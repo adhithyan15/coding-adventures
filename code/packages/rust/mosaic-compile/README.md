@@ -97,7 +97,7 @@ Package mode compiles a Mosaic package directory that contains
 files:
 
 ```text
-mosaic-compile pkg <PACKAGE_ROOT> --backend <BACKEND> --output <DIR> [--emit-project] [--profile permissive|native-complete] [--runtime-library <CDYLIB>] [--token-palette <JSON>]
+mosaic-compile pkg <PACKAGE_ROOT> --backend <BACKEND> --output <DIR> [--emit-project] [--profile permissive|native-complete] [--runtime-library <CDYLIB>] [--token-palette <JSON>] [--ios-ui-test <FILE.swift>]...
 
 BACKEND: react | swiftui | qt | xaml | compose | webcomponent | html | flutter
 ```
@@ -115,6 +115,15 @@ Flutter uses Dart's stable build-hook/code-asset packaging contract and therefor
 requires Flutter 3.38+ and Dart 3.10+ when a runtime is bundled. The option
 requires `--emit-project`; strict project builds on all five native backends
 require it.
+
+`--ios-ui-test <FILE.swift>` (repeatable; UI89 §4.3) adds an XCUITest to the
+iOS app. The file is copied to `swiftui/UITests/` and compiled by a UI test
+bundle beside the app target in `iOS/App.xcodeproj`. A shared scheme
+(`xcshareddata/xcschemes/App.xcscheme`) is also written, so
+`xcodebuild test -scheme App` can run it. It needs an iOS app build
+(`--backend swiftui --emit-project` with an `.xcframework` runtime). Each file
+must be named with letters, digits and `_` only, then `.swift`. Without the
+flag the project is a single app target with no scheme, as before.
 
 `--token-palette` applies one versioned palette to the app package and every
 referenced Mosaic package. Global values can be refined per generated backend:

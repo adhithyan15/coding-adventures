@@ -52,8 +52,10 @@ library="lib${package//-/_}.a"
 
 build() {
   local target="$1"
+  # `|| exit 1`: this runs in a command substitution, where `set -e` does
+  # not apply, so a failed build would otherwise go on to a stale library.
   cargo rustc --manifest-path "$manifest" -p "$package" --release \
-    --target "$target" --crate-type staticlib >&2
+    --target "$target" --target-dir "$target_dir" --crate-type staticlib >&2 || exit 1
   local built="$target_dir/$target/release/$library"
   test -f "$built" || { echo "cargo did not produce $built" >&2; exit 1; }
   echo "$built"

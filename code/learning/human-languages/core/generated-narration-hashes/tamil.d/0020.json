@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 20,
-  "sourceHash": "fnv1a64:6f1e8bdf1411d8b9",
+  "sourceHash": "fnv1a64:7ed30171aa918b50",
   "lessonIds": [
     "TA-C20-pathinondru-irupathu",
     "TA-C20-vaanilai",
@@ -11,7 +11,7 @@
   "drivablePrefix": 2,
   "text": "tamil/narration/ch20.txt",
   "json": "tamil/narration/ch20.json",
-  "textHash": "fnv1a64:61b843dea70c333e",
-  "jsonHash": "fnv1a64:d9607f16a71556e3",
+  "textHash": "fnv1a64:eaa20965b1741381",
+  "jsonHash": "fnv1a64:22f516d6afb1f690",
   "findings": []
 }

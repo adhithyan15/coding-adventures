@@ -164,6 +164,13 @@ fn serve_connection(
     expected_address: Option<SocketAddr>,
     token: &str,
 ) -> io::Result<()> {
+    // The listener is non-blocking so the accept loop can notice shutdown.
+    // On macOS (and the other BSDs) an accepted socket inherits O_NONBLOCK
+    // from its listener; Linux's accept4 does not. Left non-blocking, the
+    // first read below fails with WouldBlock whenever the client has not
+    // written yet, and the connection is dropped. Make the request socket
+    // blocking, so the read and write timeouts are what bound it.
+    stream.set_nonblocking(false)?;
     stream.set_read_timeout(Some(Duration::from_secs(2)))?;
     stream.set_write_timeout(Some(Duration::from_secs(2)))?;
     let mut request = Vec::new();

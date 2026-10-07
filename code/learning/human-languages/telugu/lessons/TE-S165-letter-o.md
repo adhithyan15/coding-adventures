@@ -59,17 +59,17 @@ Hold the two next to each other and the whole system is visible in one line:
 |---|---|
 | తొమ్మిది — the sign ◌ొ rides on త | ఒకటి — the letter ఒ stands alone |
 
-## Writing: ఒ — copy what you see
+## Writing: ఒ — follow the numbered strip
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-165] -->
 
-Put your pen on ఒ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed. Then write ◌ొ beside it and look at the two.
+Follow the numbered strip: start where movement 1 begins, and let each panel
+show you the next movement before your pen makes it. Then write ఒ yourself,
+slowly and larger than it is printed, with ◌ొ beside it, and look at the two.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+> The strip shows **where to start the character and which way to travel**, in
+> one attested order. That is taught with real variation from school to school,
+> so the strip names its source beneath it: treat it as a sound way in, not the
+> only one.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-165, TE-SCRIPT-RECOG-154] -->

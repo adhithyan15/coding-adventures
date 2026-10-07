@@ -7,9 +7,9 @@
 //! bounding box of all elements) and passes elements through unchanged.
 
 use std::collections::HashMap;
-use diagram_ir::{CynefinDiagram, GeoElement, GeometricDiagram, InfoDiagram, IshikawaDiagram, LayoutedCynefinDiagram, LayoutedCynefinDomain, LayoutedCynefinTransition, LayoutedGeometricDiagram, LayoutedInfoDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedVennCircle, LayoutedVennDiagram, LayoutedVennLabel, LayoutedWardleyDiagram, LayoutedWardleyEvolution, LayoutedWardleyLink, LayoutedWardleyNode, Point, VennDiagram, WardleyDiagram};
+use diagram_ir::{CubicCurveSegment, CynefinDiagram, GeoElement, GeometricDiagram, InfoDiagram, IshikawaDiagram, LayoutedCynefinBoundary, LayoutedCynefinDiagram, LayoutedCynefinDomain, LayoutedCynefinItem, LayoutedCynefinTransition, LayoutedGeometricDiagram, LayoutedInfoDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedVennCircle, LayoutedVennDiagram, LayoutedVennLabel, LayoutedWardleyDiagram, LayoutedWardleyEvolution, LayoutedWardleyLink, LayoutedWardleyNode, Point, VennDiagram, WardleyDiagram};
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 const MARGIN: f64 = 20.0;
 
@@ -76,8 +76,9 @@ fn centroid(sets: &[String], centers: &HashMap<&str, (f64, f64)>) -> Option<(f64
 /// Lay out an Ishikawa causal tree as an alternating fishbone.
 pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> LayoutedIshikawaDiagram {
     let width = canvas_width.max(560.0); let height = (width * 0.58).max(360.0);
-    let spine_y = height / 2.0; let spine_from = Point { x: 36.0, y: spine_y };
-    let effect_width = 150.0; let effect_height = 58.0; let effect_x = width - effect_width - 20.0;
+    let padding = diagram.diagram_padding.min(width / 4.0).min(height / 4.0);
+    let spine_y = height / 2.0; let spine_from = Point { x: padding + 16.0, y: spine_y };
+    let effect_width = 150.0; let effect_height = 58.0; let effect_x = width - effect_width - padding;
     let spine_to = Point { x: effect_x, y: spine_y };
     let roots: Vec<_> = diagram.causes.iter().filter(|cause| cause.parent_id.is_none()).collect();
     let spacing = (spine_to.x - spine_from.x) / (roots.len() + 1).max(2) as f64;
@@ -85,7 +86,8 @@ pub fn layout_ishikawa(diagram: &IshikawaDiagram, canvas_width: f64) -> Layouted
     for (index, cause) in roots.iter().enumerate() {
         let attach = Point { x: spine_from.x + spacing * (index + 1) as f64, y: spine_y };
         let sign = if index.is_multiple_of(2) { -1.0 } else { 1.0 };
-        let tip = Point { x: attach.x - spacing * 0.48, y: spine_y + sign * height * 0.32 };
+        let vertical_reach = ((height / 2.0 - padding) * 0.72).max(40.0);
+        let tip = Point { x: attach.x - spacing * 0.48, y: spine_y + sign * vertical_reach };
         bones.push(LayoutedIshikawaBone { from: tip.clone(), to: attach, label: cause.label.clone(),
             label_position: Point { x: tip.x + spacing * 0.24, y: (tip.y + spine_y) / 2.0 + sign * 42.0 }, depth: 1 });
         anchors.insert(&cause.id, tip);
@@ -125,23 +127,134 @@ pub fn layout_wardley(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram {
 
 /// Place the four Cynefin quadrants and central confusion domain deterministically.
 pub fn layout_cynefin(diagram: &CynefinDiagram) -> LayoutedCynefinDiagram {
-    let width = 800.0; let height = 600.0; let top = if diagram.title.is_some() { 48.0 } else { 24.0 };
-    let left = 28.0; let gap = 10.0; let domain_width = (width - left * 2.0 - gap) / 2.0;
-    let domain_height = (height - top - 28.0 - gap) / 2.0;
-    let specs = [("complex", left, top), ("complicated", left + domain_width + gap, top),
-        ("chaotic", left, top + domain_height + gap), ("clear", left + domain_width + gap, top + domain_height + gap)];
+    let width = diagram.config.width + diagram.config.padding * 2.0;
+    let height = diagram.config.height + diagram.config.padding * 2.0;
+    let top = diagram.config.padding; let left = diagram.config.padding;
+    let domain_width = diagram.config.width / 2.0;
+    let domain_height = diagram.config.height / 2.0;
+    let specs = [("complex", left, top), ("complicated", left + domain_width, top),
+        ("chaotic", left, top + domain_height), ("clear", left + domain_width, top + domain_height)];
     let mut domains: Vec<_> = specs.into_iter().map(|(name, x, y)| LayoutedCynefinDomain { name: name.into(),
         items: diagram.domains.iter().find(|domain| domain.name == name).map_or_else(Vec::new, |domain| domain.items.clone()),
-        x, y, width: domain_width, height: domain_height, center: Point { x: x + domain_width / 2.0, y: y + domain_height / 2.0 }, confusion: false }).collect();
+        item_badges: Vec::new(), overflow_count: 0, x, y, width: domain_width, height: domain_height,
+        center: Point { x: x + domain_width / 2.0, y: y + domain_height / 2.0 },
+        label_position: Point { x: x + domain_width / 2.0, y: y + domain_height / 2.0 - if diagram.config.show_domain_descriptions { 30.0 } else { 0.0 } },
+        model_position: diagram.config.show_domain_descriptions.then(|| Point { x: x + domain_width / 2.0, y: y + domain_height / 2.0 - 10.0 }),
+        practice_position: diagram.config.show_domain_descriptions.then(|| Point { x: x + domain_width / 2.0, y: y + domain_height / 2.0 + 5.0 }),
+        confusion: false }).collect();
+    let confusion_items = diagram.domains.iter().find(|domain| domain.name == "confusion").map_or_else(Vec::new, |domain| domain.items.clone());
+    let confusion_overflow = confusion_items.len().saturating_sub(3);
     domains.push(LayoutedCynefinDomain { name: "confusion".into(),
-        items: diagram.domains.iter().find(|domain| domain.name == "confusion").map_or_else(Vec::new, |domain| domain.items.clone()),
-        x: width / 2.0 - 90.0, y: top + (height - top - 28.0) / 2.0 - 58.0, width: 180.0, height: 116.0,
-        center: Point { x: width / 2.0, y: top + (height - top - 28.0) / 2.0 }, confusion: true });
-    let centers: HashMap<_, _> = domains.iter().map(|domain| (domain.name.as_str(), domain.center.clone())).collect();
-    let transitions = diagram.transitions.iter().filter_map(|transition| Some(LayoutedCynefinTransition {
-        from: centers.get(transition.from.as_str())?.clone(), to: centers.get(transition.to.as_str())?.clone(), label: transition.label.clone(),
-    })).collect();
-    LayoutedCynefinDiagram { width, height, title: diagram.title.clone(), domains, transitions }
+        items: confusion_items.into_iter().take(3).collect(), item_badges: Vec::new(), overflow_count: confusion_overflow,
+        x: left + diagram.config.width * 0.35, y: top + diagram.config.height * 0.35,
+        width: diagram.config.width * 0.3, height: diagram.config.height * 0.3,
+        center: Point { x: left + diagram.config.width / 2.0, y: top + diagram.config.height / 2.0 },
+        label_position: Point { x: left + diagram.config.width / 2.0, y: top + diagram.config.height / 2.0
+            - if diagram.config.show_domain_descriptions { 10.0 } else { 0.0 } },
+        model_position: None,
+        practice_position: diagram.config.show_domain_descriptions.then(|| Point { x: left + diagram.config.width / 2.0,
+            y: top + diagram.config.height / 2.0 + 8.0 }), confusion: true });
+    for domain in &mut domains { domain.item_badges = cynefin_item_badges(domain, diagram.config.show_domain_descriptions); }
+    let domain_by_name: HashMap<_, _> = domains.iter().map(|domain| (domain.name.as_str(), domain)).collect();
+    let transitions = diagram.transitions.iter().filter_map(|transition| {
+        let from = domain_by_name.get(transition.from.as_str())?;
+        let to = domain_by_name.get(transition.to.as_str())?;
+        let dx = to.center.x - from.center.x;
+        let dy = to.center.y - from.center.y;
+        let length = dx.hypot(dy);
+        let middle = Point { x: (from.center.x + to.center.x) / 2.0, y: (from.center.y + to.center.y) / 2.0 };
+        let control = Point { x: middle.x - dy / length * length * 0.15,
+            y: middle.y + dx / length * length * 0.15 };
+        let tangent_x = to.center.x - control.x;
+        let tangent_y = to.center.y - control.y;
+        let tangent_length = tangent_x.hypot(tangent_y);
+        let unit_x = tangent_x / tangent_length;
+        let unit_y = tangent_y / tangent_length;
+        let normal_x = -unit_y;
+        let normal_y = unit_x;
+        let arrow_tip = Point { x: to.center.x + unit_x * 0.6, y: to.center.y + unit_y * 0.6 };
+        let arrow_base = Point { x: to.center.x - unit_x * 5.4, y: to.center.y - unit_y * 5.4 };
+        let arrowhead = [arrow_tip,
+            Point { x: arrow_base.x + normal_x * 3.0, y: arrow_base.y + normal_y * 3.0 },
+            Point { x: arrow_base.x - normal_x * 3.0, y: arrow_base.y - normal_y * 3.0 }];
+        let label_position = transition.label.as_ref().map(|_| Point { x: control.x, y: control.y - 6.0 });
+        Some(LayoutedCynefinTransition { from: from.center.clone(), control, to: to.center.clone(),
+            label: transition.label.clone(), label_position, arrowhead })
+    }).collect();
+    let boundaries = cynefin_boundaries(&diagram.config, left, top);
+    let cliff = cynefin_cliff(&diagram.config, left, top);
+    LayoutedCynefinDiagram { width, height, title: diagram.title.clone(),
+        title_position: Point { x: left + diagram.config.width / 2.0, y: top / 2.0 },
+        accessibility_title: diagram.accessibility_title.clone(),
+        accessibility_description: diagram.accessibility_description.clone(),
+        show_domain_descriptions: diagram.config.show_domain_descriptions, style: diagram.config.style.clone(),
+        domains, boundaries, cliff, transitions }
+}
+
+fn cynefin_item_badges(domain: &LayoutedCynefinDomain, show_descriptions: bool) -> Vec<LayoutedCynefinItem> {
+    const HEIGHT: f64 = 26.0;
+    let start_y = if domain.confusion { domain.center.y + if show_descriptions { 22.0 } else { 14.0 } }
+        else { domain.center.y + if show_descriptions { 25.0 } else { 15.0 } };
+    let mut badges: Vec<_> = domain.items.iter().enumerate().map(|(index, label)| {
+        let width = label.encode_utf16().count() as f64 * 7.0 + 20.0;
+        LayoutedCynefinItem { label: label.clone(), x: domain.center.x - width / 2.0,
+            y: start_y + index as f64 * 30.0, width, height: HEIGHT, overflow: false }
+    }).collect();
+    if domain.overflow_count > 0 {
+        let label = format!("+{} more", domain.overflow_count);
+        let width = label.encode_utf16().count() as f64 * 7.0 + 20.0;
+        badges.push(LayoutedCynefinItem { label, x: domain.center.x - width / 2.0,
+            y: start_y + domain.items.len() as f64 * 30.0, width, height: HEIGHT, overflow: true });
+    }
+    badges
+}
+
+fn cynefin_boundaries(config: &diagram_ir::CynefinConfig, left: f64, top: f64) -> Vec<LayoutedCynefinBoundary> {
+    let vertical_points: Vec<_> = (0..=7).map(|index| Point { x: left + config.width / 2.0
+        + (cynefin_seeded_random(config.seed.wrapping_add(index * 17)) * 2.0 - 1.0) * config.boundary_amplitude,
+        y: top + index as f64 * config.height / 7.0 }).collect();
+    let horizontal_points: Vec<_> = (0..=7).map(|index| Point { x: left + index as f64 * config.width / 7.0,
+        y: top + config.height / 2.0
+            + (cynefin_seeded_random(config.seed.wrapping_add(100).wrapping_add(index * 23)) * 2.0 - 1.0) * config.boundary_amplitude }).collect();
+    vec![cynefin_curve(&vertical_points, config.seed, config.boundary_amplitude, true),
+        cynefin_curve(&horizontal_points, config.seed.wrapping_add(100), config.boundary_amplitude, false)]
+}
+
+fn cynefin_curve(points: &[Point], seed: i32, amplitude: f64, vertical: bool) -> LayoutedCynefinBoundary {
+    let segments = points.windows(2).enumerate().map(|(index, pair)| {
+        let first = &pair[0]; let second = &pair[1]; let direction = if index % 2 == 0 { 1.0 } else { -1.0 };
+        let offset = amplitude * 1.5 * direction * cynefin_seeded_random(seed
+            .wrapping_add(index as i32 * if vertical { 31 } else { 37 })
+            .wrapping_add(if vertical { 7 } else { 11 }));
+        if vertical { let middle = (first.y + second.y) / 2.0; CubicCurveSegment {
+            control1: Point { x: first.x + offset, y: middle }, control2: Point { x: second.x - offset, y: middle }, end: second.clone() }
+        } else { let middle = (first.x + second.x) / 2.0; CubicCurveSegment {
+            control1: Point { x: middle, y: first.y + offset }, control2: Point { x: middle, y: second.y - offset }, end: second.clone() } }
+    }).collect();
+    LayoutedCynefinBoundary { start: points[0].clone(), segments }
+}
+
+fn cynefin_seeded_random(seed: i32) -> f64 {
+    let mut value = seed.wrapping_add(1_831_565_813);
+    value = (value ^ ((value as u32 >> 15) as i32)).wrapping_mul(value | 1);
+    value ^= value.wrapping_add((value ^ ((value as u32 >> 7) as i32)).wrapping_mul(value | 61));
+    f64::from((value ^ ((value as u32 >> 14) as i32)) as u32) / 4_294_967_296.0
+}
+
+fn cynefin_cliff(config: &diagram_ir::CynefinConfig, left: f64, top: f64) -> LayoutedCynefinBoundary {
+    let center_x = left + config.width / 2.0;
+    let top_y = top + config.height / 2.0;
+    let bottom_y = top + config.height;
+    let height = bottom_y - top_y;
+    let amplitude = config.width * 0.03;
+    LayoutedCynefinBoundary { start: Point { x: center_x, y: top_y }, segments: vec![
+        CubicCurveSegment { control1: Point { x: center_x + amplitude, y: top_y + height * 0.2 },
+            control2: Point { x: center_x - amplitude * 1.5, y: top_y + height * 0.55 },
+            end: Point { x: center_x + amplitude * 0.5, y: top_y + height * 0.75 } },
+        CubicCurveSegment { control1: Point { x: center_x - amplitude, y: top_y + height * 0.85 },
+            control2: Point { x: center_x + amplitude * 0.3, y: top_y + height * 0.95 },
+            end: Point { x: center_x, y: bottom_y } },
+    ] }
 }
 
 /// Resolve canvas size and produce a `LayoutedGeometricDiagram`.
@@ -221,7 +334,7 @@ mod tests {
         }
     }
 
-    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.1.0"); }
+    #[test] fn version_exists() { assert_eq!(crate::VERSION, "0.2.0"); }
 
     #[test]
     fn auto_size_includes_all_elements() {
@@ -295,10 +408,20 @@ mod tests {
         let diagram = IshikawaDiagram { effect: "Problem".into(), causes: vec![
             IshikawaCause { id: "a".into(), label: "A".into(), parent_id: None, depth: 1 },
             IshikawaCause { id: "b".into(), label: "B".into(), parent_id: None, depth: 1 },
-        ] };
+        ], diagram_padding: 20.0 };
         let layout = layout_ishikawa(&diagram, 640.0);
         assert!(layout.bones[0].from.y < layout.spine_from.y);
         assert!(layout.bones[1].from.y > layout.spine_from.y);
+
+        let mut padded = diagram.clone();
+        padded.diagram_padding = 64.0;
+        let padded_layout = layout_ishikawa(&padded, 640.0);
+        assert_eq!(padded_layout.spine_from.x, 80.0);
+        assert_eq!(padded_layout.width - (padded_layout.effect_x + padded_layout.effect_width), 64.0);
+        assert!(
+            (padded_layout.bones[0].from.y - padded_layout.spine_from.y).abs()
+                < (layout.bones[0].from.y - layout.spine_from.y).abs()
+        );
     }
 
 
@@ -316,11 +439,56 @@ mod tests {
 
     #[test]
     fn cynefin_layout_places_domains_in_fixed_semantic_quadrants() {
-        let layout = layout_cynefin(&CynefinDiagram { title: None, domains: vec![], transitions: vec![] });
+        let layout = layout_cynefin(&CynefinDiagram { title: None, accessibility_title: None, accessibility_description: None,
+            config: diagram_ir::CynefinConfig { width: 640.0, height: 420.0, padding: 24.0, show_domain_descriptions: false,
+                boundary_amplitude: 12.0, seed: 17, style: diagram_ir::CynefinStyle::default() },
+            domains: vec![diagram_ir::CynefinDomain { name: "confusion".into(),
+                items: vec!["One".into(), "Two".into(), "Three".into(), "Four".into(), "Five".into()] }],
+            transitions: vec![diagram_ir::CynefinTransition { from: "complex".into(), to: "clear".into(), label: Some("Shift".into()) }] });
         let complex = layout.domains.iter().find(|domain| domain.name == "complex").unwrap();
         let clear = layout.domains.iter().find(|domain| domain.name == "clear").unwrap();
         assert!(complex.center.x < clear.center.x && complex.center.y < clear.center.y);
         assert!(layout.domains.iter().find(|domain| domain.name == "confusion").unwrap().confusion);
+        assert_eq!(layout.domains.iter().find(|domain| domain.name == "confusion").unwrap().overflow_count, 2);
+        assert_eq!(layout.domains.iter().find(|domain| domain.name == "confusion").unwrap().item_badges.len(), 4);
+        assert_eq!(complex.label_position, complex.center);
+        assert_eq!(complex.model_position, None);
+        assert_eq!(complex.practice_position, None);
+        assert_eq!(layout.title_position, Point { x: 344.0, y: 12.0 });
+        assert_eq!((layout.width, layout.height), (688.0, 468.0));
+        assert!(!layout.show_domain_descriptions);
+        assert_eq!(layout.boundaries.len(), 2);
+        assert!(layout.boundaries.iter().all(|boundary| boundary.segments.len() == 7));
+        assert_eq!(layout.cliff.start, Point { x: 344.0, y: 234.0 });
+        assert_eq!(layout.cliff.segments.len(), 2);
+        assert_eq!(layout.cliff.segments[1].end, Point { x: 344.0, y: 444.0 });
+        assert_eq!(layout.transitions[0].from, complex.center);
+        assert_eq!(layout.transitions[0].to, clear.center);
+        assert_ne!(layout.transitions[0].control, Point { x: 344.0, y: 234.0 });
+        assert_eq!(layout.transitions[0].label_position, Some(Point {
+            x: layout.transitions[0].control.x, y: layout.transitions[0].control.y - 6.0 }));
+        let arrow_tip = &layout.transitions[0].arrowhead[0];
+        assert!(((arrow_tip.x - clear.center.x).hypot(arrow_tip.y - clear.center.y) - 0.6).abs() < 1e-9);
+        for arrow_base in &layout.transitions[0].arrowhead[1..] {
+            assert!(((arrow_base.x - clear.center.x).hypot(arrow_base.y - clear.center.y) - 6.177_378_084_592_2).abs() < 1e-9);
+        }
+    }
+
+    #[test]
+    fn cynefin_layout_matches_upstream_description_text_anchors() {
+        let layout = layout_cynefin(&CynefinDiagram { title: Some("Framework".into()), accessibility_title: None,
+            accessibility_description: None, config: diagram_ir::CynefinConfig { width: 800.0, height: 600.0,
+                padding: 40.0, show_domain_descriptions: true, boundary_amplitude: 8.0, seed: 0,
+                style: diagram_ir::CynefinStyle::default() }, domains: vec![], transitions: vec![] });
+        let complex = layout.domains.iter().find(|domain| domain.name == "complex").unwrap();
+        let confusion = layout.domains.iter().find(|domain| domain.name == "confusion").unwrap();
+        assert_eq!(layout.title_position, Point { x: 440.0, y: 20.0 });
+        assert_eq!(complex.label_position, Point { x: 240.0, y: 160.0 });
+        assert_eq!(complex.model_position, Some(Point { x: 240.0, y: 180.0 }));
+        assert_eq!(complex.practice_position, Some(Point { x: 240.0, y: 195.0 }));
+        assert_eq!(confusion.label_position, Point { x: 440.0, y: 330.0 });
+        assert_eq!(confusion.model_position, None);
+        assert_eq!(confusion.practice_position, Some(Point { x: 440.0, y: 348.0 }));
     }
 
     #[test]

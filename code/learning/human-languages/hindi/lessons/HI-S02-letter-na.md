@@ -61,17 +61,17 @@ You already say these, and every one of them has न somewhere inside it:
 - **मेरा नाम** *merā nām* — assemble my name from known letters and show word spacing as two head-lines
 - **नमस्ते** *namaste* — assemble namaste
 
-## Writing: न — copy what you see
+## Writing: न — follow the numbered strip
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-02] -->
 
-Put your pen on न and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Follow the numbered strip: start where movement 1 begins, and let each panel
+show you the next movement before your pen makes it. Then write न yourself —
+slowly, and larger than it is printed.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+> The strip shows **where to start the character and which way to travel**, in
+> one attested order. That is taught with real variation from school to school,
+> so the strip names its source beneath it: treat it as a sound way in, not the
+> only one.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-02] -->

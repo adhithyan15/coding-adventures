@@ -44,6 +44,8 @@ CI_WORKFLOW_PATH = ".github/workflows/ci.yml"
 # The lane's own shell scripts (UI89 step 5): they belong to no package, so a
 # change to one reaches the lane only through this list.
 CI_SCRIPT_PATHS = (
+    # Builds and checks each app through Flutter for phones (UI89 §7).
+    "code/scripts/build-mosaic-flutter-phone-app.sh",
     "code/scripts/build-mosaic-android-libs.sh",
     "code/scripts/start-mosaic-android-emulator.sh",
     "code/scripts/mosaic-android-emulator-gate.sh",
@@ -53,6 +55,9 @@ CI_SCRIPT_PATHS = (
     # Assembles Journal's generated Android project through that verified
     # jar (UI89 §3.9).
     "code/scripts/assemble-mosaic-android-debug.sh",
+    # Runs an app's instrumented UI test across two cold launches on the
+    # emulator (UI89 §4.2).
+    "code/scripts/mosaic-android-ui-test.sh",
 )
 
 

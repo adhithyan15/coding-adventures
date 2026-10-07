@@ -73,6 +73,14 @@ export function assertKnownFigureTarget(target: FigureTarget): void {
     ) {
       throw new Error(`${target.lessonId}: script-filmstrip letters must name two or more letters`);
     }
+    // A shared-headline word is ONE ledger entry, composed from its letters by
+    // script-ductus; it never also names letters to draw one by one.
+    if (
+      target.composition !== undefined &&
+      (target.composition !== "shared-headline" || target.letters !== undefined)
+    ) {
+      throw new Error(`${target.lessonId}: script-filmstrip composition must be "shared-headline", without letters`);
+    }
     return;
   }
   const exhaustive: never = target;
@@ -122,8 +130,9 @@ function figureSources(root: string, targets: FigureTarget[]): FigureSources {
 /**
  * Every figure the book prints: the targets declared in `figure-generation.json`
  * plus, for switched-on tracks, a filmstrip for each single-letter writing
- * lesson whose letter has a cited ductus, and for each letter-list or
- * separate-letter word lesson ALL of whose letters do (HL-C443,
+ * lesson whose letter has a cited ductus, for each letter-list or
+ * separate-letter word lesson ALL of whose letters do, and for each Devanagari
+ * word that script-ductus could compose with one shared headline (HL-C443,
  * `figure-targets.ts`). The
  * generated filmstrip ledger is the record of which letters are cited, so a
  * derived target can never outrun the stroke data.

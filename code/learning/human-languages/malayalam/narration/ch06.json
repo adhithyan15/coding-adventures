@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Case Endings and Dative Subjects",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:293169514bb9cd3c",
+  "sourceHash": "fnv1a64:02c2346ea3397461",
   "lessons": [
     {
       "id": "ML-C06-dative-ikku",
@@ -197,7 +197,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8c94cd516061c1fe",
+      "sourceHash": "fnv1a64:23f903556a64c062",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -276,15 +276,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ക — copy what you see",
+          "title": "Writing: ക — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ക (ka) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ക (ka) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },
@@ -366,7 +366,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8a5fcea748eacd3a",
+      "sourceHash": "fnv1a64:f953d4a364b06a9c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -445,15 +445,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ര — copy what you see",
+          "title": "Writing: ര — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ര (ra) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ര (ra) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },

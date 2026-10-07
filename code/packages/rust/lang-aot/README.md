@@ -9,9 +9,24 @@ Unknown
 statement conditions may also merge that provenance
 when both exits establish it for the same slot, and side-effect-free conditional
 value selectors may choose between proven runtime-real branches. Calling
-selectors may choose between direct formatter-safe real procedure results that
-do not depend on pre-call local or real name-actual provenance. One-sided reassignment remains
-gated. Unary signs, additive
+selectors may choose between selector-safe runtime-real expressions rooted in
+direct formatter-safe real procedure results that do not depend on pre-call
+local provenance. A real name-formal result is also allowed when its actual has
+the same proof. Unary signs, arithmetic composition with finite static operands,
+and real-valued standard functions preserve it, while a finite static real
+actual is safe directly. Variable-free exact `sign` and exact-range `entier`
+results may also widen through a real name formal. Other real name-actual
+provenance remains conservative.
+Built-in `sign` also preserves the proof for a selector-safe runtime-real
+operand because its result is always `-1`, `0`, or `1`.
+The same bounded result preserves runtime-real formatter provenance when it is
+widened through an ordinary real assignment or direct real name formal.
+`entier(sign(runtime-real))` retains that proof because `entier` receives an
+already integral `-1`, `0`, or `1`; unrestricted runtime `entier` remains gated.
+Unary `+` and `-` around the built-in `sign` result preserve the same bound.
+Built-in integer `abs` may also map that bounded result to exact `0` or `1`
+before `entier`; a user-declared `abs` remains conservative.
+One-sided reassignment remains gated. Unary signs, additive
 composition, multiplication, division, and exponentiation over proven
 runtime-real or finite static operands preserve runtime-real provenance. The
 real-valued standard functions preserve that provenance for a runtime-real

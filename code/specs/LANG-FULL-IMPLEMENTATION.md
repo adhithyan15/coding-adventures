@@ -1302,7 +1302,25 @@ backend immediately) come before the enabler-dependent items.
   shared with Dartmouth BASIC on native/LLVM/WASM/JVM/CLR/VM/JIT. Conditional
   statements retain that provenance only when every reachable exit proves the
   same slot; conditional value expressions retain it when their selector has no
-  procedure call and every reachable branch is independently proven. Unary plus
+  procedure call and every reachable branch is independently proven. A calling
+  selector may choose selector-safe runtime-real expressions rooted in direct
+  formatter-safe real procedure results, including a result specialised through
+  a real name formal when its actual has the same proof. Unary signs, arithmetic
+  composition with finite static operands, and real-valued standard functions
+  preserve it, while a finite static real actual is safe directly. Variable-free
+  exact `sign` and exact-range `entier` results may also widen through a real
+  name formal. Built-in `sign` also preserves the proof for a selector-safe
+  runtime-real operand because its result is always `-1`, `0`, or `1`; the
+  same bounded result preserves formatter provenance when widened through an
+  ordinary real assignment or direct real name formal. A directly nested
+  built-in `entier(sign(runtime-real))` retains the proof because `entier`
+  receives an already integral `-1`, `0`, or `1`; unrestricted runtime
+  `entier` remains conservative. Unary `+` and `-` around the built-in `sign`
+  result preserve the same bound. Built-in integer `abs` may map that bounded
+  result to exact `0` or `1` before `entier`; user-declared overrides remain
+  conservative.
+  Provenance-backed local and other real-name branches remain conservative
+  across selector calls. Unary plus
   and unary minus preserve the same runtime-real proof. Additive composition,
   multiplication, division, and exponentiation preserve it when every operand
   is independently runtime-real or a finite static numeric expression. The

@@ -456,3 +456,94 @@ describe("Malayalam ഴ — one joined run through the left arch, right loop, an
     expect(pen.attrs.d).toBe(penPathD(MALAYALAM_ZHA.strokes[0], 1));
   });
 });
+
+// The Thooval-cited consonants: every movement stays in stroke zero, so the
+// strip reports one unbroken stroke and its movement count.
+const THOOVAL_MOVEMENTS: ReadonlyArray<readonly [glyph: string, movements: number]> = [
+  ["ന", 4],
+  ["മ", 4],
+  ["സ", 5],
+  ["ര", 3],
+  ["ത", 4],
+  ["ഷ", 6],
+  ["പ", 3],
+  ["വ", 3],
+  ["ണ", 6],
+  ["ട", 3],
+  ["ദ", 3],
+  ["ഹ", 4],
+  ["ഗ", 3],
+  ["റ", 2],
+  ["ല", 5],
+  ["ശ", 4],
+  ["ബ", 6],
+];
+
+describe("Malayalam consonants cited to Thooval — one unbroken stroke each", () => {
+  for (const [glyph, movements] of THOOVAL_MOVEMENTS) {
+    it(`${glyph} draws ${movements} movements without a lift`, () => {
+      const letter = DUCTUS[ductusKey("malayalam", glyph)];
+      const steps = ductusSteps(letter);
+      const strip = ductusFilmstrip(letter, malayalamOutline(glyph));
+      expect(steps.every((step) => !step.startsAfterLift)).toBe(true);
+      expect(steps.every((step) => step.strokeIndex === 0)).toBe(true);
+      expect(strip.frames).toHaveLength(movements);
+      expect(strip.penLifts).toBe(0);
+      expect(strip.summary).toBe(`one unbroken stroke · ${movements} movements`);
+      const last = strip.frames[movements - 1];
+      const pen = byTag(last, "path").find(
+        (path) => path.attrs.class === "ductus__pen",
+      )!;
+      expect(pen.attrs.d).toBe(penPathD(letter.strokes[0], 1));
+    });
+  }
+});
+
+// The Moag-cited glyphs: every numbered movement stays in stroke zero, so the
+// strip reports one unbroken stroke and its movement count.
+const MOAG_MOVEMENTS: ReadonlyArray<readonly [glyph: string, movements: number]> = [
+  ["ക", 7],
+  ["യ", 4],
+  ["ഏ", 7],
+  ["ഖ", 4],
+  ["ങ", 5],
+  ["ച", 4],
+  ["ഛ", 5],
+  ["ഞ", 7],
+  ["ഥ", 3],
+  ["ധ", 4],
+  ["ഭ", 4],
+  ["ഫ", 3],
+  ["ള", 4],
+  ["ം", 1],
+  ["ാ", 1],
+  ["ി", 1],
+  ["ീ", 2],
+  ["ു", 3],
+  ["ൂ", 4],
+  ["ൃ", 2],
+  ["െ", 2],
+  ["േ", 3],
+];
+
+describe("Malayalam glyphs cited to Moag — one unbroken stroke each", () => {
+  for (const [glyph, movements] of MOAG_MOVEMENTS) {
+    it(`${glyph} draws ${movements} movement${movements === 1 ? "" : "s"} without a lift`, () => {
+      const letter = DUCTUS[ductusKey("malayalam", glyph)];
+      const steps = ductusSteps(letter);
+      const strip = ductusFilmstrip(letter, malayalamOutline(glyph));
+      expect(steps.every((step) => !step.startsAfterLift)).toBe(true);
+      expect(steps.every((step) => step.strokeIndex === 0)).toBe(true);
+      expect(strip.frames).toHaveLength(movements);
+      expect(strip.penLifts).toBe(0);
+      expect(strip.summary).toBe(
+        `one unbroken stroke · ${movements} movement${movements === 1 ? "" : "s"}`,
+      );
+      const last = strip.frames[movements - 1];
+      const pen = byTag(last, "path").find(
+        (path) => path.attrs.class === "ductus__pen",
+      )!;
+      expect(pen.attrs.d).toBe(penPathD(letter.strokes[0], 1));
+    });
+  }
+});

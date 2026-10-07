@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8e3be5a629b0a0be",
+  "sourceHash": "fnv1a64:cce9f1820175f38a",
   "lessons": [
     {
       "id": "TA-C33-ninai",
@@ -571,7 +571,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:cd982d731316d61c",
+      "sourceHash": "fnv1a64:55d90727a7835e16",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -630,7 +630,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read both; do not draw them yet. Neither த nor ழ has an entry in this book's script data, so neither gets a stroke order, and the mouth positions above are this lesson's own — the data is sourced for ண's retroflex curl and nothing else here."
+              "text": "Read both. The strip writes the whole word, numbered movement by movement, with each source beneath it. The script data calls த dental and ழ retroflex; the finer mouth positions above are this lesson's own."
             }
           ]
         },

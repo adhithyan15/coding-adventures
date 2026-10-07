@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 60,
-  "sourceHash": "fnv1a64:47f2a156bdbeec48",
+  "sourceHash": "fnv1a64:6fc7985c0471e8fa",
   "lessonIds": [
     "HI-C60-monkey",
     "HI-S140-nuqta",
@@ -14,7 +14,7 @@
   "drivablePrefix": 1,
   "text": "hindi/narration/ch60.txt",
   "json": "hindi/narration/ch60.json",
-  "textHash": "fnv1a64:d6238011279fbf8f",
-  "jsonHash": "fnv1a64:97126adb1d800f8b",
+  "textHash": "fnv1a64:d098c0b2ad9eac25",
+  "jsonHash": "fnv1a64:1c22c6658b735db3",
   "findings": []
 }

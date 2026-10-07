@@ -6,6 +6,28 @@ import 'dart:io';
 
 import 'package:ffi/ffi.dart';
 
+/// Where a phone keeps this app's state (UI89 §7.4): the platform's
+/// app-support directory, which a phone build's `main()` sets from
+/// `path_provider` before the host loads. That is `Context.getFilesDir()` on
+/// Android and the sandbox's `Library/Application Support` on iOS, the same
+/// directories Compose's `MosaicActivity` and SwiftUI's iOS host use.
+///
+/// | platform        | state root                                  |
+/// |-----------------|---------------------------------------------|
+/// | Android, iOS    | this, or no persistence (with a warning)    |
+/// | macOS           | `HOME`/`Library/Application Support`        |
+/// | Linux           | `XDG_DATA_HOME`, else `HOME`/`.local/share` |
+/// | Windows         | `LOCALAPPDATA`                              |
+///
+/// A phone never falls back to `HOME` or `XDG_DATA_HOME`. An Android app has
+/// neither, and a guess there could write somewhere the app does not own.
+/// Ignored on desktop, whose roots stay exactly as they were.
+String? mosaicStateRoot;
+
+/// Android and iOS: phones, whose rules for the runtime and the state file
+/// differ from desktop's (UI89 §7.4).
+bool get _isPhone => Platform.isAndroid || Platform.isIOS;
+
 final class _MosaicBytes extends Struct {
   external Pointer<Uint8> ptr;
 
@@ -449,7 +471,10 @@ final class _MosaicRuntime {
   String? _effectWarning;
 
   static _MosaicRuntime load() {
-    final requested = Platform.environment['MOSAIC_APP_LIBRARY'];
+    // A development override on desktop. A phone always uses the runtime its
+    // build bundled (UI89 §7.4): there the variable has no meaning, and a
+    // signed app must not load a library named from outside.
+    final requested = _isPhone ? null : Platform.environment['MOSAIC_APP_LIBRARY'];
     if (requested != null && requested.trim().isNotEmpty) {
       return _MosaicRuntime(DynamicLibrary.open(requested));
     }
@@ -994,7 +1019,15 @@ final class _MosaicRuntime {
 
   void _persistSnapshot() {
     final path = _statePath();
-    if (path == null) return;
+    if (path == null) {
+      // A phone build whose app-support directory could not be found
+      // (UI89 §7.4): say so, rather than quietly keeping nothing.
+      if (_persistenceEnabled && _isPhone) {
+        _persistenceWarning =
+            'Mosaic state is not saved: this phone has no app-support directory for it.';
+      }
+      return;
+    }
     try {
       final value = _invokeOutput((output) => _snapshot(_app, output));
       final file = File(path);
@@ -1020,9 +1053,12 @@ final class _MosaicRuntime {
     if (requested != null && requested.trim().isNotEmpty) return requested;
     final environment = Platform.environment;
     late final String root;
-    if (Platform.isWindows) {
+    if (_isPhone) {
+      // Only what `main()` found through `path_provider` (UI89 §7.4).
+      root = mosaicStateRoot ?? '';
+    } else if (Platform.isWindows) {
       root = environment['LOCALAPPDATA'] ?? '';
-    } else if (Platform.isMacOS || Platform.isIOS) {
+    } else if (Platform.isMacOS) {
       final home = environment['HOME'] ?? '';
       root = home.isEmpty ? '' : _joinPath(home, 'Library/Application Support');
     } else {

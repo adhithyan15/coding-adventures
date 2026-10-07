@@ -52,6 +52,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TA-S08-pulli",
+      "sourceHash": "fnv1a64:310158940763d906",
+      "svgHash": "fnv1a64:3e27af7327867dee",
+      "svg": "tamil/book/figures/TA-S08-pulli-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TA-S09-i-sign",
       "sourceHash": "fnv1a64:16e0221c6fa70009",
       "svgHash": "fnv1a64:06fdefa9c1eb124a",
@@ -283,10 +290,45 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TA-W03-pulli-vanakkam",
+      "sourceHash": "fnv1a64:cce00a55bb9338dc",
+      "svgHash": "fnv1a64:3e27af7327867dee",
+      "svg": "tamil/book/figures/TA-W03-pulli-vanakkam-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-W03-write-vanakkam",
+      "sourceHash": "fnv1a64:fd13efdfeba37351",
+      "svgHash": "fnv1a64:47f0e9582ee570e4",
+      "svg": "tamil/book/figures/TA-W03-write-vanakkam-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-W04-i-sign-write-nandri",
+      "sourceHash": "fnv1a64:86668f6bf5266ed7",
+      "svgHash": "fnv1a64:f986540b0eb97623",
+      "svg": "tamil/book/figures/TA-W04-i-sign-write-nandri-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TA-W04-vowel-signs-nandri",
       "sourceHash": "fnv1a64:30bbe78c31269b26",
       "svgHash": "fnv1a64:e38f2971a78981b8",
       "svg": "tamil/book/figures/TA-W04-vowel-signs-nandri-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-W05-write-aam",
+      "sourceHash": "fnv1a64:0c94e40a7499223f",
+      "svgHash": "fnv1a64:a21689d7d28426de",
+      "svg": "tamil/book/figures/TA-W05-write-aam-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-W06-write-illai",
+      "sourceHash": "fnv1a64:72f2f3c07fa98c9d",
+      "svgHash": "fnv1a64:208c8166b4f89420",
+      "svg": "tamil/book/figures/TA-W06-write-illai-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -297,10 +339,38 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TA-W08-read-en",
+      "sourceHash": "fnv1a64:1c47a0a126262f92",
+      "svgHash": "fnv1a64:fc0d164901e017c3",
+      "svg": "tamil/book/figures/TA-W08-read-en-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TA-W08-short-o-observe",
       "sourceHash": "fnv1a64:e6736ceef136343f",
       "svgHash": "fnv1a64:3e92481dd2f9e31d",
       "svg": "tamil/book/figures/TA-W08-short-o-observe-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-W09-read-peyar",
+      "sourceHash": "fnv1a64:871b4bc2346cb23c",
+      "svgHash": "fnv1a64:40bafaf2f6a38daf",
+      "svg": "tamil/book/figures/TA-W09-read-peyar-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-W10-read-naan",
+      "sourceHash": "fnv1a64:cf4b90220e42bc43",
+      "svgHash": "fnv1a64:82afd5970d1a291d",
+      "svg": "tamil/book/figures/TA-W10-read-naan-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-W11-read-niingal",
+      "sourceHash": "fnv1a64:00c75be4557e1483",
+      "svgHash": "fnv1a64:c01410331f05a6ca",
+      "svg": "tamil/book/figures/TA-W11-read-niingal-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -311,10 +381,31 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TA-W16-read-tamizh",
+      "sourceHash": "fnv1a64:79f1746781f5263b",
+      "svgHash": "fnv1a64:2df4ac9cd2f238c1",
+      "svg": "tamil/book/figures/TA-W16-read-tamizh-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-W18-read-uur",
+      "sourceHash": "fnv1a64:d8b1c4c6bdad9acc",
+      "svgHash": "fnv1a64:6e31ee5fda28c16c",
+      "svg": "tamil/book/figures/TA-W18-read-uur-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TA-W22-read-mele",
       "sourceHash": "fnv1a64:52b90c0ce266e1fd",
       "svgHash": "fnv1a64:86be836d3ad0f408",
       "svg": "tamil/book/figures/TA-W22-read-mele-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-W23-read-sattai",
+      "sourceHash": "fnv1a64:2676393638999298",
+      "svgHash": "fnv1a64:c26f8bb5a086d757",
+      "svg": "tamil/book/figures/TA-W23-read-sattai-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -332,10 +423,38 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TA-W27-read-payam",
+      "sourceHash": "fnv1a64:9bd6305e4748293b",
+      "svgHash": "fnv1a64:340a09cd577b7cf7",
+      "svg": "tamil/book/figures/TA-W27-read-payam-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TA-W30-read-sariyaa",
       "sourceHash": "fnv1a64:be5d38312ed919d8",
       "svgHash": "fnv1a64:0d6a553763db3027",
       "svg": "tamil/book/figures/TA-W30-read-sariyaa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-W31-read-aanaal",
+      "sourceHash": "fnv1a64:ae151e563085a601",
+      "svgHash": "fnv1a64:b20abb412ba67727",
+      "svg": "tamil/book/figures/TA-W31-read-aanaal-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-W32-read-sol",
+      "sourceHash": "fnv1a64:9bf1bd80bf098eba",
+      "svgHash": "fnv1a64:337a4df1424491ed",
+      "svg": "tamil/book/figures/TA-W32-read-sol-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TA-W33-read-een",
+      "sourceHash": "fnv1a64:8d910f0c17069c16",
+      "svgHash": "fnv1a64:1ba922e00c41ceb8",
+      "svg": "tamil/book/figures/TA-W33-read-een-filmstrip.svg"
     }
   ]
 }

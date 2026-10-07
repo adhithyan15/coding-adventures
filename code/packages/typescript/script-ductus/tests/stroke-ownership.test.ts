@@ -19,9 +19,13 @@ const ownerNames = [
   "cyrillic",
   "devanagari",
   "gujarati",
+  // Gurmukhi joins the same way, as one owner module after Bengali.
+  "gurmukhi",
   "hebrew",
   "japanese",
   "kannada",
+  // Latin joins as one owner module after Gurmukhi (print letters).
+  "latin",
   "malayalam",
   "tamil",
   "telugu",
@@ -486,12 +490,77 @@ describe("stroke ownership migration baseline", () => {
       // Omniglot copyists' most common count. Keys move 499 -> 500 and Kannada
       // 43 -> 44, with the ordered key hash and the non-Tamil data hash,
       // measured after the captions were settled; Tamil and both
+      //
+      // The kanji 言, 五 and 口, which chapter 5 writes on their own before
+      // assembling 語, get inventory rows citing KanjiVG (08a00, 04e94,
+      // 053e3) once each is read in a word headword (言う, 五, 口), and a
+      // ductus each, appended to the Japanese owner module. Keys move 534 ->
+      // 537 and Japanese 80 -> 83, with the ordered key hash and the
+      // non-Tamil data hash, measured after the three filmstrips' captions
+      // were settled; Tamil and both shared-identity values are unchanged.
+      //
+      // Gurmukhi joins as a new last owner with 27 letters (ਅ and 26
+      // consonants) whose order is cited to the Apache-2.0 Alphabet Tracing
+      // lesson of GNPS's Gurmukhi Sikho app, keyed `gurmukhi:<glyph>`.
+      // Appending the owner keeps every existing key in place. Keys move
+      // 537 -> 564 with a new `gurmukhi: 27` count, and the ordered key hash
+      // and the non-Tamil data hash move, measured after the last caption was
+      // settled; Tamil and both shared-identity values remain unchanged.
+      //
+      // Seventeen Malayalam base consonants — ന മ സ ര ത ഷ പ വ ണ ട ദ ഹ ഗ റ ല
+      // ശ ബ (U+0D28, U+0D2E, U+0D38, U+0D30, U+0D24, U+0D37, U+0D2A, U+0D35,
+      // U+0D23, U+0D1F, U+0D26, U+0D39, U+0D17, U+0D31, U+0D32, U+0D36,
+      // U+0D2C) — taught from chapter 1 but never given a cited stroke
+      // order, now cite the formation arrows of SPACE Kerala's Thooval
+      // teaching tool (facts only; GPL-3.0) and gain one unbroken run each.
+      // They follow ഴ at the end of the Malayalam owner, so no existing key
+      // changes its relative order. Keys move 564 -> 581 and Malayalam
+      // 14 -> 31, with the ordered key hash and the non-Tamil data hash,
+      // measured after the last caption was settled; Tamil and both
+      // shared-identity values remain unchanged.
+      //
+      // The Tamil puḷḷi ் (U+0BCD), the dot made after its consonant's body,
+      // gains a ductus cited to Varai's recorded drawings of the 18
+      // consonants with puḷḷi (one writer, confidence medium). It joins the
+      // end of the Tamil tail owner, after the six vowel signs, so every
+      // existing key keeps its relative order. Keys move 581 -> 582 and Tamil
+      // 35 -> 36, with the ordered key hash, measured after the caption was
+      // settled. No other script changes, so the non-Tamil data hash and both
+      // shared-identity values remain unchanged.
+      //
+      // Twenty-two Malayalam glyphs cite the numbered movements of Rodney F.
+      // Moag's Malayalam: A University Course and Reference Grammar (facts
+      // only; CC BY-NC-SA 4.0): the consonants ക യ ഖ ങ ച ഛ ഞ ഥ ധ ഭ ഫ ള
+      // (U+0D15, U+0D2F, U+0D16, U+0D19, U+0D1A, U+0D1B, U+0D1E, U+0D25,
+      // U+0D27, U+0D2D, U+0D2B, U+0D33), the independent vowel ഏ (U+0D0F),
+      // the anusvara ം (U+0D02) and the vowel signs ാ ി ീ ു ൂ ൃ െ േ (U+0D3E,
+      // U+0D3F, U+0D40, U+0D41, U+0D42, U+0D43, U+0D46, U+0D47), one
+      // unbroken run each. They follow ബ at the end of the Malayalam owner,
+      // so no existing key changes its relative order. Keys move 582 -> 604
+      // and Malayalam 31 -> 53, with the ordered key hash and the non-Tamil
+      // data hash, measured after the last caption was settled; Tamil and
+      // both shared-identity values remain unchanged.
+      //
+      // 語's tenth frame, 五's second stroke, is now captioned as in 五 itself
+      // ("draw the stroke down and left"). It runs from the top bar to the
+      // base (KanjiVG 04e94), so "a short stroke" was wrong. Only the label
+      // moves: keys, the ordered key hash and Tamil stay; the non-Tamil data
+      // hash moves.
+      //
+      // Latin joins as a new last owner with 18 print glyphs, keyed
+      // `latin:<glyph>`: b c e g h i l n o r s u w ß and G cite the
+      // Grundschrift-App's ordered paths (facts only; the repository has no
+      // licence), and ñ ¿ ¡ cite UJIpenchars2's native Spanish writers (CC BY
+      // 4.0). Appending the owner keeps every existing key in place. Keys move
+      // 604 -> 622 with a new `latin: 18` count, and the ordered key hash and
+      // the non-Tamil data hash move, measured after the last caption was
+      // settled; Tamil and both shared-identity values remain unchanged.
     }).toEqual({
-      keys: 534,
+      keys: 622,
       keyHash:
-        "507e26694474b2f503ad4c94223d905424a7dfc5d8e467b7d7f478bcf5f296d5",
+        "932bf4e24bcd0dfc482295e3712b865afdef61b8b85a3ce1140447a10caba106",
       nonTamilDataHash:
-        "f6c9dcc5ed1af7aa8286e172414fc3c2b852b6eaab4de09fa477abc7d6b8ea36",
+        "a45dfceb8aa014d8d918fa5e307be2033d1e583868e07fcd656f30579e99f9a3",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -502,12 +571,14 @@ describe("stroke ownership migration baseline", () => {
         cyrillic: 33,
         devanagari: 52,
         gujarati: 55,
+        gurmukhi: 27,
         hebrew: 22,
-        japanese: 80,
+        japanese: 83,
         kannada: 44,
-        malayalam: 14,
+        latin: 18,
+        malayalam: 53,
         "perso-arabic": 24,
-        tamil: 35,
+        tamil: 36,
         telugu: 43,
         "urdu-nastaliq": 31,
       },

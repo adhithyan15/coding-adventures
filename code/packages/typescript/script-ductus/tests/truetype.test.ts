@@ -628,3 +628,96 @@ describe("Tamil letter shapes the lessons make claims about", () => {
     expect(() => raster(wide, narrow)).toThrow(/clips a glyph/);
   });
 });
+
+describe("advance widths", () => {
+  // A word is laid out by advances, not by ink: the next letter starts where
+  // this one's advance ends. These values are Noto's own `hmtx` entries (read
+  // independently with fontTools), so a misread offset or a swapped field shows
+  // up as a wrong number rather than a plausible one.
+  const devanagari = () => parseFont(load("NotoSansDevanagari-Static.ttf"));
+
+  it("reads each mapped letter's advance from hmtx", () => {
+    const f = devanagari();
+    expect(f.advanceFor("म")).toBe(598);
+    expect(f.advanceFor("क")).toBe(768);
+    expect(f.advanceFor("र")).toBe(409);
+    expect(tamil().advanceFor("க")).toBe(825);
+  });
+
+  it("answers undefined for a character the font does not map", () => {
+    expect(devanagari().advanceFor("漢")).toBeUndefined();
+    expect(devanagari().advanceFor("")).toBeUndefined();
+  });
+
+  /**
+   * A two-glyph font whose `hmtx` holds ONE full metric: glyph 1 (mapped from
+   * "A") has only a side bearing and so shares glyph 0's advance. `declared` is
+   * the `numberOfHMetrics` the `hhea` table claims; `withMetrics: false` leaves
+   * both tables out.
+   */
+  function fontWithMetrics(declared: number, withMetrics = true): ArrayBuffer {
+    const tables = withMetrics
+      ? ["cmap", "glyf", "head", "hhea", "hmtx", "loca", "maxp"]
+      : ["cmap", "glyf", "head", "loca", "maxp"];
+    const dirSize = 12 + tables.length * 16;
+    const cmapOffset = dirSize;
+    const cmapSize = 16 + 12;
+    const headOffset = cmapOffset + cmapSize;
+    const hheaOffset = headOffset + 54;
+    const hmtxOffset = hheaOffset + 36;
+    const maxpOffset = hmtxOffset + 6;
+    const locaOffset = maxpOffset + 6;
+    const buf = new ArrayBuffer(locaOffset + 8);
+    const v = new DataView(buf);
+    v.setUint32(0, 0x00010000);
+    v.setUint16(4, tables.length);
+    const place: Record<string, [number, number]> = {
+      cmap: [cmapOffset, cmapSize],
+      glyf: [locaOffset + 6, 0],
+      head: [headOffset, 54],
+      hhea: [hheaOffset, 36],
+      hmtx: [hmtxOffset, 6],
+      loca: [locaOffset, 6],
+      maxp: [maxpOffset, 6],
+    };
+    tables.forEach((tag, i) => {
+      const at = 12 + i * 16;
+      for (let k = 0; k < 4; k++) v.setUint8(at + k, tag.charCodeAt(k));
+      v.setUint32(at + 8, place[tag][0]);
+      v.setUint32(at + 12, place[tag][1]);
+    });
+    v.setUint16(cmapOffset + 2, 1);
+    v.setUint16(cmapOffset + 4, 3);
+    v.setUint16(cmapOffset + 6, 10);
+    v.setUint32(cmapOffset + 8, 12);
+    const sub = cmapOffset + 12;
+    v.setUint16(sub, 12);
+    v.setUint32(sub + 12, 1); // one group: "A" -> glyph 1
+    v.setUint32(sub + 16, 0x41);
+    v.setUint32(sub + 20, 0x41);
+    v.setUint32(sub + 24, 1);
+    v.setUint16(headOffset + 18, 1000);
+    v.setInt16(headOffset + 50, 0);
+    v.setUint16(hheaOffset + 34, declared); // numberOfHMetrics
+    v.setUint16(hmtxOffset, 500); // glyph 0: advance 500
+    v.setInt16(hmtxOffset + 2, 10); // glyph 0: left side bearing
+    v.setInt16(hmtxOffset + 4, 20); // glyph 1: side bearing only
+    v.setUint16(maxpOffset + 4, 2); // numGlyphs
+    return buf;
+  }
+
+  it("gives a glyph past numberOfHMetrics the last metric's advance", () => {
+    expect(parseFont(fontWithMetrics(1)).advanceFor("A")).toBe(500);
+  });
+
+  it("clamps a numberOfHMetrics larger than the table holds", () => {
+    // 6 bytes hold one full pair; the claimed 50 must not read past them.
+    expect(parseFont(fontWithMetrics(50)).advanceFor("A")).toBe(500);
+  });
+
+  it("still draws a font with no horizontal metrics, and says it has no advance", () => {
+    const f = parseFont(fontWithMetrics(1, false));
+    expect(f.glyphIdFor("A")).toBe(1);
+    expect(f.advanceFor("A")).toBeUndefined();
+  });
+});

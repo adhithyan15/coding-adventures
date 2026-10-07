@@ -166,6 +166,14 @@
           "required": false
         },
         {
+          "id": "ios-ui-test",
+          "long": "ios-ui-test",
+          "description": "An XCUITest source (UI89 §4.3) for the iOS app: a .swift file named with letters, digits and _ only. Repeatable. Adds a UI test bundle and a shared scheme to iOS/App.xcodeproj. Needs --backend swiftui --emit-project with an .xcframework --runtime-library.",
+          "type": "string",
+          "required": false,
+          "repeatable": true
+        },
+        {
           "id": "profile",
           "long": "profile",
           "description": "Build policy: 'permissive' emits artifacts plus mosaic-degradations.json; 'native-complete' rejects known native degradations before emitting application artifacts",

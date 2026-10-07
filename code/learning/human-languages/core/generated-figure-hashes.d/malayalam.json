@@ -3,10 +3,101 @@
   "figures": [
     {
       "kind": "script-filmstrip",
+      "lessonId": "ML-S01-letter-ka",
+      "sourceHash": "fnv1a64:49e1c46c6dfed3ee",
+      "svgHash": "fnv1a64:6a71ddf962528912",
+      "svg": "malayalam/book/figures/ML-S01-letter-ka-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S03-vowel-sign-i",
+      "sourceHash": "fnv1a64:06b883d132af56ba",
+      "svgHash": "fnv1a64:1c022d015807f82e",
+      "svg": "malayalam/book/figures/ML-S03-vowel-sign-i-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S04-vowel-sign-aa",
+      "sourceHash": "fnv1a64:1892ef3ad91209ac",
+      "svgHash": "fnv1a64:8e9c4501b5aafe7e",
+      "svg": "malayalam/book/figures/ML-S04-vowel-sign-aa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S05-letter-na",
+      "sourceHash": "fnv1a64:ce0e809dcb11c7ba",
+      "svgHash": "fnv1a64:e79f9d9eb304c4b6",
+      "svg": "malayalam/book/figures/ML-S05-letter-na-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "ML-S06-letter-chillu-ll",
       "sourceHash": "fnv1a64:ef9a0ee7d217d874",
       "svgHash": "fnv1a64:af0bcc0e2856dbd7",
       "svg": "malayalam/book/figures/ML-S06-letter-chillu-ll-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S07-vowel-sign-u",
+      "sourceHash": "fnv1a64:0734fd8664143ba2",
+      "svgHash": "fnv1a64:def7536830f0df71",
+      "svg": "malayalam/book/figures/ML-S07-vowel-sign-u-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S08-letter-ta",
+      "sourceHash": "fnv1a64:7268607b38a69ec3",
+      "svgHash": "fnv1a64:6556fe3b04f38c2c",
+      "svg": "malayalam/book/figures/ML-S08-letter-ta-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S109-letter-ra",
+      "sourceHash": "fnv1a64:cbfb83209f5372ce",
+      "svgHash": "fnv1a64:2119f44e29e46cd4",
+      "svg": "malayalam/book/figures/ML-S109-letter-ra-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S110-letter-va",
+      "sourceHash": "fnv1a64:657089eb5c8acd13",
+      "svgHash": "fnv1a64:992f74c2483c6911",
+      "svg": "malayalam/book/figures/ML-S110-letter-va-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S111-letter-ca",
+      "sourceHash": "fnv1a64:7020234d2679c61f",
+      "svgHash": "fnv1a64:0259daa0ec9c9c46",
+      "svg": "malayalam/book/figures/ML-S111-letter-ca-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S112-letter-pa",
+      "sourceHash": "fnv1a64:1128118299c7cb6b",
+      "svgHash": "fnv1a64:010143957c7905cc",
+      "svg": "malayalam/book/figures/ML-S112-letter-pa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S113-letter-nna",
+      "sourceHash": "fnv1a64:0431b1417c7fcbc3",
+      "svgHash": "fnv1a64:400a304e963c22d1",
+      "svg": "malayalam/book/figures/ML-S113-letter-nna-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S114-letter-ma",
+      "sourceHash": "fnv1a64:3cf3988564c13a47",
+      "svgHash": "fnv1a64:0e6d5fe0edf49925",
+      "svg": "malayalam/book/figures/ML-S114-letter-ma-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S115-letter-nya",
+      "sourceHash": "fnv1a64:cc6aeaeb7a248be4",
+      "svgHash": "fnv1a64:4aa2aa7b218f5a90",
+      "svg": "malayalam/book/figures/ML-S115-letter-nya-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -17,10 +108,52 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "ML-S117-letter-tta",
+      "sourceHash": "fnv1a64:99348797074b94cb",
+      "svgHash": "fnv1a64:df94aa02db64a867",
+      "svg": "malayalam/book/figures/ML-S117-letter-tta-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "ML-S118-letter-llla",
       "sourceHash": "fnv1a64:e88bd2bdc0a04c94",
       "svgHash": "fnv1a64:9367ff2d400ba1c3",
       "svg": "malayalam/book/figures/ML-S118-letter-llla-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S120-sign-anusvara",
+      "sourceHash": "fnv1a64:64f75de9dca0a8fc",
+      "svgHash": "fnv1a64:f65cee01f4d7e2a3",
+      "svg": "malayalam/book/figures/ML-S120-sign-anusvara-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S121-letter-ssa",
+      "sourceHash": "fnv1a64:26daa78ff8acfbd1",
+      "svgHash": "fnv1a64:10dada9d0b204f68",
+      "svg": "malayalam/book/figures/ML-S121-letter-ssa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S122-letter-ya",
+      "sourceHash": "fnv1a64:7ed6aa90fdc0900b",
+      "svgHash": "fnv1a64:1ec3f8258a770b89",
+      "svg": "malayalam/book/figures/ML-S122-letter-ya-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S123-letter-da",
+      "sourceHash": "fnv1a64:ddf5d998a34a6fd4",
+      "svgHash": "fnv1a64:97d3f2d5d232afa3",
+      "svg": "malayalam/book/figures/ML-S123-letter-da-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S124-letter-sa",
+      "sourceHash": "fnv1a64:047063b0368efdea",
+      "svgHash": "fnv1a64:68f8dc2b1d29cf88",
+      "svg": "malayalam/book/figures/ML-S124-letter-sa-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -38,10 +171,45 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "ML-S127-letter-ha",
+      "sourceHash": "fnv1a64:cc6d11fc9713fc95",
+      "svgHash": "fnv1a64:3f4c7f9d2438f47e",
+      "svg": "malayalam/book/figures/ML-S127-letter-ha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S128-vowel-sign-r",
+      "sourceHash": "fnv1a64:2ef34c94736bae4a",
+      "svgHash": "fnv1a64:b8c1604dcf51a1fe",
+      "svg": "malayalam/book/figures/ML-S128-vowel-sign-r-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S129-letter-bha",
+      "sourceHash": "fnv1a64:07bf937479d13463",
+      "svgHash": "fnv1a64:f4f6612843bf3d22",
+      "svg": "malayalam/book/figures/ML-S129-letter-bha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S130-letter-tha",
+      "sourceHash": "fnv1a64:b3e120ca0f27f8a6",
+      "svgHash": "fnv1a64:8c20e9ea3cfff885",
+      "svg": "malayalam/book/figures/ML-S130-letter-tha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "ML-S131-chillu-nn",
       "sourceHash": "fnv1a64:e32a1b70b0655df7",
       "svgHash": "fnv1a64:7bd7d9ad46cc2062",
       "svg": "malayalam/book/figures/ML-S131-chillu-nn-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S132-letter-ga",
+      "sourceHash": "fnv1a64:9c2cf4b85441b390",
+      "svgHash": "fnv1a64:4d11733ccd32f8e6",
+      "svg": "malayalam/book/figures/ML-S132-letter-ga-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -52,10 +220,24 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "ML-S134-vowel-sign-ee",
+      "sourceHash": "fnv1a64:4c5d3fb93e47535c",
+      "svgHash": "fnv1a64:f574680c52b50d55",
+      "svg": "malayalam/book/figures/ML-S134-vowel-sign-ee-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "ML-S135-letter-e",
       "sourceHash": "fnv1a64:e8e4ac046cf2d6ed",
       "svgHash": "fnv1a64:48c3750a6408313e",
       "svg": "malayalam/book/figures/ML-S135-letter-e-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S136-letter-rra",
+      "sourceHash": "fnv1a64:8ef6a08ab6a331f2",
+      "svgHash": "fnv1a64:960cfba22833d62d",
+      "svg": "malayalam/book/figures/ML-S136-letter-rra-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -66,10 +248,31 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "ML-S138-vowel-sign-ii",
+      "sourceHash": "fnv1a64:dda963fffaf951c3",
+      "svgHash": "fnv1a64:ff34d40c234c3aec",
+      "svg": "malayalam/book/figures/ML-S138-vowel-sign-ii-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S139-vowel-sign-e",
+      "sourceHash": "fnv1a64:0cc25d12b6217e6c",
+      "svgHash": "fnv1a64:803a6f669a4a920c",
+      "svg": "malayalam/book/figures/ML-S139-vowel-sign-e-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "ML-S140-letter-i",
       "sourceHash": "fnv1a64:d63317b93acee9b0",
       "svgHash": "fnv1a64:9afa2517bdd739a9",
       "svg": "malayalam/book/figures/ML-S140-letter-i-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S141-vowel-sign-uu",
+      "sourceHash": "fnv1a64:5dd6c931ee484759",
+      "svgHash": "fnv1a64:13cfb848998639c2",
+      "svg": "malayalam/book/figures/ML-S141-vowel-sign-uu-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -87,6 +290,55 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "ML-S146-letter-la",
+      "sourceHash": "fnv1a64:8a4bbabc2c16ded3",
+      "svgHash": "fnv1a64:a012771f3e6c31ad",
+      "svg": "malayalam/book/figures/ML-S146-letter-la-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-S148-letter-pha",
+      "sourceHash": "fnv1a64:11208f60826b96d5",
+      "svgHash": "fnv1a64:98b35fa437b554a2",
+      "svg": "malayalam/book/figures/ML-S148-letter-pha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-W01-aa-ra-anusvaram",
+      "sourceHash": "fnv1a64:96c4eca99e9cb5f4",
+      "svgHash": "fnv1a64:d820db4a1044d05d",
+      "svg": "malayalam/book/figures/ML-W01-aa-ra-anusvaram-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-W01-na-ma-delayed-copy",
+      "sourceHash": "fnv1a64:4a26a3bb6ecc0e13",
+      "svgHash": "fnv1a64:3ca8798c3691e64a",
+      "svg": "malayalam/book/figures/ML-W01-na-ma-delayed-copy-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-W01-na-ma-dictation",
+      "sourceHash": "fnv1a64:f62a82ecbaa5da6c",
+      "svgHash": "fnv1a64:3ca8798c3691e64a",
+      "svg": "malayalam/book/figures/ML-W01-na-ma-dictation-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-W01-na-ma-guided-copy",
+      "sourceHash": "fnv1a64:c5f8305f22e85687",
+      "svgHash": "fnv1a64:3ca8798c3691e64a",
+      "svg": "malayalam/book/figures/ML-W01-na-ma-guided-copy-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-W01-na-ma-trace",
+      "sourceHash": "fnv1a64:805b035140ed9d06",
+      "svgHash": "fnv1a64:2ddc9410f9cef52e",
+      "svg": "malayalam/book/figures/ML-W01-na-ma-trace-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "ML-W07-number-words-1-5",
       "sourceHash": "fnv1a64:4de8606704ab3479",
       "svgHash": "fnv1a64:281ad9b61161c3d3",
@@ -94,10 +346,66 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "ML-W07-number-words-6-10",
+      "sourceHash": "fnv1a64:68d700dfad9ccc4d",
+      "svgHash": "fnv1a64:dc59fd51e563da1b",
+      "svg": "malayalam/book/figures/ML-W07-number-words-6-10-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-W113-kha",
+      "sourceHash": "fnv1a64:635b77402ef9d188",
+      "svgHash": "fnv1a64:aaf355a573212431",
+      "svg": "malayalam/book/figures/ML-W113-kha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-W113-lla",
+      "sourceHash": "fnv1a64:7301cbb95f41e993",
+      "svgHash": "fnv1a64:348543a511130cd9",
+      "svg": "malayalam/book/figures/ML-W113-lla-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-W113-nga",
+      "sourceHash": "fnv1a64:071bd79d1f8b552a",
+      "svgHash": "fnv1a64:53443b0875bab4b3",
+      "svg": "malayalam/book/figures/ML-W113-nga-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-W113-sha",
+      "sourceHash": "fnv1a64:96f82fe2d6775ce9",
+      "svgHash": "fnv1a64:1429c482ba88b39c",
+      "svg": "malayalam/book/figures/ML-W113-sha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-W114-ba",
+      "sourceHash": "fnv1a64:a135b7f9da3e2550",
+      "svgHash": "fnv1a64:c629a103e12d07b9",
+      "svg": "malayalam/book/figures/ML-W114-ba-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-W114-chha",
+      "sourceHash": "fnv1a64:3b5add0889262b66",
+      "svgHash": "fnv1a64:f62fb8fa713c5fc0",
+      "svg": "malayalam/book/figures/ML-W114-chha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "ML-W114-chillu-rr",
       "sourceHash": "fnv1a64:161eb78169b888d3",
       "svgHash": "fnv1a64:0718f67eedf116e9",
       "svg": "malayalam/book/figures/ML-W114-chillu-rr-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-W114-dha",
+      "sourceHash": "fnv1a64:c851abc0921998fc",
+      "svgHash": "fnv1a64:2091affdae81b456",
+      "svg": "malayalam/book/figures/ML-W114-dha-filmstrip.svg"
     }
   ]
 }

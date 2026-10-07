@@ -4,7 +4,7 @@
   "chapter": 113,
   "title": "Letters From Your First Words",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:24a439bcd95fa42c",
+  "sourceHash": "fnv1a64:085ca45d5d0e3047",
   "lessons": [
     {
       "id": "ML-W113-sha",
@@ -21,7 +21,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:829bf47e62232170",
+      "sourceHash": "fnv1a64:adc8f86142be2af4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -84,11 +84,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ശ (śa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ശ (śa) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start this letter or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start this letter and which way to travel, in one attested order, and names its source beneath it. Teachers vary, so treat it as a sound way in, not the only one."
             }
           ]
         },
@@ -175,7 +175,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:362969f8a1a63720",
+      "sourceHash": "fnv1a64:f61506d839a735b4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -238,11 +238,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ങ (ṅa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ങ (ṅa) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start this letter or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start this letter and which way to travel, in one attested order, and names its source beneath it. Teachers vary, so treat it as a sound way in, not the only one."
             }
           ]
         },
@@ -329,7 +329,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5103ea5b8c0278ab",
+      "sourceHash": "fnv1a64:c4d464b8975189f9",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -392,11 +392,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ള (ḷa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ള (ḷa) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start this letter or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start this letter and which way to travel, in one attested order, and names its source beneath it. Teachers vary, so treat it as a sound way in, not the only one."
             }
           ]
         },
@@ -483,7 +483,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:83183d55aa31d253",
+      "sourceHash": "fnv1a64:f0df4aed9cf4654b",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -546,11 +546,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ഖ (kha) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ഖ (kha) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start this letter or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start this letter and which way to travel, in one attested order, and names its source beneath it. Teachers vary, so treat it as a sound way in, not the only one."
             }
           ]
         },

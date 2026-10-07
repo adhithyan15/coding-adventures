@@ -30,6 +30,8 @@ describe("which headwords are sequences", () => {
     // the per-letter ductus draws.
     expect(writingSequenceOf(lesson("HI-W1", { headword: "न, म" }), "devanagari")).toEqual(["न", "म"]);
     expect(writingSequenceOf(lesson("RU-W1", { headword: "в, р" }), "cyrillic")).toEqual(["в", "р"]);
+    // Gurmukhi letters listed one by one likewise each carry their own headline.
+    expect(writingSequenceOf(lesson("PA-W1", { headword: "ਟ · ਠ · ਡ" }), "gurmukhi")).toEqual(["ਟ", "ਠ", "ਡ"]);
   });
 
   it("reads a word letter by letter only in a script whose letters stand apart", () => {
@@ -51,7 +53,10 @@ describe("which headwords are sequences", () => {
     expect(writingSequenceOf(lesson("SA-W1", { headword: "मम" }), "devanagari")).toBeUndefined();
     expect(writingSequenceOf(lesson("UR-W1", { headword: "سلام" }), "urdu-nastaliq")).toBeUndefined();
     expect(writingSequenceOf(lesson("RU-W2", { headword: "привет" }), "cyrillic")).toBeUndefined();
-    for (const script of ["devanagari", "arabic", "perso-arabic", "urdu-nastaliq", "cyrillic"]) {
+    // ਕਰ (kar) is two cited Gurmukhi letters, but one headline runs across
+    // the word, exactly as in मम, so it is refused too.
+    expect(writingSequenceOf(lesson("PA-W2", { headword: "ਕਰ" }), "gurmukhi")).toBeUndefined();
+    for (const script of ["devanagari", "arabic", "perso-arabic", "urdu-nastaliq", "cyrillic", "gurmukhi"]) {
       expect(SEPARATE_LETTER_SCRIPTS.has(script), script).toBe(false);
     }
   });
@@ -59,10 +64,10 @@ describe("which headwords are sequences", () => {
   it("refuses a word with a sign no written-order table places, even in a separate-letter script", () => {
     // Some marks are written BEFORE the consonant they follow in Unicode, so a
     // code-point-order strip would draw them in the wrong order. Only Tamil
-    // and Gujarati have a table (WRITTEN_SIGN_SIDES), and the Tamil puḷḷi is
+    // and Gujarati have a table (WRITTEN_SIGN_SIDES), and the Tamil sign ு is
     // not in it; બજાર has a row for ા, but જા fuses into one glyph. See
     // vowel-signs-in-written-order and gujarati-signs-in-written-order.
-    expect(writingSequenceOf(lesson("TA-W2", { headword: "வணக்கம்" }), "tamil")).toBeUndefined();
+    expect(writingSequenceOf(lesson("TA-W2", { headword: "பேசு" }), "tamil")).toBeUndefined();
     expect(writingSequenceOf(lesson("GU-W1", { headword: "બજાર" }), "gujarati")).toBeUndefined();
     expect(writingSequenceOf(lesson("JA-W3", { headword: "ラーメン" }), "japanese")).toBeUndefined();
   });
@@ -90,7 +95,7 @@ describe("sequence candidates", () => {
   const candidates = filmstripCandidates([
     lesson("TA-S1"),
     lesson("TA-W1", { headword: " வ, க " }),
-    lesson("TA-W2", { headword: "வணக்கம்" }),
+    lesson("TA-W2", { headword: "பேசு" }),
   ]);
 
   it("become targets carrying the headword and the letters in order", () => {

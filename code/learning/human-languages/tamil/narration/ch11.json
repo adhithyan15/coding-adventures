@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Colours",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:08c38461c318ba4b",
+  "sourceHash": "fnv1a64:5acc5d2cbc7f4025",
   "lessons": [
     {
       "id": "TA-C11-nirangal",
@@ -165,7 +165,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:36b3c2c168084900",
+      "sourceHash": "fnv1a64:4315798a854fa2d6",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -244,15 +244,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ழ — copy what you see",
+          "title": "Writing: ழ — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ழ (llla) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ழ (llla) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },

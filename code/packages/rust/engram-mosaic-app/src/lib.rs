@@ -1271,6 +1271,54 @@ mod anki_effect_tests {
         );
     }
 
+    /// What the device UI tests (UI89 §4.4) see of an Anki round trip, pinned
+    /// here so that a change in the engine fails a test that names it, not a
+    /// test on a phone. A fresh collection lists no decks. Its export is a zip
+    /// (base64 of the local header `PK\x03\x04` begins `UEsDB`). Importing that
+    /// package back adds the `Default` deck it carries to the deck list, which
+    /// is the change on screen the device tests wait for, and a relaunch
+    /// (snapshot, then restore in a new app) still lists it. Before the
+    /// import, no prop says `Default` at all, so seeing it is never vacuous.
+    #[test]
+    fn a_fresh_collection_exports_a_zip_whose_import_lists_the_default_deck() {
+        let mut app = started();
+        let fresh = app.props_with_transfer().expect("props");
+        assert_eq!(fresh["deck-rows"], serde_json::json!([]));
+        assert!(!fresh.to_string().contains("Default"), "{fresh}");
+
+        let exported = only_effect(&dispatch(&mut app, "exportAnki"), "exportAnki");
+        let apkg = exported.payload["apkg"]
+            .as_str()
+            .expect("export must carry a package")
+            .to_string();
+        assert!(
+            apkg.starts_with("UEsDB"),
+            "not a zip: {}",
+            &apkg[..apkg.len().min(16)]
+        );
+        app.complete_effect(exported.id, EffectResult::Ok(Value::Null))
+            .expect("answering an export must succeed");
+
+        let imported = only_effect(&dispatch(&mut app, "importAnki"), "importAnki");
+        let update = app
+            .complete_effect(
+                imported.id,
+                EffectResult::Ok(serde_json::json!({ "apkg": apkg })),
+            )
+            .expect("answering an import must succeed");
+        assert_eq!(transfer_status(&update), "Deck imported.");
+        assert_eq!(update.props["deck-rows"][0][0], "Default");
+
+        let snapshot = app
+            .snapshot()
+            .expect("snapshot must succeed")
+            .expect("Engram supports snapshots");
+        let restored = EngramMosaicApp::default()
+            .restore(snapshot)
+            .expect("restore must succeed");
+        assert_eq!(restored.props["deck-rows"][0][0], "Default");
+    }
+
     #[test]
     fn a_cancelled_import_says_so_and_leaves_nothing_pending() {
         let mut app = started();

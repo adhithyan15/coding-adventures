@@ -58,6 +58,12 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
     }
   }
 
+  // "Does any lesson of language L sit in chapter C?" is asked once per book
+  // chapter. Scanning all ~30k lessons for each of ~6k chapters made this a
+  // 180-million-comparison loop; one pass builds the answer set instead.
+  const lessonChapters = new Set(
+    lessons.map((lesson) => `${lesson.language}\u0000${lesson.realization.chapter}`),
+  );
   for (const book of books?.books ?? []) {
     if (!languageIds.has(book.language)) {
       error("unregistered-book-language", `${book.language}: LaTeX book is absent from core/languages.json`);
@@ -68,9 +74,7 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
         error("duplicate-book-chapter", `${book.language}: book chapter ${chapter.chapter} occurs twice`);
       }
       chapterNumbers.add(chapter.chapter);
-      const hasLesson = lessons.some(
-        (lesson) => lesson.language === book.language && lesson.realization.chapter === chapter.chapter,
-      );
+      const hasLesson = lessonChapters.has(`${book.language}\u0000${chapter.chapter}`);
       if (!hasLesson) {
         error(
           "book-chapter-without-lessons",
@@ -122,11 +126,13 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
       }
     }
   }
+  let lessonGraphHasCycle = false;
   const visitingLessons = new Set<string>();
   const visitedLessons = new Set<string>();
   const visitLesson = (id: string): void => {
     if (visitedLessons.has(id)) return;
     if (visitingLessons.has(id)) {
+      lessonGraphHasCycle = true;
       error("lesson-prerequisite-cycle", `lesson prerequisites contain a cycle through '${id}'`);
       return;
     }
@@ -276,6 +282,18 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
         }
       }
 
+      // The concepts this track's lessons realise do not depend on the spine
+      // node being checked, so they are gathered once per curriculum. Inside
+      // the node loop this was a full scan of every lesson per node.
+      const realizedConcepts = new Set(
+        lessons
+          .filter(
+            (lesson) =>
+              lesson.language === curriculum.language &&
+              REALIZING_TYPES.has(lesson.realization.type),
+          )
+          .map((lesson) => lesson.realization.concept),
+      );
       for (const node of spine.nodes) {
         const realization = curriculum.spine?.[node.id];
         if (!realization) {
@@ -294,15 +312,6 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
             `${curriculum.language}: ${node.id} segment ledger does not match the authored path`,
           );
         }
-        const realizedConcepts = new Set(
-          lessons
-            .filter(
-              (lesson) =>
-                lesson.language === curriculum.language &&
-                REALIZING_TYPES.has(lesson.realization.type),
-            )
-            .map((lesson) => lesson.realization.concept),
-        );
         // A track may declare that one of its own tags satisfies a spine concept.
         // The spine names concepts language-neutrally (TENSE-BACKSHIFT); a track
         // names its lessons in its own terms (ES-REPORT-BACKSHIFT). Aliases let
@@ -722,7 +731,11 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
     }
   }
 
-  const prerequisiteKnowledge = (lesson: ParsedLesson): Set<string> => {
+  // What may a lesson assume its learner already knows? Every atom introduced by
+  // a transitive prerequisite. The walk below is the DEFINITION: start at the
+  // lesson's prerequisites, collect what each introduces, and keep following
+  // prerequisites while they stay in the lesson's own language.
+  const walkPrerequisiteKnowledge = (lesson: ParsedLesson): Set<string> => {
     const known = new Set<string>();
     const walked = new Set<string>();
     const walk = (id: string): void => {
@@ -735,6 +748,114 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
       }
     };
     for (const prerequisite of prerequisites(lesson)) walk(prerequisite);
+    return known;
+  };
+
+  // ...but running that walk afresh for every lesson is quadratic. A track is
+  // mostly one long prerequisite chain, so lesson n re-walks n-1 ancestors:
+  // ~18 million steps over the real corpus, about 26 of this function's 41
+  // seconds, and enough to push the integration test past its timeout.
+  //
+  // The closure has optimal substructure, so it can be memoised:
+  //
+  //     known(lesson) = OR over prerequisites p of closure(p)
+  //     closure(p)    = introduced(p) OR known(p)      (p in the same language)
+  //
+  // Each closure is a bitset over that language's atoms (Uint32Array, one bit
+  // per atom), so OR-ing a prerequisite in costs atoms/32 word operations and
+  // the memo stays small (~30k lessons x a few hundred bytes).
+  //
+  // The memo is only valid on a DAG whose edges stay inside one language and
+  // whose ids are unique. A cycle (already an error above) would let a
+  // half-built closure leak into its descendants; a cross-language prerequisite
+  // (an error below) adds a foreign lesson's atoms without following its edges;
+  // a duplicated id (an error above) makes "the lesson called X" ambiguous.
+  // Rather than teach the fast path those cases, a corpus containing any of
+  // them uses the plain walk. Real data never does, so it gets the fast path.
+  const sameLanguagePrerequisites = (lesson: ParsedLesson): string[] =>
+    prerequisites(lesson).filter((id) => lessonById.get(id)?.language === lesson.language);
+  const memoIsExact = !lessonGraphHasCycle &&
+    lessonById.size === lessons.length &&
+    lessons.every((lesson) =>
+      prerequisites(lesson).every((id) => {
+        const resolved = lessonById.get(id);
+        return resolved === undefined || resolved.language === lesson.language;
+      }));
+  const atomIndexByLanguage = new Map<string, Map<string, number>>();
+  const atomsByLanguage = new Map<string, string[]>();
+  for (const [id, introduced] of introducedByLesson) {
+    const language = lessonById.get(id)?.language;
+    if (language === undefined) continue;
+    const index = atomIndexByLanguage.get(language) ?? new Map<string, number>();
+    const atoms = atomsByLanguage.get(language) ?? [];
+    for (const atom of introduced) {
+      if (!index.has(atom)) {
+        index.set(atom, atoms.length);
+        atoms.push(atom);
+      }
+    }
+    atomIndexByLanguage.set(language, index);
+    atomsByLanguage.set(language, atoms);
+  }
+  const wordsFor = (language: string): number =>
+    Math.ceil((atomsByLanguage.get(language)?.length ?? 0) / 32);
+  // known(lesson): OR of its same-language prerequisites' closures, which the
+  // caller guarantees are already memoised.
+  const knownBits = (lesson: ParsedLesson): Uint32Array => {
+    const words = wordsFor(lesson.language);
+    const bits = new Uint32Array(words);
+    for (const prerequisite of sameLanguagePrerequisites(lesson)) {
+      const from = closureBits.get(prerequisite)!;
+      for (let word = 0; word < words; word++) bits[word] |= from[word];
+    }
+    return bits;
+  };
+  // closure(id) for every id reachable from `start`, computed in post-order
+  // with an explicit stack: a track's prerequisite chain is thousands of
+  // lessons deep, and recursion that deep risks overflowing the call stack.
+  const closureBits = new Map<string, Uint32Array>();
+  const memoiseClosures = (start: string): void => {
+    const stack = [start];
+    while (stack.length > 0) {
+      const id = stack[stack.length - 1];
+      if (closureBits.has(id)) {
+        stack.pop();
+        continue;
+      }
+      const lesson = lessonById.get(id)!;
+      const pending = sameLanguagePrerequisites(lesson).filter((p) => !closureBits.has(p));
+      if (pending.length > 0) {
+        // One push per id: spreading a huge prerequisite list into push()'s
+        // arguments would throw RangeError on an adversarial lesson.
+        for (const prerequisite of pending) stack.push(prerequisite);
+        continue;
+      }
+      const bits = knownBits(lesson);
+      const index = atomIndexByLanguage.get(lesson.language);
+      for (const atom of introducedByLesson.get(id) ?? []) {
+        const at = index?.get(atom);
+        if (at !== undefined) bits[at >>> 5] |= 1 << (at & 31);
+      }
+      closureBits.set(id, bits);
+      stack.pop();
+    }
+  };
+  const prerequisiteKnowledge = (lesson: ParsedLesson): Set<string> => {
+    if (!memoIsExact) return walkPrerequisiteKnowledge(lesson);
+    for (const prerequisite of sameLanguagePrerequisites(lesson)) memoiseClosures(prerequisite);
+    const atoms = atomsByLanguage.get(lesson.language) ?? [];
+    const bits = knownBits(lesson);
+    const known = new Set<string>();
+    for (let word = 0; word < bits.length; word++) {
+      // Peel set bits lowest-first: `x & -x` isolates the lowest one, and
+      // 31 - clz32 turns it back into its position within the word.
+      let remaining = bits[word];
+      while (remaining !== 0) {
+        const low = remaining & -remaining;
+        known.add(atoms[(word << 5) + 31 - Math.clz32(low)]);
+        remaining ^= low;
+      }
+    }
     return known;
   };
   for (const lesson of schema2Lessons) {

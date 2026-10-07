@@ -6,7 +6,7 @@ export default [
     suite: "independent (word-initial) vowels",
     suiteOrder: 10,
     caseOrder: 40,
-    name: "keeps Malayalam independent അ, ആ, ഇ, ഉ, ഊ, എ, ഒ, and ഓ sourced while the remaining vowels stay unverified",
+    name: "keeps Malayalam independent അ, ആ, ഇ, ഉ, ഊ, എ, ഏ, ഒ, and ഓ sourced while the remaining vowels stay unverified",
     verify: ({ SCRIPTS }) => {
       const malayalam = SCRIPTS.find((s) => s.script === "malayalam")!;
       const iv = malayalam.independentVowels!;
@@ -43,6 +43,13 @@ export default [
       expect(iv[6]!.glyph).toBe("എ");
       expect(iv[6]!.strokeOrder).toHaveLength(3);
       expect(iv[6]!.penLifts).toBe(1);
+      // ഏ cites Moag's Table II (seven numbered movements, one run).
+      expect(iv[7]!.glyph).toBe("ഏ");
+      expect(iv[7]!.strokeOrder).toHaveLength(7);
+      expect(iv[7]!.penLifts).toBe(0);
+      expect(iv[7]!.strokeOrderSource?.url).toBe(
+        "https://github.com/matjic/malayalam/blob/7141acd2f310bc8928822a7aec61d1149efa6fa3/docs/assets/images/front-writing-028.jpg",
+      );
       expect(iv[8]!.glyph).toBe("ഒ");
       expect(iv[8]!.strokeOrder).toHaveLength(2);
       expect(iv[8]!.penLifts).toBe(1);
@@ -57,7 +64,7 @@ export default [
       );
       expect(
         iv
-          .filter((_, index) => ![0, 1, 2, 4, 5, 6, 8, 9].includes(index))
+          .filter((_, index) => ![0, 1, 2, 4, 5, 6, 7, 8, 9].includes(index))
           .every((v) => v.strokeOrder.length === 0),
       ).toBe(true);
     },
@@ -150,6 +157,69 @@ export default [
       expect(zhaRow.cells.map((cell) => cell.glyph)).toEqual([
         "ഴ", "ഴാ", "ഴി", "ഴീ", "ഴു", "ഴൂ", "ഴെ", "ഴേ", "ഴൊ", "ഴോ", "ഴൈ", "ഴൌ", "ഴൃ",
       ]);
+    },
+  },
+  {
+    suite: "source-verified base consonants",
+    suiteOrder: 30,
+    caseOrder: 20,
+    name: "keeps the seventeen Thooval-cited Malayalam consonants as one unbroken run each",
+    verify: ({ SCRIPTS }) => {
+      const malayalam = SCRIPTS.find((script) => script.script === "malayalam")!;
+      // glyph -> [Thooval formation-image slug, movements]
+      const cited: Record<string, readonly [string, number]> = {
+        "ന": ["NA", 4], "മ": ["MA", 4], "സ": ["SA", 5], "ര": ["RA", 3],
+        "ത": ["TA", 4], "ഷ": ["SSA", 6], "പ": ["PA", 3], "വ": ["VA", 3],
+        "ണ": ["NNA", 6], "ട": ["TTA", 3], "ദ": ["DA", 3], "ഹ": ["HA", 4],
+        "ഗ": ["GA", 3], "റ": ["RRA", 2], "ല": ["LA", 5], "ശ": ["SHA", 4],
+        "ബ": ["BA", 6],
+      };
+      for (const [glyph, [slug, movements]] of Object.entries(cited)) {
+        const row = malayalam.letters.find((entry) => entry.glyph === glyph)!;
+        expect(row.penLifts).toBe(0);
+        expect(row.strokeOrder).toHaveLength(movements);
+        expect(row.strokeOrderSource?.url).toBe(
+          `https://github.com/spacekerala/Thooval/blob/87143b560bf5aab43837d9da2cddab9bd59cd391/data/${slug}.png`,
+        );
+      }
+    },
+  },
+  {
+    suite: "source-verified base consonants",
+    suiteOrder: 30,
+    caseOrder: 30,
+    name: "keeps the Moag-cited Malayalam consonants, ഏ and the vowel signs as one unbroken run each",
+    verify: ({ SCRIPTS }) => {
+      const malayalam = SCRIPTS.find((script) => script.script === "malayalam")!;
+      const moag = (page: string): string =>
+        `https://github.com/matjic/malayalam/blob/7141acd2f310bc8928822a7aec61d1149efa6fa3/docs/assets/images/front-writing-${page}.jpg`;
+      // glyph -> [scan page of Moag's table, numbered movements]. ക and യ,
+      // held while the sources disagreed on their start, now cite Moag.
+      const cited: Record<string, readonly [string, number]> = {
+        "ക": ["035", 7], "യ": ["040", 4], "ഖ": ["035", 4], "ങ": ["035", 5],
+        "ച": ["036", 4], "ഛ": ["036", 5], "ഞ": ["036", 7], "ഥ": ["038", 3],
+        "ധ": ["038", 4], "ഭ": ["039", 4], "ഫ": ["039", 3], "ള": ["041", 4],
+        "ഏ": ["028", 7],
+      };
+      for (const [glyph, [page, movements]] of Object.entries(cited)) {
+        const row = [...malayalam.letters, ...(malayalam.independentVowels ?? [])].find(
+          (entry) => entry.glyph === glyph,
+        )!;
+        expect(row.penLifts).toBe(0);
+        expect(row.strokeOrder).toHaveLength(movements);
+        expect(row.strokeOrderSource?.url).toBe(moag(page));
+      }
+      const signs: Record<string, readonly [string, number]> = {
+        "ം": ["034", 1], "ാ": ["030", 1], "ി": ["030", 1], "ീ": ["030", 2],
+        "ു": ["031", 3], "ൂ": ["031", 4], "ൃ": ["031", 2], "െ": ["032", 2],
+        "േ": ["032", 3],
+      };
+      for (const [sign, [page, movements]] of Object.entries(signs)) {
+        const mark = (malayalam.marks ?? []).find((entry) => entry.mark === sign)!;
+        expect(mark.penLifts).toBe(0);
+        expect(mark.strokeOrder).toHaveLength(movements);
+        expect(mark.strokeOrderSource?.url).toBe(moag(page));
+      }
     },
   },
 ] satisfies readonly GlyphEvidence[];

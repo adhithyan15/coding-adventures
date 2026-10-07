@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:748658c51068cb7a",
+  "sourceHash": "fnv1a64:3f4f1de17f297b29",
   "lessons": [
     {
       "id": "SA-C03-katham",
@@ -856,7 +856,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:ff7261a3aa23b2d2",
+      "sourceHash": "fnv1a64:67590d241a8f30be",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -884,7 +884,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep मम (mama) visible. Copy the first म in its three sourced strokes, then copy the second म the same way. Let the two headline strokes meet so the word hangs from one continuous śirorekhā."
+              "text": "Keep मम (mama) visible and follow the numbered strip: write the body of the first म, then the body of the second, and only then draw one śirorekhā left to right across both, so the word hangs from one line. Most native writers leave the headline for last; some draw it first."
             },
             {
               "kind": "speech",
@@ -1873,7 +1873,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4f2b8be3c2759e1e",
+      "sourceHash": "fnv1a64:e06b825e6e00ec68",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1948,15 +1948,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ◌ु — copy what you see",
+          "title": "Writing: ◌ु — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ◌ु and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ु yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },

@@ -8,9 +8,10 @@ export default [
     suite: "independent (word-initial) vowels",
     suiteOrder: 10,
     caseOrder: 95,
-    name: "keeps Bengali the last script, with its letters and cited rows intact",
+    name: "keeps Bengali after every older script, with its letters and cited rows intact",
     verify: ({ SCRIPTS }) => {
-      expect(SCRIPTS.at(-1)!.script).toBe("bengali");
+      // Bengali was the last tab until Gurmukhi, then Latin, joined after it.
+      expect(SCRIPTS.at(-3)!.script).toBe("bengali");
       const bengali = SCRIPTS.find((script) => script.script === "bengali")!;
       expect(bengali.letters).toHaveLength(30);
       expect(bengali.letters.slice(0, 4).map((letter) => letter.glyph)).toEqual(["আ", "ই", "এ", "ও"]);

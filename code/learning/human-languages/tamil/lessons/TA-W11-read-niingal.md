@@ -52,10 +52,10 @@ a nasal" rule from your first writing lesson, with a face on it.
 **ல** in **இல்லை**; **ழ** still lies ahead. Retroflex: the tongue curls back, as
 for **ண**.
 
-> Read both; do not draw them yet. Neither has an entry in this book's script
-> data, so neither gets a stroke order. **ள**'s description leans on **ண**'s
-> sourced "tongue curled back"; **ங**'s is this lesson's own, since the data says
-> nothing about where **க** is made.
+> Read both. The strip writes the whole word, numbered movement by movement,
+> with each source beneath it. **ள**'s own entry gives the tongue curled back;
+> **ங**'s place is this lesson's own, since the data says nothing about where
+> **க** is made.
 
 ## Script you'll notice: the ீ sign
 <!-- hl-knowledge: introduces=[TA-SCRIPT-II-SIGN-01]; assesses=[TA-SCRIPT-I-SIGN-WRITE-NANDRI-01] -->

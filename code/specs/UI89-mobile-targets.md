@@ -246,7 +246,7 @@ platform library now lends its picker to the app's handler.
   - a second request refused while one is open;
   - lookup of an uninstalled host.
   The iOS simulator build compiles Engram's new branch; driving the picker
-  itself waits for §4's XCUITest. Android follows with the Kotlin library.
+  itself waits for §4.4. Android follows with the Kotlin library.
 
 ## 3. Android
 
@@ -428,8 +428,8 @@ What step 4 changed from §3.4, and why:
   Unlike the iOS gate, which restores the macOS run's snapshot, the app
   restores its own: the Linux job has no desktop TaskApp snapshot to hand,
   and one written by the same APK is the case a user meets.
-- **Still to come:** an instrumented Compose test that edits, relaunches and
-  reads the screen (§4). Journal runs the same gate (§3.9).
+- **Then (§4.2):** an instrumented Compose test that edits, relaunches and
+  reads the screen (§4.2). Journal runs the same gate (§3.9).
 
 ### 3.8 Mobile file effects, designed (step 6)
 
@@ -903,7 +903,7 @@ Written before implementation.
   - The Engram APK's dex must now hold `EngramAndroidEffectsKt` and still
     not `EngramEffectsKt`.
   - The JVM harness keeps covering the seam. The handler itself is
-    type-checked by the APK build. Driving it on a device needs §4's
+    type-checked by the APK build. Driving it on a device needs §4.4's
     instrumented test; until then it was driven once against the real
     router and a fake picker, outside the repository.
 
@@ -911,11 +911,267 @@ Written before implementation.
 
 | lane | builds | drives |
 |---|---|---|
-| iOS | Trestle, Journal: xcframework + app for the simulator, unsigned | an XCUITest launch-and-restore test on an iOS simulator (the JournalUiTest shape) |
-| Android | Trestle, Journal: debug APK, all ABIs | an instrumented Compose test on an x86_64 emulator |
+| iOS | Trestle, Journal, Engram: xcframework + app for the simulator, unsigned | an XCUITest launch-and-restore test on an iOS simulator (the JournalUiTest shape) |
+| Android | Trestle, Journal, Engram: debug APK, all ABIs | an instrumented Compose test on an x86_64 emulator |
 
 Signing, store packaging (`.ipa`, `.aab`) and release workflows come after the
 lanes are green, as their own PRs.
+
+### 4.1 Driving the screen on a device, designed
+
+Written before implementation. The emulator and simulator gates (§2.3, §3.7)
+prove that an app starts, persists and restores without touching it. They
+cannot show that a person can use it: that a field takes text, a button
+reaches the engine, and what was typed is on screen again after a cold
+relaunch. The desktop Compose lane already proves this for Journal with
+`JournalUiTest` (`journal-mosaic-app/conformance/compose/JournalUiTest.kt`).
+§4 brings the same test to the phones.
+
+**What the test does (both platforms).** The JournalUiTest shape, in two
+cold launches against one state file:
+
+| launch | starts with | does | must see |
+|---|---|---|---|
+| 1 | no state | waits for `mosaic-startup-loading` to go; types a title and body into `draft-editor-title` / `draft-editor-body`, taps `draft-editor-save`; does it again for a second entry; deletes one with `draft-editor-delete` | "No entries yet" first; then exactly the surviving entry's row |
+| 2 | launch 1's state, new process | nothing until the screen is read | the surviving entry's row (restored, not re-typed); then deletes it and sees "No entries yet" |
+
+- **Nodes are found by part name.** Compose tags host controls with
+  `Modifier.testTag(<part>)` and SwiftUI gives them
+  `.accessibilityIdentifier(<part>)`, so one set of names serves both. A
+  second mount of a component suffixes every part with `-m<N>`, so row
+  matchers use a prefix (`record-list-title`), as JournalUiTest already does.
+- **Launch 2 is a new process.** Recomposing in the same process would read
+  the engine's memory, not the state file; only a new process shows that the
+  snapshot was written where the platform keeps app data and read back.
+- **Journal first.** It has the most input. Trestle follows with the same
+  harness (its desktop `TaskAppUiTest` steps). Engram's picker round trip is
+  §4.4.
+- **The tests live with the app,** beside the desktop one:
+  `<app>/conformance/compose-android/<App>AndroidUiTest.kt` and
+  `<app>/conformance/swiftui-ios/<App>UiTests.swift`. The generated projects
+  stay free of app-specific tests; CI hands the test to the build, as it
+  copies `JournalUiTest.kt` into the desktop project today.
+
+### 4.2 Android: an instrumented Compose test
+
+- **The project.** `build.gradle.kts` for `android/` gains
+  `testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"`
+  and `androidTestImplementation` dependencies only: `androidx.test:runner`
+  1.6.2, `androidx.test.ext:junit` 1.2.1 (one androidx.test release, with the
+  repository's core 1.6.1) and JetBrains' `ui-test-junit4` at the app's own
+  Compose version. JetBrains' module metadata maps that artifact on Android
+  to androidx `ui-test-junit4` (1.11.2 for Compose 1.11.1), so the rule
+  follows the Compose pin rather than holding a second one that could drift.
+  *As built:* the metadata was read from Maven Central; Google's Maven is
+  unreachable from the authoring sandbox, so CI's `assembleDebugAndroidTest`
+  is what resolves the androidx.test pins. Every `androidTest` dependency, including §4.4's
+  `espresso-intents`, is pinned to an exact version (no `+`, range or
+  BOM-only resolution) and comes from the app's own repositories. The app
+  APK is unchanged: `assembleDebug` never resolves
+  the `androidTest` classpath, and no `debugImplementation` test manifest is
+  needed because the rule drives `MosaicActivity` itself.
+- **The test.** `createAndroidComposeRule<MosaicActivity>()`, so the real
+  activity starts: real `filesDir`, real JNA load, real picker. Launch 1 or 2
+  is chosen by an instrumentation argument (`-e mosaicLaunch 1|2`), read
+  through `InstrumentationRegistry.getArguments()`, the Android form of the
+  desktop test's `MOSAIC_EXPECT_RESTORED`. The test cannot set environment
+  variables, so state goes where `MosaicActivity` always puts it
+  (`filesDir/<application id>/mosaic-state.v1.json`).
+- **Running it.** Gradle's `connectedDebugAndroidTest` uninstalls the app
+  after each run, which would erase the state launch 2 needs. So:
+  1. `assemble-mosaic-android-debug.sh` builds `assembleDebugAndroidTest`
+     beside `assembleDebug` when asked for the test APK;
+  2. a new `code/scripts/mosaic-android-ui-test.sh <apk> <test apk>
+     <android package> <test class>` installs both, runs `pm clear` on the
+     app so launch 1 starts empty, then runs
+     `am instrument -w -r -e class <test class> -e mosaicLaunch N
+     <package>.test/androidx.test.runner.AndroidJUnitRunner` for N = 1, 2.
+     Each `am instrument` starts a new app process.
+  3. `am instrument` exits 0 even when a test fails, so the script reads the
+     raw output and requires `INSTRUMENTATION_CODE: -1` with an
+     `OK (<n> tests)` line and no `FAILURES!!!`. An empty or truncated
+     output fails, as the gate's logcat read does.
+  `adb shell` joins its arguments into one remote command line, so nothing
+  the caller passes reaches it unchecked: the package must match the gate's
+  package pattern, and the test class
+  `^[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)+$` (no `$`, `#` or
+  space, which the device shell would expand or cut). `mosaicLaunch` is the
+  literal 1 or 2 in the script, never the caller's. The APK paths go only to
+  host-side `adb install`, as separate arguments.
+- **Driving the controls (as built).** On the emulator's phone screen the
+  app shell's navigation split collapses (`collapse: auto`), so whether the
+  timeline and the editor share the screen depends on the window size
+  class. The test therefore drives controls through their semantics
+  actions (OnClick, text input), which run a control's own handler wherever
+  it is drawn, and reads the result through the semantics tree
+  (`assertExists`) rather than asserting what is visible. It still proves
+  that the controls reach the engine, that the screen is rebuilt from the
+  engine's answer, and that a new process restores it. Asserting what a
+  compact screen shows is the compact layout's own test. The desktop test's
+  malformed-event check is not repeated: the activity keeps its host private.
+- **Where it runs.** In the emulator step, after the three-launch gate for
+  the same app. The gate leaves state behind, which is why the script clears
+  first rather than relying on a fresh install.
+- **Animations** are already off (`start-mosaic-android-emulator.sh`), which
+  the Compose test rule needs for stable idling.
+
+### 4.3 iOS: an XCUITest
+
+- **The project.** `mosaic-ios-project` can add a second target: a UI test
+  bundle (`com.apple.product-type.bundle.ui-testing`, `TEST_TARGET_NAME =
+  App`, a dependency on App), and a shared scheme
+  `xcshareddata/xcschemes/App.xcscheme` whose test action runs it, because
+  `xcodebuild test` needs a scheme. Xcode lists every source file in
+  `project.pbxproj`, so CI cannot copy a test in afterwards as it does on
+  Android: the builder takes the test sources through a new
+  `mosaic-compile --ios-ui-test <file.swift>` (repeatable). Without the flag
+  the project is exactly today's: one target, no scheme. The flag takes
+  only a `.swift` file whose name matches `^[A-Za-z0-9_]+\.swift$`. The file
+  is copied into the project, and only that basename reaches
+  `project.pbxproj`, through the same `check_path` as every other source.
+  The scheme is XML built from the same names, so its attribute values are
+  escaped, and builder tests cover a product name with `&` and `"`.
+- **The test.** `XCUIApplication`: launch, act, `terminate()`, `launch()`
+  again. A real terminate gives the new process launch 2 needs inside one
+  test method. Nodes are found with `descendants(matching: .any)
+  .matching(identifier:)`, and rows with a predicate
+  `identifier BEGINSWITH 'record-list-title'`. Text goes in with `tap()` and
+  `typeText`, which needs only the focus the tap gives.
+- **A known start.** The gate leaves its own state in the app's container,
+  so the step runs `xcrun simctl uninstall <udid> <bundle id>` first, and
+  `xcodebuild test` installs the app fresh. The test does not override
+  `MOSAIC_APP_STATE_PATH`: the override must be an absolute path, and the
+  test runner cannot know the app's container, so state goes where users'
+  state goes (Application Support), which is the path worth proving.
+- **Running it.** `xcodebuild test -project App.xcodeproj -scheme App
+  -destination 'platform=iOS Simulator,id=<udid>' CODE_SIGNING_ALLOWED=NO`
+  on the simulator the gate already picked, after the gate. Test bundles
+  need no signing on the simulator.
+- **As built.**
+  - **The test runs on the iPad simulator, in landscape.** The app shell's
+    `NavigationSplitView` (`collapse: auto`) collapses into a stack on an
+    iPhone, so the editor is a navigation push away from the timeline, and
+    an XCUITest touches only what is on screen. On a landscape iPad both
+    columns are showing.
+  - **Before each Save it hides the software keyboard** when one is up,
+    since that keyboard covers the bottom of a landscape iPad.
+  - **It runs after the iPad launch check.** The app is uninstalled first,
+    and the step requires `Executed 1 test, with 0 failures` in the log.
+  - **The scheme lives in a workspace.** The builder writes
+    `iOS/App.xcworkspace` (holding only `App.xcodeproj`) and puts the scheme
+    there as `AppUITests`. CI runs `xcodebuild test -workspace
+    App.xcworkspace -scheme AppUITests -sdk iphonesimulator`. The first runs
+    put the scheme inside the project instead. Every scheme there resolved
+    to no buildables, Xcode's auto-created `App` scheme included: the
+    project's directory is `..`, and a project's own schemes resolve
+    `container:` against it. A workspace resolves it against its own
+    folder.
+  - **The builder.** It takes the sources through
+    `build_package_with_ios_ui_tests`, which
+    `build_package_with_profile_runtime_and_tokens` now calls with none, so
+    its many callers are unchanged. `mosaic-ios-project` names the bundle
+    `<product>UITests`, gives it the app's bundle identifier plus
+    `.uitests`, and checks its sources like every other path.
+
+### 4.4 Engram: the picker round trip (after 4.2 and 4.3)
+
+Engram's Anki import and export go through the platform picker (§2.6,
+§3.11), which the system draws: neither test framework should drive
+DocumentsUI or `UIDocumentPickerViewController`, whose layout changes with
+the OS. Both platforms answer the picker for the test instead:
+
+- **Android.** Espresso-Intents stubs `ACTION_OPEN_DOCUMENT` and
+  `ACTION_CREATE_DOCUMENT` (the Activity Result API starts them through
+  `startActivityForResult`, which Espresso-Intents intercepts) with a URI the
+  test owns. Any provider that answers the stub is declared only in the
+  `androidTest` manifest, so it ships in the test APK and never in the app's
+  main or debug manifest. It is `exported="false"` and grants per-URI
+  access. A `file://` fixture lives in the app's own cache and is written by
+  the test. The builder test that pins `assembleDebug`'s output also checks
+  that the app's manifest gains no provider. The test checks that an import of a fixture `.apkg` adds its
+  cards to the screen, and that an export writes a zip whose first bytes are
+  a local header. Whether the URI is a `file://` in the app's cache or a
+  test-only provider is decided there, by what the picker's
+  `OpenableColumns.DISPLAY_NAME` query needs.
+- **iOS.** The picker is presented by the platform library, so the test
+  build swaps in the fake picker the Swift harness already uses (§2.6) when
+  launched with a test-only argument. The seam is compiled only with the UI
+  test: it lives in a source file the builder adds only under
+  `--ios-ui-test`, and only to the Debug configuration. A project built
+  without the flag, and any Release build, has no code that reads the
+  argument, and builder tests assert both. The argument only selects the
+  fake. It never carries a path or URL, and the fake reads and writes fixed
+  fixture names inside the app's own container. The rest of the seam is
+  designed in that PR.
+
+*As built (Engram).* The round trip needs no fixture. A fresh collection
+lists no decks. Its export is a whole Anki package, and importing that
+package back lists its `Default` deck, which a relaunch restores.
+`engram-mosaic-app` pins that sequence in a unit test. Both device tests
+export, import what they exported, wait for the `Default` row in the deck
+list (`deck-option-button`), and on a second launch find it restored.
+
+- *Android: no provider.* The test answers both picker intents with a
+  `file://` URI in the app's cache. The router opens it through
+  `ContentResolver`, which serves `file://` itself. It never requires a
+  chosen document's `DISPLAY_NAME`: open checks no name, and save checks
+  only the suggested one. The app is told "document", which Engram does
+  not use. Espresso-Intents (3.6.1, the runner's release) is the one new
+  `androidTestImplementation`. The builder test asserts that the app
+  manifest has no `<provider>` and the project has no `src/androidTest`
+  or debug manifest of its own.
+- *iOS: the seam.* `--ios-ui-test` writes
+  `UITestSupport/MosaicUITestPicker.swift` (from `mosaic-app-bindings`),
+  outside `Sources/App`, and lists it in the Xcode app target. All of the
+  file is inside `#if MOSAIC_UI_TEST_PICKER`, which only the app target's
+  Debug configuration defines (`IosApp.debug_compilation_conditions`).
+  The platform library's `mosaicSystemPicker` returns the fake only under
+  that condition, and only when the process was launched with
+  `-MosaicUITestPicker`. The fake saves to and opens
+  `tmp/mosaic-ui-test-picker/document` in the app's container.
+- *One file operation at a time.* Nothing on screen says when the
+  export's answer has reached the main thread, and an Import tapped
+  before then is refused. So Android waits for a whole zip (local header
+  first, end-of-central-directory record last), and both tests tap Import
+  at most three times until the deck appears.
+
+### 4.5 Order and gates
+
+1. This design (spec only).
+2. Android: the `build.gradle.kts` additions (builder tests assert them, and
+   that `assembleDebug`'s output is unchanged), `mosaic-android-ui-test.sh`,
+   and `JournalAndroidUiTest.kt` run in the emulator step.
+3. iOS: the optional UI test target and scheme (builder tests: no flag gives
+   today's one target; with the flag, two targets, the dependency, and the
+   scheme's test action), `--ios-ui-test`, and `JournalUiTests.swift` run in
+   the simulator step.
+4. Trestle on both, then Engram's round trip (§4.4).
+   *As built for Trestle:* `TrestleAndroidUiTest.kt` and
+   `TrestleUiTests.swift` live in `task-mosaic-app/conformance/`. They follow
+   the desktop `TaskAppUiTest` and do not carry over its window-size checks,
+   which are about the desktop window. In launch 1 they add a task to an
+   empty Inbox, complete it, reopen it and delete it. Each step is read back
+   from the toggle's engine-provided accessible name ("Complete task: …" /
+   "Reopen task: …"). Launch 1 then adds the task that launch 2 must find
+   restored and delete. The task name field is matched as `name-input` or
+   `name-input-corrected`, because the engine's post-add focus marker swaps
+   the field. Trestle's Android build keeps its own verified-wrapper Gradle
+   call, which now also runs `assembleDebugAndroidTest`. The macOS step's
+   timeout rises from 75 to 90 minutes for the second XCUITest run.
+
+*Done (#16748):* steps 1–4 merged together, and every device test passed on
+its first green run. On the x86_64 emulator, Trestle, Journal and Engram each
+passed both cold launches. On the iPad simulator, the three XCUITests each
+reported `Executed 1 test, with 0 failures`. The macOS step took 49 minutes,
+under its 105-minute timeout; the emulator step took 4. One iOS problem took
+three CI rounds: the scheme had to move into a workspace (§4.3), recorded in
+`lessons.d/a-shared-xcode-scheme-for-a-project-whose-projectdirpath-is-belongs-in.md`.
+
+Neither lane can be run in this repository's Linux sandbox (no `/dev/kvm`,
+no Xcode), so each PR is proven in CI. A green run must show it drove the
+screen: the scripts require the expected test count (`OK (1 test)`, or
+xcodebuild's `Executed 1 test, with 0 failures`), so a test that was never
+compiled in or was filtered out fails the step instead of passing it.
 
 ## 5. Order
 
@@ -937,9 +1193,13 @@ lanes are green, as their own PRs.
    step 8, which builds Flutter for phones.*
 7. **Every app:** Journal, Engram, Venture (after BR02's host work).
    *Journal on Android: §3.9; on iOS and iPadOS: §2.4. Engram on Android:
-   §3.10; on iOS and iPadOS: §2.5.*
+   §3.10; on iOS and iPadOS: §2.5. CI drives each app's generated controls
+   on both platforms (§4, done). Venture is still open.*
 8. **Flutter:** `flutter create --platforms=android,ios`, per-ABI native
-   assets, `path_provider` for state.
+   assets, `path_provider` for state. *Designed in §7. Trestle passed
+   its gates on both phones (§7.8, §7.9), and CI builds and gates Journal
+   and Engram the same way (§7.10). Phone file effects and Flutter device
+   UI tests remain (§7.6).*
 
 iOS goes first because the emitted source already compiles for it; the gap is
 packaging only.
@@ -950,3 +1210,351 @@ packaging only.
 - Background execution, push notifications, widgets.
 - Whether Venture's paint surface uses Metal on iOS (likely) or a shared
   software path; BR02 P10 decides.
+
+## 7. Flutter on phones, designed (step 8)
+
+Written before implementation. Mosaic's Flutter backend runs Trestle and
+Engram on Linux, macOS and Windows. This section takes the same generated
+project to Android and iOS. Every surface it needs is already in the code,
+and each is still desktop-only.
+
+| surface | today | on a phone |
+|---|---|---|
+| runner directories | the builder writes none; CI runs `flutter create --platforms=linux` | `flutter create --platforms=android,ios` (§7.1) |
+| runtime input | one `.so`, `.dylib` or `.dll` file; a directory is the Compose jniLibs and is refused | a runtime **directory** with an `android/` half and an `ios/` half (§7.2) |
+| `hook/build.dart` | registers that one file. One `.so` matches one ABI, so `flutter build apk` fails for every other ABI | picks the file for the target's ABI or SDK (§7.3) |
+| state path | `HOME` / `XDG_DATA_HOME`, which an Android app does not have, so persistence is silently off there | the platform's app-support directory, from `path_provider` (§7.4) |
+| file effects | refused with "… is not available on this platform yet" | unchanged in step 8; designed separately (§7.6) |
+| CI | Linux builds and tests only | an APK through the emulator gate; an iOS simulator build through the simulator gate (§7.5) |
+
+### 7.1 Runner directories
+
+The builder still writes no runner. A runner is Flutter's template and
+belongs to the Flutter version that creates it. CI and people run
+`flutter create` in the generated project, as they do on desktop. What the
+builder adds is the command, written into the generated README:
+
+    flutter create --platforms=android,ios --org <org> --project-name <name> .
+
+- **The identity comes from the manifest.** `[app] bundle_identifier`
+  `dev.codingadventures.trestle` splits at its last dot into
+  `--org dev.codingadventures` and `--project-name trestle`. Android's
+  `applicationId` and iOS's bundle identifier are then the manifest's
+  identity, as they are for Compose and SwiftUI.
+- **Every part must be valid for both platforms.** The project name must
+  be a Dart package name: `^[a-z][a-z0-9_]*$`, and not a Dart reserved
+  word. Each org part must match the same pattern and not be a Java or
+  Kotlin keyword, so the org is a valid `applicationId` and Kotlin
+  package. A manifest identifier is `[A-Za-z0-9-]` and dots, which can
+  still yield `my-app`, `2d` or `dev.new`.
+- **If any part fails,** the README gives no command and says which part,
+  and it never makes up a different identity. (Compose sanitizes the same
+  identifier into an `applicationId`; Flutter cannot, because `flutter
+  create` derives it.)
+- **No quoting is needed.** Every token in the command is then free of
+  shell metacharacters.
+- The desktop command in the README is unchanged.
+
+### 7.2 The runtime directory
+
+`--runtime-library <dir>` for the Flutter backend takes a directory in one
+fixed layout. Either half may be absent, but at least one must be present:
+
+    <dir>/android/arm64-v8a/libmosaic_app.so
+    <dir>/android/armeabi-v7a/libmosaic_app.so
+    <dir>/android/x86_64/libmosaic_app.so
+    <dir>/android/x86/libmosaic_app.so
+    <dir>/ios/iphoneos/libmosaic_app.dylib          arm64
+    <dir>/ios/iphonesimulator/libmosaic_app.dylib   arm64 + x86_64 (lipo)
+
+- **The Android half** is exactly the jniLibs layout that
+  `build-mosaic-android-libs.sh` writes for Compose (which builds all four
+  ABIs), read by the same strict reader.
+- **The iOS half** is dynamic. Flutter's native assets bundle a dynamic
+  library into the app as a framework, and it cannot link a static one, so
+  SwiftUI's static `.xcframework` does not carry over. A new script,
+  `build-mosaic-ios-dylibs.sh`, builds the app crate as a `cdylib` for
+  `aarch64-apple-ios`, `aarch64-apple-ios-sim` and `x86_64-apple-ios`. It
+  joins the two simulator slices with `lipo`, as the static script does.
+- **Reading the directory: nothing is copied recursively.** The rules:
+  - The top level may hold only `android/` and `ios/`, each a real
+    directory, not a link.
+  - `android/` is read by `android_jni_libs`, Compose's strict reader.
+  - `ios/` may hold only `iphoneos/` and `iphonesimulator/`, each holding
+    exactly one regular `libmosaic_app.dylib`.
+  - Any other entry, link or file type is refused, never ignored.
+  - Each selected file is read with `read_regular_file_without_links`,
+    which compares device and inode after opening, so a link swapped in
+    after the check is still refused. It is written to its fixed path
+    under `runtime/`.
+- **Clearing first.** Before installing, the builder removes the project's
+  `runtime/` entirely, as Compose clears jniLibs. Only this build's files
+  then exist there. A reused output directory cannot keep last time's
+  `x86` library, or a desktop `libmosaic_app.so`, for the hook to bundle.
+- **Which ABIs.** `android_jni_libs` accepts any non-empty subset of the
+  four ABIs. An APK build that asks for an ABI with no file fails in the
+  hook (§7.3), saying which one.
+- **What each file must be.**
+  - Android: ELF, as the hook checks.
+  - `iphoneos`: thin `MH_MAGIC_64` arm64.
+  - `iphonesimulator`: fat `FAT_MAGIC` with exactly arm64 and x86_64.
+  - Each iOS slice's `LC_BUILD_VERSION` platform must be IOS (2) in
+    `iphoneos` and IOSSIMULATOR (7) in `iphonesimulator`. A simulator
+    library swapped into the device folder would otherwise pass every
+    architecture check and fail only on a real device, which CI never
+    runs.
+- **What is refused.** A desktop runtime file and a runtime directory
+  cannot be mixed. A Flutter build is either for desktop or for phones, as
+  a Compose build with jniLibs is for Android. The refusal names the
+  expected layout.
+
+### 7.3 `hook/build.dart` per ABI and per SDK
+
+The hook already guards on the target OS and verifies what it hands
+Flutter: ELF `e_machine` for a `.so`, and `lipo` slices for a `.dylib`.
+With a runtime directory it first chooses the file:
+
+| `targetOS` | chooses | by |
+|---|---|---|
+| Android | `runtime/android/<abi>/libmosaic_app.so` | `targetArchitecture`: arm64 → `arm64-v8a`, arm → `armeabi-v7a`, x64 → `x86_64`, ia32 → `x86` |
+| iOS | `runtime/ios/<sdk>/libmosaic_app.dylib` | the code config's iOS target SDK: device → `iphoneos`, simulator → `iphonesimulator` |
+
+It then runs the existing verifier on that file. The CodeAsset is the same
+one (`mosaic_host.dart`, `DynamicLoadingBundled`), so `mosaic_host.dart`'s
+`@Native` bindings do not change.
+
+- **Missing file.** An ABI or SDK the directory has no file for fails the
+  build, naming the path it looked for. It never falls back to another
+  ABI's library.
+- **Outside the map.** An architecture outside the four-entry map (riscv64,
+  say) or an unknown SDK fails before any path is built, naming what was
+  asked for.
+- **Stricter than the desktop verifier.** With a runtime directory, the
+  hook refuses a file that is not ELF (Android) or Mach-O (iOS). The
+  desktop verifier's "too short or not ELF: left alone" does not apply.
+  It also repeats the iOS platform check from §7.2. Like the `lipo`
+  slicing it already does, the check runs its tool through `Process.run`
+  with an argument list, never through a shell.
+
+### 7.4 State through `path_provider`
+
+`_statePath()` keeps its desktop roots exactly. A desktop user's state does
+not move. On Android and iOS it uses a root the generated `main.dart` sets
+before the host loads:
+
+    WidgetsFlutterBinding.ensureInitialized();
+    if (Platform.isAndroid || Platform.isIOS) {
+      mosaicStateRoot = (await getApplicationSupportDirectory()).path;
+    }
+
+- **Where that is.** It is `Context.getFilesDir()` on Android and the
+  sandbox's `Library/Application Support` on iOS. The state file is
+  `<root>/<application id>/mosaic-state.v1.json`. That is where Compose's
+  `MosaicActivity` and SwiftUI's iOS host already keep it, so the existing
+  emulator and simulator gates can check a Flutter app.
+- **When the root is unknown.** If the call throws, or a phone build has no
+  root, persistence is off and the host says so through its existing
+  persistence warning. It never writes beside the executable.
+- **No desktop fallback on a phone.** On Android and iOS, `_statePath`
+  uses only `MOSAIC_APP_STATE_PATH` or `mosaicStateRoot`. If neither is
+  set, it returns null. It never consults `HOME` or `XDG_DATA_HOME`, which
+  would put Android in the desktop branch. On desktop `mosaicStateRoot` is
+  ignored.
+- **`MOSAIC_APP_STATE_PATH` still wins, for tests.** No other app can set
+  it on Android. On iOS only a developer can, through the simulator
+  (`SIMCTL_CHILD_…`) or an Xcode scheme, which is acceptable.
+- **The bundled runtime only.** On Android and iOS the bundled runtime is
+  always used, and `MOSAIC_APP_LIBRARY` is ignored. That variable is a
+  desktop development override and has no meaning in a signed app.
+- **The dependency.** `path_provider` is pinned exactly in the generated
+  `pubspec.yaml`, as `file_selector` is. Its endorsed implementations are
+  published by flutter.dev:
+  - `path_provider_android` and `path_provider_foundation`;
+  - on desktop, also `path_provider_linux`, `path_provider_windows` and
+    `xdg_directories`.
+
+  They resolve with `pub get` within its ranges, as `file_selector`'s do,
+  and generated projects ship no lockfile. CI prints the resolved versions
+  from `pubspec.lock`, so a change in them is visible in the log.
+
+### 7.5 CI
+
+Neither lane runs in this sandbox: there is no `/dev/kvm` and no Xcode. Each
+PR is proven in CI.
+
+- **Android, on the Linux runner after the Compose emulator gate.**
+  1. Build Trestle's jniLibs (the Compose step already does).
+  2. `pkg --backend flutter --emit-project --runtime-library <dir>`, with
+     only the `android/` half.
+  3. `flutter create --platforms=android …`, then set
+     `android:allowBackup="false"` in the created
+     `android/app/src/main/AndroidManifest.xml`, as Compose's manifest
+     does. The README says to make the same edit. Then
+     `flutter build apk --debug`.
+  4. Check the APK:
+     - its manifest says `allowBackup` false (`aapt2 dump xmltree`);
+     - it holds `lib/<abi>/libmosaic_app.so` for every ABI it packages,
+       each byte-equal to its input;
+     - those ABIs include `x86_64`, which the emulator runs, and
+       `arm64-v8a`.
+
+     The build may not package 32-bit `x86`, so the check does not
+     require it.
+  5. `adb uninstall` the Compose Trestle first. It has the same package
+     name, so its data and signing key must not carry over.
+  6. Run the same `mosaic-android-emulator-gate.sh`, which gains an
+     optional fourth argument: an activity class name only, never a full
+     component, because Flutter's launcher is `.MainActivity` rather than
+     `mosaic.android.MosaicActivity`.
+     - It must match `^\.?[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$`,
+       or the gate exits 2.
+     - The gate builds the component itself as `$package/$activity`. The
+       default stays `mosaic.android.MosaicActivity`, and the gate accepts
+       three or four arguments.
+     - The rule matters because `adb shell` joins its arguments into one
+       device command line, so local quoting does not protect them. Every
+       value the gate splices in must be validated first.
+- **iOS, on the macOS runner after the SwiftUI iOS gates.**
+  1. Run `build-mosaic-ios-dylibs.sh`.
+  2. `pkg` with the `ios/` half.
+  3. `flutter create --platforms=ios …`, then
+     `flutter build ios --simulator --debug --no-codesign`.
+  4. Run `mosaic-ios-simulator-gate.sh` on the `Runner.app`.
+
+### 7.6 Not in step 8
+
+- **File effects on phones.** `file_selector` opens a document on Android
+  and iOS, but it has no save there. Saving needs a document-create intent
+  on Android and an export picker on iOS, which means platform code that the
+  generated project does not own. That is its own design, after this step,
+  and the refusal message stays until then.
+- **Device UI tests** for Flutter (`integration_test`), as §4 did for
+  Compose and SwiftUI.
+- **Release builds, signing and store packaging**, as §6 says for every
+  backend.
+
+### 7.7 Order
+
+1. This design (spec only).
+2. **Android:** the runtime directory's `android/` half, the per-ABI hook,
+   the state root, the README command, the gate's activity argument, and the
+   CI APK and emulator gate. Trestle first.
+3. **iOS:** `build-mosaic-ios-dylibs.sh`, the `ios/` half, the per-SDK hook,
+   and the CI simulator build and gate.
+4. Journal and Engram on both, then file effects (§7.6).
+
+### 7.8 Android, as built (step 2)
+
+What differs from the design, or what the design left open:
+
+- **No `ios/` yet.** `ios/` in a runtime directory is refused with a message
+  naming step 3, rather than read early. The README's command is
+  `flutter create --platforms=android …`; step 3 adds `ios`.
+- **Phone builds only.** `path_provider` and the state-root `main()` are
+  added to phone builds only. A desktop Flutter build's `pubspec.yaml` and
+  `main.dart` are byte-for-byte what they were. `main()` becomes
+  `Future<void> main() async`, which finds the root before `runApp`. If the
+  generated `main()` is not the plain one, the build fails rather than
+  editing something else.
+- **The host template does change for every build**, but nothing changes on
+  desktop:
+  - `mosaicStateRoot` and `_isPhone` are new.
+  - `_statePath` gives phones a branch of their own.
+  - iOS no longer shares macOS's `HOME` root. No iOS Flutter build existed
+    before this step.
+  - On a phone, `MOSAIC_APP_LIBRARY` is ignored, and a missing root sets
+    the persistence warning: "Mosaic state is not saved: this phone has no
+    app-support directory for it".
+- **`runtime/` is cleared on every Flutter runtime install**, desktop as
+  well as phone, so neither kind of build leaves files for the other's hook.
+- **Bare jniLibs are refused.** Compose's bare jniLibs layout passed as a
+  Flutter runtime is refused (`x86_64 is not part of a Flutter phone
+  runtime`): the `android/` level is what tells the two apart.
+- **The pin.** `path_provider` is 2.1.6, whose floor (Dart 3.10, Flutter
+  3.38) is the bundled-runtime floor. Locally, `flutter pub get` and
+  `flutter analyze` of a generated Trestle phone project (Flutter 3.44)
+  report no issues.
+- **CI** follows §7.5. The Flutter APK step runs when both the Compose and
+  Flutter lanes do. The emulator step gates it last, after the Compose
+  apps, with its timeout raised to 55 minutes.
+
+### 7.9 iOS, as built (step 3)
+
+- **The library.** `build-mosaic-ios-dylibs.sh <cargo-package> <phone-runtime-dir>`
+  builds the app crate with `cargo rustc --crate-type cdylib` for
+  `aarch64-apple-ios`, `aarch64-apple-ios-sim` and `x86_64-apple-ios`. It
+  writes `ios/iphoneos/` (thin arm64) and `ios/iphonesimulator/` (the two
+  simulator slices, joined with `lipo`). It replaces only `ios/`, so an
+  `android/` half beside it is kept.
+- **The deployment target.** The script exports
+  `IPHONEOS_DEPLOYMENT_TARGET=16.0`, as Mosaic's iOS app target uses. That
+  also makes the linker write `LC_BUILD_VERSION`. An older target gets only
+  `LC_VERSION_MIN_IPHONEOS`, which cannot tell device from simulator, and
+  the builder refuses such a library by name.
+- **The builder's checks.** The builder reads `ios/` as it reads
+  `android/`: known SDK directories only, each with exactly one regular
+  library, nothing followed through a link, at least one present. Each
+  library's Mach-O is checked without trusting a single offset:
+  - `iphoneos`: a thin `MH_MAGIC_64` arm64 library, platform 2;
+  - `iphonesimulator`: `FAT_MAGIC` holding exactly arm64 and x86_64, each
+    slice's CPU type agreeing with the fat header, and platform 7.
+- **The hook's iOS branch.** It chooses by `IOSSdk` (`iPhoneOS` or
+  `iPhoneSimulator`, nothing else), slices with the existing `lipo`
+  helper, and reads the thin slice's `LC_BUILD_VERSION` again in Dart. It
+  runs no tool through a shell.
+- **The README.** It names only the platforms the runtime has:
+  `--platforms=android`, `ios` or `android,ios`. The Android manifest edit
+  appears only with an Android half, and an iOS half adds the
+  `flutter build ios` commands.
+- **CI.**
+  - The macOS job sets Flutter up when the Swift lane runs, and builds
+    `flutter build ios --simulator --debug`.
+  - It finds `_mosaic_app_create` in one of the `Runner.app`'s frameworks.
+  - It uninstalls the SwiftUI Trestle (same bundle id), then runs
+    `mosaic-ios-simulator-gate.sh` on the iPhone simulator.
+  - A local `flutter analyze` of a generated Android-and-iOS phone project
+    (Flutter 3.44) finds no issues. That confirms the hook's `IOSSdk`
+    calls exist in `code_assets`.
+
+### 7.10 Every app, as built (step 4)
+
+*Steps 2 and 3 are done (#16834).* Trestle's Flutter APK and its emulator
+gate, and its Flutter iOS simulator build and simulator gate, passed in CI.
+That run also showed one thing the design had wrong. The Android Gradle
+plugin strips debug symbols from the native libraries it packages, so the
+APK's copy of an engine can never be byte-identical to its input. CI now
+compares what survives stripping: the ELF machine, and the exported
+symbols, including `mosaic_app_create`.
+
+Step 4 brings Journal and Engram along, by the same path:
+
+- **One script for every app.** `build-mosaic-flutter-phone-app.sh
+  <android|ios> <program> <phone-runtime> <output> <org> <name>` holds
+  what CI did for Trestle alone:
+  - `pkg` must be native-complete.
+  - The README must give the expected `flutter create` command, which then
+    runs.
+  - Android gets `allowBackup="false"`.
+  - Then `pub get`, `analyze`, and a debug build.
+  - Then the checks on the built app:
+    - Android: `aapt2` reads `allowBackup` false, and each packaged ABI has
+      its input's machine and symbols, with x86_64 and arm64-v8a present.
+    - iOS: the bundle id, and `_mosaic_app_create` in a framework.
+
+  It refuses an org or name outside the README's own shapes, and an empty
+  or `/` output, before building anything.
+- **CI.**
+  - **Android:** one step builds all three apps from the per-ABI engines
+    their Compose steps built.
+  - **Emulator:** the emulator step uninstalls each Compose app, which has
+    the same package, and gates its Flutter APK through `.MainActivity`.
+  - **iOS:** the macOS step builds each crate's iOS dylibs, builds each
+    app, and gates it on the iPhone simulator after uninstalling the
+    SwiftUI app (same bundle id).
+  - **The app lists.** Each loop reads its list on file descriptor 3, so
+    `adb shell`, `flutter` or `cargo` reading stdin cannot swallow the
+    rest of it.
+- **Locally**, Journal and Engram phone projects (both halves) are
+  native-complete, and `flutter analyze` (Flutter 3.44) finds no issues in
+  either.
+

@@ -7,6 +7,20 @@
       "sourceHash": "fnv1a64:6c77d7e01528fc41",
       "svgHash": "fnv1a64:02c8a41905e07c2b",
       "svg": "spanish/book/figures/ES-C06-cafe-etymology.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ES-W02-enye",
+      "sourceHash": "fnv1a64:827a6e08b4e69bec",
+      "svgHash": "fnv1a64:4e4b9cd8b490d2d3",
+      "svg": "spanish/book/figures/ES-W02-enye-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ES-W03-inverted",
+      "sourceHash": "fnv1a64:e87b6e3a7f9cbc12",
+      "svgHash": "fnv1a64:19edcd82de0b91a9",
+      "svg": "spanish/book/figures/ES-W03-inverted-filmstrip.svg"
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 9,
-  "sourceHash": "fnv1a64:2ae37cd55646b72f",
+  "sourceHash": "fnv1a64:545ba10b403b67bf",
   "lessonIds": [
     "SA-C09-grhnati",
     "SA-S107-letter-ta",
@@ -14,7 +14,7 @@
   "drivablePrefix": 1,
   "text": "sanskrit/narration/ch09.txt",
   "json": "sanskrit/narration/ch09.json",
-  "textHash": "fnv1a64:44014ebc3aae1e76",
-  "jsonHash": "fnv1a64:4dc79f6bc37fb292",
+  "textHash": "fnv1a64:43cace96955055ad",
+  "jsonHash": "fnv1a64:09a6d7ee22bbb645",
   "findings": []
 }

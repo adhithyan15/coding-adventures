@@ -982,8 +982,11 @@ Two kinds exist:
   cannot draw those honestly. Tamil has such a table (`WRITTEN_SIGN_SIDES`):
   its signs are drawn in the order they are WRITTEN, so `மேசை` is ே, ம, ை, ச
   and `சொ` is ெ, ச, ா, each side cited in the sign's mark record; the strip
-  then calls its groups "parts". The pulli and ு/ூ have no row and stay
-  refused. Gujarati has a table too, in which every sign is written AFTER its
+  then calls its groups "parts". The pulli ் is written after its own
+  consonant (`வணக்கம்` is வ, ண, க, ், க, ம, ்), cited to Varai's recorded
+  drawings of the 18 consonants with pulli; ு and ூ have no row and stay
+  refused, and so does a word with a run the font prints as one glyph across
+  the pulli (க்ஷ, ஸ்ரீ: `FUSED_LETTER_SEQUENCE_SOURCES`). Gujarati has a table too, in which every sign is written AFTER its
   consonant, even િ, which sits to its left: `કેમકે` is ક, ે, મ, ક, ે, each
   place cited to KanoAI's barakhadi templates in the sign's mark record. The
   virama ્ and ૃ have no row, two signs on one consonant (ાં) are refused, and
@@ -1005,11 +1008,36 @@ before XeLaTeX runs.
   is drawn when its letter has a cited ledger entry. Bengali is the latest
   track switched on; nine of its letter lessons print a strip, cited to native
   writers' pen traces in HP Labs India's LipiTk Bangla recognizer.
+  Malayalam's seventeen cited consonants (ന മ സ ര ത ഷ പ വ ണ ട ദ ഹ ഗ റ ല ശ ബ)
+  draw 21 strips: their letter lessons and the four chapter-1 നമ lessons,
+  drawn letter by letter. Their order cites SPACE Kerala's Thooval formation
+  arrows (GPL-3.0, cited as facts only).
+  Twenty-two more glyphs cite the numbered movements of Moag's *Malayalam: A
+  University Course and Reference Grammar* (CC BY-NC-SA 4.0, facts only):
+  ക യ ഖ ങ ച ഛ ഞ ഥ ധ ഭ ഫ ള, ഏ, the anusvara ം and the vowel signs ാ ി ീ ു ൂ ൃ െ
+  േ, for 58 Malayalam strips in all. `WRITTEN_SIGN_SIDES.malayalam` has one
+  row, ം after its base; every Malayalam vowel sign is drawn only alone.
 
   Script inventories (`data/scripts/<script>.json`) close a track's headwords:
   `validate` warns about any script character no row covers. Letters, marks,
   cited independent vowels and final consonants count, and so do a script's
   own `digits` rows, which is what lets the Bengali numbers lessons (০–৯) close.
+
+  Punjabi followed Bengali. `data/scripts/gurmukhi.json` holds exactly the
+  letters, signs and digits the track reads, and 27 of its letters cite GNPS's
+  Gurmukhi Sikho tracing lesson. 29 Punjabi letter lessons (single letters and
+  letter lists) print a strip. A Gurmukhi word is never composed, because one
+  headline runs across it, as in Devanagari.
+
+  Spanish and German followed Punjabi, the first Latin-script tracks.
+  `data/scripts/latin.json` holds exactly the Latin characters the six
+  Latin-script tracks' headwords use (NFD), and 18 of its rows cite the
+  Grundschrift-App or UJIpenchars2's native Spanish writers. `latin` is in
+  `SEPARATE_LETTER_SCRIPTS`, since print letters stand apart, so five lessons
+  print a strip: ñ, "¿ ¡", ß, and the words Großschreibung and weil. Every
+  other Latin writing lesson holds an a, which no source draws in the
+  two-storey form Noto prints, or an uncited mark, so French, Italian,
+  Portuguese and Latin stay switched off.
 
 Print the registry-ordered track table on demand, or verify that its former
 tracked projection remains absent:

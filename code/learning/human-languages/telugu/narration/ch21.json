@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Dog and Cat",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a1e9bdb42f54fc51",
+  "sourceHash": "fnv1a64:fd0a67fc4bb4e1b3",
   "lessons": [
     {
       "id": "TE-C21-kukka-pilli",
@@ -126,7 +126,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a73dfac614806e8c",
+      "sourceHash": "fnv1a64:dfd832ca18f180a2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -205,7 +205,7 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ఎ — copy what you see",
+          "title": "Writing: ఎ — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",

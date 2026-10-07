@@ -38,14 +38,25 @@ export const scriptInventoryEvidence = {
       "write the Malayalam base first",
       "add the anusvara after it",
     ]);
+    // The anusvara's written order now cites Moag's അം (the ring is movement
+    // 9, after the eight of അ); Unicode is kept in the variation for what it
+    // does say (the sign follows its base) and what it does not (when).
     expect(malayalamAnusvara.compositionSource?.url).toBe(
-      "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-12/",
+      "https://github.com/matjic/malayalam/blob/7141acd2f310bc8928822a7aec61d1149efa6fa3/docs/assets/images/front-writing-029.jpg",
     );
     expect(malayalamAnusvara.compositionSource?.citation).toMatch(
-      /Unicode Standard.*Version 17\.0.*12\.9\.3.*Anusvara.*U\+0D02/i,
+      /Rodney F\. Moag.*Table II.*p\. xix: movements 1-9 for അം.*Table III, p\. xxiv/,
     );
     expect(malayalamAnusvara.compositionSource?.variation).toMatch(
-      /independent vowels.*dependent vowel signs.*Malayalam letters.*encoded composition.*not a universal handwriting direction.*no standalone ductus claim/i,
+      /movement 9.*base is written first and the anusvara after it.*Unicode Standard.*12\.9\.3.*says nothing about when the sign is written/i,
+    );
+    expect(malayalamAnusvara.strokeOrder).toEqual(["circle clockwise"]);
+    expect(malayalamAnusvara.penLifts).toBe(0);
+    expect(malayalamAnusvara.strokeOrderSource?.url).toBe(
+      "https://github.com/matjic/malayalam/blob/7141acd2f310bc8928822a7aec61d1149efa6fa3/docs/assets/images/front-writing-034.jpg",
+    );
+    expect(malayalamAnusvara.strokeOrderSource?.variation).toMatch(
+      /clockwise.*medium-low confidence.*anticlockwise.*pen lifts after the base/,
     );
     const malayalamE = scripts.malayalam!.independentVowels!.find(
       (entry) => entry.glyph === "എ",
@@ -388,5 +399,90 @@ export const scriptInventoryEvidence = {
     expect(affected.get("ഒ") ?? 0).toBe(0);
     expect(missingByScript.get("malayalam.json")?.has("ഓ") ?? false).toBe(false);
     expect(affected.get("ഓ") ?? 0).toBe(0);
+    // Seventeen base consonants cite SPACE Kerala's Thooval formation arrows
+    // (facts only: GPL-3.0, nothing copied) and are written in one run each.
+    const thooval: Record<string, readonly [string, number]> = {
+      "ന": ["NA", 4], "മ": ["MA", 4], "സ": ["SA", 5], "ര": ["RA", 3],
+      "ത": ["TA", 4], "ഷ": ["SSA", 6], "പ": ["PA", 3], "വ": ["VA", 3],
+      "ണ": ["NNA", 6], "ട": ["TTA", 3], "ദ": ["DA", 3], "ഹ": ["HA", 4],
+      "ഗ": ["GA", 3], "റ": ["RRA", 2], "ല": ["LA", 5], "ശ": ["SHA", 4],
+      "ബ": ["BA", 6],
+    };
+    for (const [glyph, [slug, movements]] of Object.entries(thooval)) {
+      const row = scripts.malayalam!.letters.find(
+        (entry) => entry.glyph === glyph,
+      )!;
+      expect(row.role).toBe("syllable");
+      expect(row.penLifts).toBe(0);
+      expect(row.strokeOrder).toHaveLength(movements);
+      expect(row.strokeOrder.slice(1).every((s) => s.startsWith("without lifting, "))).toBe(true);
+      expect(row.strokeOrderNote).toMatch(
+        /visible movements in one continuous pen-down run.*Thooval keeps the pen down by design/i,
+      );
+      expect(row.strokeOrderSource?.url).toBe(
+        `https://github.com/spacekerala/Thooval/blob/87143b560bf5aab43837d9da2cddab9bd59cd391/data/${slug}.png`,
+      );
+      expect(row.strokeOrderSource?.citation).toMatch(
+        new RegExp(`SPACE Kerala.*Thooval.*formation arrows for ${glyph} in data/${slug}\\.png.*GPL-3\\.0, 2013`),
+      );
+      expect(row.strokeOrderSource?.variation).toMatch(
+        /only these facts are cited.*santhoshtr\/hand, MIT.*one stroke.*grahyam.*counts only.*none of the \d+ unique samples jumps.*Noto Sans Malayalam/,
+      );
+    }
+    // Moag's Malayalam: A University Course and Reference Grammar (Tables
+    // II-IV, numbered movements in a native writer's hand; facts only, CC
+    // BY-NC-SA 4.0, nothing copied) cites twelve more consonants, among them
+    // ക and യ (held earlier while the sources disagreed on their start), the
+    // vowel ഏ, and eight vowel signs drawn alone. Each is one run: Moag
+    // numbers movements, not lifts, and the recordings show none.
+    const moagScan = (page: string): string =>
+      `https://github.com/matjic/malayalam/blob/7141acd2f310bc8928822a7aec61d1149efa6fa3/docs/assets/images/front-writing-${page}.jpg`;
+    const moagRows: Record<string, readonly [string, number]> = {
+      "ക": ["035", 7], "യ": ["040", 4], "ഖ": ["035", 4], "ങ": ["035", 5],
+      "ച": ["036", 4], "ഛ": ["036", 5], "ഞ": ["036", 7], "ഥ": ["038", 3],
+      "ധ": ["038", 4], "ഭ": ["039", 4], "ഫ": ["039", 3], "ള": ["041", 4],
+      "ഏ": ["028", 7],
+    };
+    for (const [glyph, [page, movements]] of Object.entries(moagRows)) {
+      const row = [
+        ...scripts.malayalam!.letters,
+        ...(scripts.malayalam!.independentVowels ?? []),
+      ].find((entry) => entry.glyph === glyph)!;
+      expect(row.role, glyph).toBe(glyph === "ഏ" ? "vowel" : "syllable");
+      expect(row.penLifts, glyph).toBe(0);
+      expect(row.strokeOrder, glyph).toHaveLength(movements);
+      expect(row.strokeOrder.slice(1).every((s) => s.startsWith("without lifting, ")), glyph).toBe(true);
+      expect(row.strokeOrderNote, glyph).toMatch(
+        /numbered movements in one continuous pen-down run.*Moag numbers movements, not pen lifts/,
+      );
+      expect(row.strokeOrderSource?.url, glyph).toBe(moagScan(page));
+      expect(row.strokeOrderSource?.citation, glyph).toMatch(
+        new RegExp(`^Rodney F\\. Moag, Malayalam: A University Course and Reference Grammar .*CC BY-NC-SA 4\\.0.*movements 1-${movements} for ${glyph}, written by hand by Thomas Joseph$`),
+      );
+      expect(row.strokeOrderSource?.variation, glyph).toMatch(
+        /only these facts .* are cited; no drawing is copied.*not pen lifts.*grahyam.*counts only.*Noto Sans Malayalam/,
+      );
+    }
+    const moagSigns: Record<string, readonly [string, number]> = {
+      "ാ": ["030", 1], "ി": ["030", 1], "ീ": ["030", 2], "ു": ["031", 3],
+      "ൂ": ["031", 4], "ൃ": ["031", 2], "െ": ["032", 2], "േ": ["032", 3],
+    };
+    for (const [sign, [page, movements]] of Object.entries(moagSigns)) {
+      const mark = scripts.malayalam!.marks!.find((entry) => entry.mark === sign)!;
+      expect(mark.role, sign).toBe("vowel-sign");
+      expect(mark.penLifts, sign).toBe(0);
+      expect(mark.strokeOrder, sign).toHaveLength(movements);
+      expect(mark.strokeOrderSource?.url, sign).toBe(moagScan(page));
+      expect(mark.strokeOrderSource?.citation, sign).toMatch(
+        new RegExp(`Table III 'How to Write Internal Vowel Symbols'.* for ${sign}, written by hand by Thomas Joseph$`),
+      );
+      // Moag never numbers the consonant against a vowel sign, so no sign
+      // record claims a written order.
+      expect(mark.compositionOrder, sign).toBeUndefined();
+      expect(missingByScript.get("malayalam.json")?.has(sign) ?? false, sign).toBe(false);
+    }
+    expect(scripts.malayalam!.marks!.map((mark) => mark.mark)).toEqual([
+      "ം", "്", "ാ", "ി", "ീ", "ു", "ൂ", "ൃ", "െ", "േ",
+    ]);
   },
 };

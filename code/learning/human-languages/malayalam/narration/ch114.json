@@ -4,7 +4,7 @@
   "chapter": 114,
   "title": "Letters From Days, Family and Body",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:11f8d571634d1c29",
+  "sourceHash": "fnv1a64:197fbd2deff81ee1",
   "lessons": [
     {
       "id": "ML-W114-dha",
@@ -21,7 +21,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c7df6784e27c4bfc",
+      "sourceHash": "fnv1a64:8e02a08e9509e3a6",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -84,11 +84,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ധ (dha) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ധ (dha) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start this letter or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start this letter and which way to travel, in one attested order, and names its source beneath it. Teachers vary, so treat it as a sound way in, not the only one."
             }
           ]
         },
@@ -175,7 +175,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4b8a03ea4a561a07",
+      "sourceHash": "fnv1a64:ef9b94614ffd8ad3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -238,11 +238,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ബ (ba) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ബ (ba) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start this letter or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start this letter and which way to travel, in one attested order, and names its source beneath it. Teachers vary, so treat it as a sound way in, not the only one."
             }
           ]
         },
@@ -495,7 +495,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5de5f238e05f945f",
+      "sourceHash": "fnv1a64:9cd5641db2335ced",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -558,11 +558,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ഛ (chha) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ഛ (chha) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start this letter or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start this letter and which way to travel, in one attested order, and names its source beneath it. Teachers vary, so treat it as a sound way in, not the only one."
             }
           ]
         },

@@ -157,7 +157,9 @@ letter keeps its own panels at its own scale, and the `<desc>` says so.
 
 Words are deliberately **not** composed where the parts would assemble into
 something false. Devanagari (and Bengali and Gurmukhi) words share one
-continuous headline, while every cited letter draws its own; Arabic-family
+continuous headline, while every cited letter draws its own (a Devanagari
+word is since drawn another way, as ONE composed entry: see "Devanagari words"
+below); Arabic-family
 letters join and change shape by position, while the ductus holds isolated
 forms; the cited Cyrillic hand is connected cursive. A word with a vowel sign,
 virama or length mark is refused in every script that has no written-order
@@ -186,12 +188,43 @@ Each row must match the cited `compositionSource` of its mark record, and a test
 enforces it. A sequence strip that contains a sign calls its groups "parts"
 ("Part 2 of 4"), says in its `<desc>` that they are in written order, and draws
 each sign without its consonant. A two-part sign taught by itself (ோ) prints
-its two halves. Refused: any sign without a row (the pulli ், ு and ூ, which
-have no cited ductus and fuse with their consonant, and ௌ, whose right half ௗ
-has none), the pairs Unicode fuses into ligatures (டி, டீ, லீ), and every sign
+its two halves. Refused: any sign without a row (ு and ூ, which have no cited
+ductus and fuse with their consonant, and ௌ, whose right half ௗ has none), the pairs Unicode fuses into ligatures (டி, டீ, லீ), and every sign
 in every other script. The pen lift between parts is the same assumption the
 separate-letter word strips already make: the recognizer stores these signs as
 distinct symbols, written left to right.
+
+#### As built — the Tamil pulli, after its consonant
+
+The pulli ் has a cited ductus of its own: one short dab inside the bundled
+Noto Sans Tamil disc. Its order comes from Abhinaya Rajarajan's *Varai*
+(Swift Student Challenge 2026, commit `952294fa`), whose hand-recorded
+reference drawings of the 18 consonants with pulli (க் to ன்) all draw the
+body as one stroke and then the dot as a second stroke above it, centred at
+0.47 to 0.65 of the body's width. An earlier reading of Info-farmer's
+*Writing Tamil* animations on Wikimedia Commons agrees. *Varai* has no
+licence, so the mark record cites facts only; it is one writer, so the
+record says confidence is medium, and the dab's direction is not a claim.
+
+`WRITTEN_SIGN_SIDES.tamil` gains a row for it:
+
+| typed | written | source of the side |
+|---|---|---|
+| C + ் | C, then the dot | Varai: body first, dot second, in all 18 recordings |
+
+So `வணக்கம்` is drawn வ, ண, க, ், க, ம, ், and a left-hand sign still comes
+first (`இல்லை` is இ, ல, ், ை, ல). The font's cluster shows the same parts:
+every consonant + pulli glyph in Noto Sans Tamil 2.004 (GSUB `haln`) is a
+composite of the unchanged consonant outline and the unchanged pulli disc,
+so the strip's dot is the printed dot. Two runs across the pulli are not:
+the font prints க்ஷ (`akhn`) and ஸ்ரீ / ஶ்ரீ (`abvs`) as one glyph each. A
+pulli ends a grapheme, so the per-grapheme pair check cannot see them;
+`FUSED_LETTER_SEQUENCE_SOURCES` lists them with that citation, and a word
+containing one is refused.
+
+This unlocked 17 Tamil lessons (target count 48 to 65): the two that teach the
+dot by itself and fifteen words. Words with ு or ூ, or with the fused டி,
+are still refused.
 
 #### As built — Gujarati vowel signs, written after the consonant
 
@@ -278,6 +311,95 @@ Left out:
   of 83 (34%) draw both from upper left to lower right. ौ's commonest count
   is three strokes in 35 of 83 (42%).
 
+#### As built — Devanagari words: the letters' bodies, then one shared headline
+
+A Devanagari word is not its letters' strips side by side. Every cited letter
+ends with its own "lift, then draw the shirorekha rightward" stroke, while the
+printed word hangs from ONE headline (shirorekhā) that runs across all of its
+letters. So a word gets a strip of its own, drawn in this order:
+
+1. each letter in reading order, its body strokes only, exactly as its own
+   strip draws them (same paths, same labels), with its own headline stroke
+   left out;
+2. then one final movement: the shared headline, drawn once, left to right,
+   from the start of the first letter's headline to the end of the last
+   letter's, along the printed headline of the whole word.
+
+**Why the headline comes last.** That is the native majority, not a rule. In
+HP Labs India's LipiTk 4.0 Devanagari recognizer (native writers' tablet pen
+traces; the model is MIT, the data under it research-only, so only counts and
+shares are cited), the stored prototypes of the 33 consonants draw the
+headline as the LAST stroke in 82% of 2,706 and as the first in about 5%.
+Every cited Devanagari letter already ends with its headline for the same
+reason. Some writers draw the headline first, so the strip prints the
+"attested, not standardised" line and its `<desc>` says so. The traces are
+single letters: no reachable source records native writers' headline timing
+across a whole word (HP Labs India's `hpl-dvng-iso-word` set, which would, is
+on a host the authoring environment cannot reach). Carrying the per-letter
+majority across the word is this book's reading of that data, and the
+figure's source note says so in those words.
+
+**How the headline is found.** No new stroke data is authored. In the
+Devanagari ductus every letter's last stroke is one segment labelled exactly
+"lift, then draw the shirorekha rightward", a horizontal path drawn left to
+right at the headline's height (585 font units; ऋ 586). A letter whose last
+stroke is not that (every sign, and any future letter whose headline is part
+of a body stroke) cannot join a word. Body strokes keep their authored labels
+and are moved right by the advance widths the bundled font gives the letters
+before them (`hmtx`), so each body sits where the printed word puts it.
+
+**Fit to the word's ink.** The composed path is checked against the printed
+word (each letter's outline at its advance) at the default tolerances the
+per-letter ductus meet: at least 97% of every stroke on ink, and under 2% of
+the word's ink farther than 100 units from every path. A word that fails is
+not drawn. In particular a word whose printed headline is broken — a letter
+whose own headline does not reach its left edge (अ आ ओ औ थ ध भ श) anywhere but
+first — fails, because one straight headline would cross blank paper there.
+
+**Which words.** A Devanagari writing lesson whose headword is ONE word of two
+or more graphemes, each grapheme a single base letter (one code point that is
+also one code point in NFD), with a Writing or Script block. Refused:
+
+* any vowel sign, nukta, anusvara, candrabindu, visarga or virama. None has a
+  cited written order against its consonant or the shared headline (the signs'
+  traces were written alone; see above). ि's place is unresolved; ा has no
+  cited ductus at all; the virama would make conjuncts and half forms the font
+  fuses. A precomposed nukta letter (क़, U+0958) decomposes and is refused too.
+* ई and ऐ: Noto Sans Devanagari 2.006 splits them while shaping (GSUB `abvs`
+  multiple-substitution lookup 179: ई → इ + a reph-shaped mark, ऐ → ए + े),
+  so the printed word is not those letters' outlines at their advances.
+  Shaping every two- and three-letter string of the other cited letters with
+  HarfBuzz gives exactly the `cmap` glyphs at their `hmtx` advances, with no
+  offset, so for them the composed outline is the printed word.
+* a letter without a cited ductus, a phrase of several words (each word has
+  its own headline), a list (lists keep the letter-by-letter strip), digits
+  and punctuation.
+
+**What the figure says.** It is one ledger entry keyed by the word
+(`devanagari:मम`), so it prints like a letter's strip: one panel per
+movement, the whole word pale behind every panel, "How it is written — N
+strokes · N−1 pen lifts · M movements". The last caption reads "lift, then the
+word's shirorekha" (two printed lines; "lift, then one shirorekha over the
+word" wrapped to three). Its citation names every letter's source by
+position ("letters 1 and 2: …") and the HP Labs India counts for the headline;
+its `<desc>` says the frames draw the word, letter bodies first and the shared
+headline last. The target carries `composition: "shared-headline"`, and
+`script-ductus` builds the entry for exactly those targets
+(`composeHeadlineWord` in `src/headline-word.ts`; the font's advances come from
+a new `Font.advanceFor`, and the ink measurements the honesty tests used moved
+unchanged into `src/ink.ts` so the composer can refuse at build time).
+
+**What it unlocked.** Three lessons: Sanskrit मम (SA-W03-mama-guided-copy,
+-delayed-copy, -dictation), Sanskrit filmstrips 48 to 51. That is every
+Devanagari writing headword that is one word of bare letters; Hindi, Marathi
+and Marwadi have none. Every other Devanagari word lesson carries a sign
+(नाम, सा, मम नाम: ा; नमः: ः; नमस्ते, धन्यवाद, अस्ति: the virama; हो: ो),
+so the next unlock is a cited written order for ा (and a ductus for it: Noto
+prints ा with a headline piece the shared headline would now cover), which
+would add the six नाम, सा and मम नाम lessons. The guided-copy lesson's prose,
+which told the learner to give each म its own headline stroke and let the two
+meet, now points at the strip.
+
 #### As built — Bengali, cited to native writers' pen traces
 
 Bengali joins the derived filmstrips (`DERIVED_FILMSTRIP_SCRIPTS.bengali`) with
@@ -307,6 +429,212 @@ stays empty only if digits count, so `validate.ts` now counts a script's
 `digits` rows as covered (no other track has digit headwords). Bengali words
 remain undrawn: there is no composer on this branch, and a Bengali word shares
 one headline across its letters.
+
+#### As built — Punjabi (Gurmukhi), cited to a tracing lesson
+
+Punjabi joins the derived filmstrips (`DERIVED_FILMSTRIP_SCRIPTS.punjabi =
+"gurmukhi"`) with 27 letters: the vowel bearer ਅ and the consonants ਸ ਹ ਕ ਖ ਗ ਘ
+ਚ ਛ ਜ ਟ ਠ ਡ ਣ ਤ ਥ ਦ ਨ ਪ ਫ ਬ ਭ ਮ ਰ ਲ ਵ ੜ. These are every letter a Punjabi
+writing lesson prints alone or in a list of letters, so 29 lessons now print a
+strip. The order comes from the Alphabet Tracing lesson of GNPS's Gurmukhi Sikho
+app (`codemanxdev/gnps_learning_hub`, Apache-2.0, `lesson_tracing.dart` at a
+pinned commit, cited line by line). It is cited the way the Telugu owner cites a
+tracing app: one attested teaching order. Only facts are taken from it (order,
+start, direction, lifts); no checkpoint coordinate is copied, and every path is
+fitted to Noto Sans Gurmukhi at the default tolerances. Omniglot's copyist
+counts and shares go into each `variation` as corroboration of the body strokes.
+
+**The headline.** The source draws it first, left to right, and so do the paths.
+That is the source's teaching order, and each record says so. Fluent writers are
+often described as adding the headline last, as native Devanagari writers do in
+HP Labs India's data. Omniglot is not cited for the headline, because its
+copyists draw the Devanagari headline first too, where natives draw it last.
+Noto prints a split headline in ਅ ਖ ਘ ਪ ਮ. The source draws no separate bar for
+these letters, so the outline and the source agree: the bar's left part opens
+the first stroke, and its right part, drawn right to left, opens the stem stroke.
+
+**Divergence: lifts.** ਛ, ਨ and ਬ lift once less than the source. Omniglot's
+copyists most often use one stroke fewer, and copyist counts are an upper bound
+on native lifts (as for Kannada ಚ and ಯ). Each keeps the source's order and
+joins one restart on the ink. **Divergence: printed loops.** Where Noto fills a
+loop as a solid knob or tail (ਅ ਸ ਚ ਜ ਡ ਤ ਦ ਮ ੜ, and ਘ's middle upright), the
+path loops inside it, turning the way the source's stroke turns.
+
+**Left out.** The vowel signs (laga matra), bindi, tippi, addak, halant and the
+dot below have no source, so they stay undrawn, and so does every list that
+holds one. Gurmukhi words share one headline, so they are refused, exactly as
+Devanagari words are. ਝ and ਧ, which the source covers, appear only in lists
+with an uncited sign and are left for a later batch. The new
+`data/scripts/gurmukhi.json` holds exactly what the track reads (33 letters, 14
+signs, 4 digits), with `complete` false, the same way `bengali.json` does.
+
+#### As built — Malayalam consonants, cited to a teaching tool's formation arrows
+
+Seventeen Malayalam base consonants (ന മ സ ര ത ഷ പ വ ണ ട ദ ഹ ഗ റ ല ശ ബ) gain a
+ductus, which brings the Malayalam filmstrips from 14 to 35: their letter
+lessons, plus the four chapter-1 lessons whose headword is നമ (Malayalam is in
+`SEPARATE_LETTER_SCRIPTS`, so a word of cited letters is drawn letter by
+letter). The order comes from SPACE Kerala's Thooval, a Malayalam alphabet
+teaching tool whose image for each letter marks the start, every turn where the
+pen runs back along its own ink, and the end. Thooval is GPL-3.0, so it is a
+source of facts only: no image, path or template point enters the repository.
+
+**Pen lifts need a second kind of source.** Thooval has the learner keep the
+pen down to the end of every letter, so it cannot show a lift even where a
+writer would make one. The zero-lift claim therefore rests on two recordings
+that could have shown one: Santhosh Thottingal's *hand* curves (MIT), which
+store several strokes where a glyph has them, and the *grahyam* samples, cited
+as counts only because the dataset has no licence. Every letter here is one
+stroke in *hand*, and no grahyam sample jumps between points the way a lift
+would (its files keep no pen-up marker, so a jump is the only sign). Letters whose sources disagree on the start (ക, യ) or whose source is
+uncertain (ഏ) or missing (ം) are not drawn.
+
+**Divergence: lesson prose (since resolved).** These lessons first kept their
+"copy what you see" writing blocks, with the filmstrip added beside them. A
+later prose fix pointed every strip lesson's writing block at its strip, and a
+figure-targets guard now fails any strip lesson that still disclaims its stroke
+order.
+
+#### As built — Malayalam letters and signs, cited to a textbook's numbered movements
+
+Twenty-two more Malayalam glyphs gain a ductus, which brings the Malayalam
+filmstrips from 35 to 58: the consonants ക യ ഖ ങ ച ഛ ഞ ഥ ധ ഭ ഫ ള, the vowel ഏ,
+the anusvara ം and the vowel signs ാ ി ീ ു ൂ ൃ െ േ, each drawn by itself. The
+order comes from Rodney F. Moag's *Malayalam: A University Course and Reference
+Grammar* (UT Austin South Asia Institute / COERLL, April 2018), whose Tables
+II-IV number and arrow every movement of every letter and sign in the hand of a
+native writer. The book is CC BY-NC-SA 4.0, so it is a source of facts only
+(order, start, direction, end); each record links the page's scan in a digital
+edition at a pinned commit, and nothing of the drawings is copied. Moag settles
+ക and യ, held in the earlier batch while the other sources disagreed on their
+start, and confirms that Thooval's `EE` image is ഏ.
+
+**Movements are not lifts.** Moag numbers movements; the digital edition notes
+that consecutive numbers can belong to one stroke. Each glyph is therefore one
+run whose segments are Moag's numbers, and the zero-lift claim rests, as
+before, on *hand* (MIT) and *grahyam* (counts only). Where the sources disagree
+the record says so: യ's start, ു's end, and ം's direction (clockwise in Moag,
+read from a small arrowhead, so medium-low confidence; anticlockwise in an
+unlicensed tracing app and in the Gujarati and Devanagari analogues).
+
+**One written-order row.** `WRITTEN_SIGN_SIDES.malayalam` has a single row, ം
+"after", cited on the anusvara's mark record: in Moag's അം the ring is movement
+9, after the eight movements of അ. Moag draws each vowel sign beside a dash
+standing for the consonant but never numbers the consonant against the sign, so
+no vowel sign gets a row: a sign is drawn only in a lesson that teaches it
+alone, and a word with a vowel sign stays refused.
+
+**Not drawn:** ജ (Moag's arrows do not place the short stem between its humps),
+ഠ (Moag runs the ring clockwise, Thooval and grahyam anticlockwise), ൈ (two
+pieces of ink need a lift no source records), ോ and ൊ (the consonant between
+the sign's two parts is not numbered) and ് (Table V shows it without
+movements).
+
+**Divergence: lesson prose, now resolved.** The 21 newly stripped lessons that
+still carried the "copy what you see / this book does not yet tell you where
+to start" block now point at the numbered strip, in the wording the earlier
+strip lessons use, so the figure-targets guard against a strip lesson
+disclaiming its stroke order holds.
+
+#### Design — the Latin script's first print letters
+
+The six Latin-script tracks (Spanish, French, German, Italian, Portuguese,
+Latin) have about 45 writing lessons, and none prints a strip: there is no
+Latin inventory and no Latin ductus owner. This design adds both, for the
+letters a source covers, and refuses the rest by name.
+
+**Sources.** Letter order comes from the Grundschrift-App
+(`Medien-Treibhaus/grundschrift-app-source`, pinned commit `f6dbd807`), built
+in a research project of the Laborschule at Bielefeld University with the
+Grundschulverband, on the Grundschulverband's Grundschrift model, with a
+teacher advisory team. Each letter is an ordered list of paths, one per
+pen-down stroke, and the app makes the child follow them in order. The
+repository has no licence, so it is a source of facts only (stroke count,
+order, start, direction); no point is copied, and every path is fitted to the
+bundled outline. Native-writer corroboration comes from UJIpenchars2 (Prat et
+al., UCI Machine Learning Repository dataset 177, CC BY 4.0): 60 adult Spanish
+writers, two samples of each character, cited as counts and shares only. UJI
+is also the only source for the marks: the tilde of ñ is written after the n
+(108 of 120) and left to right (104 of those 108), the bar of ¡ comes before
+its dot (114 of 119) and runs downward (109 of 119), and the hook of ¿ comes
+before its dot (108 of 118), starting at the top, heading down and turning
+anticlockwise to the lower right.
+
+**Font.** No bundled font is a Latin font, but Noto Sans Devanagari 2.006
+(`_fonts/NotoSansDevanagari-Static.ttf`) carries the Noto Sans Latin letters,
+including ñ, ß, ¿ and ¡, which the Cyrillic subset lacks. The Latin inventory
+names that file, and the paths are fitted to its Latin outlines at the default
+tolerances, with no override.
+
+**Precomposed letters.** ñ is one code point (NFC) and a base letter, so it is
+its own ductus entry (`latin:ñ`): the n, then a lift, then the tilde, fitted
+to the precomposed glyph. Latin gets no `WRITTEN_SIGN_SIDES` table, so a
+headword typed with a combining tilde (n + U+0303) is refused rather than
+drawn as n and a loose mark. Every Latin-track headword is NFC today.
+
+**Words.** Print letters stand apart (no headline, no joins, no change of
+shape), so `latin` joins `SEPARATE_LETTER_SCRIPTS` and a word of cited letters
+is drawn letter by letter. The strip shows print letters, not the joined hand
+that Grundschrift itself goes on to teach. Punctuation inside a word (¿cómo?)
+is not a base letter, so such a word is refused; a list of single marks
+("¿ ¡") is drawn.
+
+**Refused, with reasons.**
+
+* a and every word with it. Noto Sans prints a two-storey a, and every source
+  draws the one-storey a (a bowl, then the stem). No bundled font has a
+  one-storey a, so no path can both follow a source and lie on the printed
+  letter. This one letter holds back most Latin word lessons (hola, salut,
+  ciao, olá, Hallo, quia, buenos días, ayer, mañana, parce que) and the
+  accent list "á é í ó ú".
+* The grave (à è ù), circumflex, cedilla (ç), æ and œ: no source gives their
+  order or direction. ë ï ÿ, ä and ö only by analogy with ü, so not drawn.
+* Acute accents and ü are sourced (UJI) but unlock nothing without a, so they
+  wait for a later batch. The acute's direction would be recorded as split
+  (up-right in about 62% of samples, down-left in about 30%).
+
+**Scope.** 18 glyphs: G b c e g h i l n o r s u w ß ñ ¿ ¡. Only Spanish and
+German join `DERIVED_FILMSTRIP_SCRIPTS`, the tracks with a lesson these
+letters complete. Four lessons gain a strip: ES-W02-enye (ñ), ES-W03-inverted
+(¿ ¡), GE-W01-eszett (ß) and GE-W04-vier-zeilen (weil). GE-W03-capitalization
+(Großschreibung) is cited letter for letter but stays undrawn: see the length
+cap below. French, Italian, Portuguese and Latin stay
+switched off: none of their writing headwords is fully cited.
+
+**Inventory.** `data/scripts/latin.json` lists every Latin character a
+Latin-track headword uses, NFD-decomposed: 26 small letters, the 24 capitals
+in use (no X or Y), ß, œ, the cited ñ, ¿ and ¡, and seven combining marks
+(grave, acute, circumflex, tilde, macron, diaeresis, cedilla), with `complete`
+false. Only the 18 cited rows carry an order. Letter anchoring and script
+closure already skip Latin tracks, so their ceilings do not move.
+
+**As built.** As designed: owner `strokes/latin.ts` (keys `latin:<glyph>`,
+appended last), 18 glyphs, every stroke 1.000 on ink at the default
+tolerances and nothing untraced. Simple letters are one movement (c l o s w),
+most others two (the stem, then "back up" and the rest), so a word strip stays
+short; ñ is three movements over two strokes. Every record's `variation`
+carries the UJI counts at the source's count (for example n: 119 of 120 one
+stroke, 74 of those from the top left), and says where adults differ from the
+school model: most start l at the bottom, as a joined hand does, and UJI has
+no ß, so ß rests on the school model alone. The sequence renderer draws each
+letter at its own scale, so narrow letters (i, l, ¡) print tall.
+
+**Divergence: a length cap.** The fourteen-letter Großschreibung strip came
+out about 2,380 units tall, against about 1,800 for the longest earlier strip
+(a nine-piece Gujarati list), and the block-figure macro would shrink it to an
+illegible size. `MAX_SEQUENCE_PIECES` (10) now keeps any sequence longer than
+ten written pieces out of the candidates, so such a lesson prints no strip
+rather than an unreadable one. It removes only Großschreibung; every earlier
+strip has nine pieces or fewer.
+
+**Divergence: the inventory.** It also lists the ordinal indicators ª and º
+(Portuguese "1.º / 1.ª" is a headword): they are Latin-script letters the
+design's census missed, because their Unicode names do not say "Latin". And
+the validator's glyph closure turned out not to measure Latin at all (its
+script matchers leave Latin out, so a Latin headword can never report a gap),
+so the inventory's exactness is held by its own evidence module instead: every
+Latin character of every Latin-track headword is listed, and every listed one
+is read.
 
 ### Class B — data diagrams (generated)
 

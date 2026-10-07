@@ -54,8 +54,8 @@ Three words, three different vowels, one rule doing the work each time. That is
 what makes the rule worth having: you did not need to be told about **எ**
 separately, only that word-initial vowels get a full letter.
 
-> Read **எ**; do not draw it yet. This book gives a stroke order only where it
-> has a sourced one, and **எ** does not have one yet.
+> Read **எ**. The strip writes **எ**, **ன** and the puḷḷi in turn, numbered
+> movement by movement, with each source beneath it.
 
 ## Script you'll notice: build the word
 <!-- hl-knowledge: introduces=[TA-SCRIPT-READ-EN-02]; assesses=[TA-SCRIPT-INDEPENDENT-VOWEL-E-01, TA-SCRIPT-THREE-NS-01, TA-SCRIPT-PULLI-VANAKKAM-01] -->

@@ -1,0 +1,208 @@
+{
+  "track": "punjabi",
+  "figures": [
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-S02-sassa-tatta-sihari",
+      "sourceHash": "fnv1a64:97261c20e1ea214e",
+      "svgHash": "fnv1a64:b1865f546ad9b403",
+      "svg": "punjabi/book/figures/PA-S02-sassa-tatta-sihari-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-S03-retroflex-row",
+      "sourceHash": "fnv1a64:8923b2748b40df8b",
+      "svgHash": "fnv1a64:83b05cb0a4ddd69e",
+      "svg": "punjabi/book/figures/PA-S03-retroflex-row-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-S07-naana-jajja-vavva",
+      "sourceHash": "fnv1a64:b9527bd618ffdf3f",
+      "svgHash": "fnv1a64:dc5739823dc0a974",
+      "svg": "punjabi/book/figures/PA-S07-naana-jajja-vavva-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-S07-rara-ghagga-dadda",
+      "sourceHash": "fnv1a64:f6a0aa2e93409f06",
+      "svgHash": "fnv1a64:d9d1450368e1ef33",
+      "svg": "punjabi/book/figures/PA-S07-rara-ghagga-dadda-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-S08-pappa",
+      "sourceHash": "fnv1a64:07cfac58ca7d2c52",
+      "svgHash": "fnv1a64:af2c30f6750b8798",
+      "svg": "punjabi/book/figures/PA-S08-pappa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-S10-chachcha",
+      "sourceHash": "fnv1a64:f1c1fd115594de20",
+      "svgHash": "fnv1a64:48f332cb940ea9cf",
+      "svg": "punjabi/book/figures/PA-S10-chachcha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-S11-bhabbha",
+      "sourceHash": "fnv1a64:42c317f7d97ef6ac",
+      "svgHash": "fnv1a64:29cc84d48c274fc4",
+      "svg": "punjabi/book/figures/PA-S11-bhabbha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-W01-ha",
+      "sourceHash": "fnv1a64:27584fbdac26b2d5",
+      "svgHash": "fnv1a64:6dfd0910499fd2e8",
+      "svg": "punjabi/book/figures/PA-W01-ha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-W01-ma",
+      "sourceHash": "fnv1a64:ae48eca836e394f3",
+      "svgHash": "fnv1a64:f1c1534be91eba7b",
+      "svg": "punjabi/book/figures/PA-W01-ma-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-W01-na",
+      "sourceHash": "fnv1a64:51c9f73f60c8db3e",
+      "svgHash": "fnv1a64:335f38b4a1a4e7c9",
+      "svg": "punjabi/book/figures/PA-W01-na-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-W01-sa",
+      "sourceHash": "fnv1a64:3525abffcacf9941",
+      "svgHash": "fnv1a64:d12291e6c6dae449",
+      "svg": "punjabi/book/figures/PA-W01-sa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-W01-ta",
+      "sourceHash": "fnv1a64:62eed0f41b27d933",
+      "svgHash": "fnv1a64:e235b8e8016d5133",
+      "svg": "punjabi/book/figures/PA-W01-ta-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-W02-a",
+      "sourceHash": "fnv1a64:646a3767ced1a599",
+      "svgHash": "fnv1a64:6e073c61f7732d10",
+      "svg": "punjabi/book/figures/PA-W02-a-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-W03-ba",
+      "sourceHash": "fnv1a64:21f8e8e06b2d1fed",
+      "svgHash": "fnv1a64:4d16e33b59b5956f",
+      "svg": "punjabi/book/figures/PA-W03-ba-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-W03-bha",
+      "sourceHash": "fnv1a64:019c744b8c9488b8",
+      "svgHash": "fnv1a64:29cc84d48c274fc4",
+      "svg": "punjabi/book/figures/PA-W03-bha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-W03-da",
+      "sourceHash": "fnv1a64:17d8a9795a302085",
+      "svgHash": "fnv1a64:e507dfee1e851692",
+      "svg": "punjabi/book/figures/PA-W03-da-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-W03-ja",
+      "sourceHash": "fnv1a64:b3524ba709b82f5e",
+      "svgHash": "fnv1a64:049d130c134a33c3",
+      "svg": "punjabi/book/figures/PA-W03-ja-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-W03-pa",
+      "sourceHash": "fnv1a64:908389dd10697d1e",
+      "svgHash": "fnv1a64:af2c30f6750b8798",
+      "svg": "punjabi/book/figures/PA-W03-pa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-W04-dda",
+      "sourceHash": "fnv1a64:6365d5d0737b769a",
+      "svgHash": "fnv1a64:7f5fac3e78ac7264",
+      "svg": "punjabi/book/figures/PA-W04-dda-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-W04-ra",
+      "sourceHash": "fnv1a64:f3cd408604e8eb2a",
+      "svgHash": "fnv1a64:e5db8f526605eaea",
+      "svg": "punjabi/book/figures/PA-W04-ra-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-W05-ka",
+      "sourceHash": "fnv1a64:7a570f056df09698",
+      "svgHash": "fnv1a64:f090a177d237b02c",
+      "svg": "punjabi/book/figures/PA-W05-ka-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-W05-kha",
+      "sourceHash": "fnv1a64:e462939205971e19",
+      "svgHash": "fnv1a64:66e4c835e0ccebfc",
+      "svg": "punjabi/book/figures/PA-W05-kha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-W08-pha",
+      "sourceHash": "fnv1a64:74d988b2e566bc02",
+      "svgHash": "fnv1a64:3a77c63b00535b89",
+      "svg": "punjabi/book/figures/PA-W08-pha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-W09-chacha",
+      "sourceHash": "fnv1a64:c87c08ec3d9ead39",
+      "svgHash": "fnv1a64:48f332cb940ea9cf",
+      "svg": "punjabi/book/figures/PA-W09-chacha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-W09-chhachha",
+      "sourceHash": "fnv1a64:88aca681a01f2fe0",
+      "svgHash": "fnv1a64:78139ff2fd8e1475",
+      "svg": "punjabi/book/figures/PA-W09-chhachha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-W09-gagga",
+      "sourceHash": "fnv1a64:c463fd84560d3f7b",
+      "svgHash": "fnv1a64:be5f00345ac15c15",
+      "svg": "punjabi/book/figures/PA-W09-gagga-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-W09-lalla",
+      "sourceHash": "fnv1a64:18d26986df5f38c8",
+      "svgHash": "fnv1a64:2d54c8f7dfc3ff34",
+      "svg": "punjabi/book/figures/PA-W09-lalla-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-W09-thattha",
+      "sourceHash": "fnv1a64:150aade7bf4f3969",
+      "svgHash": "fnv1a64:4f37523a27c931c9",
+      "svg": "punjabi/book/figures/PA-W09-thattha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PA-W10-thatha",
+      "sourceHash": "fnv1a64:e15e1a6747049223",
+      "svgHash": "fnv1a64:032a74d7df127ff9",
+      "svg": "punjabi/book/figures/PA-W10-thatha-filmstrip.svg"
+    }
+  ]
+}

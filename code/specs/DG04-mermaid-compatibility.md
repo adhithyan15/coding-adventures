@@ -417,15 +417,20 @@ Packet at the full compatibility level.
 
 The initial Mermaid 11.16.1 Kanban slice uses dedicated portable grammars and
 preserves indentation-defined columns and cards, with plain labels and explicit
-`id[label]` forms, in typed board semantic IR. Rounded, circular, and hexagonal
-node delimiters normalize to Mermaid's fixed Kanban section/card semantics while
-preserving their authored labels through layout and Paint lowering. Inline or multiline `@{...}`
+`id[label]` forms, in typed board semantic IR. Rounded, circular, hexagonal,
+cloud, bang, and alternate node delimiters normalize to Mermaid's fixed Kanban semantics while
+preserving their authored labels through layout and Paint lowering. Quoted labels inside
+node delimiters are unquoted before entering semantic IR, while quoted and inline Markdown labels
+preserve bold and italic spans through backend-neutral glyph lowering. Escaped multiline labels
+expand deterministic section headers and card geometry before Paint lowering. Inline or multiline `@{...}`
 card metadata preserves label overrides, ticket identifiers, assignees, and
 priorities in semantic IR. Icon identifiers from either metadata or following
 `::icon(...)` decorators survive the same pipeline and lower to generic,
 backend-neutral shaped badge geometry without coupling the board IR to an icon
-provider. Board layout reserves a compact metadata footer and PaintScene
-lowering emits it as backend-neutral shaped text.
+provider. High and low priority values lower to Mermaid-compatible colored edge
+markers without reserving footer space. Board layout reserves a compact metadata
+footer for ticket and assignee fields, which PaintScene lowering aligns to the
+left and right as backend-neutral shaped text.
 Following `:::class` decorators preserve ordered column or card class names
 through board semantic IR and layout, then lower them as `diagram.classes`
 PaintInstruction metadata without coupling native renderers to CSS.
@@ -477,7 +482,13 @@ artwork remains unsupported at the partial level. Architecture `iconSize`, `font
 `idealEdgeLengthMultiplier` values from Mermaid init directives or YAML front matter
 survive as typed semantic configuration and resolve into backend-neutral node geometry,
 service typography, deterministic spacing, alignment-hint distances, group insets,
-and outer canvas margins. Randomized layout and the remaining fcose-specific tuning controls remain
+and outer canvas margins. Bounded `edgeElasticity` values survive the same configuration
+paths and deterministically tighten or loosen connected sibling spacing before relationship
+routing and backend-neutral PaintScene lowering. `randomize` and signed `seed` values also
+survive semantic configuration and select a repeatable seeded permutation of sibling layout
+slots while preserving authored IR order, containment, routing, and backend-neutral PaintScene
+lowering. Unlike Mermaid's nondeterministic `seed: 0` escape hatch, the native pipeline keeps
+zero deterministic. Iteration limits and the remaining fcose-specific tuning controls remain
 unsupported at the partial level.
 
 ### Radar Compatibility
@@ -728,8 +739,11 @@ The initial Mermaid 11.16.1 Ishikawa slice recognizes `ishikawa` and
 `ishikawa-beta`, takes the first content line as the effect, and preserves
 subsequent indentation as dedicated causal-tree IR. Deterministic alternating
 fishbone layout lowers through backend-neutral paths, a rounded effect box,
-and glyph runs, with native Metal-to-PNG validation. Exact upstream theme and
-configuration parity, adaptive collision avoidance for very wide or deeply
+and glyph runs, with native Metal-to-PNG validation. Non-negative `diagramPadding`
+values from Mermaid init directives or YAML front matter survive causal IR and
+resolve outer spine, effect-box, and bone geometry before backend-neutral Paint
+lowering. Exact upstream theme and remaining configuration parity, adaptive
+collision avoidance for very wide or deeply
 nested trees, and interactive behavior remain unsupported at the partial
 level.
 
@@ -749,13 +763,31 @@ theme-exact rendering remain unsupported at the partial level.
 
 The initial Mermaid 11.16.1 Cynefin slice recognizes `cynefin-beta` and its
 colon-terminated form, then parses the five fixed domains, quoted domain
-items, titles, and labeled cross-domain transitions into dedicated domain-map
-IR. Self-loop transitions are discarded to match upstream semantics. Fixed
-semantic quadrant and center-ellipse layout lowers through backend-neutral
-rectangles, ellipses, paths, and glyph runs with native Metal-to-PNG
-validation. Theme/config overrides, organic seeded boundary waviness, exact
-cliff styling, transition arrowheads, accessibility directives, and overflow
-badges remain unsupported at the partial level.
+items, titles, accessibility titles, single-line and braced multiline
+accessibility descriptions, and labeled cross-domain transitions into dedicated
+domain-map IR. Self-loop transitions are discarded to match upstream semantics.
+Fixed semantic quadrant and center-ellipse layout preserves accessibility
+metadata while lowering through backend-neutral rectangles, ellipses, paths,
+filled transition arrowheads, and glyph runs with native Metal-to-PNG
+validation. Transitions follow Mermaid's center-to-center quadratic curves,
+including perpendicular control-point offsets, tangent-aligned arrowheads, and
+control-point label placement. All Cynefin theme fields for colors, stroke
+widths, and text sizes survive init directives or YAML front matter through
+semantic config IR and backend-neutral Paint lowering. Domain items use
+Mermaid's deterministic fallback width, 26-pixel height, four-pixel radius,
+four-pixel spacing, themed fill opacity, and one-pixel outline. Confusion
+domains follow Mermaid's three-item display cap and lower any hidden count to a
+dashed, lower-opacity backend-neutral `+N more` badge. Exact browser text
+measurement remains unsupported at the partial level.
+Positive `width` and `height` plus non-negative `padding` values from Mermaid
+init directives or YAML front matter survive semantic IR and control the inner
+framework and outer canvas dimensions during deterministic layout.
+The default-enabled `showDomainDescriptions` switch also survives config IR
+and controls backend-neutral model and practice subtitles for all five domains.
+Non-negative `boundaryAmplitude` and integer `seed` values resolve deterministic
+cubic vertical and horizontal domain boundaries before Paint lowering.
+The fixed complex-to-chaotic cliff follows Mermaid's two-segment cubic geometry
+and lowers as a backend-neutral dark-red four-pixel path.
 
 ### TreeView Native Slice
 

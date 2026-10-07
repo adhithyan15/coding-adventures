@@ -54,8 +54,8 @@ bare *r*. The *r* is a quick tongue-tip tap.
 Put a finger over **र** and follow the printed shape. Then copy it three times,
 large and slow. Say *ra* each time your pen stops.
 
-This lesson asks you to copy the shape you can see. It does not invent one
-universal stroke order where school traditions differ.
+The strip shows one attested stroke order for **र**, with its source beneath
+it. It is not one universal order: school traditions differ.
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-RA-01] -->

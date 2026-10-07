@@ -143,9 +143,23 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "JA-W05-five-component",
+      "sourceHash": "fnv1a64:8f9af18e73d3b982",
+      "svgHash": "fnv1a64:f76a81c32834e04f",
+      "svg": "japanese/book/figures/JA-W05-five-component-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "JA-W05-gen-component",
+      "sourceHash": "fnv1a64:b5741c0d312289d5",
+      "svgHash": "fnv1a64:2c7a8d6940effda8",
+      "svg": "japanese/book/figures/JA-W05-gen-component-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "JA-W05-go-kanji",
-      "sourceHash": "fnv1a64:327ee667fef280aa",
-      "svgHash": "fnv1a64:eff8ea183768f694",
+      "sourceHash": "fnv1a64:b4347eb883dd68b0",
+      "svgHash": "fnv1a64:25b1a7ccd178d728",
       "svg": "japanese/book/figures/JA-W05-go-kanji-filmstrip.svg"
     },
     {
@@ -154,6 +168,13 @@
       "sourceHash": "fnv1a64:84f6ead31473006d",
       "svgHash": "fnv1a64:274dd0d2c10f11c8",
       "svg": "japanese/book/figures/JA-W05-hon-kanji-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "JA-W05-mouth-component",
+      "sourceHash": "fnv1a64:9e06bc43ca151819",
+      "svgHash": "fnv1a64:b2b3c827e608ed06",
+      "svg": "japanese/book/figures/JA-W05-mouth-component-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",

@@ -53,13 +53,13 @@ Mercury.
 ## Writing: ധ
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-C114-DHA-01] -->
 
-Put your pen on ധ and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Follow the numbered strip: start where movement 1 begins, and let each panel
+show you the next movement before your pen makes it. Then write ധ yourself —
+slowly, and larger than it is printed.
 
-> This book does not yet tell you **where to start this letter or which way to
-> travel**. It is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+> The strip shows **where to start this letter and which way to travel**, in one
+> attested order, and names its source beneath it. Teachers vary, so treat it as
+> a sound way in, not the only one.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-C113-LLA-01, ML-SCRIPT-C113-KHA-01, ML-SCRIPT-C114-DHA-01] -->

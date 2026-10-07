@@ -70,6 +70,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/eventmodeling-11.16.1-visual-corpus.json"
     ));
+    const CYNEFIN_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/cynefin-11.16.1-corpus.json"
+    ));
+    const CYNEFIN_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/cynefin-11.16.1-visual-corpus.json"
+    ));
 
     #[test]
     fn render_dot_diagram_to_png() {
@@ -525,7 +533,7 @@ mod apple {
     #[test]
     fn render_mermaid_kanban_to_png() {
         let board = parse_kanban(
-            "%%{init: {'kanban': {'ticketBaseUrl': 'https://tracker.example/issues/#TICKET#', 'sectionWidth': 280, 'padding': 30}}}%%\nkanban\n  todo((Todo))@{ ticket: KB-7 }\n    :::backlog\n    grammar[Write grammar]@{ ticket: MC-42, assigned: Ada, priority: high, icon: code }\n      :::urgent blocked\n    ir{{Lower semantic IR}}\n  doing[In progress]\n    layout(Build board layout)@{ ticket: MC-43, assigned: Grace, priority: medium }\n      ::icon(layout)\n  done[Done]\n    paint((Render native paint))",
+            "%%{init: {'kanban': {'ticketBaseUrl': 'https://tracker.example/issues/#TICKET#', 'sectionWidth': 280, 'padding': 30}}}%%\nkanban\n  todo[\"`**Todo** queue`\"]@{ ticket: KB-7 }\n    :::backlog\n    grammar[\"`Write *grammar*`\"]@{ ticket: MC-42, assigned: Ada, priority: Very High, icon: code }\n      :::urgent blocked\n    ir{{Lower **semantic**\\nIR}}\n  doing[\"In progress\"]\n    layout(Build board layout)@{ ticket: MC-43, assigned: Grace, priority: Low }\n      ::icon(layout)\n  done)Done(\n    paint))Render native paint((",
         )
         .expect("kanban parse failed");
         let layout = layout_board_diagram(&board);
@@ -546,12 +554,20 @@ mod apple {
         );
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
-        assert_eq!((scene.width, scene.height), (940.0, 322.0));
+        assert_eq!((scene.width, scene.height), (940.0, 330.0));
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
             PaintInstruction::Rect(rect)
                 if rect.base.metadata.as_ref().and_then(|metadata| metadata.get("diagram.classes"))
                     == Some(&"urgent blocked".to_string())
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#ff0000")
+        )));
+        assert!(scene.instructions.iter().any(|instruction| matches!(
+            instruction,
+            PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#0000ff")
         )));
         assert!(scene.instructions.iter().any(|instruction| matches!(
             instruction,
@@ -1792,10 +1808,13 @@ line "Target" [35, 50, 68, 82]"##,
     #[test]
     fn render_mermaid_architecture_to_png() {
         let diagram = parse_architecture(
-            "%%{init: {\"architecture\": {\"iconSize\": 96, \"fontSize\": 18, \"nodeSeparation\": 110, \"padding\": 48, \"idealEdgeLengthMultiplier\": 1.25}}}%%\narchitecture-beta\naccTitle: Platform topology\naccDescr: API and database services\ngroup platform(cloud)[Platform]\ngroup cachegroup(disk)[Cache Layer]\nservice api \"API\"[Gateway]\nservice cache(disk)[Cache] in cachegroup\njunction split\nservice db(database)[Database] in platform\nservice worker(aws:lambda)[Worker] in platform\nalign row api cache split db worker\napi:R -[reads and writes]-> T:split\nsplit:R <--> L:db{group}\napi:R -[dispatches]-> L:worker",
+            "%%{init: {\"architecture\": {\"iconSize\": 96, \"fontSize\": 18, \"nodeSeparation\": 110, \"padding\": 48, \"idealEdgeLengthMultiplier\": 1.25, \"edgeElasticity\": 0.8, \"randomize\": true, \"seed\": 17}}}%%\narchitecture-beta\naccTitle: Platform topology\naccDescr: API and database services\ngroup platform(cloud)[Platform]\ngroup cachegroup(disk)[Cache Layer]\nservice api \"API\"[Gateway]\nservice cache(disk)[Cache] in cachegroup\njunction split\nservice db(database)[Database] in platform\nservice worker(aws:lambda)[Worker] in platform\nalign row api cache split db worker\napi:R -[reads and writes]-> T:split\nsplit:R <--> L:db{group}\napi:R -[dispatches]-> L:worker",
         )
         .expect("Mermaid architecture parse failed");
         let layout = layout_structural_diagram(&diagram);
+        assert_eq!(diagram.architecture_config.as_ref().unwrap().edge_elasticity, 0.8);
+        assert!(diagram.architecture_config.as_ref().unwrap().randomize);
+        assert_eq!(diagram.architecture_config.as_ref().unwrap().seed, 17);
         assert_eq!(layout.groups.len(), 2);
         assert!(layout.groups.iter().any(|group| group.icon_name.as_deref() == Some("cloud")));
         let cache_group = layout.groups.iter().find(|group| group.id == "cachegroup").unwrap();
@@ -1886,6 +1905,38 @@ line "Target" [35, 50, 68, 82]"##,
         let pixels = render(&scene);
         write_png(&pixels, "/tmp/mermaid_architecture_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_mermaid_architecture_seeded_layout_to_png() {
+        let diagram = parse_architecture(
+            "%%{init: {\"architecture\": {\"randomize\": true, \"seed\": 17}}}%%\narchitecture-beta\ngroup platform(cloud)[Platform]\nservice api(server)[API] in platform\nservice queue(disk)[Queue] in platform\nservice db(database)[Database] in platform\nservice cache(disk)[Cache] in platform\nservice worker(server)[Worker] in platform\nservice metrics(server)[Metrics] in platform\napi:R --> L:queue\nqueue:R --> L:db\ndb:B --> T:cache\ncache:R --> L:worker\nworker:R --> L:metrics",
+        )
+        .expect("seeded Mermaid architecture parse failed");
+        let layout = layout_structural_diagram(&diagram);
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        let scene = diagram_to_paint_structural(
+            &layout,
+            &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 248, g: 250, b: 252, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 12.0),
+                title_font: font_spec("Helvetica", 16.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            },
+        );
+        let pixels = render(&scene);
+        write_png(&pixels, "/tmp/mermaid_architecture_seeded_e2e.png")
+            .expect("seeded architecture PNG write failed");
+        assert!(pixels.width > 0 && pixels.height > 0);
+        assert_eq!(layout.nodes[0].id, "api");
+        assert!(layout.nodes.iter().enumerate().any(|(index, node)| {
+            node.x != 40.0 + (index % 3) as f64 * 235.0
+        }));
     }
 
     #[test]
@@ -3339,8 +3390,11 @@ line "Target" [35, 50, 68, 82]"##,
 
     #[test]
     fn render_mermaid_ishikawa_to_png() {
-        let diagram = parse_ishikawa("ishikawa-beta\nLate delivery\n  People\n    Staffing\n  Process\n    Reviews\n  Tools\n    Slow builds").expect("ishikawa parse failed");
+        let diagram = parse_ishikawa("%%{init: {\"ishikawa\": {\"diagramPadding\": 64}}}%%\nishikawa-beta\nLate delivery\n  People\n    Staffing\n  Process\n    Reviews\n  Tools\n    Slow builds").expect("ishikawa parse failed");
         let layout = layout_ishikawa(&diagram, 720.0);
+        assert_eq!(diagram.diagram_padding, 64.0);
+        assert_eq!(layout.spine_from.x, 80.0);
+        assert_eq!(layout.width - (layout.effect_x + layout.effect_width), 64.0);
         let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
         let scene = diagram_to_paint_ishikawa(&layout, &DiagramToPaintOptions {
             background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 }, device_pixel_ratio: 2.0,
@@ -3369,7 +3423,7 @@ line "Target" [35, 50, 68, 82]"##,
 
     #[test]
     fn render_mermaid_cynefin_to_png() {
-        let diagram = parse_cynefin("cynefin-beta\ntitle Incident Response\ncomplex\n  \"Investigate root cause\"\ncomplicated\n  \"Expert review\"\nclear\n  \"Apply known fix\"\nchaotic\n  \"Page on-call\"\nconfusion\n  \"Unknown mode\"\ncomplex --> complicated : \"Pattern found\"\nclear --> chaotic : \"Complacency\"").expect("cynefin parse failed");
+        let diagram = parse_cynefin("%%{init: {\"cynefin\": {\"width\": 640, \"height\": 520, \"padding\": 24, \"boundaryAmplitude\": 12, \"seed\": 17}, \"themeVariables\": {\"cynefin\": {\"boundaryColor\": \"#0f766e\", \"cliffColor\": \"#991b1b\", \"arrowColor\": \"#334155\", \"complexBg\": \"#dcfce7\"}}}}%%\ncynefin-beta\ntitle Incident Response\naccTitle : Incident response framework\naccDescr { Practices grouped by uncertainty\nand causality }\ncomplex\n  \"Superseded practice\"\ncomplex\n  'Investigate root cause'\ncomplicated\n  \"Expert review\"\nclear\n  \"Apply known fix\"\nchaotic\n  \"Page on-call\"\nconfusion\n  \"Unknown mode\"\n  \"Insufficient evidence\"\n  \"Mixed signals\"\n  \"Unclear ownership\"\n  \"Novel incident\"\ncomplex --> complicated : 'Pattern found'\nclear --> chaotic : \"Complacency\"").expect("cynefin parse failed");
         let layout = layout_cynefin(&diagram);
         let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
         let scene = diagram_to_paint_cynefin(&layout, &DiagramToPaintOptions {
@@ -3379,6 +3433,47 @@ line "Target" [35, 50, 68, 82]"##,
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
         let pixels = render(&scene); write_png(&pixels, "/tmp/mermaid_cynefin_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_cynefin_visual_corpus_to_png() {
+        let syntax: Value = serde_json::from_str(CYNEFIN_CORPUS).expect("cynefin corpus JSON");
+        let visual: Value =
+            serde_json::from_str(CYNEFIN_VISUAL_CORPUS).expect("cynefin visual corpus JSON");
+        assert_eq!(visual["upstream_commit"], syntax["upstream_commit"]);
+
+        let valid = syntax["valid"].as_array().expect("valid cynefin fixtures");
+        let fixture_ids = visual["fixtures"].as_array().expect("visual fixture ids");
+        let unique = fixture_ids.iter().filter_map(Value::as_str).collect::<BTreeSet<_>>();
+        assert_eq!(unique.len(), fixture_ids.len(), "visual fixture ids must be unique");
+
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        for fixture_id in fixture_ids {
+            let id = fixture_id.as_str().expect("visual fixture id");
+            let fixture = valid
+                .iter()
+                .find(|fixture| fixture["id"] == id)
+                .unwrap_or_else(|| panic!("visual fixture {id} must exist in the syntax corpus"));
+            let diagram = parse_cynefin(fixture["source"].as_str().expect("cynefin fixture source"))
+                .unwrap_or_else(|error| panic!("visual fixture {id} failed to parse: {error}"));
+            let layout = layout_cynefin(&diagram);
+            let scene = diagram_to_paint_cynefin(&layout, &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 13.0),
+                title_font: font_spec("Helvetica", 18.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            });
+            assert!(!scene.instructions.is_empty(), "visual fixture {id} must lower to paint");
+            let pixels = render(&scene);
+            assert!(pixels.width > 0 && pixels.height > 0, "visual fixture {id} must render");
+            write_png(&pixels, &format!("/tmp/mermaid_cynefin_11_16_1_{id}.png"))
+                .unwrap_or_else(|error| panic!("visual fixture {id} PNG failed: {error}"));
+        }
     }
 
     #[test]

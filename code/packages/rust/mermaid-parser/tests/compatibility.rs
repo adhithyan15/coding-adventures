@@ -68,6 +68,7 @@ const VENN_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../
 const ISHIKAWA_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/ishikawa-11.16.1-corpus.json"));
 const WARDLEY_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/wardley-11.16.1-corpus.json"));
 const CYNEFIN_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/cynefin-11.16.1-corpus.json"));
+const CYNEFIN_VISUAL_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/cynefin-11.16.1-visual-corpus.json"));
 const TREEVIEW_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/treeview-11.16.1-corpus.json"));
 const RAILROAD_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-11.16.1-corpus.json"));
 const RAILROAD_EBNF_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-ebnf-11.16.1-corpus.json"));
@@ -167,14 +168,96 @@ fn pinned_treeview_subset_corpus_parses_to_tree_ir() {
 }
 
 #[test]
-fn pinned_cynefin_subset_corpus_parses_to_domain_map_ir() {
+fn pinned_cynefin_corpus_matches_upstream_acceptance() {
     let corpus: Value = serde_json::from_str(CYNEFIN_CORPUS).expect("cynefin corpus must be JSON");
     assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
-    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
-        let name = fixture["name"].as_str().expect("fixture name");
-        parse_cynefin(fixture["source"].as_str().expect("fixture source"))
+    assert_eq!(corpus["level"].as_str(), Some("full"));
+    assert_eq!(corpus["upstream_commit"].as_str(), Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf"));
+    for fixture in corpus["valid"].as_array().expect("valid fixture array") {
+        let name = fixture["id"].as_str().expect("fixture id");
+        let diagram = parse_cynefin(fixture["source"].as_str().expect("fixture source"))
             .unwrap_or_else(|error| panic!("cynefin fixture {name} failed: {error}"));
+        if name == "accessibility" {
+            assert_eq!(diagram.accessibility_title.as_deref(), Some("Incident response framework"));
+            assert_eq!(diagram.accessibility_description.as_deref(), Some("Practices organized by\nuncertainty and causality"));
+        }
+        if name == "canvas-config" {
+            assert_eq!((diagram.config.width, diagram.config.height, diagram.config.padding), (640.0, 420.0, 24.0));
+            assert!(!diagram.config.show_domain_descriptions);
+            assert_eq!((diagram.config.boundary_amplitude, diagram.config.seed), (12.0, 17));
+        }
+        if name == "theme-config" {
+            let style = &diagram.config.style;
+            assert_eq!((style.domain_font_size, style.item_font_size), (18.0, 13.0));
+            assert_eq!((&style.boundary_color, style.boundary_width, &style.cliff_color, style.cliff_width),
+                (&"#112233".to_string(), 3.0, &"#441111".to_string(), 5.0));
+            assert_eq!((&style.arrow_color, style.arrow_width, &style.confusion_bg, &style.label_color),
+                (&"#224466".to_string(), 4.0, &"#eee1f1".to_string(), &"#101010".to_string()));
+        }
+        if name == "front-matter-config-and-theme" {
+            assert_eq!((diagram.config.width, diagram.config.padding), (680.0, 28.0));
+            assert_eq!(diagram.config.style.boundary_color, "#334455");
+            assert_eq!(diagram.config.style.complex_bg, "#ddeedd");
+        }
+        if name == "quoted-strings" {
+            assert_eq!(diagram.domains[0].items,
+                ["Single quoted", "Escaped \"quote\" and \\ slash", "Line\nfeed"]);
+            assert_eq!(diagram.transitions[0].label.as_deref(), Some("Shift's label"));
+        }
+        if name == "metadata-variants" {
+            assert_eq!(diagram.title.as_deref(), Some(""));
+            assert_eq!(diagram.accessibility_title.as_deref(), Some("Spaced accessibility title"));
+            assert_eq!(diagram.accessibility_description.as_deref(), Some("First line\nSecond line"));
+        }
+        if name == "inline-accessibility-description" {
+            assert_eq!(diagram.accessibility_description.as_deref(), Some("Inline description"));
+        }
+        if name == "duplicate-domain-last-wins" {
+            assert_eq!(diagram.domains[0].items, ["Replacement item"]);
+        }
     }
+    for fixture in corpus["invalid"].as_array().expect("invalid fixture array") {
+        let name = fixture["id"].as_str().expect("invalid fixture id");
+        assert!(parse_cynefin(fixture["source"].as_str().expect("invalid fixture source")).is_err(),
+            "invalid upstream fixture {name} unexpectedly parsed");
+    }
+    assert_eq!(parse_cynefin("cynefin-beta\nclear").expect("default seed source").config.seed, 145_697_634);
+    assert_eq!(parse_cynefin("%%{init: {\"cynefin\": {\"seed\": 0}}}%%\ncynefin-beta\nclear")
+        .expect("zero seed source").config.seed, 715_869_649);
+}
+
+#[test]
+fn cynefin_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let family = manifest["families"]
+        .as_array()
+        .expect("families array")
+        .iter()
+        .find(|family| family["id"] == "cynefin")
+        .expect("cynefin family");
+    assert_eq!(family["status"].as_str(), Some("full"));
+
+    let syntax: Value = serde_json::from_str(CYNEFIN_CORPUS).expect("cynefin corpus must be JSON");
+    let visual: Value =
+        serde_json::from_str(CYNEFIN_VISUAL_CORPUS).expect("cynefin visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let valid_ids = syntax["valid"]
+        .as_array()
+        .expect("valid fixture array")
+        .iter()
+        .map(|fixture| fixture["id"].as_str().expect("fixture id"))
+        .collect::<BTreeSet<_>>();
+    let visual_ids = visual["fixtures"]
+        .as_array()
+        .expect("visual fixture array")
+        .iter()
+        .map(|id| id.as_str().expect("visual fixture id"))
+        .collect::<BTreeSet<_>>();
+    assert!(!syntax["invalid"].as_array().expect("invalid fixture array").is_empty());
+    assert!(!visual_ids.is_empty());
+    assert!(visual_ids.is_subset(&valid_ids));
+    assert_eq!(visual_ids.len(), visual["fixtures"].as_array().expect("visual fixture array").len());
 }
 
 #[test]
@@ -199,6 +282,9 @@ fn pinned_ishikawa_subset_corpus_parses_to_causal_tree_ir() {
             .unwrap_or_else(|error| panic!("ishikawa fixture {name} failed: {error}"));
         assert!(!diagram.effect.is_empty());
         assert!(!diagram.causes.is_empty());
+        if name == "diagram-padding-config" {
+            assert_eq!(diagram.diagram_padding, 64.0);
+        }
     }
 }
 
@@ -443,6 +529,17 @@ fn pinned_architecture_subset_corpus_parses_to_structural_ir() {
         let diagram = parse_architecture(source)
             .unwrap_or_else(|error| panic!("architecture fixture {id} failed: {error}"));
         assert!(!diagram.nodes.is_empty());
+        if id == "edge-elasticity-config" {
+            assert_eq!(
+                diagram.architecture_config.as_ref().unwrap().edge_elasticity,
+                0.8
+            );
+        }
+        if id == "seeded-random-layout-config" {
+            let config = diagram.architecture_config.as_ref().unwrap();
+            assert!(config.randomize);
+            assert_eq!(config.seed, 17);
+        }
     }
 }
 
@@ -491,6 +588,39 @@ fn pinned_kanban_subset_corpus_parses_to_board_ir() {
             assert_eq!(board.columns[0].cards[0].label.text, "Rounded card");
             assert_eq!(board.columns[0].cards[1].label.text, "Hex card");
             assert_eq!(board.columns[1].cards[0].label.text, "Circle card");
+        }
+        if id == "cloud-and-bang-labels" {
+            assert_eq!(board.columns[0].label.text, "Cloud section");
+            assert_eq!(board.columns[0].cards[0].label.text, "Bang card");
+            assert_eq!(board.columns[0].cards[1].label.text, "Cloud card");
+            assert_eq!(board.columns[0].cards[2].label.text, "Burst card");
+        }
+        if id == "quoted-labels" {
+            assert_eq!(board.columns[0].label.text, "Todo queue");
+            assert_eq!(board.columns[0].cards[0].label.text, "Quoted card");
+        }
+        if id == "markdown-labels" {
+            let column = &board.columns[0];
+            let card = &column.cards[0];
+            assert_eq!(column.label.text, "Todo queue");
+            assert_eq!(column.label.markdown.as_deref(), Some("**Todo** queue"));
+            assert!(column.label.spans[0].bold);
+            assert_eq!(card.label.text, "Quoted card");
+            assert!(card.label.spans.iter().any(|span| span.italic));
+        }
+        if id == "inline-markdown-labels" {
+            assert_eq!(board.columns[0].label.text, "Todo queue");
+            assert!(board.columns[0].label.spans[0].bold);
+            assert_eq!(board.columns[0].cards[0].label.text, "Quoted card");
+            assert!(board.columns[0].cards[0].label.spans.iter().any(|span| span.italic));
+        }
+        if id == "multiline-labels" {
+            assert_eq!(board.columns[0].label.text, "Todo\nqueue");
+            assert_eq!(board.columns[0].cards[0].label.text, "Line 1\nLine 2\nLine 3");
+        }
+        if id == "priority-markers" {
+            assert_eq!(board.columns[0].cards[0].priority.as_deref(), Some("Very High"));
+            assert_eq!(board.columns[0].cards[1].priority.as_deref(), Some("Very Low"));
         }
     }
 }
@@ -1126,6 +1256,12 @@ fn ishikawa_dispatches_to_dedicated_causal_tree_ir() {
     let indented_effect = parse_ishikawa("ishikawa-beta\n    Failure\nPeople\n  Training").unwrap();
     assert_eq!(indented_effect.causes[0].parent_id, None);
     assert_eq!(indented_effect.causes[1].parent_id.as_deref(), Some("cause-1"));
+
+    let configured = parse_ishikawa(
+        "---\nconfig:\n  ishikawa:\n    diagramPadding: 52\n---\nishikawa\nFailure\n  People",
+    )
+    .unwrap();
+    assert_eq!(configured.diagram_padding, 52.0);
 }
 
 #[test]

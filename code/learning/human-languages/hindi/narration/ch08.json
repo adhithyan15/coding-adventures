@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f09e22bba797d6d4",
+  "sourceHash": "fnv1a64:dc04beada1c1a362",
   "lessons": [
     {
       "id": "HI-C08-kripaya",
@@ -157,7 +157,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5b8377bb721c6ca9",
+      "sourceHash": "fnv1a64:9f08d59632bb39a9",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -266,15 +266,15 @@
         {
           "index": 3,
           "type": "writing",
-          "title": "Writing: ◌ृ — copy what you see",
+          "title": "Writing: ◌ृ — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ◌ृ (ṛ) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ृ (ṛ) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },
@@ -557,7 +557,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:16425f6921bfb9a3",
+      "sourceHash": "fnv1a64:615bf3d9c8d4cfb5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -644,15 +644,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ◌े — copy what you see",
+          "title": "Writing: ◌े — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ◌े and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌े yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },

@@ -195,6 +195,151 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn("printf '{}' > \"$state\"", script)
         self.assertLess(script.index('test -e "$corrupt"'), script.rindex('test -s "$state"'))
 
+    def test_journal_runs_its_xcuitest_on_the_ipad(self) -> None:
+        """UI89 §4.3: Journal's XCUITest is compiled into the iOS project and
+        run on the iPad simulator, from a fresh install, and the step checks
+        that exactly one test ran and passed."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("# ---- Journal on iOS and iPadOS (UI89 §2.4, step 7).")
+        block = workflow[start : workflow.index("\n\n", start)]
+        source = "code/packages/rust/journal-mosaic-app/conformance/swiftui-ios/JournalUiTests.swift"
+        self.assertIn(f"--ios-ui-test {source}", block)
+        test_source = Path(__file__).resolve().parents[3] / source
+        self.assertTrue(test_source.is_file(), test_source)
+        swift = test_source.read_text(encoding="utf-8")
+        self.assertIn("final class JournalUiTests: XCTestCase", swift)
+        self.assertIn("XCUIDevice.shared.orientation = .landscapeLeft", swift)
+        self.assertIn("app.terminate()", swift)
+
+        uninstall = 'xcrun simctl uninstall "$ipad" dev.codingadventures.journalapp'
+        test = (
+            'xcodebuild test -workspace App.xcworkspace -scheme AppUITests -sdk iphonesimulator '
+            '-destination "platform=iOS Simulator,id=$ipad"'
+        )
+        self.assertIn(uninstall, block)
+        self.assertIn(test, block)
+        self.assertIn("grep -q 'Executed 1 test, with 0 failures'", block)
+        # After the iPad launch check, from a fresh install, before shutdown.
+        self.assertLess(block.index('xcrun simctl launch "$ipad" dev.codingadventures.journalapp'), block.index(uninstall))
+        self.assertLess(block.index(uninstall), block.index(test))
+        self.assertLess(block.index(test), block.rindex('xcrun simctl shutdown "$ipad"'))
+
+    def test_trestle_runs_its_xcuitest_on_the_ipad(self) -> None:
+        """UI89 §4.4: Trestle's XCUITest goes into its iOS project and runs on
+        the iPad simulator from a fresh install, before Journal's section,
+        and the step checks that exactly one test ran and passed."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("# iOS and iPadOS with the REAL runtime linked in (UI89 §2.1)")
+        block = workflow[start : workflow.index("# ---- Journal on iOS and iPadOS (UI89 §2.4, step 7).")]
+        source = "code/packages/rust/task-mosaic-app/conformance/swiftui-ios/TrestleUiTests.swift"
+        self.assertIn('pkg code/programs/mosaic/task-app --backend swiftui --output "$ios_linked_output"', block)
+        self.assertIn(f"--ios-ui-test {source}", block)
+        test_source = Path(__file__).resolve().parents[3] / source
+        self.assertTrue(test_source.is_file(), test_source)
+        swift = test_source.read_text(encoding="utf-8")
+        self.assertIn("final class TrestleUiTests: XCTestCase", swift)
+        self.assertIn("XCUIDevice.shared.orientation = .landscapeLeft", swift)
+        self.assertIn("app.terminate()", swift)
+
+        uninstall = 'xcrun simctl uninstall "$ipad" dev.codingadventures.trestle'
+        test = (
+            'xcodebuild test -workspace App.xcworkspace -scheme AppUITests -sdk iphonesimulator '
+            '-destination "platform=iOS Simulator,id=$ipad"'
+        )
+        self.assertIn(uninstall, block)
+        self.assertIn(test, block)
+        self.assertIn("grep -q 'Executed 1 test, with 0 failures' \"$trestle_ui_test_log\"", block)
+        self.assertLess(block.index('xcrun simctl launch "$ipad" dev.codingadventures.trestle'), block.index(uninstall))
+        self.assertLess(block.index(uninstall), block.index(test))
+        self.assertLess(block.index(test), block.rindex('xcrun simctl shutdown "$ipad"'))
+
+    def test_engram_runs_its_picker_xcuitest_on_the_ipad(self) -> None:
+        """UI89 §4.4: Engram's XCUITest goes into its iOS project, selects the
+        build's fake document picker with its launch argument, and runs on the
+        iPad from a fresh install; the step checks one test ran and passed."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("# ---- Engram on iOS and iPadOS (UI89 §2.5, step 7).")
+        block = workflow[start : workflow.index("\n\n", start)]
+        source = "code/programs/mosaic/engram-app/conformance/swiftui-ios/EngramUiTests.swift"
+        self.assertIn(f"--ios-ui-test {source}", block)
+        test_source = Path(__file__).resolve().parents[3] / source
+        swift = test_source.read_text(encoding="utf-8")
+        self.assertIn("final class EngramUiTests: XCTestCase", swift)
+        self.assertIn('private let pickerArgument = "-MosaicUITestPicker"', swift)
+        self.assertIn("app.launchArguments = [pickerArgument]", swift)
+        self.assertIn("app.terminate()", swift)
+        # The argument the test passes is the one the fake listens for.
+        picker = (
+            Path(__file__).resolve().parents[2]
+            / "packages/rust/mosaic-app-bindings/templates/swiftui/ios-ui-test/MosaicUITestPicker.swift"
+        ).read_text(encoding="utf-8")
+        self.assertIn('let mosaicUITestPickerArgument = "-MosaicUITestPicker"', picker)
+
+        uninstall = 'xcrun simctl uninstall "$ipad" dev.codingadventures.engramapp'
+        test = (
+            "xcodebuild test -workspace App.xcworkspace -scheme AppUITests -sdk iphonesimulator "
+            '-destination "platform=iOS Simulator,id=$ipad"'
+        )
+        self.assertIn(uninstall, block)
+        self.assertIn(test, block)
+        self.assertIn("grep -q 'Executed 1 test, with 0 failures' \"$engram_ui_test_log\"", block)
+        self.assertLess(block.index('xcrun simctl launch "$ipad" dev.codingadventures.engramapp'), block.index(uninstall))
+        self.assertLess(block.index(uninstall), block.index(test))
+        self.assertLess(block.index(test), block.rindex('xcrun simctl shutdown "$ipad"'))
+
+    def test_every_flutter_app_runs_through_the_ios_simulator_gate(self) -> None:
+        """UI89 §7 (steps 3, 4): Trestle, Journal and Engram are each built
+        through the Flutter backend from iOS dynamic libraries by
+        build-mosaic-flutter-phone-app.sh, and run through the SwiftUI app's
+        simulator gate after that app (same bundle id) is uninstalled."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("- name: Build Trestle, Journal and Engram for iOS with Flutter (UI89 §7)")
+        step = workflow[start : workflow.index("\n      - name:", start)]
+        self.assertIn("runner.os == 'macOS'", step)
+        self.assertIn("needs.detect.outputs.needs_mosaic_swift_runtime == 'true'", step)
+        self.assertIn("needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'", step)
+        self.assertIn("while read -r crate program name application_id <&3; do", step)
+        self.assertIn("done 3<<EOF", step)
+        self.assertIn('bash code/scripts/build-mosaic-ios-dylibs.sh "$crate" "$phone_runtime"', step)
+        self.assertIn(
+            'bash code/scripts/build-mosaic-flutter-phone-app.sh ios "$program" "$phone_runtime" "$output" dev.codingadventures "$name"',
+            step,
+        )
+        uninstall = 'xcrun simctl uninstall "$simulator" "dev.codingadventures.$name"'
+        gate = (
+            'bash code/scripts/mosaic-ios-simulator-gate.sh "$output/flutter/build/ios/iphonesimulator/Runner.app" '
+            '"dev.codingadventures.$name" "$application_id" "$simulator"'
+        )
+        self.assertIn(gate, step)
+        self.assertLess(step.index(uninstall), step.index(gate))
+        for row in (
+            "task-mosaic-app code/programs/mosaic/task-app trestle task-app",
+            "journal-mosaic-app code/programs/mosaic/journal-app journalapp journal-app",
+            "engram-mosaic-app code/programs/mosaic/engram-app engramapp engram-app",
+        ):
+            self.assertIn(row, step)
+        self.assertLess(workflow.index("- name: Round-trip Rust engine through standard SwiftUI binding"), start)
+        setup = workflow.index("      - name: Set up Flutter\n")
+        self.assertIn(
+            "(runner.os == 'Linux' || (runner.os == 'macOS' && needs.detect.outputs.needs_mosaic_swift_runtime == 'true'))",
+            workflow[setup : workflow.index("\n      - name:", setup)],
+        )
+
+        script = (SCRIPT.parent / "build-mosaic-ios-dylibs.sh").read_text(encoding="utf-8")
+        self.assertIn("--crate-type cdylib", script)
+        self.assertIn("export IPHONEOS_DEPLOYMENT_TARGET=16.0", script)
+        self.assertIn('rm -rf -- "${output:?}/ios"', script)
+        self.assertIn('lipo -create "$arm64_simulator" "$x86_64_simulator" -output "$simulator"', script)
+        self.assertIn('--crate-type cdylib >&2 || exit 1', script)
+        phone = (SCRIPT.parent / "build-mosaic-flutter-phone-app.sh").read_text(encoding="utf-8")
+        self.assertIn("flutter build ios --simulator --debug", phone)
+        self.assertIn("grep -q ' _mosaic_app_create$' \"$checks/symbols.txt\"", phone)
+        self.assertIn('= "$org.$name"', phone)
+
     def test_engram_runs_and_keeps_its_state_on_ios(self) -> None:
         """UI89 §2.5 (step 7): Engram follows Journal's iOS recipe, after
         Journal, and its iOS target compiles the [host_effects] handler."""
@@ -344,10 +489,11 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn(
             "Round-trip Rust engine through standard SwiftUI binding", workflow
         )
-        # 60: since UI89 §2.2 the step boots iOS simulators and launches the
-        # generated apps, and §2.4/§2.5 add Journal's and Engram's engines,
-        # app builds and simulator gates.
-        self.assertIn("timeout-minutes: 60", swift_runtime_step)
+        # 105: since UI89 §2.2 the step boots iOS simulators and launches the
+        # generated apps, §2.4/§2.5 add Journal's and Engram's engines, app
+        # builds and simulator gates, and §4.3/§4.4 Journal's, Trestle's and
+        # Engram's XCUITests.
+        self.assertIn("timeout-minutes: 105", swift_runtime_step)
         self.assertIn(
             "mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app",
             workflow,

@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:42dd7035e6f84b16",
+  "sourceHash": "fnv1a64:f8b9c3338f2b231d",
   "lessons": [
     {
       "id": "TE-C01-namaskaram",
@@ -730,7 +730,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:64479f020aba0472",
+      "sourceHash": "fnv1a64:8e7c68a534ea799e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -797,15 +797,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: క — copy what you see",
+          "title": "Writing: క — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on క (ka) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write క (ka) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },
@@ -1052,7 +1052,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0c22405fd272ac74",
+      "sourceHash": "fnv1a64:bca43ac72f46a3d2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1131,15 +1131,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: అ — copy what you see",
+          "title": "Writing: అ — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on అ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write అ yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },

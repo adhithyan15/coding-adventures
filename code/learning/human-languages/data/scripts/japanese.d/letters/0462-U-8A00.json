@@ -1,0 +1,27 @@
+{
+  "glyph": "言",
+  "sound": "gen / gon / i(u) / koto",
+  "role": "logograph",
+  "components": [
+    "a short top mark",
+    "three bars",
+    "口 (box)"
+  ],
+  "strokeOrder": [
+    "draw the short top mark from left to right",
+    "lift, draw the long bar from left to right",
+    "lift, draw the upper short bar from left to right",
+    "lift, draw the lower short bar from left to right",
+    "lift, draw the box's left side from top to bottom",
+    "lift, draw its top from left to right, then without lifting turn down its right side",
+    "lift, close its base from left to right"
+  ],
+  "strokeOrderNote": "KanjiVG's 08a00 file records 言 as seven stroke paths in this order and direction: the top mark, the long bar, the upper and lower short bars, then the box (its left side, its top turning down its right side, its base); so there are six pen lifts.",
+  "penLifts": 6,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/08a00.svg",
+    "citation": "KanjiVG, kanji/08a00.svg, kanji 言 (U+8A00 CJK UNIFIED IDEOGRAPH-8A00), seven stroke paths kvg:08a00-s1 to s7 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is the top mark, a dot drawn down to the right (kvg:type ㇔); s2 to s4 are the long bar and the two short bars, each drawn left to right (㇐); s5 is the box's left side drawn top to bottom (㇑); s6 is its top drawn left to right, turning down its right side without lifting (㇕b); s7 is its base, drawn left to right (㇐b). Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs. The Japanese print glyph draws the top mark as a short bar, so the path runs along the bar from left to right."
+  },
+  "notes": "Speech, to say. Read i in 言う iu, to say; on the left of 語 it is the speech side that marks a character about words."
+}

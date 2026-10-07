@@ -206,9 +206,23 @@ Conditional statements preserve that runtime provenance only for slots proven
 on every reachable exit. Conditional value expressions likewise preserve it
 when the selector contains no procedure call and every reachable value branch
 is a direct runtime real result or a provenance-backed local. A selector may
-call a procedure when both value branches are direct formatter-safe real
-procedure calls that do not rely on real name-actual provenance; selector calls
-paired with provenance-backed local or real-name branches remain conservative.
+call a procedure when both value branches are selector-safe runtime-real
+expressions rooted in direct formatter-safe real procedure calls. Those calls
+may nest through a real name formal only when its actual has the same proof;
+unary signs, arithmetic composition with finite static operands, and
+real-valued standard functions preserve it, while a finite static real actual
+is safe directly. Variable-free exact `sign` and exact-range `entier` results
+may also widen through a real name formal. Selector calls paired with
+provenance-backed local or other real-name branches remain conservative.
+Built-in `sign` also preserves the proof for a selector-safe runtime-real
+operand because its result is always `-1`, `0`, or `1`.
+The same bounded result preserves runtime-real formatter provenance when it is
+widened through an ordinary real assignment or direct real name formal.
+`entier(sign(runtime-real))` retains that proof because `entier` receives an
+already integral `-1`, `0`, or `1`; unrestricted runtime `entier` remains gated.
+Unary `+` and `-` around the built-in `sign` result preserve the same bound.
+Built-in integer `abs` may also map that bounded result to exact `0` or `1`
+before `entier`; a user-declared `abs` remains conservative.
 One-sided reassignment remains conservative. `for` loops preserve
 runtime-real provenance for caller-frame locals whose values their bodies leave
 invariant; controlled, changed, captured, and name-promoted storage remains

@@ -1,0 +1,255 @@
+{
+  "script": "latin",
+  "entries": [
+    {
+      "script": "latin",
+      "glyph": "e",
+      "font": "_fonts/NotoSansDevanagari-Static.ttf",
+      "source": {
+        "citation": "Grundschrift-App (Laborschule Bielefeld, Bielefeld University, with the Grundschulverband), level kleinbuchstaben/e, ordered stroke paths for e (assets/levels/kleinbuchstaben/e/metadata.json, commit f6dbd80; no licence, facts only)",
+        "url": "https://github.com/Medien-Treibhaus/grundschrift-app-source/blob/f6dbd807adbb3fc2f94207fe578def439f6e9c49/assets/levels/kleinbuchstaben/e/metadata.json",
+        "variation": "The Grundschrift-App was made in a research project of the Laborschule at Bielefeld University with the Grundschulverband, on its Grundschrift school model, with a teacher advisory team. Each letter is an ordered list of paths, one per pen-down stroke, which the app makes a child trace in order. It writes e in one stroke: from the middle left along the bar to the right, then anticlockwise up, over, down and round to the lower right. UJIpenchars2 (Prat, Castro, Llorens, Marzal and Vilar; UCI Machine Learning Repository dataset 177, CC BY 4.0) holds 120 tablet pen traces of e, two by each of 60 adult Spanish writers; only counts are cited. All 120 are one stroke; 90 start at the middle left, and all 120 turn anticlockwise. The app's repository has no licence, so only the order, the start, the direction and the lifts are taken from it; no point is copied, and the path is fitted to the Noto Sans e bundled in NotoSansDevanagari-Static.ttf. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 2 movements",
+      "viewBox": {
+        "minX": -15,
+        "minY": -616,
+        "width": 598,
+        "height": 889.1
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "draw the bar to the right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M292 546Q361 546 410.5 516Q460 486 486.5 431.5Q513 377 513 304L513 251L146 251Q148 160 192.5 112.5Q237 65 317 65Q368 65 407.5 74.5Q447 84 489 102L489 25Q448 7 408 -1.5Q368 -10 313 -10Q237 -10 178.5 21Q120 52 87.5 113.5Q55 175 55 264Q55 352 84.5 415Q114 478 167.5 512Q221 546 292 546ZM291 474Q228 474 191.5 433.5Q155 393 148 321L421 321Q421 367 407 401Q393 435 364.5 454.5Q336 474 291 474Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M107 282 L107 282\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M107 282 L152 286 L198 286 L243 286 L289 286 L335 286 L380 286 L426 288 L471 294\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"471\" cy=\"294\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"284\" y=\"197.9\" text-anchor=\"middle\" font-size=\"47.9\" fill=\"#6b7280\"><tspan x=\"284\" y=\"197.9\">1. draw the bar to the</tspan><tspan x=\"284\" y=\"256.3\">right</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "curve up, round and down",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M292 546Q361 546 410.5 516Q460 486 486.5 431.5Q513 377 513 304L513 251L146 251Q148 160 192.5 112.5Q237 65 317 65Q368 65 407.5 74.5Q447 84 489 102L489 25Q448 7 408 -1.5Q368 -10 313 -10Q237 -10 178.5 21Q120 52 87.5 113.5Q55 175 55 264Q55 352 84.5 415Q114 478 167.5 512Q221 546 292 546ZM291 474Q228 474 191.5 433.5Q155 393 148 321L421 321Q421 367 407 401Q393 435 364.5 454.5Q336 474 291 474Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M107 282 L152 286 L198 286 L243 286 L289 286 L335 286 L380 286 L426 288 L471 294 L471 294\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M471 294 L467 338 L459 382 L442 423 L413 456 L380 487 L339 504 L295 508 L251 507 L209 492 L174 465 L144 433 L122 394 L109 351 L107 307 L104 263 L103 218 L112 174 L128 133 L153 96 L185 66 L224 44 L267 32 L311 30 L356 30 L400 35 L443 46\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"443\" cy=\"46\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"284\" y=\"197.9\" text-anchor=\"middle\" font-size=\"47.9\" fill=\"#6b7280\"><tspan x=\"284\" y=\"197.9\">2. curve up, round and</tspan><tspan x=\"284\" y=\"256.3\">down</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "latin",
+      "glyph": "i",
+      "font": "_fonts/NotoSansDevanagari-Static.ttf",
+      "source": {
+        "citation": "Grundschrift-App (Laborschule Bielefeld, Bielefeld University, with the Grundschulverband), level kleinbuchstaben/i, ordered stroke paths for i (assets/levels/kleinbuchstaben/i/metadata.json, commit f6dbd80; no licence, facts only)",
+        "url": "https://github.com/Medien-Treibhaus/grundschrift-app-source/blob/f6dbd807adbb3fc2f94207fe578def439f6e9c49/assets/levels/kleinbuchstaben/i/metadata.json",
+        "variation": "The Grundschrift-App was made in a research project of the Laborschule at Bielefeld University with the Grundschulverband, on its Grundschrift school model, with a teacher advisory team. Each letter is an ordered list of paths, one per pen-down stroke, which the app makes a child trace in order. It writes i in two strokes: the stem first, from the top down, and the dot last. Grundschrift ends the stroke with a small hook to the right that Noto Sans does not print, so the path ends where the printed letter ends. UJIpenchars2 (Prat, Castro, Llorens, Marzal and Vilar; UCI Machine Learning Repository dataset 177, CC BY 4.0) holds 120 tablet pen traces of i, two by each of 60 adult Spanish writers; only counts are cited. 115 of the 120 are two strokes, and in all 115 the dot, the shorter stroke, comes last. The app's repository has no licence, so only the order, the start, the direction and the lifts are taken from it; no point is copied, and the path is fitted to the Noto Sans i bundled in NotoSansDevanagari-Static.ttf. Handwriting varies by writer."
+      },
+      "penLifts": 1,
+      "summary": "2 strokes · 1 pen lift · 2 movements",
+      "viewBox": {
+        "minX": 8,
+        "minY": -807,
+        "width": 243,
+        "height": 997.1
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "draw the stem down",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M173 536L173 0L85 0L85 536L173 536ZM130 737Q150 737 165.5 723.5Q181 710 181 681Q181 653 165.5 639Q150 625 130 625Q108 625 93 639Q78 653 78 681Q78 710 93 723.5Q108 737 130 737Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M130 492 L130 492\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M130 492 L130 447 L130 402 L130 356 L130 311 L130 266 L130 221 L130 176 L130 130 L130 85 L130 40\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"130\" cy=\"40\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"129.5\" y=\"159.5\" text-anchor=\"middle\" font-size=\"19.5\" fill=\"#6b7280\"><tspan x=\"129.5\" y=\"159.5\">1. draw the stem down</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "lift, then the dot on top",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M173 536L173 0L85 0L85 536L173 536ZM130 737Q150 737 165.5 723.5Q181 710 181 681Q181 653 165.5 639Q150 625 130 625Q108 625 93 639Q78 653 78 681Q78 710 93 723.5Q108 737 130 737Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M130 492 L130 447 L130 402 L130 356 L130 311 L130 266 L130 221 L130 176 L130 130 L130 85 L130 40\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M130 708 L130 708\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M130 708 L130 688 L130 668\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"130\" cy=\"668\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"129.5\" y=\"159.5\" text-anchor=\"middle\" font-size=\"19.5\" fill=\"#6b7280\"><tspan x=\"129.5\" y=\"159.5\">2. lift, then the dot</tspan><tspan x=\"129.5\" y=\"183.3\">on top</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "latin",
+      "glyph": "l",
+      "font": "_fonts/NotoSansDevanagari-Static.ttf",
+      "source": {
+        "citation": "Grundschrift-App (Laborschule Bielefeld, Bielefeld University, with the Grundschulverband), level kleinbuchstaben/l, ordered stroke paths for l (assets/levels/kleinbuchstaben/l/metadata.json, commit f6dbd80; no licence, facts only)",
+        "url": "https://github.com/Medien-Treibhaus/grundschrift-app-source/blob/f6dbd807adbb3fc2f94207fe578def439f6e9c49/assets/levels/kleinbuchstaben/l/metadata.json",
+        "variation": "The Grundschrift-App was made in a research project of the Laborschule at Bielefeld University with the Grundschulverband, on its Grundschrift school model, with a teacher advisory team. Each letter is an ordered list of paths, one per pen-down stroke, which the app makes a child trace in order. It writes l in one stroke, down from the top. Grundschrift ends the stroke with a small hook to the right that Noto Sans does not print, so the path ends where the printed letter ends. UJIpenchars2 (Prat, Castro, Llorens, Marzal and Vilar; UCI Machine Learning Repository dataset 177, CC BY 4.0) holds 120 tablet pen traces of l, two by each of 60 adult Spanish writers; only counts are cited. All 120 are one stroke, the source's count, but 93 of them start at the bottom left and loop up, as a joined hand does; 9 start at the top left, as the school model does. The app's repository has no licence, so only the order, the start, the direction and the lifts are taken from it; no point is copied, and the path is fitted to the Noto Sans l bundled in NotoSansDevanagari-Static.ttf. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 1 movement",
+      "viewBox": {
+        "minX": 15,
+        "minY": -830,
+        "width": 228,
+        "height": 994.7
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "draw the stem down",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M173 0L85 0L85 760L173 760L173 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M129 716 L129 716\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M129 716 L129 671 L129 626 L129 581 L129 536 L129 491 L129 446 L129 401 L129 355 L129 310 L129 265 L129 220 L129 175 L129 130 L129 85 L129 40\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"129\" cy=\"40\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"129\" y=\"158.3\" text-anchor=\"middle\" font-size=\"18.3\" fill=\"#6b7280\"><tspan x=\"129\" y=\"158.3\">1. draw the stem down</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "latin",
+      "glyph": "w",
+      "font": "_fonts/NotoSansDevanagari-Static.ttf",
+      "source": {
+        "citation": "Grundschrift-App (Laborschule Bielefeld, Bielefeld University, with the Grundschulverband), level kleinbuchstaben/w, ordered stroke paths for w (assets/levels/kleinbuchstaben/w/metadata.json, commit f6dbd80; no licence, facts only)",
+        "url": "https://github.com/Medien-Treibhaus/grundschrift-app-source/blob/f6dbd807adbb3fc2f94207fe578def439f6e9c49/assets/levels/kleinbuchstaben/w/metadata.json",
+        "variation": "The Grundschrift-App was made in a research project of the Laborschule at Bielefeld University with the Grundschulverband, on its Grundschrift school model, with a teacher advisory team. Each letter is an ordered list of paths, one per pen-down stroke, which the app makes a child trace in order. It writes w in one stroke from the top left: down, up, down and up. UJIpenchars2 (Prat, Castro, Llorens, Marzal and Vilar; UCI Machine Learning Repository dataset 177, CC BY 4.0) holds 120 tablet pen traces of w, two by each of 60 adult Spanish writers; only counts are cited. 88 of the 120 are one stroke (31 lift once), and 74 of those 88 start at the top left. The app's repository has no licence, so only the order, the start, the direction and the lifts are taken from it; no point is copied, and the path is fitted to the Noto Sans w bundled in NotoSansDevanagari-Static.ttf. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 1 movement",
+      "viewBox": {
+        "minX": -59,
+        "minY": -607,
+        "width": 904,
+        "height": 843.7
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "down, up, down and up",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M431 303Q423 331 415.5 357.5Q408 384 402.5 407Q397 430 394 445L390 445Q388 430 382.5 407Q377 384 370 357Q363 330 354 302L258 1L158 1L11 537L102 537L176 251Q184 222 191 192.5Q198 163 203.5 136.5Q209 110 211 91L215 91Q218 103 222 121Q226 139 230.5 159Q235 179 240.5 199Q246 219 251 235L346 537L442 537L534 235Q541 212 548.5 186Q556 160 562 135.5Q568 111 570 92L574 92Q576 109 581.5 134.5Q587 160 594.5 190.5Q602 221 610 251L685 537L775 537L626 1L523 1L431 303Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M63 497 L63 497\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M63 497 L78 455 L90 412 L101 369 L112 326 L124 283 L136 240 L147 197 L158 154 L168 110 L189 72 L226 58 L251 94 L263 137 L275 180 L288 223 L301 266 L315 308 L328 351 L340 393 L352 436 L376 473 L414 473 L434 434 L446 391 L459 348 L471 306 L484 263 L497 220 L509 178 L522 135 L534 92 L561 58 L598 73 L616 113 L627 156 L639 199 L650 242 L662 285 L673 328 L685 371 L696 414 L708 457 L727 497\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"727\" cy=\"497\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"393\" y=\"211.4\" text-anchor=\"middle\" font-size=\"72.4\" fill=\"#6b7280\"><tspan x=\"393\" y=\"211.4\">1. down, up, down and up</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "latin",
+      "glyph": "¡",
+      "font": "_fonts/NotoSansDevanagari-Static.ttf",
+      "source": {
+        "citation": "UJIpenchars2 (F. Prat, M. J. Castro, D. Llorens, A. Marzal and J. M. Vilar), UCI Machine Learning Repository dataset 177, class ¡: 120 tablet pen traces by 60 native Spanish writers (CC BY 4.0)",
+        "url": "https://archive.ics.uci.edu/dataset/177/uji+pen+characters+version+2",
+        "variation": "UJIpenchars2 (Prat, Castro, Llorens, Marzal and Vilar; UCI Machine Learning Repository dataset 177, CC BY 4.0) holds 120 tablet pen traces of ¡, two by each of 60 adult Spanish writers; only counts are cited. 119 are two strokes; in 114 of those 119 the bar comes first and the dot last, and 109 of the 119 draw the bar downward. No school-model source for ¡ was found, so the order is the adult writers' majority. Only counts and shares are cited; no trace is copied, and the path is fitted to the Noto Sans ¡ bundled in NotoSansDevanagari-Static.ttf. Handwriting varies by writer."
+      },
+      "penLifts": 1,
+      "summary": "2 strokes · 1 pen lift · 2 movements",
+      "viewBox": {
+        "minX": 2,
+        "minY": -616,
+        "width": 264,
+        "height": 992.5
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "draw the stroke down",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M104 330L162 330L187 -182L79 -182L104 330ZM196 478Q196 441 178 426Q160 411 134 411Q109 411 90.5 426Q72 441 72 478Q72 514 90.5 530Q109 546 134 546Q160 546 178 530Q196 514 196 478Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M132 298 L132 298\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M132 298 L132 254 L132 210 L132 166 L132 121 L132 77 L132 33 L132 -11 L132 -55 L132 -99 L124 -142\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"124\" cy=\"-142\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"134\" y=\"343.2\" text-anchor=\"middle\" font-size=\"21.2\" fill=\"#6b7280\"><tspan x=\"134\" y=\"343.2\">1. draw the stroke down</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "lift, then the dot on top",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M104 330L162 330L187 -182L79 -182L104 330ZM196 478Q196 441 178 426Q160 411 134 411Q109 411 90.5 426Q72 441 72 478Q72 514 90.5 530Q109 546 134 546Q160 546 178 530Q196 514 196 478Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M132 298 L132 254 L132 210 L132 166 L132 121 L132 77 L132 33 L132 -11 L132 -55 L132 -99 L124 -142\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M124 506 L124 506\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M124 506 L124 484 L124 462\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"124\" cy=\"462\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"134\" y=\"343.2\" text-anchor=\"middle\" font-size=\"21.2\" fill=\"#6b7280\"><tspan x=\"134\" y=\"343.2\">2. lift, then the dot</tspan><tspan x=\"134\" y=\"369.1\">on top</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "latin",
+      "glyph": "¿",
+      "font": "_fonts/NotoSansDevanagari-Static.ttf",
+      "source": {
+        "citation": "UJIpenchars2 (F. Prat, M. J. Castro, D. Llorens, A. Marzal and J. M. Vilar), UCI Machine Learning Repository dataset 177, class ¿: 120 tablet pen traces by 60 native Spanish writers (CC BY 4.0)",
+        "url": "https://archive.ics.uci.edu/dataset/177/uji+pen+characters+version+2",
+        "variation": "UJIpenchars2 (Prat, Castro, Llorens, Marzal and Vilar; UCI Machine Learning Repository dataset 177, CC BY 4.0) holds 120 tablet pen traces of ¿, two by each of 60 adult Spanish writers; only counts are cited. 118 are two strokes; in 108 of those 118 the hook comes first and the dot last (in 10 the dot comes first). The hook starts at its top in 94 of the 118, sets off downward in 81, turns anticlockwise in 92 and ends at the lower right in 91. No school-model source for ¿ was found, so the order is the adult writers' majority. Only counts and shares are cited; no trace is copied, and the path is fitted to the Noto Sans ¿ bundled in NotoSansDevanagari-Static.ttf. Handwriting varies by writer."
+      },
+      "penLifts": 1,
+      "summary": "2 strokes · 1 pen lift · 2 movements",
+      "viewBox": {
+        "minX": -84,
+        "minY": -616,
+        "width": 515,
+        "height": 1054.1
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "draw the hook down and round",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M242 330L242 312Q242 275 235 247Q228 219 210 194.5Q192 170 159 142Q128 116 108.5 94.5Q89 73 80 49.5Q71 26 71 -9Q71 -56 99.5 -85Q128 -114 182 -114Q223 -114 259.5 -101Q296 -88 330 -72L361 -143Q321 -163 275 -177.5Q229 -192 182 -192Q91 -192 38.5 -143.5Q-14 -95 -14 -10Q-14 34 -2.5 65.5Q9 97 32.5 124.5Q56 152 91 182Q125 211 142.5 231.5Q160 252 167 272.5Q174 293 174 321L174 330L242 330ZM265 478Q265 441 247 425.5Q229 410 203 410Q178 410 159.5 425.5Q141 441 141 478Q141 514 159.5 530Q178 546 203 546Q229 546 247 530Q265 514 265 478Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M206 296 L206 296\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M206 296 L197 251 L175 211 L143 179 L109 147 L77 115 L50 78 L35 35 L34 -11 L36 -56 L56 -97 L90 -128 L131 -146 L177 -152 L222 -150 L267 -140 L310 -124\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"310\" cy=\"-124\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"173.5\" y=\"373.3\" text-anchor=\"middle\" font-size=\"41.3\" fill=\"#6b7280\"><tspan x=\"173.5\" y=\"373.3\">1. draw the hook down</tspan><tspan x=\"173.5\" y=\"423.7\">and round</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "lift, then the dot on top",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M242 330L242 312Q242 275 235 247Q228 219 210 194.5Q192 170 159 142Q128 116 108.5 94.5Q89 73 80 49.5Q71 26 71 -9Q71 -56 99.5 -85Q128 -114 182 -114Q223 -114 259.5 -101Q296 -88 330 -72L361 -143Q321 -163 275 -177.5Q229 -192 182 -192Q91 -192 38.5 -143.5Q-14 -95 -14 -10Q-14 34 -2.5 65.5Q9 97 32.5 124.5Q56 152 91 182Q125 211 142.5 231.5Q160 252 167 272.5Q174 293 174 321L174 330L242 330ZM265 478Q265 441 247 425.5Q229 410 203 410Q178 410 159.5 425.5Q141 441 141 478Q141 514 159.5 530Q178 546 203 546Q229 546 247 530Q265 514 265 478Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M206 296 L197 251 L175 211 L143 179 L109 147 L77 115 L50 78 L35 35 L34 -11 L36 -56 L56 -97 L90 -128 L131 -146 L177 -152 L222 -150 L267 -140 L310 -124\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M198 504 L198 504\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M198 504 L198 482 L198 460\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"198\" cy=\"460\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"173.5\" y=\"373.3\" text-anchor=\"middle\" font-size=\"41.3\" fill=\"#6b7280\"><tspan x=\"173.5\" y=\"373.3\">2. lift, then the dot</tspan><tspan x=\"173.5\" y=\"423.7\">on top</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "latin",
+      "glyph": "ß",
+      "font": "_fonts/NotoSansDevanagari-Static.ttf",
+      "source": {
+        "citation": "Grundschrift-App (Laborschule Bielefeld, Bielefeld University, with the Grundschulverband), level kleinbuchstaben/sz, ordered stroke paths for ß (assets/levels/kleinbuchstaben/sz/metadata.json, commit f6dbd80; no licence, facts only)",
+        "url": "https://github.com/Medien-Treibhaus/grundschrift-app-source/blob/f6dbd807adbb3fc2f94207fe578def439f6e9c49/assets/levels/kleinbuchstaben/sz/metadata.json",
+        "variation": "The Grundschrift-App was made in a research project of the Laborschule at Bielefeld University with the Grundschulverband, on its Grundschrift school model, with a teacher advisory team. Each letter is an ordered list of paths, one per pen-down stroke, which the app makes a child trace in order. It writes ß in one stroke: up the stem from the foot, over the top and round both bowls to the lower left. UJIpenchars2 is a Spanish data set and has no ß, so no native-writer count is cited; the order is the school model's. The app's repository has no licence, so only the order, the start, the direction and the lifts are taken from it; no point is copied, and the path is fitted to the Noto Sans ß bundled in NotoSansDevanagari-Static.ttf. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 2 movements",
+      "viewBox": {
+        "minX": 15,
+        "minY": -835,
+        "width": 641,
+        "height": 1117.1
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "draw the stem up from the foot",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M522 617Q522 583 508 557.5Q494 532 473 512.5Q452 493 431 477Q410 461 396 445.5Q382 430 382 412Q382 399 388.5 388Q395 377 414 362.5Q433 348 470 323Q506 299 532 275Q558 251 572 222Q586 193 586 153Q586 96 562.5 60Q539 24 497 7Q455 -10 400 -10Q353 -10 317 -1Q281 8 255 24L255 103Q272 93 295 83Q318 73 344.5 67Q371 61 397 61Q452 61 476 84Q500 107 500 147Q500 171 491.5 189.5Q483 208 462.5 226Q442 244 406 267Q364 294 340.5 315.5Q317 337 307 359Q297 381 297 407Q297 438 310.5 460Q324 482 344.5 498.5Q365 515 385.5 531Q406 547 419.5 566Q433 585 433 612Q433 654 397.5 673Q362 692 306 692Q271 692 240.5 682.5Q210 673 191.5 650Q173 627 173 584L173 0L85 0L85 584Q85 651 114 690.5Q143 730 193 747.5Q243 765 306 765Q371 765 419.5 748.5Q468 732 495 699.5Q522 667 522 617Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M129 42 L129 42\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M129 42 L129 88 L129 134 L129 181 L129 227 L129 273 L129 319 L129 365 L129 411 L129 458 L129 504 L129 550\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"129\" cy=\"550\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"335.5\" y=\"201.4\" text-anchor=\"middle\" font-size=\"51.4\" fill=\"#6b7280\"><tspan x=\"335.5\" y=\"201.4\">1. draw the stem up</tspan><tspan x=\"335.5\" y=\"264.1\">from the foot</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "over the top and round the bowls",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M522 617Q522 583 508 557.5Q494 532 473 512.5Q452 493 431 477Q410 461 396 445.5Q382 430 382 412Q382 399 388.5 388Q395 377 414 362.5Q433 348 470 323Q506 299 532 275Q558 251 572 222Q586 193 586 153Q586 96 562.5 60Q539 24 497 7Q455 -10 400 -10Q353 -10 317 -1Q281 8 255 24L255 103Q272 93 295 83Q318 73 344.5 67Q371 61 397 61Q452 61 476 84Q500 107 500 147Q500 171 491.5 189.5Q483 208 462.5 226Q442 244 406 267Q364 294 340.5 315.5Q317 337 307 359Q297 381 297 407Q297 438 310.5 460Q324 482 344.5 498.5Q365 515 385.5 531Q406 547 419.5 566Q433 585 433 612Q433 654 397.5 673Q362 692 306 692Q271 692 240.5 682.5Q210 673 191.5 650Q173 627 173 584L173 0L85 0L85 584Q85 651 114 690.5Q143 730 193 747.5Q243 765 306 765Q371 765 419.5 748.5Q468 732 495 699.5Q522 667 522 617Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M129 42 L129 88 L129 134 L129 181 L129 227 L129 273 L129 319 L129 365 L129 411 L129 458 L129 504 L129 550 L129 550\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M129 550 L129 595 L138 638 L165 674 L198 704 L239 721 L283 726 L328 726 L372 722 L415 708 L450 681 L472 642 L473 598 L458 557 L427 524 L395 492 L364 460 L342 422 L359 382 L383 344 L415 313 L457 301 L482 266 L513 233 L535 194 L537 149 L535 105 L513 67 L477 40 L434 30 L389 30 L344 31 L301 42\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"301\" cy=\"42\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"335.5\" y=\"201.4\" text-anchor=\"middle\" font-size=\"51.4\" fill=\"#6b7280\"><tspan x=\"335.5\" y=\"201.4\">2. over the top and</tspan><tspan x=\"335.5\" y=\"264.1\">round the bowls</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "latin",
+      "glyph": "ñ",
+      "font": "_fonts/NotoSansDevanagari-Static.ttf",
+      "source": {
+        "citation": "UJIpenchars2 (F. Prat, M. J. Castro, D. Llorens, A. Marzal and J. M. Vilar), UCI Machine Learning Repository dataset 177, class ñ: 120 tablet pen traces by 60 native Spanish writers (CC BY 4.0); the n after the Grundschrift-App, level kleinbuchstaben/n (commit f6dbd80)",
+        "url": "https://archive.ics.uci.edu/dataset/177/uji+pen+characters+version+2",
+        "variation": "UJIpenchars2 (Prat, Castro, Llorens, Marzal and Vilar; UCI Machine Learning Repository dataset 177, CC BY 4.0) holds 120 tablet pen traces of ñ, two by each of 60 adult Spanish writers; only counts are cited. All 120 are two strokes. The tilde is found as a separate mark above the letter in 108 of the 120, and in all 108 it is drawn last, after the n; 104 of those 108 draw it from left to right. The n is the Grundschrift-App's n (level kleinbuchstaben/n, commit f6dbd80; no licence, facts only): one stroke, down the stem, back up it, over the arch and down the right side. Only counts and shares are cited; no trace is copied, and the path is fitted to the Noto Sans ñ bundled in NotoSansDevanagari-Static.ttf. Handwriting varies by writer."
+      },
+      "penLifts": 1,
+      "summary": "2 strokes · 1 pen lift · 3 movements",
+      "viewBox": {
+        "minX": 15,
+        "minY": -805,
+        "width": 592,
+        "height": 1066.8
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "draw the stem down",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M343 546Q439 546 488 499.5Q537 453 537 349L537 0L450 0L450 343Q450 408 421 440Q392 472 330 472Q241 472 207 422Q173 372 173 278L173 0L85 0L85 536L156 536L169 463L174 463Q192 491 218.5 509.5Q245 528 277 537Q309 546 343 546ZM126 606Q129 636 137.5 659.5Q146 683 160 699.5Q174 716 193 725Q212 734 236 734Q258 734 278.5 725.5Q299 717 318 705.5Q337 694 354.5 685.5Q372 677 388 677Q411 677 423.5 691.5Q436 706 443 735L493 735Q487 677 459 642Q431 607 384 607Q363 607 343 615.5Q323 624 303.5 635.5Q284 647 266.5 655.5Q249 664 232 664Q208 664 196 649.5Q184 635 177 606L126 606Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M125 496 L125 496\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M125 496 L127 451 L129 405 L129 359 L129 314 L129 268 L129 222 L129 177 L129 131 L129 86 L129 40\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"129\" cy=\"40\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"311\" y=\"187.4\" text-anchor=\"middle\" font-size=\"47.4\" fill=\"#6b7280\"><tspan x=\"311\" y=\"187.4\">1. draw the stem down</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "back up, over and down",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M343 546Q439 546 488 499.5Q537 453 537 349L537 0L450 0L450 343Q450 408 421 440Q392 472 330 472Q241 472 207 422Q173 372 173 278L173 0L85 0L85 536L156 536L169 463L174 463Q192 491 218.5 509.5Q245 528 277 537Q309 546 343 546ZM126 606Q129 636 137.5 659.5Q146 683 160 699.5Q174 716 193 725Q212 734 236 734Q258 734 278.5 725.5Q299 717 318 705.5Q337 694 354.5 685.5Q372 677 388 677Q411 677 423.5 691.5Q436 706 443 735L493 735Q487 677 459 642Q431 607 384 607Q363 607 343 615.5Q323 624 303.5 635.5Q284 647 266.5 655.5Q249 664 232 664Q208 664 196 649.5Q184 635 177 606L126 606Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M125 496 L127 451 L129 405 L129 359 L129 314 L129 268 L129 222 L129 177 L129 131 L129 86 L129 40\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M129 40 L129 40 L129 85 L129 129 L129 174 L129 218 L129 263 L129 307 L130 352 L137 396 L167 427 L201 455 L236 483 L276 501 L321 504 L365 504 L409 497 L445 472 L474 438 L488 396 L493 352 L493 307 L493 263 L493 218 L493 174 L493 129 L493 85 L493 40\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"493\" cy=\"40\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"311\" y=\"187.4\" text-anchor=\"middle\" font-size=\"47.4\" fill=\"#6b7280\"><tspan x=\"311\" y=\"187.4\">2. back up, over and</tspan><tspan x=\"311\" y=\"245.2\">down</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "lift, then the tilde, left to right",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M343 546Q439 546 488 499.5Q537 453 537 349L537 0L450 0L450 343Q450 408 421 440Q392 472 330 472Q241 472 207 422Q173 372 173 278L173 0L85 0L85 536L156 536L169 463L174 463Q192 491 218.5 509.5Q245 528 277 537Q309 546 343 546ZM126 606Q129 636 137.5 659.5Q146 683 160 699.5Q174 716 193 725Q212 734 236 734Q258 734 278.5 725.5Q299 717 318 705.5Q337 694 354.5 685.5Q372 677 388 677Q411 677 423.5 691.5Q436 706 443 735L493 735Q487 677 459 642Q431 607 384 607Q363 607 343 615.5Q323 624 303.5 635.5Q284 647 266.5 655.5Q249 664 232 664Q208 664 196 649.5Q184 635 177 606L126 606Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M125 496 L127 451 L129 405 L129 359 L129 314 L129 268 L129 222 L129 177 L129 131 L129 86 L129 40 L129 85 L129 129 L129 174 L129 218 L129 263 L129 307 L130 352 L137 396 L167 427 L201 455 L236 483 L276 501 L321 504 L365 504 L409 497 L445 472 L474 438 L488 396 L493 352 L493 307 L493 263 L493 218 L493 174 L493 129 L493 85 L493 40\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M173 668 L173 668\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M173 668 L209 694 L254 696 L295 680 L335 658 L377 644 L420 653 L453 684\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"453\" cy=\"684\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"311\" y=\"187.4\" text-anchor=\"middle\" font-size=\"47.4\" fill=\"#6b7280\"><tspan x=\"311\" y=\"187.4\">3. lift, then the tilde,</tspan><tspan x=\"311\" y=\"245.2\">left to right</tspan></text>"
+        }
+      ]
+    }
+  ]
+}

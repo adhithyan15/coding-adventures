@@ -1,6 +1,6 @@
 //! diagram-ir v0.42.0 - DG00/DG04 semantic IR
 
-pub const VERSION: &str = "0.81.0";
+pub const VERSION: &str = "0.85.0";
 
 #[derive(Clone, Debug, PartialEq, Default)]
 pub enum DiagramDirection {
@@ -459,6 +459,7 @@ pub struct LayoutedBoardColumn {
     pub y: f64,
     pub width: f64,
     pub height: f64,
+    pub header_height: f64,
     pub cards: Vec<LayoutedBoardCard>,
     pub style: ResolvedDiagramStyle,
     pub ticket: Option<String>,
@@ -1777,7 +1778,7 @@ pub struct LayoutedVennDiagram {
 #[derive(Clone, Debug, PartialEq)]
 pub struct IshikawaCause { pub id: String, pub label: String, pub parent_id: Option<String>, pub depth: usize }
 #[derive(Clone, Debug, PartialEq)]
-pub struct IshikawaDiagram { pub effect: String, pub causes: Vec<IshikawaCause> }
+pub struct IshikawaDiagram { pub effect: String, pub causes: Vec<IshikawaCause>, pub diagram_padding: f64 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedIshikawaBone { pub from: Point, pub to: Point, pub label: String, pub label_position: Point, pub depth: usize }
 #[derive(Clone, Debug, PartialEq)]
@@ -1806,14 +1807,35 @@ pub struct LayoutedWardleyDiagram { pub width: f64, pub height: f64, pub title: 
 pub struct CynefinDomain { pub name: String, pub items: Vec<String> }
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct CynefinTransition { pub from: String, pub to: String, pub label: Option<String> }
-#[derive(Clone, Debug, Eq, PartialEq)]
-pub struct CynefinDiagram { pub title: Option<String>, pub domains: Vec<CynefinDomain>, pub transitions: Vec<CynefinTransition> }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedCynefinDomain { pub name: String, pub items: Vec<String>, pub x: f64, pub y: f64, pub width: f64, pub height: f64, pub center: Point, pub confusion: bool }
+pub struct CynefinStyle { pub domain_font_size: f64, pub item_font_size: f64,
+    pub boundary_color: String, pub boundary_width: f64, pub cliff_color: String, pub cliff_width: f64,
+    pub arrow_color: String, pub arrow_width: f64, pub complex_bg: String, pub complicated_bg: String,
+    pub chaotic_bg: String, pub clear_bg: String, pub confusion_bg: String, pub text_color: String, pub label_color: String }
+impl Default for CynefinStyle {
+    fn default() -> Self { Self { domain_font_size: 16.0, item_font_size: 12.0,
+        boundary_color: "#333333".into(), boundary_width: 2.0, cliff_color: "#8B0000".into(), cliff_width: 4.0,
+        arrow_color: "#333333".into(), arrow_width: 2.0, complex_bg: "#E8F5E9".into(),
+        complicated_bg: "#E3F2FD".into(), chaotic_bg: "#FBE9E7".into(), clear_bg: "#FFF8E1".into(),
+        confusion_bg: "#F3E5F5".into(), text_color: "#333".into(), label_color: "#131300".into() } }
+}
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedCynefinTransition { pub from: Point, pub to: Point, pub label: Option<String> }
+pub struct CynefinConfig { pub width: f64, pub height: f64, pub padding: f64, pub show_domain_descriptions: bool, pub boundary_amplitude: f64, pub seed: i32, pub style: CynefinStyle }
+impl Default for CynefinConfig {
+    fn default() -> Self { Self { width: 800.0, height: 600.0, padding: 40.0, show_domain_descriptions: true, boundary_amplitude: 8.0, seed: 0, style: CynefinStyle::default() } }
+}
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedCynefinDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub domains: Vec<LayoutedCynefinDomain>, pub transitions: Vec<LayoutedCynefinTransition> }
+pub struct CynefinDiagram { pub title: Option<String>, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub config: CynefinConfig, pub domains: Vec<CynefinDomain>, pub transitions: Vec<CynefinTransition> }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedCynefinItem { pub label: String, pub x: f64, pub y: f64, pub width: f64, pub height: f64, pub overflow: bool }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedCynefinDomain { pub name: String, pub items: Vec<String>, pub item_badges: Vec<LayoutedCynefinItem>, pub overflow_count: usize, pub x: f64, pub y: f64, pub width: f64, pub height: f64, pub center: Point, pub label_position: Point, pub model_position: Option<Point>, pub practice_position: Option<Point>, pub confusion: bool }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedCynefinTransition { pub from: Point, pub control: Point, pub to: Point, pub label: Option<String>, pub label_position: Option<Point>, pub arrowhead: [Point; 3] }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedCynefinBoundary { pub start: Point, pub segments: Vec<CubicCurveSegment> }
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedCynefinDiagram { pub width: f64, pub height: f64, pub title: Option<String>, pub title_position: Point, pub accessibility_title: Option<String>, pub accessibility_description: Option<String>, pub show_domain_descriptions: bool, pub style: CynefinStyle, pub domains: Vec<LayoutedCynefinDomain>, pub boundaries: Vec<LayoutedCynefinBoundary>, pub cliff: LayoutedCynefinBoundary, pub transitions: Vec<LayoutedCynefinTransition> }
 
 // PROCESS OWNERSHIP FAMILY
 #[derive(Clone, Debug, PartialEq)]
@@ -1963,6 +1985,9 @@ pub struct ArchitectureConfig {
     pub node_separation: f64,
     pub padding: f64,
     pub ideal_edge_length_multiplier: f64,
+    pub edge_elasticity: f64,
+    pub randomize: bool,
+    pub seed: i64,
 }
 
 impl Default for ArchitectureConfig {
@@ -1973,6 +1998,9 @@ impl Default for ArchitectureConfig {
             node_separation: 75.0,
             padding: 40.0,
             ideal_edge_length_multiplier: 1.5,
+            edge_elasticity: 0.45,
+            randomize: false,
+            seed: 1,
         }
     }
 }
@@ -2723,7 +2751,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.81.0");
+        assert_eq!(VERSION, "0.85.0");
     }
     #[test]
     fn default_direction_is_tb() {

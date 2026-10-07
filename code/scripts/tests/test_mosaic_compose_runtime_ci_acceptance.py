@@ -295,7 +295,8 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         # Where MosaicActivity points the host, the three launches, and the
         # checks that make each one mean something.
         self.assertIn('state="files/$application_id/mosaic-state.v1.json"', gate)
-        self.assertIn('activity="$package/mosaic.android.MosaicActivity"', gate)
+        self.assertIn('activity_class="${4-mosaic.android.MosaicActivity}"', gate)
+        self.assertIn('activity="$package/$activity_class"', gate)
         self.assertIn('printf {} > $state', gate)
         self.assertIn("FATAL EXCEPTION", gate)
         self.assertIn("rejected persisted state", gate)
@@ -309,6 +310,369 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertIn('avds="$("$emulator" -list-avds 2>/dev/null || true)"', emulator)
         self.assertNotIn('-list-avds | grep', emulator)
         self.assertIn("the emulator exited before it appeared to adb", emulator)
+
+    def test_journal_runs_its_instrumented_ui_test_on_the_emulator(self) -> None:
+        """UI89 §4.2: Journal's instrumented test is built beside the APK and
+        run on the emulator after the Journal gate, across two cold
+        launches."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("- name: Build Journal for Android with its Rust runtime (UI89 step 7)")
+        build = workflow[start : workflow.index("\n      - name:", start)]
+        copy = (
+            "cp code/packages/rust/journal-mosaic-app/conformance/compose-android/"
+            'JournalAndroidUiTest.kt "$android_project/src/androidTest/kotlin/"'
+        )
+        assemble = 'bash code/scripts/assemble-mosaic-android-debug.sh "$android_project" --with-android-test'
+        self.assertIn(copy, build)
+        self.assertIn(assemble, build)
+        # The test is in place before Gradle compiles the androidTest sources.
+        self.assertLess(build.index(copy), build.index(assemble))
+        self.assertIn("build/outputs/apk/androidTest/debug", build)
+        test_source = (
+            Path(__file__).resolve().parents[2]
+            / "packages/rust/journal-mosaic-app/conformance/compose-android/JournalAndroidUiTest.kt"
+        )
+        self.assertTrue(test_source.is_file(), test_source)
+        source = test_source.read_text(encoding="utf-8")
+        self.assertIn("package dev.codingadventures.journalapp.uitest", source)
+        self.assertIn("createAndroidComposeRule<MosaicActivity>()", source)
+        self.assertIn('getString("mosaicLaunch")', source)
+
+        emulator = workflow.index("- name: Launch Trestle, Journal and Engram on an Android emulator")
+        gate = workflow[emulator : workflow.index("\n      - name:", emulator)]
+        run = (
+            'bash code/scripts/mosaic-android-ui-test.sh "$journal_apk" "$journal_test_apk" '
+            "dev.codingadventures.journalapp dev.codingadventures.journalapp.uitest.JournalAndroidUiTest"
+        )
+        self.assertIn(run, gate)
+        # After the gate, whose launches leave state that the test clears.
+        self.assertLess(gate.index("dev.codingadventures.journalapp journal-app"), gate.index(run))
+
+    def test_engram_runs_its_picker_ui_test_on_the_emulator(self) -> None:
+        """UI89 §4.4: Engram's instrumented test is built beside its APK and
+        run after the Engram gate. It answers the document picker with
+        Espresso-Intents and a file in the app's cache, so no provider ships."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("- name: Build Engram for Android with its Rust runtime (UI89 step 7)")
+        build = workflow[start : workflow.index("\n      - name:", start)]
+        copy = (
+            "cp code/programs/mosaic/engram-app/conformance/compose-android/"
+            'EngramAndroidUiTest.kt "$android_project/src/androidTest/kotlin/"'
+        )
+        assemble = 'bash code/scripts/assemble-mosaic-android-debug.sh "$android_project" --with-android-test'
+        self.assertIn(copy, build)
+        self.assertIn(assemble, build)
+        self.assertLess(build.index(copy), build.index(assemble))
+        source = (
+            Path(__file__).resolve().parents[2]
+            / "programs/mosaic/engram-app/conformance/compose-android/EngramAndroidUiTest.kt"
+        ).read_text(encoding="utf-8")
+        self.assertIn("package dev.codingadventures.engramapp.uitest", source)
+        self.assertIn("intending(hasAction(Intent.ACTION_CREATE_DOCUMENT)).respondWith(chosen)", source)
+        self.assertIn("intending(hasAction(Intent.ACTION_OPEN_DOCUMENT)).respondWith(chosen)", source)
+        self.assertIn("Uri.fromFile(document)", source)
+        self.assertIn("Intents.release()", source)
+
+        emulator = workflow.index("- name: Launch Trestle, Journal and Engram on an Android emulator")
+        gate = workflow[emulator : workflow.index("\n      - name:", emulator)]
+        run = (
+            'bash code/scripts/mosaic-android-ui-test.sh "$engram_apk" "$engram_test_apk" '
+            "dev.codingadventures.engramapp dev.codingadventures.engramapp.uitest.EngramAndroidUiTest"
+        )
+        self.assertIn(run, gate)
+        self.assertLess(gate.index("dev.codingadventures.engramapp engram-app"), gate.index(run))
+
+    def test_trestle_runs_its_instrumented_ui_test_on_the_emulator(self) -> None:
+        """UI89 §4.4: Trestle's instrumented test is compiled with its APK,
+        through the same verified wrapper jar, and run on the emulator after
+        the Trestle gate, across two cold launches."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("- name: Build Trestle for Android with its Rust runtime (UI89 step 5)")
+        build = workflow[start : workflow.index("\n      - name:", start)]
+        copy = (
+            "cp code/packages/rust/task-mosaic-app/conformance/compose-android/"
+            'TrestleAndroidUiTest.kt "$android_project/src/androidTest/kotlin/"'
+        )
+        assemble = "--no-daemon --stacktrace assembleDebug assembleDebugAndroidTest"
+        self.assertIn(copy, build)
+        self.assertIn(assemble, build)
+        self.assertLess(build.index(copy), build.index(assemble))
+        # Still the verified jar, never the unverifiable gradlew script.
+        self.assertLess(build.index("verify-gradle-wrapper-jar.sh"), build.index(assemble))
+        self.assertIn("build/outputs/apk/androidTest/debug", build)
+        test_source = (
+            Path(__file__).resolve().parents[2]
+            / "packages/rust/task-mosaic-app/conformance/compose-android/TrestleAndroidUiTest.kt"
+        )
+        self.assertTrue(test_source.is_file(), test_source)
+        source = test_source.read_text(encoding="utf-8")
+        self.assertIn("package dev.codingadventures.trestle.uitest", source)
+        self.assertIn("createAndroidComposeRule<MosaicActivity>()", source)
+        self.assertIn('getString("mosaicLaunch")', source)
+
+        emulator = workflow.index("- name: Launch Trestle, Journal and Engram on an Android emulator")
+        gate = workflow[emulator : workflow.index("\n      - name:", emulator)]
+        run = (
+            'bash code/scripts/mosaic-android-ui-test.sh "$apk" "$trestle_test_apk" '
+            "dev.codingadventures.trestle dev.codingadventures.trestle.uitest.TrestleAndroidUiTest"
+        )
+        self.assertIn(run, gate)
+        self.assertLess(gate.index("dev.codingadventures.trestle task-app"), gate.index(run))
+        # Before Journal's gate: the step stays in app order.
+        self.assertLess(gate.index(run), gate.index("dev.codingadventures.journalapp journal-app"))
+
+        script = (SCRIPT.parent / "mosaic-android-ui-test.sh").read_text(encoding="utf-8")
+        self.assertIn('runner="$package.test/androidx.test.runner.AndroidJUnitRunner"', script)
+        self.assertLess(script.index('adb shell pm clear "$package"'), script.index("run_launch 1\n"))
+        self.assertLess(script.index("run_launch 1\n"), script.index("run_launch 2\n"))
+        self.assertIn('"OK (1 test)"', script)
+        self.assertIn('"FAILURES!!!"', script)
+        self.assertIn('"INSTRUMENTATION_CODE: -1"', script)
+
+    def test_the_ui_test_script_reads_am_instrument_output_not_its_status(self) -> None:
+        """`am instrument` exits 0 when a test fails, so the script decides
+        from its output: a fake adb plays each outcome."""
+
+        script = SCRIPT.parent / "mosaic-android-ui-test.sh"
+        ok = "INSTRUMENTATION_STATUS: test=t\nOK (1 test)\nINSTRUMENTATION_CODE: -1\n"
+        cases = {
+            "passes": (ok, ok, 0),
+            "launch 2 fails": (ok, "FAILURES!!!\nTests run: 1,  Failures: 1\nINSTRUMENTATION_CODE: -1\n", 1),
+            "no test ran": ("OK (0 tests)\nINSTRUMENTATION_CODE: -1\n", ok, 1),
+            "app crashed": ("INSTRUMENTATION_RESULT: shortMsg=Process crashed.\nINSTRUMENTATION_CODE: 0\n", ok, 1),
+            "empty output": ("", ok, 1),
+        }
+        for name, (first, second, expected) in cases.items():
+            with self.subTest(name), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                (root / "one.txt").write_text(first, encoding="utf-8")
+                (root / "two.txt").write_text(second, encoding="utf-8")
+                log = root / "adb.log"
+                adb = root / "adb"
+                adb.write_text(
+                    "#!/usr/bin/env bash\n"
+                    f'echo "$*" >> "{log}"\n'
+                    'case "$*" in\n'
+                    f'  *"mosaicLaunch 1"*) cat "{root}/one.txt" ;;\n'
+                    f'  *"mosaicLaunch 2"*) cat "{root}/two.txt" ;;\n'
+                    "esac\n"
+                    "exit 0\n",
+                    encoding="utf-8",
+                )
+                adb.chmod(0o755)
+                for apk in ("app.apk", "test.apk"):
+                    (root / apk).write_bytes(b"")
+                result = subprocess.run(
+                    [
+                        "bash",
+                        str(script),
+                        str(root / "app.apk"),
+                        str(root / "test.apk"),
+                        "dev.example.app",
+                        "dev.example.app.uitest.AppUiTest",
+                    ],
+                    env={"PATH": f"{root}:/usr/bin:/bin"},
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+                calls = log.read_text(encoding="utf-8").splitlines()
+                # Both APKs installed and the app cleared before launch 1.
+                self.assertTrue(calls[0].startswith("install -r -t "), calls)
+                self.assertEqual(calls[2], "shell pm clear dev.example.app", calls)
+                instrument = [call for call in calls if "am instrument" in call]
+                self.assertIn(
+                    "-e class dev.example.app.uitest.AppUiTest -e mosaicLaunch 1 "
+                    "dev.example.app.test/androidx.test.runner.AndroidJUnitRunner",
+                    instrument[0],
+                )
+                # A failed launch 1 stops before launch 2.
+                self.assertEqual(len(instrument), 2 if name in ("passes", "launch 2 fails") else 1, calls)
+
+        # Names that would reach the device shell unchecked are refused.
+        for package, test_class in (
+            ("dev.example.app; reboot", "dev.example.app.T"),
+            ("dev.example.app", "dev.example.app.Outer$Inner"),
+            ("dev.example.app", "dev.example.app.T#method"),
+            ("dev.example.app", "T"),
+        ):
+            with self.subTest(package=package, test_class=test_class), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                for apk in ("app.apk", "test.apk"):
+                    (root / apk).write_bytes(b"")
+                result = subprocess.run(
+                    ["bash", str(script), str(root / "app.apk"), str(root / "test.apk"), package, test_class],
+                    env={"PATH": "/usr/bin:/bin"},
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                self.assertEqual(result.returncode, 2, result.stderr)
+
+    def test_every_flutter_app_runs_through_the_emulator_gate(self) -> None:
+        """UI89 §7 (steps 2, 4): Trestle, Journal and Engram are each built
+        through the Flutter backend from their Compose step's per-ABI engines
+        by build-mosaic-flutter-phone-app.sh, and gated on the emulator
+        through .MainActivity after their Compose app is uninstalled."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("- name: Build Trestle, Journal and Engram for Android with Flutter (UI89 §7)")
+        build = workflow[start : workflow.index("\n      - name:", start)]
+        self.assertIn("needs.detect.outputs.needs_mosaic_compose_runtime == 'true'", build)
+        self.assertIn("needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'", build)
+        self.assertIn('cp -R "$jni_libs" "$phone_runtime/android"', build)
+        self.assertIn(
+            'bash code/scripts/build-mosaic-flutter-phone-app.sh android "$program" "$phone_runtime" '
+            '"$RUNNER_TEMP/mosaic-flutter-$name-android" dev.codingadventures "$name"',
+            build,
+        )
+        # The list is read on fd 3, so nothing the loop runs can eat it.
+        self.assertIn("while read -r program jni_libs name <&3; do", build)
+        self.assertIn("done 3<<EOF", build)
+        for row in (
+            "code/programs/mosaic/task-app $RUNNER_TEMP/mosaic-trestle-jnilibs trestle",
+            "code/programs/mosaic/journal-app $RUNNER_TEMP/mosaic-journal-jnilibs journalapp",
+            "code/programs/mosaic/engram-app $RUNNER_TEMP/mosaic-engram-jnilibs engramapp",
+        ):
+            self.assertIn(row, build)
+        # After every Compose runtime step, whose jniLibs it reuses.
+        self.assertLess(workflow.index("- name: Build Engram for Android with its Rust runtime (UI89 step 7)"), start)
+
+        emulator = workflow.index("- name: Launch Trestle, Journal and Engram on an Android emulator")
+        self.assertLess(start, emulator)
+        gate = workflow[emulator : workflow.index("\n      - name:", emulator)]
+        self.assertIn("MOSAIC_FLUTTER_LANE: ${{ needs.detect.outputs.needs_mosaic_flutter_runtime }}", gate)
+        self.assertIn("while read -r name package application_id <&3; do", gate)
+        run = 'bash code/scripts/mosaic-android-emulator-gate.sh "$flutter_apk" "$package" "$application_id" .MainActivity'
+        uninstall = 'adb uninstall "$package"'
+        self.assertIn(run, gate)
+        self.assertLess(gate.index(uninstall), gate.index(run))
+        for row in (
+            "trestle dev.codingadventures.trestle task-app",
+            "journalapp dev.codingadventures.journalapp journal-app",
+            "engramapp dev.codingadventures.engramapp engram-app",
+        ):
+            self.assertIn(row, gate)
+        # The Flutter gates come after every Compose gate and UI test.
+        self.assertLess(gate.index("EngramAndroidUiTest"), gate.index(run))
+
+        script = (SCRIPT.parent / "build-mosaic-flutter-phone-app.sh").read_text(encoding="utf-8")
+        self.assertIn('create=(flutter create "--platforms=$platform" --org "$org" --project-name "$name" .)', script)
+        self.assertIn('grep -qxF "    ${create[*]}" README.md', script)
+        self.assertIn("allowBackup\\(0x01010280\\)=false", script)
+        self.assertIn('diff "$checks/$abi.packaged.machine" "$checks/$abi.input.machine"', script)
+        self.assertIn('diff "$checks/$abi.packaged.symbols" "$checks/$abi.input.symbols"', script)
+        self.assertIn("for abi in x86_64 arm64-v8a; do", script)
+        self.assertNotIn("cmp ", script)
+
+    def test_the_flutter_phone_script_refuses_names_before_it_builds(self) -> None:
+        """The org and project name reach `flutter create` and a bundle
+        identifier: anything but the README's own shapes is refused first."""
+
+        script = SCRIPT.parent / "build-mosaic-flutter-phone-app.sh"
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "runtime/android").mkdir(parents=True)
+            (root / "program").mkdir()
+            for platform, org, name in (
+                ("windows", "dev.example", "app"),
+                ("android", "dev.Example", "app"),
+                ("android", "dev.example;id", "app"),
+                ("android", "dev.example", "my-app"),
+                ("android", "dev.example", "2app"),
+                ("android", "", "app"),
+            ):
+                with self.subTest(platform=platform, org=org, name=name):
+                    result = subprocess.run(
+                        ["bash", str(script), platform, str(root / "program"), str(root / "runtime"), str(root / "out"), org, name],
+                        env={"PATH": "/usr/bin:/bin"},
+                        capture_output=True,
+                        text=True,
+                        check=False,
+                    )
+                    self.assertEqual(result.returncode, 2, result.stderr)
+                    self.assertFalse((root / "out").exists())
+            # A folder that is not an earlier build's output is refused, not
+            # replaced. (The root itself is refused by a guard pinned below,
+            # never by running the script at `/`.)
+            occupied = root / "occupied"
+            occupied.mkdir()
+            (occupied / "keep.txt").write_text("mine", encoding="utf-8")
+            for output in ("", str(occupied)):
+                with self.subTest(output=output):
+                    result = subprocess.run(
+                        ["bash", str(script), "android", str(root / "program"), str(root / "runtime"), output, "dev.example", "app"],
+                        env={"PATH": "/usr/bin:/bin"},
+                        capture_output=True,
+                        text=True,
+                        check=False,
+                    )
+                    self.assertEqual(result.returncode, 2, result.stderr)
+            self.assertEqual((occupied / "keep.txt").read_text(encoding="utf-8"), "mine")
+        text = script.read_text(encoding="utf-8")
+        self.assertIn('if [[ -z "$output" || "$output" == "/" ]]; then', text)
+        self.assertIn('rm -rf -- "${output:?}"', text)
+        self.assertLess(text.index('"$output" == "/"'), text.index("rm -rf --"))
+
+    def test_the_emulator_gate_takes_an_activity_class_name_only(self) -> None:
+        """UI89 §7.5: a Flutter app launches `.MainActivity`, so the gate takes
+        the activity's class name and builds the component itself. Anything
+        that is not a plain class name is refused before adb is reached,
+        because `adb shell` joins arguments into one device command line."""
+
+        gate = SCRIPT.parent / "mosaic-android-emulator-gate.sh"
+
+        def run(*activity: str, adb_body: str = "exit 0\n") -> tuple[subprocess.CompletedProcess[str], list[str]]:
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                log = root / "adb.log"
+                log.write_text("", encoding="utf-8")
+                adb = root / "adb"
+                adb.write_text(
+                    "#!/usr/bin/env bash\n" f'echo "$*" >> "{log}"\n' + adb_body,
+                    encoding="utf-8",
+                )
+                adb.chmod(0o755)
+                (root / "app.apk").write_bytes(b"")
+                result = subprocess.run(
+                    ["bash", str(gate), str(root / "app.apk"), "dev.example.app", "example-app", *activity],
+                    env={"PATH": f"{root}:/usr/bin:/bin"},
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                return result, log.read_text(encoding="utf-8").splitlines()
+
+        # `am start` fails at once in the fake, so the gate stops at its first
+        # launch: enough to see which component it asked for.
+        stop_at_launch = 'case "$*" in *"am start"*) exit 1 ;; esac\nexit 0\n'
+        for activity, component in (
+            ((), "dev.example.app/mosaic.android.MosaicActivity"),
+            ((".MainActivity",), "dev.example.app/.MainActivity"),
+            (("dev.example.app.MainActivity",), "dev.example.app/dev.example.app.MainActivity"),
+        ):
+            with self.subTest(activity=activity):
+                result, calls = run(*activity, adb_body=stop_at_launch)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(f"shell am start -W -n {component}", calls, calls)
+
+        for activity in (
+            "dev.example.app/.MainActivity",
+            ".Main;reboot",
+            ".Main Activity",
+            "$(reboot)",
+            "",
+            "..Main",
+            ".Main.",
+        ):
+            with self.subTest(activity=activity):
+                result, calls = run(activity)
+                self.assertEqual(result.returncode, 2, result.stderr)
+                self.assertEqual(calls, [], "refused before adb is reached")
 
     def test_a_lane_script_change_alone_requires_acceptance(self) -> None:
         """The Android scripts belong to no package; changing one must still

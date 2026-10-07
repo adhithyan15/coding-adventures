@@ -134,6 +134,18 @@ That is about 380 filmstrips that could print today.
   pulli ் (32 lessons) and ு/ூ (17 and more), which need a citable pen path;
   the repository's research could reach no source for them (Info-farmer's
   Commons animations and Radhakrishnan's Appendix I could not be opened).
+- **The Tamil pulli, after its consonant.** ் gained a cited ductus (one dab
+  inside the font's disc) and a `WRITTEN_SIGN_SIDES` row, "after": Abhinaya
+  Rajarajan's *Varai* recordings of the 18 consonants with pulli draw the body
+  first and the dot second (one writer, facts only, confidence medium; an
+  earlier reading of Info-farmer's animations agrees). Noto prints every
+  consonant + pulli as the unchanged consonant plus the unchanged dot; the two
+  runs it joins across the pulli (க்ஷ, ஸ்ரீ) are refused. 17 Tamil lessons
+  gained a filmstrip (Tamil 48 → 65): TA-S08-pulli, TA-W03-pulli-vanakkam and
+  fifteen words (வணக்கம், நன்றி, ஆம், இல்லை, என், பெயர், நான், நீங்கள், தமிழ்,
+  ஊர், சட்டை, பயம், ஆனால், சொல், ஏன்). The other pulli words counted above also
+  carry ு/ூ or the fused டி, so they wait on those. Still open for Tamil:
+  ு/ூ, which need a citable pen path for each consonant's fused shape.
 - **Gujarati vowel signs, written after the consonant.** ા િ ી ુ ૂ ે ૈ ો ૌ ં
   and ઃ gained a cited ductus each (order, start, direction and lifts from
   KanoAI's hand-made barakhadi templates, whose licence is ambiguous, so facts

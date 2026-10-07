@@ -36,6 +36,7 @@ data/scripts/*.{json,d/} ─► scriptdata.ts ─┐
 | `strokes.ts` + `strokes/*.ts` | **how** a letter is written — a fixed public registry assembled from writing-system-owned pen-path modules |
 | `truetype.ts` | **what** the letter looks like — a zero-dependency TrueType reader pulling the real outline out of the shipped font |
 | `ductusview.ts` | the join — the filmstrip, as a tree of plain objects plus a serialiser |
+| `headline-word.ts` | a Devanagari **word** — its cited letters' bodies, then one headline across the word, fitted to the printed word (uses `ink.ts`) |
 
 ## The design idea worth knowing
 
@@ -91,6 +92,59 @@ A letter is authored only where one order clearly wins. Bengali's headline is
 the hard case: in isolated letters writers draw it first, last, partly or not
 at all, depending on the letter, so ন, ক, ম and others whose traces split are
 left out with the reason recorded in `data/scripts/bengali.json`.
+
+### A tracing lesson as a source (Gurmukhi)
+
+Gurmukhi (`strokes/gurmukhi.ts`) cites the Alphabet Tracing lesson of GNPS's
+Gurmukhi Sikho app (Apache-2.0). For each letter, the developer entered ordered
+checkpoints over the Noto Sans Gurmukhi letter, one list per pen-down stroke,
+and the app makes a child reach them in order. That gives the order, the start,
+the direction and the lifts; the record cites them and copies no coordinate.
+The path is fitted to the bundled outline. The source draws the headline first,
+and every record says this is a teaching order: fluent writers are often
+described as adding the headline last. ਛ, ਨ and ਬ lift once less than the app,
+down to Omniglot's copyist mode, which is an upper bound on native lifts.
+
+### A teaching tool's formation arrows as a source (Malayalam consonants)
+
+Seventeen Malayalam consonants (`strokes/malayalam.ts`, after ഴ) cite the
+formation images of SPACE Kerala's *Thooval* (Society for Promotion of
+Alternative Computing and Employment), a Malayalam alphabet teaching tool. Each
+image marks where the pen starts (green), where it turns back along its own ink
+(blue) and where it ends (red). Thooval is GPL-3.0, so only those facts are
+cited, with the image linked at a pinned commit; nothing of it is copied.
+Because Thooval makes the learner keep the pen down to the end of the letter,
+it cannot show a lift, so the zero-lift claim is checked against two recordings
+that could: Santhosh Thottingal's *hand* curves (MIT) and the *grahyam* samples
+(no licence, cited as counts only). The paths retrace a stem wherever Thooval
+turns back at its foot.
+
+### A textbook's numbered movements as a source (more Malayalam letters and signs)
+
+Twenty-two more Malayalam glyphs (`strokes/malayalam.ts`, after ബ) cite Rodney
+F. Moag's *Malayalam: A University Course and Reference Grammar*, whose tables
+number and arrow every movement of every letter and sign in a native writer's
+hand: ക യ ഖ ങ ച ഛ ഞ ഥ ധ ഭ ഫ ള, ഏ, the anusvara ം and eight vowel signs drawn
+alone (ാ ി ീ ു ൂ ൃ െ േ, read through `malayalamMarkSource`). The book is CC
+BY-NC-SA 4.0, so only facts are cited, with each page's scan linked at a pinned
+commit. Moag's numbers are movements, not lifts: each becomes one segment of a
+single run, and the lift count again rests on *hand* and *grahyam*.
+
+### A school model and native writers as sources (Latin print letters)
+
+Latin (`strokes/latin.ts`, keys `latin:<glyph>`) draws 18 print glyphs: b c e
+g h i l n o r s u w ß and G cite the Grundschrift-App, made in a research
+project of the Laborschule at Bielefeld University with the Grundschulverband,
+whose ordered paths (one per pen-down stroke) a child traces in order. Its
+repository has no licence, so only the order, start, direction and lifts are
+cited, per letter level at a pinned commit, and no point is copied. Native
+writers corroborate it: UJIpenchars2 (Prat et al., UCI dataset 177, CC BY 4.0)
+holds 120 pen traces of each Spanish character from 60 adults, cited as counts.
+It is the only source for ñ's tilde (after the n, left to right), ¿ and ¡ (dot
+last). The outlines are the Noto Sans Latin letters that the bundled
+`NotoSansDevanagari-Static.ttf` carries. ñ is its own precomposed entry. a is
+not drawn: Noto prints a two-storey a, and every source draws the one-storey
+a. The grave, circumflex, cedilla, æ and œ have no source.
 
 ## Usage
 
@@ -154,6 +208,21 @@ the nukta ़, Devanagari ं and Gujarati ં, at 44 to 60 units) both are scal
 path is 150 units or more keeps the defaults. An explicit `penWidth` or
 `tipRadius` overrides the scaling, as an explicit `captionSize` does.
 
+A Devanagari word lesson (`composition: "shared-headline"`) gets ONE entry
+keyed by the whole word (`devanagari:मम`). `composeHeadlineWord` takes each
+letter's own "lift, then draw the shirorekha rightward" stroke off, places the
+letters' bodies at the font's advance widths (`Font.advanceFor`), and ends with
+one headline over the whole word: most native writers draw it last (HP Labs
+India's LipiTk Devanagari data: 82% of 2,706 consonant prototypes; about 5%
+first). A word whose composed path does not fit the printed word at the
+default tolerances is refused, not drawn.
+
+```ts
+const word = composeHeadlineWord("मम", "devanagari", font);
+if (word.ok) buildFilmstripEntry(word.ductus, word.outline, fontPath);
+else console.log(word.reason); // e.g. मथ: the shared headline is only 88.2% on ink
+```
+
 ## No DOM, no filesystem
 
 Nothing here touches `document` or reads a file. Fonts arrive as an
@@ -184,7 +253,11 @@ remains the bounded public facade and duplicate-rejecting assembly point.
 The six Tamil vowel signs written as separate symbols beside their consonant
 (ா ி ீ ெ ே ை) are owners of the same kind, cited to the native-writer pen
 traces in HP Labs India's LipiTk Tamil recognizer; the book decides where each
-is drawn in a word (`human-language-data`'s `WRITTEN_SIGN_SIDES`).
+is drawn in a word (`human-language-data`'s `WRITTEN_SIGN_SIDES`). The pulli ்
+(`U-BCD`) is the last Tamil owner: one short dab inside the font's disc, its
+order (body first, then the dot, one lift) cited to Abhinaya Rajarajan's
+*Varai* recordings of the 18 consonants with pulli (one writer, facts only,
+confidence medium).
 Gujarati's eleven signs (ા િ ી ુ ૂ ે ૈ ો ૌ ં ઃ) sit at the end of the Gujarati
 owner, keyed `gujarati:<sign>` like its letters, and take their source from the
 sign's mark record (`gujaratiMarkSource`): order, start, direction and lifts

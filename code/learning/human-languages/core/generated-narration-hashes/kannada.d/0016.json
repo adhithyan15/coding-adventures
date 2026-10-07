@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 16,
-  "sourceHash": "fnv1a64:a597f77e1771747c",
+  "sourceHash": "fnv1a64:13c8903d8c47dad5",
   "lessonIds": [
     "KA-C16-tingalugalu",
     "KA-C16-uttara",
@@ -12,7 +12,7 @@
   "drivablePrefix": 1,
   "text": "kannada/narration/ch16.txt",
   "json": "kannada/narration/ch16.json",
-  "textHash": "fnv1a64:fb98417930bfe5ca",
-  "jsonHash": "fnv1a64:d54d35eb9cc38722",
+  "textHash": "fnv1a64:b677a1d388b9e193",
+  "jsonHash": "fnv1a64:a7faf2906c4b7249",
   "findings": []
 }

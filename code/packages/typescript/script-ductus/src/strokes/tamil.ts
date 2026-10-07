@@ -35,6 +35,7 @@ import { entry as uBC0 } from "./tamil/U-BC0.ts";
 import { entry as uBC6 } from "./tamil/U-BC6.ts";
 import { entry as uBC7 } from "./tamil/U-BC7.ts";
 import { entry as uBC8 } from "./tamil/U-BC8.ts";
+import { entry as uBCD } from "./tamil/U-BCD.ts";
 
 import type { DuctusEntry } from "./registry.ts";
 
@@ -71,6 +72,7 @@ export const mainEntries: DuctusEntry[] = [
 // The six vowel signs written as separate symbols beside their consonant
 // (three to its right, three to its left) follow, one owner each like a
 // letter, after the letters so every existing key keeps its relative order.
+// The puḷḷi, the dot made after its consonant, comes last for the same reason.
 export const tailEntries: DuctusEntry[] = [
   uB8E,
   uB8F,
@@ -81,4 +83,5 @@ export const tailEntries: DuctusEntry[] = [
   uBC6,
   uBC7,
   uBC8,
+  uBCD,
 ];

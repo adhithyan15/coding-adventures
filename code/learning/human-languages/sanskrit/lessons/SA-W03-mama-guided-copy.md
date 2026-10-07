@@ -43,9 +43,10 @@ new vocabulary, and no new shape is hiding in the word.
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-01, SA-LEX-MAMA] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Keep **मम** visible. Copy the first **म** in its three sourced strokes, then
-copy the second **म** the same way. Let the two headline strokes meet so the
-word hangs from one continuous **śirorekhā**.
+Keep **मम** visible and follow the numbered strip: write the body of the
+first **म**, then the body of the second, and only then draw one
+**śirorekhā** left to right across both, so the word hangs from one line. Most
+native writers leave the headline for last; some draw it first.
 
 Read what you wrote: **मम**, “my.” Two copies of *ma* make *mama*; neither
 consonant needs a separate vowel sign because each carries its short *a*.

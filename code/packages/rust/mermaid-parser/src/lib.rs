@@ -6,7 +6,7 @@
 // of the lint file-wide.
 #![allow(clippy::manual_strip)]
 
-pub const VERSION: &str = "0.139.0";
+pub const VERSION: &str = "0.147.0";
 pub const MERMAID_COMPATIBILITY_BASELINE: &str = "11.16.1";
 
 use std::collections::{HashMap, HashSet};
@@ -599,7 +599,7 @@ use diagram_ir::{
     TemporalKind, TimelineDiagram, TimelineDirection,
     TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
-    CynefinDiagram, CynefinDomain, CynefinTransition, IshikawaCause, IshikawaDiagram,
+    CynefinConfig, CynefinDiagram, CynefinDomain, CynefinStyle, CynefinTransition, IshikawaCause, IshikawaDiagram,
     WardleyDiagram, WardleyEvolution, WardleyLink, WardleyNode, TreeViewDiagram, TreeViewNode,
     TreeViewNodeKind,
 };
@@ -1126,6 +1126,19 @@ fn parse_architecture_config(source: &str) -> ArchitectureConfig {
             .and_then(|value| value.parse::<f64>().ok())
             .filter(|value| value.is_finite() && *value > 0.0)
     };
+    let bounded_number = |key, minimum: f64, maximum: f64| {
+        value(key)
+            .and_then(|value| value.parse::<f64>().ok())
+            .filter(|value| value.is_finite() && *value >= minimum && *value <= maximum)
+    };
+    let boolean = |key| {
+        value(key).and_then(|value| match value.to_ascii_lowercase().as_str() {
+            "true" => Some(true),
+            "false" => Some(false),
+            _ => None,
+        })
+    };
+    let integer = |key| value(key).and_then(|value| value.parse::<i64>().ok());
     let defaults = ArchitectureConfig::default();
     ArchitectureConfig {
         icon_size: positive_number("iconSize").unwrap_or(defaults.icon_size),
@@ -1135,6 +1148,10 @@ fn parse_architecture_config(source: &str) -> ArchitectureConfig {
         padding: positive_number("padding").unwrap_or(defaults.padding),
         ideal_edge_length_multiplier: positive_number("idealEdgeLengthMultiplier")
             .unwrap_or(defaults.ideal_edge_length_multiplier),
+        edge_elasticity: bounded_number("edgeElasticity", 0.0, 1.0)
+            .unwrap_or(defaults.edge_elasticity),
+        randomize: boolean("randomize").unwrap_or(defaults.randomize),
+        seed: integer("seed").unwrap_or(defaults.seed),
     }
 }
 
@@ -1467,16 +1484,19 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
         let (node_source, metadata) = parse_kanban_node_metadata(value, token)?;
         let (explicit_id, mut label) = parse_board_node(node_source);
         if let Some(metadata_label) = &metadata.label {
-            label = normalize_mermaid_line_breaks(metadata_label);
+            label = parse_kanban_label(metadata_label);
         }
-        let id = unique_mindmap_id(explicit_id.unwrap_or_else(|| mindmap_slug(&label)), &mut ids);
+        let id = unique_mindmap_id(
+            explicit_id.unwrap_or_else(|| mindmap_slug(&label.text)),
+            &mut ids,
+        );
         if indent == column_indent {
             if metadata.has_card_only_fields() {
                 return Err(token_error(token, "kanban card metadata requires a card"));
             }
             diagram.columns.push(BoardColumn {
                 id,
-                label: DiagramLabel::new(label),
+                label,
                 ticket: metadata.ticket,
                 cards: Vec::new(),
                 classes: Vec::new(),
@@ -1496,7 +1516,7 @@ pub fn parse_kanban(source: &str) -> Result<BoardDiagram, ParseError> {
                 .ok_or_else(|| token_error(token, "kanban card must follow a column"))?;
             column.cards.push(BoardCard {
                 id,
-                label: DiagramLabel::new(label),
+                label,
                 ticket: metadata.ticket,
                 assigned: metadata.assigned,
                 priority: metadata.priority,
@@ -1637,9 +1657,18 @@ fn parse_kanban_layout_config(source: &str) -> BoardConfig {
     }
 }
 
-fn parse_board_node(source: &str) -> (Option<String>, String) {
+fn parse_board_node(source: &str) -> (Option<String>, DiagramLabel) {
     let source = source.trim();
-    for (open, close) in [("((", "))"), ("{{", "}}"), ("[", "]"), ("(", ")")] {
+    for (open, close) in [
+        ("-)", "(-"),
+        ("(-", "-)"),
+        ("))", "(("),
+        (")", "("),
+        ("((", "))"),
+        ("{{", "}}"),
+        ("[", "]"),
+        ("(", ")"),
+    ] {
         if let Some(open_index) = source.find(open) {
             if !source.ends_with(close) {
                 continue;
@@ -1651,13 +1680,30 @@ fn parse_board_node(source: &str) -> (Option<String>, String) {
             }
             return (
                 (!id.is_empty()).then(|| id.to_string()),
-                normalize_mermaid_line_breaks(
-                    source[open_index + open.len()..label_end].trim(),
-                ),
+                parse_kanban_label(source[open_index + open.len()..label_end].trim()),
             );
         }
     }
-    (None, normalize_mermaid_line_breaks(source))
+    (None, parse_kanban_label(source))
+}
+
+fn parse_kanban_label(source: &str) -> DiagramLabel {
+    let label = parse_mermaid_label(source);
+    if label.markdown.is_some() {
+        return label;
+    }
+    let markdown = label.text.replace("\\n", "\n");
+    let marker_count = markdown.chars().filter(|character| *character == '*').count();
+    let has_emphasis = marker_count >= 2 && marker_count.is_multiple_of(2);
+    if !has_emphasis && !markdown.contains('\n') {
+        return label;
+    }
+    let (text, spans) = parse_mindmap_markdown_spans(&markdown);
+    if markdown.contains('\n') || spans.iter().any(|span| span.bold || span.italic) {
+        DiagramLabel::markdown(text, markdown, spans)
+    } else {
+        label
+    }
 }
 
 /// Parse absolute and relative bit ranges from the Mermaid packet family.
@@ -2963,7 +3009,7 @@ fn parse_mindmap_node(source: &str) -> (Option<String>, DiagramLabel, DiagramSha
         if let Some(open_index) = source.find(open) {
             if source.ends_with(close) && open_index + open.len() <= source.len() - close.len() {
                 let id = source[..open_index].trim();
-                let label = parse_mindmap_label(
+                let label = parse_mermaid_label(
                     source[open_index + open.len()..source.len() - close.len()].trim(),
                 );
                 return (
@@ -2981,7 +3027,7 @@ fn parse_mindmap_node(source: &str) -> (Option<String>, DiagramLabel, DiagramSha
     )
 }
 
-fn parse_mindmap_label(source: &str) -> DiagramLabel {
+fn parse_mermaid_label(source: &str) -> DiagramLabel {
     let trimmed = source.trim();
     if let Some(markdown) = trimmed
         .strip_prefix("\"`")
@@ -5499,6 +5545,7 @@ fn venn_error(line: usize, message: impl Into<String>) -> ParseError { ParseErro
 
 /// Parse Mermaid 11.16.1 indentation-based Ishikawa diagrams into causal IR.
 pub fn parse_ishikawa(source: &str) -> Result<IshikawaDiagram, ParseError> {
+    let diagram_padding = parse_ishikawa_padding(source);
     let prepared = prepare_line_grammar_source(source)?;
     let tokens = try_tokenize_mermaid_ishikawa(&prepared).map_err(|message| ParseError { message, line: 1, col: 1 })?;
     let grammar = parse_parser_grammar(ISHIKAWA_PARSER_GRAMMAR_SOURCE)
@@ -5524,7 +5571,25 @@ pub fn parse_ishikawa(source: &str) -> Result<IshikawaDiagram, ParseError> {
         causes.push(IshikawaCause { id: id.clone(), label: label.clone(), parent_id, depth });
         stack.push((effective_indent, id));
     }
-    Ok(IshikawaDiagram { effect: effect.clone(), causes })
+    Ok(IshikawaDiagram { effect: effect.clone(), causes, diagram_padding })
+}
+
+fn parse_ishikawa_padding(source: &str) -> f64 {
+    let front_matter = mermaid_front_matter_section(source, &["config", "ishikawa"]);
+    let config = mermaid_directive_object(source, "ishikawa")
+        .or(front_matter.as_deref())
+        .unwrap_or("");
+    quadrant_directive_value(config, "diagramPadding")
+        .or_else(|| {
+            config.lines().find_map(|line| {
+                let (name, value) = line.trim().split_once(':')?;
+                (name.trim() == "diagramPadding")
+                    .then(|| value.trim().trim_matches(['"', '\'']).to_string())
+            })
+        })
+        .and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value >= 0.0)
+        .unwrap_or(20.0)
 }
 
 fn indentation_width(line: &str) -> usize {
@@ -5614,39 +5679,172 @@ fn wardley_error(line: usize, message: impl Into<String>) -> ParseError { ParseE
 
 /// Parse Mermaid 11.16.1 Cynefin domains, items, and cross-domain transitions.
 pub fn parse_cynefin(source: &str) -> Result<CynefinDiagram, ParseError> {
-    let prepared = prepare_line_grammar_source(source)?;
+    let config = parse_cynefin_config(source);
+    let (prepared, multiline_descriptions) = prepare_cynefin_source(source)?;
     let tokens = try_tokenize_mermaid_cynefin(&prepared).map_err(|message| ParseError { message, line: 1, col: 1 })?;
     let grammar = parse_parser_grammar(CYNEFIN_PARSER_GRAMMAR_SOURCE)
         .unwrap_or_else(|error| panic!("Failed to parse cynefin.grammar: {error}"));
     GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH).parse()
         .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
-    let mut diagram = CynefinDiagram { title: None, domains: Vec::new(), transitions: Vec::new() };
+    let mut diagram = CynefinDiagram { title: None, accessibility_title: None, accessibility_description: None, config, domains: Vec::new(), transitions: Vec::new() };
     let mut current_domain: Option<usize> = None;
     for (index, raw) in prepared.lines().enumerate() {
         let line_number = index + 1; let line = raw.trim();
         if line.is_empty() || matches!(line.to_ascii_lowercase().as_str(), "cynefin-beta" | "cynefin-beta:") { continue; }
-        if let Some(title) = line.strip_prefix("title ") { diagram.title = Some(title.trim().to_string()); current_domain = None; continue; }
+        if let Some(title) = line.strip_prefix("title").filter(|rest| rest.is_empty() || rest.starts_with(' ') || rest.starts_with('\t')) {
+            diagram.title = Some(title.trim().to_string()); current_domain = None; continue;
+        }
+        if let Some((_, value)) = line.split_once(':').filter(|(keyword, _)| keyword.trim() == "accTitle") {
+            diagram.accessibility_title = Some(value.trim().to_string()); current_domain = None; continue;
+        }
+        if let Some((_, value)) = line.split_once(':').filter(|(keyword, _)| keyword.trim() == "accDescr") {
+            let value = value.trim();
+            diagram.accessibility_description = value.strip_prefix("__CYNEFIN_MULTILINE_")
+                .and_then(|index| index.parse::<usize>().ok())
+                .and_then(|index| multiline_descriptions.get(index).cloned())
+                .or_else(|| Some(value.to_string()));
+            current_domain = None; continue;
+        }
         if let Some((from, rest)) = line.split_once("-->") {
-            let (to, label) = rest.split_once(':').map_or((rest, None), |(to, label)| (to, Some(label.trim().trim_matches('"').to_string())));
+            let (to, label) = rest.split_once(':').map_or((rest, None), |(to, label)|
+                (to, parse_cynefin_quoted_string(label.trim())));
             let from = from.trim().to_ascii_lowercase(); let to = to.trim().to_ascii_lowercase();
             if from != to { diagram.transitions.push(CynefinTransition { from, to, label }); }
             current_domain = None; continue;
         }
         let lower = line.to_ascii_lowercase();
         if matches!(lower.as_str(), "complex" | "complicated" | "clear" | "chaotic" | "confusion") {
-            let domain_index = if let Some(existing) = diagram.domains.iter().position(|domain| domain.name == lower) { existing }
+            let domain_index = if let Some(existing) = diagram.domains.iter().position(|domain| domain.name == lower) {
+                diagram.domains[existing].items.clear(); existing
+            }
                 else { diagram.domains.push(CynefinDomain { name: lower, items: Vec::new() }); diagram.domains.len() - 1 };
             current_domain = Some(domain_index); continue;
         }
-        if line.starts_with('"') && line.ends_with('"') {
+        if let Some(label) = parse_cynefin_quoted_string(line) {
             let Some(domain) = current_domain.and_then(|domain| diagram.domains.get_mut(domain)) else {
                 return Err(ParseError { message: "Cynefin item requires a preceding domain".into(), line: line_number, col: 1 });
             };
-            domain.items.push(line.trim_matches('"').to_string()); continue;
+            domain.items.push(label); continue;
         }
         return Err(ParseError { message: format!("unsupported Cynefin statement: {line}"), line: line_number, col: 1 });
     }
     Ok(diagram)
+}
+
+fn parse_cynefin_quoted_string(value: &str) -> Option<String> {
+    let quote = value.chars().next()?;
+    if !matches!(quote, '\'' | '"') || value.chars().last()? != quote { return None; }
+    let mut chars = value[quote.len_utf8()..value.len() - quote.len_utf8()].chars();
+    let mut output = String::new();
+    while let Some(ch) = chars.next() {
+        if ch != '\\' { output.push(ch); continue; }
+        let escaped = chars.next()?;
+        output.push(match escaped { 'n' => '\n', 'r' => '\r', 't' => '\t', 'b' => '\u{0008}', 'f' => '\u{000c}', other => other });
+    }
+    Some(output)
+}
+
+fn parse_cynefin_config(source: &str) -> CynefinConfig {
+    let defaults = CynefinConfig::default();
+    let front_matter = mermaid_front_matter_section(source, &["config", "cynefin"]);
+    let config = mermaid_directive_object(source, "cynefin").or(front_matter.as_deref()).unwrap_or("");
+    let value = |name: &str| {
+        quadrant_directive_value(config, name).or_else(|| config.lines().find_map(|line| {
+            let (key, value) = line.trim().split_once(':')?;
+            (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+        }))
+    };
+    let positive = |name: &str, fallback: f64| value(name).and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value > 0.0).unwrap_or(fallback);
+    let non_negative = |name: &str, fallback: f64| value(name).and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value >= 0.0).unwrap_or(fallback);
+    let boolean = |name: &str, fallback: bool| value(name).and_then(|value| match value.to_ascii_lowercase().as_str() {
+        "true" => Some(true), "false" => Some(false), _ => None,
+    }).unwrap_or(fallback);
+    let seed = value("seed").and_then(|value| value.parse::<i32>().ok()).filter(|seed| *seed != 0)
+        .unwrap_or_else(|| mermaid_string_hash(source));
+    CynefinConfig { width: positive("width", defaults.width), height: positive("height", defaults.height),
+        padding: non_negative("padding", defaults.padding),
+        show_domain_descriptions: boolean("showDomainDescriptions", defaults.show_domain_descriptions),
+        boundary_amplitude: non_negative("boundaryAmplitude", defaults.boundary_amplitude), seed,
+        style: parse_cynefin_style(source) }
+}
+
+fn parse_cynefin_style(source: &str) -> CynefinStyle {
+    let defaults = CynefinStyle::default();
+    let front_matter = mermaid_front_matter_section(source, &["config", "themeVariables", "cynefin"]);
+    let config = mermaid_directive_object(source, "themeVariables")
+        .and_then(|theme| mermaid_directive_object(theme, "cynefin"))
+        .or(front_matter.as_deref()).unwrap_or("");
+    let value = |name: &str| {
+        quadrant_directive_value(config, name).or_else(|| config.lines().find_map(|line| {
+            let (key, value) = line.trim().split_once(':')?;
+            (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+        }))
+    };
+    let positive = |name: &str, fallback: f64| value(name).and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value > 0.0).unwrap_or(fallback);
+    let text = |name: &str, fallback: &str| value(name).filter(|value| !value.is_empty()).unwrap_or_else(|| fallback.to_string());
+    CynefinStyle { domain_font_size: positive("domainFontSize", defaults.domain_font_size),
+        item_font_size: positive("itemFontSize", defaults.item_font_size),
+        boundary_color: text("boundaryColor", &defaults.boundary_color),
+        boundary_width: positive("boundaryWidth", defaults.boundary_width),
+        cliff_color: text("cliffColor", &defaults.cliff_color), cliff_width: positive("cliffWidth", defaults.cliff_width),
+        arrow_color: text("arrowColor", &defaults.arrow_color), arrow_width: positive("arrowWidth", defaults.arrow_width),
+        complex_bg: text("complexBg", &defaults.complex_bg), complicated_bg: text("complicatedBg", &defaults.complicated_bg),
+        chaotic_bg: text("chaoticBg", &defaults.chaotic_bg), clear_bg: text("clearBg", &defaults.clear_bg),
+        confusion_bg: text("confusionBg", &defaults.confusion_bg), text_color: text("textColor", &defaults.text_color),
+        label_color: text("labelColor", &defaults.label_color) }
+}
+
+fn mermaid_string_hash(value: &str) -> i32 {
+    value.encode_utf16().fold(0i32, |hash, unit| hash.wrapping_shl(5).wrapping_sub(hash).wrapping_add(i32::from(unit)))
+}
+
+fn prepare_cynefin_source(source: &str) -> Result<(String, Vec<String>), ParseError> {
+    let prepared = prepare_line_grammar_source(source)?;
+    let lines: Vec<_> = prepared.lines().collect();
+    let mut output = Vec::with_capacity(lines.len());
+    let mut multiline_descriptions = Vec::new();
+    let mut index = 0usize;
+    while index < lines.len() {
+        let trimmed = lines[index].trim();
+        let Some(after_keyword) = trimmed.strip_prefix("accDescr") else {
+            output.push(lines[index].to_string());
+            index += 1;
+            continue;
+        };
+        let after_keyword = after_keyword.trim_start();
+        let Some(mut remainder) = after_keyword.strip_prefix('{') else {
+            output.push(lines[index].to_string());
+            index += 1;
+            continue;
+        };
+        let start_line = index + 1;
+        let mut description = Vec::new();
+        loop {
+            if let Some((content, trailing)) = remainder.split_once('}') {
+                if !trailing.trim().is_empty() {
+                    return Err(ParseError { message: "unexpected content after Cynefin accessibility description".into(), line: index + 1, col: 1 });
+                }
+                description.push(content.trim());
+                break;
+            }
+            description.push(remainder.trim());
+            index += 1;
+            if index == lines.len() {
+                return Err(ParseError { message: "unterminated Cynefin accessibility description".into(), line: start_line, col: 1 });
+            }
+            remainder = lines[index];
+        }
+        let description_index = multiline_descriptions.len();
+        while description.first().is_some_and(|line| line.is_empty()) { description.remove(0); }
+        while description.last().is_some_and(|line| line.is_empty()) { description.pop(); }
+        multiline_descriptions.push(description.join("\n"));
+        output.push(format!("accDescr: __CYNEFIN_MULTILINE_{description_index}"));
+        index += 1;
+    }
+    Ok((output.join("\n"), multiline_descriptions))
 }
 
 // ── radar-beta parser ─────────────────────────────────────────────────────
@@ -12475,6 +12673,68 @@ mod tests_dg04 {
     }
 
     #[test]
+    fn kanban_normalizes_cloud_and_bang_labels() {
+        let board = parse_kanban(
+            "kanban\n  todo)Cloud section(\n    bang))Bang card((\n    cloud(-Cloud card-)\n    burst-)Burst card(-",
+        )
+        .unwrap();
+        assert_eq!(board.columns[0].id, "todo");
+        assert_eq!(board.columns[0].label.text, "Cloud section");
+        assert_eq!(board.columns[0].cards[0].label.text, "Bang card");
+        assert_eq!(board.columns[0].cards[1].label.text, "Cloud card");
+        assert_eq!(board.columns[0].cards[2].label.text, "Burst card");
+    }
+
+    #[test]
+    fn kanban_unquotes_delimited_labels() {
+        let board = parse_kanban(
+            "kanban\n  todo[\"Todo queue\"]\n    card[\"Quoted card\"]",
+        )
+        .unwrap();
+        assert_eq!(board.columns[0].id, "todo");
+        assert_eq!(board.columns[0].label.text, "Todo queue");
+        assert_eq!(board.columns[0].cards[0].label.text, "Quoted card");
+    }
+
+    #[test]
+    fn kanban_preserves_markdown_label_spans() {
+        let board = parse_kanban(
+            "kanban\n  todo[\"`**Todo** queue`\"]\n    card[\"`Quoted *card*`\"]",
+        )
+        .unwrap();
+        let column = &board.columns[0];
+        let card = &column.cards[0];
+        assert_eq!(column.label.text, "Todo queue");
+        assert_eq!(column.label.markdown.as_deref(), Some("**Todo** queue"));
+        assert!(column.label.spans[0].bold);
+        assert_eq!(card.label.text, "Quoted card");
+        assert!(card.label.spans.iter().any(|span| span.italic));
+    }
+
+    #[test]
+    fn kanban_parses_inline_markdown_label_spans() {
+        let board = parse_kanban(
+            "kanban\n  todo[**Todo** queue]\n    card[Quoted *card*]",
+        )
+        .unwrap();
+        assert_eq!(board.columns[0].label.text, "Todo queue");
+        assert!(board.columns[0].label.spans[0].bold);
+        assert_eq!(board.columns[0].cards[0].label.text, "Quoted card");
+        assert!(board.columns[0].cards[0].label.spans.iter().any(|span| span.italic));
+    }
+
+    #[test]
+    fn kanban_normalizes_escaped_multiline_labels() {
+        let board = parse_kanban(
+            "kanban\n  todo[Todo\\nqueue]\n    card[Line 1\\nLine 2\\nLine 3]",
+        )
+        .unwrap();
+        assert_eq!(board.columns[0].label.text, "Todo\nqueue");
+        assert_eq!(board.columns[0].cards[0].label.text, "Line 1\nLine 2\nLine 3");
+        assert!(board.columns[0].label.markdown.is_some());
+    }
+
+    #[test]
     fn dispatch_kanban_to_board_ir() {
         match parse_any_mermaid("kanban\nTodo\n  task1[Task]").unwrap() {
             MermaidDiagram::Board(board) => assert_eq!(board.columns.len(), 1),
@@ -12603,7 +12863,7 @@ mod tests_dg04 {
     #[test]
     fn architecture_preserves_size_and_separation_configuration() {
         let diagram = parse_architecture(
-            "%%{init: {\"architecture\": {\"iconSize\": 104, \"fontSize\": 19, \"nodeSeparation\": 112, \"padding\": 48, \"idealEdgeLengthMultiplier\": 1.25}}}%%\narchitecture-beta\nservice api(server)[API]",
+            "%%{init: {\"architecture\": {\"iconSize\": 104, \"fontSize\": 19, \"nodeSeparation\": 112, \"padding\": 48, \"idealEdgeLengthMultiplier\": 1.25, \"edgeElasticity\": 0.8, \"randomize\": true, \"seed\": 17}}}%%\narchitecture-beta\nservice api(server)[API]",
         )
         .unwrap();
         assert_eq!(
@@ -12614,11 +12874,14 @@ mod tests_dg04 {
                 node_separation: 112.0,
                 padding: 48.0,
                 ideal_edge_length_multiplier: 1.25,
+                edge_elasticity: 0.8,
+                randomize: true,
+                seed: 17,
             })
         );
 
         let diagram = parse_architecture(
-            "---\nconfig:\n  architecture:\n    iconSize: 96\n    fontSize: 18\n    nodeSeparation: 104\n    padding: 52\n    idealEdgeLengthMultiplier: 1.75\n---\narchitecture-beta\nservice api(server)[API]",
+            "---\nconfig:\n  architecture:\n    iconSize: 96\n    fontSize: 18\n    nodeSeparation: 104\n    padding: 52\n    idealEdgeLengthMultiplier: 1.75\n    edgeElasticity: 0.2\n    randomize: false\n    seed: -9\n---\narchitecture-beta\nservice api(server)[API]",
         )
         .unwrap();
         let config = diagram.architecture_config.unwrap();
@@ -12627,6 +12890,18 @@ mod tests_dg04 {
         assert_eq!(config.node_separation, 104.0);
         assert_eq!(config.padding, 52.0);
         assert_eq!(config.ideal_edge_length_multiplier, 1.75);
+        assert_eq!(config.edge_elasticity, 0.2);
+        assert!(!config.randomize);
+        assert_eq!(config.seed, -9);
+
+        let diagram = parse_architecture(
+            "%%{init: {\"architecture\": {\"edgeElasticity\": 1.5}}}%%\narchitecture-beta\nservice api(server)[API]",
+        )
+        .unwrap();
+        assert_eq!(
+            diagram.architecture_config.unwrap().edge_elasticity,
+            ArchitectureConfig::default().edge_elasticity
+        );
     }
 
     #[test]
@@ -16466,7 +16741,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.139.0");
+        assert_eq!(crate::VERSION, "0.147.0");
     }
 
     #[test]

@@ -1,4 +1,36 @@
-{"upstream":"mermaid@11.16.1","scope":"native domain-framework subset","fixtures":[
-{"name":"domains","source":"cynefin-beta\ntitle Incident Response\ncomplex\n  \"Investigate root cause\"\ncomplicated\n  \"Expert review\"\nclear\n  \"Apply known fix\"\nchaotic\n  \"Page on-call\"\nconfusion\n  \"Unknown mode\""},
-{"name":"transitions","source":"cynefin-beta:\ncomplex\n  \"Research\"\ncomplicated\n  \"Analysis\"\ncomplex --> complicated : \"Pattern identified\"\nclear --> chaotic : \"Complacency\""},
-{"name":"empty-framework","source":"cynefin-beta\ncomplex\ncomplicated\nclear\nchaotic"}]}
+{
+  "schema_version": 1,
+  "upstream": "mermaid@11.16.1",
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "level": "full",
+  "scope": "Complete pinned Mermaid 11.16.1 Cynefin grammar surface: both headers, empty diagrams, title and accessibility metadata, comments, directives, front matter, all five domains, quoted and escaped items, duplicate-domain replacement, labeled and unlabeled transitions, canvas configuration, and Cynefin theme variables.",
+  "valid": [
+    {"id": "header-only", "source": "cynefin-beta"},
+    {"id": "colon-header", "source": "cynefin-beta:"},
+    {"id": "domains", "source": "cynefin-beta\ntitle Incident Response\ncomplex\n  \"Investigate root cause\"\ncomplicated\n  \"Expert review\"\nclear\n  \"Apply known fix\"\nchaotic\n  \"Page on-call\"\nconfusion\n  \"Unknown mode\""},
+    {"id": "transitions", "source": "cynefin-beta:\ncomplex\n  \"Research\"\ncomplicated\n  \"Analysis\"\ncomplex --> complicated : \"Pattern identified\"\nclear --> chaotic : \"Complacency\"\nchaotic --> complex"},
+    {"id": "empty-framework", "source": "cynefin-beta\ncomplex\ncomplicated\nclear\nchaotic\nconfusion"},
+    {"id": "comments-and-directive", "source": "%%{init: {\"cynefin\": {\"seed\": 23}}}%%\n%% framework comment\ncynefin-beta\ncomplex\n  \"Probe\"\n%% transition comment\ncomplex --> clear"},
+    {"id": "accessibility", "source": "cynefin-beta\naccTitle: Incident response framework\naccDescr {\n  Practices organized by\n  uncertainty and causality\n}\nclear\n  \"Apply known fix\""},
+    {"id": "metadata-variants", "source": "cynefin-beta\ntitle\naccTitle : Spaced accessibility title\naccDescr   { First line\n  Second line }\nclear\n  'Known practice'"},
+    {"id": "inline-accessibility-description", "source": "cynefin-beta\naccDescr {Inline description}\nclear"},
+    {"id": "confusion-overflow", "source": "cynefin-beta\nconfusion\n  \"Unknown mode\"\n  \"Insufficient evidence\"\n  \"Mixed signals\"\n  \"Unclear ownership\"\n  \"Novel incident\""},
+    {"id": "canvas-config", "source": "%%{init: {\"cynefin\": {\"width\": 640, \"height\": 420, \"padding\": 24, \"showDomainDescriptions\": false, \"boundaryAmplitude\": 12, \"seed\": 17}}}%%\ncynefin-beta\nclear\n  \"Apply known fix\""},
+    {"id": "theme-config", "source": "%%{init: {\"themeVariables\": {\"cynefin\": {\"domainFontSize\": 18, \"itemFontSize\": 13, \"boundaryColor\": \"#112233\", \"boundaryWidth\": 3, \"cliffColor\": \"#441111\", \"cliffWidth\": 5, \"arrowColor\": \"#224466\", \"arrowWidth\": 4, \"complexBg\": \"#e1f1e1\", \"complicatedBg\": \"#e1eaf1\", \"chaoticBg\": \"#f1e1e1\", \"clearBg\": \"#f1f0e1\", \"confusionBg\": \"#eee1f1\", \"textColor\": \"#202020\", \"labelColor\": \"#101010\"}}}}%%\ncynefin-beta\ncomplex\n  \"Explore\""},
+    {"id": "front-matter-config-and-theme", "source": "---\nconfig:\n  cynefin:\n    width: 680\n    padding: 28\n  themeVariables:\n    cynefin:\n      boundaryColor: '#334455'\n      complexBg: '#ddeedd'\n---\ncynefin-beta\ncomplex\n  \"Explore\""},
+    {"id": "quoted-strings", "source": "cynefin-beta\ncomplex\n  'Single quoted'\n  \"Escaped \\\"quote\\\" and \\\\ slash\"\n  'Line\\nfeed'\ncomplex --> clear : 'Shift\\'s label'"},
+    {"id": "duplicate-domain-last-wins", "source": "cynefin-beta\ncomplex\n  \"First item\"\ncomplex\n  \"Replacement item\""}
+  ],
+  "invalid": [
+    {"id": "missing-header", "source": "complex\n  \"Practice\""},
+    {"id": "uppercase-header", "source": "CYNEFIN-BETA\ncomplex"},
+    {"id": "uppercase-domain", "source": "cynefin-beta\nComplex"},
+    {"id": "unknown-domain", "source": "cynefin-beta\ndisorder\n  \"Unknown\""},
+    {"id": "unquoted-item", "source": "cynefin-beta\ncomplex\n  Unquoted"},
+    {"id": "orphan-item", "source": "cynefin-beta\n\"Orphan\""},
+    {"id": "unterminated-item", "source": "cynefin-beta\ncomplex\n  \"Unterminated"},
+    {"id": "unquoted-transition-label", "source": "cynefin-beta\ncomplex --> clear : Codified"},
+    {"id": "unknown-transition-domain", "source": "cynefin-beta\ncomplex --> disorder"},
+    {"id": "unterminated-accessibility-description", "source": "cynefin-beta\naccDescr { Missing close\nclear"}
+  ]
+}

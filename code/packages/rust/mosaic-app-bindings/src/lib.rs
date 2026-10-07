@@ -66,6 +66,16 @@ pub fn swift_platform_effects() -> String {
     include_str!("../templates/swiftui/MosaicPlatformEffects.swift").to_string()
 }
 
+/// The fake document picker an iOS app's XCUITests answer instead of the
+/// system's (UI89 §4.4). The builder writes it only for `--ios-ui-test`,
+/// into the Xcode project alone. All of it is inside
+/// `#if MOSAIC_UI_TEST_PICKER`, which only that project's Debug
+/// configuration defines, and the platform library selects it there only
+/// when the app was launched with `-MosaicUITestPicker`.
+pub fn swift_ios_ui_test_picker() -> String {
+    include_str!("../templates/swiftui/ios-ui-test/MosaicUITestPicker.swift").to_string()
+}
+
 /// The Qt platform library (UI87 §7, §7.4a).
 pub struct QtPlatformEffects {
     pub header: String,
@@ -147,6 +157,26 @@ pub fn flutter_pubspec_with_platform_effects(pubspec_yaml: &str) -> String {
     pubspec_yaml.replacen(
         "dependencies:\n",
         &format!("dependencies:\n  file_selector: {FLUTTER_FILE_SELECTOR_VERSION}\n"),
+        1,
+    )
+}
+
+/// The `path_provider` release a Flutter phone build depends on (UI89 §7.4),
+/// pinned exactly, as `file_selector` is. Its `main()` asks it for the
+/// app-support directory, which is where state goes on Android and iOS.
+/// `path_provider` and its endorsed implementations (`path_provider_android`,
+/// `path_provider_foundation`, and on desktop `path_provider_linux`,
+/// `path_provider_windows`, `xdg_directories`) are published by flutter.dev.
+/// The implementations resolve with `pub get` within the ranges it declares,
+/// and CI prints the resolved versions. 2.1.6 needs Dart 3.10 and Flutter
+/// 3.38, the floor a bundled-runtime project already declares.
+pub const FLUTTER_PATH_PROVIDER_VERSION: &str = "2.1.6";
+
+/// Add `path_provider` (pinned) to a Flutter phone build's package manifest.
+pub fn flutter_pubspec_with_path_provider(pubspec_yaml: &str) -> String {
+    pubspec_yaml.replacen(
+        "dependencies:\n",
+        &format!("dependencies:\n  path_provider: {FLUTTER_PATH_PROVIDER_VERSION}\n"),
         1,
     )
 }
@@ -804,6 +834,43 @@ mod tests {
     /// The SwiftUI and Compose libraries answer one contract (UI87 §7.1): the
     /// same kinds, limits and MIME table, so an app sees the same outcome on
     /// either host. A drift in one template fails here, not on a Mac.
+    #[test]
+    fn the_ios_ui_test_picker_is_compiled_only_under_its_condition() {
+        // UI89 §4.4: nothing of the fake exists outside the condition, and
+        // the platform library reaches it only under the same condition.
+        let picker = swift_ios_ui_test_picker();
+        let open = "#if MOSAIC_UI_TEST_PICKER && os(iOS)\n";
+        let start = picker.find(open).expect("the condition guards the fake");
+        assert!(
+            picker.trim_end().ends_with("#endif"),
+            "the guard closes at the end"
+        );
+        // Before the guard there are only comments and blank lines.
+        assert!(
+            picker[..start]
+                .lines()
+                .all(|line| line.is_empty() || line.starts_with("//")),
+            "code outside the guard"
+        );
+        assert_eq!(
+            picker
+                .lines()
+                .filter(|line| line.starts_with("#if"))
+                .count(),
+            1,
+            "one guard, no nesting"
+        );
+        assert!(picker.contains("let mosaicUITestPickerArgument = \"-MosaicUITestPicker\""));
+        // The fake's file is fixed, inside the app's own container.
+        assert!(picker.contains("FileManager.default.temporaryDirectory"));
+        assert!(!picker.contains("launchEnvironment"));
+
+        let library = swift_platform_effects();
+        let hook = "  #if MOSAIC_UI_TEST_PICKER\n  if let fake = mosaicUITestPicker() { return fake }\n  #endif\n";
+        assert!(library.contains(hook), "the system picker's hook");
+        assert_eq!(library.matches("mosaicUITestPicker").count(), 1);
+    }
+
     #[test]
     fn swift_platform_effects_match_the_compose_contract() {
         let swift = swift_platform_effects();
@@ -1573,6 +1640,39 @@ mod tests {
         assert!(pubspec.contains("code_assets: '>=1.0.0 <2.0.0'"));
         assert!(pubspec.contains("hooks: '>=1.0.0 <3.0.0'"));
         assert!(pubspec.contains("ffi: '>=2.1.0 <3.0.0'"));
+    }
+
+    /// A phone build's `path_provider` (UI89 §7.4): pinned exactly, in the
+    /// runtime dependencies.
+    #[test]
+    fn flutter_pubspec_pins_path_provider_for_phone_builds() {
+        let base = "dependencies:\n  flutter:\n    sdk: flutter\n\ndev_dependencies:\n  flutter_test:\n    sdk: flutter\n";
+        let pubspec = flutter_pubspec_with_path_provider(base);
+        assert!(pubspec.starts_with("dependencies:\n  path_provider: 2.1.6\n  flutter:\n"), "{pubspec}");
+        assert_eq!(pubspec.matches("path_provider").count(), 1);
+        assert!(FLUTTER_PATH_PROVIDER_VERSION
+            .chars()
+            .all(|c| c.is_ascii_digit() || c == '.'));
+    }
+
+    /// The host's phone rules (UI89 §7.4): the state root only from
+    /// `mosaicStateRoot`, never `HOME` or `XDG_DATA_HOME`; the bundled
+    /// runtime only; a warning when there is no root.
+    #[test]
+    fn the_flutter_host_keeps_phone_state_where_main_put_it() {
+        let host = flutter_runtime_binding_for_application("probe", true);
+        assert!(host.contains("\nString? mosaicStateRoot;\n"));
+        assert!(host.contains("bool get _isPhone => Platform.isAndroid || Platform.isIOS;"));
+        assert!(host.contains(
+            "    if (_isPhone) {\n      // Only what `main()` found through `path_provider` (UI89 §7.4).\n      root = mosaicStateRoot ?? '';\n    } else if (Platform.isWindows) {"
+        ));
+        // iOS no longer shares macOS's HOME root.
+        assert!(host.contains("} else if (Platform.isMacOS) {\n      final home = environment['HOME']"));
+        assert!(!host.contains("Platform.isMacOS || Platform.isIOS) {\n      final home"));
+        assert!(host.contains(
+            "final requested = _isPhone ? null : Platform.environment['MOSAIC_APP_LIBRARY'];"
+        ));
+        assert!(host.contains("Mosaic state is not saved: this phone has no app-support directory for it."));
     }
 
     /// The platform library's one pub dependency, pinned exactly, in the

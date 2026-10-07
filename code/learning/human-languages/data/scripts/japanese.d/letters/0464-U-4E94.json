@@ -1,0 +1,24 @@
+{
+  "glyph": "五",
+  "sound": "go / itsu(tsu)",
+  "role": "logograph",
+  "components": [
+    "a top bar and a long base bar",
+    "a stroke falling from the top bar",
+    "a middle bar that turns down"
+  ],
+  "strokeOrder": [
+    "draw the top bar from left to right",
+    "lift, begin on the top bar and draw a stroke down to the base, leaning a little to the left",
+    "lift, draw the middle bar from left to right, then without lifting turn down at its right end",
+    "lift, draw the long base bar from left to right"
+  ],
+  "strokeOrderNote": "KanjiVG's 04e94 file records 五 as four stroke paths in this order and direction: the top bar, a stroke falling from it down and to the left, the middle bar turning down at its right end, then the long base bar; so there are three pen lifts.",
+  "penLifts": 3,
+  "strokeOrderSource": {
+    "url": "https://github.com/KanjiVG/kanjivg/blob/master/kanji/04e94.svg",
+    "citation": "KanjiVG, kanji/04e94.svg, kanji 五 (U+4E94 CJK UNIFIED IDEOGRAPH-4E94), four stroke paths kvg:04e94-s1 to s4 (Ulrich Apel and contributors, CC BY-SA 3.0)",
+    "variation": "KanjiVG stores each stroke as one directed path in writing order: s1 is the top bar drawn left to right (kvg:type ㇐); s2 starts on the top bar and falls down and slightly to the left, to the base (㇑a); s3 is the middle bar drawn left to right, turning down at its right end without lifting (㇕c); s4 is the long base bar, drawn left to right (㇐). Only the order and direction are taken from that file. The learner path's coordinates are the bundled Noto Sans JP outline's own medial line, so the print glyph's proportions, not KanjiVG's handwriting-style ones, decide where each stroke runs."
+  },
+  "notes": "Five. Read go as the number and as the sound clue inside 語; itsu in いつつ, five things."
+}
