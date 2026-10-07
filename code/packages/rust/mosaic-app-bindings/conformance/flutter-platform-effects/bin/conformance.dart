@@ -1571,7 +1571,7 @@ Future<void> checkPhoneSave(Directory directory) async {
   check(okValue(saved)!.length == 1, 'phone save answers only the name');
   check(documents.stagedContents == '{"cards":2}', 'phone save: the staged bytes');
   check(
-    documents.lastStaged!.endsWith('/deck.json'),
+    documents.lastStaged!.endsWith('${sep}deck.json'),
     'phone save: staged under the suggested name',
   );
   check(documents.lastMimeType == 'application/json', 'phone save: the type');
