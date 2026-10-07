@@ -43,7 +43,7 @@ history, and local test runs. This file is the result: one ordered list.
    - SW-1, `Path` on Web Components (*fixed, unpushed*);
    - VC-1, VisiCalc's native Open/Save.
 2. **Small bugs, batched by package.**
-   - MosaicBook: MB-2 and MB-3 (*fixed, unpushed*), MB-4;
+   - MosaicBook: MB-2, MB-3 and MB-4 (*fixed, unpushed*);
    - emitters: EM-3, EM-5 and EM-9 (*fixed, unpushed*);
    - X-2, the compiler's search path on Windows (*fixed, unpushed*).
 3. **Housekeeping.** Close the issues in [Closable now](#closable-now),
@@ -86,7 +86,7 @@ get analysis only (the drop panel); nothing renders natively. Spec: UI19.
 | MB-14 | The server listened on every network interface, not just localhost as its README says. Another machine on the network could fetch previews by sending `Host: localhost` | **fixed** on `claude/brave-ride-edfrqw` (unpushed): it binds `127.0.0.1` | security | S |
 | MB-2 | The browser shell never shows a component's `storiesError` | **fixed** on `claude/brave-ride-edfrqw` (unpushed). Was: `static/index.html` has no reference to it. UI19 §6.2 asks for a ⚠️ badge. #16928 | bug | S |
 | MB-3 | The watcher reloads once without a change at startup, and re-runs discovery while holding the server lock | **fixed** on `claude/brave-ride-edfrqw` (unpushed). Was: Its file-time snapshot starts empty, so "detected file change" appears 1 second after start. Discovery runs `--describe` subprocesses under `s.mu` (`watcher.go`). #16929 | bug | S |
-| MB-4 | Compose ignores `--fixtures` and `--emit-project`, even with `--strict-fixtures` (output byte-identical, exit 0) | **real**. This breaks the `--strict-fixtures` contract in `mosaic-compile.json`. Fail loudly first; the fix is EM-6. #16930 | bug | S then M |
+| MB-4 | Compose ignores `--fixtures` and `--emit-project`, even with `--strict-fixtures` (output byte-identical, exit 0) | **fail-loud fixed** on `claude/brave-ride-edfrqw` (unpushed): strict mode refuses, otherwise it warns; real support is EM-6. Was: This breaks the `--strict-fixtures` contract in `mosaic-compile.json`. Fail loudly first; the fix is EM-6. #16930 | bug | S then M |
 | MB-5 | Surface's `$mosaic-child-slot` cannot compile in isolation on html, webcomponent or react | **real**. Reproduced: "not yet supported by the pipeline HTML emitter". 3 recorded degradations. #14685 | bug | M |
 | MB-6 | Form-factor layouts (`*.desktop.mll`, `*.touch.mll`) are never discovered | **real**. VisiCalc's Grid and FormulaBar and EngramApp's touch layout are invisible ("2 candidate(s) skipped") | feature | M |
 | MB-7 | App components have no stories, so `--check` cannot cover them, and CI's check scans only `code/packages/mosaic` | **real**. VisiCalc, VisiCalcStartup, VentureChrome and others report "missing explicit .stories.json file" | feature | M |

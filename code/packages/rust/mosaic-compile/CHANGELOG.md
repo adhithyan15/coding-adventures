@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+### Fixed — Compose says it cannot render fixtures, instead of ignoring them (#16930)
+
+- The Compose pipeline takes no `EmitOptions` yet (#14704). It ignored
+  `--fixtures` and `--emit-project` silently, so with `--strict-fixtures` a
+  story passed on Compose while showing nothing of its fixture. That broke
+  the `--strict-fixtures` contract.
+- With `--strict-fixtures` it now refuses and exits 1.
+- Otherwise it warns that `--fixtures` is ignored and that `--emit-project`
+  writes no shell.
+- Without either flag, the output and stderr are unchanged.
+- `tests/compose_fixtures.rs` pins all three cases.
+
+
 ### Fixed — `--package-search-path` keeps Windows drive paths whole (#16931)
 
 - The list was split on `:` on every OS, so `C:\repo\code\packages` became

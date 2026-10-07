@@ -1395,6 +1395,31 @@ fn run_pipeline(
             // Compose Multiplatform Kotlin codegen.  Targets both
             // Android (Jetpack Compose) and Desktop / iOS / Web
             // (Compose Multiplatform) from the same `.kt` output.
+            //
+            // #16930: the Compose pipeline takes no `EmitOptions` yet (#14704),
+            // so it cannot render a story's fixture values or write a project
+            // shell. It used to ignore both silently, so a `--strict-fixtures`
+            // story passed while showing nothing of its fixture. Until #14704
+            // lands, say so: strict mode refuses, and otherwise both flags warn.
+            if fixtures.path.is_some() {
+                if fixtures.strict {
+                    eprintln!(
+                        "mosaic-compile: the compose pipeline cannot render --fixtures yet (#14704); \
+                         refusing under --strict-fixtures"
+                    );
+                    process::exit(1);
+                }
+                eprintln!(
+                    "mosaic-compile: warning: the compose pipeline ignores --fixtures (#14704); \
+                     the output shows no story values"
+                );
+            }
+            if emit_project {
+                eprintln!(
+                    "mosaic-compile: warning: the compose pipeline has no --emit-project shell \
+                     (#14704); writing the component only"
+                );
+            }
             let result = mosaic_emit_compose::from_pipeline(
                 &mosmodel_out.component,
                 &layout_out.def,
