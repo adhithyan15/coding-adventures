@@ -2154,7 +2154,7 @@ fn emit_visual_state_groups(groups: &[XamlVisualStateGroup], indent: usize) -> S
             writeln!(
                 out,
                 "{pad4}    <StateTrigger IsActive=\"{}\"/>",
-                escape_xaml_attr(&state.trigger_value)
+                escape_xaml_markup_attr(&state.trigger_value)
             )
             .unwrap();
             writeln!(out, "{pad4}</VisualState.StateTriggers>").unwrap();
@@ -2169,7 +2169,7 @@ fn emit_visual_state_groups(groups: &[XamlVisualStateGroup], indent: usize) -> S
                 out,
                 "{pad4}    <Setter Target=\"{}\" Value=\"{}\"/>",
                 target,
-                escape_xaml_attr(&state.value)
+                escape_xaml_markup_attr(&state.value)
             )
             .unwrap();
             writeln!(out, "{pad4}</VisualState.Setters>").unwrap();
@@ -2483,7 +2483,9 @@ fn build_style_fragment_with_drops(
     let fragment = parts
         .into_iter()
         .map(|(key, value)| {
-            let escaped = escape_xaml_attr(&value);
+            // Style values: `translate_xaml_value` passes markup
+            // extensions through on purpose, so they stay extensions.
+            let escaped = escape_xaml_markup_attr(&value);
             format!("{key}=\"{escaped}\"")
         })
         .collect::<Vec<_>>()
@@ -6791,10 +6793,43 @@ fn find_prop_value<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a Layo
         .map(|p| &p.value)
 }
 
-/// Escape characters that would break a XAML attribute value. Quotes and
-/// ampersand are the only ones strictly required; newlines pass through as
-/// literal newlines.
+/// Escape authored literal text for a XAML attribute value (issue #15487).
+///
+/// XAML reads an attribute value that starts with `{` as a markup
+/// extension, not as text, so an authored label `{x:Null}` would become
+/// the `x:Null` extension. XAML's own escape is a leading `{}`, which makes
+/// the rest of the value plain text:
+///
+/// ```text
+///   authored       emitted attribute     XAML reads
+///   Submit         Content="Submit"      the text Submit
+///   {x:Null}       Content="{}{x:Null}"  the text {x:Null}
+///   {}             Content="{}{}"        the text {}
+///   a {b}          Content="a {b}"       the text a {b} (only a leading
+///                                          brace starts an extension)
+/// ```
+///
+/// Every literal the author wrote (a `String` or plain `Keyword` prop) goes
+/// through here. A value the emitter itself built as markup (`{x:Bind …}`)
+/// or a style value that is markup by design goes through
+/// [`escape_xaml_markup_attr`] instead.
 fn escape_xaml_attr(s: &str) -> String {
+    let escaped = escape_xaml_markup_attr(s);
+    if escaped.starts_with('{') {
+        format!("{{}}{escaped}")
+    } else {
+        escaped
+    }
+}
+
+/// Escape characters that would break a XAML attribute value, leaving a
+/// leading `{` alone so a markup extension stays one. Only for values that
+/// are markup on purpose: a `{x:Bind …}` the emitter composed (a visual
+/// state's trigger), or a style value `translate_xaml_value` passed through
+/// as an extension. Authored text uses [`escape_xaml_attr`]. Quotes and
+/// ampersand are the only characters strictly required; newlines pass
+/// through as literal newlines.
+fn escape_xaml_markup_attr(s: &str) -> String {
     let mut out = String::with_capacity(s.len());
     for c in s.chars() {
         match c {
@@ -7154,7 +7189,7 @@ fn emit_for(
                 if state.trigger_value.starts_with("{x:Bind ") {
                     let proxy = format!("{}Trigger", state.name);
                     writeln!(trigger_proxies, "{pad}        <Border x:Name=\"{proxy}\" Tag=\"{}\" Visibility=\"Collapsed\"/>",
-                        escape_xaml_attr(&state.trigger_value)).unwrap();
+                        escape_xaml_markup_attr(&state.trigger_value)).unwrap();
                     state.trigger_value = format!("{{Binding Tag, ElementName={proxy}}}");
                 }
             }
@@ -17983,6 +18018,46 @@ mod tests {
         );
         let r = compile(&c, &l, &empty_style("Foo"));
         assert!(r.xaml.contains("Content=\"Submit\""), "got:\n{}", r.xaml);
+    }
+
+    /// #15487: an authored literal starting with `{` is text, not a markup
+    /// extension. XAML's `{}` prefix keeps it text.
+    #[test]
+    fn a_literal_label_starting_with_a_brace_is_escaped_as_text() {
+        for (authored, emitted) in [
+            ("{x:Null}", "Content=\"{}{x:Null}\""),
+            ("{Binding Secret}", "Content=\"{}{Binding Secret}\""),
+            ("{}", "Content=\"{}{}\""),
+            ("a {b}", "Content=\"a {b}\""),
+        ] {
+            let c = component("Foo", vec![], vec![]);
+            let l = layout_with_root(
+                "Foo",
+                host_button_node(
+                    None,
+                    vec![LayoutProp {
+                        name: "label".to_string(),
+                        value: LayoutPropValue::String(authored.to_string()),
+                    }],
+                ),
+            );
+            let r = compile(&c, &l, &empty_style("Foo"));
+            assert!(r.xaml.contains(emitted), "{authored}: got:\n{}", r.xaml);
+        }
+    }
+
+    /// The two escapes differ only in the leading brace: authored text gets
+    /// `{}`, markup the emitter built keeps its extension.
+    #[test]
+    fn the_markup_escape_keeps_an_extension_and_the_text_escape_neutralises_it() {
+        assert_eq!(escape_xaml_attr("{x:Null}"), "{}{x:Null}");
+        assert_eq!(escape_xaml_attr("Submit"), "Submit");
+        assert_eq!(escape_xaml_attr("\"{&<>"), "&quot;{&amp;&lt;&gt;");
+        assert_eq!(
+            escape_xaml_markup_attr("{x:Bind A, Mode=OneWay}"),
+            "{x:Bind A, Mode=OneWay}"
+        );
+        assert_eq!(escape_xaml_markup_attr("{a\"b}"), "{a&quot;b}");
     }
 
     #[test]
