@@ -83,24 +83,24 @@ pub fn run_source(source: &str) -> Result<String, String> {
 
 fn check_ast_budget(root: &GrammarASTNode) -> Result<(), String> {
     let mut pending = vec![(root, 1_usize)];
-    let mut remaining = MAX_AST_ITEMS;
+    let mut seen = 1_usize;
     while let Some((node, depth)) = pending.pop() {
         if depth > MAX_AST_DEPTH {
             return Err("Perl AST exceeds the native pilot depth limit".into());
         }
-        if remaining == 0 {
-            return Err("Perl AST exceeds the native pilot item limit".into());
-        }
-        remaining -= 1;
         for child in &node.children {
+            if seen == MAX_AST_ITEMS {
+                return Err("Perl AST exceeds the native pilot item limit".into());
+            }
+            seen += 1;
             match child {
-                ASTNodeOrToken::Node(inner) => pending.push((inner, depth + 1)),
-                ASTNodeOrToken::Token(_) => {
-                    if remaining == 0 {
-                        return Err("Perl AST exceeds the native pilot item limit".into());
+                ASTNodeOrToken::Node(inner) => {
+                    if depth == MAX_AST_DEPTH {
+                        return Err("Perl AST exceeds the native pilot depth limit".into());
                     }
-                    remaining -= 1;
+                    pending.push((inner, depth + 1));
                 }
+                ASTNodeOrToken::Token(_) => {}
             }
         }
     }
