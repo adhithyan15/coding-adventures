@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — PREP01 bounded C #if bitwise conditions
+
+- Accept exactly one `&`, `|`, or `^` in each decimal `#if` logical clause,
+  using nonnegative signed 32-bit operands and undefined identifiers as zero.
+  Reject out-of-range and unsupported longer or mixed expressions explicitly;
+  rooted file-input tests cover branch choice and directive error location.
+
 ## Unreleased — PREP01 bounded C #if shifts
 
 - Accept one `<<` or `>>` in each decimal `#if` logical clause, with a
