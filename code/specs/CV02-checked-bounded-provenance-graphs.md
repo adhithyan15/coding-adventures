@@ -462,6 +462,26 @@ and claims, is outside an owner/group/DACL claim and remains unproven unless
 separately specified and tested. Do not represent the narrower policy check as
 complete filesystem-security preservation.
 
+The initial Unix policy scope is native Linux and macOS, ordinary mode-based
+files with no extended ACLs. Capture UID/GID/mode from held descriptors; reject
+foreign owners and prove supported group assignment before changing originals.
+Linux must query descriptor-bound POSIX access/default ACL attributes; macOS
+must query descriptor-bound extended ACL entries. Reject unsupported extended
+or parent-default policies before creating data-bearing candidates or changing
+originals. Other Unix targets fail explicitly until separately specified.
+Define a new file's intended owner/group/mode from a separate permanently empty
+ordinary creation probe in its actual parent, preserving process umask and
+filesystem group/setgid behavior without temporarily changing global umask.
+Create data-bearing candidates with mode 0600 inside private 0700 directories.
+Apply supported ownership before final mode at installation, verify exact
+UID/GID/mode and continued ACL absence, and recheck original and parent policy
+at boundaries. Pre-commit failure restores candidate privacy before cleanup;
+original ownership/mode remain on the retained original inode. Native tests
+must prove mode-only drift detection, existing ownership/mode preservation,
+new-file creation policy and Linux/macOS extended/default ACL rejection before
+original mutation. Cross-compilation is useful validation but is not native
+ACL evidence; native CI is required before acceptance.
+
 Native regressions must first reproduce protected-output access broadening and
 prepared-file inherited grants. Verify atomically private stage files, existing
 protected and unprotected/inherited policies, intended new-file policy, policy
