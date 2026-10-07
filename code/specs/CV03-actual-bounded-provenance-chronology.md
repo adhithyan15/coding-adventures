@@ -256,6 +256,12 @@ enclosing scope according to its actual result. Full import accepts both
 histories if scope, schedules, references and terminal outcomes are consistent.
 Pass names need only be unique within one accepted schedule; the same name
 across nested or repeated pipelines is valid and cannot identify an invocation.
+For opted-in chronology, contribution and deletion `source` inside an active
+pass must match that pass's name resolved from its accepted parent schedule.
+Enforce this at admission and independent replay; changing a schedule name
+alone cannot relabel retained stage facts. Origins retain their source-file
+meaning, and unscoped or pipeline-scoped facts have no invented pass binding.
+Ordinary logs without chronology retain their existing source semantics.
 Test active-context restoration by checking facts recorded after the caught
 error and after the successful retry against the enclosing pass begin reference.
 
