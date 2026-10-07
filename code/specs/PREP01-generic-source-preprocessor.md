@@ -629,6 +629,9 @@ the shared preprocessor's default produced-token and token-spelling ceilings,
 with an additional 64 MiB aggregate text ceiling at the parser boundary. The C
 dialect will use the shared preprocessor's bounds for input and expansion; the
 parser handoff retains its own guard because it is also a public API.
+The public C dialect classifier also accepts caller-supplied token metadata;
+function-like macro adjacency must use checked column arithmetic so an
+untrusted column cannot panic or wrap.
 The lexer exposes `#` and `##` as ordinary directive tokens rather than
 silently skipping their lines. During the handoff, the existing source-input
 `c-parser` API retains its historical behavior of ignoring directive lines;

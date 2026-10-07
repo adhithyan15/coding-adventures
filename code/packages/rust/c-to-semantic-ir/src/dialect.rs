@@ -121,7 +121,12 @@ fn define(rest: &[Token]) -> Result<Directive, PpError> {
         return Err(directive_error("define", "requires an identifier name"));
     }
     let touching_paren = remaining.first().is_some_and(|next| {
-        next.value == "(" && next.line == name.line && next.column == name.column + name.value.len()
+        next.value == "("
+            && next.line == name.line
+            && name
+                .column
+                .checked_add(name.value.len())
+                .is_some_and(|column| next.column == column)
     });
     if !touching_paren {
         return Ok(Directive::Define {
@@ -354,6 +359,17 @@ mod tests {
                 assert_eq!(params, None);
                 assert_eq!(body[0].value, "(");
             }
+            other => panic!("unexpected directive: {other:?}"),
+        }
+    }
+
+    #[test]
+    fn direct_tokens_with_overflowing_column_do_not_panic() {
+        let mut tokens = try_tokenize_c("#define F(x) x").unwrap();
+        let name = tokens.iter_mut().find(|token| token.value == "F").unwrap();
+        name.column = usize::MAX;
+        match CDialect::default().classify(&tokens).unwrap().unwrap() {
+            Directive::Define { params, .. } => assert!(params.is_none()),
             other => panic!("unexpected directive: {other:?}"),
         }
     }
