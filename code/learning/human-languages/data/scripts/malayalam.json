@@ -1171,8 +1171,21 @@
       "components": [
         "ജ  ja — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "circle the small loop",
+        "without lifting, arch over and down the stem",
+        "without lifting, climb the stem and arch over the right",
+        "without lifting, run back left and round the lower left",
+        "without lifting, run right to the top of the last loop",
+        "without lifting, circle down and round the last loop"
+      ],
+      "strokeOrderNote": "Six numbered movements in one continuous pen-down run: round the small loop, over the left hump and down the short stem, back up it and over the right hump, back left and round the lower left, right along the lower stroke, and round the last loop. Moag numbers movements, not pen lifts; recorded writers show one run.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Rodney F. Moag, Malayalam: A University Course and Reference Grammar (University of Texas at Austin South Asia Institute and COERLL, updated April 2018; CC BY-NC-SA 4.0), Table IV 'How to Write Consonant Symbols', p. xxvi: movements 1-6 for ജ, written by hand by Thomas Joseph",
+        "url": "https://github.com/matjic/malayalam/blob/7141acd2f310bc8928822a7aec61d1149efa6fa3/docs/assets/images/front-writing-036.jpg",
+        "variation": "Moag's Table IV (p. xxvi) circles the small top-left loop clockwise (1), arches over the left hump to the top of the short stem (2), climbs from the stem's foot and arches over the right hump (3), runs back down and left along the band to the lower left (4), runs right along the lower stroke to the top of the last loop (5) and rounds that loop clockwise, down its right side and up its left (6). Moag's arrows do not draw the short stem's descent: arrow 2 ends above the stem and arrow 3 begins at its foot. With no lift between them, the only way to the foot is down the stem, so the path runs down it at the end of movement 2 and climbs it again in movement 3; that join is read, not drawn, so confidence in it is medium. Moag's book is CC BY-NC-SA 4.0, so only these facts (order, start, direction and end) are cited; no drawing is copied. The page is read from the scan in Mathew Jacob's digital edition (github.com/matjic/malayalam, commit 7141acd, and again at commit 2844253), which notes that the numbers mark drawing movements that can belong to one continuous stroke, not pen lifts. Santhosh Thottingal's hand reference curves (gitlab.com/santhoshtr/hand, MIT, 2019), which keep several strokes where a glyph has them, record ജ as one stroke from the upper left to the middle right. The grahyam online-handwriting samples (github.com/bluebottlewize/grahyam, no licence, cited as counts only) keep no pen-up marker, but none of the 45 unique samples jumps between consecutive points the way a lift would; they most often start at the upper left (27 of 45) and end at the middle right (27 of 45). SPACE Kerala's Thooval (GPL-3.0, facts only) starts its JA.png at the upper left and ends it at the lower right. The path is fitted to the bundled Noto Sans Malayalam outline rather than to Moag's drawing; the climb back up the stem and the run along the top of the last loop retrace ink already drawn."
+      }
     },
     {
       "glyph": "ജാ",
@@ -6713,6 +6726,34 @@
         "citation": "Rodney F. Moag, Malayalam: A University Course and Reference Grammar (University of Texas at Austin South Asia Institute and COERLL, updated April 2018; CC BY-NC-SA 4.0), Table III 'How to Write Internal Vowel Symbols', p. xxii: movements 1-3 for േ, written by hand by Thomas Joseph",
         "url": "https://github.com/matjic/malayalam/blob/7141acd2f310bc8928822a7aec61d1149efa6fa3/docs/assets/images/front-writing-032.jpg",
         "variation": "Moag's Table III (p. xxii) draws it as three movements to the left of the dash: the small top loop (1), a sweep left and round the bottom (2) and a curl up round the lower loop (3). Moag's book is CC BY-NC-SA 4.0, so only these facts (order, start, direction and end) are cited; no drawing is copied. The page is read from the scan in Mathew Jacob's digital edition (github.com/matjic/malayalam, commit 7141acd), which notes that the numbers mark drawing movements that can belong to one continuous stroke, not pen lifts. Santhosh Thottingal's hand reference curves (gitlab.com/santhoshtr/hand, MIT, 2019), which keep several strokes where a glyph has them, record േ as one stroke from the upper left to the lower left. The grahyam online-handwriting samples (github.com/bluebottlewize/grahyam, no licence, cited as counts only) keep no pen-up marker, but none of the 25 unique samples jumps between consecutive points the way a lift would; they most often start at the upper centre (14 of 25) and end at the lower left (25 of 25). The path is fitted to the bundled Noto Sans Malayalam outline of the sign on its own rather than to Moag's drawing."
+      }
+    },
+    {
+      "mark": "ൈ",
+      "sound": "ai",
+      "role": "vowel-sign",
+      "attachesAs": "the Malayalam vowel sign ai, printed to the left of its consonant",
+      "example": {
+        "base": "ക",
+        "combined": "കൈ",
+        "sound": "kai"
+      },
+      "components": [
+        "a first small loop and arch",
+        "a second small loop and arch"
+      ],
+      "strokeOrder": [
+        "circle the first small loop",
+        "without lifting, arch over and down to the foot",
+        "lift, then circle the second small loop",
+        "without lifting, arch over and down to its foot"
+      ],
+      "strokeOrderNote": "Four numbered movements in two pen-down runs: the first coil (its small loop, then its arch), a lift, and the second coil the same way. Moag numbers movements, not pen lifts; the one lift is the gap between the two coils, which are separate pieces of ink.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Rodney F. Moag, Malayalam: A University Course and Reference Grammar (University of Texas at Austin South Asia Institute and COERLL, updated April 2018; CC BY-NC-SA 4.0), Table III 'How to Write Internal Vowel Symbols', p. xxii: movements 1-4 for ൈ, written by hand by Thomas Joseph",
+        "url": "https://github.com/matjic/malayalam/blob/7141acd2f310bc8928822a7aec61d1149efa6fa3/docs/assets/images/front-writing-032.jpg",
+        "variation": "Moag's Table III (p. xxii) draws it as four movements to the left of the dash that stands for the consonant: the inner loop of the first coil (1), its arch over the top and down to the lower right (2), the inner loop of the second coil (3) and its arch (4). Each coil is the e sign െ, drawn the way the same page numbers െ. Moag's book is CC BY-NC-SA 4.0, so only these facts (order, start, direction and end) are cited; no drawing is copied. The page is read from the scan in Mathew Jacob's digital edition (github.com/matjic/malayalam, commit 7141acd, and again at commit 2844253), which notes that the numbers mark drawing movements that can belong to one continuous stroke, not pen lifts. No recording of ൈ itself was found, so the lift count is reasoned rather than observed and confidence is medium: the two coils are separate pieces of ink, so the pen must lift once between them, and each coil is written in one run, as recorded writers write െ (Santhosh Thottingal's hand curves, gitlab.com/santhoshtr/hand, MIT, record െ as one stroke; none of grahyam's 43 unique െ samples, github.com/bluebottlewize/grahyam, no licence, counts only, jumps the way a lift would). Moag does not number the consonant against the sign, so this record claims no written order against it: the sign is drawn only by itself, and a word with it stays refused. Noto Sans Malayalam builds the standalone sign from two copies of െ side by side, so each run follows the outline of one copy."
       }
     }
   ],

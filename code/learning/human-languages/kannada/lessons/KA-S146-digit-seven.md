@@ -45,16 +45,17 @@ reviews_of: [KA-S145-digit-six, KA-C07-eelu]
 Seven of ten. From here the remaining shapes are the ones you will meet
 least often, which is exactly why they come last.
 
-## Writing: ೭ — copy what you see
+## Writing: ೭ — follow the numbered strip
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-146] -->
 
-Put your pen on ೭ and follow its line. Copy the shape in front of you —
+Follow the numbered strip: start where movement 1 begins, and let each panel
+show you the next movement before your pen makes it. Then write ೭ yourself —
 slowly, and larger than it is printed.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is taught with real variation from school to school, and it is
-> not written down here until it can be written down with a source. Copying what
-> you can see needs no such source.
+> The strip shows **where to start the character and which way to travel**, in
+> one attested order. That is taught with real variation from school to school,
+> so the strip names its source beneath it: treat it as a sound way in, not the
+> only one.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-146, KA-LEX-C07-EELU-01] -->

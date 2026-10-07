@@ -333,6 +333,30 @@ describe("validate", () => {
       expect(hasErrors(issues)).toBe(true);
     });
 
+    it("holds a digit row's stroke claim to the same lift-and-source pair as a letter's", () => {
+      // Kannada ೧-೯ carry a cited ductus; a digit that names its strokes must
+      // carry both the lift count and its source, or neither.
+      const script = bengali(["১", "২", "৩"]);
+      const [lone, cited, broken] = script.digits!;
+      lone.strokeOrder = ["one stroke"];
+      lone.penLifts = 0;
+      cited.strokeOrder = ["one stroke"];
+      cited.penLifts = 0;
+      cited.strokeOrderSource = { citation: "A cited tracing lesson", url: "https://example.org/two" };
+      broken.strokeOrder = ["one stroke"];
+      broken.penLifts = 0;
+      broken.strokeOrderSource = { citation: "short", url: "not-a-url" };
+      const issues = validate({ taxonomy, lessons: [], scripts: { bengali: script } });
+      const partial = issues.filter((i) => i.code === "partial-stroke-verification");
+      expect(partial.map((i) => i.message)).toEqual([
+        "bengali ১: penLifts and strokeOrderSource must be supplied together",
+      ]);
+      expect(issues.filter((i) => i.code === "invalid-stroke-order-source").map((i) => i.message)).toEqual([
+        "bengali ৩: stroke-order citation is too short",
+        "bengali ৩: stroke-order source needs an HTTP(S) URL",
+      ]);
+    });
+
     it("does not let a malformed digit row cover headword characters", () => {
       // ক arrives only through a bogus digit row, so it stays uncovered.
       const l = good("bengali", "BN-KA", "GREETING-HELLO", { headword: "ক", romanization: "ka" });

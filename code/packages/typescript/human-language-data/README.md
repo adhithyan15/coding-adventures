@@ -1022,6 +1022,10 @@ before XeLaTeX runs.
   ക യ ഖ ങ ച ഛ ഞ ഥ ധ ഭ ഫ ള, ഏ, the anusvara ം and the vowel signs ാ ി ീ ു ൂ ൃ െ
   േ, for 58 Malayalam strips in all. `WRITTEN_SIGN_SIDES.malayalam` has one
   row, ം after its base; every Malayalam vowel sign is drawn only alone.
+  ജ and the vowel sign ൈ follow (60 Malayalam strips). Kannada's digit
+  lessons ೧-೯ and the anusvara ಂ print strips cited to Chimple's tracing
+  lessons (57 Kannada strips); a digit row that names its strokes must carry
+  its lift count and source together, as a letter row must.
 
   Script inventories (`data/scripts/<script>.json`) close a track's headwords:
   `validate` warns about any script character no row covers. Letters, marks,
