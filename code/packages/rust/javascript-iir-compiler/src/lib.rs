@@ -13,8 +13,18 @@ use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use std::sync::{Arc, Mutex};
 use vm_core::{value::Value, VMCore};
 
+/// Bound source read and parse work for the first native interpreter pilot.
+pub const MAX_SOURCE_BYTES: usize = 64 * 1024;
+const MAX_AST_NODES: usize = 16_384;
+const MAX_EXPRESSION_DEPTH: usize = 64;
+
 /// Parse source and compile the currently supported JavaScript subset.
 pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, String> {
+    if source.len() > MAX_SOURCE_BYTES {
+        return Err(format!(
+            "JavaScript source exceeds the {MAX_SOURCE_BYTES}-byte native pilot limit"
+        ));
+    }
     let ast = parse_javascript_program(source, EsVersion::Es2020)?;
     compile_ast(&ast, module_name)
 }
@@ -22,11 +32,19 @@ pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, Stri
 /// Compile a typed JavaScript AST directly to InterpreterIR.
 pub fn compile_ast(ast: &Program, module_name: &str) -> Result<IIRModule, String> {
     let mut compiler = Compiler::default();
+    let mut remaining_nodes = MAX_AST_NODES;
     for item in &ast.body {
+        if remaining_nodes == 0 {
+            return Err("JavaScript AST exceeds the native pilot node limit".into());
+        }
+        remaining_nodes -= 1;
         match item {
             ProgramItem::Statement(Statement::Tagged(TaggedStatement::ExpressionStatement(
                 stmt,
-            ))) => compiler.compile_statement(&stmt.expression)?,
+            ))) => {
+                check_expression_budget(&stmt.expression, &mut remaining_nodes)?;
+                compiler.compile_statement(&stmt.expression)?;
+            }
             _ => return Err("unsupported JavaScript statement in native VM pilot".into()),
         }
     }
@@ -46,6 +64,36 @@ pub fn compile_ast(ast: &Program, module_name: &str) -> Result<IIRModule, String
     Ok(module)
 }
 
+// Check an AST supplied directly by a caller without recursively walking it.
+// Parser depth limits protect source input, but compile_ast also accepts trees
+// built by other code. The node count bounds generated IIR and VM work.
+fn check_expression_budget(expr: &Expression, remaining: &mut usize) -> Result<(), String> {
+    let mut pending = vec![(expr, 1_usize)];
+    while let Some((expr, depth)) = pending.pop() {
+        if depth > MAX_EXPRESSION_DEPTH {
+            return Err("JavaScript AST exceeds the native pilot depth limit".into());
+        }
+        if *remaining == 0 {
+            return Err("JavaScript AST exceeds the native pilot node limit".into());
+        }
+        *remaining -= 1;
+        match expr {
+            Expression::UnaryExpression(unary) => pending.push((&unary.argument, depth + 1)),
+            Expression::BinaryExpression(binary) => {
+                pending.push((&binary.right, depth + 1));
+                pending.push((&binary.left, depth + 1));
+            }
+            Expression::CallExpression(call) => {
+                if let Some(argument) = call.arguments.first() {
+                    pending.push((argument, depth + 1));
+                }
+            }
+            _ => {}
+        }
+    }
+    Ok(())
+}
+
 /// Execute source on this repository's Rust VM and collect console output.
 pub fn run_source(source: &str) -> Result<String, String> {
     let mut module = compile_source(source, "javascript-script")?;
@@ -62,12 +110,17 @@ pub fn run_source(source: &str) -> Result<String, String> {
         let mut sink = captured.lock().map_err(|_| {
             vm_core::errors::VMError::Custom("JavaScript console lock poisoned".into())
         })?;
-        if sink.len() >= 1_000_000 {
+        let rendered = format_js_number(*number).map_err(vm_core::errors::VMError::Custom)?;
+        if sink
+            .len()
+            .checked_add(rendered.len() + 1)
+            .is_none_or(|length| length > 1_000_000)
+        {
             return Err(vm_core::errors::VMError::Custom(
                 "JavaScript console output limit exceeded".into(),
             ));
         }
-        sink.push_str(&format_js_number(*number).map_err(vm_core::errors::VMError::Custom)?);
+        sink.push_str(&rendered);
         sink.push('\n');
         Ok(Value::Null)
     });
@@ -202,5 +255,9 @@ mod tests {
         assert!(compile_source("console.log('a' + 'b');", "bad").is_err());
         assert!(compile_source("let x = 1;", "bad").is_err());
         assert!(run_source("console.log(1e21);").is_err());
+        assert!(compile_source(&" ".repeat(MAX_SOURCE_BYTES + 1), "too-large").is_err());
+        let ast =
+            parse_javascript_program(&"1;".repeat(MAX_AST_NODES + 1), EsVersion::Es2020).unwrap();
+        assert!(compile_ast(&ast, "too-many-nodes").is_err());
     }
 }

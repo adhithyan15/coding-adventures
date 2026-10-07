@@ -52,7 +52,10 @@ number formatting for the accepted values. The pilot accepts ordinary finite
 display values with magnitude from `1e-6` (inclusive) to `1e21` (exclusive),
 plus zero, NaN, and infinities. It rejects other display magnitudes until the
 full ECMAScript number-to-string algorithm is available. Reject all other
-syntax.
+syntax. Bound source to 64 KiB, direct typed ASTs to 16,384 visited nodes and
+expression depth 64, VM execution to 100,000 instructions, and captured output
+to one million bytes. The file runner must enforce the source bound while
+reading rather than after loading the whole file.
 
 Acceptance requires actual source → parser → IIR → `VMCore` tests for
 `console.log(1 + 2)` and `console.log(1 / 2)`, plus a negative test for an

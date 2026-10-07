@@ -18,4 +18,6 @@ statements, and single-argument `console.log` are accepted. Other syntax is
 rejected explicitly. This is a pilot, not a complete JavaScript engine.
 Number display outside the pilot's finite `1e-6` to `1e21` range is rejected
 until full ECMAScript formatting lands.
+Source files are limited to 64 KiB; direct AST compilation has node and depth
+limits, and the runner caps instructions and captured output.
 See [LANG78](../../../specs/LANG78-native-dynamic-iir-frontends.md).
