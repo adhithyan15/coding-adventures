@@ -6,6 +6,11 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Discovery now recognizes the emerging OCaml bucket needed to project the
+  shared Dune fixture, and its native test checks exact `_build` exclusion
+  alongside positive `_Build` and `_build-example` paths. The Go CI selection
+  map now includes Elixir as a direct fixture consumer; broader discovery
+  semantics remain separately tracked.
 - Source selection now uses an immutable, generated package-local projection of
   the complete language source-input registry rather than eight ad hoc suffix
   maps. It covers all seven selector roles, exact generated-directory pruning,

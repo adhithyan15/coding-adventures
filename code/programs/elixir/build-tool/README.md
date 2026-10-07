@@ -25,6 +25,14 @@ native retained-handle snapshot contracts are not yet at parity.
 
 The build tool follows an 11-step pipeline:
 
+Discovery's package-local test reads the shared Dune language-registry fixture
+directly. It proves that exact `_build` is ignored while `_Build` and
+`_build-example` remain source packages, with the three checked OCaml names and
+BUILD paths. The fixture-to-build-tool CI map selects this Elixir suite when
+the shared registry fixture changes. Complete language-registry, program
+identity, duplicate-identity, and Windows override conformance remain separate
+follow-up contracts.
+
 1. **Find repo root** — walk up looking for `.git`
 2. **Discover packages** — recursive walk looking for `BUILD` files
 3. **Filter by language** — optional `--language` flag

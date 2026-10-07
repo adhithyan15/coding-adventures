@@ -35,7 +35,7 @@ defmodule BuildTool.Discovery do
   ## Language inference
 
   We infer a package's language from its directory path. If the path contains
-  "python", "ruby", "go", "rust", "typescript", "elixir", or "lua" as a component
+  a known bucket such as "python", "ruby", "go", "ocaml", or "elixir" as a component
   under "packages" or "programs", that is the language. The package name is
   "{language}/{dirname}", e.g., "python/logic-gates" or "go/directed-graph".
 
@@ -61,26 +61,26 @@ defmodule BuildTool.Discovery do
   # valid packages.
 
   @skip_dirs MapSet.new([
-    ".git",
-    ".hg",
-    ".svn",
-    ".venv",
-    ".tox",
-    ".mypy_cache",
-    ".pytest_cache",
-    ".ruff_cache",
-    "__pycache__",
-    "node_modules",
-    "vendor",
-    "dist",
-    "build",
-    "target",
-    ".claude",
-    "Pods",
-    "_build",
-    "deps",
-    "coverage"
-  ])
+               ".git",
+               ".hg",
+               ".svn",
+               ".venv",
+               ".tox",
+               ".mypy_cache",
+               ".pytest_cache",
+               ".ruff_cache",
+               "__pycache__",
+               "node_modules",
+               "vendor",
+               "dist",
+               "build",
+               "target",
+               ".claude",
+               "Pods",
+               "_build",
+               "deps",
+               "coverage"
+             ])
 
   # ---------------------------------------------------------------------------
   # Known languages
@@ -100,7 +100,8 @@ defmodule BuildTool.Discovery do
     "wasm",
     "csharp",
     "fsharp",
-    "dotnet"
+    "dotnet",
+    "ocaml"
   ]
 
   # ---------------------------------------------------------------------------
