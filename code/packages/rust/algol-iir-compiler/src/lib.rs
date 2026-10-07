@@ -3918,6 +3918,8 @@ impl Compiler {
             let sequence = pieces(node);
             if sequence.len() >= 3 && sequence.len() % 2 == 1 {
                 let mut sign_operand = None;
+                let mut sign_index = None;
+                let mut saw_division = false;
                 for (index, piece) in sequence.iter().enumerate() {
                     if index % 2 == 0 {
                         let Piece::Node(operand) = piece else {
@@ -3927,6 +3929,7 @@ impl Compiler {
                             if sign_operand.replace(operand).is_some() {
                                 return None;
                             }
+                            sign_index = Some(index);
                         } else {
                             let mut dependencies = HashSet::new();
                             collect_expression_dependency_names(
@@ -3944,11 +3947,18 @@ impl Compiler {
                                 return None;
                             }
                         }
-                    } else if !matches!(piece, Piece::Op(op) if op == "*") {
-                        return None;
+                    } else {
+                        let Piece::Op(op) = piece else {
+                            return None;
+                        };
+                        match op.as_str() {
+                            "*" => {}
+                            "/" => saw_division = true,
+                            _ => return None,
+                        }
                     }
                 }
-                if sign_operand.is_some() {
+                if sign_operand.is_some() && (!saw_division || sign_index == Some(0)) {
                     return sign_operand;
                 }
             }
@@ -13230,6 +13240,40 @@ mod tests {
         ] {
             let err = compile_source(source, "test")
                 .expect_err("a non-unit or variable factor exceeds the bounded sign proof");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_unit_division_entier_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(sign(pick()) / (-1)); output(x) end",
+            "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier(abs(sign(pick())) / 1 / (-1)))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "exact unit divisors preserve a numerator-position bounded sign result through entier for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_unit_division_entier_sign_widening_rejects_unproven_divisors() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) / 2); output(result) end",
+            "begin real procedure pick; pick := -2.25; integer unit; real result; unit := -1; result := entier(sign(pick()) / unit); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(1 / sign(pick())); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "a non-unit, variable, or denominator-position sign exceeds the bounded proof",
+            );
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }
     }
