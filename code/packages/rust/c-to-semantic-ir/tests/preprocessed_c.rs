@@ -6,6 +6,16 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 
 static SEQ: AtomicUsize = AtomicUsize::new(0);
 
+fn write_fresh(path: &std::path::Path, contents: &[u8]) {
+    std::fs::OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(path)
+        .unwrap()
+        .write_all(contents)
+        .unwrap();
+}
+
 #[test]
 fn included_macro_reaches_executable_output() {
     if !std::process::Command::new("ruby")
@@ -21,12 +31,14 @@ fn included_macro_reaches_executable_output() {
         SEQ.fetch_add(1, Ordering::Relaxed)
     ));
     std::fs::create_dir(&root).unwrap();
-    std::fs::write(
-        root.join("main.c"),
-        "#define ANSWER 7\n#if defined(ANSWER) && ANSWER > 0\n#include \"part.h\"\n#else\nint value(void) { return 0; }\n#endif\nint main(void) { printf(\"%d\\n\", value()); return 0; }\n",
-    )
-    .unwrap();
-    std::fs::write(root.join("part.h"), "int value(void) { return ANSWER; }\n").unwrap();
+    write_fresh(
+        &root.join("main.c"),
+        b"#define ANSWER 7\n#if defined(ANSWER) && ANSWER > 0\n#include \"part.h\"\n#else\nint value(void) { return 0; }\n#endif\nint main(void) { printf(\"%d\\n\", value()); return 0; }\n",
+    );
+    write_fresh(
+        &root.join("part.h"),
+        b"int value(void) { return ANSWER; }\n",
+    );
 
     let module = c_to_semantic_ir::compile_preprocessed_file(
         "main.c",
@@ -37,13 +49,7 @@ fn included_macro_reaches_executable_output() {
     .unwrap();
     let ruby = semantic_ir_to_ruby::compile(&module).unwrap().source;
     let script = root.join("output.rb");
-    std::fs::OpenOptions::new()
-        .write(true)
-        .create_new(true)
-        .open(&script)
-        .unwrap()
-        .write_all(ruby.as_bytes())
-        .unwrap();
+    write_fresh(&script, ruby.as_bytes());
     let output = std::process::Command::new("ruby")
         .arg(&script)
         .output()
