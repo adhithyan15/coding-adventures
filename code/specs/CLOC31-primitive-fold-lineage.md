@@ -91,3 +91,13 @@ remain zero once exhausted, and retain existing fixed-point/cap test behavior.
 Use APIs supported by the local and CI toolchains; do not suppress the warning
 or change production scheduling. Run the pipeline's own tests and all-target
 strict lint, since consumer lint does not compile dependency unit-test targets.
+
+The next affected-package build on head `a8f6a304ef` passed the scheduler but
+rejected the oracle-refresh example's aggregate output counter for the same
+deprecated API, on both macOS and Linux. Replace that counter update with a
+checked compare-and-exchange reservation retaining AcqRel success / Acquire
+failure ordering. Concurrent reservations must never exceed the existing
+32 MiB cap, failed reservations must leave the counter untouched, and integer
+overflow must fail closed. Keep the oracle command, trust pins, captured bytes
+and classification rules unchanged. Verify exact-cap and overflow rejection,
+concurrent saturation, the example's own tests and all-target strict lint.
