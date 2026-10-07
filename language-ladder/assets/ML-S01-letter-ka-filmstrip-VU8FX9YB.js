@@ -1,0 +1,1 @@
+var e=``+new URL(`ML-S01-letter-ka-filmstrip-wFKYiQ-g.svg`,import.meta.url).href;export{e as default};
