@@ -6,8 +6,9 @@
 # The tagged perly.y and toke.c match 5.002_01 exactly; this release still
 # has its own pair. `print` maps to KEY_print, with ADDOP/MULOP and decrement.
 
+# Leading-zero multi-digit forms are octal and outside this partial subset.
 PRINT     = "print"
-INT       = /[0-9]+/
+INT       = /0|[1-9][0-9]*/
 PLUS      = "+"
 DECREMENT = "--"
 MINUS     = "-"

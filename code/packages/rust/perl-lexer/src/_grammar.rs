@@ -15,7 +15,7 @@ pub fn token_grammar() -> TokenGrammar {
         definitions: vec![
             TokenDefinition {
                 name: r#"INT"#.to_string(),
-                pattern: r#"[0-9]+"#.to_string(),
+                pattern: r#"0|[1-9][0-9]*"#.to_string(),
                 is_regex: true,
                 line_number: 5,
                 alias: None,

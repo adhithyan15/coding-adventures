@@ -5,8 +5,9 @@
 # The tagged yacc grammar has PRINT and arithmetic operators. This file
 # intentionally keeps only the bounded subset checked below.
 
+# Leading-zero multi-digit forms are octal and outside this partial subset.
 PRINT     = "print"
-INT       = /[0-9]+/
+INT       = /0|[1-9][0-9]*/
 PLUS      = "+"
 DECREMENT = "--"
 MINUS     = "-"

@@ -6,8 +6,9 @@
 # Tagged perly.y matches 5.003_02; tokenizer changes do not alter KEY_print,
 # ADDOP/MULOP or PREDEC/POSTDEC behavior in this bounded subset.
 
+# Leading-zero multi-digit forms are octal and outside this partial subset.
 PRINT     = "print"
-INT       = /[0-9]+/
+INT       = /0|[1-9][0-9]*/
 PLUS      = "+"
 DECREMENT = "--"
 MINUS     = "-"
