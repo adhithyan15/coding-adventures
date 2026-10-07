@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Add `open_chief_vault`. It returns `None` when `[vault] kek_path` is absent.
+  Otherwise it reads the owner-only KEK and unseals the vault storage root,
+  initializing it on first use. This is the single way to open the Chief
+  vault: `chief-of-staff vault put` uses it now, and startup registration
+  (P1.4c) will use it next. Adds `ChiefDaemonError::ChiefVaultSecret` and
+  `ChiefVault`.
+- `ChiefDaemonError` now reports a `source()` for `Config`, `ChiefVaultSecret`
+  and `ChiefVault`. Operators can then see which config field is wrong or why
+  the vault would not unseal, rather than only "configuration unavailable".
 - Compose the model tool surface through `CompositeModelToolDispatcher`, with
   the smart-home dispatcher as one source rather than the whole surface. No
   behaviour change today -- it is a list of one -- but adding the second source

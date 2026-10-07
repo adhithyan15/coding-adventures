@@ -295,6 +295,10 @@ pub enum ChiefDaemonError {
     SmartHomeSynologyPairingWorkerUnavailable,
     /// The Synology pairing worker thread panicked.
     SmartHomeSynologyPairingWorkerPanicked,
+    /// The configured Chief vault KEK file could not be loaded safely.
+    ChiefVaultSecret(SecretFileError),
+    /// The Chief vault could not initialize or unseal.
+    ChiefVault(SealedStoreError),
     /// The local operator credential could not be loaded or created safely.
     Credential(CredentialFileError),
     /// Local bearer policy construction failed.
@@ -443,6 +447,8 @@ impl Display for ChiefDaemonError {
             Self::SmartHomeSynologyPairingWorkerPanicked => {
                 "chief daemon: Synology pairing worker panicked"
             }
+            Self::ChiefVaultSecret(_) => "chief daemon: vault KEK file failed",
+            Self::ChiefVault(_) => "chief daemon: vault failed to open",
             Self::Credential(_) => "chief daemon: operator credential failed",
             Self::Authentication(_) => "chief daemon: local authentication policy failed",
             Self::Policy(_) => "chief daemon: approval policy composition failed",
@@ -459,7 +465,76 @@ impl Display for ChiefDaemonError {
     }
 }
 
-impl std::error::Error for ChiefDaemonError {}
+impl std::error::Error for ChiefDaemonError {
+    /// Expose the cause for the configuration and vault failures an operator
+    /// has to act on: which config field is wrong, why the KEK file was
+    /// refused, why the vault would not unseal. Every one of these inner
+    /// errors is payload-blind, so the chain carries no secret material.
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        match self {
+            Self::Config(error) => Some(error),
+            Self::ChiefVaultSecret(error) => Some(error),
+            Self::ChiefVault(error) => Some(error),
+            _ => None,
+        }
+    }
+}
+
+/// Open the Chief vault's sealed store, if the vault is configured.
+///
+/// Returns `Ok(None)` when `[vault] kek_path` is absent. That is the
+/// deliberate default: with no KEK there is no vault, and the daemon offers no
+/// vault tool rather than one over an empty vault (see `VaultConfig`).
+///
+/// Otherwise this reads the 32-byte owner-only KEK file, opens
+/// `[vault] storage_path`, and unseals the store, initializing it on first use.
+/// It is the same sequence the six smart-home pairing vaults use, written once
+/// here so the CLI's `vault put` and the daemon's startup load cannot open the
+/// vault two different ways.
+///
+/// The pairing vaults share `storage_path`, and a store root has one KEK
+/// manifest. So when a pairing KEK and `[vault] kek_path` are both
+/// configured they must name the same key, or this fails with
+/// `SealedStoreError::InvalidKek` (D18U, "Shared storage root").
+pub fn open_chief_vault(
+    config: &ChiefConfig,
+    home: &Path,
+) -> Result<Option<SealedStore>, ChiefDaemonError> {
+    let Some(kek_path) = config.vault().kek_path() else {
+        return Ok(None);
+    };
+    let kek_path = kek_path.resolve(home).map_err(ChiefDaemonError::Config)?;
+    let vault_dir = config
+        .vault()
+        .storage_path()
+        .resolve(home)
+        .map_err(ChiefDaemonError::Config)?;
+    // Read the key before touching the store, so a bad KEK file leaves no
+    // trace on disk.
+    let kek = read_owner_only_secret(&kek_path, SMART_HOME_PAIRING_KEK_BYTES)
+        .map_err(ChiefDaemonError::ChiefVaultSecret)?;
+    let kek: &[u8; SMART_HOME_PAIRING_KEK_BYTES] = kek
+        .as_slice()
+        .try_into()
+        .map_err(|_| ChiefDaemonError::ChiefVaultSecret(SecretFileError::InvalidLength))?;
+    let backend: Arc<dyn StorageBackend> = Arc::new(FsStorageBackend::new(vault_dir));
+    backend.initialize().map_err(ChiefDaemonError::Storage)?;
+    let vault = SealedStore::new(backend);
+    if vault
+        .status()
+        .map_err(ChiefDaemonError::ChiefVault)?
+        .initialized
+    {
+        vault
+            .unseal_with_kek(kek)
+            .map_err(ChiefDaemonError::ChiefVault)?;
+    } else {
+        vault
+            .init_with_kek(kek)
+            .map_err(ChiefDaemonError::ChiefVault)?;
+    }
+    Ok(Some(vault))
+}
 
 /// Resolved absolute startup paths independent of process-global environment.
 #[derive(Clone, Debug, PartialEq, Eq)]
