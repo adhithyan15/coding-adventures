@@ -6,6 +6,13 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Discovery now requires an exact regular canonical `BUILD` before any
+  platform-specific variant can select a recipe. The native Windows selector
+  maps BEAM's `{:win32, _}` OS result to `:windows`, so `BUILD_windows` wins over
+  canonical Starlark content while variant-only directories remain outside the
+  package graph on every host. Exact directory-entry checks also reject
+  wrong-case `build` and `build_windows` on case-insensitive hosts. Native
+  no-follow policy remains separately owned.
 - Discovery rejects colliding qualified identities before resolution with a
   typed `DUPLICATE_PACKAGE_IDENTITY` error and sorted repository-relative
   paths. The CLI emits the root-redacted diagnostic and returns exit status 2.
@@ -17,8 +24,8 @@ All notable changes to this project will be documented in this file.
   walker uses exact boundary buckets, retains `programs/` names, and excludes
   `.dart_tool`, `dist-newstyle`, specification trees, and other generated
   components without excluding `_Build` or `_build-example` source paths.
-  Canonical BUILD membership and native Windows overrides remain separate
-  follow-up contracts.
+  Canonical BUILD membership and native Windows overrides are covered by the
+  checked fixture projection below.
 - Discovery now recognizes the emerging OCaml bucket needed to project the
   shared Dune fixture, and its native test checks exact `_build` exclusion
   alongside positive `_Build` and `_build-example` paths. The Go CI selection
@@ -37,6 +44,10 @@ All notable changes to this project will be documented in this file.
 
 ### Tests
 
+- Project the checked Windows-override and variant-without-canonical cases
+  through production discovery on explicit platforms, check real Windows host
+  selection and emitted shell-only plan, and retain macOS/Linux precedence and
+  canonical fallback regressions.
 - Compare the full generated projection and domain-separated digest with the
   checked neutral registry, drive every package-local neutral source-collection
   case through production selection, and cover binary frames, path changes,

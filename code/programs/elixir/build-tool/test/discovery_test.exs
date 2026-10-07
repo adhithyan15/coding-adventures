@@ -5,6 +5,7 @@ defmodule BuildTool.DiscoveryTest do
   alias BuildTool.CLI
   alias BuildTool.Discovery
   alias BuildTool.Discovery.DuplicatePackageIdentityError
+  alias BuildTool.StarlarkEvaluator
 
   # ---------------------------------------------------------------------------
   # Setup: create temporary directories for testing
@@ -190,6 +191,35 @@ defmodule BuildTool.DiscoveryTest do
       assert result == Path.join(tmp_dir, "BUILD")
     end
 
+    test "variant files alone never establish canonical package membership", %{tmp_dir: tmp_dir} do
+      File.write!(Path.join(tmp_dir, "BUILD_windows"), "echo windows")
+      File.write!(Path.join(tmp_dir, "BUILD_mac"), "echo mac")
+      File.write!(Path.join(tmp_dir, "BUILD_linux"), "echo linux")
+      File.write!(Path.join(tmp_dir, "BUILD_mac_and_linux"), "echo unix")
+
+      for platform <- [:windows, :darwin, :linux] do
+        assert Discovery.get_build_file_for_platform(tmp_dir, platform) == nil
+      end
+    end
+
+    test "only exact-case canonical and variant basenames are recognized", %{tmp_dir: tmp_dir} do
+      File.write!(Path.join(tmp_dir, "build"), "echo wrong canonical\n")
+      File.write!(Path.join(tmp_dir, "build_windows"), "echo wrong windows\n")
+
+      assert Discovery.get_build_file_for_platform(tmp_dir, :windows) == nil
+      assert Discovery.discover_packages(tmp_dir, :windows) == []
+
+      # A case-insensitive filesystem cannot hold `build` and `BUILD` together.
+      File.rm!(Path.join(tmp_dir, "build"))
+      File.write!(Path.join(tmp_dir, "BUILD"), "echo canonical\n")
+
+      assert Discovery.get_build_file_for_platform(tmp_dir, :windows) ==
+               Path.join(tmp_dir, "BUILD")
+
+      assert Discovery.discover_packages(tmp_dir, :windows) |> hd() |> Map.fetch!(:build_commands) ==
+               ["echo canonical"]
+    end
+
     test "BUILD_mac overrides BUILD_mac_and_linux on darwin", %{tmp_dir: tmp_dir} do
       File.write!(Path.join(tmp_dir, "BUILD_mac"), "echo mac")
       File.write!(Path.join(tmp_dir, "BUILD_mac_and_linux"), "echo unix")
@@ -205,6 +235,78 @@ defmodule BuildTool.DiscoveryTest do
   # ---------------------------------------------------------------------------
 
   describe "discover_packages/1" do
+    test "projects the checked Windows override through production discovery", %{
+      tmp_dir: tmp_dir
+    } do
+      fixture = materialize_discovery_fixture!(tmp_dir, "discovery-windows-override.json")
+      code_root = Path.join(tmp_dir, "code")
+
+      packages = Discovery.discover_packages(code_root, :windows)
+
+      assert project_discovery(packages, tmp_dir, :windows) ==
+               fixture["expected"]["result"]["packages"]
+
+      [package] = packages
+      assert package.build_commands == ["python -m unittest discover tests"]
+      assert package.build_content == "python -m unittest discover tests\n"
+      refute StarlarkEvaluator.starlark_build?(Enum.join(package.build_commands, "\n"))
+
+      # On the actual Windows runner, the unparameterized public entry points
+      # must route BEAM's {:win32, _} result to the same override.
+      if match?({:win32, _}, :os.type()) do
+        assert Discovery.get_build_file(package.path) ==
+                 Path.join(package.path, "BUILD_windows")
+
+        assert project_discovery(Discovery.discover_packages(code_root), tmp_dir, :windows) ==
+                 fixture["expected"]["result"]["packages"]
+
+        plan_path = Path.join(tmp_dir, "windows-plan.json")
+
+        output =
+          capture_io(fn ->
+            assert CLI.run(["--root", tmp_dir, "--force", "--emit-plan", plan_path]) == 0
+          end)
+
+        refute output =~ "Evaluated 1 Starlark BUILD"
+        [planned] = plan_path |> File.read!() |> Jason.decode!() |> Map.fetch!("packages")
+        assert planned["name"] == "python/demo"
+        assert planned["build_commands"] == ["python -m unittest discover tests"]
+        assert planned["is_starlark"] == false
+      end
+    end
+
+    test "projects the checked variant-only non-package on every platform", %{
+      tmp_dir: tmp_dir
+    } do
+      fixture =
+        materialize_discovery_fixture!(tmp_dir, "discovery-variant-without-canonical.json")
+
+      code_root = Path.join(tmp_dir, "code")
+
+      for platform <- [:windows, :darwin, :linux] do
+        packages = Discovery.discover_packages(code_root, platform)
+
+        assert project_discovery(packages, tmp_dir, platform) ==
+                 fixture["expected"]["result"]["packages"]
+      end
+
+      assert Discovery.discover_packages(code_root) == []
+    end
+
+    test "recurses through a variant-only directory to canonical child", %{tmp_dir: tmp_dir} do
+      parent = Path.join([tmp_dir, "code", "packages", "python", "parent"])
+      child = Path.join(parent, "child")
+      File.mkdir_p!(child)
+      File.write!(Path.join(parent, "BUILD_windows"), "echo variant\n")
+      File.write!(Path.join(child, "BUILD"), "echo child\n")
+
+      assert Enum.map(
+               Discovery.discover_packages(Path.join(tmp_dir, "code"), :windows),
+               & &1.name
+             ) ==
+               ["python/child"]
+    end
+
     test "rejects checked duplicate identity before CLI resolution", %{tmp_dir: tmp_dir} do
       fixture_path =
         Path.expand(
@@ -443,5 +545,52 @@ defmodule BuildTool.DiscoveryTest do
     test "returns empty list when no packages found", %{tmp_dir: tmp_dir} do
       assert Discovery.discover_packages(tmp_dir) == []
     end
+  end
+
+  defp materialize_discovery_fixture!(tmp_dir, filename) do
+    fixture_path =
+      Path.expand("../../../../specs/fixtures/build-tool-v1/cases/#{filename}", __DIR__)
+
+    fixture = fixture_path |> File.read!() |> Jason.decode!()
+    assert fixture["domain"] == "discovery"
+    assert length(fixture["workspace"]["files"]) == 2
+
+    Enum.each(fixture["workspace"]["files"], fn file ->
+      parts = String.split(file["path"], "/")
+      assert Enum.take(parts, 2) == ["code", "packages"]
+      assert List.last(parts) in ["BUILD", "BUILD_windows", "BUILD_mac"]
+
+      assert Enum.all?(
+               parts,
+               &(&1 not in ["", ".", ".."] and not String.contains?(&1, ["\\", ":"]))
+             )
+
+      destination = Path.join([tmp_dir | parts])
+      File.mkdir_p!(Path.dirname(destination))
+      {:ok, output} = File.open(destination, [:write, :exclusive, :binary])
+      :ok = IO.binwrite(output, file["content_utf8"])
+      :ok = File.close(output)
+    end)
+
+    fixture
+  end
+
+  defp project_discovery(packages, tmp_dir, platform) do
+    packages
+    |> Enum.map(fn package ->
+      %{
+        "name" => package.name,
+        "language" => package.language,
+        "is_starlark" =>
+          StarlarkEvaluator.starlark_build?(Enum.join(package.build_commands, "\n")),
+        "rel_path" => package.path |> Path.relative_to(tmp_dir) |> String.replace("\\", "/"),
+        "build_file" =>
+          package.path
+          |> Discovery.get_build_file_for_platform(platform)
+          |> Path.relative_to(tmp_dir)
+          |> String.replace("\\", "/")
+      }
+    end)
+    |> Enum.sort_by(& &1["name"])
   end
 end

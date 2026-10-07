@@ -30,19 +30,23 @@ fixture directly. It checks 29 BUILD records against 25 expected packages:
 exact bucket languages, distinct `packages/` versus `programs/` identities,
 unknown buckets, generated-tree exclusion, and near-case source paths. The
 fixture-to-build-tool CI map selects this Elixir suite when the registry
-fixture changes. Canonical-BUILD-only membership and native Windows override
-selection remain separate contracts.
+fixture changes. Discovery also projects the checked Windows-override and
+variant-without-canonical cases: only an exact canonical `BUILD` creates a
+package, while `BUILD_windows` replaces its recipe on real Windows hosts.
+The Windows test confirms the emitted plan keeps the selected shell command
+rather than evaluating the canonical Starlark fallback.
 
 Discovery now rejects two physical roots with the same qualified identity
 before dependency resolution. Its typed `DUPLICATE_PACKAGE_IDENTITY` error
 lists sorted `code/`-relative paths without the checkout root; the CLI prints
 that diagnostic and exits with status 2. A package-local test projects the
-checked neutral duplicate fixture as data. This does not yet register an
-Elixir conformance adapter. Canonical BUILD membership, Windows overrides,
-and native symlink/no-follow policy retain separate owners.
+checked neutral duplicate fixture as data. These package-local fixture tests
+do not yet register an Elixir conformance adapter; native symlink/no-follow
+policy retains a separate owner.
 
 1. **Find repo root** — walk up looking for `.git`
-2. **Discover packages** — recursive walk looking for `BUILD` files
+2. **Discover packages** — recursive walk requiring canonical `BUILD`, then
+   selecting the host-specific recipe override
 3. **Filter by language** — optional `--language` flag
 4. **Resolve dependencies** — parse `pyproject.toml`, `.gemspec`, `go.mod`, `package.json`, `Cargo.toml`, `mix.exs`
 5. **Git-diff change detection** — `git diff --name-only` against a base ref
