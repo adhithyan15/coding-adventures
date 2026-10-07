@@ -63,10 +63,10 @@ function point2d.magnitude(a)
     return trig.sqrt(P.magnitude_squared(a))
 end
 
---- Normalize to unit length. Returns a unchanged if magnitude is zero.
+--- Normalize to unit length. Sub-epsilon magnitudes have no stable direction.
 function point2d.normalize(a)
     local m = P.magnitude(a)
-    if m < 1e-15 then return a end
+    if m < 1e-12 then return P.new_point(0.0, 0.0) end
     return P.scale(a, 1.0 / m)
 end
 

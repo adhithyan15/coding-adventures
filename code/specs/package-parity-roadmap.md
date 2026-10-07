@@ -16444,6 +16444,40 @@ trig/point2d/bezier2d/arc2d tests also pass. Those are baseline package
 checks, not a false claim that currently divergent endpoint APIs pass the new
 neutral edge cases.
 
+## Post-#16936 merge and dependency refresh (2026-10-07)
+
+PR #16936 completed 32 acceptable terminal checks and merged by guarded
+squash auto-merge as `6414b14d399e1b681e7b7c68deab89005cdbd070`;
+there was no manual merge. The exact-main schema-3 report remains unchanged:
+15 established lanes, 1,495 implementation identities, 4,765 slots,
+1,537 all-reported identities, 178 high-consensus identities/262 missing,
+1,013 singletons/814 Rust singletons, zero collisions, and zero unknown
+buckets. The neutral geometry contract added no implementation identity.
+
+Read-only backlog audits found no newly unowned Java/Kotlin/Dart or OCaml
+promotion gap. Java and Kotlin each still miss 52 high-consensus slots and
+Dart 96; existing owners cover these and the incomplete build-tool front
+doors/adapters. OCaml remains emerging: its native build tool lacks the
+planner, cache, executor, CLI, and neutral adapter, all covered by explicit
+owners and upstream dependencies. The all-CI-path opam mirror owner overlaps
+open Dependabot PR #15723 and is not selected. The C#/F# CI-gate selection
+owner is dependency-ready and would cover two .NET front doors; its ten-case
+neutral corpus and native test plan are recorded, but it is not this slice.
+The dependency-free BLAKE2b neutral owner also remains ready and gates three
+direct plus nine downstream Argon2 JVM/Dart slots, but has a broader
+security-sensitive contract reconciliation. Open PR #15858 touches its
+TypeScript manifest files, so that future tranche should avoid that overlap.
+
+Select the newly unblocked
+`geometry-point2d-existing-lane-threshold-reconciliation` as the one serial
+implementation item. It is a bounded five-lane repair directly downstream
+of #16936 and unlocks the later five-lane SVG endpoint arc API owner. Ruby,
+Perl, Elixir, Lua, and Swift currently treat `1e-15` as near zero and return
+the original vector. Adopt the now-frozen G2D00 magnitude `<1e-12` origin
+result, retain nonzero normalization exactly at the threshold, and test each
+native package plus relevant downstream geometry consumers. The other
+geometry arc and missing-lane owners remain separate.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

@@ -11,21 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 16936,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16936",
-    "branch": "codex/parity-geometry2d-neutral-20261007",
-    "implementation_revision": "69872f750ffe7131dbfe799ac6e9f137f0d04cc9",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-07T17:39:11Z",
+    "observed_at": "2026-10-07T18:06:59Z",
     "pr_number": 16936,
-    "status": "checks-pending",
-    "notes": "Ready-for-review geometry neutral contract PR #16936 opened from validated head 69872f750ffe7131dbfe799ac6e9f137f0d04cc9. GitHub reports MERGEABLE but checks have not all completed; do not enable auto-merge until every required check is terminal acceptable and conflict-free."
+    "status": "merged",
+    "notes": "All 32 checks reached acceptable terminal conclusions on head 9f6a820110427c4debfeaca00b88b02b8dc740eb; GitHub REST reported mergeable=true/clean. Guarded squash auto-merge completed at 2026-10-07T18:06:59Z as 6414b14d399e1b681e7b7c68deab89005cdbd070. No manual merge."
   },
   "last_inventory": {
-    "revision": "29284f51fe2e7c9be6a8ade7899d5fa126542b24",
+    "revision": "6414b14d399e1b681e7b7c68deab89005cdbd070",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1495,
@@ -12026,7 +12020,7 @@
     {
       "id": "geometry-2d-language-neutral-contract-and-fixture-repair",
       "title": "Freeze the G2D00-G2D03 portable geometry contract and neutral fixtures",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/parity-geometry2d-neutral-20261007",
       "pr_number": 16936,
@@ -12037,9 +12031,9 @@
     {
       "id": "geometry-point2d-existing-lane-threshold-reconciliation",
       "title": "Reconcile G2D00 near-zero normalization in Ruby, Perl, Elixir, Lua, and Swift",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"],
-      "branch": null,
+      "branch": "codex/parity-geometry-point2d-existing-20261007",
       "pr_number": null,
       "notes": "All five lanes currently use 1e-15 and return the original near-zero vector. Adopt the neutral <1e-12 return-origin contract, preserve exactly-at-threshold normalization, and run each real point2d package and downstream geometry test."
     },
