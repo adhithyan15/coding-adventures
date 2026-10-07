@@ -5691,9 +5691,13 @@ pub fn parse_cynefin(source: &str) -> Result<CynefinDiagram, ParseError> {
     for (index, raw) in prepared.lines().enumerate() {
         let line_number = index + 1; let line = raw.trim();
         if line.is_empty() || matches!(line.to_ascii_lowercase().as_str(), "cynefin-beta" | "cynefin-beta:") { continue; }
-        if let Some(title) = line.strip_prefix("title ") { diagram.title = Some(title.trim().to_string()); current_domain = None; continue; }
-        if let Some(value) = line.strip_prefix("accTitle:") { diagram.accessibility_title = Some(value.trim().to_string()); current_domain = None; continue; }
-        if let Some(value) = line.strip_prefix("accDescr:") {
+        if let Some(title) = line.strip_prefix("title").filter(|rest| rest.is_empty() || rest.starts_with(' ') || rest.starts_with('\t')) {
+            diagram.title = Some(title.trim().to_string()); current_domain = None; continue;
+        }
+        if let Some((_, value)) = line.split_once(':').filter(|(keyword, _)| keyword.trim() == "accTitle") {
+            diagram.accessibility_title = Some(value.trim().to_string()); current_domain = None; continue;
+        }
+        if let Some((_, value)) = line.split_once(':').filter(|(keyword, _)| keyword.trim() == "accDescr") {
             let value = value.trim();
             diagram.accessibility_description = value.strip_prefix("__CYNEFIN_MULTILINE_")
                 .and_then(|index| index.parse::<usize>().ok())
@@ -5802,22 +5806,38 @@ fn prepare_cynefin_source(source: &str) -> Result<(String, Vec<String>), ParseEr
     let mut multiline_descriptions = Vec::new();
     let mut index = 0usize;
     while index < lines.len() {
-        if lines[index].trim() != "accDescr {" {
+        let trimmed = lines[index].trim();
+        let Some(after_keyword) = trimmed.strip_prefix("accDescr") else {
             output.push(lines[index].to_string());
             index += 1;
             continue;
-        }
-        let start_line = index + 1;
-        index += 1;
-        let mut description = Vec::new();
-        while index < lines.len() && lines[index].trim() != "}" {
-            description.push(lines[index].trim());
+        };
+        let after_keyword = after_keyword.trim_start();
+        let Some(mut remainder) = after_keyword.strip_prefix('{') else {
+            output.push(lines[index].to_string());
             index += 1;
-        }
-        if index == lines.len() {
-            return Err(ParseError { message: "unterminated Cynefin accessibility description".into(), line: start_line, col: 1 });
+            continue;
+        };
+        let start_line = index + 1;
+        let mut description = Vec::new();
+        loop {
+            if let Some((content, trailing)) = remainder.split_once('}') {
+                if !trailing.trim().is_empty() {
+                    return Err(ParseError { message: "unexpected content after Cynefin accessibility description".into(), line: index + 1, col: 1 });
+                }
+                description.push(content.trim());
+                break;
+            }
+            description.push(remainder.trim());
+            index += 1;
+            if index == lines.len() {
+                return Err(ParseError { message: "unterminated Cynefin accessibility description".into(), line: start_line, col: 1 });
+            }
+            remainder = lines[index];
         }
         let description_index = multiline_descriptions.len();
+        while description.first().is_some_and(|line| line.is_empty()) { description.remove(0); }
+        while description.last().is_some_and(|line| line.is_empty()) { description.pop(); }
         multiline_descriptions.push(description.join("\n"));
         output.push(format!("accDescr: __CYNEFIN_MULTILINE_{description_index}"));
         index += 1;
