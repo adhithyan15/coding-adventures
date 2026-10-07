@@ -48,9 +48,12 @@ fn accepted_graph_operations_have_one_independent_global_clock() {
     }
     assert_eq!(events[2]["event"]["index"], "0000000000000000");
     assert_eq!(events[7]["event"]["index"], "0000000000000000");
-    assert_eq!(log.get(&merged).unwrap().parent_ids, [&a, &b, &a]);
+    assert_eq!(
+        log.get(&merged).unwrap().parent_ids,
+        [a.as_str(), b.as_str(), a.as_str()]
+    );
     assert!(log.get(&a).unwrap().deleted.is_some());
-    assert_eq!(log.get(&retained_parent).unwrap().parent_ids, [&a]);
+    assert_eq!(log.get(&retained_parent).unwrap().parent_ids, [a.as_str()]);
     assert!(log.get(&empty_merge).unwrap().parent_ids.is_empty());
     for checked in [true, false] {
         let mut imported = if checked {
