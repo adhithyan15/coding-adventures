@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16863,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16863",
+    "branch": "codex/parity-python-ci-gate-selection-20261006",
+    "implementation_revision": "f28430654c760f9003a5d266f090b24f1fea5a61",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-06T13:08:35Z",
-    "pr_number": 16798,
-    "status": "merged",
-    "notes": "PR #16798 passed all 31 required checks on the unchanged d18fd2e0 head after an unrelated macOS Forme native-preview race was retried. GitHub reported MERGEABLE/CLEAN, auto-merge was enabled with a head-commit guard, and GitHub squash-merged it as 665bf2ac6ec08e0ab463b75c2bc4a88828ce76a6. No manual merge occurred."
+    "observed_at": "2026-10-07T07:15:01Z",
+    "pr_number": 16863,
+    "status": "checks-pending",
+    "notes": "Ready-for-review Python CI-gate selection PR #16863 is open from validated f28430654c760f9003a5d266f090b24f1fea5a61. Local Python package suite passed 557 tests with 91.56% coverage, full Go build-tool tests/vet passed, focused Ruff/mypy and collision inventory passed, and read-only security review found no actionable issue. GitHub reports MERGEABLE but BLOCKED while initial CI and CodeQL checks are queued; auto-merge is not enabled. Previous parity PR #16798 auto-merged as 665bf2ac6ec08e0ab463b75c2bc4a88828ce76a6."
   },
   "last_inventory": {
     "revision": "665bf2ac6ec08e0ab463b75c2bc4a88828ce76a6",
@@ -9650,10 +9656,10 @@
     {
       "id": "build-tool-python-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Python build tool",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-python-glob-matcher-complexity-hardening"],
       "branch": "codex/parity-python-ci-gate-selection-20261006",
-      "pr_number": null,
+      "pr_number": 16863,
       "selected_at": "2026-10-06T13:24:49Z",
       "selection_revision": "665bf2ac6ec08e0ab463b75c2bc4a88828ce76a6",
       "selection_notes": "Selected after #16798 auto-merged and the exact-main 15-lane inventory stayed collision-free at 1,487 identities and 4,757 slots. All three prerequisites are merged, ten neutral cases define the closed result contract, and the Python lane is only three gates from a terminal build-tool adapter. This bounded process-free tranche advances the every-language build-tool mandate without host authority or overlap with the eleven open non-parity PRs; Haskell Dune discovery has higher raw fanout but a longer eleven-gate critical path.",
