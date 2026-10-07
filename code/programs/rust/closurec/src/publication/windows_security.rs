@@ -42,7 +42,7 @@ fn admit_dacl(acl: &[u32]) -> io::Result<()> {
             .get(cursor)
             .ok_or_else(|| invalid("missing final ACE"))?;
         let bytes = (header >> 16) as usize;
-        if bytes < 4 || bytes % 4 != 0 {
+        if bytes < 4 || !bytes.is_multiple_of(4) {
             return Err(invalid("unsupported final ACE size"));
         }
         let end = cursor
