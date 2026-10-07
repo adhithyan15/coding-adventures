@@ -25,7 +25,8 @@ Errors must identify unsupported syntax rather than silently omit it.
 Python float division by zero raises an error; the VM lowering must check that
 case rather than inheriting an IEEE infinity result from a generic `f64` divide.
 
-The pilot rejects source larger than 64 KiB before tokenization. Its AST-input
+The pilot rejects source larger than 64 KiB before tokenization; the file
+runner enforces that bound while reading. Its AST-input
 entry point also rejects trees exceeding 16,384 nodes or tokens, or 64 nested
 grammar nodes, before recursive lowering. These limits bound frontend and
 generated-IIR work even when an AST is supplied directly by another caller.
