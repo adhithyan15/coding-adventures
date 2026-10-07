@@ -34,8 +34,11 @@ divisor. Reject any statically known division whose result would exceed `i64`
 range. `puts` uses a separate Ruby-specific builtin that writes the integer's
 decimal form and one newline. Output is bounded by the runner.
 The pilot limits source to 64 KiB before parsing, a directly supplied AST to
-16,384 nodes and depth 256 before recursive lowering, execution to 100,000
-instructions, and captured output to one million bytes.
+16,384 nodes or tokens and depth 256 before recursive lowering, execution to
+100,000 instructions, and captured output to one million bytes. Direct AST
+input also has a one MiB aggregate text limit and 64 KiB per rule name or token
+field, including correlation IDs; the module name has the same field limit.
+The item count is enforced before adding children to the traversal queue.
 
 ## Acceptance
 
@@ -46,6 +49,8 @@ instructions, and captured output to one million bytes.
 - Integer range overflow, division by zero, unsupported syntax, and malformed
   source fail without panics. A separate Ruby oracle cross-checks representative
   accepted programs.
+- Oversized directly supplied AST item counts, nesting, text fields, and module
+  names fail before lowering or copying token text.
 
 This is an interpreter pilot. Bindings, objects, blocks, exceptions, the full
 integer tower, float literals, and JIT execution remain later work.
