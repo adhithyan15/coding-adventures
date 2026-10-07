@@ -452,6 +452,11 @@ Reject stale/orphan inherited policies which cannot round trip. Restore each
 candidate's private policy through its retained handle on pre-commit failure,
 before pathname cleanup; report reset failures. Never reset candidate policy
 during post-commit cleanup because stage and installed hard links share it.
+The active empty probe must also permit the fresh metadata/security open used
+by final verification, not merely readback through a retained privileged handle.
+Reopen its active link with the production verification access mask, verify its
+identity, zero length and exact intended policy before restoring probe privacy.
+OWNER RIGHTS deny-READ_CONTROL policies must reject before any original mutation.
 
 Unix mode bits alone also do not establish ownership or extended-ACL
 preservation. State native Linux/macOS support separately, check owner/group and
