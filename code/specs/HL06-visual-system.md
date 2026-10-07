@@ -723,6 +723,19 @@ earlier Latin strips are redrawn on the new outline. None of the 22 lessons
 disclaims its stroke order, and ES-W01-acento's own prose already describes
 the acute as one up-stroke rising left to right.
 
+**As built.** As designed. `LatinPrint-Subset.ttf` is 26,292 bytes (141
+characters, 152 glyphs, SHA-256 `88437a25…53cfab`), and `subset-latin.sh`
+regenerates it byte for byte. All 31 Latin glyphs are 1.000 on ink with
+nothing untraced at the default tolerances. Each precomposed letter's first
+stroke is exactly its base letter's (í shares i's stem), so a word strip
+draws the same a in hola and in á. The Latin ledger owner holds the 28 glyphs
+a lesson draws (G, g and ü wait for a lesson). Exactly the 22 expected lessons
+gain a strip: French 5, Italian 3, Portuguese 3, Latin 1, Spanish 2 -> 9,
+German 2 -> 5. The tallest new strip is Hallo at about 1,510 units (its H
+has three strokes), under the nine-piece Gujarati list's 1,800; buenos días,
+at exactly ten pieces, is about 1,420. Narration, modality and lesson prose
+are unchanged.
+
 ### Class B — data diagrams (generated)
 
 Etymology and cousin-web trees built from lesson `roots`, sound-articulation diagrams

@@ -132,19 +132,22 @@ single run, and the lift count again rests on *hand* and *grahyam*.
 
 ### A school model and native writers as sources (Latin print letters)
 
-Latin (`strokes/latin.ts`, keys `latin:<glyph>`) draws 18 print glyphs: b c e
-g h i l n o r s u w ß and G cite the Grundschrift-App, made in a research
-project of the Laborschule at Bielefeld University with the Grundschulverband,
-whose ordered paths (one per pen-down stroke) a child traces in order. Its
-repository has no licence, so only the order, start, direction and lifts are
-cited, per letter level at a pinned commit, and no point is copied. Native
-writers corroborate it: UJIpenchars2 (Prat et al., UCI dataset 177, CC BY 4.0)
-holds 120 pen traces of each Spanish character from 60 adults, cited as counts.
-It is the only source for ñ's tilde (after the n, left to right), ¿ and ¡ (dot
-last). The outlines are the Noto Sans Latin letters that the bundled
-`NotoSansDevanagari-Static.ttf` carries. ñ is its own precomposed entry. a is
-not drawn: Noto prints a two-storey a, and every source draws the one-storey
-a. The grave, circumflex, cedilla, æ and œ have no source.
+Latin (`strokes/latin.ts`, keys `latin:<glyph>`) draws 31 print glyphs: a b
+c d e g h i l n o p q r s t u w y ß, G and H cite the Grundschrift-App, made in
+a research project of the Laborschule at Bielefeld University with the
+Grundschulverband, whose ordered paths (one per pen-down stroke) a child traces
+in order. Its repository has no licence, so only the order, start, direction
+and lifts are cited, per letter level at a pinned commit, and no point is
+copied. Native writers corroborate it: UJIpenchars2 (Prat et al., UCI dataset
+177, CC BY 4.0) holds 120 pen traces of each Spanish character from 60 adults,
+cited as counts. It is the only source for the marks: ñ's tilde (after the n,
+left to right), the acute of á é í ó ú (after the letter, rising to the right
+as about six in ten writers draw it), ü's dots (left first), and ¿ and ¡ (dot
+last). Each precomposed letter is its own entry whose first stroke is its base
+letter's. The outlines are `LatinPrint-Subset.ttf`, a renamed subset of SIL's
+literacy typeface Andika, chosen because its a is the one-storey a every
+source teaches (Noto Sans prints a two-storey a). The grave, circumflex,
+cedilla, macron, æ and œ have no source; ä ö ë ï ÿ would be analogy only.
 
 ## Usage
 

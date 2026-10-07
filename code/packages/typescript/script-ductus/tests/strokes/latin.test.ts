@@ -5,17 +5,21 @@
 // Two different questions are asked of every Latin letter here.
 //
 //   1. Does the path lie on the printed letter? `registerStrokeHonestyTests`
-//      measures it against the Noto Sans Latin letters bundled in
-//      NotoSansDevanagari-Static.ttf at the DEFAULT tolerances (no per-letter
-//      override): every stroke at least 97% on ink, joins closed, at most 2%
-//      of the ink untraced.
+//      measures it against LatinPrint-Subset.ttf (a renamed subset of SIL's
+//      literacy typeface Andika, whose a is the one-storey a the sources
+//      teach) at the DEFAULT tolerances (no per-letter override): every stroke
+//      at least 97% on ink, joins closed, at most 2% of the ink untraced.
 //   2. Does the path say what its source says? The letters follow the
 //      Grundschrift-App's ordered paths (a school model; facts only, the
-//      repository has no licence), and ñ's tilde, ¿ and ¡ follow the majority
-//      of native Spanish writers in UJIpenchars2 (CC BY 4.0). The facts pinned
-//      below are the ones a reader of those sources can check: how many times
-//      the pen lifts, where it starts, which way it turns, and that a dot or a
-//      tilde comes last.
+//      repository has no licence), and the marks of ñ, á é í ó ú and ü, and ¿
+//      and ¡, follow the majority of native Spanish writers in UJIpenchars2
+//      (CC BY 4.0). The facts pinned below are the ones a reader of those
+//      sources can check: how many times the pen lifts, where it starts, which
+//      way it turns, and that a dot, a tilde or an accent comes last.
+//
+// The coordinates below are the font's (1000 units to the em, y up): the
+// x-height is about 500, the baseline 0, ascenders reach about 780 and
+// descenders about -230.
 //
 // Turning is the sum of the pen's heading changes along a stroke, in FONT
 // coordinates (y up), where a left turn is positive. So a POSITIVE sum is
@@ -38,10 +42,16 @@ import { registerStrokeHonestyTests } from "../support/stroke-honesty";
 const LA = (glyph: string): LetterDuctus => DUCTUS[ductusKey("latin", glyph)];
 const GLYPHS = [
   "b", "c", "e", "g", "h", "i", "l", "n", "o", "r", "s", "u", "w", "ß", "ñ", "G", "¿", "¡",
+  "a", "d", "p", "q", "t", "y", "H", "á", "é", "í", "ó", "ú", "ü",
 ] as const;
 /** The letters cited to the Grundschrift-App; the rest cite UJIpenchars2. */
-const SCHOOL = ["b", "c", "e", "g", "h", "i", "l", "n", "o", "r", "s", "u", "w", "ß", "G"] as const;
-const NATIVE = ["ñ", "¿", "¡"] as const;
+const SCHOOL = [
+  "b", "c", "e", "g", "h", "i", "l", "n", "o", "r", "s", "u", "w", "ß", "G",
+  "a", "d", "p", "q", "t", "y", "H",
+] as const;
+const NATIVE = ["ñ", "¿", "¡", "á", "é", "í", "ó", "ú", "ü"] as const;
+/** Each precomposed letter and the cited letter whose path it begins with. */
+const BASE: Record<string, string> = { "ñ": "n", "á": "a", "é": "e", "í": "i", "ó": "o", "ú": "u", "ü": "u" };
 const GRUNDSCHRIFT =
   /^https:\/\/github\.com\/Medien-Treibhaus\/grundschrift-app-source\/blob\/f6dbd807adbb3fc2f94207fe578def439f6e9c49\/assets\/levels\/(kleinbuchstaben|GROSSBUCHSTABEN)\/(\w+)\/metadata\.json$/;
 const UJI = "https://archive.ics.uci.edu/dataset/177/uji+pen+characters+version+2";
@@ -76,24 +86,20 @@ describe("Latin handwriting ductus", () => {
   beforeAll(() => {
     for (const glyph of GLYPHS) {
       expect(verifiedLetterFont(glyph, LA(glyph).source.url)).toBe(
-        "_fonts/NotoSansDevanagari-Static.ttf",
+        "_fonts/LatinPrint-Subset.ttf",
       );
     }
   });
 
-  it("authors exactly the 18 glyphs the Spanish and German strips need, in owner order", () => {
+  it("authors exactly the 31 cited glyphs, in owner order", () => {
     expect(letters.map((letter) => letter.glyph)).toEqual([...GLYPHS]);
     expect(Object.keys(DUCTUS).filter((key) => key.startsWith("latin:"))).toEqual(
       GLYPHS.map((glyph) => `latin:${glyph}`),
     );
   });
 
-  it("draws no a: Noto prints a two-storey a, and every source draws the one-storey a", () => {
-    for (const glyph of ["a", "á", "A"]) {
-      expect(DUCTUS[ductusKey("latin", glyph)], glyph).toBeUndefined();
-    }
-    // Nor a mark the sources do not cover, nor one whose only lesson holds an a.
-    for (const glyph of ["à", "â", "ç", "æ", "œ", "ë", "ï", "ä", "ö", "ü", "é", "í", "ó", "ú"]) {
+  it("draws no mark the sources do not cover, and no letter that would follow ü only by analogy", () => {
+    for (const glyph of ["à", "è", "â", "ê", "ç", "æ", "œ", "ē", "ä", "ö", "ë", "ï", "ÿ"]) {
       expect(DUCTUS[ductusKey("latin", glyph)], glyph).toBeUndefined();
     }
   });
@@ -102,11 +108,13 @@ describe("Latin handwriting ductus", () => {
     expect(Object.fromEntries(GLYPHS.map((glyph) => [glyph, penLifts(LA(glyph))]))).toEqual({
       b: 0, c: 0, e: 0, g: 0, h: 0, i: 1, l: 0, n: 0, o: 0, r: 0, s: 0, u: 0, w: 0,
       "ß": 0, "ñ": 1, G: 0, "¿": 1, "¡": 1,
+      a: 0, d: 0, p: 0, q: 0, t: 1, y: 1, H: 2,
+      "á": 1, "é": 1, "í": 1, "ó": 1, "ú": 1, "ü": 2,
     });
   });
 
-  it("puts the dot, or the tilde, last and above the body", () => {
-    for (const glyph of ["i", "¿", "¡", "ñ"]) {
+  it("puts the dot, the tilde or the accent last and above the body", () => {
+    for (const glyph of ["i", "¿", "¡", "ñ", "á", "é", "í", "ó", "ú"]) {
       const letter = LA(glyph);
       expect(letter.strokes, glyph).toHaveLength(2);
       const [body, mark] = letter.strokes.map((stroke) => penPath(stroke));
@@ -116,38 +124,64 @@ describe("Latin handwriting ductus", () => {
     // ¡'s bar runs down; ñ's tilde runs left to right.
     expect(last(LA("¡")).y).toBeLessThan(first(LA("¡")).y);
     expect(last(LA("ñ"), 1).x - first(LA("ñ"), 1).x).toBeGreaterThan(200);
+    // Every acute rises to the right, the majority's way.
+    for (const glyph of ["á", "é", "í", "ó", "ú"]) {
+      const [start, end] = [first(LA(glyph), 1), last(LA(glyph), 1)];
+      expect(end.x - start.x, glyph).toBeGreaterThan(100);
+      expect(end.y - start.y, glyph).toBeGreaterThan(100);
+      expect(LA(glyph).strokes[1].segments[0].label, glyph).toBe("lift, then the acute, up to the right");
+    }
+  });
+
+  it("writes a precomposed letter as its base letter's own path, then the mark", () => {
+    for (const [glyph, base] of Object.entries(BASE)) {
+      expect(LA(glyph).strokes[0], glyph).toEqual(LA(base).strokes[0]);
+    }
+    // ü: the u, then the left dot, then the right dot, both above the u.
+    const u = LA("ü");
+    expect(u.strokes).toHaveLength(3);
+    expect(u.strokes[1].segments[0].label).toBe("lift, then the left dot");
+    expect(u.strokes[2].segments[0].label).toBe("lift, then the right dot");
+    expect(first(u, 1).x).toBeLessThan(first(u, 2).x - 100);
+    for (const dot of [1, 2]) {
+      expect(meanY(penPath(u.strokes[dot]))).toBeGreaterThan(meanY(penPath(u.strokes[0])));
+    }
   });
 
   it("turns each round letter the way its source does", () => {
-    // Anticlockwise: c, o, e's curve, G's curve, the bowl of g, the hook of ¿.
+    // Anticlockwise: c, o, e's curve, G's curve, the bowls of a d g q, the hook of ¿.
     expect(turning(penPath(LA("c").strokes[0]))).toBeGreaterThan(150);
     expect(turning(penPath(LA("o").strokes[0]))).toBeGreaterThan(300);
     expect(turning(segmentPath(LA("e"), 0, 1))).toBeGreaterThan(250);
     expect(turning(segmentPath(LA("G"), 0, 0))).toBeGreaterThan(90);
     expect(turning(segmentPath(LA("G"), 0, 1))).toBeGreaterThan(150);
-    expect(turning(segmentPath(LA("g"), 0, 0))).toBeGreaterThan(180);
+    for (const glyph of ["a", "d", "g", "q"]) {
+      expect(turning(segmentPath(LA(glyph), 0, 0)), glyph).toBeGreaterThan(180);
+    }
     expect(turning(penPath(LA("¿").strokes[0]))).toBeGreaterThan(90);
     // s: anticlockwise over the top, then clockwise round the bottom.
     const s = penPath(LA("s").strokes[0]);
     const middle = Math.floor(s.length / 2);
     expect(turning(s.slice(0, middle + 1))).toBeGreaterThan(90);
     expect(turning(s.slice(middle))).toBeLessThan(-90);
-    // Clockwise: b's bowl, the arch of h and n, ß over the top and round.
+    // Clockwise: the bowls of b and p, the arch of h and n, ß over the top and round.
     expect(turning(segmentPath(LA("b"), 0, 1))).toBeLessThan(-250);
+    expect(turning(segmentPath(LA("p"), 0, 1))).toBeLessThan(-250);
     expect(turning(segmentPath(LA("h"), 0, 1))).toBeLessThan(-150);
     expect(turning(segmentPath(LA("n"), 0, 1))).toBeLessThan(-150);
     expect(turning(segmentPath(LA("ß"), 0, 1))).toBeLessThan(-150);
   });
 
   it("starts each letter where its source starts", () => {
-    // Top right: c, s, G, and g's bowl.
-    for (const glyph of ["c", "s", "G", "g"]) {
+    // Top right: c, s, G, and the bowls of a, d, g and q.
+    for (const glyph of ["c", "s", "G", "g", "a", "d", "q"]) {
       const start = first(LA(glyph));
       expect(start.x, glyph).toBeGreaterThan(350);
-      expect(start.y, glyph).toBeGreaterThan(450);
+      expect(start.y, glyph).toBeGreaterThan(400);
     }
-    // Top left, straight down: the stems of b h i l n r u, and w's first line.
-    for (const glyph of ["b", "h", "i", "l", "n", "r", "u", "w"]) {
+    // Top left, straight down: the stems of b h i l n p r u, w's first line,
+    // and the left stem of H.
+    for (const glyph of ["b", "h", "i", "l", "n", "p", "r", "u", "w", "H"]) {
       const letter = LA(glyph);
       expect(first(letter).x, glyph).toBeLessThan(150);
       expect(first(letter).y, glyph).toBeGreaterThan(450);
@@ -155,7 +189,7 @@ describe("Latin handwriting ductus", () => {
       expect(segmentPath(letter, 0, 0)[1].y, glyph).toBeLessThan(first(letter).y);
     }
     // o from the top; e from the middle left, along the bar to the right.
-    expect(first(LA("o")).y).toBeGreaterThan(480);
+    expect(first(LA("o")).y).toBeGreaterThan(440);
     expect(first(LA("e")).x).toBeLessThan(150);
     expect(Math.abs(first(LA("e")).y - 280)).toBeLessThan(40);
     expect(segmentPath(LA("e"), 0, 0).at(-1)!.x).toBeGreaterThan(400);
@@ -165,7 +199,7 @@ describe("Latin handwriting ductus", () => {
     expect(last(LA("ß")).y).toBeLessThan(60);
     // G ends in along its bar; g ends at the left of its tail.
     expect(last(LA("G")).x).toBeLessThan(first(LA("G")).x - 100);
-    expect(Math.abs(last(LA("G")).y - 340)).toBeLessThan(30);
+    expect(Math.abs(last(LA("G")).y - 325)).toBeLessThan(30);
     expect(last(LA("g")).y).toBeLessThan(-100);
     expect(last(LA("g")).x).toBeLessThan(200);
     // ¿'s hook starts at its top and ends at the lower right.
@@ -174,11 +208,53 @@ describe("Latin handwriting ductus", () => {
     expect(last(LA("¿")).x).toBeGreaterThan(first(LA("¿")).x);
   });
 
-  it("runs back along its own ink where Noto joins what the source draws in one stroke", () => {
-    for (const glyph of ["b", "h", "n", "r", "ñ"]) {
+  it("ends a, d, p and q where their stems end, after going back up", () => {
+    // a and d come down to the foot of the stem on the right; q below the line.
+    for (const glyph of ["a", "d"]) {
+      expect(last(LA(glyph)).y, glyph).toBeLessThan(100);
+      expect(last(LA(glyph)).x, glyph).toBeGreaterThan(400);
+    }
+    expect(last(LA("q")).y).toBeLessThan(-150);
+    // d goes up to the top of its ascender before it comes down.
+    expect(Math.max(...segmentPath(LA("d"), 0, 1).map((point) => point.y))).toBeGreaterThan(650);
+    // p goes down below the line first, then back up and round the bowl.
+    expect(segmentPath(LA("p"), 0, 0).at(-1)!.y).toBeLessThan(-150);
+  });
+
+  it("draws t, y and H stroke by stroke in the school model's order", () => {
+    // t: the stem from the top, then the crossbar, level, left to right.
+    const t = LA("t");
+    expect(first(t).y).toBeGreaterThan(550);
+    expect(last(t).x).toBeGreaterThan(first(t).x + 100);
+    expect(Math.abs(last(t, 1).y - first(t, 1).y)).toBeLessThan(20);
+    expect(last(t, 1).x - first(t, 1).x).toBeGreaterThan(200);
+    // y: the short line from the top left, then the long line from the top
+    // right down to the tail at the lower left.
+    const y = LA("y");
+    expect(first(y).x).toBeLessThan(150);
+    expect(last(y).x).toBeGreaterThan(first(y).x);
+    expect(last(y).y).toBeLessThan(first(y).y - 300);
+    expect(first(y, 1).x).toBeGreaterThan(350);
+    expect(last(y, 1).y).toBeLessThan(-100);
+    expect(last(y, 1).x).toBeLessThan(150);
+    // H: the left stem down, the crossbar left to right, the right stem down.
+    const H = LA("H");
+    expect(H.strokes).toHaveLength(3);
+    expect(last(H).y).toBeLessThan(first(H).y);
+    expect(Math.abs(last(H, 1).y - first(H, 1).y)).toBeLessThan(20);
+    expect(last(H, 1).x - first(H, 1).x).toBeGreaterThan(300);
+    expect(first(H, 2).x).toBeGreaterThan(450);
+    expect(last(H, 2).y).toBeLessThan(first(H, 2).y);
+  });
+
+  it("runs back along its own ink where the outline joins what the source draws in one stroke", () => {
+    for (const glyph of ["b", "h", "n", "p", "r", "ñ"]) {
       expect(LA(glyph).strokes[0].segments[1].label, glyph).toMatch(/^back up/);
     }
     expect(LA("g").strokes[0].segments[1].label).toBe("back up, then down and hook left");
+    expect(LA("a").strokes[0].segments[1].label).toBe("back up, then down to the foot");
+    expect(LA("q").strokes[0].segments[1].label).toBe("back up, then down the stem");
+    expect(LA("d").strokes[0].segments[1].label).toBe("up the stem to the top, then down to the foot");
   });
 
   it("cites the Grundschrift-App per level, or UJIpenchars2 per class, with counts in every variation", () => {
@@ -191,7 +267,7 @@ describe("Latin handwriting ductus", () => {
         `Grundschrift-App (Laborschule Bielefeld, Bielefeld University, with the Grundschulverband), level ${level}, ordered stroke paths for ${glyph} (assets/levels/${level}/metadata.json, commit f6dbd80; no licence, facts only)`,
       );
       expect(source.variation).toMatch(/^The Grundschrift-App was made in a research project of the Laborschule/);
-      expect(source.variation).toMatch(/no point is copied, and the path is fitted to the Noto Sans .* bundled in NotoSansDevanagari-Static\.ttf\. Handwriting varies by writer\.$/);
+      expect(source.variation).toMatch(/no point is copied, and the path is fitted to the .* of the bundled LatinPrint-Subset\.ttf, a renamed subset of SIL Global's literacy typeface Andika 7\.000, which prints the one-storey a the school model teaches; the book's own text face is a different font\. Handwriting varies by writer\.$/);
       if (glyph === "ß") {
         expect(source.variation).toMatch(/has no ß, so no native-writer count is cited/);
       } else {
@@ -200,6 +276,7 @@ describe("Latin handwriting ductus", () => {
     }
     expect(LA("ß").source.url).toMatch(/kleinbuchstaben\/sz\/metadata\.json$/);
     expect(LA("G").source.url).toMatch(/GROSSBUCHSTABEN\/G\/metadata\.json$/);
+    expect(LA("H").source.url).toMatch(/GROSSBUCHSTABEN\/H\/metadata\.json$/);
     for (const glyph of NATIVE) {
       const source = LA(glyph).source;
       expect(source.url).toBe(UJI);
@@ -207,9 +284,22 @@ describe("Latin handwriting ductus", () => {
         new RegExp(`^UJIpenchars2 \\(F\\. Prat, M\\. J\\. Castro, D\\. Llorens, A\\. Marzal and J\\. M\\. Vilar\\), UCI Machine Learning Repository dataset 177, class ${glyph}: 120 tablet pen traces by 60 native Spanish writers \\(CC BY 4\\.0\\)`),
       );
       expect(source.variation).toMatch(/Only counts and shares are cited; no trace is copied/);
+      expect(source.variation).toMatch(/LatinPrint-Subset\.ttf/);
     }
-    // ñ's n is the school model's n.
-    expect(LA("ñ").source.citation).toContain("the n after the Grundschrift-App, level kleinbuchstaben/n");
+    // A precomposed letter's base is the school model's letter.
+    for (const [glyph, base] of Object.entries(BASE)) {
+      expect(LA(glyph).source.citation, glyph).toContain(
+        `the ${base} after the Grundschrift-App, level kleinbuchstaben/${base}`,
+      );
+    }
     expect(LA("ñ").source.variation).toMatch(/108 of the 120, and in all 108 it is drawn last.*104 of those 108 draw it from left to right/);
+    // The acute's direction is split, and the split is said.
+    expect(LA("á").source.variation).toMatch(/74 draw it up to the right, 40 down to the left/);
+    expect(LA("é").source.variation).toMatch(/75 draw it up to the right, 35 down to the left/);
+    expect(LA("ü").source.variation).toMatch(/left dot comes first in 116 of the 118/);
+    // Where the adult writers part from the school model, the record says so.
+    expect(LA("y").source.variation).toMatch(/ONE stroke \(91 of the 120\)/);
+    expect(LA("q").source.variation).toMatch(/89 are two strokes/);
+    expect(LA("H").source.variation).toMatch(/second in 37 and third in 25/);
   });
 });

@@ -91,14 +91,21 @@ export const DERIVED_FILMSTRIP_SCRIPTS: Readonly<Record<string, string>> = {
   punjabi: "gurmukhi",
   // HL-C443 sixth rollout: the first Latin-script tracks. Their print letters
   // follow the Grundschrift-App's ordered paths (a school model, cited as
-  // facts only), with native Spanish writers' counts from UJIpenchars2, and ñ's
-  // tilde, ¿ and ¡ follow those writers. Only Spanish and German join: their
-  // lessons are the only Latin ones whose every letter is cited. Noto Sans
-  // prints a two-storey a, which no source draws, so French, Italian,
-  // Portuguese and Latin, whose writing headwords all hold an a or an
-  // uncited mark, stay off until a source covers it.
+  // facts only), with native Spanish writers' counts from UJIpenchars2, and the
+  // marks (ñ's tilde, the acute, ü's dots, ¿ and ¡) follow those writers.
   spanish: "latin",
   german: "latin",
+  // Seventh rollout: the other four Latin-script tracks. Their writing
+  // headwords (salut, ciao, olá, quia, parce que) all hold an a, and the
+  // first outline (Noto Sans) printed a two-storey a that no source draws.
+  // The Latin strips are now drawn on LatinPrint-Subset.ttf, a renamed subset
+  // of SIL's literacy typeface Andika, whose a is the one-storey a the school
+  // model teaches. Lessons with an uncited mark (è ê ç ï ë ä ö ē, œ) still
+  // print no strip: the ledger has no ductus for them.
+  french: "latin",
+  italian: "latin",
+  portuguese: "latin",
+  latin: "latin",
 };
 
 const GRAPHEMES = new Intl.Segmenter("und", { granularity: "grapheme" });

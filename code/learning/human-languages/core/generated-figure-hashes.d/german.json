@@ -4,15 +4,36 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "GE-W01-eszett",
-      "sourceHash": "fnv1a64:143779679ea33dfa",
-      "svgHash": "fnv1a64:f49f07d36ab98014",
+      "sourceHash": "fnv1a64:99d994eea46b6df4",
+      "svgHash": "fnv1a64:25c16c1b8b6557ea",
       "svg": "german/book/figures/GE-W01-eszett-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "GE-W01-hallo-delayed-copy",
+      "sourceHash": "fnv1a64:f7f01b6710b7ec90",
+      "svgHash": "fnv1a64:f617e4afb7ac7925",
+      "svg": "german/book/figures/GE-W01-hallo-delayed-copy-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "GE-W01-hallo-dictation",
+      "sourceHash": "fnv1a64:398afa3d531d3245",
+      "svgHash": "fnv1a64:f617e4afb7ac7925",
+      "svg": "german/book/figures/GE-W01-hallo-dictation-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "GE-W01-hallo-guided-copy",
+      "sourceHash": "fnv1a64:c28333a603e0bc42",
+      "svgHash": "fnv1a64:f617e4afb7ac7925",
+      "svg": "german/book/figures/GE-W01-hallo-guided-copy-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "GE-W04-vier-zeilen",
-      "sourceHash": "fnv1a64:03ba8b897f5d177b",
-      "svgHash": "fnv1a64:af44256a1a71debb",
+      "sourceHash": "fnv1a64:f22e31355d818319",
+      "svgHash": "fnv1a64:22f43de1864247e8",
       "svg": "german/book/figures/GE-W04-vier-zeilen-filmstrip.svg"
     }
   ]

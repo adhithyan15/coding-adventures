@@ -56,7 +56,8 @@ export const bengaliOutline = (character: string) =>
   outline("NotoSansBengali-Static.ttf", character);
 export const gurmukhiOutline = (character: string) =>
   outline("NotoSansGurmukhi-Static.ttf", character);
-// The Latin letters are read from the Noto Sans Latin glyphs that the bundled
-// Devanagari font carries (it has ñ, ß, ¿ and ¡; the Cyrillic subset does not).
+// The Latin letters are read from LatinPrint-Subset.ttf, a renamed subset of
+// SIL's literacy typeface Andika, because it prints the one-storey a that every
+// cited handwriting source teaches (Noto Sans prints a two-storey a).
 export const latinOutline = (character: string) =>
-  outline("NotoSansDevanagari-Static.ttf", character);
+  outline("LatinPrint-Subset.ttf", character);

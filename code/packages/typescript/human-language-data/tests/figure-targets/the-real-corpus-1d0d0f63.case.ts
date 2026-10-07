@@ -240,9 +240,24 @@ describe("the real corpus", () => {
       (target) => target.letters !== undefined && target.letters.join("") === target.glyph,
     );
     expect(words.map((target) => target.lessonId).sort()).toEqual([
-      // German print letters stand apart: weil, once its letters gained a
-      // Grundschrift-cited ductus. Großschreibung is cited letter for letter
-      // too, but at 14 pieces it is past MAX_SEQUENCE_PIECES and prints none.
+      // Latin print letters stand apart: weil, once its letters gained a
+      // Grundschrift-cited ductus, and every word whose a waited for an outline
+      // with a one-storey a (hola, salut, ciao, olá, Hallo, quia, ayer,
+      // buenos días and parce que, whose space is not drawn). Großschreibung
+      // is cited letter for letter too, but at 14 pieces it is past
+      // MAX_SEQUENCE_PIECES and prints none.
+      "ES-W00-hola-delayed-copy",
+      "ES-W00-hola-dictation",
+      "ES-W00-hola-guided-copy",
+      "ES-W00-hola-observe",
+      "ES-W02-cuatro-lineas-ayer",
+      "FR-W01-salut-delayed-copy",
+      "FR-W01-salut-dictation",
+      "FR-W01-salut-guided-copy",
+      "FR-W01-salut-observe",
+      "GE-W01-hallo-delayed-copy",
+      "GE-W01-hallo-dictation",
+      "GE-W01-hallo-guided-copy",
       "GE-W04-vier-zeilen",
       "GU-C32-ane-write",
       "GU-C33-ke-write",
@@ -251,13 +266,20 @@ describe("the real corpus", () => {
       "GU-W01-haa-delayed-copy",
       "GU-W01-haa-dictation",
       "GU-W01-haa-guided-copy",
+      "IT-W01-ciao-delayed-copy",
+      "IT-W01-ciao-dictation",
+      "IT-W01-ciao-guided-copy",
       "JA-W01-hai-read",
       "JA-W01-konnichiwa-read",
       "JA-W03-arigatou-read",
       "JA-W08-sayounara-read",
+      "LA-W04-quattuor-versus",
       "ML-W01-na-ma-delayed-copy",
       "ML-W01-na-ma-dictation",
       "ML-W01-na-ma-guided-copy",
+      "PT-W01-ola-delayed-copy",
+      "PT-W01-ola-dictation",
+      "PT-W01-ola-guided-copy",
       "TA-W03-write-vanakkam",
       "TA-W05-write-aam",
       "TA-W07-write-sari",
@@ -304,33 +326,57 @@ describe("the real corpus", () => {
     }
   });
 
-  it("draws the Latin lessons whose every letter is cited, and no word with an a", () => {
-    // Four lessons: ñ, the list "¿ ¡", ß, and the German word weil.
-    // Großschreibung's letters are all cited, but 14 pieces is past
-    // MAX_SEQUENCE_PIECES, so it prints no strip rather than an illegible one. Every other Spanish and German writing lesson holds an a
-    // (Noto's two-storey a has no source), an accent whose only lesson also
-    // holds one, punctuation inside a word, or an uncited mark (ä ö).
+  it("draws the Latin lessons whose every letter is cited, one-storey a included", () => {
+    // 26 lessons over all six Latin-script tracks. The a waited for an outline
+    // that prints the one-storey a every source teaches (LatinPrint-Subset.ttf,
+    // from SIL's Andika); the acute vowels follow UJIpenchars2's writers.
     const latin = targets.filter((target) => target.script === "latin");
     expect(
       Object.fromEntries(latin.map((target) => [target.lessonId, (target.letters ?? [target.glyph]).join(" ")])),
     ).toEqual({
+      "ES-W00-hola-delayed-copy": "h o l a",
+      "ES-W00-hola-dictation": "h o l a",
+      "ES-W00-hola-guided-copy": "h o l a",
+      "ES-W00-hola-observe": "h o l a",
+      "ES-W01-acento": "á é í ó ú",
+      "ES-W01-frase-propia": "b u e n o s d í a s",
+      "ES-W02-cuatro-lineas-ayer": "a y e r",
       "ES-W02-enye": "ñ",
       "ES-W03-inverted": "¿ ¡",
+      "FR-W01-salut-delayed-copy": "s a l u t",
+      "FR-W01-salut-dictation": "s a l u t",
+      "FR-W01-salut-guided-copy": "s a l u t",
+      "FR-W01-salut-observe": "s a l u t",
+      "FR-W04-quatre-lignes": "p a r c e q u e",
       "GE-W01-eszett": "ß",
+      "GE-W01-hallo-delayed-copy": "H a l l o",
+      "GE-W01-hallo-dictation": "H a l l o",
+      "GE-W01-hallo-guided-copy": "H a l l o",
       "GE-W04-vier-zeilen": "w e i l",
+      "IT-W01-ciao-delayed-copy": "c i a o",
+      "IT-W01-ciao-dictation": "c i a o",
+      "IT-W01-ciao-guided-copy": "c i a o",
+      "LA-W04-quattuor-versus": "q u i a",
+      "PT-W01-ola-delayed-copy": "o l á",
+      "PT-W01-ola-dictation": "o l á",
+      "PT-W01-ola-guided-copy": "o l á",
     });
+    // Still undrawn: an uncited mark (è ê ç ï ë ä ö ē œ), punctuation inside
+    // a word, a slash between two words, or more than MAX_SEQUENCE_PIECES.
     const lessonIds = new Set(targets.map((target) => target.lessonId));
     for (const id of [
-      "ES-W00-hola-guided-copy",
-      "ES-W01-acento",
-      "ES-W01-frase-propia",
-      "ES-W02-cuatro-lineas-ayer",
-      "ES-W02-enye-formas",
-      "ES-C03-como-acento",
-      "ES-W03-question-span",
-      "GE-W01-hallo-guided-copy",
+      "FR-W01-accents",
+      "FR-W02-cedille",
+      "FR-W03-trema",
+      "FR-C10-oe",
       "GE-W02-umlauts",
-      "FR-W01-salut-guided-copy",
+      "GE-W03-capitalization",
+      "LA-W01-salve-delayed-copy",
+      "LA-W01-salve-guided-copy",
+      "ES-C03-como-acento",
+      "ES-W01-tilde-diacritica",
+      "ES-W02-enye-formas",
+      "ES-W03-question-span",
     ]) {
       expect(lessonIds.has(id), id).toBe(false);
     }

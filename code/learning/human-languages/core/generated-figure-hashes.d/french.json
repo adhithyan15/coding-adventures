@@ -1,0 +1,40 @@
+{
+  "track": "french",
+  "figures": [
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "FR-W01-salut-delayed-copy",
+      "sourceHash": "fnv1a64:08d3748aaa193bed",
+      "svgHash": "fnv1a64:20756dd11753e15d",
+      "svg": "french/book/figures/FR-W01-salut-delayed-copy-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "FR-W01-salut-dictation",
+      "sourceHash": "fnv1a64:770f3b31ab672b18",
+      "svgHash": "fnv1a64:20756dd11753e15d",
+      "svg": "french/book/figures/FR-W01-salut-dictation-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "FR-W01-salut-guided-copy",
+      "sourceHash": "fnv1a64:e76985eb67572c49",
+      "svgHash": "fnv1a64:20756dd11753e15d",
+      "svg": "french/book/figures/FR-W01-salut-guided-copy-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "FR-W01-salut-observe",
+      "sourceHash": "fnv1a64:02bd4f56dad5f6ab",
+      "svgHash": "fnv1a64:20756dd11753e15d",
+      "svg": "french/book/figures/FR-W01-salut-observe-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "FR-W04-quatre-lignes",
+      "sourceHash": "fnv1a64:b71f3fbbd475296c",
+      "svgHash": "fnv1a64:aa5646e92e8afe1c",
+      "svg": "french/book/figures/FR-W04-quatre-lignes-filmstrip.svg"
+    }
+  ]
+}

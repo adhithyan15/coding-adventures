@@ -1,0 +1,12 @@
+{
+  "track": "latin",
+  "figures": [
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "LA-W04-quattuor-versus",
+      "sourceHash": "fnv1a64:45e862a85d7ebd76",
+      "svgHash": "fnv1a64:79d6d4d82095b62e",
+      "svg": "latin/book/figures/LA-W04-quattuor-versus-filmstrip.svg"
+    }
+  ]
+}

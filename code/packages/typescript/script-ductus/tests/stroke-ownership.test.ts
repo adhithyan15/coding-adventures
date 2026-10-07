@@ -555,12 +555,20 @@ describe("stroke ownership migration baseline", () => {
       // 604 -> 622 with a new `latin: 18` count, and the ordered key hash and
       // the non-Tamil data hash move, measured after the last caption was
       // settled; Tamil and both shared-identity values remain unchanged.
+      //
+      // The one-storey a batch moves the Latin outline to LatinPrint-Subset.ttf
+      // (a renamed subset of SIL's literacy typeface Andika, whose a is the
+      // one-storey a every source teaches), refits all 18 Latin paths to it,
+      // and appends 13 glyphs to the Latin owner: a d p q t y H (Grundschrift)
+      // and the precomposed á é í ó ú ü (UJIpenchars2 for the mark). Keys move
+      // 622 -> 635 with `latin: 31`; the ordered key hash and the non-Tamil
+      // data hash move; Tamil and both shared-identity values stay.
     }).toEqual({
-      keys: 622,
+      keys: 635,
       keyHash:
-        "932bf4e24bcd0dfc482295e3712b865afdef61b8b85a3ce1140447a10caba106",
+        "b1ed39f0aed782091678cf2041df407795f2d28a4312e5fba9b0e4ddd414daef",
       nonTamilDataHash:
-        "a45dfceb8aa014d8d918fa5e307be2033d1e583868e07fcd656f30579e99f9a3",
+        "76a658dccd4c5c8eef14c45bb7b331b16f87593b61d0af30f448388f2857e5a0",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -575,7 +583,7 @@ describe("stroke ownership migration baseline", () => {
         hebrew: 22,
         japanese: 83,
         kannada: 44,
-        latin: 18,
+        latin: 31,
         malayalam: 53,
         "perso-arabic": 24,
         tamil: 36,
