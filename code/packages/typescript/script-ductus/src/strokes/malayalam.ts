@@ -34,6 +34,22 @@ const malayalamAlphabetSource = (glyph: string): StrokeSource => {
   return letter.strokeOrderSource;
 };
 
+// The anusvara and the vowel signs keep their cited stroke order on their
+// mark record (malayalam.json `marks`), like the Gujarati and Devanagari signs.
+const malayalamMarkSource = (mark: string): StrokeSource => {
+  const record = (malayalam.marks ?? []).find(
+    (candidate) => candidate.mark === mark,
+  );
+  if (
+    !record ||
+    !("strokeOrderSource" in record) ||
+    !record.strokeOrderSource
+  ) {
+    throw new Error(`Malayalam mark ${mark} has no verified source`);
+  }
+  return record.strokeOrderSource;
+};
+
 export const entries: DuctusEntry[] = [
   [
     "malayalam:എ",
@@ -2591,6 +2607,1662 @@ export const entries: DuctusEntry[] = [
         },
       ],
       source: malayalamAlphabetSource("ബ"),
+    },
+  ],
+  // ---------------------------------------------------------------------
+  // Glyphs cited to Rodney F. Moag's Malayalam: A University Course and
+  // Reference Grammar (UT Austin South Asia Institute / COERLL, April 2018, CC
+  // BY-NC-SA 4.0), whose Tables II-IV ('How to Write ... Symbols') number
+  // every movement of every letter and sign, with arrows, in the hand of a
+  // native writer, Thomas Joseph. Only facts are cited (order, start,
+  // direction, end); no drawing is copied, so nothing under the book's licence
+  // is reproduced. Moag's numbers mark MOVEMENTS, not pen lifts: each numbered
+  // movement is one segment of one pen-down run, and the lift count comes from
+  // recorded writers instead (santhoshtr/hand, MIT, and grahyam's samples,
+  // counts only), which show one run for every letter and vowel sign below.
+  // Every path follows the skeleton of the bundled Noto Sans Malayalam outline
+  // between the points Moag's arrows mark, at default tolerance; where the
+  // next movement starts on ink already drawn, the path retraces that ink
+  // rather than lifting.
+  // ---------------------------------------------------------------------
+  // Moag's Table IV (p. xxv) writes ക: it starts on the left leg of the top
+  // loop at the height of the crossbar, climbs clockwise over the loop and
+  // down its right leg (1), rounds the bottom of the middle bowl to the left
+  // (2), climbs the middle stem (3), runs back down into the left bowl (4),
+  // rounds the left bowl up to the left end of the crossbar (5), draws the
+  // crossbar left to right (6) and curls the right-hand hook down to finish at
+  // the lower right (7).
+  [
+    "malayalam:ക",
+    {
+      script: "malayalam",
+      glyph: "ക",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "climb clockwise over the top loop",
+              path: [
+                { x: 332, y: 292 },
+                { x: 338, y: 360 },
+                { x: 358, y: 426 },
+                { x: 398, y: 482 },
+                { x: 455, y: 519 },
+                { x: 523, y: 528 },
+                { x: 591, y: 520 },
+                { x: 646, y: 482 },
+                { x: 686, y: 426 },
+                { x: 706, y: 360 },
+                { x: 712, y: 292 },
+              ],
+            },
+            {
+              label: "round the bottom to the left",
+              path: [
+                { x: 712, y: 292 },
+                { x: 710, y: 224 },
+                { x: 698, y: 158 },
+                { x: 668, y: 98 },
+                { x: 620, y: 50 },
+                { x: 557, y: 26 },
+                { x: 489, y: 26 },
+                { x: 426, y: 48 },
+                { x: 373, y: 89 },
+                { x: 348, y: 152 },
+              ],
+            },
+            {
+              label: "climb the middle stem",
+              path: [
+                { x: 348, y: 152 },
+                { x: 334, y: 221 },
+                { x: 332, y: 292 },
+              ],
+            },
+            {
+              label: "retrace down into the left bowl",
+              path: [
+                { x: 332, y: 292 },
+                { x: 334, y: 221 },
+                { x: 348, y: 152 },
+                { x: 365, y: 85 },
+                { x: 312, y: 42 },
+                { x: 243, y: 28 },
+                { x: 172, y: 28 },
+              ],
+            },
+            {
+              label: "round the left bowl to the bar",
+              path: [
+                { x: 172, y: 28 },
+                { x: 112, y: 58 },
+                { x: 80, y: 116 },
+                { x: 79, y: 184 },
+                { x: 115, y: 239 },
+                { x: 172, y: 276 },
+              ],
+            },
+            {
+              label: "draw the crossbar to the right",
+              path: [
+                { x: 172, y: 276 },
+                { x: 237, y: 289 },
+                { x: 304, y: 292 },
+                { x: 370, y: 292 },
+                { x: 437, y: 292 },
+                { x: 504, y: 292 },
+                { x: 570, y: 292 },
+                { x: 637, y: 292 },
+                { x: 703, y: 292 },
+                { x: 770, y: 292 },
+                { x: 836, y: 284 },
+              ],
+            },
+            {
+              label: "curl the right hook down",
+              path: [
+                { x: 836, y: 284 },
+                { x: 897, y: 261 },
+                { x: 944, y: 215 },
+                { x: 960, y: 153 },
+                { x: 949, y: 90 },
+                { x: 904, y: 43 },
+                { x: 841, y: 25 },
+                { x: 776, y: 28 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("ക"),
+    },
+  ],
+  // Moag's Table IV (p. xxx) writes യ: it starts at the top of the left bowl
+  // and runs down its left side anticlockwise to the bottom (1), climbs
+  // through the crossing to the top of the middle loop (2), comes back down
+  // the loop's inner side (3) and rounds the right bowl to finish at the top
+  // right (4).
+  [
+    "malayalam:യ",
+    {
+      script: "malayalam",
+      glyph: "യ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "curve down round the left bowl",
+              path: [
+                { x: 255, y: 532 },
+                { x: 188, y: 518 },
+                { x: 133, y: 478 },
+                { x: 97, y: 420 },
+                { x: 84, y: 353 },
+                { x: 86, y: 285 },
+                { x: 101, y: 218 },
+                { x: 129, y: 155 },
+                { x: 171, y: 102 },
+                { x: 226, y: 60 },
+                { x: 289, y: 34 },
+                { x: 357, y: 24 },
+                { x: 425, y: 25 },
+                { x: 487, y: 52 },
+              ],
+            },
+            {
+              label: "climb to the top of the middle loop",
+              path: [
+                { x: 487, y: 52 },
+                { x: 553, y: 60 },
+                { x: 601, y: 106 },
+                { x: 642, y: 159 },
+                { x: 672, y: 220 },
+                { x: 687, y: 285 },
+                { x: 691, y: 352 },
+                { x: 678, y: 418 },
+                { x: 644, y: 475 },
+                { x: 592, y: 517 },
+                { x: 527, y: 532 },
+              ],
+            },
+            {
+              label: "come back down its inner side",
+              path: [
+                { x: 527, y: 532 },
+                { x: 460, y: 519 },
+                { x: 403, y: 482 },
+                { x: 371, y: 423 },
+                { x: 359, y: 356 },
+                { x: 359, y: 288 },
+                { x: 373, y: 221 },
+                { x: 403, y: 159 },
+                { x: 443, y: 105 },
+                { x: 487, y: 52 },
+              ],
+            },
+            {
+              label: "round the right bowl to the top",
+              path: [
+                { x: 487, y: 52 },
+                { x: 558, y: 50 },
+                { x: 623, y: 24 },
+                { x: 694, y: 24 },
+                { x: 764, y: 36 },
+                { x: 828, y: 65 },
+                { x: 881, y: 112 },
+                { x: 919, y: 171 },
+                { x: 942, y: 238 },
+                { x: 947, y: 309 },
+                { x: 944, y: 379 },
+                { x: 924, y: 448 },
+                { x: 895, y: 512 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("യ"),
+    },
+  ],
+  // Moag's Table II (p. xviii) writes ഏ: it starts at the foot of the small
+  // left arch and climbs clockwise over it to the bar (1), draws the bar to
+  // the right (2), climbs the stem (3), runs back down it (4), climbs
+  // clockwise over the big arch (5), comes down its right side to the middle
+  // (6) and rounds the lower bowl to finish at the bottom right (7).
+  [
+    "malayalam:ഏ",
+    {
+      script: "malayalam",
+      glyph: "ഏ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "climb clockwise over the small arch",
+              path: [
+                { x: 124, y: 44 },
+                { x: 85, y: 106 },
+                { x: 76, y: 177 },
+                { x: 100, y: 244 },
+                { x: 154, y: 293 },
+                { x: 224, y: 308 },
+                { x: 296, y: 300 },
+                { x: 353, y: 255 },
+                { x: 383, y: 190 },
+                { x: 378, y: 118 },
+                { x: 360, y: 48 },
+              ],
+            },
+            {
+              label: "run right along the bar",
+              path: [
+                { x: 360, y: 48 },
+                { x: 424, y: 36 },
+                { x: 489, y: 36 },
+                { x: 555, y: 36 },
+                { x: 621, y: 34 },
+                { x: 687, y: 32 },
+                { x: 753, y: 32 },
+                { x: 819, y: 32 },
+                { x: 884, y: 36 },
+              ],
+            },
+            {
+              label: "climb the stem",
+              path: [
+                { x: 884, y: 36 },
+                { x: 888, y: 101 },
+                { x: 888, y: 167 },
+                { x: 892, y: 233 },
+                { x: 892, y: 298 },
+                { x: 892, y: 364 },
+              ],
+            },
+            {
+              label: "retrace it down and round the loop",
+              path: [
+                { x: 892, y: 364 },
+                { x: 892, y: 296 },
+                { x: 892, y: 229 },
+                { x: 892, y: 161 },
+                { x: 892, y: 94 },
+                { x: 885, y: 27 },
+                { x: 888, y: -41 },
+                { x: 888, y: -108 },
+                { x: 859, y: -168 },
+                { x: 798, y: -192 },
+                { x: 733, y: -179 },
+                { x: 682, y: -134 },
+                { x: 647, y: -77 },
+                { x: 628, y: -12 },
+              ],
+            },
+            {
+              label: "climb clockwise over the big arch",
+              path: [
+                { x: 628, y: -12 },
+                { x: 616, y: 57 },
+                { x: 616, y: 128 },
+                { x: 616, y: 199 },
+                { x: 627, y: 269 },
+                { x: 647, y: 336 },
+                { x: 679, y: 400 },
+                { x: 725, y: 453 },
+                { x: 782, y: 494 },
+                { x: 849, y: 518 },
+                { x: 919, y: 528 },
+                { x: 989, y: 529 },
+                { x: 1058, y: 513 },
+                { x: 1117, y: 475 },
+                { x: 1163, y: 422 },
+                { x: 1182, y: 354 },
+                { x: 1180, y: 284 },
+              ],
+            },
+            {
+              label: "come down to the middle",
+              path: [
+                { x: 1180, y: 284 },
+                { x: 1148, y: 225 },
+                { x: 1101, y: 177 },
+                { x: 1044, y: 144 },
+              ],
+            },
+            {
+              label: "round the lower bowl",
+              path: [
+                { x: 1044, y: 144 },
+                { x: 1102, y: 115 },
+                { x: 1154, y: 75 },
+                { x: 1186, y: 18 },
+                { x: 1188, y: -49 },
+                { x: 1179, y: -113 },
+                { x: 1134, y: -162 },
+                { x: 1074, y: -188 },
+                { x: 1008, y: -192 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamIndependentVowelSource("ഏ"),
+    },
+  ],
+  // Moag's Table IV (p. xxv) writes ഖ: it circles the small inner loop (1),
+  // arches over the top and comes down to the base (2), runs right along the
+  // base (3) and climbs the upright (4).
+  [
+    "malayalam:ഖ",
+    {
+      script: "malayalam",
+      glyph: "ഖ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "circle the small inner loop",
+              path: [
+                { x: 183, y: 284 },
+                { x: 252, y: 288 },
+                { x: 317, y: 268 },
+                { x: 358, y: 213 },
+                { x: 363, y: 144 },
+                { x: 343, y: 79 },
+                { x: 291, y: 34 },
+                { x: 223, y: 24 },
+                { x: 157, y: 47 },
+                { x: 111, y: 97 },
+                { x: 88, y: 162 },
+                { x: 87, y: 232 },
+              ],
+            },
+            {
+              label: "arch over and down to the base",
+              path: [
+                { x: 87, y: 232 },
+                { x: 88, y: 303 },
+                { x: 108, y: 371 },
+                { x: 147, y: 430 },
+                { x: 200, y: 478 },
+                { x: 263, y: 511 },
+                { x: 332, y: 526 },
+                { x: 403, y: 528 },
+                { x: 473, y: 515 },
+                { x: 536, y: 483 },
+                { x: 585, y: 432 },
+                { x: 617, y: 369 },
+                { x: 630, y: 299 },
+                { x: 629, y: 228 },
+                { x: 608, y: 160 },
+                { x: 572, y: 99 },
+                { x: 531, y: 44 },
+              ],
+            },
+            {
+              label: "run right along the base",
+              path: [
+                { x: 531, y: 44 },
+                { x: 601, y: 36 },
+                { x: 671, y: 36 },
+                { x: 741, y: 36 },
+                { x: 811, y: 36 },
+                { x: 879, y: 48 },
+              ],
+            },
+            {
+              label: "climb the upright to the top",
+              path: [
+                { x: 879, y: 48 },
+                { x: 883, y: 114 },
+                { x: 883, y: 180 },
+                { x: 883, y: 247 },
+                { x: 887, y: 313 },
+                { x: 887, y: 379 },
+                { x: 887, y: 446 },
+                { x: 887, y: 512 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("ഖ"),
+    },
+  ],
+  // Moag's Table IV (p. xxv) writes ങ: it circles the small inner loop (1),
+  // arches over to the stem (2), runs down the stem (3), draws the upper right
+  // bowl (4) and rounds the lower bowl to finish at the bottom (5).
+  [
+    "malayalam:ങ",
+    {
+      script: "malayalam",
+      glyph: "ങ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "circle the small inner loop",
+              path: [
+                { x: 186, y: 284 },
+                { x: 255, y: 288 },
+                { x: 320, y: 268 },
+                { x: 359, y: 212 },
+                { x: 362, y: 143 },
+                { x: 346, y: 78 },
+                { x: 293, y: 34 },
+                { x: 225, y: 24 },
+                { x: 160, y: 47 },
+                { x: 114, y: 98 },
+                { x: 91, y: 163 },
+                { x: 90, y: 232 },
+              ],
+            },
+            {
+              label: "arch over to the stem",
+              path: [
+                { x: 90, y: 232 },
+                { x: 90, y: 300 },
+                { x: 105, y: 366 },
+                { x: 138, y: 425 },
+                { x: 185, y: 474 },
+                { x: 243, y: 508 },
+                { x: 309, y: 525 },
+                { x: 377, y: 528 },
+                { x: 443, y: 518 },
+                { x: 500, y: 482 },
+                { x: 546, y: 432 },
+              ],
+            },
+            {
+              label: "descend the stem to the line",
+              path: [
+                { x: 546, y: 432 },
+                { x: 570, y: 373 },
+                { x: 566, y: 307 },
+                { x: 566, y: 240 },
+                { x: 566, y: 173 },
+                { x: 566, y: 107 },
+                { x: 566, y: 40 },
+              ],
+            },
+            {
+              label: "climb back and round the top bowl",
+              path: [
+                { x: 566, y: 40 },
+                { x: 566, y: 110 },
+                { x: 566, y: 180 },
+                { x: 566, y: 249 },
+                { x: 566, y: 319 },
+                { x: 570, y: 389 },
+                { x: 609, y: 439 },
+                { x: 660, y: 487 },
+                { x: 722, y: 518 },
+                { x: 791, y: 528 },
+                { x: 860, y: 525 },
+                { x: 924, y: 497 },
+                { x: 965, y: 442 },
+                { x: 967, y: 373 },
+                { x: 924, y: 319 },
+                { x: 868, y: 278 },
+                { x: 798, y: 276 },
+              ],
+            },
+            {
+              label: "round the lower bowl",
+              path: [
+                { x: 798, y: 276 },
+                { x: 871, y: 273 },
+                { x: 931, y: 231 },
+                { x: 977, y: 174 },
+                { x: 976, y: 102 },
+                { x: 928, y: 47 },
+                { x: 859, y: 25 },
+                { x: 786, y: 24 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("ങ"),
+    },
+  ],
+  // Moag's Table IV (p. xxvi) writes ച: it starts at the inner tip and curls
+  // clockwise over the top and down (1), runs left along the base to its end
+  // (2), runs back right along the whole base (3) and climbs the upright (4).
+  [
+    "malayalam:ച",
+    {
+      script: "malayalam",
+      glyph: "ച",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "curl clockwise over the top",
+              path: [
+                { x: 205, y: 176 },
+                { x: 213, y: 243 },
+                { x: 257, y: 296 },
+                { x: 317, y: 326 },
+                { x: 385, y: 328 },
+                { x: 447, y: 301 },
+                { x: 485, y: 244 },
+                { x: 497, y: 178 },
+                { x: 481, y: 112 },
+                { x: 457, y: 48 },
+              ],
+            },
+            {
+              label: "run left along the base",
+              path: [
+                { x: 457, y: 48 },
+                { x: 390, y: 36 },
+                { x: 322, y: 36 },
+                { x: 254, y: 36 },
+                { x: 186, y: 36 },
+                { x: 117, y: 36 },
+                { x: 49, y: 36 },
+              ],
+            },
+            {
+              label: "run back right along the base",
+              path: [
+                { x: 49, y: 36 },
+                { x: 119, y: 36 },
+                { x: 188, y: 36 },
+                { x: 258, y: 36 },
+                { x: 328, y: 36 },
+                { x: 397, y: 36 },
+                { x: 467, y: 36 },
+                { x: 537, y: 36 },
+                { x: 606, y: 36 },
+                { x: 676, y: 36 },
+                { x: 746, y: 36 },
+                { x: 813, y: 48 },
+              ],
+            },
+            {
+              label: "climb the upright to the top",
+              path: [
+                { x: 813, y: 48 },
+                { x: 817, y: 114 },
+                { x: 817, y: 180 },
+                { x: 817, y: 247 },
+                { x: 821, y: 313 },
+                { x: 821, y: 379 },
+                { x: 821, y: 446 },
+                { x: 821, y: 512 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("ച"),
+    },
+  ],
+  // Moag's Table IV (p. xxvi) writes ഛ: it starts at the inner tip and curls
+  // clockwise over the top and down (1), runs left along the base (2) and back
+  // right along it (3), then climbs clockwise over the big arch and down its
+  // right side (4) and curls up round the inner loop (5).
+  [
+    "malayalam:ഛ",
+    {
+      script: "malayalam",
+      glyph: "ഛ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "curl clockwise over the top",
+              path: [
+                { x: 205, y: 176 },
+                { x: 213, y: 243 },
+                { x: 257, y: 296 },
+                { x: 317, y: 326 },
+                { x: 385, y: 327 },
+                { x: 447, y: 300 },
+                { x: 485, y: 244 },
+                { x: 497, y: 177 },
+                { x: 481, y: 111 },
+                { x: 457, y: 48 },
+              ],
+            },
+            {
+              label: "run left along the base",
+              path: [
+                { x: 457, y: 48 },
+                { x: 390, y: 36 },
+                { x: 322, y: 36 },
+                { x: 254, y: 36 },
+                { x: 186, y: 36 },
+                { x: 117, y: 36 },
+                { x: 49, y: 36 },
+              ],
+            },
+            {
+              label: "run back right along the base",
+              path: [
+                { x: 49, y: 36 },
+                { x: 122, y: 36 },
+                { x: 195, y: 36 },
+                { x: 268, y: 36 },
+                { x: 342, y: 36 },
+                { x: 415, y: 36 },
+                { x: 488, y: 36 },
+                { x: 561, y: 36 },
+                { x: 634, y: 36 },
+                { x: 707, y: 36 },
+                { x: 777, y: 52 },
+              ],
+            },
+            {
+              label: "climb clockwise over the big arch",
+              path: [
+                { x: 777, y: 52 },
+                { x: 747, y: 113 },
+                { x: 715, y: 174 },
+                { x: 700, y: 241 },
+                { x: 698, y: 309 },
+                { x: 715, y: 376 },
+                { x: 748, y: 436 },
+                { x: 799, y: 482 },
+                { x: 860, y: 512 },
+                { x: 928, y: 526 },
+                { x: 996, y: 532 },
+                { x: 1064, y: 521 },
+                { x: 1129, y: 499 },
+                { x: 1185, y: 460 },
+                { x: 1228, y: 407 },
+                { x: 1249, y: 342 },
+                { x: 1266, y: 276 },
+                { x: 1268, y: 207 },
+                { x: 1255, y: 139 },
+                { x: 1221, y: 80 },
+                { x: 1168, y: 38 },
+                { x: 1101, y: 24 },
+              ],
+            },
+            {
+              label: "curl up round the inner loop",
+              path: [
+                { x: 1101, y: 24 },
+                { x: 1031, y: 37 },
+                { x: 977, y: 84 },
+                { x: 951, y: 150 },
+                { x: 947, y: 222 },
+                { x: 966, y: 291 },
+                { x: 1015, y: 344 },
+                { x: 1082, y: 367 },
+                { x: 1153, y: 360 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("ഛ"),
+    },
+  ],
+  // Moag's Table IV (p. xxvi) writes ഞ: it circles the small inner loop (1),
+  // arches over to the stem (2), runs down the stem (3) and back up it (4),
+  // loops over and round the oval (5), arches over the right side (6) and
+  // comes down to finish at the right foot (7).
+  [
+    "malayalam:ഞ",
+    {
+      script: "malayalam",
+      glyph: "ഞ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "circle the small inner loop",
+              path: [
+                { x: 186, y: 284 },
+                { x: 255, y: 288 },
+                { x: 320, y: 268 },
+                { x: 359, y: 212 },
+                { x: 362, y: 143 },
+                { x: 346, y: 78 },
+                { x: 293, y: 34 },
+                { x: 225, y: 24 },
+                { x: 160, y: 47 },
+                { x: 114, y: 98 },
+                { x: 91, y: 163 },
+                { x: 90, y: 232 },
+              ],
+            },
+            {
+              label: "arch over to the stem",
+              path: [
+                { x: 90, y: 232 },
+                { x: 90, y: 300 },
+                { x: 105, y: 366 },
+                { x: 138, y: 426 },
+                { x: 186, y: 474 },
+                { x: 245, y: 508 },
+                { x: 311, y: 525 },
+                { x: 379, y: 528 },
+                { x: 445, y: 517 },
+                { x: 502, y: 480 },
+                { x: 550, y: 432 },
+              ],
+            },
+            {
+              label: "descend the stem to the line",
+              path: [
+                { x: 550, y: 432 },
+                { x: 566, y: 371 },
+                { x: 566, y: 305 },
+                { x: 566, y: 239 },
+                { x: 566, y: 172 },
+                { x: 566, y: 106 },
+                { x: 566, y: 40 },
+              ],
+            },
+            {
+              label: "climb the stem again",
+              path: [
+                { x: 566, y: 40 },
+                { x: 566, y: 114 },
+                { x: 566, y: 189 },
+                { x: 566, y: 263 },
+                { x: 566, y: 338 },
+                { x: 570, y: 412 },
+              ],
+            },
+            {
+              label: "loop over and round the oval",
+              path: [
+                { x: 570, y: 412 },
+                { x: 620, y: 462 },
+                { x: 674, y: 505 },
+                { x: 740, y: 527 },
+                { x: 810, y: 532 },
+                { x: 879, y: 522 },
+                { x: 944, y: 495 },
+                { x: 999, y: 455 },
+                { x: 1043, y: 401 },
+                { x: 1077, y: 340 },
+                { x: 1094, y: 272 },
+                { x: 1098, y: 202 },
+                { x: 1088, y: 133 },
+                { x: 1052, y: 74 },
+                { x: 996, y: 33 },
+                { x: 927, y: 24 },
+                { x: 861, y: 44 },
+                { x: 811, y: 93 },
+                { x: 785, y: 158 },
+                { x: 782, y: 228 },
+                { x: 788, y: 297 },
+                { x: 814, y: 362 },
+                { x: 854, y: 419 },
+                { x: 903, y: 469 },
+                { x: 966, y: 492 },
+              ],
+            },
+            {
+              label: "arch over the right side",
+              path: [
+                { x: 966, y: 492 },
+                { x: 1024, y: 524 },
+                { x: 1092, y: 532 },
+                { x: 1159, y: 528 },
+                { x: 1224, y: 509 },
+                { x: 1278, y: 468 },
+                { x: 1326, y: 420 },
+              ],
+            },
+            {
+              label: "come down to the right foot",
+              path: [
+                { x: 1326, y: 420 },
+                { x: 1352, y: 355 },
+                { x: 1362, y: 287 },
+                { x: 1358, y: 217 },
+                { x: 1337, y: 151 },
+                { x: 1300, y: 92 },
+                { x: 1254, y: 40 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("ഞ"),
+    },
+  ],
+  // Moag's Table IV (p. xxviii) writes ഥ: it starts at the top of the left
+  // stem and runs down it (1), runs right along the base (2), then climbs the
+  // right leg, arches anticlockwise over the top and comes down the inner leg
+  // to the base (3).
+  [
+    "malayalam:ഥ",
+    {
+      script: "malayalam",
+      glyph: "ഥ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "descend the left stem",
+              path: [
+                { x: 115, y: 512 },
+                { x: 115, y: 446 },
+                { x: 115, y: 379 },
+                { x: 115, y: 313 },
+                { x: 115, y: 247 },
+                { x: 115, y: 180 },
+                { x: 115, y: 114 },
+                { x: 119, y: 48 },
+              ],
+            },
+            {
+              label: "run right along the base",
+              path: [
+                { x: 119, y: 48 },
+                { x: 184, y: 36 },
+                { x: 251, y: 36 },
+                { x: 318, y: 36 },
+                { x: 384, y: 44 },
+                { x: 450, y: 36 },
+                { x: 517, y: 36 },
+                { x: 584, y: 36 },
+                { x: 651, y: 36 },
+                { x: 718, y: 36 },
+                { x: 783, y: 48 },
+              ],
+            },
+            {
+              label: "climb, arch over and come down",
+              path: [
+                { x: 783, y: 48 },
+                { x: 789, y: 118 },
+                { x: 791, y: 189 },
+                { x: 791, y: 259 },
+                { x: 787, y: 330 },
+                { x: 777, y: 399 },
+                { x: 743, y: 460 },
+                { x: 690, y: 506 },
+                { x: 623, y: 526 },
+                { x: 552, y: 528 },
+                { x: 484, y: 509 },
+                { x: 430, y: 466 },
+                { x: 397, y: 404 },
+                { x: 386, y: 334 },
+                { x: 383, y: 264 },
+                { x: 383, y: 193 },
+                { x: 383, y: 123 },
+                { x: 383, y: 52 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("ഥ"),
+    },
+  ],
+  // Moag's Table IV (p. xxviii) writes ധ: it starts at the top left and runs
+  // down round the left bowl (1), climbs the middle stem (2), runs back down
+  // it (3) and rounds the right bowl to finish at the top right (4).
+  [
+    "malayalam:ധ",
+    {
+      script: "malayalam",
+      glyph: "ധ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "curve down round the left bowl",
+              path: [
+                { x: 191, y: 508 },
+                { x: 146, y: 458 },
+                { x: 112, y: 399 },
+                { x: 91, y: 335 },
+                { x: 87, y: 268 },
+                { x: 88, y: 200 },
+                { x: 110, y: 136 },
+                { x: 151, y: 84 },
+                { x: 204, y: 41 },
+                { x: 269, y: 28 },
+                { x: 337, y: 31 },
+                { x: 393, y: 66 },
+                { x: 439, y: 116 },
+              ],
+            },
+            {
+              label: "climb the middle stem",
+              path: [
+                { x: 439, y: 116 },
+                { x: 455, y: 178 },
+                { x: 455, y: 245 },
+                { x: 455, y: 312 },
+                { x: 455, y: 378 },
+                { x: 455, y: 445 },
+                { x: 455, y: 512 },
+              ],
+            },
+            {
+              label: "retrace the stem down",
+              path: [
+                { x: 455, y: 512 },
+                { x: 455, y: 446 },
+                { x: 455, y: 380 },
+                { x: 455, y: 313 },
+                { x: 455, y: 247 },
+                { x: 455, y: 181 },
+                { x: 471, y: 120 },
+              ],
+            },
+            {
+              label: "round the right bowl to the top",
+              path: [
+                { x: 471, y: 120 },
+                { x: 517, y: 70 },
+                { x: 572, y: 32 },
+                { x: 639, y: 24 },
+                { x: 705, y: 40 },
+                { x: 757, y: 82 },
+                { x: 799, y: 135 },
+                { x: 821, y: 199 },
+                { x: 823, y: 267 },
+                { x: 822, y: 334 },
+                { x: 802, y: 399 },
+                { x: 768, y: 457 },
+                { x: 723, y: 508 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("ധ"),
+    },
+  ],
+  // Moag's Table IV (p. xxix) writes ഭ: it starts at the left foot and climbs
+  // clockwise over the top (1), comes down into the middle (2), curls left and
+  // then right (3) and rounds the lower bowl to finish at the bottom, heading
+  // left (4).
+  [
+    "malayalam:ഭ",
+    {
+      script: "malayalam",
+      glyph: "ഭ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "climb clockwise over the top",
+              path: [
+                { x: 112, y: 44 },
+                { x: 103, y: 115 },
+                { x: 96, y: 187 },
+                { x: 96, y: 259 },
+                { x: 110, y: 329 },
+                { x: 137, y: 396 },
+                { x: 179, y: 454 },
+                { x: 238, y: 496 },
+                { x: 305, y: 520 },
+                { x: 376, y: 529 },
+                { x: 448, y: 528 },
+                { x: 516, y: 506 },
+                { x: 566, y: 454 },
+                { x: 568, y: 384 },
+              ],
+            },
+            {
+              label: "come down into the middle",
+              path: [
+                { x: 568, y: 384 },
+                { x: 509, y: 349 },
+                { x: 438, y: 348 },
+                { x: 368, y: 339 },
+                { x: 312, y: 300 },
+              ],
+            },
+            {
+              label: "curl left, then right",
+              path: [
+                { x: 312, y: 300 },
+                { x: 323, y: 230 },
+                { x: 385, y: 198 },
+                { x: 457, y: 195 },
+                { x: 528, y: 184 },
+              ],
+            },
+            {
+              label: "round the lower bowl to the left",
+              path: [
+                { x: 528, y: 184 },
+                { x: 573, y: 135 },
+                { x: 564, y: 70 },
+                { x: 509, y: 32 },
+                { x: 441, y: 24 },
+                { x: 374, y: 28 },
+                { x: 308, y: 44 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("ഭ"),
+    },
+  ],
+  // Moag's Table IV (p. xxix) writes ഫ: it starts at the foot of the small
+  // arch and climbs clockwise over it to the base (1), runs right along the
+  // base (2), then climbs the right leg, arches anticlockwise over the top and
+  // comes down the inner leg to the base (3).
+  [
+    "malayalam:ഫ",
+    {
+      script: "malayalam",
+      glyph: "ഫ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "climb clockwise over the small arch",
+              path: [
+                { x: 124, y: 45 },
+                { x: 85, y: 106 },
+                { x: 76, y: 177 },
+                { x: 100, y: 244 },
+                { x: 153, y: 293 },
+                { x: 223, y: 309 },
+                { x: 295, y: 300 },
+                { x: 351, y: 254 },
+                { x: 382, y: 190 },
+                { x: 379, y: 118 },
+                { x: 360, y: 49 },
+              ],
+            },
+            {
+              label: "run right along the base",
+              path: [
+                { x: 360, y: 49 },
+                { x: 431, y: 37 },
+                { x: 505, y: 37 },
+                { x: 579, y: 37 },
+                { x: 650, y: 38 },
+                { x: 724, y: 37 },
+                { x: 798, y: 37 },
+                { x: 871, y: 37 },
+                { x: 945, y: 37 },
+                { x: 1016, y: 49 },
+              ],
+            },
+            {
+              label: "climb, arch over and come down",
+              path: [
+                { x: 1016, y: 49 },
+                { x: 1022, y: 119 },
+                { x: 1024, y: 189 },
+                { x: 1024, y: 260 },
+                { x: 1020, y: 330 },
+                { x: 1010, y: 399 },
+                { x: 975, y: 458 },
+                { x: 923, y: 506 },
+                { x: 856, y: 526 },
+                { x: 786, y: 528 },
+                { x: 718, y: 510 },
+                { x: 666, y: 463 },
+                { x: 630, y: 403 },
+                { x: 617, y: 334 },
+                { x: 616, y: 264 },
+                { x: 616, y: 194 },
+                { x: 616, y: 123 },
+                { x: 616, y: 53 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("ഫ"),
+    },
+  ],
+  // Moag's Table IV (p. xxxi) writes ള: it circles the small inner loop (1),
+  // arches over the top and comes down to the middle (2), rounds the right
+  // side and runs left (3), then loops down at the left and runs right along
+  // the bottom (4).
+  [
+    "malayalam:ള",
+    {
+      script: "malayalam",
+      glyph: "ള",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "circle the small inner loop",
+              path: [
+                { x: 180, y: 379 },
+                { x: 254, y: 378 },
+                { x: 314, y: 339 },
+                { x: 336, y: 270 },
+                { x: 314, y: 202 },
+                { x: 257, y: 157 },
+                { x: 184, y: 152 },
+                { x: 122, y: 189 },
+                { x: 84, y: 251 },
+              ],
+            },
+            {
+              label: "arch over and down to the middle",
+              path: [
+                { x: 84, y: 251 },
+                { x: 85, y: 321 },
+                { x: 98, y: 390 },
+                { x: 136, y: 447 },
+                { x: 193, y: 488 },
+                { x: 259, y: 513 },
+                { x: 327, y: 526 },
+                { x: 397, y: 531 },
+                { x: 467, y: 528 },
+                { x: 536, y: 514 },
+                { x: 594, y: 477 },
+                { x: 627, y: 416 },
+                { x: 615, y: 349 },
+                { x: 567, y: 298 },
+                { x: 504, y: 275 },
+              ],
+            },
+            {
+              label: "round the right side to the left",
+              path: [
+                { x: 504, y: 275 },
+                { x: 566, y: 256 },
+                { x: 616, y: 211 },
+                { x: 640, y: 151 },
+                { x: 619, y: 90 },
+                { x: 567, y: 48 },
+                { x: 501, y: 36 },
+                { x: 434, y: 35 },
+                { x: 367, y: 35 },
+                { x: 300, y: 35 },
+              ],
+            },
+            {
+              label: "loop down and run right below",
+              path: [
+                { x: 300, y: 35 },
+                { x: 229, y: 35 },
+                { x: 160, y: 25 },
+                { x: 106, y: -19 },
+                { x: 100, y: -88 },
+                { x: 141, y: -143 },
+                { x: 209, y: -161 },
+                { x: 279, y: -165 },
+                { x: 350, y: -165 },
+                { x: 420, y: -165 },
+                { x: 491, y: -165 },
+                { x: 561, y: -165 },
+                { x: 632, y: -165 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamAlphabetSource("ള"),
+    },
+  ],
+  // The anusvara and the vowel signs, each drawn by itself (no consonant).
+  // Moag draws every sign beside a dash that stands for the consonant. Only
+  // the anusvara also has a cited written order (after its base, from അം,
+  // where it is movement 9): human-language-data's WRITTEN_SIGN_SIDES gives
+  // it, and no other Malayalam sign, a row.
+  // ം: Moag's Table III (p. xxiv) draws it as one movement to the right of the
+  // dash that stands for the consonant; in Table II (p. xix) it is movement 9
+  // of അം, after the eight movements of അ. The drawn line starts at the upper
+  // left of the ring and runs clockwise, ending with its arrowhead on the left
+  // side pointing up.
+  [
+    "malayalam:ം",
+    {
+      script: "malayalam",
+      glyph: "ം",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "circle clockwise",
+              path: [
+                { x: 100, y: 268 },
+                { x: 151, y: 312 },
+                { x: 216, y: 328 },
+                { x: 283, y: 320 },
+                { x: 339, y: 284 },
+                { x: 372, y: 226 },
+                { x: 379, y: 159 },
+                { x: 358, y: 95 },
+                { x: 312, y: 46 },
+                { x: 248, y: 25 },
+                { x: 181, y: 28 },
+                { x: 123, y: 61 },
+                { x: 85, y: 116 },
+                { x: 76, y: 182 },
+                { x: 88, y: 248 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamMarkSource("ം"),
+    },
+  ],
+  // ാ: Moag's Table III (p. xx) draws it as one movement to the right of the
+  // dash that stands for the consonant: from the upper tip clockwise round to
+  // the lower tip.
+  [
+    "malayalam:ാ",
+    {
+      script: "malayalam",
+      glyph: "ാ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "curve clockwise round to the foot",
+              path: [
+                { x: 81, y: 424 },
+                { x: 121, y: 480 },
+                { x: 177, y: 520 },
+                { x: 245, y: 528 },
+                { x: 312, y: 516 },
+                { x: 366, y: 473 },
+                { x: 398, y: 412 },
+                { x: 413, y: 345 },
+                { x: 417, y: 276 },
+                { x: 415, y: 207 },
+                { x: 398, y: 140 },
+                { x: 360, y: 83 },
+                { x: 308, y: 38 },
+                { x: 241, y: 24 },
+                { x: 172, y: 32 },
+                { x: 117, y: 72 },
+                { x: 77, y: 128 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamMarkSource("ാ"),
+    },
+  ],
+  // ി: Moag's Table III (p. xx) draws it as one movement to the right of the
+  // dash: from the curled tip over the top and down the stem.
+  [
+    "malayalam:ി",
+    {
+      script: "malayalam",
+      glyph: "ി",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "arch over and draw the stem down",
+              path: [
+                { x: -167, y: 676 },
+                { x: -151, y: 744 },
+                { x: -100, y: 791 },
+                { x: -32, y: 804 },
+                { x: 37, y: 792 },
+                { x: 86, y: 743 },
+                { x: 108, y: 676 },
+                { x: 113, y: 606 },
+                { x: 113, y: 535 },
+                { x: 113, y: 464 },
+                { x: 113, y: 393 },
+                { x: 113, y: 323 },
+                { x: 113, y: 252 },
+                { x: 113, y: 181 },
+                { x: 113, y: 111 },
+                { x: 113, y: 40 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamMarkSource("ി"),
+    },
+  ],
+  // ീ: Moag's Table III (p. xx) draws it as two movements to the right of the
+  // dash: the small loop at the top (1), then over the top and down the stem
+  // (2).
+  [
+    "malayalam:ീ",
+    {
+      script: "malayalam",
+      glyph: "ീ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "circle the small loop",
+              path: [
+                { x: -55, y: 772 },
+                { x: -47, y: 702 },
+                { x: -72, y: 639 },
+                { x: -136, y: 612 },
+                { x: -204, y: 627 },
+                { x: -242, y: 684 },
+                { x: -230, y: 752 },
+                { x: -179, y: 800 },
+              ],
+            },
+            {
+              label: "arch over and draw the stem down",
+              path: [
+                { x: -179, y: 800 },
+                { x: -110, y: 808 },
+                { x: -42, y: 793 },
+                { x: 26, y: 781 },
+                { x: 76, y: 733 },
+                { x: 102, y: 669 },
+                { x: 113, y: 600 },
+                { x: 113, y: 530 },
+                { x: 113, y: 460 },
+                { x: 113, y: 390 },
+                { x: 113, y: 320 },
+                { x: 113, y: 250 },
+                { x: 113, y: 180 },
+                { x: 113, y: 110 },
+                { x: 113, y: 40 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamMarkSource("ീ"),
+    },
+  ],
+  // ു: Moag's Table III (p. xxi) draws it as three movements to the right of
+  // the dash: down the stem from its hook (1), round the left side and bottom
+  // of the loop at its foot (2) and up the loop's right side to close it (3).
+  [
+    "malayalam:ു",
+    {
+      script: "malayalam",
+      glyph: "ു",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the stem down from the hook",
+              path: [
+                { x: 58, y: 529 },
+                { x: 126, y: 527 },
+                { x: 184, y: 497 },
+                { x: 213, y: 437 },
+                { x: 218, y: 370 },
+                { x: 210, y: 303 },
+                { x: 197, y: 236 },
+                { x: 182, y: 171 },
+                { x: 166, y: 105 },
+              ],
+            },
+            {
+              label: "round the left side and bottom",
+              path: [
+                { x: 166, y: 105 },
+                { x: 105, y: 79 },
+                { x: 49, y: 42 },
+                { x: 20, y: -17 },
+                { x: 19, y: -84 },
+                { x: 46, y: -145 },
+                { x: 99, y: -184 },
+                { x: 166, y: -191 },
+                { x: 230, y: -175 },
+              ],
+            },
+            {
+              label: "climb its right side",
+              path: [
+                { x: 230, y: -175 },
+                { x: 278, y: -122 },
+                { x: 294, y: -53 },
+                { x: 278, y: 16 },
+                { x: 230, y: 69 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamMarkSource("ു"),
+    },
+  ],
+  // ൂ: Moag's Table III (p. xxi) draws it as four movements to the right of
+  // the dash: down the stem from its hook (1), round the left side and bottom
+  // of the loop at its foot (2), up the loop's right side (3) and round the
+  // small inner loop (4).
+  [
+    "malayalam:ൂ",
+    {
+      script: "malayalam",
+      glyph: "ൂ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the stem down from the hook",
+              path: [
+                { x: 58, y: 529 },
+                { x: 126, y: 527 },
+                { x: 184, y: 497 },
+                { x: 213, y: 437 },
+                { x: 218, y: 370 },
+                { x: 210, y: 303 },
+                { x: 197, y: 236 },
+                { x: 182, y: 171 },
+                { x: 166, y: 105 },
+              ],
+            },
+            {
+              label: "round the left side and bottom",
+              path: [
+                { x: 166, y: 105 },
+                { x: 105, y: 82 },
+                { x: 54, y: 42 },
+                { x: 16, y: -11 },
+                { x: 10, y: -76 },
+                { x: 32, y: -136 },
+                { x: 82, y: -179 },
+                { x: 145, y: -195 },
+                { x: 210, y: -187 },
+              ],
+            },
+            {
+              label: "climb its right side",
+              path: [
+                { x: 210, y: -187 },
+                { x: 269, y: -144 },
+                { x: 298, y: -78 },
+                { x: 290, y: -6 },
+                { x: 246, y: 53 },
+              ],
+            },
+            {
+              label: "circle the small inner loop",
+              path: [
+                { x: 246, y: 53 },
+                { x: 190, y: 88 },
+                { x: 127, y: 88 },
+                { x: 69, y: 59 },
+                { x: 62, y: 1 },
+                { x: 105, y: -49 },
+                { x: 168, y: -63 },
+                { x: 223, y: -29 },
+                { x: 266, y: 21 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamMarkSource("ൂ"),
+    },
+  ],
+  // ൃ: Moag's Table III (p. xxi) draws it as two movements to the right of the
+  // dash: down the stem (1), then clockwise round the loop at its foot (2).
+  [
+    "malayalam:ൃ",
+    {
+      script: "malayalam",
+      glyph: "ൃ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the stem down",
+              path: [
+                { x: 160, y: 524 },
+                { x: 123, y: 466 },
+                { x: 101, y: 400 },
+                { x: 90, y: 331 },
+                { x: 90, y: 261 },
+                { x: 104, y: 193 },
+                { x: 126, y: 127 },
+                { x: 152, y: 62 },
+                { x: 175, y: -3 },
+                { x: 184, y: -72 },
+                { x: 192, y: -141 },
+                { x: 176, y: -208 },
+              ],
+            },
+            {
+              label: "circle the loop clockwise",
+              path: [
+                { x: 176, y: -208 },
+                { x: 126, y: -256 },
+                { x: 62, y: -279 },
+                { x: -7, y: -277 },
+                { x: -68, y: -247 },
+                { x: -100, y: -188 },
+                { x: -88, y: -121 },
+                { x: -36, y: -76 },
+                { x: 32, y: -68 },
+                { x: 99, y: -78 },
+                { x: 164, y: -100 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamMarkSource("ൃ"),
+    },
+  ],
+  // െ: Moag's Table III (p. xxii) draws it as two movements to the left of the
+  // dash that stands for the consonant: the small inner loop (1), then over
+  // the top and down to the lower right (2).
+  [
+    "malayalam:െ",
+    {
+      script: "malayalam",
+      glyph: "െ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "circle the small inner loop",
+              path: [
+                { x: 183, y: 284 },
+                { x: 252, y: 288 },
+                { x: 317, y: 268 },
+                { x: 358, y: 213 },
+                { x: 363, y: 144 },
+                { x: 343, y: 79 },
+                { x: 291, y: 34 },
+                { x: 222, y: 24 },
+                { x: 157, y: 47 },
+                { x: 110, y: 97 },
+                { x: 88, y: 162 },
+                { x: 87, y: 232 },
+              ],
+            },
+            {
+              label: "arch over and down to the foot",
+              path: [
+                { x: 87, y: 232 },
+                { x: 91, y: 302 },
+                { x: 109, y: 370 },
+                { x: 147, y: 430 },
+                { x: 199, y: 477 },
+                { x: 261, y: 510 },
+                { x: 330, y: 526 },
+                { x: 400, y: 528 },
+                { x: 470, y: 516 },
+                { x: 533, y: 486 },
+                { x: 584, y: 437 },
+                { x: 616, y: 374 },
+                { x: 629, y: 305 },
+                { x: 630, y: 234 },
+                { x: 612, y: 166 },
+                { x: 579, y: 104 },
+                { x: 531, y: 52 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamMarkSource("െ"),
+    },
+  ],
+  // േ: Moag's Table III (p. xxii) draws it as three movements to the left of
+  // the dash: the small top loop (1), a sweep left and round the bottom (2)
+  // and a curl up round the lower loop (3).
+  [
+    "malayalam:േ",
+    {
+      script: "malayalam",
+      glyph: "േ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "circle the small top loop",
+              path: [
+                { x: 327, y: 512 },
+                { x: 319, y: 441 },
+                { x: 332, y: 371 },
+                { x: 392, y: 337 },
+                { x: 463, y: 342 },
+                { x: 511, y: 393 },
+                { x: 512, y: 464 },
+                { x: 464, y: 516 },
+                { x: 395, y: 532 },
+                { x: 327, y: 516 },
+              ],
+            },
+            {
+              label: "sweep left and round the bottom",
+              path: [
+                { x: 327, y: 516 },
+                { x: 257, y: 518 },
+                { x: 192, y: 490 },
+                { x: 140, y: 444 },
+                { x: 103, y: 384 },
+                { x: 87, y: 315 },
+                { x: 87, y: 245 },
+                { x: 102, y: 176 },
+                { x: 139, y: 116 },
+                { x: 190, y: 68 },
+                { x: 253, y: 37 },
+                { x: 323, y: 36 },
+              ],
+            },
+            {
+              label: "curl up round the lower loop",
+              path: [
+                { x: 323, y: 36 },
+                { x: 395, y: 24 },
+                { x: 465, y: 42 },
+                { x: 506, y: 100 },
+                { x: 502, y: 174 },
+                { x: 445, y: 217 },
+                { x: 372, y: 217 },
+                { x: 318, y: 169 },
+                { x: 311, y: 96 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: malayalamMarkSource("േ"),
     },
   ],
 ];
