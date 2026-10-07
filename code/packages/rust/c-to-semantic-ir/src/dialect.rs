@@ -77,6 +77,22 @@ fn directive_error(name: &str, detail: &str) -> PpError {
     PpError::new(format!("`#{name}` {detail}"))
 }
 
+fn condition_operand(token: &Token) -> Result<i64, PpError> {
+    if token.effective_type_name() == "INT_LIT" {
+        return token
+            .value
+            .parse::<i64>()
+            .map_err(|_| PpError::new("C condition integer is out of range"));
+    }
+    if identifier(&token.value) {
+        // An identifier left after macro expansion reads as zero in #if.
+        return Ok(0);
+    }
+    Err(PpError::new(
+        "C conditional operand is not supported by this handoff yet",
+    ))
+}
+
 fn include(rest: &[Token]) -> Result<Directive, PpError> {
     let [path] = rest else {
         return Err(directive_error("include", "requires one quoted local path"));
@@ -264,12 +280,11 @@ impl Dialect for CDialect {
 
     fn eval_condition(&self, tokens: &[Token]) -> Result<bool, PpError> {
         match tokens {
-            [token] if token.effective_type_name() == "INT_LIT" => token
-                .value
-                .parse::<i64>()
-                .map(|value| value != 0)
-                .map_err(|_| PpError::new("C condition integer is out of range")),
-            [token] if identifier(&token.value) => Ok(false),
+            [token] => Ok(condition_operand(token)? != 0),
+            [left, op, right] if matches!(op.value.as_str(), "==" | "!=") => {
+                let equal = condition_operand(left)? == condition_operand(right)?;
+                Ok(if op.value == "==" { equal } else { !equal })
+            }
             _ => Err(PpError::new(
                 "C conditional expression is not supported by this handoff yet",
             )),
@@ -419,6 +434,30 @@ mod tests {
                 preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err(),
                 "{expression}"
             );
+        }
+    }
+
+    #[test]
+    fn expanded_macro_values_support_simple_equality_conditions() {
+        for (condition, expected) in [
+            ("LED_PORT == 7", "1"),
+            ("LED_PORT != 7", "0"),
+            ("MISSING == 0", "1"),
+        ] {
+            let source = format!(
+                "#define LED_PORT 7\n#if {condition}\nint x = 1;\n#else\nint x = 0;\n#endif\n"
+            );
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+            let values: Vec<_> = result
+                .tokens
+                .iter()
+                .map(|token| token.value.as_str())
+                .collect();
+            assert_eq!(values, ["int", "x", "=", expected, ";"], "{condition}");
         }
     }
 }
