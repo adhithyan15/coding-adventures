@@ -1,0 +1,13 @@
+[package]
+name = "ruby-iir-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded Ruby grammar-tree to InterpreterIR compiler and native VM runner"
+license = "MIT"
+
+[dependencies]
+coding-adventures-ruby-parser = { path = "../ruby-parser" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+interpreter-ir = { path = "../interpreter-ir" }
+vm-core = { path = "../vm-core" }

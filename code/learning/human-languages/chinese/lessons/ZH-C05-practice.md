@@ -34,7 +34,7 @@ reviews_of: [ZH-C05-shi, ZH-C05-bushi, ZH-C04-bu]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-SHI] -->
 
-[PAUSE 2s] Write 是. Sun first, then the body underneath.
+[PAUSE 2s] [YOU WRITE: 是 — sun first, then the body underneath]
 
 ## The exchange
 <!-- hl-knowledge: introduces=[ZH-DIALOGUE-IDENTIFY]; assesses=[ZH-LEX-SHI, ZH-LEX-BUSHI, ZH-TONE-SANDHI-BU] -->
@@ -67,8 +67,8 @@ And the same exchange, refused:
 >
 > *bú shì* — no.
 
-Say the last line twice and listen to the first syllable. It **rises**. Write it
-and it falls. That gap between the page and the mouth is the whole lesson.
+Say the last line twice and listen to the first syllable. It **rises**. Written
+down, it falls. That gap between the page and the mouth is the whole lesson.
 
 ## What you've built this chapter
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-DIALOGUE-IDENTIFY, ZH-TONE-SANDHI-BU] -->

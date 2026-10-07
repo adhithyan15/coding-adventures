@@ -32,6 +32,8 @@ Variable-free exact multiplicative unit factors may likewise surround it;
 non-unit or variable factors remain conservative.
 Exact unit division is also permitted when the bounded result is the numerator;
 non-unit or variable divisors and a bounded denominator remain conservative.
+An exact variable-free exponent chain evaluating to one may preserve the
+bounded result before `entier`; other or dynamic exponents remain conservative.
 One-sided reassignment remains gated. Unary signs, additive
 composition, multiplication, division, and exponentiation over proven
 runtime-real or finite static operands preserve runtime-real provenance. The

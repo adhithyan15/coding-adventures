@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "See You Again",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e13cc96d46eb5e01",
+  "sourceHash": "fnv1a64:44c430fde1254afd",
   "lessons": [
     {
       "id": "ZH-W06-zai",
@@ -365,7 +365,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c9b07a2290b14e2",
+      "sourceHash": "fnv1a64:7ba822de278109cc",
       "notice": null,
       "blocks": [
         {
@@ -380,8 +380,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Write 再 (zài), then 见 (jiàn). Six strokes, then four."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "再 (zài), then 见 (jiàn) — six strokes, then four",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 再, then 见 — six strokes, then four]"
             }
           ]
         },

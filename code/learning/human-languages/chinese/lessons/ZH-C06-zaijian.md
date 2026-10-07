@@ -34,7 +34,7 @@ reviews_of: [ZH-W06-zai, ZH-W06-jian]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-ZAI, ZH-SCRIPT-JIAN] -->
 
-[PAUSE 2s] Write 再, then 见. Six strokes, then four.
+[PAUSE 2s] [YOU WRITE: 再, then 见 — six strokes, then four]
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ZH-LEX-ZAIJIAN]; assesses=[] -->

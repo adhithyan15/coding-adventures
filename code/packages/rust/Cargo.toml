@@ -30,6 +30,8 @@ members = [
     "lang-aot",
     "nib-iir-compiler",
     "javascript-iir-compiler",
+    "python-iir-compiler",
+    "ruby-iir-compiler",
     "jit-loader-macos",
     "activation-functions",
     "audio-device-coreaudio",

@@ -803,8 +803,10 @@ diagnostics. Configuration-driven default and filename/extension icon maps
 resolve into semantic icon identities. Pinned TreeView theme variables control
 font size, label, connector, icon, description, and highlight Paint styling;
 directory labels lower with bold font weight and descriptions with italic
-style. Registered icon-pack artwork, exact browser typography, and interactive
-behavior remain unsupported at the partial level.
+style. Layout IR also carries one horizontal connector per row, parent vertical
+spans, and a shared description column before backend-neutral Paint lowering.
+Registered icon-pack artwork, exact browser typography, and interactive behavior
+remain unsupported at the partial level.
 
 ### Railroad Native Slice
 

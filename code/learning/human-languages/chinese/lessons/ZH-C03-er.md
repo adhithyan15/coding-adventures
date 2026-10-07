@@ -34,8 +34,9 @@ reviews_of: [ZH-W03-er, ZH-W01-er]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-NUM-ER, ZH-METHOD-STROKE-COUNT] -->
 
-[PAUSE 2s] Draw the shape. Two bars, short over long. Count the strokes and say
-what number you expect it to be.
+[PAUSE 2s] [YOU WRITE: the shape — two bars, short over long]
+
+Count the strokes and say what number you expect it to be.
 
 ## Sounds you'll need — and a trap worth meeting now
 <!-- hl-knowledge: introduces=[ZH-LEX-NUM-ER]; assesses=[ZH-TONE-LEXICAL] -->

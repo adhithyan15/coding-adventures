@@ -34,7 +34,7 @@ reviews_of: [ZH-C04-kou, ZH-C04-ri, ZH-C04-bu]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-KOU, ZH-SCRIPT-RI] -->
 
-[PAUSE 2s] Write 口. Then write 日. One line apart.
+[PAUSE 2s] [YOU WRITE: 口, then 日 — one line apart]
 
 ## The exchange
 <!-- hl-knowledge: introduces=[ZH-DIALOGUE-NEGATE]; assesses=[ZH-GRAMMAR-NEGATE, ZH-LEX-BU] -->

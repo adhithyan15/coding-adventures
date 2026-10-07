@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "One Box, Two Characters, and the First Thing You Can Refuse",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d45966cf46988112",
+  "sourceHash": "fnv1a64:a680e5147d78e34d",
   "lessons": [
     {
       "id": "ZH-W04-kou",
@@ -459,7 +459,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3eaa51bf1251abeb",
+      "sourceHash": "fnv1a64:42322802b20a380b",
       "notice": null,
       "blocks": [
         {
@@ -474,8 +474,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the box, then the box with a bar",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the box, then the box with a bar]"
+            },
+            {
               "kind": "speech",
-              "text": "Write the box, then the box with a bar. Two characters, one shape."
+              "text": "Two characters, one shape."
             }
           ]
         },
@@ -743,7 +752,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90d32de54cfd2ac9",
+      "sourceHash": "fnv1a64:65d9da7103b1fc23",
       "notice": null,
       "blocks": [
         {
@@ -758,8 +767,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "不 (bù), counting three lifts",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 不, counting three lifts]"
+            },
+            {
               "kind": "speech",
-              "text": "Write 不 (bù), counting three lifts. Then say hǎo — good."
+              "text": "Then say hǎo — good."
             }
           ]
         },
@@ -903,7 +921,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80fd961985ee743e",
+      "sourceHash": "fnv1a64:3b2fa42833c13750",
       "notice": null,
       "blocks": [
         {
@@ -918,8 +936,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Write 口 (kǒu). Then write 日 (rì). One line apart."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "口 (kǒu), then 日 (rì) — one line apart",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 口, then 日 — one line apart]"
             }
           ]
         },

@@ -208,6 +208,9 @@ fn pinned_treeview_subset_corpus_parses_to_tree_ir() {
             assert_eq!(diagram.config.theme.label_font_size, 18.0);
             assert_eq!(diagram.config.theme.label_color, "#abcdef");
             assert_eq!(diagram.config.theme.line_color, "#123456");
+        } else if name == "aligned-description-rows" {
+            assert_eq!(diagram.nodes[1].description.as_deref(), Some("short label"));
+            assert_eq!(diagram.nodes[2].description.as_deref(), Some("long label"));
         } else {
             assert!(!diagram.nodes.is_empty());
         }
