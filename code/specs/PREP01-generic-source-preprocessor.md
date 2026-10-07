@@ -635,6 +635,8 @@ The staged condition evaluator may accept a single comparison of expanded
 decimal integer literals or undefined identifiers, including `==`, `!=`,
 `<`, `<=`, `>`, and `>=`. It rejects more complex controlling expressions until
 their C integer-constant-expression semantics are implemented.
+Multi-digit leading-zero literals are C octal and must be rejected by this
+decimal-only stage instead of being silently evaluated as decimal.
 *Acceptance:* a C program using `#define` (object- and function-like), `#if`/
 `#ifdef`/`#else`/`#endif` and a real project-local `#include` compiles through
 `c-to-semantic-ir` and executes with the expected result — the first C program

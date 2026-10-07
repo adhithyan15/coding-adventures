@@ -79,6 +79,11 @@ fn directive_error(name: &str, detail: &str) -> PpError {
 
 fn condition_operand(token: &Token) -> Result<i64, PpError> {
     if token.effective_type_name() == "INT_LIT" {
+        if token.value.len() > 1 && token.value.starts_with('0') {
+            return Err(PpError::new(
+                "C octal or hexadecimal condition literal is outside the decimal handoff",
+            ));
+        }
         return token
             .value
             .parse::<i64>()
@@ -477,5 +482,15 @@ mod tests {
                 .collect();
             assert_eq!(values, ["int", "x", "=", expected, ";"], "{condition}");
         }
+    }
+
+    #[test]
+    fn octal_condition_is_not_evaluated_as_decimal() {
+        let source = "#if 010 == 10\nint x = 1;\n#endif\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        assert!(preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err());
     }
 }
