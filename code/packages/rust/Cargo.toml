@@ -582,6 +582,7 @@ members = [
     "macrooct-lexer",
     "macrooct-iir-compiler",
     "macronib-lexer",
+    "macronib-iir-compiler",
     "affine2d",
     "algol-lexer",
     "algol-parser",
