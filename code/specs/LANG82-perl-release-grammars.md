@@ -112,3 +112,8 @@ The next slice selects tagged 5.003_11. Its yacc changes operator token type
 annotations and block bookkeeping; tokenizer changes cover sigils, patterns
 and numeric-locale setup. Keep the pair partial and independently addressable,
 with the same plain-decimal print-arithmetic limits and negative probes.
+
+This bounded follow-up installment materializes distinct partial pairs through
+5.003_15, including 5.003_06 from its identified source commit. The next
+local group begins at 5.003_16; none of these pairs claims full release syntax
+or changes LANG81's executable Perl 5.38 grammar.
