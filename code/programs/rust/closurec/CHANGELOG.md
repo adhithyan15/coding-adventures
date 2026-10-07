@@ -4,6 +4,17 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Known issue - output and staging access controls (CV02 review)
+
+Additional native Windows probes and independent review reproduced protected
+owner-only outputs acquiring inherited Users read access after replacement.
+Prepared stage files also inherit Users read grants before installation. The
+earlier backup/recovery review PASS is superseded; #16905 remains draft and
+cannot be accepted on the existing ordinary test/CI results. Specification
+`e55e070094` requires atomically private staging objects, explicit captured and
+verified owner/group/DACL policy, supported-policy rejection, policy rechecks
+and native Linux/macOS ACL/ownership coverage. Implementation is pending.
+
 ### Fixed - backup ownership and recovery diagnostics (CV02 review)
 
 Independent review reproduced an unexpected backup-path occupant being

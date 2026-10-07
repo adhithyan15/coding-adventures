@@ -153,6 +153,18 @@ with zero ignores and strict all-target lint; final repaired-head review remains
 Current remaining CV02 work: final full-scope exact-head security review and
 actual CI/merge verification. Configuration and diagnostic
 names are specified before their implementation.
+PR [#16905](https://github.com/adhithyan15/coding-adventures/pull/16905) published
+`90010c29de` after the backup/recovery review passed, but subsequent native
+Windows probes and independent confirmation found output DACL broadening and
+prepared-stage inherited read grants. The review is now FAIL and the PR is draft;
+even green CI on that head cannot resolve these findings. Specification
+`e55e070094` precedes the pending access-control repair: atomically private
+staging directories/files, explicit owner/group/DACL/protection capture and
+verification, policy rechecks, final-policy transition during installation,
+supported-policy rejection and native Linux/macOS ACL/ownership tests. This work
+must precede final review, repaired-head publication, native CI and actual merge.
+All 895 lesson shards validate; the new specification/documentation does not
+implement or validate that repair yet.
 The foundation and full compiler/provenance goal remain open.
 Diagnostic short-circuits (empty-input banner and token-only tree dumps) currently
 return before trace construction. Track their provenance policy with the full

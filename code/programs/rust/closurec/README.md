@@ -226,6 +226,12 @@ These hashes identify artifacts; they do not establish node-level output joins
 or correct source-map mappings. Exact final security review and native-platform
 CI/merge verification remain required before CV02 acceptance.
 
+Native Windows access-control probes found a further publication defect:
+replacement loses a protected original DACL and staging can inherit broader
+read grants. PR #16905 remains draft until private staging and explicit file
+policy preservation are implemented and reviewed. Ordinary readonly checks do
+not establish Windows DACL or Unix extended-ACL preservation.
+
 ### Measured parity
 
 `tests/diff/ladder_*` is an ordered complexity ladder compiled by both
