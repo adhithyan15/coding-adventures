@@ -148,6 +148,9 @@ Current pairs:
 - `perl5.003_15.*` is a separate **partial** pair checked against the
   [`perl-5.003_15` source tag]'s `perly.y` and `toke.c`. Both tagged source
   blobs match 5.003_14, while the release keeps its own pair of files.
+- `perl5.003_16.*` is a separate **partial** pair checked against the
+  [`perl-5.003_16` source tag]'s `perly.y` and `toke.c`. Both tagged source
+  blobs match 5.003_15; the release has its own files and validation row.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot, including adjacent `--` and
@@ -201,4 +204,5 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [`perl-5.003_13` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_13
 [`perl-5.003_14` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_14
 [`perl-5.003_15` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_15
+[`perl-5.003_16` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_16
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2
