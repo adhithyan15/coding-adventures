@@ -106,6 +106,11 @@ Current pairs:
   lexical `my` scope, and the tokenizer changes interpolation and octal/hex
   overflow handling. Those forms remain outside the plain-decimal arithmetic
   and `print` subset; leading-zero multi-digit forms are rejected.
+- `perl5.003_09.*` is a separate **partial** pair checked against the
+  [`perl-5.003_09` source tag]'s `perly.y` and `toke.c`. Its yacc changes
+  rearrange lexical scope handling; tokenizer changes affect sigils,
+  interpolation and numeric conversion. Only the plain-decimal arithmetic
+  and `print` subset is represented, with leading-zero forms rejected.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot, including adjacent `--` and
@@ -152,4 +157,5 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [5.003_06 patch commit]: https://github.com/Perl/perl5/commit/9c6be91f691c6d72250718e13acfc7872e72a19f
 [`perl-5.003_07` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_07
 [`perl-5.003_08` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_08
+[`perl-5.003_09` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_09
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2
