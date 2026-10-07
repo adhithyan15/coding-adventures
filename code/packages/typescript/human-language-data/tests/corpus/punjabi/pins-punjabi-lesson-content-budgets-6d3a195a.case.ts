@@ -91,7 +91,9 @@ it("pins Punjabi lesson-content budgets", () =>
     // no new idiom, sense, or culture claim.
     // 882 -> 886: four separate Chapter 161 returns for Chapter 149 actions.
     // They remain no-new-atom, no-new-idiom, no-new-sense, no-new-culture.
-    lessons: 886,
+    // 886 -> 889: three short Chapter 162 returns to already taught A1
+    // writing moves, with no new idiom, sense, or culture claim.
+    lessons: 889,
     idioms: 6,
     senses: 3,
     cultureClaims: 9,

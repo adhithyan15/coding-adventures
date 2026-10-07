@@ -28,6 +28,18 @@
       "justification": "Persists owner-only local authority and the synchronized native daemon definition."
     },
     {
+      "category": "fs",
+      "action": "read",
+      "target": "configured [vault] kek_path and the vault storage root",
+      "justification": "`vault` commands read the owner-only 32-byte KEK and unseal the Chief vault (D18U)."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "records under the configured vault storage root",
+      "justification": "`vault put` and `vault delete` write or remove sealed Chief secret records; the store is initialized on first use."
+    },
+    {
       "category": "net",
       "action": "connect",
       "target": "configured loopback Chief daemon address",
@@ -44,7 +56,19 @@
       "action": "write",
       "target": "public command results and diagnostics",
       "justification": "Prints generated help, version, deterministic daemon results, and stable failures."
+    },
+    {
+      "category": "stdin",
+      "action": "read",
+      "target": "the secret value for `vault put`, bounded at 64 KiB",
+      "justification": "Secrets are read from stdin so they never appear in argv; an interactive terminal is refused rather than echoed (D18U U-C1, U-C2)."
+    },
+    {
+      "category": "time",
+      "action": "read",
+      "target": "wall clock",
+      "justification": "Stamps rotated_at_ms on each sealed secret record."
     }
   ],
-  "justification": "Concrete local operator composition root; credentials and endpoints remain outside argv and all mutations use existing bounded adapters."
+  "justification": "Concrete local operator composition root; credentials and endpoints remain outside argv and all mutations use existing bounded adapters. Vault provisioning opens the sealed store locally with the owner-only KEK; the sealed store draws record keys and nonces from the OS CSPRNG."
 }

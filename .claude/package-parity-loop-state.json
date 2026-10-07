@@ -12,34 +12,34 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16945,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16945",
-    "branch": "codex/parity-geometry-point2d-existing-20261007",
-    "implementation_revision": "6068376abd695310d81c2b5ab12cb6b1c6c67a31",
+    "number": 16956,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16956",
+    "branch": "codex/parity-geometry-arc2d-degenerate-20261007",
+    "implementation_revision": "5d1f67d0874fbbcbf27135557d4c8368b7c85941",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-07T18:06:59Z",
-    "pr_number": 16936,
-    "status": "merged",
-    "notes": "All 32 checks reached acceptable terminal conclusions on head 9f6a820110427c4debfeaca00b88b02b8dc740eb; GitHub REST reported mergeable=true/clean. Guarded squash auto-merge completed at 2026-10-07T18:06:59Z as 6414b14d399e1b681e7b7c68deab89005cdbd070. No manual merge."
+    "observed_at": "2026-10-07T20:22:13Z",
+    "pr_number": 16956,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR opened on implementation head 5d1f67d0874fbbcbf27135557d4c8368b7c85941; GitHub reports MERGEABLE but BLOCKED while detect and CodeQL discovery checks are queued. Auto-merge remains disabled until all required checks are terminal and acceptable and no conflict remains."
   },
   "last_inventory": {
-    "revision": "f94f7fa19e524a873c2939b06b3b9905430de492",
+    "revision": "4143b306c81edd87fd745ee84df2739c4b9dfa9e",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1495,
-    "implementation_package_slots": 4765,
-    "all_reported_identities": 1537,
+    "implementation_identities": 1496,
+    "implementation_package_slots": 4766,
+    "all_reported_identities": 1538,
     "high_consensus_packages": 178,
     "high_consensus_missing_slots": 262,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 181,
     "two_to_four_missing_slots": 2282,
-    "singleton_packages": 1013,
-    "singleton_missing_slots": 14182,
-    "rust_singletons": 814,
+    "singleton_packages": 1014,
+    "singleton_missing_slots": 14196,
+    "rust_singletons": 815,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -1086,6 +1086,15 @@
       "merge_revision": "a53ee1a98f62c58b09acb166d898eb5fbebf3ce0",
       "merge_notes": "All 44 reported final-head checks completed acceptably: 11 successes and 33 expected skips. GitHub reported no merge conflict, guarded squash auto-merge was enabled, and GitHub merged PR #15533 without a plain manual merge command.",
       "notes": "Adversarial review found that diff-selection strict-glob matching has no operation-wide work ceiling and that the independent oracle accepts arbitrary error outcomes after a successful expectation. Define a fixed 50,000,000-unit full preflight over every applicable strict-glob package, changed path, and declared pattern; exempt recursive exact BUILD fronts; count Unicode scalars; fail with one stable DIFF_MATCH_LIMIT_EXCEEDED diagnostic before any matcher call; preserve structural and repository-boundary validation precedence; and make successful expectations reject arbitrary adapter errors. Add exact-at-limit and over-limit neutral fixtures without granting Git, filesystem, process, environment, network, credential, or native-link authority."
+    },
+    {
+      "id": "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture",
+      "title": "Pin cross-gate shared-pattern deduplication at the CI-gate work ceiling",
+      "status": "pending",
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The neutral CI-gate corpus lacks a case where two gates share an identical path pattern at the 50,000,000-unit ceiling. Add an exact-at-limit case with 21 references but 20 distinct patterns, preserving A=true/B=false; the engine must deduplicate patterns across gates before the operation-wide preflight. This is neutral fixture coverage, not a known engine defect. Update corpus counts and both runner assertions; keep host authority out."
     },
     {
       "id": "build-tool-ci-gate-selection-match-work-ceiling",
@@ -9705,7 +9714,7 @@
       "id": "build-tool-csharp-fsharp-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the shared C# and F# build-tool lanes",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no CI gate registry or evaluator in either .NET front door. Add one bounded C# pure engine consumed independently by both language-native front doors, preserve the reviewed shared-engine boundary, and execute every neutral ci_gate_selection case in both lane suites."
@@ -9714,7 +9723,7 @@
       "id": "build-tool-elixir-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Elixir build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-elixir-glob-matcher-complexity-hardening"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture", "build-tool-elixir-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Elixir CI gate evaluator. Add a process-free native implementation and consume every neutral ci_gate_selection case without filesystem, Git, process, environment, network, credential, or workflow authority."
@@ -9723,7 +9732,7 @@
       "id": "build-tool-haskell-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Haskell build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Haskell CI gate evaluator. Add a total bounded native implementation and dynamic fixture consumer for every neutral ci_gate_selection case while retaining the process-free authority boundary."
@@ -9732,7 +9741,7 @@
       "id": "build-tool-lua-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Lua build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Lua CI gate evaluator. Add a bounded pure module and Busted consumption of every neutral case without gaining host or workflow authority."
@@ -9741,7 +9750,7 @@
       "id": "build-tool-perl-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Perl build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Perl CI gate evaluator. Add a bounded pure module and complete Test2 fixture consumption with exact null-versus-empty and portable glob semantics and no host authority."
@@ -9765,7 +9774,7 @@
       "id": "build-tool-ruby-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Ruby build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ruby-glob-matcher-complexity-hardening"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture", "build-tool-ruby-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Ruby CI gate evaluator. Add a frozen bounded pure registry projection and Minitest consumption of every neutral case without host or workflow authority."
@@ -9774,7 +9783,7 @@
       "id": "build-tool-rust-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Rust build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-rust-glob-matcher-complexity-hardening"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture", "build-tool-rust-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Rust CI gate evaluator. Add a bounded dependency-minimal pure implementation and native consumption of every neutral case with no filesystem, Git, process, environment, network, credential, or workflow authority."
@@ -9783,7 +9792,7 @@
       "id": "build-tool-swift-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Swift build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no Swift CI gate evaluator. Add a Foundation-free bounded pure implementation and Swift Testing consumption of every neutral case without host or workflow authority."
@@ -9792,7 +9801,7 @@
       "id": "build-tool-typescript-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the TypeScript build tool",
       "status": "pending",
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-typescript-glob-matcher-complexity-hardening"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture", "build-tool-typescript-glob-matcher-complexity-hardening"],
       "branch": null,
       "pr_number": null,
       "notes": "The exact-main engine audit found no TypeScript CI gate evaluator. Add a bounded process-free module and Vitest consumption of every neutral case without Node filesystem, process, environment, network, credential, or workflow authority."
@@ -9925,7 +9934,7 @@
       "id": "build-tool-jvm-current-contract-conformance",
       "title": "Bring Java and Kotlin build tools to the current neutral contract",
       "status": "pending",
-      "depends_on": ["build-tool-jvm", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-jvm", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
       "branch": null,
       "pr_number": null,
       "notes": "Promotion gate for both JVM front doors. Require the current language registry, repository-boundary reverse-diff and digest corpus, CI-gate corpus, and every other established process-free build-tool contract before either lane counts as complete."
@@ -9934,7 +9943,7 @@
       "id": "build-tool-dart-current-contract-conformance",
       "title": "Bring the Dart build tool to the current neutral contract",
       "status": "pending",
-      "depends_on": ["build-tool-dart-tracked-artifact-validation-conformance", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-dart-tracked-artifact-validation-conformance", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
       "branch": null,
       "pr_number": null,
       "notes": "Promotion gate for the Dart build-tool front door. Require all current process-free contracts and language-neutral fixtures before the lane is counted complete."
@@ -9943,7 +9952,7 @@
       "id": "ocaml-build-tool-current-contract-conformance",
       "title": "Bring the OCaml build tool to the current neutral contract",
       "status": "pending",
-      "depends_on": ["ocaml-build-tool-and-promotion", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["ocaml-build-tool-and-promotion", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
       "branch": null,
       "pr_number": null,
       "notes": "The existing OCaml native-build-tool owner predates later shared contracts. Before promotion, require native consumption of every current process-free corpus, including source registry, repository-boundary reverse diff and digest, CI-gate selection, and the remaining universal contract families."
@@ -11620,7 +11629,7 @@
       "title": "Complete CI gate selection in every supported build-tool lane",
       "status": "pending",
       "selection_blocked": true,
-      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-csharp-fsharp-ci-gate-selection-conformance", "build-tool-elixir-ci-gate-selection-conformance", "build-tool-haskell-ci-gate-selection-conformance", "build-tool-lua-ci-gate-selection-conformance", "build-tool-perl-ci-gate-selection-conformance", "build-tool-python-ci-gate-selection-conformance", "build-tool-ruby-ci-gate-selection-conformance", "build-tool-rust-ci-gate-selection-conformance", "build-tool-swift-ci-gate-selection-conformance", "build-tool-typescript-ci-gate-selection-conformance", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
+      "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture", "build-tool-csharp-fsharp-ci-gate-selection-conformance", "build-tool-elixir-ci-gate-selection-conformance", "build-tool-haskell-ci-gate-selection-conformance", "build-tool-lua-ci-gate-selection-conformance", "build-tool-perl-ci-gate-selection-conformance", "build-tool-python-ci-gate-selection-conformance", "build-tool-ruby-ci-gate-selection-conformance", "build-tool-rust-ci-gate-selection-conformance", "build-tool-swift-ci-gate-selection-conformance", "build-tool-typescript-ci-gate-selection-conformance", "build-tool-jvm-current-contract-conformance", "build-tool-dart-current-contract-conformance", "ocaml-build-tool-current-contract-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Selection-blocked aggregate for the engine audit to decompose into collision-safe native or reviewed shared-engine leaves. Final closure requires every established build-tool lane plus the OCaml promotion path to consume the same language-neutral ci_gate_selection fixtures or record a narrow reviewed exception."
@@ -12037,21 +12046,36 @@
     {
       "id": "geometry-point2d-existing-lane-threshold-reconciliation",
       "title": "Reconcile G2D00 near-zero normalization in Ruby, Perl, Elixir, Lua, and Swift",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"],
       "branch": "codex/parity-geometry-point2d-existing-20261007",
       "pr_number": 16945,
       "notes": "All five lanes used 1e-15 and returned the original near-zero vector. This branch adopts the neutral magnitude <1e-12 return-origin contract, preserves exactly-at-threshold normalization, and adds native boundary tests and README/changelog updates.",
       "validation_notes": "Native point2d suites pass: Ruby 25 tests/100% line coverage, Perl 34 assertions/97.4% statement coverage, Elixir 26 tests/100% cover, Lua Busted 22 tests/100% LuaCov source lines, Swift 22 tests/100% source lines. Downstream affine2d/bezier2d/arc2d tests pass in all five lanes (Ruby 17/13/9; Perl 29/45/16; Elixir 16/13/9; Lua 15/13/9; Swift 21/16/13). Neutral G2D fixture 8 cases and 7 validator tests, lessons validator 871 shards, build-tool Starlark/orphan/language detection gate, and diff check pass. Ruby Standard passes except Layout/EndOfLine: the checked-in LF files trigger its host-default CRLF rule on Windows; no line-ending rewrite was made.",
-      "review_notes": "Independent exact-head security and correctness review at 6068376abd passed: 22 intended files, no unrelated reversions, no new security-sensitive surface, and clean diff. PR #16945 opened ready for review; first live checks are queued or in progress."
+      "review_notes": "Independent exact-head security and correctness review at 6068376abd passed: 22 intended files, no unrelated reversions, no new security-sensitive surface, and clean diff. All 35 final-head checks completed acceptably; GitHub reported MERGEABLE/CLEAN and guarded auto-merge completed without a manual merge.",
+      "merged_head_revision": "dd82f1f039bb5ae7de449208fb7c6e75471cff72",
+      "merged_at": "2026-10-07T19:49:31Z",
+      "merge_revision": "5dffddfa232698543a6936ebf699e2041530257d"
+    },
+    {
+      "id": "geometry-point2d-all-existing-lanes-neutral-fixture-consumption",
+      "title": "Consume G2D00 neutral normalization fixtures in all twelve existing lanes",
+      "status": "pending",
+      "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-point2d-existing-lane-threshold-reconciliation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "All twelve native Point2D suites must load geometry2d-v1/cases.json and execute its four point-normalize cases. Seven otherwise compliant lanes lack the exact boundary tests and five repaired lanes hardcode boundary values without consuming the corpus. Exclude arc cases and missing Java/Kotlin/Dart ports."
     },
     {
       "id": "geometry-arc2d-existing-api-degenerate-reconciliation",
       "title": "Reconcile G2D03 existing SVG endpoint API in Rust, TypeScript, Python, C#, and F#",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-geometry-arc2d-degenerate-20261007",
+      "pr_number": 16956,
+      "selected_at": "2026-10-07T19:50:00Z",
+      "selection_revision": "4143b306c81edd87fd745ee84df2739c4b9dfa9e",
+      "selection_notes": "Selected after #16945 merged and the collision-clean 1,496-identity post-merge refresh registered all three newly discovered owners. This bounded existing-lane G2D03 repair is dependency-ready, exercises the neutral degenerate arc cases, and leaves endpoint API additions and missing-lane ports separate.",
       "notes": "These lanes expose SvgArc evaluate/bounds but return None/null on degeneration, use component-wise <1e-12 endpoint and radius guards, and must retain absolute-radius SVG semantics. Adopt squared-distance <1e-20, absolute radius <1e-10, line evaluation, and ordered bounds with neutral cases and native downstream tests. Preserve optional center conversion and empty cubic output."
     },
     {
@@ -12342,7 +12366,17 @@
       "id": "content-addressable-storage-dart-java-kotlin-parity",
       "title": "Port content-addressable storage to Dart, Java, and Kotlin",
       "status": "pending", "depends_on": ["content-addressable-storage-neutral-conformance"], "branch": null, "pr_number": null,
-      "notes": "All three lanes already have SHA-1; split by lane and test neutral error/digest behavior without representing SHA-1 as adversarial authentication."
+      "notes": "All three lanes already have SHA-1; split by lane and test the pure injected BlobStore/CAS backend neutral error/digest behavior without representing SHA-1 as adversarial authentication. Native LocalDiskStore path, symlink, race, atomic-write, and capability metadata work has a separate excluded host-security classification owner."
+    },
+    {
+      "id": "content-addressable-storage-local-disk-authority-and-capability-classification",
+      "title": "Classify native CAS LocalDiskStore authority and capability contracts",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "The twelve-lane CAS family includes a portable injected BlobStore core and a native filesystem-backed LocalDiskStore. Classify path, symlink, race, and atomic-write semantics and truthful capability declarations (Elixir/Go/Lua/Swift/TypeScript currently declare none; Haskell manifest absent). This is host-security hardening, not a missing portable package slot, and is excluded from autonomous parity selection."
     },
     {
       "id": "dartmouth-basic-neutral-lexer-parser-conformance",

@@ -6369,13 +6369,15 @@ fn parse_swimlane_edge_chain(
     let Some((operator_at, operator, kind)) = next_swimlane_operator(line) else {
         return Err(swimlane_error(line_number, "invalid Swimlane edge"));
     };
-    let first = parse_swimlane_node(
+    let first = parse_swimlane_node_group(
         &line[..operator_at],
         line_number,
         lane.map(|index| diagram.lanes[index].id.clone()),
     )?;
-    let mut previous = first.id.clone();
-    upsert_swimlane_node(diagram, first, lane);
+    let mut previous = first.iter().map(|node| node.id.clone()).collect::<Vec<_>>();
+    for node in first {
+        upsert_swimlane_node(diagram, node, lane);
+    }
     let mut remainder = &line[operator_at + operator.len()..];
     let mut edge_kind = kind;
     loop {
@@ -6396,19 +6398,26 @@ fn parse_swimlane_edge_chain(
         };
         let next = next_swimlane_operator(after_label);
         let node_text = next.map_or(after_label, |(at, _, _)| &after_label[..at]);
-        let node = parse_swimlane_node(
+        let nodes = parse_swimlane_node_group(
             node_text,
             line_number,
             lane.map(|index| diagram.lanes[index].id.clone()),
         )?;
-        diagram.edges.push(SwimlaneEdge {
-            from: previous,
-            to: node.id.clone(),
-            label,
-            kind: edge_kind,
-        });
-        previous = node.id.clone();
-        upsert_swimlane_node(diagram, node, lane);
+        let next_ids = nodes.iter().map(|node| node.id.clone()).collect::<Vec<_>>();
+        for from in &previous {
+            for to in &next_ids {
+                diagram.edges.push(SwimlaneEdge {
+                    from: from.clone(),
+                    to: to.clone(),
+                    label: label.clone(),
+                    kind: edge_kind,
+                });
+            }
+        }
+        previous = next_ids;
+        for node in nodes {
+            upsert_swimlane_node(diagram, node, lane);
+        }
         let Some((at, next_operator, next_kind)) = next else {
             break;
         };
@@ -6416,6 +6425,33 @@ fn parse_swimlane_edge_chain(
         edge_kind = next_kind;
     }
     Ok(())
+}
+
+fn parse_swimlane_node_group(
+    value: &str,
+    line: usize,
+    lane_id: Option<String>,
+) -> Result<Vec<SwimlaneNode>, ParseError> {
+    let mut nodes = Vec::new();
+    let mut start = 0;
+    let mut depth = 0usize;
+    for (index, character) in value.char_indices() {
+        match character {
+            '(' | '[' | '{' => depth += 1,
+            ')' | ']' | '}' => depth = depth.saturating_sub(1),
+            '&' if depth == 0 => {
+                nodes.push(parse_swimlane_node(
+                    &value[start..index],
+                    line,
+                    lane_id.clone(),
+                )?);
+                start = index + character.len_utf8();
+            }
+            _ => {}
+        }
+    }
+    nodes.push(parse_swimlane_node(&value[start..], line, lane_id)?);
+    Ok(nodes)
 }
 
 fn next_swimlane_operator(value: &str) -> Option<(usize, &'static str, SwimlaneEdgeKind)> {

@@ -3956,6 +3956,17 @@ impl Compiler {
         }
     }
 
+    fn builtin_single_exp_sign_operand<'n>(
+        &self,
+        node: &'n GrammarASTNode,
+    ) -> Option<&'n GrammarASTNode> {
+        let operand = self.builtin_exp_operand(node)?;
+        if self.contains_builtin_exp_call(operand) {
+            return None;
+        }
+        self.builtin_sign_operand(operand)
+    }
+
     fn builtin_sign_operand<'n>(
         &self,
         node: &'n GrammarASTNode,
@@ -4076,15 +4087,14 @@ impl Compiler {
         match target_name.as_str() {
             "sign" => Some(actuals[0]),
             "abs" | "entier" => self.builtin_sign_operand(actuals[0]),
-            "sqrt" => self.builtin_nonnegative_unit_sign_operand(actuals[0]),
+            "sqrt" => self
+                .builtin_nonnegative_unit_sign_operand(actuals[0])
+                .or_else(|| self.builtin_single_exp_sign_operand(actuals[0])),
             "sin" | "cos" | "arctan" => self.builtin_sign_operand(actuals[0]),
             "exp" if !self.contains_builtin_exp_call(actuals[0]) => {
                 self.builtin_sign_operand(actuals[0])
             }
-            "ln" => self
-                .builtin_exp_operand(actuals[0])
-                .filter(|operand| !self.contains_builtin_exp_call(operand))
-                .and_then(|operand| self.builtin_sign_operand(operand)),
+            "ln" => self.builtin_single_exp_sign_operand(actuals[0]),
             _ => None,
         }
     }
@@ -13604,6 +13614,40 @@ mod tests {
             "begin real procedure pick; pick := -2.25; real result; result := entier(ln(exp(exp(sign(pick()))))); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier(ln(exp(pick()))); output(result) end",
             "begin real procedure pick; pick := -2.25; real procedure exp(x); value x; real x; exp := x; real result; result := entier(ln(exp(sign(pick())))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "nested exponential, non-sign-rooted, and overridden exp mappings must remain conservative",
+            );
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_sqrt_exp_entier_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(sqrt(exp(sign(pick())))); output(x) end",
+            "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier(sqrt(exp(cos(sin(abs(sign(pick()))))))))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "sqrt over one exponential preserves a bounded sign-rooted result through entier for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_sqrt_exp_entier_sign_widening_rejects_unproven_mappings() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(exp(exp(sign(pick()))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(exp(pick()))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real procedure exp(x); value x; real x; exp := x; real result; result := entier(sqrt(exp(sign(pick())))); output(result) end",
         ] {
             let err = compile_source(source, "test").expect_err(
                 "nested exponential, non-sign-rooted, and overridden exp mappings must remain conservative",

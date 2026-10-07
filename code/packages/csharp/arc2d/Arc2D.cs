@@ -110,12 +110,12 @@ public readonly record struct SvgArc(
 {
     public CenterArc? ToCenterArc()
     {
-        if (Math.Abs(From.X - To.X) < 1e-12 && Math.Abs(From.Y - To.Y) < 1e-12)
+        if (From.DistanceSquared(To) < 1e-20)
         {
             return null;
         }
 
-        if (Math.Abs(Rx) < 1e-12 || Math.Abs(Ry) < 1e-12)
+        if (Math.Abs(Rx) < 1e-10 || Math.Abs(Ry) < 1e-10)
         {
             return null;
         }
@@ -177,9 +177,11 @@ public readonly record struct SvgArc(
 
     public IReadOnlyList<CubicBezier> ToCubicBeziers() => ToCenterArc()?.ToCubicBeziers() ?? [];
 
-    public Point? Evaluate(double t) => ToCenterArc()?.Evaluate(t);
+    public Point? Evaluate(double t) => ToCenterArc()?.Evaluate(t) ?? From.Lerp(To, t);
 
-    public Rect? BoundingBox() => ToCenterArc()?.BoundingBox();
+    public Rect? BoundingBox() => ToCenterArc()?.BoundingBox() ?? Rect.FromPoints(
+        new Point(Math.Min(From.X, To.X), Math.Min(From.Y, To.Y)),
+        new Point(Math.Max(From.X, To.X), Math.Max(From.Y, To.Y)));
 
     private static double AngleBetween(double ux, double uy, double vx, double vy) =>
         CodingAdventures.Trig.Trig.Atan2(ux * vy - uy * vx, ux * vx + uy * vy);
