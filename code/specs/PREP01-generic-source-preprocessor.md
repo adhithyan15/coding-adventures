@@ -613,6 +613,17 @@ names, count, and aggregate bytes before copying them into `MemoryFs`.
 `c.tokens` stops discarding `#…` lines; `c-lexer` surfaces directive tokens; a
 `CDialect` implements §5; `c-to-semantic-ir` runs the engine as its
 `post_tokenize` hook. `SIR27`'s preprocessor scope statement is updated.
+The parser handoff is a prerequisite: `c-parser` exposes a fallible token-input
+entry point that uses the same compiled C grammar and recursion cap as its
+source-input entry point. It accepts the preprocessor's directive-free token
+stream without reconstructing source text or re-lexing it. Before invoking the
+packrat parser, this public entry point refuses more than 2,000,000 tokens,
+more than 64 MiB of aggregate token value text, and any token value longer
+than 64 KiB. These finite ceilings use the shared preprocessor's default
+produced-token and token-spelling ceilings, with an additional 64 MiB aggregate
+text ceiling at the parser boundary. The C dialect
+will use the shared preprocessor's bounds for input and expansion; the parser
+handoff retains its own guard because it is also a public API.
 *Acceptance:* a C program using `#define` (object- and function-like), `#if`/
 `#ifdef`/`#else`/`#endif` and a real project-local `#include` compiles through
 `c-to-semantic-ir` and executes with the expected result — the first C program
