@@ -601,7 +601,7 @@ use diagram_ir::{
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
     CynefinConfig, CynefinDiagram, CynefinDomain, CynefinStyle, CynefinTransition, IshikawaCause, IshikawaDiagram,
     WardleyDiagram, WardleyEvolution, WardleyLink, WardleyNode, TreeViewConfig, TreeViewDiagram, TreeViewNode,
-    TreeViewNodeKind,
+    TreeViewNodeKind, TreeViewTheme,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -5919,6 +5919,32 @@ fn parse_treeview_config(source: &str) -> TreeViewConfig {
         default_icon_pack: value("defaultIconPack").unwrap_or(defaults.default_icon_pack),
         filename_icons: parse_treeview_icon_map(source, config, "filenameIcons", false),
         extension_icons: parse_treeview_icon_map(source, config, "extensionIcons", true),
+        theme: parse_treeview_theme(source),
+    }
+}
+
+fn parse_treeview_theme(source: &str) -> TreeViewTheme {
+    let front_matter = mermaid_front_matter_section(source, &["themeVariables", "treeView"]);
+    let theme_source = mermaid_directive_object(source, "themeVariables")
+        .and_then(|theme| mermaid_directive_object(theme, "treeView"))
+        .or(front_matter.as_deref()).unwrap_or("");
+    let value = |name: &str| {
+        quadrant_directive_value(theme_source, name).or_else(|| theme_source.lines().find_map(|line| {
+            let (key, value) = line.trim().split_once(':')?;
+            (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+        })).filter(|value| !value.is_empty())
+    };
+    let defaults = TreeViewTheme::default();
+    let color = |name: &str, fallback: &str| value(name).unwrap_or_else(|| fallback.to_string());
+    TreeViewTheme {
+        label_font_size: value("labelFontSize").and_then(parse_mermaid_font_size)
+            .filter(|value| value.is_finite() && *value > 0.0).unwrap_or(defaults.label_font_size),
+        label_color: color("labelColor", &defaults.label_color),
+        line_color: color("lineColor", &defaults.line_color),
+        icon_color: color("iconColor", &defaults.icon_color),
+        description_color: color("descriptionColor", &defaults.description_color),
+        highlight_background: color("highlightBg", &defaults.highlight_background),
+        highlight_stroke: color("highlightStroke", &defaults.highlight_stroke),
     }
 }
 

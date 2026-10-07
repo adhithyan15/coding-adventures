@@ -317,7 +317,7 @@ pub fn layout_treemap(diagram: &TreemapDiagram, _canvas_width: f64) -> LayoutedT
 /// Lay out a TreeView as deterministic indented rows.
 pub fn layout_treeview(diagram: &TreeViewDiagram, canvas_width: f64) -> LayoutedTreeViewDiagram {
     let title_height = if diagram.title.is_some() { 42.0 } else { 12.0 };
-    let row_height = 18.0 + diagram.config.padding_y * 2.0;
+    let row_height = diagram.config.theme.label_font_size * 1.2 + diagram.config.padding_y * 2.0;
     let width = canvas_width.max(360.0);
     let nodes = diagram.nodes.iter().enumerate().map(|(index, node)| {
         let x = 26.0 + node.depth as f64 * (diagram.config.row_indent + diagram.config.padding_x);
@@ -502,7 +502,7 @@ mod tests {
         assert!(layout.nodes[1].y > layout.nodes[0].y);
         assert_eq!(layout.nodes[1].parent_id.as_deref(), Some("root"));
         assert_eq!(layout.nodes[1].x - layout.nodes[0].x, 15.0);
-        assert_eq!(layout.nodes[0].height, 28.0);
+        assert_eq!(layout.nodes[0].height, 29.2);
     }
 
     #[test]

@@ -196,6 +196,18 @@ fn pinned_treeview_subset_corpus_parses_to_tree_ir() {
                 assert_eq!(diagram.nodes[1].class_selector.as_deref(), Some("highlight"));
                 assert_eq!(diagram.nodes[2].description.as_deref(), Some("crate root"));
             }
+        } else if name == "front-matter-theme-variables" {
+            assert_eq!(diagram.config.theme.label_font_size, 20.0);
+            assert_eq!(diagram.config.theme.label_color, "#112233");
+            assert_eq!(diagram.config.theme.line_color, "#234567");
+            assert_eq!(diagram.config.theme.icon_color, "#345678");
+            assert_eq!(diagram.config.theme.description_color, "#456789");
+            assert_eq!(diagram.config.theme.highlight_background, "rgba(10, 20, 30, 0.25)");
+            assert_eq!(diagram.config.theme.highlight_stroke, "#56789a");
+        } else if name == "directive-theme-variables" {
+            assert_eq!(diagram.config.theme.label_font_size, 18.0);
+            assert_eq!(diagram.config.theme.label_color, "#abcdef");
+            assert_eq!(diagram.config.theme.line_color, "#123456");
         } else {
             assert!(!diagram.nodes.is_empty());
         }
