@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
+  "source_corpus": "treeview-11.16.1-corpus.json",
+  "fixtures": [
+    "header-only",
+    "layout-and-icon-config",
+    "icon-resolution-config",
+    "icon-detection-precedence",
+    "built-in-and-unprefixed-icons",
+    "icon-suppression-and-annotation-order",
+    "unicode-and-emoji-labels",
+    "quoted-complex-hierarchy",
+    "multiple-root-hierarchy",
+    "quoted-labels-and-annotations",
+    "compact-box-drawing-segments",
+    "front-matter-theme-variables",
+    "aligned-description-rows",
+    "intrinsic-description-width"
+  ]
+}

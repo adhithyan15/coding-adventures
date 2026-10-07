@@ -1,7 +1,8 @@
 {
   "upstream": "mermaid@11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
-  "scope": "native hierarchy subset with the implicit root, responsive-width intent, renderer-neutral title semantics, built-in icon geometry, pinned icon detection precedence, integrator-resolved external icon glyphs, pinned box-drawing preprocessing, renderer defaults, theme variables, connector geometry, and aligned descriptions",
+  "level": "full",
+  "scope": "complete pinned upstream syntax corpus with hierarchy, metadata, annotations, icon semantics, box-drawing preprocessing, renderer configuration, theme variables, connector geometry, aligned descriptions, and backend-neutral icon lowering",
   "fixtures": [
     {
       "name": "header-only",
@@ -34,6 +35,26 @@
     {
       "name": "built-in-and-unprefixed-icons",
       "source": "treeView-beta\nroot/ icon(folder)\n    file.txt icon(file)\n    custom icon(custom)"
+    },
+    {
+      "name": "parser-terminal-semantics",
+      "source": "treeView-beta\n\"\"\n'my folder/'\n.gitignore\ndocker-compose.yml\nMy Documents/ :::my-class\nindex.js ##"
+    },
+    {
+      "name": "icon-suppression-and-annotation-order",
+      "source": "%%{init: {\"treeView\": {\"showIcons\": true}}}%%\ntreeView-beta\napp.ts icon(none) :::highlight ## entry point\nApp.tsx icon()\nsrc/ icon(none)"
+    },
+    {
+      "name": "unicode-and-emoji-labels",
+      "source": "treeView-beta\nBut  _  _ton💓.tsx\n🚀 rocket-app/\n    📦 packages/\n        🎨 ui/\n    📝 README.md"
+    },
+    {
+      "name": "quoted-complex-hierarchy",
+      "source": "treeView-beta\n\"root\"\n    \"folder1\"\n        \"file1.js\"\n        \"file2.ts\"\n    \"folder2\"\n        \"file3.spec.ts\"\n        \"folder3\"\n            \"file4.ts\""
+    },
+    {
+      "name": "multiple-root-hierarchy",
+      "source": "treeView-beta\n\"folder1\"\n    \"file1.js\"\n    \"file2.ts\"\n\"folder2\"\n    \"file3.spec.ts\"\n\"file7.ts\""
     },
     {
       "name": "indented-directories-and-files",
@@ -74,6 +95,16 @@
     {
       "name": "intrinsic-description-width",
       "source": "treeView-beta\nproject/ :::highlight\n    main.rs ## a description that expands the intrinsic viewBox"
+    }
+  ],
+  "invalid": [
+    {
+      "name": "unterminated-quoted-label",
+      "source": "treeView-beta\n\"unterminated"
+    },
+    {
+      "name": "mixed-box-drawing-and-indentation",
+      "source": "treeView-beta\n├── src/\n    index.ts\n└── README.md"
     }
   ]
 }
