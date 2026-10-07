@@ -136,6 +136,64 @@ fn windows_orphan_inherited_policy_rejects_before_original_mutation() {
     assert_eq!(fs::read_dir(private_parent).unwrap().count(), 1);
 }
 
+#[cfg(windows)]
+#[test]
+fn windows_final_verification_denial_rejects_before_any_original_mutation() {
+    use std::os::windows::process::CommandExt;
+    let fixture = Fixture::new();
+    let restricted = fixture.path("restricted");
+    fs::create_dir(&restricted).unwrap();
+    let script = r#"
+        $ErrorActionPreference='Stop'
+        $acl=Get-Acl -LiteralPath $env:CLOSUREC_TEST_ACL_PATH
+        $sid=[Security.Principal.SecurityIdentifier]::new('S-1-3-4')
+        $acl.AddAccessRule([Security.AccessControl.FileSystemAccessRule]::new($sid,'ReadPermissions','ObjectInherit','InheritOnly','Deny'))
+        Set-Acl -LiteralPath $env:CLOSUREC_TEST_ACL_PATH -AclObject $acl
+    "#;
+    let output = std::process::Command::new("powershell.exe")
+        .args(["-NoProfile", "-NonInteractive", "-Command", script])
+        .env("CLOSUREC_TEST_ACL_PATH", &restricted)
+        .env_remove("PSModulePath")
+        .creation_flags(0x0800_0000)
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let old = fixture.path("old.js");
+    fs::write(&old, "original").unwrap();
+    let original = observe(&old, false).unwrap().unwrap();
+    let new = restricted.join("new.js");
+    let mut original_mutated = false;
+    let result = publish_with_hook(
+        &[
+            (old.clone(), "new first".into()),
+            (new.clone(), "new second".into()),
+        ],
+        &mut |phase, _| {
+            if phase == Phase::BackupRemove {
+                original_mutated = true;
+            }
+            Ok(())
+        },
+    );
+    assert!(result.is_err());
+    assert!(
+        !original_mutated,
+        "unsupported final verification policy was discovered after original mutation"
+    );
+    assert!(same_original(
+        &original,
+        &observe(&old, false).unwrap().unwrap()
+    ));
+    assert_eq!(fs::read(old).unwrap(), b"original");
+    assert!(!new.exists());
+    assert_eq!(fs::read_dir(restricted).unwrap().count(), 0);
+    assert_eq!(fs::read_dir(&fixture.dir).unwrap().count(), 2);
+}
+
 #[test]
 fn held_object_id_distinguishes_same_bytes_and_detects_hard_links() {
     let fixture = Fixture::new();
