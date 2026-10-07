@@ -172,8 +172,7 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     // Pinned so the gate stays honest, NOT to bless them -- see this list's
     // doc comment on how a stale pin turns into a standing licence.
     //
-    // alignment is not threaded onto the element yet.
-    (Backend::Qt, "align"),
+    // Text alignment is not threaded onto the element yet.
     (Backend::Qt, "text-align"),
     //
     // Qt expresses this through the container chosen (RowLayout /
@@ -213,7 +212,6 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     //
     // Layout is selected by parent-owned Row/Column/Stack wrappers. These
     // values have no applicable writer on at least one authored occurrence.
-    (Backend::Flutter, "align"),
     (Backend::Flutter, "align-items"),
     (Backend::Flutter, "flex-wrap"),
     (Backend::Flutter, "justify-content"),

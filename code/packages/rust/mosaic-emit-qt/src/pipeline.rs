@@ -2433,6 +2433,21 @@ fn qml_layout_container_lines(props: &[StyleProp]) -> Vec<String> {
     qml_layout_container_lines_with_states(props, &[])
 }
 
+fn qml_child_alignment_line(props: &[StyleProp], container_tag: &str) -> Option<String> {
+    let value = props
+        .iter()
+        .find(|prop| prop.name == "align")?
+        .value
+        .trim();
+    let alignment = match (container_tag, value) {
+        ("Row", "center-vertical" | "center") => "Qt.AlignVCenter",
+        ("Column", "center-horizontal" | "center") => "Qt.AlignHCenter",
+        _ => return None,
+    };
+    record_style_read(props, "align");
+    Some(format!("Layout.alignment: {alignment}"))
+}
+
 /// The two `elevation` tiers (UI41, issue #12028 item 1), mapped to a
 /// QtQuick.Effects `MultiEffect` drop shadow. Qt 6.5+'s `MultiEffect` is the
 /// modern, non-deprecated shadow primitive (the older
@@ -3190,12 +3205,13 @@ fn emit_styled_layout_container_qml(
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let layout_lines = qml_layout_container_lines_with_states(props, &state_layers);
+    let child_alignment = qml_child_alignment_line(props, &node.tag);
     let needs_wrapper = needs_container_wrapper(props)
         || state_layers
             .iter()
             .any(|layer| needs_container_wrapper(layer.props));
     if !needs_wrapper {
-        if layout_lines.is_empty() {
+        if layout_lines.is_empty() && child_alignment.is_none() {
             return Ok(None);
         }
 
@@ -3205,10 +3221,11 @@ fn emit_styled_layout_container_qml(
             writeln!(out, "{inner_pad}{line}").unwrap();
         }
         let is_stack = node.tag == "Stack";
-        out.push_str(&emit_qml_children(
+        out.push_str(&emit_qml_children_with_line(
             &node.children,
             depth + 1,
             is_stack,
+            child_alignment.as_deref(),
             ctx,
         )?);
         writeln!(out, "{pad}}}").unwrap();
@@ -3282,10 +3299,11 @@ fn emit_styled_layout_container_qml(
     {
         writeln!(out, "{inner_pad}    {line}").unwrap();
     }
-    out.push_str(&emit_qml_children(
+    out.push_str(&emit_qml_children_with_line(
         &node.children,
         depth + 2,
         node.tag == "Stack",
+        child_alignment.as_deref(),
         ctx,
     )?);
     writeln!(out, "{inner_pad}}}").unwrap();
@@ -4401,6 +4419,16 @@ fn emit_qml_children(
     is_stack: bool,
     ctx: &EmitCtx,
 ) -> Result<String, PipelineEmitError> {
+    emit_qml_children_with_line(children, depth, is_stack, None, ctx)
+}
+
+fn emit_qml_children_with_line(
+    children: &[LayoutNode],
+    depth: usize,
+    is_stack: bool,
+    child_line: Option<&str>,
+    ctx: &EmitCtx,
+) -> Result<String, PipelineEmitError> {
     let mut out = String::new();
     let mut i = 0;
     while i < children.len() {
@@ -4430,6 +4458,10 @@ fn emit_qml_children(
         // z-overlay semantics `inject_anchors_fill_parent`'s doc comment
         // describes), so this is a narrow, primitive-specific exception,
         // not a change to Stack's general contract.
+        let mut child_qml = child_qml;
+        if let Some(line) = child_line {
+            child_qml = inject_qml_child_line(&child_qml, depth, line);
+        }
         if is_stack && child.tag != "Path" {
             out.push_str(&inject_anchors_fill_parent(&child_qml, depth));
         } else {
@@ -5386,28 +5418,41 @@ fn build_image_source_attribute(node: &LayoutNode) -> Option<String> {
 ///         }
 /// ```
 ///
-/// For a Z-stack child, we need the child to fill the parent overlay,
-/// so we insert an `anchors.fill: parent` line directly after the
-/// opening `{`. The injection is mechanical text editing on output we
-/// produced ourselves — safe by construction. (We always emit the
-/// opening brace on its own line, followed by a newline.)
+/// For a Z-stack child, we need every top-level block emitted for that
+/// logical child to fill the parent overlay, so we insert an
+/// `anchors.fill: parent` line directly after each opening `{`. A paired
+/// `If`+`Else`, for example, emits two sibling `Loader` blocks. The
+/// injection is mechanical text editing on output we produced ourselves
+/// — safe by construction. (We always emit the opening brace on its own
+/// line, followed by a newline.)
 fn inject_anchors_fill_parent(child_qml: &str, depth: usize) -> String {
+    inject_qml_child_line(child_qml, depth, "anchors.fill: parent")
+}
+
+fn inject_qml_child_line(child_qml: &str, depth: usize, line: &str) -> String {
+    let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
-    // Find the first `{\n` — that closes the opening line of the child
-    // block — and insert our line right after it.
-    if let Some(brace_idx) = child_qml.find("{\n") {
-        let insert_at = brace_idx + 2; // after `{\n`
-        let mut out = String::with_capacity(child_qml.len() + 64);
-        out.push_str(&child_qml[..insert_at]);
-        out.push_str(&inner_pad);
-        out.push_str("anchors.fill: parent\n");
-        out.push_str(&child_qml[insert_at..]);
-        out
-    } else {
-        // The walker always emits `{\n`; this branch exists for
-        // defence in depth.
-        child_qml.to_string()
+    let mut out = String::with_capacity(child_qml.len() + 64);
+
+    for source_line in child_qml.split_inclusive('\n') {
+        out.push_str(source_line);
+
+        let opening = source_line.strip_suffix('\n').unwrap_or(source_line);
+        let opening = opening.strip_suffix('\r').unwrap_or(opening);
+        let Some(content) = opening.strip_prefix(&pad) else {
+            continue;
+        };
+
+        // Only inject into blocks opened at the logical child's own depth.
+        // Nested blocks start with at least one more indentation level.
+        if !content.starts_with(' ') && content.ends_with('{') {
+            out.push_str(&inner_pad);
+            out.push_str(line);
+            out.push('\n');
+        }
     }
+
+    out
 }
 
 /// Pick the QML argument list for invoking the named signal.
@@ -16133,6 +16178,136 @@ mod tests {
             name: name.to_string(),
             value: value.to_string(),
         }
+    }
+
+    /// #15258: Mosaic's directional `align` centers every direct child on the
+    /// matching RowLayout / ColumnLayout cross axis and leaves the drop report.
+    #[test]
+    fn flex_cross_axis_align_attaches_alignment_to_each_child() {
+        for (tag, value, expected) in [
+            ("Row", "center-vertical", "Qt.AlignVCenter"),
+            ("Column", "center-horizontal", "Qt.AlignHCenter"),
+        ] {
+            let m = component("X", vec![], vec![]);
+            let text = |value: &str| LayoutNode {
+                tag: "Text".into(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "content".into(),
+                    value: LayoutPropValue::String(value.into()),
+                }],
+                children: vec![],
+            };
+            let l = LayoutDef {
+                component_name: "X".into(),
+                root: LayoutNode {
+                    tag: tag.into(),
+                    part_name: Some("items".into()),
+                    props: vec![],
+                    children: vec![text("one"), text("two")],
+                },
+            };
+            let s = StyleDef {
+                component_name: "X".into(),
+                parts: vec![PartStyle {
+                    name: "items".into(),
+                    base: vec![sp("align", value)],
+                    transitions: vec![],
+                    states: vec![],
+                }],
+            };
+
+            let out = from_pipeline(&m, &l, &s).unwrap().output;
+            assert_eq!(
+                out.matches(&format!("Layout.alignment: {expected}")).count(),
+                2,
+                "each direct child must carry the {tag}'s cross-axis alignment:\n{out}"
+            );
+            assert!(
+                dropped_style_properties(&m, &l, &s).is_empty(),
+                "implemented {tag} alignment was reported dropped"
+            );
+        }
+    }
+
+    /// #15258: a paired conditional is one logical flex child but lowers to
+    /// two sibling Loaders. Both alternatives must retain the parent's
+    /// cross-axis alignment when the active branch changes at runtime.
+    #[test]
+    fn flex_cross_axis_align_attaches_alignment_to_both_conditional_loaders() {
+        let m = component("X", vec![], vec![]);
+        let text = |value: &str| LayoutNode {
+            tag: "Text".into(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "content".into(),
+                value: LayoutPropValue::String(value.into()),
+            }],
+            children: vec![],
+        };
+        let l = LayoutDef {
+            component_name: "X".into(),
+            root: LayoutNode {
+                tag: "Row".into(),
+                part_name: Some("items".into()),
+                props: vec![],
+                children: vec![
+                    if_with_slot_when("editing", vec![text("yes")]),
+                    else_node(vec![text("no")]),
+                ],
+            },
+        };
+        let s = StyleDef {
+            component_name: "X".into(),
+            parts: vec![PartStyle {
+                name: "items".into(),
+                base: vec![sp("align", "center-vertical")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert_eq!(count_occurrences(&out, "Loader {"), 2, "{out}");
+        assert_eq!(
+            out.matches("Layout.alignment: Qt.AlignVCenter").count(),
+            2,
+            "both conditional Loaders must carry the Row's alignment:\n{out}"
+        );
+    }
+
+    #[test]
+    fn unsupported_qt_align_value_remains_a_reported_drop() {
+        let m = component("X", vec![], vec![]);
+        let l = LayoutDef {
+            component_name: "X".into(),
+            root: LayoutNode {
+                tag: "Row".into(),
+                part_name: Some("items".into()),
+                props: vec![],
+                children: vec![LayoutNode {
+                    tag: "Text".into(),
+                    part_name: None,
+                    props: vec![],
+                    children: vec![],
+                }],
+            },
+        };
+        let s = StyleDef {
+            component_name: "X".into(),
+            parts: vec![PartStyle {
+                name: "items".into(),
+                base: vec![sp("align", "space-between")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+
+        let out = from_pipeline(&m, &l, &s).unwrap().output;
+        assert!(!out.contains("Layout.alignment:"), "got:\n{out}");
+        let drops = dropped_style_properties(&m, &l, &s);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "align");
     }
 
     /// A `cell` part mirroring `Grid.dark.msl`: border, padding, height,
