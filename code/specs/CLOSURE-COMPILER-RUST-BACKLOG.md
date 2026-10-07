@@ -24,11 +24,12 @@ onto leaves and shares the real log. Live inspection found its golden trace
 assertion only proves token presence, while primitive folds read absent
 composite CVs and lose replacement lineage. CLOC31 is the selected repair;
 its stronger end-to-end graph assertions failed before implementation.
-A context probe additionally caught CV metadata disabling equal-primitive
-conditional collapse. The selected slice includes equality independent of
-identity and retaining both branch histories; the regression test failed
-before that safeguard. Broader composite semantic equality remains part of
-the remaining tracing-neutrality audit.
+A context probe additionally caught CV metadata disabling conditional collapse
+inside primitive, array and call branches. The selected slice includes native
+recursive AST equality excluding only CVs, preserving signed-zero distinctions
+and both collapsed primitive branch histories. Context regressions failed
+before these safeguards. Composite lineage and the remaining fold families
+still require the broader provenance/tracing-neutrality audit.
 
 Required next slices: audit remaining fold families; stable composite identities
 and shared source spans on the canonical ESTree boundary; typed lineage events
