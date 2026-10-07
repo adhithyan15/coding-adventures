@@ -204,6 +204,31 @@ on direct pass errors and dependency-order errors, plus successful replacement.
 Exercise all recursive AST families in the disposal library, including parameter
 defaults, class members, module exports and nested statement containers.
 
+## Compiler limit configuration and diagnostics
+
+`SpecialModesConfig.correlation_vector_limits: GraphLimits` stores the selected
+limits and defaults to `GraphLimits::default()`. `GraphLimits` supports ordinary
+`PartialEq`/`Eq` configuration comparison. The CLI flag
+`--correlation_vector_limits` accepts a comma-separated partial override list of
+`max_nodes`, `max_edges`, `max_events`, `max_metadata_values`,
+`max_metadata_depth`, `max_metadata_bytes`, `max_input_bytes`, `max_work` and
+`max_output_bytes`, each written as `name=unsigned_decimal`. Empty input selects
+all defaults. Whitespace surrounding a pair/name/value is ignored; require ASCII
+decimal digits, checked `usize` conversion and no duplicate or unknown names.
+Reject empty pairs, missing values, signs, fractions and overflow. Enforce the
+hard metadata-depth ceiling during configuration, even before tracing begins.
+Zero is a meaningful limit for rejection tests. Explicit programmatic
+configuration receives the same validation as CLI configuration.
+
+When tracing is enabled, construct the checked compact log with these limits.
+When disabled, retain disabled compact allocation behavior. Every compiler-stage
+CV operation propagates a `CompilerError::Provenance { stage: String,
+message: String }` before any successful output publication. Diagnostics identify
+the stage and preserve the underlying limit/identity/schema explanation; they
+must not panic or discard the error. No successful fallbacks from formatter or
+summary errors are allowed. Graph validation remains required under format NONE
+and before selecting filtered/summary views.
+
 ## Serialization and artifact publication
 
 Validate the full checked graph before filtering, summary or export. Canonical
