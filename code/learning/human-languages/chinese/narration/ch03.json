@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "One to Five — Where the Character Is the Count",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7b9e605a797cb959",
+  "sourceHash": "fnv1a64:fbcda3254de262f1",
   "lessons": [
     {
       "id": "ZH-W03-yi",
@@ -140,7 +140,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:564fa3e73f19b1d2",
+      "sourceHash": "fnv1a64:c0c5059be8d0554a",
       "notice": null,
       "blocks": [
         {
@@ -155,8 +155,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Draw the shape you just learned. One stroke, left to right."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the shape you just learned — one stroke, left to right",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the shape you just learned — one stroke, left to right]"
             }
           ]
         },
@@ -411,7 +416,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a67191200369bd3",
+      "sourceHash": "fnv1a64:c8919aea6654e86b",
       "notice": null,
       "blocks": [
         {
@@ -426,8 +431,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the shape — two bars, short over long",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the shape — two bars, short over long]"
+            },
+            {
               "kind": "speech",
-              "text": "Draw the shape. Two bars, short over long. Count the strokes and say what number you expect it to be."
+              "text": "Count the strokes and say what number you expect it to be."
             }
           ]
         },
@@ -699,7 +713,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a6091fa55c38dac",
+      "sourceHash": "fnv1a64:a8cc9622815a6250",
       "notice": null,
       "blocks": [
         {
@@ -714,8 +728,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Draw the three bars. Middle short, bottom long."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the three bars — middle short, bottom long",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the three bars — middle short, bottom long]"
             }
           ]
         },
@@ -996,7 +1015,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06a9f5dd235d7a33",
+      "sourceHash": "fnv1a64:db5f314789ec207b",
       "notice": null,
       "blocks": [
         {
@@ -1011,8 +1030,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the box — walls, contents, bottom last",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the box — walls, contents, bottom last]"
+            },
+            {
               "kind": "speech",
-              "text": "Draw the box. Walls, contents, bottom last. Count the strokes: five, for the number four."
+              "text": "Count the strokes: five, for the number four."
             }
           ]
         },
@@ -1289,7 +1317,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46cefe9456745693",
+      "sourceHash": "fnv1a64:b3c4b3069207aca5",
       "notice": null,
       "blocks": [
         {
@@ -1304,8 +1332,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Draw the shape. Four strokes — for five."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the shape — four strokes, for five",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the shape — four strokes, for five]"
             }
           ]
         },
