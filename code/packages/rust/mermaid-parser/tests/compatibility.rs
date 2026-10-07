@@ -200,6 +200,14 @@ fn pinned_cynefin_subset_corpus_parses_to_domain_map_ir() {
                 ["Single quoted", "Escaped \"quote\" and \\ slash", "Line\nfeed"]);
             assert_eq!(diagram.transitions[0].label.as_deref(), Some("Shift's label"));
         }
+        if name == "metadata-variants" {
+            assert_eq!(diagram.title.as_deref(), Some(""));
+            assert_eq!(diagram.accessibility_title.as_deref(), Some("Spaced accessibility title"));
+            assert_eq!(diagram.accessibility_description.as_deref(), Some("First line\nSecond line"));
+        }
+        if name == "inline-accessibility-description" {
+            assert_eq!(diagram.accessibility_description.as_deref(), Some("Inline description"));
+        }
     }
     assert_eq!(parse_cynefin("cynefin-beta\nclear").expect("default seed source").config.seed, 145_697_634);
     assert_eq!(parse_cynefin("%%{init: {\"cynefin\": {\"seed\": 0}}}%%\ncynefin-beta\nclear")
