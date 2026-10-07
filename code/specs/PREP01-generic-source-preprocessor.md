@@ -579,6 +579,27 @@ defect that the second dialect found. This is the cheapest genericity proof
 available, because Nib already has full matrix coverage to check against — the
 whole slice is one grammar, one dialect and some rows.
 
+**Slice 3 implementation contract (selected 2026-10-07).** The initial
+directive vocabulary is `.include "file"`, `.set NAME replacement`,
+`.ifdef NAME`, `.else`, and `.endif`. `.set` defines an object-like macro;
+function-like parameter syntax is deferred until the second dialect has
+proven the engine's existing object-like path. `.ifdef` tests definition
+status through `Dialect::prepare_condition`, without expanding its operand.
+All directive tokens, including the quote token needed only by `.include`,
+must be removed before Nib parsing. Ordinary Nib tokens and keyword rules
+must match `nib.tokens` byte-for-byte under an automated drift check.
+
+The Nib lexer, grammar, type rules and code generation stay the reference.
+Small additive token-input and AST-input entry points in `nib-parser` and
+`nib-iir-compiler` are permitted solely to compose a preprocessed token
+stream with that existing frontend; they must not change Nib source
+semantics. The identity oracle compares MacroNib against independently
+hand-expanded Nib at the IIR instruction level, preserving source-map
+length and testing full equality when lines are aligned. Negative tests
+must cover malformed directives, undefined includes, recursion and token
+bounds. The engine core must remain unchanged unless a reproducible
+genericity defect is found and documented.
+
 **Slice 4 — the C dialect, and real C.**
 `c.tokens` stops discarding `#…` lines; `c-lexer` surfaces directive tokens; a
 `CDialect` implements §5; `c-to-semantic-ir` runs the engine as its
