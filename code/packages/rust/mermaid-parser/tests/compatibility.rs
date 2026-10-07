@@ -208,6 +208,14 @@ fn pinned_cynefin_subset_corpus_parses_to_domain_map_ir() {
         if name == "inline-accessibility-description" {
             assert_eq!(diagram.accessibility_description.as_deref(), Some("Inline description"));
         }
+        if name == "duplicate-domain-last-wins" {
+            assert_eq!(diagram.domains[0].items, ["Replacement item"]);
+        }
+    }
+    for fixture in corpus["invalid"].as_array().expect("invalid fixture array") {
+        let name = fixture["name"].as_str().expect("invalid fixture name");
+        assert!(parse_cynefin(fixture["source"].as_str().expect("invalid fixture source")).is_err(),
+            "invalid upstream fixture {name} unexpectedly parsed");
     }
     assert_eq!(parse_cynefin("cynefin-beta\nclear").expect("default seed source").config.seed, 145_697_634);
     assert_eq!(parse_cynefin("%%{init: {\"cynefin\": {\"seed\": 0}}}%%\ncynefin-beta\nclear")
