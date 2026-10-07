@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-07 — re-audited after LANG82 Perl 5.003_99–5.004_02
+Status date: 2026-10-07 — re-audited after LANG82 Perl 5.004_03
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -162,17 +162,25 @@ pairs for `p54rc1`, `p54rc2`, and 5.003_99 through 5.004_02, and merged as
 CodeQL, and books checks passed. Its corrected pinned-source inventory has
 776 rows, 76 partial pairs, and 700 pending; complete historical syntax and
 inventory exhaustiveness are not claimed.
+PR #16975 delivered three distinct, explicitly partial source-backed Perl
+token and grammar pairs for 5.004_02_01, 5.004_03-t2, and 5.004_03, and
+merged as `cb4e232a2f103cfc484edf993557657d538230e3` after exact-head CI,
+CodeQL, and books checks passed. The 776-row inventory now has 79 partial
+pairs and 697 pending; neither complete historical syntax nor exhaustive
+public-release coverage is claimed. The next fresh selection rotates to the
+prepared PREP01 C conditional-shift slice.
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG82 Perl release grammars (selected):** add distinct source-backed,
-   explicitly partial pairs for 5.004_02_01, 5.004_03-t2, and 5.004_03.
-   Preserve the 250-digit plain-decimal `print` subset and negative probes,
-   and leave 5.004_01-t1 pending until its own source is found. Do not imply
-   complete release syntax or an exhaustive public-release inventory.
-2. **PREP01 C:** continue full C `#if`, stringize/paste, and default
-   frontend routing in later bounded slices.
+1. **PREP01 C (selected):** add exactly one checked `<<` or `>>` operation
+   per bounded logical `#if` clause, with a nonnegative signed 32-bit left
+   operand, a shift count from 0 through 31, a representable left-shift
+   result, and explicit rejection of longer or mixed expressions. Keep full
+   C `#if`, stringize/paste, and default frontend routing for later slices.
+2. **LANG82 Perl release grammars:** continue distinct, source-backed,
+   explicitly partial pairs. Keep 5.004_01-t1 pending until its own source
+   is found; do not imply complete syntax or an exhaustive release inventory.
 
 The following run records the first VM-067 selection.
 
