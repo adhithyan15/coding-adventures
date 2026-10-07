@@ -11,6 +11,8 @@ use vm_core::{errors::VMError, value::Value, VMCore};
 
 const MAX_AST_ITEMS: usize = 16_384;
 const MAX_AST_DEPTH: usize = 64;
+const MAX_AST_TEXT_BYTES: usize = 1024 * 1024;
+const MAX_AST_FIELD_BYTES: usize = 64 * 1024;
 const MAX_OUTPUT_BYTES: usize = 1_000_000;
 
 /// Parse and compile the bounded Perl 5.38 subset to InterpreterIR.
@@ -21,6 +23,9 @@ pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, Stri
 
 /// Compile a Perl parser tree supplied directly by a caller.
 pub fn compile_ast(tree: &GrammarASTNode, module_name: &str) -> Result<IIRModule, String> {
+    if module_name.len() > MAX_AST_FIELD_BYTES {
+        return Err("Perl IIR module name exceeds the native pilot limit".into());
+    }
     check_ast_budget(tree)?;
     if tree.rule_name != "program" || tree.children.is_empty() {
         return Err("expected a Perl print program".into());
@@ -84,10 +89,12 @@ pub fn run_source(source: &str) -> Result<String, String> {
 fn check_ast_budget(root: &GrammarASTNode) -> Result<(), String> {
     let mut pending = vec![(root, 1_usize)];
     let mut seen = 1_usize;
+    let mut text_bytes = 0_usize;
     while let Some((node, depth)) = pending.pop() {
         if depth > MAX_AST_DEPTH {
             return Err("Perl AST exceeds the native pilot depth limit".into());
         }
+        count_ast_text(&node.rule_name, &mut text_bytes)?;
         for child in &node.children {
             if seen == MAX_AST_ITEMS {
                 return Err("Perl AST exceeds the native pilot item limit".into());
@@ -100,10 +107,30 @@ fn check_ast_budget(root: &GrammarASTNode) -> Result<(), String> {
                     }
                     pending.push((inner, depth + 1));
                 }
-                ASTNodeOrToken::Token(_) => {}
+                ASTNodeOrToken::Token(token) => {
+                    count_ast_text(&token.value, &mut text_bytes)?;
+                    if let Some(type_name) = &token.type_name {
+                        count_ast_text(type_name, &mut text_bytes)?;
+                    }
+                    if let Some(cv) = &token.cv {
+                        count_ast_text(cv, &mut text_bytes)?;
+                    }
+                }
             }
         }
     }
+    Ok(())
+}
+
+fn count_ast_text(field: &str, total: &mut usize) -> Result<(), String> {
+    if field.len() > MAX_AST_FIELD_BYTES
+        || total
+            .checked_add(field.len())
+            .is_none_or(|next| next > MAX_AST_TEXT_BYTES)
+    {
+        return Err("Perl AST exceeds the native pilot text limit".into());
+    }
+    *total += field.len();
     Ok(())
 }
 
@@ -188,6 +215,9 @@ impl Compiler {
             },
             "atom" => match node.children.as_slice() {
                 [ASTNodeOrToken::Token(token)] if token.type_name.as_deref() == Some("INT") => {
+                    if token.value.len() > 1 && token.value.starts_with('0') {
+                        return Err("Perl legacy octal literal is outside the decimal pilot".into());
+                    }
                     let parsed = token
                         .value
                         .parse::<i64>()
@@ -305,6 +335,11 @@ mod tests {
         }
     }
 
+    #[test]
+    fn legacy_octal_is_not_lowered_as_decimal() {
+        assert!(compile_source("print(010);", "octal").is_err());
+    }
+
     fn empty_node(rule_name: &str) -> GrammarASTNode {
         GrammarASTNode {
             rule_name: rule_name.into(),
@@ -336,5 +371,64 @@ mod tests {
         assert!(compile_ast(&wide, "wide")
             .unwrap_err()
             .contains("item limit"));
+    }
+
+    #[test]
+    fn direct_ast_text_and_module_name_are_bounded() {
+        let mut oversized_token = empty_node("program");
+        let mut parsed = parse_perl("print(1);").unwrap();
+        let ASTNodeOrToken::Node(statement) = &mut parsed.children[0] else {
+            panic!("expected statement");
+        };
+        let ASTNodeOrToken::Token(token) = &mut statement.children[0] else {
+            panic!("expected print token");
+        };
+        token.value = "9".repeat(64 * 1024 + 1);
+        oversized_token.children.push(statement.children[0].clone());
+        assert!(compile_ast(&oversized_token, "text")
+            .unwrap_err()
+            .contains("text limit"));
+
+        let mut cv_tree = parse_perl("print(1);").unwrap();
+        let ASTNodeOrToken::Node(statement) = &mut cv_tree.children[0] else {
+            panic!("expected statement");
+        };
+        let ASTNodeOrToken::Token(token) = &mut statement.children[0] else {
+            panic!("expected print token");
+        };
+        token.cv = Some("c".repeat(64 * 1024 + 1));
+        assert!(compile_ast(&cv_tree, "cv")
+            .unwrap_err()
+            .contains("text limit"));
+
+        let mut type_tree = parse_perl("print(1);").unwrap();
+        let ASTNodeOrToken::Node(statement) = &mut type_tree.children[0] else {
+            panic!("expected statement");
+        };
+        let ASTNodeOrToken::Token(token) = &mut statement.children[0] else {
+            panic!("expected print token");
+        };
+        token.type_name = Some("T".repeat(64 * 1024 + 1));
+        assert!(compile_ast(&type_tree, "type")
+            .unwrap_err()
+            .contains("text limit"));
+
+        let mut aggregate = empty_node("program");
+        aggregate.children = (0..18)
+            .map(|_| {
+                let mut child = empty_node("r");
+                child.rule_name = "r".repeat(60_000);
+                ASTNodeOrToken::Node(child)
+            })
+            .collect();
+        assert!(compile_ast(&aggregate, "aggregate")
+            .unwrap_err()
+            .contains("text limit"));
+
+        assert!(
+            compile_ast(&empty_node("program"), &"m".repeat(64 * 1024 + 1))
+                .unwrap_err()
+                .contains("module name")
+        );
     }
 }
