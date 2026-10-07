@@ -215,7 +215,6 @@ describe("the real corpus", () => {
       "SA-S201-sign-visarga",
       "HI-W03-preposed-i",
       "HI-W03-matras-naam",
-      "SA-W03-mama-guided-copy",
     ]) {
       expect(lessonIds.has(id), id).toBe(false);
     }
@@ -232,10 +231,11 @@ describe("the real corpus", () => {
     // (its fourth lesson, ML-W01-na-ma-trace, lists "ന മ" and is not a
     // word). A Tamil word
     // with a sign written before its consonant is drawn in written order,
-    // which does not spell it back (see above). Devanagari
-    // (मम), the Arabic family (سلام) and Cyrillic (привет) have
-    // fully cited words that are deliberately NOT drawn: see
-    // SEPARATE_LETTER_SCRIPTS for why each would draw something false.
+    // which does not spell it back (see above). The Arabic family (سلام)
+    // and Cyrillic (привет) have fully cited words that are deliberately
+    // NOT drawn: see SEPARATE_LETTER_SCRIPTS for why each would draw
+    // something false. A Devanagari word (मम) is not a sequence either; it
+    // is drawn as ONE composed entry with a shared headline (next case).
     const words = targets.filter(
       (target) => target.letters !== undefined && target.letters.join("") === target.glyph,
     );
@@ -268,7 +268,34 @@ describe("the real corpus", () => {
       "TA-W33-read-een",
     ]);
     const lessonIds = new Set(targets.map((target) => target.lessonId));
-    for (const id of ["SA-W03-mama-guided-copy", "UR-W04-joining", "RU-W05-privet-guided-copy"]) {
+    for (const id of ["UR-W04-joining", "RU-W05-privet-guided-copy"]) {
+      expect(lessonIds.has(id), id).toBe(false);
+    }
+  });
+
+  it("draws a Devanagari word as its letters' bodies and one shared headline", () => {
+    // The only Devanagari writing headwords that are one word of bare letters
+    // are Sanskrit मम, three times. Every other Devanagari word carries a
+    // vowel sign, a virama, a nasal or a visarga, none of which has a cited
+    // written order against its consonant or the shared headline, so it is
+    // not even a candidate (नाम, नमस्ते, नमः, धन्यवाद, ...).
+    const shared = targets.filter((target) => target.composition === "shared-headline");
+    expect(Object.fromEntries(shared.map((target) => [target.lessonId, target.glyph]))).toEqual({
+      "SA-W03-mama-delayed-copy": "मम",
+      "SA-W03-mama-dictation": "मम",
+      "SA-W03-mama-guided-copy": "मम",
+    });
+    expect(shared.every((target) => target.letters === undefined && target.script === "devanagari")).toBe(true);
+    const lessonIds = new Set(targets.map((target) => target.lessonId));
+    for (const id of [
+      "SA-W03-mama-nama-guided-copy",
+      "SA-W03-namah-guided-copy",
+      "SA-W10-asti-guided-copy",
+      "HI-W05-write-namaste",
+      "HI-W12-schwa-drop",
+      "MR-W03-dhanyavad-write",
+      "MW-W01-saa",
+    ]) {
       expect(lessonIds.has(id), id).toBe(false);
     }
   });

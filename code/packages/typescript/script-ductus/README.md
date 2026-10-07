@@ -36,6 +36,7 @@ data/scripts/*.{json,d/} ─► scriptdata.ts ─┐
 | `strokes.ts` + `strokes/*.ts` | **how** a letter is written — a fixed public registry assembled from writing-system-owned pen-path modules |
 | `truetype.ts` | **what** the letter looks like — a zero-dependency TrueType reader pulling the real outline out of the shipped font |
 | `ductusview.ts` | the join — the filmstrip, as a tree of plain objects plus a serialiser |
+| `headline-word.ts` | a Devanagari **word** — its cited letters' bodies, then one headline across the word, fitted to the printed word (uses `ink.ts`) |
 
 ## The design idea worth knowing
 
@@ -190,6 +191,21 @@ the nukta ़, Devanagari ं and Gujarati ં, at 44 to 60 units) both are scal
 34-unit dot was wider than the mark's whole movement. Every letter whose pen
 path is 150 units or more keeps the defaults. An explicit `penWidth` or
 `tipRadius` overrides the scaling, as an explicit `captionSize` does.
+
+A Devanagari word lesson (`composition: "shared-headline"`) gets ONE entry
+keyed by the whole word (`devanagari:मम`). `composeHeadlineWord` takes each
+letter's own "lift, then draw the shirorekha rightward" stroke off, places the
+letters' bodies at the font's advance widths (`Font.advanceFor`), and ends with
+one headline over the whole word: most native writers draw it last (HP Labs
+India's LipiTk Devanagari data: 82% of 2,706 consonant prototypes; about 5%
+first). A word whose composed path does not fit the printed word at the
+default tolerances is refused, not drawn.
+
+```ts
+const word = composeHeadlineWord("मम", "devanagari", font);
+if (word.ok) buildFilmstripEntry(word.ductus, word.outline, fontPath);
+else console.log(word.reason); // e.g. मथ: the shared headline is only 88.2% on ink
+```
 
 ## No DOM, no filesystem
 

@@ -157,7 +157,9 @@ letter keeps its own panels at its own scale, and the `<desc>` says so.
 
 Words are deliberately **not** composed where the parts would assemble into
 something false. Devanagari (and Bengali and Gurmukhi) words share one
-continuous headline, while every cited letter draws its own; Arabic-family
+continuous headline, while every cited letter draws its own (a Devanagari
+word is since drawn another way, as ONE composed entry: see "Devanagari words"
+below); Arabic-family
 letters join and change shape by position, while the ductus holds isolated
 forms; the cited Cyrillic hand is connected cursive. A word with a vowel sign,
 virama or length mark is refused in every script that has no written-order
@@ -309,7 +311,7 @@ Left out:
   of 83 (34%) draw both from upper left to lower right. ौ's commonest count
   is three strokes in 35 of 83 (42%).
 
-#### Designed — Devanagari words: the letters' bodies, then one shared headline
+#### As built — Devanagari words: the letters' bodies, then one shared headline
 
 A Devanagari word is not its letters' strips side by side. Every cited letter
 ends with its own "lift, then draw the shirorekha rightward" stroke, while the
@@ -376,12 +378,27 @@ also one code point in NFD), with a Writing or Script block. Refused:
 **What the figure says.** It is one ledger entry keyed by the word
 (`devanagari:मम`), so it prints like a letter's strip: one panel per
 movement, the whole word pale behind every panel, "How it is written — N
-strokes · N−1 pen lifts · M movements". The last caption reads "lift, then one
-shirorekha over the word". Its citation names every letter's source by
+strokes · N−1 pen lifts · M movements". The last caption reads "lift, then the
+word's shirorekha" (two printed lines; "lift, then one shirorekha over the
+word" wrapped to three). Its citation names every letter's source by
 position ("letters 1 and 2: …") and the HP Labs India counts for the headline;
 its `<desc>` says the frames draw the word, letter bodies first and the shared
 headline last. The target carries `composition: "shared-headline"`, and
-`script-ductus` builds the entry for exactly those targets.
+`script-ductus` builds the entry for exactly those targets
+(`composeHeadlineWord` in `src/headline-word.ts`; the font's advances come from
+a new `Font.advanceFor`, and the ink measurements the honesty tests used moved
+unchanged into `src/ink.ts` so the composer can refuse at build time).
+
+**What it unlocked.** Three lessons: Sanskrit मम (SA-W03-mama-guided-copy,
+-delayed-copy, -dictation), Sanskrit filmstrips 48 to 51. That is every
+Devanagari writing headword that is one word of bare letters; Hindi, Marathi
+and Marwadi have none. Every other Devanagari word lesson carries a sign
+(नाम, सा, मम नाम: ा; नमः: ः; नमस्ते, धन्यवाद, अस्ति: the virama; हो: ो),
+so the next unlock is a cited written order for ा (and a ductus for it: Noto
+prints ा with a headline piece the shared headline would now cover), which
+would add the six नाम, सा and मम नाम lessons. The guided-copy lesson's prose,
+which told the learner to give each म its own headline stroke and let the two
+meet, now points at the strip.
 
 #### As built — Bengali, cited to native writers' pen traces
 

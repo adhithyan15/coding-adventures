@@ -509,11 +509,21 @@ export function renderScriptFilmstripFigure(
       `aria-label="${escapeXml(`How to write ${entry.glyph}: ${entry.summary}`)}">`,
   );
   parts.push(`<title>${escapeXml(`Writing ${entry.glyph}`)}</title>`);
+  // A ledger entry for a whole WORD (a Devanagari word composed with one
+  // shared headline by script-ductus; every letter's own entry is one code
+  // point) says what its frames draw, in that order, and that the pale shape
+  // behind them is the printed word, not one letter.
+  const word = [...entry.glyph].length > 1;
+  const drawn = word
+    ? `(${entry.script}): each letter's body in reading order, then one headline over the whole word; ` +
+      `the movement being added is drawn in ink over the finished word, whose outline (each letter's ` +
+      `at the font's advance) is read from ${entry.font}.`
+    : `(${entry.script}), the movement being added drawn in ink over the finished letter, ` +
+      `whose outline is read from ${entry.font}.`;
   parts.push(
     `<desc>${escapeXml(
       `${entry.frames.length} frames; frame N shows movements 1 to N of ${entry.glyph} ` +
-        `(${entry.script}), the movement being added drawn in ink over the finished letter, ` +
-        `whose outline is read from ${entry.font}. Stroke order after ` +
+        `${drawn} Stroke order after ` +
         `${entry.source.citation} <${entry.source.url}>.` +
         (varies ? ` Source note on variation: ${entry.source.variation ?? ""}` : ""),
     )}</desc>`,
@@ -700,8 +710,9 @@ function checkedFilmstripEntry(lessonId: string, entry: FilmstripEntry): Filmstr
 // them. So each letter keeps its own panels at its own scale — exactly the
 // frames its one-letter strip prints — and nothing is drawn between letters.
 // The `<desc>` says this in words. Which headwords may be drawn this way at
-// all (a Devanagari word may NOT: its letters share one headline the per-
-// letter ductus cannot draw) is decided upstream, in `figure-targets.ts`.
+// all (a Devanagari word may NOT: its letters share one headline, so it is
+// drawn as ONE composed entry by the one-letter strip above) is decided
+// upstream, in `figure-targets.ts`.
 //
 // The labels name each letter by NUMBER, never by the letter itself: a
 // figure's printed text is set in Latin Modern Sans, which has no Tamil,

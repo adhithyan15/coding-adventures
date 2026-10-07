@@ -35,7 +35,8 @@ import { fileURLToPath } from "node:url";
 import { SCRIPTS } from "../src/scriptdata.ts";
 import { loadLessons } from "@coding-adventures/human-language-data/src/loader.ts";
 import { filmstripCandidates } from "@coding-adventures/human-language-data/src/figure-targets.ts";
-import { ductusFor, boundsOf, parseFont } from "../src/index.ts";
+import { ductusFor, boundsOf, composeHeadlineWord, parseFont } from "../src/index.ts";
+import type { LetterDuctus } from "../src/strokes.ts";
 import type { GlyphOutline } from "../src/ductusview.ts";
 import {
   buildFilmstripEntry,
@@ -73,11 +74,19 @@ function letterLessonCandidates(): ReturnType<typeof filmstripCandidates> {
   return candidateCache;
 }
 
-function filmstripTargets(): Array<{ script: string; glyph: string }> {
+/**
+ * What the ledger draws for one key: a cited letter, or a composed word whose
+ * ductus and outline `composeHeadlineWord` built from cited letters.
+ */
+type Wanted =
+  | { script: string; glyph: string }
+  | { script: string; glyph: string; word: { ductus: LetterDuctus; outline: GlyphOutline } };
+
+function filmstripTargets(): Wanted[] {
   const config = JSON.parse(
     readFileSync(join(CURRICULUM_ROOT, "core", "figure-generation.json"), "utf8"),
   ) as { targets?: FigureTarget[] };
-  const wanted = new Map<string, { script: string; glyph: string }>();
+  const wanted = new Map<string, Wanted>();
   for (const target of config.targets ?? []) {
     if (target.kind !== "script-filmstrip") continue;
     if (typeof target.script !== "string" || typeof target.glyph !== "string") {
@@ -99,7 +108,25 @@ function filmstripTargets(): Array<{ script: string; glyph: string }> {
   // apart) contributes its letters only when every one of them is cited — the
   // same all-or-nothing rule `withDerivedFilmstrips` applies, so the ledger
   // never carries a letter for a strip the book will not print.
+  //
+  // A SHARED-HEADLINE candidate (a Devanagari word: its letters' bodies, then
+  // one headline) is composed here, from the cited letters and the font. A
+  // word the composer refuses (an uncited letter, a broken printed headline)
+  // gets no entry, so the book does not print it — the same rule as an
+  // uncited letter. `headlineWordRefusals` below pins which corpus words that
+  // is, and why.
   for (const candidate of letterLessonCandidates()) {
+    if (candidate.composition === "shared-headline") {
+      const composed = composeHeadlineWord(candidate.glyph, candidate.script, fontFor(candidate.script).parsed);
+      if (composed.ok) {
+        wanted.set(`${candidate.script}:${candidate.glyph}`, {
+          script: candidate.script,
+          glyph: candidate.glyph,
+          word: { ductus: composed.ductus, outline: composed.outline },
+        });
+      }
+      continue;
+    }
     const letters = candidate.letters ?? [candidate.glyph];
     if (letters.some((glyph) => ductusFor(glyph, candidate.script) === undefined)) continue;
     for (const glyph of letters) {
@@ -117,7 +144,7 @@ const fonts = new Map<string, ReturnType<typeof parseFont>>();
  * canonical inventory, so a figure cannot be drawn from a font the lessons do
  * not use.
  */
-function outlineFor(script: string, glyph: string): { outline: GlyphOutline; font: string } {
+function fontFor(script: string): { parsed: ReturnType<typeof parseFont>; font: string } {
   const inventory = SCRIPTS.find((candidate) => candidate.script === script);
   if (inventory === undefined) throw new Error(`no ${script} inventory`);
   const font = inventory.font;
@@ -131,6 +158,11 @@ function outlineFor(script: string, glyph: string): { outline: GlyphOutline; fon
     parsed = parseFont(buffer);
     fonts.set(font, parsed);
   }
+  return { parsed, font };
+}
+
+function outlineFor(script: string, glyph: string): { outline: GlyphOutline; font: string } {
+  const { parsed, font } = fontFor(script);
   const drawing = parsed.glyphFor(glyph);
   if (drawing === undefined) {
     throw new Error(`${font} has no outline for ${script} ${glyph}`);
@@ -142,7 +174,11 @@ function outlineFor(script: string, glyph: string): { outline: GlyphOutline; fon
 }
 
 function currentLedgerBytes(): string {
-  const entries = filmstripTargets().map(({ script, glyph }) => {
+  const entries = filmstripTargets().map((target) => {
+    const { script, glyph } = target;
+    if ("word" in target) {
+      return buildFilmstripEntry(target.word.ductus, target.word.outline, fontFor(script).font);
+    }
     const letter = ductusFor(glyph, script);
     if (letter === undefined) {
       throw new Error(
@@ -249,6 +285,37 @@ describe("the printed filmstrip ledger", { timeout: LEDGER_BUILD_TIMEOUT_MS }, (
       expect(entry.source.url).toMatch(/^https?:\/\//);
       expect(entry.frames.length).toBeGreaterThan(0);
     }
+  });
+});
+
+describe("Devanagari words in the real corpus", { timeout: LEDGER_BUILD_TIMEOUT_MS }, () => {
+  beforeAll(() => {
+    letterLessonCandidates();
+  }, 120_000);
+
+  it("composes every shared-headline candidate that fits, and names why the rest do not", () => {
+    // Each Devanagari writing lesson whose headword is one word of bare
+    // letters is a shared-headline candidate (figure-targets.ts). The ledger
+    // holds the ones `composeHeadlineWord` could fit to the printed word; the
+    // book prints exactly those. A word that fails would print nothing, so
+    // the outcome of every corpus candidate is pinned here.
+    const outcomes = Object.fromEntries(
+      letterLessonCandidates()
+        .filter((candidate) => candidate.composition === "shared-headline")
+        .map((candidate) => {
+          const composed = composeHeadlineWord(
+            candidate.glyph,
+            candidate.script,
+            fontFor(candidate.script).parsed,
+          );
+          return [candidate.lessonId, `${candidate.glyph}: ${composed.ok ? "composed" : composed.reason}`];
+        }),
+    );
+    expect(outcomes).toEqual({
+      "SA-W03-mama-delayed-copy": "मम: composed",
+      "SA-W03-mama-dictation": "मम: composed",
+      "SA-W03-mama-guided-copy": "मम: composed",
+    });
   });
 });
 
