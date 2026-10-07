@@ -145,3 +145,13 @@ its own official source tag. Retain the plain-decimal arithmetic and
 `print` syntax boundary, reject adjacent decrement and leading-zero
 forms, and keep carriage returns outside the accepted subset. This stage
 does not extend LANG81 execution or claim complete historical syntax.
+
+Prepare a subsequent seven-release installment for 5.003_97e through
+5.003_97j and 5.003_98. Check each release against its own official source
+tag and keep its token and grammar files distinct even when the source
+syntax is unchanged. Continue to accept only plain-decimal arithmetic and
+`print`; reject leading-zero forms, adjacent decrement, carriage returns,
+and other unsupported syntax. The 5.003_97i tokenizer introduces a bounded
+decimal scan, so its partial pair and the later pairs must accept at most
+250 decimal digits and reject longer literals. This stage does not change
+LANG81 execution or claim complete release syntax.
