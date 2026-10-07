@@ -42,7 +42,18 @@ func main() {
 	checkTimeout := flag.Duration("check-timeout", 10*time.Minute, "Overall deadline for --check mode")
 	checkDegradations := flag.String("check-degradations", "", "JSON file of issue-linked expected story compile degradations")
 
+	// --package-search-path: extra directories, in the OS's list syntax, where
+	// a package's dependencies are searched after its own siblings. An app
+	// under code/programs/mosaic needs code/packages/mosaic here, where its
+	// dependencies live (searchpath.go).
+	packageSearchPath := flag.String("package-search-path", "", "Extra directories (OS list separator) searched for dependency packages after each package's siblings")
+
 	flag.Parse()
+
+	extraSearchPaths, err := parsePackageSearchPaths(*packageSearchPath)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// Resolve the root to an absolute path so the watcher and file paths are
 	// unambiguous regardless of where the binary was invoked from.
@@ -54,7 +65,7 @@ func main() {
 	if *check {
 		ctx, cancel := context.WithTimeout(context.Background(), *checkTimeout)
 		defer cancel()
-		srv := &Server{root: absRoot, compilerPath: *compiler}
+		srv := &Server{root: absRoot, compilerPath: *compiler, packageSearchPaths: extraSearchPaths}
 		summary, err := srv.checkStories(ctx, *checkWorkers, *checkDegradations)
 		if err != nil {
 			log.Fatal(err)
@@ -71,7 +82,7 @@ func main() {
 
 	// Build the central server value.  newServer registers all HTTP routes on
 	// its internal mux and initialises the SSE client map.
-	srv := newServer(absRoot, *compiler)
+	srv := newServer(absRoot, *compiler, extraSearchPaths...)
 
 	addr := fmt.Sprintf(":%d", *port)
 	log.Printf("MosaicBook server running at http://localhost%s", addr)

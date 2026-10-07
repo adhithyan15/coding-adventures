@@ -100,6 +100,22 @@ daemons remain tracked by #14013; a Paint PNG does not claim their coverage.
 | `--check-workers` | CPU count        | Maximum concurrent compiler processes           |
 | `--check-timeout` | `10m`            | Overall deadline for check mode                  |
 | `--check-degradations` | empty            | Issue-linked expected-degradation JSON           |
+| `--package-search-path` | empty           | Extra directories (OS list separator) searched for dependency packages, after each package's own siblings |
+
+To preview the apps, whose packages live under `code/programs/mosaic` while
+their dependencies live under `code/packages/mosaic`, name the second tree:
+
+```bash
+./mosaicbook-server \
+  --root ../../mosaic \
+  --compiler ../../../packages/rust/target/release/mosaic-compile \
+  --package-search-path ../../../packages/mosaic
+```
+
+Without it, VisiCalc, TaskApp, EngramApp and JournalApp each fail with
+"dependency package … could not be found". A directory whose absolute path
+contains `:` is refused, because `mosaic-compile` splits its search path on
+`:`.
 
 ### Security
 

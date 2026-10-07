@@ -2,6 +2,26 @@
 
 ## Unreleased
 
+### Fixed - app components can find their dependencies (`--package-search-path`)
+
+Each packaged component was compiled with only its own package's siblings on
+the search path. That is enough for `code/packages/mosaic`, where every
+package sits side by side. It is not enough for the apps under
+`code/programs/mosaic`, whose dependencies live in `code/packages/mosaic`, so
+VisiCalc, TaskApp, EngramApp and JournalApp each failed on every backend with
+"dependency package … could not be found".
+
+- `--package-search-path` names extra directories, in the OS's list syntax.
+  They are searched after each package's own siblings, so a sibling of the
+  same name still wins.
+- Each entry must be an existing directory. One whose absolute path holds
+  `:` is refused at startup, because `mosaic-compile` splits its own search
+  path on `:`.
+- A component with no package keeps the compiler's default search.
+- Checked against the real apps: with
+  `--package-search-path ../../../packages/mosaic`, the html previews of all
+  four render, and without it all four show the error.
+
 ### Changed - the story check compiles with `--strict-fixtures` (#15428)
 
 `compileContext` takes a `strictFixtures` flag, and `compilerArgs` passes
