@@ -112,7 +112,23 @@ test. A new direct consumer of this fixture MUST extend the relation and its
 drift test in the same change. The resulting affected plan and toolchain flags,
 not merely the gate verdict, are the evidence that native tests can run.
 For an explicitly single-language invocation, only consumers in that language
-are seeded and checked; all-language CI retains the full ten-consumer check.
+are seeded and checked; all-language CI retains the full twelve-consumer check.
+
+The exact flat case family
+`code/specs/fixtures/build-tool-v1/cases/ci-gate-selection-*.json` has a
+separate direct-native-consumer relation: `go/programs/build-tool` (whose
+`go test ./...` BUILD front runs `internal/cigates`) and
+`python/programs/build-tool` (whose BUILD front runs the Python fixture
+suite). Any changed path matching this family, including the deleted source
+of a rename, MUST seed those two package roots before affected/prerequisite
+closure on detect and every platform override. Ordinary changed roots are
+united with these roots; sibling fixture domains and nested/lookalike paths
+MUST NOT trigger them. Explicit Go or Python single-language plans seed only
+their own consumer; other single-language plans seed neither. An applicable
+registered consumer absent from discovery MUST fail planning without writing
+an incomplete plan. The emitted affected set and Go/Python toolchain flags
+MUST demonstrate native scheduling with `force=false`. A new direct reader of
+this family must extend the relation and its drift test together.
 
 ## Evaluation
 
