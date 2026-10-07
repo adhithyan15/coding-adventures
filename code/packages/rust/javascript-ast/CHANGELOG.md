@@ -2,6 +2,16 @@
 
 All notable changes to the `coding-adventures-javascript-ast` crate will be documented in this file.
 
+## [Unreleased]
+
+### Added - borrowed structural equality excluding CV identity (CLOC31)
+
+`EqIgnoringCv` compares all represented fields recursively except `cv`, without
+cloning or serialization. It preserves raw spellings, distinguishes signed zero
+and rejects NaN equality. Exhaustive variant matches and struct destructuring
+make new AST shapes require an explicit comparison update. Ordinary `PartialEq`
+continues to include provenance metadata.
+
 ## [0.42.1] - 2026-09-23
 
 ### Fixed — `DebuggerStatement` rustdoc asserted a behaviour that never existed — CCR-053

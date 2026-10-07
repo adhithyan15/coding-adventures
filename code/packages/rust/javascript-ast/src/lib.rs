@@ -93,7 +93,10 @@ use serde::{Deserialize, Serialize};
 
 pub mod declaration;
 pub mod expression;
+pub mod equality;
 pub mod statement;
+
+pub use equality::EqIgnoringCv;
 
 /// Serde adapter that serializes [`EsVersion`] as a string via its
 /// `Display` impl and deserializes via its `FromStr`.

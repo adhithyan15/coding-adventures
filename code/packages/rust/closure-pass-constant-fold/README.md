@@ -5,33 +5,31 @@ clone. Folds compile-time-evaluable expressions per
 [CLOC06](../../../specs/CLOC06-pass-interface-contract.md)'s canonical
 pass set.
 
-## What's here (v1)
+## Implemented behavior
+
+The pass performs a bottom-up walk. It folds arithmetic, bitwise operations, primitive comparisons, string
+members/methods and other guarded constant operations. See the changelog and
+ported upstream tests for the implemented families.
+
+[CLOC31](../../../specs/CLOC31-primitive-fold-lineage.md) repairs traced
+string-literal `.length`, primitive binary and primitive unary folds: each
+replacement retains available operand CVs and owns its `constant-fold/folded`
+contribution. Nested folds retain child history. Other families still require
+the CCR-065 lineage audit; this is not a claim of complete output-byte tracing.
+
+Equal conditional branches use borrowed AST comparison excluding CV metadata,
+including values nested inside composite branches. Signed zero and every other
+represented field remain distinct. Primitive branch collapse retains both
+histories; composite branch lineage remains in CCR-065.
 
 - `ConstantFoldPass` implementing the `Pass` trait from
   [`coding-adventures-closure-pass-pipeline`](../closure-pass-pipeline).
-- Metadata pinned:
-  - `name = "constant-fold"`
-  - `iteration_policy = FixedPoint` (folds expose further folds —
-    `2 + 3 + 4` becomes `5 + 4` becomes `9` over two iterations)
-  - `cost = 2` pass-units (tree walk + small constant work per visit)
-  - no `depends_on` or `invalidates` in v1
-- `Pass::run` is **identity** in v1: `javascript-ast` ships only
-  `Program` / `SourceType` today (per CLOC02 Phase 1), so there's
-  nothing to fold. The pass clones the input `Program` unchanged,
-  reports `changed = false` and `nodes_touched = 1`, and emits no
-  contributions per CLOC03 §"When a pass keeps a node unchanged."
+- `name = "constant-fold"`, `iteration_policy = FixedPoint`, `cost = 2`.
+- The bottom-up walk handles nested folds in one pass; later pipeline passes
+  may expose new foldable expressions for the next sweep.
+- A large-stack worker protects the recursive walk on deeply nested inputs.
 
-## Why this PR matters even though it's identity
-
-1. Establishes the crate layout future `closure-pass-*` crates mirror.
-2. Pins the pass metadata the scheduler reads (name, iteration
-   policy, cost).
-3. Wires up the CLOC03 contribution-emission path so once the AST
-   grows foldable nodes, the integration is in place.
-
-## What's coming
-
-Once `javascript-ast` grows `Statement` / `Expression` variants:
+Examples of implemented folds:
 
 - Number folding: `2 + 3 → 5`, `10 * 4 → 40`, `7 - 9 → -2`.
 - Bitwise / shift folding (CLOC15.D): `0xFF & 0x3C → 60`, `1 << 4 | 2 → 18`,
@@ -43,8 +41,10 @@ Once `javascript-ast` grows `Statement` / `Expression` variants:
 - Comparison: `1 < 2 → true`.
 - Conditional folding when condition is constant: `true ? a : b → a`.
 
-Type-aware folding (via the sidecar) lets us avoid folding NaN-vs-NaN
-comparisons or anything where the typechecker is uncertain.
+Each family has guards for supported input shapes, coercion and observable
+effects. Division by zero is deliberately retained rather than replaced with
+the shadowable `Infinity` or `NaN` names. The typechecker remains a separate
+passthrough scaffold; this pass does not claim inference-backed safety.
 
 ## Dependency whitelist
 
