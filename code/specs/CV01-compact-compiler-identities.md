@@ -77,6 +77,20 @@ Until a complete-view schema is introduced, compact import rejects any declared
 `view`, including malformed or contradictory markers, instead of trusting a
 false `filtered` field as permission to reload a partial graph.
 
+Presence is also significant for allocator state: legacy snapshots omit
+`identity`; a present field must deserialize as a valid versioned object.
+`identity: null` is malformed, including in empty or disabled snapshots, and
+must not silently select the legacy allocator. The entry map must reject
+duplicate JSON identity keys before consuming the duplicate payload instead
+of retaining its last record. Apply entry-key rejection to legacy snapshots
+too; snapshots produced by either allocator already have unique entry keys.
+This prevents ambiguous reloads without claiming full graph or metadata-map
+validation. Test empty/disabled null state, both allocator modes, escaped
+duplicate-key spellings, identical/conflicting records and rejection before
+decoding a malformed duplicate value. Parent-list duplicates retain CV01's
+existing semantics. Metadata-map duplicate keys and bounded import remain
+subsequent checked-graph/schema work.
+
 - Keep the existing generic CV suite and hierarchical spelling contracts green.
 - Verify mixed roots, branching, repeated parents, merges, tombstones,
   contributions, origins, disabled allocation and mode toggling.
