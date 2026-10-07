@@ -206,6 +206,13 @@ defaults, class members, module exports and nested statement containers.
 
 ## Compiler limit configuration and diagnostics
 
+`GraphLimits::validate(&self) -> Result<(), String>` is public so CLI and
+programmatic configuration can enforce the same hard ceiling before input work.
+Invalid override syntax returns `ConfigError::InvalidProvenanceLimits(String)`;
+its diagnostic starts with `--correlation_vector_limits:`. Provenance execution
+errors use exit status 1, matching failed compilation, while existing I/O
+failures retain their established status.
+
 `SpecialModesConfig.correlation_vector_limits: GraphLimits` stores the selected
 limits and defaults to `GraphLimits::default()`. `GraphLimits` supports ordinary
 `PartialEq`/`Eq` configuration comparison. The CLI flag
