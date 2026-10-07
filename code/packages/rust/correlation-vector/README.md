@@ -60,6 +60,12 @@ The hex watermark includes allocations while storage was disabled, so reloading
 an empty or partially stored log cannot reuse IDs. Import rejects unknown modes,
 malformed/mismatched identities and uncovered allocation values. A declared
 filtered view is not accepted as a full reloadable compact log.
+Legacy logs omit `identity`; any present field must be a versioned object,
+so `identity: null` is rejected even for empty disabled logs. Import rejects
+duplicate entry keys in both modes before decoding the duplicate payload,
+including equivalent escaped key spellings. It never silently overwrites
+earlier evidence during reload. These checks do not validate metadata-map
+duplicates or the complete graph; those remain foundation requirements.
 
 `try_create`, `try_derive` and `try_merge` return allocation errors without
 changing state. The original string-returning methods fail fast if counters

@@ -99,6 +99,61 @@ fn malformed_compact_identity_state_is_rejected() {
 }
 
 #[test]
+fn present_identity_requires_an_object_even_for_empty_disabled_logs() {
+    for enabled in [false, true] {
+        for identity in [Value::Null, Value::Bool(false), serde_json::json!([])] {
+            let snapshot = serde_json::json!({
+                "entries": {}, "pass_order": [], "enabled": enabled,
+                "identity": identity,
+            });
+            assert!(CVLog::from_json_string(&snapshot.to_string()).is_err());
+        }
+        let legacy = serde_json::json!({
+            "entries": {}, "pass_order": [], "enabled": enabled,
+        });
+        let mut loaded = CVLog::from_json_string(&legacy.to_string()).unwrap();
+        assert_eq!(loaded.create(None), "00000000.1");
+    }
+}
+
+#[test]
+fn import_rejects_duplicate_entry_keys_before_decoding_the_second_payload() {
+    // Raw JSON is essential: building a Value first would erase duplicate keys
+    // and make this test exercise the library on already-discarded evidence.
+    for compact in [false, true] {
+        let id = if compact {
+            "cv1.0000000000000001"
+        } else {
+            "00000000.1"
+        };
+        let identity = if compact {
+            r#", "identity":{"scheme":"compact-v1","last_sequence":"0000000000000001"}"#
+        } else {
+            ""
+        };
+        let entry = format!(
+            r#"{{"id":"{id}","parent_ids":[],"origin":null,"contributions":[],"deleted":null}}"#
+        );
+        // Literal and escaped spellings represent the same JSON identity key.
+        let escaped = id.replacen('0', r"\u0030", 1);
+        for second_key in [id, escaped.as_str()] {
+            for second_value in [entry.as_str(), "null", r#"{"id":"conflicting"}"#] {
+                let raw = format!(
+                    r#"{{"entries":{{"{id}":{entry},"{second_key}":{second_value}}},"pass_order":[],"enabled":true{identity}}}"#
+                );
+                let error = CVLog::from_json_string(&raw)
+                    .err()
+                    .expect("accepted duplicate identity");
+                assert!(error.contains("duplicate CV entry identity"), "{error}");
+            }
+        }
+        let unique =
+            format!(r#"{{"entries":{{"{id}":{entry}}},"pass_order":[],"enabled":true{identity}}}"#);
+        assert_eq!(CVLog::from_json_string(&unique).unwrap().entries.len(), 1);
+    }
+}
+
+#[test]
 fn allocation_exhaustion_and_collision_leave_log_unchanged() {
     let mut log = CVLog::new_compact(true);
     log.compact_sequence = Some(u64::MAX);

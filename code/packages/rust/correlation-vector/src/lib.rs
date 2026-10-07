@@ -245,6 +245,47 @@ struct CompactIdentityState {
     last_sequence: String,
 }
 
+// Legacy logs omit allocator state. A present state must be an object: ordinary
+// Option deserialization would erase a null marker and silently select legacy
+// allocation, especially for empty logs whose IDs cannot reveal the scheme.
+fn deserialize_present_identity<'de, D: serde::Deserializer<'de>>(
+    deserializer: D,
+) -> Result<Option<CompactIdentityState>, D::Error> {
+    CompactIdentityState::deserialize(deserializer).map(Some)
+}
+
+// A provenance identity names exactly one record. HashMap's normal JSON loader
+// keeps the last duplicate value, silently replacing earlier evidence. Inspect
+// each decoded key before its value; escaped spellings are already normalized,
+// and a duplicate's potentially malformed payload is never decoded.
+fn deserialize_unique_entries<'de, D: serde::Deserializer<'de>>(
+    deserializer: D,
+) -> Result<HashMap<String, CVEntry>, D::Error> {
+    struct UniqueEntries;
+    impl<'de> serde::de::Visitor<'de> for UniqueEntries {
+        type Value = HashMap<String, CVEntry>;
+
+        fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            formatter.write_str("a map of unique CV entry identities")
+        }
+
+        fn visit_map<M: serde::de::MapAccess<'de>>(
+            self,
+            mut map: M,
+        ) -> Result<Self::Value, M::Error> {
+            let mut entries = HashMap::new();
+            while let Some(id) = map.next_key::<String>()? {
+                if entries.contains_key(&id) {
+                    return Err(serde::de::Error::custom("duplicate CV entry identity"));
+                }
+                entries.insert(id, map.next_value::<CVEntry>()?);
+            }
+            Ok(entries)
+        }
+    }
+    deserializer.deserialize_map(UniqueEntries)
+}
+
 // Keep field presence distinct from a JSON null marker: even `view: null`
 // declares a view and cannot authorize importing a full compact log.
 fn deserialize_present_view<'de, D: serde::Deserializer<'de>>(
@@ -1020,10 +1061,11 @@ impl CVLog {
     pub fn from_json_string(s: &str) -> Result<Self, String> {
         #[derive(Deserialize)]
         struct LogSnapshot {
+            #[serde(deserialize_with = "deserialize_unique_entries")]
             entries: HashMap<String, CVEntry>,
             pass_order: Vec<String>,
             enabled: bool,
-            #[serde(default)]
+            #[serde(default, deserialize_with = "deserialize_present_identity")]
             identity: Option<CompactIdentityState>,
             #[serde(default, deserialize_with = "deserialize_present_view")]
             view: Option<Value>,
