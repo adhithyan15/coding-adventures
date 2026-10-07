@@ -4,6 +4,27 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Added locally - explicit Linux/macOS publication policy support (CV02)
+
+Capture UID/GID/mode from held descriptors and reject foreign output owners.
+Linux descriptor-bound access/default ACL presence queries and macOS extended
+ACL entry/control queries reject unsupported policies before staging or original
+mutation. Native query errors fail closed; other Unix targets are unsupported.
+Separate permanently empty probes in the actual output parent preserve ordinary
+umask/group/setgid creation semantics and verify assignment and fresh opens.
+
+Prepare data-bearing files with owner-only mode, apply supported ownership before
+final mode during installation, and verify exact UID/GID/mode and ACL absence.
+Recheck original, stage and parent policies at boundaries. Pre-commit failure
+restores owner-only candidate mode without requiring a group reset; retained
+original inodes preserve their original ownership and mode.
+
+Seven cases per Unix platform cover mode-only drift, owner/group/mode replacement,
+actual-parent creation policy, private prepared files, rollback and access/parent
+ACL rejection. Strict all-target Linux/macOS cross-checks pass; native Unix runtime
+and final complete security review remain pending. All 20 Windows publication
+units and four artifact process tests pass after integration. #16905 remains draft.
+
 ### Fixed locally - fresh verification opens during policy preflight (CV02)
 
 Independent review found that retained probe handles continued to permit policy
@@ -28,9 +49,10 @@ and restore candidate privacy on pre-commit failure before rollback.
 The two previously failing ACL assertions now pass. Four additional native tests
 cover inherited replacement/new-file policy, metadata-preserving ACL changes,
 policy-install failure recovery and stale inherited policy rejection. The Windows
-publication unit suite passes 19 tests; compiler strict all-target lint passes.
-Exact-head security review and Linux/macOS ACL/ownership implementation remain
-pending, so #16905 stays draft. No full SACL/integrity preservation is claimed.
+publication unit suite initially passed 19 tests; the subsequent fresh-open repair
+passes 20 and has independent Windows-scope approval. Complete final review and
+native Unix runtime validation remain pending, so #16905 stays draft. No full
+SACL/integrity preservation is claimed.
 
 ### Known issue - output and staging access controls (CV02 review)
 

@@ -13,6 +13,8 @@ use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::SystemTime;
 
+#[cfg(unix)]
+mod unix_security;
 #[cfg(windows)]
 mod windows_security;
 
@@ -91,6 +93,8 @@ struct Observed {
     permissions: Permissions,
     #[cfg(windows)]
     policy: windows_security::Policy,
+    #[cfg(unix)]
+    policy: unix_security::Policy,
 }
 impl Observed {
     fn from_file(file: File) -> io::Result<Self> {
@@ -98,13 +102,15 @@ impl Observed {
         let metadata = file.metadata()?;
         #[cfg(windows)]
         let policy = windows_security::Policy::capture(&file)?;
+        #[cfg(unix)]
+        let policy = unix_security::Policy::capture(&file)?;
         Ok(Self {
             file,
             id,
             len: metadata.len(),
             modified: metadata.modified().ok(),
             permissions: metadata.permissions(),
-            #[cfg(windows)]
+            #[cfg(any(windows, unix))]
             policy,
         })
     }
@@ -289,7 +295,7 @@ fn preflight(outputs: &[(PathBuf, String)]) -> Result<Vec<Destination>, Compiler
         let original =
             observe(&path, false).map_err(|error| failure(requested, "preflight output", error))?;
         if let Some(file) = &original {
-            #[cfg(windows)]
+            #[cfg(any(windows, unix))]
             file.policy
                 .check_assignable_owner()
                 .map_err(|error| failure(requested, "preflight output policy", error))?;
@@ -345,7 +351,9 @@ struct Stage {
     installed: bool,
     #[cfg(windows)]
     intended_policy: windows_security::Policy,
-    #[cfg(windows)]
+    #[cfg(unix)]
+    intended_policy: Option<unix_security::Policy>,
+    #[cfg(any(windows, unix))]
     parent: Observed,
 }
 impl Stage {
@@ -364,7 +372,7 @@ enum Phase {
     Stage,
     Install,
     BackupRemove,
-    #[cfg(windows)]
+    #[cfg(any(windows, unix))]
     Policy,
     RollbackRemove,
     Restore,
@@ -386,7 +394,7 @@ fn publish_with_hook(
             let path = destination.path.clone();
             ensure_parents(path.parent().unwrap(), &mut parents)
                 .map_err(|error| failure(&path, "create output parents", error))?;
-            #[cfg(windows)]
+            #[cfg(any(windows, unix))]
             let parent = observe(path.parent().unwrap(), true)
                 .map_err(|error| failure(&path, "capture output parent policy", error))?
                 .ok_or_else(|| {
@@ -413,13 +421,22 @@ fn publish_with_hook(
                 installed: false,
                 #[cfg(windows)]
                 intended_policy,
-                #[cfg(windows)]
+                #[cfg(unix)]
+                intended_policy: None,
+                #[cfg(any(windows, unix))]
                 parent,
             });
             let stage = stages.last_mut().unwrap();
             #[cfg(windows)]
             verify_policy_support(stage)
                 .map_err(|error| failure(&path, "preflight native output policy", error))?;
+            #[cfg(unix)]
+            {
+                stage.intended_policy =
+                    Some(verify_unix_policy_support(stage).map_err(|error| {
+                        failure(&path, "preflight native output policy", error)
+                    })?);
+            }
             hook(Phase::Stage, &path).map_err(|error| failure(&path, "stage output", error))?;
             stage
                 .directory
@@ -435,6 +452,7 @@ fn publish_with_hook(
             new.file
                 .write_all(body.as_bytes())
                 .map_err(|error| failure(&path, "write stage file", error))?;
+            #[cfg(not(unix))]
             if let Some(old) = &stage.destination.original {
                 new.file
                     .set_permissions(old.permissions.clone())
@@ -455,7 +473,7 @@ fn publish_with_hook(
                 .map_err(|error| failure(path, "check staging directory", error))?;
             let current = observe(path, false)
                 .map_err(|error| failure(path, "recheck destination", error))?;
-            #[cfg(windows)]
+            #[cfg(any(windows, unix))]
             {
                 let parent = observe(path.parent().unwrap(), true)
                     .map_err(|error| failure(path, "recheck output parent", error))?
@@ -521,6 +539,17 @@ fn publish_with_hook(
                 failure(path, "install complete output without overwrite", error)
             })?;
             stage.installed = true;
+            #[cfg(unix)]
+            {
+                hook(Phase::Policy, path)
+                    .map_err(|error| failure(path, "apply output policy", error))?;
+                stage
+                    .intended_policy
+                    .as_ref()
+                    .unwrap()
+                    .apply(&expected.file)
+                    .map_err(|error| failure(path, "apply and verify output policy", error))?;
+            }
             #[cfg(windows)]
             {
                 hook(Phase::Policy, path)
@@ -571,15 +600,23 @@ fn publish_with_hook(
                     invalid("installed output content identity changed"),
                 ));
             }
+            #[cfg(unix)]
+            if installed.policy != *stage.intended_policy.as_ref().unwrap() {
+                return Err(failure(
+                    path,
+                    "verify installed output",
+                    invalid("installed Unix access policy changed"),
+                ));
+            }
         }
         Ok(())
     })();
     if let Err(mut error) = prepared {
-        #[cfg(windows)]
+        #[cfg(any(windows, unix))]
         if let CompilerError::OutputWriteError { message, .. } = &mut error {
             for stage in &stages {
                 if let Some(new) = &stage.new {
-                    if let Err(error) = new.policy.apply(&new.file) {
+                    if let Err(error) = restore_candidate_privacy(new) {
                         message.push_str(&format!(
                             "; restore prepared-file privacy {}: {error}",
                             stage.new_path().display()
@@ -710,11 +747,65 @@ fn create_stage_file(path: &Path) -> io::Result<File> {
     }
     #[cfg(not(windows))]
     {
-        OpenOptions::new()
-            .write(true)
-            .read(true)
-            .create_new(true)
-            .open(path)
+        let mut options = OpenOptions::new();
+        options.write(true).read(true).create_new(true);
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::OpenOptionsExt;
+            options.mode(0o600);
+        }
+        options.open(path)
+    }
+}
+
+#[cfg(unix)]
+fn verify_unix_policy_support(stage: &Stage) -> io::Result<unix_security::Policy> {
+    stage.directory.check()?;
+    // Native ordinary creation in the actual destination parent measures
+    // umask and filesystem group/setgid behavior without changing global state.
+    // This inode is permanently separate from the future data-bearing file.
+    let path = stage.directory.path.with_extension("policy-probe");
+    let file = OpenOptions::new()
+        .read(true)
+        .write(true)
+        .create_new(true)
+        .open(&path)?;
+    let probe = Observed::from_file(file).map_err(|error| {
+        io::Error::new(
+            error.kind(),
+            format!(
+                "cannot identify native creation probe; retained empty probe {}: {error}",
+                path.display()
+            ),
+        )
+    })?;
+    let intended = stage
+        .destination
+        .original
+        .as_ref()
+        .map_or_else(|| probe.policy.clone(), |old| old.policy.clone());
+    let checked = (|| {
+        intended.apply(&probe.file)?;
+        let fresh = observe(&path, false)?
+            .ok_or_else(|| invalid("active Unix policy probe disappeared"))?;
+        if fresh.id != probe.id || fresh.len != 0 || fresh.policy != intended {
+            return Err(invalid(
+                "fresh Unix policy probe identity or policy changed",
+            ));
+        }
+        Ok(())
+    })();
+    let cleaned = (|| {
+        use std::os::unix::fs::PermissionsExt;
+        probe.file.set_permissions(Permissions::from_mode(0o600))?;
+        remove_owned(&path, &probe)
+    })();
+    match (checked, cleaned) {
+        (Ok(()), Ok(())) => Ok(intended),
+        (Err(error), Ok(())) => Err(error),
+        (checked, Err(error)) => Err(io::Error::new(error.kind(), format!(
+            "native Unix policy probe cleanup failed; retained empty probe {}: {error}; validation: {checked:?}", path.display()
+        ))),
     }
 }
 
@@ -778,12 +869,24 @@ fn same_original(expected: &Observed, current: &Observed) -> bool {
     same && same_policy(expected, current)
 }
 
-fn same_policy(expected: &Observed, current: &Observed) -> bool {
+#[cfg(any(windows, unix))]
+fn restore_candidate_privacy(new: &Observed) -> io::Result<()> {
     #[cfg(windows)]
+    {
+        new.policy.apply(&new.file)
+    }
+    #[cfg(unix)]
+    {
+        new.policy.restore_privacy(&new.file)
+    }
+}
+
+fn same_policy(expected: &Observed, current: &Observed) -> bool {
+    #[cfg(any(windows, unix))]
     {
         expected.policy == current.policy
     }
-    #[cfg(not(windows))]
+    #[cfg(not(any(windows, unix)))]
     {
         let _ = (expected, current);
         true

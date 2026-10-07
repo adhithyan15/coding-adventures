@@ -172,8 +172,11 @@ Compiler strict all-target lint passes. An independent follow-up found that an
 OWNER RIGHTS denial could permit retained-handle readback while denying the
 fresh verification open. A committed native red regression reproduces late
 original mutation; the local repair now passes it by proving fresh opens while
-the empty probe has its intended policy. All 898 lesson shards validate.
-Native Linux/macOS ownership and extended-ACL copy-or-reject work and exact-head
+the empty probe has its intended policy. The repaired Windows commit has independent
+scope approval, 20 native publication tests and 1,071 compiler tests across 178
+targets, with no ignores. Linux/macOS UID/GID/mode handling and explicit extended/
+default ACL rejection are implemented locally, with seven native cases each and
+strict cross-checks. Native Unix runtime evidence and complete exact-head
 independent review remain pending; the published draft still contains the known
 defect and cannot be accepted on its older green CI.
 The new native Windows tests first reproduce both policy defects, including all

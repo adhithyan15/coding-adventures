@@ -229,13 +229,25 @@ CI/merge verification remain required before CV02 acceptance.
 The Windows repair creates staging directories and files atomically with a
 protected current-user DACL. It captures and rechecks owner/group/DACL/protection,
 proves the intended policy and production fresh verification open on a distinct
-always-empty probe, and verifies the installed policy exactly. Explicit legacy and inherited policies use separately
+always-empty probe, and verifies the installed policy exactly. Explicit legacy
+and inherited policies use separately
 verified handle routes; unsupported or stale inherited policies reject before
 originals change. Pre-commit failure restores candidate privacy before rollback.
 Native Windows regressions cover preparation, protected replacement, inherited
 and new-file policy, ACL-only changes, rejection and rollback. PR #16905 remains
-draft pending exact-head independent review and native Linux/macOS ownership and
-extended-ACL copy-or-reject coverage. Audit SACLs/integrity claims are unproven.
+draft pending complete exact-head independent review and native-platform CI.
+Audit SACLs/integrity claims are unproven.
+
+The Linux/macOS implementation supports ordinary owner/group/mode policies.
+Descriptor-bound extended access/default ACL queries reject unsupported ACLs
+before staging or original mutation. Distinct empty creation probes measure the
+actual parent's group/setgid and umask behavior, prove group-assignment capability,
+and permit fresh verification opens. Data-bearing files stay owner-only until
+installation; final ownership precedes mode application and exact verification.
+Failure restores candidate owner-only mode before cleanup, without requiring an
+unnecessary group reset. Other Unix targets fail explicitly. Seven native cases
+per platform are committed and strict Linux/macOS cross-checks pass; native Unix
+runtime validation remains pending CI. Cross-compilation is not ACL runtime evidence.
 
 ### Measured parity
 
