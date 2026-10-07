@@ -10,7 +10,18 @@ every backend reproduces its results.
 
 Implements [SIR27](../../../specs/SIR27-c-to-semantic-ir.md).
 
+The PREP01 C adapter is being built in stages. `dialect::CDialect` can classify
+the core directive shapes and run object and function-like macros, local
+includes, `#ifdef`, `defined`, and bounded decimal comparisons in `#if` through
+the generic engine. `compile_source` has not yet been switched to that token
+stream; full C `#if` expressions, stringize, and paste remain pending. The
+existing C source behavior is unchanged at this stage.
+
 ## API
+
+The PREP01 C directive adapter is currently a staged component. The public
+`compile_source` API below still uses the legacy C source parser path; it does
+not run the generic preprocessor yet.
 
 ```rust
 use c_to_semantic_ir::compile_source;

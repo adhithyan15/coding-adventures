@@ -610,9 +610,47 @@ retain the engine's read guards. The in-memory include API checks unused files,
 names, count, and aggregate bytes before copying them into `MemoryFs`.
 
 **Slice 4 — the C dialect, and real C.**
+The first publishable stage establishes the directive lexer, bounded token
+parser handoff, and a deliberately limited C dialect with direct engine tests.
+It does not satisfy Slice 4's end-to-end acceptance until the C frontend uses
+that preprocessed stream and the remaining C macro and condition semantics are
+implemented.
 `c.tokens` stops discarding `#…` lines; `c-lexer` surfaces directive tokens; a
 `CDialect` implements §5; `c-to-semantic-ir` runs the engine as its
 `post_tokenize` hook. `SIR27`'s preprocessor scope statement is updated.
+The parser handoff is a prerequisite: `c-parser` exposes a fallible token-input
+entry point that uses the same compiled C grammar and recursion cap as its
+source-input entry point. It accepts the preprocessor's directive-free token
+stream without reconstructing source text or re-lexing it. Before invoking the
+packrat parser, this public entry point refuses more than 2,000,000 tokens,
+more than 64 MiB of aggregate token text (values, type names, and provenance
+IDs), or any one of those fields longer than 64 KiB. These finite ceilings use
+the shared preprocessor's default produced-token and token-spelling ceilings,
+with an additional 64 MiB aggregate text ceiling at the parser boundary. The C
+dialect will use the shared preprocessor's bounds for input and expansion; the
+parser handoff retains its own guard because it is also a public API.
+The token-input parser accepts a nonempty stream with no EOF sentinel or one
+final EOF sentinel. It rejects an empty stream and any EOF before the end,
+so trailing tokens cannot be silently ignored.
+The public C dialect classifier also accepts caller-supplied token metadata;
+function-like macro adjacency must use checked column arithmetic so an
+untrusted column cannot panic or wrap.
+The lexer exposes `#` and `##` as ordinary directive tokens rather than
+silently skipping their lines. During the handoff, the existing source-input
+`c-parser` API retains its historical behavior of ignoring directive lines;
+the token-input API never removes them. The C frontend switches to the
+preprocessor stream before that compatibility path is retired. A local quoted
+header can be lexed as a string token; `<...>` headers remain a separate system
+include policy decision and are not resolved from the host toolchain.
+The staged condition evaluator may accept a single comparison of expanded
+decimal integer literals or undefined identifiers, including `==`, `!=`,
+`<`, `<=`, `>`, and `>=`. It rejects more complex controlling expressions until
+their C integer-constant-expression semantics are implemented.
+Multi-digit leading-zero literals are C octal and must be rejected by this
+decimal-only stage instead of being silently evaluated as decimal.
+Until stringize and paste are implemented, a `#define` replacement containing
+`#` or `##` must fail explicitly rather than emit those operator tokens as C
+source.
 *Acceptance:* a C program using `#define` (object- and function-like), `#if`/
 `#ifdef`/`#else`/`#endif` and a real project-local `#include` compiles through
 `c-to-semantic-ir` and executes with the expected result — the first C program

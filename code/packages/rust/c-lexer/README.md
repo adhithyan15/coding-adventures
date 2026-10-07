@@ -17,11 +17,11 @@ let tokens = tokenize_c("int32_t x = 5;");
 
 ## Subset notes
 
-No context-sensitive hooks are needed: whole preprocessor lines (`#…`) are
-dropped by the grammar's `skip:` section, and the `<stdint.h>` fixed-width type
-names + `size_t` are lexed as **keywords** — so the two features that make full
-C context-sensitive (the preprocessor and the typedef/identifier ambiguity)
-never arise in v1.
+The lexer exposes `#`, `##`, and `.` so PREP01 can receive directive tokens,
+including local and system header names. It still skips whitespace and comments.
+The legacy source-input C parser ignores directive lines until the PREP01 C
+dialect is connected; its token-input API expects directive-free tokens.
+Fixed-width type names and `size_t` remain **keywords** in this subset.
 
 ## Regenerating the grammar
 
