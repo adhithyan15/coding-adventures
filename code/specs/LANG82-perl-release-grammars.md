@@ -215,3 +215,31 @@ Its tokenizer changes command-line `-p` expansion and quoted delimiter
 handling outside the partial decimal `print` arithmetic subset. Record
 a distinct pair with the inherited 250-digit bound and reject unsupported
 syntax rather than claiming full release coverage.
+
+Prepare a later bounded maintenance installment with separate, explicitly partial
+pairs for `5.004_02_01`, `5.004_03-t2`, and `5.004_03`. The historical
+`perl-5.004_02_01.tar.gz` archive (SHA-256
+`e2fdda04633175d078cd2312a1e49374dbda9a7d35f8d6b95c993f20ee9d5420`)
+contains `perly.y` and `toke.c` byte-identical to 5.004_02. The separate
+`perl-5.004_03-t2.tar.gz` archive (SHA-256
+`077ca5870518c79c49a1fd2be9e39bdfbf23ad793cc2e1b87ad7168474e081c4`)
+retains those source blobs. The 5.004_03 historical archive (SHA-256
+`78b1905fdad1a0c5e1782651c898667b9c9b2a1ead88228021fc9c7752a2c85e`)
+matches the official `perl-5.004_03` tag's `perly.y` and `toke.c` Git blobs;
+its tokenizer only adds input-handle cleanup relative to the t2 archive.
+
+Each release still needs its own token and grammar file. Retain only the
+plain-decimal `print` arithmetic subset, its 250-digit lexical boundary, and
+negative probes for leading-zero forms, decrement adjacency, carriage returns,
+and unsupported characters. This stage does not extend executable LANG81
+semantics or claim full Perl release syntax. Keep `5.004_01-t1` pending until
+its own primary source evidence is found.
+
+A 2026-10-07 inventory audit reparsed the pinned `perlhist.pod` blob,
+including uncertain-date suffixes and expanded range rows. All 765 release
+identifiers found there are present in `releases.csv`; the other 11 rows are
+the separately annotated RC tags already cited by that inventory. This
+checks coverage of those pinned sources only. It does not prove that the
+inventory contains every public release after the snapshot or every
+historical distribution not named there; keep new discoveries explicit and
+never treat a pending or partial row as complete syntax.
