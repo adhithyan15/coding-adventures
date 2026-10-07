@@ -81,6 +81,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/cynefin-11.16.1-visual-corpus.json"
     ));
+    const TREEVIEW_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/treeview-11.16.1-corpus.json"
+    ));
+    const TREEVIEW_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/treeview-11.16.1-visual-corpus.json"
+    ));
 
     #[test]
     fn render_dot_diagram_to_png() {
@@ -3411,6 +3419,52 @@ line "Target" [35, 50, 68, 82]"##,
         let empty_pixels = render(&empty_scene);
         write_png(&empty_pixels, "/tmp/mermaid_treeview_empty_e2e.png").expect("empty treeview PNG write failed");
         assert!(empty_pixels.width > 0 && empty_pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_treeview_visual_corpus_to_png() {
+        let syntax: Value = serde_json::from_str(TREEVIEW_CORPUS).expect("treeview corpus JSON");
+        let visual: Value = serde_json::from_str(TREEVIEW_VISUAL_CORPUS).expect("treeview visual corpus JSON");
+        assert_eq!(visual["upstream_commit"], syntax["upstream_commit"]);
+        let fixtures = syntax["fixtures"].as_array().expect("treeview fixtures");
+        let fixture_names = visual["fixtures"].as_array().expect("treeview visual fixture names");
+        let unique = fixture_names.iter().filter_map(Value::as_str).collect::<BTreeSet<_>>();
+        assert_eq!(unique.len(), fixture_names.len(), "visual fixture names must be unique");
+
+        let options = TreeViewLayoutOptions { icon_glyphs: BTreeMap::from([
+            ("devicon:custom".into(), DiagramIconGlyph { text: "C".into(), font_family: "Helvetica".into() }),
+            ("devicon:rust".into(), DiagramIconGlyph { text: "R".into(), font_family: "Helvetica".into() }),
+            ("devicon:typescript".into(), DiagramIconGlyph { text: "T".into(), font_family: "Helvetica".into() }),
+            ("logos:markdown".into(), DiagramIconGlyph { text: "M".into(), font_family: "Helvetica".into() }),
+            ("logos:react".into(), DiagramIconGlyph { text: "R".into(), font_family: "Helvetica".into() }),
+            ("logos:special".into(), DiagramIconGlyph { text: "S".into(), font_family: "Helvetica".into() }),
+            ("logos:typescript".into(), DiagramIconGlyph { text: "T".into(), font_family: "Helvetica".into() }),
+        ]) };
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        for fixture_name in fixture_names {
+            let name = fixture_name.as_str().expect("visual fixture name");
+            let fixture = fixtures.iter().find(|fixture| fixture["name"] == name)
+                .unwrap_or_else(|| panic!("visual fixture {name} must exist in the syntax corpus"));
+            let diagram = parse_treeview(fixture["source"].as_str().expect("treeview fixture source"))
+                .unwrap_or_else(|error| panic!("visual fixture {name} failed to parse: {error}"));
+            let layout = layout_treeview_with_options(&diagram, 720.0, Some(&options));
+            let scene = diagram_to_paint_treeview(&layout, &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 13.0),
+                title_font: font_spec("Helvetica", 18.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            });
+            assert!(!scene.instructions.is_empty(), "visual fixture {name} must lower to paint");
+            let pixels = render(&scene);
+            assert!(pixels.width > 0 && pixels.height > 0, "visual fixture {name} must render");
+            write_png(&pixels, &format!("/tmp/mermaid_treeview_11_16_1_{name}.png"))
+                .unwrap_or_else(|error| panic!("visual fixture {name} PNG failed: {error}"));
+        }
     }
 
     #[test]

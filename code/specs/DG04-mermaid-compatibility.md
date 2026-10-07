@@ -791,7 +791,7 @@ and lowers as a backend-neutral dark-red four-pixel path.
 
 ### TreeView Native Slice
 
-The initial Mermaid 11.16.1 TreeView slice recognizes `treeView-beta` and
+The complete pinned Mermaid 11.16.1 TreeView corpus recognizes `treeView-beta` and
 parses indentation-based and standard/heavy box-drawing hierarchies into
 dedicated tree IR. File/directory identity, quoted and bare labels, title and
 accessibility metadata, `:::class`, `icon()`, and `##` descriptions survive
@@ -822,8 +822,10 @@ and highlighted rows expand to that content-derived right edge independent of
 the caller's width hint. The inherited `useMaxWidth` setting survives config,
 layout, and PaintScene metadata so embedding backends can choose responsive or
 absolute presentation without coupling that policy to geometry.
-Automatic loading and conversion of Iconify pack artwork, exact browser
-typography, and interactive behavior remain unsupported at the partial level.
+The pinned syntax corpus and native Metal visual corpus cover the upstream
+parser and renderer cases, so TreeView is `full` in the compatibility manifest.
+Automatic Iconify pack loading remains host-owned and exact typography remains
+backend-specific; resolved icon identities and geometry stay backend-neutral.
 
 ### Railroad Native Slice
 
