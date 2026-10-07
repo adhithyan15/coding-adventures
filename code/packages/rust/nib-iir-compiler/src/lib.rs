@@ -98,6 +98,13 @@ impl std::error::Error for CompileError {}
 /// `fn main()` declaration; otherwise the first compiled function.
 pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, CompileError> {
     let ast = parse_nib(source).map_err(|e| CompileError::Parse(format!("{e}")))?;
+    compile_ast(ast, module_name)
+}
+
+/// Compile an already-parsed Nib AST, including one parsed from a
+/// preprocessed token stream. Nib's type rules and lowering are shared with
+/// [`compile_source`].
+pub fn compile_ast(ast: GrammarASTNode, module_name: &str) -> Result<IIRModule, CompileError> {
     let result = check(ast);
     if !result.ok {
         return Err(CompileError::Type(
