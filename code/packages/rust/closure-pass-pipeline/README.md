@@ -72,3 +72,12 @@ Scheduler-owned current and candidate programs are disposed iteratively on error
 and intermediate replacements, including custom pass candidates. Only accepted
 final output ownership transfers to the caller. This protects cleanup on small
 stacks; it does not establish bounds for arbitrary pass traversal or construction.
+
+With `CVLog::new_checked_chronology`, the scheduler records every actual pipeline
+and pass invocation, including nested runs, repeated OneShot/unchanged passes,
+confirming sweeps and errors. Pass context includes returned-contribution and
+candidate acceptance; a successful callback can still fail acceptance. Begin
+reserves infallible terminal recording before entering callbacks, preserving
+deep owned results. Accepted schedules retain stable selected names/policies
+once, and pass contexts resolve them by sweep/slot. `execution_order` remains
+the distinct schedule inventory; final-sweep stats are not an invocation log.

@@ -274,7 +274,7 @@ compiler passes         ←  contribute/derive/merge/delete as they transform th
 The CV library has no knowledge of compilers, IR nodes, or any specific domain. It is a
 pure data structure and a set of operations over it.
 
-Generic `from_json_string` imports remain allocator-only even after mutation.
+Generic `from_json_string` imports without a journal remain allocator-only even after mutation.
 Strict queries and validation reject them; their snapshots retain
 `unchecked_import: true`, which checked import rejects. This prevents a
 normalized duplicate key or omitted array from becoming checked evidence
@@ -283,3 +283,43 @@ through save/reload. Use `from_checked_json` at evidence boundaries.
 Checked parsing charges object-key work before the decoder runs and validates
 borrowed key schema/duplicates/encoded payload bytes before ownership copies.
 Escaped-string scratch is bounded by the input-byte cap.
+
+`CVLog::new_checked_chronology(limits)` starts an independent global operation
+clock on a fresh checked compact log. `journal()` borrows its read-only records;
+other constructors return `None`, meaning chronology unavailable. Accepted
+create/derive/merge/contribution/deletion operations each retain one journal
+record referencing the graph fact, without another copy of arbitrary metadata.
+Rejected operations consume neither a journal sequence nor a CV identity.
+Contributions and scopes advance the journal independently of identity allocation.
+For chronology logs the event cap charges graph contribution/deletion facts,
+journal records and schedule descriptors; ordinary checked logs keep their
+original accounting.
+
+Full `chronology-v1` snapshots reload through both `from_checked_json` and
+`from_json_string`, retaining their next append sequence. Declared null, unknown,
+malformed or partial journals reject rather than disappear. The compatibility
+loader probes decoded root keys before allocating metadata, using default input
+and structural work limits. Canonical JSON/pretty JSON include the journal;
+NDJSON writes entry lines, then `_event` frames, then `_meta` with journal state
+and no duplicate events array. The presentation tests demonstrate reconstruction
+through a small adapter followed by the full checked importer; there is no
+direct NDJSON loader. Filtered journals retain original sequences/watermark and
+declare partial coverage, including when the filter selects every entry.
+
+`with_pipeline`, `record_schedule` and `with_pass` record actual scoped
+invocations. Schedules retain ordered names/policies once; pass scopes reference
+their sweep/slot without another name copy. Contribution/deletion sources
+inside a pass must match its resolved schedule name. Every begin reserves its
+terminal slot and sequence capacity before entering a callback; nested ordinary
+errors restore the outer context while preserving failed children. Callback and
+candidate-acceptance failure have distinct typed outcomes. Event caps charge
+C+D+J+S plus outstanding terminal reservations, where S counts descriptors;
+schedule names consume encoded payload bytes.
+
+Full import/export independently replays top-scope references, ordered slots,
+contiguous sweeps, FixedPoint changes, convergence/cap results and failure
+prefixes. Exact per-variant parser fields supplement serde's tagged unit
+variants. Active/abandoned contexts cannot export full evidence; unsupported
+panic recovery leaves an unusable journal. Filtering retains every context and
+schedule. These checks establish internal consistency, not authenticity of an
+artifact rewritten wholesale or lineage omitted by an instrumented caller.

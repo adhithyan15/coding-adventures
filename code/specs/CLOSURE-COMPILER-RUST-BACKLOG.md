@@ -2,11 +2,11 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 **Last reprioritized:** 2026-10-07
-**Current selection:** CCR-065 checked/bounded graphs and serialization,
-specified in [CV02](CV02-checked-bounded-provenance-graphs.md), branch
-`codex/closurec-graph-foundation-20261007`. CV01 merged and is verified;
+**Current selection:** actual bounded provenance chronology, specified in
+[CV03](CV03-actual-bounded-provenance-chronology.md), branch
+`codex/closurec-chronology-20261007`. CV02 merged and is verified;
 preserve one active Closure/shared-stack PR.
-**Current audit base:** `059acbf9e06ff7c75b1c84f278d09a13adaf53ff`
+**Current audit base:** `9e4b8d1ab9b082f4ec027a67d10f97e3827579f2`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
@@ -193,6 +193,41 @@ return before trace construction. Track their provenance policy with the full
 CLI/diagnostics completion audit; normal compile/export tests do not establish
 source/output coverage for those modes.
 
+CV02 final acceptance supersedes its historical local/published checkpoints
+above. [#16905](https://github.com/adhithyan15/coding-adventures/pull/16905)
+merged at `851ce71fc033f11d0c1716ed895b7026e5c64a81` after independently reviewed
+head `7debd2f26bd36ed243b9cf8273c6c576cd59a886`. Native
+[CI 37673154223](https://github.com/adhithyan15/coding-adventures/actions/runs/37673154223)
+executed the actual compiler test command successfully on Linux, macOS and
+Windows; both required gates, Books and CodeQL were terminal and successful on
+that head. Fetched-main reachability and all 120 reviewed file blobs/modes match.
+The tested binary and validation receipts were preserved before archiving the
+managed worktree. Local compiler verification passed 1,086 tests across 180
+targets with zero ignores. Compact/checked graph and publication foundation is
+accepted; #16868, #15830 and the full delivery contract remain open.
+
+CV03 local implementation now retains a separately sequenced typed graph
+journal and actual pipeline/pass begin, accepted schedule and terminal outcomes.
+Terminal capacity is reserved before callbacks; exact replay checks nested
+contexts, schedule slots/sweeps, result classification and contribution/deletion
+source binding. Strict raw import rejects duplicate decoded fields and malformed
+known declarations, and generic valid full import delegates to the bounded
+checked path. Canonical JSON/pretty/NDJSON and declared-partial projections retain
+chronology. The traced compiler opts in from construction; actual process tests
+observe later-sweep inline/fold ordering, tracing-neutral output, deterministic
+bytes and preservation of the entire existing artifact set on cap failures.
+Full compiler validation found three older NDJSON fixture failures; the readers
+now preserve raw records until checked reconstruction, and projection tests use
+the semantic partial-coverage contract. Final local verification passes: 1,093 compiler tests across 181 targets
+with zero ignores, plus 2,279 shared tests/doctests across 91 targets in all 20
+affected packages (49 existing ignores). Compiler and shared strict all-target
+Clippy pass with unknown lints denied; lessons and whitespace checks pass.
+The real production plan selects the actual compiler command on Linux, macOS
+and Windows, Rust toolchain and the Windows general-test gate without force.
+Build-tool uncached tests/vet and 18 Python CI gate contracts pass. Independent exact-head review, publication and native CI/merge
+remain pending. This chronology slice does not establish exact source/output coverage,
+all fold families, composite spans or provenance for every mutating pass.
+
 The remaining-fold inventory is
 [#16875](https://github.com/adhithyan15/coding-adventures/issues/16875).
 Actual SIMPLE/ADVANCED CLI probes fold Math.abs, string case conversion,
@@ -200,10 +235,9 @@ array.join and Object.keys while losing final fold events; the Math.abs input
 retains only the unary child's history. All traced/untraced bytes match. These
 are initial cases requiring result-owned graph tests, not a complete inventory.
 
-Required next slices: compact IDs and checked/bounded graph/serialization APIs;
-audit remaining fold families; stable composite identities
+Required next slices after CV03: audit remaining fold families; stable composite identities
 and shared source spans on the canonical ESTree boundary; typed lineage events
-with actual pass/sweep ordering; all mutating passes (inline/rename first),
+with complete source/node coverage; all mutating passes (inline/rename first),
 including one-to-many inlining, many-to-one merges, motion and deletion;
 output-range/source-map joins and graph queries. The full compiler delivery
 contract below remains mandatory. No provenance slice alone completes the loop.

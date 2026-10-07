@@ -262,7 +262,7 @@ impl CVLog {
         Ok(())
     }
     pub(super) fn prospective_node(
-        &self,
+        &mut self,
         parents: &[&str],
         origin: Option<&Origin>,
     ) -> Result<Option<Usage>, String> {
@@ -300,10 +300,14 @@ impl CVLog {
             work: &mut work,
         };
         payload.origin(origin)?;
-        Ok(Some(payload.usage))
+        let usage = payload.usage;
+        let limits = state.limits.clone();
+        Ok(Some(
+            self.prepare_journal_record(usage, &limits, &mut work)?,
+        ))
     }
     pub(super) fn prospective_event(
-        &self,
+        &mut self,
         id: &str,
         source: &str,
         tag: &str,
@@ -319,6 +323,7 @@ impl CVLog {
         if entry.deleted.is_some() {
             return Err("checked CV identity is already deleted".into());
         }
+        self.validate_journal_source(source)?;
         let mut usage = state.usage;
         add_bounded(&mut usage.events, 1, state.limits.max_events, "events")?;
         let mut work = Work::new(state.limits.max_work);
@@ -334,7 +339,11 @@ impl CVLog {
         if !self.pass_sources.contains(source) {
             payload.text(source)?;
         }
-        Ok(Some(payload.usage))
+        let usage = payload.usage;
+        let limits = state.limits.clone();
+        Ok(Some(
+            self.prepare_journal_record(usage, &limits, &mut work)?,
+        ))
     }
     pub(super) fn commit_usage(&mut self, usage: Option<Usage>) {
         if let Some(usage) = usage {
@@ -533,10 +542,11 @@ impl CVLog {
                 return Err("duplicate CV stage declaration".into());
             }
         }
-        let usage = payload.usage;
+        let mut usage = payload.usage;
         if declared_sources != seen_sources {
             return Err("CV stage declarations do not match recorded events".into());
         }
+        self.validate_journal(&mut usage, limits, &mut work)?;
         if let Some(state) = &self.checked {
             if verify_usage && state.usage != usage {
                 return Err("checked CV retained usage is inconsistent".into());
@@ -662,7 +672,14 @@ impl CVLog {
     /// validation. Generic from_json_string is allocator-state import and can
     /// retain incomplete recording; compiler query boundaries use this API.
     pub fn from_checked_json(text: &str, limits: GraphLimits) -> Result<Self, String> {
-        let (value, mut work) = super::bounded_json::parse(text, &limits)?;
+        Self::from_checked_json_with_work(text, limits.clone(), Work::new(limits.max_work))
+    }
+    pub(super) fn from_checked_json_with_work(
+        text: &str,
+        limits: GraphLimits,
+        work: Work,
+    ) -> Result<Self, String> {
+        let (value, mut work) = super::bounded_json::parse_with_work(text, &limits, work)?;
         // Reserve the parser's structural visits again before serde consumes the
         // bounded representation. No conversion phase receives a fresh budget.
         work.reserve_conversion()?;
@@ -686,6 +703,7 @@ impl CVLog {
                 usage: Usage::default(),
             }),
             allocator_only_import: false,
+            journal: snapshot.journal,
         };
         let usage = log.validated_graph_with_work(&limits, false, work)?.usage;
         log.checked.as_mut().unwrap().usage = usage;

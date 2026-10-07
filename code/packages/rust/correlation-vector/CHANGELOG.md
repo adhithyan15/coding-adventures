@@ -4,6 +4,38 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - independent bounded graph chronology (CV03)
+
+Fresh `new_checked_chronology` logs retain typed, read-only globally sequenced
+create/derive/merge/contribution/deletion references. Prospective graph and
+journal admission share event/work accounting and reject before consuming
+either watermark. Strict bounded import independently replays node allocation,
+parent creation, contribution indices, tombstones, complete fact coverage and
+first contributor inventory. Present malformed/null/unknown/partial journals
+reject through both import APIs; valid full journals preserve append state.
+Compatibility loading first performs a bounded root-presence probe without
+retaining a metadata tree. Canonical compact/pretty JSON borrow records; NDJSON
+adds `_event` frames and a state-only footer. Filtered views retain original
+sequence gaps/watermark and declare partial coverage, requiring full validation
+before selection.
+
+### Added - scoped chronology, reservations and independent replay (CV03)
+
+Typed pipeline/pass begin, schedule and end records preserve actual nested
+invocations, sweep/slot positions and distinct terminal outcomes. Begin reserves
+infallible end completion before callbacks. Graph and nested mutations protect
+all outstanding slots/vector/sequence capacity; fixed outcomes avoid copying
+errors or names. Encoded schedule names consume payload bytes, descriptors
+consume event charges. Independent replay rejects non-top/closed refs,
+out-of-order or extra sweeps/slots, false convergence/cap, cross-kind outcomes,
+wrong source/schedule binding and truncated/duplicate schedules. The bounded
+parser enforces exact variant fields beyond serde's tagged-unit behavior.
+Compatibility probing carries its consumed work into checked import.
+Unsupported panic recovery remains explicitly unexportable. Filtered journals
+retain all scope/schedule records and original refs. Small-stack ownership,
+precision/exhaustion, exact-cap and malformed evidence regressions cover these
+boundaries; whole-artifact authenticity remains outside this consistency check.
+
 ### Added - bounded checked presentation exports (CV02)
 
 Borrowed `SourceFilter`, `SnapshotFormat` and `SummaryFormat` drive fallible

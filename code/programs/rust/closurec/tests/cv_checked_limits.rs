@@ -3,6 +3,8 @@
 use std::path::PathBuf;
 use std::process::{Command, Output};
 use std::sync::atomic::{AtomicU64, Ordering};
+#[path = "common/chronology_ndjson.rs"]
+mod chronology_ndjson;
 
 struct Fixture {
     dir: PathBuf,
@@ -385,22 +387,12 @@ fn checked_process_exports_are_deterministic_across_formats_filters_and_summarie
                 };
                 if let Some(body) = &sidecar {
                     let text = std::str::from_utf8(body).unwrap();
-                    let root: serde_json::Value = if options.contains(&"NDJSON") {
-                        let mut lines: Vec<serde_json::Value> = text
-                            .lines()
-                            .map(|s| serde_json::from_str(s).unwrap())
-                            .collect();
-                        let mut root = lines.pop().unwrap()["_meta"].clone();
-                        let entries = lines
-                            .into_iter()
-                            .map(|e| (e["id"].as_str().unwrap().to_string(), e))
-                            .collect();
-                        root["entries"] = serde_json::Value::Object(entries);
-                        root
+                    let json = if options.contains(&"NDJSON") {
+                        chronology_ndjson::reconstruct(text, &GraphLimits::default()).unwrap()
                     } else {
-                        serde_json::from_str(text).unwrap()
+                        text.to_owned()
                     };
-                    let json = serde_json::to_string(&root).unwrap();
+                    let root: serde_json::Value = serde_json::from_str(&json).unwrap();
                     if options.contains(&"--correlation_vector_filter") {
                         assert_eq!(
                             root["view"],

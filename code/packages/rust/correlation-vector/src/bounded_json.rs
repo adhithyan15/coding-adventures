@@ -26,6 +26,21 @@ enum Role {
     Scheme,
     Sequence,
     Metadata,
+    Journal,
+    Records,
+    Record,
+    Operation,
+    Version,
+    Coverage,
+    MaybeSequence,
+    Kind,
+    Scope,
+    ScopeKind,
+    Outcome,
+    OutcomeKind,
+    Descriptors,
+    Descriptor,
+    Policy,
 }
 impl Role {
     fn child(self, key: &str) -> Result<Self, String> {
@@ -35,6 +50,24 @@ impl Role {
             (Root, "pass_order") => Stages,
             (Root, "enabled") => Bool,
             (Root, "identity") => Identity,
+            (Root, "journal") => Journal,
+            (Journal, "version") => Version,
+            (Journal, "coverage") => Coverage,
+            (Journal, "last_sequence") | (Record, "sequence") | (Operation, "index") => Sequence,
+            (Journal, "events") => Records,
+            (Record, "context") => MaybeSequence,
+            (Record, "event") => Operation,
+            (Operation, "kind") => Kind,
+            (Operation, "entity") => Parent,
+            (Operation, "scope") => Scope,
+            (Operation, "begin" | "sweep_cap") | (Scope, "sweep" | "slot") => Sequence,
+            (Operation, "passes") => Descriptors,
+            (Operation, "outcome") => Outcome,
+            (Scope, "kind") => ScopeKind,
+            (Outcome, "kind") => OutcomeKind,
+            (Outcome, "changed") => Bool,
+            (Descriptor, "name") => Text,
+            (Descriptor, "policy") => Policy,
             (Entry, "id") => Parent,
             (Entry, "parent_ids") => Parents,
             (Entry, "contributions") => Events,
@@ -61,7 +94,30 @@ impl Role {
             Event => &["source", "tag", "meta"],
             Deletion => &["source", "reason", "meta"],
             Identity => &["scheme", "last_sequence"],
+            Journal => &["version", "coverage", "last_sequence", "events"],
+            Record => &["sequence", "context", "event"],
+            Operation | Scope | Outcome => &["kind"],
+            Descriptor => &["name", "policy"],
             _ => &[],
+        }
+    }
+    // Serde's internally tagged unit variants can ignore an otherwise known
+    // field even with deny_unknown_fields. Validate each variant's EXACT shape
+    // while its decoded keys are still present, before typed conversion.
+    fn variant_fields(self, fields: &Map<String, Value>) -> Option<&'static [&'static str]> {
+        use Role::*;
+        let kind = fields.get("kind")?.as_str()?;
+        match (self, kind) {
+            (Operation, "create" | "derive" | "merge" | "deletion") => Some(&["entity", "kind"]),
+            (Operation, "contribution") => Some(&["entity", "index", "kind"]),
+            (Operation, "context_begin") => Some(&["kind", "scope"]),
+            (Operation, "schedule") => Some(&["kind", "passes", "sweep_cap"]),
+            (Operation, "context_end") => Some(&["begin", "kind", "outcome"]),
+            (Scope, "pipeline") => Some(&["kind"]),
+            (Scope, "pass") => Some(&["kind", "slot", "sweep"]),
+            (Outcome, "accepted") => Some(&["changed", "kind"]),
+            (Outcome, _) => Some(&["kind"]),
+            _ => None,
         }
     }
 }
@@ -204,7 +260,7 @@ impl<'de> Visitor<'de> for Seed<'_, '_> {
     fn visit_unit<E: Error>(self) -> Result<Value, E> {
         if !matches!(
             self.role,
-            Role::Metadata | Role::MaybeText | Role::Origin | Role::Deletion
+            Role::Metadata | Role::MaybeText | Role::Origin | Role::Deletion | Role::MaybeSequence
         ) {
             return Err(E::custom("invalid null checked CV field"));
         }
@@ -247,6 +303,8 @@ impl<'de> Visitor<'de> for Seed<'_, '_> {
         let child = match self.role {
             Role::Parents => Role::Parent,
             Role::Events => Role::Event,
+            Role::Records => Role::Record,
+            Role::Descriptors => Role::Descriptor,
             Role::Stages => Role::Text,
             Role::Metadata => Role::Metadata,
             _ => return Err(A::Error::custom("invalid checked CV array field")),
@@ -285,6 +343,12 @@ impl<'de> Visitor<'de> for Seed<'_, '_> {
                 | Role::Deletion
                 | Role::Identity
                 | Role::Metadata
+                | Role::Journal
+                | Role::Record
+                | Role::Operation
+                | Role::Scope
+                | Role::Outcome
+                | Role::Descriptor
         ) {
             return Err(A::Error::custom("invalid checked CV object field"));
         }
@@ -329,6 +393,15 @@ impl<'de> Visitor<'de> for Seed<'_, '_> {
                 return Err(A::Error::custom("missing checked CV snapshot field"));
             }
         }
+        if let Some(expected) = self.role.variant_fields(&fields) {
+            if fields.len() != expected.len()
+                || expected.iter().any(|field| !fields.contains_key(*field))
+            {
+                return Err(A::Error::custom(
+                    "CV journal variant has missing or extra fields",
+                ));
+            }
+        }
         Ok(Value::Object(fields))
     }
 }
@@ -339,9 +412,36 @@ impl Seed<'_, '_> {
                 return Err(E::custom("unsupported checked CV identity scheme"))
             }
             Role::Scheme => {}
-            Role::Sequence => {
+            Role::Sequence | Role::MaybeSequence => {
                 super::fixed_hex_sequence(v).map_err(E::custom)?;
             }
+            Role::Version if v == "chronology-v1" => {}
+            Role::Coverage if v == "full" => {}
+            Role::Kind
+                if matches!(
+                    v,
+                    "create"
+                        | "derive"
+                        | "merge"
+                        | "contribution"
+                        | "deletion"
+                        | "context_begin"
+                        | "schedule"
+                        | "context_end"
+                ) => {}
+            Role::ScopeKind if matches!(v, "pipeline" | "pass") => {}
+            Role::OutcomeKind
+                if matches!(
+                    v,
+                    "accepted"
+                        | "converged"
+                        | "cap"
+                        | "scheduling_failure"
+                        | "callback_failure"
+                        | "acceptance_failure"
+                        | "recording_failure"
+                ) => {}
+            Role::Policy if matches!(v, "one-shot" | "fixed-point") => {}
             Role::Parent => {
                 compact_id_sequence(v).map_err(E::custom)?;
             }
@@ -382,7 +482,10 @@ impl<'de> DeserializeSeed<'de> for ArraySeed<'_, '_> {
         }
         // An event array item must be an object; charging before its body also
         // prevents an oversized malformed item from bypassing the event cap.
-        if matches!(self.container, Role::Events) {
+        if matches!(
+            self.container,
+            Role::Events | Role::Records | Role::Descriptors
+        ) {
             add_bounded(
                 &mut self.seed.budget.events,
                 1,
@@ -404,14 +507,18 @@ impl<'de> DeserializeSeed<'de> for ArraySeed<'_, '_> {
     }
 }
 
-pub(super) fn parse(text: &str, limits: &GraphLimits) -> Result<(Value, Work), String> {
+pub(super) fn parse_with_work(
+    text: &str,
+    limits: &GraphLimits,
+    work: Work,
+) -> Result<(Value, Work), String> {
     if text.len() > limits.max_input_bytes {
         return Err("CV input bytes limit exceeded".into());
     }
     limits.validate()?;
     let mut budget = Budget {
         limits,
-        work: Work::new(limits.max_work),
+        work,
         nodes: 0,
         edges: 0,
         events: 0,
@@ -432,4 +539,123 @@ pub(super) fn parse(text: &str, limits: &GraphLimits) -> Result<(Value, Work), S
         .end()
         .map_err(|e| format!("checked CV import: {e}"))?;
     Ok((value, budget.work))
+}
+
+/// Decide the trust boundary from decoded root keys without retaining an
+/// arbitrary metadata tree. Input size, nesting and every structural visit are
+/// bounded before the compatibility loader allocates its normal snapshot.
+pub(super) fn declares_journal(text: &str) -> Result<(bool, Work), String> {
+    let limits = GraphLimits::default();
+    if text.len() > limits.max_input_bytes {
+        return Err("CV input bytes limit exceeded".into());
+    }
+    struct Probe<'a> {
+        work: &'a mut Work,
+        depth: usize,
+        root: bool,
+    }
+    impl<'de> DeserializeSeed<'de> for Probe<'_> {
+        type Value = bool;
+        fn deserialize<D: serde::Deserializer<'de>>(self, d: D) -> Result<bool, D::Error> {
+            self.work.take(1).map_err(D::Error::custom)?;
+            if self.depth > 128 {
+                return Err(D::Error::custom("CV compatibility nesting limit exceeded"));
+            }
+            d.deserialize_any(self)
+        }
+    }
+    struct Key;
+    impl<'de> DeserializeSeed<'de> for Key {
+        type Value = bool;
+        fn deserialize<D: serde::Deserializer<'de>>(self, d: D) -> Result<bool, D::Error> {
+            d.deserialize_str(self)
+        }
+    }
+    impl Visitor<'_> for Key {
+        type Value = bool;
+        fn expecting(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.write_str("a root key")
+        }
+        fn visit_str<E: Error>(self, key: &str) -> Result<bool, E> {
+            Ok(key == "journal")
+        }
+    }
+    impl<'de> Visitor<'de> for Probe<'_> {
+        type Value = bool;
+        fn expecting(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            f.write_str("a bounded CV compatibility value")
+        }
+        fn visit_unit<E: Error>(self) -> Result<bool, E> {
+            self.scalar()
+        }
+        fn visit_bool<E: Error>(self, _: bool) -> Result<bool, E> {
+            self.scalar()
+        }
+        fn visit_i64<E: Error>(self, _: i64) -> Result<bool, E> {
+            self.scalar()
+        }
+        fn visit_u64<E: Error>(self, _: u64) -> Result<bool, E> {
+            self.scalar()
+        }
+        fn visit_f64<E: Error>(self, _: f64) -> Result<bool, E> {
+            self.scalar()
+        }
+        fn visit_str<E: Error>(self, _: &str) -> Result<bool, E> {
+            self.scalar()
+        }
+        fn visit_seq<A: SeqAccess<'de>>(self, mut seq: A) -> Result<bool, A::Error> {
+            if self.root {
+                return Err(A::Error::custom("CV snapshot must be an object"));
+            }
+            while seq
+                .next_element_seed(Probe {
+                    work: self.work,
+                    depth: self.depth + 1,
+                    root: false,
+                })?
+                .is_some()
+            {}
+            Ok(false)
+        }
+        fn visit_map<A: MapAccess<'de>>(self, mut map: A) -> Result<bool, A::Error> {
+            let mut found = false;
+            while let Some(journal_key) = map.next_key_seed(Key)? {
+                self.work.take(1).map_err(A::Error::custom)?;
+                if self.root && journal_key {
+                    if found {
+                        return Err(A::Error::custom("duplicate CV journal declaration"));
+                    }
+                    found = true;
+                }
+                map.next_value_seed(Probe {
+                    work: self.work,
+                    depth: self.depth + 1,
+                    root: false,
+                })?;
+            }
+            Ok(found)
+        }
+    }
+    impl Probe<'_> {
+        fn scalar<E: Error>(self) -> Result<bool, E> {
+            if self.root {
+                Err(E::custom("CV snapshot must be an object"))
+            } else {
+                Ok(false)
+            }
+        }
+    }
+    let mut work = Work::new(limits.max_work);
+    let mut deserializer = serde_json::Deserializer::from_str(text);
+    let result = Probe {
+        work: &mut work,
+        depth: 1,
+        root: true,
+    }
+    .deserialize(&mut deserializer)
+    .map_err(|e| format!("CV compatibility probe: {e}"))?;
+    deserializer
+        .end()
+        .map_err(|e| format!("CV compatibility probe: {e}"))?;
+    Ok((result, work))
 }
