@@ -2154,7 +2154,11 @@ fn emit_visual_state_groups(groups: &[XamlVisualStateGroup], indent: usize) -> S
             writeln!(
                 out,
                 "{pad4}    <StateTrigger IsActive=\"{}\"/>",
-                escape_xaml_attr(&state.trigger_value)
+                // #15487: a trigger is a `{x:Bind …}` / `{Binding …}` the
+                // emitter built (or `True`/`False`) -- markup, so only the
+                // XML layer is escaped. `escape_xaml_attr` would prefix
+                // `{}` and turn the binding into the literal text.
+                escape_xml_attr(&state.trigger_value)
             )
             .unwrap();
             writeln!(out, "{pad4}</VisualState.StateTriggers>").unwrap();
@@ -2169,7 +2173,9 @@ fn emit_visual_state_groups(groups: &[XamlVisualStateGroup], indent: usize) -> S
                 out,
                 "{pad4}    <Setter Target=\"{}\" Value=\"{}\"/>",
                 target,
-                escape_xaml_attr(&state.value)
+                // A `translate_xaml_value` result: a mosstyle value whose
+                // leading `{` is a deliberate markup extension (#15487).
+                escape_xml_attr(&state.value)
             )
             .unwrap();
             writeln!(out, "{pad4}</VisualState.Setters>").unwrap();
@@ -2467,7 +2473,7 @@ fn build_style_fragment_with_drops(
         }
         drops.extend(edge_drops);
     }
-    // X8/#12025: `escape_xaml_attr` does real XML attribute escaping
+    // X8/#12025: `escape_xml_attr` does real XML attribute escaping
     // (`&`/`"`/`<`/`>`), not the C-string-style backslash escaping this
     // used to do. That old scheme protected nothing: `parse_style_fragment`
     // (below) stripped the backslashes back out before any downstream
@@ -2483,7 +2489,11 @@ fn build_style_fragment_with_drops(
     let fragment = parts
         .into_iter()
         .map(|(key, value)| {
-            let escaped = escape_xaml_attr(&value);
+            // #15487: XML layer only. `translate_xaml_value` passes a
+            // mosstyle value that starts with `{` through *as* a markup
+            // extension on purpose, so the `{}` literal-text prefix that
+            // `escape_xaml_attr` adds would break it.
+            let escaped = escape_xml_attr(&value);
             format!("{key}=\"{escaped}\"")
         })
         .collect::<Vec<_>>()
@@ -2873,7 +2883,7 @@ fn is_color_setter(setter: &str) -> bool {
 fn normalize_xaml_color_value(s: &str) -> Option<String> {
     let trimmed = s.trim();
     // Defence in depth. #12025 fixed the general case — the base-style-
-    // fragment path now applies `escape_xaml_attr` at the point the
+    // fragment path now applies `escape_xml_attr` at the point the
     // fragment is built (`build_style_fragment_with_drops`), same as the
     // `<Setter>` path already did — so this guard is no longer the only
     // thing standing between a hostile colour token and markup injection.
@@ -3437,7 +3447,9 @@ fn emit_xaml(
         for (prefix, value) in &ctx.used_xmlns {
             xmlns_lines.push_str(&format!(
                 "\n    xmlns:{prefix}=\"{}\"",
-                escape_xaml_attr(value)
+                // A namespace declaration is read by the XML layer, never
+                // by XAML's markup-extension parser: no `{}` (#15487).
+                escape_xml_attr(value)
             ));
         }
         if let Some(close) = find_root_open_close(&out) {
@@ -3860,7 +3872,7 @@ fn parse_style_fragment(frag: &str) -> Vec<(String, String)> {
                       // used to special-case `\"` as an escaped quote,
                       // matching `build_style_fragment_with_drops`'s old
                       // C-string-style escaping — that escaping is gone
-                      // now (replaced with real `escape_xaml_attr` XML
+                      // now (replaced with real `escape_xml_attr` XML
                       // escaping at the point the fragment is built), so
                       // a value can no longer contain a literal `"` at
                       // all: it always arrives here already encoded as
@@ -4036,19 +4048,27 @@ fn emit_box(
         let value = find_prop_value(text, "content").ok_or_else(|| {
             PipelineEmitError::UnsupportedExpression("row-header requires label content".into())
         })?;
+        // Each arm yields the finished, escaped attribute value, because the
+        // arms need different escaping (#15487): a binding is markup the
+        // emitter built, so it gets the XML layer only; an authored string
+        // is literal text, so it also gets XAML's `{}` prefix when it starts
+        // with `{`. Escaping the joined result once could not tell them apart.
         let label = match value {
             LayoutPropValue::Expr(src) => match lower_expr_for_xbind(src, ctx) {
-                ExprLowering::Bindable(path) => format!("{{x:Bind {path}, Mode=OneWay}}"),
+                ExprLowering::Bindable(path) => {
+                    escape_xml_attr(&format!("{{x:Bind {path}, Mode=OneWay}}"))
+                }
                 _ => {
                     return Err(PipelineEmitError::UnsupportedExpression(
                         "unsupported row-header label".into(),
                     ))
                 }
             },
-            LayoutPropValue::SlotRef(slot) => {
-                format!("{{x:Bind {}, Mode=OneWay}}", ctx.slot_xbind_path(slot))
-            }
-            LayoutPropValue::String(value) => value.clone(),
+            LayoutPropValue::SlotRef(slot) => escape_xml_attr(&format!(
+                "{{x:Bind {}, Mode=OneWay}}",
+                ctx.slot_xbind_path(slot)
+            )),
+            LayoutPropValue::String(value) => escape_xaml_attr(value),
             _ => {
                 return Err(PipelineEmitError::UnsupportedExpression(
                     "unsupported row-header label".into(),
@@ -4057,7 +4077,7 @@ fn emit_box(
         };
         let pad = " ".repeat(indent);
         let name = ctx.component_name;
-        return Ok(format!("{pad}<local:{name}MosaicTableHeaderCell Row=\"{{x:Bind Index, Mode=OneWay}}\" Header=\"{}\" HorizontalContentAlignment=\"Stretch\" VerticalContentAlignment=\"Stretch\">\n{}{pad}</local:{name}MosaicTableHeaderCell>\n", escape_xaml_attr(&label), indent_xaml_fragment(&body, 4)));
+        return Ok(format!("{pad}<local:{name}MosaicTableHeaderCell Row=\"{{x:Bind Index, Mode=OneWay}}\" Header=\"{label}\" HorizontalContentAlignment=\"Stretch\" VerticalContentAlignment=\"Stretch\">\n{}{pad}</local:{name}MosaicTableHeaderCell>\n", indent_xaml_fragment(&body, 4)));
     }
     Ok(body)
 }
@@ -6791,10 +6811,80 @@ fn find_prop_value<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a Layo
         .map(|p| &p.value)
 }
 
-/// Escape characters that would break a XAML attribute value. Quotes and
-/// ampersand are the only ones strictly required; newlines pass through as
-/// literal newlines.
+/// Escape **authored literal text** for a double-quoted XAML attribute.
+///
+/// A XAML attribute value is read by two parsers, one after the other, and
+/// a literal has to survive both:
+///
+/// ```text
+///   Content="{}{x:Null}"
+///            │
+///   1. XML   │  entity-decodes &amp; &quot; &lt; &gt;  ──► escape_xml_attr
+///            ▼
+///   2. XAML  │  value starts with "{"  ──► markup extension
+///            │  value starts with "{}" ──► the rest is literal text
+///            ▼
+///   the eight characters `{x:Null}`
+/// ```
+///
+/// Layer 1 is [`escape_xml_attr`]. Layer 2 is this function's own job: XAML
+/// reads *any* attribute value whose first character is `{` as a markup
+/// extension (`{x:Bind …}`, `{StaticResource …}`, `{x:Null}`), not as text.
+/// Without this step an author who writes
+///
+/// ```text
+/// HostButton [ ok ] ( label : "{x:Null}" )
+/// ```
+///
+/// gets `Content="{x:Null}"` -- a null button, not the label they typed --
+/// and a value like `"{oops"` is a XAML parse error that fails the whole
+/// page. Once `.mll` files can arrive as third-party package dependencies
+/// (`mosaic-package-resolver`), that is an injection: a "string" that
+/// becomes a binding or a resource lookup (#15487).
+///
+/// XAML's own escape for this is the `{}` prefix: the parser strips a
+/// leading `{}` and takes everything after it verbatim. So the fix is one
+/// rule -- if the XML-escaped value starts with `{`, prepend `{}`:
+///
+/// | authored literal | emitted attribute value | XAML reads       |
+/// |------------------|-------------------------|------------------|
+/// | `Save`           | `Save`                  | `Save`           |
+/// | `{x:Null}`       | `{}{x:Null}`            | `{x:Null}`       |
+/// | `{`              | `{}{`                   | `{`              |
+/// | `{}already`      | `{}{}already`           | `{}already`      |
+/// | `a {b}`          | `a {b}`                 | `a {b}`          |
+///
+/// Note the `{}already` row: the input is what the author *wrote*, never
+/// something already escaped for XAML, so a leading `{}` is two literal
+/// characters and must itself be protected. Only the *first* character
+/// matters -- a brace anywhere later is plain text to XAML, so `a {b}`
+/// passes through unchanged.
+///
+/// Use this for every value that came from an author as text. A value the
+/// emitter *built* as markup (a `{x:Bind …}` state trigger, a style setter
+/// that is deliberately a markup extension, an `xmlns` URI) must use
+/// [`escape_xml_attr`] instead, or the `{}` would turn it into text.
 fn escape_xaml_attr(s: &str) -> String {
+    let escaped = escape_xml_attr(s);
+    if escaped.starts_with('{') {
+        format!("{{}}{escaped}")
+    } else {
+        escaped
+    }
+}
+
+/// Escape characters that would break a double-quoted XML attribute value:
+/// `&`, `"`, `<` and `>`. Quotes and ampersand are the only ones strictly
+/// required; newlines pass through as literal newlines.
+///
+/// This is the XML layer **only**. It leaves a leading `{` alone, so a value
+/// starting with `{` is still a XAML markup extension -- which is exactly
+/// what the callers of this function want: they hand it markup the emitter
+/// generated itself (`{x:Bind …}` state triggers, mosstyle values that
+/// `translate_xaml_value` deliberately passes through as markup extensions,
+/// `xmlns` namespace URIs). Authored literal text goes through
+/// [`escape_xaml_attr`].
+fn escape_xml_attr(s: &str) -> String {
     let mut out = String::with_capacity(s.len());
     for c in s.chars() {
         match c {
@@ -7153,8 +7243,10 @@ fn emit_for(
             for state in &mut group.states {
                 if state.trigger_value.starts_with("{x:Bind ") {
                     let proxy = format!("{}Trigger", state.name);
+                    // The `{x:Bind …}` checked just above is markup: XML
+                    // layer only, no `{}` literal prefix (#15487).
                     writeln!(trigger_proxies, "{pad}        <Border x:Name=\"{proxy}\" Tag=\"{}\" Visibility=\"Collapsed\"/>",
-                        escape_xaml_attr(&state.trigger_value)).unwrap();
+                        escape_xml_attr(&state.trigger_value)).unwrap();
                     state.trigger_value = format!("{{Binding Tag, ElementName={proxy}}}");
                 }
             }
@@ -15264,7 +15356,7 @@ mod tests {
     /// `parse_style_fragment` no longer needs (or has) backslash-escape
     /// handling — confirm a value containing a literal backslash round-
     /// trips as itself (backslash isn't XML-significant, so
-    /// `escape_xaml_attr` passes it through unchanged).
+    /// `escape_xml_attr` passes it through unchanged).
     #[test]
     fn style_value_with_literal_backslash_round_trips_unchanged() {
         let c = component("Foo", vec![], vec![]);
@@ -26069,6 +26161,436 @@ mod tests {
         );
     }
 
+
+    // ─────────────────────────────────────────────────────────────────
+    // #15487: a literal that starts with `{` is text, not a markup
+    // extension
+    // ─────────────────────────────────────────────────────────────────
+    //
+    // XAML reads an attribute value whose first character is `{` as a
+    // markup extension. An authored literal `"{x:Null}"` must therefore be
+    // emitted as `{}{x:Null}` -- XAML's own "the rest is text" escape --
+    // on every attribute that carries author text. These tests pin the
+    // helper itself, then every attribute path that routes an authored
+    // literal through it, then the markup paths that must NOT get the
+    // prefix (bindings the emitter built, mosstyle markup extensions,
+    // `xmlns` URIs).
+
+    /// The authored literal every path test uses: a real markup extension,
+    /// so an unescaped emission would be silently *valid* XAML that
+    /// renders null -- the worst case, since nothing fails to flag it.
+    const BRACE_LITERAL: &str = "{x:Null}";
+
+    /// `attr` carries the escaped literal, and never the raw extension.
+    fn assert_brace_literal_escaped(xaml: &str, attr: &str) {
+        assert!(
+            xaml.contains(&format!("{attr}=\"{{}}{{x:Null}}\"")),
+            "expected {attr}=\"{{}}{{x:Null}}\", got:\n{xaml}"
+        );
+        assert!(
+            !xaml.contains(&format!("{attr}=\"{{x:Null}}\"")),
+            "{attr} must not carry the raw markup extension, got:\n{xaml}"
+        );
+    }
+
+    fn literal(name: &str, value: &str) -> LayoutProp {
+        LayoutProp {
+            name: name.to_string(),
+            value: LayoutPropValue::String(value.to_string()),
+        }
+    }
+
+    fn leaf(tag: &str, part_name: Option<&str>, props: Vec<LayoutProp>) -> LayoutNode {
+        LayoutNode {
+            tag: tag.to_string(),
+            part_name: part_name.map(str::to_string),
+            props,
+            children: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn escape_xaml_attr_prefixes_a_leading_brace() {
+        assert_eq!(escape_xaml_attr("{x:Null}"), "{}{x:Null}");
+        assert_eq!(escape_xaml_attr("{Binding Secret}"), "{}{Binding Secret}");
+        // A lone or unbalanced brace used to be a XAML *parse error*.
+        assert_eq!(escape_xaml_attr("{"), "{}{");
+        assert_eq!(escape_xaml_attr("{oops"), "{}{oops");
+        // Both layers together: XML entities, then the XAML prefix.
+        assert_eq!(
+            escape_xaml_attr("{\"a\" & <b>}"),
+            "{}{&quot;a&quot; &amp; &lt;b&gt;}"
+        );
+    }
+
+    #[test]
+    fn escape_xaml_attr_leaves_values_without_a_leading_brace_unchanged() {
+        for value in ["", "Save", "a {b}", "x}", " {x:Null}", "}{", "100%"] {
+            assert_eq!(escape_xaml_attr(value), value, "value {value:?}");
+        }
+        // Still exactly the XML layer for everything else.
+        assert_eq!(escape_xaml_attr("say \"hi\" & <go>"), "say &quot;hi&quot; &amp; &lt;go&gt;");
+    }
+
+    #[test]
+    fn escape_xaml_attr_protects_an_authored_leading_empty_braces() {
+        // The input is what the author wrote, never pre-escaped XAML: a
+        // leading `{}` is two literal characters. Passing it through would
+        // let XAML strip them, so it gets its own `{}` like any `{`.
+        assert_eq!(escape_xaml_attr("{}"), "{}{}");
+        assert_eq!(escape_xaml_attr("{}{x:Null}"), "{}{}{x:Null}");
+    }
+
+    #[test]
+    fn escape_xml_attr_never_adds_the_literal_prefix() {
+        // The markup-path escaper: XML layer only, so an emitter-built
+        // binding stays a binding.
+        assert_eq!(
+            escape_xml_attr("{x:Bind A, Mode=OneWay}"),
+            "{x:Bind A, Mode=OneWay}"
+        );
+        assert_eq!(escape_xml_attr("{x:Bind A && B}"), "{x:Bind A &amp;&amp; B}");
+    }
+
+    /// Every simple primitive attribute that lowers an authored literal.
+    /// One row per (primitive, prop) → attribute path through
+    /// `escape_xaml_attr`.
+    #[test]
+    fn every_literal_text_attribute_escapes_a_leading_brace() {
+        let cases: Vec<(&str, LayoutNode, &str)> = vec![
+            ("Text content", leaf("Text", None, vec![literal("content", BRACE_LITERAL)]), "Text"),
+            (
+                "Text content keyword",
+                leaf(
+                    "Text",
+                    None,
+                    vec![LayoutProp {
+                        name: "content".to_string(),
+                        value: LayoutPropValue::Keyword(BRACE_LITERAL.to_string()),
+                    }],
+                ),
+                "Text",
+            ),
+            (
+                "Text a11y-label",
+                leaf("Text", None, vec![literal("content", "x"), literal("a11y-label", BRACE_LITERAL)]),
+                "AutomationProperties.Name",
+            ),
+            ("HostSurface content", leaf("HostSurface", None, vec![literal("content", BRACE_LITERAL)]), "Content"),
+            ("Image src", leaf("Image", None, vec![literal("src", BRACE_LITERAL)]), "Source"),
+            ("Icon glyph", leaf("Icon", None, vec![literal("glyph", BRACE_LITERAL)]), "Glyph"),
+            ("HostInput value", leaf("HostInput", None, vec![literal("value", BRACE_LITERAL)]), "Text"),
+            (
+                "HostInput placeholder",
+                leaf("HostInput", None, vec![literal("placeholder", BRACE_LITERAL)]),
+                "PlaceholderText",
+            ),
+            (
+                "HostInput a11y-label",
+                leaf("HostInput", None, vec![literal("a11y-label", BRACE_LITERAL)]),
+                "AutomationProperties.Name",
+            ),
+            (
+                "HostInput part name",
+                leaf("HostInput", Some(BRACE_LITERAL), vec![]),
+                "AutomationProperties.AutomationId",
+            ),
+            ("HostButton label", leaf("HostButton", None, vec![literal("label", BRACE_LITERAL)]), "Content"),
+            (
+                "HostButton label keyword",
+                leaf(
+                    "HostButton",
+                    None,
+                    vec![LayoutProp {
+                        name: "label".to_string(),
+                        value: LayoutPropValue::Keyword(BRACE_LITERAL.to_string()),
+                    }],
+                ),
+                "Content",
+            ),
+            (
+                "HostButton a11y-label",
+                leaf("HostButton", None, vec![literal("label", "ok"), literal("a11y-label", BRACE_LITERAL)]),
+                "AutomationProperties.Name",
+            ),
+            (
+                "HostButton part name",
+                leaf("HostButton", Some(BRACE_LITERAL), vec![literal("label", "ok")]),
+                "AutomationProperties.AutomationId",
+            ),
+            ("HostCheckbox label", leaf("HostCheckbox", None, vec![literal("label", BRACE_LITERAL)]), "Content"),
+            ("HostRadio label", leaf("HostRadio", None, vec![literal("label", BRACE_LITERAL)]), "Content"),
+            (
+                "HostRadio group",
+                leaf("HostRadio", None, vec![literal("label", "a"), literal("group", BRACE_LITERAL)]),
+                "GroupName",
+            ),
+            (
+                "HostSlider a11y-label",
+                leaf("HostSlider", None, vec![literal("a11y-label", BRACE_LITERAL)]),
+                "AutomationProperties.Name",
+            ),
+            (
+                "HostSlider part name",
+                leaf("HostSlider", Some(BRACE_LITERAL), vec![]),
+                "AutomationProperties.AutomationId",
+            ),
+            (
+                "HostProgressRing a11y-label",
+                leaf(
+                    "HostProgressRing",
+                    None,
+                    vec![
+                        LayoutProp { name: "value".to_string(), value: LayoutPropValue::Number(0.5) },
+                        literal("a11y-label", BRACE_LITERAL),
+                    ],
+                ),
+                "AutomationProperties.Name",
+            ),
+            ("HostLink label", leaf("HostLink", None, vec![literal("label", BRACE_LITERAL)]), "Content"),
+            (
+                "HostTooltip text",
+                leaf("HostTooltip", None, vec![literal("text", BRACE_LITERAL)]),
+                "ToolTipService.ToolTip",
+            ),
+            (
+                "HostNumberInput placeholder",
+                leaf("HostNumberInput", None, vec![literal("placeholder", BRACE_LITERAL)]),
+                "PlaceholderText",
+            ),
+            (
+                "HostNavigationSplit pane-title",
+                nav_split(vec![pane_title(LayoutPropValue::String(BRACE_LITERAL.to_string()))]),
+                "PaneTitle",
+            ),
+            ("HostDialog title", leaf("HostDialog", None, vec![literal("title", BRACE_LITERAL)]), "Title"),
+            (
+                "HostDraggable drag-label",
+                leaf("HostDraggable", None, vec![literal("drag-label", BRACE_LITERAL)]),
+                "DragLabel",
+            ),
+            (
+                "HostDraggable part name",
+                leaf("HostDraggable", Some(BRACE_LITERAL), vec![]),
+                "AutomationProperties.AutomationId",
+            ),
+            (
+                "HostDropTarget drop-key",
+                leaf("HostDropTarget", None, vec![literal("drop-key", BRACE_LITERAL)]),
+                "DropKey",
+            ),
+        ];
+        for (what, node, attr) in cases {
+            let c = component("Foo", vec![], vec![]);
+            let r = from_pipeline(&c, &layout_with_root("Foo", node), &empty_style("Foo"), None, &opts())
+                .unwrap_or_else(|e| panic!("{what}: emit failed: {e:?}"));
+            assert!(
+                r.xaml.contains(&format!("{attr}=\"{{}}{{x:Null}}\"")),
+                "{what}: expected {attr}=\"{{}}{{x:Null}}\", got:\n{}",
+                r.xaml
+            );
+            assert!(
+                !r.xaml.contains(&format!("{attr}=\"{{x:Null}}\"")),
+                "{what}: {attr} must not carry the raw markup extension, got:\n{}",
+                r.xaml
+            );
+        }
+    }
+
+    /// `HostLink`'s `href` reaches `escape_xaml_attr` twice (`NavigateUri`,
+    /// and `Content` when the link has no children), but only after the
+    /// URI-scheme allow-list: a value starting with `{` has no allowed
+    /// scheme, so it is refused before it could become markup.
+    #[test]
+    fn host_link_href_with_a_leading_brace_is_refused_before_escaping() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            leaf("HostLink", None, vec![literal("href", BRACE_LITERAL)]),
+        );
+        let err = from_pipeline(&c, &l, &empty_style("Foo"), None, &opts())
+            .expect_err("a `{` href is not an allowed URI");
+        assert!(
+            matches!(err, PipelineEmitError::UnsafeUriScheme(_)),
+            "got {err:?}"
+        );
+    }
+
+    /// The issue's own reproduction, end to end.
+    #[test]
+    fn host_button_literal_markup_extension_label_is_text() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            leaf("HostButton", Some("ok"), vec![literal("label", BRACE_LITERAL)]),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert_brace_literal_escaped(&r.xaml, "Content");
+    }
+
+    #[test]
+    fn literal_without_a_leading_brace_is_emitted_unchanged() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            leaf("HostButton", None, vec![literal("label", "Save {draft}")]),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("Content=\"Save {draft}\""), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn literal_starting_with_empty_braces_keeps_them_as_text() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            leaf("Text", None, vec![literal("content", "{}{x:Null}")]),
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+        assert!(r.xaml.contains("Text=\"{}{}{x:Null}\""), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn component_reference_literal_prop_escapes_a_leading_brace() {
+        let c = component("Demo", vec![], vec![]);
+        let l = layout_with_root(
+            "Demo",
+            component_ref_node("Grid", vec![literal("title", BRACE_LITERAL)]),
+        );
+        let mut reg = ComponentRegistry::new();
+        reg.register("Grid", "grid", "using:Mosaic.Package.Grid", "mosaic-pkg-grid");
+        let r = compile_with_registry(&c, &l, &empty_style("Demo"), &reg);
+        assert_brace_literal_escaped(&r.xaml, "Title");
+        // The namespace declaration is XML, not XAML text: never prefixed.
+        assert!(
+            r.xaml.contains("xmlns:grid=\"using:Mosaic.Package.Grid\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    fn native_table_sheet() -> MosmodelComponent {
+        component(
+            "Sheet",
+            vec![
+                slot("headers", SlotType::List(Box::new(ListInnerType::Text)), true),
+                slot(
+                    "rows",
+                    SlotType::List(Box::new(ListInnerType::List(Box::new(ListInnerType::Text)))),
+                    true,
+                ),
+                slot("corner", SlotType::Text, false),
+            ],
+            vec![],
+        )
+    }
+
+    /// A canonical native table with a symmetric corner/row-header prefix
+    /// column whose row-header label is `label`.
+    fn numbered_native_table(label: LayoutPropValue) -> LayoutNode {
+        let prefix = |role: &str, value: LayoutPropValue| LayoutNode {
+            tag: "Box".into(),
+            part_name: None,
+            props: vec![LayoutProp {
+                name: "table-cell-role".into(),
+                value: LayoutPropValue::Keyword(role.into()),
+            }],
+            children: vec![LayoutNode {
+                tag: "Text".into(),
+                part_name: None,
+                children: vec![],
+                props: vec![LayoutProp { name: "content".into(), value }],
+            }],
+        };
+        let mut table = canonical_native_table_node();
+        table.children[0].children[0]
+            .children
+            .insert(0, prefix("corner", LayoutPropValue::String("#".into())));
+        table.children[1].children[0].children[0]
+            .children
+            .insert(0, prefix("row-header", label));
+        table
+    }
+
+    #[test]
+    fn native_table_row_header_literal_escapes_a_leading_brace() {
+        let table = numbered_native_table(LayoutPropValue::String(BRACE_LITERAL.into()));
+        assert!(host_table_has_native_semantics(&table));
+        let r = compile(&native_table_sheet(), &layout_with_root("Sheet", table), &empty_style("Sheet"));
+        assert_brace_literal_escaped(&r.xaml, "Header");
+    }
+
+    #[test]
+    fn native_table_row_header_binding_stays_a_binding() {
+        // The same `Header=` attribute also carries emitter-built bindings;
+        // those must not pick up the literal-text prefix.
+        let table = numbered_native_table(LayoutPropValue::SlotRef("corner".into()));
+        let r = compile(&native_table_sheet(), &layout_with_root("Sheet", table), &empty_style("Sheet"));
+        assert!(
+            r.xaml.contains("Header=\"{x:Bind Owner.Corner, Mode=OneWay}\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(!r.xaml.contains("Header=\"{}{"), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn native_table_accessible_name_from_part_escapes_a_leading_brace() {
+        let mut table = canonical_native_table_node();
+        table.part_name = Some("{x:Null}".into());
+        let r = compile(&native_table_sheet(), &layout_with_root("Sheet", table), &empty_style("Sheet"));
+        assert!(
+            r.xaml.contains("AutomationProperties.Name=\"{}{x:Null} table\""),
+            "got:\n{}",
+            r.xaml
+        );
+    }
+
+    #[test]
+    fn style_markup_extension_is_not_turned_into_text() {
+        // `translate_xaml_value` passes a mosstyle value starting with `{`
+        // through *as* a markup extension; the style path escapes the XML
+        // layer only, so it must stay a live resource lookup.
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root("Foo", leaf("Box", Some("card"), vec![]));
+        let s = style_for_box("card", vec![("background", "{ThemeResource CardBrush}")]);
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains("Background=\"{ThemeResource CardBrush}\""),
+            "got:\n{}",
+            r.xaml
+        );
+        assert!(!r.xaml.contains("{}{ThemeResource"), "got:\n{}", r.xaml);
+    }
+
+    #[test]
+    fn visual_state_triggers_are_never_prefixed() {
+        // Every `<StateTrigger IsActive=…>` is an emitter-built binding or
+        // a Boolean. None may carry the literal-text prefix.
+        let mut groups = vec![XamlVisualStateGroup {
+            target_name: "Field".into(),
+            target_type: "TextBox".into(),
+            property: "Background".into(),
+            target_brush_color: false,
+            normal_name: "MosaicState1Normal".into(),
+            base_transition: None,
+            states: vec![XamlVisualState {
+                name: "MosaicState1State0".into(),
+                trigger_value: "{x:Bind Row.Selected && Row.Live, Mode=OneWay}".into(),
+                value: "{ThemeResource AccentBrush}".into(),
+                transition: None,
+            }],
+        }];
+        let out = emit_visual_state_groups(&groups, 0);
+        assert!(
+            out.contains("<StateTrigger IsActive=\"{x:Bind Row.Selected &amp;&amp; Row.Live, Mode=OneWay}\"/>"),
+            "got:\n{out}"
+        );
+        assert!(out.contains("Value=\"{ThemeResource AccentBrush}\""), "got:\n{out}");
+        assert!(!out.contains("\"{}{"), "got:\n{out}");
+        groups[0].states[0].trigger_value = "True".into();
+        assert!(emit_visual_state_groups(&groups, 0).contains("IsActive=\"True\""));
+    }
 }
 
 // =====================================================================
