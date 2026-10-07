@@ -219,8 +219,9 @@ limits and defaults to `GraphLimits::default()`. `GraphLimits` supports ordinary
 `--correlation_vector_limits` accepts a comma-separated partial override list of
 `max_nodes`, `max_edges`, `max_events`, `max_metadata_values`,
 `max_metadata_depth`, `max_metadata_bytes`, `max_input_bytes`, `max_work` and
-`max_output_bytes`, each written as `name=unsigned_decimal`. Empty input selects
-all defaults. Whitespace surrounding a pair/name/value is ignored; require ASCII
+`max_output_bytes`, each written as `name=unsigned_decimal`. Omitting the flag selects
+all defaults (the mapped absent-flag string is empty). Explicit empty CLI values
+retain cli-builder string validation; do not change shared parser coercion. Whitespace surrounding a pair/name/value is ignored; require ASCII
 decimal digits, checked `usize` conversion and no duplicate or unknown names.
 Reject empty pairs, missing values, signs, fractions and overflow. Enforce the
 hard metadata-depth ceiling during configuration, even before tracing begins.
@@ -232,8 +233,9 @@ When disabled, retain disabled compact allocation behavior. Every compiler-stage
 CV operation propagates a `CompilerError::Provenance { stage: String,
 message: String }` before any successful output publication. Diagnostics identify
 the stage and preserve the underlying limit/identity/schema explanation; they
-must not panic or discard the error. No successful fallbacks from formatter or
-summary errors are allowed. Graph validation remains required under format NONE
+must not panic or discard the error. Parser/configuration/execution failures route diagnostics to stderr with empty
+success stdout; help/version remain successful stdout. No successful fallbacks
+from formatter or summary errors are allowed. Graph validation remains required under format NONE
 and before selecting filtered/summary views.
 
 ## Serialization and artifact publication
