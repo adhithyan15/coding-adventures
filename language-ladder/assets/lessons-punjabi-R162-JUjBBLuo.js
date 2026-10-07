@@ -1,0 +1,225 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: PA-R163-fill-again
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
+sequence: 8940
+chapter: 163
+type: review
+headword: "ਭਰਨਾ"
+romanization: "bharnā"
+gloss: "to fill, recalled after a long gap"
+prerequisites: [PA-C150-bharna, PA-R163-sew-again]
+sounds: []
+roots: []
+duration:
+  max_seconds: 180
+requires:
+  knowledge: [PA-LEX-C150-ACT150-02]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [PA-LEX-C150-ACT150-02]
+skills: [listening, speaking]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-punjabi
+reviews_of: [PA-C150-bharna]
+---
+
+# An old word for filling
+
+Return to one familiar action. Listen, pause, and say the old word;
+no new words, sentences, or scored A1 mock are added here.
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C150-ACT150-02] -->
+
+Hear **to fill**. [PAUSE 4s] Recall **ਭਰਨਾ** (*bharnā*).
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C150-ACT150-02] -->
+
+Hear **ਭਰਨਾ**. [PAUSE 4s] Recall **to fill**.
+Now hear **to fill**. [PAUSE 4s] Say **ਭਰਨਾ** before the model.
+Only this old meaning and word are needed.
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C150-ACT150-02] -->
+
+Hear **to fill** again. [PAUSE 4s] Recall **ਭਰਨਾ**.
+Listen and retry once if the word feels distant.
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: PA-R163-make-again
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
+sequence: 8920
+chapter: 163
+type: review
+headword: "ਬਣਾਉਣਾ"
+romanization: "baṇāuṇā"
+gloss: "to make, recalled after a long gap"
+prerequisites: [PA-C149-banauna, PA-W16-message-pacing-return]
+sounds: []
+roots: []
+duration:
+  max_seconds: 180
+requires:
+  knowledge: [PA-LEX-C149-ACT149-05]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [PA-LEX-C149-ACT149-05]
+skills: [listening, speaking]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-punjabi
+reviews_of: [PA-C149-banauna]
+---
+
+# An old word for making
+
+This is one familiar action, heard again after a long gap. Say the word
+before the model if you can. There is no new Punjabi or scored A1 mock.
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C149-ACT149-05] -->
+
+Hear **to make**. [PAUSE 4s] Recall **ਬਣਾਉਣਾ** (*baṇāuṇā*).
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C149-ACT149-05] -->
+
+Hear **ਬਣਾਉਣਾ**. [PAUSE 4s] Recall **to make**.
+Now hear **to make** once more. [PAUSE 4s] Say **ਬਣਾਉਣਾ**
+before the model. One word is enough; no sentence is needed.
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C149-ACT149-05] -->
+
+One last cue: **to make**. [PAUSE 4s] Recall **ਬਣਾਉਣਾ**.
+Listen and retry once if the word does not come back.
+`,a=e({default:()=>o}),o=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: PA-R163-pull-again
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
+sequence: 8950
+chapter: 163
+type: review
+headword: "ਖਿੱਚਣਾ"
+romanization: "khiccṇā"
+gloss: "to pull, then a return to four familiar actions"
+prerequisites: [PA-C150-khiccna, PA-R163-make-again, PA-R163-sew-again, PA-R163-fill-again]
+sounds: []
+roots: []
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [PA-LEX-C149-ACT149-05, PA-LEX-C150-ACT150-01, PA-LEX-C150-ACT150-02, PA-LEX-C150-ACT150-03]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [PA-LEX-C149-ACT149-05, PA-LEX-C150-ACT150-01, PA-LEX-C150-ACT150-02, PA-LEX-C150-ACT150-03]
+skills: [listening, speaking]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-punjabi
+reviews_of: [PA-C150-khiccna, PA-R163-make-again, PA-R163-sew-again, PA-R163-fill-again]
+---
+
+# An old word for pulling
+
+First retrieve **to pull** by itself. Then hear four already-taught
+actions in a small shuffled mix. Pause before each model. This is
+not scored A1 writing or a complete mock.
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C150-ACT150-03] -->
+
+Hear **to pull**. [PAUSE 4s] Recall **ਖਿੱਚਣਾ** (*khiccṇā*).
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C149-ACT149-05, PA-LEX-C150-ACT150-01, PA-LEX-C150-ACT150-02, PA-LEX-C150-ACT150-03] -->
+
+Pause after each familiar meaning, then hear its model:
+
+- **to fill** — [PAUSE 4s] **ਭਰਨਾ** (*bharnā*).
+- **to make** — [PAUSE 4s] **ਬਣਾਉਣਾ** (*baṇāuṇā*).
+- **to pull** — [PAUSE 4s] **ਖਿੱਚਣਾ** (*khiccṇā*).
+- **to sew** — [PAUSE 4s] **ਸਿਉਣਾ** (*siuṇā*).
+
+Only the order of these four old words has changed.
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C149-ACT149-05, PA-LEX-C150-ACT150-01, PA-LEX-C150-ACT150-02, PA-LEX-C150-ACT150-03] -->
+
+Hear **to sew**, **to pull**, **to make**, then **to fill**.
+Pause after each cue and recall its Punjabi word before the model:
+**ਸਿਉਣਾ**, **ਖਿੱਚਣਾ**, **ਬਣਾਉਣਾ**, **ਭਰਨਾ**.
+Revisit only the old word you missed.
+`,s=e({default:()=>c}),c=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: PA-R163-sew-again
+spine_node: SPINE-NAME-EVERYDAY-ACTIONS
+sequence: 8930
+chapter: 163
+type: review
+headword: "ਸਿਉਣਾ"
+romanization: "siuṇā"
+gloss: "to sew, recalled after a long gap"
+prerequisites: [PA-C150-siuna, PA-R163-make-again]
+sounds: []
+roots: []
+duration:
+  max_seconds: 180
+requires:
+  knowledge: [PA-LEX-C150-ACT150-01]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [PA-LEX-C150-ACT150-01]
+skills: [listening, speaking]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-punjabi
+reviews_of: [PA-C150-siuna]
+---
+
+# An old word for sewing
+
+Retrieve one action you met earlier. Hear the meaning first; there is
+no need to sew anything. This short return is not scored A1 mock work.
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C150-ACT150-01] -->
+
+Hear **to sew**. [PAUSE 4s] Say **ਸਿਉਣਾ** (*siuṇā*) before the model.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C150-ACT150-01] -->
+
+Hear **ਸਿਉਣਾ**. [PAUSE 4s] Recall its meaning, **to sew**.
+Then hear **to sew** again. [PAUSE 4s] Recall **ਸਿਉਣਾ**.
+One familiar word is the whole answer.
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C150-ACT150-01] -->
+
+Hear **to sew** once more. [PAUSE 4s] Say **ਸਿਉਣਾ**.
+If needed, listen to the model and try again once.
+`;export{t as i,a as n,r,s as t};
