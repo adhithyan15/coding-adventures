@@ -13,7 +13,16 @@
     "lesson": "RU-C01-practice",
     "kind": "task",
     "summary": "Complete RU-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in Russian, respond courteously, and close the exchange naturally.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "assesses": [
+      "RU-LEX-PRIVET",
+      "RU-LEX-ZDRAVSTVUYTE",
+      "RU-LEX-SPASIBO",
+      "RU-LEX-DA",
+      "RU-LEX-NET",
+      "RU-LEX-POZHALUYSTA",
+      "RU-DIALOGUE-COURTESY-01",
+      "RU-PRAGMATICS-GREETING-REGISTER"
+    ],
+    "note": "Chapter 1 is schema-v2, so the payoff is atom-scored: RU-C01-practice assesses all eight atoms of the chapter's spoken layer — the six words, the formal/informal greeting register its recall asks for, and the courtesy dialogue it introduces. That is 8 of 18 (0.44), below the 0.5 floor, because the other ten are Cyrillic letter atoms that the writing runway (RU-W01 to RU-W05, sequences 40-64) introduces after this recap at sequence 35; the recap cannot score them without assessing atoms before they exist. Closing the gap needs a terminal checkpoint after the runway, not a wider list here."
   }
 }

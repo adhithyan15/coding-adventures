@@ -13,10 +13,17 @@
     "kind": "task",
     "summary": "Complete ML-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in Malayalam, answer naturally, and return the question.",
     "assesses": [
+      "ML-LEX-ENGANE-01",
+      "ML-PHRASE-C03-ARE-YOU-WELL-01",
+      "ML-LEX-NJAAN-01",
+      "ML-LEX-SUKHAM-01",
+      "ML-LEX-SAARAMILLA-01",
+      "ML-CONCEPT-C03-QUESTION-PARTICLE-O-01",
+      "ML-CONCEPT-C03-PRONOUN-CANNOT-DROP-01",
       "ML-SCRIPT-RECOG-126",
       "ML-SCRIPT-RECOG-139",
       "ML-SCRIPT-RECOG-140"
     ],
-    "note": "The checkpoint's reading check assesses the three letters this chapter teaches. The legacy spoken lessons still carry no typed knowledge atoms, so their representativeness remains authored until migration."
+    "note": "Chapter 3 is schema-v2, so the payoff is atom-scored: ML-C03-practice assesses 10 of the chapter's 11 atoms — the wellbeing words and phrases, the question particle, the pronoun rule, and the three letters this chapter teaches. Only the ola letter anchor is scored in its own lesson."
   }
 }
