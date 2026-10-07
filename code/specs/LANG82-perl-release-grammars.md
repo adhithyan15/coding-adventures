@@ -42,11 +42,21 @@ The corrected `code/grammars/perl/releases.csv` inventory expands 765 release
 entries from a pinned `perlhist.pod` snapshot. An official source-tag audit
 added 11 release candidates omitted there, for 776 pending or partial release
 rows. The correction adds `p54rc1` and `p54rc2` from the pinned history's
-lines 264 and 265; each remains pending until its distinct source-backed
-token and grammar pair is validated. Historical source archives for both are
-listed in the Perl archive index. The `v5.17.7.0` tag is excluded because its
+lines 264 and 265. Historical source archives for both are listed in the
+Perl archive index. The `v5.17.7.0` tag is excluded because its
 own annotation says that no such Perl release occurred. CPAN archives still
 need comparison before treating the inventory as exhaustive.
+
+For `p54rc1` and `p54rc2`, use the separate historical source archives,
+not an alias to 5.004. Both archives' `perly.y` files match the 5.004
+release; `p54rc2`'s `toke.c` also matches 5.004, while `p54rc1` differs
+only in the later addition of the regex `/c` modifier. Keep the two
+release pairs distinct and explicitly partial. Their accepted surface is
+the same plain-decimal `print` arithmetic subset with the 250-digit
+numeric bound; reject leading-zero literals, adjacent decrement, carriage
+returns and unsupported constructs. Check each archive's identity and run
+positive and negative parser probes before changing either inventory row
+from pending to partial.
 
 A pair must not claim to describe the complete language while it covers only
 a pilot subset. Mark partial pairs explicitly, list their accepted constructs,
