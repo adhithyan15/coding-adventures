@@ -138,6 +138,18 @@ passed 1,061 tests across 178 targets with zero ignores, including read-only/
 directory rejection. CV passed 76 unit tests and 10 doctests; SHA-256 passed 27
 unit tests and four doctests. All three pass strict all-target lint with unknown
 lints denied. All 889 lesson shards validate.
+Independent exact-head review rejected publication checkpoint `d5df790ba7`:
+`rename` overwrote an unexpected staging backup occupant, and a rollback-removal
+failure for an initially absent destination named a nonexistent original backup.
+Both temp-only probes and native regressions reproduced the defects. Spec
+refinement `4f09b46596` precedes the repair: exclusive backup links, explicit
+backup-path ownership, already-present original recovery and truthful diagnostics.
+All 14 native Windows publication tests pass after repair, including same-inode
+unexpected occupants and failure between backup creation and original removal.
+The 19 shared consumers also pass fresh at the unchanged implementation scope:
+2,147 tests across 80 targets, 49 existing ignores and strict lint. All 893 lesson
+shards validate. The repaired full compiler passes 1,064 tests across 178 targets
+with zero ignores and strict all-target lint; final repaired-head review remains pending.
 Current remaining CV02 work: final full-scope exact-head security review and
 actual CI/merge verification. Configuration and diagnostic
 names are specified before their implementation.

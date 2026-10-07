@@ -217,6 +217,83 @@ fn readonly_and_directory_destinations_reject_before_staging() {
     assert_eq!(fs::read_dir(&fixture.dir).unwrap().count(), 2);
 }
 
+#[test]
+fn unexpected_backup_occupants_are_never_overwritten_or_removed() {
+    for hard_link in [false, true] {
+        let fixture = Fixture::new();
+        let output = fixture.path("output");
+        fs::write(&output, "original").unwrap();
+        let result = publish_with_hook(&[(output.clone(), "new".into())], &mut |phase, _| {
+            if phase == Phase::Install {
+                let stage = fixture.recovery().pop().unwrap();
+                if hard_link {
+                    fs::hard_link(&output, stage.join("old"))?;
+                } else {
+                    fs::write(stage.join("old"), "unknown backup occupant")?;
+                }
+            }
+            Ok(())
+        });
+        assert!(
+            result.is_err(),
+            "unexpected backup occupant was overwritten"
+        );
+        assert_eq!(fs::read(&output).unwrap(), b"original");
+        let recovery = fixture.recovery();
+        assert_eq!(recovery.len(), 1);
+        let expected: &[u8] = if hard_link {
+            b"original"
+        } else {
+            b"unknown backup occupant"
+        };
+        assert_eq!(fs::read(recovery[0].join("old")).unwrap(), expected);
+        assert_eq!(fs::read_dir(&recovery[0]).unwrap().count(), 1);
+    }
+}
+
+#[test]
+fn failed_rollback_removal_does_not_claim_a_nonexistent_original_backup() {
+    let fixture = Fixture::new();
+    let a = fixture.path("a");
+    let b = fixture.path("b");
+    let error = publish_with_hook(
+        &[(a.clone(), "new a".into()), (b.clone(), "new b".into())],
+        &mut |phase, path| {
+            if (phase == Phase::Install && path.file_name() == b.file_name())
+                || (phase == Phase::RollbackRemove && path.file_name() == a.file_name())
+            {
+                Err(injected())
+            } else {
+                Ok(())
+            }
+        },
+    )
+    .unwrap_err();
+    assert_eq!(fs::read(&a).unwrap(), b"new a");
+    assert!(!b.exists());
+    assert!(fixture.recovery().is_empty());
+    assert!(!error.to_string().contains("retained recovery"));
+    assert!(error.to_string().contains("no original backup was created"));
+    assert!(error.to_string().contains("removal unconfirmed"));
+}
+
+#[test]
+fn failed_original_removal_cleans_only_its_created_backup_link() {
+    let fixture = Fixture::new();
+    let output = fixture.path("output");
+    fs::write(&output, "original").unwrap();
+    let result = publish_with_hook(&[(output.clone(), "new".into())], &mut |phase, _| {
+        if phase == Phase::BackupRemove {
+            Err(injected())
+        } else {
+            Ok(())
+        }
+    });
+    assert!(result.is_err());
+    assert_eq!(fs::read(&output).unwrap(), b"original");
+    assert_eq!(fs::read_dir(&fixture.dir).unwrap().count(), 1);
+}
+
 #[cfg(unix)]
 #[test]
 fn final_symlinks_reject_and_parent_symlink_aliases_collide() {

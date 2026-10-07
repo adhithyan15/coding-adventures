@@ -212,7 +212,9 @@ The compiler preflights destinations, stages every complete file and installs
 JS/map/manifest outputs before the sidecar. Normalized, ancestor, Windows case
 and existing hard-link aliases reject; final symlinks, nonregular files and
 read-only destinations reject. Reported failures before commit restore original
-files in reverse order. Obstructed recovery retains original copies and names
+files in reverse order. Backup creation also refuses an occupied path; cleanup
+owns only backup links it created, regardless of matching file identities.
+Obstructed recovery retains original copies and names
 their paths; cleanup failures after commit warn on stderr while the complete
 output set remains successful. This requires filesystem object identities and
 hard links. It provides complete individual files, without promising simultaneous

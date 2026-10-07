@@ -322,6 +322,7 @@ struct Stage {
     destination: Destination,
     directory: OwnedDirectory,
     new: Option<Observed>,
+    backup_created: bool,
     backed_up: bool,
     installed: bool,
 }
@@ -340,6 +341,7 @@ impl Stage {
 enum Phase {
     Stage,
     Install,
+    BackupRemove,
     RollbackRemove,
     Restore,
     Cleanup,
@@ -366,6 +368,7 @@ fn publish_with_hook(
                 destination,
                 directory,
                 new: None,
+                backup_created: false,
                 backed_up: false,
                 installed: false,
             });
@@ -416,9 +419,18 @@ fn publish_with_hook(
                         && old.len == current.len
                         && old.modified == current.modified =>
                 {
-                    fs::rename(path, stage.old_path())
-                        .map_err(|error| failure(path, "preserve original backup", error))?;
+                    // A private directory can still acquire an unexpected
+                    // occupant. Exclusive link creation cannot overwrite it;
+                    // object identity alone never claims ownership of its path.
+                    fs::hard_link(path, stage.old_path()).map_err(|error| {
+                        failure(path, "create original backup without overwrite", error)
+                    })?;
+                    stage.backup_created = true;
                     stage.backed_up = true;
+                    hook(Phase::BackupRemove, path)
+                        .map_err(|error| failure(path, "remove backed-up original", error))?;
+                    remove_original(path, old)
+                        .map_err(|error| failure(path, "remove backed-up original", error))?;
                 }
                 _ => {
                     return Err(failure(
@@ -596,6 +608,19 @@ fn remove_owned(path: &Path, expected: &Observed) -> io::Result<()> {
         _ => Err(invalid("refusing to remove an unknown replacement file")),
     }
 }
+fn remove_original(path: &Path, expected: &Observed) -> io::Result<()> {
+    let current = observe(path, false)?
+        .ok_or_else(|| invalid("original destination disappeared before backup removal"))?;
+    if current.id != expected.id
+        || current.len != expected.len
+        || current.modified != expected.modified
+    {
+        return Err(invalid(
+            "original destination changed before backup removal",
+        ));
+    }
+    fs::remove_file(path)
+}
 fn rollback(
     stages: &mut [Stage],
     hook: &mut impl FnMut(Phase, &Path) -> io::Result<()>,
@@ -607,11 +632,12 @@ fn rollback(
             let removed = hook(Phase::RollbackRemove, path)
                 .and_then(|()| remove_owned(path, stage.new.as_ref().unwrap()));
             if let Err(error) = removed {
-                problems.push(format!(
-                    "rollback {}: {error}; retained recovery {}",
-                    path.display(),
-                    stage.old_path().display()
-                ));
+                let recovery = if stage.backup_created {
+                    format!("retained recovery {}", stage.old_path().display())
+                } else {
+                    "destination removal unconfirmed; no original backup was created".into()
+                };
+                problems.push(format!("rollback {}: {error}; {recovery}", path.display(),));
             } else {
                 stage.installed = false;
             }
@@ -621,10 +647,26 @@ fn rollback(
                 stage.directory.check()?;
                 let old = observe(&stage.old_path(), false)?
                     .ok_or_else(|| invalid("original backup disappeared"))?;
-                if old.id != stage.destination.original.as_ref().unwrap().id {
+                let original = stage.destination.original.as_ref().unwrap();
+                if old.id != original.id
+                    || old.len != original.len
+                    || old.modified != original.modified
+                {
                     return Err(invalid("original backup identity changed"));
                 }
-                fs::hard_link(stage.old_path(), path)
+                match observe(path, false)? {
+                    Some(current)
+                        if current.id == original.id
+                            && current.len == original.len
+                            && current.modified == original.modified =>
+                    {
+                        Ok(())
+                    }
+                    Some(_) => Err(invalid(
+                        "restore destination is occupied by an unknown replacement",
+                    )),
+                    None => fs::hard_link(stage.old_path(), path),
+                }
             });
             if let Err(error) = restored {
                 problems.push(format!(
@@ -658,8 +700,11 @@ fn cleanup_stages(
                     stage.old_path().display()
                 )));
             }
-            if let Some(old) = &stage.destination.original {
-                remove_owned(&stage.old_path(), old)?;
+            if stage.backup_created {
+                remove_owned(
+                    &stage.old_path(),
+                    stage.destination.original.as_ref().unwrap(),
+                )?;
             }
             stage.directory.remove_empty()
         })();

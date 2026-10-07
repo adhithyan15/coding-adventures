@@ -4,6 +4,23 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - backup ownership and recovery diagnostics (CV02 review)
+
+Independent review reproduced an unexpected backup-path occupant being
+overwritten by `rename`, then deleted by cleanup. Backups now use exclusive
+no-clobber hard links and an explicit creation flag before removing the observed
+original. Cleanup never claims an unexpected occupant, even if it is a hard link
+to the same original inode. Failure before original removal recognizes the
+already-present original and removes only the created backup link.
+
+A second probe found failed rollback removal naming an original backup for an
+initially absent destination. That diagnostic now identifies unconfirmed
+destination removal and states that no original backup was created. Both native
+regressions failed before repair; the complete 14-test Windows publication suite
+passes after repair, including the backup-created/original-still-present state.
+Full compiler validation passes 1,064 tests across 178 targets with zero ignores
+and strict all-target lint. Final exact-head independent review remains required.
+
 ### Added - transactional artifact publication and content identity (CV02)
 
 Prepare and validate every body before preflighting the entire destination set.
