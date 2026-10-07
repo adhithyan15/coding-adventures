@@ -24,11 +24,11 @@ packages = ["src/arc2d"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--cov=arc2d --cov-report=term-missing --cov-fail-under=80"
+addopts = "--cov=arc2d --cov-report=term-missing --cov-fail-under=95"
 
 [tool.coverage.run]
 source = ["src/arc2d"]
 
 [tool.coverage.report]
-fail_under = 80
+fail_under = 95
 show_missing = true
