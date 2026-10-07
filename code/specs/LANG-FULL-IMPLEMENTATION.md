@@ -1340,6 +1340,9 @@ backend immediately) come before the enabler-dependent items.
   A single built-in `exp` may also map such a bounded chain before `entier`;
   nested exponential calls remain conservative to keep the finite bound
   explicit.
+  Built-in `ln` may map that one exponential when its operand remains rooted
+  in the bounded sign chain; standalone `ln` and user-declared overrides stay
+  conservative.
   Provenance-backed local and other real-name branches remain conservative
   across selector calls. Unary plus
   and unary minus preserve the same runtime-real proof. Additive composition,

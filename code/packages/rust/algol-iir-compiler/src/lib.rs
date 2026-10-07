@@ -3928,6 +3928,34 @@ impl Compiler {
             .any(|child| self.contains_builtin_exp_call(child))
     }
 
+    fn builtin_exp_operand<'n>(&self, node: &'n GrammarASTNode) -> Option<&'n GrammarASTNode> {
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.builtin_exp_operand(child);
+        }
+        if node.rule_name != "proc_call" {
+            let children = direct_nodes(node);
+            if direct_tokens(node).is_empty() && children.len() == 1 {
+                return self.builtin_exp_operand(children[0]);
+            }
+            return None;
+        }
+        let source_name = direct_tokens(node)
+            .into_iter()
+            .find(|token| token.effective_type_name() == "NAME")?
+            .value
+            .clone();
+        let target_name = self.resolve_procedure_identity(&source_name);
+        if target_name != "exp" || self.proc_sigs.contains_key(&target_name) {
+            return None;
+        }
+        let actuals = self.standard_fn_actuals(node);
+        if actuals.len() == 1 {
+            Some(actuals[0])
+        } else {
+            None
+        }
+    }
+
     fn builtin_sign_operand<'n>(
         &self,
         node: &'n GrammarASTNode,
@@ -4053,6 +4081,10 @@ impl Compiler {
             "exp" if !self.contains_builtin_exp_call(actuals[0]) => {
                 self.builtin_sign_operand(actuals[0])
             }
+            "ln" => self
+                .builtin_exp_operand(actuals[0])
+                .filter(|operand| !self.contains_builtin_exp_call(operand))
+                .and_then(|operand| self.builtin_sign_operand(operand)),
             _ => None,
         }
     }
@@ -13541,6 +13573,40 @@ mod tests {
         ] {
             let err = compile_source(source, "test").expect_err(
                 "nested exponential, domain-sensitive, or non-sign-rooted mappings must remain conservative",
+            );
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_ln_exp_entier_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(ln(exp(sign(pick())))); output(x) end",
+            "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier(ln(exp(cos(sin(abs(sign(pick()))))))))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "ln over one exponential preserves a bounded sign-rooted result through entier for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_ln_exp_entier_sign_widening_rejects_unproven_mappings() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(ln(exp(exp(sign(pick()))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(ln(exp(pick()))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real procedure exp(x); value x; real x; exp := x; real result; result := entier(ln(exp(sign(pick())))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "nested exponential, non-sign-rooted, and overridden exp mappings must remain conservative",
             );
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }

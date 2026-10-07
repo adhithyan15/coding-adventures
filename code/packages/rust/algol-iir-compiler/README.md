@@ -242,6 +242,8 @@ Built-in `sin`, `cos`, and `arctan` may map a bounded sign-rooted result before
 standard functions and non-sign-rooted runtime operands remain conservative.
 A single built-in `exp` may also map such a bounded chain before `entier`;
 nested exponential calls remain conservative to keep the finite bound explicit.
+Built-in `ln` may map that one exponential when its operand remains rooted in
+the bounded sign chain; standalone `ln` and user-declared overrides stay conservative.
 One-sided reassignment remains conservative. `for` loops preserve
 runtime-real provenance for caller-frame locals whose values their bodies leave
 invariant; controlled, changed, captured, and name-promoted storage remains
