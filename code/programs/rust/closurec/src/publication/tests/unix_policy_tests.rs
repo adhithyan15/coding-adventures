@@ -87,14 +87,42 @@ fn data_bearing_prepared_files_remain_owner_only_until_installation() {
     assert_eq!(fs::read_dir(&fixture.dir).unwrap().count(), 0);
 }
 
+#[test]
+fn later_install_failure_recovers_original_ownership_and_mode() {
+    let fixture = Fixture::new();
+    let a = fixture.path("existing");
+    let b = fixture.path("missing");
+    fs::write(&a, "original").unwrap();
+    fs::set_permissions(&a, Permissions::from_mode(0o640)).unwrap();
+    let original = fs::metadata(&a).unwrap();
+    let result = publish_with_hook(
+        &[(a.clone(), "new a".into()), (b.clone(), "new b".into())],
+        &mut |phase, path| {
+            if phase == Phase::Install && path.file_name() == b.file_name() {
+                Err(injected())
+            } else {
+                Ok(())
+            }
+        },
+    );
+    assert!(result.is_err());
+    let recovered = fs::metadata(&a).unwrap();
+    assert_eq!(recovered.uid(), original.uid());
+    assert_eq!(recovered.gid(), original.gid());
+    assert_eq!(recovered.mode() & 0o7777, original.mode() & 0o7777);
+    assert_eq!(fs::read(a).unwrap(), b"original");
+    assert!(!b.exists());
+    assert_eq!(fs::read_dir(&fixture.dir).unwrap().count(), 1);
+}
+
 #[cfg(target_os = "linux")]
 fn attach_extended_acl(path: &Path, default: bool) {
-    use std::ffi::c_void;
+    use std::ffi::{c_char, c_void};
     use std::os::fd::AsRawFd;
     unsafe extern "C" {
         fn fsetxattr(
             fd: i32,
-            name: *const i8,
+            name: *const c_char,
             value: *const c_void,
             size: usize,
             flags: i32,
@@ -197,4 +225,22 @@ fn extended_acl_rejects_before_original_mutation() {
     assert!(!mutated);
     assert_eq!(fs::read(path).unwrap(), b"original");
     assert_eq!(fs::read_dir(&fixture.dir).unwrap().count(), 1);
+}
+
+#[cfg(target_os = "macos")]
+#[test]
+fn inheritable_parent_acl_rejects_before_missing_parent_creation() {
+    let fixture = Fixture::new();
+    let output = std::process::Command::new("chmod")
+        .args(["+a", "everyone allow read,file_inherit,directory_inherit"])
+        .arg(&fixture.dir)
+        .output()
+        .unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert!(publish_outputs(&[(fixture.path("missing/output"), "body".into())]).is_err());
+    assert_eq!(fs::read_dir(&fixture.dir).unwrap().count(), 0);
 }
