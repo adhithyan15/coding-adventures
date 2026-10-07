@@ -15,5 +15,5 @@
       "@coding-adventures/directed-graph": ["../../../packages/typescript/directed-graph/src/index.ts"]
     }
   },
-  "include": ["index.ts"]
+  "include": ["index.ts", "cow-path.ts"]
 }
