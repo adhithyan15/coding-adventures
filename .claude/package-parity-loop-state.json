@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16898,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16898",
+    "branch": "codex/parity-elixir-dune-discovery-20261007",
+    "implementation_revision": "cc4016047bc9873d03008054c52e745f632f0307",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-07T13:13:19Z",
-    "pr_number": 16891,
-    "status": "merged",
-    "notes": "PR #16891 merged by guarded squash auto-merge at c6c014e91fbd01ba71b8722e77f1dca823a45446 after all 37 final-head checks were terminal and acceptable (29 success, seven skipped, one neutral) and GitHub reported MERGEABLE/CLEAN. The Windows fixture-root test failure on the preceding head was repaired and revalidated on GHC 9.4.8 before the final CI run. No manual merge was used."
+    "observed_at": "2026-10-07T13:37:38Z",
+    "pr_number": 16898,
+    "status": "checks-pending",
+    "notes": "Ready-for-review Elixir Dune fixture adoption PR #16898 opened from tested implementation cc4016047bc9873d03008054c52e745f632f0307. Full Elixir suite, focused/full Go suite, vet, build, neutral corpus, parity reporter tests, lessons, format, diff and read-only security review passed; coverage is 87.76% for changed Discovery but aggregate Elixir remains below the pre-existing 90% gate. GitHub checks are queued. Do not enable auto-merge while pending."
   },
   "last_inventory": {
     "revision": "c6c014e91fbd01ba71b8722e77f1dca823a45446",
@@ -1986,10 +1992,10 @@
     {
       "id": "build-tool-elixir-dune-build-discovery-fixture-adoption",
       "title": "Make Elixir consume the Dune discovery fixture",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-shared-discovery-fixture-native-ci-selection"],
       "branch": "codex/parity-elixir-dune-discovery-20261007",
-      "pr_number": null,
+      "pr_number": 16898,
       "notes": "Elixir already prunes exact _build but does not consume the shared language-registry fixture. Add independent fixture evidence and change behavior only if that evidence exposes a real divergence. When adding this direct consumer, extend the exact CI detector consumer map and drift test so later fixture-only edits select Elixir."
     },
     {
