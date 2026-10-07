@@ -20,6 +20,125 @@ pub fn parse_perl(source: &str) -> Result<GrammarASTNode, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use grammar_tools::{
+        cross_validator::cross_validate, parser_grammar::parse_parser_grammar,
+        token_grammar::parse_token_grammar,
+    };
+    use lexer::grammar_lexer::GrammarLexer;
+    use std::collections::HashSet;
+    use std::path::Path;
+
+    #[test]
+    fn every_inventoried_pair_is_valid_and_parses_a_small_program() {
+        let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
+        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
+        let mut checked = 0;
+        let mut releases = HashSet::new();
+        for row in inventory
+            .lines()
+            .filter(|row| !row.starts_with('#'))
+            .skip(1)
+        {
+            let fields: Vec<_> = row.split(',').collect();
+            let [release, _, _, status] = fields.as_slice() else {
+                panic!("malformed Perl release row: {row}");
+            };
+            assert!(
+                release.starts_with(|character: char| character.is_ascii_digit())
+                    && release
+                        .chars()
+                        .all(|character| character.is_ascii_alphanumeric()
+                            || "._-".contains(character))
+                    && !release.contains(".."),
+                "unsafe Perl release ID: {release}"
+            );
+            assert!(
+                releases.insert(*release),
+                "duplicate Perl release ID: {release}"
+            );
+            assert!(
+                matches!(*status, "pending" | "partial" | "complete"),
+                "{row}"
+            );
+            if *status == "pending" {
+                continue;
+            }
+            let token_text =
+                std::fs::read_to_string(directory.join(format!("perl{release}.tokens"))).unwrap();
+            let grammar_text =
+                std::fs::read_to_string(directory.join(format!("perl{release}.grammar"))).unwrap();
+            let token_grammar = parse_token_grammar(&token_text).unwrap();
+            let parser_grammar = parse_parser_grammar(&grammar_text).unwrap();
+            let issues = cross_validate(&token_grammar, &parser_grammar);
+            assert!(
+                issues.iter().all(|issue| !issue.starts_with("Error:")),
+                "{release}: {issues:?}"
+            );
+            for source in ["print(1);", "print(1+2*3);", "print(-4);"] {
+                let tokens = GrammarLexer::new(source, &token_grammar)
+                    .tokenize()
+                    .unwrap();
+                assert!(
+                    GrammarParser::new(tokens, parser_grammar.clone())
+                        .with_max_depth(MAX_RULE_DEPTH)
+                        .parse()
+                        .is_ok(),
+                    "{release}: {source}"
+                );
+            }
+            let tokens = GrammarLexer::new("print(", &token_grammar)
+                .tokenize()
+                .unwrap();
+            assert!(
+                GrammarParser::new(tokens, parser_grammar.clone())
+                    .with_max_depth(MAX_RULE_DEPTH)
+                    .parse()
+                    .is_err(),
+                "{release}: malformed print accepted"
+            );
+            let has_decrement = token_grammar
+                .definitions
+                .iter()
+                .any(|definition| definition.name == "DECREMENT");
+            assert!(has_decrement, "{release}: missing decrement token");
+            let adjacent = GrammarLexer::new("print(1--2);", &token_grammar)
+                .tokenize()
+                .unwrap();
+            assert!(
+                GrammarParser::new(adjacent, parser_grammar.clone())
+                    .with_max_depth(MAX_RULE_DEPTH)
+                    .parse()
+                    .is_err(),
+                "{release}: decrement parsed as two minus operators"
+            );
+            let spaced = GrammarLexer::new("print(1- -2);", &token_grammar)
+                .tokenize()
+                .unwrap();
+            assert!(
+                GrammarParser::new(spaced, parser_grammar.clone())
+                    .with_max_depth(MAX_RULE_DEPTH)
+                    .parse()
+                    .is_ok(),
+                "{release}: spaced minus operators should parse"
+            );
+            if matches!(*release, "5.38.2" | "5.44.0" | "5.45.3") {
+                for source in ["print(08);", "print(09);", "print(012);"] {
+                    let tokens = GrammarLexer::new(source, &token_grammar)
+                        .tokenize()
+                        .unwrap();
+                    assert!(
+                        GrammarParser::new(tokens, parser_grammar.clone())
+                            .with_max_depth(MAX_RULE_DEPTH)
+                            .parse()
+                            .is_err(),
+                        "{release}: leading-zero literal accepted: {source}"
+                    );
+                }
+            }
+            checked += 1;
+        }
+        assert!(checked >= 13, "release pair coverage unexpectedly shrank");
+    }
 
     #[test]
     fn parses_print_expression_with_precedence() {
