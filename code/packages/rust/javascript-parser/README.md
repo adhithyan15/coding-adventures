@@ -48,3 +48,7 @@ The JavaScript grammar covers:
 - **function_declaration** — named functions with parameters and body
 - **if_statement** / **while_statement** / **for_statement** — control flow
 - **var_declaration** — variable declarations with initializers
+
+## Checked provenance errors (CV02)
+
+CV02: propagate program-root allocation and construction-event failures before accepting a parsed result; test node/event exhaustion. The caller must propagate the error and reject the compilation result.

@@ -4,6 +4,208 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - native ACL fixture diagnostic isolation (CV02)
+
+The `0dfbcf7b10` Windows run passed the new structural-policy and supported
+denial tests, but the inherited fixture stopped before publication: PATH selected
+Git's Unix `whoami.exe`, which rejected Windows `/all`. Prepending Git's `usr/bin`
+locally reproduced the exact failure. Select the diagnostic utility from the
+OS-provided Windows system directory and report its status separately from
+strict ACL setup. Optional diagnostic failure cannot hide an ACL setup error.
+A child-PATH shadow regression verifies the native utility and intended denial;
+a missing setup path remains fatal. No production publication checks change.
+Fresh complete validation, exact-head review and three-platform CI are required.
+
+### Fixed - token-independent OWNER RIGHTS admission (CV02)
+
+Native Windows CI at `c76de302f8` reached compiler tests and failed the inherited
+OWNER RIGHTS rejection regression. Independent native review reproduced an
+accepted protected policy with FullControl before a denied READ_CONTROL ACE:
+production's fresh open succeeded and publication changed the original.
+
+Before empty capability probes or original mutation, structurally reject
+effective OWNER RIGHTS denied READ_CONTROL and every file generic-access mask
+in ordinary/object/callback/callback-object denial layouts. Bound SID and optional
+GUID decoding; reject malformed or unknown effective encodings. Preserve ACE
+bytes/order and retain exact round-trip/fresh-open checks for admitted policies.
+Inheritance-only entries are inert for this file. Native red/green tests cover
+successful fresh opening followed by required publication rejection, and positive
+controls preserve unrelated denied SIDs/rights exactly. The inherited fixture
+records parent/derived policy, user/default owner, groups/privileges and the actual
+fresh-open result. Its rejection remains unconditional. Fresh independent review
+and all three native compiler commands are required before acceptance.
+
+### Fixed - strict native CI SID decoding lint (CV02)
+
+The first correctly gated Windows run at `0e02820565` failed Rust 1.99 strict
+Clippy before compiler tests: constant-size `chunks_exact(4)` was rejected.
+Decode the already range-checked, four-byte-aligned SID length using statically
+sized array chunks. Preserve revision/subauthority checks and little-endian
+word order, remove the slice-conversion unwrap, and keep warnings denied.
+Fresh review, local compiler/policy validation and native CI are required.
+
+### Fixed - native Windows CI execution gate (CV02)
+
+The repaired-head plan selected the compiler for Windows but left its OS-suite
+gate false, so a green Windows job could skip the native publication/ACL tests.
+Register the compiler's affected identity and CV02 specification with that gate;
+real-registry evaluator regressions first fail both selection clauses and keep
+unrelated Rust changes as a negative control. Native acceptance requires the
+actual compiler test step and package result, not the job label.
+Independent review then reproduced an enabled gate with no compiler/toolchain
+on a specification-only diff. Exact CV02 consumer mapping now selects the
+compiler and Rust on all platforms, fails on missing consumers, honors language
+filters, and is verified through an emitted plan with the actual native command.
+
+### Added locally - explicit Linux/macOS publication policy support (CV02)
+
+Capture UID/GID/mode from held descriptors and reject foreign output owners.
+Linux descriptor-bound access/default ACL presence queries and macOS extended
+ACL entry/control queries reject unsupported policies before staging or original
+mutation. Native query errors fail closed; other Unix targets are unsupported.
+Separate permanently empty probes in the actual output parent preserve ordinary
+umask/group/setgid creation semantics and verify assignment and fresh opens.
+
+Prepare data-bearing files with owner-only mode, apply supported ownership before
+final mode during installation, and verify exact UID/GID/mode and ACL absence.
+Recheck original, stage and parent policies at boundaries. Pre-commit failure
+restores owner-only candidate mode without requiring a group reset; retained
+original inodes preserve their original ownership and mode.
+
+Seven cases per Unix platform cover mode-only drift, owner/group/mode replacement,
+actual-parent creation policy, private prepared files, rollback and access/parent
+ACL rejection. Strict all-target Linux/macOS cross-checks pass; native Unix runtime
+and final complete security review remain pending. All 20 Windows publication
+units and four artifact process tests pass after integration. #16905 remains draft.
+
+### Fixed locally - fresh verification opens during policy preflight (CV02)
+
+Independent review found that retained probe handles continued to permit policy
+readback even when the final DACL denied the fresh verification open used after
+installation. An inheritable OWNER RIGHTS deny-ReadPermissions policy therefore
+rejected only after an earlier output had changed. A committed native regression
+failed at the mutation-boundary assertion before repair and passes after repair:
+while the separate empty probe has its intended policy, reopen its active path
+with production verification access and verify identity, zero length and policy.
+Unsupported verification policies now reject before original mutation.
+
+### Fixed locally - verified Windows publication policies (CV02)
+
+Create prepared directories and files with atomically protected current-user
+DACLs. Capture owner/group/DACL/protection from held handles and recheck policies
+alongside file identity, length and mtime. Before changing originals, round-trip
+intended policies on distinct permanently empty probes. Use verified stage-parent
+handles for explicit legacy policies and destination-parent handles for inherited
+policies, rejecting unsupported or orphan inheritance. Verify final policy exactly
+and restore candidate privacy on pre-commit failure before rollback.
+
+The two previously failing ACL assertions now pass. Four additional native tests
+cover inherited replacement/new-file policy, metadata-preserving ACL changes,
+policy-install failure recovery and stale inherited policy rejection. The Windows
+publication unit suite initially passed 19 tests; the subsequent fresh-open repair
+passes 20 and has independent Windows-scope approval. Complete final review and
+native Unix runtime validation remain pending, so #16905 stays draft. No full
+SACL/integrity preservation is claimed.
+
+### Known issue - output and staging access controls (CV02 review)
+
+Additional native Windows probes and independent review reproduced protected
+owner-only outputs acquiring inherited Users read access after replacement.
+Prepared stage files also inherit Users read grants before installation. The
+earlier backup/recovery review PASS is superseded; #16905 remains draft and
+cannot be accepted on the existing ordinary test/CI results. Specification
+`e55e070094` requires atomically private staging objects, explicit captured and
+verified owner/group/DACL policy, supported-policy rejection, policy rechecks
+and native Linux/macOS ACL/ownership coverage. Windows implementation now passes
+the reproductions; Unix coverage and final review remain pending.
+Two native regression tests originally reached and failed the actual policy assertions:
+prepared objects have inherited/unprotected policies, and all four committed
+artifacts lose protected owner-only policies. An initial helper run failed on
+inherited PowerShell module paths before inspecting ACLs; that harness failure
+is kept separate from the meaningful before-repair evidence.
+
+### Fixed - backup ownership and recovery diagnostics (CV02 review)
+
+Independent review reproduced an unexpected backup-path occupant being
+overwritten by `rename`, then deleted by cleanup. Backups now use exclusive
+no-clobber hard links and an explicit creation flag before removing the observed
+original. Cleanup never claims an unexpected occupant, even if it is a hard link
+to the same original inode. Failure before original removal recognizes the
+already-present original and removes only the created backup link.
+
+A second probe found failed rollback removal naming an original backup for an
+initially absent destination. That diagnostic now identifies unconfirmed
+destination removal and states that no original backup was created. Both native
+regressions failed before repair; the complete 14-test Windows publication suite
+passes after repair, including the backup-created/original-still-present state.
+Full compiler validation passes 1,064 tests across 178 targets with zero ignores
+and strict all-target lint. Final exact-head independent review remains required.
+
+### Added - transactional artifact publication and content identity (CV02)
+
+Prepare and validate every body before preflighting the entire destination set.
+Reject normalized/ancestor/Windows case/hard-link collisions, final symlinks,
+nonregular files and read-only outputs. Stage synced complete files in exclusive
+sibling directories; retain held filesystem identities (full 128-bit file IDs on
+Windows), preserve permissions and install without clobbering a new destination.
+Publish the sidecar last. Reported pre-commit failures roll back owned outputs
+in reverse order, preserving unknown replacements and obstructed recovery copies.
+Cleanup failures after commit report retained paths on stderr with successful,
+complete outputs. No simultaneous multi-file visibility or crash recovery claim.
+
+Source roots and JS/map/manifest publication records now include SHA-256 of exact
+consumed/final bytes through the existing local SHA-256 dependency. Process tests
+failed first on collisions, partial publication and missing hashes, then passed
+with preserved outputs and tracing-neutral bytes. Private fault tests cover later
+staging/install failure, obstructed restoration, unknown replacement preservation
+and cleanup warnings. Native Windows tests cover held IDs and path normalization;
+Unix symlink tests require native CI. Final security review and CI/merge acceptance
+remain pending; full pass lineage, output joins and compiler parity remain open.
+
+### Fixed - explicit whitespace limit overrides reject (CV02 review)
+
+Only the exactly empty absent-flag mapping selects default limits. Explicit
+spaces, mixed ASCII whitespace and Unicode whitespace now fail the empty-pair
+grammar. Actual-process regressions first returned exit 0; they now require exit
+1, the empty-pair diagnostic on stderr, empty stdout and preserved destinations.
+
+### Fixed - checked export failures precede artifact writes (CV02)
+
+Replace snapshot/pretty/filter/NDJSON and text/JSON/KV summary Value round trips
+and success-shaped fallbacks with the library's bounded borrowed exports. NONE
+also validates complete evidence; its output cap applies only to materialized
+summaries. Prepare all requested payloads before JS/map/manifest/sidecar writes,
+so recording/export failures preserve every existing destination and return no
+success stdout. Real-process tests reproduce zero-output-cap success before the
+repair, verify every view rejects correctly, and compare three fresh identical
+SIMPLE/ADVANCED runs over twelve format/filter/summary combinations. Filesystem
+publication and content identity are implemented by the subsequent checkpoint above.
+
+### Added - checked provenance configuration and stage failures (CV02)
+
+`--correlation_vector_limits` supplies closed, partial overrides of all nine
+shared `GraphLimits` fields. Invalid names, duplicates, non-ASCII/non-decimal
+values, overflow and unsafe metadata depth fail before inputs or output writes.
+Tracing constructs a checked compact log; programmatic configuration uses the
+same validation. Direct compiler CV operations and whitespace gap/emit deletion
+failures now return stage diagnostics with failed-compilation status. Parser,
+configuration and execution errors go to stderr with empty success stdout.
+Actual-process tests verify limits, file preservation on early failure, checked
+reload and tracing-neutral bytes at all five compilation levels. The generated
+help and exact-source-pinned CLI surface audit include the new Rust extension.
+Formatter/summary and publication integration were completed in subsequent checkpoints above.
+
+### Fixed - semantic EOF provenance regression assertion (CV02)
+
+The whitespace-only tombstone test reads deletion fields from the same parsed
+entry rather than assuming struct serialization order. It verifies the EOF
+tombstone and surviving name/number tokens. Its name/comments now accurately
+reflect current EOF coverage; the lexer still skips trivia without recording
+individual comment/whitespace origins.
+Removed the obsolete `doc_list_item_without_indentation` lint allowance; current
+Clippy warned about it even under `-D warnings`. The existing supported doc
+allowances remain. Verification also denies unknown lints explicitly.
+
 ### Changed - compact provenance identities (CV01 / CCR-065)
 
 The shared compiler CV log uses compact-v1 IDs with bounded length independent

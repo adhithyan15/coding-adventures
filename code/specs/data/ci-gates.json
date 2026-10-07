@@ -472,8 +472,9 @@
     },
     "build-windows-os-suites": {
       "scope": "step",
-      "description": "Suites that run only on the Windows build leg, independent of any toolchain flag.",
+      "description": "Native Windows suites, including Closure compiler publication/ACL regressions, independent of any toolchain flag.",
       "packages": [
+        "rust/programs/closurec",
         "typescript/forme-sandbox-core",
         "typescript/forme-sandbox-windows"
       ],
@@ -482,6 +483,7 @@
         "code/scripts/tests/test_adj_stdlib_provenance.py",
         "code/scripts/setup_msvc_dev_cmd.py",
         "code/scripts/tests/test_setup_msvc_dev_cmd.py",
+        "code/specs/CV02-checked-bounded-provenance-graphs.md",
         "code/specs/FM02-forme-plugin-host.md"
       ]
     }

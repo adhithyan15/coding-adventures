@@ -4,6 +4,15 @@ All notable changes to the `coding-adventures-javascript-ast` crate will be docu
 
 ## [Unreleased]
 
+### Added - iterative owned AST disposal (CV02)
+
+`dispose_program(Program)` consumes every AST family through a heap work stack,
+with one iterator frame per active list and no cloning, leaking or cleanup
+thread. Exhaustive variant matches and field destructuring require a cleanup
+choice when the taxonomy changes. Small-stack child tests cover deep parameter
+and class expressions, templates, optional calls, arrays, statements, exports
+and a 100,000-slot list. Individual step functions keep debug frames bounded.
+
 ### Added - borrowed structural equality excluding CV identity (CLOC31)
 
 `EqIgnoringCv` compares all represented fields recursively except `cv`, without

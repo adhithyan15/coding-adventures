@@ -162,19 +162,29 @@ impl Pass for ConstantFoldPass {
                         contributions: Vec::new(),
                         changed: false,
                         nodes_touched: 0,
+                        cv_error: None,
                     };
                     let new_program = fold_program(program, &mut state);
-                    (
+                    // Rejection owns a potentially deep candidate. Dispose
+                    // of it here, on the same large stack used for folding,
+                    // rather than returning it for a small caller to drop.
+                    if let Some(message) = state.cv_error {
+                        return Err(PassError {
+                            pass_name: "constant-fold".to_string(),
+                            message,
+                        });
+                    }
+                    Ok((
                         new_program,
                         state.contributions,
                         state.changed,
                         state.nodes_touched,
-                    )
+                    ))
                 })
                 .expect("failed to spawn constant-fold worker thread")
                 .join()
                 .expect("constant-fold worker thread panicked")
-        });
+        })?;
 
         Ok(PassOutput {
             program: new_program,
@@ -214,6 +224,7 @@ struct FoldState<'a> {
     contributions: Vec<Contribution>,
     changed: bool,
     nodes_touched: u32,
+    cv_error: Option<String>,
 }
 
 impl FoldState<'_> {
@@ -225,9 +236,18 @@ impl FoldState<'_> {
     /// CvId is allocated and no contribution is emitted — the
     /// replacement node will also carry `cv: None`.
     fn fork_cv(&mut self, parent: &Option<String>, before: &str, after: &str) -> Option<String> {
+        if self.cv_error.is_some() {
+            return None;
+        }
         match parent {
             Some(parent_cv) => {
-                let new_cv = self.cv.derive(parent_cv, None);
+                let new_cv = match self.cv.try_derive(parent_cv, None) {
+                    Ok(id) => id,
+                    Err(error) => {
+                        self.cv_error = Some(format!("CV fold derivation failed: {error}"));
+                        return None;
+                    }
+                };
                 let contribution = Contribution {
                     source: "constant-fold".to_string(),
                     tag: "folded".to_string(),
@@ -243,15 +263,16 @@ impl FoldState<'_> {
                 // The replacement owns its rewrite history. Returning only a
                 // program-summary contribution loses this record when the
                 // parser has no Program.cv, and never answers a node query.
-                // A freshly derived entry cannot be deleted at this point.
-                self.cv
-                    .contribute(
-                        &new_cv,
-                        &contribution.source,
-                        &contribution.tag,
-                        contribution.meta.clone(),
-                    )
-                    .expect("fresh fold identity accepts its contribution");
+                // A fresh entry still may exhaust event/payload limits.
+                if let Err(error) = self.cv.contribute(
+                    &new_cv,
+                    &contribution.source,
+                    &contribution.tag,
+                    contribution.meta.clone(),
+                ) {
+                    self.cv_error = Some(format!("CV fold contribution failed: {error}"));
+                    return None;
+                }
                 self.contributions.push(contribution);
                 self.changed = true;
                 Some(new_cv)
@@ -275,6 +296,9 @@ impl FoldState<'_> {
         before: &str,
         after: &str,
     ) -> Option<String> {
+        if self.cv_error.is_some() {
+            return None;
+        }
         let mut unique = Vec::new();
         for parent in parents.iter().flatten() {
             if !unique.contains(parent) {
@@ -284,7 +308,13 @@ impl FoldState<'_> {
         let parent = match unique.as_slice() {
             [] => None,
             [one] => Some((*one).to_string()),
-            many => Some(self.cv.merge(many, None)),
+            many => match self.cv.try_merge(many, None) {
+                Ok(id) => Some(id),
+                Err(error) => {
+                    self.cv_error = Some(format!("CV fold merge failed: {error}"));
+                    return None;
+                }
+            },
         };
         self.fork_cv(&parent, before, after)
     }
@@ -14717,6 +14747,134 @@ mod tests {
         assert_eq!(entry.contributions[0].meta["new_cv"], id);
         let merged = cv.get(&entry.parent_ids[0]).unwrap();
         assert_eq!(merged.parent_ids, [composite, operand]);
+    }
+
+    #[test]
+    fn checked_cv_fold_failures_reject_the_pass_result() {
+        use coding_adventures_correlation_vector::GraphLimits;
+        for limits in [
+            GraphLimits {
+                max_nodes: 1,
+                ..Default::default()
+            },
+            GraphLimits {
+                max_edges: 0,
+                ..Default::default()
+            },
+            GraphLimits {
+                max_events: 0,
+                ..Default::default()
+            },
+        ] {
+            let mut cv = CVLog::new_checked_compact(limits).unwrap();
+            let parent = cv.try_create(None).unwrap();
+            let expr = Expression::BinaryExpression(BinaryExpression {
+                cv: Some(parent),
+                operator: BinaryOperator::Add,
+                left: Box::new(num(2.0, None)),
+                right: Box::new(num(3.0, None)),
+            });
+            let prog = program_with_expr(expr, true);
+            let sidecar = Sidecar::new();
+            let error = ConstantFoldPass::new()
+                .run(PassContext {
+                    program: &prog,
+                    sidecar: &sidecar,
+                    cv: &mut cv,
+                })
+                .unwrap_err();
+            assert_eq!(error.pass_name, "constant-fold");
+            assert!(
+                error.message.contains("CV") && error.message.contains("limit"),
+                "{error}"
+            );
+        }
+        let mut cv = CVLog::new_checked_compact(GraphLimits {
+            max_nodes: 2,
+            ..Default::default()
+        })
+        .unwrap();
+        let a = cv.try_create(None).unwrap();
+        let b = cv.try_create(None).unwrap();
+        let expr = Expression::BinaryExpression(BinaryExpression {
+            cv: None,
+            operator: BinaryOperator::Add,
+            left: Box::new(num(2.0, Some(&a))),
+            right: Box::new(num(3.0, Some(&b))),
+        });
+        let prog = program_with_expr(expr, true);
+        let sidecar = Sidecar::new();
+        let error = ConstantFoldPass::new()
+            .run(PassContext {
+                program: &prog,
+                sidecar: &sidecar,
+                cv: &mut cv,
+            })
+            .unwrap_err();
+        assert!(error.message.contains("nodes limit"), "{error}");
+    }
+
+    #[test]
+    fn checked_cv_deep_rejected_candidate_drops_on_the_worker_stack() {
+        const CHILD: &str = "CV02_FOLD_CANDIDATE_CHILD";
+        if std::env::var_os(CHILD).is_none() {
+            let result = std::process::Command::new(std::env::current_exe().unwrap())
+                .args([
+                    "--exact",
+                    "tests::checked_cv_deep_rejected_candidate_drops_on_the_worker_stack",
+                    "--nocapture",
+                ])
+                .env(CHILD, "1")
+                .output()
+                .unwrap();
+            assert!(
+                result.status.success(),
+                "isolated fold failed: {:?}\n{}",
+                result.status,
+                String::from_utf8_lossy(&result.stderr)
+            );
+            return;
+        }
+        std::thread::Builder::new()
+            .stack_size(128 * 1024)
+            .spawn(|| {
+                let mut cv =
+                    CVLog::new_checked_compact(coding_adventures_correlation_vector::GraphLimits {
+                        max_events: 0,
+                        ..Default::default()
+                    })
+                    .unwrap();
+                let root = cv.try_create(None).unwrap();
+                let mut expr = Expression::BinaryExpression(BinaryExpression {
+                    cv: Some(root),
+                    operator: BinaryOperator::Add,
+                    left: Box::new(num(1.0, None)),
+                    right: Box::new(num(2.0, None)),
+                });
+                for _ in 0..4096 {
+                    expr = Expression::MemberExpression(MemberExpression {
+                        cv: None,
+                        object: Box::new(expr),
+                        property: Box::new(ident("p")),
+                        computed: false,
+                    });
+                }
+                // The child process owns this one leaked input, reclaimed on exit.
+                // Isolate candidate destruction from the unrelated input destructor.
+                let prog = Box::leak(Box::new(program_with_expr(expr, true)));
+                let sidecar = Sidecar::new();
+                let error = ConstantFoldPass::new()
+                    .run(PassContext {
+                        program: prog,
+                        sidecar: &sidecar,
+                        cv: &mut cv,
+                    })
+                    .unwrap_err();
+                assert!(error.message.contains("events limit"), "{error}");
+            })
+            .unwrap()
+            .join()
+            .unwrap();
     }
 
     #[test]

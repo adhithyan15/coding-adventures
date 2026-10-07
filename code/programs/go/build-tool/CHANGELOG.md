@@ -6,6 +6,16 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- Native Windows CI selection for affected `rust/programs/closurec` and its
+  CV02 acceptance specification. The ordinary Windows package-test step no
+  longer skips the compiler's publication/ACL regressions on Rust-only changes.
+  Real-registry evaluator tests reproduce both missing selection clauses and
+  preserve an unrelated Rust negative control.
+  Specification-only CV02 diffs now also seed the compiler on every platform
+  and require Rust; missing consumers fail planning and non-Rust language filters
+  remain bounded. Emitted production-plan regressions reproduce the previously
+  empty selection despite an enabled Windows gate and verify the native command.
+
 - Exact-path native CI selection for changes to the shared
   `discovery-language-registry.json` fixture. Detect and all platform build-plan
   overrides now schedule its eleven direct build-tool consumers, including both

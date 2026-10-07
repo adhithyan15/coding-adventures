@@ -53,14 +53,36 @@
 use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
+mod bounded_json;
+mod canonical;
+mod checked_export;
+pub use checked_export::{SnapshotFormat, SourceFilter, SummaryFormat};
+#[cfg(test)]
+mod checked_export_tests;
+mod checked;
+mod cleanup;
+use checked::CheckedState;
+pub use checked::GraphLimits;
 use serde_json::Value;
 
 // Re-export the sha256 function we use for ID generation.
 // We take only the first 8 hex characters of the hash.
 use coding_adventures_sha256::sha256_hex;
 
+/// Dispose of caller-owned metadata without recursive Value destruction.
+///
+/// Use when rejecting a batch of evidence that was never transferred to a log.
+/// This necessarily visits already-owned payloads; graph-operation work limits
+/// cannot bound disposal of arbitrary memory constructed by the caller.
+pub fn dispose_metadata(meta: HashMap<String, Value>) {
+    cleanup::metadata(meta);
+}
+
 #[cfg(test)]
 mod compact_tests;
+
+#[cfg(test)]
+mod checked_tests;
 
 // ===========================================================================
 // Data Types
@@ -211,15 +233,22 @@ pub struct CVEntry {
 /// when tracing is off.
 pub struct CVLog {
     /// All CV entries, keyed by CV ID.
-    pub entries: HashMap<String, CVEntry>,
+    entries: HashMap<String, CVEntry>,
 
     /// Ordered list of source names that have contributed to the log.
     /// A source name is added when it makes its first contribution to any CV.
-    pub pass_order: Vec<String>,
+    pass_order: Vec<String>,
 
     /// When `false`, all write operations are no-ops (no entries stored).
     /// IDs are still generated and returned.
-    pub enabled: bool,
+    enabled: bool,
+
+    // Keep stage membership O(1); the ordered vector remains the wire contract.
+    pass_sources: std::collections::HashSet<String>,
+    checked: Option<CheckedState>,
+    // Generic typed imports may have discarded/defaulted evidence. Never let
+    // graph shape validation or a later snapshot erase that trust boundary.
+    allocator_only_import: bool,
 
     /// Per-base sequence counters for root CVs.
     /// Key: base string (e.g., "a3f1b2c4").
@@ -286,6 +315,18 @@ fn deserialize_unique_entries<'de, D: serde::Deserializer<'de>>(
     deserializer.deserialize_map(UniqueEntries)
 }
 
+#[derive(Deserialize)]
+struct LogSnapshot {
+    #[serde(deserialize_with = "deserialize_unique_entries")]
+    entries: HashMap<String, CVEntry>,
+    pass_order: Vec<String>,
+    enabled: bool,
+    #[serde(default, deserialize_with = "deserialize_present_identity")]
+    identity: Option<CompactIdentityState>,
+    #[serde(default, deserialize_with = "deserialize_present_view")]
+    view: Option<Value>,
+}
+
 // Keep field presence distinct from a JSON null marker: even `view: null`
 // declares a view and cannot authorize importing a full compact log.
 fn deserialize_present_view<'de, D: serde::Deserializer<'de>>(
@@ -338,8 +379,8 @@ impl CVLog {
     /// use coding_adventures_correlation_vector::CVLog;
     ///
     /// let log = CVLog::new(true);
-    /// assert!(log.enabled);
-    /// assert!(log.entries.is_empty());
+    /// assert!(log.is_enabled());
+    /// assert!(log.entries().is_empty());
     /// ```
     pub fn new(enabled: bool) -> Self {
         CVLog {
@@ -349,6 +390,9 @@ impl CVLog {
             base_counters: HashMap::new(),
             child_counters: HashMap::new(),
             compact_sequence: None,
+            pass_sources: std::collections::HashSet::new(),
+            checked: None,
+            allocator_only_import: false,
         }
     }
 
@@ -404,8 +448,8 @@ impl CVLog {
     /// across runs (important for build systems and caches).
     ///
     /// Taking only 8 hex characters gives us 32 bits of collision resistance —
-    /// sufficient for a single pipeline run with millions of entities, while
-    /// keeping the ID human-readable.
+    /// which is only a short origin bucket, not a uniqueness proof. Distinct
+    /// origins can share a bucket; per-bucket counters distinguish allocations.
     fn origin_base(origin: Option<&Origin>) -> String {
         match origin {
             // No natural origin → use the special "no-origin" base.
@@ -508,8 +552,11 @@ impl CVLog {
     /// Allocate a root without wrapping or replacing an existing entry.
     /// Returns an error on sequence exhaustion/collision without changing state.
     /// The string-returning [`Self::create`] fails fast on these errors.
-    /// Graph validation and resource budgets are separate from allocation.
+    /// Checked logs also validate parents and resource budgets before allocation;
+    /// generic logs retain allocator-only compatibility semantics.
     pub fn try_create(&mut self, origin: Option<Origin>) -> Result<String, String> {
+        let mut origin = cleanup::OwnedOrigin::new(origin);
+        let usage = self.prospective_node(&[], origin.as_ref())?;
         let id = self.next_origin_id(origin.as_ref())?;
 
         // When tracing is disabled, we still need to return a valid ID
@@ -518,13 +565,14 @@ impl CVLog {
             let entry = CVEntry {
                 id: id.clone(),
                 parent_ids: vec![],
-                origin,
+                origin: origin.take(),
                 contributions: vec![],
                 deleted: None,
             };
             self.entries.insert(id.clone(), entry);
         }
 
+        self.commit_usage(usage);
         Ok(id)
     }
 
@@ -568,6 +616,8 @@ impl CVLog {
         tag: &str,
         meta: HashMap<String, Value>,
     ) -> Result<(), String> {
+        let mut meta = cleanup::OwnedMetadata::new(meta);
+        let usage = self.prospective_event(cv_id, source, tag, meta.as_ref())?;
         if !self.enabled {
             return Ok(());
         }
@@ -589,13 +639,12 @@ impl CVLog {
         entry.contributions.push(Contribution {
             source: source.to_string(),
             tag: tag.to_string(),
-            meta,
+            meta: meta.take(),
         });
 
         // Track pass order — only add the source if it hasn't appeared before.
-        if !self.pass_order.contains(&source.to_string()) {
-            self.pass_order.push(source.to_string());
-        }
+        self.record_source(source);
+        self.commit_usage(usage);
 
         Ok(())
     }
@@ -623,27 +672,30 @@ impl CVLog {
     }
 
     /// Fallible identity allocation for a one-parent child. Allocation failure
-    /// leaves state unchanged. This does not validate the parent's existence;
-    /// the legacy graph API permits IDs allocated while storage was disabled.
+    /// leaves state unchanged. Checked logs require a stored, older parent;
+    /// generic logs permit IDs allocated while storage was disabled.
     /// [`Self::derive`] fails fast rather than returning an invalid substitute.
     pub fn try_derive(
         &mut self,
         parent_cv_id: &str,
         origin: Option<Origin>,
     ) -> Result<String, String> {
+        let mut origin = cleanup::OwnedOrigin::new(origin);
+        let usage = self.prospective_node(&[parent_cv_id], origin.as_ref())?;
         let id = self.next_child_id(parent_cv_id)?;
 
         if self.enabled {
             let entry = CVEntry {
                 id: id.clone(),
                 parent_ids: vec![parent_cv_id.to_string()],
-                origin,
+                origin: origin.take(),
                 contributions: vec![],
                 deleted: None,
             };
             self.entries.insert(id.clone(), entry);
         }
 
+        self.commit_usage(usage);
         Ok(id)
     }
 
@@ -671,13 +723,15 @@ impl CVLog {
     }
 
     /// Fallible identity allocation for a merge, preserving parent order and
-    /// duplicates. Allocation errors do not change state; graph validity and
-    /// budgets remain separate. [`Self::merge`] fails fast on allocation error.
+    /// duplicates. Checked logs enforce parent validity and resource budgets
+    /// before allocating; errors do not change state. [`Self::merge`] fails fast on allocation error.
     pub fn try_merge(
         &mut self,
         parent_cv_ids: &[&str],
         origin: Option<Origin>,
     ) -> Result<String, String> {
+        let mut origin = cleanup::OwnedOrigin::new(origin);
+        let usage = self.prospective_node(parent_cv_ids, origin.as_ref())?;
         // The base for a merge comes from the origin if provided, else "00000000".
         let id = self.next_origin_id(origin.as_ref())?;
 
@@ -685,13 +739,14 @@ impl CVLog {
             let entry = CVEntry {
                 id: id.clone(),
                 parent_ids: parent_cv_ids.iter().map(|s| s.to_string()).collect(),
-                origin,
+                origin: origin.take(),
                 contributions: vec![],
                 deleted: None,
             };
             self.entries.insert(id.clone(), entry);
         }
 
+        self.commit_usage(usage);
         Ok(id)
     }
 
@@ -725,17 +780,40 @@ impl CVLog {
         reason: &str,
         meta: HashMap<String, Value>,
     ) {
+        self.try_delete(cv_id, source, reason, meta)
+            .expect("CV deletion failed");
+    }
+
+    /// Fallible tombstone recording. Checked deletion is permanent: a second
+    /// deletion is rejected before it can replace the original reason/history.
+    pub fn try_delete(
+        &mut self,
+        cv_id: &str,
+        source: &str,
+        reason: &str,
+        meta: HashMap<String, Value>,
+    ) -> Result<(), String> {
+        let mut meta = cleanup::OwnedMetadata::new(meta);
+        let usage = self.prospective_event(cv_id, source, reason, meta.as_ref())?;
         if !self.enabled {
-            return;
+            return Ok(());
         }
 
         if let Some(entry) = self.entries.get_mut(cv_id) {
+            if let Some(previous) = entry.deleted.take() {
+                cleanup::metadata(previous.meta);
+            }
             entry.deleted = Some(DeletionRecord {
                 source: source.to_string(),
                 reason: reason.to_string(),
-                meta,
+                meta: meta.take(),
             });
         }
+        if self.checked.is_some() {
+            self.record_source(source);
+        }
+        self.commit_usage(usage);
+        Ok(())
     }
 
     /// Record that a stage examined this entity but made no changes.
@@ -762,7 +840,17 @@ impl CVLog {
         // passthrough is a special contribution with tag "passthrough".
         // We don't use the Result — passthrough on a deleted entry is silently
         // ignored (the entity is gone; recording that we saw it is harmless).
-        let _ = self.contribute(cv_id, source, "passthrough", HashMap::new());
+        if self.checked.is_some() {
+            self.try_passthrough(cv_id, source)
+                .expect("CV passthrough failed");
+        } else {
+            let _ = self.try_passthrough(cv_id, source);
+        }
+    }
+
+    /// Fallible no-change event; compiler paths must propagate checked errors.
+    pub fn try_passthrough(&mut self, cv_id: &str, source: &str) -> Result<(), String> {
+        self.contribute(cv_id, source, "passthrough", HashMap::new())
     }
 
     // -----------------------------------------------------------------------
@@ -810,34 +898,10 @@ impl CVLog {
     /// assert_eq!(log.ancestors(&c), vec![b.clone(), a.clone()]);
     /// ```
     pub fn ancestors(&self, cv_id: &str) -> Vec<String> {
-        // BFS: process parents level by level so that "nearest first" holds.
-        let mut result = Vec::new();
-        let mut visited = std::collections::HashSet::new();
-        visited.insert(cv_id.to_string());
-
-        // Seed the queue with the direct parents of cv_id.
-        let mut queue = std::collections::VecDeque::new();
-        if let Some(entry) = self.entries.get(cv_id) {
-            for p in &entry.parent_ids {
-                if visited.insert(p.clone()) {
-                    queue.push_back(p.clone());
-                }
-            }
+        if !self.entries.contains_key(cv_id) {
+            return vec![];
         }
-
-        // BFS over all ancestors.
-        while let Some(current) = queue.pop_front() {
-            result.push(current.clone());
-            if let Some(entry) = self.entries.get(&current) {
-                for p in &entry.parent_ids {
-                    if visited.insert(p.clone()) {
-                        queue.push_back(p.clone());
-                    }
-                }
-            }
-        }
-
-        result
+        self.try_ancestors(cv_id).expect("CV ancestry query failed")
     }
 
     /// Return all CV IDs that have this CV ID anywhere in their ancestor chain.
@@ -862,44 +926,11 @@ impl CVLog {
     /// assert_eq!(desc.len(), 2);
     /// ```
     pub fn descendants(&self, cv_id: &str) -> Vec<String> {
-        // Build a reverse parent→children index for efficient lookup.
-        // Key: parent_id. Value: list of child IDs that have this parent.
-        let mut children_of: HashMap<String, Vec<String>> = HashMap::new();
-        for (id, entry) in &self.entries {
-            for parent in &entry.parent_ids {
-                children_of
-                    .entry(parent.clone())
-                    .or_default()
-                    .push(id.clone());
-            }
+        if !self.entries.contains_key(cv_id) {
+            return vec![];
         }
-
-        // BFS from cv_id through the children index.
-        let mut result = Vec::new();
-        let mut visited = std::collections::HashSet::new();
-        visited.insert(cv_id.to_string());
-
-        let mut queue = std::collections::VecDeque::new();
-        if let Some(children) = children_of.get(cv_id) {
-            for child in children {
-                if visited.insert(child.clone()) {
-                    queue.push_back(child.clone());
-                }
-            }
-        }
-
-        while let Some(current) = queue.pop_front() {
-            result.push(current.clone());
-            if let Some(children) = children_of.get(&current) {
-                for child in children {
-                    if visited.insert(child.clone()) {
-                        queue.push_back(child.clone());
-                    }
-                }
-            }
-        }
-
-        result
+        self.try_descendants(cv_id)
+            .expect("CV descendants query failed")
     }
 
     /// Return the ordered contributions for a CV ID.
@@ -944,9 +975,10 @@ impl CVLog {
     /// For a linear chain `A → B → C → D`, `lineage("D")` returns
     /// `[entry_A, entry_B, entry_C, entry_D]`.
     ///
-    /// For merged CVs, all branches are included. The ordering is ancestors
-    /// first, entity last — but within the ancestor set, ordering follows BFS
-    /// from nearest to most distant (reversed to oldest-first).
+    /// Shared-ancestor DAGs use deterministic topological order: every parent
+    /// precedes its child. This topology does not encode execution chronology.
+    /// Invalid graphs or exhausted query budgets fail fast; use try_lineage for
+    /// a fallible query returning borrowed entries.
     ///
     /// Returns an empty `Vec` when the entity is not found.
     ///
@@ -967,23 +999,11 @@ impl CVLog {
         if !self.entries.contains_key(cv_id) {
             return vec![];
         }
-
-        // Get ancestors (nearest first), then reverse to get oldest first.
-        let mut ancestor_ids = self.ancestors(cv_id);
-        ancestor_ids.reverse(); // now oldest first
-
-        // Build the lineage: all ancestors (oldest first) + the entity itself.
-        let mut result = Vec::new();
-        for id in &ancestor_ids {
-            if let Some(entry) = self.entries.get(id) {
-                result.push(entry.clone());
-            }
-        }
-        if let Some(entry) = self.entries.get(cv_id) {
-            result.push(entry.clone());
-        }
-
-        result
+        self.try_lineage(cv_id)
+            .expect("CV lineage query failed")
+            .into_iter()
+            .cloned()
+            .collect()
     }
 
     // -----------------------------------------------------------------------
@@ -1003,36 +1023,12 @@ impl CVLog {
     /// }
     /// ```
     ///
-    /// # Implementation note
-    ///
-    /// We use `serde_json` directly here because our data types already use
-    /// `serde_json::Value` for meta fields. Converting the entire structure
-    /// through the internal `JsonValue` pipeline would require a complex
-    /// double-conversion. For the CV package, `serde_json` IS the right tool
-    /// because our data model is inherently JSON-native.
+    /// Object keys are sorted at every level; arrays and numbers are preserved.
+    /// Checked logs validate the entire graph before encoding. Compatibility
+    /// logs retain allocator-only snapshot semantics, with finite payload and
+    /// encoding budgets. Output bytes are limited as they are produced.
     pub fn to_json_string(&self) -> Result<String, String> {
-        // Build a serde-serializable snapshot.
-        // We need a wrapper struct for the top-level shape.
-        #[derive(Serialize)]
-        struct LogSnapshot<'a> {
-            entries: &'a HashMap<String, CVEntry>,
-            pass_order: &'a Vec<String>,
-            enabled: bool,
-            #[serde(skip_serializing_if = "Option::is_none")]
-            identity: Option<CompactIdentityState>,
-        }
-
-        let snap = LogSnapshot {
-            entries: &self.entries,
-            pass_order: &self.pass_order,
-            enabled: self.enabled,
-            identity: self.compact_sequence.map(|last| CompactIdentityState {
-                scheme: "compact-v1".into(),
-                last_sequence: format!("{last:016x}"),
-            }),
-        };
-
-        serde_json::to_string(&snap).map_err(|e| format!("serialization error: {}", e))
+        canonical::log(self)
     }
 
     /// Reconstruct a CVLog from its JSON representation.
@@ -1045,7 +1041,8 @@ impl CVLog {
     /// # Errors
     ///
     /// Returns `Err` if the JSON is malformed or does not match the expected
-    /// CVLog schema.
+    /// CVLog schema. This compatibility import does not establish full graph
+    /// validity; use [`Self::from_checked_json`] for complete checked evidence.
     ///
     /// # Examples
     ///
@@ -1059,28 +1056,19 @@ impl CVLog {
     /// assert_eq!(log2.get(&id).unwrap().id, id);
     /// ```
     pub fn from_json_string(s: &str) -> Result<Self, String> {
-        #[derive(Deserialize)]
-        struct LogSnapshot {
-            #[serde(deserialize_with = "deserialize_unique_entries")]
-            entries: HashMap<String, CVEntry>,
-            pass_order: Vec<String>,
-            enabled: bool,
-            #[serde(default, deserialize_with = "deserialize_present_identity")]
-            identity: Option<CompactIdentityState>,
-            #[serde(default, deserialize_with = "deserialize_present_view")]
-            view: Option<Value>,
-        }
-
         let snap: LogSnapshot =
             serde_json::from_str(s).map_err(|e| format!("deserialization error: {}", e))?;
+        Self::from_snapshot(snap)
+    }
 
+    fn from_snapshot(snap: LogSnapshot) -> Result<Self, String> {
+        if snap.view.is_some() {
+            return Err("filtered CV view is not a full reloadable log".into());
+        }
         let compact_sequence = match &snap.identity {
             Some(identity) => {
                 if identity.scheme != "compact-v1" {
                     return Err("unsupported identity scheme".into());
-                }
-                if snap.view.is_some() {
-                    return Err("filtered compact view is not a full reloadable log".into());
                 }
                 let last = fixed_hex_sequence(&identity.last_sequence)?;
                 for (key, entry) in &snap.entries {
@@ -1160,6 +1148,9 @@ impl CVLog {
             }
         }
         Ok(CVLog {
+            pass_sources: snap.pass_order.iter().cloned().collect(),
+            checked: None,
+            allocator_only_import: true,
             entries: snap.entries,
             pass_order: snap.pass_order,
             enabled: snap.enabled,

@@ -4,8 +4,63 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - bounded checked presentation exports (CV02)
+
+Borrowed `SourceFilter`, `SnapshotFormat` and `SummaryFormat` drive fallible
+`export_snapshot` and `export_summary`. Full graph validation precedes every
+projection/count operation, including generic controlled logs; allocator-only,
+disabled and gapped evidence rejects. Validation, reference indexes, filtering,
+sorting, counting and encoding share one work allowance. Compact/pretty JSON
+and NDJSON canonicalize every record/metadata object. NDJSON retains root
+metadata and accurate partial-view declarations. Text/JSON/KV summaries stream
+counts, paths and stages through the bounded sink without graph/Value clones.
+Tests cover deterministic records, all root metadata, exact output/work limits,
+partial reload rejection, invalid evidence before empty selection and escaping.
+
+### Added - public limit configuration validation (CV02)
+
+`GraphLimits::validate` exposes the existing safe metadata-depth ceiling to
+compiler configuration before input work. Limits support `PartialEq`/`Eq` for
+configuration comparison; numeric fields and default values are unchanged.
+
+### Fixed — CV02 boundary review
+
+- Charge object-key work before decoding; validate borrowed key role, duplicates
+  and encoded metadata bytes before copying keys into owned storage.
+
+- Retain allocator-only import status through mutation/save/reload. Canonical
+  exports include unchecked_import:true; strict queries/validation and checked
+  import reject that state instead of upgrading discarded/defaulted evidence.
+
 ### Added
 
+- Public `dispose_metadata` lets evidence consumers drain pending owned payloads
+  iteratively without changing record types' field-move compatibility.
+
+- Enforce enabled recording, complete compact allocation coverage and stage-set
+  consistency at fallible query boundaries, including generic compatibility
+  reloads. Reject declared views in both identity modes before their markers
+  could be discarded (independent review findings with regression evidence).
+
+- CV02 checked library foundation: explicit `GraphLimits`, fully recorded compact
+  construction/import, independently validated iterative DAG queries and borrowed
+  parent-before-child lineage. Unknown parents, incomplete allocation coverage,
+  graph/schema defects and exceeded limits fail without success-shaped fallbacks.
+- Transaction accounting before node/event mutation; repeated edges remain data.
+  Checked deletion is permanent and records its stage. Graph fields are private
+  with read-only accessors; generic toggles use `set_enabled`.
+- Bounded checked JSON parsing rejects nested duplicate decoded keys before
+  replacement values, unknown/missing record fields and declared partial views.
+  Import shares structural work across parse, conversion and validation.
+- Canonical bounded JSON encoding borrows evidence, sorts every object level,
+  retains arrays/numbers and shares validation/encoding work. Compatibility
+  snapshots retain allocator-only semantics with finite payload/output bounds.
+- Iterative disposal of rejected owned metadata, including early failures and
+  disabled no-ops, avoids recursive destruction of arbitrary caller nesting.
+- Exact/over-cap resource tests, integer-overflow rejection, isolated-process
+  65,536-level cleanup regression, 4,096/8,192-node chain and 10,002-node wide
+  graph checks. Compiler formats/publication integration and typed execution
+  chronology remain separate work; the library foundation does not close CCR-065.
 - CV01 opt-in `CVLog::new_compact`: fixed 20-byte per-log identities, shared
   create/derive/merge sequence and explicit compact-v1 allocation watermark.
   Save/reload preserves disabled allocations and rejects malformed identity

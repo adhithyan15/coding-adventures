@@ -135,6 +135,28 @@ Rule 5 uses the **affected closure** — changed packages plus their transitive
 dependents, as computed by `directedgraph.AffectedNodes` — so listing only the
 packages a job directly exercises is sufficient; the graph supplies the rest.
 
+### Closure compiler native Windows acceptance
+
+The Windows general package-test step is conditional on
+`build-windows-os-suites` (or another native toolchain requirement); a Rust
+toolchain flag alone does not run that step. The gate MUST include affected
+package `rust/programs/closurec` so compiler and dependency changes execute its
+Windows publication and ACL regressions. Its path clause MUST also include
+`code/specs/CV02-checked-bounded-provenance-graphs.md`. That exact specification
+path MUST also seed `rust/programs/closurec` as a changed package root on Linux,
+macOS and Windows, so a specification-only change selects both its native test
+command and the Rust toolchain. Planning MUST fail if that consumer is missing
+from discovered packages. An explicitly non-Rust single-language invocation
+does not seed or require the Rust consumer. Union this root with ordinary package
+edits without forcing unrelated packages; deleted or renamed source paths still
+trigger the exact relation. Near-matching specification paths do not.
+Both gate clauses are exercised through the real evaluator. Emitted-plan tests
+must verify the compiler, Rust toolchain and Windows step gate together for a
+specification-only diff; an unrelated Rust affected set must not enable the gate.
+An OS-labelled green job whose compiler test step was skipped is insufficient
+native acceptance evidence. Linux/macOS ordinary package tests already execute
+on their selected matrix legs.
+
 ### Portable evaluation boundary
 
 The registry decision is a process-free build-tool domain named

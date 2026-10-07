@@ -2,10 +2,11 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 **Last reprioritized:** 2026-10-07
-**Current selection:** CCR-065 compact compiler identities, specified in
-[CV01](CV01-compact-compiler-identities.md), branch
-`codex/closurec-compact-ids-20261007`. No competing Closure/shared-stack PR at selection.
-**Current audit base:** `84252d038a9fa2eddb5f92833d0de242969e45c8`
+**Current selection:** CCR-065 checked/bounded graphs and serialization,
+specified in [CV02](CV02-checked-bounded-provenance-graphs.md), branch
+`codex/closurec-graph-foundation-20261007`. CV01 merged and is verified;
+preserve one active Closure/shared-stack PR.
+**Current audit base:** `059acbf9e06ff7c75b1c84f278d09a13adaf53ff`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
@@ -46,7 +47,151 @@ doubling depth nearly quadruples identity overhead. Shared-ancestor lineage can
 put a child before its parent. The library accepts and reserializes dangling
 parents, mismatched entry IDs and cycles. Five identical fresh CLI runs produced
 five different sidecar byte strings despite structurally equal graphs. CV01
-selects compact allocation first; it does not complete those other requirements.
+selected compact allocation first; it does not complete those other requirements.
+
+CV01 merged as [#16881](https://github.com/adhithyan15/coding-adventures/pull/16881)
+at `ec1c8d8c733f188c762e1377fe56dc07ecd2faa7`. All 34 checks were terminal and
+acceptable on reviewed head `76f7dc78995dc6c66dfcc1f1952bea0b37efcc21`, including
+all three operating systems and required gates. Fetched main contains that
+squash commit and all 14 changed files match the reviewed head. The clean worktree
+was archived after preserving its compiled baseline and validation/audit artifacts.
+Depth 1024 now serializes to 142,567 bytes and depth 4096 to 569,575 bytes, with
+20-byte IDs throughout. Disabled allocation state survives reload; present null
+state and duplicate decoded entry keys reject rather than downgrading/overwriting.
+Full compiler tests: 1,037 passed; CV49 unit/10 doctests; all other 19 consumers
+2,135 passed (49 existing ignored cases). Strict lint and security review passed.
+
+The compact head still accepts cycles/dangling parents and can allocate a
+self-parent edge when deriving from a future unknown ID. Public mutable maps
+bypass checked invariants; reversed BFS still violates DAG topology. CV02 selects
+controlled graph ownership/mutation, explicit budgets, bounded valid traversal,
+checked import and canonical/fail-closed serialization with artifact publication
+tests. Typed actual chronology and full source/node/output coverage remain open.
+
+CV02 local checkpoints (not yet published/merged): checked/private graph
+ownership, transactional accounting, strict bounded import, iterative borrowed
+topological queries, canonical byte-limited JSON and safe rejected-metadata
+disposal are implemented. Independent review exposed compatibility query gaps,
+discarded projection/stage declarations, pre-budget metadata sorting and
+pre-validation scheduler cloning, caller-stack destruction of rejected folds
+and unchecked-import normalization laundering; each has regression evidence
+and a repair. Allocator-only import status now survives canonical export and
+cannot be upgraded through checked queries/reload.
+Lexer/parser/scheduler, constant-fold and all four current deletion passes
+propagate recording errors before accepting candidates. Historical checkpoint
+09cdb43 passed six affected crates: 878 tests (including 10 CV doctests), with
+10 existing ignored cases. The subsequent key-preflight repair passed all 70 CV
+unit tests and 10 doctests. Independent ownership review passed 4f818174 and its
+corrected dependency-rejection test: scheduler-owned current/candidate trees now
+use iterative disposal on errors and intermediate replacement. Fresh AST and
+pipeline suites pass 145 tests (one existing ignored doctest); four deletion-pass
+suites pass 266 tests (14 existing ignores). The full compiler passes 1,037 tests
+across 176 targets with no ignores. All touched packages and compiler pass strict
+all-target lint; compiler verification explicitly denies unknown lints. There
+are 879 valid lesson shards. These remain local checkpoints, not CI/merge proof.
+Direct checked chains have 4,096/8,192 nodes and 569,436/1,138,780-byte exports;
+a 10,002-node wide graph passes deterministic queries. Isolated small-stack tests
+cover 65,536-level metadata, deep mixed AST families and wide sibling lists.
+The compiler EOF test now checks semantic deletion fields rather than JSON key
+order; it explicitly does not prove currently skipped comment/whitespace origins.
+The checked CLI/stage checkpoint adds the closed nine-field limit override,
+shared programmatic validation, checked compiler log construction and fallible
+direct-stage/whitespace gap and emit recording. Actual-process tests preserve
+existing artifacts on early cap/configuration failure and verify successful
+checked reload with unchanged output at all five compilation levels. Error
+diagnostics now go to stderr; the typed-AST alias-conflict fixture verifies
+empty stdout. Fresh compiler verification passes 1,043 tests across 177 targets
+with no ignores, plus 70 CV unit tests and 10 doctests; both pass strict lint
+including unknown-lint denial. There are 884 valid lesson shards.
+The borrowed checked-export checkpoint validates the complete graph before
+filters/summary and shares work through reference indexes, comparisons, sorting,
+counting and canonical compact/pretty/NDJSON encoding. All summary formats stream
+through a bounded sink. Every filtered view declares partial coverage. CLI export
+failures no longer become `{}`/zero summaries/changed formats; NONE independently
+validates evidence. All payloads are prepared before any JS/map/manifest/sidecar
+write. Real-process regression first reproduced exit 0 under a zero output cap;
+now all views reject and preserve pre-existing destinations and success stdout.
+Seventy-two fresh SIMPLE/ADVANCED processes over twelve configurations produce
+identical sidecar/summary bytes and unchanged JavaScript. Fresh full compiler:
+1,047 passed across 177 targets with no ignores; CV: 76 unit and 10 doctests;
+both strict all-target lint, 885 valid lessons, whitespace clean. A fixture
+selected a random tombstoned map key in the first full run; it now selects a
+live identity explicitly and the complete library suite passes. These are local
+checks. Independent review at 5a220f6e4a passed the implemented security scope
+and found one override-grammar correctness defect: explicit whitespace selected
+defaults. ASCII/mixed/Unicode-whitespace process probes reproduced exit 0 before
+repair; the absent-value check now tests exact emptiness and rejects those pairs.
+All seven critical process tests, 11 surface tests, two typed-AST alias tests and
+35 configuration unit tests pass after repair, with strict compiler lint and
+887 valid lessons. Final checkpoint review remains required before publishing.
+The publication checkpoint preflights the whole artifact set, rejects destination
+aliases/nonregular/read-only outputs, stages complete synced files and installs
+without clobbering, with the sidecar last. Reported pre-commit failure rolls back
+owned files; obstructed restoration preserves recovery copies and unknown files.
+Post-commit cleanup failures warn with complete outputs. Held Unix/Windows object
+identities protect ownership checks; Windows uses the full 128-bit file ID.
+Source roots and JS/map/manifest publication records hash exact consumed/final
+bytes using the existing local SHA-256 crate. Three actual-process tests failed
+before implementation and pass after repair. Native Windows fault/identity/path
+tests pass; Unix symlink cases await native CI. Final local compiler verification
+passed 1,061 tests across 178 targets with zero ignores, including read-only/
+directory rejection. CV passed 76 unit tests and 10 doctests; SHA-256 passed 27
+unit tests and four doctests. All three pass strict all-target lint with unknown
+lints denied. All 889 lesson shards validate.
+Independent exact-head review rejected publication checkpoint `d5df790ba7`:
+`rename` overwrote an unexpected staging backup occupant, and a rollback-removal
+failure for an initially absent destination named a nonexistent original backup.
+Both temp-only probes and native regressions reproduced the defects. Spec
+refinement `4f09b46596` precedes the repair: exclusive backup links, explicit
+backup-path ownership, already-present original recovery and truthful diagnostics.
+All 14 native Windows publication tests pass after repair, including same-inode
+unexpected occupants and failure between backup creation and original removal.
+The 19 shared consumers also pass fresh at the unchanged implementation scope:
+2,147 tests across 80 targets, 49 existing ignores and strict lint. All 893 lesson
+shards validate. The repaired full compiler passes 1,064 tests across 178 targets
+with zero ignores and strict all-target lint; final repaired-head review remains pending.
+Current remaining CV02 work: native CI execution and actual merge verification.
+PR [#16905](https://github.com/adhithyan15/coding-adventures/pull/16905) now publishes
+repaired head `3b7928e241`, with full-scope independent security PASS and 1,079
+Windows tests across 180 all-target targets, zero ignores, and strict lint.
+The older `90010c29de` native probes found output DACL broadening and inherited
+stage readers; specification-first repairs create atomically private objects,
+capture/recheck owner/group/DACL/protection, use distinct always-empty policy
+probes and verified handle routes, and restore privacy before rollback. An
+additional OWNER RIGHTS fresh-open regression first reproduced late original
+mutation; the repair proves production fresh opens before changing originals.
+All 20 Windows publication cases pass. Linux/macOS descriptor-bound UID/GID/mode
+preservation and extended/default ACL rejection are implemented, with seven
+native cases each and strict cross-checks. Published-head CI run `37649573380`
+executed the native Closure package command successfully on Linux and macOS.
+Its Windows general package-test step was skipped; that job is not acceptance.
+
+The initial repaired-head CI plan selected Closure on all platforms but left
+`build-windows-os-suites` false, which skips ordinary Windows package tests.
+The gate repair adds the compiler's affected identity and CV02 specification,
+with real-evaluator regressions that first fail both selection clauses and an
+unrelated Rust negative control. Independent review of local `79643862f1` found
+the specification-only gate still selected no compiler or Rust toolchain.
+Specification-first exact consumer mapping now seeds Closure on all platforms,
+fails on missing consumers, and respects language filters. Emitted-plan tests
+first reproduced the empty selection and now verify the real native command,
+toolchain and gate together. Refresh exact-head review and CI after these
+changes; require non-skipped compiler test commands and successful native package
+results before accepting the draft. Green job labels or older checks cannot
+substitute for execution evidence. The foundation and full compiler/provenance
+goal remain open. Correctly gated head `0e02820565` CI run `37655926931` executed
+the Windows general package-test step but failed the compiler's Rust 1.99
+strict Clippy preflight on constant-size SID `chunks_exact(4)`, before tests.
+Specification `0192308acf` preserves the checked SID range/count and byte order;
+fixed array chunks repair that lint without weakening the gate. Matching
+toolchain validation, independent exact-head review and fresh native CI remain
+required. The chronology draft stays outside the checkout until CV02 merges.
+Chronology and complete source/node/output coverage are not
+established by this foundation.
+Diagnostic short-circuits (empty-input banner and token-only tree dumps) currently
+return before trace construction. Track their provenance policy with the full
+CLI/diagnostics completion audit; normal compile/export tests do not establish
+source/output coverage for those modes.
 
 The remaining-fold inventory is
 [#16875](https://github.com/adhithyan15/coding-adventures/issues/16875).

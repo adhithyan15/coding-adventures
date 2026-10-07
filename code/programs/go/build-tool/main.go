@@ -187,6 +187,9 @@ func packagesForPlatform(packages []discovery.Package, goos string) []discovery.
 
 const sharedDiscoveryFixturePath = "code/specs/fixtures/build-tool-v1/cases/discovery-language-registry.json"
 
+const closureProvenanceSpecPath = "code/specs/CV02-checked-bounded-provenance-graphs.md"
+const closureProvenanceConsumer = "rust/programs/closurec"
+
 // These are the program fronts whose native tests read sharedDiscoveryFixturePath.
 // A new direct consumer must extend this list and its test in the same change.
 var sharedDiscoveryFixtureConsumers = []struct{ name, language string }{
@@ -262,6 +265,23 @@ func changedPackageRootsForPlatformAndLanguage(
 	}
 
 	changed := gitdiff.MapFilesToPackages(filtered, packages, repoRoot)
+	// External native-acceptance specifications need a producer root as well
+	// as a step gate. Otherwise CI enables the step without selecting its
+	// compiler or installing its toolchain. Keep the exact relation bounded
+	// and honor explicitly single-language invocations.
+	if containsPath(changedFiles, closureProvenanceSpecPath) && (language == "all" || language == "rust") {
+		found := false
+		for _, pkg := range packages {
+			if pkg.Name == closureProvenanceConsumer {
+				found = true
+				break
+			}
+		}
+		if !found {
+			return nil, fmt.Errorf("Closure provenance specification consumer %q is missing from discovered packages", closureProvenanceConsumer)
+		}
+		changed[closureProvenanceConsumer] = true
+	}
 	if !containsPath(changedFiles, sharedDiscoveryFixturePath) {
 		return changed, nil
 	}

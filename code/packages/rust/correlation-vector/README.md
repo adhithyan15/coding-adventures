@@ -64,15 +64,80 @@ Legacy logs omit `identity`; any present field must be a versioned object,
 so `identity: null` is rejected even for empty disabled logs. Import rejects
 duplicate entry keys in both modes before decoding the duplicate payload,
 including equivalent escaped key spellings. It never silently overwrites
-earlier evidence during reload. These checks do not validate metadata-map
-duplicates or the complete graph; those remain foundation requirements.
+earlier evidence during reload. Generic `from_json_string` remains an allocator
+state import; use the checked import below to establish complete graph evidence.
 
 `try_create`, `try_derive` and `try_merge` return allocation errors without
 changing state. The original string-returning methods fail fast if counters
 exhaust or a caller-mutated log would collide; they never wrap or overwrite.
-These are allocation/state checks. Bounded graph validation, topology,
-canonical serialization and event chronology remain separate foundation work;
-compact IDs alone do not bound entry counts or prove complete lineage.
+Generic allocation methods retain their compatibility policy. Checked logs
+also enforce graph and resource limits before mutation. Compact IDs alone do
+not prove complete lineage or actual transformation chronology.
+
+## Checked graph foundation (CV02)
+
+```rust
+use coding_adventures_correlation_vector::{CVLog, GraphLimits};
+let mut log = CVLog::new_checked_compact(GraphLimits::default())?;
+let root = log.try_create(None)?;
+let child = log.try_derive(&root, None)?;
+log.try_passthrough(&child, "analysis")?;
+let evidence = log.try_lineage(&child)?; // borrowed, parent before child
+assert_eq!(evidence.len(), 2);
+let json = log.to_json_string()?;
+let restored = CVLog::from_checked_json(&json, GraphLimits::default())?;
+# Ok::<(), String>(())
+```
+
+Checked logs require full enabled recording, resolved older parents and complete
+allocation coverage. Mutation errors leave allocation, graph and retained usage
+unchanged. Contributions to unknown/deleted entries and repeated deletion fail.
+Deletion records its stage without replacing the original tombstone. Checked
+recording cannot be disabled. `entries()`, `pass_order()` and `is_enabled()`
+replace public field access; `set_enabled` retains generic recording toggles.
+
+`GraphLimits` bounds nodes, repeated parent edges, events, metadata values/depth
+and encoded text bytes, input bytes, structural operation work and export bytes.
+Defaults are 1M nodes, 4M edges/events, 1M metadata values, depth 64, 128 MiB
+payload/import, 64M work units and 512 MiB output. Depth above 64 is rejected.
+Call public `GraphLimits::validate` to reject unsafe configuration before input
+work. Limits support equality comparison for configuration tests. Counts and
+encoding bytes provide finite limits, rather than a precise RAM cap.
+Import/export share work allowances across phases. Destruction of oversized
+caller-owned arguments is iterative; disposing of already-transferred memory
+necessarily visits that payload outside the graph-processing allowance.
+`dispose_metadata` safely drains pending owned evidence batches without
+recursive destruction or changing public record move-field semantics.
+
+Checked import rejects missing/unknown record fields, duplicate decoded keys at
+every level, disabled/incomplete history and declared projections. Queries
+validate the entire graph and use iterative traversal. They reject disabled
+recording and compact allocation gaps even after a generic compatibility reload.
+Stage declarations must match contributions and tombstones. Historical
+allocator snapshots lacking deletion-stage declarations remain reloadable,
+but cannot claim complete query evidence. Declared views are rejected on import
+in both identity modes, including null markers. Ancestry preserves
+nearest-first parent-list order; descendants have deterministic identity order
+within each BFS level; lineage includes reachable entries once with every parent
+before its child. Unknown query IDs return errors. Topology and `pass_order`
+(first occurrence of stage names) do not establish actual execution chronology.
+
+JSON sorts object keys at every level and preserves arrays and numbers. Output
+limits are enforced while writing; checked logs are validated before encoding.
+Generic snapshots retain allocator-only compatibility semantics, with bounded
+payload/encoding. `export_snapshot(SnapshotFormat, SourceFilter)` and
+`export_summary(SummaryFormat, SourceFilter, Option<&str>)` are strict presentation
+APIs: they validate the full log before source selection, borrow its records and
+share one work allowance through filtering, sorting, counting and encoding.
+Compact/pretty JSON and NDJSON use canonical records; NDJSON retains all root
+metadata in its `_meta` footer. A nonempty filter always declares partial coverage,
+even when every entry matches; such output cannot be checked-imported. Text,
+JSON and KV summaries count the selected entries but retain full `pass_order`.
+Every produced byte, including indentation and final newlines, is bounded.
+No graph clones, Value round trips or successful error fallbacks are used.
+Compiler publication prepares all payloads before writes, but filesystem rollback,
+collision checks and content identity remain CV02 integration work. This library
+foundation does not complete CCR-065 or prove source-to-output coverage.
 
 ---
 
@@ -208,3 +273,13 @@ compiler passes         ←  contribute/derive/merge/delete as they transform th
 
 The CV library has no knowledge of compilers, IR nodes, or any specific domain. It is a
 pure data structure and a set of operations over it.
+
+Generic `from_json_string` imports remain allocator-only even after mutation.
+Strict queries and validation reject them; their snapshots retain
+`unchecked_import: true`, which checked import rejects. This prevents a
+normalized duplicate key or omitted array from becoming checked evidence
+through save/reload. Use `from_checked_json` at evidence boundaries.
+
+Checked parsing charges object-key work before the decoder runs and validates
+borrowed key schema/duplicates/encoded payload bytes before ownership copies.
+Escaped-string scratch is bounded by the input-byte cap.
