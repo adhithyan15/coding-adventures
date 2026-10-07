@@ -29,10 +29,11 @@ package main
 //	mosaicbook-server --root code/programs/mosaic \
 //	                  --package-search-path code/packages/mosaic
 //
-// mosaic-compile splits its own --package-search-path on ':' (on every OS), so
-// a directory whose absolute path contains ':' cannot be passed through it at
-// all. Such a directory -- a Windows drive path is one -- is refused here with
-// a message, rather than handed over as two broken halves.
+// mosaic-compile splits its --package-search-path on ':' (and, on Windows, on
+// ';' too, keeping a drive letter's own colon, #16931). So a directory whose
+// path holds any other ':' cannot be passed through it, and is refused here
+// with a message rather than handed over as two broken halves. A Windows
+// drive colon (`C:`) is fine.
 
 import (
 	"fmt"
@@ -63,15 +64,14 @@ func parsePackageSearchPaths(list string) ([]string, error) {
 }
 
 // packageSearchDir is one entry of the list, made absolute and checked: an
-// existing directory whose absolute path holds no ':'. On Unix the list
-// itself is split on ':', so the colon check matters on Windows, where a
-// drive path always has one.
+// existing directory whose absolute path holds no ':' beyond a Windows drive
+// letter's (filepath.VolumeName is empty on Unix, so there any ':' counts).
 func packageSearchDir(entry string) (string, error) {
 	abs, err := filepath.Abs(entry)
 	if err != nil {
 		return "", fmt.Errorf("package search path %q: %v", entry, err)
 	}
-	if strings.Contains(abs, ":") {
+	if strings.Contains(abs[len(filepath.VolumeName(abs)):], ":") {
 		return "", fmt.Errorf(
 			"package search path %q contains ':', which mosaic-compile reads as its list separator",
 			entry,

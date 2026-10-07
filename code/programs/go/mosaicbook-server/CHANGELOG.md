@@ -34,6 +34,12 @@ server now listens on `127.0.0.1:<port>`, through `listenAddress`, which a
 test pins. Found by the security review of the `--package-search-path`
 change, which widens what that output can name.
 
+### Changed - a Windows drive path is a valid search path (#16931)
+
+`mosaic-compile` now keeps a drive letter's colon when it splits its search
+path, so `--package-search-path` refuses only a `:` beyond the drive
+(`filepath.VolumeName`).
+
 ### Fixed - app components can find their dependencies (`--package-search-path`)
 
 Each packaged component was compiled with only its own package's siblings on

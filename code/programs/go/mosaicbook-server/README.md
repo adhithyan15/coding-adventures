@@ -114,8 +114,8 @@ their dependencies live under `code/packages/mosaic`, name the second tree:
 
 Without it, VisiCalc, TaskApp, EngramApp and JournalApp each fail with
 "dependency package … could not be found". A directory whose absolute path
-contains `:` is refused, because `mosaic-compile` splits its search path on
-`:`.
+contains `:` (other than a Windows drive letter's) is refused, because
+`mosaic-compile` splits its search path on `:`.
 
 ### Security
 

@@ -45,7 +45,7 @@ history, and local test runs. This file is the result: one ordered list.
 2. **Small bugs, batched by package.**
    - MosaicBook: MB-2 and MB-3 (*fixed, unpushed*), MB-4;
    - emitters: EM-3, EM-5 and EM-9;
-   - X-2, the compiler's search path on Windows.
+   - X-2, the compiler's search path on Windows (*fixed, unpushed*).
 3. **Housekeeping.** Close the issues in [Closable now](#closable-now),
    update the out-of-date epic checklists, and refresh the docs rows (MB-12,
    SW-5, VE-3).
@@ -67,7 +67,7 @@ history, and local test runs. This file is the result: one ordered list.
 | ID | Problem | Status and evidence | Kind | Size |
 |---|---|---|---|---|
 | X-1 | `ci.yml` on main almost never completes: each push cancels the run before it (`cancel-in-progress`) | **real**. Every one of the last 300 completed `ci.yml` runs on main was cancelled. The last success was on 2026-07-21. The last full build (run 36528879089, 2026-09-29) failed all 15 shards. Nobody can tell from main whether any product is green | CI | M |
-| X-2 | `mosaic-compile` splits `--package-search-path` on `:` on every OS | **real**. `mosaic-compile/src/main.rs:755` uses `split(':')`, so a Windows drive path (`C:\…`) breaks in two. MosaicBook's sibling search path is absolute, so it is affected on Windows. Fix: `std::env::split_paths`, plus OS-specific joining in MosaicBook. #16931 | bug | S |
+| X-2 | `mosaic-compile` splits `--package-search-path` on `:` on every OS | **fixed** on `claude/brave-ride-edfrqw` (unpushed): Windows splits on `;` and `:` and keeps a drive colon. Was: `mosaic-compile/src/main.rs:755` uses `split(':')`, so a Windows drive path (`C:\…`) breaks in two. MosaicBook's sibling search path is absolute, so it is affected on Windows. Fix: `std::env::split_paths`, plus OS-specific joining in MosaicBook. #16931 | bug | S |
 | X-3 | Native backends drop authored style properties silently or with a warning only | **partly**. Every backend reports drops (#15532, `mosaic-package-artifact-builder/src/lib.rs:2757-2817`), but the gate fails only on capability degradations. TaskApp's ratchet (`code/scripts/taskapp_native_control_contract.py:22`) allows 741 drops: XAML 77, SwiftUI 142, Compose 89, Qt 193, Flutter 240. Tracked by #12022 | bug | L |
 | X-4 | Style values that start with `{` pass into XAML verbatim, as markup extensions | **real, by design**. `translate_xaml_value` (`mosaic-emit-xaml/src/pipeline.rs:~2698, ~2918`). Harmless while every `.msl` is first-party. See [Decisions needed](#decisions-needed) | decision | S |
 | X-5 | Dependency style axes are not scoped to the call site | **real**. Only XAML guards against it (`xaml/pipeline.rs:1823-1834`, #14482). #14481 | bug | L |

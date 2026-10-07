@@ -278,7 +278,8 @@ fn run(result: cli_builder::types::ParseResult) {
         .get("package-manifest")
         .and_then(|v| v.as_str())
         .map(str::to_string);
-    // UI34 --package-search-path: colon-separated list of directories
+    // UI34 --package-search-path: a list of directories (see
+    // `split_package_search_path` for the separators)
     // to search for `mosaic-package.toml` manifests.  Used by the
     // package-reference resolver (resolver.rs) to locate packages
     // named in `pkg::P::C` references inside the consumer's layout.
@@ -752,7 +753,7 @@ fn run_pipeline(
     // (no search) only when neither directory exists, so single-file
     // projects without any packages do not pay an I/O cost.
     let search_paths: Vec<PathBuf> = match package_search_path {
-        Some(s) => s.split(':').map(PathBuf::from).collect(),
+        Some(s) => split_package_search_path(s, cfg!(windows)),
         None => {
             let base = PathBuf::from("code/packages");
             let mut paths = Vec::new();
@@ -1829,8 +1830,78 @@ fn write_bytes_or_die(path: &str, content: &[u8]) {
     });
 }
 
+/// Split a `--package-search-path` value into directories (#16931).
+///
+/// On Unix the list is `:`-separated, as it always was. On Windows the list
+/// may come `;`-separated (the OS convention, and what Git Bash makes of a
+/// `:`-joined POSIX list) or `:`-separated (what the repo's scripts and
+/// MosaicBook write), and every absolute path carries a drive colon. So on
+/// Windows both separators split, except the colon of a drive letter: a `:`
+/// right after a lone letter at the start of an entry belongs to it.
+///
+/// ```text
+///   value                                  windows   entries
+///   code/packages:code/packages/mosaic     either    code/packages, code/packages/mosaic
+///   C:\repo\a;C:\repo\b                  yes       C:\repo\a, C:\repo\b
+///   C:\repo\a:D:\repo\b                  yes       C:\repo\a, D:\repo\b
+///   C:\repo\a                            no        C, \repo\a   (Unix: ':' always splits)
+/// ```
+///
+/// Empty entries are dropped.
+fn split_package_search_path(value: &str, windows: bool) -> Vec<PathBuf> {
+    let mut entries = Vec::new();
+    let mut current = String::new();
+    for ch in value.chars() {
+        let separator = if windows {
+            match ch {
+                ';' => true,
+                // A drive colon: the entry so far is one ASCII letter.
+                ':' => !(current.len() == 1 && current.as_bytes()[0].is_ascii_alphabetic()),
+                _ => false,
+            }
+        } else {
+            ch == ':'
+        };
+        if separator {
+            if !current.is_empty() {
+                entries.push(PathBuf::from(std::mem::take(&mut current)));
+            }
+        } else {
+            current.push(ch);
+        }
+    }
+    if !current.is_empty() {
+        entries.push(PathBuf::from(current));
+    }
+    entries
+}
+
 #[cfg(test)]
 mod tests {
+    // --- --package-search-path splitting (#16931) ----------------------
+
+    #[test]
+    fn package_search_path_splits_per_platform() {
+        use std::path::PathBuf;
+        let paths = |v: &str, windows: bool| -> Vec<String> {
+            super::split_package_search_path(v, windows)
+                .into_iter()
+                .map(|p: PathBuf| p.to_string_lossy().into_owned())
+                .collect()
+        };
+        // Unix: ':' separates, as it always has.
+        assert_eq!(paths("code/packages:code/packages/mosaic", false), ["code/packages", "code/packages/mosaic"]);
+        assert_eq!(paths("/a::/b:", false), ["/a", "/b"]);
+        // Windows: ';' and ':' both separate, but a drive colon stays.
+        assert_eq!(paths("code/packages:code/packages/mosaic", true), ["code/packages", "code/packages/mosaic"]);
+        assert_eq!(paths(r"C:\repo\a;C:\repo\b", true), [r"C:\repo\a", r"C:\repo\b"]);
+        assert_eq!(paths(r"C:\repo\a:D:\repo\b", true), [r"C:\repo\a", r"D:\repo\b"]);
+        assert_eq!(paths(r"C:\repo\a", true), [r"C:\repo\a"]);
+        assert_eq!(paths("c:/x;;", true), ["c:/x"]);
+        // Only a lone letter before the colon is a drive.
+        assert_eq!(paths("ab:cd", true), ["ab", "cd"]);
+    }
+
     // --- --describe (#14026, #14435) ------------------------------------
 
     /// The JSON carries every `one-of` value set, machine-readably.
