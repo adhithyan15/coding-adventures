@@ -3254,6 +3254,10 @@ line "Target" [35, 50, 68, 82]"##,
             label_font: font_spec("Helvetica", 13.0), title_font: font_spec("Helvetica", 18.0),
             shaper: &shaper, metrics: &metrics, resolver: &resolver,
         });
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("treeView.title")),
+            Some(&"Application Files".to_string()));
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))).count(),
+            diagram.nodes.len() + diagram.nodes.iter().filter(|node| node.description.is_some()).count());
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         let pixels = render(&scene); write_png(&pixels, "/tmp/mermaid_treeview_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
