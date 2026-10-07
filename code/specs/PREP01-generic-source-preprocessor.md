@@ -615,6 +615,13 @@ parser handoff, and a deliberately limited C dialect with direct engine tests.
 It does not satisfy Slice 4's end-to-end acceptance until the C frontend uses
 that preprocessed stream and the remaining C macro and condition semantics are
 implemented.
+The composition stage exposes an explicit file-input C frontend using
+`RootedFs`: it resolves and reads the primary file under declared roots,
+preprocesses its tokens, and passes the resulting directive-free tokens to
+`try_parse_c_tokens` before lowering. A pathless `compile_source` cannot
+resolve local includes and retains its compatibility behavior until the
+file-input path and remaining C semantics are validated. Tests may use
+`MemoryFs` through an internal helper; production callers use `RootedFs`.
 `c.tokens` stops discarding `#…` lines; `c-lexer` surfaces directive tokens; a
 `CDialect` implements §5; `c-to-semantic-ir` runs the engine as its
 `post_tokenize` hook. `SIR27`'s preprocessor scope statement is updated.
