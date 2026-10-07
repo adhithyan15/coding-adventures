@@ -1,0 +1,12 @@
+[package]
+name = "coding-adventures-macronib-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "MacroNib lexer: Nib tokens plus assembler-style preprocessor directives"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+
+[dev-dependencies]
+coding-adventures-nib-lexer = { path = "../nib-lexer" }

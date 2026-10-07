@@ -2,6 +2,7 @@
 // would churn the public API and all call sites for no behavior change.
 #![allow(clippy::result_large_err)]
 use coding_adventures_nib_lexer::tokenize_nib;
+use lexer::token::Token;
 use parser::grammar_parser::{GrammarASTNode, GrammarParseError, GrammarParser};
 
 mod _grammar;
@@ -53,7 +54,14 @@ const MAX_RULE_DEPTH: usize = 200;
 /// pathologically deep nesting fails cleanly instead of overflowing the
 /// native stack.
 pub fn create_nib_parser(source: &str) -> GrammarParser {
-    let tokens = tokenize_nib(source);
+    create_nib_parser_from_tokens(tokenize_nib(source))
+}
+
+/// Create Nib's guarded grammar parser over an already-tokenized stream.
+///
+/// A preprocessing dialect can pass its directive-free tokens here without
+/// copying Nib's compiled grammar or weakening the depth limit.
+pub fn create_nib_parser_from_tokens(tokens: Vec<Token>) -> GrammarParser {
     let grammar = _grammar::parser_grammar();
     GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH)
 }
@@ -61,6 +69,12 @@ pub fn create_nib_parser(source: &str) -> GrammarParser {
 pub fn parse_nib(source: &str) -> Result<GrammarASTNode, GrammarParseError> {
     let mut parser = create_nib_parser(source);
     parser.parse()
+}
+
+/// Parse pre-tokenized Nib syntax with the same grammar and depth guard as
+/// [`parse_nib`].
+pub fn parse_nib_tokens(tokens: Vec<Token>) -> Result<GrammarASTNode, GrammarParseError> {
+    create_nib_parser_from_tokens(tokens).parse()
 }
 
 #[cfg(test)]
@@ -152,6 +166,15 @@ mod tests {
         assert_eq!(ast.rule_name, "program");
         assert!(has_rule(&ast, "fn_decl"));
         assert!(has_rule(&ast, "let_stmt"));
+    }
+
+    #[test]
+    fn token_input_keeps_nibs_grammar_and_source_positions() {
+        let source = "fn main() { let x: u4 = 1; }";
+        assert_eq!(
+            parse_nib_tokens(tokenize_nib(source)).unwrap(),
+            parse_nib(source).unwrap()
+        );
     }
 
     #[test]

@@ -581,6 +581,8 @@ members = [
     # stream is pure Oct, so both are Oct's, unchanged.
     "macrooct-lexer",
     "macrooct-iir-compiler",
+    "macronib-lexer",
+    "macronib-iir-compiler",
     "affine2d",
     "algol-lexer",
     "algol-parser",
