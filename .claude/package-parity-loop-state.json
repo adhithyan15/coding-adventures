@@ -9729,9 +9729,9 @@
     {
       "id": "build-tool-csharp-fsharp-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the shared C# and F# build-tool lanes",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
-      "branch": null,
+      "branch": "codex/parity-cigates-dotnet-20261007",
       "pr_number": null,
       "notes": "The exact-main engine audit found no CI gate registry or evaluator in either .NET front door. Add one bounded C# pure engine consumed independently by both language-native front doors, preserve the reviewed shared-engine boundary, and execute every neutral ci_gate_selection case in both lane suites."
     },
