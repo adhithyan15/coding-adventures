@@ -237,6 +237,13 @@ Current pairs:
   tokenizer bounds plain-decimal scanning to 250 digits in its 256-byte
   token buffer. This pair tests 250 accepted and 251 rejected digits;
   it does not claim executable large-integer semantics.
+- `perl5.003_97j.*` is a separate **partial** pair checked against the
+  [`perl-5.003_97j` source tag]. Tagged yacc and tokenizer match 5.003_97i;
+  it retains the tested 250-digit decimal bound.
+- `perl5.003_98.*` is a separate **partial** pair checked against the
+  [`perl-5.003_98` source tag]. Tagged yacc adds arrow-call forms outside
+  this subset; the tokenizer matches 5.003_97j and retains the tested
+  250-digit decimal bound.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot, including adjacent `--` and
@@ -320,4 +327,6 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [`perl-5.003_97g` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_97g
 [`perl-5.003_97h` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_97h
 [`perl-5.003_97i` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_97i
+[`perl-5.003_97j` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_97j
+[`perl-5.003_98` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_98
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2
