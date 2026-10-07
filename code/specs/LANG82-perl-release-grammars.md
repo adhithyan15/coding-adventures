@@ -162,3 +162,14 @@ plain-decimal token rule may accept at most 250 digits and must reject a
 251-digit literal before parsing. Test both sides of that boundary. This is a
 lexer bound for the historical syntax pair, not a claim that LANG81 can
 execute a 250-digit integer or that other Perl numeric forms are supported.
+
+Prepare the next bounded installment as nine distinct partial pairs for
+5.003_99, 5.003_99a, 5.004, 5.004_01, 5.004_01-t2, 5.004_01_01 through
+5.004_01_03, and 5.004_02. Ground tagged releases in their own official
+source tags and the four trials in their own historical archives. Keep each
+token and grammar file separate even where source blobs agree. Retain the
+plain-decimal `print` arithmetic subset and the 250-digit bound; reject
+leading-zero forms, adjacent decrement, carriage returns, and unsupported
+syntax. Leave 5.004_01-t1 pending until source evidence for that trial is
+established. This installment does not extend executable LANG81 semantics or
+claim full historical release syntax.
