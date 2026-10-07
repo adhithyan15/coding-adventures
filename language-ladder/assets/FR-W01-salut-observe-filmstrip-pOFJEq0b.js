@@ -1,0 +1,1 @@
+var e=``+new URL(`FR-W01-salut-observe-filmstrip-BsRiKGF2.svg`,import.meta.url).href;export{e as default};

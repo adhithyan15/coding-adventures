@@ -1,0 +1,1 @@
+var e=``+new URL(`ES-W01-acento-filmstrip-CIoKh_cB.svg`,import.meta.url).href;export{e as default};

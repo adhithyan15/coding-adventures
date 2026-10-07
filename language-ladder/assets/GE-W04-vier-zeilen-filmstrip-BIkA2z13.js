@@ -1,0 +1,1 @@
+var e=``+new URL(`GE-W04-vier-zeilen-filmstrip-Db0pYRfg.svg`,import.meta.url).href;export{e as default};

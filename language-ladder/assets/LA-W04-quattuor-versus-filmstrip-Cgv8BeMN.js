@@ -1,0 +1,1 @@
+var e=``+new URL(`LA-W04-quattuor-versus-filmstrip-j32ZKmta.svg`,import.meta.url).href;export{e as default};

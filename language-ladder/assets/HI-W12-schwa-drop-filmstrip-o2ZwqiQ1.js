@@ -1,0 +1,1 @@
+var e=``+new URL(`HI-W12-schwa-drop-filmstrip-B_ZhBPrg.svg`,import.meta.url).href;export{e as default};

@@ -1,0 +1,1 @@
+var e=``+new URL(`FR-W04-quatre-lignes-filmstrip-D_EyeX7I.svg`,import.meta.url).href;export{e as default};
