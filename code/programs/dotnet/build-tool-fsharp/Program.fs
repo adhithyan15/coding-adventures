@@ -31,6 +31,11 @@ let evaluateGraph (input: GraphInput) = GraphDiffCore.EvaluateGraph(input)
 [<MethodImpl(MethodImplOptions.NoInlining)>]
 let evaluateDiffSelection (input: DiffSelectionInput) = GraphDiffCore.EvaluateDiffSelection(input)
 
+// A separate F# symbol makes the shared pure CI-gate decision reachable and
+// testable in this language without granting the facade workflow authority.
+[<MethodImpl(MethodImplOptions.NoInlining)>]
+let evaluateCIGates (input: CIGateSelectionInput) = CIGateSelection.Evaluate(input)
+
 // Toolchain declarations are BUILD metadata, not executable commands. This
 // native F# symbol accepts only the already-bounded, caller-supplied snapshot
 // records defined by the shared .NET engine. It deliberately does not discover

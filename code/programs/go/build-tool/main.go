@@ -211,6 +211,8 @@ var sharedDiscoveryFixtureConsumers = []struct{ name, language string }{
 // These package BUILD fronts run the native CI-gate fixture readers. A new
 // direct reader must extend this relation and the drift test together.
 var ciGateFixtureConsumers = []struct{ name, language string }{
+	{"dotnet/programs/build-tool-csharp", "csharp"},
+	{"dotnet/programs/build-tool-fsharp", "fsharp"},
 	{"go/programs/build-tool", "go"},
 	{"python/programs/build-tool", "python"},
 }

@@ -22,6 +22,11 @@ the repo:
    before and after the package batch
 10. Evaluate caller-supplied graph and diff-selection snapshots without Git,
     filesystem, process, environment, clock, or network access
+11. Evaluate a validated, in-memory CI-gate registry against nullable affected
+    and changed-file snapshots, returning every gate in id order. The pure
+    `CIGateSelection.Evaluate` decision preflights distinct path patterns
+    against a 50-million Unicode-scalar work-unit ceiling before matching;
+    it does not read the repository registry or schedule a workflow.
 
 ## Usage
 

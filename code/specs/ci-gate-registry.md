@@ -119,14 +119,16 @@ The exact flat case family
 separate direct-native-consumer relation: `go/programs/build-tool` (whose
 `go test ./...` BUILD front runs `internal/cigates`) and
 `python/programs/build-tool` (whose BUILD front runs the Python fixture
-suite). Any changed path matching this family, including the deleted source
-of a rename, MUST seed those two package roots before affected/prerequisite
+suite), plus `dotnet/programs/build-tool-csharp` and
+`dotnet/programs/build-tool-fsharp` (whose native .NET test fronts replay the
+neutral cases independently). Any changed path matching this family, including
+the deleted source of a rename, MUST seed those four package roots before affected/prerequisite
 closure on detect and every platform override. Ordinary changed roots are
 united with these roots; sibling fixture domains and nested/lookalike paths
-MUST NOT trigger them. Explicit Go or Python single-language plans seed only
-their own consumer; other single-language plans seed neither. An applicable
+MUST NOT trigger them. Explicit C#, F#, Go, or Python single-language plans
+seed only their own consumer; other single-language plans seed neither. An applicable
 registered consumer absent from discovery MUST fail planning without writing
-an incomplete plan. The emitted affected set and Go/Python toolchain flags
+an incomplete plan. The emitted affected set and .NET/Go/Python toolchain flags
 MUST demonstrate native scheduling with `force=false`. A new direct reader of
 this family must extend the relation and its drift test together.
 
@@ -254,6 +256,17 @@ The exact-main front-door audit at
 | Rust | no | `build-tool-rust-ci-gate-selection-conformance` |
 | Swift | no | `build-tool-swift-ci-gate-selection-conformance` |
 | TypeScript | no | `build-tool-typescript-ci-gate-selection-conformance` |
+
+For the C#/F# owner, the portable evaluator lives in the C# build-tool
+assembly, separate from graph/diff selection. The F# build tool exposes an
+explicit language-native facade over that reviewed shared engine; both native
+test projects independently replay the complete neutral `ci_gate_selection`
+corpus and reject result/diagnostic drift. The evaluator accepts only inert
+in-memory records, validates the full registry before any run-all shortcut,
+and never acquires Git, filesystem, process, workflow, or output authority.
+Register both native fixture readers in the Go build-plan selector in the same
+change, so a fixture-only diff schedules their actual package tests on all
+supported CI platforms.
 
 Java/Kotlin, Dart, and OCaml remain owned by their existing build-tool creation
 and promotion items; the final CI gate aggregate depends on those owners as
