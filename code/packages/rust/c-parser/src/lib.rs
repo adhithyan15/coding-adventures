@@ -127,11 +127,17 @@ fn check_token_budget(
     max_field_bytes: usize,
     max_text_bytes: usize,
 ) -> Result<(), String> {
+    if tokens.is_empty() {
+        return Err("C token input is empty".into());
+    }
     if tokens.len() > max_tokens {
         return Err(format!("C token input exceeds {max_tokens} tokens"));
     }
     let mut text_bytes = 0_usize;
-    for token in tokens {
+    for (index, token) in tokens.iter().enumerate() {
+        if token.type_ == TokenType::Eof && index + 1 != tokens.len() {
+            return Err("C token input has premature EOF".into());
+        }
         for field in [
             Some(token.value.as_str()),
             token.type_name.as_deref(),
@@ -181,6 +187,24 @@ mod tests {
             try_parse_c_tokens(tokens).unwrap().rule_name,
             "translation_unit"
         );
+    }
+
+    #[test]
+    fn empty_token_input_returns_error() {
+        assert!(try_parse_c_tokens(Vec::new())
+            .unwrap_err()
+            .contains("empty"));
+    }
+
+    #[test]
+    fn token_input_rejects_premature_eof() {
+        let mut tokens = try_tokenize_c("int main(void) { return 1; }").unwrap();
+        let mut trailing = try_tokenize_c("int extra(void) { return 2; }").unwrap();
+        trailing.pop();
+        tokens.extend(trailing);
+        assert!(try_parse_c_tokens(tokens)
+            .unwrap_err()
+            .contains("premature EOF"));
     }
 
     #[test]

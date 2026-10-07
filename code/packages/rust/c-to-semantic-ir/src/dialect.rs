@@ -129,6 +129,7 @@ fn define(rest: &[Token]) -> Result<Directive, PpError> {
                 .is_some_and(|column| next.column == column)
     });
     if !touching_paren {
+        reject_unsupported_macro_operators(remaining)?;
         return Ok(Directive::Define {
             name: name.value.clone(),
             params: None,
@@ -177,11 +178,25 @@ fn define(rest: &[Token]) -> Result<Directive, PpError> {
             }
         }
     }
+    reject_unsupported_macro_operators(&remaining[cursor..])?;
     Ok(Directive::Define {
         name: name.value.clone(),
         params: Some(params),
         body: remaining[cursor..].to_vec(),
     })
+}
+
+fn reject_unsupported_macro_operators(body: &[Token]) -> Result<(), PpError> {
+    if body
+        .iter()
+        .any(|token| matches!(token.value.as_str(), "#" | "##"))
+    {
+        return Err(directive_error(
+            "define",
+            "stringize and paste operators are not supported by this handoff yet",
+        ));
+    }
+    Ok(())
 }
 
 impl Dialect for CDialect {
@@ -389,6 +404,23 @@ mod tests {
             let tokens = try_tokenize_c(source).unwrap();
             assert!(
                 CDialect::default().classify(&tokens).unwrap().is_err(),
+                "{source}"
+            );
+        }
+    }
+
+    #[test]
+    fn unsupported_stringize_and_paste_definitions_fail() {
+        for source in [
+            "#define STR(x) #x\nint x;\n",
+            "#define JOIN(a,b) a ## b\nint x;\n",
+        ] {
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(source, file).unwrap();
+            assert!(
+                preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err(),
                 "{source}"
             );
         }

@@ -629,6 +629,9 @@ the shared preprocessor's default produced-token and token-spelling ceilings,
 with an additional 64 MiB aggregate text ceiling at the parser boundary. The C
 dialect will use the shared preprocessor's bounds for input and expansion; the
 parser handoff retains its own guard because it is also a public API.
+The token-input parser accepts a nonempty stream with no EOF sentinel or one
+final EOF sentinel. It rejects an empty stream and any EOF before the end,
+so trailing tokens cannot be silently ignored.
 The public C dialect classifier also accepts caller-supplied token metadata;
 function-like macro adjacency must use checked column arithmetic so an
 untrusted column cannot panic or wrap.
@@ -645,6 +648,9 @@ decimal integer literals or undefined identifiers, including `==`, `!=`,
 their C integer-constant-expression semantics are implemented.
 Multi-digit leading-zero literals are C octal and must be rejected by this
 decimal-only stage instead of being silently evaluated as decimal.
+Until stringize and paste are implemented, a `#define` replacement containing
+`#` or `##` must fail explicitly rather than emit those operator tokens as C
+source.
 *Acceptance:* a C program using `#define` (object- and function-like), `#if`/
 `#ifdef`/`#else`/`#endif` and a real project-local `#include` compiles through
 `c-to-semantic-ir` and executes with the expected result — the first C program
