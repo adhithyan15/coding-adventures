@@ -646,6 +646,13 @@ The staged condition evaluator may accept a single comparison of expanded
 decimal integer literals or undefined identifiers, including `==`, `!=`,
 `<`, `<=`, `>`, and `>=`. It rejects more complex controlling expressions until
 their C integer-constant-expression semantics are implemented.
+The next bounded stage accepts `!` on a single decimal/identifier operand and
+chains of those operands or simple comparisons with `&&` and `||`, using C's
+`&&`-before-`||` precedence. It rejects parentheses, arithmetic and mixed
+unary/comparison forms until their full precedence and evaluation rules are
+implemented. Both branches of each accepted logical operator are checked for
+supported syntax, even when C would short-circuit execution; this stage has
+no expression side effects.
 Multi-digit leading-zero literals are C octal and must be rejected by this
 decimal-only stage instead of being silently evaluated as decimal.
 Until stringize and paste are implemented, a `#define` replacement containing
