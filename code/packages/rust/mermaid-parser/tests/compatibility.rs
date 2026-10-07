@@ -181,6 +181,7 @@ fn pinned_treeview_subset_corpus_parses_to_tree_ir() {
             assert_eq!((diagram.config.row_indent, diagram.config.padding_x, diagram.config.padding_y),
                 (18.0, 9.0, 7.0));
             assert_eq!(diagram.config.line_thickness, 3.0);
+            assert!(!diagram.config.use_max_width);
             assert!(!diagram.config.show_icons);
             assert_eq!(diagram.nodes[2].icon.as_deref(), Some("mermaid-treeview:folder"));
         } else if name == "front-matter-config" {

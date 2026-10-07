@@ -12,9 +12,10 @@ Implements [SIR27](../../../specs/SIR27-c-to-semantic-ir.md).
 
 The PREP01 C adapter is being built in stages. `dialect::CDialect` can classify
 the core directive shapes and run object and function-like macros, local
-includes, `#ifdef`, `defined`, bounded decimal comparisons and bounded logical
-conditions in `#if` through the generic engine. `compile_preprocessed_file`
-uses that token stream with declared include roots before parsing and lowering.
+includes, `#ifdef`, `defined`, bounded decimal comparisons, one-operator
+arithmetic and bounded logical conditions in `#if` through the generic engine.
+`compile_preprocessed_file` uses that token stream with declared include roots
+before parsing and lowering.
 The pathless `compile_source` API retains its legacy behavior. Full C `#if`
 expressions, stringize, paste and default frontend routing remain pending.
 
@@ -37,9 +38,10 @@ Quoted includes search beside the verified including file, then under the
 declared roots. The primary file and system includes search declared roots
 only. Every resolved candidate must remain inside a declared root; an
 unresolved include fails explicitly.
-`#if` currently handles single decimal comparisons, `!` on one operand and
-`&&`/`||` chains; it rejects unsupported C expressions. Stringize and paste
-in macro bodies also fail explicitly.
+`#if` currently handles single decimal comparisons, one checked `+`, `-`, or
+`*` within signed 32-bit range, `!` on one operand and `&&`/`||` chains. It
+rejects unsupported C expressions. Stringize and paste in macro bodies also
+fail explicitly.
 
 The pathless `compile_source` API below still uses the legacy C source parser
 path and does not run the generic preprocessor.

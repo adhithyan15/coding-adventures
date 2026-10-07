@@ -682,6 +682,17 @@ supported syntax, even when C would short-circuit execution; this stage has
 no expression side effects.
 Multi-digit leading-zero literals are C octal and must be rejected by this
 decimal-only stage instead of being silently evaluated as decimal.
+The next bounded `#if` arithmetic stage accepts exactly one `+`, `-`, or `*`
+between two expanded decimal integer literals or undefined identifiers within
+each logical clause. It interprets an undefined identifier as zero, evaluates
+with checked signed arithmetic, and accepts only operands and results in the
+signed 32-bit range, which avoids width-dependent answers across C hosts. The
+result is true exactly when nonzero. Longer arithmetic chains, division,
+remainder, unary signs, parentheses, and arithmetic mixed with a comparison
+remain explicit errors until their precedence and evaluation rules are added.
+Tests cover each accepted operator, false and negative results, undefined
+identifiers, leading-zero operands, out-of-range values, and unsupported mixed
+forms through the real C preprocessor path.
 Until stringize and paste are implemented, a `#define` replacement containing
 `#` or `##` must fail explicitly rather than emit those operator tokens as C
 source.
