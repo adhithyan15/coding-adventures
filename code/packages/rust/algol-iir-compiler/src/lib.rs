@@ -3970,7 +3970,7 @@ impl Compiler {
                 if !self.proc_sigs.contains_key(&target_name)
                     && matches!(
                         target_name.as_str(),
-                        "abs" | "sqrt" | "sin" | "cos" | "ln" | "exp" | "arctan"
+                        "abs" | "sign" | "sqrt" | "sin" | "cos" | "ln" | "exp" | "arctan"
                     )
                 {
                     let actuals = self.standard_fn_actuals(node);
@@ -12736,6 +12736,21 @@ mod tests {
             "test",
         )
         .expect("a calling selector may choose exact static integer-function real name actuals");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var)
+                    == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
+    fn al4_runtime_real_calling_selectors_allow_runtime_sign_name_actuals() {
+        let module = compile_source(
+            "begin boolean procedure choose; choose := true; real procedure left; left := -2.25; real procedure right; right := 3.5; real procedure relay(x); real x; relay := x; real result; result := if choose() then relay(sign(left())) else relay(sign(right())); output(result) end",
+            "test",
+        )
+        .expect("a calling selector may choose runtime sign real name actuals");
         let main = module.get_function("main").expect("has main");
         assert!(main.instructions.iter().any(|instr| {
             instr.op == "call"

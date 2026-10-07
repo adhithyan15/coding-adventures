@@ -214,6 +214,8 @@ real-valued standard functions preserve it, while a finite static real actual
 is safe directly. Variable-free exact `sign` and exact-range `entier` results
 may also widen through a real name formal. Selector calls paired with
 provenance-backed local or other real-name branches remain conservative.
+Built-in `sign` also preserves the proof for a selector-safe runtime-real
+operand because its result is always `-1`, `0`, or `1`.
 One-sided reassignment remains conservative. `for` loops preserve
 runtime-real provenance for caller-frame locals whose values their bodies leave
 invariant; controlled, changed, captured, and name-promoted storage remains
