@@ -221,8 +221,10 @@ now preserve raw records until checked reconstruction, and projection tests use
 the semantic partial-coverage contract. Final local verification passes: 1,093 compiler tests across 181 targets
 with zero ignores, plus 2,279 shared tests/doctests across 91 targets in all 20
 affected packages (49 existing ignores). Compiler and shared strict all-target
-Clippy pass with unknown lints denied; all 936 lessons validate and whitespace
-checks pass. Independent exact-head review, publication and native CI/merge
+Clippy pass with unknown lints denied; lessons and whitespace checks pass.
+The real production plan selects the actual compiler command on Linux, macOS
+and Windows, Rust toolchain and the Windows general-test gate without force.
+Build-tool uncached tests/vet and 18 Python CI gate contracts pass. Independent exact-head review, publication and native CI/merge
 remain pending. This chronology slice does not establish exact source/output coverage,
 all fold families, composite spans or provenance for every mutating pass.
 
