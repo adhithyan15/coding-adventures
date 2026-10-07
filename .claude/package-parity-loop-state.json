@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16880,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16880",
+    "branch": "codex/parity-discovery-fixture-native-ci-selection-20261007",
+    "implementation_revision": "f93d1925a82bbd08accc39d1b0d7498541fd547b",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-07T09:14:51Z",
-    "pr_number": 16872,
-    "status": "merged",
-    "notes": "PR #16872 completed all 33 final-head checks with 14 successes, 18 expected skips, one acceptable neutral CodeQL result, and no failure or pending check. Both required gates passed and GitHub reported MERGEABLE/CLEAN. Guarded squash auto-merge was enabled for exact head b8b9872013eab8184119296e6d70ada3744e49f1; GitHub merged it as 2cd82bda78887a0bbf926b9897eff80ce090c0b9 at 2026-10-07T09:14:51Z. No manual merge occurred. Read-only CI audit found this fixture-only diff selected Python and Perl but omitted eight other native consumers, including locally untested Lua; register a separate selection repair before the next shared-discovery fixture change."
+    "observed_at": "2026-10-07T09:45:15Z",
+    "pr_number": 16880,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #16880 opened from exact validated implementation f93d1925a82bbd08accc39d1b0d7498541fd547b after full Go package tests, vet, focused coverage, build-file and emitted-plan validation over 5291 packages, diff check, and read-only security/correctness review. GitHub reports MERGEABLE/BLOCKED with detect and both companion checks queued. Fixture-only native fanout is proven in tests; this implementation head changes the detector, not the shared fixture, so its CI is not ten native executions. Do not enable auto-merge while checks remain pending."
   },
   "last_inventory": {
     "revision": "2cd82bda78887a0bbf926b9897eff80ce090c0b9",
@@ -737,10 +743,10 @@
     {
       "id": "build-tool-shared-discovery-fixture-native-ci-selection",
       "title": "Select every native discovery fixture consumer in CI when the shared case changes",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
       "branch": "codex/parity-discovery-fixture-native-ci-selection-20261007",
-      "pr_number": null,
+      "pr_number": 16880,
       "selected_at": "2026-10-07T09:18:48Z",
       "selection_revision": "2cd82bda78887a0bbf926b9897eff80ce090c0b9",
       "selection_notes": "Selected after #16872 auto-merged, fresh 15-lane collision inventory, and registration of the newly discovered gap. Both prerequisites are merged and no parity PR remains open. The exact shared fixture is consumed by ten native tests, but #16872 CI selected only Python/Perl; closing this detector blind spot has broader immediate leverage than the single-engine Haskell Dune fix. Keep the Go selection rule exact-path and bounded to known native consumers, then extend its map as future lanes adopt the case.",
