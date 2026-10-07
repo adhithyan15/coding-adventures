@@ -174,6 +174,15 @@ fn pinned_treeview_subset_corpus_parses_to_tree_ir() {
             assert_eq!(diagram.accessibility_description.as_deref(),
                 Some("Files grouped by\ntheir directory hierarchy"));
             assert_eq!(diagram.nodes.len(), 1);
+        } else if name == "layout-and-icon-config" {
+            assert_eq!((diagram.config.row_indent, diagram.config.padding_x, diagram.config.padding_y),
+                (18.0, 9.0, 7.0));
+            assert_eq!(diagram.config.line_thickness, 3.0);
+            assert!(!diagram.config.show_icons);
+            assert_eq!(diagram.nodes[1].icon.as_deref(), Some("folder"));
+        } else if name == "front-matter-config" {
+            assert_eq!((diagram.config.row_indent, diagram.config.padding_x), (14.0, 8.0));
+            assert!(!diagram.config.show_icons);
         } else {
             assert!(!diagram.nodes.is_empty());
         }

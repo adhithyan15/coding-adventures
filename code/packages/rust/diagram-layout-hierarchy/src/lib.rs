@@ -317,10 +317,10 @@ pub fn layout_treemap(diagram: &TreemapDiagram, _canvas_width: f64) -> LayoutedT
 /// Lay out a TreeView as deterministic indented rows.
 pub fn layout_treeview(diagram: &TreeViewDiagram, canvas_width: f64) -> LayoutedTreeViewDiagram {
     let title_height = if diagram.title.is_some() { 42.0 } else { 12.0 };
-    let row_height = 34.0;
+    let row_height = 18.0 + diagram.config.padding_y * 2.0;
     let width = canvas_width.max(360.0);
     let nodes = diagram.nodes.iter().enumerate().map(|(index, node)| {
-        let x = 26.0 + node.depth as f64 * 42.0;
+        let x = 26.0 + node.depth as f64 * (diagram.config.row_indent + diagram.config.padding_x);
         LayoutedTreeViewNode {
             id: node.id.clone(),
             parent_id: node.parent_id.clone(),
@@ -333,7 +333,7 @@ pub fn layout_treeview(diagram: &TreeViewDiagram, canvas_width: f64) -> Layouted
             x,
             y: title_height + index as f64 * row_height,
             width: (width - x - 18.0).max(80.0),
-            height: 28.0,
+            height: row_height,
         }
     }).collect();
     LayoutedTreeViewDiagram {
@@ -342,6 +342,7 @@ pub fn layout_treeview(diagram: &TreeViewDiagram, canvas_width: f64) -> Layouted
         title: diagram.title.clone(),
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
+        config: diagram.config.clone(),
         nodes,
     }
 }
@@ -490,6 +491,7 @@ mod tests {
         use diagram_ir::{TreeViewDiagram, TreeViewNode, TreeViewNodeKind};
         let diagram = TreeViewDiagram {
             title: None, accessibility_title: None, accessibility_description: None,
+            config: diagram_ir::TreeViewConfig::default(),
             nodes: vec![
                 TreeViewNode { id: "root".into(), parent_id: None, depth: 0, label: "src".into(), kind: TreeViewNodeKind::Directory, class_selector: None, icon: None, description: None },
                 TreeViewNode { id: "child".into(), parent_id: Some("root".into()), depth: 1, label: "main.rs".into(), kind: TreeViewNodeKind::File, class_selector: None, icon: None, description: None },
@@ -499,6 +501,8 @@ mod tests {
         assert!(layout.nodes[1].x > layout.nodes[0].x);
         assert!(layout.nodes[1].y > layout.nodes[0].y);
         assert_eq!(layout.nodes[1].parent_id.as_deref(), Some("root"));
+        assert_eq!(layout.nodes[1].x - layout.nodes[0].x, 15.0);
+        assert_eq!(layout.nodes[0].height, 28.0);
     }
 
     #[test]

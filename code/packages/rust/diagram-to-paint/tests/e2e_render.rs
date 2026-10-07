@@ -3258,6 +3258,25 @@ line "Target" [35, 50, 68, 82]"##,
         let pixels = render(&scene); write_png(&pixels, "/tmp/mermaid_treeview_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
 
+        let configured = parse_treeview("%%{init: {\"treeView\": {\"rowIndent\": 18, \"paddingX\": 9, \"paddingY\": 7, \"lineThickness\": 3, \"showIcons\": false}}}%%\ntreeView-beta\nproject/\n    src/ icon(folder)\n        main.rs")
+            .expect("configured treeview parse failed");
+        let configured_layout = layout_treeview(&configured, 720.0);
+        assert_eq!(configured_layout.nodes[1].x - configured_layout.nodes[0].x, 27.0);
+        assert_eq!(configured_layout.nodes[0].height, 32.0);
+        let configured_scene = diagram_to_paint_treeview(&configured_layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 }, device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 13.0), title_font: font_spec("Helvetica", 18.0),
+            shaper: &shaper, metrics: &metrics, resolver: &resolver,
+        });
+        assert_eq!(configured_scene.instructions.iter()
+            .filter(|instruction| matches!(instruction, PaintInstruction::Rect(_))).count(), 1);
+        assert_eq!(configured_scene.metadata.as_ref().and_then(|metadata| metadata.get("treeView.config.lineThickness")),
+            Some(&"3".to_string()));
+        let configured_pixels = render(&configured_scene);
+        write_png(&configured_pixels, "/tmp/mermaid_treeview_config_e2e.png")
+            .expect("configured treeview PNG write failed");
+        assert!(configured_pixels.width > 0 && configured_pixels.height > 0);
+
         let empty = parse_treeview("treeView-beta\ntitle\naccTitle: Empty tree\naccDescr {\n  No files are present\n}")
             .expect("empty treeview parse failed");
         let empty_layout = layout_treeview(&empty, 720.0);

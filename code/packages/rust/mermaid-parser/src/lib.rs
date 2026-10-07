@@ -600,7 +600,7 @@ use diagram_ir::{
     TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
     CynefinConfig, CynefinDiagram, CynefinDomain, CynefinStyle, CynefinTransition, IshikawaCause, IshikawaDiagram,
-    WardleyDiagram, WardleyEvolution, WardleyLink, WardleyNode, TreeViewDiagram, TreeViewNode,
+    WardleyDiagram, WardleyEvolution, WardleyLink, WardleyNode, TreeViewConfig, TreeViewDiagram, TreeViewNode,
     TreeViewNodeKind,
 };
 
@@ -5851,6 +5851,7 @@ fn prepare_cynefin_source(source: &str) -> Result<(String, Vec<String>), ParseEr
 
 /// Parse Mermaid 11.16.1 TreeView hierarchy and node annotations.
 pub fn parse_treeview(source: &str) -> Result<TreeViewDiagram, ParseError> {
+    let config = parse_treeview_config(source);
     let (prepared, multiline_descriptions) = prepare_treeview_source(source)?;
     let normalized = preprocess_treeview_box_drawing(&prepared)?;
     let tokens = try_tokenize_mermaid_treeview(&normalized).map_err(|message| ParseError { message, line: 1, col: 1 })?;
@@ -5858,7 +5859,7 @@ pub fn parse_treeview(source: &str) -> Result<TreeViewDiagram, ParseError> {
         .unwrap_or_else(|error| panic!("Failed to parse treeview.grammar: {error}"));
     GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH).parse()
         .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
-    let mut diagram = TreeViewDiagram { title: None, accessibility_title: None, accessibility_description: None, nodes: Vec::new() };
+    let mut diagram = TreeViewDiagram { title: None, accessibility_title: None, accessibility_description: None, config, nodes: Vec::new() };
     let mut ancestors = Vec::<(usize, usize, String)>::new();
     for (index, raw) in normalized.lines().enumerate() {
         let line_number = index + 1;
@@ -5889,6 +5890,30 @@ pub fn parse_treeview(source: &str) -> Result<TreeViewDiagram, ParseError> {
         ancestors.push((indentation, depth, id));
     }
     Ok(diagram)
+}
+
+fn parse_treeview_config(source: &str) -> TreeViewConfig {
+    let defaults = TreeViewConfig::default();
+    let front_matter = mermaid_front_matter_section(source, &["config", "treeView"]);
+    let config = mermaid_directive_object(source, "treeView").or(front_matter.as_deref()).unwrap_or("");
+    let value = |name: &str| {
+        quadrant_directive_value(config, name).or_else(|| config.lines().find_map(|line| {
+            let (key, value) = line.trim().split_once(':')?;
+            (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+        }))
+    };
+    let non_negative = |name: &str, fallback: f64| value(name).and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value >= 0.0).unwrap_or(fallback);
+    let boolean = |name: &str, fallback: bool| value(name).and_then(|value| match value.to_ascii_lowercase().as_str() {
+        "true" => Some(true), "false" => Some(false), _ => None,
+    }).unwrap_or(fallback);
+    TreeViewConfig {
+        row_indent: non_negative("rowIndent", defaults.row_indent),
+        padding_x: non_negative("paddingX", defaults.padding_x),
+        padding_y: non_negative("paddingY", defaults.padding_y),
+        line_thickness: non_negative("lineThickness", defaults.line_thickness),
+        show_icons: boolean("showIcons", defaults.show_icons),
+    }
 }
 
 fn prepare_treeview_source(source: &str) -> Result<(String, Vec<String>), ParseError> {

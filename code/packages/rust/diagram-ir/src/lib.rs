@@ -1704,6 +1704,21 @@ pub enum TreeViewNodeKind {
     Directory,
 }
 
+#[derive(Clone, Debug, PartialEq)]
+pub struct TreeViewConfig {
+    pub row_indent: f64,
+    pub padding_x: f64,
+    pub padding_y: f64,
+    pub line_thickness: f64,
+    pub show_icons: bool,
+}
+
+impl Default for TreeViewConfig {
+    fn default() -> Self {
+        Self { row_indent: 10.0, padding_x: 5.0, padding_y: 5.0, line_thickness: 1.0, show_icons: true }
+    }
+}
+
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct TreeViewNode {
     pub id: String,
@@ -1716,11 +1731,12 @@ pub struct TreeViewNode {
     pub description: Option<String>,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct TreeViewDiagram {
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
+    pub config: TreeViewConfig,
     pub nodes: Vec<TreeViewNode>,
 }
 
@@ -1747,6 +1763,7 @@ pub struct LayoutedTreeViewDiagram {
     pub title: Option<String>,
     pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>,
+    pub config: TreeViewConfig,
     pub nodes: Vec<LayoutedTreeViewNode>,
 }
 
