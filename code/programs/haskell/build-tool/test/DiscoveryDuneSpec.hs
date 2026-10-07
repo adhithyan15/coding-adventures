@@ -12,7 +12,7 @@ import Data.List (isPrefixOf, sort)
 import qualified Data.Text as Text
 import qualified Data.Text.Encoding as Text
 import System.Directory
-    (createDirectory, createDirectoryIfMissing, getTemporaryDirectory, removeFile, removePathForcibly)
+    (canonicalizePath, createDirectory, createDirectoryIfMissing, getTemporaryDirectory, removeFile, removePathForcibly)
 import System.FilePath ((</>), isAbsolute, makeRelative, pathSeparator, splitDirectories, takeDirectory)
 import System.IO (hClose, openTempFile)
 import Test.Hspec (Spec, describe, it, shouldBe)
@@ -56,15 +56,16 @@ discoveryDuneSpec = describe "shared Dune discovery fixture" $ do
         length files `shouldBe` 4
         length expected `shouldBe` 3
         withTemporaryDirectory "haskell-dune-discovery" $ \root -> do
+            canonicalRoot <- canonicalizePath root
             forM_ files $ \(FixtureFile path content) -> do
                 unless (safeFixturePath path) $ fail ("unsafe discovery fixture path: " ++ show path)
-                let destination = root </> portableToNative path
+                let destination = canonicalRoot </> portableToNative path
                 createDirectoryIfMissing True (takeDirectory destination)
                 Bytes.writeFile destination (Text.encodeUtf8 content)
-            packages <- discoverPackages (root </> "code")
+            packages <- discoverPackages (canonicalRoot </> "code")
             let actual = sort
-                    [ (packageName package, portable (makeRelative root (packageBuildFile package)),
-                       portable (makeRelative root (packagePath package)))
+                    [ (packageName package, portable (makeRelative canonicalRoot (packageBuildFile package)),
+                       portable (makeRelative canonicalRoot (packagePath package)))
                     | package <- packages
                     ]
                 wanted = sort
