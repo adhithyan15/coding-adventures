@@ -227,6 +227,8 @@ Variable-free exact additive zero terms may surround that bounded result before
 `entier`; nonzero or dynamic additive terms remain conservative.
 Variable-free exact multiplicative unit factors may likewise surround it;
 non-unit or variable factors remain conservative.
+Exact unit division is also permitted when the bounded result is the numerator;
+non-unit or variable divisors and a bounded denominator remain conservative.
 One-sided reassignment remains conservative. `for` loops preserve
 runtime-real provenance for caller-frame locals whose values their bodies leave
 invariant; controlled, changed, captured, and name-promoted storage remains
