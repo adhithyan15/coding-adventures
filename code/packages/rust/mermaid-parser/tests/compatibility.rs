@@ -16,6 +16,10 @@ const SWIMLANE_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/swimlane-11.16.1-corpus.json"
 ));
+const SWIMLANE_VISUAL_CORPUS: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../../grammars/mermaid/swimlane-11.16.1-visual-corpus.json"
+));
 const QUADRANT_CORPUS: &str = include_str!(concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../../grammars/mermaid/quadrant-11.16.1-corpus.json"
@@ -1466,6 +1470,32 @@ fn pinned_swimlane_subset_corpus_parses_to_ownership_ir() {
         let source = fixture["source"].as_str().expect("fixture source must be a string");
         assert!(parse_swimlane(source).is_ok(), "fixture {:?} should parse", fixture["name"]);
     }
+}
+
+#[test]
+fn pinned_swimlane_visual_corpus_references_syntax_fixtures() {
+    let syntax: Value = serde_json::from_str(SWIMLANE_CORPUS).expect("swimlane corpus must be JSON");
+    let visual: Value = serde_json::from_str(SWIMLANE_VISUAL_CORPUS).expect("swimlane visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let syntax_names = syntax["fixtures"].as_array().expect("fixtures must be an array").iter()
+        .map(|fixture| fixture["name"].as_str().expect("fixture name")).collect::<BTreeSet<_>>();
+    let visual_names = visual["fixtures"].as_array().expect("visual fixtures must be an array").iter()
+        .map(|fixture| fixture.as_str().expect("visual fixture name")).collect::<BTreeSet<_>>();
+    assert_eq!(visual_names.len(), visual["fixtures"].as_array().expect("visual fixtures").len());
+    assert!(visual_names.is_subset(&syntax_names));
+}
+
+#[test]
+fn swimlane_parallel_endpoints_lower_to_individual_handoffs() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  decide{Approved?}\n  revise[Revise]\nend\nsubgraph Delivery\n  ship[Ship]\n  notify[Notify]\nend\ndecide --> ship & notify\nship & notify --> revise",
+    ).expect("parallel Swimlane endpoints should parse");
+
+    assert_eq!(diagram.edges.len(), 4);
+    assert_eq!(diagram.edges.iter().map(|edge| (edge.from.as_str(), edge.to.as_str())).collect::<Vec<_>>(), [
+        ("decide", "ship"), ("decide", "notify"), ("ship", "revise"), ("notify", "revise"),
+    ]);
+    assert_eq!(diagram.lanes[1].node_ids, ["ship", "notify"]);
 }
 
 #[test]

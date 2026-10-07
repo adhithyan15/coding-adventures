@@ -89,6 +89,14 @@ mod apple {
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/treeview-11.16.1-visual-corpus.json"
     ));
+    const SWIMLANE_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/swimlane-11.16.1-corpus.json"
+    ));
+    const SWIMLANE_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/swimlane-11.16.1-visual-corpus.json"
+    ));
 
     #[test]
     fn render_dot_diagram_to_png() {
@@ -3481,6 +3489,41 @@ line "Target" [35, 50, 68, 82]"##,
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         let pixels = render(&scene); write_png(&pixels, "/tmp/mermaid_swimlane_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_swimlane_visual_corpus_to_png() {
+        let syntax: Value = serde_json::from_str(SWIMLANE_CORPUS).expect("swimlane corpus JSON");
+        let visual: Value = serde_json::from_str(SWIMLANE_VISUAL_CORPUS).expect("swimlane visual corpus JSON");
+        assert_eq!(visual["upstream_commit"], syntax["upstream_commit"]);
+        let fixtures = syntax["fixtures"].as_array().expect("swimlane fixtures");
+        let fixture_names = visual["fixtures"].as_array().expect("swimlane visual fixture names");
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+
+        for (index, fixture_name) in fixture_names.iter().enumerate() {
+            let fixture_name = fixture_name.as_str().expect("swimlane fixture name");
+            let fixture = fixtures.iter().find(|fixture| fixture["name"] == fixture_name)
+                .unwrap_or_else(|| panic!("missing Swimlane fixture {fixture_name}"));
+            let diagram = parse_swimlane(fixture["source"].as_str().expect("swimlane source"))
+                .unwrap_or_else(|error| panic!("failed to parse {fixture_name}: {error}"));
+            let layout = layout_swimlane(&diagram);
+            let scene = diagram_to_paint_swimlane(&layout, &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 13.0),
+                title_font: font_spec("Helvetica", 18.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            });
+            assert!(!scene.instructions.is_empty(), "{fixture_name} must lower to paint");
+            let pixels = render(&scene);
+            let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
+            write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));
+            assert!(pixels.width > 0 && pixels.height > 0);
+        }
     }
 
     #[test]
