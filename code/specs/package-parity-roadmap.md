@@ -16317,6 +16317,12 @@ Swift 51 high-consensus missing slots; the audit found no new exact unowned
 eligible slot. The selected Elixir dependency is intentionally one serial PR,
 not a claim that those broader lane gaps are complete.
 
+PR #16909 is now ready for review for that duplicate-identity slice. It
+consumes the checked neutral fixture in a package-local Elixir test, rejects
+collisions with a typed diagnostic and sorted repository-relative paths, and
+proves CLI exit 2 through a real escript. The active PR's CI and CodeQL checks
+are pending; no second parity implementation PR will be opened meanwhile.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
