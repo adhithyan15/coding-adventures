@@ -239,6 +239,12 @@ draft pending native-platform CI. Full-scope independent review passed repaired
 head `3b7928e241`; native acceptance must also prove the compiler's test command
 ran. Its first CI plan selected Closure on Windows but left the OS-suite gate
 false, so the gate is now repaired to include the compiler and CV02 specification.
+Independent review also reproduced a specification-only plan with that gate
+enabled but no compiler or Rust toolchain. Exact specification-to-consumer
+selection now supplies both on all three platforms and fails on a missing
+consumer; production-plan regressions verify the actual native command.
+The published candidate's Linux/macOS native compiler package commands passed;
+the Windows command was skipped, so acceptance awaits refreshed native CI.
 The updated head requires refreshed review and CI before acceptance.
 Audit SACLs/integrity claims are unproven.
 

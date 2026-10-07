@@ -72,6 +72,12 @@ func TestClosureProvenanceSpecBuildPlanSelectsCompilerToolchainAndGate(t *testin
 	if err := os.WriteFile(filepath.Join(compilerDir, "BUILD"), build, 0o644); err != nil {
 		t.Fatal(err)
 	}
+	// Populate executable commands through production discovery as CI does.
+	discovered, err := discovery.DiscoverPackages(filepath.Join(root, "code"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	packages = append(discovered, packages[1])
 	registry := filepath.Join(toolchainFixtureRepoRoot(t), "code", "specs", "data", "ci-gates.json")
 	graph, err := resolver.ResolveDependencies(packages)
 	if err != nil {
@@ -106,6 +112,15 @@ func TestClosureProvenanceSpecBuildPlanSelectsCompilerToolchainAndGate(t *testin
 	}
 	if !built.LanguagesNeeded["rust"] || built.LanguagesNeeded["go"] || !built.CIJobs["build-windows-os-suites"] {
 		t.Errorf("spec-only plan languages=%v Windows gate=%v", built.LanguagesNeeded, built.CIJobs["build-windows-os-suites"])
+	}
+	foundCommand := false
+	for _, pkg := range built.Packages {
+		if pkg.Name == "rust/programs/closurec" {
+			foundCommand = reflect.DeepEqual(pkg.BuildCommands, []string{"cargo test -p coding-adventures-closurec -- --nocapture"})
+		}
+	}
+	if !foundCommand {
+		t.Error("selected compiler has no actual native test command in emitted plan")
 	}
 }
 

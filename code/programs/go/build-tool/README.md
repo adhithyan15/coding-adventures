@@ -221,6 +221,11 @@ The `build-windows-os-suites` step gate includes `rust/programs/closurec`
 and its CV02 acceptance specification. Rust toolchain selection alone does not
 run ordinary Windows package tests; this gate makes the compiler's native
 publication/ACL regressions execute for compiler or affected dependency changes.
+The exact CV02 specification path also selects `rust/programs/closurec` on all
+three platforms and requires Rust, including specification-only diffs. Planning
+fails if that consumer is missing; explicit non-Rust language filters skip it.
+Emitted-plan regressions check the actual test command, affected compiler,
+toolchain and Windows gate together without forcing unrelated packages.
 Acceptance still requires a non-skipped test step and successful package result.
 
 The shared `discovery/language-registry` case needs an additional, bounded

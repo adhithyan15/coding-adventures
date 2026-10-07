@@ -162,15 +162,21 @@ additional OWNER RIGHTS fresh-open regression first reproduced late original
 mutation; the repair proves production fresh opens before changing originals.
 All 20 Windows publication cases pass. Linux/macOS descriptor-bound UID/GID/mode
 preservation and extended/default ACL rejection are implemented, with seven
-native cases each and strict cross-checks. Native Unix runtime is still unproven
-until actual CI executes those cases.
+native cases each and strict cross-checks. Published-head CI run `37649573380`
+executed the native Closure package command successfully on Linux and macOS.
+Its Windows general package-test step was skipped; that job is not acceptance.
 
 The initial repaired-head CI plan selected Closure on all platforms but left
 `build-windows-os-suites` false, which skips ordinary Windows package tests.
 The gate repair adds the compiler's affected identity and CV02 specification,
 with real-evaluator regressions that first fail both selection clauses and an
-unrelated Rust negative control. Refresh exact-head review and CI after this
-change; require non-skipped compiler test commands and successful native package
+unrelated Rust negative control. Independent review of local `79643862f1` found
+the specification-only gate still selected no compiler or Rust toolchain.
+Specification-first exact consumer mapping now seeds Closure on all platforms,
+fails on missing consumers, and respects language filters. Emitted-plan tests
+first reproduced the empty selection and now verify the real native command,
+toolchain and gate together. Refresh exact-head review and CI after these
+changes; require non-skipped compiler test commands and successful native package
 results before accepting the draft. Green job labels or older checks cannot
 substitute for execution evidence. The foundation and full compiler/provenance
 goal remain open; chronology and complete source/node/output coverage are not

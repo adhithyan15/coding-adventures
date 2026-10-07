@@ -12,6 +12,10 @@ Register the compiler's affected identity and CV02 specification with that gate;
 real-registry evaluator regressions first fail both selection clauses and keep
 unrelated Rust changes as a negative control. Native acceptance requires the
 actual compiler test step and package result, not the job label.
+Independent review then reproduced an enabled gate with no compiler/toolchain
+on a specification-only diff. Exact CV02 consumer mapping now selects the
+compiler and Rust on all platforms, fails on missing consumers, honors language
+filters, and is verified through an emitted plan with the actual native command.
 
 ### Added locally - explicit Linux/macOS publication policy support (CV02)
 
