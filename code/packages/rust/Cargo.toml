@@ -854,6 +854,7 @@ members = [
     "vault-leases",
     "chief-of-staff-vault-runtime",
     "chief-of-staff-vault-dispatch",
+    "chief-of-staff-vault-secret-store",
     "vault-engine-core",
     "vault-engine-kv2",
     "vault-audit",

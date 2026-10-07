@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `SealedStore::list_page` and `SealedPage`, which keep the backend's
+  `next_cursor`. `list` used to drop it, which left a caller that paged through
+  a namespace inferring "done" from a short page. That inference is wrong:
+  `storage-fs` returns a short page with more still to come whenever a key is
+  deleted between its directory scan and its read, so the caller silently
+  missed every record after it. `list` now delegates to `list_page`.
 - `SealedStore::put_if_absent` for collision-safe encrypted record creation
   without overwriting an existing credential address.
 - `SealedStore::init_with_kek` and `SealedStore::unseal_with_kek` for
