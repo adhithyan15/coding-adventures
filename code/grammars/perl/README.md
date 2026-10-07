@@ -217,6 +217,9 @@ Current pairs:
   [`perl-5.003_97d` source tag]. Its tagged yacc changes a loop action;
   tokenizer changes switch bookkeeping and subparse types. These are outside
   the accepted arithmetic subset.
+- `perl5.003_97e.*` is a separate **partial** pair checked against the
+  [`perl-5.003_97e` source tag]. Its tagged yacc matches 5.003_97d;
+  tokenizer adds `sysseek` recognition outside the accepted arithmetic subset.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot, including adjacent `--` and
@@ -295,4 +298,5 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [`perl-5.003_97b` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_97b
 [`perl-5.003_97c` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_97c
 [`perl-5.003_97d` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_97d
+[`perl-5.003_97e` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_97e
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2
