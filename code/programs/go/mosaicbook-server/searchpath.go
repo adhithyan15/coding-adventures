@@ -64,16 +64,20 @@ func parsePackageSearchPaths(list string) ([]string, error) {
 }
 
 // packageSearchDir is one entry of the list, made absolute and checked: an
-// existing directory whose absolute path holds no ':' beyond a Windows drive
-// letter's (filepath.VolumeName is empty on Unix, so there any ':' counts).
+// existing directory that mosaic-compile will read back as exactly this one
+// directory. Its splitter (#16931) separates on ':' everywhere and on ';' on
+// Windows, keeping only a drive letter's colon: one ASCII letter, then ':'.
+// So the path must hold no ';' and no ':' other than that drive colon. A
+// device path (`\\?\C:\x`), whose volume is longer than `C:`, or a volume
+// that is not a letter (`1:`), would be split into a fragment nobody named.
 func packageSearchDir(entry string) (string, error) {
 	abs, err := filepath.Abs(entry)
 	if err != nil {
 		return "", fmt.Errorf("package search path %q: %v", entry, err)
 	}
-	if strings.Contains(abs[len(filepath.VolumeName(abs)):], ":") {
+	if !compilerReadsAsOneDir(abs) {
 		return "", fmt.Errorf(
-			"package search path %q contains ':', which mosaic-compile reads as its list separator",
+			"package search path %q contains ':' or ';', which mosaic-compile reads as list separators",
 			entry,
 		)
 	}
@@ -82,6 +86,24 @@ func packageSearchDir(entry string) (string, error) {
 		return "", fmt.Errorf("package search path %q is not a directory", entry)
 	}
 	return abs, nil
+}
+
+// compilerReadsAsOneDir reports whether mosaic-compile's splitter keeps abs
+// whole: no ';', and no ':' except a leading `X:` drive with X an ASCII
+// letter.
+func compilerReadsAsOneDir(abs string) bool {
+	if strings.Contains(abs, ";") {
+		return false
+	}
+	rest := abs
+	if len(abs) >= 2 && abs[1] == ':' && isASCIILetter(abs[0]) {
+		rest = abs[2:]
+	}
+	return !strings.Contains(rest, ":")
+}
+
+func isASCIILetter(b byte) bool {
+	return (b >= 'a' && b <= 'z') || (b >= 'A' && b <= 'Z')
 }
 
 // withPackageSearchPaths appends extras after base, without repeats, joined

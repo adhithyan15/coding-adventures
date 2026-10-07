@@ -11,7 +11,8 @@
 - `split_package_search_path` keeps Unix exactly as it was: `:` separates.
 - On Windows, `;` and `:` both separate, except a `:` right after a lone
   letter at the start of an entry, which is the drive's.
-- Empty entries are dropped.
+- Empty entries are kept, as `split(':')` kept them, so Unix is
+  byte-identical to before.
 - The flag's description in `mosaic-compile.json` says so, and a unit test
   pins both platforms.
 

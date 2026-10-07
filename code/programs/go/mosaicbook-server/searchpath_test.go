@@ -111,3 +111,24 @@ mosaic-pkg-grid = "0.2.0"
 		t.Fatalf("a component with no package: search path %q, want the compiler default", got)
 	}
 }
+
+// The directory check mirrors mosaic-compile's splitter (#16931): only a
+// leading ASCII-letter drive colon survives; ';', device paths and
+// non-letter volumes would be split into fragments nobody named.
+func TestCompilerReadsAsOneDir(t *testing.T) {
+	for path, want := range map[string]bool{
+		"/home/user/code/packages/mosaic": true,
+		`C:\repo\code\packages`:           true,
+		`c:/repo`:                         true,
+		"/a:b":                            false,
+		`C:\a;b`:                          false,
+		`\\?\C:\x`:                        false,
+		`\\.\C:\x`:                        false,
+		`1:\x`:                            false,
+		`\\server\share\x`:                true,
+	} {
+		if got := compilerReadsAsOneDir(path); got != want {
+			t.Errorf("compilerReadsAsOneDir(%q) = %v, want %v", path, got, want)
+		}
+	}
+}

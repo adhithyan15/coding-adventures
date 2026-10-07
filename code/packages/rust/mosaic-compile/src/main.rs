@@ -1845,9 +1845,11 @@ fn write_bytes_or_die(path: &str, content: &[u8]) {
 ///   C:\repo\a;C:\repo\b                  yes       C:\repo\a, C:\repo\b
 ///   C:\repo\a:D:\repo\b                  yes       C:\repo\a, D:\repo\b
 ///   C:\repo\a                            no        C, \repo\a   (Unix: ':' always splits)
+///   a:b                                  yes       a:b   (a lone letter reads as a drive)
 /// ```
 ///
-/// Empty entries are dropped.
+/// Empty entries are kept, exactly as `split(':')` kept them, so Unix
+/// behaviour is unchanged (an empty entry resolves against the cwd).
 fn split_package_search_path(value: &str, windows: bool) -> Vec<PathBuf> {
     let mut entries = Vec::new();
     let mut current = String::new();
@@ -1863,16 +1865,12 @@ fn split_package_search_path(value: &str, windows: bool) -> Vec<PathBuf> {
             ch == ':'
         };
         if separator {
-            if !current.is_empty() {
-                entries.push(PathBuf::from(std::mem::take(&mut current)));
-            }
+            entries.push(PathBuf::from(std::mem::take(&mut current)));
         } else {
             current.push(ch);
         }
     }
-    if !current.is_empty() {
-        entries.push(PathBuf::from(current));
-    }
+    entries.push(PathBuf::from(current));
     entries
 }
 
@@ -1891,13 +1889,17 @@ mod tests {
         };
         // Unix: ':' separates, as it always has.
         assert_eq!(paths("code/packages:code/packages/mosaic", false), ["code/packages", "code/packages/mosaic"]);
-        assert_eq!(paths("/a::/b:", false), ["/a", "/b"]);
+        // Byte-identical to the old `split(':')`, empty entries included.
+        for value in ["/a::/b:", ":x", "", "a:b:c"] {
+            let old: Vec<String> = value.split(':').map(str::to_string).collect();
+            assert_eq!(paths(value, false), old, "{value:?}");
+        }
         // Windows: ';' and ':' both separate, but a drive colon stays.
         assert_eq!(paths("code/packages:code/packages/mosaic", true), ["code/packages", "code/packages/mosaic"]);
         assert_eq!(paths(r"C:\repo\a;C:\repo\b", true), [r"C:\repo\a", r"C:\repo\b"]);
         assert_eq!(paths(r"C:\repo\a:D:\repo\b", true), [r"C:\repo\a", r"D:\repo\b"]);
         assert_eq!(paths(r"C:\repo\a", true), [r"C:\repo\a"]);
-        assert_eq!(paths("c:/x;;", true), ["c:/x"]);
+        assert_eq!(paths("c:/x;;", true), ["c:/x", "", ""]);
         // Only a lone letter before the colon is a drive.
         assert_eq!(paths("ab:cd", true), ["ab", "cd"]);
     }

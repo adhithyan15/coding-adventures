@@ -37,8 +37,11 @@ change, which widens what that output can name.
 ### Changed - a Windows drive path is a valid search path (#16931)
 
 `mosaic-compile` now keeps a drive letter's colon when it splits its search
-path, so `--package-search-path` refuses only a `:` beyond the drive
-(`filepath.VolumeName`).
+path. `--package-search-path` therefore accepts a path whose only `:` is a
+leading ASCII-letter drive (`C:`). It refuses any other `:`, any `;`
+(Windows' list separator), device paths such as `\\?\C:\x`, and non-letter
+volumes, each of which the compiler would split into fragments nobody
+named.
 
 ### Fixed - app components can find their dependencies (`--package-search-path`)
 
