@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Added a process-free typed CI-gate registry evaluator with deterministic
+  all-gate verdicts, nullable-snapshot fail-open behavior, portable glob
+  selection, shared-pattern Unicode-scalar 50-million-unit preflight, and
+  no-partial-output errors. The C# suite replays all eleven neutral cases.
+- Registered the C# and F# native fixture readers with the Go build-plan
+  selector so fixture-only changes schedule both .NET package tests.
+
 - Expanded dynamic source-selection and package-hash fixture replay from 16/4
   to 20/8 cases, covering before/after shared-input digest evidence for two
   Swift consumers. The production engine and host authority are unchanged.

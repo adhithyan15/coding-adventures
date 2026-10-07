@@ -12,20 +12,20 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16972,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16972",
-    "branch": "codex/parity-cigates-native-selection-20261007",
-    "implementation_revision": "e7393d0b00d0d8d8b57350b932d0c3936658abf0",
+    "number": 16981,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16981",
+    "branch": "codex/parity-cigates-dotnet-20261007",
+    "implementation_revision": "7398562d001f2ff9c2c1c22fd83565c5cae0a1e5",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-07T22:24:20Z",
-    "pr_number": 16972,
+    "observed_at": "2026-10-07T23:21:35Z",
+    "pr_number": 16981,
     "status": "checks-pending",
-    "notes": "Ready-for-review PR #16972 opened on e7393d0b00d0d8d8b57350b932d0c3936658abf0 after local native tests, build-file/parity checks, and independent security review. GitHub reported MERGEABLE but BLOCKED with first three checks queued; no auto-merge until every final-head required check is terminal and acceptable and no conflict remains."
+    "notes": "Ready-for-review PR #16981 opened after both native .NET suites, Go full/race/vet, 5,304-package BUILD validation, neutral corpus/parity/diff checks and independent SHIP security review. GitHub reported MERGEABLE but BLOCKED with the initial CI, CodeQL, and Human Languages Books checks queued; no auto-merge until every final-head check is terminal acceptable and no conflict remains. Prior PR #16972 merged through guarded auto-merge as 2ef032426b5fc69ce19fdf6a0b67fddadcf33dd4."
   },
   "last_inventory": {
-    "revision": "c0c7b8bc04d972e07348d02143b6f8b867eee1ae",
+    "revision": "2ef032426b5fc69ce19fdf6a0b67fddadcf33dd4",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1496,
@@ -1109,11 +1109,14 @@
     {
       "id": "build-tool-ci-gate-fixture-native-ci-selection",
       "title": "Schedule native Go and Python CI-gate consumers for neutral fixture-only diffs",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
       "branch": "codex/parity-cigates-native-selection-20261007",
       "pr_number": 16972,
-      "notes": "Selected after #16963 merged and all 30 discovered owners were registered. A diff confined to ci-gate-selection-*.json runs the shared conformance oracle but need not select the native Go internal/cigates and Python CI-gate package BUILD fronts. Add exact fixture-path consumer selection and detector regression with Ubuntu proof; avoid broad spec fanout and recheck live workflow overlap before editing."
+      "notes": "PR #16972 merged by guarded auto-merge after 37 acceptable final-head checks. The exact flat CI-gate fixture family now selects the Go/Python native BUILD fronts across three platform plans, with language filtering, missing-root failure, and direct-reader drift tests; no workflow broadening or forced full build.",
+      "merged_head": "8a19dd98421cc0be17867e4c45e23e83fc22912f",
+      "merged_at": "2026-10-07T22:58:04Z",
+      "merge_revision": "2ef032426b5fc69ce19fdf6a0b67fddadcf33dd4"
     },
     {
       "id": "build-tool-ci-gate-selection-match-work-ceiling",
@@ -9732,10 +9735,10 @@
     {
       "id": "build-tool-csharp-fsharp-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the shared C# and F# build-tool lanes",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-cigates-dotnet-20261007",
+      "pr_number": 16981,
       "notes": "The exact-main engine audit found no CI gate registry or evaluator in either .NET front door. Add one bounded C# pure engine consumed independently by both language-native front doors, preserve the reviewed shared-engine boundary, and execute every neutral ci_gate_selection case in both lane suites."
     },
     {
@@ -12150,7 +12153,7 @@
       "id": "geometry-affine2d-bezier2d-java-kotlin-dart-lane-parity",
       "title": "Implement affine2d and bezier2d parity in Java, Kotlin, and Dart",
       "status": "pending",
-      "depends_on": ["geometry-point2d-java-kotlin-dart-lane-parity"],
+      "depends_on": ["geometry-point2d-java-kotlin-dart-lane-parity", "geometry-affine2d-bezier2d-neutral-fixture-extension"],
       "branch": null,
       "pr_number": null,
       "notes": "Port the G2D01 and G2D02 pure transform and curve layers as one dependency-shaped tranche, dynamically consuming neutral fixtures and preserving bounded finite arithmetic."
@@ -12751,7 +12754,7 @@
       "id": "compiler-ir-aot-neutral-conformance",
       "title": "Freeze BF03 compiler IR types, opcodes, and text round trips",
       "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
-      "notes": "Compiler IR appears in 7/15 established lanes, leaving eight slots and blocking several Nib/AOT chains. Define pure ID, opcode, and textual round-trip fixtures before lane-sized ports. Keep BF03's source-map sketch out of this owner because compiler-source-map-language-neutral-conformance owns map semantics. Avoid overlapping the TypeScript compiler-IR metadata surface of PR #15858."
+      "notes": "The collision-checked post-#16972 inventory finds compiler IR in 9/15 established lanes, leaving six slots in C#/Dart/F#/Java/Kotlin/Swift and blocking several Nib/AOT chains. Define pure ID, opcode, and textual round-trip fixtures before lane-sized ports. Keep BF03's source-map sketch out of this owner because compiler-source-map-language-neutral-conformance owns map semantics. Avoid overlapping the TypeScript compiler-IR metadata surface of PR #15858."
     },
     {
       "id": "segment-tree-dt05-neutral-conformance",
@@ -13456,6 +13459,150 @@
     {
       "id": "register-vm-kotlin-lane-parity", "title": "Port portable register VM to Kotlin", "status": "pending", "depends_on": ["register-vm-neutral-conformance"], "branch": null, "pr_number": null,
       "notes": "Missing established Kotlin slot; consume neutral register/instruction/step/error fixtures, separate from stack VM and host execution."
+    },
+    {
+      "id": "document-sanitization-te02-neutral-conformance", "title": "Reconcile TE02 AST and bounded HTML sanitization profiles", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Both TE02 stages are 8/15. Fixture pure AST transformations separately from bounded renderer-produced HTML. Regex HTML filtering must not claim arbitrary CMS/user-pasted XSS safety; resolve the contradictory parser-backed security prose before lane ports."
+    },
+    {
+      "id": "document-ast-sanitizer-seven-lane-parity", "title": "Classify seven missing TE02 AST sanitizer lanes", "status": "pending", "depends_on": ["document-sanitization-te02-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/F#/Haskell/Java/Kotlin/Swift absent; split by lane before implementation. Pure AST stage only, no arbitrary HTML security claim."
+    },
+    {
+      "id": "document-html-sanitizer-seven-lane-parity", "title": "Classify seven missing TE02 HTML sanitizer lanes", "status": "pending", "depends_on": ["document-sanitization-te02-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/F#/Haskell/Java/Kotlin/Swift absent; split by lane after defining bounded renderer-output contract and security exception for arbitrary HTML."
+    },
+    {
+      "id": "compiler-ir-bf03-csharp-lane-parity", "title": "Port BF03 compiler IR to C#", "status": "pending", "depends_on": ["compiler-ir-aot-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing BF03 slot; consume neutral typed IR and text round-trip fixtures."
+    },
+    {
+      "id": "compiler-ir-bf03-dart-lane-parity", "title": "Port BF03 compiler IR to Dart", "status": "pending", "depends_on": ["compiler-ir-aot-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing BF03 slot; consume neutral typed IR and text round-trip fixtures."
+    },
+    {
+      "id": "compiler-ir-bf03-fsharp-lane-parity", "title": "Port BF03 compiler IR to F#", "status": "pending", "depends_on": ["compiler-ir-aot-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing BF03 slot; consume neutral typed IR and text round-trip fixtures."
+    },
+    {
+      "id": "compiler-ir-bf03-java-lane-parity", "title": "Port BF03 compiler IR to Java", "status": "pending", "depends_on": ["compiler-ir-aot-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing BF03 slot; consume neutral typed IR and text round-trip fixtures."
+    },
+    {
+      "id": "compiler-ir-bf03-kotlin-lane-parity", "title": "Port BF03 compiler IR to Kotlin", "status": "pending", "depends_on": ["compiler-ir-aot-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing BF03 slot; consume neutral typed IR and text round-trip fixtures."
+    },
+    {
+      "id": "compiler-ir-bf03-swift-lane-parity", "title": "Port BF03 compiler IR to Swift", "status": "pending", "depends_on": ["compiler-ir-aot-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing BF03 slot; consume neutral typed IR and text round-trip fixtures."
+    },
+    {
+      "id": "segment-tree-dt05-nine-lane-parity", "title": "Classify nine missing DT05 segment-tree lanes", "status": "pending", "depends_on": ["segment-tree-dt05-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "DT05 is 6/15; absent Dart/Elixir/Go/Lua/Perl/Python/Ruby/Swift/TypeScript. Split into lane-sized owners after query/update fixtures."
+    },
+    {
+      "id": "sql-execution-stack-seven-lane-parity", "title": "Classify missing SQL execution-stack lanes", "status": "pending", "depends_on": ["sql-codegen-and-vm-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Planner/optimizer/codegen/VM are each 8/15, 28 missing slots across Dart/Elixir/Go/Lua/Perl/Ruby/Swift. Split by stage and lane after neutral schema fixtures; injected planner snapshot only, no database authority."
+    },
+    {
+      "id": "progress-bar-neutral-event-rendering-conformance", "title": "Freeze pure progress-bar event rendering", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Progress bar is 9/15; define injected writer/clock traces and portable terminal formatting independent of process or terminal authority."
+    },
+    {
+      "id": "progress-bar-six-lane-parity", "title": "Classify six missing progress-bar lanes", "status": "pending", "depends_on": ["progress-bar-neutral-event-rendering-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/F#/Haskell/Java/Kotlin absent; split by lane after neutral event-rendering fixtures."
+    },
+    {
+      "id": "ir-to-wasm-neutral-module-conformance", "title": "Freeze pure IR-to-Wasm module contract", "status": "pending", "depends_on": ["compiler-ir-aot-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Reconcile deterministic Wasm module bytes and validator behavior; Wasm is an output target, not an all-language implementation denominator."
+    },
+    {
+      "id": "nib-static-aot-six-lane-prerequisite-classification", "title": "Classify six-lane Nib static-AOT prerequisite chain", "status": "pending", "depends_on": ["ir-to-wasm-neutral-module-conformance", "nib-wasm-compiler-dart-swift-dependency-plan"], "branch": null, "pr_number": null,
+      "notes": "Seven Brainfuck/Nib/AOT families each 9/15 and 42 structural slots absent in C#/Dart/F#/Java/Kotlin/Swift. Separate BF02 IR producer from Nib frontend, then split per dependency and lane before ports; no native-runtime scope."
+    },
+    {
+      "id": "build-tool-toolchain-detection-fixture-native-ci-selection", "title": "Gate native toolchain-detection fixture readers", "status": "pending", "depends_on": ["build-tool-ci-gate-fixture-native-ci-selection", "build-tool-extra-ci-toolchain-declaration-corpus"], "branch": null, "pr_number": null,
+      "notes": "Twelve native direct readers of the toolchain-detection corpus; add exact-package, three-platform, missing-root CI selection without broad build-tool specs fanout."
+    },
+    {
+      "id": "build-tool-graph-diff-fixture-native-ci-selection", "title": "Gate native graph/diff fixture readers", "status": "pending", "depends_on": ["build-tool-ci-gate-fixture-native-ci-selection", "build-tool-neutral-graph-diff-corpus-completion"], "branch": null, "pr_number": null,
+      "notes": "Eleven native direct readers of graph-/diff-selection corpora, including JVM/Dart pure cores and emerging OCaml. Add exact-package, three-platform, missing-root CI selection."
+    },
+    {
+      "id": "transistors-physical-model-neutral-conformance", "title": "Freeze educational transistor physical-model fixtures", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Transistors are 9/15; isolate deterministic model behavior from hardware or real-device claims."
+    },
+    {
+      "id": "transistors-six-lane-parity", "title": "Classify six missing transistor-model lanes", "status": "pending", "depends_on": ["transistors-physical-model-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/F#/Haskell/Java/Kotlin absent; split by lane after physical-model fixtures."
+    },
+    {
+      "id": "bytecode-compiler-neutral-conformance", "title": "Freeze portable bytecode-compiler fixtures", "status": "pending", "depends_on": ["virtual-machine-language-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Bytecode compiler is 8/15; define pure opcode, emission, errors, and VM-consumption vectors without host execution authority."
+    },
+    {
+      "id": "bytecode-compiler-seven-lane-parity", "title": "Classify seven missing bytecode-compiler lanes", "status": "pending", "depends_on": ["bytecode-compiler-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/F#/Haskell/Java/Kotlin/Swift absent; split by lane."
+    },
+    {
+      "id": "virtual-machine-six-lane-parity", "title": "Classify six missing stack-VM lanes", "status": "pending", "depends_on": ["virtual-machine-language-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Stack VM is 9/15; C#/Dart/F#/Haskell/Java/Kotlin absent. Use injected PRINT sink and neutral opcodes; split by lane."
+    },
+    {
+      "id": "assembler-arm-other-six-lane-parity", "title": "Classify six missing assembler lanes beyond Lua", "status": "pending", "depends_on": ["assembler-language-neutral-conformance", "assembler-existing-lane-conformance"], "branch": null, "pr_number": null,
+      "notes": "Assembler is 8/15; Dart/Haskell/Java/Kotlin/Perl/Swift absent alongside separately owned Lua. Split by lane after neutral ISA fixtures."
+    },
+    {
+      "id": "multi-directed-graph-dt02-neutral-conformance", "title": "Freeze DT02 multi-directed-graph fixtures", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "DT02 is 4/15 despite DT01 directed graph in 15/15; define parallel-edge, ordering, and mutation semantics."
+    },
+    {
+      "id": "multi-directed-graph-eleven-lane-parity", "title": "Classify eleven missing DT02 lanes", "status": "pending", "depends_on": ["multi-directed-graph-dt02-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Eleven absent slots; split by lane after neutral edge semantics."
+    },
+    {
+      "id": "format-doc-p2d03-neutral-conformance", "title": "Freeze P2D03 format-doc core fixtures", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Format-doc core is 2/15 in Rust/TypeScript; define deterministic document AST and formatting before lane-sized ports."
+    },
+    {
+      "id": "format-doc-p2d03-thirteen-lane-parity", "title": "Classify thirteen missing format-doc core lanes", "status": "pending", "depends_on": ["format-doc-p2d03-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Thirteen absent P2D03 slots; split by lane; do not count host display adapters as core parity."
+    },
+    {
+      "id": "format-doc-std-p2d04-neutral-conformance", "title": "Freeze P2D04 format-doc standard helpers", "status": "pending", "depends_on": ["format-doc-p2d03-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Standard helpers are 2/15; per-lane ports require same-lane P2D03 substrate, not completion of all thirteen core lanes."
+    },
+    {
+      "id": "format-doc-std-p2d04-thirteen-lane-parity", "title": "Classify thirteen missing format-doc standard-helper lanes", "status": "pending", "depends_on": ["format-doc-std-p2d04-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Thirteen absent P2D04 slots; split by lane and same-lane P2D03 prerequisite before implementation."
+    },
+    {
+      "id": "hdl-ir-neutral-schema-conformance", "title": "Freeze HIR typed JSON schema and pure transforms", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "HDL IR is 2/15 in Python/Rust; reconcile typed JSON across Verilog/VHDL/Ruby DSL/sim/synth without host simulator authority."
+    },
+    {
+      "id": "hdl-ir-thirteen-lane-parity", "title": "Classify thirteen missing HDL-IR lanes", "status": "pending", "depends_on": ["hdl-ir-neutral-schema-conformance"], "branch": null, "pr_number": null,
+      "notes": "Thirteen absent HIR slots; split by lane after schema contract."
+    },
+    {
+      "id": "geometry-affine2d-bezier2d-neutral-fixture-extension", "title": "Add dynamic G2D01/G2D02 neutral fixtures", "status": "pending", "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"], "branch": null, "pr_number": null,
+      "notes": "Existing Java/Kotlin/Dart geometry owner cites dynamic affine/Bezier cases not yet present; add them before claiming fixture-consumed parity."
+    },
+    {
+      "id": "geometry-arc2d-existing-endpoint-api-neutral-fixture-consumption", "title": "Make six existing Arc2D endpoint lanes consume neutral cases", "status": "pending", "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-arc2d-existing-api-degenerate-reconciliation"], "branch": null, "pr_number": null,
+      "notes": "C#/F#/Haskell/Python/Rust/TypeScript have endpoint APIs but only hardcoded tests; consume neutral cases dynamically. Separate five-lane and Go owners must do so in their own work."
+    },
+    {
+      "id": "format-doc-to-paint-p2d03-neutral-bridge-conformance", "title": "Classify P2D03-to-paint pure bridge", "status": "pending", "depends_on": ["format-doc-p2d03-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "TypeScript-only deterministic bridge; defer lane ports until format-doc, paint-instructions and paint-vm-ascii substrates are classified."
+    },
+    {
+      "id": "mosaic-ir-to-layout-ui05-neutral-conformance", "title": "Classify UI05 mosaic IR-to-layout bridge", "status": "pending", "depends_on": ["document-diagram-and-layout-neutral-foundation"], "branch": null, "pr_number": null,
+      "notes": "TypeScript-only pure bridge; lane ports require prior layout-ir/layout-to-paint classification."
+    },
+    {
+      "id": "spreadsheet-engine-core-adapter-boundary-classification", "title": "Classify spreadsheet-engine core and adapter boundary", "status": "pending", "depends_on": ["spreadsheet-and-business-rust-singleton-foundation"], "branch": null, "pr_number": null,
+      "notes": "TypeScript-only package has pure headless core but shipped Excel/CAS adapter reads grammar files; do not equate it with Rust spreadsheet-core identity or claim authority-free all-lane parity."
     },
     {
       "id": "build-tool-elixir-discovery-no-follow-boundary-review",
