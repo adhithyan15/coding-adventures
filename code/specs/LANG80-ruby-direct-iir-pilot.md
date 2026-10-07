@@ -33,6 +33,9 @@ that implements floor division and reports `ZeroDivisionError` for a zero
 divisor. Reject any statically known division whose result would exceed `i64`
 range. `puts` uses a separate Ruby-specific builtin that writes the integer's
 decimal form and one newline. Output is bounded by the runner.
+The pilot limits source to 64 KiB before parsing, a directly supplied AST to
+16,384 nodes and depth 256 before recursive lowering, execution to 100,000
+instructions, and captured output to one million bytes.
 
 ## Acceptance
 
