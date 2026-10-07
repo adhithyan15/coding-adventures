@@ -859,6 +859,86 @@ has three strokes), under the nine-piece Gujarati list's 1,800; buenos días,
 at exactly ten pieces, is about 1,420. Narration, modality and lesson prose
 are unchanged.
 
+#### Design — a strip in modelled practice, when a lesson has no Writing or Script block
+
+**The gap.** A derived strip lands in a lesson's first `## Writing` block,
+else its first `## Script` block, and a writing lesson with neither was never
+a candidate. 64 writing lessons on switched-on tracks have neither: their
+blocks are Warm-up / Guided Practice / Wrap-up Recall (chinese 15, gujarati
+18, hindi 12, marathi 3, punjabi 15, spanish 1). 30 of them have a headword
+whose every piece is cited, among them the Chinese copy pair for each
+character (ZH-W16-han-guided, ZH-W16-han-delayed: 汉 语 国 文 看 书 吗) and the
+Gujarati place words (ઘર, મંદિર, હાથ …). Their -observe sibling prints a
+strip; they print none.
+
+**Not every such lesson should print one.** The same block shape carries
+lessons whose design is that the learner sees no model: a dictation ("write
+家, 汉, 语, 文, 国 without a model"), a "select, do not copy" form card, a timed
+repair. A strip there gives away the answer the lesson is testing.
+
+**The rule: follow the writing stage.** Every practice block that asks for
+writing already declares its stage (`<!-- hl-writing-stage: … -->`, HL19),
+from the seven defined in `core/assessment-policy.json`. Three of them show
+the learner a model, and those blocks take the strip:
+
+| stage | the learner … | strip |
+|---|---|---|
+| observe-trace | traces with the model visible | yes |
+| guided-copy | copies beside the model | yes |
+| delayed-copy | looks, hides the model, writes, then compares and repairs | yes |
+| dictation-transcription | writes from sound, no model | no |
+| controlled-composition | chooses and orders known language | no |
+| connected-composition | writes connected sentences | no |
+| timed-assessment-production | writes under exam timing | no |
+
+Delayed copy is on the "yes" side because its model is shown before and
+compared after ("Study 汉 for five seconds. Cover it. … Reveal the model and
+repair"): a printed book has to give the learner a model to cover, and the
+strip is that model with its route drawn in. A block with no stage directive
+is never chosen, whatever its title: that keeps out the Punjabi selector
+cards ("Guided Practice — decide before writing") and the Hindi concept
+lessons whose Guided Practice is a list of cues (HI-W02-abugida-ka-ta's
+headword is अ, a letter it never asks the learner to write).
+
+So the strip's block is: the first Writing block, else the first Script
+block, else the first block whose writing stage is observe-trace,
+guided-copy or delayed-copy (`stripBlockIndex` in `figure-targets.ts`). The
+fallback only adds lessons; no existing strip moves. Every other rule is
+unchanged: the headword decides letter, list, word or phrase, and the ledger
+decides whether every piece is cited.
+
+**Letter anchoring is not widened.** `letter-anchoring.ts` counts a lesson as
+a letter lesson only when its strip comes from a Writing or Script block
+(`letterBlockIndex`). A copy lesson that gains a strip from its practice
+block practises a letter an earlier lesson taught (ZH-W16-han-observe), so
+counting it would only double-count that letter.
+
+**The app follows the same rule.** language-ladder places a lesson's strip
+itself (the book inserts it from generated targets, so the authored Markdown
+has no image to find). Its `filmstripSectionIndex` applies the same three
+steps, with the same three stages, held equal to the book's by a test. Its
+section parser now reads the stage directive instead of printing it as a line
+of lesson text, which it had been doing for every section with a stage.
+
+**Expected.** Exactly 25 lessons gain a strip: chinese 14 (the seven
+characters' -guided and -delayed lessons), gujarati 10 (GU-C20-ghar,
+GU-C20-mandir, GU-C21-haath, GU-C21-paisa, GU-C22-shaalaa, GU-C22-shahar,
+GU-C23-dukaan, GU-C23-gaam, GU-W20-gha, GU-W21-ai-matra) and hindi 1
+(HI-W01-na-ma, the list न, म). Of the other five cited headwords,
+ZH-R17-writing-five is a dictation and PA-W09-date-select a selector card,
+and HI-W02-abugida-ka-ta, HI-W02-ka-ta-mouth-order and HI-W04-ra-sa-mera-naam
+declare no stage (their letters are taught, with strips, by the HI-S letter
+lessons).
+
+**Prose follows the strip.** None of the 25 disclaims its stroke order. Two
+kinds of prose are moved to agree with it. HI-W01-na-ma numbered म's pieces
+"lower loop, upper loop, spine, bar", while the cited strip draws "descend,
+loop, sweep right / climb the spine / descend it / the headline"; its list
+now follows the strip. Five Chinese delayed-copy lessons (语 国 文 看 书) said
+"look … and cover it" in the Warm-up, so the strip, printed at the top of
+Guided Practice, appeared after the model was meant to be covered; the
+look-and-cover sentence now opens the Guided Practice, under the strip.
+
 ### Class B — data diagrams (generated)
 
 Etymology and cousin-web trees built from lesson `roots`, sound-articulation diagrams

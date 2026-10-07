@@ -78,9 +78,13 @@
 // What counts as a word and as a letter lesson
 // ---------------------------------------------------------------------------
 //
-// A letter lesson is exactly what gets a stroke-order filmstrip:
-// `writingLetterOf` from figure-targets.ts. That means `type: writing`, a
-// one-grapheme headword, and a Writing or Script block. A LETTER SET counts
+// A letter lesson is a lesson that gets a stroke-order filmstrip from its own
+// Writing or Script block: `writingLetterOf` from figure-targets.ts, with
+// `letterBlockIndex` found. That means `type: writing`, a one-grapheme
+// headword, and a Writing or Script block. A copy or delayed-copy lesson whose
+// strip lands in its modelled practice block instead (ZH-W16-han-guided) is
+// practice of a letter an earlier lesson taught (ZH-W16-han-observe), so it is
+// not counted again. A LETTER SET counts
 // too: a writing lesson whose headword lists single letters, like "வ, க" or
 // "௧ ௨ ௩". It writes a few letters side by side rather than one, and each of
 // its letters counts as written. The letters may be followed by the word they
@@ -176,9 +180,9 @@ const GRAPHEMES = new Intl.Segmenter("und", { granularity: "grapheme" });
  * every letter of a letter set. `undefined` for any other lesson.
  */
 export function writtenLettersOf(lesson: ParsedLesson): string[] | undefined {
+  if (lesson.realization.type !== "writing" || letterBlockIndex(lesson) === -1) return undefined;
   const letter = writingLetterOf(lesson);
   if (letter !== undefined) return [letter];
-  if (lesson.realization.type !== "writing" || letterBlockIndex(lesson) === -1) return undefined;
   const pieces = (lesson.realization.headword ?? "")
     .split(/[\s,\u00B7\u060C\u3001\u2013\u2014]+/u)
     .filter(Boolean);

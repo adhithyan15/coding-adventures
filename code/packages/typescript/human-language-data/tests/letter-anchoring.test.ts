@@ -103,6 +103,39 @@ describe("anchoring", () => {
     expect(track(report).cold).toBe(1);
   });
 
+  it("does not count a copy lesson whose strip lands in its guided practice", () => {
+    // figure-targets.ts gives such a lesson a strip (ZH-W16-han-guided), but it
+    // practises a letter an earlier lesson taught, so it is not a letter lesson.
+    const copy = parseLesson(
+      [
+        "---",
+        "schema_version: 2",
+        "id: TA-W2",
+        "sequence: 10",
+        "chapter: 1",
+        "type: writing",
+        `headword: "${VA}"`,
+        "gloss: x",
+        "concept_tag: GREETING-HELLO",
+        'romanization: "x"',
+        "---",
+        "",
+        "# TA-W2",
+        "",
+        "## Guided Practice",
+        "<!-- hl-knowledge: introduces=[]; assesses=[] -->",
+        "<!-- hl-writing-stage: guided-copy -->",
+        "",
+        "Copy it beside the model.",
+        "",
+      ].join("\n"),
+      "tamil",
+    );
+    expect(copy.blocks[0]!.writingStage).toBe("guided-copy");
+    const report = measureLetterAnchoring([copy, lesson("TA-S1", 20, { type: "writing", headword: VA })]);
+    expect(track(report).letterLessons.map((entry) => entry.lessonId)).toEqual(["TA-S1"]);
+  });
+
   it("counts a digit no word holds as a numeral, not cold", () => {
     // TELUGU DIGIT ONE, TELUGU LETTER KA.
     const report = measureLetterAnchoring([

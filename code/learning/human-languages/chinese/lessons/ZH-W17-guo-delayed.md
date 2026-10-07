@@ -34,11 +34,13 @@ reviews_of: [ZH-W17-guo-observe, ZH-W17-guo-guided, ZH-C12-nu]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-GUO-01, ZH-LEX-NU-01] -->
 
-[PAUSE 8s] Say what 女 means. Then look at **国** for five seconds and cover it.
+[PAUSE 8s] Say what 女 means.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-GUO-01] -->
 <!-- hl-writing-stage: delayed-copy -->
+
+Look at **国** for five seconds and cover it.
 
 [PAUSE 10s] Say **frame, inside, close**, then write **国** once without the
 model. Do not uncover it until the bottom bar is complete.

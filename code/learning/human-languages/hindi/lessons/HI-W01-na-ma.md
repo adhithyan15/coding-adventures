@@ -51,11 +51,11 @@ Three pieces:
 ## You'll want to know — म — "ma"
 <!-- hl-knowledge: introduces=[HI-CONCEPT-W01-NA-MA-02]; assesses=[] -->
 
-Four pieces — the same spine, with two loops instead of a bowl:
+Four movements — the same spine, but the body starts at the top:
 
-1. **a lower loop**
-2. **an upper loop**, sitting above it
-3. **the right spine**
+1. **down and round** — descend, loop, sweep right.
+2. **up the right spine**, without lifting.
+3. **back down it.**
 4. **the top bar** — last, again.
 
 ## You'll want to know — The shared frame
@@ -83,6 +83,6 @@ not the task yet; one careful, supported copy is enough.
 <!-- hl-activity: {"id":"HI-W01-na-ma-guided-copy","kind":"text","assesses":["HI-CONCEPT-W01-NA-MA-01","HI-CONCEPT-W01-NA-MA-02","HI-CONCEPT-W01-NA-MA-03"],"prompt":"Keep न म visible, copy each once, and name the shared frame.","answer":"right spine and top bar","accepted":["spine on the right and a top bar","right-hand spine and headline","right spine, top bar"],"feedback":{"correct":"Good: both supported copies use a right spine and a top bar.","incorrect":"Look back at न म: each has a spine on the right and a bar across the top."},"response_seconds":18} -->
 
 [PAUSE 3s] Draw **न** — its three pieces? (Bowl, spine, bar.) Draw **म** — what
-makes it different? (**Two loops** where न has one bowl.) Where does the spine
-sit in both? (**On the right** — though a minority of letters have none.) Next:
-the vowel already hiding inside each consonant.
+makes it different? (It **starts at the top** and runs into the spine.) Where
+does the spine sit in both? (**On the right** — though a minority of letters
+have none.) Next: the vowel already hiding inside each consonant.
