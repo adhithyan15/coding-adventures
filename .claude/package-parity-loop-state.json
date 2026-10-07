@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16972,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16972",
+    "branch": "codex/parity-cigates-native-selection-20261007",
+    "implementation_revision": "e7393d0b00d0d8d8b57350b932d0c3936658abf0",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-07T22:05:46Z",
-    "pr_number": 16963,
-    "status": "merged",
-    "notes": "All 33 final-head checks completed acceptably on 863f903c22dc9e7a99288937e891b33c719e4b7b; GitHub reported MERGEABLE/CLEAN, guarded squash auto-merge was enabled, and PR #16963 merged at 22:05:46Z as 820486b82913d88c34718fe4faa3c4d6003595cd without a manual merge."
+    "observed_at": "2026-10-07T22:24:20Z",
+    "pr_number": 16972,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #16972 opened on e7393d0b00d0d8d8b57350b932d0c3936658abf0 after local native tests, build-file/parity checks, and independent security review. GitHub reported MERGEABLE but BLOCKED with first three checks queued; no auto-merge until every final-head required check is terminal and acceptable and no conflict remains."
   },
   "last_inventory": {
     "revision": "c0c7b8bc04d972e07348d02143b6f8b867eee1ae",
@@ -1103,10 +1109,10 @@
     {
       "id": "build-tool-ci-gate-fixture-native-ci-selection",
       "title": "Schedule native Go and Python CI-gate consumers for neutral fixture-only diffs",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
       "branch": "codex/parity-cigates-native-selection-20261007",
-      "pr_number": null,
+      "pr_number": 16972,
       "notes": "Selected after #16963 merged and all 30 discovered owners were registered. A diff confined to ci-gate-selection-*.json runs the shared conformance oracle but need not select the native Go internal/cigates and Python CI-gate package BUILD fronts. Add exact fixture-path consumer selection and detector regression with Ubuntu proof; avoid broad spec fanout and recheck live workflow overlap before editing."
     },
     {
