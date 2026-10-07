@@ -1333,6 +1333,10 @@ backend immediately) come before the enabler-dependent items.
   or `1` before `entier`; an unnormalized or unrestricted operand remains
   conservative. Additional built-in `sqrt` calls may wrap that nonnegative
   unit result while preserving the same bound.
+  Built-in `sin`, `cos`, and `arctan` may map a bounded sign-rooted result
+  before `entier`, including nested combinations; domain-sensitive or
+  unbounded standard functions and non-sign-rooted runtime operands remain
+  conservative.
   Provenance-backed local and other real-name branches remain conservative
   across selector calls. Unary plus
   and unary minus preserve the same runtime-real proof. Additive composition,
