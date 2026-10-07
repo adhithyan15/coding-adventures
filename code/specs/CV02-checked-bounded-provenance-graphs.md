@@ -439,6 +439,20 @@ contract. Bound native descriptor, token, ACL and encoded-path buffers and retry
 counts before growing caller-owned storage; reject unsupported states rather
 than using an unverified fallback.
 
+Native Windows round trips distinguish legacy explicit unprotected DACLs from
+automatically inherited DACLs. `SetSecurityInfo` uses the opened handle's parent:
+the private stage handle avoids adding grants to explicit legacy policies; an
+identity-verified destination-parent handle supplies actual inheritance for
+inherited/mixed policies. Treat this routing as a measured capability, not an
+assumption that every inherited ACL is reproducible. Before modifying any
+original, validate exact owner/group/ACE order/protection equality on a distinct
+always-empty probe inode. Never apply a broad policy to a future output inode
+and later tighten it before writing: an already-open reader retains access.
+Reject stale/orphan inherited policies which cannot round trip. Restore each
+candidate's private policy through its retained handle on pre-commit failure,
+before pathname cleanup; report reset failures. Never reset candidate policy
+during post-commit cleanup because stage and installed hard links share it.
+
 Unix mode bits alone also do not establish ownership or extended-ACL
 preservation. State native Linux/macOS support separately, check owner/group and
 extended/default ACL policy, and faithfully preserve it or reject unsupported
