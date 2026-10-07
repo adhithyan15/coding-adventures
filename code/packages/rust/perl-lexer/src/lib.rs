@@ -41,4 +41,16 @@ mod tests {
             .unwrap_err()
             .contains("source exceeds"));
     }
+
+    #[test]
+    fn adjacent_minus_is_decrement_token() {
+        let adjacent = tokenize_perl("print(1--2);").unwrap();
+        assert!(adjacent
+            .iter()
+            .any(|token| token.type_name.as_deref() == Some("DECREMENT")));
+        let spaced = tokenize_perl("print(1- -2);").unwrap();
+        assert!(!spaced
+            .iter()
+            .any(|token| token.type_name.as_deref() == Some("DECREMENT")));
+    }
 }

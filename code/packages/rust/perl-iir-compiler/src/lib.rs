@@ -340,6 +340,12 @@ mod tests {
         assert!(compile_source("print(010);", "octal").is_err());
     }
 
+    #[test]
+    fn decrement_is_not_two_unary_minuses() {
+        assert!(compile_source("print(1--2);", "decrement").is_err());
+        assert_eq!(run_source("print(1- -2);").unwrap(), "3");
+    }
+
     fn empty_node(rule_name: &str) -> GrammarASTNode {
         GrammarASTNode {
             rule_name: rule_name.into(),

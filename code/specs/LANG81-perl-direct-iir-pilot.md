@@ -18,6 +18,8 @@ Expressions contain decimal integer literals, parentheses, unary `-`, and
 binary `+`, `-`, and `*`, with Perl's precedence and left associativity.
 The decimal pilot accepts plain digit spellings with no separators and rejects
 multi-digit leading-zero forms such as `010`, which Perl interprets as octal.
+Adjacent `--` is Perl's decrement token and is rejected; spaced binary minus
+followed by unary minus remains accepted.
 Each `print` has exactly one argument. It writes the argument's decimal form
 without adding a newline. Statement order determines output order.
 
