@@ -1,17 +1,27 @@
 defmodule BuildTool.DiscoveryTest do
   use ExUnit.Case, async: true
+  import ExUnit.CaptureIO
 
+  alias BuildTool.CLI
   alias BuildTool.Discovery
+  alias BuildTool.Discovery.DuplicatePackageIdentityError
 
   # ---------------------------------------------------------------------------
   # Setup: create temporary directories for testing
   # ---------------------------------------------------------------------------
 
   setup do
-    # Create a temporary directory structure that mimics the monorepo layout.
-    tmp_dir = Path.join(System.tmp_dir!(), "build_tool_discovery_test_#{:rand.uniform(100_000)}")
-    File.rm_rf!(tmp_dir)
-    File.mkdir_p!(tmp_dir)
+    # A random name plus exclusive mkdir refuses an existing tree. Never
+    # overwrite or remove another user's path in a shared temporary directory.
+    token = :crypto.strong_rand_bytes(16) |> Base.url_encode64(padding: false)
+
+    tmp_dir =
+      Path.join(
+        System.tmp_dir!(),
+        "build_tool_discovery_test_#{token}"
+      )
+
+    :ok = File.mkdir(tmp_dir)
 
     on_exit(fn -> File.rm_rf!(tmp_dir) end)
 
@@ -195,6 +205,188 @@ defmodule BuildTool.DiscoveryTest do
   # ---------------------------------------------------------------------------
 
   describe "discover_packages/1" do
+    test "rejects checked duplicate identity before CLI resolution", %{tmp_dir: tmp_dir} do
+      fixture_path =
+        Path.expand(
+          "../../../../specs/fixtures/build-tool-v1/cases/discovery-duplicate-identity.json",
+          __DIR__
+        )
+
+      fixture = fixture_path |> File.read!() |> Jason.decode!()
+      files = fixture["workspace"]["files"]
+      assert length(files) == 2
+
+      Enum.each(files, fn file ->
+        parts = String.split(file["path"], "/")
+        assert Enum.take(parts, 2) == ["code", "packages"]
+        assert List.last(parts) == "BUILD"
+
+        assert Enum.all?(
+                 parts,
+                 &(&1 not in ["", ".", ".."] and not String.contains?(&1, ["\\", ":"]))
+               )
+
+        destination = Path.join([tmp_dir | parts])
+        File.mkdir_p!(Path.dirname(destination))
+        {:ok, output} = File.open(destination, [:write, :exclusive, :binary])
+        :ok = IO.binwrite(output, file["content_utf8"])
+        :ok = File.close(output)
+      end)
+
+      error =
+        assert_raise DuplicatePackageIdentityError, fn ->
+          Discovery.discover_packages(Path.join(tmp_dir, "code"))
+        end
+
+      diagnostic = %{
+        "code" => error.code,
+        "severity" => "error",
+        "path" => hd(error.paths),
+        "package" => error.package,
+        "details" => %{"paths" => error.paths}
+      }
+
+      # The test-local projection compares the native diagnostic to the
+      # neutral case. It is not a registered conformance adapter.
+      assert %{
+               "schema_version" => 1,
+               "case_id" => fixture["id"],
+               "domain" => fixture["domain"],
+               "outcome" => "error",
+               "result" => %{},
+               "diagnostics" => [diagnostic]
+             } == fixture["expected"]
+
+      refute Exception.message(error) =~ tmp_dir
+
+      stderr =
+        capture_io(:stderr, fn ->
+          assert CLI.run(["--root", tmp_dir, "--force", "--dry-run"]) == 2
+        end)
+
+      assert stderr =~ "DUPLICATE_PACKAGE_IDENTITY"
+      assert stderr =~ "unknown/demo"
+      assert stderr =~ "code/packages/alpha/demo"
+      assert stderr =~ "code/packages/beta/demo"
+      refute stderr =~ tmp_dir
+    end
+
+    test "matches the complete neutral language registry", %{tmp_dir: tmp_dir} do
+      fixture_path =
+        Path.expand(
+          "../../../../specs/fixtures/build-tool-v1/cases/discovery-language-registry.json",
+          __DIR__
+        )
+
+      fixture = fixture_path |> File.read!() |> Jason.decode!()
+      files = fixture["workspace"]["files"]
+      expected = fixture["expected"]["result"]["packages"]
+
+      # These cardinalities pin the independent upstream corpus: a future
+      # fixture change must be reviewed, not silently normalized to our walk.
+      assert length(files) == 29
+      assert length(expected) == 25
+
+      Enum.each(files, fn file ->
+        parts = String.split(file["path"], "/")
+
+        assert hd(parts) == "code"
+        assert List.last(parts) == "BUILD"
+
+        assert Enum.all?(
+                 parts,
+                 &(&1 not in ["", ".", ".."] and not String.contains?(&1, ["\\", ":"]))
+               )
+
+        destination = Path.join([tmp_dir | parts])
+        File.mkdir_p!(Path.dirname(destination))
+        File.write!(destination, file["content_utf8"])
+      end)
+
+      actual =
+        Path.join(tmp_dir, "code")
+        |> Discovery.discover_packages()
+        |> Enum.map(fn package ->
+          %{
+            "name" => package.name,
+            "language" => package.language,
+            "is_starlark" => false,
+            "rel_path" => package.path |> Path.relative_to(tmp_dir) |> String.replace("\\", "/"),
+            "build_file" =>
+              package.path
+              |> Discovery.get_build_file()
+              |> Path.relative_to(tmp_dir)
+              |> String.replace("\\", "/")
+          }
+        end)
+        |> Enum.sort_by(& &1["name"])
+
+      assert actual == Enum.sort_by(expected, & &1["name"])
+    end
+
+    test "projects checked Dune discovery records through the production walk", %{
+      tmp_dir: tmp_dir
+    } do
+      fixture_path =
+        Path.expand(
+          "../../../../specs/fixtures/build-tool-v1/cases/discovery-language-registry.json",
+          __DIR__
+        )
+
+      fixture = fixture_path |> File.read!() |> Jason.decode!()
+
+      ocaml_files =
+        Enum.filter(fixture["workspace"]["files"], fn file ->
+          String.starts_with?(file["path"], "code/packages/ocaml/")
+        end)
+
+      expected =
+        fixture["expected"]["result"]["packages"]
+        |> Enum.filter(&String.starts_with?(&1["build_file"], "code/packages/ocaml/"))
+        |> Enum.map(&{&1["name"], &1["build_file"], &1["rel_path"]})
+        |> Enum.sort()
+
+      assert length(ocaml_files) == 4
+      assert length(expected) == 3
+
+      Enum.each(ocaml_files, fn file ->
+        path = file["path"]
+        parts = String.split(path, "/")
+
+        assert Enum.take(parts, 3) == ["code", "packages", "ocaml"]
+
+        assert Enum.all?(
+                 parts,
+                 &(&1 not in ["", ".", ".."] and not String.contains?(&1, ["\\", ":"]))
+               )
+
+        destination = Path.join([tmp_dir | parts])
+        File.mkdir_p!(Path.dirname(destination))
+        File.write!(destination, file["content_utf8"])
+      end)
+
+      actual =
+        Path.join(tmp_dir, "code")
+        |> Discovery.discover_packages()
+        |> Enum.map(fn package ->
+          {package.name,
+           package.path
+           |> Discovery.get_build_file()
+           |> Path.relative_to(tmp_dir)
+           |> String.replace("\\", "/"),
+           package.path |> Path.relative_to(tmp_dir) |> String.replace("\\", "/")}
+        end)
+        |> Enum.sort()
+
+      assert actual == expected
+
+      assert Enum.map(actual, &elem(&1, 0)) == [
+               "ocaml/case-source",
+               "ocaml/demo-ocaml",
+               "ocaml/near-source"
+             ]
+    end
+
     test "discovers packages with BUILD files", %{tmp_dir: tmp_dir} do
       # Create: tmp_dir/packages/python/logic-gates/BUILD
       pkg_dir = Path.join([tmp_dir, "packages", "python", "logic-gates"])

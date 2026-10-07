@@ -1,7 +1,7 @@
 {
   "upstream": "mermaid@11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
-  "scope": "native hierarchy subset with pinned box-drawing preprocessing, renderer defaults, theme variables, connector geometry, and aligned descriptions",
+  "scope": "native hierarchy subset with the implicit root, built-in icon geometry, pinned box-drawing preprocessing, renderer defaults, theme variables, connector geometry, and aligned descriptions",
   "fixtures": [
     {
       "name": "header-only",
@@ -25,7 +25,11 @@
     },
     {
       "name": "icon-resolution-config",
-      "source": "%%{init: {\"treeView\": {\"showIcons\": true, \"defaultIconPack\": \"devicon\", \"filenameIcons\": {\"README.md\": \"logos:markdown\", \"package.json\": \"none\"}, \"extensionIcons\": {\".rs\": \"rust\", \"TS\": \"logos:typescript\"}}}}%%\ntreeView-beta\nREADME.md\npackage.json\nmain.RS\napp.ts\nnotes.txt icon(custom)"
+      "source": "%%{init: {\"treeView\": {\"showIcons\": true, \"defaultIconPack\": \"devicon\", \"filenameIcons\": {\"README.md\": \"logos:markdown\", \"package.json\": \"none\"}, \"extensionIcons\": {\".rs\": \"rust\", \"TS\": \"logos:typescript\"}}}}%%\ntreeView-beta\nREADME.md\npackage.json\nmain.RS\napp.ts\nplain.txt\nnotes.txt icon(custom)"
+    },
+    {
+      "name": "built-in-and-unprefixed-icons",
+      "source": "treeView-beta\nroot/ icon(folder)\n    file.txt icon(file)\n    custom icon(custom)"
     },
     {
       "name": "indented-directories-and-files",
@@ -62,6 +66,10 @@
     {
       "name": "aligned-description-rows",
       "source": "treeView-beta\nproject/\n    a.rs ## short label\n    much-longer-name.rs ## long label"
+    },
+    {
+      "name": "intrinsic-description-width",
+      "source": "treeView-beta\nproject/ :::highlight\n    main.rs ## a description that expands the intrinsic viewBox"
     }
   ]
 }

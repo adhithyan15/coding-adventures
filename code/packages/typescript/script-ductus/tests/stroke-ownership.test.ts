@@ -570,12 +570,23 @@ describe("stroke ownership migration baseline", () => {
       // word). Keys move 635 -> 636 with `devanagari: 53`; the ordered key
       // hash and the non-Tamil data hash move; Tamil and both shared-identity
       // values stay.
+      //
+      // Kannada gains the anusvara ಂ (U+0C82) and the digits ೧-೯
+      // (U+0CE7-U+0CEF), their order, start and direction cited to Chimple's
+      // tracing lessons (facts only; no licence), appended after ಠ at the end
+      // of the Kannada owner; ಃ (U+0C83) is refitted in place so its upper dot
+      // comes first, as its source and Chimple both draw it. Malayalam gains
+      // ജ (U+0D1C) and the vowel sign ൈ (U+0D48), cited to Moag's numbered
+      // movements and appended after േ. No existing key moves. Keys move 636
+      // -> 648 with `kannada: 54` and `malayalam: 55`; the ordered key hash
+      // and the non-Tamil data hash move, measured after the captions were
+      // settled; Tamil and both shared-identity values stay.
     }).toEqual({
-      keys: 636,
+      keys: 648,
       keyHash:
-        "e52c9816c055a36748539ab5cef8fff66e84864940ff302d08489af05317eb28",
+        "2c4ee249dafad2d64ea6e3403458c297940dd4bc2a4276242777a5bb613d2746",
       nonTamilDataHash:
-        "2aa2d54472b3ebe37be571366646460e5f55a3dfe6f21bf3c181fc79b1fcc626",
+        "ae902d92d933f04604923c1315d70f5eb0377c584e452840b00ebf65a61b2289",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -589,9 +600,9 @@ describe("stroke ownership migration baseline", () => {
         gurmukhi: 27,
         hebrew: 22,
         japanese: 83,
-        kannada: 44,
+        kannada: 54,
         latin: 31,
-        malayalam: 53,
+        malayalam: 55,
         "perso-arabic": 24,
         tamil: 36,
         telugu: 43,

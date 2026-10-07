@@ -130,6 +130,23 @@ BY-NC-SA 4.0, so only facts are cited, with each page's scan linked at a pinned
 commit. Moag's numbers are movements, not lifts: each becomes one segment of a
 single run, and the lift count again rests on *hand* and *grahyam*.
 
+Two more follow: ജ (Moag's six movements; the short stem's descent is read
+between arrows 2 and 3, at medium confidence) and the vowel sign ൈ, two coils
+of െ with the one lift the gap between them forces.
+
+### A children's tracing app as a source (Kannada digits and anusvara)
+
+The Kannada digits ೧-೯ and the anusvara ಂ (`strokes/kannada.ts`, after ಠ)
+cite Chimple, the literacy app of Bangalore's Sutara Learning Foundation:
+its lesson pictures hold hidden, ordered tracing paths, one per pen-down run,
+and its recorded traces agree. The lesson repository has no licence, so only
+order, start, direction and stroke count are cited; nothing is copied. Each
+digit is one run; the ring is one anticlockwise run, drawn after its carrier.
+One source, designer-authored, so each record says confidence is medium. A
+digit row with a cited ductus resolves its font like a letter
+(`verifiedLetterFont`). The same source corrected ಃ, whose first path drew
+the lower dot first.
+
 ### A school model and native writers as sources (Latin print letters)
 
 Latin (`strokes/latin.ts`, keys `latin:<glyph>`) draws 31 print glyphs: a b

@@ -646,6 +646,18 @@ const MOAG_GLYPHS: ReadonlyArray<
     ],
   ],
   [
+    "ജ",
+    "036",
+    [
+      "circle the small loop",
+      "arch over and down the stem",
+      "climb the stem and arch over the right",
+      "run back left and round the lower left",
+      "run right to the top of the last loop",
+      "circle down and round the last loop",
+    ],
+  ],
+  [
     "ള",
     "041",
     [
@@ -760,6 +772,47 @@ describe("Malayalam glyphs cited to Moag's numbered movements", () => {
       );
     });
   }
+
+  it("states that ജ's stem descent is read between Moag's arrows, at medium confidence", () => {
+    const ja = DUCTUS[ductusKey("malayalam", "ജ")];
+    expect(ja.source.variation).toMatch(
+      /arrows do not draw the short stem's descent.*arrow 2 ends above the stem and arrow 3 begins at its foot.*confidence in it is medium.*hand.*one stroke.*45 unique samples/,
+    );
+  });
+
+  it("draws ൈ as two cited െ coils, 715 units apart, with the one lift between them", () => {
+    // Noto Sans Malayalam composes the standalone ൈ from two copies of െ; the
+    // gap between them is paper, so the pen must lift once, and each coil is
+    // the run Moag numbers for െ (movements 1-2, then 3-4).
+    const ai = DUCTUS[ductusKey("malayalam", "ൈ")];
+    const e = DUCTUS[ductusKey("malayalam", "െ")];
+    expect(penLifts(ai)).toBe(1);
+    expect(
+      ai.strokes.map((stroke) => stroke.segments.map((segment) => segment.label)),
+    ).toEqual([
+      ["circle the first small loop", "arch over and down to the foot"],
+      ["lift, then circle the second small loop", "arch over and down to its foot"],
+    ]);
+    expect(penPath(ai.strokes[0])).toEqual(penPath(e.strokes[0]));
+    expect(penPath(ai.strokes[1])).toEqual(
+      penPath(e.strokes[0]).map((point) => ({ x: point.x + 715, y: point.y })),
+    );
+    for (const stroke of ai.strokes) {
+      for (const gap of joinGaps(stroke)) expect(gap).toBe(0);
+    }
+    expect(ai.source.url).toBe(
+      "https://github.com/matjic/malayalam/blob/7141acd2f310bc8928822a7aec61d1149efa6fa3/docs/assets/images/front-writing-032.jpg",
+    );
+    expect(ai.source.citation).toMatch(
+      /^Rodney F\. Moag, .*Table III 'How to Write Internal Vowel Symbols', p\. xxii: movements 1-4 for ൈ, written by hand by Thomas Joseph$/,
+    );
+    expect(ai.source.variation).toMatch(
+      /No recording of ൈ itself.*reasoned rather than observed and confidence is medium.*claims no written order/,
+    );
+    expect(verifiedLetterFont("ൈ", ai.source.url)).toBe(
+      "_fonts/NotoSansMalayalam-Static.ttf",
+    );
+  });
 
   it("states the anusvara's direction as medium-low confidence, with the conflicting sources", () => {
     const anusvara = DUCTUS[ductusKey("malayalam", "ം")];

@@ -510,6 +510,7 @@ const MOAG_MOVEMENTS: ReadonlyArray<readonly [glyph: string, movements: number]>
   ["ച", 4],
   ["ഛ", 5],
   ["ഞ", 7],
+  ["ജ", 6],
   ["ഥ", 3],
   ["ധ", 4],
   ["ഭ", 4],
@@ -546,4 +547,26 @@ describe("Malayalam glyphs cited to Moag — one unbroken stroke each", () => {
       expect(pen.attrs.d).toBe(penPathD(letter.strokes[0], 1));
     });
   }
+});
+
+describe("Malayalam ൈ — two coils, one lift between them", () => {
+  const ai = DUCTUS[ductusKey("malayalam", "ൈ")];
+  const steps = ductusSteps(ai);
+  const strip = ductusFilmstrip(ai, malayalamOutline("ൈ"));
+
+  it("starts the second coil only after the lift", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 1, 1]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      false,
+      true,
+      false,
+    ]);
+  });
+
+  it("reports 4 movements across 2 strokes", () => {
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 4 movements");
+  });
 });

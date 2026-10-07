@@ -1,0 +1,20 @@
+# Perl 1.000 (1987-12-18) tokens: verified arithmetic-print subset only.
+# @version 1
+# This file is PARTIAL. It does not lex all Perl 1.000 programs.
+# Evidence: https://github.com/Perl/perl5/blob/perl-1.0/perl.y
+# The original yacc grammar has PRINT, '+', '-', '*', '(', ')', and ';'.
+# `perl.y` and its original manual, rather than a modern Perl runtime, are
+# the authority for this historical release.
+
+PRINT     = "print"
+INT       = /[0-9]+/
+PLUS      = "+"
+DECREMENT = "--"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\r\n]+/

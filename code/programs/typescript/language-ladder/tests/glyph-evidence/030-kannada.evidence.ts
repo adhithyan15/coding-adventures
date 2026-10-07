@@ -14,8 +14,8 @@ export default [
       expect(visarga.role).toBe("other");
       expect(visarga.penLifts).toBe(1);
       expect(visarga.strokeOrder).toEqual([
-        "draw the upper dot as a closed loop",
-        "lift, then draw the lower dot as a closed loop",
+        "circle the upper dot anticlockwise",
+        "lift, then circle the lower dot",
       ]);
       expect(visarga.strokeOrderSource?.url).toBe(
         "https://commons.wikimedia.org/wiki/File:Kannada-Alphabet-Aha.gif",

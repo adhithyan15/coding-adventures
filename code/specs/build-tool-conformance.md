@@ -447,10 +447,45 @@ complete registry, program identity, or duplicate-identity behavior; those
 remain separate Haskell conformance items. Adding this native fixture consumer
 MUST also extend the exact fixture-to-build-tool CI selection map.
 
+The Elixir Dune-discovery adopter MUST project those same four OCaml package
+BUILD records through its production `discover_packages` walk. It MUST exclude
+the exact `_build` component while retaining `_Build` and `_build-example`,
+then compare the three qualified names and repository-relative BUILD paths to
+the shared fixture's expected records on every supported host. This is a
+narrow fixture-consumer obligation, not evidence of complete registry,
+program-identity, duplicate-identity, or Windows-override conformance; those
+have separate owners. The native Elixir test MUST read the checked fixture
+directly, materialize only bounded safe OCaml paths in an isolated directory,
+and extend the exact fixture-to-build-tool CI selection map.
+
+The subsequent Elixir language-registry adopter MUST materialize every checked
+BUILD record from `discovery/language-registry` in an isolated bounded tree and
+compare the complete sorted native discovery projection to the fixture's
+expected qualified names, repository-relative paths, BUILD paths, and language
+buckets on each supported host. Language inference MUST use only the exact
+bucket immediately below `packages` or `programs`; an unknown bucket remains
+`unknown` even when a later component spells a known language. Program names
+MUST retain the `programs/` identity segment. The production walk MUST exclude
+exact generated components, retain near-case source components, and reject
+the fixture's specification-tree decoy. This adoption does not establish the
+separately owned duplicate-identity rejection, canonical-BUILD-only membership,
+or native Windows override-selection contracts.
+
 If two discovered directories still produce one qualified name, discovery
 fails with `DUPLICATE_PACKAGE_IDENTITY`. The diagnostic includes the duplicate
 package identity and every repository-relative package path in sorted order;
 it must not disclose the checkout root.
+
+The Elixir duplicate-identity adopter MUST project the checked
+`discovery/duplicate-identity` fixture through its production discovery walk.
+It MUST reject before resolution or any build execution, with a narrowly typed
+error containing the stable code, qualified identity, and sorted
+`code/`-relative roots; the native CLI MUST return exit status 2 and emit no
+absolute checkout path. The package-local fixture projection MAY represent
+the neutral diagnostic as data for comparison, but it MUST NOT claim to be a
+registered conformance adapter while the adapter manifest still marks Elixir
+missing. Native symlink/no-follow policy and platform-only BUILD membership
+are governed by separate owners.
 
 The selected canonical `BUILD` may contain legacy shell lines or Starlark.
 Conformance v1 does not recognize `BUILD.lark` as a package marker; that name in

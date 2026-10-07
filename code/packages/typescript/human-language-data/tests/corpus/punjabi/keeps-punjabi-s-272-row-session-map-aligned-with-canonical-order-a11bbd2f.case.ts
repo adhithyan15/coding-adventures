@@ -48,8 +48,9 @@ it("keeps Punjabi's session map aligned with canonical order", () => {
   // 868 -> 872: four short, unscored writing-skill returns.
   // 872 -> 874: two short, no-new-language Chapter 158 quality-word reviews.
   // 874 -> 878: one separate unscored repair return and three old-word reviews.
-  expect(rows).toHaveLength(878);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 878 }, (_, index) => index + 1));
+  // 878 -> 882: four separate Chapter 148 action-word returns.
+  expect(rows).toHaveLength(882);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 882 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );

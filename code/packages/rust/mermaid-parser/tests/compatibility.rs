@@ -163,38 +163,45 @@ fn pinned_treeview_subset_corpus_parses_to_tree_ir() {
         let name = fixture["name"].as_str().expect("fixture name");
         let diagram = parse_treeview(fixture["source"].as_str().expect("fixture source"))
             .unwrap_or_else(|error| panic!("treeview fixture {name} failed: {error}"));
+        assert_eq!(diagram.nodes[0].label, "/");
+        assert!(diagram.nodes[0].is_implicit_root);
+        assert_eq!(diagram.nodes[0].depth, 0);
         if name == "header-only" {
-            assert!(diagram.nodes.is_empty());
+            assert_eq!(diagram.nodes.len(), 1);
         } else if name == "empty-metadata" {
             assert_eq!(diagram.title.as_deref(), Some(""));
             assert_eq!(diagram.accessibility_title.as_deref(), Some(""));
             assert_eq!(diagram.accessibility_description.as_deref(), Some(""));
-            assert!(diagram.nodes.is_empty());
+            assert_eq!(diagram.nodes.len(), 1);
         } else if name == "multiline-accessibility-description" {
             assert_eq!(diagram.accessibility_description.as_deref(),
                 Some("Files grouped by\ntheir directory hierarchy"));
-            assert_eq!(diagram.nodes.len(), 1);
+            assert_eq!(diagram.nodes.len(), 2);
         } else if name == "layout-and-icon-config" {
             assert_eq!((diagram.config.row_indent, diagram.config.padding_x, diagram.config.padding_y),
                 (18.0, 9.0, 7.0));
             assert_eq!(diagram.config.line_thickness, 3.0);
             assert!(!diagram.config.show_icons);
-            assert_eq!(diagram.nodes[1].icon.as_deref(), Some("folder"));
+            assert_eq!(diagram.nodes[2].icon.as_deref(), Some("mermaid-treeview:folder"));
         } else if name == "front-matter-config" {
             assert_eq!((diagram.config.row_indent, diagram.config.padding_x), (14.0, 8.0));
             assert!(!diagram.config.show_icons);
         } else if name == "icon-resolution-config" {
             assert_eq!(diagram.config.default_icon_pack, "devicon");
-            assert_eq!(diagram.nodes.iter().map(|node| node.icon.as_deref()).collect::<Vec<_>>(),
+            assert_eq!(diagram.nodes.iter().skip(1).map(|node| node.icon.as_deref()).collect::<Vec<_>>(),
                 [Some("logos:markdown"), Some("none"), Some("devicon:rust"),
-                    Some("logos:typescript"), Some("devicon:custom")]);
+                    Some("logos:typescript"), Some("mermaid-treeview:file"), Some("devicon:custom")]);
+        } else if name == "built-in-and-unprefixed-icons" {
+            assert_eq!(diagram.nodes.iter().skip(1).map(|node| node.icon.as_deref()).collect::<Vec<_>>(),
+                [Some("mermaid-treeview:folder"), Some("mermaid-treeview:file"),
+                    Some("mermaid-treeview:custom")]);
         } else if matches!(name, "rooted-box-drawing-hierarchy" | "compact-box-drawing-segments") {
-            assert_eq!(diagram.nodes.iter().map(|node| node.depth).collect::<Vec<_>>(), [0, 1, 2, 1]);
+            assert_eq!(diagram.nodes.iter().map(|node| node.depth).collect::<Vec<_>>(), [0, 1, 2, 3, 2]);
             assert_eq!(diagram.nodes.iter().map(|node| node.parent_id.as_deref()).collect::<Vec<_>>(),
-                [None, Some("treeview-1"), Some("treeview-2"), Some("treeview-1")]);
+                [None, Some("treeview-root"), Some("treeview-1"), Some("treeview-2"), Some("treeview-1")]);
             if name == "compact-box-drawing-segments" {
-                assert_eq!(diagram.nodes[1].class_selector.as_deref(), Some("highlight"));
-                assert_eq!(diagram.nodes[2].description.as_deref(), Some("crate root"));
+                assert_eq!(diagram.nodes[2].class_selector.as_deref(), Some("highlight"));
+                assert_eq!(diagram.nodes[3].description.as_deref(), Some("crate root"));
             }
         } else if name == "front-matter-theme-variables" {
             assert_eq!(diagram.config.theme.label_font_size, 20.0);
@@ -209,8 +216,8 @@ fn pinned_treeview_subset_corpus_parses_to_tree_ir() {
             assert_eq!(diagram.config.theme.label_color, "#abcdef");
             assert_eq!(diagram.config.theme.line_color, "#123456");
         } else if name == "aligned-description-rows" {
-            assert_eq!(diagram.nodes[1].description.as_deref(), Some("short label"));
-            assert_eq!(diagram.nodes[2].description.as_deref(), Some("long label"));
+            assert_eq!(diagram.nodes[2].description.as_deref(), Some("short label"));
+            assert_eq!(diagram.nodes[3].description.as_deref(), Some("long label"));
         } else {
             assert!(!diagram.nodes.is_empty());
         }
@@ -1366,10 +1373,12 @@ fn treeview_dispatches_to_dedicated_tree_ir() {
         .expect("treeview subset should parse");
     match diagram {
         mermaid_parser::MermaidDiagram::TreeView(diagram) => {
-            assert_eq!(diagram.nodes.len(), 2);
-            assert_eq!(diagram.nodes[1].parent_id.as_deref(), Some("treeview-1"));
-            assert_eq!(diagram.nodes[1].icon.as_deref(), Some("logos:react"));
-            assert_eq!(diagram.nodes[1].description.as_deref(), Some("main component"));
+            assert_eq!(diagram.nodes.len(), 3);
+            assert_eq!(diagram.nodes[0].label, "/");
+            assert_eq!(diagram.nodes[1].parent_id.as_deref(), Some("treeview-root"));
+            assert_eq!(diagram.nodes[2].parent_id.as_deref(), Some("treeview-1"));
+            assert_eq!(diagram.nodes[2].icon.as_deref(), Some("logos:react"));
+            assert_eq!(diagram.nodes[2].description.as_deref(), Some("main component"));
         }
         _ => panic!("treeview should lower to dedicated tree IR"),
     }

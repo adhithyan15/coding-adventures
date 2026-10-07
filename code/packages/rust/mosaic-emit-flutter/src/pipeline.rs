@@ -3197,6 +3197,26 @@ fn emit_widget_tree(
     let mut out = emit_widget_tree_inner(node, indent, part_styles, component, emits, ctx)?;
     let pad = " ".repeat(indent);
 
+    // Leaf widgets do not expose a common width argument, so preserve authored
+    // fixed widths with one wrapper shared by the text, input, and button
+    // paths. Container primitives already lower width themselves, and the
+    // remaining leaf emitters either have geometry-specific sizing or need a
+    // separate constraint-aware design. In particular, percentages are not
+    // read here: marking `100%` handled while emitting no constraint would
+    // hide the exact degradation audit this wrapper is meant to improve.
+    if matches!(
+        node.tag.as_str(),
+        "Text" | "HostInput" | "Input" | "HostButton"
+    ) {
+        if let Some(width) = part_fixed_width(node, part_styles) {
+            let body = out.trim_end_matches('\n');
+            out = format!(
+                "{pad}SizedBox(\n{pad}  width: {width},\n{pad}  child: {},\n{pad})\n",
+                body.trim_start()
+            );
+        }
+    }
+
     // A scroll view only scrolls when its viewport is bounded. Container
     // primitives consume `height` in their own lowering, but HostScroll has
     // no native height argument; wrap it in a SizedBox so authored fixed
@@ -3286,6 +3306,19 @@ fn part_fixed_height(node: &LayoutNode, part_styles: &HashMap<String, String>) -
     let props = part_styles.get(part)?;
     let parsed = parse_style_props(props);
     style_prop(&parsed, "height").and_then(|value| fixed_pixel_length(value))
+}
+
+/// The authored fixed pixel width for a part, recording support only after the
+/// value is proven representable as a finite non-negative Dart length.
+fn part_fixed_width(node: &LayoutNode, part_styles: &HashMap<String, String>) -> Option<String> {
+    let part = node.part_name.as_deref()?;
+    let props = part_styles.get(part)?;
+    let parsed = parse_style_props(props);
+    let width = parsed
+        .get("width")
+        .and_then(|value| fixed_pixel_length(value))?;
+    record_style_read("width");
+    Some(width)
 }
 
 /// The `opacity:` argument for a part, or `None` when none is authored.
@@ -5740,7 +5773,11 @@ fn emit_host_input(
     emits: &[EmitDecl],
     ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
-    let direct_row_child = ctx.direct_row_child;
+    // A direct Row child normally expands so a text field receives bounded
+    // constraints. A fixed authored width is already a real bound and must win
+    // over that fallback; the shared leaf wrapper above applies the SizedBox.
+    let fixed_width = part_fixed_width(node, part_styles);
+    let direct_row_child = ctx.direct_row_child && fixed_width.is_none();
     let pad = " ".repeat(indent);
     let field_pad = if direct_row_child {
         " ".repeat(indent + 2)
@@ -11213,6 +11250,91 @@ mod tests {
         let styled = from_pipeline(&m, &styled_layout, &style).unwrap().output;
         assert_eq!(styled.matches("Expanded(").count(), 1, "{styled}");
         assert!(styled.contains("Expanded(flex: 2, child:"), "{styled}");
+    }
+
+    #[test]
+    fn fixed_leaf_widths_wrap_text_input_and_button_but_leave_percentages_reported() {
+        fn styled_leaf(tag: &str, part: &str, prop_name: &str, value: &str) -> LayoutNode {
+            LayoutNode {
+                tag: tag.into(),
+                part_name: Some(part.into()),
+                props: vec![LayoutProp {
+                    name: prop_name.into(),
+                    value: LayoutPropValue::String(value.into()),
+                }],
+                children: vec![],
+            }
+        }
+
+        fn width_part(name: &str, value: &str) -> PartStyle {
+            PartStyle {
+                name: name.into(),
+                base: vec![StyleProp {
+                    name: "width".into(),
+                    value: value.into(),
+                }],
+                transitions: vec![],
+                states: vec![],
+            }
+        }
+
+        let m = component("LeafWidths", vec![], vec![]);
+        let l = layout(
+            "LeafWidths",
+            node_with(
+                "Row",
+                vec![],
+                vec![
+                    styled_leaf("Text", "timeline-name", "content", "Task"),
+                    styled_leaf("HostInput", "checklist-input", "value", ""),
+                    styled_leaf("HostButton", "theme-toggle", "label", "Theme"),
+                    styled_leaf("Text", "calendar-day", "content", "Mon"),
+                ],
+            ),
+        );
+        let s = StyleDef {
+            component_name: "LeafWidths".into(),
+            parts: vec![
+                width_part("timeline-name", "150"),
+                width_part("checklist-input", "220px"),
+                width_part("theme-toggle", "34"),
+                width_part("calendar-day", "14.2857%"),
+            ],
+        };
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("fixed leaf widths emit")
+            .output;
+        assert!(
+            out.contains("width: 150,") && out.contains("child: Text(\"Task\")"),
+            "fixed Text width must wrap the emitted widget:\n{out}"
+        );
+        assert!(
+            out.contains("width: 220,") && out.contains("child: _MosaicInputController("),
+            "fixed HostInput width must replace the Row's Expanded fallback:\n{out}"
+        );
+        assert!(
+            out.contains("width: 34,") && out.contains("child: ElevatedButton("),
+            "fixed HostButton width must wrap the emitted widget:\n{out}"
+        );
+        assert!(
+            !out.contains("Expanded("),
+            "a fixed-width input must not also be expanded by its Row:\n{out}"
+        );
+        assert!(
+            !out.contains("width: 0"),
+            "percentage width collapsed:\n{out}"
+        );
+
+        let dropped = dropped_style_properties(&m, &l, &s);
+        assert_eq!(
+            dropped
+                .iter()
+                .map(|drop| (drop.part.as_str(), drop.name.as_str()))
+                .collect::<Vec<_>>(),
+            vec![("calendar-day", "width")],
+            "only the deliberately unsupported percentage width should remain"
+        );
     }
 
     /// Regression: `HostInput { onChange: emit: onFormulaChange }`

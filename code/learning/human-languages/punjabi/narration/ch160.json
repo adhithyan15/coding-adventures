@@ -1,0 +1,433 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 160,
+  "title": "Return to Four Familiar Action Words",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:5775e2c8b3ab4b95",
+  "lessons": [
+    {
+      "id": "PA-R160-fall-again",
+      "sequence": 8810,
+      "title": "An old word for falling",
+      "headword": "ਡਿੱਗਣਾ",
+      "romanization": "ḍiggṇā",
+      "gloss": "to fall, recalled after a long gap",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:41eb47d9348d629c",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is one familiar action, not a new form to memorise. First try to remember it from the English meaning. The model comes after the pause."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to fall."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Punjabi word before the model: ਡਿੱਗਣਾ (ḍiggṇā)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at ਡਿੱਗਣਾ (ḍiggṇā) and say its familiar meaning."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The meaning is to fall. Now hear to fall again, look away, and say ਡਿੱਗਣਾ (ḍiggṇā) before the model. No sentence is needed yet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to fall once more."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਡਿੱਗਣਾ (ḍiggṇā). If it did not come back, listen to the model and retry once. This untimed word return is not part of a scored A1 mock."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R160-teach-again",
+      "sequence": 8820,
+      "title": "An old word for teaching",
+      "headword": "ਸਿਖਾਉਣਾ",
+      "romanization": "sikhāuṇā",
+      "gloss": "to teach, recalled after a long gap",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f099c4379db3eccf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the previous word for falling separate. Here there is only one familiar action to retrieve: to teach."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to teach."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the earlier Punjabi word before the model: ਸਿਖਾਉਣਾ (sikhāuṇā)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear the model ਸਿਖਾਉਣਾ (sikhāuṇā)."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall its old meaning, to teach. Then hear to teach and say ਸਿਖਾਉਣਾ (sikhāuṇā) once more before the spoken model. There is no new grammar here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One last cue: to teach."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਸਿਖਾਉਣਾ (sikhāuṇā) before the model. Retry a missed old word once; do not count this as a timed or scored writing attempt."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R160-lift-again",
+      "sequence": 8830,
+      "title": "An old word for lifting",
+      "headword": "ਚੁੱਕਣਾ",
+      "romanization": "cukkṇā",
+      "gloss": "to lift, recalled after a long gap",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:d3e4baffef4db490",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The next familiar action is to lift. This small return asks for one old word, with time to pause before each model."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to lift."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਚੁੱਕਣਾ (cukkṇā)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at ਚੁੱਕਣਾ (cukkṇā) and remember to lift."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Look away. Hear to lift and say ਚੁੱਕਣਾ (cukkṇā) before the spoken model. Stay with the old word; no new action is being taught."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to lift one final time."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਚੁੱਕਣਾ (cukkṇā). Listen and retry once if needed. This is an untimed vocabulary return, separate from the scored A1 writing tasks."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R160-jump-again",
+      "sequence": 8840,
+      "title": "An old word for jumping",
+      "headword": "ਟੱਪਣਾ",
+      "romanization": "ṭappṇā",
+      "gloss": "to jump, then a return to four familiar actions",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f2150e04b22b36fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "First retrieve to jump on its own. Then mix just the four earlier action words, with pauses and models. This is not a new sentence pattern or a scored mock."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to jump."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the old Punjabi word before the model: ਟੱਪਣਾ (ṭappṇā)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Pause after each familiar meaning, then listen to the old word:"
+            },
+            {
+              "kind": "speech",
+              "text": "to lift —."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਚੁੱਕਣਾ (cukkṇā)."
+            },
+            {
+              "kind": "speech",
+              "text": "to fall —."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਡਿੱਗਣਾ (ḍiggṇā)."
+            },
+            {
+              "kind": "speech",
+              "text": "to jump —."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਟੱਪਣਾ (ṭappṇā)."
+            },
+            {
+              "kind": "speech",
+              "text": "to teach —."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਸਿਖਾਉਣਾ (sikhāuṇā)."
+            },
+            {
+              "kind": "speech",
+              "text": "The shuffled order is the only new part of this practice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to teach, to jump, to fall, then to lift. Pause after each cue and recall its Punjabi word before the model: ਸਿਖਾਉਣਾ (sikhāuṇā), ਟੱਪਣਾ (ṭappṇā), ਡਿੱਗਣਾ (ḍiggṇā), ਚੁੱਕਣਾ (cukkṇā). Revisit only the old word you missed."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

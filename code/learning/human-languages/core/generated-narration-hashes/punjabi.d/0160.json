@@ -1,0 +1,18 @@
+{
+  "language": "punjabi",
+  "chapter": 160,
+  "sourceHash": "fnv1a64:5775e2c8b3ab4b95",
+  "lessonIds": [
+    "PA-R160-fall-again",
+    "PA-R160-teach-again",
+    "PA-R160-lift-again",
+    "PA-R160-jump-again"
+  ],
+  "voiceLessons": 2,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch160.txt",
+  "json": "punjabi/narration/ch160.json",
+  "textHash": "fnv1a64:b3e26b288bd71688",
+  "jsonHash": "fnv1a64:a0292ed21b19635a",
+  "findings": []
+}

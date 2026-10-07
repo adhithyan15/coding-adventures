@@ -1,0 +1,12 @@
+# Perl 5.44.0 grammar: LANG81-style print-arithmetic subset only.
+# @version 1
+# PARTIAL: unsupported Perl 5.44.0 syntax is rejected.
+# Evidence: https://github.com/Perl/perl5/blob/v5.44.0/pod/perlop.pod
+# and https://github.com/Perl/perl5/blob/v5.44.0/pod/perlfunc.pod
+
+program         = print_statement { print_statement } ;
+print_statement = "print" LPAREN expr RPAREN SEMICOLON ;
+expr            = term { ( PLUS | MINUS ) term } ;
+term            = unary { STAR unary } ;
+unary           = MINUS unary | atom ;
+atom            = INT | LPAREN expr RPAREN ;

@@ -1,0 +1,19 @@
+# Perl 1.0.15 (2002-12-18) tokens: verified arithmetic-print subset only.
+# @version 1
+# PARTIAL: this does not lex all Perl 1.0.15 source.
+# Evidence: https://github.com/Perl/perl5/blob/perl-1.0.15/perl.y
+# The tagged yacc grammar has PRINT and arithmetic operators. This file
+# intentionally keeps only the bounded subset checked below.
+
+PRINT     = "print"
+INT       = /[0-9]+/
+PLUS      = "+"
+DECREMENT = "--"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\r\n]+/

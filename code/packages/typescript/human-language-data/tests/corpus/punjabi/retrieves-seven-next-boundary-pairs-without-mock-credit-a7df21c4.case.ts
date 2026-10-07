@@ -5,17 +5,20 @@ import { loadTrackLessons } from "../../../src/loader.js";
 const lessons = loadTrackLessons("punjabi").sort(
   (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
 );
+// Keep the Chapter 159 measurement at its original boundary when later
+// chapters add their own honest, separately tested retrieval work.
+const chapter159Lessons = lessons.filter((lesson) => Number(lesson.frontmatter.sequence) <= 8800);
 const ids = [
   "PA-W14-timed-repair-return",
   "PA-R159-people-quality-recall",
   "PA-R159-strength-weakness-recall",
   "PA-R159-hide-and-quality-mix",
 ];
-const reviews = lessons.filter((lesson) => ids.includes(lesson.realization.lessonId));
+const reviews = chapter159Lessons.filter((lesson) => ids.includes(lesson.realization.lessonId));
 const before = measureContinuity(
-  lessons.filter((lesson) => !ids.includes(lesson.realization.lessonId)),
+  chapter159Lessons.filter((lesson) => !ids.includes(lesson.realization.lessonId)),
 );
-const after = measureContinuity(lessons);
+const after = measureContinuity(chapter159Lessons);
 const missedPairs = (report: typeof before): Set<string> => new Set(
   report.reinforcement.flatMap((defect) =>
     defect.missed.map((window) => `${window}|${defect.atom}`),

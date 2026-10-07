@@ -1106,3 +1106,39 @@ describe("Kannada ಠ — round bowl, hooked bar, then the dot", () => {
     expect(strip.summary).toBe("3 strokes · 2 pen lifts · 6 movements");
   });
 });
+
+describe("Kannada ಂ — one anticlockwise ring", () => {
+  const anusvara = DUCTUS[ductusKey("kannada", "ಂ")];
+  const strip = ductusFilmstrip(anusvara, kannadaOutline("ಂ"));
+
+  it("reports one stroke, zero lifts, and one movement", () => {
+    expect(ductusSteps(anusvara).map((step) => step.startsAfterLift)).toEqual([
+      false,
+    ]);
+    expect(strip.frames).toHaveLength(1);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 1 movement");
+  });
+});
+
+// Each Kannada digit ೧-೯ is one pen-down run; the number of movements is the
+// number of parts its Chimple-cited record names.
+describe("Kannada digits ೧-೯ — one unbroken run each", () => {
+  const movements: Record<string, number> = {
+    "೧": 3, "೨": 3, "೩": 4, "೪": 5, "೫": 6, "೬": 3, "೭": 3, "೮": 4, "೯": 3,
+  };
+  for (const [digit, count] of Object.entries(movements)) {
+    it(`${digit} never lifts across its ${count} movements`, () => {
+      const ductus = DUCTUS[ductusKey("kannada", digit)];
+      const steps = ductusSteps(ductus);
+      expect(steps.map((step) => step.strokeIndex)).toEqual(
+        Array(count).fill(0),
+      );
+      expect(steps.some((step) => step.startsAfterLift)).toBe(false);
+      const strip = ductusFilmstrip(ductus, kannadaOutline(digit));
+      expect(strip.frames).toHaveLength(count);
+      expect(strip.penLifts).toBe(0);
+      expect(strip.summary).toBe(`one unbroken stroke · ${count} movements`);
+    });
+  }
+});
