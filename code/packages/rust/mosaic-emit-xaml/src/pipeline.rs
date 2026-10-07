@@ -4038,19 +4038,25 @@ fn emit_box(
         let value = find_prop_value(text, "content").ok_or_else(|| {
             PipelineEmitError::UnsupportedExpression("row-header requires label content".into())
         })?;
+        // Escaped per arm (#15487): the bindings are markup the emitter built
+        // and must stay extensions; only the authored text gets the `{}`
+        // escape that keeps a leading brace as text.
         let label = match value {
             LayoutPropValue::Expr(src) => match lower_expr_for_xbind(src, ctx) {
-                ExprLowering::Bindable(path) => format!("{{x:Bind {path}, Mode=OneWay}}"),
+                ExprLowering::Bindable(path) => {
+                    escape_xaml_markup_attr(&format!("{{x:Bind {path}, Mode=OneWay}}"))
+                }
                 _ => {
                     return Err(PipelineEmitError::UnsupportedExpression(
                         "unsupported row-header label".into(),
                     ))
                 }
             },
-            LayoutPropValue::SlotRef(slot) => {
-                format!("{{x:Bind {}, Mode=OneWay}}", ctx.slot_xbind_path(slot))
-            }
-            LayoutPropValue::String(value) => value.clone(),
+            LayoutPropValue::SlotRef(slot) => escape_xaml_markup_attr(&format!(
+                "{{x:Bind {}, Mode=OneWay}}",
+                ctx.slot_xbind_path(slot)
+            )),
+            LayoutPropValue::String(value) => escape_xaml_attr(value),
             _ => {
                 return Err(PipelineEmitError::UnsupportedExpression(
                     "unsupported row-header label".into(),
@@ -4059,7 +4065,7 @@ fn emit_box(
         };
         let pad = " ".repeat(indent);
         let name = ctx.component_name;
-        return Ok(format!("{pad}<local:{name}MosaicTableHeaderCell Row=\"{{x:Bind Index, Mode=OneWay}}\" Header=\"{}\" HorizontalContentAlignment=\"Stretch\" VerticalContentAlignment=\"Stretch\">\n{}{pad}</local:{name}MosaicTableHeaderCell>\n", escape_xaml_attr(&label), indent_xaml_fragment(&body, 4)));
+        return Ok(format!("{pad}<local:{name}MosaicTableHeaderCell Row=\"{{x:Bind Index, Mode=OneWay}}\" Header=\"{}\" HorizontalContentAlignment=\"Stretch\" VerticalContentAlignment=\"Stretch\">\n{}{pad}</local:{name}MosaicTableHeaderCell>\n", label, indent_xaml_fragment(&body, 4)));
     }
     Ok(body)
 }
@@ -16686,6 +16692,24 @@ mod tests {
         assert!(host_table_has_native_semantics(&numbered));
         let numbered_result = compile(&c, &layout_with_root("Sheet", numbered.clone()), &empty_style("Sheet"));
         assert!(numbered_result.xaml.contains("MosaicTableHeaderCell Row=\"{x:Bind Index, Mode=OneWay}\" Header=\"authored header\""));
+        // #15487: a bound row header stays a binding, and an authored one
+        // starting with a brace stays text.
+        fn row_header_text(numbered: &mut LayoutNode) -> &mut LayoutNode {
+            &mut numbered.children[1].children[0].children[0].children[0].children[0]
+        }
+        let mut bound = numbered.clone();
+        row_header_text(&mut bound).props[0].value = LayoutPropValue::SlotRef("headers".into());
+        let bound_result = compile(&c, &layout_with_root("Sheet", bound), &empty_style("Sheet"));
+        assert!(
+            bound_result.xaml.contains("Header=\"{x:Bind Owner.Headers, Mode=OneWay}\"")
+                && !bound_result.xaml.contains("Header=\"{}{x:Bind"),
+            "{}",
+            bound_result.xaml
+        );
+        let mut braced = numbered.clone();
+        row_header_text(&mut braced).props[0].value = LayoutPropValue::String("{x:Null}".into());
+        let braced_result = compile(&c, &layout_with_root("Sheet", braced), &empty_style("Sheet"));
+        assert!(braced_result.xaml.contains("Header=\"{}{x:Null}\""), "{}", braced_result.xaml);
         assert!(numbered_result.xaml.contains("ColumnCount=\"{x:Bind Headers.Count, Mode=OneWay}\""));
         assert!(numbered_result.code_behind.contains("if (header.Row != Cell.Row) continue;"));
         numbered.children[0].children[0].children[0].props.clear();
