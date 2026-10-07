@@ -4,7 +4,7 @@
   "chapter": 81,
   "title": "The Letter Yo",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:dbb91e5407b98490",
+  "sourceHash": "fnv1a64:9a341430c668c44b",
   "lessons": [
     {
       "id": "RU-W81-yo",
@@ -21,7 +21,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:267c5e0e8efbcf4b",
+      "sourceHash": "fnv1a64:4a4a09d84a2500cf",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -84,11 +84,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ё and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ё yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start this letter or which way to travel. It is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start this letter and which way to travel, in one attested order, and names its source beneath it. Teachers vary, so treat it as a sound way in, not the only one."
             }
           ]
         },

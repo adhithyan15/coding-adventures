@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Please",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:bd78adb5ba32baf0",
+  "sourceHash": "fnv1a64:3752d4a89a631526",
   "lessons": [
     {
       "id": "TA-C08-sontham",
@@ -365,7 +365,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3fdc17fdc7fbe1c4",
+      "sourceHash": "fnv1a64:309547f57e361e62",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -414,7 +414,7 @@
             },
             {
               "kind": "speech",
-              "text": "Do not invent a stroke order from the printed font. Follow the model as one shape today."
+              "text": "Do not invent a stroke order from the printed font: the strip gives a sourced one, in written order — the left part of ொ, then ச, then the right part."
             }
           ]
         },
@@ -1149,7 +1149,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:50944e3bc120df71",
+      "sourceHash": "fnv1a64:8cff2a60401507ef",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1228,15 +1228,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: எ — copy what you see",
+          "title": "Writing: எ — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on எ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write எ yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },
@@ -1318,7 +1318,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:75203be08d72c0f2",
+      "sourceHash": "fnv1a64:8d2215962be5cd8a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1397,15 +1397,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: உ — copy what you see",
+          "title": "Writing: உ — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on உ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write உ yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },

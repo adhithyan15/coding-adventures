@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 8,
-  "sourceHash": "fnv1a64:aeec69a4621488d9",
+  "sourceHash": "fnv1a64:cc32e331868ca25b",
   "lessonIds": [
     "SA-C08-cintayati",
     "SA-S112-vowel-sign-e",
@@ -14,7 +14,7 @@
   "drivablePrefix": 1,
   "text": "sanskrit/narration/ch08.txt",
   "json": "sanskrit/narration/ch08.json",
-  "textHash": "fnv1a64:84dee1516fd03268",
-  "jsonHash": "fnv1a64:e3a12ad7517824f9",
+  "textHash": "fnv1a64:a1aa4ee605757dad",
+  "jsonHash": "fnv1a64:74e018b896b82b7c",
   "findings": []
 }

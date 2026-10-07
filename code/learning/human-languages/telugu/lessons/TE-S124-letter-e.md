@@ -52,7 +52,7 @@ You already say these, and every one of them has ఎ somewhere inside it:
 - **ఆరు ఏడు ఎనిమిది తొమ్మిది పది** — six to ten
 - **నలుపు తెలుపు ఎరుపు నీలం** — black, white, red, blue
 
-## Writing: ఎ — copy what you see
+## Writing: ఎ — follow the numbered strip
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-124] -->
 
 Use **two pen-down runs**. Start at the central junction. Turn down and left

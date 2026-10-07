@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0f72cf194df75d7d",
+  "sourceHash": "fnv1a64:93cece01821f584b",
   "lessons": [
     {
       "id": "ML-C02-peru",
@@ -135,7 +135,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f185b2c86b6e957a",
+      "sourceHash": "fnv1a64:fe59aaeeeb321826",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -206,15 +206,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: പ — copy what you see",
+          "title": "Writing: പ — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on പ (pa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write പ yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },
@@ -582,7 +582,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:27ba2eb68c7b1b46",
+      "sourceHash": "fnv1a64:7c986f6cd8b5bba6",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -653,15 +653,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: എ — copy what you see",
+          "title": "Writing: എ — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on എ and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write എ yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },
@@ -743,7 +743,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:dcaebc670db6661a",
+      "sourceHash": "fnv1a64:63dd325c17a825c4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -814,15 +814,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: റ — copy what you see",
+          "title": "Writing: റ — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on റ (ṟa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write റ (ṟa) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },
@@ -1042,7 +1042,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9d52e06dddecb6e6",
+      "sourceHash": "fnv1a64:b816bc7245caa032",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1113,15 +1113,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ആ — copy what you see",
+          "title": "Writing: ആ — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ആ (ā) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ആ (ā) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },
@@ -1203,7 +1203,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d1613e9b5365b64c",
+      "sourceHash": "fnv1a64:70b5d980c7a74980",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1274,15 +1274,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ണ — copy what you see",
+          "title": "Writing: ണ — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ണ (ṇa) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ണ (ṇa) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },
@@ -1765,7 +1765,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ace570e3a60d1efd",
+      "sourceHash": "fnv1a64:1333ef05896240e3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1836,15 +1836,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ൾ — copy what you see",
+          "title": "Writing: ൾ — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ൾ (ḷ) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ൾ (ḷ) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },

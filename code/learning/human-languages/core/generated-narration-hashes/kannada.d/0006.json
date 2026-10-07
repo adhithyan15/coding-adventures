@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 6,
-  "sourceHash": "fnv1a64:6dc063db1e486834",
+  "sourceHash": "fnv1a64:52d8628edfa63297",
   "lessonIds": [
     "KA-C06-dative-ge",
     "KA-S06-letter-da",
@@ -14,7 +14,7 @@
   "drivablePrefix": 1,
   "text": "kannada/narration/ch06.txt",
   "json": "kannada/narration/ch06.json",
-  "textHash": "fnv1a64:89e163a6c5e70805",
-  "jsonHash": "fnv1a64:bb7728d6434562c0",
+  "textHash": "fnv1a64:3901927a06aa1bf6",
+  "jsonHash": "fnv1a64:dd6588144754f743",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 93,
-  "sourceHash": "fnv1a64:87610c75dd88f0cd",
+  "sourceHash": "fnv1a64:8fc2a27ae4227c40",
   "lessonIds": [
     "RU-W93-e",
     "RU-W93-shcha",
@@ -12,7 +12,7 @@
   "drivablePrefix": 0,
   "text": "russian/narration/ch93.txt",
   "json": "russian/narration/ch93.json",
-  "textHash": "fnv1a64:4828e31102e8ba13",
-  "jsonHash": "fnv1a64:c3850970ef46a860",
+  "textHash": "fnv1a64:0a02a42b9832235b",
+  "jsonHash": "fnv1a64:9384d33038bb0ed0",
   "findings": []
 }

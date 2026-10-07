@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 81,
-  "sourceHash": "fnv1a64:dbb91e5407b98490",
+  "sourceHash": "fnv1a64:9a341430c668c44b",
   "lessonIds": [
     "RU-W81-yo",
     "RU-R81-letters-first-pass",
@@ -11,7 +11,7 @@
   "drivablePrefix": 0,
   "text": "russian/narration/ch81.txt",
   "json": "russian/narration/ch81.json",
-  "textHash": "fnv1a64:6c38ebcaece629df",
-  "jsonHash": "fnv1a64:2ce6a8604c6a76b1",
+  "textHash": "fnv1a64:09a7f144756b5fb6",
+  "jsonHash": "fnv1a64:085ecfad8795c0a5",
   "findings": []
 }

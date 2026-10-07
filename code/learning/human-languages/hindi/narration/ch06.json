@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Five",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:2d9d1bca6152e467",
+  "sourceHash": "fnv1a64:d8e266796458f7f0",
   "lessons": [
     {
       "id": "HI-C06-numbers-1-5",
@@ -417,7 +417,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d8fc38b02324bdca",
+      "sourceHash": "fnv1a64:0110c461cbfe90a4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -516,15 +516,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: म — copy what you see",
+          "title": "Writing: म — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on म (ma) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write म yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f8e82c6bf8d1ee32",
+  "sourceHash": "fnv1a64:b8c0b71ee497f847",
   "lessons": [
     {
       "id": "TA-C27-maalai",
@@ -134,7 +134,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:32cfc1fb13f08bef",
+      "sourceHash": "fnv1a64:f1beaacb1d648ef3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -194,7 +194,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read both; do not draw them yet. Neither has an entry in this book's script data, so neither gets a stroke order. ள's description leans on ண's sourced \"tongue curled back\"; ங's is this lesson's own, since the data says nothing about where க is made."
+              "text": "Read both. The strip writes the whole word, numbered movement by movement, with each source beneath it. ள's own entry gives the tongue curled back; ங's place is this lesson's own, since the data says nothing about where க is made."
             }
           ]
         },

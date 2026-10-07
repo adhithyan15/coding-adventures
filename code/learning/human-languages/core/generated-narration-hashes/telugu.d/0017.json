@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 17,
-  "sourceHash": "fnv1a64:e9e04c6e22ad4bcf",
+  "sourceHash": "fnv1a64:70acf55d624d6798",
   "lessonIds": [
     "TE-C17-madhyaahnam-ardharaatri",
     "TE-S138-letter-gha",
@@ -14,7 +14,7 @@
   "drivablePrefix": 1,
   "text": "telugu/narration/ch17.txt",
   "json": "telugu/narration/ch17.json",
-  "textHash": "fnv1a64:87a9730cf16763d7",
-  "jsonHash": "fnv1a64:378856ea299801b3",
+  "textHash": "fnv1a64:604057c899290ba4",
+  "jsonHash": "fnv1a64:b14010fdbe3306ad",
   "findings": []
 }

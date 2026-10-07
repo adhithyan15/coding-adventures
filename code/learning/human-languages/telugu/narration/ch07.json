@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d9f2e2c5436c218b",
+  "sourceHash": "fnv1a64:f6d17472dc126544",
   "lessons": [
     {
       "id": "TE-C07-numbers-1-5",
@@ -196,7 +196,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:4974e6fcfa8ab362",
+      "sourceHash": "fnv1a64:d9d3c82223793928",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -268,15 +268,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ఐ — copy what you see",
+          "title": "Writing: ఐ — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ఐ (ai) and follow its line. Copy the shape you can see — slowly, and larger than it is printed. Then write ఏ beside it and look at the two."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ఐ (ai) yourself, slowly and larger than it is printed, with ఏ beside it, and look at the two."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },
@@ -859,7 +859,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:9f86ecd37f2b71f0",
+      "sourceHash": "fnv1a64:b0d370073606cf28",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -943,15 +943,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ఒ — copy what you see",
+          "title": "Writing: ఒ — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ఒ and follow its line. Copy the shape you can see — slowly, and larger than it is printed. Then write ◌ొ beside it and look at the two."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ఒ yourself, slowly and larger than it is printed, with ◌ొ beside it, and look at the two."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },
@@ -1034,7 +1034,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:dec7ded40a1a2771",
+      "sourceHash": "fnv1a64:26eef34b6cd914e5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1124,15 +1124,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ఆ — copy what you see",
+          "title": "Writing: ఆ — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ఆ (ā) and follow its line. Copy the shape you can see — slowly, and larger than it is printed. Then write అ beside it and find the difference."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ఆ (ā) yourself, slowly and larger than it is printed, with అ beside it, and find the difference."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },

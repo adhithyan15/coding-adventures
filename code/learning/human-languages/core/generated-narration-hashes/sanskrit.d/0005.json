@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 5,
-  "sourceHash": "fnv1a64:07c83e62dcd45ba3",
+  "sourceHash": "fnv1a64:12dd312dea1a0d9e",
   "lessonIds": [
     "SA-C05-vadami",
     "SA-S204-letter-ya",
@@ -19,7 +19,7 @@
   "drivablePrefix": 1,
   "text": "sanskrit/narration/ch05.txt",
   "json": "sanskrit/narration/ch05.json",
-  "textHash": "fnv1a64:ed3bc29f3357d95d",
-  "jsonHash": "fnv1a64:2ff663a8e5d2e3d0",
+  "textHash": "fnv1a64:94aa0ae176dfa932",
+  "jsonHash": "fnv1a64:42b5fcf55409eafd",
   "findings": []
 }

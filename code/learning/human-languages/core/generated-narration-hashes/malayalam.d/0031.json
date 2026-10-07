@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 31,
-  "sourceHash": "fnv1a64:ac082cfbbc4950c1",
+  "sourceHash": "fnv1a64:90f1d20bc7798ece",
   "lessonIds": [
     "ML-C31-shubha-madhyaahnam",
     "ML-C31-oonjaal",
@@ -12,7 +12,7 @@
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch31.txt",
   "json": "malayalam/narration/ch31.json",
-  "textHash": "fnv1a64:ab3ae7f271564cba",
-  "jsonHash": "fnv1a64:00a663cd00b31d48",
+  "textHash": "fnv1a64:de2777a3b1414fcd",
+  "jsonHash": "fnv1a64:f967420d8b5cc399",
   "findings": []
 }

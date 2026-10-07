@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 26,
-  "sourceHash": "fnv1a64:bbf75caa6a49e1ca",
+  "sourceHash": "fnv1a64:c6776ad4adcac66c",
   "lessonIds": [
     "KA-C26-belagge",
     "KA-C26-iiju",
@@ -11,7 +11,7 @@
   "drivablePrefix": 1,
   "text": "kannada/narration/ch26.txt",
   "json": "kannada/narration/ch26.json",
-  "textHash": "fnv1a64:9926b07a2e2bf44e",
-  "jsonHash": "fnv1a64:cf263229d7b362c8",
+  "textHash": "fnv1a64:678346b13c339695",
+  "jsonHash": "fnv1a64:15271c46da13778d",
   "findings": []
 }

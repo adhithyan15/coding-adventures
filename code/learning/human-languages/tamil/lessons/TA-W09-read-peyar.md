@@ -47,8 +47,8 @@ Two consonants, each carrying its built-in *a* like every other:
 | **ப** | *pa* |
 | **ய** | *ya* |
 
-> Read both; do not draw them yet. Neither has a sourced stroke order in this
-> book's script data, so neither gets one here.
+> Read both. The strip writes the whole word in written order, **ெ** first,
+> numbered movement by movement, with each source beneath it.
 
 ## Script you'll notice: the ெ sign
 <!-- hl-knowledge: introduces=[TA-SCRIPT-E-SIGN-02]; assesses=[TA-SCRIPT-LA-AI-SIGN-02] -->
@@ -68,12 +68,10 @@ one member at a time. Compare the three vowel signs you now hold:
 | **ை** | *ai* | to the **left**, spoken after |
 | **ெ** | *e* | to the **left**, spoken after |
 
-Be clear about how well attested each half of that is. The sourced description
-covers **ை** — *"a double hook written BEFORE (to the left of) the consonant,
-though pronounced after it."* There is no such entry for **ெ** yet, so the claim
-that **ெ** sits on the left is stated from the pattern the two signs share, not
-from a source for **ெ** itself. It is reliable — this is ordinary Tamil
-orthography — but it is one step further from the page than the **ை** rule is.
+Both halves of that are sourced. The description of **ை** reads *"a double
+hook written BEFORE (to the left of) the consonant, though pronounced after
+it"*, and **ெ** has its own entry, cited to a Tamil script manual: the sign for
+short *e* is always placed before the letter it belongs to.
 
 ## Script you'll notice: build the word
 <!-- hl-knowledge: introduces=[TA-SCRIPT-READ-PEYAR-03]; assesses=[TA-SCRIPT-PA-YA-01, TA-SCRIPT-E-SIGN-02, TA-SCRIPT-PULLI-VANAKKAM-01, TA-SCRIPT-CA-ONE-LETTER-01] -->

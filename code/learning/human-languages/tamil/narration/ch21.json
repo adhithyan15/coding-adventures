@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Dog and Cat",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d8c3335ebc8752bf",
+  "sourceHash": "fnv1a64:f247f96f418b44f7",
   "lessons": [
     {
       "id": "TA-C21-naay-poonai",
@@ -134,7 +134,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0eab9a657dd7d20f",
+      "sourceHash": "fnv1a64:c3361225cafaaef7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -194,7 +194,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read எ; do not draw it yet. This book gives a stroke order only where it has a sourced one, and எ does not have one yet."
+              "text": "Read எ. The strip writes எ, ன and the puḷḷi in turn, numbered movement by movement, with each source beneath it."
             }
           ]
         },

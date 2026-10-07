@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 10,
-  "sourceHash": "fnv1a64:a2a52e10b3739407",
+  "sourceHash": "fnv1a64:ae1968b1fc8ed6c3",
   "lessonIds": [
     "TA-C10-vaara-kizhamai",
     "TA-S05-rra",
@@ -12,7 +12,7 @@
   "drivablePrefix": 1,
   "text": "tamil/narration/ch10.txt",
   "json": "tamil/narration/ch10.json",
-  "textHash": "fnv1a64:c753f2c0db811c07",
-  "jsonHash": "fnv1a64:24a3db7ad585c01e",
+  "textHash": "fnv1a64:0221e46034e71cb6",
+  "jsonHash": "fnv1a64:b3c926edadf54938",
   "findings": []
 }
