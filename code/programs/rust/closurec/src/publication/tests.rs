@@ -1,6 +1,9 @@
 //! Deterministic filesystem faults exercise states normal process tests cannot.
 use super::*;
 
+#[cfg(any(target_os = "linux", target_os = "macos"))]
+mod unix_policy_tests;
+
 struct Fixture {
     dir: PathBuf,
 }
