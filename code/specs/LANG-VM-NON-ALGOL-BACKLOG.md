@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-07 — re-audited after LANG82 Perl 5.003_16–28
+Status date: 2026-10-07 — re-audited after LANG82 Perl 5.003_90–97d
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -142,14 +142,23 @@ PR #16957 delivered 13 distinct, explicitly partial source-tagged Perl
 `a56d722c6803ae153768e813eccacfb5f5f2ef78` after its exact-head CI,
 CodeQL, and books checks passed. The 774-row inventory now has 46 partial
 pairs and 728 pending; complete historical syntax is not claimed.
+PR #16962 delivered 12 distinct, explicitly partial source-tagged Perl
+5.003_90 through 5.003_97d token and grammar pairs and merged as
+`697492955c3dca729029ea58a196e21a492295e0` after exact-head CI,
+CodeQL, and books checks passed. The 774-row inventory now has 58 partial
+pairs and 716 pending; complete historical syntax is not claimed. A separate
+source audit found two omitted Perl 5.004 release candidates, `p54rc1` and
+`p54rc2`; their pending inventory correction and source-backed partial pairs
+are prepared locally for a later bounded slice.
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
 1. **LANG82 Perl release grammars (selected):** add distinct source-backed,
-   explicitly partial token and grammar pairs for 5.003_90 through 5.003_97d.
-   Keep the existing decimal-only `print` arithmetic boundary and negative
-   probes; do not imply complete release syntax.
+   explicitly partial token and grammar pairs for 5.003_97e through 5.003_98.
+   Preserve the decimal-only `print` arithmetic boundary and negative probes;
+   5.003_97i adds a 250-digit decimal token limit. Do not imply complete
+   release syntax.
 2. **PREP01 C:** continue full C `#if`, stringize/paste, and default
    frontend routing in later bounded slices.
 
