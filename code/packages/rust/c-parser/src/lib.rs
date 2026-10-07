@@ -21,7 +21,7 @@
 //! The root node's `rule_name` is `"translation_unit"`.
 
 use coding_adventures_c_lexer::{tokenize_c, try_tokenize_c};
-use lexer::token::Token;
+use lexer::token::{Token, TokenType};
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
 mod _grammar;
@@ -56,7 +56,7 @@ const MAX_TOTAL_TOKEN_TEXT_BYTES: usize = 64 * 1024 * 1024;
 /// Create a [`GrammarParser`] wired to the C grammar and tokens.  Ready to
 /// call `.parse()`.
 pub fn create_c_parser(source: &str) -> GrammarParser {
-    let tokens = tokenize_c(source);
+    let tokens = strip_legacy_directive_lines(tokenize_c(source));
     GrammarParser::new(tokens, _grammar::parser_grammar()).with_max_depth(MAX_RULE_DEPTH)
 }
 
@@ -72,8 +72,31 @@ pub fn parse_c(source: &str) -> GrammarASTNode {
 /// routes through [`try_tokenize_c`], not the panicking `tokenize_c` that
 /// `create_c_parser` uses).
 pub fn try_parse_c(source: &str) -> Result<GrammarASTNode, String> {
-    let tokens = try_tokenize_c(source)?;
+    let tokens = strip_legacy_directive_lines(try_tokenize_c(source)?);
     try_parse_c_tokens(tokens)
+}
+
+/// Preserve the original source-input parser contract while the frontend's C
+/// dialect is being wired up. The lexer now surfaces directives, but this
+/// historical parser API used to receive none because `c.tokens` skipped them.
+/// The token-input API below never calls this filter: PREP01 must decide what
+/// directives mean before handing its output to the parser.
+fn strip_legacy_directive_lines(tokens: Vec<Token>) -> Vec<Token> {
+    let mut last_line = None;
+    let mut skip_line = false;
+    tokens
+        .into_iter()
+        .filter(|token| {
+            if token.type_ == TokenType::Eof {
+                return true;
+            }
+            if last_line != Some(token.line) {
+                last_line = Some(token.line);
+                skip_line = token.effective_type_name() == "HASH";
+            }
+            !skip_line
+        })
+        .collect()
 }
 
 /// Parse an already-tokenized C stream, such as the directive-free output of
@@ -158,6 +181,14 @@ mod tests {
             try_parse_c_tokens(tokens).unwrap().rule_name,
             "translation_unit"
         );
+    }
+
+    #[test]
+    fn source_input_retains_legacy_directive_behavior() {
+        let src = "#include <stdint.h>\nint main(void) { return 1; }";
+        assert_eq!(try_parse_c(src).unwrap().rule_name, "translation_unit");
+        let tokens = try_tokenize_c(src).unwrap();
+        assert!(try_parse_c_tokens(tokens).is_err());
     }
 
     #[test]

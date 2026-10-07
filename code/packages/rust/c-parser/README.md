@@ -21,6 +21,10 @@ stream from a preprocessing hook. It uses the same grammar and recursion guard
 as `try_parse_c`, with finite token-count and token-text limits checked before
 packrat parsing. The token stream may omit the lexer-generated EOF sentinel.
 
+The legacy `parse_c` and `try_parse_c` source-input paths still ignore
+directive lines. The lexer now exposes those tokens for PREP01; once the C
+dialect is connected, its output should use `try_parse_c_tokens`.
+
 The result is the generic `parser::grammar_parser::GrammarASTNode` CST
 (`rule_name` + `children`); consumers walk it by `rule_name`.  The full C
 expression precedence cascade is encoded in the grammar; a `(T)e` cast is

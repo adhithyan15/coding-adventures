@@ -2,6 +2,8 @@
 
 ## Unreleased — PREP01 C parser handoff
 
+- Preserve legacy source-input parsing by filtering directive lines now that
+  the C lexer exposes them; token-input parsing never filters directives.
 - Add `try_parse_c_tokens` so the generic preprocessor's directive-free C
   tokens can reach the existing grammar without re-lexing or losing provenance.
 - Bound the public token-input path before packrat parsing, including token
