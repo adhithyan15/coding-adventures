@@ -26,19 +26,21 @@ func isBuildFront(base string) bool {
 	}
 }
 
-// GetChangedFiles runs `git diff --name-only <base>...HEAD` and returns
+// GetChangedFiles runs `git diff --no-renames --name-only <base>...HEAD` and returns
 // the list of changed file paths relative to the repo root.
 //
 // Uses three-dot diff which shows changes since the merge base — exactly
-// what we want for PR builds. Falls back to two-dot diff if three-dot fails.
+// what we want for PR builds. Disabling rename detection includes both the
+// deleted source and added destination, so consumers of either path rebuild.
+// Falls back to two-dot diff if three-dot fails.
 func GetChangedFiles(repoRoot, diffBase string) []string {
 	// Try three-dot diff first (merge base)
-	cmd := exec.Command("git", "diff", "--name-only", diffBase+"...HEAD")
+	cmd := exec.Command("git", "diff", "--no-renames", "--name-only", diffBase+"...HEAD")
 	cmd.Dir = repoRoot
 	out, err := cmd.Output()
 	if err != nil {
 		// Fallback: two-dot diff
-		cmd = exec.Command("git", "diff", "--name-only", diffBase, "HEAD")
+		cmd = exec.Command("git", "diff", "--no-renames", "--name-only", diffBase, "HEAD")
 		cmd.Dir = repoRoot
 		out, err = cmd.Output()
 		if err != nil {
