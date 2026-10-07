@@ -41,8 +41,11 @@ preserved and are excluded from acceptance.
 
 Fetched main `2ef032426b5f` merged conflict-free; changed Perl/ALGOL/Mermaid
 consumers require refreshed tests/lint, and the updated production build tool
-requires a fresh plan. Required local Miri has passed runtime-core/dynval-runtime
-and is still executing Twig VM. Native CI/final refreshed-head security/merge
+requires a fresh plan. The first local Miri compiled lexer metadata before the final lexer source
+edit (22:36:27 versus22:38:21 UTC). Its log is preserved as rejected stale-source
+evidence; the owned process tree was stopped and the full required script must
+restart against frozen source. Runtime-core/dynval passed in that earlier run,
+but no final-source Miri acceptance is claimed. Native CI/final refreshed-head security/merge
 acceptance remain pending; no branch has been pushed and no CV04a PR exists.
 These are local results, not accepted delivery. #16970 remains open through CV04b.
 
