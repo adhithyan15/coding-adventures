@@ -79,3 +79,15 @@ outside that guard; successive single-parent CV derivations encode ancestor IDs
 and grow with depth. Compact graph identities and explicit graph/serialization
 resource limits are required follow-up acceptance work in CCR-065, alongside
 bounded traversal, rather than an implied guarantee of this primitive slice.
+
+## CI compatibility repair
+
+The macOS affected-package build on head `19a5592117` rejected the scheduler's
+existing `CountingPass` unit-test helper because its atomic `fetch_update`
+method is deprecated under the CI Rust toolchain and warnings are denied.
+Replace that call with a compare-and-exchange loop using the same sequentially
+consistent ordering. The change budget must atomically decrement while positive,
+remain zero once exhausted, and retain existing fixed-point/cap test behavior.
+Use APIs supported by the local and CI toolchains; do not suppress the warning
+or change production scheduling. Run the pipeline's own tests and all-target
+strict lint, since consumer lint does not compile dependency unit-test targets.
