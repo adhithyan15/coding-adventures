@@ -667,6 +667,22 @@ where all four control points coincide.
 20. **x_rotation non-zero**: arc with `x_rotation=π/4` — start/end points and
     bounding box rotate accordingly.
 
+21. **Degenerate endpoint-form fallback**: consume all four
+    `svg-arc-degenerate` records in `geometry2d-v1/cases.json` in each lane
+    that exposes `SvgArc.evaluate` and `SvgArc.bounding_box`. Preserve the
+    optional return type for source compatibility, but return a present line
+    point and an ordered endpoint rect even when center conversion is absent.
+    The coincident case is a point rect, and cubic output remains empty.
+
+22. **Strict threshold and SVG radius boundary**: a radius with magnitude
+    exactly `1e-10` is not degenerate; endpoint distance squared exactly
+    `1e-20` is not degenerate. A diagonal endpoint delta of
+    `(8e-11, 8e-11)` is nondegenerate despite each component being below
+    `1e-10`. A negative nondegenerate radius has the same geometry as its
+    positive magnitude. Assert center presence and finite parameters at
+    tiny exact boundaries; floating-point center precision at that scale is
+    not an endpoint-location oracle.
+
 Coverage threshold: ≥ 95% lines.
 
 ---
