@@ -636,6 +636,93 @@ so the inventory's exactness is held by its own evidence module instead: every
 Latin character of every Latin-track headword is listed, and every listed one
 is read.
 
+#### Design — a one-storey a: the Latin strips move to a literacy font
+
+The first Latin batch refused a, and with it about twenty lessons, because
+the only bundled Latin outline (the Noto Sans letters inside
+NotoSansDevanagari-Static.ttf) prints a two-storey a and every source teaches
+the one-storey a. A strip traces a school model's path over the printed
+letter, so the printed letter must have the shape the model teaches. This
+design changes the outline the Latin strips are drawn on, not the books.
+
+**Font.** Andika 7.000 (SIL Global, `github.com/silnrsi/font-andika`, release
+tag `v7.000`, SIL Open Font License 1.1) is a typeface made for literacy
+work: its DEFAULT glyph for a is the one-storey a (`a.SngStory`) and for g
+the single-storey g (`g.SngBowl`), so nothing has to be remapped. The
+Grundschrift g is single-storey too, and Noto's g already was. A subset is
+vendored as `_fonts/LatinPrint-Subset.ttf`:
+
+* fetched by `_fonts/subset-latin.sh`, which checks the SHA-256 of the
+  release zip and of `Andika-Regular.ttf` inside it, and asserts that the
+  source's cmap maps a and g to those two glyphs;
+* cut to printable Basic Latin, ß ñ Ñ ¿ ¡, the acute, diaeresis and tilde
+  vowels, and every non-ASCII Latin character of every Latin-track headword
+  and inventory row (about 140 characters, tens of kilobytes);
+* composites flattened to plain contours (script-ductus's reader refuses
+  scaled components) and the em scaled from 2048 to 1000 units, the em of
+  every other vendored font, so the ductus tests' distances mean the same for
+  Latin as for every other script;
+* RENAMED "Latin Print Subset": the licence reserves the names Andika and SIL,
+  and a subset is a Modified Version. The copyright and licence name records
+  are kept verbatim, and Andika's own licence file is vendored beside it as
+  `_fonts/OFL-Andika.txt`.
+
+The `_fonts` README records the source URL, tag, both digests and the
+command. The books' body text is unchanged (Latin Modern Roman, whose a is
+two-storey): the strip shows the handwriting model's letter, not the book's
+type, and every Latin record's source note says so.
+
+**Refit.** The Latin inventory names the new file. All 18 existing paths are
+refitted to its outlines (same order, starts, directions and lifts), and must
+again be fully on ink at the default tolerances with nothing untraced and no
+override. Andika's letters are heavier and its x-height lower than Noto's, so
+the numbers pinned in the Latin ductus tests (where a stroke starts, where a
+bar sits) move with the outline; what they assert does not.
+
+**New glyphs (13).**
+
+* a, d, q: one stroke (Grundschrift): the bowl anticlockwise from the top
+  right, then back up to the top of the stem and down it (d to the top of its
+  ascender; q down to the foot of its descender). UJI: a 118 of 120 one
+  stroke; d 101; q mostly TWO (89), a short crossing stroke at the foot that
+  print does not have, recorded as variation.
+* p: one stroke: the stem down to the descender, back up it, the bowl
+  clockwise. UJI 75 one stroke, 45 two.
+* t: two strokes: the stem down and round to the right, then the crossbar
+  left to right. UJI 113 two strokes, crossbar second in 111 of them.
+* y: two strokes: the short line down to the right, then the long line from
+  the top right down to the tail. UJI writes y mostly in ONE stroke (91 of
+  120), recorded as variation; the school model's two strokes are drawn.
+* H: three strokes: left stem, crossbar left to right, right stem. UJI splits
+  (62 of 120 three strokes; crossbar second 37, third 25), recorded.
+* á é í ó ú: precomposed, as ñ is: the base letter's cited path, a lift,
+  then the acute. UJI puts the accent after the letter (á 120 of 120,
+  é 120, ó 114, ú 115, í 66 of the 69 where it is found apart from the stem);
+  its direction is split, up to the right in about 62% (á 74, é 75, ó 74,
+  ú 70 of 120; í 44 of 69) and down to the left in about 30%. The majority
+  is drawn and the split is recorded. On í the acute replaces the dot, as the
+  printed glyph shows.
+* ü: the u, a lift, the left dot, a lift, the right dot. UJI: dots last in
+  119 of 120, left dot first in 116 of 118.
+
+**Still refused.** The grave (à è ù), circumflex, cedilla, macron (Latin
+salvē), æ and œ: no source. ä ö ë ï ÿ: analogy with ü only. So FR-W01-accents
+(é è ê), FR-W03-trema (ï ë ü), GE-W02-umlauts (ä ö ü), FR-W02-cedille,
+FR-C10-oe and the salvē lessons stay undrawn.
+
+**Tracks.** French, Italian, Portuguese and Latin join
+`DERIVED_FILMSTRIP_SCRIPTS` ("latin"), within `MAX_SEQUENCE_PIECES` (buenos
+días is exactly ten pieces). Expected new strips (22): FR-W01-salut-observe,
+-guided-copy, -delayed-copy, -dictation; FR-W04-quatre-lignes (parce que);
+GE-W01-hallo-guided-copy, -delayed-copy, -dictation; IT-W01-ciao-guided-copy,
+-delayed-copy, -dictation; LA-W04-quattuor-versus (quia);
+PT-W01-ola-guided-copy, -delayed-copy, -dictation; ES-W00-hola-observe,
+-guided-copy, -delayed-copy, -dictation; ES-W01-acento (á é í ó ú);
+ES-W01-frase-propia (buenos días); ES-W02-cuatro-lineas-ayer. The four
+earlier Latin strips are redrawn on the new outline. None of the 22 lessons
+disclaims its stroke order, and ES-W01-acento's own prose already describes
+the acute as one up-stroke rising left to right.
+
 ### Class B — data diagrams (generated)
 
 Etymology and cousin-web trees built from lesson `roots`, sound-articulation diagrams
