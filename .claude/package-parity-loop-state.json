@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16981,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16981",
+    "branch": "codex/parity-cigates-dotnet-20261007",
+    "implementation_revision": "7398562d001f2ff9c2c1c22fd83565c5cae0a1e5",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-07T22:58:04Z",
-    "pr_number": 16972,
-    "status": "merged",
-    "notes": "All 37 final-head checks completed acceptably on 8a19dd98421cc0be17867e4c45e23e83fc22912f (29 success, 7 conditional skips, 1 neutral); GitHub reported MERGEABLE/CLEAN, guarded squash auto-merge was enabled, and PR #16972 merged as 2ef032426b5fc69ce19fdf6a0b67fddadcf33dd4 without a manual merge."
+    "observed_at": "2026-10-07T23:21:35Z",
+    "pr_number": 16981,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #16981 opened after both native .NET suites, Go full/race/vet, 5,304-package BUILD validation, neutral corpus/parity/diff checks and independent SHIP security review. GitHub reported MERGEABLE but BLOCKED with the initial CI, CodeQL, and Human Languages Books checks queued; no auto-merge until every final-head check is terminal acceptable and no conflict remains. Prior PR #16972 merged through guarded auto-merge as 2ef032426b5fc69ce19fdf6a0b67fddadcf33dd4."
   },
   "last_inventory": {
     "revision": "2ef032426b5fc69ce19fdf6a0b67fddadcf33dd4",
@@ -9729,10 +9735,10 @@
     {
       "id": "build-tool-csharp-fsharp-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the shared C# and F# build-tool lanes",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
       "branch": "codex/parity-cigates-dotnet-20261007",
-      "pr_number": null,
+      "pr_number": 16981,
       "notes": "The exact-main engine audit found no CI gate registry or evaluator in either .NET front door. Add one bounded C# pure engine consumed independently by both language-native front doors, preserve the reviewed shared-engine boundary, and execute every neutral ci_gate_selection case in both lane suites."
     },
     {
