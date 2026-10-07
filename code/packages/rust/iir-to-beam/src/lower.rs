@@ -1052,12 +1052,12 @@ pub fn lower_iir_to_beam(
         // `live_across`: maps instruction index → sorted list of variable names
         // that are live across that call and must be saved/restored around it.
         //
-        // `n_yregs`: liveness slots plus one allocation-length slot when an
-        // ets-backed array is allocated in this function.
+        // `n_yregs`: liveness slots plus one transient slot when an expansion
+        // must carry an intermediate term across an imported call.
         y_reg_map: HashMap<String, u8>,
         live_across: HashMap<usize, Vec<String>>,
         n_yregs: u8,
-        ets_alloc_len_slot: Option<u8>,
+        transient_call_slot: Option<u8>,
     }
 
     let mut fn_metas: Vec<FnMeta> = Vec::with_capacity(module.functions.len());
@@ -1407,20 +1407,24 @@ pub fn lower_iir_to_beam(
             }
         }
 
-        // Guard: BEAM Y-registers are 8-bit (0–255). The length handoff needs
-        // one extra slot in functions with ets-backed allocation; unchecked
-        // casts below would silently overflow at 256 total slots.
-        let has_ets_alloc = func.instructions.iter().any(|instr| {
-            instr.op == "alloc_array"
-                && matches!(instr.type_hint.as_str(), "array<f64>" | "array<str>")
+        // A Y slot roots one temporary across a call inside a single IIR
+        // instruction. These expansions never overlap, so the length handoff,
+        // ETS table handoff, and closure atom handoff share one slot. Count it
+        // before the u8 cast; 256 slots cannot be represented by BEAM Y regs.
+        let has_transient_call = func.instructions.iter().any(|instr| {
+            (instr.op == "alloc_array"
+                && matches!(instr.type_hint.as_str(), "array<f64>" | "array<str>"))
+                || (instr.op == "array_set"
+                    && matches!(instr.type_hint.as_str(), "f64" | "str"))
+                || instr.op == "call_closure"
         });
-        if all_live_vars.len() + usize::from(has_ets_alloc) > 255 {
+        if all_live_vars.len() + usize::from(has_transient_call) > 255 {
             return Err(IIRBeamError::UnsupportedOp {
                 function: func.name.clone(),
                 op: format!(
-                    "too many Y-register slots ({} live variables, {} ets array length); \
+                    "too many Y-register slots ({} live variables, {} transient call slot); \
                      BEAM Y-registers are limited to 255",
-                    all_live_vars.len(), usize::from(has_ets_alloc)
+                    all_live_vars.len(), usize::from(has_transient_call)
                 ),
             });
         }
@@ -1430,8 +1434,8 @@ pub fn lower_iir_to_beam(
             y_reg_map.insert(var.clone(), slot as u8);
         }
 
-        let ets_alloc_len_slot = has_ets_alloc.then_some(y_reg_map.len() as u8);
-        let n_yregs = (y_reg_map.len() + usize::from(has_ets_alloc)) as u8;
+        let transient_call_slot = has_transient_call.then_some(y_reg_map.len() as u8);
+        let n_yregs = (y_reg_map.len() + usize::from(has_transient_call)) as u8;
 
         fn_metas.push(FnMeta {
             fn_atom,
@@ -1443,7 +1447,7 @@ pub fn lower_iir_to_beam(
             y_reg_map,
             live_across,
             n_yregs,
-            ets_alloc_len_slot,
+            transient_call_slot,
         });
     }
 
@@ -1489,8 +1493,8 @@ pub fn lower_iir_to_beam(
 
         // ── Stack frame allocation (Y-registers for cross-call liveness) ─────
         //
-        // If this function has live variables crossing calls or an ets array
-        // length crossing `ets:new/2`, we must allocate a stack frame.
+        // If this function has live variables or an expansion temporary
+        // crossing an imported call, we must allocate a stack frame.
         //
         // `{allocate, StackNeed, Live}`:
         //   - StackNeed = number of Y-register slots we will use.
@@ -4143,7 +4147,7 @@ pub fn lower_iir_to_beam(
                         // scratch register above the live prefix. Keep the
                         // declared length in this function's initialized Y
                         // slot across ets:new, then build [Tab | N].
-                        let len_slot = meta.ets_alloc_len_slot.expect("ets allocation needs Y slot");
+                        let len_slot = meta.transient_call_slot.expect("ets allocation needs Y slot");
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                             BEAMOperand::x(r_len), BEAMOperand::y(len_slot),
                         ]));
@@ -4396,11 +4400,13 @@ pub fn lower_iir_to_beam(
                         ]));
 
                         // erlang:list_to_tuple([Idx, Val]) -> {Idx, Val}.
-                        // `s_ref` (>= meta.next_reg) survives this call the
-                        // same way call_closure's `r0` (fn_atom) survives its
-                        // own intermediate erlang:'++'/2 call — see that
-                        // arm's comment for why a scratch register above the
-                        // SSA set is not clobbered by an unrelated call_ext.
+                        // A scratch X register is not a GC root for this call.
+                        // Root the ETS table in the initialized transient Y
+                        // slot and reload its relocated value for ets:insert.
+                        let tab_slot = meta.transient_call_slot.expect("ets store needs Y slot");
+                        instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                            BEAMOperand::x(s_ref), BEAMOperand::y(tab_slot),
+                        ]));
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                             BEAMOperand::x(s_list), BEAMOperand::x(0),
                         ]));
@@ -4413,7 +4419,7 @@ pub fn lower_iir_to_beam(
 
                         // ets:insert(Tab, Tuple)
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                            BEAMOperand::x(s_ref), BEAMOperand::x(0),
+                            BEAMOperand::y(tab_slot), BEAMOperand::x(0),
                         ]));
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                             BEAMOperand::x(s_list), BEAMOperand::x(1),
@@ -4914,8 +4920,9 @@ pub fn lower_iir_to_beam(
 
                     // Step 3: call erlang:'++'/2 to compute caps ++ args.
                     // Move caps (r1) → x0, args (r2) → x1; result lands in x0.
-                    // Note: r0 (fn_atom) is untouched by this call since r0 >=
-                    // meta.next_reg which is always > 2 for any real function.
+                    // An imported call may clobber an X register outside its
+                    // argument prefix. Root r0 in Y before append and reload
+                    // that slot for the following apply call.
                     //
                     // This arm emits TWO call_ext instructions (erlang:'++'/2
                     // here, then erlang:apply/3 below). Any SSA variable live
@@ -4933,6 +4940,10 @@ pub fn lower_iir_to_beam(
                     // read it back out).
                     let cur_idx = instr_idx - 1;
                     save_live_across_imported_call!(cur_idx);
+                    let fn_slot = meta.transient_call_slot.expect("closure call needs Y slot");
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::x(r0), BEAMOperand::y(fn_slot),
+                    ]));
                     instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                         BEAMOperand::x(r1),
                         BEAMOperand::x(0),
@@ -4958,7 +4969,7 @@ pub fn lower_iir_to_beam(
                         BEAMOperand::x(0),
                     ]));
                     instrs.push(BEAMInstruction::new(OP_MOVE, vec![
-                        BEAMOperand::x(r0),
+                        BEAMOperand::y(fn_slot),
                         BEAMOperand::x(1),
                     ]));
                     instrs.push(BEAMInstruction::new(OP_MOVE, vec![
