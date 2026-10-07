@@ -139,3 +139,29 @@ fn empty_known_journal_and_escaped_presence_reload_and_append() {
         assert_eq!(imported.journal().unwrap().last_sequence(), 1);
     }
 }
+
+#[test]
+fn first_contributor_inventory_matches_the_actual_journal() {
+    let mut wire = snapshot();
+    wire["pass_order"].as_array_mut().unwrap().swap(0, 1);
+    rejects(wire);
+}
+
+#[test]
+fn deletion_before_retained_contribution_rejects() {
+    let mut wire = snapshot();
+    let records = wire["journal"]["events"].as_array_mut().unwrap();
+    records.swap(1, 4);
+    for (index, record) in records.iter_mut().enumerate() {
+        record["sequence"] = json!(format!("{:016x}", index + 1));
+    }
+    rejects(wire);
+}
+
+#[test]
+fn duplicate_decoded_journal_record_keys_survive_to_the_real_parser() {
+    let text = serde_json::to_string(&snapshot()).unwrap();
+    let duplicate = text.replacen("\"context\":null", "\"context\":null,\"\\u0063ontext\":null", 1);
+    assert!(CVLog::from_checked_json(&duplicate, GraphLimits::default()).is_err());
+    assert!(CVLog::from_json_string(&duplicate).is_err());
+}
