@@ -13,7 +13,12 @@
     "lesson": "HI-C03-practice",
     "kind": "task",
     "summary": "Complete HI-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in Hindi, answer naturally, and return the question.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "assesses": [
+      "HI-CONCEPT-C03-AAPKAISEHAIN-01",
+      "HI-CONCEPT-C03-THIK-01",
+      "HI-CONCEPT-C03-AAPKASWAGATHAI-01",
+      "HI-CONCEPT-C03-PRACTICE-01"
+    ],
+    "note": "Chapter 3 is schema-v2, so the payoff is atom-scored: HI-C03-practice assesses 4 of the chapter's 7 atoms — the two set phrases (aap kaise hain, aapka swagat hai), thik, and the full exchange the checkpoint introduces. The three building blocks kaise, main and hun are rehearsed inside those phrases and scored in their own lessons rather than as separate checkpoint atoms."
   }
 }

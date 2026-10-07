@@ -752,6 +752,23 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
             if matches!(icon.as_str(), "mermaid-treeview:folder" | "mermaid-treeview:file") {
                 instructions.push(PaintInstruction::Path(treeview_builtin_icon_path(&icon, node.x + diagram.config.padding_x,
                     node.y + diagram.config.padding_y, &icon_color, icon_metadata)));
+            } else if let Some(glyph) = &node.icon_glyph {
+                let mut icon_font = font_with_size(&options.label_font, Some(14.0));
+                icon_font.family.clone_from(&glyph.font_family);
+                let icon_node = text_node_no_wrap(&glyph.text, node.x + diagram.config.padding_x,
+                    node.y + diagram.config.padding_y, 14.0, 14.0 * icon_font.line_height,
+                    icon_font, css_to_color(&diagram.config.theme.icon_color));
+                let mut icon_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width,
+                    height: diagram.height, id: None, content: None, children: vec![icon_node], ext: HashMap::new() },
+                    &LayoutToPaintOptions { width: diagram.width, height: diagram.height,
+                        background: Color { r: 0, g: 0, b: 0, a: 0 }, device_pixel_ratio: 1.0,
+                        shaper: options.shaper, metrics: options.metrics, resolver: options.resolver });
+                for instruction in &mut icon_scene.instructions {
+                    if let PaintInstruction::GlyphRun(run) = instruction {
+                        run.base.metadata = Some(icon_metadata.clone());
+                    }
+                }
+                instructions.extend(icon_scene.instructions);
             } else {
                 instructions.push(PaintInstruction::Rect(PaintRect {
                     base: PaintBase { metadata: Some(icon_metadata), ..PaintBase::default() }, x: node.x + diagram.config.padding_x,
@@ -788,6 +805,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     metadata.insert("treeView.config.paddingX".into(), diagram.config.padding_x.to_string());
     metadata.insert("treeView.config.paddingY".into(), diagram.config.padding_y.to_string());
     metadata.insert("treeView.config.lineThickness".into(), diagram.config.line_thickness.to_string());
+    metadata.insert("treeView.config.useMaxWidth".into(), diagram.config.use_max_width.to_string());
     metadata.insert("treeView.config.showIcons".into(), diagram.config.show_icons.to_string());
     metadata.insert("treeView.config.defaultIconPack".into(), diagram.config.default_icon_pack.clone());
     if let Some(root) = diagram.nodes.iter().find(|node| node.is_implicit_root) {
@@ -9408,12 +9426,18 @@ mod tests {
             nodes: vec![
                 diagram_ir::LayoutedTreeViewNode { id: "root".into(), is_implicit_root: true, parent_id: None, depth: 0, label: "src".into(),
                     kind: TreeViewNodeKind::Directory, class_selector: Some("highlight".into()), icon: Some("mermaid-treeview:folder".into()),
-                    description: None, x: 26.0, y: 12.0, width: 376.0, height: 28.0,
+                    icon_glyph: None, description: None, x: 26.0, y: 12.0, width: 376.0, height: 28.0,
                     label_x: 49.0, label_width: 45.0, description_x: None, description_width: None },
                 diagram_ir::LayoutedTreeViewNode { id: "child".into(), is_implicit_root: false, parent_id: Some("root".into()), depth: 1, label: "main.rs".into(),
                     kind: TreeViewNodeKind::File, class_selector: None, icon: None, description: Some("entry".into()),
+                    icon_glyph: None,
                     x: 68.0, y: 46.0, width: 334.0, height: 28.0,
                     label_x: 73.0, label_width: 95.0, description_x: Some(184.0), description_width: Some(54.4) },
+                diagram_ir::LayoutedTreeViewNode { id: "icon".into(), is_implicit_root: false, parent_id: Some("root".into()), depth: 1, label: "app.ts".into(),
+                    kind: TreeViewNodeKind::File, class_selector: None, icon: Some("logos:typescript".into()),
+                    icon_glyph: Some(diagram_ir::DiagramIconGlyph { text: "T".into(), font_family: "Icon Font".into() }),
+                    description: None, x: 68.0, y: 74.0, width: 334.0, height: 28.0,
+                    label_x: 91.0, label_width: 82.0, description_x: None, description_width: None },
             ],
             connectors: vec![
                 diagram_ir::LayoutedTreeViewConnector { node_id: "root".into(), points: vec![Point { x: 16.0, y: 26.0 }, Point { x: 26.0, y: 26.0 }] },
@@ -9439,6 +9463,10 @@ mod tests {
         }.and_then(|metadata| metadata.get("treeView.icon")) == Some(&"mermaid-treeview:file".to_string())));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::GlyphRun(run) if run.font_size == 20.0)));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if run.font_size == 14.0
+                && run.base.metadata.as_ref().and_then(|metadata| metadata.get("treeView.icon"))
+                    == Some(&"logos:typescript".to_string()))));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("treeView.config.showIcons")),
             Some(&"false".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("treeView.implicitRootId")),

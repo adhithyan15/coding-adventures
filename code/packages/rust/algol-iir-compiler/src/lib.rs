@@ -3910,6 +3910,24 @@ impl Compiler {
         }
     }
 
+    fn contains_builtin_exp_call(&self, node: &GrammarASTNode) -> bool {
+        if node.rule_name == "proc_call" {
+            let source_name = direct_tokens(node)
+                .into_iter()
+                .find(|token| token.effective_type_name() == "NAME")
+                .map(|token| token.value.clone());
+            if source_name.is_some_and(|source_name| {
+                let target_name = self.resolve_procedure_identity(&source_name);
+                target_name == "exp" && !self.proc_sigs.contains_key(&target_name)
+            }) {
+                return true;
+            }
+        }
+        direct_nodes(node)
+            .into_iter()
+            .any(|child| self.contains_builtin_exp_call(child))
+    }
+
     fn builtin_sign_operand<'n>(
         &self,
         node: &'n GrammarASTNode,
@@ -4032,6 +4050,9 @@ impl Compiler {
             "abs" | "entier" => self.builtin_sign_operand(actuals[0]),
             "sqrt" => self.builtin_nonnegative_unit_sign_operand(actuals[0]),
             "sin" | "cos" | "arctan" => self.builtin_sign_operand(actuals[0]),
+            "exp" if !self.contains_builtin_exp_call(actuals[0]) => {
+                self.builtin_sign_operand(actuals[0])
+            }
             _ => None,
         }
     }
@@ -13482,11 +13503,44 @@ mod tests {
     fn al4_trig_entier_sign_widening_rejects_unproven_mappings() {
         for source in [
             "begin real procedure pick; pick := -2.25; real result; result := entier(ln(sign(pick()))); output(result) end",
-            "begin real procedure pick; pick := -2.25; real result; result := entier(exp(sign(pick()))); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier(sin(pick())); output(result) end",
         ] {
             let err = compile_source(source, "test").expect_err(
-                "unbounded, domain-sensitive, or non-sign-rooted mappings must remain conservative",
+                "domain-sensitive or non-sign-rooted mappings must remain conservative",
+            );
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_single_exp_entier_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(exp(sign(pick()))); output(x) end",
+            "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier(exp(cos(sin(abs(sign(pick())))))))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "one exponential mapping preserves a bounded sign-rooted result through entier for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_single_exp_entier_sign_widening_rejects_unproven_mappings() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(exp(exp(sign(pick())))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(exp(pick())); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(ln(sign(pick()))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "nested exponential, domain-sensitive, or non-sign-rooted mappings must remain conservative",
             );
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }

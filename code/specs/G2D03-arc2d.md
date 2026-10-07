@@ -124,11 +124,13 @@ it here with explanations.
 
 ### Step 0: Handle degenerate cases
 
-Before any computation, handle these edge cases:
+Before any computation, replace each negative radius with its absolute value,
+as required by SVG path arcs. Then handle these edge cases:
 
 1. **`from == to`**: the arc has zero length. Return `None` (degenerate).
 2. **`rx == 0` or `ry == 0`**: the ellipse degenerates to a line segment.
    Treat as a line segment, not an arc. Return `None`.
+   The near-zero thresholds below apply after absolute-value correction.
 
 ### Step 1: Transform to the rotated coordinate system
 
@@ -550,13 +552,17 @@ Convenience: `to_center_arc()?.to_cubic_beziers()` or empty vec if degenerate.
 evaluate(self, t: f64) → Point
 ```
 Delegates to `to_center_arc()?.evaluate(t)` or `lerp(from, to, t)` for
-degenerate (line segment) case.
+the degenerate line case. A coincident-endpoint arc evaluates to that one
+endpoint for all `t`; it does not invent a full ellipse.
 
 ```
 bounding_box(self) → Rect
 ```
-Delegates to `to_center_arc()?.bounding_box()` or `Rect::from_points(from, to)`
-for degenerate case.
+Delegates to `to_center_arc()?.bounding_box()` or the ordered endpoint rect
+for the degenerate case: construct its minimum corner from the component-wise
+minima of `from` and `to`, and its maximum corner from their component-wise
+maxima before calling `Rect::from_points`. Reversed endpoints must not create
+a negative-width or negative-height rect.
 
 ---
 
@@ -595,8 +601,9 @@ where all four control points coincide.
 
 ### Floating-point edge cases
 
-- `rx` and `ry` very close to zero (but not exactly zero): treat as degenerate
-  if `rx < 1e-10 || ry < 1e-10`.
+- `rx` and `ry` very close to zero (but not exactly zero): after replacing
+  negative radii with their absolute values, treat as degenerate if
+  `abs(rx) < 1e-10 || abs(ry) < 1e-10`.
 - `from` very close to `to`: degenerate if `from.distance_squared(to) < 1e-20`.
 - `sqrt(max(0, ...))` in step 3: clamp to 0 explicitly to prevent `sqrt` of
   tiny negative values from producing NaN.

@@ -806,8 +806,10 @@ Box-drawing preprocessing matches the pinned root offset, inferred segment
 width, decoration-line handling, mixed-format rejection, and original-line
 diagnostics. Configuration-driven default and filename/extension icon maps
 resolve into fully qualified semantic icon identities. The pinned built-in
-folder and file artwork lowers to filled backend-neutral path geometry, while
-external pack references retain their identities for downstream resolution.
+folder and file artwork lowers to filled backend-neutral path geometry.
+Integrator-registered external icon glyphs resolve by fully qualified identity
+during layout and lower through backend-neutral shaped glyph instructions;
+unresolved references retain their identity on deterministic placeholders.
 Pinned TreeView theme variables control
 font size, label, connector, icon, description, and highlight Paint styling;
 directory labels lower with bold font weight and descriptions with italic
@@ -815,9 +817,11 @@ style. Layout IR also carries one horizontal connector per row, parent vertical
 spans, and a shared description column before backend-neutral Paint lowering.
 TreeView canvas width is intrinsic to its deepest label or widest description,
 and highlighted rows expand to that content-derived right edge independent of
-the caller's width hint.
-Registered icon-pack artwork, exact browser typography, and interactive behavior
-remain unsupported at the partial level.
+the caller's width hint. The inherited `useMaxWidth` setting survives config,
+layout, and PaintScene metadata so embedding backends can choose responsive or
+absolute presentation without coupling that policy to geometry.
+Automatic loading and conversion of Iconify pack artwork, exact browser
+typography, and interactive behavior remain unsupported at the partial level.
 
 ### Railroad Native Slice
 

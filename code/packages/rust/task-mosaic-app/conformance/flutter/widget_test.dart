@@ -75,6 +75,24 @@ class _FailingInitialPropsHost extends MosaicHost {
 }
 
 void main() {
+  testWidgets('topbar fits the declared desktop viewport', (tester) async {
+    tester.view.physicalSize = const Size(1280, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    await loadRealFontIfAvailable();
+    final host = MosaicHost.loadRequired();
+
+    await tester.pumpWidget(MosaicApp(mosaicHostLoader: () => host));
+    await _settle(tester);
+
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'the generated topbar must not report a RenderFlex overflow',
+    );
+  });
+
   testWidgets('timeline legend fits the default constrained viewport', (
     tester,
   ) async {
@@ -98,10 +116,9 @@ void main() {
         .toInt();
 
     try {
-      // The separately tracked topbar width debt (#13465) is already present
-      // before Timeline mounts. Consume that known exception so this
-      // regression test remains scoped to the legend introduced by the next
-      // interaction.
+      // Compact-width debt remains in controls below the topbar. Consume those
+      // known pre-Timeline exceptions so this regression test remains scoped
+      // to the legend introduced by the next interaction.
       while (tester.takeException() != null) {}
       if (!initialFull) {
         tester

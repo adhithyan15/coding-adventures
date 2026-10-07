@@ -15,7 +15,28 @@
     "lesson": "IT-C01-practice",
     "kind": "task",
     "summary": "Complete IT-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in Italian, recognize the reply, and choose an appropriate response.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "assesses": [
+      "IT-PHONO-CIAO-01",
+      "IT-ETYMON-CIAO-02",
+      "IT-PRAGMATIC-CIAO-03",
+      "IT-SOUND-BUONO-02",
+      "IT-ETYMON-BUONO-03",
+      "IT-GRAMMAR-BUONO-04",
+      "IT-ETYMON-IL-LA-LO-02",
+      "IT-GRAMMAR-IL-LA-LO-03",
+      "IT-SOUND-GIORNO-02",
+      "IT-ETYMON-GIORNO-03",
+      "IT-GRAMMAR-GIORNO-04",
+      "IT-LEX-BUONGIORNO-02",
+      "IT-PRAGMATIC-BUONGIORNO-03",
+      "IT-ETYMON-SERA-02",
+      "IT-GRAMMAR-SERA-03",
+      "IT-ETYMON-NOTTE-02",
+      "IT-LEX-NOTTE-03",
+      "IT-SOUND-GRAZIE-02",
+      "IT-ETYMON-GRAZIE-03",
+      "IT-PRAGMATIC-GRAZIE-04"
+    ],
+    "note": "Chapter 1 is schema-v2, so the payoff is atom-scored: IT-C01-practice assesses all twenty atoms the chapter introduces. The ciao writing runway (IT-W01) introduces no atoms of its own — it re-assesses ciao's three — so the opener's typed writing evidence is already inside this set."
   }
 }

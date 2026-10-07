@@ -14,14 +14,14 @@ roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [RU-LEX-PRIVET, RU-LEX-ZDRAVSTVUYTE, RU-LEX-SPASIBO, RU-LEX-DA, RU-LEX-NET, RU-LEX-POZHALUYSTA]
+  knowledge: [RU-LEX-PRIVET, RU-LEX-ZDRAVSTVUYTE, RU-PRAGMATICS-GREETING-REGISTER, RU-LEX-SPASIBO, RU-LEX-DA, RU-LEX-NET, RU-LEX-POZHALUYSTA]
 introduces:
  knowledge: [RU-DIALOGUE-COURTESY-01]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [RU-DIALOGUE-COURTESY-01, RU-LEX-DA, RU-LEX-NET, RU-LEX-POZHALUYSTA, RU-LEX-PRIVET, RU-LEX-SPASIBO, RU-LEX-ZDRAVSTVUYTE]
+  knowledge: [RU-DIALOGUE-COURTESY-01, RU-LEX-DA, RU-LEX-NET, RU-LEX-POZHALUYSTA, RU-LEX-PRIVET, RU-LEX-SPASIBO, RU-LEX-ZDRAVSTVUYTE, RU-PRAGMATICS-GREETING-REGISTER]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -63,7 +63,7 @@ And the two easy vowel traps: **у** = "oo" (not y), **е** = "ye."
 - **пожалуйста** → *pozhálusta* (please / you're welcome)
 
 ## The exchange
-<!-- hl-knowledge: introduces=[]; assesses=[RU-DIALOGUE-COURTESY-01, RU-LEX-PRIVET, RU-LEX-ZDRAVSTVUYTE, RU-LEX-SPASIBO, RU-LEX-DA, RU-LEX-NET, RU-LEX-POZHALUYSTA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[RU-DIALOGUE-COURTESY-01, RU-LEX-PRIVET, RU-LEX-ZDRAVSTVUYTE, RU-PRAGMATICS-GREETING-REGISTER, RU-LEX-SPASIBO, RU-LEX-DA, RU-LEX-NET, RU-LEX-POZHALUYSTA] -->
 
 [PAUSE 1s] Run the whole ritual, formal then informal:
 
@@ -85,7 +85,7 @@ Every word carried a hidden story:
 - **пожалуйста** asks for a **favour** — and doubles as "you're welcome."
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[RU-DIALOGUE-COURTESY-01, RU-LEX-PRIVET, RU-LEX-ZDRAVSTVUYTE, RU-LEX-SPASIBO, RU-LEX-DA, RU-LEX-NET, RU-LEX-POZHALUYSTA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[RU-DIALOGUE-COURTESY-01, RU-LEX-PRIVET, RU-LEX-ZDRAVSTVUYTE, RU-PRAGMATICS-GREETING-REGISTER, RU-LEX-SPASIBO, RU-LEX-DA, RU-LEX-NET, RU-LEX-POZHALUYSTA] -->
 
 [PAUSE 3s] Without looking: which greeting is formal and which is informal?
 (*здравствуйте* / *привет*.) Which word answers *спасибо*? (*пожалуйста*.) Name
