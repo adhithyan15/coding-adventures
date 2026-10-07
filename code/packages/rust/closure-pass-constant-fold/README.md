@@ -84,3 +84,7 @@ The recursive visitor retains its first derivation, merge or contribution
 error. `Pass::run` returns it before accepting the transformed program; later
 forks stop recording. Checked resource exhaustion is an error, not a panic or
 an accepted replacement with missing evidence.
+
+On a provenance error the worker disposes of the candidate AST on its own
+large stack before returning, so rejection does not transfer a deep tree to
+a small caller stack for destruction.

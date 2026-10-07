@@ -4,6 +4,12 @@ All notable changes to the `coding-adventures-closure-pass-constant-fold` crate 
 
 ## [Unreleased]
 
+### Fixed — CV02 boundary review
+
+- Reject and dispose of a failed deep candidate inside the large-stack worker
+  before returning its error; a 128 KiB caller/4,096-wrapper regression prevents
+  rejection from overflowing the caller's stack.
+
 ### Fixed — CV02 checked provenance errors
 
 - Latch the first checked derivation/merge/contribution failure in the recursive

@@ -153,41 +153,38 @@ impl Pass for ConstantFoldPass {
         // worker borrow `ctx.program`/`ctx.cv` without `'static`.
         let program = ctx.program;
         let cv = ctx.cv;
-        let (new_program, contributions, changed, nodes_touched, cv_error) =
-            std::thread::scope(|scope| {
-                std::thread::Builder::new()
-                    .stack_size(FOLD_STACK_SIZE)
-                    .spawn_scoped(scope, move || {
-                        let mut state = FoldState {
-                            cv,
-                            contributions: Vec::new(),
-                            changed: false,
-                            nodes_touched: 0,
-                            cv_error: None,
-                        };
-                        let new_program = fold_program(program, &mut state);
-                        (
-                            new_program,
-                            state.contributions,
-                            state.changed,
-                            state.nodes_touched,
-                            state.cv_error,
-                        )
-                    })
-                    .expect("failed to spawn constant-fold worker thread")
-                    .join()
-                    .expect("constant-fold worker thread panicked")
-            });
-
-        // The recursive visitor cannot return Result at every helper boundary.
-        // Reject its candidate program if any provenance operation failed;
-        // subsequent forks stop recording after retaining the first error.
-        if let Some(message) = cv_error {
-            return Err(PassError {
-                pass_name: self.name().to_string(),
-                message,
-            });
-        }
+        let (new_program, contributions, changed, nodes_touched) = std::thread::scope(|scope| {
+            std::thread::Builder::new()
+                .stack_size(FOLD_STACK_SIZE)
+                .spawn_scoped(scope, move || {
+                    let mut state = FoldState {
+                        cv,
+                        contributions: Vec::new(),
+                        changed: false,
+                        nodes_touched: 0,
+                        cv_error: None,
+                    };
+                    let new_program = fold_program(program, &mut state);
+                    // Rejection owns a potentially deep candidate. Dispose
+                    // of it here, on the same large stack used for folding,
+                    // rather than returning it for a small caller to drop.
+                    if let Some(message) = state.cv_error {
+                        return Err(PassError {
+                            pass_name: "constant-fold".to_string(),
+                            message,
+                        });
+                    }
+                    Ok((
+                        new_program,
+                        state.contributions,
+                        state.changed,
+                        state.nodes_touched,
+                    ))
+                })
+                .expect("failed to spawn constant-fold worker thread")
+                .join()
+                .expect("constant-fold worker thread panicked")
+        })?;
 
         Ok(PassOutput {
             program: new_program,
@@ -14815,6 +14812,69 @@ mod tests {
             })
             .unwrap_err();
         assert!(error.message.contains("nodes limit"), "{error}");
+    }
+
+    #[test]
+    fn checked_cv_deep_rejected_candidate_drops_on_the_worker_stack() {
+        const CHILD: &str = "CV02_FOLD_CANDIDATE_CHILD";
+        if std::env::var_os(CHILD).is_none() {
+            let result = std::process::Command::new(std::env::current_exe().unwrap())
+                .args([
+                    "--exact",
+                    "tests::checked_cv_deep_rejected_candidate_drops_on_the_worker_stack",
+                    "--nocapture",
+                ])
+                .env(CHILD, "1")
+                .output()
+                .unwrap();
+            assert!(
+                result.status.success(),
+                "isolated fold failed: {:?}\n{}",
+                result.status,
+                String::from_utf8_lossy(&result.stderr)
+            );
+            return;
+        }
+        std::thread::Builder::new()
+            .stack_size(128 * 1024)
+            .spawn(|| {
+                let mut cv =
+                    CVLog::new_checked_compact(coding_adventures_correlation_vector::GraphLimits {
+                        max_events: 0,
+                        ..Default::default()
+                    })
+                    .unwrap();
+                let root = cv.try_create(None).unwrap();
+                let mut expr = Expression::BinaryExpression(BinaryExpression {
+                    cv: Some(root),
+                    operator: BinaryOperator::Add,
+                    left: Box::new(num(1.0, None)),
+                    right: Box::new(num(2.0, None)),
+                });
+                for _ in 0..4096 {
+                    expr = Expression::MemberExpression(MemberExpression {
+                        cv: None,
+                        object: Box::new(expr),
+                        property: Box::new(ident("p")),
+                        computed: false,
+                    });
+                }
+                // The child process owns this one leaked input, reclaimed on exit.
+                // Isolate candidate destruction from the unrelated input destructor.
+                let prog = Box::leak(Box::new(program_with_expr(expr, true)));
+                let sidecar = Sidecar::new();
+                let error = ConstantFoldPass::new()
+                    .run(PassContext {
+                        program: prog,
+                        sidecar: &sidecar,
+                        cv: &mut cv,
+                    })
+                    .unwrap_err();
+                assert!(error.message.contains("events limit"), "{error}");
+            })
+            .unwrap()
+            .join()
+            .unwrap();
     }
 
     #[test]

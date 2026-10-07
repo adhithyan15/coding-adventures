@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed — CV02 boundary review
+
+- Retain allocator-only import status through mutation/save/reload. Canonical
+  exports include unchecked_import:true; strict queries/validation and checked
+  import reject that state instead of upgrading discarded/defaulted evidence.
+
 ### Added
 
 - Public `dispose_metadata` lets evidence consumers drain pending owned payloads

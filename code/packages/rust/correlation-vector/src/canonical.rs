@@ -46,7 +46,10 @@ impl Serialize for Canonical<'_, CVLog> {
     fn serialize<S: Serializer>(&self, s: S) -> Result<S::Ok, S::Error> {
         self.1.take::<S::Error>(1)?;
         let log = self.0;
-        let mut map = s.serialize_map(Some(if log.compact_sequence.is_some() { 4 } else { 3 }))?;
+        let fields = 3
+            + usize::from(log.compact_sequence.is_some())
+            + usize::from(log.allocator_only_import);
+        let mut map = s.serialize_map(Some(fields))?;
         map.serialize_entry("enabled", &log.enabled)?;
         map.serialize_entry("entries", &Canonical(&log.entries, self.1))?;
         if let Some(last) = log.compact_sequence {
@@ -54,6 +57,10 @@ impl Serialize for Canonical<'_, CVLog> {
         }
         self.1.take::<S::Error>(log.pass_order.len())?;
         map.serialize_entry("pass_order", &log.pass_order)?;
+        if log.allocator_only_import {
+            self.1.take::<S::Error>(1)?;
+            map.serialize_entry("unchecked_import", &true)?;
+        }
         map.end()
     }
 }

@@ -242,6 +242,9 @@ pub struct CVLog {
     // Keep stage membership O(1); the ordered vector remains the wire contract.
     pass_sources: std::collections::HashSet<String>,
     checked: Option<CheckedState>,
+    // Generic typed imports may have discarded/defaulted evidence. Never let
+    // graph shape validation or a later snapshot erase that trust boundary.
+    allocator_only_import: bool,
 
     /// Per-base sequence counters for root CVs.
     /// Key: base string (e.g., "a3f1b2c4").
@@ -385,6 +388,7 @@ impl CVLog {
             compact_sequence: None,
             pass_sources: std::collections::HashSet::new(),
             checked: None,
+            allocator_only_import: false,
         }
     }
 
@@ -1142,6 +1146,7 @@ impl CVLog {
         Ok(CVLog {
             pass_sources: snap.pass_order.iter().cloned().collect(),
             checked: None,
+            allocator_only_import: true,
             entries: snap.entries,
             pass_order: snap.pass_order,
             enabled: snap.enabled,

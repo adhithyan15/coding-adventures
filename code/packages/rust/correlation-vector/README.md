@@ -261,3 +261,9 @@ compiler passes         ←  contribute/derive/merge/delete as they transform th
 
 The CV library has no knowledge of compilers, IR nodes, or any specific domain. It is a
 pure data structure and a set of operations over it.
+
+Generic `from_json_string` imports remain allocator-only even after mutation.
+Strict queries and validation reject them; their snapshots retain
+`unchecked_import: true`, which checked import rejects. This prevents a
+normalized duplicate key or omitted array from becoming checked evidence
+through save/reload. Use `from_checked_json` at evidence boundaries.

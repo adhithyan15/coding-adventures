@@ -73,11 +73,14 @@ ownership, transactional accounting, strict bounded import, iterative borrowed
 topological queries, canonical byte-limited JSON and safe rejected-metadata
 disposal are implemented. Independent review exposed compatibility query gaps,
 discarded projection/stage declarations, pre-budget metadata sorting and
-pre-validation scheduler cloning; each has regression evidence and a repair.
+pre-validation scheduler cloning, caller-stack destruction of rejected folds
+and unchecked-import normalization laundering; each has regression evidence
+and a repair. Allocator-only import status now survives canonical export and
+cannot be upgraded through checked queries/reload.
 Lexer/parser/scheduler and constant-fold visitor errors now propagate before
-accepting their candidate results. Six affected crates pass 876 tests (including
+accepting their candidate results. Six affected crates pass 878 tests (including
 10 CV doctests), with 10 existing ignored cases; strict all-target lint and
-871 lesson shards pass. Direct checked chains have 4,096/8,192 nodes and
+874 lesson shards pass. Direct checked chains have 4,096/8,192 nodes and
 569,436/1,138,780-byte exports; a 10,002-node wide graph passes deterministic
 queries. Isolated small-stack tests cover 65,536-level owned and returned
 metadata. Current remaining CV02 work: other visitor/pass errors, checked CLI

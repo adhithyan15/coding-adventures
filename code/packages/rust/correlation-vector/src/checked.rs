@@ -425,6 +425,9 @@ impl CVLog {
         verify_usage: bool,
         mut work: Work,
     ) -> Result<ValidatedGraph<'_>, String> {
+        if self.allocator_only_import {
+            return Err("allocator-only CV import is not checked graph evidence".into());
+        }
         limits.validate()?;
         if self.entries.len() > limits.max_nodes {
             return Err("CV nodes limit exceeded".into());
@@ -674,6 +677,7 @@ impl CVLog {
                 limits: limits.clone(),
                 usage: Usage::default(),
             }),
+            allocator_only_import: false,
         };
         let usage = log.validated_graph_with_work(&limits, false, work)?.usage;
         log.checked.as_mut().unwrap().usage = usage;

@@ -1,6 +1,32 @@
 use super::*;
 
 #[test]
+fn allocator_import_cannot_launder_lost_metadata_or_defaulted_fields() {
+    let duplicate = r#"{"enabled":true,"entries":{"cv1.0000000000000001":{"id":"cv1.0000000000000001","parent_ids":[],"origin":{"source":"s","location":"l","timestamp":null,"meta":{"x":1,"\u0078":2}},"contributions":[],"deleted":null}},"identity":{"scheme":"compact-v1","last_sequence":"0000000000000001"},"pass_order":[]}"#;
+    let missing = r#"{"enabled":true,"entries":{"cv1.0000000000000001":{"id":"cv1.0000000000000001"}},"identity":{"scheme":"compact-v1","last_sequence":"0000000000000001"},"pass_order":[]}"#;
+    for raw in [duplicate, missing] {
+        assert!(CVLog::from_checked_json(raw, GraphLimits::default()).is_err());
+        let mut unchecked = CVLog::from_json_string(raw).unwrap();
+        assert!(unchecked.try_lineage("cv1.0000000000000001").is_err());
+        assert!(unchecked.validate_graph().is_err());
+        unchecked.try_create(None).unwrap();
+        let normalized = unchecked.to_json_string().unwrap();
+        assert_eq!(
+            serde_json::from_str::<Value>(&normalized).unwrap()["unchecked_import"],
+            true
+        );
+        assert!(CVLog::from_checked_json(&normalized, GraphLimits::default()).is_err());
+        let reloaded = CVLog::from_json_string(&normalized).unwrap();
+        assert!(reloaded.try_lineage("cv1.0000000000000002").is_err());
+        assert!(CVLog::from_checked_json(
+            &reloaded.to_json_string().unwrap(),
+            GraphLimits::default()
+        )
+        .is_err());
+    }
+}
+
+#[test]
 fn compatibility_import_cannot_discard_projection_or_stage_evidence() {
     let mut legacy = CVLog::new(true);
     let id = legacy.try_create(None).unwrap();
