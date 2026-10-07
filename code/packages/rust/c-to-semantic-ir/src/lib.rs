@@ -142,6 +142,24 @@ mod tests {
     }
 
     #[test]
+    fn arithmetic_if_reaches_the_rooted_c_frontend() {
+        let root = uniq("_arithmetic_if");
+        std::fs::create_dir(&root).unwrap();
+        write_fresh(
+            &root.join("main.c"),
+            b"#define LEFT 2\n#if LEFT * 3\nint value(void) { return 7; }\n#else\nint value(void) { return 0; }\n#endif\n",
+        );
+        let module =
+            compile_preprocessed_file("main.c", [root.clone()], "arithmetic_if", Bounds::default())
+                .unwrap();
+        let text = semantic_ir::print_module(&module);
+        assert!(text.contains("(function value"), "{text}");
+        assert!(text.contains("(block (int 7))"), "{text}");
+        assert!(semantic_ir::validate(&module).is_ok());
+        std::fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
     fn overlong_entry_is_refused_before_copy_or_filesystem_access() {
         let entry = "x".repeat(65_537);
         let error = compile_preprocessed_file(&entry, [], "oversized", Bounds::default())

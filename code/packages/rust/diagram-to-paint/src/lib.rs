@@ -788,6 +788,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     metadata.insert("treeView.config.paddingX".into(), diagram.config.padding_x.to_string());
     metadata.insert("treeView.config.paddingY".into(), diagram.config.padding_y.to_string());
     metadata.insert("treeView.config.lineThickness".into(), diagram.config.line_thickness.to_string());
+    metadata.insert("treeView.config.useMaxWidth".into(), diagram.config.use_max_width.to_string());
     metadata.insert("treeView.config.showIcons".into(), diagram.config.show_icons.to_string());
     metadata.insert("treeView.config.defaultIconPack".into(), diagram.config.default_icon_pack.clone());
     if let Some(root) = diagram.nodes.iter().find(|node| node.is_implicit_root) {

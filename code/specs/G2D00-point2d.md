@@ -154,8 +154,10 @@ Unit vectors represent _pure directions_ with no magnitude information. They
 appear everywhere: face normals, tangent directions on curves, perpendicular
 offsets.
 
-Edge case: if $|\mathbf{v}| = 0$ (the zero vector has no direction), we return
-the origin (0, 0) rather than dividing by zero.
+Edge case: a vector with magnitude less than $10^{-12}$ has no stable
+direction at this package's precision. Return the origin (0, 0) rather than
+amplifying rounding error or dividing by zero. At exactly $10^{-12}$, normalize
+the vector. The comparison is on magnitude, not squared magnitude.
 
 ### Linear Interpolation (Lerp)
 
@@ -286,7 +288,7 @@ are comparing distances or checking if a vector is zero.
 normalize(self) → Point
 ```
 The unit vector in the same direction. Returns `Point::origin()` if the
-magnitude is zero (rather than dividing by zero).
+magnitude is less than `1e-12`; exactly `1e-12` remains normalizable.
 
 ```
 distance(self, other: Point) → f64
@@ -509,6 +511,7 @@ Every language implementation must include tests validating:
 7. **Magnitude squared**: `Point::new(3,4).magnitude_squared() == 25.0` (exact).
 8. **Normalize**: `Point::new(3,4).normalize() ≈ Point::new(0.6, 0.8)`.
 9. **Normalize zero**: `Point::origin().normalize() == Point::origin()`.
+   Also cover magnitudes just below and exactly at `1e-12`.
 10. **Distance**: `Point::new(0,0).distance(Point::new(3,4)) ≈ 5.0`.
 11. **Lerp midpoint**: `Point::new(0,0).lerp(Point::new(10,10), 0.5) == Point::new(5,5)`.
 12. **Perpendicular**: `Point::new(1,0).perpendicular() == Point::new(0,1)`.

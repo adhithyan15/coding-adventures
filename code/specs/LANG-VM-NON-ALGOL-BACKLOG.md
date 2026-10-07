@@ -113,14 +113,19 @@ SIR lowerer, plus bounded logical `#if` conditions. It merged as
 CodeQL, and books checks passed. An included macro and conditional program
 executed through SIR-to-Ruby. Quoted includes still search declared roots only;
 full C `#if`, stringize/paste, and pathless `compile_source` routing remain.
+PR #16921 delivered nested quoted include lookup beside the verified including
+header before declared roots and merged as
+`b0c223097bf34f0e4b81f6fca894743c9daa5a08` after latest-head CI, CodeQL,
+and books checks passed. Unknown origin remains rejected; primary and system
+includes remain root-only with the same containment and bounded reads.
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **PREP01 C (selected):** resolve nested quoted includes beside their verified
-   including header before declared roots, while retaining root confinement and
-   bounded file reads. Continue toward full C `#if`, stringize/paste and default
-   frontend routing after this bounded step.
+1. **PREP01 C (selected):** add exactly one checked `+`, `-`, or `*` arithmetic
+   operation in each bounded logical `#if` clause, accepting only signed 32-bit
+   decimal operands and results. Continue toward full C `#if`, stringize/paste
+   and default frontend routing after this bounded step.
 2. **LANG82 Perl release grammars:** add distinct source-backed token and
    grammar files for the 753 remaining inventoried releases, and continue the
    inventory audit. Every currently published pair remains explicitly partial.

@@ -815,7 +815,9 @@ style. Layout IR also carries one horizontal connector per row, parent vertical
 spans, and a shared description column before backend-neutral Paint lowering.
 TreeView canvas width is intrinsic to its deepest label or widest description,
 and highlighted rows expand to that content-derived right edge independent of
-the caller's width hint.
+the caller's width hint. The inherited `useMaxWidth` setting survives config,
+layout, and PaintScene metadata so embedding backends can choose responsive or
+absolute presentation without coupling that policy to geometry.
 Registered icon-pack artwork, exact browser typography, and interactive behavior
 remain unsupported at the partial level.
 
