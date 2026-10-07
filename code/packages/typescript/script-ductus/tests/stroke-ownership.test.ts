@@ -1,16 +1,68 @@
-import { createHash } from "node:crypto";
-import { lstatSync, readFileSync, readdirSync } from "node:fs";
-import { dirname, resolve } from "node:path";
+// ---------------------------------------------------------------------------
+// stroke-ownership.test.ts — the registry pin, and who may own which glyph
+// ---------------------------------------------------------------------------
+//
+// ONE PIN PER SCRIPT, ONE FILE PER PIN (#12118, #13193).
+//
+// The first test pins the whole `DUCTUS` registry: every key, their order,
+// every byte of non-Tamil data, every script count and the Arabic family's
+// shared stroke objects. That pin used to be one literal here, and every
+// filmstrip or stroke PR in EVERY script had to rewrite it — keys 636 -> 648,
+// a new key hash, a new data hash — so a Kannada PR and a Malayalam PR in
+// flight together conflicted on the same five lines, and each of them also
+// appended a paragraph of provenance to the same comment above it.
+//
+// Now each script's numbers live in `tests/stroke-ownership/<script>.json`
+// and the few facts that belong to no script — the order of the script
+// blocks and the shared-identity values — in `tests/stroke-ownership/
+// _registry.json`. `stroke-ownership-pins.ts` explains each field and why the
+// split pins exactly what the single literal did, no less. The four-hundred-
+// line history of every move (353 -> 648 keys) lives in git, in this file's
+// log, and in the CHANGELOG.d fragments that made each move.
+//
+// After a deliberate change to stroke data, rewrite the pins with
+//
+//     npm run generate:stroke-ownership
+//     (= vitest run tests/stroke-ownership.test.ts --mode write)
+//
+// review the diff — it should touch ONLY the scripts you meant to change —
+// and say in your CHANGELOG.d fragment why each value moved. The write mode is
+// the same switch `npm run generate:filmstrip-ledger` uses; without it the
+// test only compares, and a missing pin for a new script, a stale pin for a
+// removed one, or any moved value fails.
+// ---------------------------------------------------------------------------
+
+import {
+  existsSync,
+  lstatSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  symlinkSync,
+  unlinkSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import ts from "typescript";
 import { describe, expect, it } from "vitest";
 
-import { DUCTUS } from "../src/strokes";
-
-const sha256 = (value: string): string =>
-  createHash("sha256").update(value).digest("hex");
+import { DUCTUS, type LetterDuctus } from "../src/strokes";
+import {
+  REGISTRY_PIN_FILE,
+  interleaveScriptKeys,
+  loadStrokeOwnershipPins,
+  measureStrokeOwnershipPins,
+  scriptLayout,
+  strokeOwnershipPinFiles,
+  type ScriptPin,
+} from "./stroke-ownership-pins";
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const pinDirectory = resolve(packageRoot, "tests/stroke-ownership");
 const ownerNames = [
   "arabic-family",
   // Bengali joins as one owner module, like Malayalam and Gujarati.
@@ -114,501 +166,202 @@ const sourceOwnerGlyphs = (filename: string, source: string): string[] => {
   return glyphs;
 };
 
-const sharedObjectIdentityGroups = (
-  registry: Record<string, object>,
-): string[][] => {
-  const seen = new Map<object, { path: string; root: string }>();
-  const shared = new Map<object, string[]>();
-
-  const visit = (value: unknown, path: string, root: string): void => {
-    if (value === null || typeof value !== "object") return;
-    const previous = seen.get(value);
-    if (previous !== undefined) {
-      if (previous.root !== root) {
-        const paths = shared.get(value) ?? [previous.path];
-        paths.push(path);
-        shared.set(value, paths);
-      }
-      return;
-    }
-    seen.set(value, { path, root });
-    for (const [key, child] of Object.entries(value)) {
-      visit(child, `${path}.${key}`, root);
-    }
-  };
-
-  for (const [key, value] of Object.entries(registry)) {
-    visit(value, JSON.stringify(key), key);
-  }
-  return [...shared.values()].sort(([a], [b]) => a.localeCompare(b));
-};
-
 describe("stroke ownership migration baseline", () => {
-  it("preserves the exact ordered registry and parsed data", () => {
-    const counts = Object.values(DUCTUS).reduce<Record<string, number>>(
-      (out, letter) => {
-        out[letter.script] = (out[letter.script] ?? 0) + 1;
-        return out;
-      },
-      {},
-    );
-    const nonTamilRegistry = Object.fromEntries(
-      Object.entries(DUCTUS).filter(([, letter]) => letter.script !== "tamil"),
-    );
-    const identityGroups = sharedObjectIdentityGroups(DUCTUS);
-    expect({
-      keys: Object.keys(DUCTUS).length,
-      keyHash: sha256(JSON.stringify(Object.keys(DUCTUS))),
-      nonTamilDataHash: sha256(JSON.stringify(nonTamilRegistry)),
-      sharedIdentityGroups: identityGroups.length,
-      sharedIdentityHash: sha256(JSON.stringify(identityGroups)),
-      counts: Object.fromEntries(
-        Object.entries(counts).sort(([a], [b]) => a.localeCompare(b)),
+  // The gate. In write mode it first rewrites every pin file from the live
+  // registry and deletes the pin of any script that no longer exists; in the
+  // normal mode it only reads. Either way the comparison below runs, so a
+  // regeneration that produced something unreadable still fails here.
+  it("pins every script's keys, order and data in its own shard", () => {
+    const measured = measureStrokeOwnershipPins(DUCTUS);
+    const files = strokeOwnershipPinFiles(measured);
+
+    if (import.meta.env.MODE === "write") {
+      mkdirSync(pinDirectory, { recursive: true });
+      // Never write through a symlink: not the directory, not a pin file.
+      if (!lstatSync(pinDirectory).isDirectory()) throw new Error(`${pinDirectory} is not a real directory`);
+      for (const name of readdirSync(pinDirectory)) {
+        const stale = join(pinDirectory, name);
+        const stat = lstatSync(stale);
+        if (!files.has(name) && /^[a-z][a-z0-9-]*\.json$/.test(name) && stat.isFile()) {
+          unlinkSync(stale);
+        }
+      }
+      for (const [name, bytes] of files) {
+        const target = join(pinDirectory, name);
+        if (existsSync(target) && !lstatSync(target).isFile()) throw new Error(`${target} is not a regular file`);
+        writeFileSync(target, bytes, "utf8");
+      }
+    }
+
+    const pinned = loadStrokeOwnershipPins(pinDirectory);
+    const regenerate = "run `npm run generate:stroke-ownership` in script-ductus";
+
+    // The SET of pin files must equal the set of scripts, in both directions:
+    // a new script cannot slip past without a pin, and a removed script cannot
+    // leave a pin behind that nothing checks.
+    const live = Object.keys(measured.scripts).sort();
+    const onDisk = Object.keys(pinned.scripts).sort();
+    const problems: string[] = [];
+    for (const script of live) {
+      if (!onDisk.includes(script)) {
+        problems.push(`NEW ${script}: no tests/stroke-ownership/${script}.json — ${regenerate}`);
+      }
+    }
+    for (const script of onDisk) {
+      if (!live.includes(script)) {
+        problems.push(`STALE ${script}: no registry entry has this script — delete its pin`);
+      }
+    }
+
+    // Then every value of every pin. Each moved field is named with its old
+    // and new value, so the failure reads like the diff a regeneration makes.
+    const fieldsOf = (pin: ScriptPin | undefined): (keyof ScriptPin)[] =>
+      pin === undefined ? [] : (Object.keys(pin) as (keyof ScriptPin)[]);
+    for (const script of live.filter((name) => onDisk.includes(name))) {
+      const want = pinned.scripts[script]!;
+      const got = measured.scripts[script]!;
+      for (const field of new Set([...fieldsOf(want), ...fieldsOf(got)])) {
+        const before = JSON.stringify(want[field]);
+        const after = JSON.stringify(got[field]);
+        if (before !== after) {
+          problems.push(`MOVED ${script}.${field}: ${before} -> ${after} (tests/stroke-ownership/${script}.json)`);
+        }
+      }
+    }
+    for (const field of Object.keys(measured.registry) as (keyof typeof measured.registry)[]) {
+      const before = JSON.stringify(pinned.registry[field]);
+      const after = JSON.stringify(measured.registry[field]);
+      if (before !== after) {
+        problems.push(`MOVED ${field}: ${before} -> ${after} (tests/stroke-ownership/${REGISTRY_PIN_FILE})`);
+      }
+    }
+    expect(problems, `${problems.join("\n")}\nIf the change is deliberate, ${regenerate}.`).toEqual([]);
+
+    // Belt and braces: the pins as parsed must equal the measurement exactly,
+    // so no field can exist on one side and be skipped by the loop above.
+    expect(pinned).toEqual(measured);
+  });
+
+  // The split must lose nothing. The old literal hashed the ORDERED list of
+  // every key; the shards keep only each script's own ordered keys plus the
+  // block shape. This rebuilds the full order from exactly those pieces, so if
+  // it ever stopped matching, the per-script pins would no longer determine
+  // the registry and the gate would have quietly weakened.
+  it("rebuilds the exact registry key order from the per-script layout", () => {
+    const { scriptRuns, byScript } = scriptLayout(DUCTUS);
+    expect(interleaveScriptKeys(scriptRuns, byScript)).toEqual(Object.keys(DUCTUS));
+
+    // The pieces must fit exactly: a block that asks for more keys than its
+    // script has, or a script with keys no block consumes, is refused.
+    const tamil = byScript.get("tamil")!;
+    expect(() =>
+      interleaveScriptKeys(
+        scriptRuns,
+        new Map([...byScript, ["tamil", { ...tamil, runs: [...tamil.runs, 1] }]]),
       ),
-      // Measured, not reasoned: the source-verified numeral tranche adds 六,
-      // 七, 八, 九, 十 and 百, so it moves keys 353 -> 359, the ordered key hash,
-      // the non-Tamil data hash, and Chinese 44 -> 50. Tamil is untouched,
-      // which is why its own count and the shared-identity hashes do not move.
-      //
-      // Measured again for HL-C360, which adds exactly two glyphs — ろ (U+308D)
-      // and ゅ (U+3085), the two hiragana the Japanese cardinals one to ten
-      // needed. Keys 359 -> 361, japanese 15 -> 17, the ordered key hash and the
-      // non-Tamil data hash. Tamil is untouched again, so its count and both
-      // shared-identity values are unchanged.
-      //
-      // Measured for HL-C364: the native-count and counter lessons verify six
-      // independently written hiragana — の, ひ, ふ, ほ, む and や. Keys move
-      // 361 -> 367 and Japanese 17 -> 23; Tamil and both shared-identity values
-      // remain unchanged.
-      //
-      // Measured for HL-C366: the Chinese particles and joining lessons add
-      // ten source-verified glyphs. Keys move 367 -> 377 and Chinese 50 -> 60;
-      // Tamil and both shared-identity values remain unchanged.
-      //
-      // Measured for the Malayalam chillu NN repair: the newly source-verified
-      // ൺ adds its font-checked ductus. Keys move 377 -> 378 and Malayalam
-      // 13 -> 14; Tamil and both shared-identity values remain unchanged.
-      //
-      // Telugu క starts the consonant pass with its five-movement, two-run
-      // source-backed path. Keys move 378 -> 379 and Telugu 9 -> 10; Tamil and
-      // both shared-identity values remain unchanged.
-      //
-      // Telugu ఖ continues that pass with its six-movement, two-run path.
-      // Keys move 379 -> 380 and Telugu 10 -> 11; Tamil and both
-      // shared-identity values remain unchanged.
-      //
-      // Telugu గ follows with its two-movement, two-run path. Keys move
-      // 380 -> 381 and Telugu 11 -> 12; Tamil and both shared-identity
-      // values remain unchanged.
-      //
-      // Telugu ఘ continues with its six-movement, four-run path. Keys move
-      // 381 -> 382 and Telugu 12 -> 13; Tamil and both shared-identity
-      // values remain unchanged.
-      //
-      // Telugu చ starts the next consonant row with a four-movement, two-run
-      // path. Keys move 382 -> 383 and Telugu 13 -> 14; Tamil and both
-      // shared-identity values remain unchanged.
-      //
-      // Telugu ఙ fills the word-first gap before చ with a five-movement,
-      // three-run path. Keys move 383 -> 384 and Telugu 14 -> 15; Tamil and
-      // both shared-identity values remain unchanged.
-      //
-      // Telugu జ is the next consonant with an existing vocabulary-first
-      // lesson owner. Its four sourced movements remain four pen-down runs.
-      // Keys move 384 -> 385 and Telugu 15 -> 16; Tamil and both
-      // shared-identity values remain unchanged.
-      //
-      // Telugu ఞ already has a vocabulary-first lesson owner. Its eight
-      // sourced movements remain eight pen-down runs. Keys move 385 -> 386
-      // and Telugu 16 -> 17; Tamil and both shared-identity values remain
-      // unchanged.
-      //
-      // Telugu ట already has a vocabulary-first lesson owner. Its six sourced
-      // movements remain six pen-down runs. Keys move 386 -> 387 and Telugu
-      // 17 -> 18; Tamil and both shared-identity values remain unchanged.
-      //
-      // Telugu ఠ already has a vocabulary-first lesson owner. Its three
-      // sourced movements remain three pen-down runs. Keys move 387 -> 388
-      // and Telugu 18 -> 19; shared-identity values remain unchanged.
-      //
-      // Telugu ఛ closes the preceding word-first gap with a five-movement,
-      // two-run path. Keys move 388 -> 389 and Telugu 19 -> 20; Tamil and both
-      // shared-identity values remain unchanged.
-      //
-      // Telugu డ already has a vocabulary-first lesson owner. Its five
-      // sourced movements remain five pen-down runs. Keys move 389 -> 390
-      // and Telugu 20 -> 21; shared-identity values remain unchanged.
-      //
-      // Telugu ఝ follows its newly added vocabulary-first lesson owner. Its
-      // five sourced movements remain five pen-down runs. Keys move 390 -> 391
-      // and Telugu 21 -> 22; shared-identity values remain unchanged.
-      //
-      // Telugu ఢ already has a vocabulary-first lesson owner. Its six
-      // sourced movements remain six pen-down runs. Keys move 391 -> 392 and
-      // Telugu 22 -> 23; shared-identity values remain unchanged.
-      //
-      // Telugu ణ already has a vocabulary-first lesson owner. Its five
-      // sourced movements remain five pen-down runs. Keys move 392 -> 393 and
-      // Telugu 23 -> 24; shared-identity values remain unchanged.
-      //
-      // Telugu త already anchors a complete word-first writing ladder. Its
-      // seven sourced movements form two pen-down runs. Keys move 393 -> 394
-      // and Telugu 24 -> 25; shared-identity values remain unchanged.
-      //
-      // Telugu థ follows its vocabulary-first lesson owner. Its seven
-      // sourced movements remain seven pen-down runs. Keys move 394 -> 395
-      // and Telugu 25 -> 26; shared-identity values remain unchanged.
-      //
-      // Telugu ద follows its familiar-word lesson owner. Its five sourced
-      // movements remain five pen-down runs. Keys move 395 -> 396 and Telugu
-      // 26 -> 27; shared-identity values remain unchanged.
-      //
-      // Telugu ధ opens the word-first writing ladder. Its six sourced
-      // movements remain six pen-down runs. Keys move 396 -> 397 and Telugu
-      // 27 -> 28; shared-identity values remain unchanged.
-      //
-      // Telugu న follows with its familiar-word lesson owner. Its three
-      // sourced movements remain three pen-down runs. Keys move 397 -> 398
-      // and Telugu 28 -> 29; shared-identity values remain unchanged.
-      //
-      // Telugu ప follows with another familiar-word lesson owner. Its four
-      // sourced movements remain four pen-down runs. Keys move 398 -> 399
-      // and Telugu 29 -> 30; shared-identity values remain unchanged.
-      //
-      // Telugu ఫ follows with the aspirated partner's five sourced movements,
-      // including its separate short lower stem. Keys move 399 -> 400 and
-      // Telugu 30 -> 31; shared-identity values remain unchanged.
-      //
-      // Telugu బ follows with four separately sourced bowl movements. Keys
-      // move 400 -> 401 and Telugu 31 -> 32; shared-identity values remain
-      // unchanged.
-      //
-      // Telugu భ follows with six sourced movements, including its separate
-      // upper flourish and lower stem. Keys move 401 -> 402 and Telugu 32 ->
-      // 33; shared-identity values remain unchanged.
-      //
-      // Telugu మ follows with seven separately sourced curves. Keys move
-      // 402 -> 403 and Telugu 33 -> 34; shared-identity values remain
-      // unchanged.
-      //
-      // Telugu య follows with four sourced paths. Keys move 403 -> 404 and
-      // Telugu 34 -> 35; shared-identity values remain unchanged.
-      //
-      // Telugu ర follows with two sourced paths. Keys move 404 -> 405 and
-      // Telugu 35 -> 36; shared-identity values remain unchanged.
-      //
-      // Telugu ల follows with two sourced paths. Keys move 405 -> 406 and
-      // Telugu 36 -> 37; shared-identity values remain unchanged.
-      //
-      // Telugu వ follows with three sourced paths. Keys move 406 -> 407 and
-      // Telugu 37 -> 38; shared-identity values remain unchanged.
-      //
-      // Telugu శ follows with three sourced paths. Keys move 407 -> 408 and
-      // Telugu 38 -> 39; shared-identity values remain unchanged.
-      //
-      // Telugu ష follows with four sourced paths. Keys move 408 -> 409 and
-      // Telugu 39 -> 40; shared-identity values remain unchanged.
-      //
-      // Telugu స follows with two sourced paths. Keys move 409 -> 410 and
-      // Telugu 40 -> 41; shared-identity values remain unchanged.
-      //
-      // Telugu హ follows with four sourced paths. Keys move 410 -> 411 and
-      // Telugu 41 -> 42; shared-identity values remain unchanged.
-      //
-      // Telugu ళ follows with four sourced paths. Keys move 411 -> 412 and
-      // Telugu 42 -> 43; shared-identity values remain unchanged.
-      //
-      // Japanese chapter 131 writes small ゃ (U+3083), small ょ (U+3087) and
-      // を (U+3092). Keys move 412 -> 415 and Japanese 23 -> 26, with the
-      // ordered key hash and the non-Tamil data hash; Tamil and both
-      // shared-identity values remain unchanged.
-      //
-      // Japanese chapter 132 writes そ (U+305D), れ (U+308C) and る (U+308B).
-      // Keys move 415 -> 418 and Japanese 26 -> 29, with the ordered key hash
-      // and the non-Tamil data hash; Tamil and both shared-identity values
-      // remain unchanged.
-      //
-      // Japanese chapter 133 writes the last four basic hiragana: き (U+304D),
-      // け (U+3051), ぬ (U+306C) and へ (U+3078). It also gives ら (U+3089),
-      // written since chapter 8 but missing from the inventory, its record
-      // and ductus. Keys move 418 -> 423 and Japanese 29 -> 34, with the
-      // ordered key hash and the non-Tamil data hash; Tamil and both
-      // shared-identity values remain unchanged.
-      //
-      // あ (U+3042), い (U+3044), う (U+3046), え (U+3048), お (U+304A) and
-      // か (U+304B), written since chapters 1, 3 and 10 but never given a
-      // cited stroke-order source, now cite KanjiVG and gain a ductus each.
-      // Keys move 423 -> 429 and Japanese 34 -> 40, with the ordered key hash
-      // and the non-Tamil data hash; Tamil and both shared-identity values
-      // remain unchanged.
-      //
-      // こ (U+3053), さ (U+3055), す (U+3059), ち (U+3061) and と (U+3068),
-      // written since chapters 2 to 4 but never given a cited stroke-order
-      // source, now cite KanjiVG and gain a ductus each. Keys move 429 -> 434
-      // and Japanese 40 -> 45, with the ordered key hash and the non-Tamil
-      // data hash; Tamil and both shared-identity values remain unchanged.
-      //
-      // に (U+306B), は (U+306F), ま (U+307E), り (U+308A) and ん (U+3093),
-      // written since chapters 1 to 4 but never given a cited stroke-order
-      // source, now cite KanjiVG and gain a ductus each, so every one of the
-      // 46 basic hiragana has one. Keys move 434 -> 439 and Japanese 45 -> 50,
-      // with the ordered key hash and the non-Tamil data hash, measured after
-      // the last caption was settled; Tamil and both shared-identity values
-      // remain unchanged.
-      //
-      // ఞ, థ, మ, ట, ధ, భ and ఢ keep their source-numbered movements as
-      // segments but now lift only where HP Labs India's native writers do
-      // (2, 2, 1, 1, 1, 1 and 2 lifts, down from 7, 6, 6, 5, 5, 5 and 5).
-      // Only the non-Tamil data hash moves, measured after the last caption
-      // was settled; keys, the key hash, every count, Tamil and both
-      // shared-identity values remain unchanged.
-      //
-      // ద, డ, ణ, బ, ఫ, ఐ, ఋ and ళ likewise keep their source movements as
-      // segments but lift only where HP Labs India's native writers do (0, 1,
-      // 0, 0, 2, 0, 2 and 0 lifts, down from 4, 4, 4, 3, 4, 4, 5 and 3), and
-      // every Telugu caption now wraps to at most two lines. Only the
-      // non-Tamil data hash moves, measured after the last caption was
-      // settled; keys, the key hash, every count, Tamil and both
-      // shared-identity values remain unchanged.
-      //
-      // A third batch does the same for త, న, ప, య, ర, ల, వ, శ, ష, హ, ఠ,
-      // జ, చ, అ, ఎ and ఒ (0, 0, 1, 2, 0, 0, 0, 0, 2, 1, 1, 1, 0, 0, 0 and 0
-      // lifts, down from 1, 2, 3, 3, 1, 1, 2, 2, 3, 3, 2, 3, 1, 1, 1 and 2).
-      // Again only the non-Tamil data hash moves; keys, the key hash, every
-      // count, Tamil and both shared-identity values remain unchanged.
-      //
-      // The 22 voiced kana the inventory holds, が to ぽ, and the three spacing
-      // marks ゛, ゜ and ー now cite KanjiVG and gain a ductus each. Keys move
-      // 439 -> 464 and Japanese 50 -> 75, with the ordered key hash and the
-      // non-Tamil data hash, measured after the last caption was settled;
-      // Tamil and both shared-identity values remain unchanged.
-      //
-      // The katakana コ and ヒ and the kanji 日, 語 and 本, taught by the
-      // chapter 5 and 6 writing lessons, now cite KanjiVG and gain a ductus
-      // each. Keys move 464 -> 469 and Japanese 75 -> 80, with
-      // the ordered key hash and the non-Tamil data hash, measured after the
-      // last caption was settled; Tamil and both shared-identity values
-      // remain unchanged.
-      // The non-Tamil hash was re-measured on top of the Telugu native-lift
-      // batches.
-      //
-      // Devanagari क, य, र, प, ध, ल, द, ठ, घ, ष and औ now lift only where HP
-      // Labs India's native writers do: their sourced runs become segments of
-      // fewer strokes, with new captions and source notes. Only the non-Tamil
-      // data hash moves, measured after the last caption was settled; keys,
-      // the key hash, every script count, Tamil and both shared-identity
-      // values remain unchanged.
-      //
-      // Devanagari अ, आ, ओ, झ, स, ब, च, थ, भ, म and व follow: each joins one
-      // run into the next by climbing the stem it then descends, so each lifts
-      // once less. Every Devanagari headline caption now reads "rightward" and
-      // every long caption is shortened to fit two lines. Only the non-Tamil
-      // data hash moves, measured after the last caption was settled.
-      //
-      // Kannada base consonants ನ (U+0CA8), ತ (U+0CA4), ದ (U+0CA6), ರ (U+0CB0),
-      // ಕ (U+0C95) and ಗ (U+0C97), taught since chapters 1 to 7 but never
-      // given a cited stroke-order source, now cite Gopala Krishna A's Commons
-      // animations and gain a ductus each. Keys move 439 -> 445 and Kannada
-      // 13 -> 19, with the ordered key hash and the non-Tamil data hash,
-      // measured after the last caption was settled; Tamil and both
-      // shared-identity values remain unchanged.
-      //
-      // Kannada base consonants ಬ (U+0CAC), ಳ (U+0CB3), ಯ (U+0CAF), ಡ (U+0CA1),
-      // ಹ (U+0CB9) and ಸ (U+0CB8), taught since chapters 4 to 12 but never
-      // given a cited stroke-order source, now cite Gopala Krishna A's Commons
-      // animations and gain a ductus each. Keys move
-      // 445 -> 451 and Kannada 19 -> 25, with the ordered key hash and the
-      // non-Tamil data hash, measured after the last caption was settled;
-      // Tamil and both shared-identity values remain unchanged.
-      //
-      // Kannada base consonants ಚ (U+0C9A), ಪ (U+0CAA), ಝ (U+0C9D), ಥ (U+0CA5),
-      // ಮ (U+0CAE), ಲ (U+0CB2), ವ (U+0CB5) and ಜ (U+0C9C), taught since
-      // chapters 13 to 72 but never given a cited stroke-order source, now cite
-      // Gopala Krishna A's Commons animations and gain a ductus each. Keys move
-      // 451 -> 459 and Kannada 25 -> 33, with the ordered key hash and the
-      // non-Tamil data hash, measured after the last caption was settled;
-      // Tamil and both shared-identity values remain unchanged.
-      //
-      // Kannada ಚ (U+0C9A) and ಯ (U+0CAF) lifted the pen after every run of
-      // their animations (three lifts each), more often than even Omniglot's
-      // non-native copyists. ಚ now joins its body, lower bar and link (one
-      // lift) and ಯ its middle arm and hooked bar (two lifts), through short
-      // connectors along the bars. Only the non-Tamil data hash moves,
-      // measured after the last caption was settled; keys, Tamil and both
-      // shared-identity values remain unchanged.
-      //
-      // Kannada base consonants ಟ (U+0C9F), ಣ (U+0CA3), ಶ (U+0CB6), ಷ (U+0CB7),
-      // ಧ (U+0CA7), ಭ (U+0CAD), ಫ (U+0CAB), ಖ (U+0C96), ಘ (U+0C98) and ಢ
-      // (U+0CA2), taught since chapters 73 to 80 but never given a cited
-      // stroke-order source, now cite Gopala Krishna A's Commons animations and
-      // gain a ductus each; ಭ and ಘ join one pair of runs so they lift no more
-      // often than Omniglot's copyists most often do. Keys move 459 -> 469 and
-      // Kannada 33 -> 43, with the ordered key hash and the non-Tamil data
-      // hash, measured after the last caption was settled; Tamil and both
-      // shared-identity values remain unchanged.
-      //
-      // The six Tamil vowel signs written as separate symbols beside their
-      // consonant — ா (U+0BBE), ி (U+0BBF), ீ (U+0BC0), ெ (U+0BC6),
-      // ே (U+0BC7) and ை (U+0BC8) — gain a ductus each, cited to native
-      // writers' pen traces in HP Labs India's LipiTk Tamil recognizer. They
-      // join the Tamil tail owner after எ, ஏ and ஓ, so every existing key keeps
-      // its relative order. Keys move 439 -> 445 and Tamil 29 -> 35, with the
-      // ordered key hash, measured after the last caption was settled. No
-      // other script changes, so the non-Tamil data hash and both
-      //
-      // Eleven Gujarati signs — ા (U+0ABE), િ (U+0ABF), ી (U+0AC0),
-      // ુ (U+0AC1), ૂ (U+0AC2), ે (U+0AC7), ૈ (U+0AC8), ો (U+0ACB),
-      // ૌ (U+0ACC), the anusvara ં (U+0A82) and the visarga ઃ (U+0A83) —
-      // gain a ductus each, their order, start, direction and lifts cited to
-      // KanoAI's hand-made Gujarati barakhadi templates. They follow હ at the
-      // end of the Gujarati owner, so every existing key keeps its relative
-      // order. Keys move 445 -> 456 and Gujarati 44 -> 55, with the ordered
-      // key hash and the non-Tamil data hash; Tamil and both shared-identity
-      //
-      // Eight Devanagari signs — ु (U+0941), ू (U+0942), े (U+0947), the
-      // anusvara ं (U+0902), the nukta ़ (U+093C), the virama ् (U+094D),
-      // ृ (U+0943) and the candrabindu ँ (U+0901) — gain a ductus each, drawn
-      // alone, their lifts, start and direction cited to native writers' pen
-      // traces in HP Labs India's LipiTk Devanagari recognizer. They follow ह
-      // at the end of the Devanagari owner, so every existing key keeps its
-      // relative order. Keys move 456 -> 464 and Devanagari 44 -> 52, with the
-      //
-  // Bengali joins as one owner module, like Malayalam and Gujarati.
-  // Bengali joins as one owner module, like Malayalam and Gujarati.
-      // Bengali joins as a new last owner with nine glyphs cited to native
-      // writers' pen traces in HP Labs India's LipiTk Bangla recognizer:
-      // এ ও খ থ ঞ ব র and the signs ঃ ঁ, keyed `bengali:<glyph>`. Appending
-      // the owner keeps every existing key in place. Keys move 439 -> 448 with
-      // a new `bengali: 9` count, and the ordered key hash and the non-Tamil
-      // data hash move, measured after the last caption was settled; Tamil
-      // and both shared-identity values remain unchanged.
-      //
-      // Kannada base consonant ಠ (U+0CA0), taught in chapter 80 and the last
-      // Kannada consonant without a cited stroke-order source, now cites Gopala
-      // Krishna A's Commons animation (filed as "tta") and gains a ductus: the
-      // round bowl, the hooked bar and the dot, two lifts, which is also the
-      // Omniglot copyists' most common count. Keys move 499 -> 500 and Kannada
-      // 43 -> 44, with the ordered key hash and the non-Tamil data hash,
-      // measured after the captions were settled; Tamil and both
-      //
-      // The kanji 言, 五 and 口, which chapter 5 writes on their own before
-      // assembling 語, get inventory rows citing KanjiVG (08a00, 04e94,
-      // 053e3) once each is read in a word headword (言う, 五, 口), and a
-      // ductus each, appended to the Japanese owner module. Keys move 534 ->
-      // 537 and Japanese 80 -> 83, with the ordered key hash and the
-      // non-Tamil data hash, measured after the three filmstrips' captions
-      // were settled; Tamil and both shared-identity values are unchanged.
-      //
-      // Gurmukhi joins as a new last owner with 27 letters (ਅ and 26
-      // consonants) whose order is cited to the Apache-2.0 Alphabet Tracing
-      // lesson of GNPS's Gurmukhi Sikho app, keyed `gurmukhi:<glyph>`.
-      // Appending the owner keeps every existing key in place. Keys move
-      // 537 -> 564 with a new `gurmukhi: 27` count, and the ordered key hash
-      // and the non-Tamil data hash move, measured after the last caption was
-      // settled; Tamil and both shared-identity values remain unchanged.
-      //
-      // Seventeen Malayalam base consonants — ന മ സ ര ത ഷ പ വ ണ ട ദ ഹ ഗ റ ല
-      // ശ ബ (U+0D28, U+0D2E, U+0D38, U+0D30, U+0D24, U+0D37, U+0D2A, U+0D35,
-      // U+0D23, U+0D1F, U+0D26, U+0D39, U+0D17, U+0D31, U+0D32, U+0D36,
-      // U+0D2C) — taught from chapter 1 but never given a cited stroke
-      // order, now cite the formation arrows of SPACE Kerala's Thooval
-      // teaching tool (facts only; GPL-3.0) and gain one unbroken run each.
-      // They follow ഴ at the end of the Malayalam owner, so no existing key
-      // changes its relative order. Keys move 564 -> 581 and Malayalam
-      // 14 -> 31, with the ordered key hash and the non-Tamil data hash,
-      // measured after the last caption was settled; Tamil and both
-      // shared-identity values remain unchanged.
-      //
-      // The Tamil puḷḷi ் (U+0BCD), the dot made after its consonant's body,
-      // gains a ductus cited to Varai's recorded drawings of the 18
-      // consonants with puḷḷi (one writer, confidence medium). It joins the
-      // end of the Tamil tail owner, after the six vowel signs, so every
-      // existing key keeps its relative order. Keys move 581 -> 582 and Tamil
-      // 35 -> 36, with the ordered key hash, measured after the caption was
-      // settled. No other script changes, so the non-Tamil data hash and both
-      // shared-identity values remain unchanged.
-      //
-      // Twenty-two Malayalam glyphs cite the numbered movements of Rodney F.
-      // Moag's Malayalam: A University Course and Reference Grammar (facts
-      // only; CC BY-NC-SA 4.0): the consonants ക യ ഖ ങ ച ഛ ഞ ഥ ധ ഭ ഫ ള
-      // (U+0D15, U+0D2F, U+0D16, U+0D19, U+0D1A, U+0D1B, U+0D1E, U+0D25,
-      // U+0D27, U+0D2D, U+0D2B, U+0D33), the independent vowel ഏ (U+0D0F),
-      // the anusvara ം (U+0D02) and the vowel signs ാ ി ീ ു ൂ ൃ െ േ (U+0D3E,
-      // U+0D3F, U+0D40, U+0D41, U+0D42, U+0D43, U+0D46, U+0D47), one
-      // unbroken run each. They follow ബ at the end of the Malayalam owner,
-      // so no existing key changes its relative order. Keys move 582 -> 604
-      // and Malayalam 31 -> 53, with the ordered key hash and the non-Tamil
-      // data hash, measured after the last caption was settled; Tamil and
-      // both shared-identity values remain unchanged.
-      //
-      // 語's tenth frame, 五's second stroke, is now captioned as in 五 itself
-      // ("draw the stroke down and left"). It runs from the top bar to the
-      // base (KanjiVG 04e94), so "a short stroke" was wrong. Only the label
-      // moves: keys, the ordered key hash and Tamil stay; the non-Tamil data
-      // hash moves.
-      //
-      // Latin joins as a new last owner with 18 print glyphs, keyed
-      // `latin:<glyph>`: b c e g h i l n o r s u w ß and G cite the
-      // Grundschrift-App's ordered paths (facts only; the repository has no
-      // licence), and ñ ¿ ¡ cite UJIpenchars2's native Spanish writers (CC BY
-      // 4.0). Appending the owner keeps every existing key in place. Keys move
-      // 604 -> 622 with a new `latin: 18` count, and the ordered key hash and
-      // the non-Tamil data hash move, measured after the last caption was
-      // settled; Tamil and both shared-identity values remain unchanged.
-      //
-      // The one-storey a batch moves the Latin outline to LatinPrint-Subset.ttf
-      // (a renamed subset of SIL's literacy typeface Andika, whose a is the
-      // one-storey a every source teaches), refits all 18 Latin paths to it,
-      // and appends 13 glyphs to the Latin owner: a d p q t y H (Grundschrift)
-      // and the precomposed á é í ó ú ü (UJIpenchars2 for the mark). Keys move
-      // 622 -> 635 with `latin: 31`; the ordered key hash and the non-Tamil
-      // data hash move; Tamil and both shared-identity values stay.
-      //
-      // The ā sign (ा) joins the Devanagari owner, before ु in the signs: the
-      // stem, then the piece of headline Noto prints on it (HP Labs India's
-      // LipiTk class 47 for the strokes; the cited आ for its place in a
-      // word). Keys move 635 -> 636 with `devanagari: 53`; the ordered key
-      // hash and the non-Tamil data hash move; Tamil and both shared-identity
-      // values stay.
-      //
-      // Kannada gains the anusvara ಂ (U+0C82) and the digits ೧-೯
-      // (U+0CE7-U+0CEF), their order, start and direction cited to Chimple's
-      // tracing lessons (facts only; no licence), appended after ಠ at the end
-      // of the Kannada owner; ಃ (U+0C83) is refitted in place so its upper dot
-      // comes first, as its source and Chimple both draw it. Malayalam gains
-      // ജ (U+0D1C) and the vowel sign ൈ (U+0D48), cited to Moag's numbered
-      // movements and appended after േ. No existing key moves. Keys move 636
-      // -> 648 with `kannada: 54` and `malayalam: 55`; the ordered key hash
-      // and the non-Tamil data hash move, measured after the captions were
-      // settled; Tamil and both shared-identity values stay.
-    }).toEqual({
-      keys: 648,
-      keyHash:
-        "2c4ee249dafad2d64ea6e3403458c297940dd4bc2a4276242777a5bb613d2746",
-      nonTamilDataHash:
-        "ae902d92d933f04604923c1315d70f5eb0377c584e452840b00ebf65a61b2289",
-      sharedIdentityGroups: 17,
-      sharedIdentityHash:
-        "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
-      counts: {
-        arabic: 32,
-        bengali: 9,
-        chinese: 60,
-        cyrillic: 33,
-        devanagari: 53,
-        gujarati: 55,
-        gurmukhi: 27,
-        hebrew: 22,
-        japanese: 83,
-        kannada: 54,
-        latin: 31,
-        malayalam: 55,
-        "perso-arabic": 24,
-        tamil: 36,
-        telugu: 43,
-        "urdu-nastaliq": 31,
-      },
-    });
+    ).toThrow(/never consumes/);
+    expect(() =>
+      interleaveScriptKeys(
+        [...scriptRuns, "tamil"],
+        byScript,
+      ),
+    ).toThrow(/fewer blocks/);
+    expect(() => interleaveScriptKeys(["klingon"], byScript)).toThrow(/unknown script/);
+  });
+
+  // The point of the split, checked on a copy of the real registry: a change
+  // in one script moves that script's pin and nothing else, so two PRs in
+  // different scripts can no longer meet in the same file. A brand-new script
+  // is the one change that legitimately touches `_registry.json` too.
+  it("moves only the changed script's pin when one script changes", () => {
+    const baseline = measureStrokeOwnershipPins(DUCTUS);
+    const differing = (registry: Record<string, LetterDuctus>): string[] => {
+      const next = measureStrokeOwnershipPins(registry);
+      const before = strokeOwnershipPinFiles(baseline);
+      const after = strokeOwnershipPinFiles(next);
+      return [...new Set([...before.keys(), ...after.keys()])]
+        .filter((name) => before.get(name) !== after.get(name))
+        .sort();
+    };
+    const lastKannada = Object.keys(DUCTUS).filter((key) => DUCTUS[key]!.script === "kannada").at(-1)!;
+    const kannada = DUCTUS[lastKannada]!;
+
+    // A changed caption, deep inside one Kannada glyph.
+    const relabelled = structuredClone(kannada);
+    relabelled.strokes[0]!.segments[0]!.label = `${relabelled.strokes[0]!.segments[0]!.label} (edited)`;
+    expect(differing({ ...DUCTUS, [lastKannada]: relabelled })).toEqual(["kannada.json"]);
+
+    // A glyph appended to the Kannada block, where new glyphs go. It is a deep
+    // copy: sharing the original's stroke objects would (rightly) move the
+    // shared-identity pin, which is a different change from adding a glyph.
+    const keys = Object.keys(DUCTUS);
+    const at = keys.indexOf(lastKannada) + 1;
+    const withAdded = Object.fromEntries([
+      ...keys.slice(0, at).map((key) => [key, DUCTUS[key]!]),
+      ["kannada:test-only", { ...structuredClone(kannada), glyph: "test-only" }],
+      ...keys.slice(at).map((key) => [key, DUCTUS[key]!]),
+    ]);
+    expect(differing(withAdded)).toEqual(["kannada.json"]);
+
+    // A glyph removed from Kannada.
+    const { [lastKannada]: _removed, ...withRemoved } = DUCTUS;
+    expect(differing(withRemoved)).toEqual(["kannada.json"]);
+
+    // Tamil data is pinned glyph by glyph, so editing it moves no shard at all
+    // — exactly as the old `nonTamilDataHash` ignored it.
+    const tamilKey = Object.keys(DUCTUS).find((key) => DUCTUS[key]!.script === "tamil")!;
+    const tamilEdited = structuredClone(DUCTUS[tamilKey]!);
+    tamilEdited.strokes[0]!.segments[0]!.label = "edited";
+    expect(differing({ ...DUCTUS, [tamilKey]: tamilEdited })).toEqual([]);
+
+    // A new script needs its own pin, and lengthens the block shape.
+    expect(differing({ ...DUCTUS, "klingon:a": { ...structuredClone(kannada), script: "klingon" } })).toEqual([
+      REGISTRY_PIN_FILE,
+      "klingon.json",
+    ]);
+  });
+
+  // The loader fails closed, like human-language-data's per-track pin loaders:
+  // only real files with script-shaped names and exactly the expected fields.
+  it("refuses pin files that are not exactly pins", () => {
+    const root = mkdtempSync(join(tmpdir(), "script-ductus-ownership-pins-"));
+    try {
+      const write = (files: Map<string, string>): string => {
+        const directory = mkdtempSync(join(root, "pins-"));
+        for (const [name, bytes] of files) writeFileSync(join(directory, name), bytes);
+        return directory;
+      };
+      const good = strokeOwnershipPinFiles(measureStrokeOwnershipPins(DUCTUS));
+      expect(loadStrokeOwnershipPins(write(good))).toEqual(measureStrokeOwnershipPins(DUCTUS));
+
+      const variant = (name: string, bytes: string | undefined): Map<string, string> => {
+        const files = new Map(good);
+        if (bytes === undefined) files.delete(name);
+        else files.set(name, bytes);
+        return files;
+      };
+      const kannada = JSON.parse(good.get("kannada.json")!) as Record<string, unknown>;
+      const cases: [string, Map<string, string>, RegExp][] = [
+        ["no registry pin", variant(REGISTRY_PIN_FILE, undefined), /_registry\.json is missing/],
+        ["an uppercase name", variant("Kannada.json", good.get("kannada.json")), /unsafe/],
+        ["a non-JSON file", variant("notes.txt", "hi"), /unsafe/],
+        ["an extra field", variant("kannada.json", JSON.stringify({ ...kannada, note: "x" })), /kannada\.json: expected/],
+        ["a missing field", variant("kannada.json", JSON.stringify({ ...kannada, keyHash: undefined })), /kannada\.json: expected/],
+        ["a short hash", variant("kannada.json", JSON.stringify({ ...kannada, dataHash: "abc" })), /kannada\.json: expected/],
+        ["a zero run", variant("kannada.json", JSON.stringify({ ...kannada, runs: [0] })), /kannada\.json: expected/],
+        ["an empty block shape", variant(REGISTRY_PIN_FILE, JSON.stringify({ scriptRuns: [], sharedIdentityGroups: 0, sharedIdentityHash: "0".repeat(64) })), /_registry\.json: expected/],
+      ];
+      for (const [label, files, error] of cases) {
+        expect(() => loadStrokeOwnershipPins(write(files)), label).toThrow(error);
+      }
+
+      const linked = write(variant("kannada.json", undefined));
+      symlinkSync(join(write(good), "kannada.json"), join(linked, "kannada.json"));
+      expect(() => loadStrokeOwnershipPins(linked), "a symlinked pin").toThrow(/unsafe/);
+      expect(() => loadStrokeOwnershipPins(join(root, "absent"))).toThrow();
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 
   it("discovers one source and evidence owner for every Tamil glyph", () => {

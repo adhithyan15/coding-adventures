@@ -8,6 +8,7 @@
     "build": "tsc",
     "generate:filmstrip-ledger": "vitest run tests/filmstrip-ledger.test.ts --mode write",
     "check:filmstrip-ledger": "vitest run tests/filmstrip-ledger.test.ts",
+    "generate:stroke-ownership": "vitest run tests/stroke-ownership.test.ts --mode write",
     "shard:docs": "node ../human-language-data/dist/doc-shard-cli.js --shard code/packages/typescript/script-ductus/CHANGELOG.md",
     "unshard:docs": "node ../human-language-data/dist/doc-shard-cli.js --unshard code/packages/typescript/script-ductus/CHANGELOG.md",
     "check:doc-shards": "node ../human-language-data/dist/doc-shard-cli.js --check code/packages/typescript/script-ductus/CHANGELOG.md",
