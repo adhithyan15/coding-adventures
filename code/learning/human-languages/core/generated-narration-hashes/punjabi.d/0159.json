@@ -1,0 +1,18 @@
+{
+  "language": "punjabi",
+  "chapter": 159,
+  "sourceHash": "fnv1a64:44754ef686da6b2a",
+  "lessonIds": [
+    "PA-W14-timed-repair-return",
+    "PA-R159-people-quality-recall",
+    "PA-R159-strength-weakness-recall",
+    "PA-R159-hide-and-quality-mix"
+  ],
+  "voiceLessons": 3,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch159.txt",
+  "json": "punjabi/narration/ch159.json",
+  "textHash": "fnv1a64:e50ab770488b0e98",
+  "jsonHash": "fnv1a64:f537f3366dedd454",
+  "findings": []
+}
