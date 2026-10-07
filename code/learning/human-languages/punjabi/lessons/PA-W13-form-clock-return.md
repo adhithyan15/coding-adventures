@@ -8,7 +8,7 @@ spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 8742
 chapter: 157
 delivery: script
-type: review
+type: writing
 headword: "ਨਾਂ: · ਭਾਸ਼ਾ:"
 romanization: "a short return to the familiar form clock"
 gloss: "retrieve mixed card values under a small practice clock, then repair separately"

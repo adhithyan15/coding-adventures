@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 157,
-  "sourceHash": "fnv1a64:8f24152145e6d2ca",
+  "sourceHash": "fnv1a64:6cc35e267f2ff691",
   "lessonIds": [
     "PA-W13-form-mixed-cues",
     "PA-W13-form-timed",
@@ -13,11 +13,11 @@
     "PA-W13-message-opening-return",
     "PA-W13-message-purpose-return"
   ],
-  "voiceLessons": 4,
+  "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "punjabi/narration/ch157.txt",
   "json": "punjabi/narration/ch157.json",
-  "textHash": "fnv1a64:41ca18c9e8517e66",
-  "jsonHash": "fnv1a64:401edf110f946f14",
+  "textHash": "fnv1a64:c8f943bb89dddc1e",
+  "jsonHash": "fnv1a64:dedd1fbaf3941f2c",
   "findings": []
 }

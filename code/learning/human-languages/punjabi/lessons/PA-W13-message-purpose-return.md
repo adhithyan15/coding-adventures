@@ -8,7 +8,7 @@ spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 8748
 chapter: 157
 delivery: script
-type: review
+type: writing
 headword: "(known water detail and meeting purpose)"
 romanization: "return to the short named-reader message purpose"
 gloss: "rehearse a short whole message using only taught language"

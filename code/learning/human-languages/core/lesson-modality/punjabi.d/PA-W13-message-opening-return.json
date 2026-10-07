@@ -4,18 +4,18 @@
     "language": "punjabi",
     "chapter": 157,
     "sequence": 8746,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "writing-type"
     ],
-    "coreModality": "voice",
+    "coreModality": "pen",
     "coreReasons": [
-      "no-visual-dependency"
+      "writing-type"
     ],
-    "coreDrivable": true,
-    "sourceHash": "fnv1a64:55ada97246ca6f92",
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:41cef1deff925e66",
     "delivery": "script"
   },
   "findings": []

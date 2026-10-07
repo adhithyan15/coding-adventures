@@ -8,7 +8,7 @@ spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 8744
 chapter: 157
 delivery: script
-type: review
+type: writing
 headword: "ਰਿਹਾਇਸ਼: · ਕੰਮ:"
 romanization: "a second small form-and-repair return"
 gloss: "retrieve two other known form values and check one repair dimension"

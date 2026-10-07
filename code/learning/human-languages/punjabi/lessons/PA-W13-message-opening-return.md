@@ -8,7 +8,7 @@ spine_node: SPINE-NAME-EVERYDAY-ACTIONS
 sequence: 8746
 chapter: 157
 delivery: script
-type: review
+type: writing
 headword: "(reader and opening)"
 romanization: "return to the short named-reader message clock"
 gloss: "retrieve a familiar greeting and wellbeing question for a named reader"

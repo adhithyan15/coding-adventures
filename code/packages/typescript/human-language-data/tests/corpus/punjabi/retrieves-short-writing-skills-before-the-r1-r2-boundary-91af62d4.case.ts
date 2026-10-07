@@ -15,6 +15,7 @@ it("retrieves short writing skills before the R1/R2 boundary without mock credit
   ];
   const reviews = lessons.filter((lesson) => ids.includes(lesson.realization.lessonId));
   expect(reviews.map((lesson) => lesson.realization.lessonId)).toEqual(ids);
+  expect(reviews.map((lesson) => lesson.realization.type)).toEqual(ids.map(() => "writing"));
   expect(reviews.map((lesson) => Number(lesson.frontmatter.sequence))).toEqual([8742, 8744, 8746, 8748]);
   expect(reviews.every((lesson) => Number(lesson.frontmatter["duration.max_seconds"]) <= 300)).toBe(true);
   expect(reviews.every((lesson) => lesson.frontmatter["introduces.knowledge"]?.length === 0)).toBe(true);
