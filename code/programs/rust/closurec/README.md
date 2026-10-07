@@ -253,6 +253,18 @@ policy identity and word order. Matching-toolchain validation, fresh review
 and another exact-head native run are required before acceptance.
 Audit SACLs/integrity claims are unproven.
 
+The next native Windows run at `c76de302f8` passed lint but failed the promised
+OWNER RIGHTS policy rejection test. A deterministic native regression reproduced
+successful fresh opening and publication with an earlier FullControl allow and
+a later OWNER RIGHTS denial. The repair now checks structural admission before
+any empty probe or original mutation: effective OWNER RIGHTS denied READ_CONTROL
+or file generic rights reject across ordinary/object/callback denial encodings,
+independently of ACE order and token capabilities. Unknown or malformed effective
+encodings reject; inheritance-only ACEs are inert. Supported policies retain exact
+ACE order and all existing fresh-open/identity/policy proofs. Diagnostics record
+the inherited fixture's actual token, ACL and open outcome. Repaired-head review
+and successful native compiler execution on all three platforms remain required.
+
 The Linux/macOS implementation supports ordinary owner/group/mode policies.
 Descriptor-bound extended access/default ACL queries reject unsupported ACLs
 before staging or original mutation. Distinct empty creation probes measure the

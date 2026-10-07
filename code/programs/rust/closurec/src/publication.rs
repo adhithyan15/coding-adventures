@@ -811,6 +811,10 @@ fn verify_unix_policy_support(stage: &Stage) -> io::Result<unix_security::Policy
 
 #[cfg(windows)]
 fn verify_policy_support(stage: &Stage) -> io::Result<()> {
+    // Admission precedes even the empty capability probe. Effective access
+    // depends on ACE order/token privileges; it cannot admit a policy class
+    // which the publication contract explicitly requires us to reject.
+    stage.intended_policy.check_verification_policy()?;
     // Never widen the future data-bearing inode, even while it is empty:
     // tightening a DACL cannot revoke a reader's already-open handle. This
     // distinct probe remains empty and is destroyed before writing any bytes.

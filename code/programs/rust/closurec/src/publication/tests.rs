@@ -160,10 +160,36 @@ fn windows_allow_before_owner_rights_denial_rejects_despite_successful_fresh_ope
         Ok(())
     });
     assert!(result.is_err(), "OWNER RIGHTS denial accepted: {result:?}");
-    assert!(!original_mutated, "unsupported policy discovered after original mutation");
-    assert!(same_original(&original, &observe(&path, false).unwrap().unwrap()));
+    assert!(
+        !original_mutated,
+        "unsupported policy discovered after original mutation"
+    );
+    assert!(same_original(
+        &original,
+        &observe(&path, false).unwrap().unwrap()
+    ));
     assert_eq!(fs::read(&path).unwrap(), b"original");
     assert_eq!(fs::read_dir(&fixture.dir).unwrap().count(), 1);
+}
+
+#[cfg(windows)]
+#[test]
+fn windows_supported_denials_preserve_policy_and_replace_bytes() {
+    for (mask, sid) in [
+        (2, [0x0000_0101, 0x0300_0000, 4]),
+        (0x0002_0000, [0x0000_0101, 0x0100_0000, 0]),
+    ] {
+        let fixture = Fixture::new();
+        let path = fixture.path("output.js");
+        let mut file = windows_security::create_file(&path).unwrap();
+        file.write_all(b"original").unwrap();
+        let intended = windows_security::allow_then_denial(&file, mask, sid).unwrap();
+        assert_eq!(observe(&path, false).unwrap().unwrap().policy, intended);
+        publish_outputs(&[(path.clone(), "replacement".into())]).unwrap();
+        assert_eq!(observe(&path, false).unwrap().unwrap().policy, intended);
+        assert_eq!(fs::read(&path).unwrap(), b"replacement");
+        assert_eq!(fs::read_dir(&fixture.dir).unwrap().count(), 1);
+    }
 }
 
 #[cfg(windows)]
@@ -201,11 +227,15 @@ fn windows_final_verification_denial_rejects_before_any_original_mutation() {
     let private = windows_security::Policy::capture(&probe).unwrap();
     let public_probe = restricted.join("empty-policy-diagnostic");
     fs::hard_link(&probe_path, &public_probe).unwrap();
-    intended.apply(&windows_security::policy_handle(&public_probe).unwrap()).unwrap();
+    intended
+        .apply(&windows_security::policy_handle(&public_probe).unwrap())
+        .unwrap();
     let fresh = observe(&public_probe, false);
-    let fresh_diagnostic = fresh.as_ref().map(|value| value.as_ref().map(|observed| {
-        format!("len={}; policy={:?}", observed.len, observed.policy)
-    }));
+    let fresh_diagnostic = fresh.as_ref().map(|value| {
+        value
+            .as_ref()
+            .map(|observed| format!("len={}; policy={:?}", observed.len, observed.policy))
+    });
     eprintln!(
         "inherited OWNER RIGHTS fixture: {}; parent={:?}; derived={intended:?}; fresh_open={fresh_diagnostic:?}\n{}",
         windows_security::token_owner_diagnostics().unwrap(),

@@ -20,6 +20,99 @@ const MAX_DESCRIPTOR_BYTES: usize = 131_072;
 const MAX_TOKEN_BYTES: usize = 4096;
 const FILE_ALL_ACCESS: u32 = 0x001f_01ff;
 const SE_DACL_PROTECTED: u16 = 0x1000;
+const READ_CONTROL: u32 = 0x0002_0000;
+const FILE_GENERIC_ACCESS: u32 = 0xf000_0000;
+const OWNER_RIGHTS: [u32; 3] = [0x0000_0101, 0x0300_0000, 4]; // S-1-3-4
+
+/// Admission is distinct from effective access: an earlier allow or a token
+/// privilege can satisfy a fresh open despite an explicitly unsupported denial.
+/// Walk the bounded copied ACL without sorting or changing its ACEs. This is
+/// deliberately not an implementation of Windows AccessCheck.
+fn admit_dacl(acl: &[u32]) -> io::Result<()> {
+    if acl.len() < 2
+        || acl.len() > usize::from(u16::MAX) / 4
+        || !matches!(acl[0] & 0xff, 2 | 4)
+        || (acl[0] >> 16) as usize != acl.len() * 4
+    {
+        return Err(invalid("unsupported final ACL bounds"));
+    }
+    let mut cursor = 2;
+    for _ in 0..(acl[1] & 0xffff) {
+        let header = *acl
+            .get(cursor)
+            .ok_or_else(|| invalid("missing final ACE"))?;
+        let bytes = (header >> 16) as usize;
+        if bytes < 4 || bytes % 4 != 0 {
+            return Err(invalid("unsupported final ACE size"));
+        }
+        let end = cursor
+            .checked_add(bytes / 4)
+            .ok_or_else(|| invalid("final ACE bounds overflow"))?;
+        let ace = acl
+            .get(cursor..end)
+            .ok_or_else(|| invalid("truncated final ACE"))?;
+        cursor = end;
+        if header & 0x0800 != 0 {
+            // INHERIT_ONLY_ACE: inert on this file
+            continue;
+        }
+        match header & 0xff {
+            // Ordinary, compound, object, callback and callback-object grants.
+            // These are copied OS policy, not grants synthesized by this guard.
+            0 | 4 | 5 | 9 | 11 => (),
+            1 | 6 | 10 | 12 => admit_denial(ace)?,
+            _ => return Err(invalid("unsupported effective final ACE encoding")),
+        }
+    }
+    if cursor != acl.len() {
+        return Err(invalid("unaccounted final ACL entries"));
+    }
+    Ok(())
+}
+
+fn admit_denial(ace: &[u32]) -> io::Result<()> {
+    let kind = ace[0] & 0xff;
+    let mask = *ace
+        .get(1)
+        .ok_or_else(|| invalid("missing denial access mask"))?;
+    let sid_start = if matches!(kind, 6 | 12) {
+        let flags = *ace
+            .get(2)
+            .ok_or_else(|| invalid("missing denial object flags"))?;
+        if flags & !3 != 0 {
+            return Err(invalid("unsupported denial object flags"));
+        }
+        // Each optional GUID occupies four DWORDs. Both absent puts SidStart
+        // immediately after Flags, as specified by the native ACE layouts.
+        3 + flags.count_ones() as usize * 4
+    } else {
+        2
+    };
+    let header = *ace
+        .get(sid_start)
+        .ok_or_else(|| invalid("missing denial SID"))?;
+    let subauthorities = (header >> 8) & 0xff;
+    if header & 0xff != 1 || subauthorities > 15 {
+        return Err(invalid("unsupported denial SID"));
+    }
+    let sid_end = sid_start + 2 + subauthorities as usize;
+    let sid = ace
+        .get(sid_start..sid_end)
+        .ok_or_else(|| invalid("truncated denial SID"))?;
+    if matches!(kind, 1 | 6) && sid_end != ace.len() {
+        return Err(invalid("unsupported trailing denial data"));
+    }
+    // All four file generic mappings include READ_CONTROL. Object filters and
+    // callback conditions cannot turn this explicitly unsupported class into
+    // a supported policy; conservatively reject it regardless of applicability.
+    if sid == OWNER_RIGHTS && mask & (READ_CONTROL | FILE_GENERIC_ACCESS) != 0 {
+        return Err(io::Error::new(
+            io::ErrorKind::PermissionDenied,
+            "unsupported OWNER RIGHTS denial of verification READ_CONTROL",
+        ));
+    }
+    Ok(())
+}
 
 #[repr(C)]
 struct Attributes {
@@ -384,6 +477,12 @@ pub(super) struct Policy {
     protected: bool,
 }
 impl Policy {
+    pub(super) fn check_verification_policy(&self) -> io::Result<()> {
+        if let Some(acl) = &self.dacl {
+            admit_dacl(acl)?;
+        }
+        Ok(())
+    }
     pub(super) fn has_inherited_entries(&self) -> bool {
         let Some(acl) = &self.dacl else {
             return false;
@@ -613,13 +712,19 @@ impl Drop for PrivateDescriptor {
 
 #[cfg(test)]
 pub(super) fn allow_then_owner_rights_denial(file: &File) -> io::Result<Policy> {
+    allow_then_denial(file, READ_CONTROL, OWNER_RIGHTS)
+}
+
+#[cfg(test)]
+pub(super) fn allow_then_denial(file: &File, mask: u32, sid: [u32; 3]) -> io::Result<Policy> {
     // The private creator gives exactly one protected current-user allow.
     // Append a denial without canonicalizing ACE order: native access can
     // succeed after the earlier FullControl grant satisfies the request.
     let mut policy = Policy::capture(file)?;
     let acl = policy.dacl.as_mut().unwrap();
     assert_eq!(acl[1] & 0xffff, 1);
-    acl.extend_from_slice(&[(20u32 << 16) | 1, 0x0002_0000, 0x0000_0101, 0x0300_0000, 4]);
+    acl.extend_from_slice(&[(20u32 << 16) | 1, mask]);
+    acl.extend_from_slice(&sid);
     acl[0] = (acl[0] & 0xffff) | ((acl.len() as u32 * 4) << 16);
     acl[1] = (acl[1] & 0xffff_0000) | 2;
     policy.apply(file)?;
@@ -629,5 +734,137 @@ pub(super) fn allow_then_owner_rights_denial(file: &File) -> io::Result<Policy> 
 #[cfg(test)]
 pub(super) fn token_owner_diagnostics() -> io::Result<String> {
     let token = Token::current()?;
-    Ok(format!("token_user={:?}; token_default_owner={:?}", token.sid(1)?, token.sid(4)?))
+    Ok(format!(
+        "token_user={:?}; token_default_owner={:?}",
+        token.sid(1)?,
+        token.sid(4)?
+    ))
+}
+
+#[cfg(test)]
+mod admission_tests {
+    use super::*;
+
+    fn denial(kind: u32, flags: u32, mask: u32, sid: &[u32]) -> Vec<u32> {
+        let mut ace = vec![kind, mask];
+        if matches!(kind, 6 | 12) {
+            ace.push(flags);
+            ace.resize(3 + (flags & 3).count_ones() as usize * 4, 0);
+        }
+        ace.extend_from_slice(sid);
+        if matches!(kind, 10 | 12) {
+            ace.extend_from_slice(&[0x7874_7261, 0]); // opaque callback data
+        }
+        ace[0] |= (ace.len() as u32 * 4) << 16;
+        ace
+    }
+
+    fn acl(aces: &[Vec<u32>]) -> Vec<u32> {
+        let mut result = vec![4, aces.len() as u32];
+        for ace in aces {
+            result.extend_from_slice(ace);
+        }
+        result[0] |= (result.len() as u32 * 4) << 16;
+        result
+    }
+
+    #[test]
+    fn every_denial_layout_and_file_generic_mask_rejects_owner_rights() {
+        for kind in [1, 6, 10, 12] {
+            for flags in 0..=3 {
+                for mask in [
+                    READ_CONTROL,
+                    0x1000_0000,
+                    0x2000_0000,
+                    0x4000_0000,
+                    0x8000_0000,
+                ] {
+                    let bytes = acl(&[denial(kind, flags, mask, &OWNER_RIGHTS)]);
+                    assert_eq!(
+                        admit_dacl(&bytes).unwrap_err().kind(),
+                        io::ErrorKind::PermissionDenied,
+                        "kind={kind}, flags={flags}, mask={mask:x}"
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn inert_denials_unrelated_sids_and_other_rights_are_admitted_unchanged() {
+        let unrelated = [0x0000_0101, 0x0100_0000, 0]; // Everyone S-1-1-0
+        for kind in [1, 6, 10, 12] {
+            let mut inert = denial(kind, 3, READ_CONTROL, &OWNER_RIGHTS);
+            inert[0] |= 0x0800;
+            for ace in [
+                inert,
+                denial(kind, 3, READ_CONTROL, &unrelated),
+                denial(kind, 3, 2, &OWNER_RIGHTS),
+            ] {
+                let bytes = acl(&[ace]);
+                let before = bytes.clone();
+                admit_dacl(&bytes).unwrap();
+                assert_eq!(bytes, before);
+            }
+        }
+        admit_dacl(&acl(&[])).unwrap();
+    }
+
+    #[test]
+    fn ace_order_does_not_hide_a_denial_or_change_policy_bytes() {
+        let mut grant = denial(1, 0, FILE_ALL_ACCESS, &OWNER_RIGHTS);
+        grant[0] &= !0xff;
+        let deny = denial(1, 0, READ_CONTROL, &OWNER_RIGHTS);
+        for entries in [vec![grant.clone(), deny.clone()], vec![deny, grant]] {
+            let bytes = acl(&entries);
+            let before = bytes.clone();
+            assert!(admit_dacl(&bytes).is_err());
+            assert_eq!(bytes, before);
+        }
+    }
+
+    #[test]
+    fn malformed_or_unknown_effective_encodings_fail_closed_without_panics() {
+        let good = acl(&[denial(1, 0, READ_CONTROL, &OWNER_RIGHTS)]);
+        for end in 0..good.len() {
+            assert_eq!(
+                admit_dacl(&good[..end]).unwrap_err().kind(),
+                io::ErrorKind::InvalidInput
+            );
+        }
+        for (offset, replacement) in [
+            (0, 0),
+            (1, 0),
+            (1, u32::MAX),
+            (2, 0),
+            (2, (4 << 16) | 1),
+            (2, (24 << 16) | 1),
+            (2, (20 << 16) | 0xff),
+            (4, 0x0102),
+            (4, 0x1001),
+            (4, 0x0201),
+        ] {
+            let mut bad = good.clone();
+            bad[offset] = replacement;
+            assert_eq!(
+                admit_dacl(&bad).unwrap_err().kind(),
+                io::ErrorKind::InvalidInput,
+                "offset={offset}, replacement={replacement:x}"
+            );
+        }
+        for kind in [6, 12] {
+            let mut bad = denial(kind, 0, READ_CONTROL, &OWNER_RIGHTS);
+            bad[2] = 4;
+            assert_eq!(
+                admit_dacl(&acl(&[bad])).unwrap_err().kind(),
+                io::ErrorKind::InvalidInput
+            );
+            let mut truncated_guid = denial(kind, 0, READ_CONTROL, &OWNER_RIGHTS);
+            truncated_guid[2] = 3;
+            assert_eq!(
+                admit_dacl(&acl(&[truncated_guid])).unwrap_err().kind(),
+                io::ErrorKind::InvalidInput
+            );
+        }
+    }
 }

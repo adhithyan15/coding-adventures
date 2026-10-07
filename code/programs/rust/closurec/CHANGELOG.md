@@ -4,6 +4,25 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - token-independent OWNER RIGHTS admission (CV02)
+
+Native Windows CI at `c76de302f8` reached compiler tests and failed the inherited
+OWNER RIGHTS rejection regression. Independent native review reproduced an
+accepted protected policy with FullControl before a denied READ_CONTROL ACE:
+production's fresh open succeeded and publication changed the original.
+
+Before empty capability probes or original mutation, structurally reject
+effective OWNER RIGHTS denied READ_CONTROL and every file generic-access mask
+in ordinary/object/callback/callback-object denial layouts. Bound SID and optional
+GUID decoding; reject malformed or unknown effective encodings. Preserve ACE
+bytes/order and retain exact round-trip/fresh-open checks for admitted policies.
+Inheritance-only entries are inert for this file. Native red/green tests cover
+successful fresh opening followed by required publication rejection, and positive
+controls preserve unrelated denied SIDs/rights exactly. The inherited fixture
+records parent/derived policy, user/default owner, groups/privileges and the actual
+fresh-open result. Its rejection remains unconditional. Fresh independent review
+and all three native compiler commands are required before acceptance.
+
 ### Fixed - strict native CI SID decoding lint (CV02)
 
 The first correctly gated Windows run at `0e02820565` failed Rust 1.99 strict
