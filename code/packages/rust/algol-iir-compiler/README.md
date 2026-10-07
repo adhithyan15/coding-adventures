@@ -225,6 +225,8 @@ Built-in integer `abs` may also map that bounded result to exact `0` or `1`
 before `entier`; a user-declared `abs` remains conservative.
 Variable-free exact additive zero terms may surround that bounded result before
 `entier`; nonzero or dynamic additive terms remain conservative.
+Variable-free exact multiplicative unit factors may likewise surround it;
+non-unit or variable factors remain conservative.
 One-sided reassignment remains conservative. `for` loops preserve
 runtime-real provenance for caller-frame locals whose values their bodies leave
 invariant; controlled, changed, captured, and name-promoted storage remains
