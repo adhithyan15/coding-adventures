@@ -51,6 +51,17 @@ defmodule BuildTool.Discovery do
       }
   """
 
+  defmodule DuplicatePackageIdentityError do
+    @moduledoc """
+    A stable discovery error for two physical roots with one graph identity.
+
+    The paths are relative to the configured code root's parent, never host
+    checkout paths. The CLI catches only this typed error and returns status 2.
+    """
+
+    defexception [:package, :paths, :message, code: "DUPLICATE_PACKAGE_IDENTITY"]
+  end
+
   # ---------------------------------------------------------------------------
   # Skip list
   # ---------------------------------------------------------------------------
@@ -137,9 +148,43 @@ defmodule BuildTool.Discovery do
       ["elixir/progress-bar", "go/directed-graph", "python/logic-gates"]
   """
   def discover_packages(root) do
-    root
-    |> walk_dirs([])
-    |> Enum.sort_by(& &1.name)
+    packages =
+      root
+      |> walk_dirs([])
+      |> Enum.sort_by(&{&1.name, &1.path})
+
+    # Discovery must not silently choose one of two roots with the same graph
+    # identity. Group after sorting so both the first reported collision and
+    # the diagnostic's path order are independent of filesystem walk order.
+    duplicate =
+      packages
+      |> Enum.chunk_by(& &1.name)
+      |> Enum.find(&(length(&1) > 1))
+
+    case duplicate do
+      nil ->
+        packages
+
+      group ->
+        name = hd(group).name
+
+        paths =
+          group
+          |> Enum.map(&repository_package_path(root, &1.path))
+          |> Enum.sort()
+
+        raise DuplicatePackageIdentityError,
+          package: name,
+          paths: paths,
+          message: "DUPLICATE_PACKAGE_IDENTITY: package=#{name} paths=#{Enum.join(paths, ",")}"
+    end
+  end
+
+  # A root supplied as /checkout/code yields code/packages/... regardless of
+  # checkout location. This representation is diagnostic data, not a host path.
+  defp repository_package_path(root, package_path) do
+    Path.join(Path.basename(root), Path.relative_to(package_path, root))
+    |> String.replace("\\", "/")
   end
 
   @doc """

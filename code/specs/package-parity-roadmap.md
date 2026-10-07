@@ -16279,6 +16279,50 @@ JavaScript AST, storage-core, XML parser, and neutral event-loop fixtures have
 broader eventual leverage but require prerequisite reconciliation; this Elixir
 slice unblocks its two downstream discovery owners after merge.
 
+## Post-#16906 merge and dependency refresh (2026-10-07)
+
+PR #16906 passed its final-head checks, was conflict-free, and auto-merged at
+`1dc3d896cfd50d5d8261323d7d3b87abe149062e`; no manual merge occurred.
+The fresh schema-3 inventory on that exact main commit still has 15 established
+lanes, 1,495 implementation identities, 4,765 slots, 1,537 all-reported
+identities, 178 high-consensus packages with 262 missing slots, 1,013
+singletons, and 814 Rust singletons. The five OCaml packages remain emerging.
+Canonical collisions and unknown buckets are zero, and no parity PR remains
+open. A later check on `1da8d7e9d9bdf9911f33172394acd1c326cb72a9`
+after unrelated Algol/Mermaid merges confirmed these counts and clean gates.
+
+Parallel read-only audit confirmed that all 12 executable established
+build-tool front doors and the three core-only Java/Kotlin/Dart lanes have
+exact owners; OCaml's process-free core and promotion gates are likewise
+owned, with no newly eligible unowned gap. The OCaml archive-mirror path still
+overlaps open PR #15723, while full native build-tool promotion remains gated
+by execution-semantics corpus and Go-oracle prerequisites. The top-level
+roadmap snapshot is older than the current state-file inventory; the checked
+schema-3 report and state graph govern selection.
+
+The read-only ranking puts the existing, now dependency-ready Elixir
+duplicate-identity discovery owner next. It is a bounded correctness slice
+on the just-merged exact language registry and precedes the Elixir neutral
+adapter closure. Tests should consume the checked duplicate fixture, reject
+colliding qualified names before resolution with stable root-redacted sorted
+paths and a typed diagnostic, and prove CLI exit 2. Fixture result projection
+must not be called a registered native adapter while the adapter manifest
+still marks Elixir missing. Canonical BUILD membership, Windows override
+selection, and host symlink/no-follow policy remain separate owners.
+
+Other ready high-leverage prerequisites remain DT17 hash-vector correction,
+the mockable event-loop neutral fixture, C#/F# shared-input digest evidence,
+C#/F# CI-gate selection, and Dart/Swift binary-tree parity. Dart has 96 and
+Swift 51 high-consensus missing slots; the audit found no new exact unowned
+eligible slot. The selected Elixir dependency is intentionally one serial PR,
+not a claim that those broader lane gaps are complete.
+
+PR #16909 is now ready for review for that duplicate-identity slice. It
+consumes the checked neutral fixture in a package-local Elixir test, rejects
+collisions with a typed diagnostic and sorted repository-relative paths, and
+proves CLI exit 2 through a real escript. The active PR's CI and CodeQL checks
+are pending; no second parity implementation PR will be opened meanwhile.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

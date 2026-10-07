@@ -6,13 +6,19 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Discovery rejects colliding qualified identities before resolution with a
+  typed `DUPLICATE_PACKAGE_IDENTITY` error and sorted repository-relative
+  paths. The CLI emits the root-redacted diagnostic and returns exit status 2.
+  A package-local test compares the native error projection with the checked
+  neutral duplicate fixture; no adapter registration or native no-follow
+  authority is claimed.
 - Discovery now checks the complete neutral language-registry fixture: all 29
   BUILD records yield the 25 expected package and program identities. The
   walker uses exact boundary buckets, retains `programs/` names, and excludes
   `.dart_tool`, `dist-newstyle`, specification trees, and other generated
   components without excluding `_Build` or `_build-example` source paths.
-  Duplicate identities, canonical BUILD membership, and native Windows
-  overrides remain separate follow-up contracts.
+  Canonical BUILD membership and native Windows overrides remain separate
+  follow-up contracts.
 - Discovery now recognizes the emerging OCaml bucket needed to project the
   shared Dune fixture, and its native test checks exact `_build` exclusion
   alongside positive `_Build` and `_build-example` paths. The Go CI selection

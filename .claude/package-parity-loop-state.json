@@ -12,20 +12,20 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16906,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16906",
-    "branch": "codex/parity-elixir-registry-20261007",
-    "implementation_revision": "d61e98d7a1fa12bed9cdad42d68f2c8b909e3380",
+    "number": 16909,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16909",
+    "branch": "codex/parity-elixir-duplicate-20261007",
+    "implementation_revision": "aded56c24e",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-07T14:29:07Z",
-    "pr_number": 16906,
+    "observed_at": "2026-10-07T15:02:53Z",
+    "pr_number": 16909,
     "status": "checks-pending",
-    "notes": "Ready-for-review full Elixir language-registry PR #16906 opened from tested implementation d61e98d7a1fa12bed9cdad42d68f2c8b909e3380. GitHub reports MERGEABLE with checks queued. Focused and full Elixir tests, focused formatting, escript build, full Go tests/vet/build, neutral corpus, parity reporter, lessons, diff, and independent read-only security review passed. Changed Discovery coverage is 88.89%; the pre-existing package-wide 90% coverage gate remains unmet at 64.81%. Do not enable auto-merge while checks are pending."
+    "notes": "Ready-for-review PR #16909 opened from tested Elixir duplicate-identity implementation. GitHub reports MERGEABLE, with CI, CodeQL, and human-language detection checks in progress on head fdf7452da1ef14cbc2973aeb3ed616168ddc41b5. Do not enable auto-merge while checks are pending."
   },
   "last_inventory": {
-    "revision": "a7b4a319a3d9d9d3f4e56cc226e2458c11f82f60",
+    "revision": "1da8d7e9d9bdf9911f33172394acd1c326cb72a9",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1495,
@@ -2001,20 +2001,20 @@
     {
       "id": "build-tool-elixir-discovery-language-registry-conformance",
       "title": "Make Elixir discovery match the complete language-registry fixture",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-elixir-dune-build-discovery-fixture-adoption"],
       "branch": "codex/parity-elixir-registry-20261007",
       "pr_number": 16906,
-      "notes": "Ready-for-review PR #16906 fixes exact bucket/identity and generated-tree behavior against all 29 BUILD records and 25 expected package/program records in the neutral fixture. It follows merged PR #16898. Duplicate identities, canonical BUILD membership, Windows override selection, and native no-follow boundaries remain separately owned."
+      "notes": "Merged PR #16906 as 1dc3d896cfd50d5d8261323d7d3b87abe149062e after terminal acceptable checks and conflict-free auto-merge. It fixes exact bucket/identity and generated-tree behavior against all 29 BUILD records and 25 expected package/program records in the neutral fixture. Duplicate identities, canonical BUILD membership, Windows override selection, and native no-follow boundaries remain separately owned."
     },
     {
       "id": "build-tool-elixir-discovery-duplicate-identity-conformance",
       "title": "Reject duplicate Elixir build-tool package identities",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-elixir-discovery-language-registry-conformance"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Two distinct roots can currently share one inferred package identity. Consume the neutral duplicate-identity case, reject before resolution with a stable typed code and sorted repository-relative root-redacted paths, and prove CLI exit 2 while the process-free adapter expresses the error as data."
+      "branch": "codex/parity-elixir-duplicate-20261007",
+      "pr_number": 16909,
+      "notes": "PR #16909 is ready for review with specs, checked neutral fixture, typed duplicate rejection, root-redacted sorted paths, and CLI exit 2. Package-local Elixir tests, real escript, Go build-tool tests/vet/build, corpus, parity, lessons, diff, and independent security review passed. CI is pending; the fixture result is test-local structured data, not a registered process-free adapter."
     },
     {
       "id": "build-tool-elixir-canonical-build-membership-and-windows-selection-conformance",

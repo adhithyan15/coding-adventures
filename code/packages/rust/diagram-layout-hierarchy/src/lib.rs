@@ -316,7 +316,6 @@ pub fn layout_treemap(diagram: &TreemapDiagram, _canvas_width: f64) -> LayoutedT
 
 /// Lay out a TreeView as deterministic indented rows.
 pub fn layout_treeview(diagram: &TreeViewDiagram, _canvas_width: f64) -> LayoutedTreeViewDiagram {
-    let title_height = if diagram.title.is_some() { 42.0 } else { 12.0 };
     let row_height = diagram.config.theme.label_font_size * 1.2 + diagram.config.padding_y * 2.0;
     let mut nodes = diagram.nodes.iter().enumerate().map(|(index, node)| {
         let x = 26.0 + node.depth as f64 * (diagram.config.row_indent + diagram.config.padding_x);
@@ -334,7 +333,7 @@ pub fn layout_treeview(diagram: &TreeViewDiagram, _canvas_width: f64) -> Layoute
             icon: node.icon.clone(),
             description: node.description.clone(),
             x,
-            y: title_height + index as f64 * row_height,
+            y: index as f64 * row_height,
             width: 0.0,
             height: row_height,
             label_x,
@@ -350,12 +349,10 @@ pub fn layout_treeview(diagram: &TreeViewDiagram, _canvas_width: f64) -> Layoute
             if node.description.is_some() { node.description_x = Some(description_x); }
         }
     }
-    let title_width = diagram.title.as_ref()
-        .map(|title| title.chars().count() as f64 * 18.0 * 0.62 + 20.0).unwrap_or(0.0);
     let content_width = nodes.iter().map(|node| match (node.description_x, node.description_width) {
         (Some(x), Some(width)) => x + width + diagram.config.padding_x,
         _ => node.label_x + node.label_width + diagram.config.padding_x,
-    }).fold(diagram.config.line_thickness.max(1.0).max(title_width), f64::max);
+    }).fold(diagram.config.line_thickness.max(1.0), f64::max);
     let has_highlight = nodes.iter().any(|node| node.class_selector.as_deref()
         .is_some_and(|classes| classes.split_whitespace().any(|class| class == "highlight")));
     let width = content_width + if has_highlight { 10.0 } else { 0.0 };
@@ -378,7 +375,7 @@ pub fn layout_treeview(diagram: &TreeViewDiagram, _canvas_width: f64) -> Layoute
     }
     LayoutedTreeViewDiagram {
         width,
-        height: title_height + diagram.nodes.len() as f64 * row_height + 12.0,
+        height: diagram.nodes.len() as f64 * row_height,
         title: diagram.title.clone(),
         accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),

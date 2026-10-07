@@ -1,7 +1,7 @@
 {
   "upstream": "mermaid@11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
-  "scope": "native hierarchy subset with the implicit root, built-in icon geometry, pinned box-drawing preprocessing, renderer defaults, theme variables, connector geometry, and aligned descriptions",
+  "scope": "native hierarchy subset with the implicit root, renderer-neutral title semantics, built-in icon geometry, pinned box-drawing preprocessing, renderer defaults, theme variables, connector geometry, and aligned descriptions",
   "fixtures": [
     {
       "name": "header-only",

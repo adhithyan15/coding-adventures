@@ -797,6 +797,8 @@ dedicated tree IR. File/directory identity, quoted and bare labels, title and
 accessibility metadata, `:::class`, `icon()`, and `##` descriptions survive
 through deterministic row layout and backend-neutral connector, highlight,
 marker, and glyph PaintInstructions with native Metal-to-PNG validation.
+Diagram titles remain available in semantic and PaintScene metadata but do not
+reserve layout space or emit a glyph, matching the pinned renderer's behavior.
 The upstream synthetic `/` directory is explicit semantic IR, owns every
 authored top-level node, participates in layout and Paint lowering, and remains
 present for header-only diagrams.

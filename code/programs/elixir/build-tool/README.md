@@ -30,8 +30,16 @@ fixture directly. It checks 29 BUILD records against 25 expected packages:
 exact bucket languages, distinct `packages/` versus `programs/` identities,
 unknown buckets, generated-tree exclusion, and near-case source paths. The
 fixture-to-build-tool CI map selects this Elixir suite when the registry
-fixture changes. Duplicate-identity rejection, canonical-BUILD-only
-membership, and native Windows override selection remain separate contracts.
+fixture changes. Canonical-BUILD-only membership and native Windows override
+selection remain separate contracts.
+
+Discovery now rejects two physical roots with the same qualified identity
+before dependency resolution. Its typed `DUPLICATE_PACKAGE_IDENTITY` error
+lists sorted `code/`-relative paths without the checkout root; the CLI prints
+that diagnostic and exits with status 2. A package-local test projects the
+checked neutral duplicate fixture as data. This does not yet register an
+Elixir conformance adapter. Canonical BUILD membership, Windows overrides,
+and native symlink/no-follow policy retain separate owners.
 
 1. **Find repo root** — walk up looking for `.git`
 2. **Discover packages** — recursive walk looking for `BUILD` files
