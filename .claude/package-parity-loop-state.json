@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16963,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16963",
+    "branch": "codex/parity-buildtool-sharedpattern-20261007",
+    "implementation_revision": "3d7a35fe62fb0ee2e566b775a0c538a1502cb705",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-07T21:12:12Z",
-    "pr_number": 16956,
-    "status": "merged",
-    "notes": "All 35 final-head checks completed acceptably on 80f2db951a068522ddb4d4e953d5c31cdfea8d19; GitHub reported MERGEABLE/CLEAN, guarded squash auto-merge was enabled, and PR #16956 merged at 21:12:12Z as 513e94670e523cae04f53e4169f4d5833597b5af without a manual merge."
+    "observed_at": "2026-10-07T21:33:16Z",
+    "pr_number": 16963,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR opened on implementation head 3d7a35fe62fb0ee2e566b775a0c538a1502cb705; GitHub reports MERGEABLE but BLOCKED while CI detect, CodeQL detection, and human-language detection are queued. Auto-merge remains disabled until all required checks are terminal and acceptable and no conflict remains."
   },
   "last_inventory": {
     "revision": "513e94670e523cae04f53e4169f4d5833597b5af",
@@ -1084,10 +1090,13 @@
     {
       "id": "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture",
       "title": "Pin cross-gate shared-pattern deduplication at the CI-gate work ceiling",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
       "branch": "codex/parity-buildtool-sharedpattern-20261007",
-      "pr_number": null,
+      "pr_number": 16963,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16963",
+      "opened_at": "2026-10-07T21:33:16Z",
+      "implementation_revision": "3d7a35fe62fb0ee2e566b775a0c538a1502cb705",
       "selected_at": "2026-10-07T21:13:00Z",
       "selection_revision": "513e94670e523cae04f53e4169f4d5833597b5af",
       "selection_notes": "Selected after #16956 merged, exact-main collision-checked inventory stayed at 15 established lanes, 1,496 identities and zero collisions, and three newly discovered owners were registered. Both dependencies are merged; this fixture-only boundary proof unlocks thirteen pending build-tool consumers without changing host or engine authority.",
