@@ -1321,7 +1321,9 @@ backend immediately) come before the enabler-dependent items.
   conservative. Variable-free exact additive zero terms may surround that
   bounded result before `entier`; nonzero or dynamic additive terms remain
   conservative. Variable-free exact multiplicative unit factors may likewise
-  surround it; non-unit or variable factors remain conservative.
+  surround it; non-unit or variable factors remain conservative. Exact unit
+  division is also permitted when the bounded result is the numerator;
+  non-unit or variable divisors and a bounded denominator remain conservative.
   Provenance-backed local and other real-name branches remain conservative
   across selector calls. Unary plus
   and unary minus preserve the same runtime-real proof. Additive composition,

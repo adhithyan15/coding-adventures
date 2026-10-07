@@ -800,9 +800,13 @@ marker, and glyph PaintInstructions with native Metal-to-PNG validation.
 Box-drawing preprocessing matches the pinned root offset, inferred segment
 width, decoration-line handling, mixed-format rejection, and original-line
 diagnostics. Configuration-driven default and filename/extension icon maps
-resolve into semantic icon identities; registered icon-pack artwork,
-theme-variable styling, exact typography, and interactive behavior remain
-unsupported at the partial level.
+resolve into semantic icon identities. Pinned TreeView theme variables control
+font size, label, connector, icon, description, and highlight Paint styling;
+directory labels lower with bold font weight and descriptions with italic
+style. Layout IR also carries one horizontal connector per row, parent vertical
+spans, and a shared description column before backend-neutral Paint lowering.
+Registered icon-pack artwork, exact browser typography, and interactive behavior
+remain unsupported at the partial level.
 
 ### Railroad Native Slice
 

@@ -49,6 +49,31 @@ a3f1.1.1.1   — entity derived from a3f1.1.1
 The base (`a3f1`) is the first 8 hex characters of SHA-256(`"source:location"`). You can
 read parentage directly from the ID — no log lookup needed for basic lineage tracing.
 
+`CVLog::new_compact(enabled)` opts into **compact-v1** identities, used by
+Closurec. Each ID is `cv1.` plus sixteen lowercase hex digits (20 bytes at
+every depth); one sequence is shared by create/derive/merge. They are unique
+within a log, and parent edges carry ancestry. Default `CVLog::new` retains
+the hierarchical format above.
+
+Compact JSON adds `identity: {scheme: "compact-v1", last_sequence: "…"}`.
+The hex watermark includes allocations while storage was disabled, so reloading
+an empty or partially stored log cannot reuse IDs. Import rejects unknown modes,
+malformed/mismatched identities and uncovered allocation values. A declared
+filtered view is not accepted as a full reloadable compact log.
+Legacy logs omit `identity`; any present field must be a versioned object,
+so `identity: null` is rejected even for empty disabled logs. Import rejects
+duplicate entry keys in both modes before decoding the duplicate payload,
+including equivalent escaped key spellings. It never silently overwrites
+earlier evidence during reload. These checks do not validate metadata-map
+duplicates or the complete graph; those remain foundation requirements.
+
+`try_create`, `try_derive` and `try_merge` return allocation errors without
+changing state. The original string-returning methods fail fast if counters
+exhaust or a caller-mutated log would collide; they never wrap or overwrite.
+These are allocation/state checks. Bounded graph validation, topology,
+canonical serialization and event chronology remain separate foundation work;
+compact IDs alone do not bound entry counts or prove complete lineage.
+
 ---
 
 ## Quick Start

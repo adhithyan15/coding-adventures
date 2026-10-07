@@ -2,6 +2,24 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- CV01 opt-in `CVLog::new_compact`: fixed 20-byte per-log identities, shared
+  create/derive/merge sequence and explicit compact-v1 allocation watermark.
+  Save/reload preserves disabled allocations and rejects malformed identity
+  state and projected views. Default hierarchical clients retain their format.
+- Reject present null allocator state, including empty/disabled snapshots,
+  instead of silently switching to legacy allocation. Reject duplicate entry
+  identities before their values can overwrite evidence, in both modes and
+  with equivalent escaped JSON keys. Full graph/schema validation remains pending.
+- Fallible allocation methods reject counter exhaustion and collisions before
+  mutation. String-returning methods fail fast instead of wrapping/overwriting.
+- Deep direct-library chain, mode-toggle/reload, origin/history/tombstone,
+  malformed-state and unchanged-on-error tests. Graph budgets, validation,
+  canonical serialization and chronological events remain pending foundation work.
+
 ## [0.1.0] — 2026-04-05
 
 ### Added

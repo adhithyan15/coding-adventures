@@ -4,7 +4,7 @@ use std::collections::HashMap;
 
 use diagram_ir::{
     DiagramDirection, LayoutedSwimlaneDiagram, LayoutedSwimlaneEdge, LayoutedSwimlaneLane,
-    LayoutedSwimlaneNode, LayoutedTreeViewDiagram, LayoutedTreeViewNode, LayoutedTreemapDiagram,
+    LayoutedSwimlaneNode, LayoutedTreeViewConnector, LayoutedTreeViewDiagram, LayoutedTreeViewNode, LayoutedTreemapDiagram,
     LayoutedTreemapNode, Point, SwimlaneDiagram, TreeViewDiagram, TreemapDiagram,
     LayoutedRailroadDiagram, LayoutedRailroadElement, LayoutedRailroadPath, LayoutedRailroadRule,
     RailroadDiagram, RailroadElementKind, RailroadExpression,
@@ -317,10 +317,13 @@ pub fn layout_treemap(diagram: &TreemapDiagram, _canvas_width: f64) -> LayoutedT
 /// Lay out a TreeView as deterministic indented rows.
 pub fn layout_treeview(diagram: &TreeViewDiagram, canvas_width: f64) -> LayoutedTreeViewDiagram {
     let title_height = if diagram.title.is_some() { 42.0 } else { 12.0 };
-    let row_height = 18.0 + diagram.config.padding_y * 2.0;
+    let row_height = diagram.config.theme.label_font_size * 1.2 + diagram.config.padding_y * 2.0;
     let width = canvas_width.max(360.0);
-    let nodes = diagram.nodes.iter().enumerate().map(|(index, node)| {
+    let mut nodes = diagram.nodes.iter().enumerate().map(|(index, node)| {
         let x = 26.0 + node.depth as f64 * (diagram.config.row_indent + diagram.config.padding_x);
+        let show_icon = match node.icon.as_deref() { Some("none") => false, Some(_) => true, None => diagram.config.show_icons };
+        let label_x = x + diagram.config.padding_x + if show_icon { 18.0 } else { 0.0 };
+        let label_width = node.label.chars().count() as f64 * diagram.config.theme.label_font_size * 0.62 + 8.0;
         LayoutedTreeViewNode {
             id: node.id.clone(),
             parent_id: node.parent_id.clone(),
@@ -334,8 +337,29 @@ pub fn layout_treeview(diagram: &TreeViewDiagram, canvas_width: f64) -> Layouted
             y: title_height + index as f64 * row_height,
             width: (width - x - 18.0).max(80.0),
             height: row_height,
+            label_x,
+            label_width,
+            description_x: None,
         }
-    }).collect();
+    }).collect::<Vec<_>>();
+    let description_x = nodes.iter().map(|node| node.label_x + node.label_width).fold(0.0, f64::max) + 16.0;
+    for node in &mut nodes {
+        if node.description.is_some() { node.description_x = Some(description_x); }
+    }
+    let mut connectors = Vec::new();
+    for node in &nodes {
+        let center_y = node.y + node.height / 2.0;
+        connectors.push(LayoutedTreeViewConnector { node_id: node.id.clone(), points: vec![
+            Point { x: node.x - diagram.config.row_indent, y: center_y }, Point { x: node.x, y: center_y },
+        ] });
+        if let Some(last_child) = nodes.iter().rev().find(|candidate| candidate.parent_id.as_deref() == Some(node.id.as_str())) {
+            connectors.push(LayoutedTreeViewConnector { node_id: node.id.clone(), points: vec![
+                Point { x: node.x + diagram.config.padding_x, y: node.y + node.height },
+                Point { x: node.x + diagram.config.padding_x,
+                    y: last_child.y + last_child.height / 2.0 + diagram.config.line_thickness / 2.0 },
+            ] });
+        }
+    }
     LayoutedTreeViewDiagram {
         width,
         height: title_height + diagram.nodes.len() as f64 * row_height + 12.0,
@@ -344,6 +368,7 @@ pub fn layout_treeview(diagram: &TreeViewDiagram, canvas_width: f64) -> Layouted
         accessibility_description: diagram.accessibility_description.clone(),
         config: diagram.config.clone(),
         nodes,
+        connectors,
     }
 }
 
@@ -494,7 +519,8 @@ mod tests {
             config: diagram_ir::TreeViewConfig::default(),
             nodes: vec![
                 TreeViewNode { id: "root".into(), parent_id: None, depth: 0, label: "src".into(), kind: TreeViewNodeKind::Directory, class_selector: None, icon: None, description: None },
-                TreeViewNode { id: "child".into(), parent_id: Some("root".into()), depth: 1, label: "main.rs".into(), kind: TreeViewNodeKind::File, class_selector: None, icon: None, description: None },
+                TreeViewNode { id: "child".into(), parent_id: Some("root".into()), depth: 1, label: "a.rs".into(), kind: TreeViewNodeKind::File, class_selector: None, icon: None, description: Some("short".into()) },
+                TreeViewNode { id: "sibling".into(), parent_id: Some("root".into()), depth: 1, label: "longer-name.rs".into(), kind: TreeViewNodeKind::File, class_selector: None, icon: None, description: Some("long".into()) },
             ],
         };
         let layout = layout_treeview(&diagram, 500.0);
@@ -502,7 +528,12 @@ mod tests {
         assert!(layout.nodes[1].y > layout.nodes[0].y);
         assert_eq!(layout.nodes[1].parent_id.as_deref(), Some("root"));
         assert_eq!(layout.nodes[1].x - layout.nodes[0].x, 15.0);
-        assert_eq!(layout.nodes[0].height, 28.0);
+        assert_eq!(layout.nodes[0].height, 29.2);
+        assert_eq!(layout.connectors.len(), 4);
+        assert_eq!(layout.connectors[0].points[0].x, 16.0);
+        assert_eq!(layout.connectors[1].points[0].x, 31.0);
+        assert_eq!(layout.nodes[1].description_x, layout.nodes[2].description_x);
+        assert!(layout.nodes[1].description_x.unwrap() > layout.nodes[2].label_x + layout.nodes[2].label_width);
     }
 
     #[test]

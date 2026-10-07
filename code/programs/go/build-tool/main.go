@@ -185,14 +185,41 @@ func packagesForPlatform(packages []discovery.Package, goos string) []discovery.
 	return platformPackages
 }
 
+const sharedDiscoveryFixturePath = "code/specs/fixtures/build-tool-v1/cases/discovery-language-registry.json"
+
+// These are the program fronts whose native tests read sharedDiscoveryFixturePath.
+// A new direct consumer must extend this list and its test in the same change.
+var sharedDiscoveryFixtureConsumers = []struct{ name, language string }{
+	{"dotnet/programs/build-tool-csharp", "csharp"},
+	{"dotnet/programs/build-tool-fsharp", "fsharp"},
+	{"go/programs/build-tool", "go"},
+	{"lua/programs/build-tool", "lua"},
+	{"perl/programs/build-tool", "perl"},
+	{"python/programs/build-tool", "python"},
+	{"ruby/programs/build-tool", "ruby"},
+	{"rust/programs/build-tool", "rust"},
+	{"swift/programs/build-tool", "swift"},
+	{"typescript/programs/build-tool", "typescript"},
+}
+
 func changedPackageRootsForPlatform(
 	changedFiles []string,
 	packages []discovery.Package,
 	repoRoot string,
 	goos string,
-) map[string]bool {
+) (map[string]bool, error) {
+	return changedPackageRootsForPlatformAndLanguage(changedFiles, packages, repoRoot, goos, "all")
+}
+
+func changedPackageRootsForPlatformAndLanguage(
+	changedFiles []string,
+	packages []discovery.Package,
+	repoRoot string,
+	goos string,
+	language string,
+) (map[string]bool, error) {
 	if changedFiles == nil {
-		return nil
+		return nil, nil
 	}
 
 	packageByDir := make(map[string]discovery.Package, len(packages))
@@ -232,7 +259,27 @@ func changedPackageRootsForPlatform(
 		}
 	}
 
-	return gitdiff.MapFilesToPackages(filtered, packages, repoRoot)
+	changed := gitdiff.MapFilesToPackages(filtered, packages, repoRoot)
+	if !containsPath(changedFiles, sharedDiscoveryFixturePath) {
+		return changed, nil
+	}
+
+	// The fixture lives outside every package directory. Its gate validates
+	// corpus shape, but these roots schedule the native consumers themselves.
+	available := make(map[string]bool, len(packages))
+	for _, pkg := range packages {
+		available[pkg.Name] = true
+	}
+	for _, consumer := range sharedDiscoveryFixtureConsumers {
+		if language != "all" && consumer.language != language {
+			continue
+		}
+		if !available[consumer.name] {
+			return nil, fmt.Errorf("shared discovery fixture consumer %q is missing from discovered packages", consumer.name)
+		}
+		changed[consumer.name] = true
+	}
+	return changed, nil
 }
 
 func buildVariantApplies(base, goos string) bool {
@@ -635,12 +682,17 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 					*force = true
 					affectedSet = nil
 				} else {
-					changedPkgs := changedPackageRootsForPlatform(
+					changedPkgs, selectionErr := changedPackageRootsForPlatformAndLanguage(
 						changedFiles,
 						packages,
 						repoRoot,
 						runtime.GOOS,
+						*language,
 					)
+					if selectionErr != nil {
+						fmt.Fprintf(os.Stderr, "Error selecting native fixture consumers: %v\n", selectionErr)
+						return 1
+					}
 					changedPackageRoots = changedPkgs
 					if len(changedPkgs) > 0 {
 						affectedSet = graph.AffectedNodes(changedPkgs)
@@ -716,6 +768,7 @@ func runWithPackageHasher(hashPackage func(discovery.Package) (string, error)) i
 			*shardCount,
 			*emitShardMatrix,
 			*ciGates,
+			*language,
 		)
 	}
 
@@ -952,6 +1005,7 @@ func emitBuildPlan(
 	shardCount int,
 	alsoEmitShardMatrix bool,
 	ciGatesPath string,
+	language string,
 ) int {
 	// Build package entries with repo-root-relative paths.
 	entries := make([]plan.PackageEntry, len(packages))
@@ -988,7 +1042,11 @@ func emitBuildPlan(
 			fmt.Fprintf(os.Stderr, "Error resolving %s build plan: %v\n", goos, err)
 			return 1
 		}
-		platformChanged := changedPackageRootsForPlatform(changedFiles, platformPackages, repoRoot, goos)
+		platformChanged, selectionErr := changedPackageRootsForPlatformAndLanguage(changedFiles, platformPackages, repoRoot, goos, language)
+		if selectionErr != nil {
+			fmt.Fprintf(os.Stderr, "Error selecting %s native fixture consumers: %v\n", goos, selectionErr)
+			return 1
+		}
 		platformAffected := affectedForGraph(
 			platformGraph,
 			platformChanged,

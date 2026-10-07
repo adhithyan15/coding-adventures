@@ -1,7 +1,7 @@
 {
   "upstream": "mermaid@11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
-  "scope": "native hierarchy subset with pinned standard, heavy, and compact box-drawing preprocessing",
+  "scope": "native hierarchy subset with pinned box-drawing preprocessing, renderer defaults, theme variables, connector geometry, and aligned descriptions",
   "fixtures": [
     {
       "name": "header-only",
@@ -25,7 +25,7 @@
     },
     {
       "name": "icon-resolution-config",
-      "source": "%%{init: {\"treeView\": {\"defaultIconPack\": \"devicon\", \"filenameIcons\": {\"README.md\": \"logos:markdown\", \"package.json\": \"none\"}, \"extensionIcons\": {\".rs\": \"rust\", \"TS\": \"logos:typescript\"}}}}%%\ntreeView-beta\nREADME.md\npackage.json\nmain.RS\napp.ts\nnotes.txt icon(custom)"
+      "source": "%%{init: {\"treeView\": {\"showIcons\": true, \"defaultIconPack\": \"devicon\", \"filenameIcons\": {\"README.md\": \"logos:markdown\", \"package.json\": \"none\"}, \"extensionIcons\": {\".rs\": \"rust\", \"TS\": \"logos:typescript\"}}}}%%\ntreeView-beta\nREADME.md\npackage.json\nmain.RS\napp.ts\nnotes.txt icon(custom)"
     },
     {
       "name": "indented-directories-and-files",
@@ -50,6 +50,18 @@
     {
       "name": "compact-box-drawing-segments",
       "source": "treeView-beta\nproject/\n├─ src/ :::highlight\n│ └─ lib.rs ## crate root\n└─ README.md"
+    },
+    {
+      "name": "front-matter-theme-variables",
+      "source": "---\nthemeVariables:\n  treeView:\n    labelFontSize: 20px\n    labelColor: '#112233'\n    lineColor: '#234567'\n    iconColor: '#345678'\n    descriptionColor: '#456789'\n    highlightBg: 'rgba(10, 20, 30, 0.25)'\n    highlightStroke: '#56789a'\n---\ntreeView-beta\nproject/ :::highlight icon(folder)\n    main.rs ## crate root"
+    },
+    {
+      "name": "directive-theme-variables",
+      "source": "%%{init: {\"themeVariables\": {\"treeView\": {\"labelFontSize\": \"18px\", \"labelColor\": \"#abcdef\", \"lineColor\": \"#123456\"}}}}%%\ntreeView-beta\nproject/\n    main.rs"
+    },
+    {
+      "name": "aligned-description-rows",
+      "source": "treeView-beta\nproject/\n    a.rs ## short label\n    much-longer-name.rs ## long label"
     }
   ]
 }
