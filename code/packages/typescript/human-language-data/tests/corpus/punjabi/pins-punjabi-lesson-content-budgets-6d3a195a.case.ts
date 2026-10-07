@@ -89,7 +89,9 @@ it("pins Punjabi lesson-content budgets", () =>
     // reviews. These retrieve old atoms without new idiom, sense, or culture.
     // 878 -> 882: four separate Chapter 160 action-word returns, again with
     // no new idiom, sense, or culture claim.
-    lessons: 882,
+    // 882 -> 886: four separate Chapter 161 returns for Chapter 149 actions.
+    // They remain no-new-atom, no-new-idiom, no-new-sense, no-new-culture.
+    lessons: 886,
     idioms: 6,
     senses: 3,
     cultureClaims: 9,

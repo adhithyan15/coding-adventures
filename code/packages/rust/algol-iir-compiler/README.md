@@ -237,6 +237,9 @@ Built-in `sqrt` may also map an `abs`-normalized bounded result to exact `0`
 or `1` before `entier`; an unnormalized or unrestricted operand remains gated.
 Additional built-in `sqrt` calls may wrap that nonnegative unit result while
 preserving the same bound.
+Built-in `sin`, `cos`, and `arctan` may map a bounded sign-rooted result before
+`entier`, including nested combinations; domain-sensitive or unbounded
+standard functions and non-sign-rooted runtime operands remain conservative.
 One-sided reassignment remains conservative. `for` loops preserve
 runtime-real provenance for caller-frame locals whose values their bodies leave
 invariant; controlled, changed, captured, and name-promoted storage remains

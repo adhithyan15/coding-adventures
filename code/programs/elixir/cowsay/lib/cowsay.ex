@@ -1,6 +1,7 @@
 defmodule CodingAdventures.Cowsay do
   alias CodingAdventures.CliBuilder
   alias CodingAdventures.CliBuilder.{ParseResult, HelpResult, VersionResult, ParseErrors}
+  alias CodingAdventures.Cowsay.CowPath
 
   def main(argv) do
     root = find_root()
@@ -72,7 +73,7 @@ defmodule CodingAdventures.Cowsay do
 
       # Load and render cow
       cowfile = Map.get(flags, "cowfile", "default")
-      cow_template = load_cow(cowfile, root)
+      cow_template = load_cow(cowfile, Path.join([root, "code", "specs", "cows"]))
 
       # Replace placeholders
       cow =
@@ -149,15 +150,11 @@ defmodule CodingAdventures.Cowsay do
     [border_top | middle] ++ [border_bottom] |> Enum.join("\n")
   end
 
-  defp load_cow(cow_name, root) do
-    cow_path = Path.join([root, "code", "specs", "cows", "#{cow_name}.cow"])
-
-    cow_path =
-      if File.exists?(cow_path) do
-        cow_path
-      else
-        Path.join([root, "code", "specs", "cows", "default.cow"])
-      end
+  defp load_cow(cow_name, cows_dir) do
+    # The cow name comes straight from -f/--file, so it is untrusted: see
+    # CowPath for the path-traversal threat and the two-layer defence.
+    # Unsafe, missing, or escaping names all draw default.cow.
+    cow_path = CowPath.resolve(cow_name, cows_dir)
 
     content = File.read!(cow_path)
 

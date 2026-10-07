@@ -33,9 +33,10 @@ let module = compile_preprocessed_file(
 ).unwrap();
 ```
 
-Quoted includes are searched under the declared roots. `RootedFs` does not
-yet search beside the including header, so nested headers need their directory
-declared as an additional root. An unresolved include fails explicitly.
+Quoted includes search beside the verified including file, then under the
+declared roots. The primary file and system includes search declared roots
+only. Every resolved candidate must remain inside a declared root; an
+unresolved include fails explicitly.
 `#if` currently handles single decimal comparisons, `!` on one operand and
 `&&`/`||` chains; it rejects unsupported C expressions. Stringize and paste
 in macro bodies also fail explicitly.

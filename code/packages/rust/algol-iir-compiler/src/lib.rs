@@ -4031,6 +4031,7 @@ impl Compiler {
             "sign" => Some(actuals[0]),
             "abs" | "entier" => self.builtin_sign_operand(actuals[0]),
             "sqrt" => self.builtin_nonnegative_unit_sign_operand(actuals[0]),
+            "sin" | "cos" | "arctan" => self.builtin_sign_operand(actuals[0]),
             _ => None,
         }
     }
@@ -13452,6 +13453,40 @@ mod tests {
         ] {
             let err = compile_source(source, "test").expect_err(
                 "nested sqrt without an abs-normalized bounded sign root must remain conservative",
+            );
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_trig_entier_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(sin(sign(pick()))); output(x) end",
+            "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier(arctan(cos(sin(abs(sign(pick())))))))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "bounded trigonometric mappings preserve a sign-rooted result through entier for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_trig_entier_sign_widening_rejects_unproven_mappings() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(ln(sign(pick()))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(exp(sign(pick()))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sin(pick())); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "unbounded, domain-sensitive, or non-sign-rooted mappings must remain conservative",
             );
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }

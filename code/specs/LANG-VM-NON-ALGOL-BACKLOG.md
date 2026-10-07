@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-07 — re-audited after LANG82's first release-grammar installment
+Status date: 2026-10-07 — re-audited after PREP01 C rooted-file composition
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -107,14 +107,20 @@ latest-head CI, CodeQL, and books checks passed. Its inventory has 774 public
 release entries, 21 distinct explicitly partial token/grammar pairs and 753
 pending pairs. The inventory and partial grammars do not satisfy the user's
 complete per-release request; continue source-backed coverage in bounded work.
+PR #16914 delivered rooted C file-input preprocessing into the token parser and
+SIR lowerer, plus bounded logical `#if` conditions. It merged as
+`f4031922c44da030632cabf4fc7930e217ab8346` after its latest-head CI,
+CodeQL, and books checks passed. An included macro and conditional program
+executed through SIR-to-Ruby. Quoted includes still search declared roots only;
+full C `#if`, stringize/paste, and pathless `compile_source` routing remain.
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **PREP01 C (selected):** compose the staged dialect with a rooted C
-   file-input frontend and execute a real include, macro and conditional
-   program. Continue toward full C `#if`, stringize/paste and default frontend
-   routing after this bounded step.
+1. **PREP01 C (selected):** resolve nested quoted includes beside their verified
+   including header before declared roots, while retaining root confinement and
+   bounded file reads. Continue toward full C `#if`, stringize/paste and default
+   frontend routing after this bounded step.
 2. **LANG82 Perl release grammars:** add distinct source-backed token and
    grammar files for the 753 remaining inventoried releases, and continue the
    inventory audit. Every currently published pair remains explicitly partial.

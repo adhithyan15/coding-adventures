@@ -5,17 +5,20 @@ import { loadTrackLessons } from "../../../src/loader.js";
 const lessons = loadTrackLessons("punjabi").sort(
   (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
 );
+// Preserve the Chapter 160 measurement at its own boundary. Later reviews
+// close the Chapter 149 pairs that this test deliberately exposes.
+const chapter160Lessons = lessons.filter((lesson) => Number(lesson.frontmatter.sequence) <= 8840);
 const ids = [
   "PA-R160-fall-again",
   "PA-R160-teach-again",
   "PA-R160-lift-again",
   "PA-R160-jump-again",
 ];
-const reviews = lessons.filter((lesson) => ids.includes(lesson.realization.lessonId));
+const reviews = chapter160Lessons.filter((lesson) => ids.includes(lesson.realization.lessonId));
 const before = measureContinuity(
-  lessons.filter((lesson) => !ids.includes(lesson.realization.lessonId)),
+  chapter160Lessons.filter((lesson) => !ids.includes(lesson.realization.lessonId)),
 );
-const after = measureContinuity(lessons);
+const after = measureContinuity(chapter160Lessons);
 const missedPairs = (report: typeof before): Set<string> => new Set(
   report.reinforcement.flatMap((defect) =>
     defect.missed.map((window) => `${window}|${defect.atom}`),
