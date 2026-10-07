@@ -1,0 +1,19 @@
+# Perl 4.000 (1991-03-21) tokens: verified arithmetic-print subset only.
+# @version 1
+# PARTIAL: this does not lex all Perl 4.000 source.
+# Evidence: https://github.com/Perl/perl5/blob/perl-4.0.00/perly.y
+# Evidence: https://github.com/Perl/perl5/blob/perl-4.0.00/toke.c
+# The tagged tokenizer recognizes `print` as a list operator. This pair
+# admits that spelling only, and leaves all other list operators unsupported.
+
+PRINT     = "print"
+INT       = /[0-9]+/
+PLUS      = "+"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\r\n]+/
