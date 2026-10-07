@@ -5,9 +5,10 @@
 **Current selection:** exact lexical source intervals and coordinate ownership,
 tracked in [#16970](https://github.com/adhithyan15/coding-adventures/issues/16970),
 branch `codex/closurec-source-spans-20261007`. CV03 merged and is verified;
-its managed worktree is archived. The detailed CV04 specification is in
-preparation; no source implementation has started. Preserve one active
-Closure/shared-stack PR.
+its managed worktree is archived. The detailed [CV04 specification](CV04-exact-lexical-source-intervals.md)
+first accepts CV04a actual matcher capture/domain validation, then CV04b compiler
+source inventory/ingestion-leaf reuse. No source implementation has started;
+#16970 remains open until both slices pass. Preserve one active shared-stack PR.
 **Current audit base:** `c0c7b8bc04d972e07348d02143b6f8b867eee1ae`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
