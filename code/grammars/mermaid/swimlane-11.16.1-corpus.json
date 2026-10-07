@@ -25,6 +25,10 @@
     {
       "name": "subprocess-and-database-shapes",
       "source": "swimlane-beta LR\nsubgraph Data\n  source[(Source data)]\nend\nsubgraph Processing\n  transform[[Transform records]]\nend\nsubgraph Output\n  sink[(Result store)]\nend\nsource --> transform --> sink"
+    },
+    {
+      "name": "hexagon-and-double-circle-shapes",
+      "source": "swimlane-beta LR\nsubgraph Review\n  decide{{Evaluate options}}\nend\nsubgraph Complete\n  finish(((Finished)))\nend\ndecide --> finish"
     }
   ]
 }
