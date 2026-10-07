@@ -6,9 +6,7 @@
 // Call `token_grammar()` instead of reading and parsing the .tokens file.
 
 #[allow(unused_imports)]
-use grammar_tools::token_grammar::{
-    ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction,
-};
+use grammar_tools::token_grammar::{ModeTransition, PatternGroup, TokenDefinition, TokenGrammar, TransitionAction};
 #[allow(unused_imports)]
 use std::collections::HashMap;
 
@@ -74,13 +72,15 @@ pub fn token_grammar() -> TokenGrammar {
         ],
         keywords: vec![],
         mode: None,
-        skip_definitions: vec![TokenDefinition {
-            name: r#"WHITESPACE"#.to_string(),
-            pattern: r#"[ \t\r\n]+"#.to_string(),
-            is_regex: true,
-            line_number: 15,
-            alias: None,
-        }],
+        skip_definitions: vec![
+            TokenDefinition {
+                name: r#"WHITESPACE"#.to_string(),
+                pattern: r#"[ \t\r\n]+"#.to_string(),
+                is_regex: true,
+                line_number: 15,
+                alias: None,
+            },
+        ],
         reserved_keywords: vec![],
         escapes: None,
         error_definitions: vec![],
