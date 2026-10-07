@@ -3257,6 +3257,22 @@ line "Target" [35, 50, 68, 82]"##,
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         let pixels = render(&scene); write_png(&pixels, "/tmp/mermaid_treeview_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
+
+        let empty = parse_treeview("treeView-beta\ntitle\naccTitle: Empty tree\naccDescr {\n  No files are present\n}")
+            .expect("empty treeview parse failed");
+        let empty_layout = layout_treeview(&empty, 720.0);
+        let empty_scene = diagram_to_paint_treeview(&empty_layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 }, device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 13.0), title_font: font_spec("Helvetica", 18.0),
+            shaper: &shaper, metrics: &metrics, resolver: &resolver,
+        });
+        assert_eq!(empty_scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.title")),
+            Some(&"Empty tree".to_string()));
+        assert_eq!(empty_scene.metadata.as_ref().and_then(|metadata| metadata.get("accessibility.description")),
+            Some(&"No files are present".to_string()));
+        let empty_pixels = render(&empty_scene);
+        write_png(&empty_pixels, "/tmp/mermaid_treeview_empty_e2e.png").expect("empty treeview PNG write failed");
+        assert!(empty_pixels.width > 0 && empty_pixels.height > 0);
     }
 
     #[test]

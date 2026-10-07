@@ -4,6 +4,18 @@
   "scope": "native hierarchy subset",
   "fixtures": [
     {
+      "name": "header-only",
+      "source": "treeView-beta"
+    },
+    {
+      "name": "empty-metadata",
+      "source": "treeView-beta\ntitle\naccTitle:\naccDescr:"
+    },
+    {
+      "name": "multiline-accessibility-description",
+      "source": "treeView-beta\naccDescr {\n  Files grouped by\n  their directory hierarchy\n}\nproject/"
+    },
+    {
       "name": "indented-directories-and-files",
       "source": "treeView-beta\nproject/\n    src/\n        index.js\n    README.md"
     },
