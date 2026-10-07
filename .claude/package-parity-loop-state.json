@@ -11,21 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 16906,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16906",
-    "branch": "codex/parity-elixir-registry-20261007",
-    "implementation_revision": "d61e98d7a1fa12bed9cdad42d68f2c8b909e3380",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-07T14:29:07Z",
+    "observed_at": "2026-10-07T14:47:05Z",
     "pr_number": 16906,
-    "status": "checks-pending",
-    "notes": "Ready-for-review full Elixir language-registry PR #16906 opened from tested implementation d61e98d7a1fa12bed9cdad42d68f2c8b909e3380. GitHub reports MERGEABLE with checks queued. Focused and full Elixir tests, focused formatting, escript build, full Go tests/vet/build, neutral corpus, parity reporter, lessons, diff, and independent read-only security review passed. Changed Discovery coverage is 88.89%; the pre-existing package-wide 90% coverage gate remains unmet at 64.81%. Do not enable auto-merge while checks are pending."
+    "status": "merged",
+    "notes": "PR #16906 passed every final-head required check with expected skips and no CI failure; GitHub reported MERGEABLE/CLEAN. Auto-merge was enabled with an exact head guard, never manually merged. GitHub merged it at 2026-10-07T14:47:05Z as 1dc3d896cfd50d5d8261323d7d3b87abe149062e."
   },
   "last_inventory": {
-    "revision": "a7b4a319a3d9d9d3f4e56cc226e2458c11f82f60",
+    "revision": "1dc3d896cfd50d5d8261323d7d3b87abe149062e",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1495,
@@ -2001,20 +1995,20 @@
     {
       "id": "build-tool-elixir-discovery-language-registry-conformance",
       "title": "Make Elixir discovery match the complete language-registry fixture",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-elixir-dune-build-discovery-fixture-adoption"],
       "branch": "codex/parity-elixir-registry-20261007",
       "pr_number": 16906,
-      "notes": "Ready-for-review PR #16906 fixes exact bucket/identity and generated-tree behavior against all 29 BUILD records and 25 expected package/program records in the neutral fixture. It follows merged PR #16898. Duplicate identities, canonical BUILD membership, Windows override selection, and native no-follow boundaries remain separately owned."
+      "notes": "Merged PR #16906 as 1dc3d896cfd50d5d8261323d7d3b87abe149062e after terminal acceptable checks and conflict-free auto-merge. It fixes exact bucket/identity and generated-tree behavior against all 29 BUILD records and 25 expected package/program records in the neutral fixture. Duplicate identities, canonical BUILD membership, Windows override selection, and native no-follow boundaries remain separately owned."
     },
     {
       "id": "build-tool-elixir-discovery-duplicate-identity-conformance",
       "title": "Reject duplicate Elixir build-tool package identities",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-elixir-discovery-language-registry-conformance"],
-      "branch": null,
+      "branch": "codex/parity-elixir-duplicate-20261007",
       "pr_number": null,
-      "notes": "Two distinct roots can currently share one inferred package identity. Consume the neutral duplicate-identity case, reject before resolution with a stable typed code and sorted repository-relative root-redacted paths, and prove CLI exit 2 while the process-free adapter expresses the error as data."
+      "notes": "Selected after #16906 merged and the 1,495-identity collision-checked refresh. Two distinct roots can share one inferred package identity. Consume the neutral duplicate-identity case, reject before resolution with a stable typed code and sorted repository-relative root-redacted paths, and prove CLI exit 2. The fixture result is test-local structured data, not a claim of a registered process-free adapter."
     },
     {
       "id": "build-tool-elixir-canonical-build-membership-and-windows-selection-conformance",

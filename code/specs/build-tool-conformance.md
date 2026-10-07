@@ -476,6 +476,17 @@ fails with `DUPLICATE_PACKAGE_IDENTITY`. The diagnostic includes the duplicate
 package identity and every repository-relative package path in sorted order;
 it must not disclose the checkout root.
 
+The Elixir duplicate-identity adopter MUST project the checked
+`discovery/duplicate-identity` fixture through its production discovery walk.
+It MUST reject before resolution or any build execution, with a narrowly typed
+error containing the stable code, qualified identity, and sorted
+`code/`-relative roots; the native CLI MUST return exit status 2 and emit no
+absolute checkout path. The package-local fixture projection MAY represent
+the neutral diagnostic as data for comparison, but it MUST NOT claim to be a
+registered conformance adapter while the adapter manifest still marks Elixir
+missing. Native symlink/no-follow policy and platform-only BUILD membership
+are governed by separate owners.
+
 The selected canonical `BUILD` may contain legacy shell lines or Starlark.
 Conformance v1 does not recognize `BUILD.lark` as a package marker; that name in
 older migration documents is aspirational. Implementations must not infer
