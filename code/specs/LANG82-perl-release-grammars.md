@@ -107,3 +107,8 @@ The following slice selects tagged 5.003_10. Its yacc source matches 5.003_09;
 the tokenizer changes sigil spacing and a few built-in/identifier decisions,
 outside this bounded print-arithmetic subset. It still needs its own pair and
 separate source note.
+
+The next slice selects tagged 5.003_11. Its yacc changes operator token type
+annotations and block bookkeeping; tokenizer changes cover sigils, patterns
+and numeric-locale setup. Keep the pair partial and independently addressable,
+with the same plain-decimal print-arithmetic limits and negative probes.
