@@ -169,6 +169,9 @@ mod tests {
                     | "5.003_23"
                     | "5.003_24"
                     | "5.003_25"
+                    | "5.003_26"
+                    | "5.003_27"
+                    | "5.003_28"
                     | "5.38.2"
                     | "5.44.0"
                     | "5.45.3"
@@ -185,6 +188,18 @@ mod tests {
                         "{release}: leading-zero literal accepted: {source}"
                     );
                 }
+            }
+            if matches!(*release, "5.003_26" | "5.003_27" | "5.003_28") {
+                let carriage_return = GrammarLexer::new("print(1);\r", &token_grammar).tokenize();
+                assert!(
+                    carriage_return.map_or(true, |tokens| {
+                        GrammarParser::new(tokens, parser_grammar.clone())
+                            .with_max_depth(MAX_RULE_DEPTH)
+                            .parse()
+                            .is_err()
+                    }),
+                    "{release}: carriage return accepted"
+                );
             }
             checked += 1;
         }
