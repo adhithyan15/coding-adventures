@@ -1171,11 +1171,12 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
             transition.control.y - 30.0, 130.0, 24.0, font_with_size(&options.label_font, Some(diagram.style.item_font_size - 1.0)),
             css_to_color(&diagram.style.text_color))); }
     }
-    if let Some(title) = &diagram.title { text_children.push(text_node(title, 10.0, 5.0, diagram.width - 20.0, 30.0,
+    if let Some(title) = &diagram.title { text_children.push(text_node(title, diagram.title_position.x - (diagram.width - 20.0) / 2.0,
+        diagram.title_position.y - 15.0, diagram.width - 20.0, 30.0,
         font_with_size(&options.title_font, Some(diagram.style.domain_font_size + 2.0)), css_to_color(&diagram.style.label_color))); }
     for domain in &diagram.domains {
-        let label_y = if domain.confusion { domain.center.y - 34.0 } else { domain.y + 14.0 };
-        text_children.push(text_node(&capitalize(&domain.name), domain.x + 12.0, label_y, domain.width - 24.0, 28.0,
+        text_children.push(text_node(&capitalize(&domain.name), domain.label_position.x - (domain.width - 24.0) / 2.0,
+            domain.label_position.y - 14.0, domain.width - 24.0, 28.0,
             font_with_size(&options.title_font, Some(diagram.style.domain_font_size)), css_to_color(&diagram.style.label_color)));
         if diagram.show_domain_descriptions {
             let (model, practice) = match domain.name.as_str() {
@@ -1185,13 +1186,14 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
                 "chaotic" => (Some("Act -> Sense -> Respond"), "Novel Practices"),
                 _ => (None, "Disorder"),
             };
-            let description_y = if domain.confusion { domain.center.y - 12.0 } else { domain.y + 40.0 };
-            if let Some(model) = model { text_children.push(text_node(model, domain.x + 12.0, description_y,
+            if let (Some(model), Some(position)) = (model, &domain.model_position) { text_children.push(text_node(model,
+                position.x - (domain.width - 24.0) / 2.0, position.y - 10.0,
                 domain.width - 24.0, 20.0, font_with_size(&options.label_font, Some(diagram.style.item_font_size - 1.0)),
                 css_to_color(&diagram.style.text_color))); }
-            text_children.push(text_node(practice, domain.x + 12.0, description_y + if model.is_some() { 18.0 } else { 0.0 },
-                domain.width - 24.0, 20.0, font_with_size(&options.label_font, Some(diagram.style.item_font_size - 1.0)),
-                css_to_color(&diagram.style.text_color)));
+            if let Some(position) = &domain.practice_position { text_children.push(text_node(practice,
+                    position.x - (domain.width - 24.0) / 2.0, position.y - 10.0,
+                    domain.width - 24.0, 20.0, font_with_size(&options.label_font, Some(diagram.style.item_font_size - 1.0)),
+                    css_to_color(&diagram.style.text_color))); }
         }
         for badge in &domain.item_badges {
             instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: badge.x, y: badge.y,
@@ -9363,7 +9365,7 @@ mod tests {
     #[test]
     fn cynefin_lowers_to_backend_neutral_rects_ellipse_and_glyphs() {
         let shaper = FakeShaper; let metrics = FakeMetrics; let resolver = FakeResolver; let opts = make_opts(&shaper, &metrics, &resolver);
-        let layout = LayoutedCynefinDiagram { width: 400.0, height: 300.0, title: None, accessibility_title: Some("Cynefin framework".into()),
+        let layout = LayoutedCynefinDiagram { width: 400.0, height: 300.0, title: None, title_position: Point { x: 200.0, y: 5.0 }, accessibility_title: Some("Cynefin framework".into()),
             accessibility_description: Some("Practices by domain".into()),
             show_domain_descriptions: true, style: diagram_ir::CynefinStyle::default(),
             boundaries: vec![diagram_ir::LayoutedCynefinBoundary { start: Point { x: 200.0, y: 10.0 },
@@ -9375,11 +9377,15 @@ mod tests {
             domains: vec![diagram_ir::LayoutedCynefinDomain { name: "complex".into(), items: vec!["Probe".into()],
                 item_badges: vec![diagram_ir::LayoutedCynefinItem { label: "Probe".into(), x: 65.0, y: 95.0, width: 70.0, height: 26.0, overflow: false }],
                 overflow_count: 0, x: 10.0, y: 10.0,
-                width: 180.0, height: 130.0, center: Point { x: 100.0, y: 75.0 }, confusion: false },
+                width: 180.0, height: 130.0, center: Point { x: 100.0, y: 75.0 },
+                label_position: Point { x: 100.0, y: 45.0 }, model_position: Some(Point { x: 100.0, y: 65.0 }),
+                practice_position: Some(Point { x: 100.0, y: 80.0 }), confusion: false },
                 diagram_ir::LayoutedCynefinDomain { name: "confusion".into(), items: vec!["One".into(), "Two".into(), "Three".into()],
                     item_badges: vec![diagram_ir::LayoutedCynefinItem { label: "+2 more".into(), x: 167.5, y: 230.0, width: 65.0, height: 26.0, overflow: true }],
                     overflow_count: 2, x: 150.0, y: 110.0,
-                    width: 100.0, height: 80.0, center: Point { x: 200.0, y: 150.0 }, confusion: true }],
+                    width: 100.0, height: 80.0, center: Point { x: 200.0, y: 150.0 },
+                    label_position: Point { x: 200.0, y: 140.0 }, model_position: None,
+                    practice_position: Some(Point { x: 200.0, y: 158.0 }), confusion: true }],
             transitions: vec![diagram_ir::LayoutedCynefinTransition { from: Point { x: 100.0, y: 75.0 },
                 control: Point { x: 145.0, y: 95.0 }, to: Point { x: 200.0, y: 150.0 }, label: None }] };
         let scene = diagram_to_paint_cynefin(&layout, &opts);
