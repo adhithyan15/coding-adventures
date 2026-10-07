@@ -16523,6 +16523,36 @@ The read-only gap audit added three narrow owners before selection: Go center-fo
 
 Select only `build-tool-ci-gate-shared-pattern-dedup-neutral-fixture` next. Both prerequisites have merged. One process-free fixture must distinguish 21 cross-gate pattern references from 20 distinct patterns at the 50,000,000-unit limit, preserving the A=true/B=false selection. This bounded neutral contract proof directly unlocks thirteen pending build-tool consumers; the new CI-selection owner will schedule native consumers for subsequent fixture-only diffs. Do not modify a production engine merely to create activity.
 
+## Post-#16963 merged refresh (2026-10-07)
+
+PR #16963 completed 33 acceptable final-head checks and merged through
+guarded squash auto-merge at `820486b82913d88c34718fe4faa3c4d6003595cd`;
+there was no manual merge. The refreshed schema-3 report at
+`7c36c41e98cadb8bf555f517e913a3b6832c1fbe` still has 15 established
+lanes, 1,496 implementation identities, 4,766 slots, 1,538 all-reported
+identities, 178 high-consensus identities with 262 missing slots, 1,014
+singletons (815 Rust), and five emerging OCaml roots. Canonical collisions
+and unknown buckets remain zero. The intervening #16955 CI repair added no
+package slot.
+
+Parallel read-only audits registered 30 previously unowned, dependency-shaped
+items before selecting more implementation work: DT28 Markov-chain neutral
+conformance, nine-lane adoption and six absent ports; C#/F# CSS frontends;
+DT14 compressed radix-tree conformance and existing Elixir structural repair;
+six-lane BMP/PPM/QOI codecs; six-lane KD02 scrypt ports; and six absent
+DT15 suffix-tree ports. These are backlog owners, not claims of completed
+implementations. Cryptographic ports remain gated by neutral and PBKDF2
+prerequisites; Elixir suffix-tree work follows the radix-tree structural
+repair. Existing Java/Kotlin/Dart/Swift/Haskell package, all-lane build-tool,
+and OCaml promotion owners remain open.
+
+Select only `build-tool-ci-gate-fixture-native-ci-selection` next. #16963
+established the neutral shared-pattern oracle, but its fixture-only diff
+selected the shared conformance gate without selecting native Go CI-gates.
+Add exact-path Go/Python native consumer scheduling and a detector regression
+with real build-plan and Ubuntu evidence. Keep other build-tool lane adapters
+and CI workflow changes separate.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
