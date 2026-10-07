@@ -624,6 +624,13 @@ the shared preprocessor's default produced-token and token-spelling ceilings,
 with an additional 64 MiB aggregate text ceiling at the parser boundary. The C
 dialect will use the shared preprocessor's bounds for input and expansion; the
 parser handoff retains its own guard because it is also a public API.
+The lexer exposes `#` and `##` as ordinary directive tokens rather than
+silently skipping their lines. During the handoff, the existing source-input
+`c-parser` API retains its historical behavior of ignoring directive lines;
+the token-input API never removes them. The C frontend switches to the
+preprocessor stream before that compatibility path is retired. A local quoted
+header can be lexed as a string token; `<...>` headers remain a separate system
+include policy decision and are not resolved from the host toolchain.
 *Acceptance:* a C program using `#define` (object- and function-like), `#if`/
 `#ifdef`/`#else`/`#endif` and a real project-local `#include` compiles through
 `c-to-semantic-ir` and executes with the expected result — the first C program
