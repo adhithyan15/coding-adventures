@@ -212,6 +212,8 @@ fn manifest_declares_task_app() {
         "mosaic-startup-failure",
         "mosaic-startup-retry",
         "expect(startupAttempts, 2)",
+        "timeline legend fits the default constrained viewport",
+        "the generated Timeline must not report a RenderFlex overflow",
     ] {
         assert!(
             flutter_acceptance.contains(marker),

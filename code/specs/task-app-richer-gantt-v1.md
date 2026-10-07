@@ -24,7 +24,10 @@ design thesis this gap measures against.
   status — via the kernel's existing `HostTooltip` primitive (UI29-4),
   wrapping each bar.
 - **A legend**: static swatches for Normal / Critical / Milestone /
-  Today, once, above the chart.
+  Today, once, above the chart. The four entries occupy two explicit
+  horizontal lines. This keeps the complete legend visible in constrained
+  native cards without relying on `flex-wrap`, which not every Mosaic backend
+  implements.
 
 ## What does NOT ship — dependency arrows
 
@@ -113,8 +116,9 @@ unrelated to this fix — this fix is purely the DoS bound.
   swapped in via `If (when: (t[5]))` (the kind cell) ahead of the
   existing critical/non-critical branch; a percent-complete overlay
   `Box` sits inside the bar sized from `(t[6])`. The legend is a static
-  row of labelled swatches, not data-bound (nothing about it varies per
-  render).
+  two-line group of labelled swatches, not data-bound (nothing about it varies
+  per render). Its explicit rows are the portable constrained-width contract;
+  no backend may infer or claim unsupported wrapping from this structure.
 - `TaskApp.{light,dark}.msl`: day-grid cell parts (weekday / weekend /
   today), milestone diamond part, percent-complete overlay part, legend
   swatch parts.

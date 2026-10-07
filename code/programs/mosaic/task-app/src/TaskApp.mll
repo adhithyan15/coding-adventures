@@ -196,22 +196,29 @@ layout TaskApp {
               }
               // The legend — static copy, not data-bound (see TaskApp.mil's doc
               // comment on why this isn't a slot).
-              Row [ tl-legend ] {
-                Row [ tl-legend-item ] {
-                  Box [ tl-legend-swatch ] { }
-                  Text [ tl-legend-label ] ( content : "On track" )
+              // Two explicit lines keep all four meanings visible in the
+              // constrained native card without pretending every backend
+              // supports CSS flex-wrap (#16887).
+              Column [ tl-legend ] {
+                Row [ tl-legend-line ] {
+                  Row [ tl-legend-item ] {
+                    Box [ tl-legend-swatch ] { }
+                    Text [ tl-legend-label ] ( content : "On track" )
+                  }
+                  Row [ tl-legend-item3 ] {
+                    Box [ tl-legend-swatch-milestone ] { }
+                    Text [ tl-legend-label3 ] ( content : "Milestone" )
+                  }
                 }
-                Row [ tl-legend-item2 ] {
-                  Box [ tl-legend-swatch-crit ] { }
-                  Text [ tl-legend-label2 ] ( content : "Critical path" )
-                }
-                Row [ tl-legend-item3 ] {
-                  Box [ tl-legend-swatch-milestone ] { }
-                  Text [ tl-legend-label3 ] ( content : "Milestone" )
-                }
-                Row [ tl-legend-item4 ] {
-                  Box [ tl-legend-swatch-today ] { }
-                  Text [ tl-legend-label4 ] ( content : "Today" )
+                Row [ tl-legend-line2 ] {
+                  Row [ tl-legend-item2 ] {
+                    Box [ tl-legend-swatch-crit ] { }
+                    Text [ tl-legend-label2 ] ( content : "Critical path" )
+                  }
+                  Row [ tl-legend-item4 ] {
+                    Box [ tl-legend-swatch-today ] { }
+                    Text [ tl-legend-label4 ] ( content : "Today" )
+                  }
                 }
               }
               For ( each: slot: timeline-rows , as: t , index: ti ) {
