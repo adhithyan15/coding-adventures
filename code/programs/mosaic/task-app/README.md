@@ -84,6 +84,10 @@ test framework happens to default to (#14771). The same test asserts directly
 that the one- and two-task lifecycle produces **zero** vertical scroll overflow
 in that window, so a layout change that pushes content below the fold fails
 saying so, in pixels, at the stage where it happened.
+Flutter acceptance independently mounts the empty app at the same declared
+1280 x 900 viewport and requires the generated topbar to produce no RenderFlex
+overflow. The title/summary, compact action controls, and view switcher use
+explicit stacked rows because portable Mosaic layouts cannot assume flex-wrap.
 
 Those gates all assert the **semantics tree**, not appearance, and they can all
 pass while the app is unreadable — see #14798 for the first actual render and
