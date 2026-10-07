@@ -239,6 +239,19 @@ defmodule BuildTool.DiscoveryTest do
 
         assert project_discovery(Discovery.discover_packages(code_root), tmp_dir, :windows) ==
                  fixture["expected"]["result"]["packages"]
+
+        plan_path = Path.join(tmp_dir, "windows-plan.json")
+
+        output =
+          capture_io(fn ->
+            assert CLI.run(["--root", tmp_dir, "--force", "--emit-plan", plan_path]) == 0
+          end)
+
+        refute output =~ "Evaluated 1 Starlark BUILD"
+        [planned] = plan_path |> File.read!() |> Jason.decode!() |> Map.fetch!("packages")
+        assert planned["name"] == "python/demo"
+        assert planned["build_commands"] == ["python -m unittest discover tests"]
+        assert planned["is_starlark"] == false
       end
     end
 
