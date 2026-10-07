@@ -9,14 +9,25 @@ use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use std::sync::{Arc, Mutex};
 use vm_core::{errors::VMError, value::Value, VMCore};
 
+/// Bounds for the initial native frontend and its generated VM program.
+pub const MAX_SOURCE_BYTES: usize = 64 * 1024;
+const MAX_AST_ITEMS: usize = 16_384;
+const MAX_AST_DEPTH: usize = 64;
+
 /// Parse Python 3.12 source and lower the supported subset directly to IIR.
 pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, String> {
+    if source.len() > MAX_SOURCE_BYTES {
+        return Err(format!(
+            "Python source exceeds the {MAX_SOURCE_BYTES}-byte native pilot limit"
+        ));
+    }
     let tree = parse_python(source, "3.12")?;
     compile_ast(&tree, module_name)
 }
 
 /// Lower a Python parser tree to IIR, rejecting all syntax outside LANG79.
 pub fn compile_ast(tree: &GrammarASTNode, module_name: &str) -> Result<IIRModule, String> {
+    check_ast_budget(tree)?;
     if tree.rule_name != "file" {
         return Err("expected a Python file grammar root".into());
     }
@@ -44,6 +55,34 @@ pub fn compile_ast(tree: &GrammarASTNode, module_name: &str) -> Result<IIRModule
         return Err(format!("invalid Python IIR: {}", errors.join("; ")));
     }
     Ok(module)
+}
+
+// Callers may pass their own grammar tree, so check it iteratively before the
+// recursive lowering path. Count tokens as well as nodes to bound wide input.
+fn check_ast_budget(tree: &GrammarASTNode) -> Result<(), String> {
+    let mut pending = vec![(tree, 1_usize)];
+    let mut remaining = MAX_AST_ITEMS;
+    while let Some((node, depth)) = pending.pop() {
+        if depth > MAX_AST_DEPTH {
+            return Err("Python AST exceeds the native pilot depth limit".into());
+        }
+        if remaining == 0 {
+            return Err("Python AST exceeds the native pilot item limit".into());
+        }
+        remaining -= 1;
+        for child in &node.children {
+            match child {
+                ASTNodeOrToken::Node(inner) => pending.push((inner, depth + 1)),
+                ASTNodeOrToken::Token(_) => {
+                    if remaining == 0 {
+                        return Err("Python AST exceeds the native pilot item limit".into());
+                    }
+                    remaining -= 1;
+                }
+            }
+        }
+    }
+    Ok(())
 }
 
 /// Execute Python source on the Rust VM and return its captured `print` output.
@@ -342,5 +381,43 @@ mod tests {
         assert!(run_source("print(1.0 / 0.0)\n")
             .unwrap_err()
             .contains("ZeroDivisionError"));
+    }
+
+    fn empty_node(rule_name: &str) -> GrammarASTNode {
+        GrammarASTNode {
+            rule_name: rule_name.into(),
+            children: vec![],
+            start_line: None,
+            start_column: None,
+            end_line: None,
+            end_column: None,
+        }
+    }
+
+    #[test]
+    fn source_and_direct_ast_budgets_reject_oversized_inputs() {
+        let source = " ".repeat(MAX_SOURCE_BYTES + 1);
+        assert!(compile_source(&source, "oversized")
+            .unwrap_err()
+            .contains("source exceeds"));
+
+        let mut wide = empty_node("file");
+        wide.children = (0..MAX_AST_ITEMS)
+            .map(|_| ASTNodeOrToken::Node(empty_node("statement")))
+            .collect();
+        assert!(compile_ast(&wide, "wide")
+            .unwrap_err()
+            .contains("item limit"));
+
+        let mut deep = empty_node("leaf");
+        for _ in 0..MAX_AST_DEPTH {
+            let mut parent = empty_node("wrapper");
+            parent.children.push(ASTNodeOrToken::Node(deep));
+            deep = parent;
+        }
+        deep.rule_name = "file".into();
+        assert!(compile_ast(&deep, "deep")
+            .unwrap_err()
+            .contains("depth limit"));
     }
 }
