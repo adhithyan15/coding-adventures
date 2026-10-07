@@ -38,6 +38,8 @@ Additional built-in `entier` calls may wrap that already integral bounded
 result; an unrestricted runtime `entier` operand remains conservative.
 Built-in `sqrt` may also map an `abs`-normalized bounded result to exact `0`
 or `1` before `entier`; an unnormalized or unrestricted operand remains gated.
+Additional built-in `sqrt` calls may wrap that nonnegative unit result while
+preserving the same bound.
 One-sided reassignment remains gated. Unary signs, additive
 composition, multiplication, division, and exponentiation over proven
 runtime-real or finite static operands preserve runtime-real provenance. The
