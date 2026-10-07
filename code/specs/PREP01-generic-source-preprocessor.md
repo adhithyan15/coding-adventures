@@ -625,12 +625,9 @@ file-input path and remaining C semantics are validated. Tests may use
 The file-input API checks the entry spelling against the tightened token
 spelling budget before cloning it into an include request. Its search roots
 come from the embedding host, not C source text.
-This bounded file-input stage searches quoted includes under those declared
-roots. `RootedFs` does not yet search relative to an including header's own
-directory; callers must declare such a directory as a root, and an unresolved
-include fails. Relative-to-header lookup remains required for full C behavior.
-The next file-resolution stage uses `IncludeRequest.from` only for a quoted
-include (`system == false`) from a file that this `RootedFs` instance already
+The first bounded file-input stage searched quoted includes under declared
+roots only. The next file-resolution stage uses `IncludeRequest.from` only for
+a quoted include (`system == false`) from a file that this `RootedFs` instance already
 resolved. It searches that file's canonical parent directory first, then the
 declared roots in order. The primary file (`from == None`) and a system include
 search declared roots only. An unknown `from` id fails closed; it cannot silently
@@ -642,6 +639,9 @@ resolved canonical file. No ambient compiler or host-system include path is
 added. Tests distinguish a header-neighbor from a same-named root file, cover
 an out-of-root relative path and symlink, reject an unknown `from`, and compile
 a nested quoted header through the real C file-input frontend.
+`RootedFs::resolve` also checks the request spelling against its tightened
+token-spelling bound before constructing candidate paths, including when used
+directly outside an engine run.
 `c.tokens` stops discarding `#…` lines; `c-lexer` surfaces directive tokens; a
 `CDialect` implements §5; `c-to-semantic-ir` runs the engine as its
 `post_tokenize` hook. `SIR27`'s preprocessor scope statement is updated.

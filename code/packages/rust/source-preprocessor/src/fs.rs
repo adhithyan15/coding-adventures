@@ -170,6 +170,9 @@ impl SourceFs for MemoryFs {
 struct Entry {
     /// The spelling the program used, for diagnostics. Never the real path.
     name: String,
+    /// The verified canonical path, used only to locate a quoted header's
+    /// sibling before searching declared roots.
+    canon: PathBuf,
     /// The handle opened and verified during `resolve`, taken by first `read`.
     handle: Option<File>,
     /// Text, cached on first read so a legitimate repeat include is served
@@ -178,6 +181,10 @@ struct Entry {
 }
 
 /// A filesystem confined to a set of declared search roots.
+///
+/// A quoted include with a verified `from` file searches that file's
+/// canonical parent first, then the roots. Primary and system includes search
+/// roots only. Every candidate must still canonicalise within a declared root.
 ///
 /// # Resolve opens; read never touches a path
 ///
@@ -368,7 +375,33 @@ impl SourceFs for RootedFs {
     fn resolve(&mut self, request: &IncludeRequest) -> Result<FileId, PpError> {
         Self::screen_spelling(&request.spelling)?;
 
-        for root in self.roots.clone() {
+        if request.spelling.len() as u64 > self.bounds.token_spelling_bytes {
+            return Err(PpError::new(format!(
+                "include spelling exceeds the {}-byte token bound",
+                self.bounds.token_spelling_bytes
+            )));
+        }
+
+        // A supplied origin must name a file this instance already resolved.
+        // Only quoted includes search beside it; primary and system includes
+        // search the declared roots alone.
+        let mut search = Vec::with_capacity(self.roots.len() + 1);
+        if let Some(from) = request.from {
+            let entry = self
+                .entries
+                .get(from.index())
+                .ok_or_else(|| PpError::new("unknown including file"))?;
+            if !request.system {
+                let parent = entry
+                    .canon
+                    .parent()
+                    .ok_or_else(|| PpError::new("including file has no parent directory"))?;
+                search.push(parent.to_path_buf());
+            }
+        }
+        search.extend(self.roots.iter().cloned());
+
+        for root in search {
             let joined = root.join(&request.spelling);
 
             // Canonicalise, which resolves `..` AND follows any symlink or
@@ -422,6 +455,7 @@ impl SourceFs for RootedFs {
             let id = FileId::new(self.entries.len() as u32);
             self.entries.push(Entry {
                 name: request.spelling.clone(),
+                canon: canon.clone(),
                 handle: Some(handle),
                 text: None,
             });
@@ -515,6 +549,30 @@ impl SourceFs for RootedFs {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::io::Write;
+    use std::sync::atomic::{AtomicUsize, Ordering};
+
+    static NEXT: AtomicUsize = AtomicUsize::new(0);
+
+    fn fresh_dir(name: &str) -> PathBuf {
+        let path = std::env::temp_dir().join(format!(
+            "prep01_{name}_{}_{}",
+            std::process::id(),
+            NEXT.fetch_add(1, Ordering::Relaxed)
+        ));
+        std::fs::create_dir(&path).unwrap();
+        path
+    }
+
+    fn write_fresh(path: &Path, text: &str) {
+        std::fs::OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(path)
+            .unwrap()
+            .write_all(text.as_bytes())
+            .unwrap();
+    }
 
     fn req(spelling: &str) -> IncludeRequest {
         IncludeRequest { spelling: spelling.to_string(), from: None, system: false }
@@ -533,6 +591,113 @@ mod tests {
     fn memory_fs_reports_a_missing_file() {
         let mut fs = MemoryFs::new();
         assert!(fs.resolve(&req("nope.oct")).is_err());
+    }
+
+    #[test]
+    fn quoted_header_searches_its_verified_parent_before_declared_roots() {
+        let dir = fresh_dir("relative_include");
+        let root = dir.join("root");
+        std::fs::create_dir(&root).unwrap();
+        std::fs::create_dir(root.join("sub")).unwrap();
+        write_fresh(&root.join("sub/a.h"), "origin");
+        write_fresh(&root.join("sub/b.h"), "neighbor");
+        write_fresh(&root.join("b.h"), "root");
+        let mut fs = RootedFs::new([root], Bounds::default()).unwrap();
+        let from = fs.resolve(&req("sub/a.h")).unwrap();
+        let local = fs
+            .resolve(&IncludeRequest {
+                spelling: "b.h".to_string(),
+                from: Some(from),
+                system: false,
+            })
+            .unwrap();
+        assert_eq!(fs.read(local).unwrap(), "neighbor");
+        let system = fs
+            .resolve(&IncludeRequest {
+                spelling: "b.h".to_string(),
+                from: Some(from),
+                system: true,
+            })
+            .unwrap();
+        assert_eq!(fs.read(system).unwrap(), "root");
+        let again = fs.resolve(&req("sub/b.h")).unwrap();
+        assert_eq!(again, local, "canonical identity must survive search order");
+        std::fs::remove_dir_all(&dir).unwrap();
+    }
+
+    #[test]
+    fn unverified_origin_and_out_of_root_relative_target_fail_closed() {
+        let dir = fresh_dir("relative_escape");
+        let root = dir.join("root");
+        std::fs::create_dir(&root).unwrap();
+        std::fs::create_dir(root.join("sub")).unwrap();
+        std::fs::create_dir(dir.join("outside")).unwrap();
+        write_fresh(&root.join("sub/a.h"), "origin");
+        write_fresh(&dir.join("outside/b.h"), "secret");
+        let mut fs = RootedFs::new([root], Bounds::default()).unwrap();
+        let from = fs.resolve(&req("sub/a.h")).unwrap();
+        assert!(fs
+            .resolve(&IncludeRequest {
+                spelling: "b.h".to_string(),
+                from: Some(FileId::new(999)),
+                system: false,
+            })
+            .is_err());
+        assert!(fs
+            .resolve(&IncludeRequest {
+                spelling: "../../outside/b.h".to_string(),
+                from: Some(from),
+                system: false,
+            })
+            .is_err());
+        std::fs::remove_dir_all(&dir).unwrap();
+    }
+
+    #[test]
+    fn header_relative_symlink_cannot_escape_a_declared_root() {
+        let dir = fresh_dir("relative_symlink");
+        let root = dir.join("root");
+        std::fs::create_dir(&root).unwrap();
+        std::fs::create_dir(root.join("sub")).unwrap();
+        write_fresh(&root.join("sub/a.h"), "origin");
+        write_fresh(&dir.join("outside.h"), "secret");
+        let link = root.join("sub/link.h");
+        #[cfg(unix)]
+        std::os::unix::fs::symlink(dir.join("outside.h"), &link).unwrap();
+        #[cfg(windows)]
+        if let Err(error) = std::os::windows::fs::symlink_file(dir.join("outside.h"), &link) {
+            // Some Windows runners disallow unprivileged symlink creation.
+            if error.kind() == std::io::ErrorKind::PermissionDenied
+                || error.raw_os_error() == Some(1314)
+            {
+                std::fs::remove_dir_all(&dir).unwrap();
+                return;
+            }
+            panic!("unexpected symlink creation failure: {error}");
+        }
+        let mut fs = RootedFs::new([root], Bounds::default()).unwrap();
+        let from = fs.resolve(&req("sub/a.h")).unwrap();
+        assert!(fs
+            .resolve(&IncludeRequest {
+                spelling: "link.h".to_string(),
+                from: Some(from),
+                system: false,
+            })
+            .is_err());
+        std::fs::remove_dir_all(&dir).unwrap();
+    }
+
+    #[test]
+    fn direct_rooted_fs_calls_bound_include_spelling_before_joining() {
+        let dir = fresh_dir("spelling_bound");
+        let mut fs = RootedFs::new([dir.clone()], Bounds::default()).unwrap();
+        let too_long = "x".repeat(Bounds::default().token_spelling_bytes as usize + 1);
+        assert!(fs
+            .resolve(&req(&too_long))
+            .unwrap_err()
+            .to_string()
+            .contains("token bound"));
+        std::fs::remove_dir_all(&dir).unwrap();
     }
 
     // --- the spelling gate -------------------------------------------------
