@@ -271,6 +271,11 @@ Current pairs:
   recognition, word-operator expectations, warnings and quote delimiters
   outside this plain-decimal `print` subset. It retains the tested
   250-digit decimal bound and claims no full-release syntax coverage.
+- `perl5.004_02.*` is a separate **partial** pair checked against the
+  [`perl-5.004_02` source tag]. Its tagged `perly.y` and `toke.c`
+  match the preceding 5.004_01_03 trial archive byte for byte, while
+  this numbered release keeps distinct files. The tested plain-decimal
+  subset retains its 250-digit bound and does not claim full syntax.
 - `perl5.004_01_02.*` is a separate **partial** pair checked against the
   [historical 5.004_01_02 source archive] (SHA-256
   `185dc7317b340d4ca018f966993bb155bcc834c914fd26e579225d49c01e2a93`).
@@ -372,6 +377,7 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [`perl-5.003_99a` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_99a
 [`perl-5.004` source tag]: https://github.com/Perl/perl5/tree/perl-5.004
 [`perl-5.004_01` source tag]: https://github.com/Perl/perl5/tree/perl-5.004_01
+[`perl-5.004_02` source tag]: https://github.com/Perl/perl5/tree/perl-5.004_02
 [historical 5.004_01-t2 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01-t2.tar.gz
 [historical 5.004_01_01 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01_01.tar.gz
 [historical 5.004_01_02 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01_02.tar.gz

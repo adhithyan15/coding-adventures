@@ -193,6 +193,10 @@ The historical 5.004_01_03 trial archive keeps the same `perly.y` as
 bounded decimal `print` arithmetic subset. Give the trial a distinct
 partial pair with the inherited 250-digit bound and negative probes.
 
+The tagged final 5.004_02 release has `perly.y` and `toke.c` identical
+to the 5.004_01_03 trial archive. It still needs a distinct partial pair;
+retain the tested decimal boundary and unsupported-form rejection.
+
 The historical 5.004_01_02 trial archive again has the same `perly.y`.
 Its tokenizer changes command-line `-p` expansion and quoted delimiter
 handling outside the partial decimal `print` arithmetic subset. Record
