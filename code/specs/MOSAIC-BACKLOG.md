@@ -44,7 +44,7 @@ history, and local test runs. This file is the result: one ordered list.
    - VC-1, VisiCalc's native Open/Save.
 2. **Small bugs, batched by package.**
    - MosaicBook: MB-2 and MB-3 (*fixed, unpushed*), MB-4;
-   - emitters: EM-3, EM-5 and EM-9;
+   - emitters: EM-3, EM-5 and EM-9 (*fixed, unpushed*);
    - X-2, the compiler's search path on Windows (*fixed, unpushed*).
 3. **Housekeeping.** Close the issues in [Closable now](#closable-now),
    update the out-of-date epic checklists, and refresh the docs rows (MB-12,
@@ -202,7 +202,7 @@ exist.
 | EM-6 | Compose pipeline mode has no `EmitOptions` or project shell, and ignores `--fixtures` | **real**. `compose/pipeline.rs:69`, `main.rs:1392-1411`. #14704 | feature | M |
 | EM-7 | Permissive XAML shells bind the host by reflection, so mismatches fail silently | **partly**: native-complete shells bind directly. `xaml/pipeline.rs:9047-9192`. #14049 | bug | M |
 | EM-8 | `HostButton` children are dropped on 6 of 8 backends (now reported as a degradation) | **real** as a feature. #15921 | feature | L |
-| EM-9 | webcomponent emits `align: center-vertical` as a raw, invalid inline CSS declaration | **real**. #16932 | bug | S |
+| EM-9 | webcomponent (and html) emit `align: center-vertical` as a raw, invalid inline CSS declaration | **fixed** on `claude/brave-ride-edfrqw` (unpushed): translated to flex alignment, as React does. #16932 | bug | S |
 | EM-10 | Compose `Col(width:)` is emitted as a comment | **real**, cosmetic; no product relies on it. #14846 | bug | S |
 | EM-11 | Compose `performScrollTo()` hang | **unverified**. The reporter's own bisection cleared the emitter; the workaround is still in `TaskAppUiTest.kt:53,107`. #14790 | test infra | M |
 | EM-12 | The qualified `pkg::P::C` tag contract is undocumented | docs only: all 8 backends already reject it. #14886 | docs | S |

@@ -3458,11 +3458,45 @@ fn build_inline_css_fragment(props: &[StyleProp]) -> String {
     let mut parts: Vec<String> = Vec::with_capacity(props.len());
     for p in props {
         let key = camel_to_kebab(&p.name);
+        if let Some(css) = translate_layout_alias(&key, &p.value) {
+            parts.push(css.to_string());
+            continue;
+        }
         let value = normalize_css_value(&key, &p.value);
         let value = escape_html_attribute(&value);
         parts.push(format!("{key}: {value}"));
     }
     parts.join("; ")
+}
+
+/// Translate a mosstyle layout intent into real CSS (#16932).
+///
+/// Most mosstyle properties are CSS property names and pass straight through.
+/// `align` is mosstyle's own vocabulary and has no CSS property of that name,
+/// so `align: center-vertical` used to reach the page verbatim and the browser
+/// discarded it: nothing using it was centred. The same table as
+/// `mosaic-emit-react`'s `translate_layout_alias`:
+///
+/// | mosstyle `align`  | CSS                                          |
+/// |-------------------|----------------------------------------------|
+/// | `center-vertical` | `align-items: center`                        |
+/// | `center-horizontal` | `justify-content: center`                  |
+/// | `center`          | `align-items: center; justify-content: center` |
+/// | `start` / `end`   | `align-items: flex-start` / `flex-end`       |
+/// | `space-between`   | `justify-content: space-between`             |
+///
+/// Any other value is not an alias and passes through unchanged, as React's
+/// does, so nothing is silently dropped.
+fn translate_layout_alias(name: &str, value: &str) -> Option<&'static str> {
+    match (name, value.trim()) {
+        ("align", "center-vertical") => Some("align-items: center"),
+        ("align", "center-horizontal") => Some("justify-content: center"),
+        ("align", "center") => Some("align-items: center; justify-content: center"),
+        ("align", "start") => Some("align-items: flex-start"),
+        ("align", "end") => Some("align-items: flex-end"),
+        ("align", "space-between") => Some("justify-content: space-between"),
+        _ => None,
+    }
 }
 
 fn normalize_css_value(property: &str, value: &str) -> String {
@@ -5356,6 +5390,35 @@ mod tests {
             "HostButton output does not match expected shape:\n{}",
             r.output
         );
+    }
+
+    /// #16932: mosstyle's `align` is translated to flex alignment, as on
+    /// html and React; an unknown value still passes through.
+    #[test]
+    fn align_intent_becomes_flex_alignment() {
+        for (value, want) in [
+            ("center-vertical", "align-items: center"),
+            ("center-horizontal", "justify-content: center"),
+            ("end", "align-items: flex-end"),
+            ("sideways", "align: sideways"),
+        ] {
+            let m = component("Btn", vec![], vec![]);
+            let l = root_layout(
+                "Btn",
+                LayoutNode {
+                    tag: "Row".to_string(),
+                    part_name: Some("bar".to_string()),
+                    props: vec![],
+                    children: vec![],
+                },
+            );
+            let s = style_with_parts("Btn", vec![part("bar", vec![prop("align", value)], vec![])]);
+            let r = from_pipeline(&m, &l, &s).unwrap();
+            assert!(r.output.contains(want), "{value}: got\n{}", r.output);
+            if value != "sideways" {
+                assert!(!r.output.contains("align: "), "{value}: alias leaked\n{}", r.output);
+            }
+        }
     }
 
     #[test]

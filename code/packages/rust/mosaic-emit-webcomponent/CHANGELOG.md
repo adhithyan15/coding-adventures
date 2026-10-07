@@ -4,6 +4,8 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+- **mosstyle `align` becomes flex alignment (#16932).** `align` is not a CSS property, so `align: center-vertical` reached the inline style verbatim and browsers discarded it. `translate_layout_alias` maps it as html and React do: `center-vertical` → `align-items: center`, `center-horizontal` → `justify-content: center`, `center` → both, `start`/`end` → `flex-start`/`flex-end`, `space-between` → `justify-content: space-between`. Any other value passes through unchanged.
+
 - **`Path` lowers to SVG (UI39, #14686).** `circle`, `line` and `curve` emit the same inert SVG overlay as the html emitter, with paint from the part's style (`background` → fill, `border-color` → stroke, `border-width` → stroke width). Before this, `Path` fell through to `UnknownPrimitive`, so SpiceWorkbench could not compile on Web Components, and MosaicBook carried a waiver for it.
   - A bound coordinate, from a slot or an expression such as `( segment[0] )`, is interpolated through `Number(...)`, so it can only ever produce a number in the attribute.
   - Paint values go through `escape_html_attribute`, which also guards the template literal.
