@@ -138,3 +138,10 @@ plain-decimal arithmetic and `print` subset. Parser probes must reject
 adjacent decrement, leading-zero integer forms, and unsupported syntax.
 5.003_26 introduces explicit carriage-return refusal; preserve that
 boundary for 5.003_26 through 5.003_28. LANG81 execution is unchanged.
+
+Prepare the following bounded installment as twelve distinct, explicitly
+partial pairs for 5.003_90 through 5.003_97d. Check each release against
+its own official source tag. Retain the plain-decimal arithmetic and
+`print` syntax boundary, reject adjacent decrement and leading-zero
+forms, and keep carriage returns outside the accepted subset. This stage
+does not extend LANG81 execution or claim complete historical syntax.

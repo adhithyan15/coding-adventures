@@ -172,6 +172,18 @@ mod tests {
                     | "5.003_26"
                     | "5.003_27"
                     | "5.003_28"
+                    | "5.003_90"
+                    | "5.003_91"
+                    | "5.003_92"
+                    | "5.003_93"
+                    | "5.003_94"
+                    | "5.003_95"
+                    | "5.003_96"
+                    | "5.003_97"
+                    | "5.003_97a"
+                    | "5.003_97b"
+                    | "5.003_97c"
+                    | "5.003_97d"
                     | "5.38.2"
                     | "5.44.0"
                     | "5.45.3"
@@ -189,7 +201,24 @@ mod tests {
                     );
                 }
             }
-            if matches!(*release, "5.003_26" | "5.003_27" | "5.003_28") {
+            if matches!(
+                *release,
+                "5.003_26"
+                    | "5.003_27"
+                    | "5.003_28"
+                    | "5.003_90"
+                    | "5.003_91"
+                    | "5.003_92"
+                    | "5.003_93"
+                    | "5.003_94"
+                    | "5.003_95"
+                    | "5.003_96"
+                    | "5.003_97"
+                    | "5.003_97a"
+                    | "5.003_97b"
+                    | "5.003_97c"
+                    | "5.003_97d"
+            ) {
                 let carriage_return = GrammarLexer::new("print(1);\r", &token_grammar).tokenize();
                 assert!(
                     carriage_return.map_or(true, |tokens| {
@@ -199,6 +228,21 @@ mod tests {
                             .is_err()
                     }),
                     "{release}: carriage return accepted"
+                );
+            }
+            if matches!(
+                *release,
+                "5.003_96" | "5.003_97" | "5.003_97a" | "5.003_97b" | "5.003_97c" | "5.003_97d"
+            ) {
+                let unknown = GrammarLexer::new("print(1);\u{0001}", &token_grammar).tokenize();
+                assert!(
+                    unknown.map_or(true, |tokens| {
+                        GrammarParser::new(tokens, parser_grammar.clone())
+                            .with_max_depth(MAX_RULE_DEPTH)
+                            .parse()
+                            .is_err()
+                    }),
+                    "{release}: unrecognized character accepted"
                 );
             }
             checked += 1;

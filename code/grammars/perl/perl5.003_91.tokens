@@ -1,0 +1,20 @@
+# Perl 5.003_91 (1997-03-01) tokens: plain-decimal arithmetic-print subset.
+# @version 1
+# PARTIAL: this does not lex all Perl 5.003_91 source.
+# Evidence: https://github.com/Perl/perl5/blob/perl-5.003_91/toke.c
+# Tagged numeric conversion widens from I_32 to I_V, outside syntax accepted
+# here. Carriage return and leading-zero forms
+# remain refused; unsupported Perl syntax is outside this subset.
+
+PRINT     = "print"
+INT       = /0|[1-9][0-9]*/
+PLUS      = "+"
+DECREMENT = "--"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\n]+/

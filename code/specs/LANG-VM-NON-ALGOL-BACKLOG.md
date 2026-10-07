@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-07 — re-audited after PREP01 C division/remainder
+Status date: 2026-10-07 — re-audited after LANG82 Perl 5.003_16–28
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -137,12 +137,17 @@ PR #16952 delivered one checked `/` or `%` operation per bounded C `#if`
 logical clause and merged as `f889e3db081c174cab17e890776dccd3ff274495`
 after latest-head CI, CodeQL, and books checks passed. Zero divisors and
 unsupported longer expressions remain explicit errors.
+PR #16957 delivered 13 distinct, explicitly partial source-tagged Perl
+5.003_16 through 5.003_28 token and grammar pairs and merged as
+`a56d722c6803ae153768e813eccacfb5f5f2ef78` after its exact-head CI,
+CodeQL, and books checks passed. The 774-row inventory now has 46 partial
+pairs and 728 pending; complete historical syntax is not claimed.
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
 1. **LANG82 Perl release grammars (selected):** add distinct source-backed,
-   explicitly partial token and grammar pairs for 5.003_16 through 5.003_28.
+   explicitly partial token and grammar pairs for 5.003_90 through 5.003_97d.
    Keep the existing decimal-only `print` arithmetic boundary and negative
    probes; do not imply complete release syntax.
 2. **PREP01 C:** continue full C `#if`, stringize/paste, and default

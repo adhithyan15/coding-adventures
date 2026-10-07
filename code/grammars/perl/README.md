@@ -184,6 +184,39 @@ Current pairs:
   token files and a negative parser probe. Later tokenizer changes to diagnostics,
   filters and interpolation lie outside this arithmetic and `print` subset;
   5.003_28's yacc change is comment-only.
+- `perl5.003_90.*` through `perl5.003_93.*` are four separate **partial** pairs
+  checked against their official source tags. The 5.003_90 source blobs match
+  5.003_28. The 5.003_91 tokenizer changes numeric conversion width, while
+  5.003_92 changes string interpolation and shebang handling; 5.003_93 matches
+  5.003_92. Carriage returns remain rejected in all four token files.
+- `perl5.003_94.*` is a separate **partial** pair checked against the
+  [`perl-5.003_94` source tag]. Its tagged yacc matches 5.003_93; tokenizer
+  changes to `print` argument disambiguation, built-ins and diagnostics are
+  outside the accepted parenthesized plain-decimal arithmetic subset.
+- `perl5.003_95.*` is a separate **partial** pair checked against the
+  [`perl-5.003_95` source tag]. Its tagged yacc matches 5.003_94; tokenizer
+  changes to command-line `-a`/`-F` loop expansion lie outside this subset.
+- `perl5.003_96.*` is a separate **partial** pair checked against the
+  [`perl-5.003_96` source tag]. Its tagged yacc matches 5.003_95; tokenizer
+  changes make unrecognized characters fatal and revise `-a`/`-F` handling
+  and diagnostics. The bounded token file rejects unsupported characters.
+- `perl5.003_97.*` is a separate **partial** pair checked against the
+  [`perl-5.003_97` source tag]. Its tagged yacc matches 5.003_96; tokenizer
+  changes string/readline value ownership outside this arithmetic subset.
+- `perl5.003_97a.*` is a separate **partial** pair checked against the
+  [`perl-5.003_97a` source tag]. Its tagged yacc and tokenizer match 5.003_97.
+- `perl5.003_97b.*` is a separate **partial** pair checked against the
+  [`perl-5.003_97b` source tag]. Its tagged yacc matches 5.003_97a;
+  tokenizer changes to interpolated dollar-digit names and regex scanning
+  lie outside the accepted arithmetic subset.
+- `perl5.003_97c.*` is a separate **partial** pair checked against the
+  [`perl-5.003_97c` source tag]. Its tagged yacc matches 5.003_97b;
+  tokenizer changes to late command-line switch handling lie outside the
+  accepted arithmetic subset.
+- `perl5.003_97d.*` is a separate **partial** pair checked against the
+  [`perl-5.003_97d` source tag]. Its tagged yacc changes a loop action;
+  tokenizer changes switch bookkeeping and subparse types. These are outside
+  the accepted arithmetic subset.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot, including adjacent `--` and
@@ -250,4 +283,16 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [`perl-5.003_26` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_26
 [`perl-5.003_27` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_27
 [`perl-5.003_28` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_28
+[`perl-5.003_90` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_90
+[`perl-5.003_91` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_91
+[`perl-5.003_92` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_92
+[`perl-5.003_93` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_93
+[`perl-5.003_94` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_94
+[`perl-5.003_95` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_95
+[`perl-5.003_96` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_96
+[`perl-5.003_97` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_97
+[`perl-5.003_97a` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_97a
+[`perl-5.003_97b` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_97b
+[`perl-5.003_97c` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_97c
+[`perl-5.003_97d` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_97d
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2
