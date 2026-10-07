@@ -195,6 +195,59 @@ defmodule BuildTool.DiscoveryTest do
   # ---------------------------------------------------------------------------
 
   describe "discover_packages/1" do
+    test "matches the complete neutral language registry", %{tmp_dir: tmp_dir} do
+      fixture_path =
+        Path.expand(
+          "../../../../specs/fixtures/build-tool-v1/cases/discovery-language-registry.json",
+          __DIR__
+        )
+
+      fixture = fixture_path |> File.read!() |> Jason.decode!()
+      files = fixture["workspace"]["files"]
+      expected = fixture["expected"]["result"]["packages"]
+
+      # These cardinalities pin the independent upstream corpus: a future
+      # fixture change must be reviewed, not silently normalized to our walk.
+      assert length(files) == 29
+      assert length(expected) == 25
+
+      Enum.each(files, fn file ->
+        parts = String.split(file["path"], "/")
+
+        assert hd(parts) == "code"
+        assert List.last(parts) == "BUILD"
+
+        assert Enum.all?(
+                 parts,
+                 &(&1 not in ["", ".", ".."] and not String.contains?(&1, ["\\", ":"]))
+               )
+
+        destination = Path.join([tmp_dir | parts])
+        File.mkdir_p!(Path.dirname(destination))
+        File.write!(destination, file["content_utf8"])
+      end)
+
+      actual =
+        Path.join(tmp_dir, "code")
+        |> Discovery.discover_packages()
+        |> Enum.map(fn package ->
+          %{
+            "name" => package.name,
+            "language" => package.language,
+            "is_starlark" => false,
+            "rel_path" => package.path |> Path.relative_to(tmp_dir) |> String.replace("\\", "/"),
+            "build_file" =>
+              package.path
+              |> Discovery.get_build_file()
+              |> Path.relative_to(tmp_dir)
+              |> String.replace("\\", "/")
+          }
+        end)
+        |> Enum.sort_by(& &1["name"])
+
+      assert actual == Enum.sort_by(expected, & &1["name"])
+    end
+
     test "projects checked Dune discovery records through the production walk", %{
       tmp_dir: tmp_dir
     } do

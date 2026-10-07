@@ -13040,6 +13040,43 @@
       "branch": null,
       "pr_number": null,
       "notes": "Post-#16898 audit found SQL codegen and VM missing in Go, Elixir, Lua, and Perl without exact owners. Specify deterministic bytecode/trace fixtures and bounded execution, then split codegen and VM lane ports; filesystem and database authority are outside the neutral core."
+    },
+    {
+      "id": "perl-lang81-frontend-portability-classification",
+      "title": "Classify LANG81 Perl lexer and parser portable boundaries",
+      "status": "pending",
+      "depends_on": ["array-runtime-and-language-frontends-neutral-foundation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 four-singleton audit: Rust perl-lexer and perl-parser are new LANG81 bounded source-language pilots with no exact owner. Review deterministic accepted/rejected grammar fixtures and pure frontend portability, separating CLI file and VM effects from any lane-sized port decision."
+    },
+    {
+      "id": "perl-lang81-iir-compiler-portability-classification",
+      "title": "Classify LANG81 Perl direct-IIR lowering boundary",
+      "status": "pending",
+      "depends_on": ["perl-lang81-frontend-portability-classification", "compiler-and-ir-rust-singleton-foundation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 audit: new Rust-only perl-iir-compiler is a bounded deterministic LANG81 lowering pilot. Define neutral lowering and diagnostics fixtures before deciding applicable lanes; keep VM runner, CLI IO, and target authority separate."
+    },
+    {
+      "id": "ruby-lang80-iir-compiler-portability-classification",
+      "title": "Classify LANG80 Ruby direct-IIR lowering boundary",
+      "status": "pending",
+      "depends_on": ["compiler-and-ir-rust-singleton-foundation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 audit: new Rust-only ruby-iir-compiler is a bounded source-language-specific LANG80 direct-IIR pilot. Freeze pure grammar/lowering and diagnostic fixtures before lane decisions; do not infer a blanket 14-lane obligation from the VM/CLI wrapper."
+    },
+    {
+      "id": "build-tool-elixir-discovery-no-follow-boundary-review",
+      "title": "Review Elixir discovery symlink and repository-boundary authority",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["build-tool-elixir-discovery-language-registry-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Read-only security review of the registry slice observed pre-existing File.dir?/1 recursion through directory symlinks without canonical-root or visited-inode checks. This is host filesystem authority, not portable language-registry behavior; review an explicit no-follow/boundary policy and applicable native tests separately. Excluded from this portable parity delivery loop pending host-security review."
     }
   ]
 }

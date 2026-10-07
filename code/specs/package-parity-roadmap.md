@@ -16245,19 +16245,29 @@ established lanes, 1,495 implementation identities and 4,765 package slots,
 slots, 1,013 singletons with 14,182 missing slots, and 814 Rust singletons.
 Five OCaml packages remain emerging and outside the all-language denominator.
 Canonical collisions and unknown language buckets are zero. Four new
-mainline-only singletons beyond the prior snapshot are not evidence of parity.
+mainline-only singletons are Rust `perl-lexer`, `perl-parser`,
+`perl-iir-compiler`, and `ruby-iir-compiler`. LANG80/81 define bounded
+source-language frontend/lowering pilots, not automatic 14-lane ports; exact
+classification owners now separate pure grammar/IIR fixtures from VM and CLI
+host effects.
 
 Parallel read-only audits registered seven new pending owners before the next
 selection: deterministic-priority DT10 treap, DT09 red-black tree, storage-core,
 XML01 parser, Twig-to-semantic-IR, SQL optimizer, and SQL codegen/VM. These
 distinguish portable behavior from clock, filesystem, database, target backend,
-and security authority. The state graph has 1,135 unique owners and zero
+and security authority. The state graph has 1,139 unique owners and zero
 missing dependency IDs. Go has zero high-consensus gaps; Elixir lacks PNG,
 Lua lacks constant-time compare, and Perl lacks both, with existing exact
 owners. Java/Kotlin/Swift/Dart still have broad portable gaps; Haskell's four
 high-consensus gaps are already owned. OCaml promotion remains gated on its
 native build-tool substrate, current contract, representative CI, and neutral
 adapter rather than counting its five packages prematurely.
+
+An independent read-only security review of the selected Elixir diff found no
+new issue. It identified pre-existing directory-symlink recursion without a
+canonical repository boundary; a selection-blocked native/host-security
+review owner records that separate concern without expanding the portable
+language-registry slice or claiming it safe to follow symlinks.
 
 The dependency-ready next bounded slice is Elixir discovery language-registry
 conformance, which now has its Dune fixture prerequisite merged. It will use
