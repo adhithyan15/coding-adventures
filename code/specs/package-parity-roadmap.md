@@ -16269,15 +16269,15 @@ canonical repository boundary; a selection-blocked native/host-security
 review owner records that separate concern without expanding the portable
 language-registry slice or claiming it safe to follow symlinks.
 
-The dependency-ready next bounded slice is Elixir discovery language-registry
-conformance, which now has its Dune fixture prerequisite merged. It will use
-the full neutral discovery fixture to correct exact language buckets, package
-identities, generated-tree pruning, and specification-tree handling. Separate
-existing owners retain duplicate-identity rejection and canonical BUILD plus
-Windows override selection, avoiding a catch-all discovery PR. JavaScript
-AST, storage-core, XML parser, and neutral event-loop fixtures have broader
-eventual leverage but require prerequisite reconciliation; the Elixir slice is
-ready now and unlocks its two downstream discovery owners.
+The dependency-ready Elixir discovery language-registry slice is now
+ready-for-review PR #16906, following merged Dune fixture prerequisite #16898.
+It uses the full neutral discovery fixture to correct exact language buckets,
+package identities, generated-tree pruning, and specification-tree handling.
+Separate existing owners retain duplicate-identity rejection and canonical
+BUILD plus Windows override selection, avoiding a catch-all discovery PR.
+JavaScript AST, storage-core, XML parser, and neutral event-loop fixtures have
+broader eventual leverage but require prerequisite reconciliation; this Elixir
+slice unblocks its two downstream discovery owners after merge.
 
 ## Autonomous Loop Protocol
 
