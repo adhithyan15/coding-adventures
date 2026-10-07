@@ -161,6 +161,10 @@ Current pairs:
   [`perl-5.003_19` source tag]'s `perly.y` and `toke.c`. Yacc matches 5.003_18;
   tokenizer changes to method/subroutine and quote/label recognition are
   outside the accepted plain-decimal arithmetic and `print` subset.
+- `perl5.003_20.*` is a separate **partial** pair checked against the
+  [`perl-5.003_20` source tag]'s `perly.y` and `toke.c`. Yacc changes subroutine
+  forms; tokenizer changes shebang interpreter-path handling. Both lie outside
+  the accepted plain-decimal arithmetic and `print` subset.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot, including adjacent `--` and
@@ -218,4 +222,5 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [`perl-5.003_17` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_17
 [`perl-5.003_18` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_18
 [`perl-5.003_19` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_19
+[`perl-5.003_20` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_20
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2
