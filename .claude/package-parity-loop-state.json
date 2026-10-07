@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16918,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16918",
+    "branch": "codex/parity-elixir-windows-selector-20261007",
+    "implementation_revision": "c9484a95082110cbd2d199c4ad6782d92931cc21",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-07T15:50:21Z",
-    "pr_number": 16909,
-    "status": "merged",
-    "notes": "PR #16909 passed all 28 terminal current-head checks with expected skips and no failure. GitHub reported MERGEABLE/CLEAN; guarded squash auto-merge was enabled for exact head bc21487e26ee154ab3bf0d2151948c4a0e886cbb, never manually merged. GitHub merged it at 2026-10-07T15:50:21Z as 2d4ec84ca28db22bb816473c432251bf35d3b4c0."
+    "observed_at": "2026-10-07T16:19:00Z",
+    "pr_number": 16918,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #16918 opened from independently reviewed implementation c9484a95082110cbd2d199c4ad6782d92931cc21. GitHub reports MERGEABLE; CI and CodeQL checks are queued. Do not enable auto-merge before every required check is terminal and acceptable and GitHub reports no conflict."
   },
   "last_inventory": {
     "revision": "7d56e76cbbde034bbf32eac907d51dc21c32a3ee",
@@ -2013,10 +2019,10 @@
     {
       "id": "build-tool-elixir-canonical-build-membership-and-windows-selection-conformance",
       "title": "Require canonical BUILD membership and select Elixir Windows overrides",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-elixir-discovery-language-registry-conformance"],
       "branch": "codex/parity-elixir-windows-selector-20261007",
-      "pr_number": null,
+      "pr_number": 16918,
       "notes": "Selected after #16909 merged and the 1,495-identity collision-checked refresh. Elixir's native current_os reports :win32 while the override selector expects :windows, and variant-only BUILD_windows/BUILD_mac can falsely create packages without canonical BUILD. Consume the neutral Windows-override and variant-without-canonical cases through the native selector/front door, preserving canonical membership and platform-specific fallback. The active work is one serial PR; Elixir native no-follow policy remains separately owned.",
       "validation_notes": "Test-first red run reproduced four focused failures; independent correctness review found and reproduced an exact-case Windows defect before PR, now fixed with a directory-entry check and red/green regression. On the final implementation, 36 focused Discovery tests and the 273-test Elixir package suite pass with two expected skips. Changed Discovery coverage is 91.18%; full package coverage reports 70.33% and still misses its pre-existing 90% aggregate gate. Focused format, warnings-as-errors compile, literal Windows BUILD_windows deps.get/test with a bounded toolchain PATH, escript build, Go build-tool tests/vet/build, neutral 178-case corpus, parity reporter, 868 lesson shards, collision gate, state DAG, and diff checks pass. Independent security and correctness reviews found no remaining blocker. Rebased cleanly onto 7d56e76cbbde034bbf32eac907d51dc21c32a3ee; refreshed collision-checked inventory counts remain unchanged."
     },
