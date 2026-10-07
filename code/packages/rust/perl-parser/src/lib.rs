@@ -176,6 +176,7 @@ mod tests {
                     | "5.003_91"
                     | "5.003_92"
                     | "5.003_93"
+                    | "5.003_94"
                     | "5.38.2"
                     | "5.44.0"
                     | "5.45.3"
@@ -202,6 +203,7 @@ mod tests {
                     | "5.003_91"
                     | "5.003_92"
                     | "5.003_93"
+                    | "5.003_94"
             ) {
                 let carriage_return = GrammarLexer::new("print(1);\r", &token_grammar).tokenize();
                 assert!(

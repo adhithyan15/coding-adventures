@@ -189,6 +189,10 @@ Current pairs:
   5.003_28. The 5.003_91 tokenizer changes numeric conversion width, while
   5.003_92 changes string interpolation and shebang handling; 5.003_93 matches
   5.003_92. Carriage returns remain rejected in all four token files.
+- `perl5.003_94.*` is a separate **partial** pair checked against the
+  [`perl-5.003_94` source tag]. Its tagged yacc matches 5.003_93; tokenizer
+  changes to `print` argument disambiguation, built-ins and diagnostics are
+  outside the accepted parenthesized plain-decimal arithmetic subset.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot, including adjacent `--` and
@@ -259,4 +263,5 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [`perl-5.003_91` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_91
 [`perl-5.003_92` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_92
 [`perl-5.003_93` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_93
+[`perl-5.003_94` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_94
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2
