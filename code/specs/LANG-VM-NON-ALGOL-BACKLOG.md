@@ -150,15 +150,22 @@ pairs and 716 pending; complete historical syntax is not claimed. A separate
 source audit found two omitted Perl 5.004 release candidates, `p54rc1` and
 `p54rc2`; their pending inventory correction and source-backed partial pairs
 are prepared locally for a later bounded slice.
+PR #16965 delivered seven distinct, explicitly partial source-tagged Perl
+5.003_97e through 5.003_98 token and grammar pairs and merged as
+`fd489a40634cb1be9a203d4b08592e282994603c` after exact-head CI,
+CodeQL, and books checks passed. The 774-row inventory now has 65 partial
+pairs and 709 pending; complete historical syntax and inventory
+exhaustiveness are not claimed.
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
 1. **LANG82 Perl release grammars (selected):** add distinct source-backed,
-   explicitly partial token and grammar pairs for 5.003_97e through 5.003_98.
-   Preserve the decimal-only `print` arithmetic boundary and negative probes;
-   5.003_97i adds a 250-digit decimal token limit. Do not imply complete
-   release syntax.
+   explicitly partial pairs for `p54rc1`, `p54rc2`, and 5.003_99 through
+   5.004_02. Correct the pinned historical inventory to include the two RCs,
+   preserve the 250-digit plain-decimal `print` subset and negative probes,
+   and leave 5.004_01-t1 pending until its own source is found. Do not imply
+   complete release syntax or an exhaustive public-release inventory.
 2. **PREP01 C:** continue full C `#if`, stringize/paste, and default
    frontend routing in later bounded slices.
 
