@@ -592,7 +592,16 @@ mod tests {
 
     #[test]
     fn unsupported_or_malformed_logical_conditions_fail() {
-        for condition in ["1 &&", "|| 1", "1 || || 0", "(1)", "!1 == 0", "1 + 2"] {
+        for condition in [
+            "1 &&",
+            "|| 1",
+            "1 || || 0",
+            "(1)",
+            "!1 == 0",
+            "1 + 2",
+            "0 && (1)",
+            "1 || (1)",
+        ] {
             let source = format!("#if {condition}\nint x = 1;\n#endif\n");
             let mut fs = MemoryFs::new();
             let file = fs.insert("<main>", &source);
