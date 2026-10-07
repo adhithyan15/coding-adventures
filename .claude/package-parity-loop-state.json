@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16872,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16872",
+    "branch": "codex/parity-dune-discovery-nearcase-fixture-20261007",
+    "implementation_revision": "6421a5c2819db90ad852ac10976e1f4a71742b6b",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-07T08:26:52Z",
-    "pr_number": 16863,
-    "status": "merged",
-    "notes": "PR #16863 completed all 33 final-head checks with 14 successes, 18 expected skips, one acceptable neutral CodeQL result, and no failure or pending check. Both required gates passed and GitHub reported MERGEABLE/CLEAN. Guarded squash auto-merge was enabled for exact head a1c2722fe1b3bb7a1f056d1d6615424325a894d8; GitHub merged it as 8d587b2eb15eae5e06ebea24c75e5a8d1d650100 at 2026-10-07T08:26:52Z. No manual merge occurred."
+    "observed_at": "2026-10-07T08:51:18Z",
+    "pr_number": 16872,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #16872 opened from validated implementation 6421a5c2819db90ad852ac10976e1f4a71742b6b after the neutral corpus/schema checks, nine available native fixture consumers, Python/Perl/Ruby/Rust package suites, TypeScript discovery suite and typecheck, focused Go vet, collision inventory, diff and independent security review. Lua test dependencies are unavailable locally; full TypeScript suite has two Windows-local failures in untouched executor/gitdiff tests. GitHub reports MERGEABLE but BLOCKED while detection checks are queued; do not enable auto-merge yet."
   },
   "last_inventory": {
     "revision": "9fc786aab0663baefab6274669df2a9111b7d2f6",
@@ -720,10 +726,10 @@
     {
       "id": "build-tool-dune-discovery-near-case-neutral-fixture-repair",
       "title": "Pin positive Dune near-case discovery roots in the neutral language-registry fixture",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-language-source-input-registry-corpus-and-engine-audit"],
       "branch": "codex/parity-dune-discovery-nearcase-fixture-20261007",
-      "pr_number": null,
+      "pr_number": 16872,
       "selected_at": "2026-10-07T08:29:41Z",
       "selection_revision": "8d587b2eb15eae5e06ebea24c75e5a8d1d650100",
       "selection_notes": "Selected after #16863 auto-merged and the fresh 15-lane inventory remained collision-free. Both prerequisites are merged. The neutral discovery fixture currently proves only negative _build exclusion; adding positive _Build and _build-example witnesses creates a small cross-language ratchet for ten native consumers before Haskell/Elixir adoption and JVM/Dart/OCaml current-contract claims. No other parity PR or open PR path overlap exists; keep this one fixture/consumer-count repair separate from Haskell engine behavior.",
