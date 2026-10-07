@@ -100,8 +100,8 @@ build planner MUST seed all direct native consumers as changed package roots
 before affected/prerequisite closure, both on its detect platform and in every
 platform-specific build-plan override. The current direct consumers are
 `dotnet/programs/build-tool-csharp`, `dotnet/programs/build-tool-fsharp`, and
-`<language>/programs/build-tool` for `go`, `lua`, `perl`, `python`, `ruby`,
-`rust`, `swift`, and `typescript`.
+`<language>/programs/build-tool` for `go`, `haskell`, `lua`, `perl`, `python`,
+`ruby`, `rust`, `swift`, and `typescript`.
 
 This is an exact fixture-to-consumer relation, not a general `code/specs/`
 shared prefix or a forced full build. It applies to additions, modifications,
