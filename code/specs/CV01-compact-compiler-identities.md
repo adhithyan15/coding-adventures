@@ -73,6 +73,9 @@ not the future bounded graph-validation API. Compact import checks ID/state
 shape, matching map keys and counter coverage, including parent identity values.
 Filtered compact views carry `view: {filtered: true, complete: false}` and are
 rejected as full reloadable logs. JSON and NDJSON preserve that declaration.
+Until a complete-view schema is introduced, compact import rejects any declared
+`view`, including malformed or contradictory markers, instead of trusting a
+false `filtered` field as permission to reload a partial graph.
 
 - Keep the existing generic CV suite and hierarchical spelling contracts green.
 - Verify mixed roots, branching, repeated parents, merges, tombstones,
