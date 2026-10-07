@@ -123,6 +123,9 @@ Current pairs:
   [`perl-5.003_12` source tag]'s `perly.y` and `toke.c`. Its yacc changes to
   while/until block forms lie outside the accepted plain-decimal arithmetic
   and `print` subset; leading-zero forms remain rejected.
+- `perl5.003_13.*` is a separate **partial** pair checked against the
+  [`perl-5.003_13` source tag]'s `perly.y` and `toke.c`. Yacc is unchanged
+  from 5.003_12; tokenizer label recognition changes lie outside this subset.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot, including adjacent `--` and
@@ -173,4 +176,5 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [`perl-5.003_10` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_10
 [`perl-5.003_11` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_11
 [`perl-5.003_12` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_12
+[`perl-5.003_13` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_13
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2
