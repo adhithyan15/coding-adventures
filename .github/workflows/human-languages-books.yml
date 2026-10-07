@@ -476,6 +476,7 @@ jobs:
       # non-Latin book font is vendored under human-languages/_fonts. The
       # recommended font collection supplies Hyperref's Zapf Dingbats metric.
       - name: Install focused TeX toolchain
+        timeout-minutes: 20  # apt can stall on a mirror; fail fast, not at 6h (#12163)
         run: |
           setup_started_at=$(date +%s)
           bash code/scripts/ci/apt-install.sh --no-install-recommends \

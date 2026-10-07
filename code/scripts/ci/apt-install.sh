@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 #
 # Install Ubuntu-archive packages on a CI runner, without letting an unrelated
-# third-party repository fail the job.
+# third-party repository fail the job, and without letting a stalled mirror
+# hang it (see "Bounding apt in time" near the end).
 #
 # ## Why this exists
 #
@@ -110,6 +111,8 @@ fi
 keep_this() {
   local name="$1" pattern
   for pattern in "${KEEP_PATTERNS[@]}"; do
+    # Unquoted on purpose: the patterns ARE globs (`ubuntu-*.sources`).
+    # shellcheck disable=SC2053
     [[ -n "$pattern" && "$name" == $pattern ]] && return 0
   done
   return 1
@@ -180,7 +183,127 @@ if [[ $# -eq 0 ]]; then
   exit 2
 fi
 
+# ## Bounding apt in time (#12163, #12181)
+#
+# Pruning answers "a repository we do not use is down". It does nothing for
+# the other way apt fails a job: a mirror we DO use that accepts the
+# connection and then stops talking. That happened on `build (ubuntu-latest)`
+# repeatedly --
+#
+#     Get:5 https://archive.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+#     <nothing for 5h59m>
+#     ##[error]The operation was canceled.
+#
+# -- and because nothing bounded the step, each stall burned the full six-hour
+# job limit and surfaced as `cancelled`, which reads as "superseded", not as
+# "re-run me". Three layers now bound it, from the innermost out:
+#
+#   1. apt's own knobs (APT_OPTS below). They make a dead connection fail in
+#      seconds and retry the individual download, which is what fixes the
+#      common case without anyone noticing.
+#   2. A wall-clock cap on each apt-get invocation (`timeout`), so a stall the
+#      knobs do not catch -- a mirror trickling one byte at a time never trips
+#      an inactivity timeout -- becomes a failed ATTEMPT, not a hung job.
+#   3. A short retry loop over those attempts, because a mirror stall is
+#      transient by nature and the next attempt usually lands on a healthy
+#      mirror connection.
+#
+# The workflow steps that call this script also carry `timeout-minutes`, the
+# outermost backstop: if every layer here were somehow wrong, the step still
+# fails in minutes rather than hours.
+#
+# Testing hooks for this part:
+#   APT_GET              the apt-get binary (default `apt-get`)
+#   APT_ATTEMPTS         attempts per apt-get command (default 3)
+#   APT_RETRY_DELAY      base backoff in seconds, doubled each retry (default 10)
+#   APT_UPDATE_TIMEOUT   wall-clock seconds per `update` attempt (default 120)
+#   APT_INSTALL_TIMEOUT  wall-clock seconds per `install` attempt (default 600)
+
+APT_GET="${APT_GET:-apt-get}"
+APT_ATTEMPTS="${APT_ATTEMPTS:-3}"
+APT_RETRY_DELAY="${APT_RETRY_DELAY:-10}"
+
+# `update` fetches a handful of index files and normally takes 2-15 seconds on
+# a runner; two minutes is an order of magnitude of headroom, and still short
+# enough that three attempts fit inside a 10-minute step.
+APT_UPDATE_TIMEOUT="${APT_UPDATE_TIMEOUT:-120}"
+
+# `install` is where the size varies: libcairo2-dev takes ~15s, the TeX Live
+# install in human-languages-books.yml up to ~2 minutes. Ten minutes covers
+# the largest with ~5x headroom. For the small installs the step's own
+# `timeout-minutes` is the tighter bound, and that is fine -- the stalls seen
+# so far were all in `update`, which the tighter cap above covers.
+APT_INSTALL_TIMEOUT="${APT_INSTALL_TIMEOUT:-600}"
+
+# Bash evaluates the operands of `-ge` and `$(( ))` as arithmetic, and an
+# arithmetic "number" like `a[$(cmd)]` runs cmd. Only someone who already
+# controls the runner's environment could set these, but a plain-digits check
+# costs nothing and makes the knobs mean only what they say.
+for knob in APT_ATTEMPTS APT_RETRY_DELAY APT_UPDATE_TIMEOUT APT_INSTALL_TIMEOUT; do
+  if [[ ! ${!knob} =~ ^[0-9]+$ ]]; then
+    echo "error: $knob must be a non-negative integer, got '${!knob}'." >&2
+    exit 2
+  fi
+done
+
+APT_OPTS=(
+  # Retry each individual download up to three times before giving up on it.
+  # Newer apt defaults to this already; saying it keeps the behaviour the same
+  # on an older image and documents that we rely on it.
+  -o Acquire::Retries=3
+  # How long apt waits on a connect, or on a connection that has gone silent,
+  # before treating the fetch as failed (apt's default is 120s). A healthy
+  # mirror answers in well under a second, so 30s only ever trims a stall.
+  -o Acquire::http::Timeout=30
+  -o Acquire::https::Timeout=30
+  # Without this apt fails IMMEDIATELY if something else (an image's
+  # unattended-upgrades, say) holds the dpkg lock; with it apt waits for the
+  # lock -- but only for a minute, so a stuck holder cannot become our hang.
+  -o DPkg::Lock::Timeout=60
+)
+
+# Run one apt-get command under a wall-clock cap, retrying with backoff.
+#
+#   apt_with_retry <seconds-per-attempt> <apt-get args...>
+#
+# `timeout` runs INSIDE sudo, as root, so that its SIGKILL (sent 15s after the
+# polite SIGTERM, if apt ignores that) reaches apt-get itself; run outside sudo
+# it could only signal sudo. `env DEBIAN_FRONTEND=noninteractive` is likewise
+# inside sudo because sudo resets the environment: a package whose postinst
+# asks a debconf question must take the default, not wait on a terminal that
+# CI does not have.
+apt_with_retry() {
+  local budget="$1"
+  shift
+  local attempt=1 status delay="$APT_RETRY_DELAY"
+  while true; do
+    status=0
+    $SUDO env DEBIAN_FRONTEND=noninteractive \
+      timeout --kill-after=15 "$budget" \
+      "$APT_GET" "${APT_OPTS[@]}" "$@" || status=$?
+    if [[ $status -eq 0 ]]; then
+      return 0
+    fi
+    # 124 is timeout(1)'s "the cap fired"; 137 is SIGKILL after it did. Named
+    # in the log so a stall reads as a stall, not as a package problem.
+    local why="exit $status"
+    if [[ $status -eq 124 || $status -eq 137 ]]; then
+      why="no result after ${budget}s; treated as a stalled mirror"
+    fi
+    if [[ $attempt -ge $APT_ATTEMPTS ]]; then
+      echo "error: apt-get $1 failed on all $APT_ATTEMPTS attempt(s) ($why)." >&2
+      return "$status"
+    fi
+    echo "apt-get $1 attempt $attempt/$APT_ATTEMPTS failed ($why); retrying in ${delay}s" >&2
+    sleep "$delay"
+    attempt=$((attempt + 1))
+    delay=$((delay * 2))
+  done
+}
+
 # Neither of these is allowed to fail quietly: the whole point is that update
-# keeps meaning "the archive we depend on is reachable".
-$SUDO apt-get update
-$SUDO apt-get install -y "$@"
+# keeps meaning "the archive we depend on is reachable". Retrying is not
+# swallowing -- the last attempt's failure is still this script's exit status,
+# and a package that genuinely does not exist fails every attempt.
+apt_with_retry "$APT_UPDATE_TIMEOUT" update
+apt_with_retry "$APT_INSTALL_TIMEOUT" install -y "$@"

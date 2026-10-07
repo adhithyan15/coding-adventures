@@ -647,6 +647,11 @@ jobs:
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_flutter_runtime_ci_acceptance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_mosaic_compose_runtime_ci_acceptance.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_run_under_xvfb.py'
+          # Pins apt-install.sh's retry/timeout layers and that every apt step
+          # carries its own timeout-minutes (#12163, #12181). It sat outside
+          # this list before, which is how two deploy workflows drifted back to
+          # refreshing the apt index by hand without anything going red.
+          python3 -m unittest discover -s code/scripts/tests -p 'test_apt_install.py'
           python3 code/scripts/package_parity_report.py --format json --fail-on-collisions > /tmp/package-parity-report.json
 
       # The cgroup lifecycle (mkdir, chown, trap, cleanup) must stay inside one
@@ -1262,6 +1267,7 @@ jobs:
           persist-credentials: false
 
       - name: Install Lua build prerequisites
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
         run: sudo apt-get install -qy libreadline-dev libncurses-dev
 
       - name: Install pinned Lua 5.4.7 from verified mirrors
@@ -1999,6 +2005,7 @@ jobs:
       - name: Install pinned Lua 5.4.7 from verified mirrors
         if: needs.detect.outputs.needs_lua == 'true' && steps.lua-cache.outputs.cache-hit != 'true'
         shell: bash
+        timeout-minutes: 15  # apt can stall on a mirror; fail fast, not at 6h (#12163)
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then
             python code/scripts/setup_lua.py --prefix .lua
@@ -2131,6 +2138,7 @@ jobs:
       # matrix, and the ISO harness compiles with every compiler it finds.
       - name: Install Clang alongside GCC (Linux C/C++)
         if: needs.detect.outputs.needs_cpp == 'true' && runner.os == 'Linux'
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
         run: |
           bash code/scripts/ci/apt-install.sh clang
           gcc --version | head -1
@@ -2177,6 +2185,7 @@ jobs:
         # same three-way condition "Install Venture Qt acceptance
         # dependencies" below already uses.
         if: (needs.detect.outputs.needs_rust == 'true' || needs.detect.outputs.needs_venture_windows == 'true' || needs.detect.outputs.needs_mosaic_qt_runtime == 'true') && runner.os == 'Linux'
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
         run: |
           bash code/scripts/ci/apt-install.sh libcairo2-dev
 
@@ -2218,6 +2227,7 @@ jobs:
       - name: Install qpdf for the PDF oracle tests
         if: needs.detect.outputs.needs_rust == 'true'
         shell: bash
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
         run: |
           set -euo pipefail
           if [ "$RUNNER_OS" = "Linux" ]; then
@@ -2249,6 +2259,7 @@ jobs:
       - name: Install poppler for the PDF rendering oracle
         if: needs.detect.outputs.needs_rust == 'true' && runner.os != 'Windows'
         shell: bash
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
         run: |
           set -euo pipefail
           if [ "$RUNNER_OS" = "Linux" ]; then
@@ -2268,6 +2279,7 @@ jobs:
       # SetupAPI, neither of which needs a package install step.
       - name: Install native HID dependencies (vault-webauthn-ctap2-hid)
         if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Linux'
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
         run: |
           bash code/scripts/ci/apt-install.sh libudev-dev
 
@@ -2464,6 +2476,7 @@ jobs:
       - name: Install cpanm and test dependencies (Perl)
         if: needs.detect.outputs.needs_perl == 'true' && runner.os != 'Windows'
         shell: bash
+        timeout-minutes: 15  # apt can stall on a mirror; fail fast, not at 6h (#12163)
         run: |
           if [ "$RUNNER_OS" = "Linux" ]; then
             sudo apt-get install -y cpanminus
