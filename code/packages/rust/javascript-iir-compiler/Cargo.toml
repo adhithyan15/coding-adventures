@@ -1,0 +1,13 @@
+[package]
+name = "javascript-iir-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded JavaScript AST to InterpreterIR compiler and native vm-core runner"
+license = "MIT"
+
+[dependencies]
+coding-adventures-javascript-ast = { path = "../javascript-ast" }
+coding-adventures-javascript-parser = { path = "../javascript-parser" }
+coding-adventures-javascript-tokens = { path = "../javascript-tokens" }
+interpreter-ir = { path = "../interpreter-ir" }
+vm-core = { path = "../vm-core" }
