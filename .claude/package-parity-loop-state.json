@@ -12,20 +12,20 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16936,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16936",
-    "branch": "codex/parity-geometry2d-neutral-20261007",
-    "implementation_revision": "69872f750ffe7131dbfe799ac6e9f137f0d04cc9",
+    "number": 16945,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16945",
+    "branch": "codex/parity-geometry-point2d-existing-20261007",
+    "implementation_revision": "6068376abd695310d81c2b5ab12cb6b1c6c67a31",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-07T17:39:11Z",
+    "observed_at": "2026-10-07T18:06:59Z",
     "pr_number": 16936,
-    "status": "checks-pending",
-    "notes": "Ready-for-review geometry neutral contract PR #16936 opened from validated head 69872f750ffe7131dbfe799ac6e9f137f0d04cc9. GitHub reports MERGEABLE but checks have not all completed; do not enable auto-merge until every required check is terminal acceptable and conflict-free."
+    "status": "merged",
+    "notes": "All 32 checks reached acceptable terminal conclusions on head 9f6a820110427c4debfeaca00b88b02b8dc740eb; GitHub REST reported mergeable=true/clean. Guarded squash auto-merge completed at 2026-10-07T18:06:59Z as 6414b14d399e1b681e7b7c68deab89005cdbd070. No manual merge."
   },
   "last_inventory": {
-    "revision": "29284f51fe2e7c9be6a8ade7899d5fa126542b24",
+    "revision": "f94f7fa19e524a873c2939b06b3b9905430de492",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1495,
@@ -12026,7 +12026,7 @@
     {
       "id": "geometry-2d-language-neutral-contract-and-fixture-repair",
       "title": "Freeze the G2D00-G2D03 portable geometry contract and neutral fixtures",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/parity-geometry2d-neutral-20261007",
       "pr_number": 16936,
@@ -12037,11 +12037,13 @@
     {
       "id": "geometry-point2d-existing-lane-threshold-reconciliation",
       "title": "Reconcile G2D00 near-zero normalization in Ruby, Perl, Elixir, Lua, and Swift",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "All five lanes currently use 1e-15 and return the original near-zero vector. Adopt the neutral <1e-12 return-origin contract, preserve exactly-at-threshold normalization, and run each real point2d package and downstream geometry test."
+      "branch": "codex/parity-geometry-point2d-existing-20261007",
+      "pr_number": 16945,
+      "notes": "All five lanes used 1e-15 and returned the original near-zero vector. This branch adopts the neutral magnitude <1e-12 return-origin contract, preserves exactly-at-threshold normalization, and adds native boundary tests and README/changelog updates.",
+      "validation_notes": "Native point2d suites pass: Ruby 25 tests/100% line coverage, Perl 34 assertions/97.4% statement coverage, Elixir 26 tests/100% cover, Lua Busted 22 tests/100% LuaCov source lines, Swift 22 tests/100% source lines. Downstream affine2d/bezier2d/arc2d tests pass in all five lanes (Ruby 17/13/9; Perl 29/45/16; Elixir 16/13/9; Lua 15/13/9; Swift 21/16/13). Neutral G2D fixture 8 cases and 7 validator tests, lessons validator 871 shards, build-tool Starlark/orphan/language detection gate, and diff check pass. Ruby Standard passes except Layout/EndOfLine: the checked-in LF files trigger its host-default CRLF rule on Windows; no line-ending rewrite was made.",
+      "review_notes": "Independent exact-head security and correctness review at 6068376abd passed: 22 intended files, no unrelated reversions, no new security-sensitive surface, and clean diff. PR #16945 opened ready for review; first live checks are queued or in progress."
     },
     {
       "id": "geometry-arc2d-existing-api-degenerate-reconciliation",
