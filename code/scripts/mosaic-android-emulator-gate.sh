@@ -2,11 +2,16 @@
 # Launch a Mosaic Android app on an emulator and prove it keeps its state
 # (UI89 §3.4 "The gate", §3.7). The Android shape of the iOS simulator gate.
 #
-#   mosaic-android-emulator-gate.sh <apk> <android-package> <mosaic-application-id>
+#   mosaic-android-emulator-gate.sh <apk> <android-package> <mosaic-application-id> [<activity>]
 #
 # e.g. for Trestle (TaskApp):
 #
 #   mosaic-android-emulator-gate.sh app-debug.apk dev.codingadventures.trestle task-app
+#
+# <activity> is the launcher activity's class name, never a whole component:
+# mosaic.android.MosaicActivity (Compose, the default), or .MainActivity for
+# a Flutter app (UI89 §7.5). The gate builds the component itself, as
+# <android-package>/<activity>.
 #
 # The emulator must already be booted and the only device adb sees
 # (start-mosaic-android-emulator.sh does that). The APK must be a DEBUG build:
@@ -19,7 +24,8 @@
 # under the app's `filesDir` proves, in one observation, that the activity
 # started, JNA loaded `libmosaic_app.so`, the engine answered an event, and
 # the host persisted where MosaicActivity told it to (`filesDir/<application
-# id>/mosaic-state.v1.json`). Then three launches, each of which must still be
+# id>/mosaic-state.v1.json`; a Flutter app's `main()` finds the same
+# directory through `path_provider`). Then three launches, each of which must still be
 # running ten seconds later with no uncaught exception:
 #
 #   launch   | state before           | must see afterwards
@@ -34,13 +40,15 @@
 # refuses is quarantined inside the app's own storage and the app still runs.
 set -euo pipefail
 
-if [[ $# -ne 3 ]]; then
-  echo "usage: $0 <apk> <android-package> <mosaic-application-id>" >&2
+if [[ $# -ne 3 && $# -ne 4 ]]; then
+  echo "usage: $0 <apk> <android-package> <mosaic-application-id> [<activity>]" >&2
   exit 2
 fi
 apk="$1"
 package="$2"
 application_id="$3"
+# Unset means the default; an empty argument is refused below, not defaulted.
+activity_class="${4-mosaic.android.MosaicActivity}"
 if [[ ! -f "$apk" ]]; then
   echo "no APK at $apk" >&2
   exit 2
@@ -55,8 +63,14 @@ if [[ ! "$application_id" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]; then
   echo "invalid Mosaic application id: $application_id" >&2
   exit 2
 fi
+# A class name only: `adb shell` joins its arguments into one device command
+# line, where quoting here does not protect them.
+if [[ ! "$activity_class" =~ ^\.?[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z][A-Za-z0-9_]*)*$ ]]; then
+  echo "invalid activity class name: $activity_class" >&2
+  exit 2
+fi
 
-activity="$package/mosaic.android.MosaicActivity"
+activity="$package/$activity_class"
 # Relative to the app's data directory, which is where `run-as` starts.
 state="files/$application_id/mosaic-state.v1.json"
 corrupt="$state.corrupt"

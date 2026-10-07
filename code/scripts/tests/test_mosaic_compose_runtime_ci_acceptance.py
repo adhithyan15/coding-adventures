@@ -295,7 +295,8 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         # Where MosaicActivity points the host, the three launches, and the
         # checks that make each one mean something.
         self.assertIn('state="files/$application_id/mosaic-state.v1.json"', gate)
-        self.assertIn('activity="$package/mosaic.android.MosaicActivity"', gate)
+        self.assertIn('activity_class="${4-mosaic.android.MosaicActivity}"', gate)
+        self.assertIn('activity="$package/$activity_class"', gate)
         self.assertIn('printf {} > $state', gate)
         self.assertIn("FATAL EXCEPTION", gate)
         self.assertIn("rejected persisted state", gate)
@@ -511,6 +512,107 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                     check=False,
                 )
                 self.assertEqual(result.returncode, 2, result.stderr)
+
+    def test_the_flutter_trestle_apk_runs_through_the_emulator_gate(self) -> None:
+        """UI89 §7.5: Trestle through the Flutter backend is built from the
+        Compose step's per-ABI engines into a Flutter phone runtime, created
+        with the README's command, kept off backups, checked byte-for-byte per
+        ABI, and gated on the emulator through .MainActivity after the Compose
+        Trestle is uninstalled."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("- name: Build Trestle for Android with Flutter (UI89 §7)")
+        build = workflow[start : workflow.index("\n      - name:", start)]
+        self.assertIn("needs.detect.outputs.needs_mosaic_compose_runtime == 'true'", build)
+        self.assertIn("needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'", build)
+        self.assertIn('cp -R "$jni_libs" "$phone_runtime/android"', build)
+        self.assertIn('--backend flutter --output "$output" --emit-project --profile native-complete --runtime-library "$phone_runtime"', build)
+        create = "flutter create --platforms=android --org dev.codingadventures --project-name trestle ."
+        self.assertIn(f"grep -qxF '    {create}' README.md", build)
+        self.assertLess(build.index("README.md"), build.index(f"\n          {create}\n"))
+        self.assertIn("allowBackup\\(0x01010280\\)=false", build)
+        self.assertIn("flutter build apk --debug", build)
+        # Not byte-for-byte (AGP strips the libraries it packages): the ELF
+        # machine and exported symbols must match the input's.
+        self.assertIn('input="$jni_libs/$abi/libmosaic_app.so"', build)
+        self.assertIn('diff "$library.machine" "$input.machine"', build)
+        self.assertIn('diff "$library.symbols" "$input.symbols"', build)
+        self.assertIn("grep -Eq ' T mosaic_app_create$' \"$library.symbols\"", build)
+        self.assertNotIn('cmp "$library"', build)
+        self.assertIn("for abi in x86_64 arm64-v8a; do", build)
+        # After the Compose Trestle's runtime step, whose jniLibs it reuses.
+        self.assertLess(
+            workflow.index("- name: Build Trestle for Android with its Rust runtime (UI89 step 5)"), start
+        )
+
+        emulator = workflow.index("- name: Launch Trestle, Journal and Engram on an Android emulator")
+        self.assertLess(start, emulator)
+        gate = workflow[emulator : workflow.index("\n      - name:", emulator)]
+        self.assertIn("MOSAIC_FLUTTER_LANE: ${{ needs.detect.outputs.needs_mosaic_flutter_runtime }}", gate)
+        run = (
+            'bash code/scripts/mosaic-android-emulator-gate.sh "$flutter_apk" '
+            "dev.codingadventures.trestle task-app .MainActivity"
+        )
+        self.assertIn(run, gate)
+        uninstall = "adb uninstall dev.codingadventures.trestle"
+        self.assertLess(gate.index(uninstall), gate.index(run))
+        self.assertLess(gate.index("dev.codingadventures.trestle task-app\n"), gate.index(uninstall))
+
+    def test_the_emulator_gate_takes_an_activity_class_name_only(self) -> None:
+        """UI89 §7.5: a Flutter app launches `.MainActivity`, so the gate takes
+        the activity's class name and builds the component itself. Anything
+        that is not a plain class name is refused before adb is reached,
+        because `adb shell` joins arguments into one device command line."""
+
+        gate = SCRIPT.parent / "mosaic-android-emulator-gate.sh"
+
+        def run(*activity: str, adb_body: str = "exit 0\n") -> tuple[subprocess.CompletedProcess[str], list[str]]:
+            with tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                log = root / "adb.log"
+                log.write_text("", encoding="utf-8")
+                adb = root / "adb"
+                adb.write_text(
+                    "#!/usr/bin/env bash\n" f'echo "$*" >> "{log}"\n' + adb_body,
+                    encoding="utf-8",
+                )
+                adb.chmod(0o755)
+                (root / "app.apk").write_bytes(b"")
+                result = subprocess.run(
+                    ["bash", str(gate), str(root / "app.apk"), "dev.example.app", "example-app", *activity],
+                    env={"PATH": f"{root}:/usr/bin:/bin"},
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                return result, log.read_text(encoding="utf-8").splitlines()
+
+        # `am start` fails at once in the fake, so the gate stops at its first
+        # launch: enough to see which component it asked for.
+        stop_at_launch = 'case "$*" in *"am start"*) exit 1 ;; esac\nexit 0\n'
+        for activity, component in (
+            ((), "dev.example.app/mosaic.android.MosaicActivity"),
+            ((".MainActivity",), "dev.example.app/.MainActivity"),
+            (("dev.example.app.MainActivity",), "dev.example.app/dev.example.app.MainActivity"),
+        ):
+            with self.subTest(activity=activity):
+                result, calls = run(*activity, adb_body=stop_at_launch)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(f"shell am start -W -n {component}", calls, calls)
+
+        for activity in (
+            "dev.example.app/.MainActivity",
+            ".Main;reboot",
+            ".Main Activity",
+            "$(reboot)",
+            "",
+            "..Main",
+            ".Main.",
+        ):
+            with self.subTest(activity=activity):
+                result, calls = run(activity)
+                self.assertEqual(result.returncode, 2, result.stderr)
+                self.assertEqual(calls, [], "refused before adb is reached")
 
     def test_a_lane_script_change_alone_requires_acceptance(self) -> None:
         """The Android scripts belong to no package; changing one must still

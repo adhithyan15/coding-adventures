@@ -290,6 +290,49 @@ class MosaicSwiftRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertLess(block.index(uninstall), block.index(test))
         self.assertLess(block.index(test), block.rindex('xcrun simctl shutdown "$ipad"'))
 
+    def test_the_flutter_trestle_runs_through_the_ios_simulator_gate(self) -> None:
+        """UI89 §7.7 step 3: Trestle through the Flutter backend is built from
+        iOS dynamic libraries, created with the README's command, carries the
+        engine in its frameworks, and runs through the SwiftUI app's simulator
+        gate after the SwiftUI Trestle (same bundle id) is uninstalled."""
+
+        workflow = WORKFLOW.read_text(encoding="utf-8")
+        start = workflow.index("- name: Build Trestle for iOS with Flutter (UI89 §7)")
+        step = workflow[start : workflow.index("\n      - name:", start)]
+        self.assertIn("runner.os == 'macOS'", step)
+        self.assertIn("needs.detect.outputs.needs_mosaic_swift_runtime == 'true'", step)
+        self.assertIn("needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'", step)
+        self.assertIn('bash code/scripts/build-mosaic-ios-dylibs.sh task-mosaic-app "$phone_runtime"', step)
+        create = "flutter create --platforms=ios --org dev.codingadventures --project-name trestle ."
+        self.assertIn(f"grep -qxF '    {create}' README.md", step)
+        self.assertIn("flutter build ios --simulator --debug", step)
+        self.assertIn("grep -q ' _mosaic_app_create$'", step)
+        uninstall = "xcrun simctl uninstall \"$simulator\" dev.codingadventures.trestle"
+        gate = 'bash code/scripts/mosaic-ios-simulator-gate.sh "$output/flutter/$app" dev.codingadventures.trestle task-app "$simulator"'
+        self.assertIn(gate, step)
+        self.assertLess(step.index(uninstall), step.index(gate))
+        # After the SwiftUI step, whose iOS gates use the same simulators.
+        self.assertLess(workflow.index("- name: Round-trip Rust engine through standard SwiftUI binding"), start)
+        # Flutter is set up on macOS only when this step can run.
+        setup = workflow.index("      - name: Set up Flutter\n")
+        self.assertIn(
+            "(runner.os == 'Linux' || (runner.os == 'macOS' && needs.detect.outputs.needs_mosaic_swift_runtime == 'true'))",
+            workflow[setup : workflow.index("\n      - name:", setup)],
+        )
+
+        script = (SCRIPT.parent / "build-mosaic-ios-dylibs.sh").read_text(encoding="utf-8")
+        self.assertIn("--crate-type cdylib", script)
+        self.assertIn("export IPHONEOS_DEPLOYMENT_TARGET=16.0", script)
+        self.assertIn('device="$output/ios/iphoneos/libmosaic_app.dylib"', script)
+        self.assertIn('simulator="$output/ios/iphonesimulator/libmosaic_app.dylib"', script)
+        self.assertIn('rm -rf -- "${output:?}/ios"', script)
+        self.assertIn('lipo -create "$arm64_simulator" "$x86_64_simulator" -output "$simulator"', script)
+        # A failed cargo stops the script (command substitutions do not
+        # inherit `set -e`), and every build precedes the removal of ios/.
+        self.assertIn('--crate-type cdylib >&2 || exit 1', script)
+        self.assertLess(script.index('x86_64_simulator="$(build x86_64-apple-ios)"'), script.index("rm -rf --"))
+        self.assertIn('if [[ -z "$output" || "$output" == "/" ]]; then', script)
+
     def test_engram_runs_and_keeps_its_state_on_ios(self) -> None:
         """UI89 §2.5 (step 7): Engram follows Journal's iOS recipe, after
         Journal, and its iOS target compiles the [host_effects] handler."""
