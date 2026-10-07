@@ -1852,3 +1852,55 @@ file" for an open, "couldn't save the file" for an export.
    the dex check. Phone builds pass the plugin, so Android answers.
 4. **iOS:** the plugin's `ios/` half and the `Runner.app` check.
 5. **Engram:** its Flutter handler on the app seam, on every platform.
+
+**As built: Dart (step 2).** The phone path is in
+`mosaic_platform_effects_core.dart`. These are the places it differs from
+the design above:
+
+- **The app seam moves to step 5.** `mosaicOpenForApp` and
+  `mosaicSaveForApp` land with Engram, their first caller, so they are
+  checked against a real handler rather than written ahead of one.
+- **A third method.** `MosaicPhoneDocuments` also has
+  `temporaryDirectory()`. Dart does not depend on `path_provider` in the
+  core, so the plugin's adapter supplies the directory, and the harness's
+  fake supplies its own.
+- **No 0700.** `Directory.createTemp` makes the request directory with the
+  default mode, and the core has no `chmod` on a phone: its libc table
+  covers only the desktop ABIs. The directory is still private, because
+  its parent is `cacheDir` (Android) or the sandbox's `tmp/` (iOS), which no
+  other app can reach. The plugin's directory checks are unchanged.
+- **The open's generic message** is the desktop's existing "couldn't read
+  the selected file", so an app sees one wording on every platform.
+- **A plugin means pickers.** `installMosaicPlatformRouter` treats a given
+  `phoneDocuments` as having pickers whatever `hasDialogs` says. A test
+  that simulates a phone (`hasDialogs: false`) then reaches the plugin.
+- **The sweep leaves links alone.** A link's age cannot be read without
+  following it, and Dart never makes links there.
+- **The open's name is checked too.** The copy's name comes from the
+  plugin, so the answer's name goes through the same ordinary-name rule as
+  a save's reported name, and its type is read from the name the app is
+  told.
+- **What Dart cannot refuse.** Dart has no `O_NOFOLLOW` or `fstat` on a
+  phone. The copy is checked as a regular file in the request directory
+  before it is read, and the staged file is created exclusively and then
+  opened by path. A link or FIFO swapped in between could be followed, but
+  only by code inside the app's own process: the request directory is
+  private to the app, so no other app can make that swap. The plugin's
+  `O_NOFOLLOW` checks (above) are the boundary against another app.
+- **A plugin that never answers** holds the one file operation. The halves
+  bound every wait: the stall watch, `activity_gone`, and a picker's
+  `deinit`.
+- **The save checks are shared.** `_mosaicCheckSaveRequest` runs the
+  desktop's checks for both paths, so a phone save refuses exactly what a
+  desktop save refuses.
+- **The harness** checks:
+  - the copy, the known MIME types and the 50 MiB limit;
+  - six hostile answered paths, each refused unread;
+  - every plugin code, an unknown code, and a thrown error;
+  - the reported-name rule, including the byte clause and lone surrogates;
+  - staging, the type a save asks for, and refusals that never reach the
+    picker;
+  - cleanup after success, cancel and failure;
+  - a `mosaic-files` that is a file or a link, refused;
+  - the sweep's age rule;
+  - the router's deferral, busy rule and use of the plugin.

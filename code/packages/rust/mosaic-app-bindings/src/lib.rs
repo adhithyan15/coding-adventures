@@ -1965,6 +1965,13 @@ mod tests {
         // the finally blocks can throw and leak the descriptor.
         assert!(buffer < open && open < write && write < fchmod && fchmod < fsync);
         assert!(fsync < close && close < rename && rename < unlink && unlink < free);
+        // The desktop half: everything before the phone section (UI89
+        // §7.11), whose request directory is the app's own and is staged and
+        // removed through dart:io on purpose (pinned below).
+        let phone_at = core
+            .find("// ── Phones: the document plugin (UI89 §7.11)")
+            .expect("the phone section");
+        let desktop = &core[..phone_at];
         for gone in [
             "_mosaicLibcPathMode",
             "privateDirectory",
@@ -1972,8 +1979,17 @@ mod tests {
             "createSync(exclusive: true)",
             "openSync(mode: FileMode.writeOnly)",
         ] {
-            assert!(!core.contains(gone), "the save no longer uses {gone}");
+            assert!(!desktop.contains(gone), "the desktop save no longer uses {gone}");
         }
+        // The phone stages into its fresh request directory with an exclusive
+        // create, and accepts an answered copy only as a regular file, not a
+        // link, directly inside that directory.
+        let phone = &core[phone_at..];
+        assert!(phone.contains("final file = File(staged)..createSync(exclusive: true);"));
+        assert!(phone.contains("if (path != '$directory/$name') return false;"));
+        assert!(phone.contains(
+            "return FileSystemEntity.typeSync(path, followLinks: false) ==\n      FileSystemEntityType.file;"
+        ));
         // The mode: a regular file's rwx bits only when this user owns it;
         // someone else's (or nothing, or a link) gives 0600; an unknown owner
         // loses group and other write.

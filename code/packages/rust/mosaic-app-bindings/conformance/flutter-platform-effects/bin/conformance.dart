@@ -1310,6 +1310,507 @@ final class _AskingDialogs implements MosaicFileDialogs {
       );
 }
 
+// ── Phones (UI89 §7.11) ──────────────────────────────────────────────────
+
+/// The phone build's document plugin, answered by callbacks. Each records
+/// what it was asked, so a check can see what reached the "picker".
+final class FakePhoneDocuments implements MosaicPhoneDocuments {
+  FakePhoneDocuments(this.temporary, {this.open, this.save});
+
+  final String temporary;
+  final Future<String?> Function(String directory, List<String> mimeTypes, int limit)? open;
+  final Future<String?> Function(String stagedPath, String mimeType)? save;
+
+  int opened = 0;
+  int exported = 0;
+  List<String> lastMimeTypes = const <String>[];
+  int lastLimit = 0;
+  String? lastDirectory;
+  String? lastStaged;
+  String? stagedContents;
+  String? lastMimeType;
+
+  @override
+  Future<String> temporaryDirectory() async => temporary;
+
+  @override
+  Future<String?> copyForOpening(
+    String directory,
+    List<String> mimeTypes,
+    int limit,
+  ) async {
+    opened += 1;
+    lastDirectory = directory;
+    lastMimeTypes = List<String>.of(mimeTypes);
+    lastLimit = limit;
+    return open!(directory, mimeTypes, limit);
+  }
+
+  @override
+  Future<String?> export(String stagedPath, String mimeType) async {
+    exported += 1;
+    lastStaged = stagedPath;
+    lastMimeType = mimeType;
+    stagedContents = File(stagedPath).readAsStringSync();
+    return save!(stagedPath, mimeType);
+  }
+}
+
+/// The request directories left under [temporary]'s `mosaic-files`.
+List<String> requestDirectories(String temporary) {
+  final root = Directory('$temporary/$mosaicPhoneFilesDirectoryName');
+  if (!root.existsSync()) return const <String>[];
+  return root.listSync().map((entry) => entry.path).toList();
+}
+
+Future<void> checkPhoneOpen(Directory directory) async {
+  final temporary = Directory('${directory.path}/phone-open')..createSync();
+  final temp = temporary.path;
+  final accept = payload({
+    'accept': <String>['application/json', 'text/x-unknown', 'application/json', 'text/plain'],
+  });
+
+  // A copy the plugin made is read, named, typed, and removed with its
+  // directory.
+  final documents = FakePhoneDocuments(temp, open: (dir, mimes, limit) async {
+    final copy = '$dir/deck.json';
+    File(copy).writeAsStringSync('{"cards":1}');
+    return copy;
+  });
+  final opened = await mosaicRunPhoneFilesOpen(accept, documents);
+  check(okValue(opened)?['name'] == 'deck.json', 'phone open: the copy\'s name');
+  check(okValue(opened)?['mimeType'] == 'application/json', 'phone open: its type');
+  check(
+    okValue(opened)?['bytes'] == encoded('{"cards":1}'),
+    'phone open: its bytes',
+  );
+  check(
+    documents.lastMimeTypes.join(',') == 'application/json,text/plain',
+    'phone open: only known MIME types reach the picker, in order, once each',
+  );
+  check(documents.lastLimit == mosaicMaxOpenBytes, 'phone open: the 50 MiB limit');
+  check(
+    documents.lastDirectory!.startsWith('$temp/$mosaicPhoneFilesDirectoryName/'),
+    'phone open: a request directory under mosaic-files',
+  );
+  check(requestDirectories(temp).isEmpty, 'phone open: the copy is removed');
+
+  // The copy's name is the plugin's choice, so it is made ordinary too: a
+  // provider's bidi-spoofed name is told as "document", typed by that name.
+  final spoofed = await mosaicRunPhoneFilesOpen(
+    accept,
+    FakePhoneDocuments(temp, open: (dir, mimes, limit) async {
+      final copy = '$dir/invoice\u202Efdp.json';
+      File(copy).writeAsStringSync('{}');
+      return copy;
+    }),
+  );
+  check(okValue(spoofed)?['name'] == 'document', 'phone open: a spoofed name');
+  check(
+    okValue(spoofed)?['mimeType'] == 'application/octet-stream',
+    'phone open: typed by the name it is told',
+  );
+
+  // A temporary directory with a trailing separator, as iOS reports it.
+  final trailing = FakePhoneDocuments('$temp/', open: (dir, mimes, limit) async {
+    check(!dir.contains('//'), 'phone open: no doubled separator');
+    final copy = '$dir/deck.json';
+    File(copy).writeAsStringSync('{}');
+    return copy;
+  });
+  check(
+    okValue(await mosaicRunPhoneFilesOpen(accept, trailing))?['name'] == 'deck.json',
+    'phone open: a trailing separator in the temporary directory',
+  );
+
+  // Any document when nothing known is accepted.
+  await mosaicRunPhoneFilesOpen(
+    payload({'accept': <String>['text/x-unknown']}),
+    FakePhoneDocuments(temp, open: (dir, mimes, limit) async {
+      check(mimes.isEmpty, 'phone open: nothing known accepted is any document');
+      return null;
+    }),
+  );
+
+  // A cancel.
+  final cancelled = await mosaicRunPhoneFilesOpen(
+    accept,
+    FakePhoneDocuments(temp, open: (dir, mimes, limit) async => null),
+  );
+  check(isCancelled(cancelled), 'phone open: a cancel');
+  check(requestDirectories(temp).isEmpty, 'phone open: a cancel leaves nothing');
+
+  // Exactly 50 MiB is read; one byte more is refused, whatever the plugin
+  // copied.
+  final atLimit = await mosaicRunPhoneFilesOpen(
+    accept,
+    FakePhoneDocuments(temp, open: (dir, mimes, limit) async {
+      final copy = '$dir/big.json';
+      final handle = File(copy).openSync(mode: FileMode.writeOnly);
+      handle.setPositionSync(mosaicMaxOpenBytes - 1);
+      handle.writeByteSync(0x20);
+      handle.closeSync();
+      return copy;
+    }),
+  );
+  check(okValue(atLimit) != null, 'phone open: exactly 50 MiB is read');
+  final overLimit = await mosaicRunPhoneFilesOpen(
+    accept,
+    FakePhoneDocuments(temp, open: (dir, mimes, limit) async {
+      final copy = '$dir/big.json';
+      final handle = File(copy).openSync(mode: FileMode.writeOnly);
+      handle.setPositionSync(mosaicMaxOpenBytes);
+      handle.writeByteSync(0x20);
+      handle.closeSync();
+      return copy;
+    }),
+  );
+  check(
+    failure(overLimit) ==
+        'the selected file is larger than $mosaicMaxOpenBytes bytes',
+    'phone open: an oversized copy is refused',
+  );
+  check(requestDirectories(temp).isEmpty, 'phone open: and removed');
+
+  // The answered path is not trusted: a link, a path outside the request's
+  // directory, `..`, a directory and a missing file are each refused unread.
+  final secret = File('${directory.path}/phone-secret.txt')
+    ..writeAsStringSync('private');
+  final hostile = <String, Future<String?> Function(String, List<String>, int)>{
+    'a link to a private file': (dir, mimes, limit) async {
+      Link('$dir/deck.json').createSync(secret.path);
+      return '$dir/deck.json';
+    },
+    'a file outside the directory': (dir, mimes, limit) async => secret.path,
+    'a path through ..': (dir, mimes, limit) async =>
+        '$dir/../${dir.split('/').last}/x',
+    'the directory itself': (dir, mimes, limit) async => '$dir/.',
+    'a directory': (dir, mimes, limit) async {
+      Directory('$dir/folder').createSync();
+      return '$dir/folder';
+    },
+    'a missing file': (dir, mimes, limit) async => '$dir/missing.json',
+  };
+  for (final MapEntry(key: label, value: answer) in hostile.entries) {
+    final outcome = await mosaicRunPhoneFilesOpen(
+      accept,
+      FakePhoneDocuments(temp, open: answer),
+    );
+    check(
+      failure(outcome) == "couldn't read the selected file",
+      'phone open refuses $label',
+    );
+    check(
+      !jsonEncode(outcome).contains('private'),
+      'phone open reads nothing through $label',
+    );
+  }
+  check(secret.readAsStringSync() == 'private', 'the private file is untouched');
+  check(requestDirectories(temp).isEmpty, 'phone open: refusals leave nothing');
+
+  // Each plugin code is a fixed message, never the platform's text.
+  const openMessages = <String, String>{
+    'busy': 'another file operation is in progress',
+    'no_window': 'there is no window to show the file picker in',
+    'activity_gone': 'the file picker closed with the app',
+    'too_large': 'the selected file is larger than $mosaicMaxOpenBytes bytes',
+    'stalled': 'the selected file stopped arriving',
+    'unreadable': "couldn't read the selected file",
+    'something_new': "couldn't read the selected file",
+  };
+  for (final MapEntry(key: code, value: message) in openMessages.entries) {
+    final outcome = await mosaicRunPhoneFilesOpen(
+      accept,
+      FakePhoneDocuments(
+        temp,
+        open: (dir, mimes, limit) async =>
+            throw MosaicPhoneDocumentsException(code),
+      ),
+    );
+    check(failure(outcome) == message, 'phone open: code $code');
+  }
+  final missing = await mosaicRunPhoneFilesOpen(
+    accept,
+    FakePhoneDocuments(
+      temp,
+      open: (dir, mimes, limit) async =>
+          throw StateError('/data/user/0/app/secret: no plugin'),
+    ),
+  );
+  check(
+    failure(missing) == "couldn't read the selected file",
+    'phone open: a missing plugin is the generic failure, without its text',
+  );
+  check(requestDirectories(temp).isEmpty, 'phone open: failures leave nothing');
+}
+
+Future<void> checkPhoneSave(Directory directory) async {
+  final temporary = Directory('${directory.path}/phone-save')..createSync();
+  final temp = temporary.path;
+  final request = payload({
+    'suggestedName': 'deck.json',
+    'bytes': encoded('{"cards":2}'),
+    'accept': <String>['application/json'],
+  });
+
+  // The bytes are staged under the suggested name and handed to the picker;
+  // the answer is the name it reports, and the staged file is removed.
+  final documents = FakePhoneDocuments(
+    temp,
+    save: (staged, mime) async => 'deck (1).json',
+  );
+  final saved = await mosaicRunPhoneFilesSave(request, documents);
+  check(okValue(saved)?['name'] == 'deck (1).json', 'phone save: the reported name');
+  check(okValue(saved)!.length == 1, 'phone save answers only the name');
+  check(documents.stagedContents == '{"cards":2}', 'phone save: the staged bytes');
+  check(
+    documents.lastStaged!.endsWith('/deck.json'),
+    'phone save: staged under the suggested name',
+  );
+  check(documents.lastMimeType == 'application/json', 'phone save: the type');
+  check(requestDirectories(temp).isEmpty, 'phone save: the staged file is removed');
+
+  // The type: the name's own when accepted or when anything is, else the
+  // first accepted.
+  final anyType = FakePhoneDocuments(temp, save: (staged, mime) async => null);
+  await mosaicRunPhoneFilesSave(
+    payload({'suggestedName': 'notes.md', 'bytes': encoded('#')}),
+    anyType,
+  );
+  check(anyType.lastMimeType == 'text/markdown', 'phone save: the name\'s own type');
+  final firstType = FakePhoneDocuments(temp, save: (staged, mime) async => null);
+  await mosaicRunPhoneFilesSave(
+    payload({
+      'suggestedName': 'notes.markdown',
+      'bytes': encoded('#'),
+      'accept': <String>['text/plain', 'text/markdown'],
+    }),
+    firstType,
+  );
+  check(firstType.lastMimeType == 'text/markdown', 'phone save: an accepted own type');
+
+  // A reported name is told only when ordinary.
+  final reportedNames = <String, String>{
+    '/storage/emulated/0/Download/deck.json': 'deck.json',
+    r'C:\docs\deck.json': 'deck.json',
+    '': 'document',
+    '.': 'document',
+    '..': 'document',
+    '   ': 'document',
+    'evil\u202Egnp.json': 'document',
+    'two\nlines.json': 'document',
+    'nul\u0000.json': 'document',
+    'c1\u0085.json': 'document',
+    'para\u2029.json': 'document',
+    'lone\uD800.json': 'document',
+    'lone\uDC00.json': 'document',
+    '${'é' * 128}.json': 'document',
+    '${'a' * 256}': 'document',
+    'family\u200D\u{1F468}.json': 'family\u200D\u{1F468}.json',
+    'soft\u00ADhyphen.json': 'soft\u00ADhyphen.json',
+    '${'a' * 250}.json': '${'a' * 250}.json',
+  };
+  for (final MapEntry(key: reported, value: told) in reportedNames.entries) {
+    check(
+      mosaicOrdinaryReportedName(reported) == told,
+      'reported name ${shown(reported)} is told as ${shown(told)}',
+    );
+  }
+
+  // A refused request never reaches the picker, and stages nothing.
+  final refusing = FakePhoneDocuments(temp, save: (staged, mime) async => 'x');
+  for (final bad in <Map<String, Object?>>[
+    {'suggestedName': '../deck.json', 'bytes': encoded('x')},
+    {'suggestedName': 'deck.exe', 'bytes': encoded('x')},
+    {'suggestedName': 'deck.txt', 'bytes': encoded('x'), 'accept': <String>['application/json']},
+    {'suggestedName': 'deck.json', 'bytes': '%%%'},
+  ]) {
+    final outcome = await mosaicRunPhoneFilesSave(payload(bad), refusing);
+    check(failure(outcome) != null, 'phone save refuses ${bad['suggestedName']}');
+  }
+  check(refusing.exported == 0, 'phone save: no picker for a refused request');
+  check(
+    !Directory('$temp/$mosaicPhoneFilesDirectoryName').existsSync() ||
+        requestDirectories(temp).isEmpty,
+    'phone save: a refused request stages nothing',
+  );
+
+  // A cancel, and each code, leave nothing staged.
+  final cancelled = await mosaicRunPhoneFilesSave(
+    request,
+    FakePhoneDocuments(temp, save: (staged, mime) async => null),
+  );
+  check(isCancelled(cancelled), 'phone save: a cancel');
+  const saveMessages = <String, String>{
+    'busy': 'another file operation is in progress',
+    'no_window': 'there is no window to show the file picker in',
+    'activity_gone': 'the file picker closed with the app',
+    'too_large': 'the file is larger than $mosaicMaxSaveBytes bytes',
+    'stalled': 'the file stopped saving',
+    'unreadable': "couldn't save the file",
+    'something_new': "couldn't save the file",
+  };
+  for (final MapEntry(key: code, value: message) in saveMessages.entries) {
+    final outcome = await mosaicRunPhoneFilesSave(
+      request,
+      FakePhoneDocuments(
+        temp,
+        save: (staged, mime) async => throw MosaicPhoneDocumentsException(code),
+      ),
+    );
+    check(failure(outcome) == message, 'phone save: code $code');
+  }
+  final thrown = await mosaicRunPhoneFilesSave(
+    request,
+    FakePhoneDocuments(
+      temp,
+      save: (staged, mime) async => throw StateError('/private/var/secret'),
+    ),
+  );
+  check(
+    failure(thrown) == "couldn't save the file",
+    'phone save: anything else is the generic failure, without its text',
+  );
+  check(requestDirectories(temp).isEmpty, 'phone save: failures leave nothing');
+
+  // A temporary directory that cannot be used fails the request, never
+  // writes elsewhere.
+  final blocked = '${directory.path}/phone-blocked';
+  File(blocked).writeAsStringSync('not a directory');
+  final noRoot = await mosaicRunPhoneFilesSave(
+    request,
+    FakePhoneDocuments(blocked, save: (staged, mime) async => 'x'),
+  );
+  check(failure(noRoot) == "couldn't save the file", 'phone save: no usable root');
+  final linkedRoot = Directory('${directory.path}/phone-linked')..createSync();
+  Link('${linkedRoot.path}/$mosaicPhoneFilesDirectoryName')
+      .createSync(directory.path);
+  final throughLink = await mosaicRunPhoneFilesSave(
+    request,
+    FakePhoneDocuments(linkedRoot.path, save: (staged, mime) async => 'x'),
+  );
+  check(
+    failure(throughLink) == "couldn't save the file",
+    'phone save: a linked mosaic-files is refused',
+  );
+}
+
+Future<void> checkPhoneLeftovers(Directory directory) async {
+  final temporary = Directory('${directory.path}/phone-sweep')..createSync();
+  final root = Directory('${temporary.path}/$mosaicPhoneFilesDirectoryName')
+    ..createSync();
+  final old = Directory('${root.path}/request-old')..createSync();
+  File('${old.path}/copy.json').writeAsStringSync('old');
+  final young = Directory('${root.path}/request-young')..createSync();
+  final outside = File('${directory.path}/phone-outside.txt')
+    ..writeAsStringSync('keep');
+  final linked = Link('${root.path}/request-link')..createSync(outside.path);
+  // The old directory's link reaches outside: the sweep must not follow it.
+  Link('${old.path}/escape').createSync(outside.path);
+
+  // Both directories were just made: a sweep now keeps them, and a sweep an
+  // hour and a minute from now finds both old.
+  final now = DateTime.now();
+  final later = now.add(mosaicPhoneLeftoverAge + const Duration(minutes: 1));
+  mosaicSweepPhoneLeftovers(root, now);
+  check(old.existsSync() && young.existsSync(), 'a fresh sweep deletes nothing');
+  mosaicSweepPhoneLeftovers(
+    root,
+    now.add(mosaicPhoneLeftoverAge - const Duration(minutes: 1)),
+  );
+  check(old.existsSync(), 'an entry younger than an hour is kept');
+  mosaicSweepPhoneLeftovers(root, later);
+  check(
+    !old.existsSync() && !young.existsSync(),
+    'a sweep deletes request directories unchanged for over an hour',
+  );
+  check(outside.readAsStringSync() == 'keep', 'without following its links');
+  check(
+    linked.existsSync() && outside.existsSync(),
+    'a link in mosaic-files is left alone',
+  );
+
+  // The router sweeps before its first request, and keeps what is young:
+  // another engine's request in flight looks like this one.
+  final inFlight = Directory('${root.path}/request-in-flight')..createSync();
+  final queued = <void Function()>[];
+  final host = FakeHost();
+  var keptInFlight = false;
+  final documents = FakePhoneDocuments(
+    temporary.path,
+    open: (dir, mimes, limit) async {
+      keptInFlight = inFlight.existsSync();
+      return null;
+    },
+  );
+  installMosaicPlatformRouter(
+    host,
+    appKinds: null,
+    dialogs: FakeDialogs(null),
+    phoneDocuments: documents,
+    runOnUi: queued.add,
+  );
+  host.waitingOn = <int>{1};
+  host.effectHandler!(1, 'files.open', payload({}), 'await');
+  queued.removeAt(0)();
+  check(await host.answer(1) == '{"cancelled":{}}', 'the router asks the plugin');
+  check(keptInFlight, 'the router\'s sweep keeps a young entry');
+}
+
+Future<void> checkPhoneRouter(Directory directory) async {
+  final temporary = Directory('${directory.path}/phone-router')..createSync();
+  final queued = <void Function()>[];
+  final host = FakeHost();
+  final pending = Completer<String?>();
+  final documents = FakePhoneDocuments(
+    temporary.path,
+    save: (staged, mime) => pending.future,
+  );
+  final dialogs = FakeDialogs('${directory.path}/never.txt');
+  installMosaicPlatformRouter(
+    host,
+    appKinds: null,
+    dialogs: dialogs,
+    phoneDocuments: documents,
+    hasDialogs: false,
+    runOnUi: queued.add,
+  );
+  final request = payload({'suggestedName': 'deck.json', 'bytes': encoded('x')});
+  host.waitingOn = <int>{1, 2};
+  host.effectHandler!(1, 'files.save', request, 'await');
+  check(host.deferred.join(',') == '1', 'phone: deferred before any picker');
+  queued.removeAt(0)();
+  host.effectHandler!(2, 'files.save', request, 'await');
+  check(
+    await answeredFailure(host, 2) == 'another file operation is in progress',
+    'phone: one file operation at a time',
+  );
+  for (var tries = 0; tries < 200 && documents.exported == 0; tries += 1) {
+    await Future<void>.delayed(const Duration(milliseconds: 5));
+  }
+  pending.complete('deck.json');
+  check(await answeredName(host, 1) == 'deck.json', 'phone: answered through the plugin');
+  check(dialogs.opened == 0, 'phone: the desktop dialogs are never shown');
+  check(documents.exported == 1, 'phone: one export');
+
+  // Given a plugin, a phone has pickers; without one, it does not.
+  final withoutPlugin = FakeHost();
+  installMosaicPlatformRouter(
+    withoutPlugin,
+    appKinds: null,
+    dialogs: dialogs,
+    hasDialogs: false,
+    runOnUi: (work) => work(),
+  );
+  withoutPlugin.waitingOn = <int>{3};
+  withoutPlugin.effectHandler!(3, 'files.open', payload({}), 'await');
+  check(
+    await answeredFailure(withoutPlugin, 3) ==
+        'files.open is not available on this platform yet',
+    'phone without the plugin: still not available',
+  );
+}
+
 Future<void> main() async {
   final directory = Directory.systemTemp.createTempSync(
     'mosaic-flutter-platform-effects-',
@@ -1323,6 +1824,10 @@ Future<void> main() async {
     checkNameSafety();
     await checkOpen(directory);
     await checkRouter(directory);
+    await checkPhoneOpen(directory);
+    await checkPhoneSave(directory);
+    await checkPhoneLeftovers(directory);
+    await checkPhoneRouter(directory);
   } finally {
     directory.deleteSync(recursive: true);
   }
