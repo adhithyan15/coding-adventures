@@ -111,6 +111,8 @@ discovered package set, planning MUST fail rather than silently omit its native
 test. A new direct consumer of this fixture MUST extend the relation and its
 drift test in the same change. The resulting affected plan and toolchain flags,
 not merely the gate verdict, are the evidence that native tests can run.
+For an explicitly single-language invocation, only consumers in that language
+are seeded and checked; all-language CI retains the full ten-consumer check.
 
 ## Evaluation
 
