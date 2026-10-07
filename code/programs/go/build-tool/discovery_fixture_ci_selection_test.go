@@ -28,6 +28,7 @@ var discoveryRegistryConsumerRoots = []struct {
 	{"dotnet/programs/build-tool-csharp", "code/programs/dotnet/build-tool-csharp", "csharp"},
 	{"dotnet/programs/build-tool-fsharp", "code/programs/dotnet/build-tool-fsharp", "fsharp"},
 	{"go/programs/build-tool", "code/programs/go/build-tool", "go"},
+	{"haskell/programs/build-tool", "code/programs/haskell/build-tool", "haskell"},
 	{"lua/programs/build-tool", "code/programs/lua/build-tool", "lua"},
 	{"perl/programs/build-tool", "code/programs/perl/build-tool", "perl"},
 	{"python/programs/build-tool", "code/programs/python/build-tool", "python"},
@@ -205,16 +206,16 @@ func TestDiscoveryRegistryFixtureBuildPlanKeepsEveryPlatformAndToolchain(t *test
 	if err := json.Unmarshal(data, &built); err != nil {
 		t.Fatal(err)
 	}
-	if built.Force || built.AffectedPackages == nil || len(built.AffectedPackages) != 10 {
-		t.Fatalf("fixture plan should select exactly ten packages without force: %#v", built.AffectedPackages)
+	if built.Force || built.AffectedPackages == nil || len(built.AffectedPackages) != 11 {
+		t.Fatalf("fixture plan should select exactly eleven packages without force: %#v", built.AffectedPackages)
 	}
 	for _, goos := range []string{"linux", "darwin", "windows"} {
 		state := built.StateForPlatform(goos)
-		if state.AffectedPackages == nil || len(state.AffectedPackages) != 10 {
+		if state.AffectedPackages == nil || len(state.AffectedPackages) != 11 {
 			t.Fatalf("%s affected packages = %v", goos, state.AffectedPackages)
 		}
 	}
-	for _, toolchain := range []string{"dotnet", "go", "lua", "perl", "python", "ruby", "rust", "swift", "typescript"} {
+	for _, toolchain := range []string{"dotnet", "go", "haskell", "lua", "perl", "python", "ruby", "rust", "swift", "typescript"} {
 		if !built.LanguagesNeeded[toolchain] {
 			t.Errorf("missing native fixture toolchain %s", toolchain)
 		}
@@ -237,7 +238,7 @@ func TestDiscoveryRegistryFixtureConsumerMapTracksNativeReferences(t *testing.T)
 			return nil
 		}
 		switch filepath.Ext(entry.Name()) {
-		case ".go", ".cs", ".fs", ".lua", ".t", ".py", ".rb", ".rs", ".swift", ".ts":
+		case ".go", ".cs", ".fs", ".hs", ".lua", ".t", ".py", ".rb", ".rs", ".swift", ".ts":
 		default:
 			return nil
 		}

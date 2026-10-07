@@ -1014,6 +1014,7 @@ skipDirectories =
     , "vendor"
     , ".claude"
     , ".build"
+    , "_build"
     , "cover"
     , "Pods"
     ]
