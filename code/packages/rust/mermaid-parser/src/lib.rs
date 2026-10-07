@@ -5714,7 +5714,9 @@ pub fn parse_cynefin(source: &str) -> Result<CynefinDiagram, ParseError> {
         }
         let lower = line.to_ascii_lowercase();
         if matches!(lower.as_str(), "complex" | "complicated" | "clear" | "chaotic" | "confusion") {
-            let domain_index = if let Some(existing) = diagram.domains.iter().position(|domain| domain.name == lower) { existing }
+            let domain_index = if let Some(existing) = diagram.domains.iter().position(|domain| domain.name == lower) {
+                diagram.domains[existing].items.clear(); existing
+            }
                 else { diagram.domains.push(CynefinDomain { name: lower, items: Vec::new() }); diagram.domains.len() - 1 };
             current_domain = Some(domain_index); continue;
         }

@@ -9,4 +9,11 @@
 {"name":"theme-front-matter","source":"---\nconfig:\n  themeVariables:\n    cynefin:\n      boundaryColor: '#334455'\n      complexBg: '#ddeedd'\n---\ncynefin-beta\ncomplex\n  \"Explore\""},
 {"name":"quoted-strings","source":"cynefin-beta\ncomplex\n  'Single quoted'\n  \"Escaped \\\"quote\\\" and \\\\ slash\"\n  'Line\\nfeed'\ncomplex --> clear : 'Shift\\'s label'"},
 {"name":"metadata-variants","source":"cynefin-beta\ntitle\naccTitle : Spaced accessibility title\naccDescr   { First line\n  Second line }\nclear\n  'Known practice'"},
-{"name":"inline-accessibility-description","source":"cynefin-beta\naccDescr {Inline description}\nclear"}]}
+{"name":"inline-accessibility-description","source":"cynefin-beta\naccDescr {Inline description}\nclear"},
+{"name":"duplicate-domain-last-wins","source":"cynefin-beta\ncomplex\n  \"First item\"\ncomplex\n  \"Replacement item\""}],
+"invalid":[
+{"name":"uppercase-header","source":"CYNEFIN-BETA\ncomplex"},
+{"name":"uppercase-domain","source":"cynefin-beta\nComplex"},
+{"name":"unquoted-item","source":"cynefin-beta\ncomplex\n  Unquoted"},
+{"name":"orphan-item","source":"cynefin-beta\n\"Orphan\""}
+]}
