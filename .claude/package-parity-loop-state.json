@@ -12,20 +12,20 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16923,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16923",
-    "branch": "codex/parity-dt17-vector-correction-20261007",
-    "implementation_revision": "8100b08a425b6c5fac1288388ba2cdef7aa92064",
+    "number": 16936,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16936",
+    "branch": "codex/parity-geometry2d-neutral-20261007",
+    "implementation_revision": "69872f750ffe7131dbfe799ac6e9f137f0d04cc9",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-07T16:58:46Z",
-    "pr_number": 16923,
+    "observed_at": "2026-10-07T17:39:11Z",
+    "pr_number": 16936,
     "status": "checks-pending",
-    "notes": "Ready-for-review DT17 vector correction PR #16923 opened from independently verified head 8100b08a425b6c5fac1288388ba2cdef7aa92064. GitHub reports MERGEABLE but required checks have not completed. Do not enable auto-merge before every required check is terminal and acceptable and GitHub reports no conflict."
+    "notes": "Ready-for-review geometry neutral contract PR #16936 opened from validated head 69872f750ffe7131dbfe799ac6e9f137f0d04cc9. GitHub reports MERGEABLE but checks have not all completed; do not enable auto-merge until every required check is terminal acceptable and conflict-free."
   },
   "last_inventory": {
-    "revision": "40c6f6af49c47ef8ad85138e645de82ab69b7bac",
+    "revision": "29284f51fe2e7c9be6a8ade7899d5fa126542b24",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1495,
@@ -12025,12 +12025,50 @@
     },
     {
       "id": "geometry-2d-language-neutral-contract-and-fixture-repair",
-      "title": "Reconcile the G2D00-G2D03 portable geometry contract and neutral fixtures",
-      "status": "pending",
+      "title": "Freeze the G2D00-G2D03 portable geometry contract and neutral fixtures",
+      "status": "pr-open",
       "depends_on": [],
+      "branch": "codex/parity-geometry2d-neutral-20261007",
+      "pr_number": 16936,
+      "notes": "Selected after #16923 merged and the exact-main collision-clean 1,495-identity refresh. The twelve-slot Java/Kotlin/Dart geometry family is gated by a shared contract. Freeze G2D00 magnitude <1e-12 and G2D03 absolute radius <1e-10, endpoint distance-squared <1e-20, line evaluation, and ordered endpoint bounds in versioned neutral fixtures. The read-only all-lane audit found five point2d threshold outliers, five arc2d implementations with nullable degenerate results, and six arc2d lanes lacking endpoint-form evaluation/bounds APIs. Those newly discovered existing-lane corrections have explicit child owners below; this neutral tranche does not claim existing-lane or rotated analytic-bounds parity.",
+      "validation_notes": "The independent process-free fixture validator accepts eight pinned cases, rejects duplicate keys/IDs, nonfinite inputs, changed tolerance, malformed shapes, nondegenerate arc claims, and mutated expectations; seven unittest cases pass with 97% validator line coverage. Exact-origin and absolute-only oracle comparison negative tests close two independently found tolerance holes. Ruff and strict MyPy pass. Existing package baselines pass: Python point2d 44 tests/98.92% and arc2d 17 tests/95.80% using explicit Python 3.13 uv virtual environments; Rust point2d/arc2d cargo tests and doc tests pass; Haskell cabal test all passes trig/point2d/bezier2d/arc2d including 25 arc examples. These baseline suites do not prove the newly pinned edge cases conform in every lane; four explicit child owners cover those gaps. The repository's unmodified BUILD_windows script initially selected the global Python through the local uv module bridge rather than its .venv; explicit --python restored isolated package testing without changing BUILD metadata.",
+      "review_notes": "Independent final security/correctness review found no blocker, no new execution surface, and zero exact overlap across 15 open PRs. It verified both tolerance regressions, the eight-case validator, state/roadmap bookkeeping, and diff hygiene."
+    },
+    {
+      "id": "geometry-point2d-existing-lane-threshold-reconciliation",
+      "title": "Reconcile G2D00 near-zero normalization in Ruby, Perl, Elixir, Lua, and Swift",
+      "status": "pending",
+      "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"],
       "branch": null,
       "pr_number": null,
-      "notes": "The post-#16722 collision-clean audit found point2d, affine2d, bezier2d, and arc2d each present in 12 of 15 established lanes but absent in Java, Kotlin, and Dart. Resolve G2D00 near-zero normalization disagreement and G2D03 degenerate SvgArc behavior first: the spec requires line interpolation and ordered bounds while most existing lanes return no value and Haskell follows the spec. Freeze coordinate-wise normalization of arbitrary line endpoints without changing ordered Rect.from_points, absolute-value normalization of SVG radii, near-zero thresholds, finite/error semantics, and deterministic neutral vectors; reconcile existing oracles before Java/Kotlin/Dart ports. Several lanes sample rotated arc bounds despite an analytic-bounds spec, so do not claim that behavior reconciled through initial fixtures. Directory presence alone is not semantic parity."
+      "notes": "All five lanes currently use 1e-15 and return the original near-zero vector. Adopt the neutral <1e-12 return-origin contract, preserve exactly-at-threshold normalization, and run each real point2d package and downstream geometry test."
+    },
+    {
+      "id": "geometry-arc2d-existing-api-degenerate-reconciliation",
+      "title": "Reconcile G2D03 existing SVG endpoint API in Rust, TypeScript, Python, C#, and F#",
+      "status": "pending",
+      "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "These lanes expose SvgArc evaluate/bounds but return None/null on degeneration, use component-wise <1e-12 endpoint and radius guards, and must retain absolute-radius SVG semantics. Adopt squared-distance <1e-20, absolute radius <1e-10, line evaluation, and ordered bounds with neutral cases and native downstream tests. Preserve optional center conversion and empty cubic output."
+    },
+    {
+      "id": "geometry-arc2d-go-endpoint-api-reconciliation",
+      "title": "Complete Go G2D03 SVG endpoint-form evaluation and bounds",
+      "status": "pending",
+      "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Go currently provides endpoint-to-center conversion but no SvgArc evaluate/bounds convenience API and exact endpoint/<1e-12 radius guards. Add the native equivalent of the neutral degenerate line fallback and ordered bounds; validate Go arc2d and downstream packages."
+    },
+    {
+      "id": "geometry-arc2d-ruby-perl-elixir-lua-swift-endpoint-api-reconciliation",
+      "title": "Complete SVG endpoint-form arc evaluation and bounds in five existing lanes",
+      "status": "pending",
+      "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-point2d-existing-lane-threshold-reconciliation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Ruby, Perl, Elixir, Lua, and Swift currently provide center conversion but lack SvgArc evaluation/bounds convenience APIs, use exact endpoint/<1e-12 radius guards, and require the neutral line fallback. Split by lane before implementation if a five-language PR is not reviewable; run each real package and downstream tests."
     },
     {
       "id": "geometry-point2d-java-kotlin-dart-lane-parity",
@@ -12216,7 +12254,7 @@
     {
       "id": "hash-functions-dt17-vector-and-documentation-correction",
       "title": "Correct governing DT17 hash-function vectors and stale package prose",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": [],
       "branch": "codex/parity-dt17-vector-correction-20261007",
       "pr_number": 16923,
