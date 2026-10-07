@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16891,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16891",
+    "branch": "codex/parity-haskell-dune-discovery-20261007",
+    "implementation_revision": "950a1bbe70eb63dd0820261812b5e247fd9c1c82",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-07T10:49:18Z",
-    "pr_number": 16880,
-    "status": "merged",
-    "notes": "PR #16880 completed all 37 final-head checks with 29 successes and eight acceptable skips/neutral results. Both required gates and Linux, macOS, and Windows builds passed; GitHub reported MERGEABLE/CLEAN. Guarded squash auto-merge was enabled for exact head 71d8093f0a48b24eab8ac1929d2a7a997a67b3e5, and GitHub merged it as a380448500add74a18453815e30757e7caa08806 at 2026-10-07T10:49:18Z. No manual merge occurred. The implementation head changes the detector, not the fixture; its unit tests prove ten-consumer fixture fanout, while the next fixture-only change will supply actual ten-native-CI execution evidence."
+    "observed_at": "2026-10-07T11:19:35Z",
+    "pr_number": 16891,
+    "status": "checks-pending",
+    "notes": "Ready-for-review Haskell Dune discovery PR #16891 opened from tested implementation 950a1bbe70eb63dd0820261812b5e247fd9c1c82. Local Haskell O2 package/dependency suites, executable build with short Windows builddir, Haskell coverage, Go package tests/vet/build/coverage, neutral corpus, build-file validation, collision inventory, diff, and read-only security review passed. GitHub reports MERGEABLE with detect and companion checks still queued or in progress. Do not enable auto-merge while checks remain pending."
   },
   "last_inventory": {
     "revision": "1561f63f918ddab136936d72a6c9f0867bd9feaf",
@@ -752,10 +758,10 @@
     {
       "id": "build-tool-haskell-dune-build-discovery-conformance",
       "title": "Prove Dune _build discovery exclusion in the Haskell build tool",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-shared-discovery-fixture-native-ci-selection"],
       "branch": "codex/parity-haskell-dune-discovery-20261007",
-      "pr_number": null,
+      "pr_number": 16891,
       "selected_at": "2026-10-07T10:51:43Z",
       "selection_revision": "ec1c8d8c733f188c762e1377fe56dc07ecd2faa7",
       "selection_notes": "Selected after #16880 auto-merged, fresh collision-checked 15-lane inventory, registration of the newly discovered Lattice @use and WebP neutral owners, and a live open-PR overlap check. All three prerequisites are merged. This bounded Haskell Dune fixture slice unlocks the Haskell full-registry and duplicate-identity successors plus fixture-CI coverage; dependency-ready Haskell CT01/PNG ports close one slot each and the new neutral contracts need separate specification work. Preserve the complete language-registry and identity defects for their existing successors.",
