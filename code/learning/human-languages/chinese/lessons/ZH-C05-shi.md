@@ -34,7 +34,7 @@ reviews_of: [ZH-W05-shi]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-SHI] -->
 
-[PAUSE 2s] Write 是. Sun first, then the body.
+[PAUSE 2s] [YOU WRITE: 是 — sun first, then the body]
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[ZH-LEX-SHI]; assesses=[ZH-TONE-LEXICAL] -->

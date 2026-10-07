@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 6,
-  "sourceHash": "fnv1a64:e13cc96d46eb5e01",
+  "sourceHash": "fnv1a64:44c430fde1254afd",
   "lessonIds": [
     "ZH-W06-zai",
     "ZH-W06-jian",
@@ -12,7 +12,7 @@
   "drivablePrefix": 0,
   "text": "chinese/narration/ch06.txt",
   "json": "chinese/narration/ch06.json",
-  "textHash": "fnv1a64:fb679382ec496d0f",
-  "jsonHash": "fnv1a64:ed373a3383bc170a",
+  "textHash": "fnv1a64:a382f5f63e9b87db",
+  "jsonHash": "fnv1a64:b23965a013ce474f",
   "findings": []
 }
