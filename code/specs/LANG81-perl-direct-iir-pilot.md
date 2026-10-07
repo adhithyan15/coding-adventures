@@ -9,7 +9,7 @@ Add a Perl-language token definition and parser grammar, then Rust
 `perl-lexer`, `perl-parser`, and `perl-iir-compiler` crates. The production path
 is Perl source → Rust lexer/parser → grammar tree → `interpreter-ir` → Rust
 `vm-core`. Semantic IR and a host Perl interpreter are not execution stages.
-A host Perl 5.40 process may only serve as a conformance oracle in tests.
+A host Perl 5.38 process may only serve as a conformance oracle in tests.
 
 ## First accepted subset
 

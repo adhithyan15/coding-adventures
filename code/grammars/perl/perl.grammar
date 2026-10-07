@@ -1,4 +1,4 @@
-# Parser grammar for LANG81's bounded Perl 5.40 print pilot.
+# Parser grammar for LANG81's bounded Perl 5.38 print pilot.
 # @version 1
 # Anything outside this subset is rejected, including trailing tokens.
 

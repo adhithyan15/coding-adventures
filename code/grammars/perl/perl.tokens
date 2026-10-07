@@ -1,4 +1,4 @@
-# Token definitions for LANG81's bounded Perl 5.40 print pilot.
+# Token definitions for LANG81's bounded Perl 5.38 print pilot.
 # @version 1
 # This is a deliberately small Perl-language lexer, not a claim to lex all Perl.
 
