@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "The Meeting Comes Off the Page",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:4c1e5eb1c397c19c",
+  "sourceHash": "fnv1a64:2ef9625b0da2447c",
   "lessons": [
     {
       "id": "UR-C18-aam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27d8c5a794f326be",
+      "sourceHash": "fnv1a64:5d6e4c6ab534b2dc",
       "notice": null,
       "blocks": [
         {
@@ -34,8 +34,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "یہ کام ہے۔ — and say it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: یہ کام ہے۔ — and say it]"
+            },
+            {
               "kind": "speech",
-              "text": "Write یہ کام ہے۔ and say it. Ten letters are yours."
+              "text": "Ten letters are yours."
             }
           ]
         },
@@ -371,7 +380,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b065ba20103b1f36",
+      "sourceHash": "fnv1a64:74966115176e06c0",
       "notice": null,
       "blocks": [
         {
@@ -386,8 +395,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Write آسمان (āsmān). Two alifs, one wearing the wave and one not — say which is which as you draw them."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "آسمان (āsmān) — two alifs, one wearing the wave and one not; say which is which as you draw them",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: آسمان — two alifs, one wearing the wave and one not; say which is which as you draw them]"
             }
           ]
         },
@@ -769,7 +783,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea01909a3f50338c",
+      "sourceHash": "fnv1a64:98dc580061234a2a",
       "notice": null,
       "blocks": [
         {
@@ -784,8 +798,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "آپ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: آپ]"
+            },
+            {
               "kind": "speech",
-              "text": "Write آپ. Say where pe's three dots sit, and who you would address as āp."
+              "text": "Say where pe's three dots sit, and who you would address as āp."
             }
           ]
         },

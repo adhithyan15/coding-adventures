@@ -37,7 +37,7 @@ reviews_of: [PA-W02-name-supported, PA-W02-name-delayed, PA-W02-name-no-model, P
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-NAME-NO-MODEL-01, PA-FORM-LANGUAGE-NO-MODEL-01] -->
 
 [PAUSE 3s] Two fields, no model, nothing on the page but a label and a blank.
-Write both before reading on.
+[YOU WRITE: both fields before reading on]
 
 ## Guided Practice: across the three fields, one rung at a time
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-NAME-SUPPORTED-ENTRY-01, PA-FORM-LANGUAGE-SUPPORTED-ENTRY-01, PA-FORM-RESIDENCE-SUPPORTED-ENTRY-01, PA-FORM-NAME-DELAYED-ENTRY-01, PA-FORM-LANGUAGE-DELAYED-ENTRY-01, PA-FORM-RESIDENCE-DELAYED-ENTRY-01] -->

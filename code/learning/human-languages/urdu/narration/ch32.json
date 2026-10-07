@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Which One: the Ordinals",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b03227c11e984466",
+  "sourceHash": "fnv1a64:9b63fe46c4c8743a",
   "lessons": [
     {
       "id": "UR-C32-pehla",
@@ -483,7 +483,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c84cf95894c80cc",
+      "sourceHash": "fnv1a64:8971740eb529be30",
       "notice": null,
       "blocks": [
         {
@@ -517,8 +517,13 @@
               "text": "Count aloud one to ten, then say bīs and sau."
             },
             {
-              "kind": "speech",
-              "text": "Write the ten figures shuffled, checking ۴, ۵ and ۶ against the models rather than against memory."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the ten figures shuffled, checking ۴, ۵ and ۶ against the models rather than against memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the ten figures shuffled, checking **۴**, **۵** and **۶** against the models rather than against memory]"
             },
             {
               "kind": "speech",

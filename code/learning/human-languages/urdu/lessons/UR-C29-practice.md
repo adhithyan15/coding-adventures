@@ -46,8 +46,7 @@ reviews_of: [UR-C29-das, UR-C29-nau, UR-C29-aath, UR-C29-saat, UR-C29-chhe, UR-C
 2. Count backwards from **das** to **ek**.
 3. Hear all ten named singly and out of order, and say each.
 4. Read the ten printed shuffled and say each.
-5. Write all ten from dictation. The tranche has added **no new letter**: every
-   sign in all ten words was already on the page.
+5. [YOU WRITE: all ten from dictation — the tranche has added **no new letter**; every sign in all ten words was already on the page]
 
 Then say the English cousin of each. All ten have one.
 

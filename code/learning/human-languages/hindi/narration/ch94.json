@@ -4,7 +4,7 @@
   "chapter": 94,
   "title": "The Pronouns, And The Article Hindi Does Not Have",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:53ac3297e8d9e85d",
+  "sourceHash": "fnv1a64:9677f5a25493d7bd",
   "lessons": [
     {
       "id": "HI-C86-ham",
@@ -167,7 +167,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:835b51685a5d0c22",
+      "sourceHash": "fnv1a64:12570f4b1283b4a2",
       "notice": null,
       "blocks": [
         {
@@ -230,7 +230,7 @@
             },
             {
               "kind": "speech",
-              "text": "In everyday speech many speakers say वो for both vah and ve. Recognise it; write the forms above."
+              "text": "In everyday speech many speakers say वो for both vah and ve. Recognise it; in writing, use the forms above."
             }
           ]
         },

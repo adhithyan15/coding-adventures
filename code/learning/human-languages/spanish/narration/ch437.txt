@@ -227,7 +227,7 @@ Hola: al final no puedo el jueves, me coincide con el curso. Perdona, me equivoq
 [pause 8 seconds for the answer]
 
 What you've built.
-Now write the reply. Say aloud:
+Now compose the reply. Say aloud:
 [pause 3 seconds]
 [your turn — say: Friday clashes with my class]
 [pause 8 seconds for the answer]

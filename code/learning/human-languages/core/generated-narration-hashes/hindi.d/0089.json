@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 89,
-  "sourceHash": "fnv1a64:eaceb138bddfc8b8",
+  "sourceHash": "fnv1a64:d64512e617254b42",
   "lessonIds": [
     "HI-C81-skool",
     "HI-C81-vidyalaya",
@@ -13,7 +13,7 @@
   "drivablePrefix": 4,
   "text": "hindi/narration/ch89.txt",
   "json": "hindi/narration/ch89.json",
-  "textHash": "fnv1a64:ad671bdaea0126f9",
-  "jsonHash": "fnv1a64:512a489b3b05de6d",
+  "textHash": "fnv1a64:5ac153938076418c",
+  "jsonHash": "fnv1a64:07b2c23c9c4fa565",
   "findings": []
 }

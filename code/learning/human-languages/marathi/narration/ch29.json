@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "The Twelve, Further Apart",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:ab8846a22fe4e449",
+  "sourceHash": "fnv1a64:7bbe5ddb1fcdbe0c",
   "lessons": [
     {
       "id": "MR-R25-twelve-verbs",
@@ -198,7 +198,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66b85c0e953561cb",
+      "sourceHash": "fnv1a64:1cee26ada3df62ed",
       "notice": null,
       "blocks": [
         {
@@ -266,8 +266,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "हो once, without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **हो** once, without a model]"
+            },
+            {
               "kind": "speech",
-              "text": "Write हो once without a model, say चार with its leaning consonant, then stop."
+              "text": "Say चार with its leaning consonant, then stop."
             }
           ]
         }

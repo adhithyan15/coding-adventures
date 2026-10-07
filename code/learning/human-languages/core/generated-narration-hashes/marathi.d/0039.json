@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 39,
-  "sourceHash": "fnv1a64:c1ae5ac777119f2b",
+  "sourceHash": "fnv1a64:ff865861890828e0",
   "lessonIds": [
     "MR-W39-tha",
     "MR-C39-tithe",
@@ -11,7 +11,7 @@
   "drivablePrefix": 0,
   "text": "marathi/narration/ch39.txt",
   "json": "marathi/narration/ch39.json",
-  "textHash": "fnv1a64:58f84bd625c712b5",
-  "jsonHash": "fnv1a64:f7d3b065a1f179b0",
+  "textHash": "fnv1a64:ac12c24e4e4291cd",
+  "jsonHash": "fnv1a64:2c8ed45e56df1016",
   "findings": []
 }

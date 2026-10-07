@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Six to Ten, and One Sound Law",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:6deecce58af6d0d5",
+  "sourceHash": "fnv1a64:69d42b2de2baeef4",
   "lessons": [
     {
       "id": "FA-C17-shesh",
@@ -698,7 +698,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e084411c0a39348",
+      "sourceHash": "fnv1a64:842afd0272fbc5dc",
       "notice": null,
       "blocks": [
         {
@@ -736,8 +736,13 @@
               "text": "Read the ten printed shuffled and say each."
             },
             {
-              "kind": "speech",
-              "text": "Write سه and نه (noh), the two whose letters the script chapter gave you."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "سه and نه (noh), the two whose letters the script chapter gave you",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **سه** and **نه**, the two whose letters the script chapter gave you]"
             },
             {
               "kind": "speech",

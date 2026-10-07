@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "The Sentence Learns to End",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:e2260e5db6cae7cb",
+  "sourceHash": "fnv1a64:cac5032e3a9f8d27",
   "lessons": [
     {
       "id": "UR-C17-yih",
@@ -377,7 +377,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14fce698fbc7c6d8",
+      "sourceHash": "fnv1a64:40773021b1c84144",
       "notice": null,
       "blocks": [
         {
@@ -392,8 +392,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "یہ (yih) — and say it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: یہ — and say it]"
+            },
+            {
               "kind": "speech",
-              "text": "Write یہ (yih) and say it. Which face is gol he wearing there — the opening one, the middle one, or the closing one? (Closing.)"
+              "text": "Which face is gol he wearing there — the opening one, the middle one, or the closing one? (Closing.)"
             }
           ]
         },
@@ -768,7 +777,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f85080f67bc210b",
+      "sourceHash": "fnv1a64:b1931ae37d2ae027",
       "notice": null,
       "blocks": [
         {
@@ -783,8 +792,22 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Write ہے and say it. Then write میرا نام... ہے and say it with your own name in the gap."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ہے — and say it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ہے — and say it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "میرا نام... ہے — and say it with your own name in the gap",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: میرا نام ... ہے — and say it with your own name in the gap]"
             }
           ]
         },

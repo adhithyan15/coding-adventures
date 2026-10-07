@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 29,
-  "sourceHash": "fnv1a64:ab8846a22fe4e449",
+  "sourceHash": "fnv1a64:7bbe5ddb1fcdbe0c",
   "lessonIds": [
     "MR-R25-twelve-verbs",
     "MR-R25-dative-frame",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "marathi/narration/ch29.txt",
   "json": "marathi/narration/ch29.json",
-  "textHash": "fnv1a64:fddf94c5c912710d",
-  "jsonHash": "fnv1a64:294ebceffbffb32a",
+  "textHash": "fnv1a64:019ad0ca08fec86d",
+  "jsonHash": "fnv1a64:5c8aeea8a09f9f4e",
   "findings": []
 }

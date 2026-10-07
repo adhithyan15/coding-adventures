@@ -59,7 +59,7 @@ entirely, and ended up carrying the negation by itself — after which the origi
 **ne** became the optional half. The word that was decoration is now the load
 bearer, and the word that did the work is the one that falls off.
 
-Write both. Say one.
+Written, both. Spoken, one.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FR-GRAM-NE-CHUTE-01, FR-GRAMMAR-NEGATION-04, FR-LEX-COMPRENDRE-01, FR-LEX-MARCHER-07, FR-LEX-FINIR-01, FR-LEX-DORMIR-04, FR-LEX-NON-02, FR-PRAGMATICS-SI-05] -->

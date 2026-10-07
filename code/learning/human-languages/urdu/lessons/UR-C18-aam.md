@@ -37,7 +37,9 @@ reviews_of: [UR-C17-practice, UR-C12-pani, UR-C12-chai]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-READ-HAI-01] -->
 
-[PAUSE 2s] Write یہ کام ہے۔ and say it. Ten letters are yours.
+[PAUSE 2s] [YOU WRITE: یہ کام ہے۔ — and say it]
+
+Ten letters are yours.
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[UR-LEX-AAM]; assesses=[UR-LEX-PANI, UR-LEX-CHAI, UR-LEX-YIH] -->

@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "Where You Come From",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a46518dcf7972ea2",
+  "sourceHash": "fnv1a64:040a43a287cece91",
   "lessons": [
     {
       "id": "HI-C68-country",
@@ -172,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c75361b5168b552",
+      "sourceHash": "fnv1a64:2abe5b7bb028c356",
       "notice": null,
       "blocks": [
         {
@@ -188,7 +188,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say desh, then write देश from memory. Three letters and one matra: द, then े on top of it, then श. You have been taught all three."
+              "text": "Say desh."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "देश (desh) from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **देश** from memory]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three letters and one matra: द, then े on top of it, then श. You have been taught all three."
             }
           ]
         },
@@ -447,7 +460,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a24999fd474b136a",
+      "sourceHash": "fnv1a64:bd3bf5ad91b01618",
       "notice": null,
       "blocks": [
         {
@@ -462,8 +475,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "शहर (shahar) from memory — श, then ह, then र",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **शहर** from memory — श, then ह, then र]"
+            },
+            {
               "kind": "speech",
-              "text": "Write शहर (shahar) from memory: श, then ह, then र. No matras at all in this one — three bare letters in a row."
+              "text": "No matras at all in this one — three bare letters in a row."
             }
           ]
         },

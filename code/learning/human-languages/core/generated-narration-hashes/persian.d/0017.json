@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 17,
-  "sourceHash": "fnv1a64:6deecce58af6d0d5",
+  "sourceHash": "fnv1a64:69d42b2de2baeef4",
   "lessonIds": [
     "FA-C17-shesh",
     "FA-C17-haft",
@@ -14,7 +14,7 @@
   "drivablePrefix": 3,
   "text": "persian/narration/ch17.txt",
   "json": "persian/narration/ch17.json",
-  "textHash": "fnv1a64:301c221165384130",
-  "jsonHash": "fnv1a64:b2a3edd15a45a209",
+  "textHash": "fnv1a64:5ef692220848d154",
+  "jsonHash": "fnv1a64:eaf19e461a0bc57b",
   "findings": []
 }

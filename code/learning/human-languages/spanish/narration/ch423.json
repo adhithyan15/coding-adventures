@@ -4,7 +4,7 @@
   "chapter": 423,
   "title": "Character, Not Mood",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:e91f2796796cca08",
+  "sourceHash": "fnv1a64:dc33d5a3c52823c1",
   "lessons": [
     {
       "id": "ES-C423-antipatico",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15b564a17c2259fb",
+      "sourceHash": "fnv1a64:73ec866383a2c46f",
       "notice": null,
       "blocks": [
         {
@@ -44,8 +44,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Write one line with porque before the new words: Hablé con mi amiga porque tuve tiempo. Then write one of your own."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one line with porque before the new words — Hablé con mi amiga porque tuve tiempo. — then one of your own",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one line with *porque* before the new words — *Hablé con mi amiga porque tuve tiempo.* — then one of your own]"
             }
           ]
         },

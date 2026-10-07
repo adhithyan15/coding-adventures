@@ -45,9 +45,8 @@ line.
 1. Read all ten signs shuffled and say each as a Persian word.
 2. Read **۱۰**, **۱۱**, **۲۰** and **۱۰۰** and say each — *dah*, *yâzdah*,
    *bist*, *sad*.
-3. Hear ten amounts named and write each in Persian figures.
-4. Write the ten signs from dictation, out of order, and check **۴**, **۵** and
-   **۶** against the models rather than against memory.
+3. Hear ten amounts named. [YOU WRITE: each in Persian figures]
+4. [YOU WRITE: the ten signs from dictation, out of order, and check **۴**, **۵** and **۶** against the models rather than against memory]
 
 Say what a reader can now do that could not be done four chapters ago: read a
 price, a page number and a telephone number off an Iranian page.

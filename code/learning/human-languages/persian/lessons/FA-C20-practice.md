@@ -46,8 +46,7 @@ reviews_of: [FA-C20-chaharom, FA-C20-dovvom-sevvom, FA-C20-avval, FA-C19-practic
    the cardinals and the ending.
 3. Say which one of the whole series is not built that way, and where it came
    from.
-4. Write **اول** and **سوم** from memory. Both are made entirely of letters
-   the script chapter taught.
+4. [YOU WRITE: **اول** and **سوم** from memory — both are made entirely of letters the script chapter taught]
 5. Use one: name the floor a room is on, and the day of the month a notice
    gives.
 

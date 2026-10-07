@@ -4,7 +4,7 @@
   "chapter": 176,
   "title": "Para --- For, Pointing Forward",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:416cf6cdfeeed467",
+  "sourceHash": "fnv1a64:13661e1630ebf8b1",
   "lessons": [
     {
       "id": "ES-C51-para",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d59b6c636414f31",
+      "sourceHash": "fnv1a64:a98dd5a2324d44db",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Destination, deadline, recipient, purpose. They look like four different rules and they are one: something is heading toward something else. Draw an arrow from the thing to its target, and if the arrow makes sense, the word is para."
+              "text": "Destination, deadline, recipient, purpose. They look like four different rules and they are one: something is heading toward something else. Picture an arrow from the thing to its target, and if the arrow makes sense, the word is para."
             },
             {
               "kind": "speech",

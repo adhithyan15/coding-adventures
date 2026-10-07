@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 75,
-  "sourceHash": "fnv1a64:fa97eb547d808634",
+  "sourceHash": "fnv1a64:a6fc0b1069cb9e01",
   "lessonIds": [
     "ML-C75-eppol",
     "ML-C75-umbol",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "malayalam/narration/ch75.txt",
   "json": "malayalam/narration/ch75.json",
-  "textHash": "fnv1a64:7a1b742caed1009c",
-  "jsonHash": "fnv1a64:4dbec6040d6c5659",
+  "textHash": "fnv1a64:58e1836fb08f83cd",
+  "jsonHash": "fnv1a64:b8966b439843f97b",
   "findings": []
 }

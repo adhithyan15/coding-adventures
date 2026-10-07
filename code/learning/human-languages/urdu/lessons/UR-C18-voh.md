@@ -37,8 +37,9 @@ reviews_of: [UR-W07-pe, UR-C17-yih, UR-C03-aap-tum-tu, UR-C17-maan]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-PE-01, UR-LEX-AAP-TUM-TU] -->
 
-[PAUSE 2s] Write آپ. Say where pe's three dots sit, and who you would address
-as *āp*.
+[PAUSE 2s] [YOU WRITE: آپ]
+
+Say where pe's three dots sit, and who you would address as *āp*.
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[UR-LEX-VOH]; assesses=[UR-LEX-YIH] -->

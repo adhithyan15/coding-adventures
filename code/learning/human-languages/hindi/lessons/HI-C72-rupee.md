@@ -36,7 +36,7 @@ reviews_of: [HI-C72-money, HI-C71-very]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-01] -->
 
-[PAUSE 2s] Say *paisā*, then write **पैसा**: प with ै above it, then स, then ा.
+[PAUSE 2s] Say *paisā*. [YOU WRITE: **पैसा** — प with ै above it, then स, then ा]
 
 ## You'll want to know: रुपया
 <!-- hl-knowledge: introduces=[HI-LEX-C72-COST-02]; assesses=[] -->

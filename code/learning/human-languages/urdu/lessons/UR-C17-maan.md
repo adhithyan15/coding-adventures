@@ -37,8 +37,9 @@ reviews_of: [UR-W06-bari-ye, UR-C09-bhai, UR-C09-bahan, UR-C09-khandan]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-BARI-YE-01, UR-LEX-MERA-NAAM-HAI] -->
 
-[PAUSE 2s] Write ہے and say it. Then write میرا نام ... ہے and say it with
-your own name in the gap.
+[PAUSE 2s] [YOU WRITE: ہے — and say it]
+
+[YOU WRITE: میرا نام ... ہے — and say it with your own name in the gap]
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[UR-LEX-MAAN]; assesses=[UR-LEX-BAHAN, UR-LEX-BHAI] -->

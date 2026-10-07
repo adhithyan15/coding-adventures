@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 32,
-  "sourceHash": "fnv1a64:b03227c11e984466",
+  "sourceHash": "fnv1a64:9b63fe46c4c8743a",
   "lessonIds": [
     "UR-C32-pehla",
     "UR-C32-dusra-tisra",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "urdu/narration/ch32.txt",
   "json": "urdu/narration/ch32.json",
-  "textHash": "fnv1a64:dee7de6cb9d3b808",
-  "jsonHash": "fnv1a64:7ab665fa9b4724f2",
+  "textHash": "fnv1a64:019b4bce9d4de8e0",
+  "jsonHash": "fnv1a64:91bd66015d037367",
   "findings": []
 }

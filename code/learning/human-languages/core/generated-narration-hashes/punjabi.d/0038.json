@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 38,
-  "sourceHash": "fnv1a64:f1708b37d9e77282",
+  "sourceHash": "fnv1a64:ef22d6db9bbc8e99",
   "lessonIds": [
     "PA-C38-ate",
     "PA-C38-ate-vaak",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "punjabi/narration/ch38.txt",
   "json": "punjabi/narration/ch38.json",
-  "textHash": "fnv1a64:158ab874eeb101df",
-  "jsonHash": "fnv1a64:72818ff5370d0d0a",
+  "textHash": "fnv1a64:a7fccf4ed26578d0",
+  "jsonHash": "fnv1a64:18622e2eb6fc5806",
   "findings": []
 }

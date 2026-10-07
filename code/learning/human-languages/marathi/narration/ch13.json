@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Numbers One to Five",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:69ebe42dff0aa9b4",
+  "sourceHash": "fnv1a64:3e7a9eb7cd3ce634",
   "lessons": [
     {
       "id": "MR-R09-script-a-r3",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7125fa7bca7cc028",
+      "sourceHash": "fnv1a64:ddcf06852d458804",
       "notice": null,
       "blocks": [
         {
@@ -40,7 +40,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Cover the answer. Write dhanyavād, then the two-dot breath sign, independent long ā, and breathy bha from their spoken names. Compare: धन्यवाद; ः आ भ. Stop after one retrieval and one repair."
+              "text": "Cover the answer."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "dhanyavād, then the two-dot breath sign, independent long ā, and breathy bha from their spoken names",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: *dhanyavād*, then the two-dot breath sign, independent long *ā*, and breathy *bha* from their spoken names]"
+            },
+            {
+              "kind": "speech",
+              "text": "Compare: धन्यवाद; ः आ भ. Stop after one retrieval and one repair."
             },
             {
               "kind": "activity",
@@ -79,7 +92,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95d9869cdae4ae61",
+      "sourceHash": "fnv1a64:5827f14dbc2b1cdb",
       "notice": null,
       "blocks": [
         {
@@ -100,7 +113,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Cover the answer. Write the e-mark, one-dot anusvāra, and dental ta from their spoken names. Then compare: े ं त. Stop after one retrieval and one repair."
+              "text": "Cover the answer."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the e-mark, one-dot anusvāra, and dental ta from their spoken names",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the e-mark, one-dot anusvāra, and dental *ta* from their spoken names]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then compare: े ं त. Stop after one retrieval and one repair."
             },
             {
               "kind": "activity",
@@ -138,7 +164,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:608e8ccf310e720d",
+      "sourceHash": "fnv1a64:2c99bc0231ac7b5d",
       "notice": null,
       "blocks": [
         {
@@ -159,7 +185,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Cover the answer. Write dental da, breathy dha, and quiet ba from sound. Then compare: द ध ब. Stop after one retrieval and one repair."
+              "text": "Cover the answer."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "dental da, breathy dha, and quiet ba from sound",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: dental *da*, breathy *dha*, and quiet *ba* from sound]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then compare: द ध ब. Stop after one retrieval and one repair."
             },
             {
               "kind": "activity",
@@ -197,7 +236,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e714e2a5496fb44",
+      "sourceHash": "fnv1a64:eafd11b66e5d6306",
       "notice": null,
       "blocks": [
         {
@@ -218,7 +257,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Cover the answer. Write ya, Marathi curled-back ḷa, and va from sound. Then compare: य ळ व. Stop after one retrieval and one repair."
+              "text": "Cover the answer."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ya, Marathi curled-back ḷa, and va from sound",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: *ya*, Marathi curled-back *ḷa*, and *va* from sound]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then compare: य ळ व. Stop after one retrieval and one repair."
             },
             {
               "kind": "activity",

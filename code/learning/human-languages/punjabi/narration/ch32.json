@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Good and So-So",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e1c2c59017c453e6",
+  "sourceHash": "fnv1a64:24d4a5355ea5a5e0",
   "lessons": [
     {
       "id": "PA-C32-changa",
@@ -276,7 +276,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60e34c8b96b34e80",
+      "sourceHash": "fnv1a64:d423bc0743885c08",
       "notice": null,
       "blocks": [
         {
@@ -292,7 +292,16 @@
             },
             {
               "kind": "speech",
-              "text": "Two answers to how are you are already yours: ṭhīk, nothing wrong; changā, good. Write ਚ once while you say them, so the letter from the last session stays warm."
+              "text": "Two answers to how are you are already yours: ṭhīk, nothing wrong; changā, good."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ਚ (cha) once while you say them, so the letter from the last session stays warm",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ਚ** once while you say them, so the letter from the last session stays warm]"
             }
           ]
         },

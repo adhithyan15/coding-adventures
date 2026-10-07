@@ -61,7 +61,7 @@ number stands alone.
 1. Count aloud one to ten, then say **двадцать** and **сто**.
 2. Hear twelve amounts named singly and out of order; say each.
 3. Read the twelve printed shuffled and say each.
-4. Write all twelve from dictation.
+4. [YOU WRITE: all twelve from dictation]
 5. Split **двадцать** into its two pieces and build **тридцать** from **три**.
 6. Say which side of the centum/satem split Russian is on, and name the number
    the split is named after.

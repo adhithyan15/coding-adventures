@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "One to Five, By the Road Urdu Did Not Borrow",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:8ce5c462ed800ab0",
+  "sourceHash": "fnv1a64:f8db5623f15ed569",
   "lessons": [
     {
       "id": "UR-C28-ek",
@@ -671,7 +671,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:458ea67eda3861a8",
+      "sourceHash": "fnv1a64:8f458a197223fd1c",
       "notice": null,
       "blocks": [
         {
@@ -713,8 +713,13 @@
               "text": "Read the five printed shuffled — پانچ (pānch)، ایک (ek)، چار (chār)، تین (tīn)، دو (do) — and say each."
             },
             {
-              "kind": "speech",
-              "text": "Write all five from dictation. Every letter in all five has been on the page for chapters; the tranche adds no new sign at all."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all five from dictation — every letter in all five has been on the page for chapters; the tranche adds no new sign at all",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all five from dictation — every letter in all five has been on the page for chapters; the tranche adds no new sign at all]"
             },
             {
               "kind": "speech",

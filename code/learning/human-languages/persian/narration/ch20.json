@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Which One: the Ordinals",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:1afc21fef49acb7c",
+  "sourceHash": "fnv1a64:634492cbe1a6b118",
   "lessons": [
     {
       "id": "FA-C20-avval",
@@ -394,7 +394,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0670ce4b500b3df4",
+      "sourceHash": "fnv1a64:41ff3df4ab2e565e",
       "notice": null,
       "blocks": [
         {
@@ -432,8 +432,13 @@
               "text": "Say which one of the whole series is not built that way, and where it came from."
             },
             {
-              "kind": "speech",
-              "text": "Write اول (avval) and سوم from memory. Both are made entirely of letters the script chapter taught."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "اول (avval) and سوم from memory — both are made entirely of letters the script chapter taught",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **اول** and **سوم** from memory — both are made entirely of letters the script chapter taught]"
             },
             {
               "kind": "speech",

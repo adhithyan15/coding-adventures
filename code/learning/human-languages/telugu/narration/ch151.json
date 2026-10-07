@@ -4,7 +4,7 @@
   "chapter": 151,
   "title": "A Word for Shade — Then Its First Letter",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2acd6b30ca87d447",
+  "sourceHash": "fnv1a64:a328d9062bbf77a9",
   "lessons": [
     {
       "id": "TE-C151-chhaya",
@@ -348,7 +348,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19503530e0d4672b",
+      "sourceHash": "fnv1a64:d6a207b111cae71b",
       "notice": null,
       "blocks": [
         {
@@ -375,7 +375,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read ఛాయ (chāya) once. Cover it, then write only its first base letter: ఛ (cha)."
+              "text": "Read ఛాయ (chāya) once. Cover it."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "only its first base letter — ఛ (cha)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: only its first base letter — **ఛ**]"
             },
             {
               "kind": "speech",

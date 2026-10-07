@@ -4,7 +4,7 @@
   "chapter": 130,
   "title": "Sixty, Seventy, Eighty, Ninety, To begin",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9397bdad8f7064fc",
+  "sourceHash": "fnv1a64:04deaaec68994751",
   "lessons": [
     {
       "id": "PT-C130-sessenta",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e8098b4a1740391",
+      "sourceHash": "fnv1a64:0b7a0e12e5979f33",
       "notice": null,
       "blocks": [
         {
@@ -44,8 +44,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "first the way a sign writes it — 1.º",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: *first* the way a sign writes it — *1.º*]"
+            },
+            {
               "kind": "speech",
-              "text": "Write first the way a sign writes it: 1.º. Then say décimo, the tenth."
+              "text": "Then say décimo, the tenth."
             }
           ]
         },
@@ -152,7 +161,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:136d277cdc47b94a",
+      "sourceHash": "fnv1a64:eaaacf32a8b5a7d0",
       "notice": null,
       "blocks": [
         {
@@ -177,8 +186,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Write first for a woman the way a sign writes it: 1.ª."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "first for a woman the way a sign writes it — 1.ª",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: *first* for a woman the way a sign writes it — *1.ª*]"
             }
           ]
         },

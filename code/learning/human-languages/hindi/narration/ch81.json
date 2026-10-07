@@ -4,7 +4,7 @@
   "chapter": 81,
   "title": "Words on the Door",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:231c855d418b1ab9",
+  "sourceHash": "fnv1a64:0efa489c470933df",
   "lessons": [
     {
       "id": "HI-C74-open",
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e951c82d4573f252",
+      "sourceHash": "fnv1a64:9f498c95c656a31a",
       "notice": null,
       "blocks": [
         {
@@ -179,7 +179,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say khulā, then write खुला: ख with ु beneath it, then ल, then ा."
+              "text": "Say khulā."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "खुला — ख with ु beneath it, then ल, then ा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **खुला** — ख with ु beneath it, then ल, then ा]"
             }
           ]
         },
@@ -442,7 +451,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf23c00ad1e25089",
+      "sourceHash": "fnv1a64:3eaa98c9a92f408f",
       "notice": null,
       "blocks": [
         {
@@ -457,8 +466,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Write प्रवेश (pravesh) from memory, starting with the stacked प्र."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "प्रवेश (pravesh) from memory, starting with the stacked प्र",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **प्रवेश** from memory, starting with the stacked प्र]"
             }
           ]
         },

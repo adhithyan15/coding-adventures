@@ -36,7 +36,7 @@ reviews_of: [HI-C70-game, HI-C69-go]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-01] -->
 
-[PAUSE 2s] Say *khel*, then write **खेल**: ख, then े above it, then ल.
+[PAUSE 2s] Say *khel*. [YOU WRITE: **खेल** — ख, then े above it, then ल]
 
 ## You'll want to know: खेलना
 <!-- hl-knowledge: introduces=[HI-LEX-C70-LEISURE-02]; assesses=[] -->

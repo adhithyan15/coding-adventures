@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 18,
-  "sourceHash": "fnv1a64:4c1e5eb1c397c19c",
+  "sourceHash": "fnv1a64:2ef9625b0da2447c",
   "lessonIds": [
     "UR-C18-aam",
     "UR-C18-aasmaan",
@@ -15,7 +15,7 @@
   "drivablePrefix": 3,
   "text": "urdu/narration/ch18.txt",
   "json": "urdu/narration/ch18.json",
-  "textHash": "fnv1a64:c2a3d9496e6333d9",
-  "jsonHash": "fnv1a64:9152589bf03b2a6c",
+  "textHash": "fnv1a64:9a37c819e7632096",
+  "jsonHash": "fnv1a64:615801b5ea20eb44",
   "findings": []
 }

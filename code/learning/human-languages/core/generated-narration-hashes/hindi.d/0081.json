@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 81,
-  "sourceHash": "fnv1a64:231c855d418b1ab9",
+  "sourceHash": "fnv1a64:0efa489c470933df",
   "lessonIds": [
     "HI-C74-open",
     "HI-C74-closed",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch81.txt",
   "json": "hindi/narration/ch81.json",
-  "textHash": "fnv1a64:ae89d088c2e59815",
-  "jsonHash": "fnv1a64:8ef1afb2fefa30d2",
+  "textHash": "fnv1a64:943c876d3a3ce286",
+  "jsonHash": "fnv1a64:630f404067203a95",
   "findings": []
 }
