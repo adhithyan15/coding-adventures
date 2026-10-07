@@ -123,7 +123,7 @@ mod tests {
             );
             if matches!(
                 *release,
-                "5.003_08" | "5.003_09" | "5.38.2" | "5.44.0" | "5.45.3"
+                "5.003_08" | "5.003_09" | "5.003_10" | "5.38.2" | "5.44.0" | "5.45.3"
             ) {
                 for source in ["print(08);", "print(09);", "print(012);"] {
                     let tokens = GrammarLexer::new(source, &token_grammar)
