@@ -2,11 +2,13 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 **Last reprioritized:** 2026-10-07
-**Current selection:** actual bounded provenance chronology, specified in
-[CV03](CV03-actual-bounded-provenance-chronology.md), branch
-`codex/closurec-chronology-20261007`. CV02 merged and is verified;
-preserve one active Closure/shared-stack PR.
-**Current audit base:** `9e4b8d1ab9b082f4ec027a67d10f97e3827579f2`
+**Current selection:** exact lexical source intervals and coordinate ownership,
+tracked in [#16970](https://github.com/adhithyan15/coding-adventures/issues/16970),
+branch `codex/closurec-source-spans-20261007`. CV03 merged and is verified;
+its managed worktree is archived. The detailed CV04 specification is in
+preparation; no source implementation has started. Preserve one active
+Closure/shared-stack PR.
+**Current audit base:** `c0c7b8bc04d972e07348d02143b6f8b867eee1ae`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
@@ -228,6 +230,47 @@ Build-tool uncached tests/vet and 18 Python CI gate contracts pass. Independent 
 remain pending. This chronology slice does not establish exact source/output coverage,
 all fold families, composite spans or provenance for every mutating pass.
 
+CV03 final acceptance supersedes its local checkpoints above.
+[#16964](https://github.com/adhithyan15/coding-adventures/pull/16964) merged at
+`b81127a2c4e2ca435c88830f19c4efe2404c66d2` after exact independently reviewed
+head `7be8e45623731acdc169061c4d036e0a0cdad0ea` had all 34 checks terminal and
+acceptable, both required gates successful and no change-request review.
+[CI 37692178935](https://github.com/adhithyan15/coding-adventures/actions/runs/37692178935)
+completed successfully. Actual compiler commands passed on Linux
+(job 113035624234), macOS (113035624277) and Windows (113035624352), with completed
+successful package steps and timestamped `rust/programs/closurec BUILT` rows.
+The current-head production plan selects the real command and Rust on all three
+platforms, including Windows general package testing. Books and CodeQL also
+succeeded. Aggregate native logs do not establish individual test counts.
+Fetched main contains the squash merge; all 46 reviewed file blobs/modes match.
+The tested binary and source/validation/native/merge receipts were preserved
+before managed archival; the old directory and Git registration are absent.
+This fulfills #16868's original compact/checked/canonical/chronology foundation;
+that issue is closed. Full provenance #15830 and compiler #15530 remain open.
+
+A refreshed current-head audit runs 28 native processes for seven seeds at
+SIMPLE/ADVANCED, with plain/traced JS/map bytes equal. All 14 sidecars pass both
+actual checked and compatibility Rust import with unchanged canonical re-export.
+Math.abs retains only its child unary fold. String-case conversion, array.join,
+Object.keys, array selection, logical selection and truthy conditional collapse
+retain no final `folded` fact. All 14 source-map mappings are empty. Static source
+also discards derived result IDs at array/logical/conditional selection sites.
+The 72 production recorder call sites (44 inside `fold_call`) are a syntactic
+index, not a complete semantic replacement-family inventory. Keep #16875 open.
+
+CV04 selects exact raw lexical intervals, bound buffer identity and explicit
+scalar/UTF16 coordinates and EOF/trivia/synthetic/preprocessing policy. The live
+CLOC27 path already stamps token CVs in `parse_javascript_typed_with_cv` and reads
+them in `convert_primary_token`; do not implement the stale no-leaf-CV audit.
+Two compiler tokenization routes need coverage: ingestion-derived token origins
+and the typed parser's newly created token roots. Their source/root linkage and
+actual buffer identity must be audited, rather than inferred from matching file
+names, token values or locations. A compatibility-safe generic lexer range API
+must capture acceptance boundaries before value transformations; it must not
+add a required field to every existing `Token` construction. Commit the detailed
+spec before tests/implementation. This source foundation does not itself deliver
+composite/occurrence ownership, all transformation lineage or emitted-byte joins.
+
 The remaining-fold inventory is
 [#16875](https://github.com/adhithyan15/coding-adventures/issues/16875).
 Actual SIMPLE/ADVANCED CLI probes fold Math.abs, string case conversion,
@@ -235,7 +278,8 @@ array.join and Object.keys while losing final fold events; the Math.abs input
 retains only the unary child's history. All traced/untraced bytes match. These
 are initial cases requiring result-owned graph tests, not a complete inventory.
 
-Required next slices after CV03: audit remaining fold families; stable composite identities
+Required next slices: exact lexical source intervals and coordinate ownership;
+audit remaining fold families; stable composite identities
 and shared source spans on the canonical ESTree boundary; typed lineage events
 with complete source/node coverage; all mutating passes (inline/rename first),
 including one-to-many inlining, many-to-one merges, motion and deletion;
