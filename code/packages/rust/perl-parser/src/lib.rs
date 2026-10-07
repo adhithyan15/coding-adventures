@@ -182,6 +182,7 @@ mod tests {
                     | "5.003_97"
                     | "5.003_97a"
                     | "5.003_97b"
+                    | "5.003_97c"
                     | "5.38.2"
                     | "5.44.0"
                     | "5.45.3"
@@ -214,6 +215,7 @@ mod tests {
                     | "5.003_97"
                     | "5.003_97a"
                     | "5.003_97b"
+                    | "5.003_97c"
             ) {
                 let carriage_return = GrammarLexer::new("print(1);\r", &token_grammar).tokenize();
                 assert!(
@@ -228,7 +230,7 @@ mod tests {
             }
             if matches!(
                 *release,
-                "5.003_96" | "5.003_97" | "5.003_97a" | "5.003_97b"
+                "5.003_96" | "5.003_97" | "5.003_97a" | "5.003_97b" | "5.003_97c"
             ) {
                 let unknown = GrammarLexer::new("print(1);\u{0001}", &token_grammar).tokenize();
                 assert!(

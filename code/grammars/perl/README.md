@@ -209,6 +209,10 @@ Current pairs:
   [`perl-5.003_97b` source tag]. Its tagged yacc matches 5.003_97a;
   tokenizer changes to interpolated dollar-digit names and regex scanning
   lie outside the accepted arithmetic subset.
+- `perl5.003_97c.*` is a separate **partial** pair checked against the
+  [`perl-5.003_97c` source tag]. Its tagged yacc matches 5.003_97b;
+  tokenizer changes to late command-line switch handling lie outside the
+  accepted arithmetic subset.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot, including adjacent `--` and
@@ -285,4 +289,5 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [`perl-5.003_97` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_97
 [`perl-5.003_97a` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_97a
 [`perl-5.003_97b` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_97b
+[`perl-5.003_97c` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_97c
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2
