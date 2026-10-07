@@ -55,6 +55,10 @@ Current pairs:
   against the [`perl-5.001` source tag]'s `perly.y` and `toke.c`. The tagged
   `perly.y` has the same Git blob as 5.000, while `toke.c` differs; both source
   tags still require separate checked pairs. This covers only the listed forms.
+- `perl5.001n.*` is a separate **partial** arithmetic and `print` pair checked
+  against the [`perl-5.001n` source tag]'s `perly.y` and `toke.c`. Its tagged
+  `perly.y` still matches 5.001, while `toke.c` differs. This covers only the
+  listed forms.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot and does not claim full coverage.
@@ -87,4 +91,5 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [`perl-4.0.36` source tag]: https://github.com/Perl/perl5/tree/perl-4.0.36
 [`perl-5.000` source tag]: https://github.com/Perl/perl5/tree/perl-5.000
 [`perl-5.001` source tag]: https://github.com/Perl/perl5/tree/perl-5.001
+[`perl-5.001n` source tag]: https://github.com/Perl/perl5/tree/perl-5.001n
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2
