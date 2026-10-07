@@ -16453,6 +16453,9 @@ there was no manual merge. The exact-main schema-3 report remains unchanged:
 1,537 all-reported identities, 178 high-consensus identities/262 missing,
 1,013 singletons/814 Rust singletons, zero collisions, and zero unknown
 buckets. The neutral geometry contract added no implementation identity.
+The refreshed report after the intervening non-package merges at
+`f94f7fa19e524a873c2939b06b3b9905430de492` has the same counts and
+remains collision-clean.
 
 Read-only backlog audits found no newly unowned Java/Kotlin/Dart or OCaml
 promotion gap. Java and Kotlin each still miss 52 high-consensus slots and

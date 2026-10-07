@@ -5,6 +5,7 @@ require_relative "../lib/point2d"
 
 class TestPoint2D < Minitest::Test
   include Point2D
+
   DELTA = 1e-9
 
   def test_add
@@ -105,6 +106,7 @@ end
 
 class TestRect < Minitest::Test
   include Point2D
+
   DELTA = 1e-9
 
   def r
