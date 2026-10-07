@@ -615,6 +615,20 @@ parser handoff, and a deliberately limited C dialect with direct engine tests.
 It does not satisfy Slice 4's end-to-end acceptance until the C frontend uses
 that preprocessed stream and the remaining C macro and condition semantics are
 implemented.
+The composition stage exposes an explicit file-input C frontend using
+`RootedFs`: it resolves and reads the primary file under declared roots,
+preprocesses its tokens, and passes the resulting directive-free tokens to
+`try_parse_c_tokens` before lowering. A pathless `compile_source` cannot
+resolve local includes and retains its compatibility behavior until the
+file-input path and remaining C semantics are validated. Tests may use
+`MemoryFs` through an internal helper; production callers use `RootedFs`.
+The file-input API checks the entry spelling against the tightened token
+spelling budget before cloning it into an include request. Its search roots
+come from the embedding host, not C source text.
+This bounded file-input stage searches quoted includes under those declared
+roots. `RootedFs` does not yet search relative to an including header's own
+directory; callers must declare such a directory as a root, and an unresolved
+include fails. Relative-to-header lookup remains required for full C behavior.
 `c.tokens` stops discarding `#…` lines; `c-lexer` surfaces directive tokens; a
 `CDialect` implements §5; `c-to-semantic-ir` runs the engine as its
 `post_tokenize` hook. `SIR27`'s preprocessor scope statement is updated.
@@ -646,6 +660,13 @@ The staged condition evaluator may accept a single comparison of expanded
 decimal integer literals or undefined identifiers, including `==`, `!=`,
 `<`, `<=`, `>`, and `>=`. It rejects more complex controlling expressions until
 their C integer-constant-expression semantics are implemented.
+The next bounded stage accepts `!` on a single decimal/identifier operand and
+chains of those operands or simple comparisons with `&&` and `||`, using C's
+`&&`-before-`||` precedence. It rejects parentheses, arithmetic and mixed
+unary/comparison forms until their full precedence and evaluation rules are
+implemented. Both branches of each accepted logical operator are checked for
+supported syntax, even when C would short-circuit execution; this stage has
+no expression side effects.
 Multi-digit leading-zero literals are C octal and must be rejected by this
 decimal-only stage instead of being silently evaluated as decimal.
 Until stringize and paste are implemented, a `#define` replacement containing

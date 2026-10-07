@@ -37,6 +37,59 @@ mod lower;
 
 pub use lower::{compile, CLowerError};
 
+use coding_adventures_source_preprocessor::{
+    preprocess, Bounds, Dialect, IncludeRequest, PpError, RootedFs, SourceFs,
+};
+use std::path::PathBuf;
+
+fn preprocess_error(error: PpError) -> CLowerError {
+    let position = error.position();
+    CLowerError {
+        message: format!("C preprocessing error: {}", error.message()),
+        line: position.map_or(0, |position| position.line as usize),
+        column: position.map_or(0, |position| position.column as usize),
+    }
+}
+
+/// Read a C translation unit under declared roots, preprocess it, and lower
+/// the resulting directive-free token stream. Unsupported C preprocessor
+/// forms fail explicitly while Slice 4 is being completed.
+pub fn compile_preprocessed_file(
+    entry: &str,
+    roots: impl IntoIterator<Item = PathBuf>,
+    module_name: &str,
+    bounds: Bounds,
+) -> Result<semantic_ir::Module, CLowerError> {
+    let bounds = bounds.tighten(Bounds::default());
+    if u64::try_from(entry.len()).unwrap_or(u64::MAX) > bounds.token_spelling_bytes {
+        return Err(CLowerError {
+            message: "C entry spelling exceeds the token-spelling budget".to_string(),
+            line: 0,
+            column: 0,
+        });
+    }
+    let mut fs = RootedFs::new(roots, bounds).map_err(preprocess_error)?;
+    let file = fs
+        .resolve(&IncludeRequest {
+            spelling: entry.to_string(),
+            from: None,
+            system: false,
+        })
+        .map_err(preprocess_error)?;
+    let source = fs.read(file).map_err(preprocess_error)?;
+    let dialect = dialect::CDialect::new(bounds);
+    let tokens = dialect.lex(&source, file).map_err(preprocess_error)?;
+    let output = preprocess(tokens, file, &dialect, &mut fs, bounds).map_err(preprocess_error)?;
+    let tree = coding_adventures_c_parser::try_parse_c_tokens(output.tokens).map_err(|message| {
+        CLowerError {
+            message: format!("C parse error: {message}"),
+            line: 0,
+            column: 0,
+        }
+    })?;
+    compile(&tree, module_name)
+}
+
 /// Parse C `source` and lower it to a [`semantic_ir::Module`].
 pub fn compile_source(source: &str, module_name: &str) -> Result<semantic_ir::Module, CLowerError> {
     let tree = coding_adventures_c_parser::try_parse_c(source).map_err(|msg| CLowerError {
@@ -50,9 +103,51 @@ pub fn compile_source(source: &str, module_name: &str) -> Result<semantic_ir::Mo
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::io::Write;
     use std::sync::atomic::{AtomicUsize, Ordering};
 
     static SEQ: AtomicUsize = AtomicUsize::new(0);
+
+    fn write_fresh(path: &std::path::Path, contents: &[u8]) {
+        std::fs::OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(path)
+            .unwrap()
+            .write_all(contents)
+            .unwrap();
+    }
+
+    #[test]
+    fn rooted_preprocessor_feeds_real_c_frontend() {
+        let root = uniq("_includes");
+        std::fs::create_dir(&root).unwrap();
+        write_fresh(
+            &root.join("main.c"),
+            b"#define ANSWER 7\n#if defined(ANSWER) && ANSWER > 0\n#include \"part.h\"\n#endif\nint main(void) { return value(); }\n",
+        );
+        write_fresh(&root.join("part.h"), b"int value(void) { return ANSWER; }\n");
+        let module = compile_preprocessed_file(
+            "main.c",
+            [root.clone()],
+            "preprocessed_c",
+            Bounds::default(),
+        )
+        .unwrap();
+        let text = semantic_ir::print_module(&module);
+        assert!(text.contains("(function value"), "{text}");
+        assert!(text.contains("(block (int 7))"), "{text}");
+        assert!(semantic_ir::validate(&module).is_ok());
+        std::fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn overlong_entry_is_refused_before_copy_or_filesystem_access() {
+        let entry = "x".repeat(65_537);
+        let error = compile_preprocessed_file(&entry, [], "oversized", Bounds::default())
+            .unwrap_err();
+        assert!(error.message.contains("entry spelling"), "{error}");
+    }
 
     /// A per-(process, call) unique stem so parallel tests never share a file.
     fn uniq(ext: &str) -> std::path::PathBuf {

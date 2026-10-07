@@ -372,7 +372,10 @@ fn apply_directive(
                 // the raw text did not have, so the pre-scan above does not
                 // bound what the dialect finally sees.
                 check_group_depth(&condition, bounds.condition_depth, here)?;
-                dialect.eval_condition(&condition)?
+                dialect.eval_condition(&condition).map_err(|error| {
+                    let position = error.position().or(Some(here));
+                    error.at_opt(position)
+                })?
             } else {
                 false
             };
