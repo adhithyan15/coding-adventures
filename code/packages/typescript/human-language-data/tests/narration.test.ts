@@ -330,6 +330,58 @@ describe("cues become structured directives, not prose", () => {
   });
 });
 
+describe("cues the book and the voice must agree on", () => {
+  // `delivery-cue.ts` is shared with the book (`bookVoice`). Each case here has
+  // a twin in book.test.ts; the narration had them right or wrong independently
+  // of the book until the grammar was shared.
+
+  it("speaks a qualified prompt as a prompt, qualifier and all", () => {
+    expect(parseNarrationCue("YOU SAY (m.): *boltā hūṁ*")).toMatchObject({
+      kind: "prompt",
+      action: "SAY",
+      qualifier: "(m.)",
+      instruction: "boltā hūṁ",
+      spoken: true,
+    });
+    expect(parseNarrationCue("YOU RUN the pattern: kamm karnā")).toMatchObject({
+      action: "RUN",
+      qualifier: "the pattern",
+    });
+    expect(parseNarrationCue('YOU READ ALOUD, gathering the words: "le chien"')).toMatchObject({
+      action: "READ ALOUD",
+      qualifier: ", gathering the words",
+    });
+    // An unqualified prompt carries no qualifier key at all, so its JSON is
+    // unchanged from before qualifiers were understood.
+    expect(parseNarrationCue("YOU SAY: hola")).not.toHaveProperty("qualifier");
+    const text = renderLessonNarrationText(
+      narrateLesson(lesson({ body: "## Guided Practice\n\n- [YOU SAY (m.): *boltā hūṁ*]" })),
+    );
+    expect(text).toContain("[your turn — say (m.): boltā hūṁ]");
+    expect(text).not.toContain("[YOU");
+  });
+
+  it("treats a cue wrapped across source lines as one cue", () => {
+    for (const body of [
+      "Cover it. [YOU WRITE: the word,\nthen its meaning] Check.",
+      "Cover it. [YOU WRITE: the word,\n  then\n  its meaning] Check.",
+      "1. Cover it. [YOU WRITE: the word,\n   then its meaning] Check.",
+      "> Cover it. [YOU WRITE: the word,\n> then its meaning] Check.",
+    ]) {
+      const parts = segments(narrateLesson(lesson({ body: `## Warm-up\n\n${body}` })));
+      expect(parts.map((part) => part.kind), body).toEqual(["speech", "prompt", "speech"]);
+      expect(parts[1], body).toMatchObject({
+        action: "WRITE",
+        instruction: "the word, then its meaning",
+        spoken: false,
+      });
+    }
+    for (const kind of ["PAUSE\n2s", "REPEAT\nx2"]) {
+      expect(parseNarrationCue(kind), kind).not.toBeNull();
+    }
+  });
+});
+
 describe("prose shaping", () => {
   it("keeps a multi-line blockquote as one utterance", () => {
     // Split per line it came out as "…is building." / "on real family resemblances…" —

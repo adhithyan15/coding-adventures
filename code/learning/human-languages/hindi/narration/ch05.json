@@ -260,8 +260,14 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "[YOU SAY (m.): maiṁ Dillī meṁ rahtā hūṁ, (f.): … rahtī hūṁ]."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ Dillī meṁ rahtā hūṁ, (f.): … rahtī hūṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY (m.): *maiṁ Dillī meṁ rahtā hūṁ*  ·  (f.): *… rahtī hūṁ*]",
+              "qualifier": "(m.)"
             },
             {
               "kind": "prompt",
@@ -596,12 +602,24 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "[YOU SAY (m.): \"I speak\" — boltā hūṁ]."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I speak\" — boltā hūṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY (m.): \"I speak\" — *boltā hūṁ*]",
+              "qualifier": "(m.)"
             },
             {
-              "kind": "speech",
-              "text": "[YOU SAY (f.): \"I speak\" — boltī hūṁ]."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I speak\" — boltī hūṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY (f.): \"I speak\" — *boltī hūṁ*]",
+              "qualifier": "(f.)"
             },
             {
               "kind": "prompt",
@@ -737,8 +755,14 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "[YOU SAY (m.): maiṁ hindī boltā hūṁ, (f.): maiṁ hindī boltī hūṁ]."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ hindī boltā hūṁ, (f.): maiṁ hindī boltī hūṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY (m.): *maiṁ hindī boltā hūṁ*  ·  (f.): *maiṁ hindī boltī hūṁ*]",
+              "qualifier": "(m.)"
             },
             {
               "kind": "prompt",

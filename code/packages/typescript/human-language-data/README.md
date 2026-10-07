@@ -930,6 +930,12 @@ npm run generate:books
 npm run check:books
 ```
 
+Both modes also refuse a generated chapter that prints a delivery cue's
+brackets (`{[}YOU SAY: …{]}`, `{[}PAUSE 2s{]}`, `{[}REPEAT x2{]}`): the book
+voice (`bookVoice` in `book.ts`) puts every cue into print form wherever it sits
+in a paragraph or list item, including a cue wrapped across source lines, and a
+bracket it cannot voice is a generator bug, not something to typeset.
+
 Generate configured SVG lesson figures, or verify both their canonical inputs and
 committed bytes are current:
 
@@ -1116,6 +1122,7 @@ until the existing corpus has been split.
 | `curriculum-membership-shards.ts` | strict per-lesson curriculum owner fold and filesystem boundary | ⛔ (fs) |
 | `sound-tags.ts` | pure closed-vocabulary shape and tag validation | ✅ |
 | `sound-tag-shards.ts` | strict per-language owner fold and filesystem boundary | ⛔ (fs) |
+| `delivery-cue.ts` | the one `[PAUSE …]` / `[REPEAT …]` / `[YOU …: …]` cue grammar shared by the book and the narration | ✅ |
 | `book.ts` | typed lesson AST → LaTeX chapter | ✅ |
 | `curriculum.ts` | spine, realization-map, prerequisite, schema-v2 duration/block/knowledge validation | ✅ |
 | `plans.ts` | ordered local paths, extension placement, next lessons, and mixed ready frontiers | ✅ |

@@ -85,8 +85,14 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "[YOU SAY (m.): मैं सोचता हूँ (maiṁ sochtā hūṁ), (f.): मैं सोचती हूँ (maiṁ sochtī hūṁ)]."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "मैं सोचता हूँ (maiṁ sochtā hūṁ), (f.): मैं सोचती हूँ (maiṁ sochtī hūṁ)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY (m.): **मैं सोचता हूँ** (*maiṁ sochtā hūṁ*)  ·  (f.): **मैं सोचती हूँ** (*maiṁ sochtī hūṁ*)]",
+              "qualifier": "(m.)"
             },
             {
               "kind": "prompt",
@@ -247,8 +253,14 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "[YOU SAY (m.): maiṁ samajhtā hūṁ, (f.): maiṁ samajhtī hūṁ]."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ samajhtā hūṁ, (f.): maiṁ samajhtī hūṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY (m.): *maiṁ samajhtā hūṁ*  ·  (f.): *maiṁ samajhtī hūṁ*]",
+              "qualifier": "(m.)"
             },
             {
               "kind": "prompt",
@@ -410,8 +422,14 @@
               "source": "[YOU SAY: the flap alone — *ṛh*, *ṛh* — then the whole word, *paṛhnā*]"
             },
             {
-              "kind": "speech",
-              "text": "[YOU SAY (m.): maiṁ paṛhtā hūṁ, (f.): maiṁ paṛhtī hūṁ — and mean both \"I read\" and \"I study\"]."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ paṛhtā hūṁ, (f.): maiṁ paṛhtī hūṁ — and mean both \"I read\" and \"I study\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY (m.): *maiṁ paṛhtā hūṁ*  ·  (f.): *maiṁ paṛhtī hūṁ* — and mean both \"I read\" and \"I study\"]",
+              "qualifier": "(m.)"
             },
             {
               "kind": "prompt",
@@ -567,8 +585,14 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "[YOU SAY (m.): maiṁ likhtā hūṁ, (f.): maiṁ likhtī hūṁ]."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ likhtā hūṁ, (f.): maiṁ likhtī hūṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY (m.): *maiṁ likhtā hūṁ*  ·  (f.): *maiṁ likhtī hūṁ*]",
+              "qualifier": "(m.)"
             },
             {
               "kind": "prompt",
