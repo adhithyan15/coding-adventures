@@ -13,7 +13,8 @@ The view switcher and task action controls now scroll horizontally when the
 window is narrow, while task identity and secondary actions reflow onto separate
 rows. The main content keeps a bounded vertical scroll area, and Flutter
 acceptance now requires zero layout exceptions for fresh and restored 800 x 600
-sessions.
+sessions. Compose keeps horizontal-only viewports intrinsically tall, so those
+new viewports do not starve the storage summary or later content controls.
 
 ### Fixed — the Flutter topbar fits the declared desktop window (#13465)
 

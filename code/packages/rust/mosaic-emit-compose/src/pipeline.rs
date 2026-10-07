@@ -2727,7 +2727,7 @@ fn flex_grow_weight(value: &str) -> Option<String> {
 fn host_scroll_modifier_prefix(node: &LayoutNode, chain_indent: usize) -> Option<String> {
     (node.tag == "HostScroll").then(|| {
         let cpad = " ".repeat(chain_indent);
-        // `.fillMaxSize()` comes first, and it is not decoration.
+        // The viewport bound comes first, and it is not decoration.
         //
         // `.verticalScroll` on its own leaves the container wrapping its
         // CONTENT, which is the wrong shape twice over. Scrolling only means
@@ -2740,15 +2740,22 @@ fn host_scroll_modifier_prefix(node: &LayoutNode, chain_indent: usize) -> Option
         // A scroll region fills the space it is given. That is what makes it a
         // viewport rather than a tall column that happens to have a scroll
         // modifier attached.
-        // UI61 -- the axis. `.fillMaxSize()` above bounds the viewport on
-        // BOTH axes regardless, because the reasoning above is about
-        // being a viewport at all, not about which way it scrolls.
+        // UI61 -- the axis. A vertical or two-axis viewport owns the space
+        // it is given, hence `fillMaxSize()`. A horizontal-only viewport must
+        // bound its scroll axis with `fillMaxWidth()` while keeping intrinsic
+        // height. `fillMaxSize()` there consumes a Column's vertical budget
+        // and measures every following sibling at zero height (#16949).
         //
         // Compose is the one backend where both axes compose as plain
         // modifier chaining, so `both` needs no nesting and no second
         // widget -- just two scroll modifiers and two scroll states.
         let axis = ScrollAxis::of(node);
-        let mut chain = format!("\n{cpad}.fillMaxSize()");
+        let viewport_bound = if axis == ScrollAxis::Horizontal {
+            "fillMaxWidth()"
+        } else {
+            "fillMaxSize()"
+        };
+        let mut chain = format!("\n{cpad}.{viewport_bound}");
         if axis.scrolls_vertically() {
             chain.push_str(&format!("\n{cpad}.verticalScroll(rememberScrollState())"));
         }
@@ -14830,6 +14837,14 @@ mod tests {
         let horizontal = render(Some("horizontal"));
         assert!(horizontal.contains(".horizontalScroll(rememberScrollState())"));
         assert!(
+            horizontal.contains(".fillMaxWidth()"),
+            "a horizontal-only viewport must bound its scroll axis without taking a Column's full height, got:\n{horizontal}"
+        );
+        assert!(
+            !horizontal.contains(".fillMaxSize()"),
+            "fillMaxSize starves later Column siblings of vertical space, got:\n{horizontal}"
+        );
+        assert!(
             horizontal.contains("import androidx.compose.foundation.horizontalScroll"),
             "a missing Kotlin import is a compile error, got:\n{horizontal}"
         );
@@ -14844,9 +14859,11 @@ mod tests {
                 && both.contains(".horizontalScroll(rememberScrollState())"),
             "got:\n{both}"
         );
-        // Every axis is a bounded viewport; that reasoning is about being
-        // a viewport at all, not about which way it scrolls (#14798).
-        for out in [&vertical, &horizontal, &both] {
+        // A vertical or two-axis viewport must occupy the available height.
+        // A horizontal-only viewport is bounded by width above, while keeping
+        // its content's intrinsic height so later Column siblings remain
+        // measurable (#16949).
+        for out in [&vertical, &both] {
             assert!(out.contains(".fillMaxSize()"), "got:\n{out}");
         }
     }
