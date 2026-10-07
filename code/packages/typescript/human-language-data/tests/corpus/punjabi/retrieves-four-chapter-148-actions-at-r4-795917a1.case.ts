@@ -41,7 +41,13 @@ it("retrieves four Chapter 148 actions in separate short R4 lessons without mock
   const previousPairs = missedPairs(before);
   const currentPairs = missedPairs(after);
   expect(before.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 513, R4: 576 });
+  expect(after.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 513, R4: 576 });
   expect([...previousPairs].filter((pair) => !currentPairs.has(pair)).sort()).toEqual(
     atoms.map((atom) => `R4|${atom}`).sort(),
+  );
+  // #16899 owns the four newly visible Chapter 149 action pairs. This
+  // chapter must not silently claim to have taught those later words.
+  expect([...currentPairs].filter((pair) => !previousPairs.has(pair)).sort()).toEqual(
+    [1, 2, 3, 4].map((number) => `R4|PA-LEX-C149-ACT149-0${number}`),
   );
 });

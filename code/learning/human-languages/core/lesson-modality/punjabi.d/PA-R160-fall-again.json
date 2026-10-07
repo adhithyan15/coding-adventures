@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R160-fall-again",
+    "language": "punjabi",
+    "chapter": 160,
+    "sequence": 8810,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:41eb47d9348d629c"
+  },
+  "findings": []
+}

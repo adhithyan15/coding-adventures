@@ -87,7 +87,9 @@ it("pins Punjabi lesson-content budgets", () =>
     // reviews. None introduces a new idiom, sense, or culture claim.
     // 874 -> 878: one unscored repair return and three Chapter 159 lexical
     // reviews. These retrieve old atoms without new idiom, sense, or culture.
-    lessons: 878,
+    // 878 -> 882: four separate Chapter 160 action-word returns, again with
+    // no new idiom, sense, or culture claim.
+    lessons: 882,
     idioms: 6,
     senses: 3,
     cultureClaims: 9,
