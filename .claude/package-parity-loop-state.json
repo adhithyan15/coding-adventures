@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16936,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16936",
+    "branch": "codex/parity-geometry2d-neutral-20261007",
+    "implementation_revision": "69872f750ffe7131dbfe799ac6e9f137f0d04cc9",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-07T17:21:52Z",
-    "pr_number": 16923,
-    "status": "merged",
-    "notes": "PR #16923 completed 33 terminal acceptable checks (8 successful, 1 neutral, 24 skipped). GitHub API reported mergeable=true and clean; guarded squash auto-merge with exact head 5a57e8a0c6a20682e95ad9cfa962191a8787b80c produced 29284f51fe2e7c9be6a8ade7899d5fa126542b24. No manual merge."
+    "observed_at": "2026-10-07T17:39:11Z",
+    "pr_number": 16936,
+    "status": "checks-pending",
+    "notes": "Ready-for-review geometry neutral contract PR #16936 opened from validated head 69872f750ffe7131dbfe799ac6e9f137f0d04cc9. GitHub reports MERGEABLE but checks have not all completed; do not enable auto-merge until every required check is terminal acceptable and conflict-free."
   },
   "last_inventory": {
     "revision": "29284f51fe2e7c9be6a8ade7899d5fa126542b24",
@@ -12020,10 +12026,10 @@
     {
       "id": "geometry-2d-language-neutral-contract-and-fixture-repair",
       "title": "Freeze the G2D00-G2D03 portable geometry contract and neutral fixtures",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": [],
       "branch": "codex/parity-geometry2d-neutral-20261007",
-      "pr_number": null,
+      "pr_number": 16936,
       "notes": "Selected after #16923 merged and the exact-main collision-clean 1,495-identity refresh. The twelve-slot Java/Kotlin/Dart geometry family is gated by a shared contract. Freeze G2D00 magnitude <1e-12 and G2D03 absolute radius <1e-10, endpoint distance-squared <1e-20, line evaluation, and ordered endpoint bounds in versioned neutral fixtures. The read-only all-lane audit found five point2d threshold outliers, five arc2d implementations with nullable degenerate results, and six arc2d lanes lacking endpoint-form evaluation/bounds APIs. Those newly discovered existing-lane corrections have explicit child owners below; this neutral tranche does not claim existing-lane or rotated analytic-bounds parity.",
       "validation_notes": "The independent process-free fixture validator accepts eight pinned cases, rejects duplicate keys/IDs, nonfinite inputs, changed tolerance, malformed shapes, nondegenerate arc claims, and mutated expectations; seven unittest cases pass with 97% validator line coverage. Exact-origin and absolute-only oracle comparison negative tests close two independently found tolerance holes. Ruff and strict MyPy pass. Existing package baselines pass: Python point2d 44 tests/98.92% and arc2d 17 tests/95.80% using explicit Python 3.13 uv virtual environments; Rust point2d/arc2d cargo tests and doc tests pass; Haskell cabal test all passes trig/point2d/bezier2d/arc2d including 25 arc examples. These baseline suites do not prove the newly pinned edge cases conform in every lane; four explicit child owners cover those gaps. The repository's unmodified BUILD_windows script initially selected the global Python through the local uv module bridge rather than its .venv; explicit --python restored isolated package testing without changing BUILD metadata.",
       "review_notes": "Independent final security/correctness review found no blocker, no new execution surface, and zero exact overlap across 15 open PRs. It verified both tolerance regressions, the eight-case validator, state/roadmap bookkeeping, and diff hygiene."
