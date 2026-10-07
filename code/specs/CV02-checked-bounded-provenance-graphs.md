@@ -11,6 +11,9 @@ contents were verified; the compiled baseline and audits were preserved and
 the clean predecessor worktree was archived. This selection starts from
 `059acbf9e06ff7c75b1c84f278d09a13adaf53ff`, with only unrelated ALGOL changes
 after that verified merge. Preserve one active Closure/shared-stack PR.
+Use repository libraries and the standard library; introduce no crates.io
+dependencies. Preserve the owner decisions: own AST, canonical base ESTree
+serialized boundary and the Babel converter.
 
 CV01 provides constant-size identities and reliable allocator reload state.
 It deliberately does not establish graph validity. Direct-library evidence:
