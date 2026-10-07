@@ -185,7 +185,7 @@ release,date,perlhist_line,grammar_status
 5.002b3,1996-Feb-02,205,pending
 5.002gamma,1996-Feb-11,206,pending
 5.002delta,1996-Feb-27,207,pending
-5.002,1996-Feb-29,209,pending
+5.002,1996-Feb-29,209,partial
 5.002_01,1996-Mar-25,211,pending
 5.003,1996-Jun-25,213,pending
 5.003_01,1996-Jul-31,215,pending
