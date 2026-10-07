@@ -238,6 +238,15 @@ success stdout; help/version remain successful stdout. No successful fallbacks
 from formatter or summary errors are allowed. Graph validation remains required under format NONE
 and before selecting filtered/summary views.
 
+Whitespace-only minification retains its `Result<String, MinifyError>` API and
+adds `MinifyError::Provenance(String)` for failed gap/emit tombstones. Both
+pre-pass deletion and emit-loop skip recording use fallible deletion and stop
+at the first failure. The compiler maps this variant to its provenance error
+with the `whitespace_only` stage and failed-compilation status. Other minifier
+errors retain their established diagnostics. Compilation-level and define
+summaries propagate contribution failures; no ignored `let _` remains around
+provenance mutations in any compiler stage.
+
 ## Serialization and artifact publication
 
 Validate the full checked graph before filtering, summary or export. Canonical
