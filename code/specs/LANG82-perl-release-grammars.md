@@ -88,3 +88,9 @@ The next local historical slice selects 5.003_07. The official source repository
 has no `perl-5.003_06` tag, so 5.003_06 remains pending until its release source
 is independently located. The 5.003_07 pair is checked against its own tag;
 unchanged yacc syntax does not remove the requirement for separate files.
+
+The following local slice selects 5.003_08. Its tagged yacc and tokenizer files
+both differ from 5.003_07, especially around lexical `my` scope, interpolation,
+and octal/hexadecimal overflow. Keep the initial release pair limited to the
+arithmetic and `print` forms that those changes do not extend; record it as
+partial and retain negative syntax probes.
