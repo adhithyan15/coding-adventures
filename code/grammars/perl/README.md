@@ -66,6 +66,9 @@ Current pairs:
   [`perl-5.002_01` source tag]'s `perly.y` and `toke.c`. Its `perly.y` matches
   5.002 while `toke.c` differs; this pair covers only the listed forms and
   rejects adjacent decrement `--` while allowing spaced binary/unary minus.
+- `perl5.003.*` is a separate **partial** pair checked against the
+  [`perl-5.003` source tag]'s `perly.y` and `toke.c`. Both tagged source files
+  match 5.002_01, but this release retains distinct files and limited scope.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot and does not claim full coverage.
@@ -101,4 +104,5 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [`perl-5.001n` source tag]: https://github.com/Perl/perl5/tree/perl-5.001n
 [`perl-5.002` source tag]: https://github.com/Perl/perl5/tree/perl-5.002
 [`perl-5.002_01` source tag]: https://github.com/Perl/perl5/tree/perl-5.002_01
+[`perl-5.003` source tag]: https://github.com/Perl/perl5/tree/perl-5.003
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2

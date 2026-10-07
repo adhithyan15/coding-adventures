@@ -78,7 +78,11 @@ mod tests {
                     .is_err(),
                 "{release}: malformed print accepted"
             );
-            if *release == "5.002_01" {
+            if token_grammar
+                .definitions
+                .iter()
+                .any(|definition| definition.name == "DECREMENT")
+            {
                 let adjacent = GrammarLexer::new("print(1--2);", &token_grammar)
                     .tokenize()
                     .unwrap();
