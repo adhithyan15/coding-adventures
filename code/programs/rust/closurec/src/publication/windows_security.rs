@@ -825,7 +825,10 @@ mod admission_tests {
 
     #[test]
     fn malformed_or_unknown_effective_encodings_fail_closed_without_panics() {
-        let good = acl(&[denial(1, 0, READ_CONTROL, &OWNER_RIGHTS)]);
+        // Start with an admitted unrelated trustee, so a malformed envelope
+        // must be rejected for its format rather than the OWNER RIGHTS class.
+        let good = acl(&[denial(1, 0, READ_CONTROL, &[0x0000_0101, 0x0100_0000, 0])]);
+        admit_dacl(&good).unwrap();
         for end in 0..good.len() {
             assert_eq!(
                 admit_dacl(&good[..end]).unwrap_err().kind(),
