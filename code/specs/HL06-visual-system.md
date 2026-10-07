@@ -400,6 +400,129 @@ would add the six नाम, सा and मम नाम lessons. The guided-cop
 which told the learner to give each म its own headline stroke and let the two
 meet, now points at the strip.
 
+#### Design — the ā sign in a Devanagari word, and phrases word by word
+
+The shared-headline strips drew only मम. Every other Devanagari writing
+headword with a Writing or Script block is refused, and two causes cover
+most of the near misses: the ā sign (नाम, सा, and the sign taught alone), and
+phrases of words separated by a space (मम नाम). This design draws both, and
+keeps refusing everything whose order is not cited.
+
+**ā has no cited ductus today.** None of the eight cited signs is ā, so it
+needs one before it can join a word. The evidence, all reachable and none of
+it copied (the HP Labs data is research-only, so only counts and shares are
+cited):
+
+| claim | evidence | strength |
+|---|---|---|
+| the sign is a stem drawn from the top, then a piece of headline | HP Labs India LipiTk 4.0 Devanagari recognizer, class 47 (ा): 55 of 81 stored native prototypes are one stroke, 54 of those 55 downward; 23 of 81 are the stem and then a short top stroke, drawn left to right in 20 of the 23 | strokes: high. The 1-stroke majority is an artefact of collection: the signs were "collected without the shirorekha" (DvngChar.pdf) |
+| on a consonant the stem comes after the consonant's body and before the headline | the cited आ (Saurmandal, *Devanagari आ stroke order.svg*, frames 1–5): the body, then frame 4 the trailing stem top-to-bottom, then frame 5 the shirorekhā. HP Labs' 83 stored prototypes of आ: 52 (63%) are body strokes, then the bar, then the headline; the bar follows the body in 69% and precedes the headline in 65% | **medium**: indirect (the bar of आ, not a consonant + ā syllable) |
+| cross-check, another script | KanoAI's Gujarati barakhadi templates draw ા after its consonant in all 32 rows that keep the bare consonant outline | cross-script; Gujarati has no headline |
+
+No reachable source records native writers' consonant + ā syllables: HP Labs
+India's `hpl-dvng-iso-word` set, which would, is on a host the authoring
+environment cannot reach. So carrying आ's order onto a consonant is this
+book's reading, and the citation says "medium confidence" in words.
+
+**The ductus.** `devanagari:ा` is two strokes, one lift: "draw the stem
+straight down", then "lift, then draw the shirorekha rightward" over the
+piece of headline Noto Sans Devanagari prints on the sign (x 0 to 273). Its
+mark record cites class 47 for the strokes (`strokeOrderSource`) and the
+cited आ, with the HP Labs and KanoAI counts, for the place
+(`compositionOrder`, `compositionSource`). This revises "Left out: ा" in
+"Devanagari signs drawn alone": that path followed the 1-stroke traces and
+left 9.7% of the printed sign untraced; drawing the headline piece last, as
+the 2-stroke writers and the cited आ do, traces it. So the four lessons that
+teach ā by itself (HI-S06, SA-S06, MR-W01-aa-matra, MW-W01-aa-matra) print a
+strip as well.
+
+**ā in a word.** `composeHeadlineWord` accepts ā only straight after a
+consonant (क to ह). Because the sign's last stroke is a headline labelled
+like every letter's, it splits like a letter: its stem is drawn right after
+its consonant's body, and its piece of headline becomes part of the word's
+one headline. Unicode stores ā after its consonant, so reading order is the
+written order. Shaping with HarfBuzz each of the 33 cited consonants + ā,
+alone and between two of the other cited letters (ई and ऐ, which the font
+splits, left out), gives exactly the `cmap` glyphs at their `hmtx` advances
+in all 2,805 strings, so the composed outline is the printed word. A vowel
+sign after an independent vowel is not a written syllable (after अ the font
+even prints a dotted circle, in all 85 such strings), so ā after a vowel
+letter, at the start of a word or after another sign is refused. The sign
+table (`HEADLINE_WORD_SIGNS`) holds ā
+only, and it reads the place citation from the mark record, so the strip's
+footer and the data cannot drift apart. The footer names the sign by
+position and adds its place:
+
+    letter 1: <न's source>; sign 2: <class 47>; letter 3: <म's source>;
+    the place of sign 2, after its consonant's body: <the cited आ>;
+    the shared headline, drawn last: <HP Labs India counts>
+
+A word of bare letters prints exactly what it printed before.
+
+**Signs still refused.** Each needs a cited order against its consonant AND
+the shared headline, and none has one:
+
+* े and ै: written after the consonant only in Gujarati (KanoAI); in native
+  ऐ the flag precedes the headline in 35 of 58 top sequences, a split. ै
+  also has no ductus (its flags' directions split).
+* ो and ौ: no ductus (ो's 2-stroke form is 51%; ौ has no majority).
+* ी: no headline timing at all, and its drawn form is a 43% minority.
+* ि: its side is unresolved (Gujarati KanoAI: after, 33 of 34; Gurmukhi
+  copyists: before, 10 of 17).
+* ं, ः, ्, ़ and conjuncts: no cited place; ः has no ductus; the virama
+  makes the half forms and conjuncts the font fuses.
+
+**Phrases.** A headword of two or more words separated by single spaces
+(U+0020) and nothing else becomes ONE strip in which every word is composed
+exactly as a word is now: its letters' bodies (and ā stems), then that
+word's own headline. Words come in reading order; the space breaks the
+headline, as the printed phrase does. A one-letter word is that letter's
+own strip, which already ends with its own headline. If any word fails a
+check, the ink fit included, the whole phrase is refused, naming the word
+("word 2 (नाम): …"); a phrase is never printed with a word missing.
+
+* The words are separate ledger entries (`devanagari:मम`,
+  `devanagari:नाम`), printed as the groups of a sequence strip: "How it is
+  written — 2 words, one after another", then "Word 1 of 2 — …" and "Word 2
+  of 2 — …". One entry for the whole phrase would scale a phrase 2,500 font
+  units wide into a 150-unit panel, about half the size of मम's letters; as
+  groups, each word keeps its own scale. The target is `letters: [words]`
+  with `composition: "shared-headline"` (a combination that was refused).
+* Punctuation is refused, not stripped: a label ("नाम: मीरा", "नाव: ___")
+  has a colon no source draws, a sentence ends in । or ".", a list uses
+  commas, dashes or middle dots. Stripping it would print a strip of
+  something the lesson does not ask the learner to write.
+* Length: like a sequence strip, a phrase is a candidate only up to
+  `MAX_SEQUENCE_PIECES` (10) pieces, counting its letters and signs, and
+  (as built, see below) up to `MAX_PHRASE_WORDS` (3) words. The figure must
+  stay at or under the 1,801 units of the tallest printed strip.
+
+**What it should unlock.** Ten lessons: Hindi नाम (HI-A1F01-name-label,
+HI-W12-schwa-drop) and ā (HI-S06); Marathi ā (MR-W01-aa-matra); Marwadi सा
+(MW-W01-saa) and ā (MW-W01-aa-matra); Sanskrit ā (SA-S06) and मम नाम
+(SA-W03-mama-nama-guided-copy, -delayed-copy, -dictation). Every lesson that
+gains a strip loses the "copy what you see" disclaimer, as before. Still
+refused: हो (ो), नमः (ः), every conjunct word (नमस्ते, धन्यवाद, अस्ति, स्त),
+every word with ि, े, ी, ं or a nukta, and every label, sentence and list
+that carries punctuation.
+
+**As built.** The design held, with one addition: the piece cap alone was
+not enough. Each word of a phrase is a group of its own, so a phrase grows
+one band per word, and two-letter words of the cited letters with the most
+movements (औइ, औझ, धऋ, औब) wrap to three rows each. Measured with those,
+three words print 1,571.14 units tall and four 2,048 (both within ten
+pieces), so `MAX_PHRASE_WORDS` is 3; a case in
+`script-ductus/tests/filmstrip-ledger.test.ts` renders the three-word worst
+case and holds it under 1,801.14. The ten lessons above print strips and
+nothing else changed: no earlier figure's bytes moved (a word strip alone
+adds its unit to the figure's source hash). The book's alt text reads "How
+मम नाम is written, word by word, each with its own headline". The
+`<desc>` of a word strip says each word is drawn as its letters' bodies,
+then one headline over that word. Prose fixed alongside: HI-S06 and SA-S06
+lose the "copy what you see" disclaimer; SA-W03-mama-nama-guided-copy and
+HI-A1F01-name-label stop telling the learner to join or draw each letter's
+headline and follow the strip (one headline per word, last).
+
 #### As built — Bengali, cited to native writers' pen traces
 
 Bengali joins the derived filmstrips (`DERIVED_FILMSTRIP_SCRIPTS.bengali`) with
@@ -635,6 +758,106 @@ script matchers leave Latin out, so a Latin headword can never report a gap),
 so the inventory's exactness is held by its own evidence module instead: every
 Latin character of every Latin-track headword is listed, and every listed one
 is read.
+
+#### Design — a one-storey a: the Latin strips move to a literacy font
+
+The first Latin batch refused a, and with it about twenty lessons, because
+the only bundled Latin outline (the Noto Sans letters inside
+NotoSansDevanagari-Static.ttf) prints a two-storey a and every source teaches
+the one-storey a. A strip traces a school model's path over the printed
+letter, so the printed letter must have the shape the model teaches. This
+design changes the outline the Latin strips are drawn on, not the books.
+
+**Font.** Andika 7.000 (SIL Global, `github.com/silnrsi/font-andika`, release
+tag `v7.000`, SIL Open Font License 1.1) is a typeface made for literacy
+work: its DEFAULT glyph for a is the one-storey a (`a.SngStory`) and for g
+the single-storey g (`g.SngBowl`), so nothing has to be remapped. The
+Grundschrift g is single-storey too, and Noto's g already was. A subset is
+vendored as `_fonts/LatinPrint-Subset.ttf`:
+
+* fetched by `_fonts/subset-latin.sh`, which checks the SHA-256 of the
+  release zip and of `Andika-Regular.ttf` inside it, and asserts that the
+  source's cmap maps a and g to those two glyphs;
+* cut to printable Basic Latin, ß ñ Ñ ¿ ¡, the acute, diaeresis and tilde
+  vowels, and every non-ASCII Latin character of every Latin-track headword
+  and inventory row (about 140 characters, tens of kilobytes);
+* composites flattened to plain contours (script-ductus's reader refuses
+  scaled components) and the em scaled from 2048 to 1000 units, the em of
+  every other vendored font, so the ductus tests' distances mean the same for
+  Latin as for every other script;
+* RENAMED "Latin Print Subset": the licence reserves the names Andika and SIL,
+  and a subset is a Modified Version. The copyright and licence name records
+  are kept verbatim, and Andika's own licence file is vendored beside it as
+  `_fonts/OFL-Andika.txt`.
+
+The `_fonts` README records the source URL, tag, both digests and the
+command. The books' body text is unchanged (Latin Modern Roman, whose a is
+two-storey): the strip shows the handwriting model's letter, not the book's
+type, and every Latin record's source note says so.
+
+**Refit.** The Latin inventory names the new file. All 18 existing paths are
+refitted to its outlines (same order, starts, directions and lifts), and must
+again be fully on ink at the default tolerances with nothing untraced and no
+override. Andika's letters are heavier and its x-height lower than Noto's, so
+the numbers pinned in the Latin ductus tests (where a stroke starts, where a
+bar sits) move with the outline; what they assert does not.
+
+**New glyphs (13).**
+
+* a, d, q: one stroke (Grundschrift): the bowl anticlockwise from the top
+  right, then back up to the top of the stem and down it (d to the top of its
+  ascender; q down to the foot of its descender). UJI: a 118 of 120 one
+  stroke; d 101; q mostly TWO (89), a short crossing stroke at the foot that
+  print does not have, recorded as variation.
+* p: one stroke: the stem down to the descender, back up it, the bowl
+  clockwise. UJI 75 one stroke, 45 two.
+* t: two strokes: the stem down and round to the right, then the crossbar
+  left to right. UJI 113 two strokes, crossbar second in 111 of them.
+* y: two strokes: the short line down to the right, then the long line from
+  the top right down to the tail. UJI writes y mostly in ONE stroke (91 of
+  120), recorded as variation; the school model's two strokes are drawn.
+* H: three strokes: left stem, crossbar left to right, right stem. UJI splits
+  (62 of 120 three strokes; crossbar second 37, third 25), recorded.
+* á é í ó ú: precomposed, as ñ is: the base letter's cited path, a lift,
+  then the acute. UJI puts the accent after the letter (á 120 of 120,
+  é 120, ó 114, ú 115, í 66 of the 69 where it is found apart from the stem);
+  its direction is split, up to the right in about 62% (á 74, é 75, ó 74,
+  ú 70 of 120; í 44 of 69) and down to the left in about 30%. The majority
+  is drawn and the split is recorded. On í the acute replaces the dot, as the
+  printed glyph shows.
+* ü: the u, a lift, the left dot, a lift, the right dot. UJI: dots last in
+  119 of 120, left dot first in 116 of 118.
+
+**Still refused.** The grave (à è ù), circumflex, cedilla, macron (Latin
+salvē), æ and œ: no source. ä ö ë ï ÿ: analogy with ü only. So FR-W01-accents
+(é è ê), FR-W03-trema (ï ë ü), GE-W02-umlauts (ä ö ü), FR-W02-cedille,
+FR-C10-oe and the salvē lessons stay undrawn.
+
+**Tracks.** French, Italian, Portuguese and Latin join
+`DERIVED_FILMSTRIP_SCRIPTS` ("latin"), within `MAX_SEQUENCE_PIECES` (buenos
+días is exactly ten pieces). Expected new strips (22): FR-W01-salut-observe,
+-guided-copy, -delayed-copy, -dictation; FR-W04-quatre-lignes (parce que);
+GE-W01-hallo-guided-copy, -delayed-copy, -dictation; IT-W01-ciao-guided-copy,
+-delayed-copy, -dictation; LA-W04-quattuor-versus (quia);
+PT-W01-ola-guided-copy, -delayed-copy, -dictation; ES-W00-hola-observe,
+-guided-copy, -delayed-copy, -dictation; ES-W01-acento (á é í ó ú);
+ES-W01-frase-propia (buenos días); ES-W02-cuatro-lineas-ayer. The four
+earlier Latin strips are redrawn on the new outline. None of the 22 lessons
+disclaims its stroke order, and ES-W01-acento's own prose already describes
+the acute as one up-stroke rising left to right.
+
+**As built.** As designed. `LatinPrint-Subset.ttf` is 26,292 bytes (141
+characters, 152 glyphs, SHA-256 `88437a25…53cfab`), and `subset-latin.sh`
+regenerates it byte for byte. All 31 Latin glyphs are 1.000 on ink with
+nothing untraced at the default tolerances. Each precomposed letter's first
+stroke is exactly its base letter's (í shares i's stem), so a word strip
+draws the same a in hola and in á. The Latin ledger owner holds the 28 glyphs
+a lesson draws (G, g and ü wait for a lesson). Exactly the 22 expected lessons
+gain a strip: French 5, Italian 3, Portuguese 3, Latin 1, Spanish 2 -> 9,
+German 2 -> 5. The tallest new strip is Hallo at about 1,510 units (its H
+has three strokes), under the nine-piece Gujarati list's 1,800; buenos días,
+at exactly ten pieces, is about 1,420. Narration, modality and lesson prose
+are unchanged.
 
 ### Class B — data diagrams (generated)
 

@@ -1,14 +1,16 @@
 // Exact real-corpus evidence owned by the Devanagari inventory's marks.
 // See HL24: unrelated script authors must not share an executable edit surface.
 //
-// Eight Devanagari signs carry a cited stroke order: native writers' tablet
+// Nine Devanagari signs carry a cited stroke order: native writers' tablet
 // pen traces in HP Labs India's LipiTk Devanagari recognizer (MIT-licensed
 // model; the underlying data is research-only, so only counts and shares are
-// cited). The writers wrote each sign alone, so no record claims where the
-// sign is written against its consonant or the headline, and the composer's
-// WRITTEN_SIGN_SIDES has no Devanagari row
-// (tests/figure-targets/devanagari-signs-drawn-alone). The other seven signs
-// claim nothing; each says why below.
+// cited). The writers wrote each sign alone, so the traces never say where
+// the sign is written against its consonant or the headline, and the
+// composer's WRITTEN_SIGN_SIDES has no Devanagari row
+// (tests/figure-targets/devanagari-signs-drawn-alone). ā alone cites that
+// place separately, to the cited आ (its compositionSource), which is what
+// lets it join a word composed with one shared headline. The other six
+// signs claim nothing; each says why below.
 
 import { createHash } from "node:crypto";
 import { expect } from "vitest";
@@ -27,8 +29,14 @@ interface SignEvidence {
 }
 
 const MARKS: readonly SignEvidence[] = [
-  // Noto prints it with a piece of headline the native traces do not draw (68% draw the bar alone).
-  { mark: "ा", digest: "4533604d4b31af58e78dbe71665990a6f7549f939a72bc6a60b41a4300e432ec" },
+  // The stem, then the piece of headline Noto prints on it (23 of 81 writers draw that top stroke too).
+  {
+    mark: "ा",
+    digest: "f4bca6ec5afd13afb4b4725dc6d8c45f52f00f72efa54251d3f8d7b3ddec8d81",
+    penLifts: 1,
+    strokeOrder: ["start at the top of the stem and draw it straight down", "lift, then draw the piece of headline left to right — and only now lift"],
+    recognizerClass: 47,
+  },
   // Noto prints it with a piece of headline the native traces do not draw.
   { mark: "ि", digest: "ff2a4b8e5a32f6c2ace602bc5183abc3be40a8c4e72c51e74b3e16cdf6713a0c" },
   // The drawn form is a weak majority (43%), and Noto adds a piece of headline.
@@ -128,9 +136,14 @@ export const scriptInventoryEvidence = {
         /^The recognizer stores native writers' tablet pen traces, each resampled to 60 points\. .*Each sign was written by itself, with no consonant beside it.*fitted to the bundled Noto Sans Devanagari outline of the sign on its own\..*research use only, so only counts and shares are cited here.*Handwriting varies by writer\.$/,
       );
       // The traces were written one sign at a time: no written-order claim,
-      // except the nukta's carrier-first convention, cited to Unicode earlier.
+      // except the nukta's carrier-first convention, cited to Unicode earlier,
+      // and ā's place in a word, cited to the cited आ.
       if (mark.mark === "\u093C") {
         expect(mark.compositionSource?.url).toMatch(/^https:\/\/www\.unicode\.org\//);
+      } else if (mark.mark === "\u093E") {
+        expect(mark.compositionSource?.url).toBe(
+          "https://commons.wikimedia.org/wiki/File:Devanagari_%E0%A4%86_stroke_order.svg",
+        );
       } else {
         expect(mark.compositionOrder, mark.mark).toBeUndefined();
       }

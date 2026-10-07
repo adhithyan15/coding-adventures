@@ -158,15 +158,17 @@ describe("the real corpus", () => {
   });
 
   it("draws a Devanagari sign only where a lesson teaches it alone", () => {
-    // 32 Hindi, Marathi, Sanskrit and Marwadi lessons teach one of eight
-    // signs by itself (ु ू े ं ़ ् ृ ँ), each cited to native writers who wrote
-    // it alone. Each is one glyph, never a sequence: Devanagari has no
-    // written-order table, so no sign is ever placed against a consonant.
+    // 36 Hindi, Marathi, Sanskrit and Marwadi lessons teach one of nine
+    // signs by itself (ा ु ू े ं ़ ् ृ ँ), each cited to native writers who
+    // wrote it alone. Each is one glyph, never a sequence: Devanagari has no
+    // written-order table, so no sign is placed against a consonant here
+    // (ā joins its consonant only inside a composed word, next cases).
     const devanagari = targets.filter((target) => target.script === "devanagari");
     const signs = devanagari.filter((target) => /^\p{M}+$/u.test(target.glyph));
     expect(signs.every((target) => target.letters === undefined)).toBe(true);
     expect(Object.fromEntries(signs.map((target) => [target.lessonId, target.glyph]))).toEqual({
       "HI-S05-sign-virama": "्",
+      "HI-S06-vowel-sign-aa": "ा",
       "HI-S112-vowel-sign-e": "े",
       "HI-S118-sign-candrabindu": "ँ",
       "HI-S120-vowel-sign-u": "ु",
@@ -176,6 +178,7 @@ describe("the real corpus", () => {
       "HI-S149-vowel-sign-uu": "ू",
       "HI-W12-chandrabindu": "ँ",
       "HI-W12-u-matra": "ु",
+      "MR-W01-aa-matra": "ा",
       "MR-W01-virama": "्",
       "MR-W02-anusvara": "ं",
       "MR-W02-e-matra": "े",
@@ -183,6 +186,7 @@ describe("the real corpus", () => {
       "MR-W05-ru-matra": "ृ",
       "MR-W05-u-matra": "ु",
       "MR-W05-uu-matra": "ू",
+      "MW-W01-aa-matra": "ा",
       "MW-W03-anusvara": "ं",
       "MW-W05-virama": "्",
       "MW-W06-uu-matra": "ू",
@@ -190,6 +194,7 @@ describe("the real corpus", () => {
       "MW-W13-u-matra": "ु",
       "MW-W15-nukta": "़",
       "SA-S05-sign-virama": "्",
+      "SA-S06-vowel-sign-aa": "ा",
       "SA-S112-vowel-sign-e": "े",
       "SA-S203-vowel-sign-u": "ु",
       "SA-S205-vowel-sign-vocalic-r": "ृ",
@@ -200,12 +205,11 @@ describe("the real corpus", () => {
       "SA-W05-vocalic-r-guided-copy": "ृ",
     });
     // Left undrawn: the signs Noto prints with a piece of headline the traces
-    // never draw (ा ि ी ो ः), the signs whose traces split (ै ौ), a sign
+    // never draw (ि ी ो ः), the signs whose traces split (ै ौ), a sign
     // lesson with no Writing or Script block (HI-W03-preposed-i), and every
     // word or list that puts a sign on a consonant.
     const lessonIds = new Set(targets.map((target) => target.lessonId));
     for (const id of [
-      "HI-S06-vowel-sign-aa",
       "HI-W128-vowel-sign-i",
       "HI-S116-vowel-sign-ii",
       "HI-S150-vowel-sign-o",
@@ -240,9 +244,24 @@ describe("the real corpus", () => {
       (target) => target.letters !== undefined && target.letters.join("") === target.glyph,
     );
     expect(words.map((target) => target.lessonId).sort()).toEqual([
-      // German print letters stand apart: weil, once its letters gained a
-      // Grundschrift-cited ductus. Großschreibung is cited letter for letter
-      // too, but at 14 pieces it is past MAX_SEQUENCE_PIECES and prints none.
+      // Latin print letters stand apart: weil, once its letters gained a
+      // Grundschrift-cited ductus, and every word whose a waited for an outline
+      // with a one-storey a (hola, salut, ciao, olá, Hallo, quia, ayer,
+      // buenos días and parce que, whose space is not drawn). Großschreibung
+      // is cited letter for letter too, but at 14 pieces it is past
+      // MAX_SEQUENCE_PIECES and prints none.
+      "ES-W00-hola-delayed-copy",
+      "ES-W00-hola-dictation",
+      "ES-W00-hola-guided-copy",
+      "ES-W00-hola-observe",
+      "ES-W02-cuatro-lineas-ayer",
+      "FR-W01-salut-delayed-copy",
+      "FR-W01-salut-dictation",
+      "FR-W01-salut-guided-copy",
+      "FR-W01-salut-observe",
+      "GE-W01-hallo-delayed-copy",
+      "GE-W01-hallo-dictation",
+      "GE-W01-hallo-guided-copy",
       "GE-W04-vier-zeilen",
       "GU-C32-ane-write",
       "GU-C33-ke-write",
@@ -251,13 +270,20 @@ describe("the real corpus", () => {
       "GU-W01-haa-delayed-copy",
       "GU-W01-haa-dictation",
       "GU-W01-haa-guided-copy",
+      "IT-W01-ciao-delayed-copy",
+      "IT-W01-ciao-dictation",
+      "IT-W01-ciao-guided-copy",
       "JA-W01-hai-read",
       "JA-W01-konnichiwa-read",
       "JA-W03-arigatou-read",
       "JA-W08-sayounara-read",
+      "LA-W04-quattuor-versus",
       "ML-W01-na-ma-delayed-copy",
       "ML-W01-na-ma-dictation",
       "ML-W01-na-ma-guided-copy",
+      "PT-W01-ola-delayed-copy",
+      "PT-W01-ola-dictation",
+      "PT-W01-ola-guided-copy",
       "TA-W03-write-vanakkam",
       "TA-W05-write-aam",
       "TA-W07-write-sari",
@@ -278,59 +304,99 @@ describe("the real corpus", () => {
   });
 
   it("draws a Devanagari word as its letters' bodies and one shared headline", () => {
-    // The only Devanagari writing headwords that are one word of bare letters
-    // are Sanskrit मम, three times. Every other Devanagari word carries a
-    // vowel sign, a virama, a nasal or a visarga, none of which has a cited
-    // written order against its consonant or the shared headline, so it is
-    // not even a candidate (नाम, नमस्ते, नमः, धन्यवाद, ...).
+    // The Devanagari writing headwords that are one word of bare letters, or
+    // of letters and the ā sign straight after a consonant: Sanskrit मम (three
+    // lessons), Hindi नाम (two) and Marwadi सा. ā is the one sign whose place
+    // against its consonant and the headline is cited (its mark record cites
+    // the cited आ). Every other word carries a sign, a virama, a nasal or a
+    // visarga with no cited place, so it is not even a candidate (नमस्ते, नमः,
+    // धन्यवाद, हो, ...).
     const shared = targets.filter((target) => target.composition === "shared-headline");
-    expect(Object.fromEntries(shared.map((target) => [target.lessonId, target.glyph]))).toEqual({
+    const words = shared.filter((target) => target.letters === undefined);
+    expect(Object.fromEntries(words.map((target) => [target.lessonId, target.glyph]))).toEqual({
+      "HI-A1F01-name-label": "नाम",
+      "HI-W12-schwa-drop": "नाम",
+      "MW-W01-saa": "सा",
       "SA-W03-mama-delayed-copy": "मम",
       "SA-W03-mama-dictation": "मम",
       "SA-W03-mama-guided-copy": "मम",
     });
-    expect(shared.every((target) => target.letters === undefined && target.script === "devanagari")).toBe(true);
+    expect(shared.every((target) => target.script === "devanagari")).toBe(true);
+    // A phrase of such words, separated by single spaces, is drawn word by
+    // word, each word with its own headline: Sanskrit मम नाम, three lessons.
+    const phrases = shared.filter((target) => target.letters !== undefined);
+    expect(Object.fromEntries(phrases.map((target) => [target.lessonId, target.letters]))).toEqual({
+      "SA-W03-mama-nama-delayed-copy": ["मम", "नाम"],
+      "SA-W03-mama-nama-dictation": ["मम", "नाम"],
+      "SA-W03-mama-nama-guided-copy": ["मम", "नाम"],
+    });
     const lessonIds = new Set(targets.map((target) => target.lessonId));
     for (const id of [
-      "SA-W03-mama-nama-guided-copy",
-      "SA-W03-namah-guided-copy",
-      "SA-W10-asti-guided-copy",
-      "HI-W05-write-namaste",
-      "HI-W12-schwa-drop",
-      "MR-W03-dhanyavad-write",
-      "MW-W01-saa",
+      "SA-W03-namah-guided-copy", // ः
+      "SA-W10-asti-guided-copy", // conjunct
+      "HI-W05-write-namaste", // conjunct
+      "MR-W03-dhanyavad-write", // conjunct
+      "MR-W01-ho-delayed-copy", // ो
+      "HI-A1F01-name-supported", // a label: "नाम: मीरा"
+      "HI-W04-write-mera-naam", // े in मेरा
+      "MR-A1M01-reader-greeting", // a sentence: "नमस्कार मीरा."
+      "MW-C07-read-later", // े and ू: "पाछे मिलसू"
     ]) {
       expect(lessonIds.has(id), id).toBe(false);
     }
   });
 
-  it("draws the Latin lessons whose every letter is cited, and no word with an a", () => {
-    // Four lessons: ñ, the list "¿ ¡", ß, and the German word weil.
-    // Großschreibung's letters are all cited, but 14 pieces is past
-    // MAX_SEQUENCE_PIECES, so it prints no strip rather than an illegible one. Every other Spanish and German writing lesson holds an a
-    // (Noto's two-storey a has no source), an accent whose only lesson also
-    // holds one, punctuation inside a word, or an uncited mark (ä ö).
+  it("draws the Latin lessons whose every letter is cited, one-storey a included", () => {
+    // 26 lessons over all six Latin-script tracks. The a waited for an outline
+    // that prints the one-storey a every source teaches (LatinPrint-Subset.ttf,
+    // from SIL's Andika); the acute vowels follow UJIpenchars2's writers.
     const latin = targets.filter((target) => target.script === "latin");
     expect(
       Object.fromEntries(latin.map((target) => [target.lessonId, (target.letters ?? [target.glyph]).join(" ")])),
     ).toEqual({
+      "ES-W00-hola-delayed-copy": "h o l a",
+      "ES-W00-hola-dictation": "h o l a",
+      "ES-W00-hola-guided-copy": "h o l a",
+      "ES-W00-hola-observe": "h o l a",
+      "ES-W01-acento": "á é í ó ú",
+      "ES-W01-frase-propia": "b u e n o s d í a s",
+      "ES-W02-cuatro-lineas-ayer": "a y e r",
       "ES-W02-enye": "ñ",
       "ES-W03-inverted": "¿ ¡",
+      "FR-W01-salut-delayed-copy": "s a l u t",
+      "FR-W01-salut-dictation": "s a l u t",
+      "FR-W01-salut-guided-copy": "s a l u t",
+      "FR-W01-salut-observe": "s a l u t",
+      "FR-W04-quatre-lignes": "p a r c e q u e",
       "GE-W01-eszett": "ß",
+      "GE-W01-hallo-delayed-copy": "H a l l o",
+      "GE-W01-hallo-dictation": "H a l l o",
+      "GE-W01-hallo-guided-copy": "H a l l o",
       "GE-W04-vier-zeilen": "w e i l",
+      "IT-W01-ciao-delayed-copy": "c i a o",
+      "IT-W01-ciao-dictation": "c i a o",
+      "IT-W01-ciao-guided-copy": "c i a o",
+      "LA-W04-quattuor-versus": "q u i a",
+      "PT-W01-ola-delayed-copy": "o l á",
+      "PT-W01-ola-dictation": "o l á",
+      "PT-W01-ola-guided-copy": "o l á",
     });
+    // Still undrawn: an uncited mark (è ê ç ï ë ä ö ē œ), punctuation inside
+    // a word, a slash between two words, or more than MAX_SEQUENCE_PIECES.
     const lessonIds = new Set(targets.map((target) => target.lessonId));
     for (const id of [
-      "ES-W00-hola-guided-copy",
-      "ES-W01-acento",
-      "ES-W01-frase-propia",
-      "ES-W02-cuatro-lineas-ayer",
-      "ES-W02-enye-formas",
-      "ES-C03-como-acento",
-      "ES-W03-question-span",
-      "GE-W01-hallo-guided-copy",
+      "FR-W01-accents",
+      "FR-W02-cedille",
+      "FR-W03-trema",
+      "FR-C10-oe",
       "GE-W02-umlauts",
-      "FR-W01-salut-guided-copy",
+      "GE-W03-capitalization",
+      "LA-W01-salve-delayed-copy",
+      "LA-W01-salve-guided-copy",
+      "ES-C03-como-acento",
+      "ES-W01-tilde-diacritica",
+      "ES-W02-enye-formas",
+      "ES-W03-question-span",
     ]) {
       expect(lessonIds.has(id), id).toBe(false);
     }

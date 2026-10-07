@@ -36,7 +36,7 @@ data/scripts/*.{json,d/} ─► scriptdata.ts ─┐
 | `strokes.ts` + `strokes/*.ts` | **how** a letter is written — a fixed public registry assembled from writing-system-owned pen-path modules |
 | `truetype.ts` | **what** the letter looks like — a zero-dependency TrueType reader pulling the real outline out of the shipped font |
 | `ductusview.ts` | the join — the filmstrip, as a tree of plain objects plus a serialiser |
-| `headline-word.ts` | a Devanagari **word** — its cited letters' bodies, then one headline across the word, fitted to the printed word (uses `ink.ts`) |
+| `headline-word.ts` | a Devanagari **word** — its cited letters' bodies (and ā stems), then one headline across the word, fitted to the printed word (uses `ink.ts`); a phrase, word by word |
 
 ## The design idea worth knowing
 
@@ -132,19 +132,22 @@ single run, and the lift count again rests on *hand* and *grahyam*.
 
 ### A school model and native writers as sources (Latin print letters)
 
-Latin (`strokes/latin.ts`, keys `latin:<glyph>`) draws 18 print glyphs: b c e
-g h i l n o r s u w ß and G cite the Grundschrift-App, made in a research
-project of the Laborschule at Bielefeld University with the Grundschulverband,
-whose ordered paths (one per pen-down stroke) a child traces in order. Its
-repository has no licence, so only the order, start, direction and lifts are
-cited, per letter level at a pinned commit, and no point is copied. Native
-writers corroborate it: UJIpenchars2 (Prat et al., UCI dataset 177, CC BY 4.0)
-holds 120 pen traces of each Spanish character from 60 adults, cited as counts.
-It is the only source for ñ's tilde (after the n, left to right), ¿ and ¡ (dot
-last). The outlines are the Noto Sans Latin letters that the bundled
-`NotoSansDevanagari-Static.ttf` carries. ñ is its own precomposed entry. a is
-not drawn: Noto prints a two-storey a, and every source draws the one-storey
-a. The grave, circumflex, cedilla, æ and œ have no source.
+Latin (`strokes/latin.ts`, keys `latin:<glyph>`) draws 31 print glyphs: a b
+c d e g h i l n o p q r s t u w y ß, G and H cite the Grundschrift-App, made in
+a research project of the Laborschule at Bielefeld University with the
+Grundschulverband, whose ordered paths (one per pen-down stroke) a child traces
+in order. Its repository has no licence, so only the order, start, direction
+and lifts are cited, per letter level at a pinned commit, and no point is
+copied. Native writers corroborate it: UJIpenchars2 (Prat et al., UCI dataset
+177, CC BY 4.0) holds 120 pen traces of each Spanish character from 60 adults,
+cited as counts. It is the only source for the marks: ñ's tilde (after the n,
+left to right), the acute of á é í ó ú (after the letter, rising to the right
+as about six in ten writers draw it), ü's dots (left first), and ¿ and ¡ (dot
+last). Each precomposed letter is its own entry whose first stroke is its base
+letter's. The outlines are `LatinPrint-Subset.ttf`, a renamed subset of SIL's
+literacy typeface Andika, chosen because its a is the one-storey a every
+source teaches (Noto Sans prints a two-storey a). The grave, circumflex,
+cedilla, macron, æ and œ have no source; ä ö ë ï ÿ would be analogy only.
 
 ## Usage
 
@@ -217,10 +220,21 @@ India's LipiTk Devanagari data: 82% of 2,706 consonant prototypes; about 5%
 first). A word whose composed path does not fit the printed word at the
 default tolerances is refused, not drawn.
 
+One sign may join a word: ā (ा), straight after a consonant. Its stem is drawn
+after the consonant's body and its piece of headline becomes part of the
+word's one headline; its place is cited on its mark record (the cited आ draws
+the same bar after the body and before the headline) and read from there by
+`HEADLINE_WORD_SIGNS`. A phrase (words separated by single spaces) is composed
+word by word by `composeHeadlinePhrase`, each word with its own headline, and
+refused whole if any word fails.
+
 ```ts
-const word = composeHeadlineWord("मम", "devanagari", font);
+const word = composeHeadlineWord("नाम", "devanagari", font);
 if (word.ok) buildFilmstripEntry(word.ductus, word.outline, fontPath);
 else console.log(word.reason); // e.g. मथ: the shared headline is only 88.2% on ink
+
+const phrase = composeHeadlinePhrase("मम नाम", "devanagari", font);
+if (phrase.ok) for (const w of phrase.words) buildFilmstripEntry(w.ductus, w.outline, fontPath);
 ```
 
 ## No DOM, no filesystem

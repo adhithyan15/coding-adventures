@@ -3,8 +3,10 @@
 // mark by mark, and ñ is one precomposed letter with a ductus of its own.
 // What is refused, and why: a word with punctuation inside it (¿ and ? are not
 // base letters); ñ typed as n plus a combining tilde (Latin has no written-order
-// table); and every word with an a, because no source draws Noto's two-storey a
-// (the ledger, not this module, says which letters are cited).
+// table); and every lesson with a letter no source covers (è ê ç ä ö ...; the
+// ledger, not this module, says which letters are cited). The a was refused
+// too until the strips moved to an outline that prints the one-storey a every
+// source teaches (LatinPrint-Subset.ttf, from SIL's Andika).
 import { describe, expect, it } from "vitest";
 import {
   DERIVED_FILMSTRIP_SCRIPTS,
@@ -19,16 +21,14 @@ import {
 } from "../../src/figure-targets.js";
 import { lesson } from "./fixture.js";
 
-/** The 18 glyphs the Latin owner cites; a stands out of it on purpose. */
-const CITED = new Set([..."bceghilnorsuwßñG¿¡"]);
+/** The 31 glyphs the Latin owner cites. */
+const CITED = new Set([..."bceghilnorsuwßñG¿¡adpqtyHáéíóúü"]);
 const hasDuctus = (script: string, glyph: string) => script === "latin" && CITED.has(glyph);
 
 describe("Latin print letters", () => {
-  it("switches on exactly Spanish and German, and lets Latin words stand apart", () => {
-    expect(DERIVED_FILMSTRIP_SCRIPTS.spanish).toBe("latin");
-    expect(DERIVED_FILMSTRIP_SCRIPTS.german).toBe("latin");
-    for (const track of ["french", "italian", "portuguese", "latin"]) {
-      expect(Object.keys(DERIVED_FILMSTRIP_SCRIPTS), track).not.toContain(track);
+  it("switches on all six Latin-script tracks, and lets Latin words stand apart", () => {
+    for (const track of ["spanish", "german", "french", "italian", "portuguese", "latin"]) {
+      expect(DERIVED_FILMSTRIP_SCRIPTS[track], track).toBe("latin");
     }
     expect(SEPARATE_LETTER_SCRIPTS.has("latin")).toBe(true);
     expect(WRITTEN_SIGN_SIDES.latin).toBeUndefined();
@@ -69,19 +69,25 @@ describe("Latin print letters", () => {
     expect(writingSequenceOf(lesson("ES-W5", { language: "spanish", headword: "¿cómo?" }), "latin")).toBeUndefined();
   });
 
-  it("draws a candidate only when every letter is cited, so no word with an a", () => {
+  it("draws a candidate only when every letter is cited, the one-storey a included", () => {
     const candidates = filmstripCandidates([
       lesson("ES-W6", { language: "spanish", headword: "hola" }),
-      lesson("ES-W7", { language: "spanish", headword: "ñ" }),
-      lesson("GE-W8", { language: "german", headword: "weil" }),
-      lesson("GE-W9", { language: "german", headword: "Hallo" }),
+      lesson("ES-W7", { language: "spanish", headword: "á é í ó ú" }),
+      lesson("GE-W8", { language: "german", headword: "Hallo" }),
+      lesson("GE-W9", { language: "german", headword: "ä ö ü" }),
       lesson("FR-W1", { language: "french", headword: "salut" }),
+      lesson("FR-W2", { language: "french", headword: "é è ê" }),
+      lesson("FR-W3", { language: "french", headword: "ç" }),
     ]);
-    // French is switched off, so salut is not even a candidate.
-    expect(candidates.map((candidate) => candidate.lessonId)).toEqual(["ES-W6", "ES-W7", "GE-W8", "GE-W9"]);
+    expect(candidates.map((candidate) => candidate.lessonId)).toEqual([
+      "ES-W6", "ES-W7", "FR-W1", "FR-W2", "FR-W3", "GE-W8", "GE-W9",
+    ]);
+    // ä ö, è ê and ç have no source, so those lessons print no strip.
     const drawn = withDerivedFilmstrips([], candidates, hasDuctus);
     expect(drawn.map((target) => (target.kind === "script-filmstrip" ? target.lessonId : ""))).toEqual([
+      "ES-W6",
       "ES-W7",
+      "FR-W1",
       "GE-W8",
     ]);
   });

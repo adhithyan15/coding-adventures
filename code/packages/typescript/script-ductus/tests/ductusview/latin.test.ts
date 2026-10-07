@@ -25,6 +25,19 @@ const EXPECTED: Record<string, { frames: number; lifts: number; summary: string 
   G: { frames: 2, lifts: 0, summary: "one unbroken stroke · 2 movements" },
   "¿": { frames: 2, lifts: 1, summary: "2 strokes · 1 pen lift · 2 movements" },
   "¡": { frames: 2, lifts: 1, summary: "2 strokes · 1 pen lift · 2 movements" },
+  a: { frames: 2, lifts: 0, summary: "one unbroken stroke · 2 movements" },
+  d: { frames: 2, lifts: 0, summary: "one unbroken stroke · 2 movements" },
+  p: { frames: 2, lifts: 0, summary: "one unbroken stroke · 2 movements" },
+  q: { frames: 2, lifts: 0, summary: "one unbroken stroke · 2 movements" },
+  t: { frames: 2, lifts: 1, summary: "2 strokes · 1 pen lift · 2 movements" },
+  y: { frames: 2, lifts: 1, summary: "2 strokes · 1 pen lift · 2 movements" },
+  H: { frames: 3, lifts: 2, summary: "3 strokes · 2 pen lifts · 3 movements" },
+  "á": { frames: 3, lifts: 1, summary: "2 strokes · 1 pen lift · 3 movements" },
+  "é": { frames: 3, lifts: 1, summary: "2 strokes · 1 pen lift · 3 movements" },
+  "í": { frames: 2, lifts: 1, summary: "2 strokes · 1 pen lift · 2 movements" },
+  "ó": { frames: 2, lifts: 1, summary: "2 strokes · 1 pen lift · 2 movements" },
+  "ú": { frames: 3, lifts: 1, summary: "2 strokes · 1 pen lift · 3 movements" },
+  "ü": { frames: 4, lifts: 2, summary: "3 strokes · 2 pen lifts · 4 movements" },
 };
 
 describe("Latin filmstrips", () => {
@@ -59,5 +72,12 @@ describe("Latin filmstrips", () => {
   it("draws ñ from the precomposed glyph, never from n plus a combining tilde", () => {
     expect(ductusFor("ñ", "latin")).toBeDefined();
     expect(ductusFor("ñ", "latin")).toBeUndefined();
+  });
+
+  it("draws the accented vowels and ü from their precomposed glyphs only", () => {
+    for (const glyph of ["á", "é", "í", "ó", "ú", "ü"]) {
+      expect(ductusFor(glyph, "latin"), glyph).toBeDefined();
+      expect(ductusFor(glyph.normalize("NFD"), "latin"), glyph).toBeUndefined();
+    }
   });
 });

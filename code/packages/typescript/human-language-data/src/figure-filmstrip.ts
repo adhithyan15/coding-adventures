@@ -735,11 +735,15 @@ export function scriptSequenceFilmstripFigureSource(
   lessonId: string,
   text: string,
   entries: readonly FilmstripEntry[],
+  unit?: SequenceUnit,
 ): string {
   return JSON.stringify({
     kind: "script-filmstrip-sequence",
     lessonId,
     text,
+    // Only a phrase names its unit: every strip drawn before phrases keeps
+    // the source (and so the hash) it always had.
+    ...(unit === "Word" ? { unit } : {}),
     layout: {
       FRAME_WIDTH,
       MAX_COLUMNS,
@@ -770,8 +774,13 @@ export function letterNumbers(numbers: readonly number[], unit: SequenceUnit = "
  * not a letter, and the groups no longer spell the word in typed order. Such a
  * strip says "Part 2 of 4" instead. A strip with no sign prints exactly what
  * it printed before signs could be drawn.
+ *
+ * A Devanagari PHRASE ("मम नाम") is a strip of words, each composed with its
+ * own headline: "Word 2 of 2". Only the caller knows a phrase from a list, so
+ * the unit is passed in (`renderScriptSequenceFilmstripFigure`), never
+ * guessed from the entries.
  */
-export type SequenceUnit = "Letter" | "Part";
+export type SequenceUnit = "Letter" | "Part" | "Word";
 
 /** A ledger glyph made only of combining signs is a vowel sign drawn alone. */
 const SIGN_GLYPH = /^\p{M}+$/u;
@@ -797,6 +806,11 @@ const SIGN_FIRST_NOTE =
   `The parts are in the order the hand writes them, which is not always the order ` +
   `they are typed: a vowel sign written to the left of its consonant comes before ` +
   `it. Each vowel sign is drawn on its own, without the consonant it attaches to. `;
+
+/** What a strip of words says about how each word is drawn, in its `<desc>`. */
+const WORD_NOTE =
+  `Each word is drawn as its letters' bodies in reading order, then one headline over that ` +
+  `word; the space between words breaks the headline. `;
 
 /** The `<desc>` sentence on written order for a strip of parts in `script`. */
 export function writtenOrderNote(script: string): string {
@@ -891,6 +905,7 @@ export function renderScriptSequenceFilmstripFigure(
   lessonId: string,
   text: string,
   entries: readonly FilmstripEntry[],
+  unitOverride?: "Word",
 ): GeneratedFigure {
   if (entries.length < 2) {
     throw new Error(`${lessonId}: a sequence filmstrip needs at least two letters`);
@@ -901,7 +916,7 @@ export function renderScriptSequenceFilmstripFigure(
   }
   const boxes = entries.map((entry) => checkedFilmstripEntry(lessonId, entry));
   const count = entries.length;
-  const unit = sequenceUnit(entries);
+  const unit: SequenceUnit = unitOverride ?? sequenceUnit(entries);
   const units = `${unit.toLowerCase()}s`;
 
   // Each group's own geometry, before anything is placed: how many columns it
@@ -988,6 +1003,7 @@ export function renderScriptSequenceFilmstripFigure(
     `<desc>${escapeXml(
       `${count} ${units} written one after another: ${letters.join(", ")} (${script}). ` +
         (unit === "Part" ? writtenOrderNote(script) : "") +
+        (unit === "Word" ? WORD_NOTE : "") +
         `Each ${unit.toLowerCase()} has its own group of frames; frame N of a group shows movements 1 to N ` +
         `of that ${unit.toLowerCase()}, the movement being added drawn in ink over the finished ${unit.toLowerCase()}, ` +
         `whose outline is read from ${fonts}. Each ${unit.toLowerCase()} is drawn at its own scale from ` +
@@ -1006,7 +1022,7 @@ export function renderScriptSequenceFilmstripFigure(
   const svg = `${parts.join("")}\n`;
   return {
     svg,
-    sourceHash: fnv1a64(scriptSequenceFilmstripFigureSource(lessonId, text, entries)),
+    sourceHash: fnv1a64(scriptSequenceFilmstripFigureSource(lessonId, text, entries, unit)),
     svgHash: fnv1a64(svg),
     labels: entries.flatMap((entry) => entry.frames.map((frame) => frame.label)),
   };

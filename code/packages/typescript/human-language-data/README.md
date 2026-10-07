@@ -994,11 +994,16 @@ Two kinds exist:
   22 consonants that take a stem form; જ and ૹ with ા, ી, ો, ૌ). Each group
   of fused pairs carries its citation in `FUSED_SIGN_PAIR_SOURCES`, and a
   test fails if a pair is added or dropped without its source.
-  Devanagari has no table on purpose: its eight cited signs (ु ू े ं ़ ् ृ ँ)
+  Devanagari has no table on purpose: its nine cited signs (ा ु ू े ं ़ ् ृ ँ)
   come from native writers who wrote each sign alone, which says nothing about
-  its order against a consonant or the headline, so only a lesson whose
-  headword is the bare sign prints one (a one-glyph strip), and कि or any
-  Devanagari word with a sign stays refused.
+  its order against a consonant or the headline, so a lesson whose headword
+  is the bare sign prints a one-glyph strip, and कि stays refused. A
+  Devanagari WORD is one composed entry (its letters' bodies, then one shared
+  headline), and the one sign it may hold is ā straight after a consonant,
+  whose place is cited separately (`HEADLINE_WORD_SIGNS`). A phrase of such
+  words separated by single spaces (`headlinePhraseOf`, at most
+  `MAX_PHRASE_WORDS` words) prints as a strip of words, "Word 1 of 2", each
+  word with its own headline.
   Generated book chapters rewrite the lesson's `.svg` image
 destination to `.pdf`; the books workflow creates that PDF with `rsvg-convert`
 before XeLaTeX runs.
@@ -1029,15 +1034,21 @@ before XeLaTeX runs.
   letter lists) print a strip. A Gurmukhi word is never composed, because one
   headline runs across it, as in Devanagari.
 
-  Spanish and German followed Punjabi, the first Latin-script tracks.
-  `data/scripts/latin.json` holds exactly the Latin characters the six
-  Latin-script tracks' headwords use (NFD), and 18 of its rows cite the
-  Grundschrift-App or UJIpenchars2's native Spanish writers. `latin` is in
-  `SEPARATE_LETTER_SCRIPTS`, since print letters stand apart, so five lessons
-  print a strip: ñ, "¿ ¡", ß, and the words Großschreibung and weil. Every
-  other Latin writing lesson holds an a, which no source draws in the
-  two-storey form Noto prints, or an uncited mark, so French, Italian,
-  Portuguese and Latin stay switched off.
+  Spanish and German followed Punjabi, the first Latin-script tracks, and
+  French, Italian, Portuguese and Latin followed once the Latin strips moved
+  to an outline with a one-storey a. `data/scripts/latin.json` holds exactly
+  the Latin characters the six Latin-script tracks' headwords use (NFD), plus
+  the precomposed ñ á é í ó ú ü that are drawn whole, and 31 of its rows cite
+  the Grundschrift-App or UJIpenchars2's native Spanish writers. Its font is
+  `_fonts/LatinPrint-Subset.ttf`, a renamed subset of SIL's literacy typeface
+  Andika: Noto Sans prints a two-storey a, and every source teaches the
+  one-storey a, so the strip shows the handwriting model's letter while the
+  book's text keeps its own typeface. `latin` is in `SEPARATE_LETTER_SCRIPTS`,
+  since print letters stand apart, so 26 lessons print a strip (hola, salut,
+  ciao, olá, Hallo, quia, ayer, buenos días, parce que, weil, ñ, ß, "¿ ¡" and
+  "á é í ó ú"). Lessons with an uncited mark (è ê ç ä ö ë ï ē, œ),
+  punctuation inside a word, or more than `MAX_SEQUENCE_PIECES` pieces stay
+  undrawn.
 
 Print the registry-ordered track table on demand, or verify that its former
 tracked projection remains absent:

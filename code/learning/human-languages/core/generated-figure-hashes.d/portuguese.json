@@ -1,0 +1,26 @@
+{
+  "track": "portuguese",
+  "figures": [
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PT-W01-ola-delayed-copy",
+      "sourceHash": "fnv1a64:aafec7117d4a55c2",
+      "svgHash": "fnv1a64:1aefea737dc86ad1",
+      "svg": "portuguese/book/figures/PT-W01-ola-delayed-copy-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PT-W01-ola-dictation",
+      "sourceHash": "fnv1a64:51f5cbaf6e70e171",
+      "svgHash": "fnv1a64:1aefea737dc86ad1",
+      "svg": "portuguese/book/figures/PT-W01-ola-dictation-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "PT-W01-ola-guided-copy",
+      "sourceHash": "fnv1a64:66d4dac24593f3c8",
+      "svgHash": "fnv1a64:1aefea737dc86ad1",
+      "svg": "portuguese/book/figures/PT-W01-ola-guided-copy-filmstrip.svg"
+    }
+  ]
+}

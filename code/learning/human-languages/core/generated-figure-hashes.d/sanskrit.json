@@ -59,6 +59,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "SA-S06-vowel-sign-aa",
+      "sourceHash": "fnv1a64:4632f80d834c4de7",
+      "svgHash": "fnv1a64:c181c00311f74a7f",
+      "svg": "sanskrit/book/figures/SA-S06-vowel-sign-aa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "SA-S107-letter-ta",
       "sourceHash": "fnv1a64:a84a27cecedb9e19",
       "svgHash": "fnv1a64:8092566e5078aa4a",
@@ -336,6 +343,27 @@
       "sourceHash": "fnv1a64:c1fb10fcb0b7623b",
       "svgHash": "fnv1a64:b05dd274e41c44ca",
       "svg": "sanskrit/book/figures/SA-W03-mama-guided-copy-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "SA-W03-mama-nama-delayed-copy",
+      "sourceHash": "fnv1a64:9b29ac81ef9bac98",
+      "svgHash": "fnv1a64:b00f184aa543a4db",
+      "svg": "sanskrit/book/figures/SA-W03-mama-nama-delayed-copy-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "SA-W03-mama-nama-dictation",
+      "sourceHash": "fnv1a64:cd857f810cf6b1f3",
+      "svgHash": "fnv1a64:b00f184aa543a4db",
+      "svg": "sanskrit/book/figures/SA-W03-mama-nama-dictation-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "SA-W03-mama-nama-guided-copy",
+      "sourceHash": "fnv1a64:f8d5c95031432436",
+      "svgHash": "fnv1a64:b00f184aa543a4db",
+      "svg": "sanskrit/book/figures/SA-W03-mama-nama-guided-copy-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",

@@ -2,10 +2,11 @@ import { expect } from "vitest";
 import type { GlyphEvidence } from "./types";
 
 // Latin reaches the app as a script tab of its own: the Latin-script tracks'
-// 57 rows (letters, ordinal indicators and opening marks), recognition-only except where the
-// Grundschrift-App (a school model) or UJIpenchars2's native Spanish writers
-// cite an order. a is never cited: Noto prints a two-storey a, and every
-// source draws the one-storey a.
+// 63 rows (letters, the precomposed ñ á é í ó ú ü, ordinal indicators and
+// opening marks), recognition-only except where the Grundschrift-App (a school
+// model) or UJIpenchars2's native Spanish writers cite an order. The one-storey
+// a is cited since its paths moved to LatinPrint-Subset.ttf (from SIL's
+// literacy typeface Andika), whose a has the shape every source teaches.
 export default [
   {
     suite: "independent (word-initial) vowels",
@@ -15,11 +16,10 @@ export default [
     verify: ({ SCRIPTS }) => {
       expect(SCRIPTS.at(-1)!.script).toBe("latin");
       const latin = SCRIPTS.find((script) => script.script === "latin")!;
-      expect(latin.letters).toHaveLength(57);
+      expect(latin.letters).toHaveLength(63);
       expect(latin.letters.slice(0, 5).map((letter) => letter.glyph)).toEqual(["a", "b", "c", "d", "e"]);
       const cited = latin.letters.filter((letter) => letter.strokeOrderSource !== undefined);
-      expect(cited.map((letter) => letter.glyph).join("")).toBe("bceghilnorsuwßñG¿¡");
-      expect(cited.map((letter) => letter.glyph)).not.toContain("a");
+      expect(cited.map((letter) => letter.glyph).join("")).toBe("abcdeghilnopqrstuwyßñáéíóúüGH¿¡");
       for (const letter of cited) {
         expect(letter.penLifts, letter.glyph).toBeGreaterThanOrEqual(0);
         expect(letter.strokeOrderSource!.url).toMatch(
@@ -28,6 +28,8 @@ export default [
       }
       const enye = latin.letters.find((letter) => letter.glyph === "ñ")!;
       expect(enye.strokeOrder.at(-1)).toBe("lift, then the tilde, left to right");
+      const acute = latin.letters.find((letter) => letter.glyph === "á")!;
+      expect(acute.strokeOrder.at(-1)).toBe("lift, then the acute, up to the right");
     },
   },
 ] satisfies readonly GlyphEvidence[];

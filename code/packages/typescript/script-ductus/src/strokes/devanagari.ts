@@ -4163,11 +4163,66 @@ export const entries: DuctusEntry[] = [
   // record), which were written one sign at a time; no trace was copied.
   // Each path is fitted to the bundled Noto Sans Devanagari outline of the
   // sign by itself. The traces say nothing about when a sign is written
-  // against its consonant or the headline, so Devanagari words with signs
-  // stay undrawn (human-language-data's WRITTEN_SIGN_SIDES has no Devanagari
-  // row). ा ि ी ो ौ ै and ः are left out; spec HL06 ("As built —
-  // Devanagari signs drawn alone") says why.
+  // against its consonant or the headline, so these signs are drawn only by
+  // themselves (human-language-data's WRITTEN_SIGN_SIDES has no Devanagari
+  // row). ि ी ो ौ ै and ः are left out; spec HL06 ("As built — Devanagari
+  // signs drawn alone") says why.
+  //
+  // ā (ा) is the one exception, and the one sign a Devanagari word may hold
+  // (headline-word.ts). Its place is cited separately, on its mark record's
+  // `compositionSource`: the cited आ draws the same bar ("lift, then descend
+  // the trailing stem") after the body and before the headline, and so do
+  // most native writers' आ. Spec HL06 ("Design — the ā sign in a word, and
+  // phrases") gives the evidence.
   // ---------------------------------------------------------------------
+  // ा: the stem straight down from the headline, then (after a lift) the
+  // headline piece Noto prints the sign with, left to right. Drawn alone,
+  // 55 of the 81 native prototypes are the stem only (the signs were
+  // collected without a headline) and 23 are the stem and then a short
+  // left-to-right top stroke; the printed sign carries that headline piece,
+  // so it is drawn, last, as आ draws its headline after its trailing stem.
+  // In a word the piece becomes part of the word's one headline.
+  [
+    "devanagari:ा",
+    {
+      script: "devanagari",
+      glyph: "ा",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the stem straight down",
+              path: [
+                { x: 130, y: 590 },
+                { x: 130, y: 500 },
+                { x: 130, y: 410 },
+                { x: 130, y: 320 },
+                { x: 130, y: 230 },
+                { x: 130, y: 140 },
+                { x: 130, y: 50 },
+                { x: 130, y: 5 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw the shirorekha rightward",
+              path: [
+                { x: 5, y: 585 },
+                { x: 70, y: 585 },
+                { x: 135, y: 585 },
+                { x: 200, y: 585 },
+                { x: 268, y: 585 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: devanagariMarkSource("ा"),
+    },
+  ],
   // ु: one run from the tip of the upper arm, right and down round the bowl
   // (clockwise), and out to the lower-left tip.
   [

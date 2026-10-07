@@ -163,7 +163,20 @@ fn pinned_treeview_subset_corpus_parses_to_tree_ir() {
         let name = fixture["name"].as_str().expect("fixture name");
         let diagram = parse_treeview(fixture["source"].as_str().expect("fixture source"))
             .unwrap_or_else(|error| panic!("treeview fixture {name} failed: {error}"));
-        assert!(!diagram.nodes.is_empty());
+        if name == "header-only" {
+            assert!(diagram.nodes.is_empty());
+        } else if name == "empty-metadata" {
+            assert_eq!(diagram.title.as_deref(), Some(""));
+            assert_eq!(diagram.accessibility_title.as_deref(), Some(""));
+            assert_eq!(diagram.accessibility_description.as_deref(), Some(""));
+            assert!(diagram.nodes.is_empty());
+        } else if name == "multiline-accessibility-description" {
+            assert_eq!(diagram.accessibility_description.as_deref(),
+                Some("Files grouped by\ntheir directory hierarchy"));
+            assert_eq!(diagram.nodes.len(), 1);
+        } else {
+            assert!(!diagram.nodes.is_empty());
+        }
     }
 }
 

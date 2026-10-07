@@ -1,0 +1,26 @@
+{
+  "track": "italian",
+  "figures": [
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "IT-W01-ciao-delayed-copy",
+      "sourceHash": "fnv1a64:8cce64b5cc31224d",
+      "svgHash": "fnv1a64:fc3558e23d14aa3f",
+      "svg": "italian/book/figures/IT-W01-ciao-delayed-copy-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "IT-W01-ciao-dictation",
+      "sourceHash": "fnv1a64:463738b80bc9359a",
+      "svgHash": "fnv1a64:fc3558e23d14aa3f",
+      "svg": "italian/book/figures/IT-W01-ciao-dictation-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "IT-W01-ciao-guided-copy",
+      "sourceHash": "fnv1a64:be163d9321f25aa1",
+      "svgHash": "fnv1a64:fc3558e23d14aa3f",
+      "svg": "italian/book/figures/IT-W01-ciao-guided-copy-filmstrip.svg"
+    }
+  ]
+}
