@@ -19,7 +19,7 @@
     "notes": "PR #16906 passed every final-head required check with expected skips and no CI failure; GitHub reported MERGEABLE/CLEAN. Auto-merge was enabled with an exact head guard, never manually merged. GitHub merged it at 2026-10-07T14:47:05Z as 1dc3d896cfd50d5d8261323d7d3b87abe149062e."
   },
   "last_inventory": {
-    "revision": "1dc3d896cfd50d5d8261323d7d3b87abe149062e",
+    "revision": "1da8d7e9d9bdf9911f33172394acd1c326cb72a9",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1495,

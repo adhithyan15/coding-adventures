@@ -16288,7 +16288,8 @@ lanes, 1,495 implementation identities, 4,765 slots, 1,537 all-reported
 identities, 178 high-consensus packages with 262 missing slots, 1,013
 singletons, and 814 Rust singletons. The five OCaml packages remain emerging.
 Canonical collisions and unknown buckets are zero, and no parity PR remains
-open.
+open. A later check on `1da8d7e9d9bdf9911f33172394acd1c326cb72a9`
+after unrelated Algol/Mermaid merges confirmed these counts and clean gates.
 
 Parallel read-only audit confirmed that all 12 executable established
 build-tool front doors and the three core-only Java/Kotlin/Dart lanes have
