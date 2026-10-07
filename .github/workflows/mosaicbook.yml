@@ -46,6 +46,7 @@ jobs:
       # does not include the Cairo development package by default.
       - name: Install Linux build dependencies
         shell: bash
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
         run: |
           set -euo pipefail
           bash code/scripts/ci/apt-install.sh libcairo2-dev

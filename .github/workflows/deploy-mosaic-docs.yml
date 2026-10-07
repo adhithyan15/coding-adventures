@@ -59,19 +59,20 @@ jobs:
         with:
           go-version: "1.21"
 
-      # mosaic-compile links cairo-sys-rs through the paint backend. The
-      # runner's preinstalled vendor repositories are dropped first: they are
-      # unused here, and apt-get update exits non-zero if ANY configured
-      # repository fails, so an unrelated packages.microsoft.com outage would
-      # fail this deploy (#13982).
+      # mosaic-compile links cairo-sys-rs through the paint backend. The shared
+      # apt-install.sh drops the runner's preinstalled vendor repositories
+      # first: they are unused here, and apt's index refresh exits non-zero if
+      # ANY configured repository fails, so an unrelated packages.microsoft.com
+      # outage would fail this deploy (#13982). It also retries and time-boxes
+      # each apt call, and the step timeout below is the backstop, so a stalled
+      # Ubuntu mirror fails in minutes instead of hanging for six hours
+      # (#12163, #12181).
       - name: Install Linux build dependencies
         shell: bash
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
         run: |
           set -euo pipefail
-          sudo rm -f /etc/apt/sources.list.d/microsoft*.list \
-                     /etc/apt/sources.list.d/azure-cli.list || true
-          sudo apt-get update
-          sudo apt-get install -y libcairo2-dev
+          bash code/scripts/ci/apt-install.sh libcairo2-dev
 
       - name: Build mosaic-compile
         shell: bash
