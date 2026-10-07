@@ -63,6 +63,15 @@ export interface ScriptFilmstripTarget extends FigureTargetBase {
    * qualify, and why a Devanagari or Arabic word does not.
    */
   letters?: string[];
+  /**
+   * Present only on a WORD whose letters share one headline (a Devanagari
+   * word, see `headlineWordOf` in `figure-targets.ts`): the strip draws each
+   * letter's body in reading order, then one headline over the whole word.
+   * `glyph` is then the word, and it is one key into the filmstrip ledger,
+   * where `script-ductus` composes it from the cited letters and the font.
+   * Never together with `letters`.
+   */
+  composition?: "shared-headline";
 }
 
 export type FigureTarget = EtymologyRouteTarget | ScriptFilmstripTarget;

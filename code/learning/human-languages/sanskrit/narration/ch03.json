@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d7d8811b44f5f79b",
+  "sourceHash": "fnv1a64:3f4f1de17f297b29",
   "lessons": [
     {
       "id": "SA-C03-katham",
@@ -856,7 +856,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:ff7261a3aa23b2d2",
+      "sourceHash": "fnv1a64:67590d241a8f30be",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -884,7 +884,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep मम (mama) visible. Copy the first म in its three sourced strokes, then copy the second म the same way. Let the two headline strokes meet so the word hangs from one continuous śirorekhā."
+              "text": "Keep मम (mama) visible and follow the numbered strip: write the body of the first म, then the body of the second, and only then draw one śirorekhā left to right across both, so the word hangs from one line. Most native writers leave the headline for last; some draw it first."
             },
             {
               "kind": "speech",

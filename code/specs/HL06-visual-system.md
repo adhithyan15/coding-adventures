@@ -157,7 +157,9 @@ letter keeps its own panels at its own scale, and the `<desc>` says so.
 
 Words are deliberately **not** composed where the parts would assemble into
 something false. Devanagari (and Bengali and Gurmukhi) words share one
-continuous headline, while every cited letter draws its own; Arabic-family
+continuous headline, while every cited letter draws its own (a Devanagari
+word is since drawn another way, as ONE composed entry: see "Devanagari words"
+below); Arabic-family
 letters join and change shape by position, while the ductus holds isolated
 forms; the cited Cyrillic hand is connected cursive. A word with a vowel sign,
 virama or length mark is refused in every script that has no written-order
@@ -308,6 +310,95 @@ Left out:
 * ै and ौ. ै is two strokes in 76 of 83, but the flags' direction splits: 28
   of 83 (34%) draw both from upper left to lower right. ौ's commonest count
   is three strokes in 35 of 83 (42%).
+
+#### As built — Devanagari words: the letters' bodies, then one shared headline
+
+A Devanagari word is not its letters' strips side by side. Every cited letter
+ends with its own "lift, then draw the shirorekha rightward" stroke, while the
+printed word hangs from ONE headline (shirorekhā) that runs across all of its
+letters. So a word gets a strip of its own, drawn in this order:
+
+1. each letter in reading order, its body strokes only, exactly as its own
+   strip draws them (same paths, same labels), with its own headline stroke
+   left out;
+2. then one final movement: the shared headline, drawn once, left to right,
+   from the start of the first letter's headline to the end of the last
+   letter's, along the printed headline of the whole word.
+
+**Why the headline comes last.** That is the native majority, not a rule. In
+HP Labs India's LipiTk 4.0 Devanagari recognizer (native writers' tablet pen
+traces; the model is MIT, the data under it research-only, so only counts and
+shares are cited), the stored prototypes of the 33 consonants draw the
+headline as the LAST stroke in 82% of 2,706 and as the first in about 5%.
+Every cited Devanagari letter already ends with its headline for the same
+reason. Some writers draw the headline first, so the strip prints the
+"attested, not standardised" line and its `<desc>` says so. The traces are
+single letters: no reachable source records native writers' headline timing
+across a whole word (HP Labs India's `hpl-dvng-iso-word` set, which would, is
+on a host the authoring environment cannot reach). Carrying the per-letter
+majority across the word is this book's reading of that data, and the
+figure's source note says so in those words.
+
+**How the headline is found.** No new stroke data is authored. In the
+Devanagari ductus every letter's last stroke is one segment labelled exactly
+"lift, then draw the shirorekha rightward", a horizontal path drawn left to
+right at the headline's height (585 font units; ऋ 586). A letter whose last
+stroke is not that (every sign, and any future letter whose headline is part
+of a body stroke) cannot join a word. Body strokes keep their authored labels
+and are moved right by the advance widths the bundled font gives the letters
+before them (`hmtx`), so each body sits where the printed word puts it.
+
+**Fit to the word's ink.** The composed path is checked against the printed
+word (each letter's outline at its advance) at the default tolerances the
+per-letter ductus meet: at least 97% of every stroke on ink, and under 2% of
+the word's ink farther than 100 units from every path. A word that fails is
+not drawn. In particular a word whose printed headline is broken — a letter
+whose own headline does not reach its left edge (अ आ ओ औ थ ध भ श) anywhere but
+first — fails, because one straight headline would cross blank paper there.
+
+**Which words.** A Devanagari writing lesson whose headword is ONE word of two
+or more graphemes, each grapheme a single base letter (one code point that is
+also one code point in NFD), with a Writing or Script block. Refused:
+
+* any vowel sign, nukta, anusvara, candrabindu, visarga or virama. None has a
+  cited written order against its consonant or the shared headline (the signs'
+  traces were written alone; see above). ि's place is unresolved; ा has no
+  cited ductus at all; the virama would make conjuncts and half forms the font
+  fuses. A precomposed nukta letter (क़, U+0958) decomposes and is refused too.
+* ई and ऐ: Noto Sans Devanagari 2.006 splits them while shaping (GSUB `abvs`
+  multiple-substitution lookup 179: ई → इ + a reph-shaped mark, ऐ → ए + े),
+  so the printed word is not those letters' outlines at their advances.
+  Shaping every two- and three-letter string of the other cited letters with
+  HarfBuzz gives exactly the `cmap` glyphs at their `hmtx` advances, with no
+  offset, so for them the composed outline is the printed word.
+* a letter without a cited ductus, a phrase of several words (each word has
+  its own headline), a list (lists keep the letter-by-letter strip), digits
+  and punctuation.
+
+**What the figure says.** It is one ledger entry keyed by the word
+(`devanagari:मम`), so it prints like a letter's strip: one panel per
+movement, the whole word pale behind every panel, "How it is written — N
+strokes · N−1 pen lifts · M movements". The last caption reads "lift, then the
+word's shirorekha" (two printed lines; "lift, then one shirorekha over the
+word" wrapped to three). Its citation names every letter's source by
+position ("letters 1 and 2: …") and the HP Labs India counts for the headline;
+its `<desc>` says the frames draw the word, letter bodies first and the shared
+headline last. The target carries `composition: "shared-headline"`, and
+`script-ductus` builds the entry for exactly those targets
+(`composeHeadlineWord` in `src/headline-word.ts`; the font's advances come from
+a new `Font.advanceFor`, and the ink measurements the honesty tests used moved
+unchanged into `src/ink.ts` so the composer can refuse at build time).
+
+**What it unlocked.** Three lessons: Sanskrit मम (SA-W03-mama-guided-copy,
+-delayed-copy, -dictation), Sanskrit filmstrips 48 to 51. That is every
+Devanagari writing headword that is one word of bare letters; Hindi, Marathi
+and Marwadi have none. Every other Devanagari word lesson carries a sign
+(नाम, सा, मम नाम: ा; नमः: ः; नमस्ते, धन्यवाद, अस्ति: the virama; हो: ो),
+so the next unlock is a cited written order for ा (and a ductus for it: Noto
+prints ा with a headline piece the shared headline would now cover), which
+would add the six नाम, सा and मम नाम lessons. The guided-copy lesson's prose,
+which told the learner to give each म its own headline stroke and let the two
+meet, now points at the strip.
 
 #### As built — Bengali, cited to native writers' pen traces
 
