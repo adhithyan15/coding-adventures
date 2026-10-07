@@ -506,6 +506,14 @@ with an unrelated Rust change as a negative control. Required native CI must
 show a non-skipped compiler test command and a successful package result on
 Windows as well as Linux/macOS before acceptance.
 
+For a specification-only diff, the gate is insufficient by itself. Map this exact
+specification path to changed package root `rust/programs/closurec` on Linux,
+macOS and Windows, and require the emitted plan to select the compiler and Rust
+toolchain together with the Windows gate. Fail planning if the discovered native
+consumer is missing. Respect explicit non-Rust single-language selection, union
+ordinary package edits, retain deleted/renamed source-path triggers, and reject
+near-path matches without a broad force-build fallback.
+
 Commit specification refinements before implementation, then demonstrate the
 current reproductions failing meaningful acceptance tests before repair.
 Exercise compact and legacy contracts, enabled/disabled allocations, full/partial
