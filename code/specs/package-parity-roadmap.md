@@ -16481,6 +16481,40 @@ result, retain nonzero normalization exactly at the threshold, and test each
 native package plus relevant downstream geometry consumers. The other
 geometry arc and missing-lane owners remain separate.
 
+## Post-#16945 merge and dependency refresh (2026-10-07)
+
+PR #16945 completed all 35 final-head checks acceptably and merged through
+guarded squash auto-merge at `5dffddfa232698543a6936ebf699e2041530257d`;
+there was no manual merge. The collision-checked schema-3 report at
+`4143b306c81edd87fd745ee84df2739c4b9dfa9e` counts 15 established
+languages, 1,496 implementation identities, 4,766 slots, 1,538 all-reported
+identities, 178 high-consensus identities/262 missing slots, 1,014 singleton
+identities/815 Rust singletons, five emerging OCaml packages, zero collisions,
+and zero unknown buckets. The sole new identity, Rust
+`chief-of-staff-vault-secret-store`, is host/security-scoped rather than a
+new portable selection candidate.
+
+Parallel read-only audits registered three previously unowned obligations
+before selecting the next item: a neutral CI-gate fixture for shared pattern
+deduplication at the match-work ceiling (now upstream of thirteen pending
+build-tool consumers), direct G2D00 neutral fixture consumption in all twelve
+existing Point2D lanes, and native `LocalDiskStore` authority/capability
+classification for content-addressable storage. The last is explicitly
+selection-blocked host-security hardening, separate from the portable injected
+CAS backend and its Java/Kotlin/Dart port owner. These additions do not claim
+new package slots. Existing Java, Kotlin, Dart, Swift, Haskell, build-tool,
+and OCaml promotion owners remain open and dependency-shaped.
+
+Select only `geometry-arc2d-existing-api-degenerate-reconciliation` next.
+The neutral G2D03 contract is merged, while Rust, TypeScript, Python, C#,
+and F# expose endpoint `SvgArc` evaluation/bounds that currently return an
+absent result for degenerate arcs. Reconcile absolute-radius `<1e-10` and
+endpoint distance-squared `<1e-20` guards, line evaluation, and ordered
+endpoint bounds in those five lanes, consume the neutral degenerate cases,
+and test native packages and Rust's tracked paint-vm downstream. Keep Go and
+Ruby/Perl/Elixir/Lua/Swift endpoint API additions, the twelve-lane Point2D
+fixture-consumption owner, and absent Java/Kotlin/Dart ports separate.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
