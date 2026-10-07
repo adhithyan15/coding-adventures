@@ -771,8 +771,10 @@ metadata while lowering through backend-neutral rectangles, ellipses, paths,
 filled transition arrowheads, and glyph runs with native Metal-to-PNG
 validation. Transitions follow Mermaid's center-to-center quadratic curves,
 including perpendicular control-point offsets, tangent-aligned arrowheads, and
-control-point label placement. Theme overrides and exact remaining styles
-remain unsupported at the partial level. Confusion domains follow Mermaid's
+control-point label placement. All Cynefin theme fields for colors, stroke
+widths, and text sizes survive init directives or YAML front matter through
+semantic config IR and backend-neutral Paint lowering. Exact item-box styling
+remains unsupported at the partial level. Confusion domains follow Mermaid's
 three-item display cap
 and lower any hidden count to a backend-neutral `+N more` badge.
 Positive `width` and `height` plus non-negative `padding` values from Mermaid

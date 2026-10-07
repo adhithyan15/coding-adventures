@@ -161,7 +161,8 @@ pub fn layout_cynefin(diagram: &CynefinDiagram) -> LayoutedCynefinDiagram {
     let cliff = cynefin_cliff(&diagram.config, left, top);
     LayoutedCynefinDiagram { width, height, title: diagram.title.clone(), accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
-        show_domain_descriptions: diagram.config.show_domain_descriptions, domains, boundaries, cliff, transitions }
+        show_domain_descriptions: diagram.config.show_domain_descriptions, style: diagram.config.style.clone(),
+        domains, boundaries, cliff, transitions }
 }
 
 fn cynefin_boundaries(config: &diagram_ir::CynefinConfig, left: f64, top: f64) -> Vec<LayoutedCynefinBoundary> {
@@ -396,7 +397,7 @@ mod tests {
     fn cynefin_layout_places_domains_in_fixed_semantic_quadrants() {
         let layout = layout_cynefin(&CynefinDiagram { title: None, accessibility_title: None, accessibility_description: None,
             config: diagram_ir::CynefinConfig { width: 640.0, height: 420.0, padding: 24.0, show_domain_descriptions: false,
-                boundary_amplitude: 12.0, seed: 17 },
+                boundary_amplitude: 12.0, seed: 17, style: diagram_ir::CynefinStyle::default() },
             domains: vec![diagram_ir::CynefinDomain { name: "confusion".into(),
                 items: vec!["One".into(), "Two".into(), "Three".into(), "Four".into(), "Five".into()] }],
             transitions: vec![diagram_ir::CynefinTransition { from: "complex".into(), to: "clear".into(), label: None }] });

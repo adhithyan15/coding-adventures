@@ -183,6 +183,18 @@ fn pinned_cynefin_subset_corpus_parses_to_domain_map_ir() {
             assert!(!diagram.config.show_domain_descriptions);
             assert_eq!((diagram.config.boundary_amplitude, diagram.config.seed), (12.0, 17));
         }
+        if name == "theme-config" {
+            let style = &diagram.config.style;
+            assert_eq!((style.domain_font_size, style.item_font_size), (18.0, 13.0));
+            assert_eq!((&style.boundary_color, style.boundary_width, &style.cliff_color, style.cliff_width),
+                (&"#112233".to_string(), 3.0, &"#441111".to_string(), 5.0));
+            assert_eq!((&style.arrow_color, style.arrow_width, &style.confusion_bg, &style.label_color),
+                (&"#224466".to_string(), 4.0, &"#eee1f1".to_string(), &"#101010".to_string()));
+        }
+        if name == "theme-front-matter" {
+            assert_eq!(diagram.config.style.boundary_color, "#334455");
+            assert_eq!(diagram.config.style.complex_bg, "#ddeedd");
+        }
     }
     assert_eq!(parse_cynefin("cynefin-beta\nclear").expect("default seed source").config.seed, 145_697_634);
     assert_eq!(parse_cynefin("%%{init: {\"cynefin\": {\"seed\": 0}}}%%\ncynefin-beta\nclear")

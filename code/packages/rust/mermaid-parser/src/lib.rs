@@ -599,7 +599,7 @@ use diagram_ir::{
     TemporalKind, TimelineDiagram, TimelineDirection,
     TimelinePeriod, TimelineSection, TreemapDiagram, TreemapNode, VennDiagram, VennRegion,
     VennStyle, VennText, XyAxisConfig, XyChartConfig,
-    CynefinConfig, CynefinDiagram, CynefinDomain, CynefinTransition, IshikawaCause, IshikawaDiagram,
+    CynefinConfig, CynefinDiagram, CynefinDomain, CynefinStyle, CynefinTransition, IshikawaCause, IshikawaDiagram,
     WardleyDiagram, WardleyEvolution, WardleyLink, WardleyNode, TreeViewDiagram, TreeViewNode,
     TreeViewNodeKind,
 };
@@ -5746,7 +5746,35 @@ fn parse_cynefin_config(source: &str) -> CynefinConfig {
     CynefinConfig { width: positive("width", defaults.width), height: positive("height", defaults.height),
         padding: non_negative("padding", defaults.padding),
         show_domain_descriptions: boolean("showDomainDescriptions", defaults.show_domain_descriptions),
-        boundary_amplitude: non_negative("boundaryAmplitude", defaults.boundary_amplitude), seed }
+        boundary_amplitude: non_negative("boundaryAmplitude", defaults.boundary_amplitude), seed,
+        style: parse_cynefin_style(source) }
+}
+
+fn parse_cynefin_style(source: &str) -> CynefinStyle {
+    let defaults = CynefinStyle::default();
+    let front_matter = mermaid_front_matter_section(source, &["config", "themeVariables", "cynefin"]);
+    let config = mermaid_directive_object(source, "themeVariables")
+        .and_then(|theme| mermaid_directive_object(theme, "cynefin"))
+        .or(front_matter.as_deref()).unwrap_or("");
+    let value = |name: &str| {
+        quadrant_directive_value(config, name).or_else(|| config.lines().find_map(|line| {
+            let (key, value) = line.trim().split_once(':')?;
+            (key.trim() == name).then(|| value.trim().trim_matches(['"', '\'']).to_string())
+        }))
+    };
+    let positive = |name: &str, fallback: f64| value(name).and_then(|value| value.parse::<f64>().ok())
+        .filter(|value| value.is_finite() && *value > 0.0).unwrap_or(fallback);
+    let text = |name: &str, fallback: &str| value(name).filter(|value| !value.is_empty()).unwrap_or_else(|| fallback.to_string());
+    CynefinStyle { domain_font_size: positive("domainFontSize", defaults.domain_font_size),
+        item_font_size: positive("itemFontSize", defaults.item_font_size),
+        boundary_color: text("boundaryColor", &defaults.boundary_color),
+        boundary_width: positive("boundaryWidth", defaults.boundary_width),
+        cliff_color: text("cliffColor", &defaults.cliff_color), cliff_width: positive("cliffWidth", defaults.cliff_width),
+        arrow_color: text("arrowColor", &defaults.arrow_color), arrow_width: positive("arrowWidth", defaults.arrow_width),
+        complex_bg: text("complexBg", &defaults.complex_bg), complicated_bg: text("complicatedBg", &defaults.complicated_bg),
+        chaotic_bg: text("chaoticBg", &defaults.chaotic_bg), clear_bg: text("clearBg", &defaults.clear_bg),
+        confusion_bg: text("confusionBg", &defaults.confusion_bg), text_color: text("textColor", &defaults.text_color),
+        label_color: text("labelColor", &defaults.label_color) }
 }
 
 fn mermaid_string_hash(value: &str) -> i32 {
