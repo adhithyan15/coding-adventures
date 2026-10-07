@@ -50,6 +50,26 @@ function entry(overrides: Partial<FilmstripEntry> = {}): FilmstripEntry {
 }
 
 describe("the printed filmstrip", () => {
+  it("describes a composed word as a word: letter bodies first, then one headline", () => {
+    // A Devanagari word is ONE ledger entry keyed by the whole word, composed
+    // by script-ductus; its desc must not call the pale shape "the letter".
+    const word = renderScriptFilmstripFigure(
+      "SA-W1",
+      entry({ script: "devanagari", glyph: "मम", font: "_fonts/NotoSansDevanagari-Static.ttf" }),
+    );
+    expect(word.svg).toContain(
+      "of मम (devanagari): each letter&apos;s body in reading order, then one headline over the whole word; " +
+        "the movement being added is drawn in ink over the finished word, whose outline (each letter&apos;s " +
+        "at the font&apos;s advance) is read from _fonts/NotoSansDevanagari-Static.ttf. Stroke order after",
+    );
+    expect(word.svg).toContain("<title>Writing मम</title>");
+    // A letter's desc is unchanged.
+    expect(renderScriptFilmstripFigure("TA-S1", entry()).svg).toContain(
+      "of அ (tamil), the movement being added drawn in ink over the finished letter, " +
+        "whose outline is read from _fonts/NotoSansTamil-Static.ttf. Stroke order after",
+    );
+  });
+
   it("lays every frame out in the letter's one shared box", () => {
     const figure = renderScriptFilmstripFigure("TA-S119-letter-a", entry());
 

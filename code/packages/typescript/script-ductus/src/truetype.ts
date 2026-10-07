@@ -76,6 +76,15 @@ export interface Font {
   mappedCharacters: number;
   glyphIdFor(character: string): number | undefined;
   glyphFor(character: string): Glyph | undefined;
+  /**
+   * How far the pen moves right after this character, in font units (the
+   * `hmtx` advance width of its `cmap` glyph), or `undefined` when the font
+   * does not map the character or carries no horizontal metrics.
+   *
+   * One letter never needs it. A WORD does: the second letter of a printed
+   * word starts where the first one's advance ends, not where its ink ends.
+   */
+  advanceFor(character: string): number | undefined;
 }
 
 // A cursor over a byte buffer. Font files are big-endian throughout.
@@ -239,6 +248,31 @@ export function parseFont(bytes: ArrayBuffer): Font {
     readCmapFormat12(view, chosen.offset, charToGlyph, cmapBudget);
   }
 
+  // ---- hhea + hmtx: how far each glyph moves the pen ------------------------
+  // `hmtx` stores (advanceWidth, leftSideBearing) pairs for the first
+  // `numberOfHMetrics` glyphs (a count kept in `hhea`, at byte 34), then bare
+  // side bearings for the rest, which all share the LAST pair's advance — a
+  // monospaced tail costs two bytes a glyph instead of four. Both tables are
+  // optional here: a font without them still draws letters, and only asking
+  // for an advance answers `undefined`. The count is clamped to the glyph count
+  // and to the table's own length, like every other file-controlled bound.
+  const advances: number[] = [];
+  {
+    const hhea = tables.get("hhea");
+    const hmtx = tables.get("hmtx");
+    if (hhea !== undefined && hmtx !== undefined && hhea.length >= 36) {
+      const declared = view.getUint16(hhea.offset + 34);
+      const count = Math.min(declared, numGlyphs, Math.floor(hmtx.length / 4));
+      const c = new Cursor(view, hmtx.offset);
+      for (let i = 0; i < count; i++) {
+        advances.push(c.u16());
+        c.skip(2); // leftSideBearing: where the ink starts, not where the pen goes
+      }
+    }
+  }
+  const advanceOf = (glyphId: number): number | undefined =>
+    advances.length === 0 ? undefined : advances[Math.min(glyphId, advances.length - 1)];
+
   // ---- glyf: the outlines ---------------------------------------------------
   const glyfOffset = tableAt("glyf").offset;
 
@@ -283,6 +317,12 @@ export function parseFont(bytes: ArrayBuffer): Font {
       if (id === undefined) return undefined;
       const contours = contoursOf(id);
       return { id, contours, path: contoursToPath(contours) };
+    },
+    advanceFor(character: string) {
+      const cp = character.codePointAt(0);
+      if (cp === undefined) return undefined;
+      const id = charToGlyph.get(cp);
+      return id === undefined ? undefined : advanceOf(id);
     },
   };
 }

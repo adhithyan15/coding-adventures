@@ -1309,7 +1309,10 @@ backend immediately) come before the enabler-dependent items.
   composition with finite static operands, and real-valued standard functions
   preserve it, while a finite static real actual is safe directly. Variable-free
   exact `sign` and exact-range `entier` results may also widen through a real
-  name formal.
+  name formal. Built-in `sign` also preserves the proof for a selector-safe
+  runtime-real operand because its result is always `-1`, `0`, or `1`; the
+  same bounded result preserves formatter provenance when widened through an
+  ordinary real assignment or direct real name formal.
   Provenance-backed local and other real-name branches remain conservative
   across selector calls. Unary plus
   and unary minus preserve the same runtime-real proof. Additive composition,

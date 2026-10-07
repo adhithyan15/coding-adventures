@@ -26,6 +26,10 @@
 //                  1..k travelled in ink over the finished glyph in pale grey,
 //                  with a dot where the pen is.
 //
+// Two helpers sit beside them. `headline-word.ts` composes a Devanagari WORD
+// from its cited letters: their bodies, then one headline across the word,
+// checked against the printed word with the ink measurements in `ink.ts`.
+//
 // The reason the outline comes from the font rather than from a second
 // hand-drawn shape is that it makes a whole class of error impossible to hide.
 // A pen path that has drifted away from the letter it claims to draw shows up
@@ -95,6 +99,18 @@ export {
   isSafeName,
   svgMarkup,
 } from "./ductusview.ts";
+
+export {
+  type HeadlineSplit,
+  type HeadlineWord,
+  LETTER_HEADLINE_LABEL,
+  WORD_HEADLINE_LABEL,
+  HEADLINE_WORD_SCRIPTS,
+  HEADLINE_LAST_SOURCE,
+  splitHeadline,
+  headlineWordSource,
+  composeHeadlineWord,
+} from "./headline-word.ts";
 
 export {
   type FilmstripViewBox,

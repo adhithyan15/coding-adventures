@@ -13,7 +13,8 @@
 //
 // This module removes the manual steps for the case that is always the same: a
 // `type: writing` lesson whose headword is ONE letter (or, since the sequence
-// strips below, a list of letters or a word whose letters stand apart), with a `## Writing:`
+// strips below, a list of letters or a word whose letters stand apart, or,
+// since the shared-headline strips, a Devanagari word), with a `## Writing:`
 // block (or, where a track presents its letters that way, a `## Script`
 // block), on a track that has been switched on below. Such a lesson is a
 // candidate. The candidate becomes a figure only if `script-ductus` holds a
@@ -165,6 +166,8 @@ export function writingLetterOf(lesson: ParsedLesson): string | undefined {
 //   devanagari        one continuous headline (shirorekha) across the word;
 //                     every cited letter ends "lift, then draw the
 //                     shirorekha", so a composed word would show N headlines
+//                     (a Devanagari word has its own strip instead: its
+//                     letters' bodies, then ONE headline; `headlineWordOf`)
 //   arabic family     letters join and change shape (initial / medial /
 //                     final); the ductus is isolated forms only
 //   cyrillic          the cited school hand is connected cursive, whose own
@@ -181,9 +184,11 @@ export function writingLetterOf(lesson: ParsedLesson): string | undefined {
  * letter and the next. A word in one of these, made only of cited base
  * letters, is honestly drawn as its letters one after another.
  *
- * Bengali and Gurmukhi are absent for the Devanagari reason above (a shared
- * headline). Both now have cited letters, so a LIST of them is drawn, but a
- * word never is.
+ * Devanagari, Bengali and Gurmukhi are absent for the reason above (a shared
+ * headline). All three have cited letters, so a LIST of them is drawn. A
+ * Devanagari WORD is drawn another way (`headlineWordOf`); a Bengali or
+ * Gurmukhi word never is: Gurmukhi's cited source draws the headline FIRST,
+ * and Bengali's letters do not treat it one way.
  */
 export const SEPARATE_LETTER_SCRIPTS: ReadonlySet<string> = new Set([
   "chinese",
@@ -267,11 +272,33 @@ const SIGNS_ONLY = /^\p{M}+$/u;
 //   * The virama ્ and the vocalic-r sign ૃ have no row: no Gujarati source
 //     gives their pen path or place, so every word with one stays refused.
 //
+// Malayalam has a table with one row. Its anusvara ം is written AFTER its
+// base, to the right of it:
+//
+//     typed (code points)      written (by hand)        looks like
+//     ----------------------   ----------------------   ----------
+//     അ + ം                    അ, then the ring         അം
+//     ക + ം                    ക, then the ring         കം
+//
+//   * The anusvara's mark record (data/scripts/malayalam.json) cites it as
+//     its `compositionSource`: in Rodney F. Moag's Malayalam: A University
+//     Course and Reference Grammar, Table II numbers the ring of അം as
+//     movement 9, after the eight movements of അ, and Table III draws ം to
+//     the right of a dash standing for the consonant. A test holds the row
+//     to that record. Dumping every GSUB lookup of Noto Sans Malayalam that
+//     mentions the anusvara glyph finds only Vedic-sign reorderings, so no
+//     consonant + ം pair is fused.
+//   * Moag draws each vowel sign beside that dash too, but never numbers the
+//     consonant against the sign, so no Malayalam vowel sign has a row: a
+//     sign is drawn only by itself, in a lesson that teaches it alone, and a
+//     word with a vowel sign stays refused. So does every word with the
+//     candrakkala ്, whose Moag table gives no movements at all.
+//
 // Everything without a row is refused: the Tamil signs ு and ூ (no cited
 // ductus, and they fuse with their consonant into shapes of their own),
-// Gujarati ્ and ૃ, and every sign in every other script
-// (Devanagari ि, the kana voicing mark ゙), because no other script has a
-// table yet.
+// Gujarati ્ and ૃ, every Malayalam sign but ം, and every sign in every
+// other script (Devanagari ि, the kana voicing mark ゙), because no other
+// script has a table yet.
 //
 // Two signs on the same side of one consonant (Gujarati ાં, a vowel sign and
 // then the anusvara) are refused as well: each sign's own place is cited, but
@@ -324,6 +351,9 @@ export const WRITTEN_SIGN_SIDES: Readonly<Record<string, Readonly<Record<string,
     "\u0ACC": "after", //  ૌ  au
     "\u0A82": "after", //  ં  anusvara
     "\u0A83": "after", //  ઃ  visarga
+  },
+  malayalam: {
+    "\u0D02": "after", //  ം  anusvara (a ring to the right, after its base)
   },
 };
 
@@ -535,6 +565,112 @@ export function writingSequenceOf(lesson: ParsedLesson, script: string): string[
   return pieces.flat() as string[];
 }
 
+// ---------------------------------------------------------------------------
+// Devanagari words: the letters' bodies, then ONE shared headline
+// ---------------------------------------------------------------------------
+//
+// A Devanagari word hangs from one headline, so it is not its letters' strips
+// side by side (see the table above). It gets a strip of its own instead:
+//
+//     मम   ->   म's body,  म's body (moved right by the first म's advance),
+//               then ONE headline, left to right, over the whole word
+//
+// The headline comes last because most native writers draw it last: in HP Labs
+// India's LipiTk 4.0 Devanagari recognizer, 82% of the 2,706 stored consonant
+// prototypes end with the headline and about 5% begin with it. Some writers do
+// begin with it, and the traces are single letters, not words, so the strip
+// prints "attested, not standardised" and its source note says both things.
+//
+// The composing is done in `script-ductus` (`composeHeadlineWord`), which has
+// the cited letters and the font: it takes each letter's last stroke off (its
+// "lift, then draw the shirorekha rightward"), places the bodies at the font's
+// advances, draws the one headline, and refuses any word whose result does not
+// fit the printed word's ink at the default tolerances. That last check is
+// what refuses, say, मथ: थ's own headline does not reach its left edge, so the
+// printed line is broken there and one straight headline would cross paper.
+//
+// THIS module decides which headwords are worth trying, from the text alone:
+//
+//   * one word (no space, comma, dash or dot) of two or more letters;
+//   * every letter a single base letter of the script, one code point that
+//     NFD leaves alone. So EVERY sign is refused: no Devanagari sign has a
+//     cited place against its consonant or the shared headline (the signs'
+//     traces were written alone); ि's place is unresolved; ा has no cited
+//     ductus; the virama makes the conjuncts and half forms the font fuses;
+//     and a precomposed nukta letter (क़, U+0958) decomposes into क + ़;
+//   * no letter the bundled font SPLITS while shaping, listed with its
+//     citation in `HEADLINE_WORD_SPLIT_LETTER_SOURCES` (ई and ऐ): the strip
+//     lays out each letter's own outline at its advance, which is what the
+//     printed word shows only when the font prints that outline unchanged.
+//
+// Shaping every two- and three-letter string of the other cited letters with
+// HarfBuzz gave exactly their `cmap` glyphs at their `hmtx` advances, with no
+// offsets, so for them the composed outline IS the printed word.
+
+/**
+ * Scripts whose words are drawn as their letters' bodies and one shared
+ * headline, with the Unicode script every letter must belong to.
+ * `HEADLINE_WORD_SCRIPTS` in script-ductus names the same scripts; a test
+ * there holds the two together.
+ */
+export const HEADLINE_WORD_SCRIPTS: Readonly<Record<string, RegExp>> = {
+  devanagari: /^\p{Script=Devanagari}$/u,
+};
+
+/** One cited reason that the bundled font prints some letters as other glyphs. */
+export interface SplitLetterSource {
+  /** Where the substitution is, specific enough to check (font version, table, lookup). */
+  readonly citation: string;
+  /** An HTTPS URL for the source. */
+  readonly url: string;
+  /** The letters it splits. */
+  readonly letters: readonly string[];
+}
+
+/**
+ * Letters the bundled font replaces while shaping, so a word containing one is
+ * not its letters' outlines at their advances. A test checks that the bundled
+ * Devanagari font is still the version cited.
+ */
+export const HEADLINE_WORD_SPLIT_LETTER_SOURCES: Readonly<Record<string, readonly SplitLetterSource[]>> = {
+  devanagari: [
+    {
+      citation:
+        "Noto Sans Devanagari Version 2.006, bundled as learning/human-languages/_fonts/" +
+        "NotoSansDevanagari-Static.ttf: GSUB 'abvs' multiple-substitution lookup 179 replaces ई " +
+        "with इ plus a reph-shaped mark (glyph uni0930094D) and ऐ with ए plus े, each placed by GPOS",
+      url: "https://github.com/notofonts/devanagari",
+      letters: ["\u0908", "\u0910"], // ई ऐ
+    },
+  ],
+};
+
+/**
+ * The word a writing lesson's headword is, when it is a word this module asks
+ * `script-ductus` to compose with one shared headline; `undefined` otherwise.
+ * Like every candidate, it needs a Writing or Script block to land in, and
+ * whether it is DRAWN is the ledger's answer (`withDerivedFilmstrips`).
+ */
+export function headlineWordOf(lesson: ParsedLesson, script: string): string | undefined {
+  const letterScript = HEADLINE_WORD_SCRIPTS[script];
+  if (letterScript === undefined) return undefined;
+  if (lesson.realization.type !== "writing") return undefined;
+  if (letterBlockIndex(lesson) === -1) return undefined;
+  const word = (lesson.realization.headword ?? "").trim();
+  if (word === "" || LIST_SEPARATORS.test(word)) return undefined;
+  const letters = [...word];
+  if (letters.length < 2) return undefined;
+  const split = new Set((HEADLINE_WORD_SPLIT_LETTER_SOURCES[script] ?? []).flatMap((source) => source.letters));
+  const fits = letters.every(
+    (letter) =>
+      BASE_LETTER.test(letter) &&
+      letterScript.test(letter) &&
+      letter.normalize("NFD") === letter &&
+      !split.has(letter),
+  );
+  return fits ? word : undefined;
+}
+
 /** Every lesson on a switched-on track that COULD carry a filmstrip. */
 export function filmstripCandidates(
   lessons: readonly ParsedLesson[],
@@ -550,6 +686,20 @@ export function filmstripCandidates(
     // (the two-part sign ோ) is a sequence, not a letter.
     const letters = writingSequenceOf(lesson, script);
     if (letters === undefined) {
+      // A Devanagari word: one entry, composed from its letters and one
+      // shared headline by script-ductus.
+      const word = headlineWordOf(lesson, script);
+      if (word !== undefined) {
+        candidates.push({
+          kind: "script-filmstrip",
+          lessonId,
+          script,
+          glyph: word,
+          composition: "shared-headline",
+          output,
+        });
+        continue;
+      }
       const glyph = writingLetterOf(lesson);
       if (glyph !== undefined) candidates.push({ kind: "script-filmstrip", lessonId, script, glyph, output });
       continue;
@@ -605,6 +755,8 @@ export function withDerivedFilmstrips(
 /**
  * The Markdown image a book prints for a filmstrip target.
  *
+ * A Devanagari word reads "How मम is written, letter by letter, then one
+ * headline": its strip draws the letters' bodies and then the one headline.
  * A sequence reads "How はい is written" when its letters spell the headword
  * as one word, and "How the letters வ, க are written" when the headword is a
  * LIST — the letters joined back together are then not the headword, because
@@ -614,6 +766,10 @@ export function withDerivedFilmstrips(
  */
 export function filmstripImageMarkdown(target: ScriptFilmstripTarget): string {
   const file = `figures/${basename(target.output)}`;
+  // A shared-headline word: its letters' bodies, then one headline across it.
+  if (target.composition === "shared-headline") {
+    return `![How ${target.glyph} is written, letter by letter, then one headline, stroke by stroke](${file})`;
+  }
   if (target.letters === undefined) return `![How ${target.glyph} is written, stroke by stroke](${file})`;
   // A strip with a vowel sign in it draws PIECES in written order ("மேசை" is
   // ே, ம, ை, ச), which never spell the headword back, so it is captioned by
