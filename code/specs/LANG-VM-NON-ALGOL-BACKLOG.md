@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-07 — re-audited after PREP01 C staging
+Status date: 2026-10-07 — re-audited after LANG82's first release-grammar installment
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -101,17 +101,23 @@ token-handoff stage and merged as `7cafea593aca52764f49ee2e528e7e1cad11031f`
 after its exact-head CI, CodeQL, and books checks passed. Its `compile_source`
 still uses the legacy path; full C `#if`, stringize/paste, and actual
 preprocessor-to-C-frontend composition remain open.
+PR #16907 delivered LANG82's first source-grounded release-grammar installment
+and merged as `2fd67ab15143282dc138eb9b484b945dbe927381` after its
+latest-head CI, CodeQL, and books checks passed. Its inventory has 774 public
+release entries, 21 distinct explicitly partial token/grammar pairs and 753
+pending pairs. The inventory and partial grammars do not satisfy the user's
+complete per-release request; continue source-backed coverage in bounded work.
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG82 Perl release grammars (selected):** publish the source-grounded
-   release inventory and individually checked partial grammar/token pairs as a
-   bounded first installment. Continue until every public release has its own
-   files; do not label partial pairs complete or treat the first installment as
-   satisfying the full per-release request.
-2. **PREP01 C:** complete full C `#if` semantics, stringize/paste, and
-   preprocessor-to-C-frontend composition with executed end-to-end tests.
+1. **PREP01 C (selected):** compose the staged dialect with a rooted C
+   file-input frontend and execute a real include, macro and conditional
+   program. Continue toward full C `#if`, stringize/paste and default frontend
+   routing after this bounded step.
+2. **LANG82 Perl release grammars:** add distinct source-backed token and
+   grammar files for the 753 remaining inventoried releases, and continue the
+   inventory audit. Every currently published pair remains explicitly partial.
 
 The following run records the first VM-067 selection.
 

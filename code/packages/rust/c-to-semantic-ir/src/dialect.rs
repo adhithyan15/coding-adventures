@@ -1,8 +1,8 @@
 //! C's directive syntax for the shared PREP01 engine.
 //!
-//! This is the classification handoff. The C frontend will compose it with
-//! `preprocess` once conditional expressions and C's `#`/`##` macro operators
-//! are implemented. Until then the existing source compiler is unchanged.
+//! The rooted C file-input frontend composes this dialect with `preprocess`.
+//! Its condition evaluator remains bounded, and C's `#`/`##` macro operators
+//! remain unsupported. The pathless source compiler retains its legacy path.
 
 use coding_adventures_c_lexer::try_tokenize_c;
 use coding_adventures_source_preprocessor::{
@@ -96,6 +96,31 @@ fn condition_operand(token: &Token) -> Result<i64, PpError> {
     Err(PpError::new(
         "C conditional operand is not supported by this handoff yet",
     ))
+}
+
+fn condition_clause(tokens: &[Token]) -> Result<bool, PpError> {
+    match tokens {
+        [token] => Ok(condition_operand(token)? != 0),
+        [not, token] if not.value == "!" => Ok(condition_operand(token)? == 0),
+        [left, op, right] => {
+            let left = condition_operand(left)?;
+            let right = condition_operand(right)?;
+            match op.value.as_str() {
+                "==" => Ok(left == right),
+                "!=" => Ok(left != right),
+                "<" => Ok(left < right),
+                "<=" => Ok(left <= right),
+                ">" => Ok(left > right),
+                ">=" => Ok(left >= right),
+                _ => Err(PpError::new(
+                    "C conditional expression is not supported by this handoff yet",
+                )),
+            }
+        }
+        _ => Err(PpError::new(
+            "C conditional expression is not supported by this handoff yet",
+        )),
+    }
 }
 
 fn include(rest: &[Token]) -> Result<Directive, PpError> {
@@ -304,30 +329,27 @@ impl Dialect for CDialect {
     }
 
     fn eval_condition(&self, tokens: &[Token]) -> Result<bool, PpError> {
-        match tokens {
-            [token] => Ok(condition_operand(token)? != 0),
-            [left, op, right] => {
-                let left = condition_operand(left)?;
-                let right = condition_operand(right)?;
-                let result = match op.value.as_str() {
-                    "==" => left == right,
-                    "!=" => left != right,
-                    "<" => left < right,
-                    "<=" => left <= right,
-                    ">" => left > right,
-                    ">=" => left >= right,
-                    _ => {
-                        return Err(PpError::new(
-                            "C conditional expression is not supported by this handoff yet",
-                        ))
-                    }
-                };
-                Ok(result)
+        let mut any = false;
+        for disjunct in tokens.split(|token| token.value == "||") {
+            if disjunct.is_empty() {
+                return Err(PpError::new(
+                    "C conditional expression has an empty OR operand",
+                ));
             }
-            _ => Err(PpError::new(
-                "C conditional expression is not supported by this handoff yet",
-            )),
+            let mut all = true;
+            for conjunct in disjunct.split(|token| token.value == "&&") {
+                if conjunct.is_empty() {
+                    return Err(PpError::new(
+                        "C conditional expression has an empty AND operand",
+                    ));
+                }
+                // Validate every operand even when a previous one determines
+                // the result: this partial grammar must reject unsupported syntax.
+                all &= condition_clause(conjunct)?;
+            }
+            any |= all;
         }
+        Ok(any)
     }
 
     fn lex(&self, text: &str, _file: FileId) -> Result<Vec<Token>, PpError> {
@@ -540,5 +562,55 @@ mod tests {
         let dialect = CDialect::default();
         let tokens = dialect.lex(source, file).unwrap();
         assert!(preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err());
+    }
+
+    #[test]
+    fn logical_conditions_use_and_before_or() {
+        for (condition, expected) in [
+            ("1 || 0 && 0", "1"),
+            ("0 || 1 && 0", "0"),
+            ("!0 && 7 > 2", "1"),
+            ("!1 || 2 == 2", "1"),
+            ("defined(ANSWER) && ANSWER == 7", "1"),
+        ] {
+            let source = format!(
+                "#define ANSWER 7\n#if {condition}\nint x = 1;\n#else\nint x = 0;\n#endif\n"
+            );
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+            let values: Vec<_> = result
+                .tokens
+                .iter()
+                .map(|token| token.value.as_str())
+                .collect();
+            assert_eq!(values, ["int", "x", "=", expected, ";"], "{condition}");
+        }
+    }
+
+    #[test]
+    fn unsupported_or_malformed_logical_conditions_fail() {
+        for condition in [
+            "1 &&",
+            "|| 1",
+            "1 || || 0",
+            "(1)",
+            "!1 == 0",
+            "1 + 2",
+            "0 && (1)",
+            "1 || (1)",
+        ] {
+            let source = format!("#if {condition}\nint x = 1;\n#endif\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            assert!(
+                preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err(),
+                "{condition}"
+            );
+        }
     }
 }

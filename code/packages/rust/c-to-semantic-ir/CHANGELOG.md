@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased — PREP01 rooted C file composition
+
+- Add `compile_preprocessed_file` for bounded, rooted C file input: it passes
+  PREP01 output directly to the C token parser and SIR lowerer. An included
+  macro/conditional program executes through the SIR-to-Ruby backend in the
+  integration test.
+- Extend the deliberately partial C `#if` evaluator with single-operand `!`
+  and `&&`/`||` chains, respecting `&&` precedence; unsupported forms fail.
+- Bound the primary entry spelling before copying it. Quoted includes search
+  declared roots only; relative-to-header lookup, full C conditions,
+  stringize/paste and pathless `compile_source` routing remain pending.
+- Preserve the directive location when condition evaluation fails.
+
 ## Unreleased — PREP01 C directive classifier handoff
 
 - Add a bounded `CDialect` adapter that classifies local includes, object- and
