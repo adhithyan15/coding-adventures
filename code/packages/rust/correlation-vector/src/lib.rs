@@ -65,6 +65,15 @@ use serde_json::Value;
 // We take only the first 8 hex characters of the hash.
 use coding_adventures_sha256::sha256_hex;
 
+/// Dispose of caller-owned metadata without recursive Value destruction.
+///
+/// Use when rejecting a batch of evidence that was never transferred to a log.
+/// This necessarily visits already-owned payloads; graph-operation work limits
+/// cannot bound disposal of arbitrary memory constructed by the caller.
+pub fn dispose_metadata(meta: HashMap<String, Value>) {
+    cleanup::metadata(meta);
+}
+
 #[cfg(test)]
 mod compact_tests;
 

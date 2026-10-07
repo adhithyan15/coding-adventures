@@ -104,6 +104,8 @@ Counts and encoding bytes provide finite limits, rather than a precise RAM cap.
 Import/export share work allowances across phases. Destruction of oversized
 caller-owned arguments is iterative; disposing of already-transferred memory
 necessarily visits that payload outside the graph-processing allowance.
+`dispose_metadata` safely drains pending owned evidence batches without
+recursive destruction or changing public record move-field semantics.
 
 Checked import rejects missing/unknown record fields, duplicate decoded keys at
 every level, disabled/incomplete history and declared projections. Queries

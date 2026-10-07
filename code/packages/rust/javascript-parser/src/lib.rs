@@ -304,16 +304,27 @@ mod tests {
 
     #[test]
     fn checked_cv_root_allocation_and_contribution_failures_return_parser_errors() {
-        let tokens = coding_adventures_javascript_lexer::tokenize_javascript_typed("1;", EsVersion::Es5).unwrap().len();
-        let mut capped = CVLog::new_checked_compact(coding_adventures_correlation_vector::GraphLimits {
-            max_nodes: tokens, ..Default::default()
-        }).unwrap();
-        let error = parse_javascript_with_cv("1;", "input.js", EsVersion::Es5, &mut capped).unwrap_err();
+        let tokens =
+            coding_adventures_javascript_lexer::tokenize_javascript_typed("1;", EsVersion::Es5)
+                .unwrap()
+                .len();
+        let mut capped =
+            CVLog::new_checked_compact(coding_adventures_correlation_vector::GraphLimits {
+                max_nodes: tokens,
+                ..Default::default()
+            })
+            .unwrap();
+        let error =
+            parse_javascript_with_cv("1;", "input.js", EsVersion::Es5, &mut capped).unwrap_err();
         assert!(error.contains("nodes limit"), "{error}");
-        let mut capped = CVLog::new_checked_compact(coding_adventures_correlation_vector::GraphLimits {
-            max_events: 0, ..Default::default()
-        }).unwrap();
-        let error = parse_javascript_with_cv("1;", "input.js", EsVersion::Es5, &mut capped).unwrap_err();
+        let mut capped =
+            CVLog::new_checked_compact(coding_adventures_correlation_vector::GraphLimits {
+                max_events: 0,
+                ..Default::default()
+            })
+            .unwrap();
+        let error =
+            parse_javascript_with_cv("1;", "input.js", EsVersion::Es5, &mut capped).unwrap_err();
         assert!(error.contains("events limit"), "{error}");
     }
 

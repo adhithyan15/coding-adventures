@@ -4,6 +4,12 @@ All notable changes to the `coding-adventures-closure-pass-constant-fold` crate 
 
 ## [Unreleased]
 
+### Fixed — CV02 checked provenance errors
+
+- Latch the first checked derivation/merge/contribution failure in the recursive
+  visitor and return a pass error before accepting its candidate program.
+  Node/edge/event/merge limit regressions replace prior panics.
+
 ### Fixed - primitive folds retain actual operand lineage (CLOC31 / CCR-065)
 
 String-literal `.length`, primitive binary folds and primitive unary folds

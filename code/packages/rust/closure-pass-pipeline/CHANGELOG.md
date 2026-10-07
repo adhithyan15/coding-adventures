@@ -6,6 +6,10 @@ All notable changes to the `coding-adventures-closure-pass-pipeline` crate will 
 
 ### Fixed
 
+- Transfer returned metadata before validation; safely drain remaining/omitted
+  payloads on an error or absent program identity. A small-stack child process
+  covers 65,536-level metadata without recursive cloning/destruction.
+
 - CV02: reject a pass result when its requested program contribution cannot be recorded; preserve pass-specific diagnostics.
 
 - The fixed-point test helper now decrements its atomic change budget with a

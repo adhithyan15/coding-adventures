@@ -77,3 +77,10 @@ Plus `coding-adventures-javascript-tokens` as a dev-dependency for
   placeholders. Run with
   `cargo test --test upstream_peephole_replace_known_methods` (every case is
   active — nothing is ignored).
+
+## Checked provenance failures (CV02)
+
+The recursive visitor retains its first derivation, merge or contribution
+error. `Pass::run` returns it before accepting the transformed program; later
+forks stop recording. Checked resource exhaustion is an error, not a panic or
+an accepted replacement with missing evidence.

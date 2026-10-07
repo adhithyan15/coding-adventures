@@ -38,7 +38,7 @@
 use std::collections::HashMap;
 
 use coding_adventures_closure_typechecker::Diagnostic;
-use coding_adventures_correlation_vector::{CVLog, Contribution};
+use coding_adventures_correlation_vector::{dispose_metadata, CVLog, Contribution};
 use coding_adventures_javascript_ast::Program;
 use coding_adventures_type_sidecar::Sidecar;
 
@@ -305,14 +305,24 @@ impl PassPipeline {
                 // contributions to — passes shouldn't be emitting them
                 // in that mode anyway, but we skip silently here for
                 // safety.
+                let mut pending = output.contributions.into_iter();
                 if let Some(ref prog_cv) = current.cv {
-                    for c in &output.contributions {
-                        cv.contribute(prog_cv, &c.source, &c.tag, c.meta.clone())
-                            .map_err(|message| PassError {
+                    while let Some(c) = pending.next() {
+                        // Transfer ownership before checked preflight. Cloning
+                        // here would evade limits and recurse into unvalidated
+                        // metadata. Rejected arguments are disposed by CVLog.
+                        if let Err(message) = cv.contribute(prog_cv, &c.source, &c.tag, c.meta) {
+                            for remaining in pending { dispose_metadata(remaining.meta); }
+                            return Err(PassError {
                                 pass_name: pass.name().to_string(),
                                 message: format!("CV contribution failed: {message}"),
-                            })?;
+                            });
+                        }
                     }
+                } else {
+                    // No program identity means these requested events are
+                    // omitted. Their owned payloads still need safe disposal.
+                    for omitted in pending { dispose_metadata(omitted.meta); }
                 }
 
                 // Only a FixedPoint pass's change drives another sweep.
@@ -719,18 +729,28 @@ mod tests {
     fn checked_cv_scheduler_rejects_an_unrecordable_pass_result() {
         struct RecordedPass;
         impl Pass for RecordedPass {
-            fn name(&self) -> &'static str { "recorded" }
+            fn name(&self) -> &'static str {
+                "recorded"
+            }
             fn run(&self, ctx: PassContext<'_>) -> Result<PassOutput, PassError> {
                 Ok(PassOutput {
-                    program: ctx.program.clone(), changed: false, diagnostics: Vec::new(),
+                    program: ctx.program.clone(),
+                    changed: false,
+                    diagnostics: Vec::new(),
                     stats: PassStats::default(),
-                    contributions: vec![Contribution {source: "recorded".into(), tag: "examined".into(), meta: HashMap::new()}],
+                    contributions: vec![Contribution {
+                        source: "recorded".into(),
+                        tag: "examined".into(),
+                        meta: HashMap::new(),
+                    }],
                 })
             }
         }
         let mut cv = CVLog::new_checked_compact(coding_adventures_correlation_vector::GraphLimits {
-            max_events: 0, ..Default::default()
-        }).unwrap();
+            max_events: 0,
+            ..Default::default()
+        })
+        .unwrap();
         let id = cv.try_create(None).unwrap();
         let program = Program::new(id, EsVersion::Es2025, SourceType::Module);
         let mut pipeline = PassPipeline::new();
@@ -738,6 +758,95 @@ mod tests {
         let error = pipeline.run(program, &Sidecar::new(), &mut cv).unwrap_err();
         assert_eq!(error.pass_name, "recorded");
         assert!(error.message.contains("events limit"), "{error}");
+    }
+
+    #[test]
+    fn checked_cv_returned_metadata_does_not_clone_or_drop_recursively() {
+        const CHILD: &str = "CV02_PENDING_EVENT_CHILD";
+        if std::env::var_os(CHILD).is_none() {
+            let result = std::process::Command::new(std::env::current_exe().unwrap())
+                .args([
+                    "--exact",
+                    "tests::checked_cv_returned_metadata_does_not_clone_or_drop_recursively",
+                    "--nocapture",
+                ])
+                .env(CHILD, "1")
+                .output()
+                .unwrap();
+            assert!(
+                result.status.success(),
+                "isolated scheduler failed: {:?}\n{}",
+                result.status,
+                String::from_utf8_lossy(&result.stderr)
+            );
+            return;
+        }
+        std::thread::Builder::new()
+            .stack_size(128 * 1024)
+            .spawn(|| {
+                struct RecordedPass {
+                    deep_first: bool,
+                }
+                impl Pass for RecordedPass {
+                    fn name(&self) -> &'static str {
+                        "recorded"
+                    }
+                    fn run(&self, ctx: PassContext<'_>) -> Result<PassOutput, PassError> {
+                        let mut value = serde_json::Value::Null;
+                        for _ in 0..65_536 {
+                            value = serde_json::Value::Array(vec![value]);
+                        }
+                        let deep = Contribution {
+                            source: "recorded".into(),
+                            tag: "deep".into(),
+                            meta: HashMap::from([("deep".into(), value)]),
+                        };
+                        let empty = Contribution {
+                            source: "recorded".into(),
+                            tag: "empty".into(),
+                            meta: HashMap::new(),
+                        };
+                        Ok(PassOutput {
+                            program: ctx.program.clone(),
+                            contributions: if self.deep_first {
+                                vec![deep, empty]
+                            } else {
+                                vec![empty, deep]
+                            },
+                            changed: false,
+                            diagnostics: Vec::new(),
+                            stats: PassStats::default(),
+                        })
+                    }
+                }
+                for traced in [true, false] {
+                    for deep_first in [true, false] {
+                        let mut cv = CVLog::new_checked_compact(
+                            coding_adventures_correlation_vector::GraphLimits {
+                                max_events: 0,
+                                ..Default::default()
+                            },
+                        )
+                        .unwrap();
+                        let id = cv.try_create(None).unwrap();
+                        let mut program = Program::new(id, EsVersion::Es2025, SourceType::Module);
+                        if !traced {
+                            program.cv = None;
+                        }
+                        let mut pipeline = PassPipeline::new();
+                        pipeline.add(Box::new(RecordedPass { deep_first }));
+                        let result = pipeline.run(program, &Sidecar::new(), &mut cv);
+                        if traced {
+                            assert!(result.unwrap_err().message.contains("events limit"));
+                        } else {
+                            assert!(result.is_ok());
+                        }
+                    }
+                }
+            })
+            .unwrap()
+            .join()
+            .unwrap();
     }
 
     #[test]

@@ -68,6 +68,24 @@ controlled graph ownership/mutation, explicit budgets, bounded valid traversal,
 checked import and canonical/fail-closed serialization with artifact publication
 tests. Typed actual chronology and full source/node/output coverage remain open.
 
+CV02 local checkpoints (not yet published/merged): checked/private graph
+ownership, transactional accounting, strict bounded import, iterative borrowed
+topological queries, canonical byte-limited JSON and safe rejected-metadata
+disposal are implemented. Independent review exposed compatibility query gaps,
+discarded projection/stage declarations, pre-budget metadata sorting and
+pre-validation scheduler cloning; each has regression evidence and a repair.
+Lexer/parser/scheduler and constant-fold visitor errors now propagate before
+accepting their candidate results. Six affected crates pass 876 tests (including
+10 CV doctests), with 10 existing ignored cases; strict all-target lint and
+871 lesson shards pass. Direct checked chains have 4,096/8,192 nodes and
+569,436/1,138,780-byte exports; a 10,002-node wide graph passes deterministic
+queries. Isolated small-stack tests cover 65,536-level owned and returned
+metadata. Current remaining CV02 work: other visitor/pass errors, checked CLI
+construction/configuration, every format/filter/summary/NONE boundary,
+transactional artifact publication/content identity, full affected/compiler
+validation, final exact-head security review and actual CI/merge verification.
+The foundation and full compiler/provenance goal remain open.
+
 The remaining-fold inventory is
 [#16875](https://github.com/adhithyan15/coding-adventures/issues/16875).
 Actual SIMPLE/ADVANCED CLI probes fold Math.abs, string case conversion,

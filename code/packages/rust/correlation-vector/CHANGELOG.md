@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Public `dispose_metadata` lets evidence consumers drain pending owned payloads
+  iteratively without changing record types' field-move compatibility.
+
 - Enforce enabled recording, complete compact allocation coverage and stage-set
   consistency at fallible query boundaries, including generic compatibility
   reloads. Reject declared views in both identity modes before their markers

@@ -63,3 +63,7 @@ other way.
 ## Checked provenance errors (CV02)
 
 CV02: reject a pass result when its requested program contribution cannot be recorded; preserve pass-specific diagnostics. The caller must propagate the error and reject the compilation result.
+
+Returned contributions transfer metadata into recording before validation,
+and pending/omitted payloads are disposed iteratively if recording fails
+or there is no program identity. They are never recursively cloned first.
