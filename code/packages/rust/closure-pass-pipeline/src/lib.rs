@@ -307,7 +307,11 @@ impl PassPipeline {
                 // safety.
                 if let Some(ref prog_cv) = current.cv {
                     for c in &output.contributions {
-                        let _ = cv.contribute(prog_cv, &c.source, &c.tag, c.meta.clone());
+                        cv.contribute(prog_cv, &c.source, &c.tag, c.meta.clone())
+                            .map_err(|message| PassError {
+                                pass_name: pass.name().to_string(),
+                                message: format!("CV contribution failed: {message}"),
+                            })?;
                     }
                 }
 
@@ -709,6 +713,31 @@ mod tests {
 
     fn program() -> Program {
         Program::new("prog.1".to_string(), EsVersion::Es2025, SourceType::Module)
+    }
+
+    #[test]
+    fn checked_cv_scheduler_rejects_an_unrecordable_pass_result() {
+        struct RecordedPass;
+        impl Pass for RecordedPass {
+            fn name(&self) -> &'static str { "recorded" }
+            fn run(&self, ctx: PassContext<'_>) -> Result<PassOutput, PassError> {
+                Ok(PassOutput {
+                    program: ctx.program.clone(), changed: false, diagnostics: Vec::new(),
+                    stats: PassStats::default(),
+                    contributions: vec![Contribution {source: "recorded".into(), tag: "examined".into(), meta: HashMap::new()}],
+                })
+            }
+        }
+        let mut cv = CVLog::new_checked_compact(coding_adventures_correlation_vector::GraphLimits {
+            max_events: 0, ..Default::default()
+        }).unwrap();
+        let id = cv.try_create(None).unwrap();
+        let program = Program::new(id, EsVersion::Es2025, SourceType::Module);
+        let mut pipeline = PassPipeline::new();
+        pipeline.add(Box::new(RecordedPass));
+        let error = pipeline.run(program, &Sidecar::new(), &mut cv).unwrap_err();
+        assert_eq!(error.pass_name, "recorded");
+        assert!(error.message.contains("events limit"), "{error}");
     }
 
     #[test]

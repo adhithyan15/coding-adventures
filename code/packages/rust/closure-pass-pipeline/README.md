@@ -59,3 +59,7 @@ The **harness** all `closure-pass-*` crates plug into. Defines the
 
 No `closure-pass-*` deps — those depend on this crate, not the
 other way.
+
+## Checked provenance errors (CV02)
+
+CV02: reject a pass result when its requested program contribution cannot be recorded; preserve pass-specific diagnostics. The caller must propagate the error and reject the compilation result.

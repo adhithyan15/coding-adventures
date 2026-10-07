@@ -6,6 +6,8 @@ All notable changes to the `coding-adventures-closure-pass-pipeline` crate will 
 
 ### Fixed
 
+- CV02: reject a pass result when its requested program contribution cannot be recorded; preserve pass-specific diagnostics.
+
 - The fixed-point test helper now decrements its atomic change budget with a
   sequentially consistent compare-and-exchange loop. This preserves exhaustion
   behavior while avoiding `fetch_update` deprecation failures in strict CI on

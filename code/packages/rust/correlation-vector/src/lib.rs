@@ -1045,13 +1045,13 @@ impl CVLog {
     }
 
     fn from_snapshot(snap: LogSnapshot) -> Result<Self, String> {
+        if snap.view.is_some() {
+            return Err("filtered CV view is not a full reloadable log".into());
+        }
         let compact_sequence = match &snap.identity {
             Some(identity) => {
                 if identity.scheme != "compact-v1" {
                     return Err("unsupported identity scheme".into());
-                }
-                if snap.view.is_some() {
-                    return Err("filtered compact view is not a full reloadable log".into());
                 }
                 let last = fixed_hex_sequence(&identity.last_sequence)?;
                 for (key, entry) in &snap.entries {

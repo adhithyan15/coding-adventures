@@ -1,6 +1,60 @@
 use super::*;
 
 #[test]
+fn compatibility_import_cannot_discard_projection_or_stage_evidence() {
+    let mut legacy = CVLog::new(true);
+    let id = legacy.try_create(None).unwrap();
+    let mut snapshot: Value = serde_json::from_str(&legacy.to_json_string().unwrap()).unwrap();
+    for view in [
+        serde_json::json!({"complete":false,"filtered":true}),
+        Value::Null,
+    ] {
+        snapshot["view"] = view;
+        assert!(CVLog::from_json_string(&snapshot.to_string()).is_err());
+    }
+    for mut log in [CVLog::new(true), CVLog::new_compact(true)] {
+        let root = log.try_create(None).unwrap();
+        log.contribute(&root, "pass", "changed", HashMap::new())
+            .unwrap();
+        let mut snapshot: Value = serde_json::from_str(&log.to_json_string().unwrap()).unwrap();
+        snapshot["pass_order"] = serde_json::json!([]);
+        let incomplete = CVLog::from_json_string(&snapshot.to_string()).unwrap();
+        assert!(incomplete.try_lineage(&root).is_err());
+        assert!(incomplete.try_ancestors(&root).is_err());
+        assert!(incomplete.try_descendants(&root).is_err());
+    }
+    legacy
+        .try_delete(&id, "dce", "removed", HashMap::new())
+        .unwrap();
+    let text = legacy.to_json_string().unwrap();
+    let incomplete = CVLog::from_json_string(&text).unwrap();
+    assert!(
+        incomplete.try_lineage(&id).is_err(),
+        "historical undeclared deletion stage is not complete evidence"
+    );
+}
+
+#[test]
+fn checked_queries_reject_disabled_and_gapped_compatibility_recording() {
+    let mut partial = CVLog::new_compact(false);
+    partial.try_create(None).unwrap(); // allocated but never recorded
+    partial.set_enabled(true).unwrap();
+    let recorded = partial.try_create(None).unwrap();
+    let text = partial.to_json_string().unwrap(); // allocator-only export remains valid
+    let imported = CVLog::from_json_string(&text).unwrap();
+    assert!(imported.try_lineage(&recorded).is_err());
+    assert!(imported.try_ancestors(&recorded).is_err());
+    assert!(imported.try_descendants(&recorded).is_err());
+    for mut disabled in [CVLog::new(true), CVLog::new_compact(true)] {
+        let id = disabled.try_create(None).unwrap();
+        disabled.set_enabled(false).unwrap();
+        assert!(disabled.try_lineage(&id).is_err());
+        assert!(disabled.try_ancestors(&id).is_err());
+        assert!(disabled.try_descendants(&id).is_err());
+    }
+}
+
+#[test]
 fn checked_import_counts_malformed_items_before_reading_their_bodies() {
     let mut log = CVLog::new_checked_compact(GraphLimits::default()).unwrap();
     let id = log.try_create(None).unwrap();
@@ -169,13 +223,13 @@ fn metadata_depth_has_a_hard_ceiling_and_mutation_work_is_transactional() {
         })
     };
     let mut log = CVLog::new_checked_compact(GraphLimits {
-        max_work: 66,
+        max_work: 128,
         ..GraphLimits::default()
     })
     .unwrap();
     log.try_create(origin(62)).unwrap(); // metadata root + 62 arrays + null: depth 64
     let mut limited = CVLog::new_checked_compact(GraphLimits {
-        max_work: 65,
+        max_work: 127,
         ..GraphLimits::default()
     })
     .unwrap();

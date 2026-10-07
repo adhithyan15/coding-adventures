@@ -48,3 +48,7 @@ The JavaScript lexer produces these token categories:
 - **Operators** — `+`, `-`, `*`, `/`, `===`, `!==`, `=>`, `&&`, `||`, etc.
 - **Delimiters** — `(`, `)`, `[`, `]`, `{`, `}`, `,`, `;`, `.`, `:`
 - **EOF** — end of file
+
+## Checked provenance errors (CV02)
+
+CV02: propagate checked token-identity allocation failures as lexer errors, with an exhausted-node-budget regression. The caller must propagate the error and reject the compilation result.

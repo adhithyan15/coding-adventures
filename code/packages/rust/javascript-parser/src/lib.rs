@@ -221,7 +221,7 @@ pub fn parse_javascript_with_cv(
 
     // 3. Mint the program-root CV by merging every token's CV.
     let parent_refs: Vec<&str> = token_cv_ids.iter().map(|s| s.as_str()).collect();
-    let program_cv = cv.merge(
+    let program_cv = cv.try_merge(
         &parent_refs,
         Some(Origin {
             source: source_file.to_string(),
@@ -229,7 +229,7 @@ pub fn parse_javascript_with_cv(
             timestamp: None,
             meta: HashMap::new(),
         }),
-    );
+    ).map_err(|e| format!("JavaScript parser CV construction failed: {e}"))?;
 
     // 4. Append the "constructed" contribution per CLOC03 §Stage 2.
     let mut meta = HashMap::new();
@@ -241,10 +241,10 @@ pub fn parse_javascript_with_cv(
         "version".to_string(),
         serde_json::Value::String(version.as_str().to_string()),
     );
-    // Ignore the Err path on `contribute` — the only error it can return is
-    // "contributing to a deleted entity," which can't happen here (we just
-    // created the entity).
-    let _ = cv.contribute(&program_cv, "parser", "constructed", meta);
+    // Even a fresh entity can exceed an event/payload budget. Accept the parsed
+    // result only after its construction evidence has been recorded.
+    cv.contribute(&program_cv, "parser", "constructed", meta)
+        .map_err(|e| format!("JavaScript parser CV contribution failed: {e}"))?;
 
     Ok(ProgramWithCv {
         ast,
@@ -301,6 +301,21 @@ mod tests {
     }
 
     // ----- CV-plumbed parser (CLOC03 Stage 2 v1) -----
+
+    #[test]
+    fn checked_cv_root_allocation_and_contribution_failures_return_parser_errors() {
+        let tokens = coding_adventures_javascript_lexer::tokenize_javascript_typed("1;", EsVersion::Es5).unwrap().len();
+        let mut capped = CVLog::new_checked_compact(coding_adventures_correlation_vector::GraphLimits {
+            max_nodes: tokens, ..Default::default()
+        }).unwrap();
+        let error = parse_javascript_with_cv("1;", "input.js", EsVersion::Es5, &mut capped).unwrap_err();
+        assert!(error.contains("nodes limit"), "{error}");
+        let mut capped = CVLog::new_checked_compact(coding_adventures_correlation_vector::GraphLimits {
+            max_events: 0, ..Default::default()
+        }).unwrap();
+        let error = parse_javascript_with_cv("1;", "input.js", EsVersion::Es5, &mut capped).unwrap_err();
+        assert!(error.contains("events limit"), "{error}");
+    }
 
     #[test]
     fn parse_with_cv_assigns_a_program_id() {

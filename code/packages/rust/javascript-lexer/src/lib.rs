@@ -134,7 +134,8 @@ pub fn tokenize_javascript_with_cv(
             timestamp: None,
             meta: HashMap::new(),
         };
-        let id = cv.create(Some(origin));
+        let id = cv.try_create(Some(origin))
+            .map_err(|e| format!("JavaScript lexer CV creation failed: {e}"))?;
         out.push(TokenWithCv { token, cv: id });
     }
     Ok(out)
@@ -144,6 +145,16 @@ pub fn tokenize_javascript_with_cv(
 mod tests {
     use super::*;
     use lexer::token::{TokenType, TOKEN_PRECEDED_BY_NEWLINE};
+
+    #[test]
+    fn checked_cv_allocation_failure_returns_a_lexer_error() {
+        let mut cv = CVLog::new_checked_compact(coding_adventures_correlation_vector::GraphLimits {
+            max_nodes: 0, ..Default::default()
+        }).unwrap();
+        let error = tokenize_javascript_with_cv("1;", "input.js", EsVersion::Es5, &mut cv).unwrap_err();
+        assert!(error.contains("CV") && error.contains("nodes limit"), "{error}");
+        assert!(cv.entries().is_empty());
+    }
 
     fn preceded_by_newline(t: &lexer::token::Token) -> bool {
         t.flags.unwrap_or(0) & TOKEN_PRECEDED_BY_NEWLINE != 0

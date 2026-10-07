@@ -158,6 +158,7 @@ impl Payload<'_> {
                     self.bytes(items.len().saturating_sub(1))?;
                     self.guard_pending(stack.len(), items.len())?;
                     for item in items.iter().rev() {
+                        self.work.take(1)?; // enqueue before growing the pending stack
                         stack.push((item, depth + 1));
                     }
                 }
@@ -165,12 +166,14 @@ impl Payload<'_> {
                     self.bytes(2)?;
                     self.bytes(map.len().saturating_sub(1))?;
                     self.guard_pending(stack.len(), map.len())?;
-                    let mut fields: Vec<_> = map.iter().collect();
-                    fields.sort_unstable_by(|a, b| a.0.cmp(b.0));
-                    for (key, item) in fields.into_iter().rev() {
+                    // Accounting does not need canonical order. Borrow each
+                    // field directly, validating its key before any enqueue;
+                    // canonical encoding sorts only after this full preflight.
+                    for (key, item) in map.iter().rev() {
                         self.work.take(1)?;
                         self.text(key)?;
                         self.bytes(1)?;
+                        self.work.take(1)?;
                         stack.push((item, depth + 1));
                     }
                 }
@@ -204,9 +207,7 @@ impl Payload<'_> {
         self.bytes(2)?;
         self.bytes(meta.len().saturating_sub(1))?;
         self.guard_pending(0, meta.len())?;
-        let mut fields: Vec<_> = meta.iter().collect();
-        fields.sort_unstable_by(|a, b| a.0.cmp(b.0));
-        for (key, value) in fields {
+        for (key, value) in meta {
             self.work.take(1)?;
             self.text(key)?;
             self.bytes(1)?;
@@ -428,6 +429,17 @@ impl CVLog {
         if self.entries.len() > limits.max_nodes {
             return Err("CV nodes limit exceeded".into());
         }
+        // Fallible evidence queries never inherit allocator-only compatibility
+        // semantics. A generic compact reload can preserve a disabled-history
+        // gap, but that gap cannot become complete lineage through try_*.
+        if !self.enabled {
+            return Err("CV graph recording is disabled".into());
+        }
+        if let Some(last) = self.compact_sequence {
+            if Some(last) != u64::try_from(self.entries.len()).ok() {
+                return Err("CV allocation coverage is incomplete".into());
+            }
+        }
         let mut payload = Payload {
             usage: Usage::default(),
             limits,
@@ -499,9 +511,7 @@ impl CVLog {
                 payload.text(&event.source)?;
                 payload.text(&event.reason)?;
                 payload.meta(&event.meta)?;
-                if self.checked.is_some() {
-                    seen_sources.insert(event.source.as_str());
-                }
+                seen_sources.insert(event.source.as_str());
             }
         }
         let mut declared_sources = HashSet::new();
@@ -513,16 +523,10 @@ impl CVLog {
             }
         }
         let usage = payload.usage;
+        if declared_sources != seen_sources {
+            return Err("CV stage declarations do not match recorded events".into());
+        }
         if let Some(state) = &self.checked {
-            if !self.enabled {
-                return Err("checked CV recording is disabled".into());
-            }
-            if self.compact_sequence != u64::try_from(self.entries.len()).ok() {
-                return Err("checked CV allocation coverage is incomplete".into());
-            }
-            if declared_sources != seen_sources {
-                return Err("checked CV stage declarations do not match recorded events".into());
-            }
             if verify_usage && state.usage != usage {
                 return Err("checked CV retained usage is inconsistent".into());
             }

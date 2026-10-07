@@ -6,6 +6,11 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Enforce enabled recording, complete compact allocation coverage and stage-set
+  consistency at fallible query boundaries, including generic compatibility
+  reloads. Reject declared views in both identity modes before their markers
+  could be discarded (independent review findings with regression evidence).
+
 - CV02 checked library foundation: explicit `GraphLimits`, fully recorded compact
   construction/import, independently validated iterative DAG queries and borrowed
   parent-before-child lineage. Unknown parents, incomplete allocation coverage,

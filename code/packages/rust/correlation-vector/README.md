@@ -107,7 +107,12 @@ necessarily visits that payload outside the graph-processing allowance.
 
 Checked import rejects missing/unknown record fields, duplicate decoded keys at
 every level, disabled/incomplete history and declared projections. Queries
-validate the entire graph and use iterative traversal. Ancestry preserves
+validate the entire graph and use iterative traversal. They reject disabled
+recording and compact allocation gaps even after a generic compatibility reload.
+Stage declarations must match contributions and tombstones. Historical
+allocator snapshots lacking deletion-stage declarations remain reloadable,
+but cannot claim complete query evidence. Declared views are rejected on import
+in both identity modes, including null markers. Ancestry preserves
 nearest-first parent-list order; descendants have deterministic identity order
 within each BFS level; lineage includes reachable entries once with every parent
 before its child. Unknown query IDs return errors. Topology and `pass_order`
