@@ -1,0 +1,1 @@
+var e=``+new URL(`KA-S123-sign-anusvara-filmstrip-sByjkFKl.svg`,import.meta.url).href;export{e as default};

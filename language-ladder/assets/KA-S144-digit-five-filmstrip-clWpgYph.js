@@ -1,0 +1,1 @@
+var e=``+new URL(`KA-S144-digit-five-filmstrip-BrqqHgkv.svg`,import.meta.url).href;export{e as default};
