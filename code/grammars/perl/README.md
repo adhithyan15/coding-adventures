@@ -1,6 +1,6 @@
 # Perl release grammars
 
-`releases.csv` inventories 774 numbered releases from the official
+`releases.csv` inventories 776 release entries from the official
 `perlhist.pod` snapshot and annotated Perl source tags retrieved on 2026-10-07.
 It expands historical range rows such as `1.001..10` into one row per release.
 The `perlhist_line` column points to the source line, or names a `tag:v...`
@@ -13,6 +13,11 @@ On 2026-10-07, all 337 distinct version names from CPAN's `/src/5.0/`
 `perl5.<version>.tar.gz` names were present in this inventory. This comparison
 does not establish that the inventory covers every historical public release;
 other archive names and pre-Perl-5 sources still need review.
+The pinned history also lists `p54rc1` and `p54rc2` at lines 264 and 265.
+They were omitted from the earlier inventory and now have distinct,
+explicitly partial token and grammar pairs. Historical archives provide
+the source for each candidate; the shared parser probes validate only the
+bounded decimal `print` arithmetic subset.
 
 The user requested a **separate `.tokens` and `.grammar` file for every
 release**, including maintenance and development versions. The filenames are
@@ -244,6 +249,59 @@ Current pairs:
   [`perl-5.003_98` source tag]. Tagged yacc adds arrow-call forms outside
   this subset; the tokenizer matches 5.003_97j and retains the tested
   250-digit decimal bound.
+- `perl5.003_99.*` and `perl5.003_99a.*` are separate **partial** pairs
+  checked against their own [`perl-5.003_99` source tag] and
+  [`perl-5.003_99a` source tag]. Tagged yacc and tokenizer sources match
+  5.003_98 across both releases; each pair retains the tested 250-digit
+  decimal bound and does not claim complete syntax coverage.
+- `perl5.004.*` is a separate **partial** pair checked against the
+  [`perl-5.004` source tag]. Its tagged yacc matches 5.003_99a; tokenizer
+  adds the regex `/c` modifier outside this subset and retains the tested
+  250-digit decimal bound.
+- `perlp54rc1.*` and `perlp54rc2.*` are distinct **partial** pairs checked
+  against their separate [p54rc1 source archive] (SHA-256
+  `5a9a9c294931d006007ea471cbc79c94209d181d48a958a2db86cc1a1633e468`)
+  and [p54rc2 source archive] (SHA-256
+  `973d9cadb2a1efbcdac705fe1eb08e351d746f9480aa806d6b54ecc3344e5f9d`).
+  Both yacc files match 5.004. The p54rc2 tokenizer also matches 5.004;
+  p54rc1 lacks its regex `/c` modifier, outside this bounded subset.
+  Both retain the tested 250-digit decimal bound and reject unsupported
+  syntax.
+- `perl5.004_01.*` is a separate **partial** pair checked against the
+  [`perl-5.004_01` source tag]. Tagged yacc and tokenizer match 5.004;
+  this release still has its own files and tested 250-digit decimal bound.
+- `perl5.004_01-t2.*` is a separate **partial** pair checked against the
+  [historical 5.004_01-t2 source archive]. Its `perly.y` and `toke.c`
+  are byte-identical to the tagged final 5.004_01 sources, but this
+  prerelease retains distinct files and the tested 250-digit decimal bound.
+  The downloaded archive's SHA-256 is
+  `1bc2cf4b61399d7a2d2ad5050ab31e5cbd73cae99e1534ec9aefc7dace013ea1`.
+  The inventoried 5.004_01-t1 prerelease remains pending until its own
+  source evidence is found.
+- `perl5.004_01_01.*` is a separate **partial** pair checked against the
+  [historical 5.004_01_01 source archive] (SHA-256
+  `15391fa5322de2cbae8a245c1f7a367e524070f3e1873bc6ea74dc829f395061`).
+  Its `perly.y` matches 5.004_01-t2; `toke.c` changes quoted-curly
+  recognition, word-operator expectations, warnings and quote delimiters
+  outside this plain-decimal `print` subset. It retains the tested
+  250-digit decimal bound and claims no full-release syntax coverage.
+- `perl5.004_02.*` is a separate **partial** pair checked against the
+  [`perl-5.004_02` source tag]. Its tagged `perly.y` and `toke.c`
+  match the preceding 5.004_01_03 trial archive byte for byte, while
+  this numbered release keeps distinct files. The tested plain-decimal
+  subset retains its 250-digit bound and does not claim full syntax.
+- `perl5.004_01_02.*` is a separate **partial** pair checked against the
+  [historical 5.004_01_02 source archive] (SHA-256
+  `185dc7317b340d4ca018f966993bb155bcc834c914fd26e579225d49c01e2a93`).
+  Its `perly.y` matches 5.004_01_01; `toke.c` changes `-p` expansion
+  and quoted delimiter handling outside this plain-decimal `print` subset.
+  It retains the tested 250-digit decimal bound and claims no full coverage.
+- `perl5.004_01_03.*` is a separate **partial** pair checked against the
+  [historical 5.004_01_03 source archive] (SHA-256
+  `590678a6aa3f9bc838ba0d3b605348bc4c05b911940c6751f5d905ec7db7c359`).
+  Its `perly.y` matches 5.004_01_02; `toke.c` changes debugger line
+  hooks outside this plain-decimal `print` subset. It retains the tested
+  250-digit decimal bound and claims no full-release syntax coverage.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot, including adjacent `--` and
@@ -329,4 +387,15 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [`perl-5.003_97i` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_97i
 [`perl-5.003_97j` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_97j
 [`perl-5.003_98` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_98
+[`perl-5.003_99` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_99
+[`perl-5.003_99a` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_99a
+[`perl-5.004` source tag]: https://github.com/Perl/perl5/tree/perl-5.004
+[p54rc1 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-p54rc1.tar.gz
+[p54rc2 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-p54rc2.tar.gz
+[`perl-5.004_01` source tag]: https://github.com/Perl/perl5/tree/perl-5.004_01
+[`perl-5.004_02` source tag]: https://github.com/Perl/perl5/tree/perl-5.004_02
+[historical 5.004_01-t2 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01-t2.tar.gz
+[historical 5.004_01_01 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01_01.tar.gz
+[historical 5.004_01_02 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01_02.tar.gz
+[historical 5.004_01_03 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01_03.tar.gz
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2
