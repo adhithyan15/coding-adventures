@@ -6542,7 +6542,17 @@ fn parse_swimlane_node(
     } else if suffix.starts_with("([") && suffix.ends_with("])") {
         (
             suffix[2..suffix.len() - 2].to_string(),
-            DiagramShape::RoundedRect,
+            DiagramShape::Stadium,
+        )
+    } else if suffix.starts_with("[[") && suffix.ends_with("]]") {
+        (
+            suffix[2..suffix.len() - 2].to_string(),
+            DiagramShape::Subroutine,
+        )
+    } else if suffix.starts_with("[(") && suffix.ends_with(")]") {
+        (
+            suffix[2..suffix.len() - 2].to_string(),
+            DiagramShape::Cylinder,
         )
     } else if suffix.starts_with('[') && suffix.ends_with(']') {
         (suffix[1..suffix.len() - 1].to_string(), DiagramShape::Rect)

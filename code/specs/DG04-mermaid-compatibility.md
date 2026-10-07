@@ -991,7 +991,8 @@ silently degrading.
 ## Swimlane Partial Compatibility
 
 The native Mermaid 11.16.1 Swimlane slice recognizes `swimlane-beta` with all
-five directions, top-level `subgraph` lanes, common process-node shapes,
+five directions, top-level `subgraph` lanes, common process-node shapes
+(including storage and subprocess nodes),
 directed/undirected/dotted/thick chained links, multiline edge continuations,
 parallel branch and join
 endpoints, pipe-delimited and Flowchart-style link labels, titles, and
