@@ -8,7 +8,11 @@ when a release candidate is absent from that document. The history snapshot's
 Git blob ID is in the CSV header. A tag comparison found 11 such additional
 release candidates. The `v5.17.7.0` tag is excluded: its annotation explicitly
 says that no version 5.17.7.0 was released; it only preserves Git ancestry.
-Compare this inventory with CPAN archives before calling it exhaustive.
+On 2026-10-07, all 337 distinct version names from CPAN's `/src/5.0/`
+`perl-<version>.tar.{gz,bz2,xz}` entries and all 11 legacy
+`perl5.<version>.tar.gz` names were present in this inventory. This comparison
+does not establish that the inventory covers every historical public release;
+other archive names and pre-Perl-5 sources still need review.
 
 The user requested a **separate `.tokens` and `.grammar` file for every
 release**, including maintenance and development versions. The filenames are
