@@ -182,7 +182,7 @@ fn pinned_treeview_subset_corpus_parses_to_tree_ir() {
                 (18.0, 9.0, 7.0));
             assert_eq!(diagram.config.line_thickness, 3.0);
             assert!(!diagram.config.show_icons);
-            assert_eq!(diagram.nodes[2].icon.as_deref(), Some("folder"));
+            assert_eq!(diagram.nodes[2].icon.as_deref(), Some("mermaid-treeview:folder"));
         } else if name == "front-matter-config" {
             assert_eq!((diagram.config.row_indent, diagram.config.padding_x), (14.0, 8.0));
             assert!(!diagram.config.show_icons);
@@ -190,7 +190,11 @@ fn pinned_treeview_subset_corpus_parses_to_tree_ir() {
             assert_eq!(diagram.config.default_icon_pack, "devicon");
             assert_eq!(diagram.nodes.iter().skip(1).map(|node| node.icon.as_deref()).collect::<Vec<_>>(),
                 [Some("logos:markdown"), Some("none"), Some("devicon:rust"),
-                    Some("logos:typescript"), Some("devicon:custom")]);
+                    Some("logos:typescript"), Some("mermaid-treeview:file"), Some("devicon:custom")]);
+        } else if name == "built-in-and-unprefixed-icons" {
+            assert_eq!(diagram.nodes.iter().skip(1).map(|node| node.icon.as_deref()).collect::<Vec<_>>(),
+                [Some("mermaid-treeview:folder"), Some("mermaid-treeview:file"),
+                    Some("mermaid-treeview:custom")]);
         } else if matches!(name, "rooted-box-drawing-hierarchy" | "compact-box-drawing-segments") {
             assert_eq!(diagram.nodes.iter().map(|node| node.depth).collect::<Vec<_>>(), [0, 1, 2, 3, 2]);
             assert_eq!(diagram.nodes.iter().map(|node| node.parent_id.as_deref()).collect::<Vec<_>>(),

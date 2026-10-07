@@ -803,7 +803,10 @@ present for header-only diagrams.
 Box-drawing preprocessing matches the pinned root offset, inferred segment
 width, decoration-line handling, mixed-format rejection, and original-line
 diagnostics. Configuration-driven default and filename/extension icon maps
-resolve into semantic icon identities. Pinned TreeView theme variables control
+resolve into fully qualified semantic icon identities. The pinned built-in
+folder and file artwork lowers to filled backend-neutral path geometry, while
+external pack references retain their identities for downstream resolution.
+Pinned TreeView theme variables control
 font size, label, connector, icon, description, and highlight Paint styling;
 directory labels lower with bold font weight and descriptions with italic
 style. Layout IR also carries one horizontal connector per row, parent vertical

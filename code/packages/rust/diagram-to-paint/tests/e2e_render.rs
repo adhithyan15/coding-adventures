@@ -3269,7 +3269,7 @@ line "Target" [35, 50, 68, 82]"##,
             shaper: &shaper, metrics: &metrics, resolver: &resolver,
         });
         assert_eq!(configured_scene.instructions.iter()
-            .filter(|instruction| matches!(instruction, PaintInstruction::Rect(_))).count(), 1);
+            .filter(|instruction| matches!(instruction, PaintInstruction::Rect(_))).count(), 0);
         assert_eq!(configured_scene.metadata.as_ref().and_then(|metadata| metadata.get("treeView.config.lineThickness")),
             Some(&"3".to_string()));
         let configured_pixels = render(&configured_scene);
@@ -3277,7 +3277,7 @@ line "Target" [35, 50, 68, 82]"##,
             .expect("configured treeview PNG write failed");
         assert!(configured_pixels.width > 0 && configured_pixels.height > 0);
 
-        let mapped = parse_treeview("%%{init: {\"treeView\": {\"showIcons\": true, \"defaultIconPack\": \"devicon\", \"filenameIcons\": {\"README.md\": \"logos:markdown\", \"package.json\": \"none\"}, \"extensionIcons\": {\".rs\": \"rust\", \"TS\": \"logos:typescript\"}}}}%%\ntreeView-beta\nREADME.md\npackage.json\nmain.RS\napp.ts\nnotes.txt icon(custom)")
+        let mapped = parse_treeview("%%{init: {\"treeView\": {\"showIcons\": true, \"defaultIconPack\": \"devicon\", \"filenameIcons\": {\"README.md\": \"logos:markdown\", \"package.json\": \"none\"}, \"extensionIcons\": {\".rs\": \"rust\", \"TS\": \"logos:typescript\"}}}}%%\ntreeView-beta\nREADME.md\npackage.json\nmain.RS\napp.ts\nplain.txt\nnotes.txt icon(custom)")
             .expect("mapped treeview parse failed");
         let mapped_layout = layout_treeview(&mapped, 720.0);
         let mapped_scene = diagram_to_paint_treeview(&mapped_layout, &DiagramToPaintOptions {
@@ -3286,12 +3286,13 @@ line "Target" [35, 50, 68, 82]"##,
             shaper: &shaper, metrics: &metrics, resolver: &resolver,
         });
         let mapped_icons = mapped_scene.instructions.iter().filter_map(|instruction| match instruction {
-            PaintInstruction::Rect(rect) => rect.base.metadata.as_ref()
-                .and_then(|metadata| metadata.get("treeView.icon")).map(String::as_str),
+            PaintInstruction::Path(path) => path.base.metadata.as_ref(),
+            PaintInstruction::Rect(rect) => rect.base.metadata.as_ref(),
             _ => None,
-        }).collect::<BTreeSet<_>>();
+        }.and_then(|metadata| metadata.get("treeView.icon")).map(String::as_str)).collect::<BTreeSet<_>>();
         assert_eq!(mapped_icons,
-            BTreeSet::from(["devicon:custom", "devicon:rust", "folder", "logos:markdown", "logos:typescript"]));
+            BTreeSet::from(["devicon:custom", "devicon:rust", "logos:markdown", "logos:typescript",
+                "mermaid-treeview:file", "mermaid-treeview:folder"]));
         let mapped_pixels = render(&mapped_scene);
         write_png(&mapped_pixels, "/tmp/mermaid_treeview_icon_map_e2e.png")
             .expect("mapped treeview PNG write failed");
@@ -3309,7 +3310,7 @@ line "Target" [35, 50, 68, 82]"##,
         assert!(themed_scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#234567"))));
         assert!(themed_scene.instructions.iter().any(|instruction| matches!(instruction,
-            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#345678"))));
+            PaintInstruction::Path(path) if path.fill.as_deref() == Some("#345678"))));
         assert!(themed_scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Rect(rect) if rect.fill.as_deref().is_some_and(|fill| fill.starts_with("rgba(10,20,30,"))
                 && rect.stroke.as_deref() == Some("#56789a"))));
