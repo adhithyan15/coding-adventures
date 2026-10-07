@@ -89,9 +89,8 @@ fn typed_pipeline_records_per_token_origins_and_pass_summary() {
     let mut origin_sources: std::collections::BTreeSet<String> = std::collections::BTreeSet::new();
     // (2) Per-token source-span origins — minted by the parser's CV tokenizer
     // (CLOC27 P2/P3), `Origin.source == <input path>`, `location == line:col`.
-    // Their presence is the signal that per-fold provenance now reaches the
-    // sidecar: every leaf literal (and thus every literal a fold derives from)
-    // carries a CvId whose root Origin is the source span it came from.
+    // This asserts source-token inventory only. It cannot establish a path
+    // from a transformed result; the graph tests in cv_fold_trace do that.
     let mut per_token_span_origins = 0usize;
     for (_id, e) in entries {
         if let Some(src) = e["origin"]["source"].as_str() {
@@ -117,13 +116,8 @@ fn typed_pipeline_records_per_token_origins_and_pass_summary() {
          origins seen: {origin_sources:?}",
     );
 
-    // (2) Leaf-token origins reach the shared sidecar (CLOC27). Per-token
-    // source-span origins now appear in the sidecar — the leaf literals the
-    // constant-fold derives from carry CvIds rooted at the `"abc".length`
-    // source bytes (source == the input file, location == a `line:col` span),
-    // not the coarse lex/file-level origins that were the only ones present
-    // before. (The lex/file-level origins in `LEX_FILE_ORIGINS` still appear
-    // alongside them; this asserts the *addition* of true per-token lineage.)
+    // (2) Leaf-token origins coexist with the file/pass-summary records.
+    // Their presence does not imply that any replacement reaches them.
     assert!(
         per_token_span_origins > 0,
         "expected at least one per-token source-span origin (source == {input_path:?}, \

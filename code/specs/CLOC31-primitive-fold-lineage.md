@@ -60,3 +60,12 @@ graph queries. Every compiler parity slice must preserve the resulting evidence.
 Full completion also requires diagnostics, syntax/lowering, modules/chunks,
 externs/reports and representative real-world differential builds under the
 backlog's completion contract. A green curated corpus alone is insufficient.
+
+## Resource boundary from independent review
+
+CLI unary-chain probes compile at depths 10/20/40/60 and reject 100/400/1000
+cleanly at the parser nesting guard. Direct library callers can construct ASTs
+outside that guard; successive single-parent CV derivations encode ancestor IDs
+and grow with depth. Compact graph identities and explicit graph/serialization
+resource limits are required follow-up acceptance work in CCR-065, alongside
+bounded traversal, rather than an implied guarantee of this primitive slice.
