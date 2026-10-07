@@ -240,6 +240,18 @@ impl FoldState<'_> {
                     .into_iter()
                     .collect(),
                 };
+                // The replacement owns its rewrite history. Returning only a
+                // program-summary contribution loses this record when the
+                // parser has no Program.cv, and never answers a node query.
+                // A freshly derived entry cannot be deleted at this point.
+                self.cv
+                    .contribute(
+                        &new_cv,
+                        &contribution.source,
+                        &contribution.tag,
+                        contribution.meta.clone(),
+                    )
+                    .expect("fresh fold identity accepts its contribution");
                 self.contributions.push(contribution);
                 self.changed = true;
                 Some(new_cv)
@@ -252,6 +264,29 @@ impl FoldState<'_> {
                 None
             }
         }
+    }
+
+    /// CLOC31: retain every available immediate operand identity. A composite
+    /// bridge node may have no identity even though its literal children do.
+    /// Merging child results also preserves earlier folds in a bottom-up walk.
+    fn fork_operand_cvs(
+        &mut self,
+        parents: &[Option<&str>],
+        before: &str,
+        after: &str,
+    ) -> Option<String> {
+        let mut unique = Vec::new();
+        for parent in parents.iter().flatten() {
+            if !unique.contains(parent) {
+                unique.push(*parent);
+            }
+        }
+        let parent = match unique.as_slice() {
+            [] => None,
+            [one] => Some((*one).to_string()),
+            many => Some(self.cv.merge(many, None)),
+        };
+        self.fork_cv(&parent, before, after)
     }
 
     fn visit(&mut self) {
@@ -4513,10 +4548,13 @@ fn fold_member(m: &MemberExpression, st: &mut FoldState) -> Expression {
         if let (Expression::StringLiteral(s), Expression::Identifier(id)) = (&object, &property) {
             if id.name == "length" {
                 let len = s.value.encode_utf16().count() as f64;
-                let parent = m.cv.clone();
                 let before = format!("\"{}\".length", s.value);
                 let after = format_js_number(len);
-                let new_cv = st.fork_cv(&parent, &before, &after);
+                let new_cv = st.fork_operand_cvs(
+                    &[m.cv.as_deref(), primitive_cv(&object), primitive_cv(&property)],
+                    &before,
+                    &after,
+                );
                 return stamp_literal_cv(FoldedLiteral::Number(len), new_cv);
             }
         }
@@ -4913,7 +4951,6 @@ fn fold_binary(b: &BinaryExpression, st: &mut FoldState) -> Expression {
             }
         }
 
-        let parent = b.cv.clone();
         let before = format!(
             "({}) {} ({})",
             lit_label(&left),
@@ -4921,7 +4958,11 @@ fn fold_binary(b: &BinaryExpression, st: &mut FoldState) -> Expression {
             lit_label(&right)
         );
         let after = literal_label(&value);
-        let new_cv = st.fork_cv(&parent, &before, &after);
+        let new_cv = st.fork_operand_cvs(
+            &[b.cv.as_deref(), primitive_cv(&left), primitive_cv(&right)],
+            &before,
+            &after,
+        );
         return stamp_literal_cv(value, new_cv);
     }
 
@@ -6190,10 +6231,13 @@ fn fold_unary(u: &UnaryExpression, st: &mut FoldState) -> Expression {
     };
 
     if let Some(value) = folded {
-        let parent = u.cv.clone();
         let before = format!("{}({})", unary_op_label(u.operator), lit_label(&arg));
         let after = literal_label(&value);
-        let new_cv = st.fork_cv(&parent, &before, &after);
+        let new_cv = st.fork_operand_cvs(
+            &[u.cv.as_deref(), primitive_cv(&arg)],
+            &before,
+            &after,
+        );
         return stamp_literal_cv(value, new_cv);
     }
 
@@ -6667,6 +6711,22 @@ enum FoldedLiteral {
     /// - `void <any-expression-without-side-effects>` fold (CLOC12.20 / gap-002).
     /// - Future: identifier-reference to `undefined` in scopes that don't shadow it.
     Undefined,
+}
+
+/// Identities consumed by primitive folds, including a member's property name.
+/// This deliberately does not pretend to reconstruct composite parse identities
+/// or descend through arbitrary subtrees; those require the shared span work.
+fn primitive_cv(expr: &Expression) -> Option<&str> {
+    match expr {
+        Expression::Identifier(n) => n.cv.as_deref(),
+        Expression::NumericLiteral(n) => n.cv.as_deref(),
+        Expression::StringLiteral(n) => n.cv.as_deref(),
+        Expression::BooleanLiteral(n) => n.cv.as_deref(),
+        Expression::NullLiteral(n) => n.cv.as_deref(),
+        Expression::BigIntLiteral(n) => n.cv.as_deref(),
+        Expression::UndefinedLiteral(n) => n.cv.as_deref(),
+        _ => None,
+    }
 }
 
 fn stamp_literal_cv(v: FoldedLiteral, cv: Option<String>) -> Expression {
@@ -14591,6 +14651,41 @@ mod tests {
     }
 
     // ------------------- untraced (cv = None) mode -------------------
+
+    #[test]
+    fn binary_fold_keeps_composite_and_shared_operand_lineage() {
+        let mut cv = CVLog::new(true);
+        let composite = cv.create(None);
+        let operand = cv.create(None);
+        // A transform can reuse one source identity at two operand positions.
+        // The result must retain that identity once, alongside its composite.
+        let expr = Expression::BinaryExpression(BinaryExpression {
+            cv: Some(composite.clone()),
+            operator: BinaryOperator::Add,
+            left: Box::new(num(2.0, Some(&operand))),
+            right: Box::new(num(3.0, Some(&operand))),
+        });
+        let prog = program_with_expr(expr, false);
+        let sidecar = Sidecar::new();
+        let out = ConstantFoldPass::new()
+            .run(PassContext {
+                program: &prog,
+                sidecar: &sidecar,
+                cv: &mut cv,
+            })
+            .unwrap();
+        let Expression::NumericLiteral(result) = extract_expr(&out.program) else {
+            panic!("expected the folded numeric result");
+        };
+        assert_eq!(result.value, 5.0);
+        let id = result.cv.as_deref().expect("replacement identity");
+        let entry = cv.get(id).unwrap();
+        assert_eq!(entry.contributions.len(), 1);
+        assert_eq!(entry.contributions[0].source, "constant-fold");
+        assert_eq!(entry.contributions[0].meta["new_cv"], id);
+        let merged = cv.get(&entry.parent_ids[0]).unwrap();
+        assert_eq!(merged.parent_ids, [composite, operand]);
+    }
 
     #[test]
     fn fold_in_untraced_mode_skips_cv_and_contributions() {

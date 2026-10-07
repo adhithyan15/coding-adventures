@@ -161,6 +161,15 @@ The `passes` field of a correlation-vector trace is taken directly from
 `PipelineOutput::execution_order`. A pass can appear there only by having run:
 there is no second list that could disagree with the pipeline.
 
+Per-node tracing is still partial. CLOC27 carries lexer identities onto leaves;
+[CLOC31](../../../specs/CLOC31-primitive-fold-lineage.md) connects string-literal
+`.length`, primitive binary and primitive unary results to their operand
+identities and records the rewrite on the replacement. The trace tests follow
+actual parent links, including nested folds, rather than treating token presence
+as lineage. Composite node spans, other transformations, deletion/motion/inlining
+events and output-byte/source-map joins remain required by
+[CCR-065](https://github.com/adhithyan15/coding-adventures/issues/15830).
+
 ### Measured parity
 
 `tests/diff/ladder_*` is an ordered complexity ladder compiled by both

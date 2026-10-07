@@ -1,39 +1,8 @@
-//! Characterization test for the **correlation-vector trace at the
-//! constant-fold layer** — and the gap it currently has.
+//! CLOC27 lexer/leaf plumbing smoke test, retained from the original gap probe.
 //!
-//! ## Why this exists
-//!
-//! "A Closure-Compiler clone *with tracing*" is the project's headline
-//! differentiator: every transformation should be auditable back to the source
-//! bytes it came from. Each constant-fold dutifully records provenance
-//! (`fork_cv` / `stamp_literal_cv`) as it rewrites the tree. But when you run
-//! the binary with `--correlation_vector` at `--compilation_level SIMPLE`, that
-//! per-fold lineage is **not in the emitted sidecar**: the SIMPLE path
-//! (`run.rs::run_typed_pipeline`) runs the pass pipeline with a *disabled,
-//! discarded* `CVLog`, and the typed AST nodes the bridge produces carry
-//! `cv: None`, so the folded literal has no link to its source token. The
-//! sidecar records only coarse lex/file/pass-summary provenance.
-//!
-//! Concretely, for `report("abc".length)` → `report(3)`, the `3` literal cannot
-//! be traced back to the `"abc".length` source bytes.
-//!
-//! ## What this test pins down
-//!
-//! 1. The constant-fold pass DID run — it is listed in the coarse
-//!    `compilation_level/simple_v2` contribution's `passes`. (So the optimizer
-//!    is active; the gap is in *tracing*, not in folding.)
-//! 2. THE GAP — every CV entry's `origin.source` is a lex/file-level source
-//!    (`lexer_token` / `input_file` / `js_output_file` /
-//!    `concatenated_combined_source`); **none** comes from the constant-fold
-//!    pass, and nothing ties the folded `3` to the `"abc".length` span.
-//!
-//! This is a *characterization* test: it documents the current contract so the
-//! gap is visible and regression-detectable. The day per-fold provenance is
-//! wired through the SIMPLE bridge (tracked as the "wire per-fold CV
-//! provenance" task), assertion (2) FLIPS — at which point this test must be
-//! updated to assert the real fold lineage (the folded literal's entry links to
-//! its source token's byte span). That failure is the signal that tracing
-//! became real.
+//! This checks token origins and the scheduler-derived pass summary. Token
+//! presence alone does not prove a fold's lineage. `cv_fold_trace.rs` provides
+//! the stronger CLOC31 contract: result-owned events and graph paths to operands.
 
 use std::process::Command;
 use std::sync::atomic::{AtomicU64, Ordering};
@@ -108,7 +77,7 @@ fn is_line_col(loc: &str) -> bool {
 }
 
 #[test]
-fn constant_fold_records_per_token_source_provenance() {
+fn typed_pipeline_records_per_token_origins_and_pass_summary() {
     // `"abc".length` folds to `3`; `report(...)` keeps it referenced so the
     // value survives remove-unused-vars/treeshake and the fold is real.
     let (j, input_path) = run_cv_sidecar("report(\"abc\".length);\n");
@@ -148,7 +117,7 @@ fn constant_fold_records_per_token_source_provenance() {
          origins seen: {origin_sources:?}",
     );
 
-    // (2) TRACING IS REAL (CLOC27): the gap has been closed. Per-token
+    // (2) Leaf-token origins reach the shared sidecar (CLOC27). Per-token
     // source-span origins now appear in the sidecar — the leaf literals the
     // constant-fold derives from carry CvIds rooted at the `"abc".length`
     // source bytes (source == the input file, location == a `line:col` span),
@@ -158,7 +127,7 @@ fn constant_fold_records_per_token_source_provenance() {
     assert!(
         per_token_span_origins > 0,
         "expected at least one per-token source-span origin (source == {input_path:?}, \
-         location == line:col) proving per-fold provenance reaches the sidecar; \
+         location == line:col) proving leaf-token origins reach the sidecar; \
          origins seen: {origin_sources:?}",
     );
 

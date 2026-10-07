@@ -1,17 +1,36 @@
 # Closure Compiler on Rust — parity backlog
 
-**Status:** active  
-**Last reprioritized:** 2026-09-21  
-**Current selection:** none — CCR-066 (the differential complexity ladder,
-[#15837](https://github.com/adhithyan15/coding-adventures/issues/15837)) is
-complete, as its queue row and the loop record below both record. Pick the next
-item from the queue rather than from this line.<br>
-**Current local loop base:** `coding-adventures` at
-`d2610543e665da8978d45a49ea8993853810d7bb`<br>
-**Local audit base:** `coding-adventures` at `06fc0524051a397ccc53c628b08c019b2bbf75ba`  
+**Status:** active — resumed with provenance as a completion requirement
+**Last reprioritized:** 2026-10-07
+**Current selection:** CCR-065 primitive fold lineage, specified in
+[CLOC31](CLOC31-primitive-fold-lineage.md), branch
+`codex/closurec-fold-lineage-20261007`. No competing Closure PR at selection.
+**Current audit base:** `8ec899e565e2e73eb01c48107acdbe54a66c457a`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
+
+## Recovery and provenance acceptance (2026-10-07)
+
+Verified on fetched `origin/main`: long aliases #15608, debugger preservation
+#15929, literal propagation #15964/#16011/#16019 and scheduler ordering #16118
+are merged. CCR-053 and CCR-063 are closed; their old queue descriptions below
+are historical and must not be selected again. The automation and umbrella
+#15530 were still pointing at merged #15608; the heartbeat now targets the
+completion chat and re-audits live PR state rather than hardcoding a head.
+
+CCR-065's original bridge audit is stale: CLOC27 already propagates token CVs
+onto leaves and shares the real log. Live inspection found its golden trace
+assertion only proves token presence, while primitive folds read absent
+composite CVs and lose replacement lineage. CLOC31 is the selected repair;
+its stronger end-to-end graph assertions failed before implementation.
+
+Required next slices: audit remaining fold families; stable composite identities
+and shared source spans on the canonical ESTree boundary; typed lineage events
+with actual pass/sweep ordering; all mutating passes (inline/rename first),
+including one-to-many inlining, many-to-one merges, motion and deletion;
+output-range/source-map joins and graph queries. The full compiler delivery
+contract below remains mandatory. No provenance slice alone completes the loop.
 
 ## Purpose and truthfulness boundary
 
@@ -33,18 +52,18 @@ remain the design and historical slicing record.
 5. **Operational parity:** the same invocation is deterministic and supported
    on Linux, macOS, and Windows, with useful failures and bounded resource use.
 
-**Measured agreement against the pinned oracle**, now committed as 156 CI-gated
-fixtures under `tests/diff/ladder_*` (52 rungs x 3 levels,
+**Measured agreement against the pinned oracle**, now committed as 171 CI-gated
+fixtures under `tests/diff/ladder_*` (57 rungs x 3 levels,
 [#15837](https://github.com/adhithyan15/coding-adventures/issues/15837)):
 
 | Level | Rungs agreeing | |
 |---|---:|---|
-| `WHITESPACE_ONLY` | 49 / 52 | 94% |
-| `SIMPLE` | 31 / 52 | 60% |
-| `ADVANCED` | 13 / 52 | 25% |
+| `WHITESPACE_ONLY` | 54 / 57 | 95% |
+| `SIMPLE` | 34 / 57 | 60% |
+| `ADVANCED` | 24 / 57 | 42% |
 
 Agreement falls as the amount of claimed optimization rises. The ADVANCED
-figure flatters it: most of its thirteen agreements are trivial rungs where
+figure flatters it: many of its agreements are trivial rungs where
 there is nothing to optimize. Upstream ADVANCED reduces whole programs to their
 observable effect (`var o={a:1,b:2};console.log(o.a)` → `console.log(1)`);
 we emit approximately the input. ADVANCED is better described as **scaffolded

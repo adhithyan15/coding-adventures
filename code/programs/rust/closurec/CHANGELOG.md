@@ -4,6 +4,14 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - prove primitive fold lineage through the sidecar (CLOC31 / CCR-065)
+
+Primitive fold records now belong to the replacement and retain operand
+identities. The trace tests traverse actual parent links, pin both binary inputs
+and nested fold history, exclude unrelated tokens, compare tracing-on/off bytes
+and reject fictitious rewrites for declined folds. The previous source-token
+presence assertion could pass with disconnected replacements.
+
 ### Fixed - pass schedule follows registration order when dependencies permit
 
 `closure-pass-pipeline` now chooses the earliest registered ready pass at each
