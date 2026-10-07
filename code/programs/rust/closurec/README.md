@@ -228,8 +228,8 @@ CI/merge verification remain required before CV02 acceptance.
 
 The Windows repair creates staging directories and files atomically with a
 protected current-user DACL. It captures and rechecks owner/group/DACL/protection,
-proves the intended policy on a distinct always-empty probe, and verifies the
-installed policy exactly. Explicit legacy and inherited policies use separately
+proves the intended policy and production fresh verification open on a distinct
+always-empty probe, and verifies the installed policy exactly. Explicit legacy and inherited policies use separately
 verified handle routes; unsupported or stale inherited policies reject before
 originals change. Pre-commit failure restores candidate privacy before rollback.
 Native Windows regressions cover preparation, protected replacement, inherited

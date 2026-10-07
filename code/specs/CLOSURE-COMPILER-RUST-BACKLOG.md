@@ -168,7 +168,11 @@ unit tests, including actual-parent/new-file policy, inherited replacement,
 ACL-only changes, policy failure rollback and orphan-inheritance rejection.
 It uses atomically private objects, separate always-empty policy probes, verified
 handle routes, strict final-policy equality and pre-commit privacy restoration.
-Compiler strict all-target lint passes. All 897 lesson shards validate.
+Compiler strict all-target lint passes. An independent follow-up found that an
+OWNER RIGHTS denial could permit retained-handle readback while denying the
+fresh verification open. A committed native red regression reproduces late
+original mutation; the local repair now passes it by proving fresh opens while
+the empty probe has its intended policy. All 898 lesson shards validate.
 Native Linux/macOS ownership and extended-ACL copy-or-reject work and exact-head
 independent review remain pending; the published draft still contains the known
 defect and cannot be accepted on its older green CI.

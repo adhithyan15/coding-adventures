@@ -735,10 +735,22 @@ fn verify_policy_support(stage: &Stage) -> io::Result<()> {
             if file_identity(&handle)? != probe.id {
                 return Err(invalid("native policy probe identity changed"));
             }
-            stage.intended_policy.apply(&handle)
+            stage.intended_policy.apply(&handle)?;
         } else {
-            stage.intended_policy.apply(&probe.file)
+            stage.intended_policy.apply(&probe.file)?;
         }
+        // Retained handles keep rights granted before the DACL changed. Prove
+        // the exact fresh open required by final verification while the intended
+        // policy is active; OWNER RIGHTS can remove the owner's implicit access.
+        let active_path = if linked { &public_path } else { &private_path };
+        let fresh = observe(active_path, false)?
+            .ok_or_else(|| invalid("active policy probe disappeared"))?;
+        if fresh.id != probe.id || fresh.len != 0 || fresh.policy != stage.intended_policy {
+            return Err(invalid(
+                "fresh native policy probe identity or policy changed",
+            ));
+        }
+        Ok(())
     })();
     // This held handle keeps WRITE_DAC/WRITE_OWNER despite a restrictive test
     // policy. Restore privacy before identity-checked removal of owned links.

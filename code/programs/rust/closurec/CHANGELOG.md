@@ -4,6 +4,17 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed locally - fresh verification opens during policy preflight (CV02)
+
+Independent review found that retained probe handles continued to permit policy
+readback even when the final DACL denied the fresh verification open used after
+installation. An inheritable OWNER RIGHTS deny-ReadPermissions policy therefore
+rejected only after an earlier output had changed. A committed native regression
+failed at the mutation-boundary assertion before repair and passes after repair:
+while the separate empty probe has its intended policy, reopen its active path
+with production verification access and verify identity, zero length and policy.
+Unsupported verification policies now reject before original mutation.
+
 ### Fixed locally - verified Windows publication policies (CV02)
 
 Create prepared directories and files with atomically protected current-user
