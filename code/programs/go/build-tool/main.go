@@ -186,6 +186,7 @@ func packagesForPlatform(packages []discovery.Package, goos string) []discovery.
 }
 
 const sharedDiscoveryFixturePath = "code/specs/fixtures/build-tool-v1/cases/discovery-language-registry.json"
+const ciGateFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/ci-gate-selection-"
 
 const closureProvenanceSpecPath = "code/specs/CV02-checked-bounded-provenance-graphs.md"
 const closureProvenanceConsumer = "rust/programs/closurec"
@@ -205,6 +206,23 @@ var sharedDiscoveryFixtureConsumers = []struct{ name, language string }{
 	{"rust/programs/build-tool", "rust"},
 	{"swift/programs/build-tool", "swift"},
 	{"typescript/programs/build-tool", "typescript"},
+}
+
+// These package BUILD fronts run the native CI-gate fixture readers. A new
+// direct reader must extend this relation and the drift test together.
+var ciGateFixtureConsumers = []struct{ name, language string }{
+	{"go/programs/build-tool", "go"},
+	{"python/programs/build-tool", "python"},
+}
+
+func hasCIGateFixturePath(changedFiles []string) bool {
+	for _, changed := range changedFiles {
+		name, ok := strings.CutPrefix(changed, ciGateFixturePrefix)
+		if ok && strings.HasSuffix(name, ".json") && len(name) > len(".json") && !strings.ContainsAny(name, "/\\") {
+			return true
+		}
+	}
+	return false
 }
 
 func changedPackageRootsForPlatform(
@@ -282,7 +300,9 @@ func changedPackageRootsForPlatformAndLanguage(
 		}
 		changed[closureProvenanceConsumer] = true
 	}
-	if !containsPath(changedFiles, sharedDiscoveryFixturePath) {
+	discoveryFixtureChanged := containsPath(changedFiles, sharedDiscoveryFixturePath)
+	ciGateFixtureChanged := hasCIGateFixturePath(changedFiles)
+	if !discoveryFixtureChanged && !ciGateFixtureChanged {
 		return changed, nil
 	}
 
@@ -292,14 +312,27 @@ func changedPackageRootsForPlatformAndLanguage(
 	for _, pkg := range packages {
 		available[pkg.Name] = true
 	}
-	for _, consumer := range sharedDiscoveryFixtureConsumers {
-		if language != "all" && consumer.language != language {
-			continue
+	if discoveryFixtureChanged {
+		for _, consumer := range sharedDiscoveryFixtureConsumers {
+			if language != "all" && consumer.language != language {
+				continue
+			}
+			if !available[consumer.name] {
+				return nil, fmt.Errorf("shared discovery fixture consumer %q is missing from discovered packages", consumer.name)
+			}
+			changed[consumer.name] = true
 		}
-		if !available[consumer.name] {
-			return nil, fmt.Errorf("shared discovery fixture consumer %q is missing from discovered packages", consumer.name)
+	}
+	if ciGateFixtureChanged {
+		for _, consumer := range ciGateFixtureConsumers {
+			if language != "all" && consumer.language != language {
+				continue
+			}
+			if !available[consumer.name] {
+				return nil, fmt.Errorf("CI-gate fixture consumer %q is missing from discovered packages", consumer.name)
+			}
+			changed[consumer.name] = true
 		}
-		changed[consumer.name] = true
 	}
 	return changed, nil
 }

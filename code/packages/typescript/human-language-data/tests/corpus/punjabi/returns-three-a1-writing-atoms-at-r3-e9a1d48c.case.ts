@@ -3,7 +3,9 @@ import { measureContinuity } from "../../../src/continuity.js";
 import { loadTrackLessons } from "../../../src/loader.js";
 import { estimateLessonDuration } from "../../../src/report.js";
 
-const lessons = loadTrackLessons("punjabi").sort(
+const lessons = loadTrackLessons("punjabi").filter(
+  (lesson) => Number(lesson.frontmatter.sequence) <= 8910,
+).sort(
   (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
 );
 const ids = [

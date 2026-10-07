@@ -1,0 +1,12 @@
+{
+  "language": "punjabi",
+  "chapter": 163,
+  "sourceHash": "fnv1a64:8cd555f7e5e82d8e",
+  "lessonIds": [
+    "PA-R163-make-again",
+    "PA-R163-sew-again",
+    "PA-R163-fill-again",
+    "PA-R163-pull-again"
+  ],
+  "tex": "punjabi/book/chapters/ch163-return-to-making-sewing-filling-and-pulling.tex"
+}

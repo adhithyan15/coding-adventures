@@ -4,6 +4,7 @@
   "fixtures": [
     "basic-handoff",
     "parallel-branch-and-join",
-    "flowchart-style-edge-label"
+    "flowchart-style-edge-label",
+    "multiline-edge-continuation"
   ]
 }
