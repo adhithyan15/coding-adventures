@@ -16088,6 +16088,38 @@ single-engine Dune fix or the C#/F# CI-gate engine. The fresh-main and open-PR
 checks found no path overlap, so this one neutral fixture owner is the next
 in-progress tranche; Haskell implementation remains serially downstream.
 
+## Post-#16872 merge, inventory, and native fixture CI gap (2026-10-07)
+
+PR #16872 passed all 33 final-head checks (14 successes, 18 expected skips,
+one acceptable neutral CodeQL result). Both required gates passed, GitHub
+reported `MERGEABLE/CLEAN`, guarded squash auto-merge was enabled, and GitHub
+merged it as `2cd82bda78887a0bbf926b9897eff80ce090c0b9` without a manual
+merge. The fresh schema-3 reporter has 15 established lanes, 1,488
+implementation identities, 4,758 slots, 1,530 all-reported identities, 178
+high-consensus identities with 262 missing slots, five emerging OCaml packages,
+and zero canonical collisions or unknown buckets. The one additional Rust
+singleton since the previous snapshot is not a new portable-package obligation.
+
+The fixture now proves exact `_build` exclusion and positive `_Build` and
+`_build-example` discovery through ten existing native consumers. Nine consumers
+were validated locally; Lua's test dependencies were unavailable on this
+Windows host. PR detect selected only Python and Perl, so the green contracts
+and build gates did not establish the other eight native projections. The new
+pending `build-tool-shared-discovery-fixture-native-ci-selection` owner repairs
+the fixture-specific Go detect mapping to all ten direct consumer roots and
+requires evidence that the Ubuntu build executes each native BUILD front,
+especially Lua. It does not change discovery semantics or broadly select every
+specification file.
+
+The Haskell Dune discovery owner can consume the four OCaml fixture BUILD
+records, prove only the three positive identities, and add exact `_build` to
+its discovery skip list; its full language-registry successor stays separate.
+The quick dependency/leverage pass selects the CI detector repair first:
+it closes a demonstrated ten-consumer contract blind spot before Haskell and
+Elixir become new fixture consumers. Their adoption owners now depend on that
+repair and must extend the exact consumer map when they add native tests. No
+second PR is active.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
