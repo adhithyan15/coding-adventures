@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R160-jump-again",
+    "language": "punjabi",
+    "chapter": 160,
+    "sequence": 8840,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f2150e04b22b36fa"
+  },
+  "findings": []
+}
