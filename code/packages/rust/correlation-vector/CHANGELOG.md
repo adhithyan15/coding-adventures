@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Fixed — CV02 boundary review
 
+- Charge object-key work before decoding; validate borrowed key role, duplicates
+  and encoded metadata bytes before copying keys into owned storage.
+
 - Retain allocator-only import status through mutation/save/reload. Canonical
   exports include unchecked_import:true; strict queries/validation and checked
   import reject that state instead of upgrading discarded/defaulted evidence.

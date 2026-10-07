@@ -1,6 +1,22 @@
 use super::*;
 
 #[test]
+fn checked_import_charges_key_work_before_decoding_the_key() {
+    // Root consumes the entire allowance. Entering the key decoder would
+    // report the malformed escape; budget exhaustion must stop it first.
+    let error = CVLog::from_checked_json(
+        r#"{"\uZZZZ":false}"#,
+        GraphLimits {
+            max_work: 1,
+            ..Default::default()
+        },
+    )
+    .err()
+    .unwrap();
+    assert!(error.contains("operation work limit"), "{error}");
+}
+
+#[test]
 fn allocator_import_cannot_launder_lost_metadata_or_defaulted_fields() {
     let duplicate = r#"{"enabled":true,"entries":{"cv1.0000000000000001":{"id":"cv1.0000000000000001","parent_ids":[],"origin":{"source":"s","location":"l","timestamp":null,"meta":{"x":1,"\u0078":2}},"contributions":[],"deleted":null}},"identity":{"scheme":"compact-v1","last_sequence":"0000000000000001"},"pass_order":[]}"#;
     let missing = r#"{"enabled":true,"entries":{"cv1.0000000000000001":{"id":"cv1.0000000000000001"}},"identity":{"scheme":"compact-v1","last_sequence":"0000000000000001"},"pass_order":[]}"#;

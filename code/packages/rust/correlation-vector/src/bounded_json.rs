@@ -99,6 +99,68 @@ struct Seed<'a, 'b> {
     depth: usize,
     meta_depth: usize,
 }
+
+// MapAccess invokes a key seed only when a key is present. Charge before the
+// decoder runs, then check borrowed keys before making an owned copy. Escaped
+// strings may use serde's scratch buffer, bounded by the input-byte allowance.
+struct KeySeed<'a, 'b> {
+    budget: &'a mut Budget<'b>,
+    role: Role,
+    fields: &'a Map<String, Value>,
+}
+impl KeySeed<'_, '_> {
+    fn check<E: Error>(&mut self, key: &str) -> Result<(), E> {
+        if self.fields.contains_key(key) {
+            return Err(E::custom(if matches!(self.role, Role::Entries) {
+                "duplicate CV entry identity"
+            } else {
+                "duplicate checked CV object key"
+            }));
+        }
+        if matches!(self.role, Role::Root) {
+            if key == "view" {
+                return Err(E::custom("declared CV view is not a complete checked log"));
+            }
+            if key == "unchecked_import" {
+                return Err(E::custom(
+                    "allocator-only CV snapshot is not checked graph evidence",
+                ));
+            }
+        }
+        if matches!(self.role, Role::Entries) {
+            compact_id_sequence(key).map_err(E::custom)?;
+        }
+        self.role.child(key).map_err(E::custom)?;
+        if matches!(self.role, Role::Metadata) {
+            self.budget.text(key).map_err(E::custom)?;
+            self.budget
+                .payload(if self.fields.is_empty() { 1 } else { 2 })
+                .map_err(E::custom)?;
+        }
+        Ok(())
+    }
+}
+impl<'de> DeserializeSeed<'de> for KeySeed<'_, '_> {
+    type Value = String;
+    fn deserialize<D: serde::Deserializer<'de>>(self, d: D) -> Result<String, D::Error> {
+        self.budget.work.take(1).map_err(D::Error::custom)?;
+        d.deserialize_str(self)
+    }
+}
+impl<'de> Visitor<'de> for KeySeed<'_, '_> {
+    type Value = String;
+    fn expecting(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str("a checked CV object key")
+    }
+    fn visit_str<E: Error>(mut self, key: &str) -> Result<String, E> {
+        self.check(key)?;
+        Ok(key.to_string())
+    }
+    fn visit_string<E: Error>(mut self, key: String) -> Result<String, E> {
+        self.check(&key)?;
+        Ok(key)
+    }
+}
 impl<'de> DeserializeSeed<'de> for Seed<'_, '_> {
     type Value = Value;
     fn deserialize<D: serde::Deserializer<'de>>(self, deserializer: D) -> Result<Value, D::Error> {
@@ -239,29 +301,11 @@ impl<'de> Visitor<'de> for Seed<'_, '_> {
             self.budget.payload(2).map_err(A::Error::custom)?;
         }
         let mut fields = Map::new();
-        while let Some(key) = map.next_key::<String>()? {
-            self.budget.work.take(1).map_err(A::Error::custom)?;
-            if fields.contains_key(&key) {
-                return Err(A::Error::custom(if matches!(self.role, Role::Entries) {
-                    "duplicate CV entry identity"
-                } else {
-                    "duplicate checked CV object key"
-                }));
-            }
-            if matches!(self.role, Role::Root) && key == "view" {
-                return Err(A::Error::custom(
-                    "declared CV view is not a complete checked log",
-                ));
-            }
-            if matches!(self.role, Role::Entries) {
-                compact_id_sequence(&key).map_err(A::Error::custom)?;
-            }
-            if matches!(self.role, Role::Metadata) {
-                self.budget.text(&key).map_err(A::Error::custom)?;
-                self.budget
-                    .payload(if fields.is_empty() { 1 } else { 2 })
-                    .map_err(A::Error::custom)?;
-            }
+        while let Some(key) = map.next_key_seed(KeySeed {
+            budget: self.budget,
+            role: self.role,
+            fields: &fields,
+        })? {
             let role = self.role.child(&key).map_err(A::Error::custom)?;
             let meta_depth = if matches!(role, Role::Metadata) {
                 if matches!(self.role, Role::Metadata) {

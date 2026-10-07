@@ -267,3 +267,7 @@ Strict queries and validation reject them; their snapshots retain
 `unchecked_import: true`, which checked import rejects. This prevents a
 normalized duplicate key or omitted array from becoming checked evidence
 through save/reload. Use `from_checked_json` at evidence boundaries.
+
+Checked parsing charges object-key work before the decoder runs and validates
+borrowed key schema/duplicates/encoded payload bytes before ownership copies.
+Escaped-string scratch is bounded by the input-byte cap.
