@@ -11,21 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 16863,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16863",
-    "branch": "codex/parity-python-ci-gate-selection-20261006",
-    "implementation_revision": "f28430654c760f9003a5d266f090b24f1fea5a61",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-07T07:15:01Z",
+    "observed_at": "2026-10-07T08:26:52Z",
     "pr_number": 16863,
-    "status": "checks-pending",
-    "notes": "Ready-for-review Python CI-gate selection PR #16863 is open from validated f28430654c760f9003a5d266f090b24f1fea5a61. Local Python package suite passed 557 tests with 91.56% coverage, full Go build-tool tests/vet passed, focused Ruff/mypy and collision inventory passed, and read-only security review found no actionable issue. GitHub reports MERGEABLE but BLOCKED while initial CI and CodeQL checks are queued; auto-merge is not enabled. Previous parity PR #16798 auto-merged as 665bf2ac6ec08e0ab463b75c2bc4a88828ce76a6."
+    "status": "merged",
+    "notes": "PR #16863 completed all 33 final-head checks with 14 successes, 18 expected skips, one acceptable neutral CodeQL result, and no failure or pending check. Both required gates passed and GitHub reported MERGEABLE/CLEAN. Guarded squash auto-merge was enabled for exact head a1c2722fe1b3bb7a1f056d1d6615424325a894d8; GitHub merged it as 8d587b2eb15eae5e06ebea24c75e5a8d1d650100 at 2026-10-07T08:26:52Z. No manual merge occurred."
   },
   "last_inventory": {
-    "revision": "665bf2ac6ec08e0ab463b75c2bc4a88828ce76a6",
+    "revision": "8d587b2eb15eae5e06ebea24c75e5a8d1d650100",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
@@ -724,10 +718,19 @@
       "notes": "The shared C#/F# engine neither consumes the full registry fixture nor exposes the exact Dune exclusion. Add native C# behavior coverage and explicit F# facade evidence without pretending that one runtime silently covers the other."
     },
     {
+      "id": "build-tool-dune-discovery-near-case-neutral-fixture-repair",
+      "title": "Pin positive Dune near-case discovery roots in the neutral language-registry fixture",
+      "status": "pending",
+      "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-language-source-input-registry-corpus-and-engine-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16863 audit found discovery/language-registry proves only negative exact _build exclusion, although build-tool-conformance.md also claims positive _Build and _build-example preservation. Add Windows-safe distinct-parent OCaml BUILD records and exact expected packages, then update hard-coded Python and Perl consumer counts/lists and validate all ten native fixture consumers. Do not conflate source-collection near-case fixtures with discovery evidence."
+    },
+    {
       "id": "build-tool-haskell-dune-build-discovery-conformance",
       "title": "Prove Dune _build discovery exclusion in the Haskell build tool",
       "status": "pending",
-      "depends_on": ["ocaml-build-substrate-process-free-core"],
+      "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-dune-discovery-near-case-neutral-fixture-repair"],
       "branch": null,
       "pr_number": null,
       "notes": "Haskell does not consume the shared language-registry fixture and mentions _build only in orphan validation. Add the exact discovery rule and language-neutral fixture consumption in one bounded Haskell tranche."
@@ -1955,7 +1958,7 @@
       "id": "build-tool-elixir-dune-build-discovery-fixture-adoption",
       "title": "Make Elixir consume the Dune discovery fixture",
       "status": "pending",
-      "depends_on": ["ocaml-build-substrate-process-free-core"],
+      "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-dune-discovery-near-case-neutral-fixture-repair"],
       "branch": null,
       "pr_number": null,
       "notes": "Elixir already prunes exact _build but does not consume the shared language-registry fixture. Add independent fixture evidence and change behavior only if that evidence exposes a real divergence."
@@ -9656,10 +9659,13 @@
     {
       "id": "build-tool-python-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Python build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-python-glob-matcher-complexity-hardening"],
       "branch": "codex/parity-python-ci-gate-selection-20261006",
       "pr_number": 16863,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16863",
+      "merged_at": "2026-10-07T08:26:52Z",
+      "merge_commit": "8d587b2eb15eae5e06ebea24c75e5a8d1d650100",
       "selected_at": "2026-10-06T13:24:49Z",
       "selection_revision": "665bf2ac6ec08e0ab463b75c2bc4a88828ce76a6",
       "selection_notes": "Selected after #16798 auto-merged and the exact-main 15-lane inventory stayed collision-free at 1,487 identities and 4,757 slots. All three prerequisites are merged, ten neutral cases define the closed result contract, and the Python lane is only three gates from a terminal build-tool adapter. This bounded process-free tranche advances the every-language build-tool mandate without host authority or overlap with the eleven open non-parity PRs; Haskell Dune discovery has higher raw fanout but a longer eleven-gate critical path.",
@@ -9829,7 +9835,7 @@
       "id": "build-tool-jvm-current-contract-conformance",
       "title": "Bring Java and Kotlin build tools to the current neutral contract",
       "status": "pending",
-      "depends_on": ["build-tool-jvm", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-jvm", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling"],
       "branch": null,
       "pr_number": null,
       "notes": "Promotion gate for both JVM front doors. Require the current language registry, repository-boundary reverse-diff and digest corpus, CI-gate corpus, and every other established process-free build-tool contract before either lane counts as complete."
@@ -9838,7 +9844,7 @@
       "id": "build-tool-dart-current-contract-conformance",
       "title": "Bring the Dart build tool to the current neutral contract",
       "status": "pending",
-      "depends_on": ["build-tool-dart-tracked-artifact-validation-conformance", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["build-tool-dart-tracked-artifact-validation-conformance", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling"],
       "branch": null,
       "pr_number": null,
       "notes": "Promotion gate for the Dart build-tool front door. Require all current process-free contracts and language-neutral fixtures before the lane is counted complete."
@@ -9847,7 +9853,7 @@
       "id": "ocaml-build-tool-current-contract-conformance",
       "title": "Bring the OCaml build tool to the current neutral contract",
       "status": "pending",
-      "depends_on": ["ocaml-build-tool-and-promotion", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "depends_on": ["ocaml-build-tool-and-promotion", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-site-authored-resource-source-input-extension", "build-tool-diff-selection-match-work-ceiling", "build-tool-ci-gate-selection-match-work-ceiling"],
       "branch": null,
       "pr_number": null,
       "notes": "The existing OCaml native-build-tool owner predates later shared contracts. Before promotion, require native consumption of every current process-free corpus, including source registry, repository-boundary reverse diff and digest, CI-gate selection, and the remaining universal contract families."
