@@ -373,14 +373,13 @@ impl RootedFs {
 
 impl SourceFs for RootedFs {
     fn resolve(&mut self, request: &IncludeRequest) -> Result<FileId, PpError> {
-        Self::screen_spelling(&request.spelling)?;
-
         if request.spelling.len() as u64 > self.bounds.token_spelling_bytes {
             return Err(PpError::new(format!(
                 "include spelling exceeds the {}-byte token bound",
                 self.bounds.token_spelling_bytes
             )));
         }
+        Self::screen_spelling(&request.spelling)?;
 
         // A supplied origin must name a file this instance already resolved.
         // Only quoted includes search beside it; primary and system includes
@@ -694,6 +693,12 @@ mod tests {
         let too_long = "x".repeat(Bounds::default().token_spelling_bytes as usize + 1);
         assert!(fs
             .resolve(&req(&too_long))
+            .unwrap_err()
+            .to_string()
+            .contains("token bound"));
+        let long_reserved = format!("CON.{}", "x".repeat(too_long.len()));
+        assert!(fs
+            .resolve(&req(&long_reserved))
             .unwrap_err()
             .to_string()
             .contains("token bound"));

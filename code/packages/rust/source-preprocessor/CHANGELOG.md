@@ -7,7 +7,7 @@
   only; an unknown origin fails closed.
 - Every candidate retains the same canonical containment, regular-file and
   bounded-read checks. Direct `RootedFs` calls now reject overlong include
-  spellings before constructing paths.
+  spellings before screening or constructing paths.
 - Tests cover search precedence, canonical identity, traversal, symlink escape
   and real nested C file-input composition.
 

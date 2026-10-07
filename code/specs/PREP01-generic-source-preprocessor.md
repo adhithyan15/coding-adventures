@@ -640,8 +640,8 @@ added. Tests distinguish a header-neighbor from a same-named root file, cover
 an out-of-root relative path and symlink, reject an unknown `from`, and compile
 a nested quoted header through the real C file-input frontend.
 `RootedFs::resolve` also checks the request spelling against its tightened
-token-spelling bound before constructing candidate paths, including when used
-directly outside an engine run.
+token-spelling bound before path screening or candidate construction, including
+when used directly outside an engine run.
 `c.tokens` stops discarding `#…` lines; `c-lexer` surfaces directive tokens; a
 `CDialect` implements §5; `c-to-semantic-ir` runs the engine as its
 `post_tokenize` hook. `SIR27`'s preprocessor scope statement is updated.
