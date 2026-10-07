@@ -722,30 +722,21 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     let mut text_children = Vec::new();
     let line_color = normalize_css_paint(diagram.config.theme.line_color.clone());
     let icon_color = normalize_css_paint(diagram.config.theme.icon_color.clone());
-    let positions = diagram.nodes.iter().map(|node| (node.id.as_str(), (node.x, node.y, node.height))).collect::<HashMap<_, _>>();
-    for node in &diagram.nodes {
-        if let Some((parent_x, parent_y, parent_height)) = node.parent_id.as_deref().and_then(|id| positions.get(id)).copied() {
-            let joint_x = node.x - diagram.config.row_indent;
-            let parent_center_y = parent_y + parent_height / 2.0;
-            let node_center_y = node.y + node.height / 2.0;
-            instructions.push(PaintInstruction::Path(line_path(&[
-                Point { x: parent_x + diagram.config.padding_x, y: parent_center_y },
-                Point { x: joint_x, y: parent_center_y },
-                Point { x: joint_x, y: node_center_y },
-                Point { x: node.x, y: node_center_y },
-            ], &line_color, diagram.config.line_thickness)));
-        }
+    for connector in &diagram.connectors {
+        let mut path = line_path(&connector.points, &line_color, diagram.config.line_thickness);
+        path.base.metadata = Some(HashMap::from([("treeView.nodeId".into(), connector.node_id.clone())]));
+        instructions.push(PaintInstruction::Path(path));
     }
     if let Some(title) = &diagram.title {
         text_children.push(text_node(title, 10.0, 5.0, diagram.width - 20.0, 30.0, options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
     }
     for node in &diagram.nodes {
         if node.class_selector.as_deref() == Some("highlight") {
-            instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: node.x - 5.0, y: node.y,
-                width: node.width, height: node.height,
+            instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: node.x, y: node.y + 1.0,
+                width: node.width, height: (node.height - 2.0).max(0.0),
                 fill: Some(normalize_css_paint(diagram.config.theme.highlight_background.clone())),
                 stroke: Some(normalize_css_paint(diagram.config.theme.highlight_stroke.clone())),
-                stroke_width: Some(1.0), corner_radius: Some(4.0), stroke_dash: None, stroke_dash_offset: None }));
+                stroke_width: Some(1.0), corner_radius: Some(3.0), stroke_dash: None, stroke_dash_offset: None }));
         }
         let show_icon = match node.icon.as_deref() {
             Some("none") => false,
@@ -761,24 +752,22 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
             icon_metadata.insert("treeView.icon".into(), icon);
             icon_metadata.insert("treeView.nodeId".into(), node.id.clone());
             instructions.push(PaintInstruction::Rect(PaintRect {
-                base: PaintBase { metadata: Some(icon_metadata), ..PaintBase::default() }, x: node.x,
-                y: node.y + (node.height - 16.0) / 2.0,
-                width: 16.0, height: 16.0, fill: Some(icon_color.clone()), stroke: Some(icon_color.clone()), stroke_width: Some(1.0),
+                base: PaintBase { metadata: Some(icon_metadata), ..PaintBase::default() }, x: node.x + diagram.config.padding_x,
+                y: node.y + diagram.config.padding_y,
+                width: 14.0, height: 14.0, fill: Some(icon_color.clone()), stroke: Some(icon_color.clone()), stroke_width: Some(1.0),
                 corner_radius: Some(radius), stroke_dash: None, stroke_dash_offset: None }));
         }
-        let text_x = node.x + if show_icon { 23.0 } else { 0.0 };
         let mut label_font = font_with_size(&options.label_font, Some(diagram.config.theme.label_font_size));
         if matches!(node.kind, TreeViewNodeKind::Directory) { label_font.weight = 700; }
         let text_height = label_font.size * label_font.line_height;
         let text_y = node.y + (node.height - text_height) / 2.0;
-        let label_width = (node.label.chars().count() as f64 * label_font.size * 0.62 + 8.0).min(node.width * 0.6);
-        text_children.push(text_node_no_wrap(&node.label, text_x, text_y, label_width, text_height,
+        text_children.push(text_node_no_wrap(&node.label, node.label_x, text_y, node.label_width, text_height,
             label_font, css_to_color(&diagram.config.theme.label_color)));
         if let Some(description) = &node.description {
             let mut description_font = font_with_size(&options.label_font, Some(diagram.config.theme.label_font_size));
             description_font.italic = true;
             let description_width = (description.chars().count() as f64 * description_font.size * 0.58 + 8.0).min(node.width * 0.4);
-            text_children.push(text_node_no_wrap(description, text_x + label_width + 10.0,
+            text_children.push(text_node_no_wrap(description, node.description_x.unwrap_or(node.label_x + node.label_width + 16.0),
                 text_y, description_width, text_height, description_font, css_to_color(&diagram.config.theme.description_color)));
         }
     }
@@ -9355,15 +9344,23 @@ mod tests {
             nodes: vec![
                 diagram_ir::LayoutedTreeViewNode { id: "root".into(), parent_id: None, depth: 0, label: "src".into(),
                     kind: TreeViewNodeKind::Directory, class_selector: Some("highlight".into()), icon: Some("folder".into()),
-                    description: None, x: 26.0, y: 12.0, width: 376.0, height: 28.0 },
+                    description: None, x: 26.0, y: 12.0, width: 376.0, height: 28.0,
+                    label_x: 49.0, label_width: 45.0, description_x: None },
                 diagram_ir::LayoutedTreeViewNode { id: "child".into(), parent_id: Some("root".into()), depth: 1, label: "main.rs".into(),
                     kind: TreeViewNodeKind::File, class_selector: None, icon: None, description: Some("entry".into()),
-                    x: 68.0, y: 46.0, width: 334.0, height: 28.0 },
+                    x: 68.0, y: 46.0, width: 334.0, height: 28.0,
+                    label_x: 73.0, label_width: 95.0, description_x: Some(184.0) },
+            ],
+            connectors: vec![
+                diagram_ir::LayoutedTreeViewConnector { node_id: "root".into(), points: vec![Point { x: 16.0, y: 26.0 }, Point { x: 26.0, y: 26.0 }] },
+                diagram_ir::LayoutedTreeViewConnector { node_id: "root".into(), points: vec![Point { x: 31.0, y: 40.0 }, Point { x: 31.0, y: 60.5 }] },
+                diagram_ir::LayoutedTreeViewConnector { node_id: "child".into(), points: vec![Point { x: 58.0, y: 60.0 }, Point { x: 68.0, y: 60.0 }] },
             ],
         };
         let scene = diagram_to_paint_treeview(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#123456"))));
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Path(_))).count(), 3);
         assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Rect(_))).count(), 2);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#345678")

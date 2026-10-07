@@ -1783,6 +1783,15 @@ pub struct LayoutedTreeViewNode {
     pub y: f64,
     pub width: f64,
     pub height: f64,
+    pub label_x: f64,
+    pub label_width: f64,
+    pub description_x: Option<f64>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct LayoutedTreeViewConnector {
+    pub node_id: String,
+    pub points: Vec<Point>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -1794,6 +1803,7 @@ pub struct LayoutedTreeViewDiagram {
     pub accessibility_description: Option<String>,
     pub config: TreeViewConfig,
     pub nodes: Vec<LayoutedTreeViewNode>,
+    pub connectors: Vec<LayoutedTreeViewConnector>,
 }
 
 // SET FAMILY

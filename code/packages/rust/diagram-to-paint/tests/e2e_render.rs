@@ -3320,6 +3320,23 @@ line "Target" [35, 50, 68, 82]"##,
             .expect("themed treeview PNG write failed");
         assert!(themed_pixels.width > 0 && themed_pixels.height > 0);
 
+        let described = parse_treeview("treeView-beta\nproject/\n    a.rs ## short label\n    much-longer-name.rs ## long label")
+            .expect("described treeview parse failed");
+        let described_layout = layout_treeview(&described, 720.0);
+        assert_eq!(described_layout.nodes[1].description_x, described_layout.nodes[2].description_x);
+        assert_eq!(described_layout.connectors.len(), 4);
+        let described_scene = diagram_to_paint_treeview(&described_layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 }, device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 13.0), title_font: font_spec("Helvetica", 18.0),
+            shaper: &shaper, metrics: &metrics, resolver: &resolver,
+        });
+        assert_eq!(described_scene.instructions.iter()
+            .filter(|instruction| matches!(instruction, PaintInstruction::Path(_))).count(), 4);
+        let described_pixels = render(&described_scene);
+        write_png(&described_pixels, "/tmp/mermaid_treeview_descriptions_e2e.png")
+            .expect("described treeview PNG write failed");
+        assert!(described_pixels.width > 0 && described_pixels.height > 0);
+
         let box_drawing = parse_treeview("treeView-beta\nproject/\n├─ src/ :::highlight\n│ └─ lib.rs ## crate root\n└─ README.md")
             .expect("box-drawing treeview parse failed");
         assert_eq!(box_drawing.nodes.iter().map(|node| node.depth).collect::<Vec<_>>(), [0, 1, 2, 1]);
@@ -3331,7 +3348,7 @@ line "Target" [35, 50, 68, 82]"##,
             shaper: &shaper, metrics: &metrics, resolver: &resolver,
         });
         assert_eq!(box_scene.instructions.iter()
-            .filter(|instruction| matches!(instruction, PaintInstruction::Path(_))).count(), 3);
+            .filter(|instruction| matches!(instruction, PaintInstruction::Path(_))).count(), 6);
         let box_pixels = render(&box_scene);
         write_png(&box_pixels, "/tmp/mermaid_treeview_box_drawing_e2e.png")
             .expect("box-drawing treeview PNG write failed");

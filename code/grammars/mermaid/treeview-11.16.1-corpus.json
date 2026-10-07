@@ -1,7 +1,7 @@
 {
   "upstream": "mermaid@11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
-  "scope": "native hierarchy subset with pinned box-drawing preprocessing, renderer defaults, and TreeView theme variables",
+  "scope": "native hierarchy subset with pinned box-drawing preprocessing, renderer defaults, theme variables, connector geometry, and aligned descriptions",
   "fixtures": [
     {
       "name": "header-only",
@@ -58,6 +58,10 @@
     {
       "name": "directive-theme-variables",
       "source": "%%{init: {\"themeVariables\": {\"treeView\": {\"labelFontSize\": \"18px\", \"labelColor\": \"#abcdef\", \"lineColor\": \"#123456\"}}}}%%\ntreeView-beta\nproject/\n    main.rs"
+    },
+    {
+      "name": "aligned-description-rows",
+      "source": "treeView-beta\nproject/\n    a.rs ## short label\n    much-longer-name.rs ## long label"
     }
   ]
 }
