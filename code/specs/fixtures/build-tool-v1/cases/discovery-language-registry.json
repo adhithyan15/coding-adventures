@@ -70,6 +70,14 @@
         "content_utf8": "echo generated-dune-output\n"
       },
       {
+        "path": "code/packages/ocaml/generated-b/_Build/case-source/BUILD",
+        "content_utf8": "echo ocaml\n"
+      },
+      {
+        "path": "code/packages/ocaml/generated-c/_build-example/near-source/BUILD",
+        "content_utf8": "echo ocaml\n"
+      },
+      {
         "path": "code/packages/starlark/demo-starlark/BUILD",
         "content_utf8": "echo starlark\n"
       },
@@ -260,11 +268,25 @@
           "rel_path": "code/packages/mosaic/demo-mosaic"
         },
         {
+          "build_file": "code/packages/ocaml/generated-b/_Build/case-source/BUILD",
+          "is_starlark": false,
+          "language": "ocaml",
+          "name": "ocaml/case-source",
+          "rel_path": "code/packages/ocaml/generated-b/_Build/case-source"
+        },
+        {
           "build_file": "code/packages/ocaml/demo-ocaml/BUILD",
           "is_starlark": false,
           "language": "ocaml",
           "name": "ocaml/demo-ocaml",
           "rel_path": "code/packages/ocaml/demo-ocaml"
+        },
+        {
+          "build_file": "code/packages/ocaml/generated-c/_build-example/near-source/BUILD",
+          "is_starlark": false,
+          "language": "ocaml",
+          "name": "ocaml/near-source",
+          "rel_path": "code/packages/ocaml/generated-c/_build-example/near-source"
         },
         {
           "build_file": "code/programs/ocaml/demo-ocaml/BUILD",

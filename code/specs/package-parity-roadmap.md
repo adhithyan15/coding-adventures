@@ -16061,6 +16061,33 @@ advance two package slots per lane after the just-merged fixtures. Keep those
 as separate next choices, do not open a second parity PR, and recheck current
 main and path collisions before pushing.
 
+## Post-#16863 inventory and discovery-fixture dependency (2026-10-07)
+
+PR #16863 passed all 33 final-head checks (14 successes, 18 expected skips,
+one acceptable neutral CodeQL result). Both required gates passed, GitHub
+reported `MERGEABLE/CLEAN`, guarded squash auto-merge was enabled, and GitHub
+merged it as `8d587b2eb15eae5e06ebea24c75e5a8d1d650100` without a manual
+merge. The fresh schema-3 reporter still finds 15 established lanes, 1,487
+implementation identities, 4,757 slots, 178 high-consensus identities with
+262 missing slots, five emerging OCaml packages, and zero canonical collisions
+or unknown language buckets. The Python build tool now consumes all ten neutral
+CI-gate selection cases, but its neutral execution adapter is still missing.
+
+The read-only post-merge audit found one newly unowned shared fixture gap.
+`discovery/language-registry` proves exclusion of exact OCaml `_build`, while
+the governing build-tool spec also claims that `_Build` and `_build-example`
+remain discoverable. Those positive names occur in *source-collection*
+fixtures, not the discovery case. The new pending
+`build-tool-dune-discovery-near-case-neutral-fixture-repair` owner adds two
+Windows-safe distinct-parent BUILD records and exact expected OCaml package
+identities, then updates the Python and Perl consumers with hard-coded counts
+and reruns the ten live native fixture consumers. Haskell and Elixir adoption
+and the JVM, Dart, and OCaml current-contract gates now depend on that neutral
+repair. It is a smaller, broader, dependency-first ratchet than the Haskell
+single-engine Dune fix or the C#/F# CI-gate engine. The fresh-main and open-PR
+checks found no path overlap, so this one neutral fixture owner is the next
+in-progress tranche; Haskell implementation remains serially downstream.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

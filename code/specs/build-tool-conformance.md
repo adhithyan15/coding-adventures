@@ -419,9 +419,12 @@ for every discovery implementation.
 
 Dune's exact, case-sensitive `_build` directory component is likewise generated
 build output and is excluded before BUILD-file membership is tested. Source
-components such as `_Build` and `_build-example` remain discoverable. The same
-shared language-registry fixture makes this exact-component rule normative for
-every discovery implementation.
+components such as `_Build` and `_build-example` remain discoverable. The shared
+`discovery/language-registry` fixture MUST include BUILD files beneath each of
+those near-case components as positive expected packages, alongside a BUILD file
+beneath exact `_build` that is absent from expected packages. These records make
+the exact-component rule normative for every discovery implementation, including
+on case-insensitive hosts.
 
 The Perl Dune-discovery adopter MUST independently project the checked OCaml
 package and `_build` decoy records from that fixture through its production

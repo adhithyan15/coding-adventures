@@ -51,7 +51,8 @@ The 178-case bootstrap corpus covers every process-free v1 domain:
 - canonical package and program membership, language-registry classification
   with paired C#, F#, Haskell, Java, Kotlin, and OCaml package/program
   identities, a Dart program identity, plus Cabal `dist-newstyle`, Dune
-  `_build`, and Dart `.dart_tool` exclusion,
+  exact `_build` exclusion with positive `_Build` and `_build-example`
+  discovery roots, and Dart `.dart_tool` exclusion,
   fixture-tree exclusion, fail-closed duplicate package identities, plus
   Windows, macOS, and Linux BUILD precedence;
 - the shared Python dependency diamond, distinct package/program identities,
