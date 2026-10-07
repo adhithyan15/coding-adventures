@@ -1318,6 +1318,8 @@ backend immediately) come before the enabler-dependent items.
   `entier` remains conservative. Unary `+` and `-` around the built-in `sign`
   result preserve the same bound. Built-in integer `abs` may map that bounded
   result to exact `0` or `1` before `entier`; user-declared overrides remain
+  conservative. Variable-free exact additive zero terms may surround that
+  bounded result before `entier`; nonzero or dynamic additive terms remain
   conservative.
   Provenance-backed local and other real-name branches remain conservative
   across selector calls. Unary plus

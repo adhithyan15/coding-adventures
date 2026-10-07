@@ -3887,6 +3887,33 @@ impl Compiler {
             }
             return None;
         }
+        if matches!(node.rule_name.as_str(), "expr_add" | "simple_arith") {
+            let sequence = pieces(node);
+            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
+                let mut sign_operand = None;
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return None;
+                        };
+                        if let Some(operand) = self.builtin_sign_operand(operand) {
+                            if sign_operand.replace(operand).is_some() {
+                                return None;
+                            }
+                        } else if !expr_static_real_arithmetic_value_with(operand, &|_| None)
+                            .is_some_and(|value| value == 0.0)
+                        {
+                            return None;
+                        }
+                    } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-")) {
+                        return None;
+                    }
+                }
+                if sign_operand.is_some() {
+                    return sign_operand;
+                }
+            }
+        }
         if node.rule_name != "proc_call" {
             let children = direct_nodes(node);
             if direct_tokens(node).is_empty() && children.len() == 1 {
@@ -13102,6 +13129,38 @@ mod tests {
         )
         .expect_err("a custom abs call has no built-in bounded-result proof");
         assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_additive_entier_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(sign(pick()) + 0); output(x) end",
+            "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier(0 - abs(sign(pick()))))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "exact additive zero preserves the bounded sign result through entier for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_additive_entier_sign_widening_rejects_unproven_terms() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) + 1); output(result) end",
+            "begin real procedure pick; pick := -2.25; integer zero; real result; zero := 0; result := entier(sign(pick()) + zero); output(result) end",
+        ] {
+            let err = compile_source(source, "test")
+                .expect_err("a nonzero or variable additive term exceeds the bounded sign proof");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
     }
 
     #[test]
