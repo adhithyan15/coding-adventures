@@ -1,0 +1,23 @@
+{
+  "chapter": 159,
+  "title": "Return to an Earlier Repair and Familiar Words",
+  "label": "ch:pa-earlier-repair-and-familiar-words",
+  "canDo": "I can keep a later Gurmukhi repair separate from a timed first attempt and retrieve familiar words for rich, poor, young, strong, weak, and to hide without mistaking these reviews for an A1 mock.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS",
+    "SPINE-DESCRIBE-QUALITIES"
+  ],
+  "payoff": {
+    "lesson": "PA-R159-hide-and-quality-mix",
+    "kind": "recognition",
+    "summary": "From short familiar cues, recall the five earlier descriptions and the earlier verb for hiding without adding Punjabi language or borrowing scored writing credit.",
+    "assesses": [
+      "PA-LEX-C147-QUAL147-01",
+      "PA-LEX-C147-QUAL147-02",
+      "PA-LEX-C147-QUAL147-03",
+      "PA-LEX-C147-QUAL147-04",
+      "PA-LEX-C147-QUAL147-05",
+      "PA-LEX-C148-ACT148-01"
+    ]
+  }
+}
