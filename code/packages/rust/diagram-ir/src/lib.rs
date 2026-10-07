@@ -1781,6 +1781,7 @@ pub struct LayoutedTreeViewNode {
     pub kind: TreeViewNodeKind,
     pub class_selector: Option<String>,
     pub icon: Option<String>,
+    pub icon_glyph: Option<DiagramIconGlyph>,
     pub description: Option<String>,
     pub x: f64,
     pub y: f64,

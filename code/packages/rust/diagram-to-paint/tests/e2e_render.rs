@@ -19,7 +19,10 @@ mod apple {
     use diagram_layout_chart::layout_chart_diagram;
     use diagram_layout_graph::{GraphLayoutOptions, layout_graph_diagram};
     use diagram_layout_grid::layout_grid_diagram;
-    use diagram_layout_hierarchy::{layout_railroad, layout_swimlane, layout_treeview, layout_treemap};
+    use diagram_layout_hierarchy::{
+        layout_railroad, layout_swimlane, layout_treeview, layout_treeview_with_options, layout_treemap,
+        TreeViewLayoutOptions,
+    };
     use diagram_layout_geometric::{layout_cynefin, layout_info, layout_ishikawa, layout_venn, layout_wardley};
     use diagram_layout_packet::layout_packet_diagram;
     use diagram_layout_sequence::layout_sequence_diagram;
@@ -3285,7 +3288,14 @@ line "Target" [35, 50, 68, 82]"##,
 
         let mapped = parse_treeview("%%{init: {\"treeView\": {\"showIcons\": true, \"defaultIconPack\": \"devicon\", \"filenameIcons\": {\"README.md\": \"logos:markdown\", \"package.json\": \"none\"}, \"extensionIcons\": {\".rs\": \"rust\", \"TS\": \"logos:typescript\"}}}}%%\ntreeView-beta\nREADME.md\npackage.json\nmain.RS\napp.ts\nplain.txt\nnotes.txt icon(custom)")
             .expect("mapped treeview parse failed");
-        let mapped_layout = layout_treeview(&mapped, 720.0);
+        let mapped_layout = layout_treeview_with_options(&mapped, 720.0, Some(&TreeViewLayoutOptions {
+            icon_glyphs: BTreeMap::from([
+                ("devicon:custom".into(), DiagramIconGlyph { text: "C".into(), font_family: "Helvetica".into() }),
+                ("devicon:rust".into(), DiagramIconGlyph { text: "R".into(), font_family: "Helvetica".into() }),
+                ("logos:markdown".into(), DiagramIconGlyph { text: "M".into(), font_family: "Helvetica".into() }),
+                ("logos:typescript".into(), DiagramIconGlyph { text: "T".into(), font_family: "Helvetica".into() }),
+            ]),
+        }));
         let mapped_scene = diagram_to_paint_treeview(&mapped_layout, &DiagramToPaintOptions {
             background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 }, device_pixel_ratio: 2.0,
             label_font: font_spec("Helvetica", 13.0), title_font: font_spec("Helvetica", 18.0),
@@ -3294,11 +3304,19 @@ line "Target" [35, 50, 68, 82]"##,
         let mapped_icons = mapped_scene.instructions.iter().filter_map(|instruction| match instruction {
             PaintInstruction::Path(path) => path.base.metadata.as_ref(),
             PaintInstruction::Rect(rect) => rect.base.metadata.as_ref(),
+            PaintInstruction::GlyphRun(run) => run.base.metadata.as_ref(),
             _ => None,
         }.and_then(|metadata| metadata.get("treeView.icon")).map(String::as_str)).collect::<BTreeSet<_>>();
         assert_eq!(mapped_icons,
             BTreeSet::from(["devicon:custom", "devicon:rust", "logos:markdown", "logos:typescript",
                 "mermaid-treeview:file", "mermaid-treeview:folder"]));
+        assert_eq!(mapped_scene.instructions.iter().filter(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if run.base.metadata.as_ref()
+                .and_then(|metadata| metadata.get("treeView.icon")).is_some())).count(), 4);
+        assert!(!mapped_scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.base.metadata.as_ref()
+                .and_then(|metadata| metadata.get("treeView.icon"))
+                .is_some_and(|icon| !icon.starts_with("mermaid-treeview:")))));
         let mapped_pixels = render(&mapped_scene);
         write_png(&mapped_pixels, "/tmp/mermaid_treeview_icon_map_e2e.png")
             .expect("mapped treeview PNG write failed");

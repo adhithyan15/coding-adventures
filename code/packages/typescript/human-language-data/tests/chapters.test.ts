@@ -366,18 +366,68 @@ describe("corpus snapshot", () => {
     // was never about the script segments; it was that a v1 chapter has no atoms
     // for a payoff to be representative OF. kannada stays out until its own
     // chapters are migrated.
+    //
+    // italian and portuguese JOIN (#12301, #12088). Their chapter 1 had already been
+    // migrated to schema v2 -- every lesson typed, the closing checkpoint assessing all
+    // twenty (Italian) and eighteen (Portuguese) atoms the chapter introduces -- but the
+    // ledger still carried the schema-v1 placeholder `assesses: []`, which the
+    // representativeness gate scored 0/20 and 0/18. That one chapter was the only thing
+    // keeping each track off this list, and it was paperwork, not teaching: naming the
+    // atoms the checkpoint really assesses scores it 20/20 and 18/18.
     expect(report.tracks.filter((t) => t.clean).map((t) => t.language).sort()).toEqual([
       "bengali",
       "chinese",
       "french",
       "gujarati",
+      "italian",
       "japanese",
       "latin",
       "marathi",
       "marwadi",
+      "portuguese",
       "punjabi",
       "telugu",
     ]);
+  });
+
+  // ---------------------------------------------------------------------------
+  // No payoff is still waiting for a migration that already happened.
+  //
+  // Schema-v1 chapters had no typed atoms, so their payoffs were authored with an
+  // empty `assesses` list and a note saying representativeness stayed "authored
+  // rather than atom-scored until migration". That was honest at the time. The
+  // trap is what happens AFTER migration: converting a chapter's lessons gives it
+  // typed atoms, the representativeness gate starts measuring it, and the empty
+  // list scores 0/N. Nothing about the placeholder fails on its own -- it just
+  // quietly holds the track off the clean list above. #12088 and its follow-up
+  // review found ten chapters in that state (hindi 3-5, italian 1, portuguese 1,
+  // russian 1, and malayalam 2-5 with half-filled lists), every one of them
+  // already migrated.
+  //
+  // Every track has now crossed that line, so the placeholder has no legitimate
+  // use left, and this test makes both halves of it impossible to reintroduce:
+  //
+  //   empty list    every payoff names at least one atom its lesson assesses
+  //   stale note    no payoff note still claims it is waiting "until migration"
+  //
+  // A future chapter with nothing typed yet should be typed, not exempted here.
+  it("leaves no payoff as an empty schema-v1 placeholder", () => {
+    const empty: string[] = [];
+    const awaitingMigration: string[] = [];
+    for (const track of loadTrackChapters()) {
+      for (const chapter of track.chapters) {
+        const where = `${track.language}:${chapter.chapter}`;
+        if ((chapter.payoff?.assesses ?? []).length === 0) empty.push(where);
+        // `note` is free tooling prose the typed shape does not model (the book never
+        // prints it), so it is read off the raw ledger object.
+        const note = (chapter.payoff as { note?: unknown } | undefined)?.note;
+        if (typeof note === "string" && /until migration/i.test(note)) {
+          awaitingMigration.push(where);
+        }
+      }
+    }
+    expect(empty).toEqual([]);
+    expect(awaitingMigration).toEqual([]);
   });
 
   it("validates the first canonical pattern lesson", () => {

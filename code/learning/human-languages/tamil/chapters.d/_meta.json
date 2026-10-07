@@ -1,5 +1,5 @@
 {
   "version": 1,
   "language": "tamil",
-  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Every declared book chapter now has an authored capability. Legacy schema-v1 entries anchor their payoff to real canonical lesson content but intentionally keep assesses empty until typed knowledge atoms exist, preserving measurable debt without inventing atoms. Chapter generation status remains independently controlled by core/book-generation.json."
+  "note": "HL05 chapter capability ledger. Authored intent, not a derived cache: no validator may rewrite this file. Every declared book chapter now has an authored capability. Every payoff names the typed knowledge atoms its lesson actually assesses; the empty-assesses placeholder that legacy schema-v1 entries once carried is retired, and the human-language-data chapter tests keep it from returning. Chapter generation status remains independently controlled by core/book-generation.json."
 }
