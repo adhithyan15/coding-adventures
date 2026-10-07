@@ -108,7 +108,9 @@ it("extends the sourced single-letter ladder through independently recalled conn
   );
   expect(markdown[0]).toContain("new vocabulary");
   expect(markdown[2]).toContain("no visible Devanagari model and no romanized answer");
-  expect(markdown[3]).toContain("न + ◌ा");
+  // The guided copy now follows its strip: the ā sign is written as part of
+  // नाम (its stem straight after न), not built up as "न + ◌ा".
+  expect(markdown[3]).toContain("**न**, the stem of **◌ा**, then **म**");
   expect(markdown[4]).toContain("Keep the two words apart");
   expect(markdown[5]).toContain("from sound and meaning alone");
   expect(markdown[5]).toContain("connected text");
