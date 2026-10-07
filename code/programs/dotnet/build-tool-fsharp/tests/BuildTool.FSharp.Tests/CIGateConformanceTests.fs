@@ -21,7 +21,7 @@ let private expectedIds =
        "ci-gate-selection/match-work-over-limit"; "ci-gate-selection/null-affected"
        "ci-gate-selection/null-changed-files"; "ci-gate-selection/package-and-path"
        "ci-gate-selection/recursive-glob"; "ci-gate-selection/shared-pattern-at-limit"
-       "ci-gate-selection/unrelated" |]
+       "ci-gate-selection/unrelated-change" |]
 
 let private nullableStrings (value: JsonElement) : string array =
     if value.ValueKind = JsonValueKind.Null then null
@@ -76,3 +76,11 @@ let ``F sharp facade evaluates every neutral CI gate fixture`` () =
                         gate.GetProperty("output_name").GetString()))
                 |> Seq.toArray
             Assert.Equal<CIGateVerdict>(expectedGates, actual.Gates)
+
+[<Fact>]
+let ``F sharp facade preserves implicit job scope`` () =
+    let registry = CIGateRegistry(1,
+        [| CIGateDefinition("default-job", "", "implicit job scope", [| "rust/alpha" |], [||]) |])
+    let actual = evaluateCIGates (CIGateSelectionInput(registry, [| "rust/alpha" |], [||], false))
+    Assert.Null(actual.ErrorCode)
+    Assert.Equal<CIGateVerdict>([| CIGateVerdict("default-job", true, "run_default_job") |], actual.Gates)

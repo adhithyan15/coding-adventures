@@ -27,6 +27,8 @@ func sortedStrings(values []string) []string {
 
 func ciGateFixturePackages(root string) []discovery.Package {
 	return []discovery.Package{
+		{Name: "dotnet/programs/build-tool-csharp", Path: filepath.Join(root, "code", "programs", "dotnet", "build-tool-csharp"), Language: "csharp"},
+		{Name: "dotnet/programs/build-tool-fsharp", Path: filepath.Join(root, "code", "programs", "dotnet", "build-tool-fsharp"), Language: "fsharp"},
 		{Name: "go/programs/build-tool", Path: filepath.Join(root, "code", "programs", "go", "build-tool"), Language: "go"},
 		{Name: "python/programs/build-tool", Path: filepath.Join(root, "code", "programs", "python", "build-tool"), Language: "python"},
 		{Name: "rust/extra", Path: filepath.Join(root, "code", "packages", "rust", "extra"), Language: "rust"},
@@ -36,7 +38,7 @@ func ciGateFixturePackages(root string) []discovery.Package {
 func TestCIGateFixtureNativeSelectionIsExactAndPlatformIndependent(t *testing.T) {
 	root := t.TempDir()
 	packages := ciGateFixturePackages(root)
-	want := []string{"go/programs/build-tool", "python/programs/build-tool"}
+	want := []string{"dotnet/programs/build-tool-csharp", "dotnet/programs/build-tool-fsharp", "go/programs/build-tool", "python/programs/build-tool"}
 	for _, path := range []string{ciGateFixturePath, "code/specs/fixtures/build-tool-v1/cases/ci-gate-selection-new-case.json"} {
 		for _, goos := range []string{"linux", "darwin", "windows"} {
 			got, err := changedPackageRootsForPlatform([]string{path}, packages, root, goos)
@@ -65,7 +67,7 @@ func TestCIGateFixtureNativeSelectionIsExactAndPlatformIndependent(t *testing.T)
 		}
 	}
 	got, err := changedPackageRootsForPlatform([]string{ciGateFixturePath, "code/packages/rust/extra/src/lib.rs"}, packages, root, "linux")
-	if err != nil || !reflect.DeepEqual(sortedChangedRoots(got), []string{"go/programs/build-tool", "python/programs/build-tool", "rust/extra"}) {
+	if err != nil || !reflect.DeepEqual(sortedChangedRoots(got), []string{"dotnet/programs/build-tool-csharp", "dotnet/programs/build-tool-fsharp", "go/programs/build-tool", "python/programs/build-tool", "rust/extra"}) {
 		t.Fatalf("native and ordinary root union = %v, error = %v", got, err)
 	}
 }
@@ -77,6 +79,8 @@ func TestCIGateFixtureNativeSelectionHonorsLanguageAndFailsClosed(t *testing.T) 
 		language string
 		want     []string
 	}{
+		{"csharp", []string{"dotnet/programs/build-tool-csharp"}},
+		{"fsharp", []string{"dotnet/programs/build-tool-fsharp"}},
 		{"go", []string{"go/programs/build-tool"}},
 		{"python", []string{"python/programs/build-tool"}},
 		{"rust", []string{}},
@@ -91,9 +95,11 @@ func TestCIGateFixtureNativeSelectionHonorsLanguageAndFailsClosed(t *testing.T) 
 		packages []discovery.Package
 		missing  string
 	}{
-		{"all", packages[1:], "go/programs/build-tool"},
-		{"go", packages[1:], "go/programs/build-tool"},
-		{"python", packages[:1], "python/programs/build-tool"},
+		{"all", packages[1:], "dotnet/programs/build-tool-csharp"},
+		{"csharp", packages[1:], "dotnet/programs/build-tool-csharp"},
+		{"fsharp", packages[:1], "dotnet/programs/build-tool-fsharp"},
+		{"go", packages[:2], "go/programs/build-tool"},
+		{"python", packages[:3], "python/programs/build-tool"},
 	} {
 		_, err := changedPackageRootsForPlatformAndLanguage([]string{ciGateFixturePath}, tc.packages, root, "linux", tc.language)
 		if err == nil || !strings.Contains(err.Error(), tc.missing) {
@@ -133,7 +139,7 @@ func TestCIGateFixtureRenameRetainsDeletedSource(t *testing.T) {
 		t.Fatalf("rename omitted old path: %v", changed)
 	}
 	selected, err := changedPackageRootsForPlatform(changed, ciGateFixturePackages(root), root, "linux")
-	if err != nil || len(selected) != 2 {
+	if err != nil || len(selected) != 4 {
 		t.Fatalf("renamed source selected %v, error = %v", selected, err)
 	}
 }
@@ -173,15 +179,15 @@ func TestCIGateFixtureNativePlanFailsClosedAndSelectsToolchains(t *testing.T) {
 	if err := json.Unmarshal(data, &built); err != nil {
 		t.Fatal(err)
 	}
-	if built.Force || !reflect.DeepEqual(sortedStrings(built.AffectedPackages), []string{"go/programs/build-tool", "python/programs/build-tool"}) {
+	if built.Force || !reflect.DeepEqual(sortedStrings(built.AffectedPackages), []string{"dotnet/programs/build-tool-csharp", "dotnet/programs/build-tool-fsharp", "go/programs/build-tool", "python/programs/build-tool"}) {
 		t.Fatalf("unforced affected roots = %v, force = %t", built.AffectedPackages, built.Force)
 	}
 	for _, goos := range []string{"linux", "darwin", "windows"} {
-		if got := built.StateForPlatform(goos).AffectedPackages; !reflect.DeepEqual(sortedStrings(got), []string{"go/programs/build-tool", "python/programs/build-tool"}) {
+		if got := built.StateForPlatform(goos).AffectedPackages; !reflect.DeepEqual(sortedStrings(got), []string{"dotnet/programs/build-tool-csharp", "dotnet/programs/build-tool-fsharp", "go/programs/build-tool", "python/programs/build-tool"}) {
 			t.Fatalf("%s roots = %v", goos, got)
 		}
 	}
-	if !built.LanguagesNeeded["go"] || !built.LanguagesNeeded["python"] || built.LanguagesNeeded["rust"] {
+	if !built.LanguagesNeeded["dotnet"] || !built.LanguagesNeeded["go"] || !built.LanguagesNeeded["python"] || built.LanguagesNeeded["rust"] {
 		t.Fatalf("toolchains = %v", built.LanguagesNeeded)
 	}
 }
@@ -200,10 +206,10 @@ func TestCIGateFixtureConsumerMapTracksNativeReaders(t *testing.T) {
 			}
 			return nil
 		}
-		if !strings.HasSuffix(entry.Name(), "_test.go") && !strings.HasPrefix(entry.Name(), "test_") {
+		if !strings.HasSuffix(entry.Name(), "_test.go") && !strings.HasPrefix(entry.Name(), "test_") && !strings.HasSuffix(entry.Name(), "Tests.cs") && !strings.HasSuffix(entry.Name(), "Tests.fs") {
 			return nil
 		}
-		if filepath.Ext(entry.Name()) != ".go" && filepath.Ext(entry.Name()) != ".py" {
+		if filepath.Ext(entry.Name()) != ".go" && filepath.Ext(entry.Name()) != ".py" && filepath.Ext(entry.Name()) != ".cs" && filepath.Ext(entry.Name()) != ".fs" {
 			return nil
 		}
 		rel, err := filepath.Rel(root, path)
@@ -247,7 +253,7 @@ func TestCIGateFixtureConsumerMapTracksNativeReaders(t *testing.T) {
 
 func TestCIGateFixtureConsumersResolveThroughDiscovery(t *testing.T) {
 	root := t.TempDir()
-	for _, consumer := range ciGateFixturePackages(root)[:2] {
+	for _, consumer := range ciGateFixturePackages(root)[:4] {
 		if err := os.MkdirAll(consumer.Path, 0o755); err != nil {
 			t.Fatal(err)
 		}
@@ -261,7 +267,7 @@ func TestCIGateFixtureConsumersResolveThroughDiscovery(t *testing.T) {
 	}
 	for _, goos := range []string{"linux", "darwin", "windows"} {
 		changed, err := changedPackageRootsForPlatform([]string{ciGateFixturePath}, packages, root, goos)
-		if err != nil || !reflect.DeepEqual(sortedChangedRoots(changed), []string{"go/programs/build-tool", "python/programs/build-tool"}) {
+		if err != nil || !reflect.DeepEqual(sortedChangedRoots(changed), []string{"dotnet/programs/build-tool-csharp", "dotnet/programs/build-tool-fsharp", "go/programs/build-tool", "python/programs/build-tool"}) {
 			t.Fatalf("%s discovery roots = %v, error = %v", goos, changed, err)
 		}
 	}

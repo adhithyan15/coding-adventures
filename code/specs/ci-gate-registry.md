@@ -119,14 +119,16 @@ The exact flat case family
 separate direct-native-consumer relation: `go/programs/build-tool` (whose
 `go test ./...` BUILD front runs `internal/cigates`) and
 `python/programs/build-tool` (whose BUILD front runs the Python fixture
-suite). Any changed path matching this family, including the deleted source
-of a rename, MUST seed those two package roots before affected/prerequisite
+suite), plus `dotnet/programs/build-tool-csharp` and
+`dotnet/programs/build-tool-fsharp` (whose native .NET test fronts replay the
+neutral cases independently). Any changed path matching this family, including
+the deleted source of a rename, MUST seed those four package roots before affected/prerequisite
 closure on detect and every platform override. Ordinary changed roots are
 united with these roots; sibling fixture domains and nested/lookalike paths
-MUST NOT trigger them. Explicit Go or Python single-language plans seed only
-their own consumer; other single-language plans seed neither. An applicable
+MUST NOT trigger them. Explicit C#, F#, Go, or Python single-language plans
+seed only their own consumer; other single-language plans seed neither. An applicable
 registered consumer absent from discovery MUST fail planning without writing
-an incomplete plan. The emitted affected set and Go/Python toolchain flags
+an incomplete plan. The emitted affected set and .NET/Go/Python toolchain flags
 MUST demonstrate native scheduling with `force=false`. A new direct reader of
 this family must extend the relation and its drift test together.
 

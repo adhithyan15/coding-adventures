@@ -11,7 +11,7 @@ public sealed class CIGateConformanceTests
         "ci-gate-selection/match-work-over-limit", "ci-gate-selection/null-affected",
         "ci-gate-selection/null-changed-files", "ci-gate-selection/package-and-path",
         "ci-gate-selection/recursive-glob", "ci-gate-selection/shared-pattern-at-limit",
-        "ci-gate-selection/unrelated",
+        "ci-gate-selection/unrelated-change",
     ];
 
     [Fact]
@@ -74,6 +74,16 @@ public sealed class CIGateConformanceTests
         var actual = CIGateSelection.Evaluate(new CIGateSelectionInput(invalid, null, null, true));
         Assert.NotNull(actual.ErrorCode);
         Assert.Empty(actual.Gates);
+    }
+
+    [Fact]
+    public void OmittedScopeDefaultsToJobLikeTheGoOracle()
+    {
+        var registry = new CIGateRegistry(1,
+            [new CIGateDefinition("default-job", "", "implicit job scope", ["rust/alpha"], [])]);
+        var actual = CIGateSelection.Evaluate(new CIGateSelectionInput(registry, ["rust/alpha"], [], false));
+        Assert.Null(actual.ErrorCode);
+        Assert.Equal([new CIGateVerdict("default-job", true, "run_default_job")], actual.Gates);
     }
 
     private static string[]? Strings(JsonElement value) => value.ValueKind == JsonValueKind.Null

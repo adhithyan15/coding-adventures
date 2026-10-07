@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Exposed a no-inline pure CI-gate-selection facade over the shared .NET
+  engine. The native F# suite independently replays all eleven neutral
+  registry, path, budget, and run-all cases without workflow authority.
+
 - Expanded independent F# facade replay from 16/4 to 20/8 neutral
   source-collection/package-hash cases, including both shared-input consumers'
   before/after digest evidence, without changing production authority.
