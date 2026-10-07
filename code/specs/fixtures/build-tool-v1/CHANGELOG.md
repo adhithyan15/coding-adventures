@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-10-07
+
+- Added positive `_Build` and `_build-example` OCaml BUILD roots to the shared
+  `discovery/language-registry` case, paired with its existing exact `_build`
+  decoy. The distinct parent directories keep the fixture valid on
+  case-insensitive hosts; Python and Perl consumers now assert the expanded
+  discovery inventory.
+
 ## 2026-10-06
 
 - Added three process-free Hashing v1 cache cases: deliberately reverse-ordered
