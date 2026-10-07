@@ -16563,6 +16563,39 @@ Add exact-path Go/Python native consumer scheduling and a detector regression
 with real build-plan and Ubuntu evidence. Keep other build-tool lane adapters
 and CI workflow changes separate.
 
+## Post-#16972 merged refresh (2026-10-07)
+
+PR #16972 passed 37 final-head checks and merged through guarded squash
+auto-merge at `2ef032426b5fc69ce19fdf6a0b67fddadcf33dd4`; there was no manual
+merge. The collision-checked schema-3 inventory still reports 15 established
+lanes, 1,496 identities, 4,766 occupied slots, 178 high-consensus identities
+with 262 missing slots, 123 five-to-nine-lane identities with 934 missing
+slots, 181 two-to-four-lane identities with 2,282 missing slots, and 1,014
+singletons with 14,196 missing slots (815 Rust). The five OCaml roots remain
+emerging; canonical collisions and unknown buckets are zero.
+
+Parallel read-only audits added 36 pending owners before the next selection:
+TE02 AST/HTML sanitization with an explicit arbitrary-HTML security boundary;
+six BF03 compiler-IR lanes; DT05 segment tree and the seven-lane SQL stack;
+progress-bar event rendering, transistor models, bytecode/stack VM, assembler,
+DT02 multi-directed graph, P2D03/P2D04 format-doc, HDL IR, and pure
+compiler-to-Wasm/Nib prerequisites. Exact native fixture-selection owners now
+cover toolchain detection and graph/diff following the merged CI-gate selector.
+Geometry audits exposed absent dynamic affine/Bezier cases and six existing
+Arc2D endpoint lanes with hardcoded rather than neutral-consumed tests; those
+have separate owners. Spreadsheet and UI bridge owners classify pure cores
+separately from adapters and other substrates. Broad family trackers require
+lane-sized children before implementation and are not claims of completed
+parity. BF03 is now 9/15, correcting an older 7/15 ledger note.
+
+Select only `build-tool-csharp-fsharp-ci-gate-selection-conformance` next.
+Its neutral registry, bounded glob-work, and shared-pattern fixtures are all
+merged. One process-free .NET engine with independently tested C# and F#
+front doors closes two directly affected build-tool contracts and extends the
+native fixture-only CI selector for both readers. Keep workflow edits and
+host execution out of this slice; the next toolchain and graph/diff selectors
+remain pending.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
