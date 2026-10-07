@@ -1,0 +1,19 @@
+# Perl 2.000 (1988-06-05) tokens: verified arithmetic-print subset only.
+# @version 1
+# PARTIAL: this does not lex all Perl 2.000 source.
+# Evidence: https://github.com/Perl/perl5/blob/perl-2.0/perl.y
+# Evidence: https://github.com/Perl/perl5/blob/perl-2.0/toke.c
+# The tagged tokenizer maps `print` to the yacc LISTOP token; this bounded
+# grammar names that one keyword PRINT and rejects the other list operators.
+
+PRINT     = "print"
+INT       = /[0-9]+/
+PLUS      = "+"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\r\n]+/

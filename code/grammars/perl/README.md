@@ -28,6 +28,10 @@ Current pairs:
   [`perl-1.0.16` source tag] yacc grammars, respectively.
   The two tagged `perl.y` files match, but each release has its own pair;
   neither pair claims complete syntax coverage.
+- `perl2.000.*` and `perl2.001.*` are separate **partial** arithmetic and
+  `print` subsets checked against the [`perl-2.0` source tag] and
+  [`perl-2.001` source tag] yacc grammars and tokenizers. Both tagged
+  `perl.y` files match; neither pair claims complete syntax coverage.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot and does not claim full coverage.
@@ -52,4 +56,6 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [`perl-1.0` source tag]: https://github.com/Perl/perl5/tree/perl-1.0
 [`perl-1.0.15` source tag]: https://github.com/Perl/perl5/tree/perl-1.0.15
 [`perl-1.0.16` source tag]: https://github.com/Perl/perl5/tree/perl-1.0.16
+[`perl-2.0` source tag]: https://github.com/Perl/perl5/tree/perl-2.0
+[`perl-2.001` source tag]: https://github.com/Perl/perl5/tree/perl-2.001
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2
