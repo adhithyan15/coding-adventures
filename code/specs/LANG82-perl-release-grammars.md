@@ -173,3 +173,10 @@ leading-zero forms, adjacent decrement, carriage returns, and unsupported
 syntax. Leave 5.004_01-t1 pending until source evidence for that trial is
 established. This installment does not extend executable LANG81 semantics or
 claim full historical release syntax.
+
+The historical 5.004_01-t2 source archive is independently available even
+though the inspected official Git tag list has no t2 tag. Its `patchlevel.h`
+identifies patchlevel 4, subversion 1; its `perly.y` and `toke.c` are
+byte-identical to the tagged final 5.004_01 files. Give t2 distinct partial
+token and grammar files and retain the plain-decimal 250-digit boundary
+probes. Keep 5.004_01-t1 pending until its own source can be established.

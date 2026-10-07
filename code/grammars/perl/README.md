@@ -256,8 +256,14 @@ Current pairs:
 - `perl5.004_01.*` is a separate **partial** pair checked against the
   [`perl-5.004_01` source tag]. Tagged yacc and tokenizer match 5.004;
   this release still has its own files and tested 250-digit decimal bound.
-  The inventoried 5.004_01-t1 and -t2 prereleases remain pending because
-  their own source evidence has not yet been established.
+- `perl5.004_01-t2.*` is a separate **partial** pair checked against the
+  [historical 5.004_01-t2 source archive]. Its `perly.y` and `toke.c`
+  are byte-identical to the tagged final 5.004_01 sources, but this
+  prerelease retains distinct files and the tested 250-digit decimal bound.
+  The downloaded archive's SHA-256 is
+  `1bc2cf4b61399d7a2d2ad5050ab31e5cbd73cae99e1534ec9aefc7dace013ea1`.
+  The inventoried 5.004_01-t1 prerelease remains pending until its own
+  source evidence is found.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot, including adjacent `--` and
@@ -347,4 +353,5 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [`perl-5.003_99a` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_99a
 [`perl-5.004` source tag]: https://github.com/Perl/perl5/tree/perl-5.004
 [`perl-5.004_01` source tag]: https://github.com/Perl/perl5/tree/perl-5.004_01
+[historical 5.004_01-t2 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01-t2.tar.gz
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2
