@@ -1320,7 +1320,8 @@ backend immediately) come before the enabler-dependent items.
   result to exact `0` or `1` before `entier`; user-declared overrides remain
   conservative. Variable-free exact additive zero terms may surround that
   bounded result before `entier`; nonzero or dynamic additive terms remain
-  conservative.
+  conservative. Variable-free exact multiplicative unit factors may likewise
+  surround it; non-unit or variable factors remain conservative.
   Provenance-backed local and other real-name branches remain conservative
   across selector calls. Unary plus
   and unary minus preserve the same runtime-real proof. Additive composition,
