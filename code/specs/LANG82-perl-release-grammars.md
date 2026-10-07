@@ -52,6 +52,9 @@ lexical and grammatical forms, including context-sensitive constructs that
 cannot be expressed by a simple regular-expression lexer alone. Add lexical
 modes or parser hooks where the shared grammar system needs them, rather than
 quietly accepting a modern approximation.
+For release pairs that expose arithmetic subtraction, lex adjacent `--` as
+Perl's decrement operator and reject it if decrement semantics are outside the
+partial grammar; spaced binary/unary minus (`1- -2`) remains a separate form.
 
 The existing unversioned `perl.tokens` and `perl.grammar` remain the bounded
 Perl 5.38 LANG81 execution grammar until a separately validated versioned
