@@ -115,6 +115,10 @@ Current pairs:
   [`perl-5.003_10` source tag]'s `perly.y` and `toke.c`. Its yacc blob matches
   5.003_09; tokenizer changes affect sigil spacing and built-in/identifier
   handling outside this plain-decimal arithmetic and `print` subset.
+- `perl5.003_11.*` is a separate **partial** pair checked against the
+  [`perl-5.003_11` source tag]'s `perly.y` and `toke.c`. Yacc changes operator
+  token types and block bookkeeping; tokenizer changes cover sigils, patterns
+  and numeric-locale setup outside this plain-decimal arithmetic/print subset.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot, including adjacent `--` and
@@ -163,4 +167,5 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [`perl-5.003_08` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_08
 [`perl-5.003_09` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_09
 [`perl-5.003_10` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_10
+[`perl-5.003_11` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_11
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2
