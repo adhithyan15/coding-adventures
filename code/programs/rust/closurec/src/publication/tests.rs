@@ -193,12 +193,11 @@ fn windows_supported_denials_preserve_policy_and_replace_bytes() {
 }
 
 #[cfg(windows)]
-#[test]
-fn windows_final_verification_denial_rejects_before_any_original_mutation() {
+fn windows_inherited_denial_setup(
+    restricted: &Path,
+    child_path: Option<&std::ffi::OsStr>,
+) -> std::process::Output {
     use std::os::windows::process::CommandExt;
-    let fixture = Fixture::new();
-    let restricted = fixture.path("restricted");
-    fs::create_dir(&restricted).unwrap();
     let script = r#"
         $ErrorActionPreference='Stop'
         $acl=Get-Acl -LiteralPath $env:CLOSUREC_TEST_ACL_PATH
@@ -208,13 +207,51 @@ fn windows_final_verification_denial_rejects_before_any_original_mutation() {
         Write-Output ('parent_sddl='+(Get-Acl -LiteralPath $env:CLOSUREC_TEST_ACL_PATH).Sddl)
         whoami.exe /all
     "#;
-    let output = std::process::Command::new("powershell.exe")
-        .args(["-NoProfile", "-NonInteractive", "-Command", script])
-        .env("CLOSUREC_TEST_ACL_PATH", &restricted)
+    let mut command = std::process::Command::new("powershell.exe");
+    command.args(["-NoProfile", "-NonInteractive", "-Command", script])
+        .env("CLOSUREC_TEST_ACL_PATH", restricted)
         .env_remove("PSModulePath")
-        .creation_flags(0x0800_0000)
-        .output()
-        .unwrap();
+        .creation_flags(0x0800_0000);
+    if let Some(path) = child_path { command.env("PATH", path); }
+    command.output().unwrap()
+}
+
+#[cfg(windows)]
+#[test]
+fn windows_acl_fixture_diagnostics_ignore_path_shadow_and_keep_setup_errors() {
+    let fixture = Fixture::new();
+    let shadow = fixture.path("shadow-bin");
+    fs::create_dir(&shadow).unwrap();
+    // A copied Rust test executable rejects /all, like Git's Unix utility.
+    // It is a deterministic PATH shadow and requires no Git installation.
+    let shadow_exe = shadow.join("whoami.exe");
+    fs::copy(std::env::current_exe().unwrap(), &shadow_exe).unwrap();
+    let inherited_path = std::env::var_os("PATH").unwrap();
+    let child_path = std::env::join_paths(std::iter::once(shadow.clone())
+        .chain(std::env::split_paths(&inherited_path))).unwrap();
+    let restricted = fixture.path("restricted");
+    fs::create_dir(&restricted).unwrap();
+    let output = windows_inherited_denial_setup(&restricted, Some(&child_path));
+    assert!(output.status.success(), "{}", String::from_utf8_lossy(&output.stderr));
+    let diagnostics = String::from_utf8_lossy(&output.stdout);
+    assert!(diagnostics.contains("native_whoami_exit=0"), "{diagnostics}");
+    assert!(!diagnostics.contains(shadow_exe.to_str().unwrap()));
+    let parent = observe(&restricted, true).unwrap().unwrap();
+    let intended = windows_security::new_file_policy(&parent.file).unwrap();
+    assert!(intended.check_verification_policy().is_err());
+    // The diagnostic's success must not turn an actual ACL setup failure into
+    // success. This also checks that the explicit script exit is correctly scoped.
+    let failed_setup = windows_inherited_denial_setup(&fixture.path("missing"), Some(&child_path));
+    assert!(!failed_setup.status.success());
+}
+
+#[cfg(windows)]
+#[test]
+fn windows_final_verification_denial_rejects_before_any_original_mutation() {
+    let fixture = Fixture::new();
+    let restricted = fixture.path("restricted");
+    fs::create_dir(&restricted).unwrap();
+    let output = windows_inherited_denial_setup(&restricted, None);
     assert!(
         output.status.success(),
         "{}",
