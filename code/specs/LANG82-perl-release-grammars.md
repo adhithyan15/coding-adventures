@@ -155,3 +155,10 @@ and other unsupported syntax. The 5.003_97i tokenizer introduces a bounded
 decimal scan, so its partial pair and the later pairs must accept at most
 250 decimal digits and reject longer literals. This stage does not change
 LANG81 execution or claim complete release syntax.
+
+For tagged 5.003_97i, `toke.c` adds a decimal scan bound using its 256-byte
+`tokenbuf` and an end pointer six bytes before the buffer end. The partial
+plain-decimal token rule may accept at most 250 digits and must reject a
+251-digit literal before parsing. Test both sides of that boundary. This is a
+lexer bound for the historical syntax pair, not a claim that LANG81 can
+execute a 250-digit integer or that other Perl numeric forms are supported.
