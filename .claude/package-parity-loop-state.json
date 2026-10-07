@@ -19,7 +19,7 @@
     "notes": "PR #16863 completed all 33 final-head checks with 14 successes, 18 expected skips, one acceptable neutral CodeQL result, and no failure or pending check. Both required gates passed and GitHub reported MERGEABLE/CLEAN. Guarded squash auto-merge was enabled for exact head a1c2722fe1b3bb7a1f056d1d6615424325a894d8; GitHub merged it as 8d587b2eb15eae5e06ebea24c75e5a8d1d650100 at 2026-10-07T08:26:52Z. No manual merge occurred."
   },
   "last_inventory": {
-    "revision": "8d587b2eb15eae5e06ebea24c75e5a8d1d650100",
+    "revision": "9fc786aab0663baefab6274669df2a9111b7d2f6",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
