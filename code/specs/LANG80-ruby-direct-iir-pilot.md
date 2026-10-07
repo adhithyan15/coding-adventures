@@ -20,6 +20,10 @@ definitions, multiple arguments, and every other construct are rejected with
 an unsupported-syntax diagnostic. The parser's original recursion guard
 remains in force.
 
+The decimal-only subset rejects multi-digit literals beginning with `0`:
+Ruby interprets legacy forms such as `010` as octal. Until the pilot supports
+their Ruby values, it must reject them rather than lower them as decimal.
+
 Ruby integers have arbitrary precision. This pilot accepts only programs for
 which each literal and every intermediate expression value is provably within
 `i64` range. There are no variables in the subset, so the compiler can check
