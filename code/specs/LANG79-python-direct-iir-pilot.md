@@ -28,7 +28,9 @@ case rather than inheriting an IEEE infinity result from a generic `f64` divide.
 The pilot rejects source larger than 64 KiB before tokenization; the file
 runner enforces that bound while reading. Its AST-input
 entry point also rejects trees exceeding 16,384 nodes or tokens, or 64 nested
-grammar nodes, before recursive lowering. These limits bound frontend and
+grammar nodes, before recursive lowering. Supplied ASTs additionally have a
+1 MiB aggregate text budget and a 64 KiB limit per rule name or token field;
+the IIR module name has the same field limit. These limits bound frontend and
 generated-IIR work even when an AST is supplied directly by another caller.
 
 `print` is a Python-specific VM builtin registered by the Rust runner. It
@@ -38,6 +40,9 @@ that range are rejected until Python's full float formatting is implemented.
 Within this range, integral floats include a `.0` suffix and negative zero
 prints `-0.0`. NaN and infinities are initially rejected at the print
 boundary. This display restriction does not change arithmetic semantics.
+If a later statement fails at runtime, an earlier successful `print` remains
+visible on stdout; the runner's error value retains both that output and the
+error message.
 
 ## Acceptance
 
@@ -46,10 +51,12 @@ boundary. This display restriction does not change arithmetic semantics.
 - Source `print(-0.0)` prints `-0.0`, preserving the float sign bit.
 - `print(1 + 2)`, `print(1.0 // 2.0)`, and assignment fail explicitly.
 - `print(1.0 / 0.0)` raises a division-by-zero error on the native runner.
+- `print(1.0)` followed by a failing division still writes `1.0` before the
+  error, matching source-order Python output.
 - The emitted `IIRModule` validates before execution; tests confirm that the
   Rust runner does not invoke a host Python process.
 - Oversized source and directly supplied deep or wide ASTs fail with explicit
-  pilot-limit errors before lowering.
+  pilot-limit errors before lowering; oversized AST text and module names do too.
 
 The slice is an interpreter pilot, not a Python engine completion claim.
 Bindings, integers, strings, truth, control flow, functions, exceptions,
