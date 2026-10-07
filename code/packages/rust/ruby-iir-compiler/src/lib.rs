@@ -6,6 +6,7 @@
 
 use coding_adventures_ruby_parser::try_create_ruby_parser;
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
+use lexer::token::TokenType;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use std::sync::{Arc, Mutex};
 use vm_core::{errors::VMError, value::Value, VMCore};
@@ -256,7 +257,13 @@ impl Compiler {
 
     fn compile_factor(&mut self, node: &GrammarASTNode) -> Result<Compiled, String> {
         match node.children.as_slice() {
-            [ASTNodeOrToken::Token(token)] if token.value.bytes().all(|c| c.is_ascii_digit()) => {
+            [ASTNodeOrToken::Token(token)]
+                if token.type_ == TokenType::Number
+                    && token.value.bytes().all(|c| c.is_ascii_digit()) =>
+            {
+                if token.value.len() > 1 && token.value.starts_with('0') {
+                    return Err("Ruby legacy octal literal is outside the decimal pilot".into());
+                }
                 let value = token
                     .value
                     .parse::<i128>()
@@ -407,10 +414,13 @@ mod tests {
             "puts(1, 2)",
             "x = 1",
             "puts('hello')",
+            "puts('123')",
+            "puts(\"123\")",
             "puts(9223372036854775808)",
             "puts(9223372036854775807 + 1)",
             "puts(1 / 0)",
             "puts(-9223372036854775807 - 2)",
+            "puts(010)",
         ] {
             assert!(run_source(source).is_err(), "{source}");
         }

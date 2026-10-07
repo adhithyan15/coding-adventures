@@ -4,6 +4,8 @@
 
 - Use the fallible Ruby parser constructor so malformed lexical input is
   returned as a compiler error.
+- Reject numeric-looking strings and legacy leading-zero octal literals in the
+  decimal-only pilot instead of silently compiling them as base-10 integers.
 
 ## 0.1.0
 
