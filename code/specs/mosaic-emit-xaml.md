@@ -734,11 +734,22 @@ on first render when the property is its default.
 ## 9. Style application (mosstyle)
 
 The `.msl` source's base `part` properties lower to native attributes and
-scoped text styles. Values are XML-escaped (`escape_xaml_attr` — `&`, `"`,
+scoped text styles. Values are XML-escaped (`escape_xml_attr` — `&`, `"`,
 `<`, `>`) at the point the base attribute fragment is built, the same
 guarantee the `<Setter Value="...">` path always had (#12025). This is the
 single production write path for every base-`part`-derived attribute
 across every primitive, so nothing downstream needs its own escaping.
+
+Style values get the XML layer **only**: a mosstyle value that starts with
+`{` is passed through as a XAML markup extension on purpose
+(`translate_xaml_value`), so it must not be turned into text. Authored
+*literal text* on a layout prop (`label`, `content`, `a11y-label`,
+`pane-title`, `placeholder`, …) is the opposite case and goes through
+`escape_xaml_attr`, which also prepends XAML's `{}` escape when the value
+starts with `{` — `"{x:Null}"` is emitted as `{}{x:Null}` and renders as
+those eight characters, not as the null extension (#15487). Emitter-built
+markup (`StateTrigger` bindings, `xmlns:` declarations) uses
+`escape_xml_attr`.
 
 On native Host controls, a `state-when-*` layout
 predicate plus its matching MSL state block lowers to a WinUI
