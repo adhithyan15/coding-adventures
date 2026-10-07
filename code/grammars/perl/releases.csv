@@ -21,7 +21,7 @@ release,date,perlhist_line,grammar_status
 1.0_16,2003-Dec-18,83,partial
 2.000,1988-Jun-05,85,partial
 2.001,1988-Jun-28,87,partial
-3.000,1989-Oct-18,89,pending
+3.000,1989-Oct-18,89,partial
 3.001,1989-Oct-26,91,pending
 3.002,1989-Nov-11,92,pending
 3.003,1989-Nov-11,92,pending
@@ -63,7 +63,7 @@ release,date,perlhist_line,grammar_status
 3.041,1990-Nov-13,104,pending
 3.042,1991-Jan-??,105,pending
 3.043,1991-Jan-??,105,pending
-3.044,1991-Jan-12,106,pending
+3.044,1991-Jan-12,106,partial
 4.000,1991-Mar-21,108,pending
 4.001,1991-Apr-12,110,pending
 4.002,1991-Apr-12,110,pending
