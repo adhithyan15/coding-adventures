@@ -179,8 +179,8 @@ and are rejected as full reloadable compact logs. NONE still computes the log
 and optional summary without writing a sidecar.
 
 Compact IDs bound identity length, not graph size or query/serialization work.
-Validated resource limits, deterministic serialization and actual pass/sweep
-event chronology remain required foundation work in
+Checked resource limits and deterministic serialization are implemented locally;
+native CI/merge acceptance and actual pass/sweep event chronology remain in
 [#16868](https://github.com/adhithyan15/coding-adventures/issues/16868).
 Allocation sequence and the scheduled `passes` list do not supply that chronology.
 
@@ -208,8 +208,21 @@ and return exit status 1 on stderr with empty success stdout. Snapshot and summa
 work/output allowances; pretty whitespace and NDJSON newlines count too. NONE
 validates evidence without applying output-byte caps unless a summary is
 materialized. Payloads are prepared before any JS/map/manifest/sidecar write.
-Filesystem rollback, destination collision protection and artifact content
-identity remain required before CV02 can be accepted.
+The compiler preflights destinations, stages every complete file and installs
+JS/map/manifest outputs before the sidecar. Normalized, ancestor, Windows case
+and existing hard-link aliases reject; final symlinks, nonregular files and
+read-only destinations reject. Reported failures before commit restore original
+files in reverse order. Obstructed recovery retains original copies and names
+their paths; cleanup failures after commit warn on stderr while the complete
+output set remains successful. This requires filesystem object identities and
+hard links. It provides complete individual files, without promising simultaneous
+visibility of the whole set or recovery from a process crash.
+
+Source-root origins record `content_sha256` for consumed UTF-8 bytes. JS/map/
+manifest `wrote` events record the digest and byte length of final encoded bytes.
+These hashes identify artifacts; they do not establish node-level output joins
+or correct source-map mappings. Exact final security review and native-platform
+CI/merge verification remain required before CV02 acceptance.
 
 ### Measured parity
 

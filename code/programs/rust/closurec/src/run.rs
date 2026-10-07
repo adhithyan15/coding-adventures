@@ -1203,6 +1203,10 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                 "byte_len".to_string(),
                 serde_json::Value::Number((contents.len() as u64).into()),
             );
+            meta.insert(
+                "content_sha256".into(),
+                serde_json::Value::String(coding_adventures_sha256::sha256_hex(contents.as_bytes())),
+            );
             Some(cv_log.try_create(Some(
                 coding_adventures_correlation_vector::Origin {
                     source: "input_file".to_string(),
@@ -1751,7 +1755,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // publication writes succeed and the prepared sidecar is published.
     let mut pending_outputs: Vec<(PathBuf, String)> = Vec::new();
     // Step 4: prepare the output. Two cases:
-    //   a) --js_output_file set → write to disk via write_output_file.
+    //   a) --js_output_file set → prepare a transactional disk output.
     //   b) absent → stdout via the returned `stdout_text`.
     //
     // Step 5 (CLOC11.42): when --create_source_map=path is set,
@@ -1768,6 +1772,14 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // None arm moves `encoded` into stdout_text; without the
     // pre-capture we'd see a borrow-of-moved error.
     let encoded_byte_len = encoded.len();
+    let encoded_digest = if combined_cv_id.is_some()
+        && config.io.js_output_file.is_some()
+        && !config.special_modes.correlation_vector_summary_only
+    {
+        Some(coding_adventures_sha256::sha256_hex(encoded.as_bytes()))
+    } else {
+        None
+    };
     // CLOC11.76 — when --correlation_vector_summary_only is
     // set, skip the JS write entirely. The CV log still
     // accumulates per-file / combined / post-combine
@@ -1827,6 +1839,10 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                 "byte_len".to_string(),
                 serde_json::Value::Number((encoded_byte_len as u64).into()),
             );
+            contrib_meta.insert(
+                "content_sha256".into(),
+                serde_json::Value::String(encoded_digest.expect("prepared JS digest")),
+            );
             cv_log.contribute(
                 &js_cv_id,
                 "write_output_file",
@@ -1846,6 +1862,9 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
             config.io.js_output_file.as_deref(),
         );
         let map_byte_len = map_body.len();
+        let map_digest = combined_cv_id
+            .as_ref()
+            .map(|_| coding_adventures_sha256::sha256_hex(map_body.as_bytes()));
         pending_outputs.push((map_path.clone(), map_body));
         wrote_files.push(map_path.clone());
 
@@ -1873,6 +1892,10 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
             contrib_meta.insert(
                 "byte_len".to_string(),
                 serde_json::Value::Number((map_byte_len as u64).into()),
+            );
+            contrib_meta.insert(
+                "content_sha256".into(),
+                serde_json::Value::String(map_digest.expect("prepared map digest")),
             );
             cv_log.contribute(
                 &map_cv_id,
@@ -1905,6 +1928,12 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     if let Some(manifest_path) = &config.chunks.output_manifest_file {
         let body = format_manifest(&inputs);
         let manifest_byte_len = body.len();
+        let manifest_digest =
+            if config.special_modes.correlation_vector && !per_file_cv_ids.is_empty() {
+                Some(coding_adventures_sha256::sha256_hex(body.as_bytes()))
+            } else {
+                None
+            };
         pending_outputs.push((manifest_path.clone(), body));
         wrote_files.push(manifest_path.clone());
 
@@ -1943,6 +1972,10 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
             contrib_meta.insert(
                 "byte_len".to_string(),
                 serde_json::Value::Number((manifest_byte_len as u64).into()),
+            );
+            contrib_meta.insert(
+                "content_sha256".into(),
+                serde_json::Value::String(manifest_digest.expect("prepared manifest digest")),
             );
             cv_log.contribute(
                 &manifest_cv_id,
@@ -2044,10 +2077,10 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
         }
     }
 
-    // Preparation is complete. Filesystem rollback and collision protection are
-    // the next publication boundary; success stdout is returned only after writes.
-    for (path, body) in &pending_outputs {
-        write_output_file(path, body)?;
+    // The sidecar is last in this prepared set. Return successful stdout only
+    // after the complete set commits; cleanup warnings name retained owned paths.
+    for warning in crate::publication::publish_outputs(&pending_outputs)? {
+        result.stderr_text.push_str(&warning);
     }
     Ok(CompilerOutput {
         stdout_text: result.stdout_text,
@@ -2170,9 +2203,9 @@ fn format_manifest(inputs: &[PathBuf]) -> String {
 ///   means the value was quoted), and CC has the same limitation.
 /// - We don't `chmod` the created directories; default umask
 ///   applies (matches CC).
-/// - We don't atomically write via a tempfile + rename. CC writes
-///   directly too; the disk-half-full scenario is rare enough
-///   and CC's behavior is already what users expect.
+/// - This standalone compatibility helper writes directly. `run_compiler`
+///   publishes its prepared artifact set through the private publication
+///   transaction, including rollback and destination collision protection.
 ///
 /// Extracted as its own function so the directory-creation
 /// behavior is unit-testable independently of `run_compiler`'s

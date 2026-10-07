@@ -124,8 +124,22 @@ repair; the absent-value check now tests exact emptiness and rejects those pairs
 All seven critical process tests, 11 surface tests, two typed-AST alias tests and
 35 configuration unit tests pass after repair, with strict compiler lint and
 887 valid lessons. Final checkpoint review remains required before publishing.
-Current remaining CV02 work: transactional artifact publication/content identity, final full-scope exact-head
-security review and actual CI/merge verification. Configuration and diagnostic
+The publication checkpoint preflights the whole artifact set, rejects destination
+aliases/nonregular/read-only outputs, stages complete synced files and installs
+without clobbering, with the sidecar last. Reported pre-commit failure rolls back
+owned files; obstructed restoration preserves recovery copies and unknown files.
+Post-commit cleanup failures warn with complete outputs. Held Unix/Windows object
+identities protect ownership checks; Windows uses the full 128-bit file ID.
+Source roots and JS/map/manifest publication records hash exact consumed/final
+bytes using the existing local SHA-256 crate. Three actual-process tests failed
+before implementation and pass after repair. Native Windows fault/identity/path
+tests pass; Unix symlink cases await native CI. Final local compiler verification
+passed 1,061 tests across 178 targets with zero ignores, including read-only/
+directory rejection. CV passed 76 unit tests and 10 doctests; SHA-256 passed 27
+unit tests and four doctests. All three pass strict all-target lint with unknown
+lints denied. All 889 lesson shards validate.
+Current remaining CV02 work: final full-scope exact-head security review and
+actual CI/merge verification. Configuration and diagnostic
 names are specified before their implementation.
 The foundation and full compiler/provenance goal remain open.
 Diagnostic short-circuits (empty-input banner and token-only tree dumps) currently

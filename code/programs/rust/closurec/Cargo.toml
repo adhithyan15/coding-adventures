@@ -46,7 +46,7 @@ coding-adventures-type-sidecar = { path = "../../../packages/rust/type-sidecar" 
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 
-[dev-dependencies]
+# Content identity for consumed input and committed artifacts; local implementation.
 coding_adventures_sha256 = { path = "../../../packages/rust/sha256" }
 
 # closurec's diff-test modules are literate: their `//!` docs interleave prose

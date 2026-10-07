@@ -83,6 +83,7 @@ pub mod defines;
 pub mod globs;
 pub mod help_markdown;
 pub mod print_tree;
+mod publication;
 pub mod run;
 pub mod source_map;
 pub mod whitespace_only;

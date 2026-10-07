@@ -4,6 +4,27 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Added - transactional artifact publication and content identity (CV02)
+
+Prepare and validate every body before preflighting the entire destination set.
+Reject normalized/ancestor/Windows case/hard-link collisions, final symlinks,
+nonregular files and read-only outputs. Stage synced complete files in exclusive
+sibling directories; retain held filesystem identities (full 128-bit file IDs on
+Windows), preserve permissions and install without clobbering a new destination.
+Publish the sidecar last. Reported pre-commit failures roll back owned outputs
+in reverse order, preserving unknown replacements and obstructed recovery copies.
+Cleanup failures after commit report retained paths on stderr with successful,
+complete outputs. No simultaneous multi-file visibility or crash recovery claim.
+
+Source roots and JS/map/manifest publication records now include SHA-256 of exact
+consumed/final bytes through the existing local SHA-256 dependency. Process tests
+failed first on collisions, partial publication and missing hashes, then passed
+with preserved outputs and tracing-neutral bytes. Private fault tests cover later
+staging/install failure, obstructed restoration, unknown replacement preservation
+and cleanup warnings. Native Windows tests cover held IDs and path normalization;
+Unix symlink tests require native CI. Final security review and CI/merge acceptance
+remain pending; full pass lineage, output joins and compiler parity remain open.
+
 ### Fixed - explicit whitespace limit overrides reject (CV02 review)
 
 Only the exactly empty absent-flag mapping selects default limits. Explicit
@@ -21,7 +42,7 @@ so recording/export failures preserve every existing destination and return no
 success stdout. Real-process tests reproduce zero-output-cap success before the
 repair, verify every view rejects correctly, and compare three fresh identical
 SIMPLE/ADVANCED runs over twelve format/filter/summary combinations. Filesystem
-rollback, destination collision protection and content hashes remain required.
+publication and content identity are implemented by the subsequent checkpoint above.
 
 ### Added - checked provenance configuration and stage failures (CV02)
 
@@ -35,7 +56,7 @@ configuration and execution errors go to stderr with empty success stdout.
 Actual-process tests verify limits, file preservation on early failure, checked
 reload and tracing-neutral bytes at all five compilation levels. The generated
 help and exact-source-pinned CLI surface audit include the new Rust extension.
-Formatter/summary and transactional publication integration remain unfinished.
+Formatter/summary and publication integration were completed in subsequent checkpoints above.
 
 ### Fixed - semantic EOF provenance regression assertion (CV02)
 
