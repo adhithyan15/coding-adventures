@@ -96,3 +96,9 @@ both differ from 5.003_07, especially around lexical `my` scope, interpolation,
 and octal/hexadecimal overflow. Keep the initial release pair limited to the
 arithmetic and `print` forms that those changes do not extend; record it as
 partial and retain negative syntax probes.
+
+The next slice selects tagged 5.003_09. Its yacc changes rearrange lexical
+scope handling, while tokenizer changes mainly concern sigils, interpolation,
+patterns, and locale-aware numeric conversion. Preserve only the bounded
+plain-decimal arithmetic and `print` subset; reject leading-zero multi-digit
+forms and do not infer full syntax coverage from the pair.
