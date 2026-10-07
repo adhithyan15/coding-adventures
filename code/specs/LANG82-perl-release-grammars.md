@@ -38,12 +38,15 @@ version's spelling, date, history line or tag, and coverage state. Pair paths
 follow the filename convention above; source revisions and the validated
 subset are recorded in each pair's comments and the release-grammar README.
 Inventory release IDs must be unique and safe to use in those file paths.
-The initial `code/grammars/perl/releases.csv` inventory expands 763 numbered
-releases from a pinned `perlhist.pod` snapshot. An official source-tag audit
-added 11 release candidates omitted there, for 774 pending or partial release
-rows. The `v5.17.7.0` tag is excluded because its own annotation says that
-no such Perl release occurred. CPAN archives still need comparison before
-treating the inventory as exhaustive.
+The corrected `code/grammars/perl/releases.csv` inventory expands 765 release
+entries from a pinned `perlhist.pod` snapshot. An official source-tag audit
+added 11 release candidates omitted there, for 776 pending or partial release
+rows. The correction adds `p54rc1` and `p54rc2` from the pinned history's
+lines 264 and 265; each remains pending until its distinct source-backed
+token and grammar pair is validated. Historical source archives for both are
+listed in the Perl archive index. The `v5.17.7.0` tag is excluded because its
+own annotation says that no such Perl release occurred. CPAN archives still
+need comparison before treating the inventory as exhaustive.
 
 A pair must not claim to describe the complete language while it covers only
 a pilot subset. Mark partial pairs explicitly, list their accepted constructs,
