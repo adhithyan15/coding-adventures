@@ -595,9 +595,10 @@ is not a base letter, so such a word is refused; a list of single marks
 
 **Scope.** 18 glyphs: G b c e g h i l n o r s u w ß ñ ¿ ¡. Only Spanish and
 German join `DERIVED_FILMSTRIP_SCRIPTS`, the tracks with a lesson these
-letters complete. Five lessons gain a strip: ES-W02-enye (ñ), ES-W03-inverted
-(¿ ¡), GE-W01-eszett (ß), GE-W03-capitalization (Großschreibung) and
-GE-W04-vier-zeilen (weil). French, Italian, Portuguese and Latin stay
+letters complete. Four lessons gain a strip: ES-W02-enye (ñ), ES-W03-inverted
+(¿ ¡), GE-W01-eszett (ß) and GE-W04-vier-zeilen (weil). GE-W03-capitalization
+(Großschreibung) is cited letter for letter but stays undrawn: see the length
+cap below. French, Italian, Portuguese and Latin stay
 switched off: none of their writing headwords is fully cited.
 
 **Inventory.** `data/scripts/latin.json` lists every Latin character a
@@ -616,10 +617,15 @@ carries the UJI counts at the source's count (for example n: 119 of 120 one
 stroke, 74 of those from the top left), and says where adults differ from the
 school model: most start l at the bottom, as a joined hand does, and UJI has
 no ß, so ß rests on the school model alone. The sequence renderer draws each
-letter at its own scale, so narrow letters (i, l, ¡) print tall, and the
-fourteen-letter Großschreibung strip is the tallest figure in the corpus
-(about 2,380 units, against about 1,800 for the longest earlier strips); the
-block-figure macro shrinks it to 0.45 of the text height.
+letter at its own scale, so narrow letters (i, l, ¡) print tall.
+
+**Divergence: a length cap.** The fourteen-letter Großschreibung strip came
+out about 2,380 units tall, against about 1,800 for the longest earlier strip
+(a nine-piece Gujarati list), and the block-figure macro would shrink it to an
+illegible size. `MAX_SEQUENCE_PIECES` (10) now keeps any sequence longer than
+ten written pieces out of the candidates, so such a lesson prints no strip
+rather than an unreadable one. It removes only Großschreibung; every earlier
+strip has nine pieces or fewer.
 
 **Divergence: the inventory.** It also lists the ordinal indicators ª and º
 (Portuguese "1.º / 1.ª" is a headword): they are Latin-script letters the

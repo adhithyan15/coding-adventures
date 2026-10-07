@@ -10,13 +10,6 @@
     },
     {
       "kind": "script-filmstrip",
-      "lessonId": "GE-W03-capitalization",
-      "sourceHash": "fnv1a64:8f57cb0a6d5101a6",
-      "svgHash": "fnv1a64:efa48c77f5651458",
-      "svg": "german/book/figures/GE-W03-capitalization-filmstrip.svg"
-    },
-    {
-      "kind": "script-filmstrip",
       "lessonId": "GE-W04-vier-zeilen",
       "sourceHash": "fnv1a64:03ba8b897f5d177b",
       "svgHash": "fnv1a64:af44256a1a71debb",

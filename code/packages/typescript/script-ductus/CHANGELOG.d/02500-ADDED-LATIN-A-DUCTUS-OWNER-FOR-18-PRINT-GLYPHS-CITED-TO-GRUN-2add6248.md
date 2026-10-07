@@ -19,4 +19,5 @@
   `tests/strokes/latin.test.ts` and `tests/ductusview/latin.test.ts`.
   stroke-ownership: keys 604 -> 622, `latin: 18`, key hash and non-Tamil
   data hash move; owner list gains `latin`. The filmstrip ledger gains owner
-  `latin` (18 entries).
+  `latin` with the 8 glyphs a lesson draws (e i l w ß ñ ¿ ¡); the other ten
+  wait in the owner for words that need a one-storey a.

@@ -690,6 +690,18 @@ export function headlineWordOf(lesson: ParsedLesson, script: string): string | u
   return fits ? word : undefined;
 }
 
+/**
+ * The longest sequence a strip may draw, in written pieces.
+ *
+ * A sequence strip shelves every piece's frames into one figure, and the book
+ * shrinks each figure to fit the column. Past about ten pieces the figure is so
+ * tall that the shrunken frames and captions are no longer readable: the
+ * 14-letter "Großschreibung" came out 2,379 units tall, against 1,801 for the
+ * tallest nine-piece strip. A lesson that long is a word to read, not a
+ * stroke-order drill, so it prints no strip rather than an illegible one.
+ */
+export const MAX_SEQUENCE_PIECES = 10;
+
 /** Every lesson on a switched-on track that COULD carry a filmstrip. */
 export function filmstripCandidates(
   lessons: readonly ParsedLesson[],
@@ -704,6 +716,7 @@ export function filmstripCandidates(
     // A sequence first: a one-grapheme headword that is written in two pieces
     // (the two-part sign ோ) is a sequence, not a letter.
     const letters = writingSequenceOf(lesson, script);
+    if (letters !== undefined && letters.length > MAX_SEQUENCE_PIECES) continue;
     if (letters === undefined) {
       // A Devanagari word: one entry, composed from its letters and one
       // shared headline by script-ductus.

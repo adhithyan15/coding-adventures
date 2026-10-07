@@ -240,9 +240,9 @@ describe("the real corpus", () => {
       (target) => target.letters !== undefined && target.letters.join("") === target.glyph,
     );
     expect(words.map((target) => target.lessonId).sort()).toEqual([
-      // German print letters stand apart: weil, and Großschreibung (capital G
-      // and ß included), once their letters gained a Grundschrift-cited ductus.
-      "GE-W03-capitalization",
+      // German print letters stand apart: weil, once its letters gained a
+      // Grundschrift-cited ductus. Großschreibung is cited letter for letter
+      // too, but at 14 pieces it is past MAX_SEQUENCE_PIECES and prints none.
       "GE-W04-vier-zeilen",
       "GU-C32-ane-write",
       "GU-C33-ke-write",
@@ -305,8 +305,9 @@ describe("the real corpus", () => {
   });
 
   it("draws the Latin lessons whose every letter is cited, and no word with an a", () => {
-    // Five lessons: ñ, the list "¿ ¡", ß, and the German words Großschreibung
-    // and weil. Every other Spanish and German writing lesson holds an a
+    // Four lessons: ñ, the list "¿ ¡", ß, and the German word weil.
+    // Großschreibung's letters are all cited, but 14 pieces is past
+    // MAX_SEQUENCE_PIECES, so it prints no strip rather than an illegible one. Every other Spanish and German writing lesson holds an a
     // (Noto's two-storey a has no source), an accent whose only lesson also
     // holds one, punctuation inside a word, or an uncited mark (ä ö).
     const latin = targets.filter((target) => target.script === "latin");
@@ -316,7 +317,6 @@ describe("the real corpus", () => {
       "ES-W02-enye": "ñ",
       "ES-W03-inverted": "¿ ¡",
       "GE-W01-eszett": "ß",
-      "GE-W03-capitalization": "G r o ß s c h r e i b u n g",
       "GE-W04-vier-zeilen": "w e i l",
     });
     const lessonIds = new Set(targets.map((target) => target.lessonId));

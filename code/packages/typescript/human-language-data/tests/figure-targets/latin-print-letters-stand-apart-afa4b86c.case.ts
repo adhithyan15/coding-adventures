@@ -10,6 +10,7 @@ import {
   DERIVED_FILMSTRIP_SCRIPTS,
   filmstripCandidates,
   filmstripImageMarkdown,
+  MAX_SEQUENCE_PIECES,
   SEPARATE_LETTER_SCRIPTS,
   WRITTEN_SIGN_SIDES,
   withDerivedFilmstrips,
@@ -40,6 +41,15 @@ describe("Latin print letters", () => {
     expect(
       writingSequenceOf(lesson("GE-W2", { language: "german", headword: "Großschreibung" }), "latin"),
     ).toEqual([..."Großschreibung"]);
+  });
+
+  it("offers no strip for a sequence longer than MAX_SEQUENCE_PIECES", () => {
+    // writingSequenceOf still reads the word; filmstripCandidates drops it,
+    // because a 14-piece strip shrinks past legibility in the book.
+    expect(MAX_SEQUENCE_PIECES).toBe(10);
+    const long = lesson("GE-W2", { language: "german", headword: "Großschreibung" });
+    const short = lesson("GE-W1", { language: "german", headword: "weil" });
+    expect(filmstripCandidates([long, short]).map((target) => target.lessonId)).toEqual(["GE-W1"]);
   });
 
   it("keeps a precomposed ñ whole, and refuses n typed with a combining tilde", () => {
