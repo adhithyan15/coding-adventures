@@ -702,7 +702,7 @@ release,date,perlhist_line,grammar_status
 5.38.0-RC2,2023-Jun-23,772,pending
 5.38.0,2023-Jul-02,774,pending
 5.38.1,2023-Nov-25,776,pending
-5.38.2,2023-Nov-29,777,pending
+5.38.2,2023-Nov-29,777,partial
 5.38.3-RC1,2025-Jan-05,778,pending
 5.38.3,2025-Jan-18,779,pending
 5.38.4-RC1,2025-Mar-30,780,pending

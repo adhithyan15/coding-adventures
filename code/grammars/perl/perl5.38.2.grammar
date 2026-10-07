@@ -1,0 +1,12 @@
+# Perl 5.38.2 grammar: verified LANG81 print-arithmetic subset only.
+# @version 1
+# PARTIAL: unsupported Perl 5.38.2 syntax is rejected, including trailing tokens.
+# Evidence: https://github.com/Perl/perl5/tree/v5.38.2
+# The bounded subset is also exercised against Perl 5.38.2 by LANG81.
+
+program         = print_statement { print_statement } ;
+print_statement = "print" LPAREN expr RPAREN SEMICOLON ;
+expr            = term { ( PLUS | MINUS ) term } ;
+term            = unary { STAR unary } ;
+unary           = MINUS unary | atom ;
+atom            = INT | LPAREN expr RPAREN ;
