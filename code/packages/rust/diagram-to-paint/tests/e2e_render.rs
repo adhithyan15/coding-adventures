@@ -3286,13 +3286,14 @@ line "Target" [35, 50, 68, 82]"##,
             .expect("configured treeview PNG write failed");
         assert!(configured_pixels.width > 0 && configured_pixels.height > 0);
 
-        let mapped = parse_treeview("%%{init: {\"treeView\": {\"showIcons\": true, \"defaultIconPack\": \"devicon\", \"filenameIcons\": {\"README.md\": \"logos:markdown\", \"package.json\": \"none\"}, \"extensionIcons\": {\".rs\": \"rust\", \"TS\": \"logos:typescript\"}}}}%%\ntreeView-beta\nREADME.md\npackage.json\nmain.RS\napp.ts\nplain.txt\nnotes.txt icon(custom)")
+        let mapped = parse_treeview("%%{init: {\"treeView\": {\"showIcons\": true, \"defaultIconPack\": \"devicon\", \"filenameIcons\": {\"README.md\": \"logos:markdown\", \"package.json\": \"none\", \"component.spec.ts\": \"logos:special\", \"notes.txt\": \"folder\", \"skip.ts\": \"none\"}, \"extensionIcons\": {\".rs\": \"rust\", \"TS\": \"logos:typescript\", \"bashrc\": \"console\"}}}}%%\ntreeView-beta\nREADME.md\npackage.json\ncomponent.spec.ts\nmain.RS\nAPP.TS\n.bashrc\nnotes.txt\nskip.ts\nplain.txt\ncustom.txt icon(custom)")
             .expect("mapped treeview parse failed");
         let mapped_layout = layout_treeview_with_options(&mapped, 720.0, Some(&TreeViewLayoutOptions {
             icon_glyphs: BTreeMap::from([
                 ("devicon:custom".into(), DiagramIconGlyph { text: "C".into(), font_family: "Helvetica".into() }),
                 ("devicon:rust".into(), DiagramIconGlyph { text: "R".into(), font_family: "Helvetica".into() }),
                 ("logos:markdown".into(), DiagramIconGlyph { text: "M".into(), font_family: "Helvetica".into() }),
+                ("logos:special".into(), DiagramIconGlyph { text: "S".into(), font_family: "Helvetica".into() }),
                 ("logos:typescript".into(), DiagramIconGlyph { text: "T".into(), font_family: "Helvetica".into() }),
             ]),
         }));
@@ -3308,11 +3309,11 @@ line "Target" [35, 50, 68, 82]"##,
             _ => None,
         }.and_then(|metadata| metadata.get("treeView.icon")).map(String::as_str)).collect::<BTreeSet<_>>();
         assert_eq!(mapped_icons,
-            BTreeSet::from(["devicon:custom", "devicon:rust", "logos:markdown", "logos:typescript",
+            BTreeSet::from(["devicon:custom", "devicon:rust", "logos:markdown", "logos:special", "logos:typescript",
                 "mermaid-treeview:file", "mermaid-treeview:folder"]));
         assert_eq!(mapped_scene.instructions.iter().filter(|instruction| matches!(instruction,
             PaintInstruction::GlyphRun(run) if run.base.metadata.as_ref()
-                .and_then(|metadata| metadata.get("treeView.icon")).is_some())).count(), 4);
+                .and_then(|metadata| metadata.get("treeView.icon")).is_some())).count(), 5);
         assert!(!mapped_scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Rect(rect) if rect.base.metadata.as_ref()
                 .and_then(|metadata| metadata.get("treeView.icon"))

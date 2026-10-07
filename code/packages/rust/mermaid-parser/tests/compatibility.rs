@@ -192,6 +192,10 @@ fn pinned_treeview_subset_corpus_parses_to_tree_ir() {
             assert_eq!(diagram.nodes.iter().skip(1).map(|node| node.icon.as_deref()).collect::<Vec<_>>(),
                 [Some("logos:markdown"), Some("none"), Some("devicon:rust"),
                     Some("logos:typescript"), Some("mermaid-treeview:file"), Some("devicon:custom")]);
+        } else if name == "icon-detection-precedence" {
+            assert_eq!(diagram.nodes.iter().skip(1).map(|node| node.icon.as_deref()).collect::<Vec<_>>(),
+                [Some("logos:special"), Some("devicon:typescript"), Some("mermaid-treeview:file"),
+                    Some("mermaid-treeview:folder"), Some("none"), Some("devicon:typescript")]);
         } else if name == "built-in-and-unprefixed-icons" {
             assert_eq!(diagram.nodes.iter().skip(1).map(|node| node.icon.as_deref()).collect::<Vec<_>>(),
                 [Some("mermaid-treeview:folder"), Some("mermaid-treeview:file"),

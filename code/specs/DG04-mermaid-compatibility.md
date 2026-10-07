@@ -805,7 +805,9 @@ present for header-only diagrams.
 Box-drawing preprocessing matches the pinned root offset, inferred segment
 width, decoration-line handling, mixed-format rejection, and original-line
 diagnostics. Configuration-driven default and filename/extension icon maps
-resolve into fully qualified semantic icon identities. The pinned built-in
+resolve into fully qualified semantic icon identities. Exact filename matches
+precede case-insensitive final-extension matches, empty mappings fall through,
+and leading-dot filenames do not count as extensions. The pinned built-in
 folder and file artwork lowers to filled backend-neutral path geometry.
 Integrator-registered external icon glyphs resolve by fully qualified identity
 during layout and lower through backend-neutral shaped glyph instructions;

@@ -5996,9 +5996,10 @@ fn resolve_treeview_icon(
     } else if matches!(kind, TreeViewNodeKind::Directory) {
         "folder".to_string()
     } else {
-        config.filename_icons.get(label).cloned().or_else(|| {
-            label.rsplit_once('.').and_then(|(_, extension)|
-                config.extension_icons.get(&extension.to_ascii_lowercase()).cloned())
+        config.filename_icons.get(label).filter(|icon| !icon.is_empty()).cloned().or_else(|| {
+            label.rfind('.').filter(|index| *index > 0).and_then(|index|
+                config.extension_icons.get(&label[index + 1..].to_ascii_lowercase())
+                    .filter(|icon| !icon.is_empty()).cloned())
         }).unwrap_or_else(|| "file".to_string())
     };
     if icon == "none" {
