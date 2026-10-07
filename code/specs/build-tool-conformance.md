@@ -458,6 +458,19 @@ have separate owners. The native Elixir test MUST read the checked fixture
 directly, materialize only bounded safe OCaml paths in an isolated directory,
 and extend the exact fixture-to-build-tool CI selection map.
 
+The subsequent Elixir language-registry adopter MUST materialize every checked
+BUILD record from `discovery/language-registry` in an isolated bounded tree and
+compare the complete sorted native discovery projection to the fixture's
+expected qualified names, repository-relative paths, BUILD paths, and language
+buckets on each supported host. Language inference MUST use only the exact
+bucket immediately below `packages` or `programs`; an unknown bucket remains
+`unknown` even when a later component spells a known language. Program names
+MUST retain the `programs/` identity segment. The production walk MUST exclude
+exact generated components, retain near-case source components, and reject
+the fixture's specification-tree decoy. This adoption does not establish the
+separately owned duplicate-identity rejection, canonical-BUILD-only membership,
+or native Windows override-selection contracts.
+
 If two discovered directories still produce one qualified name, discovery
 fails with `DUPLICATE_PACKAGE_IDENTITY`. The diagnostic includes the duplicate
 package identity and every repository-relative package path in sorted order;

@@ -34,10 +34,10 @@ defmodule BuildTool.Discovery do
 
   ## Language inference
 
-  We infer a package's language from its directory path. If the path contains
-  a known bucket such as "python", "ruby", "go", "ocaml", or "elixir" as a component
-  under "packages" or "programs", that is the language. The package name is
-  "{language}/{dirname}", e.g., "python/logic-gates" or "go/directed-graph".
+  We infer a package's language from its directory path. Only the exact
+  bucket immediately below "packages" or "programs" counts as a language.
+  Package names use "{language}/{dirname}"; programs preserve an additional
+  "programs/" identity segment.
 
   ## The Package struct
 
@@ -73,9 +73,15 @@ defmodule BuildTool.Discovery do
                "node_modules",
                "vendor",
                "dist",
+               "dist-newstyle",
                "build",
                "target",
                ".claude",
+               "specs",
+               ".dart_tool",
+               ".build",
+               ".gradle",
+               "gradle-build",
                "Pods",
                "_build",
                "deps",
@@ -101,7 +107,15 @@ defmodule BuildTool.Discovery do
     "csharp",
     "fsharp",
     "dotnet",
-    "ocaml"
+    "ocaml",
+    "c",
+    "cpp",
+    "dart",
+    "java",
+    "kotlin",
+    "mosaic",
+    "starlark",
+    "twig"
   ]
 
   # ---------------------------------------------------------------------------
@@ -163,9 +177,9 @@ defmodule BuildTool.Discovery do
   @doc """
   Inspects the directory path to determine the programming language.
 
-  We look for known language names ("python", "ruby", "go", "rust",
-  "typescript", "elixir") as path components. For example,
-  "/repo/code/packages/python/logic-gates" yields "python".
+  The exact component after the last `packages` or `programs` boundary is
+  the sole language candidate. A later `go` in `packages/custom/go` does
+  not turn the unknown `custom` bucket into Go.
 
   ## Example
 
@@ -175,20 +189,15 @@ defmodule BuildTool.Discovery do
       "unknown"
   """
   def infer_language(path) do
-    # Normalize path separators to forward slashes for consistent parsing.
-    parts =
-      path
-      |> String.replace("\\", "/")
-      |> String.split("/")
-
-    Enum.find(@known_languages, "unknown", fn lang ->
-      lang in parts
-    end)
+    case package_boundary(path) do
+      {_kind, bucket} when bucket in @known_languages -> bucket
+      _ -> "unknown"
+    end
   end
 
   @doc """
   Builds a qualified package name like "python/logic-gates" from the
-  language and the directory's basename.
+  language and the directory's basename. Program roots keep `programs/`.
 
   ## Example
 
@@ -196,7 +205,24 @@ defmodule BuildTool.Discovery do
       "python/logic-gates"
   """
   def infer_package_name(path, language) do
-    language <> "/" <> Path.basename(path)
+    case package_boundary(path) do
+      {"programs", _bucket} -> language <> "/programs/" <> Path.basename(path)
+      _ -> language <> "/" <> Path.basename(path)
+    end
+  end
+
+  # Search boundaries from the root and retain the last complete pair. This
+  # mirrors the canonical path-boundary rule while refusing a language word
+  # from a later basename or an unrelated parent directory.
+  defp package_boundary(path) do
+    path
+    |> String.replace("\\", "/")
+    |> String.split("/")
+    |> Enum.chunk_every(2, 1, :discard)
+    |> Enum.reduce(nil, fn
+      [kind, bucket], _previous when kind in ["packages", "programs"] -> {kind, bucket}
+      _pair, previous -> previous
+    end)
   end
 
   # ---------------------------------------------------------------------------

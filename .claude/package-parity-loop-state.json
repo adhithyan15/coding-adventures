@@ -12,34 +12,34 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16898,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16898",
-    "branch": "codex/parity-elixir-dune-discovery-20261007",
-    "implementation_revision": "cc4016047bc9873d03008054c52e745f632f0307",
+    "number": 16906,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16906",
+    "branch": "codex/parity-elixir-registry-20261007",
+    "implementation_revision": "d61e98d7a1fa12bed9cdad42d68f2c8b909e3380",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-07T13:37:38Z",
-    "pr_number": 16898,
+    "observed_at": "2026-10-07T14:29:07Z",
+    "pr_number": 16906,
     "status": "checks-pending",
-    "notes": "Ready-for-review Elixir Dune fixture adoption PR #16898 opened from tested implementation cc4016047bc9873d03008054c52e745f632f0307. Full Elixir suite, focused/full Go suite, vet, build, neutral corpus, parity reporter tests, lessons, format, diff and read-only security review passed; coverage is 87.76% for changed Discovery but aggregate Elixir remains below the pre-existing 90% gate. GitHub checks are queued. Do not enable auto-merge while pending."
+    "notes": "Ready-for-review full Elixir language-registry PR #16906 opened from tested implementation d61e98d7a1fa12bed9cdad42d68f2c8b909e3380. GitHub reports MERGEABLE with checks queued. Focused and full Elixir tests, focused formatting, escript build, full Go tests/vet/build, neutral corpus, parity reporter, lessons, diff, and independent read-only security review passed. Changed Discovery coverage is 88.89%; the pre-existing package-wide 90% coverage gate remains unmet at 64.81%. Do not enable auto-merge while checks are pending."
   },
   "last_inventory": {
-    "revision": "c6c014e91fbd01ba71b8722e77f1dca823a45446",
+    "revision": "a7b4a319a3d9d9d3f4e56cc226e2458c11f82f60",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1491,
-    "implementation_package_slots": 4761,
-    "all_reported_identities": 1533,
+    "implementation_identities": 1495,
+    "implementation_package_slots": 4765,
+    "all_reported_identities": 1537,
     "high_consensus_packages": 178,
     "high_consensus_missing_slots": 262,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 181,
     "two_to_four_missing_slots": 2282,
-    "singleton_packages": 1009,
-    "singleton_missing_slots": 14126,
-    "rust_singletons": 810,
+    "singleton_packages": 1013,
+    "singleton_missing_slots": 14182,
+    "rust_singletons": 814,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -1992,20 +1992,20 @@
     {
       "id": "build-tool-elixir-dune-build-discovery-fixture-adoption",
       "title": "Make Elixir consume the Dune discovery fixture",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-shared-discovery-fixture-native-ci-selection"],
       "branch": "codex/parity-elixir-dune-discovery-20261007",
       "pr_number": 16898,
-      "notes": "Elixir already prunes exact _build but does not consume the shared language-registry fixture. Add independent fixture evidence and change behavior only if that evidence exposes a real divergence. When adding this direct consumer, extend the exact CI detector consumer map and drift test so later fixture-only edits select Elixir."
+      "notes": "Merged PR #16898 at a7b4a319a3d9d9d3f4e56cc226e2458c11f82f60. Elixir directly projects four OCaml BUILD records and three positive identities from the shared Dune fixture; the exact native CI selector now includes Elixir. Final CI: 29 success, seven expected skips, one neutral."
     },
     {
       "id": "build-tool-elixir-discovery-language-registry-conformance",
       "title": "Make Elixir discovery match the complete language-registry fixture",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-elixir-dune-build-discovery-fixture-adoption"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Read-only post-#16891 audit found Elixir's 14-language allowlist omits c/cpp/dart/java/kotlin/mosaic/ocaml/starlark/twig; inference scans any path component and program identities omit programs/. Consume the full shared fixture and enforce exact bucket, identity, generated-tree, specification-tree, and canonical BUILD membership semantics. Keep the narrow Dune fixture predecessor separate."
+      "branch": "codex/parity-elixir-registry-20261007",
+      "pr_number": 16906,
+      "notes": "Ready-for-review PR #16906 fixes exact bucket/identity and generated-tree behavior against all 29 BUILD records and 25 expected package/program records in the neutral fixture. It follows merged PR #16898. Duplicate identities, canonical BUILD membership, Windows override selection, and native no-follow boundaries remain separately owned."
     },
     {
       "id": "build-tool-elixir-discovery-duplicate-identity-conformance",
@@ -12983,6 +12983,106 @@
       "branch": null,
       "pr_number": null,
       "notes": "Audit includes numeric/date/number-format, lookup, FSRS→Engram→Anki, engineering/financial core and R-vector NA. Split clock/storage host seams; resolve SML02 serial-60 conflict."
+    },
+    {
+      "id": "treap-dt10-neutral-priority-and-lane-conformance",
+      "title": "Freeze deterministic DT10 treap behavior before missing-lane ports",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 collision-checked audit: seven established lanes implement treap, but Go, Elixir, Lua, and Perl are among missing lanes and no exact owner existed. Specify supplied-priority injection, duplicate semantics, rotations, order statistics, and stable vectors without granting host RNG authority; then split lane ports."
+    },
+    {
+      "id": "red-black-tree-dt09-neutral-and-missing-lane-conformance",
+      "title": "Freeze DT09 red-black-tree behavior across missing lanes",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 audit: seven established lanes implement red-black-tree; Go, Elixir, Lua, and Perl are missing, while only Swift had an exact lane owner. Specify insert/delete, duplicate, traversal, rank and invariant vectors before bounded lane children."
+    },
+    {
+      "id": "storage-core-portable-conformance",
+      "title": "Extract a clock-injected portable storage-core contract",
+      "status": "pending",
+      "depends_on": ["bounded-json-rfc8259-portable-core-classification-and-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 audit: Rust-only storage-core has 45 direct dependents and no exact owner. Fixture pure path/token/MIME/metadata, body SHA-256, CAS/create-if-absent, idempotent delete, pagination, leases, and aggregates with injected clock. Reconcile Rust in-memory recursive-list handling and instance-only atomicity; filesystem and SQLite durability remain separate host contracts."
+    },
+    {
+      "id": "xml-parser-xml01-neutral-conformance-and-reference-reconciliation",
+      "title": "Reconcile XML01 parser semantics and bounded neutral fixtures",
+      "status": "pending",
+      "depends_on": ["xml-lexer-f04-language-neutral-conformance-and-target-hook-readiness"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 audit: Rust-only xml-parser has ten direct consumers. Freeze ordered AST, namespace and entity handling, CDATA, comments, processing instructions, malformed QName, and DTD/external rejection. Resolve whitespace after references and add input/node/depth bounds plus XML-char and duplicate expanded-attribute rejection before lane ports."
+    },
+    {
+      "id": "twig-to-semantic-ir-neutral-conformance",
+      "title": "Fixture the portable Twig-to-semantic-IR boundary",
+      "status": "pending",
+      "depends_on": ["compiler-and-ir-rust-singleton-foundation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 Rust-singleton audit found no exact owner for Twig-to-semantic-IR despite seven direct backend consumers. Separate pure lowering and type-declaration behavior from target-specific CIL/JVM/WASM backends, host compilation, and VM IO."
+    },
+    {
+      "id": "sql-optimizer-neutral-conformance",
+      "title": "Fixture the portable SQL optimizer contract",
+      "status": "pending",
+      "depends_on": ["sql-planner-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 audit found the eight-lane SQL optimizer missing in Go, Elixir, Lua, and Perl without an exact owner. Freeze plan rewrites and stable cost/tie behavior independently of storage and host execution."
+    },
+    {
+      "id": "sql-codegen-and-vm-neutral-conformance",
+      "title": "Fixture portable SQL code generation and VM execution",
+      "status": "pending",
+      "depends_on": ["sql-optimizer-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 audit found SQL codegen and VM missing in Go, Elixir, Lua, and Perl without exact owners. Specify deterministic bytecode/trace fixtures and bounded execution, then split codegen and VM lane ports; filesystem and database authority are outside the neutral core."
+    },
+    {
+      "id": "perl-lang81-frontend-portability-classification",
+      "title": "Classify LANG81 Perl lexer and parser portable boundaries",
+      "status": "pending",
+      "depends_on": ["array-runtime-and-language-frontends-neutral-foundation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 four-singleton audit: Rust perl-lexer and perl-parser are new LANG81 bounded source-language pilots with no exact owner. Review deterministic accepted/rejected grammar fixtures and pure frontend portability, separating CLI file and VM effects from any lane-sized port decision."
+    },
+    {
+      "id": "perl-lang81-iir-compiler-portability-classification",
+      "title": "Classify LANG81 Perl direct-IIR lowering boundary",
+      "status": "pending",
+      "depends_on": ["perl-lang81-frontend-portability-classification", "compiler-and-ir-rust-singleton-foundation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 audit: new Rust-only perl-iir-compiler is a bounded deterministic LANG81 lowering pilot. Define neutral lowering and diagnostics fixtures before deciding applicable lanes; keep VM runner, CLI IO, and target authority separate."
+    },
+    {
+      "id": "ruby-lang80-iir-compiler-portability-classification",
+      "title": "Classify LANG80 Ruby direct-IIR lowering boundary",
+      "status": "pending",
+      "depends_on": ["compiler-and-ir-rust-singleton-foundation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 audit: new Rust-only ruby-iir-compiler is a bounded source-language-specific LANG80 direct-IIR pilot. Freeze pure grammar/lowering and diagnostic fixtures before lane decisions; do not infer a blanket 14-lane obligation from the VM/CLI wrapper."
+    },
+    {
+      "id": "build-tool-elixir-discovery-no-follow-boundary-review",
+      "title": "Review Elixir discovery symlink and repository-boundary authority",
+      "status": "pending",
+      "selection_blocked": true,
+      "depends_on": ["build-tool-elixir-discovery-language-registry-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Read-only security review of the registry slice observed pre-existing File.dir?/1 recursion through directory symlinks without canonical-root or visited-inode checks. This is host filesystem authority, not portable language-registry behavior; review an explicit no-follow/boundary policy and applicable native tests separately. Excluded from this portable parity delivery loop pending host-security review."
     }
   ]
 }

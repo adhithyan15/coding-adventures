@@ -6,6 +6,13 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Discovery now checks the complete neutral language-registry fixture: all 29
+  BUILD records yield the 25 expected package and program identities. The
+  walker uses exact boundary buckets, retains `programs/` names, and excludes
+  `.dart_tool`, `dist-newstyle`, specification trees, and other generated
+  components without excluding `_Build` or `_build-example` source paths.
+  Duplicate identities, canonical BUILD membership, and native Windows
+  overrides remain separate follow-up contracts.
 - Discovery now recognizes the emerging OCaml bucket needed to project the
   shared Dune fixture, and its native test checks exact `_build` exclusion
   alongside positive `_Build` and `_build-example` paths. The Go CI selection
