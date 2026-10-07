@@ -11,7 +11,13 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16945,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16945",
+    "branch": "codex/parity-geometry-point2d-existing-20261007",
+    "implementation_revision": "6068376abd695310d81c2b5ab12cb6b1c6c67a31",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
     "observed_at": "2026-10-07T18:06:59Z",
     "pr_number": 16936,
@@ -12031,12 +12037,13 @@
     {
       "id": "geometry-point2d-existing-lane-threshold-reconciliation",
       "title": "Reconcile G2D00 near-zero normalization in Ruby, Perl, Elixir, Lua, and Swift",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"],
       "branch": "codex/parity-geometry-point2d-existing-20261007",
-      "pr_number": null,
+      "pr_number": 16945,
       "notes": "All five lanes used 1e-15 and returned the original near-zero vector. This branch adopts the neutral magnitude <1e-12 return-origin contract, preserves exactly-at-threshold normalization, and adds native boundary tests and README/changelog updates.",
-      "validation_notes": "Native point2d suites pass: Ruby 25 tests/100% line coverage, Perl 34 assertions/97.4% statement coverage, Elixir 26 tests/100% cover, Lua Busted 22 tests/100% LuaCov source lines, Swift 22 tests/100% source lines. Downstream affine2d/bezier2d/arc2d tests pass in all five lanes (Ruby 17/13/9; Perl 29/45/16; Elixir 16/13/9; Lua 15/13/9; Swift 21/16/13). Neutral G2D fixture 8 cases and 7 validator tests, lessons validator 871 shards, and diff check pass. Ruby Standard passes except Layout/EndOfLine: the checked-in LF files trigger its host-default CRLF rule on Windows; no line-ending rewrite was made."
+      "validation_notes": "Native point2d suites pass: Ruby 25 tests/100% line coverage, Perl 34 assertions/97.4% statement coverage, Elixir 26 tests/100% cover, Lua Busted 22 tests/100% LuaCov source lines, Swift 22 tests/100% source lines. Downstream affine2d/bezier2d/arc2d tests pass in all five lanes (Ruby 17/13/9; Perl 29/45/16; Elixir 16/13/9; Lua 15/13/9; Swift 21/16/13). Neutral G2D fixture 8 cases and 7 validator tests, lessons validator 871 shards, build-tool Starlark/orphan/language detection gate, and diff check pass. Ruby Standard passes except Layout/EndOfLine: the checked-in LF files trigger its host-default CRLF rule on Windows; no line-ending rewrite was made.",
+      "review_notes": "Independent exact-head security and correctness review at 6068376abd passed: 22 intended files, no unrelated reversions, no new security-sensitive surface, and clean diff. PR #16945 opened ready for review; first live checks are queued or in progress."
     },
     {
       "id": "geometry-arc2d-existing-api-degenerate-reconciliation",
