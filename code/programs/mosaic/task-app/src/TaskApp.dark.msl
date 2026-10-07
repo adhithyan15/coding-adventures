@@ -1127,12 +1127,19 @@ style TaskApp {
   }
   // ── legend ──────────────────────────────────────────────────────────────
   part tl-legend {
-    gap : 18 ;
-    align : center-vertical ;
+    gap : 6 ;
     padding-top : 4 ;
     border-top-width : 1 ;
     border-top-color : "#352e25" ;
     border-top-style : "solid" ;
+  }
+  part tl-legend-line {
+    gap : 18 ;
+    align : center-vertical ;
+  }
+  part tl-legend-line2 {
+    gap : 18 ;
+    align : center-vertical ;
   }
   part tl-legend-item {
     gap : 6 ;
