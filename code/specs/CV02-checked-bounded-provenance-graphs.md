@@ -319,6 +319,77 @@ transaction commits; the library itself does not publish files. A zero output
 cap rejects materialized snapshots and summaries, while NONE without summary
 only validates graph evidence.
 
+## Compiler filesystem publication transaction
+
+The compiler prepares all requested bodies and validates/encodes provenance
+before entering its private `publication` module. A transaction publishes JS,
+source-map and manifest outputs first and its sidecar last. It provides complete
+per-file installation and rollback on reported pre-commit failures; it does not
+claim instantaneous multi-file visibility or crash/power-loss recovery.
+
+Preflight every destination before changing existing outputs. Resolve existing
+parent components through filesystem canonicalization and append only ordinary
+missing components. Reject ambiguous missing-parent `..`, identical normalized
+paths, Windows case aliases, existing-file identity aliases, and any destination
+which is another destination's parent. Reject final symlinks, nonregular files
+and read-only outputs. Parent symlinks may resolve to existing directories and
+must participate in alias detection. Use filesystem object identity, not size,
+timestamps or content equality: Unix device/inode; Windows volume plus full
+128-bit FileIdInfo obtained from a live handle. Unsupported identity queries
+fail closed. Retain handles during the transaction to prevent reuse of old IDs.
+Use primitive FFI arguments and documented `repr(C)` buffers for Windows;
+unsupported platforms fail explicitly rather than guessing identities.
+
+Stage files in exclusively created sibling directories with fixed short names
+`new`/`old`, a checked process-local sequence and bounded collision retries.
+Unix private staging directories have mode 0700. Create stage files exclusively,
+write complete bytes, sync, and preserve existing file permissions. Track each
+owned path immediately; parent creation records only directories this operation
+actually created. All staging completes before replacing any destination.
+
+Move the existing regular file to its private backup only after rechecking its
+identity and observed metadata. Install the complete stage using a no-clobber
+hard link: a newly appeared destination cannot be overwritten. Keep a private
+stage link for ownership checks. Filesystems unable to provide the required
+identity/hard-link semantics reject before claiming success. On a reported
+pre-commit error, roll back in reverse order: remove only a destination whose
+identity matches the held staged file, restore the original with a no-clobber
+link and retain recovery copies when restoration is obstructed. Include the
+original failure and every rollback/cleanup failure with exact recovery paths.
+Never recursively delete a user directory or overwrite an unknown replacement.
+Concurrency checks detect replacements at operation boundaries; this transaction
+does not claim to serialize arbitrary outside modifications between syscalls.
+
+The commit point is successful installation and identity/length verification of
+all requested files. After that point, cleanup failures are reported as stderr
+warnings naming retained owned paths, while the command remains successful:
+the complete output set has already committed and deleting some backups cannot
+be reversed. Before commit, cleanup errors accompany the failed command.
+Ordinary success and rollback leave no owned temporary files. Empty created
+parent directories are removed only on rollback and only if still owned.
+
+`write_output_file` retains its standalone API; compiler artifact-set publication
+uses the transaction. Existing output-I/O exit status is preserved. No successful
+stdout or prepared summary is returned until publication commits. Candidate
+`wrote` events become visible only with a committed sidecar and correspond to
+complete content. Add `content_sha256` (lowercase 64 hex digits) alongside
+`byte_len` to JS/map/manifest publication records, computed from the exact final
+encoded bytes using the existing local SHA-256 package (promote its current
+compiler dev-dependency; add no crates.io dependency). Source-root origins also
+retain a digest of consumed UTF-8 bytes. Snapshot identity is not a self-hash;
+do not create a circular sidecar digest. Hashing cost is proportional to source
+and output bytes, independent of the structural graph-operation work allowance.
+
+Process tests must first reproduce existing overwrite/collision defects, then
+verify collisions including normalized/ancestor/hard-link/case aliases, failed
+later staging with the full existing output set, exact published digests and
+tracing-neutral bytes. Private unit hooks deterministically fail later installs,
+rollback and post-commit cleanup, proving restoration, preserved unknown files,
+retained recovery copies and truthful commit-versus-cleanup status. No production
+failure-injection environment variable or CLI option is introduced. Independently
+review the exact final code and execute required native-platform CI before
+acceptance.
+
 ## Required verification
 
 Commit specification refinements before implementation, then demonstrate the
