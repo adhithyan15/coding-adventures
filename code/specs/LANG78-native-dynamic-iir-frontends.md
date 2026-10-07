@@ -48,7 +48,11 @@ parentheses, unary minus, and binary `+`, `-`, `*`, `/`, plus
 `console.log(<accepted expression>)`. Preserve evaluation order. Compile to
 an `IIRModule` with a `main` function. `console.log` uses a narrowly named
 VM builtin registered by the JavaScript runner; its output matches JavaScript
-number formatting for the accepted values. Reject all other syntax.
+number formatting for the accepted values. The pilot accepts ordinary finite
+display values with magnitude from `1e-6` (inclusive) to `1e21` (exclusive),
+plus zero, NaN, and infinities. It rejects other display magnitudes until the
+full ECMAScript number-to-string algorithm is available. Reject all other
+syntax.
 
 Acceptance requires actual source → parser → IIR → `VMCore` tests for
 `console.log(1 + 2)` and `console.log(1 / 2)`, plus a negative test for an

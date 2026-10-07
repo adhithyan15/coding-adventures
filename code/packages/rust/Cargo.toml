@@ -29,6 +29,7 @@ members = [
     "twig-aot",
     "lang-aot",
     "nib-iir-compiler",
+    "javascript-iir-compiler",
     "jit-loader-macos",
     "activation-functions",
     "audio-device-coreaudio",
