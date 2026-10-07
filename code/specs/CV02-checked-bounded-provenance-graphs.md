@@ -275,6 +275,50 @@ claim a successfully written event for a failed publication. Artifact linking
 must identify the published content, not merely a pathname that can hold stale
 bytes. Keep tracing-neutral output assertions when all operations succeed.
 
+## Borrowed checked export API
+
+The library exposes `SourceFilter<'a> { sources: &'a [String], include_origin:
+bool, invert: bool }` with an empty default, `SnapshotFormat::{CompactJson,
+PrettyJson, Ndjson}` and `SummaryFormat::{Text, Json, Kv}`. The enums are ordinary
+copyable selections; compact JSON/text are their defaults.
+`CVLog::export_snapshot(&self, format: SnapshotFormat, filter: SourceFilter<'_>)
+-> Result<String, String>` and `CVLog::export_summary(&self, format:
+SummaryFormat, filter: SourceFilter<'_>, wrote_path: Option<&str>) ->
+Result<String, String>` always validate complete graph evidence, including
+ordinary controlled-constructor logs. Disabled, gapped or allocator-only imported
+logs cannot enter these checked APIs. Preserve generic `to_json_string`
+compatibility semantics separately.
+
+Export validates the entire graph before applying a filter. An empty source list
+selects everything, regardless of inversion/origin switches. Nonempty lists use
+exact contribution-source membership, plus exact origin-source membership when
+requested; inversion flips that decision. Every nonempty filter declares
+`view:{complete:false,filtered:true}`, including filters which happen to select
+all entries. Parents and all root allocator/stage metadata remain unchanged.
+Projections are presentation views and cannot be reimported as complete graphs.
+
+Validation, filtering, reference collection, sorting, counting and encoding share
+one structural work allowance for each export. Charge before growing buffers,
+copying references or sorting; source comparisons and examined contributions
+also consume work. Borrow entries/metadata and allocate only charged reference
+indexes, never a cloned graph or an intermediate JSON Value tree. Canonical
+JSON sorts root, entry, record and nested metadata keys and preserves numbers
+and arrays. NDJSON emits canonical entry records in identity order and one
+canonical `_meta` footer containing every non-entry root field. Its newline
+bytes count toward the same bounded sink. Pretty output includes indentation
+bytes in that sink and never substitutes compact output on failure.
+
+Summary exports count selected entries, contributions and tombstones but retain
+the full graph's first-observed `pass_order`. Preserve the existing CLI text,
+`{cv_sidecar:{...}}` JSON and `cv_sidecar.key=value` shapes, including path/skipped
+semantics and trailing newline. Stream path quoting and comma-separated stages
+through the bounded sink rather than materializing unbounded joined strings.
+Count overflow and serialization/work/output caps are errors. The path describes
+a successfully published sidecar only when the surrounding compiler publication
+transaction commits; the library itself does not publish files. A zero output
+cap rejects materialized snapshots and summaries, while NONE without summary
+only validates graph evidence.
+
 ## Required verification
 
 Commit specification refinements before implementation, then demonstrate the
