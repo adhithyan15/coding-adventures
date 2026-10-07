@@ -137,14 +137,23 @@ pub fn layout_cynefin(diagram: &CynefinDiagram) -> LayoutedCynefinDiagram {
     let mut domains: Vec<_> = specs.into_iter().map(|(name, x, y)| LayoutedCynefinDomain { name: name.into(),
         items: diagram.domains.iter().find(|domain| domain.name == name).map_or_else(Vec::new, |domain| domain.items.clone()),
         item_badges: Vec::new(), overflow_count: 0, x, y, width: domain_width, height: domain_height,
-        center: Point { x: x + domain_width / 2.0, y: y + domain_height / 2.0 }, confusion: false }).collect();
+        center: Point { x: x + domain_width / 2.0, y: y + domain_height / 2.0 },
+        label_position: Point { x: x + domain_width / 2.0, y: y + domain_height / 2.0 - if diagram.config.show_domain_descriptions { 30.0 } else { 0.0 } },
+        model_position: diagram.config.show_domain_descriptions.then(|| Point { x: x + domain_width / 2.0, y: y + domain_height / 2.0 - 10.0 }),
+        practice_position: diagram.config.show_domain_descriptions.then(|| Point { x: x + domain_width / 2.0, y: y + domain_height / 2.0 + 5.0 }),
+        confusion: false }).collect();
     let confusion_items = diagram.domains.iter().find(|domain| domain.name == "confusion").map_or_else(Vec::new, |domain| domain.items.clone());
     let confusion_overflow = confusion_items.len().saturating_sub(3);
     domains.push(LayoutedCynefinDomain { name: "confusion".into(),
         items: confusion_items.into_iter().take(3).collect(), item_badges: Vec::new(), overflow_count: confusion_overflow,
         x: left + diagram.config.width * 0.35, y: top + diagram.config.height * 0.35,
         width: diagram.config.width * 0.3, height: diagram.config.height * 0.3,
-        center: Point { x: left + diagram.config.width / 2.0, y: top + diagram.config.height / 2.0 }, confusion: true });
+        center: Point { x: left + diagram.config.width / 2.0, y: top + diagram.config.height / 2.0 },
+        label_position: Point { x: left + diagram.config.width / 2.0, y: top + diagram.config.height / 2.0
+            - if diagram.config.show_domain_descriptions { 10.0 } else { 0.0 } },
+        model_position: None,
+        practice_position: diagram.config.show_domain_descriptions.then(|| Point { x: left + diagram.config.width / 2.0,
+            y: top + diagram.config.height / 2.0 + 8.0 }), confusion: true });
     for domain in &mut domains { domain.item_badges = cynefin_item_badges(domain, diagram.config.show_domain_descriptions); }
     let domain_by_name: HashMap<_, _> = domains.iter().map(|domain| (domain.name.as_str(), domain)).collect();
     let transitions = diagram.transitions.iter().filter_map(|transition| {
@@ -160,7 +169,9 @@ pub fn layout_cynefin(diagram: &CynefinDiagram) -> LayoutedCynefinDiagram {
     }).collect();
     let boundaries = cynefin_boundaries(&diagram.config, left, top);
     let cliff = cynefin_cliff(&diagram.config, left, top);
-    LayoutedCynefinDiagram { width, height, title: diagram.title.clone(), accessibility_title: diagram.accessibility_title.clone(),
+    LayoutedCynefinDiagram { width, height, title: diagram.title.clone(),
+        title_position: Point { x: left + diagram.config.width / 2.0, y: top / 2.0 },
+        accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
         show_domain_descriptions: diagram.config.show_domain_descriptions, style: diagram.config.style.clone(),
         domains, boundaries, cliff, transitions }
@@ -426,6 +437,10 @@ mod tests {
         assert!(layout.domains.iter().find(|domain| domain.name == "confusion").unwrap().confusion);
         assert_eq!(layout.domains.iter().find(|domain| domain.name == "confusion").unwrap().overflow_count, 2);
         assert_eq!(layout.domains.iter().find(|domain| domain.name == "confusion").unwrap().item_badges.len(), 4);
+        assert_eq!(complex.label_position, complex.center);
+        assert_eq!(complex.model_position, None);
+        assert_eq!(complex.practice_position, None);
+        assert_eq!(layout.title_position, Point { x: 344.0, y: 12.0 });
         assert_eq!((layout.width, layout.height), (688.0, 468.0));
         assert!(!layout.show_domain_descriptions);
         assert_eq!(layout.boundaries.len(), 2);
@@ -436,6 +451,23 @@ mod tests {
         assert_eq!(layout.transitions[0].from, complex.center);
         assert_eq!(layout.transitions[0].to, clear.center);
         assert_ne!(layout.transitions[0].control, Point { x: 344.0, y: 234.0 });
+    }
+
+    #[test]
+    fn cynefin_layout_matches_upstream_description_text_anchors() {
+        let layout = layout_cynefin(&CynefinDiagram { title: Some("Framework".into()), accessibility_title: None,
+            accessibility_description: None, config: diagram_ir::CynefinConfig { width: 800.0, height: 600.0,
+                padding: 40.0, show_domain_descriptions: true, boundary_amplitude: 8.0, seed: 0,
+                style: diagram_ir::CynefinStyle::default() }, domains: vec![], transitions: vec![] });
+        let complex = layout.domains.iter().find(|domain| domain.name == "complex").unwrap();
+        let confusion = layout.domains.iter().find(|domain| domain.name == "confusion").unwrap();
+        assert_eq!(layout.title_position, Point { x: 440.0, y: 20.0 });
+        assert_eq!(complex.label_position, Point { x: 240.0, y: 160.0 });
+        assert_eq!(complex.model_position, Some(Point { x: 240.0, y: 180.0 }));
+        assert_eq!(complex.practice_position, Some(Point { x: 240.0, y: 195.0 }));
+        assert_eq!(confusion.label_position, Point { x: 440.0, y: 330.0 });
+        assert_eq!(confusion.model_position, None);
+        assert_eq!(confusion.practice_position, Some(Point { x: 440.0, y: 348.0 }));
     }
 
     #[test]
