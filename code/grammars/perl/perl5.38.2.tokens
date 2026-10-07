@@ -4,9 +4,10 @@
 # Evidence: https://github.com/Perl/perl5/tree/v5.38.2
 # The bounded subset is also exercised against Perl 5.38.2 by LANG81.
 
-INT       = /[0-9]+/
+INT       = /0|[1-9][0-9]*/
 NAME      = /[a-zA-Z_][a-zA-Z0-9_]*/
 PLUS      = "+"
+DECREMENT = "--"
 MINUS     = "-"
 STAR      = "*"
 LPAREN    = "("

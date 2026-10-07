@@ -96,31 +96,44 @@ mod tests {
                     .is_err(),
                 "{release}: malformed print accepted"
             );
-            if token_grammar
+            let has_decrement = token_grammar
                 .definitions
                 .iter()
-                .any(|definition| definition.name == "DECREMENT")
-            {
-                let adjacent = GrammarLexer::new("print(1--2);", &token_grammar)
-                    .tokenize()
-                    .unwrap();
-                assert!(
-                    GrammarParser::new(adjacent, parser_grammar.clone())
-                        .with_max_depth(MAX_RULE_DEPTH)
-                        .parse()
-                        .is_err(),
-                    "{release}: decrement parsed as two minus operators"
-                );
-                let spaced = GrammarLexer::new("print(1- -2);", &token_grammar)
-                    .tokenize()
-                    .unwrap();
-                assert!(
-                    GrammarParser::new(spaced, parser_grammar.clone())
-                        .with_max_depth(MAX_RULE_DEPTH)
-                        .parse()
-                        .is_ok(),
-                    "{release}: spaced minus operators should parse"
-                );
+                .any(|definition| definition.name == "DECREMENT");
+            assert!(has_decrement, "{release}: missing decrement token");
+            let adjacent = GrammarLexer::new("print(1--2);", &token_grammar)
+                .tokenize()
+                .unwrap();
+            assert!(
+                GrammarParser::new(adjacent, parser_grammar.clone())
+                    .with_max_depth(MAX_RULE_DEPTH)
+                    .parse()
+                    .is_err(),
+                "{release}: decrement parsed as two minus operators"
+            );
+            let spaced = GrammarLexer::new("print(1- -2);", &token_grammar)
+                .tokenize()
+                .unwrap();
+            assert!(
+                GrammarParser::new(spaced, parser_grammar.clone())
+                    .with_max_depth(MAX_RULE_DEPTH)
+                    .parse()
+                    .is_ok(),
+                "{release}: spaced minus operators should parse"
+            );
+            if matches!(*release, "5.38.2" | "5.44.0" | "5.45.3") {
+                for source in ["print(08);", "print(09);", "print(012);"] {
+                    let tokens = GrammarLexer::new(source, &token_grammar)
+                        .tokenize()
+                        .unwrap();
+                    assert!(
+                        GrammarParser::new(tokens, parser_grammar.clone())
+                            .with_max_depth(MAX_RULE_DEPTH)
+                            .parse()
+                            .is_err(),
+                        "{release}: leading-zero literal accepted: {source}"
+                    );
+                }
             }
             checked += 1;
         }
