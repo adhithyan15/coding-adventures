@@ -727,9 +727,6 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         path.base.metadata = Some(HashMap::from([("treeView.nodeId".into(), connector.node_id.clone())]));
         instructions.push(PaintInstruction::Path(path));
     }
-    if let Some(title) = &diagram.title {
-        text_children.push(text_node(title, 10.0, 5.0, diagram.width - 20.0, 30.0, options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
-    }
     for node in &diagram.nodes {
         if node.class_selector.as_deref().is_some_and(|classes|
             classes.split_whitespace().any(|class| class == "highlight")) {
@@ -784,6 +781,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         shaper: options.shaper, metrics: options.metrics, resolver: options.resolver });
     instructions.extend(text_scene.instructions);
     let mut metadata = HashMap::new();
+    if let Some(title) = &diagram.title { metadata.insert("treeView.title".into(), title.clone()); }
     if let Some(title) = &diagram.accessibility_title { metadata.insert("accessibility.title".into(), title.clone()); }
     if let Some(description) = &diagram.accessibility_description { metadata.insert("accessibility.description".into(), description.clone()); }
     metadata.insert("treeView.config.rowIndent".into(), diagram.config.row_indent.to_string());
