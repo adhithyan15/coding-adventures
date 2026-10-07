@@ -1931,6 +1931,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("-1"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — sqrt preserves an abs-normalized bounded sign result before
+    // entier and real widening.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(abs(sign(pick())))); output(result) end",
+        expect: Expect::Stdout("1"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — unary plus is an identity and may preserve runtime-real
     // formatter provenance through assignment and output.
     Prog {
@@ -13012,6 +13021,31 @@ fn algol_nested_entier_sign_widening_runs_on_every_available_standard_backend() 
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but nested-entier-sign widening did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_sqrt_entier_sign_widening_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("result := entier(sqrt(abs(sign(pick())))); output(result)")
+        })
+        .expect("the ALGOL sqrt-entier-sign widening program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but sqrt-entier-sign widening did not complete"
             );
             continue;
         };

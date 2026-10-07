@@ -1329,6 +1329,9 @@ backend immediately) come before the enabler-dependent items.
   conservative.
   Additional built-in `entier` calls may wrap that already integral bounded
   result; an unrestricted runtime `entier` operand remains conservative.
+  Built-in `sqrt` may also map an `abs`-normalized bounded result to exact `0`
+  or `1` before `entier`; an unnormalized or unrestricted operand remains
+  conservative.
   Provenance-backed local and other real-name branches remain conservative
   across selector calls. Unary plus
   and unary minus preserve the same runtime-real proof. Additive composition,
