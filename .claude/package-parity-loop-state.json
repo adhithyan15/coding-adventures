@@ -737,10 +737,13 @@
     {
       "id": "build-tool-shared-discovery-fixture-native-ci-selection",
       "title": "Select every native discovery fixture consumer in CI when the shared case changes",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
-      "branch": null,
+      "branch": "codex/parity-discovery-fixture-native-ci-selection-20261007",
       "pr_number": null,
+      "selected_at": "2026-10-07T09:18:48Z",
+      "selection_revision": "2cd82bda78887a0bbf926b9897eff80ce090c0b9",
+      "selection_notes": "Selected after #16872 auto-merged, fresh 15-lane collision inventory, and registration of the newly discovered gap. Both prerequisites are merged and no parity PR remains open. The exact shared fixture is consumed by ten native tests, but #16872 CI selected only Python/Perl; closing this detector blind spot has broader immediate leverage than the single-engine Haskell Dune fix. Keep the Go selection rule exact-path and bounded to known native consumers, then extend its map as future lanes adopt the case.",
       "notes": "Read-only #16872 detect audit showed a fixture-only discovery/language-registry change selects Python and Perl but not the other eight direct native consumers: C#, F#, Go, Lua, Ruby, Rust, Swift, and TypeScript. Lua's shared-case test was unavailable locally and was not selected by PR CI. Add a fixture-specific Go detector rule that seeds all ten exact existing build-tool roots before ordinary graph closure, including both .NET fronts, without broad code/specs fanout or a second CI job. Test fixture-only selection, union with ordinary package changes, deletion/rename, per-platform toolchain flags, missing-root fail-closed behavior, and direct-consumer mapping drift; prove the Ubuntu PR build actually executes all ten BUILD fronts, especially Lua. This is CI selection, not a second discovery engine implementation."
     },
     {

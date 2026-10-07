@@ -90,6 +90,28 @@ A package-only gate would skip the D18F job on a PR that changed only the D18F
 manifest — precisely the drift that job exists to catch. The `paths` clause is
 load-bearing, not decoration.
 
+### Native consumers of a shared build-tool fixture
+
+Scheduling the `contracts-build-tool-conformance` job for a shared fixture
+change validates the neutral corpus but does not execute every native build-tool
+consumer. For the exact path
+`code/specs/fixtures/build-tool-v1/cases/discovery-language-registry.json`, the
+build planner MUST seed all direct native consumers as changed package roots
+before affected/prerequisite closure, both on its detect platform and in every
+platform-specific build-plan override. The current direct consumers are
+`dotnet/programs/build-tool-csharp`, `dotnet/programs/build-tool-fsharp`, and
+`<language>/programs/build-tool` for `go`, `lua`, `perl`, `python`, `ruby`,
+`rust`, `swift`, and `typescript`.
+
+This is an exact fixture-to-consumer relation, not a general `code/specs/`
+shared prefix or a forced full build. It applies to additions, modifications,
+deletions, and renames of that path; ordinary changed package roots are united
+with the fixture consumers. If a registered consumer is missing from the
+discovered package set, planning MUST fail rather than silently omit its native
+test. A new direct consumer of this fixture MUST extend the relation and its
+drift test in the same change. The resulting affected plan and toolchain flags,
+not merely the gate verdict, are the evidence that native tests can run.
+
 ## Evaluation
 
 A gate is **required** when ANY of the following holds:

@@ -16114,7 +16114,8 @@ specification file.
 The Haskell Dune discovery owner can consume the four OCaml fixture BUILD
 records, prove only the three positive identities, and add exact `_build` to
 its discovery skip list; its full language-registry successor stays separate.
-The quick dependency/leverage pass selects the CI detector repair first:
+The quick dependency/leverage pass selects the CI detector repair as the one
+in-progress tranche:
 it closes a demonstrated ten-consumer contract blind spot before Haskell and
 Elixir become new fixture consumers. Their adoption owners now depend on that
 repair and must extend the exact consumer map when they add native tests. No
