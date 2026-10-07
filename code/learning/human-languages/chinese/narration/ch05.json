@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Yes, No, and a Tone That Moves",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:708538f4098aa533",
+  "sourceHash": "fnv1a64:9e656cd64e79fece",
   "lessons": [
     {
       "id": "ZH-W05-shi",
@@ -182,7 +182,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df836738edd547ca",
+      "sourceHash": "fnv1a64:cf5155780f45c34e",
       "notice": null,
       "blocks": [
         {
@@ -197,8 +197,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Write 是 (shì). Sun first, then the body."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "是 (shì) — sun first, then the body",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 是 — sun first, then the body]"
             }
           ]
         },
@@ -484,7 +489,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00c0944790750cb0",
+      "sourceHash": "fnv1a64:c9387f4de7bf7b78",
       "notice": null,
       "blocks": [
         {
@@ -499,8 +504,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Write 是 (shì). Sun first, then the body underneath."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "是 (shì) — sun first, then the body underneath",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 是 — sun first, then the body underneath]"
             }
           ]
         },
@@ -527,7 +537,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say the last line twice and listen to the first syllable. It rises. Write it and it falls. That gap between the page and the mouth is the whole lesson."
+              "text": "Say the last line twice and listen to the first syllable. It rises. Written down, it falls. That gap between the page and the mouth is the whole lesson."
             }
           ]
         },

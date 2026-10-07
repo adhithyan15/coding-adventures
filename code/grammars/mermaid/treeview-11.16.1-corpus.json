@@ -62,6 +62,10 @@
     {
       "name": "aligned-description-rows",
       "source": "treeView-beta\nproject/\n    a.rs ## short label\n    much-longer-name.rs ## long label"
+    },
+    {
+      "name": "intrinsic-description-width",
+      "source": "treeView-beta\nproject/ :::highlight\n    main.rs ## a description that expands the intrinsic viewBox"
     }
   ]
 }

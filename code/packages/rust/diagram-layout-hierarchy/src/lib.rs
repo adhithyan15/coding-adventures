@@ -315,10 +315,9 @@ pub fn layout_treemap(diagram: &TreemapDiagram, _canvas_width: f64) -> LayoutedT
 }
 
 /// Lay out a TreeView as deterministic indented rows.
-pub fn layout_treeview(diagram: &TreeViewDiagram, canvas_width: f64) -> LayoutedTreeViewDiagram {
+pub fn layout_treeview(diagram: &TreeViewDiagram, _canvas_width: f64) -> LayoutedTreeViewDiagram {
     let title_height = if diagram.title.is_some() { 42.0 } else { 12.0 };
     let row_height = diagram.config.theme.label_font_size * 1.2 + diagram.config.padding_y * 2.0;
-    let width = canvas_width.max(360.0);
     let mut nodes = diagram.nodes.iter().enumerate().map(|(index, node)| {
         let x = 26.0 + node.depth as f64 * (diagram.config.row_indent + diagram.config.padding_x);
         let show_icon = match node.icon.as_deref() { Some("none") => false, Some(_) => true, None => diagram.config.show_icons };
@@ -335,16 +334,32 @@ pub fn layout_treeview(diagram: &TreeViewDiagram, canvas_width: f64) -> Layouted
             description: node.description.clone(),
             x,
             y: title_height + index as f64 * row_height,
-            width: (width - x - 18.0).max(80.0),
+            width: 0.0,
             height: row_height,
             label_x,
             label_width,
             description_x: None,
+            description_width: node.description.as_ref().map(|description|
+                description.chars().count() as f64 * diagram.config.theme.label_font_size * 0.58 + 8.0),
         }
     }).collect::<Vec<_>>();
-    let description_x = nodes.iter().map(|node| node.label_x + node.label_width).fold(0.0, f64::max) + 16.0;
+    if nodes.iter().any(|node| node.description.is_some()) {
+        let description_x = nodes.iter().map(|node| node.label_x + node.label_width).fold(0.0, f64::max) + 16.0;
+        for node in &mut nodes {
+            if node.description.is_some() { node.description_x = Some(description_x); }
+        }
+    }
+    let title_width = diagram.title.as_ref()
+        .map(|title| title.chars().count() as f64 * 18.0 * 0.62 + 20.0).unwrap_or(0.0);
+    let content_width = nodes.iter().map(|node| match (node.description_x, node.description_width) {
+        (Some(x), Some(width)) => x + width + diagram.config.padding_x,
+        _ => node.label_x + node.label_width + diagram.config.padding_x,
+    }).fold(diagram.config.line_thickness.max(1.0).max(title_width), f64::max);
+    let has_highlight = nodes.iter().any(|node| node.class_selector.as_deref()
+        .is_some_and(|classes| classes.split_whitespace().any(|class| class == "highlight")));
+    let width = content_width + if has_highlight { 10.0 } else { 0.0 };
     for node in &mut nodes {
-        if node.description.is_some() { node.description_x = Some(description_x); }
+        node.width = (width - node.x - 2.0).max(0.0);
     }
     let mut connectors = Vec::new();
     for node in &nodes {
@@ -518,7 +533,7 @@ mod tests {
             title: None, accessibility_title: None, accessibility_description: None,
             config: diagram_ir::TreeViewConfig::default(),
             nodes: vec![
-                TreeViewNode { id: "root".into(), parent_id: None, depth: 0, label: "src".into(), kind: TreeViewNodeKind::Directory, class_selector: None, icon: None, description: None },
+                TreeViewNode { id: "root".into(), parent_id: None, depth: 0, label: "src".into(), kind: TreeViewNodeKind::Directory, class_selector: Some("selected highlight".into()), icon: None, description: None },
                 TreeViewNode { id: "child".into(), parent_id: Some("root".into()), depth: 1, label: "a.rs".into(), kind: TreeViewNodeKind::File, class_selector: None, icon: None, description: Some("short".into()) },
                 TreeViewNode { id: "sibling".into(), parent_id: Some("root".into()), depth: 1, label: "longer-name.rs".into(), kind: TreeViewNodeKind::File, class_selector: None, icon: None, description: Some("long".into()) },
             ],
@@ -534,6 +549,10 @@ mod tests {
         assert_eq!(layout.connectors[1].points[0].x, 31.0);
         assert_eq!(layout.nodes[1].description_x, layout.nodes[2].description_x);
         assert!(layout.nodes[1].description_x.unwrap() > layout.nodes[2].label_x + layout.nodes[2].label_width);
+        assert_eq!(layout.nodes[1].description_width, Some(54.4));
+        assert_eq!(layout.width, layout_treeview(&diagram, 900.0).width);
+        assert!(layout.width > layout.nodes[2].description_x.unwrap() + layout.nodes[2].description_width.unwrap());
+        assert_eq!(layout.nodes[0].x + layout.nodes[0].width + 2.0, layout.width);
     }
 
     #[test]

@@ -731,7 +731,8 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         text_children.push(text_node(title, 10.0, 5.0, diagram.width - 20.0, 30.0, options.title_font.clone(), Color { r: 15, g: 23, b: 42, a: 255 }));
     }
     for node in &diagram.nodes {
-        if node.class_selector.as_deref() == Some("highlight") {
+        if node.class_selector.as_deref().is_some_and(|classes|
+            classes.split_whitespace().any(|class| class == "highlight")) {
             instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: node.x, y: node.y + 1.0,
                 width: node.width, height: (node.height - 2.0).max(0.0),
                 fill: Some(normalize_css_paint(diagram.config.theme.highlight_background.clone())),
@@ -766,7 +767,8 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         if let Some(description) = &node.description {
             let mut description_font = font_with_size(&options.label_font, Some(diagram.config.theme.label_font_size));
             description_font.italic = true;
-            let description_width = (description.chars().count() as f64 * description_font.size * 0.58 + 8.0).min(node.width * 0.4);
+            let description_width = node.description_width.unwrap_or_else(||
+                description.chars().count() as f64 * description_font.size * 0.58 + 8.0);
             text_children.push(text_node_no_wrap(description, node.description_x.unwrap_or(node.label_x + node.label_width + 16.0),
                 text_y, description_width, text_height, description_font, css_to_color(&diagram.config.theme.description_color)));
         }
@@ -9345,11 +9347,11 @@ mod tests {
                 diagram_ir::LayoutedTreeViewNode { id: "root".into(), parent_id: None, depth: 0, label: "src".into(),
                     kind: TreeViewNodeKind::Directory, class_selector: Some("highlight".into()), icon: Some("folder".into()),
                     description: None, x: 26.0, y: 12.0, width: 376.0, height: 28.0,
-                    label_x: 49.0, label_width: 45.0, description_x: None },
+                    label_x: 49.0, label_width: 45.0, description_x: None, description_width: None },
                 diagram_ir::LayoutedTreeViewNode { id: "child".into(), parent_id: Some("root".into()), depth: 1, label: "main.rs".into(),
                     kind: TreeViewNodeKind::File, class_selector: None, icon: None, description: Some("entry".into()),
                     x: 68.0, y: 46.0, width: 334.0, height: 28.0,
-                    label_x: 73.0, label_width: 95.0, description_x: Some(184.0) },
+                    label_x: 73.0, label_width: 95.0, description_x: Some(184.0), description_width: Some(54.4) },
             ],
             connectors: vec![
                 diagram_ir::LayoutedTreeViewConnector { node_id: "root".into(), points: vec![Point { x: 16.0, y: 26.0 }, Point { x: 26.0, y: 26.0 }] },

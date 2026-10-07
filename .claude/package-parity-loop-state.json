@@ -12,34 +12,34 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16891,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16891",
-    "branch": "codex/parity-haskell-dune-discovery-20261007",
-    "implementation_revision": "950a1bbe70eb63dd0820261812b5e247fd9c1c82",
+    "number": 16898,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16898",
+    "branch": "codex/parity-elixir-dune-discovery-20261007",
+    "implementation_revision": "cc4016047bc9873d03008054c52e745f632f0307",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-07T11:19:35Z",
-    "pr_number": 16891,
+    "observed_at": "2026-10-07T13:37:38Z",
+    "pr_number": 16898,
     "status": "checks-pending",
-    "notes": "Ready-for-review Haskell Dune discovery PR #16891 opened from tested implementation 950a1bbe70eb63dd0820261812b5e247fd9c1c82. Local Haskell O2 package/dependency suites, executable build with short Windows builddir, Haskell coverage, Go package tests/vet/build/coverage, neutral corpus, build-file validation, collision inventory, diff, and read-only security review passed. GitHub reports MERGEABLE with detect and companion checks still queued or in progress. Do not enable auto-merge while checks remain pending."
+    "notes": "Ready-for-review Elixir Dune fixture adoption PR #16898 opened from tested implementation cc4016047bc9873d03008054c52e745f632f0307. Full Elixir suite, focused/full Go suite, vet, build, neutral corpus, parity reporter tests, lessons, format, diff and read-only security review passed; coverage is 87.76% for changed Discovery but aggregate Elixir remains below the pre-existing 90% gate. GitHub checks are queued. Do not enable auto-merge while pending."
   },
   "last_inventory": {
-    "revision": "1561f63f918ddab136936d72a6c9f0867bd9feaf",
+    "revision": "c6c014e91fbd01ba71b8722e77f1dca823a45446",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1490,
-    "implementation_package_slots": 4760,
-    "all_reported_identities": 1532,
+    "implementation_identities": 1491,
+    "implementation_package_slots": 4761,
+    "all_reported_identities": 1533,
     "high_consensus_packages": 178,
     "high_consensus_missing_slots": 262,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 181,
     "two_to_four_missing_slots": 2282,
-    "singleton_packages": 1008,
-    "singleton_missing_slots": 14112,
-    "rust_singletons": 809,
+    "singleton_packages": 1009,
+    "singleton_missing_slots": 14126,
+    "rust_singletons": 810,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -758,10 +758,13 @@
     {
       "id": "build-tool-haskell-dune-build-discovery-conformance",
       "title": "Prove Dune _build discovery exclusion in the Haskell build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-shared-discovery-fixture-native-ci-selection"],
       "branch": "codex/parity-haskell-dune-discovery-20261007",
       "pr_number": 16891,
+      "merge_revision": "c6c014e91fbd01ba71b8722e77f1dca823a45446",
+      "merged_at": "2026-10-07T13:13:19Z",
+      "merge_notes": "All 37 final-head checks were terminal and acceptable, with 29 successes, seven skips, and one neutral result. GitHub reported MERGEABLE/CLEAN; guarded squash auto-merge completed without a manual merge. The Windows fixture-root test failure on the prior head was fixed on the same PR and the final Windows Haskell build passed.",
       "selected_at": "2026-10-07T10:51:43Z",
       "selection_revision": "ec1c8d8c733f188c762e1377fe56dc07ecd2faa7",
       "selection_notes": "Selected after #16880 auto-merged, fresh collision-checked 15-lane inventory, registration of the newly discovered Lattice @use and WebP neutral owners, and a live open-PR overlap check. All three prerequisites are merged. This bounded Haskell Dune fixture slice unlocks the Haskell full-registry and duplicate-identity successors plus fixture-CI coverage; dependency-ready Haskell CT01/PNG ports close one slot each and the new neutral contracts need separate specification work. Preserve the complete language-registry and identity defects for their existing successors.",
@@ -1989,11 +1992,38 @@
     {
       "id": "build-tool-elixir-dune-build-discovery-fixture-adoption",
       "title": "Make Elixir consume the Dune discovery fixture",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-shared-discovery-fixture-native-ci-selection"],
+      "branch": "codex/parity-elixir-dune-discovery-20261007",
+      "pr_number": 16898,
+      "notes": "Elixir already prunes exact _build but does not consume the shared language-registry fixture. Add independent fixture evidence and change behavior only if that evidence exposes a real divergence. When adding this direct consumer, extend the exact CI detector consumer map and drift test so later fixture-only edits select Elixir."
+    },
+    {
+      "id": "build-tool-elixir-discovery-language-registry-conformance",
+      "title": "Make Elixir discovery match the complete language-registry fixture",
+      "status": "pending",
+      "depends_on": ["build-tool-elixir-dune-build-discovery-fixture-adoption"],
       "branch": null,
       "pr_number": null,
-      "notes": "Elixir already prunes exact _build but does not consume the shared language-registry fixture. Add independent fixture evidence and change behavior only if that evidence exposes a real divergence. When adding this direct consumer, extend the exact CI detector consumer map and drift test so later fixture-only edits select Elixir."
+      "notes": "Read-only post-#16891 audit found Elixir's 14-language allowlist omits c/cpp/dart/java/kotlin/mosaic/ocaml/starlark/twig; inference scans any path component and program identities omit programs/. Consume the full shared fixture and enforce exact bucket, identity, generated-tree, specification-tree, and canonical BUILD membership semantics. Keep the narrow Dune fixture predecessor separate."
+    },
+    {
+      "id": "build-tool-elixir-discovery-duplicate-identity-conformance",
+      "title": "Reject duplicate Elixir build-tool package identities",
+      "status": "pending",
+      "depends_on": ["build-tool-elixir-discovery-language-registry-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Two distinct roots can currently share one inferred package identity. Consume the neutral duplicate-identity case, reject before resolution with a stable typed code and sorted repository-relative root-redacted paths, and prove CLI exit 2 while the process-free adapter expresses the error as data."
+    },
+    {
+      "id": "build-tool-elixir-canonical-build-membership-and-windows-selection-conformance",
+      "title": "Require canonical BUILD membership and select Elixir Windows overrides",
+      "status": "pending",
+      "depends_on": ["build-tool-elixir-discovery-language-registry-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Elixir's native current_os reports :win32 while the override selector expects :windows, and variant-only BUILD_windows/BUILD_mac can falsely create packages without canonical BUILD. Consume the neutral Windows-override and variant-without-canonical cases through the native selector/front door, preserving canonical membership and platform-specific fallback."
     },
     {
       "id": "build-tool-lua-dune-build-discovery-fixture-adoption",
@@ -3294,6 +3324,9 @@
         "build-tool-elixir-native-source-snapshot-stability-hardening",
         "build-tool-elixir-portable-dependency-hashing-conformance",
         "build-tool-elixir-dune-build-discovery-fixture-adoption",
+        "build-tool-elixir-discovery-language-registry-conformance",
+        "build-tool-elixir-discovery-duplicate-identity-conformance",
+        "build-tool-elixir-canonical-build-membership-and-windows-selection-conformance",
         "build-tool-elixir-engine-rockspec-utf8-conformance",
         "build-tool-elixir-resolution-semantic-parity",
         "build-tool-elixir-ci-gate-selection-conformance",
@@ -12746,6 +12779,210 @@
       "title": "Port DT15 suffix-tree to Dart and Swift after radix-tree",
       "status": "pending", "depends_on": ["suffix-tree-dt15-neutral-conformance", "dart-radix-tree-lane-parity", "swift-radix-tree-lane-parity"], "branch": null, "pr_number": null,
       "notes": "Split Dart and Swift implementation PRs once their own radix-tree prerequisite and the reconciled DT15 contract are merged; validate structure and complexity rather than a text-scan proxy."
+    },
+    {
+      "id": "executor-protocol-wire-codec-language-neutral-conformance",
+      "title": "Freeze pure MX03 executor envelope wire vectors",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Rust-only, 12 dependents; separate frame v1 from payload v2 and exclude transport/worker launch."
+    },
+    {
+      "id": "generic-job-protocol-language-neutral-conformance",
+      "title": "Reconcile JR00 JSONL job wire profile",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Rust-only, five dependents; JR00 length-bearing frame conflicts with Rust newline {version,kind,body}. Separate parse and semantic validation; runtime spawn/IO is native."
+    },
+    {
+      "id": "datetime-core-portable-conformance",
+      "title": "Reconcile SML02 date serial and injected-clock core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Rust-only, five dependents; Excel serial 60 phantom-day spec conflicts with Rust 1900-02-28 mapping. Exclude ambient clock."
+    },
+    {
+      "id": "matrix-ir-json-language-neutral-conformance",
+      "title": "Freeze matrix-ir JSON and validation boundary",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Rust-only, four dependents; decoder does not run Graph::validate. Keep binary matrix-ir separate."
+    },
+    {
+      "id": "numeric-foundations-rust-singleton-portability",
+      "title": "Classify Rust numeric foundation contracts",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Bignum-core, math-core, number-format-core, array-core, smt-lib-format, numeric-tower and R-vector NA need distinct fixture and lane children; C bridges are native."
+    },
+    {
+      "id": "javascript-ast-and-typesidecar-neutral-foundation",
+      "title": "Freeze CLOC02 JavaScript AST/type-sidecar foundation",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Token and AST roots have 21 and 17 Rust dependents. Split lexer, AST, JSDoc, parser, sidecar and JS-to-SIR; distinct from owned Dart/Swift frontend vertical."
+    },
+    {
+      "id": "smart-home-local-http-portable-conformance",
+      "title": "Freeze smart-home local HTTP pure planner",
+      "status": "pending",
+      "depends_on": [
+        "smart-home-core-language-neutral-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Strict Rust singleton, 19 dependents; exclude listener/socket."
+    },
+    {
+      "id": "smart-home-integration-catalog-portable-contract-and-conformance",
+      "title": "Freeze bounded D23A integration catalog fixtures",
+      "status": "pending",
+      "depends_on": [
+        "smart-home-core-language-neutral-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Strict Rust singleton, four dependents; use representative corpus and staged ports for ~83k-line Rust implementation."
+    },
+    {
+      "id": "smart-home-discovery-portable-core-conformance",
+      "title": "Freeze smart-home discovery parsing/plans",
+      "status": "pending",
+      "depends_on": [
+        "smart-home-core-language-neutral-conformance",
+        "smart-home-integration-catalog-portable-contract-and-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Strict Rust singleton, 42 dependents; native UDP is separately owned."
+    },
+    {
+      "id": "smart-home-registry-language-neutral-conformance",
+      "title": "Freeze smart-home registry transitions",
+      "status": "pending",
+      "depends_on": [
+        "smart-home-core-language-neutral-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Strict Rust singleton; deterministic registry/identity core, native persistence separate."
+    },
+    {
+      "id": "smart-home-runtime-portable-core-conformance",
+      "title": "Freeze smart-home runtime pure transitions",
+      "status": "pending",
+      "depends_on": [
+        "smart-home-registry-language-neutral-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Strict Rust singleton, 71 dependents; replay/auth/command transitions with injected effects."
+    },
+    {
+      "id": "smart-home-testkit-portable-fixture-contract",
+      "title": "Freeze smart-home deterministic testkit",
+      "status": "pending",
+      "depends_on": [
+        "smart-home-runtime-portable-core-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Strict Rust singleton; test-only fixtures and expected traces."
+    },
+    {
+      "id": "smart-home-platform-http-native-applicability-review",
+      "title": "Review smart-home platform HTTP host composite",
+      "status": "pending",
+      "depends_on": [
+        "smart-home-runtime-portable-core-conformance"
+      ],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Selection-blocked host composite; extract pure seams, not automatic 15-lane HTTP server."
+    },
+    {
+      "id": "paint-vm-raster-rect-neutral-conformance",
+      "title": "Freeze Go paint-vm-raster rectangle core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Go-only rect raster has one barcode dependent; test clipping, alpha, pixels and malformed rectangles; native backends separate."
+    },
+    {
+      "id": "array-runtime-and-language-frontends-neutral-foundation",
+      "title": "Classify sparse language frontend families",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Audit includes array-runtime MA00, AsciiMath, Axiom, Board, BASIC, C, COBOL, Derive, Flow-Matic, F#, J, IDL, Lisp, Maple, Matlab, Octave, Q, Reduce, Scilab, LaTeX, Mermaid, Mosaic, MacroNib, JS. Split lexer/parser/SIR/runtime and host exceptions."
+    },
+    {
+      "id": "compiler-and-ir-rust-singleton-foundation",
+      "title": "Classify compiler and IR singleton chains",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Audit includes Closure scope/typecheck/passes/emitter, compute-IR, constraint VM, grammar type checker, IIR linker/type/coverage, semantic-IR backends and CPU targets. Split neutral and target children, avoid existing owner duplication."
+    },
+    {
+      "id": "document-diagram-and-layout-neutral-foundation",
+      "title": "Classify document, diagram and layout chains",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Audit includes diagram IR/DOT/layout/paint, document AST→layout, layout IR→paint, HTML→layout, CFB, OPC, DOCX/PPTX, format-doc. Split pure fixtures from host painting/storage."
+    },
+    {
+      "id": "codec-and-dsp-rust-singleton-foundation",
+      "title": "Classify codec and DSP pure chains",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Audit includes RAW/TIFF/camera RAW, GIF/JPEG/JXL/ICO/PNG; DSP complex→FFT→filters/STFT/DCT/wavelets; range/RANS. Split malformed-input security bounds, native GPU/FFI exceptions and lane ports."
+    },
+    {
+      "id": "storage-network-and-job-rust-singleton-foundation",
+      "title": "Classify storage/network/job pure seams",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Audit includes injected artifact/context/memory store cores, LSM WAL, DNS/CoAP/IEEE802154/6LoWPAN, HTTP1/Hue, executor/job protocols, capability cage, OS job rendering and server wire. Split host authority."
+    },
+    {
+      "id": "security-and-native-singleton-applicability-review",
+      "title": "Review security and native singleton applicability",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Shamir, sealed-sender, curve25519, CSPRNG and capability compiler need vectors/authority review; Node/JNI/Ruby/Lua/C bridges, CoreAudio/GPU/Metal/CUDA/epoll/kqueue/firmware/CPU targets are not automatic 15-lane ports."
+    },
+    {
+      "id": "spreadsheet-and-business-rust-singleton-foundation",
+      "title": "Classify spreadsheet/business portable cores",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Audit includes numeric/date/number-format, lookup, FSRS→Engram→Anki, engineering/financial core and R-vector NA. Split clock/storage host seams; resolve SML02 serial-60 conflict."
     }
   ]
 }

@@ -1786,6 +1786,7 @@ pub struct LayoutedTreeViewNode {
     pub label_x: f64,
     pub label_width: f64,
     pub description_x: Option<f64>,
+    pub description_width: Option<f64>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
