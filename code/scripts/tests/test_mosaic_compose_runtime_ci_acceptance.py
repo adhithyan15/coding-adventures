@@ -513,50 +513,110 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
                 )
                 self.assertEqual(result.returncode, 2, result.stderr)
 
-    def test_the_flutter_trestle_apk_runs_through_the_emulator_gate(self) -> None:
-        """UI89 §7.5: Trestle through the Flutter backend is built from the
-        Compose step's per-ABI engines into a Flutter phone runtime, created
-        with the README's command, kept off backups, checked byte-for-byte per
-        ABI, and gated on the emulator through .MainActivity after the Compose
-        Trestle is uninstalled."""
+    def test_every_flutter_app_runs_through_the_emulator_gate(self) -> None:
+        """UI89 §7 (steps 2, 4): Trestle, Journal and Engram are each built
+        through the Flutter backend from their Compose step's per-ABI engines
+        by build-mosaic-flutter-phone-app.sh, and gated on the emulator
+        through .MainActivity after their Compose app is uninstalled."""
 
         workflow = WORKFLOW.read_text(encoding="utf-8")
-        start = workflow.index("- name: Build Trestle for Android with Flutter (UI89 §7)")
+        start = workflow.index("- name: Build Trestle, Journal and Engram for Android with Flutter (UI89 §7)")
         build = workflow[start : workflow.index("\n      - name:", start)]
         self.assertIn("needs.detect.outputs.needs_mosaic_compose_runtime == 'true'", build)
         self.assertIn("needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'", build)
         self.assertIn('cp -R "$jni_libs" "$phone_runtime/android"', build)
-        self.assertIn('--backend flutter --output "$output" --emit-project --profile native-complete --runtime-library "$phone_runtime"', build)
-        create = "flutter create --platforms=android --org dev.codingadventures --project-name trestle ."
-        self.assertIn(f"grep -qxF '    {create}' README.md", build)
-        self.assertLess(build.index("README.md"), build.index(f"\n          {create}\n"))
-        self.assertIn("allowBackup\\(0x01010280\\)=false", build)
-        self.assertIn("flutter build apk --debug", build)
-        # Not byte-for-byte (AGP strips the libraries it packages): the ELF
-        # machine and exported symbols must match the input's.
-        self.assertIn('input="$jni_libs/$abi/libmosaic_app.so"', build)
-        self.assertIn('diff "$library.machine" "$input.machine"', build)
-        self.assertIn('diff "$library.symbols" "$input.symbols"', build)
-        self.assertIn("grep -Eq ' T mosaic_app_create$' \"$library.symbols\"", build)
-        self.assertNotIn('cmp "$library"', build)
-        self.assertIn("for abi in x86_64 arm64-v8a; do", build)
-        # After the Compose Trestle's runtime step, whose jniLibs it reuses.
-        self.assertLess(
-            workflow.index("- name: Build Trestle for Android with its Rust runtime (UI89 step 5)"), start
+        self.assertIn(
+            'bash code/scripts/build-mosaic-flutter-phone-app.sh android "$program" "$phone_runtime" '
+            '"$RUNNER_TEMP/mosaic-flutter-$name-android" dev.codingadventures "$name"',
+            build,
         )
+        # The list is read on fd 3, so nothing the loop runs can eat it.
+        self.assertIn("while read -r program jni_libs name <&3; do", build)
+        self.assertIn("done 3<<EOF", build)
+        for row in (
+            "code/programs/mosaic/task-app $RUNNER_TEMP/mosaic-trestle-jnilibs trestle",
+            "code/programs/mosaic/journal-app $RUNNER_TEMP/mosaic-journal-jnilibs journalapp",
+            "code/programs/mosaic/engram-app $RUNNER_TEMP/mosaic-engram-jnilibs engramapp",
+        ):
+            self.assertIn(row, build)
+        # After every Compose runtime step, whose jniLibs it reuses.
+        self.assertLess(workflow.index("- name: Build Engram for Android with its Rust runtime (UI89 step 7)"), start)
 
         emulator = workflow.index("- name: Launch Trestle, Journal and Engram on an Android emulator")
         self.assertLess(start, emulator)
         gate = workflow[emulator : workflow.index("\n      - name:", emulator)]
         self.assertIn("MOSAIC_FLUTTER_LANE: ${{ needs.detect.outputs.needs_mosaic_flutter_runtime }}", gate)
-        run = (
-            'bash code/scripts/mosaic-android-emulator-gate.sh "$flutter_apk" '
-            "dev.codingadventures.trestle task-app .MainActivity"
-        )
+        self.assertIn("while read -r name package application_id <&3; do", gate)
+        run = 'bash code/scripts/mosaic-android-emulator-gate.sh "$flutter_apk" "$package" "$application_id" .MainActivity'
+        uninstall = 'adb uninstall "$package"'
         self.assertIn(run, gate)
-        uninstall = "adb uninstall dev.codingadventures.trestle"
         self.assertLess(gate.index(uninstall), gate.index(run))
-        self.assertLess(gate.index("dev.codingadventures.trestle task-app\n"), gate.index(uninstall))
+        for row in (
+            "trestle dev.codingadventures.trestle task-app",
+            "journalapp dev.codingadventures.journalapp journal-app",
+            "engramapp dev.codingadventures.engramapp engram-app",
+        ):
+            self.assertIn(row, gate)
+        # The Flutter gates come after every Compose gate and UI test.
+        self.assertLess(gate.index("EngramAndroidUiTest"), gate.index(run))
+
+        script = (SCRIPT.parent / "build-mosaic-flutter-phone-app.sh").read_text(encoding="utf-8")
+        self.assertIn('create=(flutter create "--platforms=$platform" --org "$org" --project-name "$name" .)', script)
+        self.assertIn('grep -qxF "    ${create[*]}" README.md', script)
+        self.assertIn("allowBackup\\(0x01010280\\)=false", script)
+        self.assertIn('diff "$checks/$abi.packaged.machine" "$checks/$abi.input.machine"', script)
+        self.assertIn('diff "$checks/$abi.packaged.symbols" "$checks/$abi.input.symbols"', script)
+        self.assertIn("for abi in x86_64 arm64-v8a; do", script)
+        self.assertNotIn("cmp ", script)
+
+    def test_the_flutter_phone_script_refuses_names_before_it_builds(self) -> None:
+        """The org and project name reach `flutter create` and a bundle
+        identifier: anything but the README's own shapes is refused first."""
+
+        script = SCRIPT.parent / "build-mosaic-flutter-phone-app.sh"
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "runtime/android").mkdir(parents=True)
+            (root / "program").mkdir()
+            for platform, org, name in (
+                ("windows", "dev.example", "app"),
+                ("android", "dev.Example", "app"),
+                ("android", "dev.example;id", "app"),
+                ("android", "dev.example", "my-app"),
+                ("android", "dev.example", "2app"),
+                ("android", "", "app"),
+            ):
+                with self.subTest(platform=platform, org=org, name=name):
+                    result = subprocess.run(
+                        ["bash", str(script), platform, str(root / "program"), str(root / "runtime"), str(root / "out"), org, name],
+                        env={"PATH": "/usr/bin:/bin"},
+                        capture_output=True,
+                        text=True,
+                        check=False,
+                    )
+                    self.assertEqual(result.returncode, 2, result.stderr)
+                    self.assertFalse((root / "out").exists())
+            # A folder that is not an earlier build's output is refused, not
+            # replaced. (The root itself is refused by a guard pinned below,
+            # never by running the script at `/`.)
+            occupied = root / "occupied"
+            occupied.mkdir()
+            (occupied / "keep.txt").write_text("mine", encoding="utf-8")
+            for output in ("", str(occupied)):
+                with self.subTest(output=output):
+                    result = subprocess.run(
+                        ["bash", str(script), "android", str(root / "program"), str(root / "runtime"), output, "dev.example", "app"],
+                        env={"PATH": "/usr/bin:/bin"},
+                        capture_output=True,
+                        text=True,
+                        check=False,
+                    )
+                    self.assertEqual(result.returncode, 2, result.stderr)
+            self.assertEqual((occupied / "keep.txt").read_text(encoding="utf-8"), "mine")
+        text = script.read_text(encoding="utf-8")
+        self.assertIn('if [[ -z "$output" || "$output" == "/" ]]; then', text)
+        self.assertIn('rm -rf -- "${output:?}"', text)
+        self.assertLess(text.index('"$output" == "/"'), text.index("rm -rf --"))
 
     def test_the_emulator_gate_takes_an_activity_class_name_only(self) -> None:
         """UI89 §7.5: a Flutter app launches `.MainActivity`, so the gate takes

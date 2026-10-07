@@ -1196,7 +1196,10 @@ compiled in or was filtered out fails the step instead of passing it.
    §3.10; on iOS and iPadOS: §2.5. CI drives each app's generated controls
    on both platforms (§4, done). Venture is still open.*
 8. **Flutter:** `flutter create --platforms=android,ios`, per-ABI native
-   assets, `path_provider` for state. *Designed in §7.*
+   assets, `path_provider` for state. *Designed in §7. Trestle passed
+   its gates on both phones (§7.8, §7.9), and CI builds and gates Journal
+   and Engram the same way (§7.10). Phone file effects and Flutter device
+   UI tests remain (§7.6).*
 
 iOS goes first because the emitted source already compiles for it; the gap is
 packaging only.
@@ -1512,4 +1515,46 @@ What differs from the design, or what the design left open:
   - A local `flutter analyze` of a generated Android-and-iOS phone project
     (Flutter 3.44) finds no issues. That confirms the hook's `IOSSdk`
     calls exist in `code_assets`.
+
+### 7.10 Every app, as built (step 4)
+
+*Steps 2 and 3 are done (#16834).* Trestle's Flutter APK and its emulator
+gate, and its Flutter iOS simulator build and simulator gate, passed in CI.
+That run also showed one thing the design had wrong. The Android Gradle
+plugin strips debug symbols from the native libraries it packages, so the
+APK's copy of an engine can never be byte-identical to its input. CI now
+compares what survives stripping: the ELF machine, and the exported
+symbols, including `mosaic_app_create`.
+
+Step 4 brings Journal and Engram along, by the same path:
+
+- **One script for every app.** `build-mosaic-flutter-phone-app.sh
+  <android|ios> <program> <phone-runtime> <output> <org> <name>` holds
+  what CI did for Trestle alone:
+  - `pkg` must be native-complete.
+  - The README must give the expected `flutter create` command, which then
+    runs.
+  - Android gets `allowBackup="false"`.
+  - Then `pub get`, `analyze`, and a debug build.
+  - Then the checks on the built app:
+    - Android: `aapt2` reads `allowBackup` false, and each packaged ABI has
+      its input's machine and symbols, with x86_64 and arm64-v8a present.
+    - iOS: the bundle id, and `_mosaic_app_create` in a framework.
+
+  It refuses an org or name outside the README's own shapes, and an empty
+  or `/` output, before building anything.
+- **CI.**
+  - **Android:** one step builds all three apps from the per-ABI engines
+    their Compose steps built.
+  - **Emulator:** the emulator step uninstalls each Compose app, which has
+    the same package, and gates its Flutter APK through `.MainActivity`.
+  - **iOS:** the macOS step builds each crate's iOS dylibs, builds each
+    app, and gates it on the iPhone simulator after uninstalling the
+    SwiftUI app (same bundle id).
+  - **The app lists.** Each loop reads its list on file descriptor 3, so
+    `adb shell`, `flutter` or `cargo` reading stdin cannot swallow the
+    rest of it.
+- **Locally**, Journal and Engram phone projects (both halves) are
+  native-complete, and `flutter analyze` (Flutter 3.44) finds no issues in
+  either.
 

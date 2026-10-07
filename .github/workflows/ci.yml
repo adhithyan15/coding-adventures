@@ -3274,59 +3274,43 @@ jobs:
             xcodebuild -scheme App -destination 'generic/platform=iOS' -derivedDataPath "$RUNNER_TEMP/mosaic-swift-host-navigation-split-ios" CODE_SIGNING_ALLOWED=NO build
           )
 
-      # UI89 §7.7 step 3: Trestle through the Flutter backend, on iOS. The
-      # engine is built as iOS dynamic libraries (Flutter's native assets
-      # bundle a dylib as a framework; SwiftUI's static xcframework cannot be
-      # used), checked per SDK by the builder and the hook, and the simulator
-      # build runs through the same gate as the SwiftUI app. Gate: the
-      # Runner.app's frameworks carry the engine, and it launches, restores
-      # and quarantines on the iPhone simulator.
-      - name: Build Trestle for iOS with Flutter (UI89 §7)
+      # UI89 §7 (steps 3 and 4): Trestle, Journal and Engram through the
+      # Flutter backend, on iOS. Each engine is built as iOS dynamic
+      # libraries. Flutter's native assets bundle a dylib as a framework, so
+      # SwiftUI's static xcframework cannot be used. The builder and the hook
+      # check each library per SDK. build-mosaic-flutter-phone-app.sh builds
+      # the simulator app and finds the engine in its frameworks. Each app
+      # then runs through the same simulator gate as its SwiftUI app, after
+      # that app (same bundle id) is uninstalled.
+      - name: Build Trestle, Journal and Engram for iOS with Flutter (UI89 §7)
         if: runner.os == 'macOS' && needs.detect.outputs.needs_mosaic_swift_runtime == 'true' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
         shell: bash
-        timeout-minutes: 40
+        timeout-minutes: 90
         run: |
           set -euo pipefail
           rustup target add aarch64-apple-ios aarch64-apple-ios-sim x86_64-apple-ios
-          phone_runtime="$RUNNER_TEMP/mosaic-trestle-flutter-ios-runtime"
-          rm -rf "$phone_runtime"
-          bash code/scripts/build-mosaic-ios-dylibs.sh task-mosaic-app "$phone_runtime"
-          output="$RUNNER_TEMP/mosaic-flutter-trestle-ios"
-          rm -rf "$output"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend flutter --output "$output" --emit-project --profile native-complete --runtime-library "$phone_runtime"
-          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$output/flutter/mosaic-degradations.json"
-          cd "$output/flutter"
-          # The README's command, from the manifest's identity (UI89 §7.1).
-          grep -qxF '    flutter create --platforms=ios --org dev.codingadventures --project-name trestle .' README.md
-          flutter create --platforms=ios --org dev.codingadventures --project-name trestle .
-          flutter pub get
-          # What path_provider's implementations resolved to (UI89 §7.4).
-          grep -A3 -E '^  path_provider(_android|_foundation|_platform_interface)?:' pubspec.lock
-          flutter analyze
-          flutter build ios --simulator --debug
-          app=build/ios/iphonesimulator/Runner.app
-          test -d "$app"
-          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Info.plist")" = dev.codingadventures.trestle
-          # The engine rides in the app's frameworks, as a native asset.
-          found=0
-          for binary in "$app"/Frameworks/*.framework/*; do
-            [ -f "$binary" ] || continue
-            if nm -gU "$binary" 2>/dev/null > "$RUNNER_TEMP/mosaic-flutter-ios-symbols.txt" \
-              && grep -q ' _mosaic_app_create$' "$RUNNER_TEMP/mosaic-flutter-ios-symbols.txt"; then
-              echo "engine: $binary"
-              found=1
-            fi
-          done
-          test "$found" = 1
           simulator="$(xcrun simctl list devices available -j | jq -r '[.devices[][] | select(.name | startswith("iPhone"))][0].udid')"
           test -n "$simulator" && test "$simulator" != null
-          xcrun simctl boot "$simulator" || true
-          xcrun simctl bootstatus "$simulator" -b
-          # Uninstalled first: the SwiftUI Trestle has the same bundle id.
-          xcrun simctl uninstall "$simulator" dev.codingadventures.trestle || true
-          cd "$GITHUB_WORKSPACE"
-          bash code/scripts/mosaic-ios-simulator-gate.sh "$output/flutter/$app" dev.codingadventures.trestle task-app "$simulator"
-          xcrun simctl shutdown "$simulator"
+          # crate | program | project name | Mosaic application id. Read on
+          # fd 3: cargo, flutter and simctl must not eat the list from stdin.
+          while read -r crate program name application_id <&3; do
+            phone_runtime="$RUNNER_TEMP/mosaic-$name-flutter-ios-runtime"
+            rm -rf "$phone_runtime"
+            echo "::group::$name (Flutter, iOS)"
+            bash code/scripts/build-mosaic-ios-dylibs.sh "$crate" "$phone_runtime"
+            output="$RUNNER_TEMP/mosaic-flutter-$name-ios"
+            bash code/scripts/build-mosaic-flutter-phone-app.sh ios "$program" "$phone_runtime" "$output" dev.codingadventures "$name"
+            xcrun simctl boot "$simulator" || true
+            xcrun simctl bootstatus "$simulator" -b
+            xcrun simctl uninstall "$simulator" "dev.codingadventures.$name" || true
+            bash code/scripts/mosaic-ios-simulator-gate.sh "$output/flutter/build/ios/iphonesimulator/Runner.app" "dev.codingadventures.$name" "$application_id" "$simulator"
+            xcrun simctl shutdown "$simulator"
+            echo "::endgroup::"
+          done 3<<EOF
+          task-mosaic-app code/programs/mosaic/task-app trestle task-app
+          journal-mosaic-app code/programs/mosaic/journal-app journalapp journal-app
+          engram-mosaic-app code/programs/mosaic/engram-app engramapp engram-app
+          EOF
 
       - name: Round-trip Rust engine through standard Qt binding
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_qt_runtime == 'true'
@@ -4555,103 +4539,47 @@ jobs:
             fi
           done
 
-      # UI89 §7 (step 8): Trestle through the Flutter backend, on Android. The
-      # same per-ABI engines the Compose APK packages go into a Flutter phone
-      # runtime (android/<abi>/libmosaic_app.so). hook/build.dart bundles the
-      # one each ABI's build asks for. `flutter create` uses the command the
-      # generated README derives from the manifest. Gate: allowBackup is
-      # false, and the APK carries each packaged ABI's own engine (its ELF
-      # machine and exported symbols equal the input's), x86_64 (the
-      # emulator's) and arm64-v8a among them. The emulator step
-      # below then runs it through the same gate as the Compose APK.
-      - name: Build Trestle for Android with Flutter (UI89 §7)
+      # UI89 §7 (steps 2 and 4): Trestle, Journal and Engram through the
+      # Flutter backend, on Android. Each app's per-ABI engines (built for
+      # its Compose APK above) go into a Flutter phone runtime
+      # (android/<abi>/libmosaic_app.so). build-mosaic-flutter-phone-app.sh
+      # builds it with the README's `flutter create`, sets allowBackup false,
+      # builds the debug APK and checks it:
+      # - the manifest says allowBackup false;
+      # - every packaged ABI's library has its input's ELF machine and
+      #   exported symbols, with x86_64 (the emulator's) and arm64-v8a there.
+      # The emulator step below runs each one through the same gate as its
+      # Compose APK.
+      - name: Build Trestle, Journal and Engram for Android with Flutter (UI89 §7)
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
         shell: bash
-        timeout-minutes: 30
+        timeout-minutes: 50
         run: |
           set -euo pipefail
-          # Built by "Build Trestle for Android with its Rust runtime" above.
-          jni_libs="$RUNNER_TEMP/mosaic-trestle-jnilibs"
-          test -d "$jni_libs"
-          phone_runtime="$RUNNER_TEMP/mosaic-trestle-flutter-phone-runtime"
-          rm -rf "$phone_runtime"
-          mkdir -p "$phone_runtime"
-          cp -R "$jni_libs" "$phone_runtime/android"
-          output="$RUNNER_TEMP/mosaic-flutter-trestle-android"
-          rm -rf "$output"
-          cargo run --manifest-path code/packages/rust/mosaic-compile/Cargo.toml -- pkg code/programs/mosaic/task-app --backend flutter --output "$output" --emit-project --profile native-complete --runtime-library "$phone_runtime"
-          jq -e '.nativeComplete == true and (.degradations | length == 0)' "$output/flutter/mosaic-degradations.json"
-          cd "$output/flutter"
-          # The README's command, from the manifest's identity (UI89 §7.1).
-          grep -qxF '    flutter create --platforms=android --org dev.codingadventures --project-name trestle .' README.md
-          flutter create --platforms=android --org dev.codingadventures --project-name trestle .
-          # State stays on the device, as with Compose's manifest (UI89 §7.5).
-          manifest=android/app/src/main/AndroidManifest.xml
-          if grep -q 'android:allowBackup=' "$manifest"; then
-            sed -i 's/android:allowBackup="[a-z]*"/android:allowBackup="false"/' "$manifest"
-          else
-            sed -i 's/<application/<application android:allowBackup="false"/' "$manifest"
-          fi
-          test "$(grep -c 'android:allowBackup="false"' "$manifest")" = 1
-          flutter pub get
-          # What path_provider's implementations resolved to (UI89 §7.4).
-          grep -A3 -E '^  path_provider(_android|_foundation|_platform_interface)?:' pubspec.lock
-          flutter analyze
-          flutter build apk --debug
-          apk=build/app/outputs/flutter-apk/app-debug.apk
-          test -f "$apk"
-          aapt2="$(find "$ANDROID_HOME/build-tools" -name aapt2 -type f | sort -V | tail -n 1)"
-          test -n "$aapt2"
-          "$aapt2" dump xmltree --file AndroidManifest.xml "$apk" > "$RUNNER_TEMP/mosaic-flutter-trestle-manifest.txt"
-          grep -Eq 'allowBackup\(0x01010280\)=false' "$RUNNER_TEMP/mosaic-flutter-trestle-manifest.txt"
-          unpacked="$RUNNER_TEMP/mosaic-flutter-trestle-apk"
-          rm -rf "$unpacked"
-          unzip -q -o "$apk" 'lib/*' -d "$unpacked"
-          # Each packaged library is that ABI's engine, never another's. Not
-          # byte-for-byte: the Android Gradle plugin strips debug symbols as it
-          # packages native libraries, so the APK's copy differs from the input
-          # (in the section headers). Its ELF machine and its exported symbols
-          # survive stripping, so those must equal the input's, with
-          # mosaic_app_create among them.
-          ndk="${ANDROID_NDK_LATEST_HOME:-${ANDROID_NDK_HOME:-}}"
-          # One test per line: `set -e` ignores a failure left of `&&`.
-          test -n "$ndk"
-          test -d "$ndk"
-          llvm_bin="$ndk/toolchains/llvm/prebuilt/linux-x86_64/bin"
-          test -x "$llvm_bin/llvm-nm"
-          test -x "$llvm_bin/llvm-readelf"
-          packaged=0
-          for library in "$unpacked"/lib/*/libmosaic_app.so; do
-            abi="$(basename "$(dirname "$library")")"
-            input="$jni_libs/$abi/libmosaic_app.so"
-            test -f "$input"
-            for file in "$library" "$input"; do
-              "$llvm_bin/llvm-readelf" -h "$file" | grep -E '^ +Machine:' > "$file.machine"
-              "$llvm_bin/llvm-nm" -D --defined-only "$file" > "$file.symbols"
-            done
-            diff "$library.machine" "$input.machine"
-            diff "$library.symbols" "$input.symbols"
-            grep -Eq ' T mosaic_app_create$' "$library.symbols"
-            rm -f "$input.machine" "$input.symbols"
-            packaged=$((packaged + 1))
-          done
-          test "$packaged" -ge 2
-          for abi in x86_64 arm64-v8a; do
-            test -f "$unpacked/lib/$abi/libmosaic_app.so"
-          done
+          # program | jniLibs built by its Compose step above | project name.
+          # Read on fd 3: flutter, cargo and gradle must not eat the list
+          # from stdin.
+          while read -r program jni_libs name <&3; do
+            test -d "$jni_libs"
+            phone_runtime="$RUNNER_TEMP/mosaic-$name-flutter-phone-runtime"
+            rm -rf "$phone_runtime"
+            mkdir -p "$phone_runtime"
+            cp -R "$jni_libs" "$phone_runtime/android"
+            echo "::group::$name (Flutter, Android)"
+            bash code/scripts/build-mosaic-flutter-phone-app.sh android "$program" "$phone_runtime" "$RUNNER_TEMP/mosaic-flutter-$name-android" dev.codingadventures "$name"
+            echo "::endgroup::"
+          done 3<<EOF
+          code/programs/mosaic/task-app $RUNNER_TEMP/mosaic-trestle-jnilibs trestle
+          code/programs/mosaic/journal-app $RUNNER_TEMP/mosaic-journal-jnilibs journalapp
+          code/programs/mosaic/engram-app $RUNNER_TEMP/mosaic-engram-jnilibs engramapp
+          EOF
 
-      # UI89 step 5, second half, and step 7: the APKs above run. An x86_64
-      # emulator boots headless under KVM, and mosaic-android-emulator-gate.sh
-      # installs Trestle, then Journal, then Engram, launches each one's MosaicActivity
-      # three times and requires that it writes its state under filesDir,
-      # restores it, quarantines state the runtime refuses, and is still
-      # running ten seconds after each launch.
       - name: Launch Trestle, Journal and Engram on an Android emulator (UI89 steps 5, 7)
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true'
         shell: bash
         # Each app's gate, then each one's UI test in two cold launches (§4),
-        # then the Flutter Trestle's gate (§7) when its lane built it.
-        timeout-minutes: 55
+        # then each Flutter app's gate (§7) when its lane built them.
+        timeout-minutes: 65
         env:
           MOSAIC_FLUTTER_LANE: ${{ needs.detect.outputs.needs_mosaic_flutter_runtime }}
         run: |
@@ -4705,16 +4633,23 @@ jobs:
           test -n "$engram_test_apk"
           bash code/scripts/mosaic-android-ui-test.sh "$engram_apk" "$engram_test_apk" dev.codingadventures.engramapp dev.codingadventures.engramapp.uitest.EngramAndroidUiTest
 
-          # Trestle through Flutter (UI89 §7.5), built by its own step when the
-          # Flutter lane runs. Same gate, launched through Flutter's
-          # .MainActivity. The Compose Trestle has the same package, so it
-          # is uninstalled first: neither its data nor its signing key carry
-          # over.
+          # Trestle, Journal and Engram through Flutter (UI89 §7.5), built by
+          # their own step when the Flutter lane runs. Same gate, launched
+          # through Flutter's .MainActivity. Each Compose app has the same
+          # package, so it is uninstalled first: neither its data nor its
+          # signing key carry over.
           if [ "$MOSAIC_FLUTTER_LANE" = true ]; then
-            flutter_apk="$RUNNER_TEMP/mosaic-flutter-trestle-android/flutter/build/app/outputs/flutter-apk/app-debug.apk"
-            test -f "$flutter_apk"
-            adb uninstall dev.codingadventures.trestle > /dev/null
-            bash code/scripts/mosaic-android-emulator-gate.sh "$flutter_apk" dev.codingadventures.trestle task-app .MainActivity
+            # Read on fd 3: `adb shell` reads stdin and would eat the list.
+            while read -r name package application_id <&3; do
+              flutter_apk="$RUNNER_TEMP/mosaic-flutter-$name-android/flutter/build/app/outputs/flutter-apk/app-debug.apk"
+              test -f "$flutter_apk"
+              adb uninstall "$package" > /dev/null
+              bash code/scripts/mosaic-android-emulator-gate.sh "$flutter_apk" "$package" "$application_id" .MainActivity
+            done 3<<EOF
+          trestle dev.codingadventures.trestle task-app
+          journalapp dev.codingadventures.journalapp journal-app
+          engramapp dev.codingadventures.engramapp engram-app
+          EOF
           fi
 
       - name: Build concrete Mosaic TaskApp WinUI shell
