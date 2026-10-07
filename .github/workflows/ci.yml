@@ -4560,8 +4560,9 @@ jobs:
       # runtime (android/<abi>/libmosaic_app.so). hook/build.dart bundles the
       # one each ABI's build asks for. `flutter create` uses the command the
       # generated README derives from the manifest. Gate: allowBackup is
-      # false, and the APK carries each packaged ABI's library byte-for-byte,
-      # x86_64 (the emulator's) and arm64-v8a among them. The emulator step
+      # false, and the APK carries each packaged ABI's own engine (its ELF
+      # machine and exported symbols equal the input's), x86_64 (the
+      # emulator's) and arm64-v8a among them. The emulator step
       # below then runs it through the same gate as the Compose APK.
       - name: Build Trestle for Android with Flutter (UI89 §7)
         if: runner.os == 'Linux' && needs.detect.outputs.needs_mosaic_compose_runtime == 'true' && needs.detect.outputs.needs_mosaic_flutter_runtime == 'true'
@@ -4606,11 +4607,32 @@ jobs:
           unpacked="$RUNNER_TEMP/mosaic-flutter-trestle-apk"
           rm -rf "$unpacked"
           unzip -q -o "$apk" 'lib/*' -d "$unpacked"
+          # Each packaged library is that ABI's engine, never another's. Not
+          # byte-for-byte: the Android Gradle plugin strips debug symbols as it
+          # packages native libraries, so the APK's copy differs from the input
+          # (in the section headers). Its ELF machine and its exported symbols
+          # survive stripping, so those must equal the input's, with
+          # mosaic_app_create among them.
+          ndk="${ANDROID_NDK_LATEST_HOME:-${ANDROID_NDK_HOME:-}}"
+          # One test per line: `set -e` ignores a failure left of `&&`.
+          test -n "$ndk"
+          test -d "$ndk"
+          llvm_bin="$ndk/toolchains/llvm/prebuilt/linux-x86_64/bin"
+          test -x "$llvm_bin/llvm-nm"
+          test -x "$llvm_bin/llvm-readelf"
           packaged=0
           for library in "$unpacked"/lib/*/libmosaic_app.so; do
             abi="$(basename "$(dirname "$library")")"
-            # Each one is that ABI's engine, never another's.
-            cmp "$library" "$jni_libs/$abi/libmosaic_app.so"
+            input="$jni_libs/$abi/libmosaic_app.so"
+            test -f "$input"
+            for file in "$library" "$input"; do
+              "$llvm_bin/llvm-readelf" -h "$file" | grep -E '^ +Machine:' > "$file.machine"
+              "$llvm_bin/llvm-nm" -D --defined-only "$file" > "$file.symbols"
+            done
+            diff "$library.machine" "$input.machine"
+            diff "$library.symbols" "$input.symbols"
+            grep -Eq ' T mosaic_app_create$' "$library.symbols"
+            rm -f "$input.machine" "$input.symbols"
             packaged=$((packaged + 1))
           done
           test "$packaged" -ge 2

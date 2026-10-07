@@ -532,7 +532,13 @@ class MosaicComposeRuntimeCIAcceptanceTests(unittest.TestCase):
         self.assertLess(build.index("README.md"), build.index(f"\n          {create}\n"))
         self.assertIn("allowBackup\\(0x01010280\\)=false", build)
         self.assertIn("flutter build apk --debug", build)
-        self.assertIn('cmp "$library" "$jni_libs/$abi/libmosaic_app.so"', build)
+        # Not byte-for-byte (AGP strips the libraries it packages): the ELF
+        # machine and exported symbols must match the input's.
+        self.assertIn('input="$jni_libs/$abi/libmosaic_app.so"', build)
+        self.assertIn('diff "$library.machine" "$input.machine"', build)
+        self.assertIn('diff "$library.symbols" "$input.symbols"', build)
+        self.assertIn("grep -Eq ' T mosaic_app_create$' \"$library.symbols\"", build)
+        self.assertNotIn('cmp "$library"', build)
         self.assertIn("for abi in x86_64 arm64-v8a; do", build)
         # After the Compose Trestle's runtime step, whose jniLibs it reuses.
         self.assertLess(
