@@ -13,6 +13,10 @@
 //
 //     sign   class  strokes (share)   start                    then
 //     ----   -----  ----------------  -----------------------  ------------------------------
+//     ा      47     1 (55/81); 2      top of the stem          down (54/55); the 2-stroke form
+//                   (23/81)                                    adds a top stroke, left to right
+//                                                              (20/23): the headline piece Noto
+//                                                              prints, drawn last, as in आ
 //     ु      50     1 (79/83)         tip of the upper arm     right, round the bowl (clockwise), out left
 //     ू      51     1 (83/83)         inner tip of the loop    left, over the top (clockwise), down the tail right
 //     े      53     1 (162/165)       upper-left tip           right, then down to the right (116/165)
@@ -22,9 +26,15 @@
 //     ृ      52     1 (81/83)         upper tip                left, round the bottom (anticlockwise), out right
 //     ँ      59     2 (79/82)         crescent's left tip      crescent left to right, lift, then the dot (76/82)
 //
+// ā is the one sign whose PLACE in a word is cited too (its mark record's
+// compositionSource: the cited आ draws the same bar after its body and before
+// its headline), so it is also the one sign a composed word may hold
+// (headline-word.ts). Its path draws the piece of headline the printed sign
+// carries, so nothing of the printed sign is left untraced.
+//
 // Left out, so their lessons stay undrawn:
 //
-//   * ा, ि, ी, ो and ः: Noto Sans Devanagari prints each with a short piece of
+//   * ि, ी, ो and ः: Noto Sans Devanagari prints each with a short piece of
 //     headline that the native traces do not draw (they were written without
 //     one), so a path fitted to the traces leaves 3.5% to 37% of the printed ink
 //     untraced, over the 2% the honesty check allows. ी and ो are also weak
@@ -64,6 +74,7 @@ const signedArea = (open: Point[]): number => {
 
 // The exact data each sign owns. A deliberate path change moves its hash here.
 const HASHES: Record<string, string> = {
+  "ा": "e31d04eb552dd0afc2504818e5db625d210ec455476aa8ec067e64abd1c49ecf",
   "ु": "922f69e34ee729cea2998d180290f8652d7976ae422a05e7e5cc8924865e306c",
   "ू": "ac6ffefbabe664460dc871badac8720fcdecee9e95791d61755d56e552dd8d1d",
   "े": "c18cc325894240e864dbe6fbadb8cd0d587e41c00bc290182cd98ecfaf815139",
@@ -75,11 +86,11 @@ const HASHES: Record<string, string> = {
 };
 
 const CLASSES: Record<string, number> = {
-  "ु": 50, "ू": 51, "े": 53, "ं": 57, "़": 62, "्": 61, "ृ": 52, "ँ": 59,
+  "ा": 47, "ु": 50, "ू": 51, "े": 53, "ं": 57, "़": 62, "्": 61, "ृ": 52, "ँ": 59,
 };
 
 const LIFTS: Record<string, number> = {
-  "ु": 0, "ू": 0, "े": 0, "ं": 0, "़": 0, "्": 0, "ृ": 0, "ँ": 1,
+  "ा": 1, "ु": 0, "ू": 0, "े": 0, "ं": 0, "़": 0, "्": 0, "ृ": 0, "ँ": 1,
 };
 
 describe("Devanagari sign ductus records", () => {
@@ -110,7 +121,7 @@ describe("Devanagari sign ductus records", () => {
   }
 
   it("leaves out the signs whose evidence or printed form does not fit", () => {
-    for (const glyph of ["ा", "ि", "ी", "ै", "ो", "ौ", "ः"]) {
+    for (const glyph of ["ि", "ी", "ै", "ो", "ौ", "ः"]) {
       expect(DUCTUS[ductusKey("devanagari", glyph)], glyph).toBeUndefined();
     }
   });
@@ -184,7 +195,20 @@ describe("one-stroke signs", () => {
   });
 });
 
-describe("a sign written in two strokes", () => {
+describe("signs written in two strokes", () => {
+  it("ा draws its stem down from the top, then lifts for its piece of headline, left to right", () => {
+    const aa = sign("ा");
+    expect(labels(aa)).toEqual([["draw the stem straight down"], ["lift, then draw the shirorekha rightward"]]);
+    // The stem: straight down from inside the headline piece to the foot.
+    expect(new Set(xs(aa, 0)).size).toBe(1);
+    expect(first(aa, 0).y).toBe(Math.max(...ys(aa, 0)));
+    expect(last(aa, 0).y).toBe(Math.min(...ys(aa, 0)));
+    // The piece of headline: level, left to right, last, at the letters' height.
+    expect(new Set(ys(aa, 1))).toEqual(new Set([585]));
+    expect(xs(aa, 1)).toEqual([...xs(aa, 1)].sort((a, b) => a - b));
+  });
+
+
   it("ँ draws the crescent left to right, then lifts for the dot above it", () => {
     const candrabindu = sign("ँ");
     expect(labels(candrabindu)).toEqual([

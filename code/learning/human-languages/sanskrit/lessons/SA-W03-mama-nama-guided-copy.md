@@ -43,14 +43,16 @@ Leave one ordinary word space between them.
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-01, SA-SCRIPT-RECOG-02, SA-SCRIPT-RECOG-06, SA-LEX-MAMA, SA-LEX-NAMA] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Keep the phrase visible and copy it once.
+Keep the phrase visible and follow the numbered strip, one word at a time.
 
-1. Write **मम**, joining its two letter headlines.
+1. Write **मम**: the body of each **म**, then one headline across the word.
 2. Leave one word space.
-3. Build **ना** from **न + ◌ा**, then add **म** to complete **नाम**.
+3. Write **नाम**: **न**, the stem of **◌ा**, then **म**, and last one headline
+   across the word.
 
-The vowel sign changes *na* to *nā*; it does not begin a separate letter. Read
-the finished phrase once: **मम नाम**, “my name.”
+The vowel sign changes *na* to *nā*; it does not begin a separate letter. Most
+native writers leave the headline for last; some draw it first. Read the
+finished phrase once: **मम नाम**, “my name.”
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-06, SA-LEX-NAMA] -->

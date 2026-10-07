@@ -158,15 +158,17 @@ describe("the real corpus", () => {
   });
 
   it("draws a Devanagari sign only where a lesson teaches it alone", () => {
-    // 32 Hindi, Marathi, Sanskrit and Marwadi lessons teach one of eight
-    // signs by itself (ु ू े ं ़ ् ृ ँ), each cited to native writers who wrote
-    // it alone. Each is one glyph, never a sequence: Devanagari has no
-    // written-order table, so no sign is ever placed against a consonant.
+    // 36 Hindi, Marathi, Sanskrit and Marwadi lessons teach one of nine
+    // signs by itself (ा ु ू े ं ़ ् ृ ँ), each cited to native writers who
+    // wrote it alone. Each is one glyph, never a sequence: Devanagari has no
+    // written-order table, so no sign is placed against a consonant here
+    // (ā joins its consonant only inside a composed word, next cases).
     const devanagari = targets.filter((target) => target.script === "devanagari");
     const signs = devanagari.filter((target) => /^\p{M}+$/u.test(target.glyph));
     expect(signs.every((target) => target.letters === undefined)).toBe(true);
     expect(Object.fromEntries(signs.map((target) => [target.lessonId, target.glyph]))).toEqual({
       "HI-S05-sign-virama": "्",
+      "HI-S06-vowel-sign-aa": "ा",
       "HI-S112-vowel-sign-e": "े",
       "HI-S118-sign-candrabindu": "ँ",
       "HI-S120-vowel-sign-u": "ु",
@@ -176,6 +178,7 @@ describe("the real corpus", () => {
       "HI-S149-vowel-sign-uu": "ू",
       "HI-W12-chandrabindu": "ँ",
       "HI-W12-u-matra": "ु",
+      "MR-W01-aa-matra": "ा",
       "MR-W01-virama": "्",
       "MR-W02-anusvara": "ं",
       "MR-W02-e-matra": "े",
@@ -183,6 +186,7 @@ describe("the real corpus", () => {
       "MR-W05-ru-matra": "ृ",
       "MR-W05-u-matra": "ु",
       "MR-W05-uu-matra": "ू",
+      "MW-W01-aa-matra": "ा",
       "MW-W03-anusvara": "ं",
       "MW-W05-virama": "्",
       "MW-W06-uu-matra": "ू",
@@ -190,6 +194,7 @@ describe("the real corpus", () => {
       "MW-W13-u-matra": "ु",
       "MW-W15-nukta": "़",
       "SA-S05-sign-virama": "्",
+      "SA-S06-vowel-sign-aa": "ा",
       "SA-S112-vowel-sign-e": "े",
       "SA-S203-vowel-sign-u": "ु",
       "SA-S205-vowel-sign-vocalic-r": "ृ",
@@ -200,12 +205,11 @@ describe("the real corpus", () => {
       "SA-W05-vocalic-r-guided-copy": "ृ",
     });
     // Left undrawn: the signs Noto prints with a piece of headline the traces
-    // never draw (ा ि ी ो ः), the signs whose traces split (ै ौ), a sign
+    // never draw (ि ी ो ः), the signs whose traces split (ै ौ), a sign
     // lesson with no Writing or Script block (HI-W03-preposed-i), and every
     // word or list that puts a sign on a consonant.
     const lessonIds = new Set(targets.map((target) => target.lessonId));
     for (const id of [
-      "HI-S06-vowel-sign-aa",
       "HI-W128-vowel-sign-i",
       "HI-S116-vowel-sign-ii",
       "HI-S150-vowel-sign-o",
@@ -300,27 +304,43 @@ describe("the real corpus", () => {
   });
 
   it("draws a Devanagari word as its letters' bodies and one shared headline", () => {
-    // The only Devanagari writing headwords that are one word of bare letters
-    // are Sanskrit मम, three times. Every other Devanagari word carries a
-    // vowel sign, a virama, a nasal or a visarga, none of which has a cited
-    // written order against its consonant or the shared headline, so it is
-    // not even a candidate (नाम, नमस्ते, नमः, धन्यवाद, ...).
+    // The Devanagari writing headwords that are one word of bare letters, or
+    // of letters and the ā sign straight after a consonant: Sanskrit मम (three
+    // lessons), Hindi नाम (two) and Marwadi सा. ā is the one sign whose place
+    // against its consonant and the headline is cited (its mark record cites
+    // the cited आ). Every other word carries a sign, a virama, a nasal or a
+    // visarga with no cited place, so it is not even a candidate (नमस्ते, नमः,
+    // धन्यवाद, हो, ...).
     const shared = targets.filter((target) => target.composition === "shared-headline");
-    expect(Object.fromEntries(shared.map((target) => [target.lessonId, target.glyph]))).toEqual({
+    const words = shared.filter((target) => target.letters === undefined);
+    expect(Object.fromEntries(words.map((target) => [target.lessonId, target.glyph]))).toEqual({
+      "HI-A1F01-name-label": "नाम",
+      "HI-W12-schwa-drop": "नाम",
+      "MW-W01-saa": "सा",
       "SA-W03-mama-delayed-copy": "मम",
       "SA-W03-mama-dictation": "मम",
       "SA-W03-mama-guided-copy": "मम",
     });
-    expect(shared.every((target) => target.letters === undefined && target.script === "devanagari")).toBe(true);
+    expect(shared.every((target) => target.script === "devanagari")).toBe(true);
+    // A phrase of such words, separated by single spaces, is drawn word by
+    // word, each word with its own headline: Sanskrit मम नाम, three lessons.
+    const phrases = shared.filter((target) => target.letters !== undefined);
+    expect(Object.fromEntries(phrases.map((target) => [target.lessonId, target.letters]))).toEqual({
+      "SA-W03-mama-nama-delayed-copy": ["मम", "नाम"],
+      "SA-W03-mama-nama-dictation": ["मम", "नाम"],
+      "SA-W03-mama-nama-guided-copy": ["मम", "नाम"],
+    });
     const lessonIds = new Set(targets.map((target) => target.lessonId));
     for (const id of [
-      "SA-W03-mama-nama-guided-copy",
-      "SA-W03-namah-guided-copy",
-      "SA-W10-asti-guided-copy",
-      "HI-W05-write-namaste",
-      "HI-W12-schwa-drop",
-      "MR-W03-dhanyavad-write",
-      "MW-W01-saa",
+      "SA-W03-namah-guided-copy", // ः
+      "SA-W10-asti-guided-copy", // conjunct
+      "HI-W05-write-namaste", // conjunct
+      "MR-W03-dhanyavad-write", // conjunct
+      "MR-W01-ho-delayed-copy", // ो
+      "HI-A1F01-name-supported", // a label: "नाम: मीरा"
+      "HI-W04-write-mera-naam", // े in मेरा
+      "MR-A1M01-reader-greeting", // a sentence: "नमस्कार मीरा."
+      "MW-C07-read-later", // े and ू: "पाछे मिलसू"
     ]) {
       expect(lessonIds.has(id), id).toBe(false);
     }

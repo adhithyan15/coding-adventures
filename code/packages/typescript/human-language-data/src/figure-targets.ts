@@ -617,13 +617,16 @@ export function writingSequenceOf(lesson: ParsedLesson, script: string): string[
 //
 // THIS module decides which headwords are worth trying, from the text alone:
 //
-//   * one word (no space, comma, dash or dot) of two or more letters;
-//   * every letter a single base letter of the script, one code point that
-//     NFD leaves alone. So EVERY sign is refused: no Devanagari sign has a
-//     cited place against its consonant or the shared headline (the signs'
-//     traces were written alone); ि's place is unresolved; ा has no cited
-//     ductus; the virama makes the conjuncts and half forms the font fuses;
-//     and a precomposed nukta letter (क़, U+0958) decomposes into क + ़;
+//   * one word (no space, comma, dash or dot) of two or more characters;
+//   * every character a single base letter of the script, one code point
+//     that NFD leaves alone, or the ā sign (ा) straight after a consonant.
+//     ā is the one sign with a cited place in a word: its mark record cites
+//     the cited आ, which draws the same bar after its body and before its
+//     headline (`HEADLINE_WORD_SIGNS`). Every other sign is refused: none
+//     has a cited place against its consonant AND the shared headline (the
+//     signs' traces were written alone); ि's side is unresolved; the virama
+//     makes the conjuncts and half forms the font fuses; and a precomposed
+//     nukta letter (क़, U+0958) decomposes into क + ़;
 //   * no letter the bundled font SPLITS while shaping, listed with its
 //     citation in `HEADLINE_WORD_SPLIT_LETTER_SOURCES` (ई and ऐ): the strip
 //     lays out each letter's own outline at its advance, which is what the
@@ -631,7 +634,15 @@ export function writingSequenceOf(lesson: ParsedLesson, script: string): string[
 //
 // Shaping every two- and three-letter string of the other cited letters with
 // HarfBuzz gave exactly their `cmap` glyphs at their `hmtx` advances, with no
-// offsets, so for them the composed outline IS the printed word.
+// offsets, so for them the composed outline IS the printed word. The same
+// holds for every cited consonant + ā, alone and between two such letters.
+//
+// A PHRASE (`headlinePhraseOf`) is two or more such words separated by
+// single spaces and nothing else ("मम नाम"). Each word keeps its own
+// headline (the space breaks the line), so each is composed on its own and
+// the strip prints them one after another, word by word. A label ("नाम:
+// मीरा"), a sentence ("… है।") or a list ("नाव · शहर") carries punctuation no
+// source draws, and is refused.
 
 /**
  * Scripts whose words are drawn as their letters' bodies and one shared
@@ -672,30 +683,104 @@ export const HEADLINE_WORD_SPLIT_LETTER_SOURCES: Readonly<Record<string, readonl
 };
 
 /**
+ * The signs a shared-headline word may hold, per script, and the letters each
+ * may follow. Only ā (ा), and only straight after a consonant (क to ह): after
+ * a vowel letter it is not a written syllable. `HEADLINE_WORD_SIGNS` in
+ * script-ductus names the same signs, each with its cited place read from
+ * its mark record; a test there holds the two together.
+ */
+export const HEADLINE_WORD_SIGNS: Readonly<Record<string, ReadonlySet<string>>> = {
+  devanagari: new Set(["\u093E"]), // ा
+};
+const HEADLINE_WORD_CONSONANTS: Readonly<Record<string, RegExp>> = {
+  devanagari: /^[\u0915-\u0939]$/u, // क … ह
+};
+
+/**
+ * Whether `word` is one word this module asks `script-ductus` to compose with
+ * one shared headline: two or more characters, each a base letter of the
+ * script that NFD leaves alone and the font does not split, or a sign from
+ * `HEADLINE_WORD_SIGNS` straight after a consonant.
+ */
+function isHeadlineWord(word: string, script: string): boolean {
+  const letterScript = HEADLINE_WORD_SCRIPTS[script];
+  if (letterScript === undefined) return false;
+  const characters = [...word];
+  if (characters.length < 2) return false;
+  const split = new Set((HEADLINE_WORD_SPLIT_LETTER_SOURCES[script] ?? []).flatMap((source) => source.letters));
+  const signs = HEADLINE_WORD_SIGNS[script];
+  const consonant = HEADLINE_WORD_CONSONANTS[script];
+  return characters.every((character, index) => {
+    if (signs?.has(character)) {
+      const before = characters[index - 1];
+      return before !== undefined && consonant !== undefined && consonant.test(before);
+    }
+    return (
+      BASE_LETTER.test(character) &&
+      letterScript.test(character) &&
+      character.normalize("NFD") === character &&
+      !split.has(character)
+    );
+  });
+}
+
+/**
  * The word a writing lesson's headword is, when it is a word this module asks
  * `script-ductus` to compose with one shared headline; `undefined` otherwise.
  * Like every candidate, it needs a Writing or Script block to land in, and
  * whether it is DRAWN is the ledger's answer (`withDerivedFilmstrips`).
  */
 export function headlineWordOf(lesson: ParsedLesson, script: string): string | undefined {
-  const letterScript = HEADLINE_WORD_SCRIPTS[script];
-  if (letterScript === undefined) return undefined;
+  if (HEADLINE_WORD_SCRIPTS[script] === undefined) return undefined;
   if (lesson.realization.type !== "writing") return undefined;
   if (letterBlockIndex(lesson) === -1) return undefined;
   const word = (lesson.realization.headword ?? "").trim();
   if (word === "" || LIST_SEPARATORS.test(word)) return undefined;
-  const letters = [...word];
-  if (letters.length < 2) return undefined;
-  const split = new Set((HEADLINE_WORD_SPLIT_LETTER_SOURCES[script] ?? []).flatMap((source) => source.letters));
-  const fits = letters.every(
-    (letter) =>
-      BASE_LETTER.test(letter) &&
-      letterScript.test(letter) &&
-      letter.normalize("NFD") === letter &&
-      !split.has(letter),
-  );
-  return fits ? word : undefined;
+  return isHeadlineWord(word, script) ? word : undefined;
 }
+
+/**
+ * The words of a writing lesson's headword when it is a PHRASE this module
+ * asks `script-ductus` to compose word by word; `undefined` otherwise.
+ *
+ * A phrase is two or more words separated by single spaces (U+0020) and
+ * nothing else. Every word is a shared-headline word (`isHeadlineWord`) or a
+ * single base letter of the script, which its own strip draws with its own
+ * headline. A headword whose items are ALL single letters ("न म") is a list,
+ * and `writingSequenceOf` has already taken it. The phrase's pieces (letters
+ * and signs, not spaces) are capped like a sequence's, at
+ * `MAX_SEQUENCE_PIECES`, and its words at `MAX_PHRASE_WORDS`.
+ */
+export function headlinePhraseOf(lesson: ParsedLesson, script: string): string[] | undefined {
+  const letterScript = HEADLINE_WORD_SCRIPTS[script];
+  if (letterScript === undefined) return undefined;
+  if (lesson.realization.type !== "writing") return undefined;
+  if (letterBlockIndex(lesson) === -1) return undefined;
+  const phrase = (lesson.realization.headword ?? "").trim();
+  if (!/^\S+(?: \S+)+$/u.test(phrase)) return undefined;
+  const words = phrase.split(" ");
+  const oneLetter = (word: string): boolean =>
+    [...word].length === 1 && BASE_LETTER.test(word) && letterScript.test(word) && word.normalize("NFD") === word;
+  if (!words.every((word) => isHeadlineWord(word, script) || oneLetter(word))) return undefined;
+  if (words.every(oneLetter)) return undefined;
+  if (words.length > MAX_PHRASE_WORDS) return undefined;
+  if ([...words.join("")].length > MAX_SEQUENCE_PIECES) return undefined;
+  return words;
+}
+
+/**
+ * The most words a phrase strip may draw.
+ *
+ * Each word is a group of its own (its frames wrap at six to a row), so a
+ * phrase grows one band per word. Measured with the cited letters that draw
+ * the most movements in the narrowest words (औइ, औझ, धऋ: three rows each),
+ * three words print 1,571 units tall, under the 1,801 of the tallest strip
+ * already printed; four such words print 2,048, and their frames and
+ * captions would be shrunk past reading. A test in script-ductus
+ * (`filmstrip-ledger.test.ts`) renders that worst case and holds it under the
+ * line.
+ */
+export const MAX_PHRASE_WORDS = 3;
 
 /**
  * The longest sequence a strip may draw, in written pieces.
@@ -725,6 +810,20 @@ export function filmstripCandidates(
     const letters = writingSequenceOf(lesson, script);
     if (letters !== undefined && letters.length > MAX_SEQUENCE_PIECES) continue;
     if (letters === undefined) {
+      // A Devanagari phrase: one composed entry per word, drawn word by word.
+      const words = headlinePhraseOf(lesson, script);
+      if (words !== undefined) {
+        candidates.push({
+          kind: "script-filmstrip",
+          lessonId,
+          script,
+          glyph: (lesson.realization.headword ?? "").trim(),
+          letters: words,
+          composition: "shared-headline",
+          output,
+        });
+        continue;
+      }
       // A Devanagari word: one entry, composed from its letters and one
       // shared headline by script-ductus.
       const word = headlineWordOf(lesson, script);
@@ -796,6 +895,8 @@ export function withDerivedFilmstrips(
  *
  * A Devanagari word reads "How मम is written, letter by letter, then one
  * headline": its strip draws the letters' bodies and then the one headline.
+ * A Devanagari phrase reads "How मम नाम is written, word by word, each with
+ * its own headline": its strip draws each word that way, one after another.
  * A sequence reads "How はい is written" when its letters spell the headword
  * as one word, and "How the letters வ, க are written" when the headword is a
  * LIST — the letters joined back together are then not the headword, because
@@ -805,6 +906,10 @@ export function withDerivedFilmstrips(
  */
 export function filmstripImageMarkdown(target: ScriptFilmstripTarget): string {
   const file = `figures/${basename(target.output)}`;
+  // A shared-headline phrase: each word's letters, then that word's headline.
+  if (target.composition === "shared-headline" && target.letters !== undefined) {
+    return `![How ${target.glyph} is written, word by word, each with its own headline, stroke by stroke](${file})`;
+  }
   // A shared-headline word: its letters' bodies, then one headline across it.
   if (target.composition === "shared-headline") {
     return `![How ${target.glyph} is written, letter by letter, then one headline, stroke by stroke](${file})`;

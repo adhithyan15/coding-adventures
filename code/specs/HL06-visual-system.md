@@ -493,10 +493,9 @@ check, the ink fit included, the whole phrase is refused, naming the word
   commas, dashes or middle dots. Stripping it would print a strip of
   something the lesson does not ask the learner to write.
 * Length: like a sequence strip, a phrase is a candidate only up to
-  `MAX_SEQUENCE_PIECES` (10) pieces, counting its letters and signs. The
-  implementation measures the tallest strip that cap allows and records it
-  here; the figure must stay at or under the 1,801 units of the tallest
-  printed strip, else the cap tightens.
+  `MAX_SEQUENCE_PIECES` (10) pieces, counting its letters and signs, and
+  (as built, see below) up to `MAX_PHRASE_WORDS` (3) words. The figure must
+  stay at or under the 1,801 units of the tallest printed strip.
 
 **What it should unlock.** Ten lessons: Hindi नाम (HI-A1F01-name-label,
 HI-W12-schwa-drop) and ā (HI-S06); Marathi ā (MR-W01-aa-matra); Marwadi सा
@@ -506,6 +505,23 @@ gains a strip loses the "copy what you see" disclaimer, as before. Still
 refused: हो (ो), नमः (ः), every conjunct word (नमस्ते, धन्यवाद, अस्ति, स्त),
 every word with ि, े, ी, ं or a nukta, and every label, sentence and list
 that carries punctuation.
+
+**As built.** The design held, with one addition: the piece cap alone was
+not enough. Each word of a phrase is a group of its own, so a phrase grows
+one band per word, and two-letter words of the cited letters with the most
+movements (औइ, औझ, धऋ, औब) wrap to three rows each. Measured with those,
+three words print 1,571.14 units tall and four 2,048 (both within ten
+pieces), so `MAX_PHRASE_WORDS` is 3; a case in
+`script-ductus/tests/filmstrip-ledger.test.ts` renders the three-word worst
+case and holds it under 1,801.14. The ten lessons above print strips and
+nothing else changed: no earlier figure's bytes moved (a word strip alone
+adds its unit to the figure's source hash). The book's alt text reads "How
+मम नाम is written, word by word, each with its own headline". The
+`<desc>` of a word strip says each word is drawn as its letters' bodies,
+then one headline over that word. Prose fixed alongside: HI-S06 and SA-S06
+lose the "copy what you see" disclaimer; SA-W03-mama-nama-guided-copy and
+HI-A1F01-name-label stop telling the learner to join or draw each letter's
+headline and follow the strip (one headline per word, last).
 
 #### As built — Bengali, cited to native writers' pen traces
 

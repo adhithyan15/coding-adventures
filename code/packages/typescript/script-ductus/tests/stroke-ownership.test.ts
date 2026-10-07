@@ -563,12 +563,19 @@ describe("stroke ownership migration baseline", () => {
       // and the precomposed á é í ó ú ü (UJIpenchars2 for the mark). Keys move
       // 622 -> 635 with `latin: 31`; the ordered key hash and the non-Tamil
       // data hash move; Tamil and both shared-identity values stay.
+      //
+      // The ā sign (ा) joins the Devanagari owner, before ु in the signs: the
+      // stem, then the piece of headline Noto prints on it (HP Labs India's
+      // LipiTk class 47 for the strokes; the cited आ for its place in a
+      // word). Keys move 635 -> 636 with `devanagari: 53`; the ordered key
+      // hash and the non-Tamil data hash move; Tamil and both shared-identity
+      // values stay.
     }).toEqual({
-      keys: 635,
+      keys: 636,
       keyHash:
-        "b1ed39f0aed782091678cf2041df407795f2d28a4312e5fba9b0e4ddd414daef",
+        "e52c9816c055a36748539ab5cef8fff66e84864940ff302d08489af05317eb28",
       nonTamilDataHash:
-        "76a658dccd4c5c8eef14c45bb7b331b16f87593b61d0af30f448388f2857e5a0",
+        "2aa2d54472b3ebe37be571366646460e5f55a3dfe6f21bf3c181fc79b1fcc626",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -577,7 +584,7 @@ describe("stroke ownership migration baseline", () => {
         bengali: 9,
         chinese: 60,
         cyrillic: 33,
-        devanagari: 52,
+        devanagari: 53,
         gujarati: 55,
         gurmukhi: 27,
         hebrew: 22,

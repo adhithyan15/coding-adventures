@@ -36,7 +36,7 @@ data/scripts/*.{json,d/} ─► scriptdata.ts ─┐
 | `strokes.ts` + `strokes/*.ts` | **how** a letter is written — a fixed public registry assembled from writing-system-owned pen-path modules |
 | `truetype.ts` | **what** the letter looks like — a zero-dependency TrueType reader pulling the real outline out of the shipped font |
 | `ductusview.ts` | the join — the filmstrip, as a tree of plain objects plus a serialiser |
-| `headline-word.ts` | a Devanagari **word** — its cited letters' bodies, then one headline across the word, fitted to the printed word (uses `ink.ts`) |
+| `headline-word.ts` | a Devanagari **word** — its cited letters' bodies (and ā stems), then one headline across the word, fitted to the printed word (uses `ink.ts`); a phrase, word by word |
 
 ## The design idea worth knowing
 
@@ -220,10 +220,21 @@ India's LipiTk Devanagari data: 82% of 2,706 consonant prototypes; about 5%
 first). A word whose composed path does not fit the printed word at the
 default tolerances is refused, not drawn.
 
+One sign may join a word: ā (ा), straight after a consonant. Its stem is drawn
+after the consonant's body and its piece of headline becomes part of the
+word's one headline; its place is cited on its mark record (the cited आ draws
+the same bar after the body and before the headline) and read from there by
+`HEADLINE_WORD_SIGNS`. A phrase (words separated by single spaces) is composed
+word by word by `composeHeadlinePhrase`, each word with its own headline, and
+refused whole if any word fails.
+
 ```ts
-const word = composeHeadlineWord("मम", "devanagari", font);
+const word = composeHeadlineWord("नाम", "devanagari", font);
 if (word.ok) buildFilmstripEntry(word.ductus, word.outline, fontPath);
 else console.log(word.reason); // e.g. मथ: the shared headline is only 88.2% on ink
+
+const phrase = composeHeadlinePhrase("मम नाम", "devanagari", font);
+if (phrase.ok) for (const w of phrase.words) buildFilmstripEntry(w.ductus, w.outline, fontPath);
 ```
 
 ## No DOM, no filesystem

@@ -994,11 +994,16 @@ Two kinds exist:
   22 consonants that take a stem form; જ and ૹ with ા, ી, ો, ૌ). Each group
   of fused pairs carries its citation in `FUSED_SIGN_PAIR_SOURCES`, and a
   test fails if a pair is added or dropped without its source.
-  Devanagari has no table on purpose: its eight cited signs (ु ू े ं ़ ् ृ ँ)
+  Devanagari has no table on purpose: its nine cited signs (ा ु ू े ं ़ ् ृ ँ)
   come from native writers who wrote each sign alone, which says nothing about
-  its order against a consonant or the headline, so only a lesson whose
-  headword is the bare sign prints one (a one-glyph strip), and कि or any
-  Devanagari word with a sign stays refused.
+  its order against a consonant or the headline, so a lesson whose headword
+  is the bare sign prints a one-glyph strip, and कि stays refused. A
+  Devanagari WORD is one composed entry (its letters' bodies, then one shared
+  headline), and the one sign it may hold is ā straight after a consonant,
+  whose place is cited separately (`HEADLINE_WORD_SIGNS`). A phrase of such
+  words separated by single spaces (`headlinePhraseOf`, at most
+  `MAX_PHRASE_WORDS` words) prints as a strip of words, "Word 1 of 2", each
+  word with its own headline.
   Generated book chapters rewrite the lesson's `.svg` image
 destination to `.pdf`; the books workflow creates that PDF with `rsvg-convert`
 before XeLaTeX runs.

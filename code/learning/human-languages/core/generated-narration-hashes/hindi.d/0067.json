@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 67,
-  "sourceHash": "fnv1a64:ce485597183af95a",
+  "sourceHash": "fnv1a64:77bf1c3f5df1d8cd",
   "lessonIds": [
     "HI-A1F01-name-label",
     "HI-A1F01-name-select",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "hindi/narration/ch67.txt",
   "json": "hindi/narration/ch67.json",
-  "textHash": "fnv1a64:b374b1ce4e99d2ac",
-  "jsonHash": "fnv1a64:671aa26ac9acc2c7",
+  "textHash": "fnv1a64:a3c9e60113e0d553",
+  "jsonHash": "fnv1a64:8538755bdd8f90ff",
   "findings": []
 }

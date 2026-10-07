@@ -3,6 +3,13 @@
   "figures": [
     {
       "kind": "script-filmstrip",
+      "lessonId": "MR-W01-aa-matra",
+      "sourceHash": "fnv1a64:29b18e8c24613a3f",
+      "svgHash": "fnv1a64:c181c00311f74a7f",
+      "svg": "marathi/book/figures/MR-W01-aa-matra-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "MR-W01-ha",
       "sourceHash": "fnv1a64:3c099e358b7d0b1d",
       "svgHash": "fnv1a64:0012d542243408f0",

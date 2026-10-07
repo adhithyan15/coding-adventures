@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "The First Form Line: Name",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ce485597183af95a",
+  "sourceHash": "fnv1a64:77bf1c3f5df1d8cd",
   "lessons": [
     {
       "id": "HI-A1F01-name-label",
@@ -20,7 +20,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:b9ba565144af50b7",
+      "sourceHash": "fnv1a64:b3e1542dfe445283",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -63,7 +63,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Copy only नाम (nām) once. Check न, then ा, then म, and draw each head-line after its letter shape. Do not add a value yet. This visible copy is supported script practice, not independent form writing."
+              "text": "Copy only नाम (nām) once, following the numbered strip: न, the stem of ा, then म, and last one head-line across the whole word. Do not add a value yet. This visible copy is supported script practice, not independent form writing."
             }
           ]
         },

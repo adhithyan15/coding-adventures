@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:3f4f1de17f297b29",
+  "sourceHash": "fnv1a64:14144ae285c57d76",
   "lessons": [
     {
       "id": "SA-C03-katham",
@@ -240,7 +240,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c89d5653dc913ee9",
+      "sourceHash": "fnv1a64:9fcf2d910be3df23",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -327,15 +327,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ◌ा — copy what you see",
+          "title": "Writing: ◌ा — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ◌ा (ā) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ◌ा (ā) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },
@@ -1181,7 +1181,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:bf1c8607ac1b5d10",
+      "sourceHash": "fnv1a64:35fff4806a3dafe8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1209,11 +1209,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep the phrase visible and copy it once."
+              "text": "Keep the phrase visible and follow the numbered strip, one word at a time."
             },
             {
               "kind": "speech",
-              "text": "Write मम (mama), joining its two letter headlines."
+              "text": "Write मम (mama): the body of each म, then one headline across the word."
             },
             {
               "kind": "speech",
@@ -1221,11 +1221,11 @@
             },
             {
               "kind": "speech",
-              "text": "Build ना from न + ◌ा (ā), then add म (ma) to complete नाम."
+              "text": "Write नाम: न, the stem of ◌ा (ā), then म (ma), and last one headline across the word."
             },
             {
               "kind": "speech",
-              "text": "The vowel sign changes na to nā; it does not begin a separate letter. Read the finished phrase once: मम नाम (mama nāma), “my name.”"
+              "text": "The vowel sign changes na to nā; it does not begin a separate letter. Most native writers leave the headline for last; some draw it first. Read the finished phrase once: मम नाम (mama nāma), “my name.”"
             }
           ]
         },

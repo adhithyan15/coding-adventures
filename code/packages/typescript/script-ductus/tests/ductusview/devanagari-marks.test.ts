@@ -1,7 +1,8 @@
-// How the eight Devanagari signs print as filmstrips: one frame per movement,
+// How the nine Devanagari signs print as filmstrips: one frame per movement,
 // a lift exactly where HP Labs India's native writers lift the pen, and each
 // sign drawn over the bundled Noto Sans Devanagari outline of the sign by
-// itself — no consonant, and no headline the printed sign does not carry.
+// itself — no consonant, and no headline the printed sign does not carry (ā
+// carries a piece of one, so its strip draws it, last).
 import { describe, expect, it } from "vitest";
 import { DUCTUS, ductusKey, penPathD } from "../../src/strokes";
 import { ductusFilmstrip, ductusFor, ductusSteps } from "../../src/ductusview";
@@ -10,6 +11,7 @@ import { byTag } from "../support/svg-tree";
 
 //   sign   lifts before each movement            summary
 const VIEWS: Record<string, { lifts: boolean[]; summary: string }> = {
+  "ा": { lifts: [false, true], summary: "2 strokes · 1 pen lift · 2 movements" },
   "ु": { lifts: [false, false, false], summary: "one unbroken stroke · 3 movements" },
   "ू": { lifts: [false, false, false], summary: "one unbroken stroke · 3 movements" },
   "े": { lifts: [false, false], summary: "one unbroken stroke · 2 movements" },
