@@ -4,6 +4,14 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - oracle capture counter compiles on current CI Rust
+
+The oracle-refresh example reserves aggregate capture bytes with a checked
+compare-and-exchange loop instead of the deprecated atomic update method.
+Its existing 32 MiB limit and acquire/release ordering are retained. Exact-cap,
+overflow and concurrent saturation tests prove failed reservations leave the
+counter unchanged. Oracle inputs, trust pins and classifications are unchanged.
+
 ### Fixed - prove primitive fold lineage through the sidecar (CLOC31 / CCR-065)
 
 Primitive fold records now belong to the replacement and retain operand
