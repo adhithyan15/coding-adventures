@@ -1499,6 +1499,17 @@ fn swimlane_parallel_endpoints_lower_to_individual_handoffs() {
 }
 
 #[test]
+fn swimlane_flowchart_style_edge_labels_lower_to_semantic_edges() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  Start\n  Process1\nend\nStart --Yes --> Process1 --> Start",
+    ).expect("Flowchart-style Swimlane edge labels should parse");
+
+    assert_eq!(diagram.edges.len(), 2);
+    assert_eq!(diagram.edges[0].label.as_deref(), Some("Yes"));
+    assert_eq!(diagram.edges[1].label, None);
+}
+
+#[test]
 fn railroad_dispatches_all_notations_to_recursive_ir() {
     let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
     let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");

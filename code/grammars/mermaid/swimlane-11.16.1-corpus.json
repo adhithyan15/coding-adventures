@@ -13,6 +13,10 @@
     {
       "name": "parallel-branch-and-join",
       "source": "swimlane-beta LR\nsubgraph Dep1\n  Start\nend\nsubgraph Dep2\n  Process1\n  Decision1\n  Process2\n  Process5\nend\nsubgraph Dep3\n  Process3\n  Decision2\nend\nsubgraph Dep4\n  Process4\n  Process6\n  Finish\nend\nStart --> Process1 --> Decision1 --> Process2 --> Decision2\nDecision1 --> Process3\nProcess3 --> Process4 --> Decision2 --> Process6 & Process5--> Finish"
+    },
+    {
+      "name": "flowchart-style-edge-label",
+      "source": "swimlane-beta LR\nsubgraph Dep1\n  Start\n  Process1\nend\nStart --Yes --> Process1 --> Start"
     }
   ]
 }
