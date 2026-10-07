@@ -21,6 +21,7 @@
 //! The root node's `rule_name` is `"translation_unit"`.
 
 use coding_adventures_c_lexer::{tokenize_c, try_tokenize_c};
+use lexer::token::Token;
 use parser::grammar_parser::{GrammarASTNode, GrammarParser, DEFAULT_MAX_RULE_DEPTH};
 
 mod _grammar;
@@ -48,6 +49,9 @@ mod _grammar;
 /// reasonable, evidence-backed interim value pending the full bespoke
 /// measurement for this crate's own grammar (tracked as a follow-up).
 const MAX_RULE_DEPTH: usize = DEFAULT_MAX_RULE_DEPTH;
+const MAX_INPUT_TOKENS: usize = 2_000_000;
+const MAX_TOKEN_FIELD_BYTES: usize = 64 * 1024;
+const MAX_TOTAL_TOKEN_TEXT_BYTES: usize = 64 * 1024 * 1024;
 
 /// Create a [`GrammarParser`] wired to the C grammar and tokens.  Ready to
 /// call `.parse()`.
@@ -69,10 +73,60 @@ pub fn parse_c(source: &str) -> GrammarASTNode {
 /// `create_c_parser` uses).
 pub fn try_parse_c(source: &str) -> Result<GrammarASTNode, String> {
     let tokens = try_tokenize_c(source)?;
+    try_parse_c_tokens(tokens)
+}
+
+/// Parse an already-tokenized C stream, such as the directive-free output of
+/// PREP01's C dialect. This path keeps the same compiled grammar and recursion
+/// cap as [`try_parse_c`], and never reconstructs or re-lexes source text.
+///
+/// The token count and text checks run before packrat memoization can amplify
+/// the cost of a caller-supplied stream. The preprocessor applies its own
+/// input and expansion bounds; this public boundary checks them independently.
+pub fn try_parse_c_tokens(tokens: Vec<Token>) -> Result<GrammarASTNode, String> {
+    check_token_budget(
+        &tokens,
+        MAX_INPUT_TOKENS,
+        MAX_TOKEN_FIELD_BYTES,
+        MAX_TOTAL_TOKEN_TEXT_BYTES,
+    )?;
     GrammarParser::new(tokens, _grammar::parser_grammar())
         .with_max_depth(MAX_RULE_DEPTH)
         .parse()
         .map_err(|e| format!("{e}"))
+}
+
+/// Check the same dimensions independently, because a fixed token count does
+/// not bound the size of the strings the packrat parser may clone into its AST.
+fn check_token_budget(
+    tokens: &[Token],
+    max_tokens: usize,
+    max_field_bytes: usize,
+    max_text_bytes: usize,
+) -> Result<(), String> {
+    if tokens.len() > max_tokens {
+        return Err(format!("C token input exceeds {max_tokens} tokens"));
+    }
+    let mut text_bytes = 0_usize;
+    for token in tokens {
+        for field in [
+            Some(token.value.as_str()),
+            token.type_name.as_deref(),
+            token.cv.as_deref(),
+        ]
+        .into_iter()
+        .flatten()
+        {
+            if field.len() > max_field_bytes {
+                return Err(format!("C token field exceeds {max_field_bytes} bytes"));
+            }
+            text_bytes = text_bytes.saturating_add(field.len());
+            if text_bytes > max_text_bytes {
+                return Err(format!("C token text exceeds {max_text_bytes} bytes"));
+            }
+        }
+    }
+    Ok(())
 }
 
 #[cfg(test)]
@@ -82,6 +136,52 @@ mod tests {
 
     fn root(src: &str) -> GrammarASTNode {
         parse_c(src)
+    }
+
+    #[test]
+    fn token_input_matches_source_input() {
+        let src = "int main(void) { return 2 + 3; }";
+        let tokens = try_tokenize_c(src).unwrap();
+        assert_eq!(
+            try_parse_c_tokens(tokens).unwrap(),
+            try_parse_c(src).unwrap()
+        );
+    }
+
+    #[test]
+    fn token_input_without_eof_parses() {
+        // PREP01 emits ordinary source tokens, not an EOF sentinel. The C
+        // grammar parser already accepts this representation directly.
+        let mut tokens = try_tokenize_c("int main(void) { return 1; }").unwrap();
+        tokens.pop();
+        assert_eq!(
+            try_parse_c_tokens(tokens).unwrap().rule_name,
+            "translation_unit"
+        );
+    }
+
+    #[test]
+    fn oversized_token_field_is_rejected_before_parsing() {
+        let mut tokens = try_tokenize_c("int main(void) { return 1; }").unwrap();
+        tokens[0].value = "x".repeat(MAX_TOKEN_FIELD_BYTES + 1);
+        assert!(try_parse_c_tokens(tokens)
+            .unwrap_err()
+            .contains("field exceeds"));
+    }
+
+    #[test]
+    fn token_budget_counts_metadata_and_aggregate_text() {
+        let mut tokens = try_tokenize_c("int main(void) { return 1; }").unwrap();
+        tokens[0].cv = Some("origin".into());
+        assert!(check_token_budget(&tokens, tokens.len() - 1, 100, 100)
+            .unwrap_err()
+            .contains("tokens"));
+        assert!(check_token_budget(&tokens, tokens.len(), 5, 100)
+            .unwrap_err()
+            .contains("field"));
+        assert!(check_token_budget(&tokens, tokens.len(), 100, 10)
+            .unwrap_err()
+            .contains("text"));
     }
 
     /// Does the tree contain a node with this `rule_name` anywhere?
@@ -185,7 +285,11 @@ mod tests {
         // `int a[] = {…}` (size inferred) and `a[i] = v` (indexed write).
         let ast = root("int main(void) { int a[] = {5, 6}; a[1] = 9; return a[1]; }");
         assert!(has_rule(&ast, "init_list"));
-        assert_eq!(count_rule(&ast, "index_suffix"), 2, "a[1]=… and return a[1]");
+        assert_eq!(
+            count_rule(&ast, "index_suffix"),
+            2,
+            "a[1]=… and return a[1]"
+        );
     }
 
     // -------------------------------------------------------------------

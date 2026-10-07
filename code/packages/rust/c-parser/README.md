@@ -16,6 +16,11 @@ let cst = parse_c("int main(void) { return 2 + 3 * 4; }");
 assert_eq!(cst.rule_name, "translation_unit");
 ```
 
+`try_parse_c_tokens(tokens)` accepts an already-tokenized, directive-free C
+stream from a preprocessing hook. It uses the same grammar and recursion guard
+as `try_parse_c`, with finite token-count and token-text limits checked before
+packrat parsing. The token stream may omit the lexer-generated EOF sentinel.
+
 The result is the generic `parser::grammar_parser::GrammarASTNode` CST
 (`rule_name` + `children`); consumers walk it by `rule_name`.  The full C
 expression precedence cascade is encoded in the grammar; a `(T)e` cast is

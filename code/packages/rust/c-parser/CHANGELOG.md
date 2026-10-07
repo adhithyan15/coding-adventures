@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — PREP01 C parser handoff
+
+- Add `try_parse_c_tokens` so the generic preprocessor's directive-free C
+  tokens can reach the existing grammar without re-lexing or losing provenance.
+- Bound the public token-input path before packrat parsing, including token
+  count, individual string fields, and aggregate token text.
+
 ## 0.1.0 — C integer-core parser (SIR27)
 
 - Grammar-driven parser over `code/grammars/c/c.grammar`, wrapping
