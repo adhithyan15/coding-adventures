@@ -40,7 +40,7 @@ history, and local test runs. This file is the result: one ordered list.
    - MB-14, MosaicBook listened on every interface (*fixed, unpushed*);
    - MB-1, apps cannot be previewed (*fixed, unpushed*);
    - SW-2, SpiceWorkbench does not compile on four native backends;
-   - SW-1, `Path` on Web Components;
+   - SW-1, `Path` on Web Components (*fixed, unpushed*);
    - VC-1, VisiCalc's native Open/Save.
 2. **Small bugs, batched by package.**
    - MosaicBook: MB-2, MB-3 and MB-4;
@@ -125,7 +125,7 @@ was on 2026-09-20.
 
 | ID | Problem | Status and evidence | Kind | Size |
 |---|---|---|---|---|
-| SW-1 | The Web Component emitter rejects `Path` | **real, reproduced**. It falls through to `UnknownPrimitive` (`mosaic-emit-webcomponent/src/pipeline.rs:3047`), and is waived in `mosaicbook-degradations.json`. Port from `mosaic-emit-html/src/pipeline.rs:1785`, then remove the waiver. #14686 | bug | S–M |
+| SW-1 | The Web Component emitter rejects `Path` | **fixed** on `claude/brave-ride-edfrqw` (unpushed); MosaicBook's waiver removed. Was: It falls through to `UnknownPrimitive` (`mosaic-emit-webcomponent/src/pipeline.rs:3047`), and is waived in `mosaicbook-degradations.json`. Port from `mosaic-emit-html/src/pipeline.rs:1785`, then remove the waiver. #14686 | bug | S–M |
 | SW-2 | Does not compile at all for SwiftUI, Compose, Flutter or Qt | **real, reproduced**:<br>• SwiftUI: "primitive 'Path' is not yet supported".<br>• Compose, Flutter and Qt: "Path prop 'x1' is bound … only supports a literal number".<br>Nothing records it, because MosaicBook gates only browser backends. XAML's #14682 is the template for the bound line geometry. #16926 | bug | M–L |
 | SW-3 | No app shell or deploy; only package artifacts and the adapter's WASM test | **real** | feature | L |
 | SW-4 | Collapse-never pinned split: no runtime proof | **real**. `SpiceWorkbench.mll` has no `HostNavigationSplit`, and there is no runnable app to resize. #15699 (parent #15481) | feature | M |

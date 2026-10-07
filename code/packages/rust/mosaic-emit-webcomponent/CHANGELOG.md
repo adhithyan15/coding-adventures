@@ -4,6 +4,13 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+- **`Path` lowers to SVG (UI39, #14686).** `circle`, `line` and `curve` emit the same inert SVG overlay as the html emitter, with paint from the part's style (`background` → fill, `border-color` → stroke, `border-width` → stroke width). Before this, `Path` fell through to `UnknownPrimitive`, so SpiceWorkbench could not compile on Web Components, and MosaicBook carried a waiver for it.
+  - A bound coordinate, from a slot or an expression such as `( segment[0] )`, is interpolated through `Number(...)`, so it can only ever produce a number in the attribute.
+  - Paint values go through `escape_html_attribute`, which also guards the template literal.
+  - `arc`, an unknown kind, a missing or non-finite coordinate and an unsafe slot name are refused, as on html.
+  - `css_value` and `css_declarations` (quote- and paren-aware, #15221) are ported from the html emitter.
+  - The MosaicBook waiver is removed: `--check` passes with 3 recorded degradations instead of 4.
+
 - **`HostCheckbox` in a list reports which row changed (UI29-2 §2.1.1).** Inside a `For`, an `onToggle` that targets `( index : number )` now carries the row index, exactly as a `HostButton` click does. Before, it carried only the new checked value, so a list of checkboxes could not say which item was toggled, and `mosaic-pkg-checklist` had to draw a toggle button beside a "☐" glyph. Any other single parameter still receives the checked value.
   - The index form reuses `HostButton`'s `data-mosaic-index` dispatch. `checked` reads a loop binding or row expression by truthiness; a binding or expression label renders through `HostButton`'s escaped label body.
 

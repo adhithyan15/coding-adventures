@@ -1,7 +1,7 @@
 # UI39 — `Path`, a kernel drawing primitive
 
-**Status:** XAML, Qt, Flutter, Compose, HTML, and React implemented
-(`circle`/`line`/`curve`); SwiftUI/webcomponent not yet — see §6.
+**Status:** XAML, Qt, Flutter, Compose, HTML, React and Web Components
+implemented (`circle`/`line`/`curve`); SwiftUI not yet — see §6.
 **Kernel surface:** one new primitive, `Path`, added to the 33-entry kernel
 list `moslayout-compiler::PRIMITIVES` (UI29 §2.1) and its mirror,
 `mosaic-package-resolver::KERNEL_PRIMITIVES`.
@@ -160,7 +160,8 @@ plumbing + a round-trip fixture — no rendering), then one PR per backend.
 | SwiftUI | not yet — tracked as a follow-up issue |
 | HTML | **implemented** — `circle`/`line`/`curve` lower to SVG geometry inside an inert, absolutely positioned SVG overlay. Coordinates preserve literal, slot, and expression bindings through the existing mustache runtime paths, so array-backed series such as `segment[0]` render as `{{segment.0}}`. `arc` hard-errors with the same named unsupported-kind message as the native backends. |
 | React | **implemented** — `circle`/`line`/`curve` lower to SVG geometry inside an inert overlay, with literal, slot, and expression coordinates emitted as JSX expressions. The workbench waveform phase exercises dynamic `segment[index]` line coordinates end to end. `arc` has the same named unsupported-kind gap. |
-| SwiftUI, webcomponent | not yet — each remains an explicitly tracked backend gap rather than an assumed no-op. |
+| Web Components | **implemented** (#14686) — the same inert SVG overlay as HTML, with the same `circle`/`line`/`curve` shapes and part paint. The output is template code rather than a static template, so a slot or expression coordinate is interpolated (`${Number(segment[0])}`); wrapping each one in `Number(...)` means a bound value can only ever produce a number in the attribute. `arc` has the same named unsupported-kind gap. MosaicBook's SpiceWorkbench story now compiles on this backend, and its recorded degradation is gone. |
+| SwiftUI | not yet — an explicitly tracked backend gap rather than an assumed no-op (#13206; SpiceWorkbench's native gap is #16926). |
 
 Until a backend implements `Path`, an author using it renders nothing (a
 reported degradation, not silent) on that host — the same posture UI36 §5

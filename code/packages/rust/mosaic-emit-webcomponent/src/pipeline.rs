@@ -1205,6 +1205,10 @@ fn emit_html_tree(
         // UI29-4 §3.2; richer tooltips are reserved for UI29-5.
         "HostTooltip" => return emit_host_tooltip(node, ctx, part_styles),
 
+        // UI39 — real vector geometry (#14686). The same parameterized shapes
+        // the html emitter draws, with bound coordinates interpolated.
+        "Path" => return emit_path(node, part_styles),
+
         // UI29-6 — a semantic pane/detail split. Web Components do not have
         // a native adaptive split element, so this preserves the landmark and
         // sizing contract while UI48 owns future viewport-driven collapse.
@@ -2457,6 +2461,153 @@ fn emit_host_tooltip(
         inner.push_str(&emit_html_tree(child, 0, ctx, part_styles)?);
     }
     Ok(format!("<span{attrs}>{inner}</span>"))
+}
+
+/// Lower UI39 `Path` to an inline `<svg>` overlay (#14686), the shape the
+/// html emitter draws (`mosaic-emit-html`'s `emit_path_html`):
+///
+/// | `kind:`  | element                                   |
+/// |----------|-------------------------------------------|
+/// | `circle` | `<circle cx cy r>`                        |
+/// | `line`   | `<line x1 y1 x2 y2>`                      |
+/// | `curve`  | `<path d="M x1 y1 Q cx cy x2 y2">`        |
+/// | `arc`    | not yet supported (as on html)            |
+///
+/// Paint comes from the part's style: `background` is the fill (default
+/// `none`), `border-color` the stroke (default `currentColor`) and
+/// `border-width` the stroke width (default `1`). Every value goes through
+/// [`escape_html_attribute`], which also guards the template literal this
+/// markup lives in.
+///
+/// Unlike html's static template, this output is code, so a bound coordinate
+/// is interpolated: a slot reads its camelCased property, and an expression
+/// such as `( line[0] )` is evaluated in the current loop scope. Each is
+/// wrapped in `Number(...)`, so whatever value arrives, the attribute can
+/// only ever hold a number (a non-number becomes `NaN`, which SVG ignores),
+/// never markup.
+fn emit_path(node: &LayoutNode, part_styles: &HtmlStyles) -> Result<String, PipelineEmitError> {
+    let style = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.parts.get(part))
+        .map(String::as_str)
+        .unwrap_or("");
+    let fill = css_value(style, "background").unwrap_or("none");
+    let stroke = css_value(style, "border-color").unwrap_or("currentColor");
+    let stroke_width = css_value(style, "border-width").unwrap_or("1");
+    let common = format!(
+        r#" fill="{}" stroke="{}" stroke-width="{}""#,
+        escape_html_attribute(fill),
+        escape_html_attribute(stroke),
+        escape_html_attribute(stroke_width),
+    );
+    let svg_open = r#"<svg aria-hidden="true" focusable="false" style="position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none">"#;
+    let kind = find_keyword(node, "kind").ok_or_else(|| {
+        PipelineEmitError::UnknownPrimitive("Path missing required prop `kind:`".to_owned())
+    })?;
+    let geometry = match kind {
+        "circle" => format!(
+            r#"<circle cx="{}" cy="{}" r="{}"{common}></circle>"#,
+            path_coordinate(node, "cx")?,
+            path_coordinate(node, "cy")?,
+            path_coordinate(node, "r")?,
+        ),
+        "line" => format!(
+            r#"<line x1="{}" y1="{}" x2="{}" y2="{}"{common}></line>"#,
+            path_coordinate(node, "x1")?,
+            path_coordinate(node, "y1")?,
+            path_coordinate(node, "x2")?,
+            path_coordinate(node, "y2")?,
+        ),
+        "curve" => format!(
+            r#"<path d="M {} {} Q {} {} {} {}"{common}></path>"#,
+            path_coordinate(node, "x1")?,
+            path_coordinate(node, "y1")?,
+            path_coordinate(node, "cx")?,
+            path_coordinate(node, "cy")?,
+            path_coordinate(node, "x2")?,
+            path_coordinate(node, "y2")?,
+        ),
+        "arc" => {
+            return Err(PipelineEmitError::UnknownPrimitive(
+                "Path kind `arc` is not yet supported by the Web Component emitter".to_owned(),
+            ))
+        }
+        other => {
+            return Err(PipelineEmitError::UnknownPrimitive(format!(
+                "Path kind `{other}` is not a recognized shape kind (expected circle, line, curve, or arc)"
+            )))
+        }
+    };
+    Ok(format!("{svg_open}{geometry}</svg>"))
+}
+
+/// One `Path` coordinate: a finite literal as written, or a bound value
+/// interpolated through `Number(...)` (see [`emit_path`]).
+fn path_coordinate(node: &LayoutNode, prop_name: &str) -> Result<String, PipelineEmitError> {
+    let value = node.props.iter().find(|p| p.name == prop_name).map(|p| &p.value);
+    match value {
+        Some(LayoutPropValue::Number(n)) if n.is_finite() => Ok(n.to_string()),
+        Some(LayoutPropValue::Number(_)) => Err(PipelineEmitError::UnknownPrimitive(format!(
+            "Path prop `{prop_name}:` must be a finite number"
+        ))),
+        Some(LayoutPropValue::SlotRef(slot)) => {
+            let camel = to_camel_case_first_lower(slot);
+            if !is_safe_identifier(&camel) {
+                return Err(PipelineEmitError::UnsafeSlotName(camel));
+            }
+            Ok(format!("${{Number({camel})}}"))
+        }
+        Some(LayoutPropValue::Expr(expr)) if !strip_outer_parens(expr.trim()).is_empty() => {
+            Ok(format!("${{Number({})}}", strip_outer_parens(expr.trim())))
+        }
+        _ => Err(PipelineEmitError::UnknownPrimitive(format!(
+            "Path missing required numeric prop `{prop_name}:`"
+        ))),
+    }
+}
+
+/// Look up one property in a serialized CSS declaration body, splitting only
+/// on top-level `;` (not inside a quoted string or `url(...)`). The same
+/// parse as `mosaic-emit-html`'s `css_value` (#15221).
+fn css_value<'a>(style: &'a str, property: &str) -> Option<&'a str> {
+    css_declarations(style).find_map(|declaration| {
+        let (name, value) = declaration.trim().split_once(':')?;
+        (name.trim() == property).then_some(value.trim())
+    })
+}
+
+/// Split a CSS declaration body on its top-level `;`.
+fn css_declarations(style: &str) -> impl Iterator<Item = &str> {
+    let mut boundaries = vec![0usize];
+    let mut quote: Option<char> = None;
+    let mut escaped = false;
+    let mut depth: i32 = 0;
+    for (idx, ch) in style.char_indices() {
+        if escaped {
+            escaped = false;
+            continue;
+        }
+        match ch {
+            '\\' if quote.is_some() => escaped = true,
+            '"' | '\'' => match quote {
+                Some(open) if open == ch => quote = None,
+                None => quote = Some(ch),
+                _ => {}
+            },
+            '(' if quote.is_none() => depth += 1,
+            ')' if quote.is_none() => depth -= 1,
+            ';' if quote.is_none() && depth <= 0 => boundaries.push(idx),
+            _ => {}
+        }
+    }
+    boundaries.push(style.len());
+    let mut out = Vec::new();
+    for pair in boundaries.windows(2) {
+        let slice = &style[pair[0]..pair[1]];
+        out.push(slice.strip_prefix(';').unwrap_or(slice));
+    }
+    out.into_iter()
 }
 
 /// Lower UI29-6 `HostNavigationSplit` to a flex wrapper containing a named
@@ -4198,6 +4349,148 @@ mod tests {
             "got:\n{}",
             r.output
         );
+    }
+
+    fn path_node(part: Option<&str>, props: Vec<(&str, LayoutPropValue)>) -> LayoutNode {
+        LayoutNode {
+            tag: "Path".to_string(),
+            part_name: part.map(str::to_string),
+            props: props
+                .into_iter()
+                .map(|(name, value)| LayoutProp { name: name.to_string(), value })
+                .collect(),
+            children: Vec::new(),
+        }
+    }
+
+    /// #14686: Path lowers to the same inline SVG the html emitter draws.
+    #[test]
+    fn path_line_lowers_to_an_svg_line_with_part_paint() {
+        let m = component("X", vec![], vec![]);
+        let l = root_layout(
+            "X",
+            path_node(
+                Some("axis"),
+                vec![
+                    ("kind", LayoutPropValue::Keyword("line".into())),
+                    ("x1", LayoutPropValue::Number(28.0)),
+                    ("y1", LayoutPropValue::Number(188.0)),
+                    ("x2", LayoutPropValue::Number(344.5)),
+                    ("y2", LayoutPropValue::Number(188.0)),
+                ],
+            ),
+        );
+        let s = style_with_parts(
+            "X",
+            vec![part("axis", vec![prop("border-color", "#94a3b8"), prop("border-width", "2")], vec![])],
+        );
+        let r = from_pipeline(&m, &l, &s).unwrap();
+        assert!(r.output.contains("<svg aria-hidden=\"true\""), "{}", r.output);
+        assert!(
+            r.output.contains(r##"<line x1="28" y1="188" x2="344.5" y2="188" fill="none" stroke="#94a3b8" stroke-width="2px"></line>"##)
+                || r.output.contains(r##"<line x1="28" y1="188" x2="344.5" y2="188" fill="none" stroke="#94a3b8" stroke-width="2"></line>"##),
+            "{}",
+            r.output
+        );
+    }
+
+    /// Bound coordinates are interpolated, and only ever as numbers.
+    #[test]
+    fn path_bound_coordinates_interpolate_through_number() {
+        let m = component("X", vec![], vec![]);
+        let l = root_layout(
+            "X",
+            path_node(
+                None,
+                vec![
+                    ("kind", LayoutPropValue::Keyword("curve".into())),
+                    ("x1", LayoutPropValue::Expr("( segment[0] )".into())),
+                    ("y1", LayoutPropValue::SlotRef("start-y".into())),
+                    ("cx", LayoutPropValue::Number(5.0)),
+                    ("cy", LayoutPropValue::Number(6.0)),
+                    ("x2", LayoutPropValue::Number(7.0)),
+                    ("y2", LayoutPropValue::Number(8.0)),
+                ],
+            ),
+        );
+        let r = from_pipeline(&m, &l, &empty_style("X")).unwrap();
+        assert!(
+            r.output.contains(r#"<path d="M ${Number(segment[0])} ${Number(startY)} Q 5 6 7 8" fill="none" stroke="currentColor" stroke-width="1"></path>"#),
+            "{}",
+            r.output
+        );
+    }
+
+    #[test]
+    fn path_circle_and_its_refusals() {
+        let m = component("X", vec![], vec![]);
+        let circle = path_node(
+            None,
+            vec![
+                ("kind", LayoutPropValue::Keyword("circle".into())),
+                ("cx", LayoutPropValue::Number(1.0)),
+                ("cy", LayoutPropValue::Number(2.0)),
+                ("r", LayoutPropValue::Number(3.0)),
+            ],
+        );
+        let r = from_pipeline(&m, &root_layout("X", circle), &empty_style("X")).unwrap();
+        assert!(r.output.contains(r#"<circle cx="1" cy="2" r="3""#), "{}", r.output);
+
+        for (label, props) in [
+            ("no kind", vec![("x1", LayoutPropValue::Number(1.0))]),
+            ("arc", vec![("kind", LayoutPropValue::Keyword("arc".into()))]),
+            ("unknown kind", vec![("kind", LayoutPropValue::Keyword("blob".into()))]),
+            (
+                "missing coordinate",
+                vec![("kind", LayoutPropValue::Keyword("circle".into())), ("cx", LayoutPropValue::Number(1.0))],
+            ),
+            (
+                "non-finite",
+                vec![
+                    ("kind", LayoutPropValue::Keyword("circle".into())),
+                    ("cx", LayoutPropValue::Number(f64::INFINITY)),
+                    ("cy", LayoutPropValue::Number(1.0)),
+                    ("r", LayoutPropValue::Number(1.0)),
+                ],
+            ),
+            (
+                "unsafe slot",
+                vec![
+                    ("kind", LayoutPropValue::Keyword("circle".into())),
+                    ("cx", LayoutPropValue::SlotRef("a}`;alert(1)//".into())),
+                    ("cy", LayoutPropValue::Number(1.0)),
+                    ("r", LayoutPropValue::Number(1.0)),
+                ],
+            ),
+        ] {
+            let result = from_pipeline(&m, &root_layout("X", path_node(None, props)), &empty_style("X"));
+            assert!(result.is_err(), "{label}: accepted");
+        }
+    }
+
+    /// A paint value cannot leave the template literal the markup lives in.
+    #[test]
+    fn path_paint_values_are_escaped_for_the_template_literal() {
+        let m = component("X", vec![], vec![]);
+        let l = root_layout(
+            "X",
+            path_node(
+                Some("wire"),
+                vec![
+                    ("kind", LayoutPropValue::Keyword("circle".into())),
+                    ("cx", LayoutPropValue::Number(1.0)),
+                    ("cy", LayoutPropValue::Number(1.0)),
+                    ("r", LayoutPropValue::Number(1.0)),
+                ],
+            ),
+        );
+        let s = style_with_parts(
+            "X",
+            vec![part("wire", vec![prop("border-color", "red\"`${alert(1)}")], vec![])],
+        );
+        let r = from_pipeline(&m, &l, &s).unwrap();
+        assert!(!r.output.contains("`${alert(1)}"), "{}", r.output);
+        assert!(!r.output.contains("stroke=\"red\"`"), "{}", r.output);
     }
 
     #[test]
