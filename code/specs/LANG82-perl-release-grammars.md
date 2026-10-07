@@ -85,9 +85,11 @@ PR at a time. LANG81 source-to-IIR execution continues to use its declared
 Perl 5.38 subset until a release pair and semantic lowering are ready.
 
 The next local historical slice selects 5.003_07. The official source repository
-has no `perl-5.003_06` tag, so 5.003_06 remains pending until its release source
-is independently located. The 5.003_07 pair is checked against its own tag;
-unchanged yacc syntax does not remove the requirement for separate files.
+has no `perl-5.003_06` tag; that release initially remained pending. Its source
+was then located in official commit `9c6be91f`, whose message introduces the
+5.003_06 patch and whose `patchlevel.h` identifies subversion 6. Use that
+commit to ground a separate 5.003_06 pair. The 5.003_07 pair is checked against
+its own tag; unchanged yacc syntax does not remove the separate-file rule.
 
 The following local slice selects 5.003_08. Its tagged yacc and tokenizer files
 both differ from 5.003_07, especially around lexical `my` scope, interpolation,
