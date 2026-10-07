@@ -191,6 +191,8 @@ mod tests {
                     | "5.003_97i"
                     | "5.003_97j"
                     | "5.003_98"
+                    | "5.003_99"
+                    | "5.003_99a"
                     | "5.38.2"
                     | "5.44.0"
                     | "5.45.3"
@@ -232,6 +234,8 @@ mod tests {
                     | "5.003_97i"
                     | "5.003_97j"
                     | "5.003_98"
+                    | "5.003_99"
+                    | "5.003_99a"
             ) {
                 let carriage_return = GrammarLexer::new("print(1);\r", &token_grammar).tokenize();
                 assert!(
@@ -259,6 +263,8 @@ mod tests {
                     | "5.003_97i"
                     | "5.003_97j"
                     | "5.003_98"
+                    | "5.003_99"
+                    | "5.003_99a"
             ) {
                 let unknown = GrammarLexer::new("print(1);\u{0001}", &token_grammar).tokenize();
                 assert!(
@@ -271,7 +277,10 @@ mod tests {
                     "{release}: unrecognized character accepted"
                 );
             }
-            if matches!(*release, "5.003_97i" | "5.003_97j" | "5.003_98") {
+            if matches!(
+                *release,
+                "5.003_97i" | "5.003_97j" | "5.003_98" | "5.003_99" | "5.003_99a"
+            ) {
                 let accepted = format!("print({});", "9".repeat(250));
                 let tokens = GrammarLexer::new(&accepted, &token_grammar)
                     .tokenize()

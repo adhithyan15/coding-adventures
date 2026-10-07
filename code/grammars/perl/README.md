@@ -244,6 +244,11 @@ Current pairs:
   [`perl-5.003_98` source tag]. Tagged yacc adds arrow-call forms outside
   this subset; the tokenizer matches 5.003_97j and retains the tested
   250-digit decimal bound.
+- `perl5.003_99.*` and `perl5.003_99a.*` are separate **partial** pairs
+  checked against their own [`perl-5.003_99` source tag] and
+  [`perl-5.003_99a` source tag]. Tagged yacc and tokenizer sources match
+  5.003_98 across both releases; each pair retains the tested 250-digit
+  decimal bound and does not claim complete syntax coverage.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot, including adjacent `--` and
@@ -329,4 +334,6 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [`perl-5.003_97i` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_97i
 [`perl-5.003_97j` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_97j
 [`perl-5.003_98` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_98
+[`perl-5.003_99` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_99
+[`perl-5.003_99a` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_99a
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2

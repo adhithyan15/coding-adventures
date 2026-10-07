@@ -235,8 +235,8 @@ release,date,perlhist_line,grammar_status
 5.003_97i,1997-Apr-25,259,partial
 5.003_97j,1997-Apr-28,260,partial
 5.003_98,1997-Apr-30,261,partial
-5.003_99,1997-May-01,262,pending
-5.003_99a,1997-May-09,263,pending
+5.003_99,1997-May-01,262,partial
+5.003_99a,1997-May-09,263,partial
 5.004,1997-May-15,267,pending
 5.004_01-t1,1997-???-??,269,pending
 5.004_01-t2,1997-Jun-11,270,pending
