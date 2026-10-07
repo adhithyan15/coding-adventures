@@ -458,6 +458,29 @@ Reopen its active link with the production verification access mask, verify its
 identity, zero length and exact intended policy before restoring probe privacy.
 OWNER RIGHTS deny-READ_CONTROL policies must reject before any original mutation.
 
+This rejection is structural, independent of the caller's token, enabled
+privileges, or ACE order: an earlier allow can make a fresh open succeed despite
+a later OWNER RIGHTS denial. Before probing either an existing or derived final
+file policy, inspect its bounded DACL without reordering or changing any bytes.
+Reject effective OWNER RIGHTS (`S-1-3-4`) denied `READ_CONTROL`, including every
+file generic-access bit (all map to `READ_CONTROL`), in ordinary, object, callback,
+and callback-object denial ACEs. Conservatively reject these denial encodings
+even when an object GUID or callback condition might limit their applicability.
+Inheritance-only ACEs do not affect this file. Validate denial SID lengths and
+optional object GUID offsets; malformed or unknown effective ACE encodings
+reject rather than being interpreted as grants. Known allow ACEs, unrelated
+denial SIDs and denied rights outside this class remain subject to the same
+exact-policy round trip and fresh verification open. A null DACL is not an
+OWNER RIGHTS denial, but still requires those existing probes.
+
+A native regression must independently establish that a protected current-user
+FullControl allow followed by an OWNER RIGHTS denial permits production's fresh
+open, then require publication to reject before original backup/removal while
+preserving original identity, policy and bytes and leaving no staging links.
+The inherited-denial regression must report the parent/derived policy, token
+user/default owner and actual fresh-open outcome; its rejection requirement
+must not depend on that outcome or skip under a different CI token.
+
 Unix mode bits alone also do not establish ownership or extended-ACL
 preservation. State native Linux/macOS support separately, check owner/group and
 extended/default ACL policy, and faithfully preserve it or reject unsupported
