@@ -693,6 +693,17 @@ remain explicit errors until their precedence and evaluation rules are added.
 Tests cover each accepted operator, false and negative results, undefined
 identifiers, leading-zero operands, out-of-range values, and unsupported mixed
 forms through the real C preprocessor path.
+The following bounded C `#if` stage accepts exactly one `/` or `%` between
+two expanded plain-decimal literals or undefined identifiers within a logical
+clause. As with `+`, `-`, and `*`, both operands must fit signed 32-bit integers.
+The divisor must be nonzero; division and remainder use C's integer quotient
+with the fractional part discarded. A zero divisor fails explicitly, including
+in a logical operand whose truth value would otherwise be unnecessary: this
+partial evaluator checks every accepted clause before combining results.
+Longer or mixed arithmetic, unary signs, parentheses, and arithmetic mixed
+with comparisons remain explicit errors. Tests must cover true and false
+quotients/remainders, macro expansion, undefined names, zero divisors, and
+rooted C file-input error locations.
 Until stringize and paste are implemented, a `#define` replacement containing
 `#` or `##` must fail explicitly rather than emit those operator tokens as C
 source.

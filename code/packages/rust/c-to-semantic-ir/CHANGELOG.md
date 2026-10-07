@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — PREP01 bounded C #if division and remainder
+
+- Accept one checked `/` or `%` in each decimal `#if` logical clause using
+  signed 32-bit operands. Reject a zero divisor, out-of-range operands, and
+  longer or mixed expressions. Rooted file-input tests check branch selection
+  and the location on a zero-divisor error.
+
 ## Unreleased — PREP01 bounded C condition arithmetic
 
 - Accept one checked `+`, `-`, or `*` in each decimal `#if` logical clause,

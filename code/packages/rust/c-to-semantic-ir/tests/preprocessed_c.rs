@@ -117,3 +117,43 @@ fn quoted_nested_header_prefers_its_own_directory() {
     assert!(text.contains("(block (int 7))"), "{text}");
     assert!(!text.contains("(block (int 9))"), "{text}");
 }
+
+#[test]
+fn rooted_division_selects_branch_and_zero_divisor_keeps_location() {
+    let root = std::env::temp_dir().join(format!(
+        "prep01_c_divmod_{}_{}",
+        std::process::id(),
+        SEQ.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::create_dir(&root).unwrap();
+    write_fresh(
+        &root.join("good.c"),
+        b"#define COUNT 9\n#if COUNT / 3\nint value(void) { return 7; }\n#else\nint value(void) { return 0; }\n#endif\n",
+    );
+    write_fresh(
+        &root.join("bad.c"),
+        b"#if 8 % 0\nint value(void) { return 1; }\n#endif\n",
+    );
+
+    let module = c_to_semantic_ir::compile_preprocessed_file(
+        "good.c",
+        [root.clone()],
+        "divmod_good",
+        Bounds::default(),
+    )
+    .unwrap();
+    let text = semantic_ir::print_module(&module);
+    assert!(text.contains("(block (int 7))"), "{text}");
+    assert!(!text.contains("(block (int 0))"), "{text}");
+
+    let error = c_to_semantic_ir::compile_preprocessed_file(
+        "bad.c",
+        [root.clone()],
+        "divmod_bad",
+        Bounds::default(),
+    )
+    .unwrap_err();
+    std::fs::remove_dir_all(&root).unwrap();
+    assert_eq!((error.line, error.column), (1, 1), "{error}");
+    assert!(error.message.contains("divisor is zero"), "{error}");
+}

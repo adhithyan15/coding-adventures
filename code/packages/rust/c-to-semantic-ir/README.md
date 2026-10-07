@@ -38,10 +38,12 @@ Quoted includes search beside the verified including file, then under the
 declared roots. The primary file and system includes search declared roots
 only. Every resolved candidate must remain inside a declared root; an
 unresolved include fails explicitly.
-`#if` currently handles single decimal comparisons, one checked `+`, `-`, or
-`*` within signed 32-bit range, `!` on one operand and `&&`/`||` chains. It
-rejects unsupported C expressions. Stringize and paste in macro bodies also
-fail explicitly.
+`#if` currently handles single decimal comparisons, one checked `+`, `-`,
+`*`, `/`, or `%` within signed 32-bit range, `!` on one operand and
+`&&`/`||` chains. Division and remainder reject a zero divisor, including
+inside a logical clause whose value would otherwise be unnecessary. Longer or
+mixed arithmetic and other unsupported C expressions fail explicitly.
+Stringize and paste in macro bodies also fail explicitly.
 
 The pathless `compile_source` API below still uses the legacy C source parser
 path and does not run the generic preprocessor.
