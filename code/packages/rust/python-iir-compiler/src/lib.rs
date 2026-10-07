@@ -13,6 +13,8 @@ use vm_core::{errors::VMError, value::Value, VMCore};
 pub const MAX_SOURCE_BYTES: usize = 64 * 1024;
 const MAX_AST_ITEMS: usize = 16_384;
 const MAX_AST_DEPTH: usize = 64;
+const MAX_AST_TEXT_BYTES: usize = 1024 * 1024;
+const MAX_AST_FIELD_BYTES: usize = 64 * 1024;
 
 /// Parse Python 3.12 source and lower the supported subset directly to IIR.
 pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, String> {
@@ -27,6 +29,9 @@ pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, Stri
 
 /// Lower a Python parser tree to IIR, rejecting all syntax outside LANG79.
 pub fn compile_ast(tree: &GrammarASTNode, module_name: &str) -> Result<IIRModule, String> {
+    if module_name.len() > MAX_AST_FIELD_BYTES {
+        return Err("Python IIR module name exceeds the native pilot limit".into());
+    }
     check_ast_budget(tree)?;
     if tree.rule_name != "file" {
         return Err("expected a Python file grammar root".into());
@@ -62,10 +67,12 @@ pub fn compile_ast(tree: &GrammarASTNode, module_name: &str) -> Result<IIRModule
 fn check_ast_budget(tree: &GrammarASTNode) -> Result<(), String> {
     let mut pending = vec![(tree, 1_usize)];
     let mut seen = 1_usize;
+    let mut text_bytes = 0_usize;
     while let Some((node, depth)) = pending.pop() {
         if depth > MAX_AST_DEPTH {
             return Err("Python AST exceeds the native pilot depth limit".into());
         }
+        count_ast_text(&node.rule_name, &mut text_bytes)?;
         for child in &node.children {
             if seen == MAX_AST_ITEMS {
                 return Err("Python AST exceeds the native pilot item limit".into());
@@ -78,16 +85,51 @@ fn check_ast_budget(tree: &GrammarASTNode) -> Result<(), String> {
                     }
                     pending.push((inner, depth + 1));
                 }
-                ASTNodeOrToken::Token(_) => {}
+                ASTNodeOrToken::Token(token) => {
+                    count_ast_text(&token.value, &mut text_bytes)?;
+                    if let Some(type_name) = &token.type_name {
+                        count_ast_text(type_name, &mut text_bytes)?;
+                    }
+                }
             }
         }
     }
     Ok(())
 }
 
+fn count_ast_text(field: &str, total: &mut usize) -> Result<(), String> {
+    if field.len() > MAX_AST_FIELD_BYTES
+        || total
+            .checked_add(field.len())
+            .is_none_or(|next| next > MAX_AST_TEXT_BYTES)
+    {
+        return Err("Python AST exceeds the native pilot text limit".into());
+    }
+    *total += field.len();
+    Ok(())
+}
+
+/// VM failure with stdout already emitted by earlier Python statements.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PythonRunError {
+    pub output: String,
+    pub message: String,
+}
+
+impl std::fmt::Display for PythonRunError {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        formatter.write_str(&self.message)
+    }
+}
+
+impl std::error::Error for PythonRunError {}
+
 /// Execute Python source on the Rust VM and return its captured `print` output.
-pub fn run_source(source: &str) -> Result<String, String> {
-    let mut module = compile_source(source, "python-script")?;
+pub fn run_source(source: &str) -> Result<String, PythonRunError> {
+    let mut module = compile_source(source, "python-script").map_err(|message| PythonRunError {
+        output: String::new(),
+        message,
+    })?;
     let output = Arc::new(Mutex::new(String::new()));
     let captured = Arc::clone(&output);
     let mut vm = VMCore::new();
@@ -118,13 +160,21 @@ pub fn run_source(source: &str) -> Result<String, String> {
         sink.push('\n');
         Ok(Value::Null)
     });
-    vm.execute(&mut module, "main", &[])
-        .map_err(|e| e.to_string())?;
+    let execution = vm.execute(&mut module, "main", &[]);
     let result = output
         .lock()
-        .map_err(|_| "Python output lock poisoned")?
+        .map_err(|_| PythonRunError {
+            output: String::new(),
+            message: "Python output lock poisoned".into(),
+        })?
         .clone();
-    Ok(result)
+    match execution {
+        Ok(_) => Ok(result),
+        Err(error) => Err(PythonRunError {
+            output: result,
+            message: error.to_string(),
+        }),
+    }
 }
 
 fn format_python_float(number: f64) -> Result<String, String> {
@@ -380,6 +430,7 @@ mod tests {
         }
         assert!(run_source("print(1.0 / 0.0)\n")
             .unwrap_err()
+            .message
             .contains("ZeroDivisionError"));
     }
 
@@ -419,5 +470,61 @@ mod tests {
         assert!(compile_ast(&deep, "deep")
             .unwrap_err()
             .contains("depth limit"));
+    }
+
+    #[test]
+    fn direct_ast_text_and_module_names_are_bounded_before_lowering() {
+        fn enlarge_float_token(node: &mut GrammarASTNode) -> bool {
+            for child in &mut node.children {
+                match child {
+                    ASTNodeOrToken::Token(token) if token.type_name.as_deref() == Some("FLOAT") => {
+                        token.value = "9".repeat(MAX_AST_FIELD_BYTES + 1);
+                        return true;
+                    }
+                    ASTNodeOrToken::Node(inner) => {
+                        if enlarge_float_token(inner) {
+                            return true;
+                        }
+                    }
+                    _ => {}
+                }
+            }
+            false
+        }
+
+        let mut oversized_token = parse_python("print(1.0)\n", "3.12").unwrap();
+        assert!(enlarge_float_token(&mut oversized_token));
+        assert!(compile_ast(&oversized_token, "test")
+            .unwrap_err()
+            .contains("text limit"));
+
+        let mut oversized_name = empty_node("file");
+        oversized_name.rule_name = "x".repeat(64 * 1024 + 1);
+        assert!(compile_ast(&oversized_name, "test")
+            .unwrap_err()
+            .contains("text limit"));
+
+        let mut aggregate = empty_node("file");
+        aggregate.children = (0..18)
+            .map(|_| {
+                let mut node = empty_node("child");
+                node.rule_name = "x".repeat(60_000);
+                ASTNodeOrToken::Node(node)
+            })
+            .collect();
+        assert!(compile_ast(&aggregate, "test")
+            .unwrap_err()
+            .contains("text limit"));
+
+        assert!(compile_ast(&empty_node("file"), &"m".repeat(64 * 1024 + 1))
+            .unwrap_err()
+            .contains("module name"));
+    }
+
+    #[test]
+    fn runtime_error_retains_prior_print_output() {
+        let error = run_source("print(1.0)\nprint(1.0 / 0.0)\n").unwrap_err();
+        assert_eq!(error.output, "1.0\n");
+        assert!(error.message.contains("ZeroDivisionError"));
     }
 }

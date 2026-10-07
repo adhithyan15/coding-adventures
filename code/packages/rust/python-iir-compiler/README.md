@@ -10,3 +10,8 @@ pilot, not a complete Python implementation.
 
 Run a supported source file with `cargo run -p python-iir-compiler --bin pyvm --
 path/to/source.py` from the Rust workspace.
+
+`compile_source` limits input to 64 KiB. The public `compile_ast` entry point
+also caps tree items, depth, and text bytes before lowering. `run_source`
+returns `PythonRunError` on failure; its `output` field contains any successful
+earlier `print` calls, and `pyvm` writes those bytes before the error message.
