@@ -622,6 +622,9 @@ preprocesses its tokens, and passes the resulting directive-free tokens to
 resolve local includes and retains its compatibility behavior until the
 file-input path and remaining C semantics are validated. Tests may use
 `MemoryFs` through an internal helper; production callers use `RootedFs`.
+The file-input API checks the entry spelling against the tightened token
+spelling budget before cloning it into an include request. Its search roots
+come from the embedding host, not C source text.
 `c.tokens` stops discarding `#…` lines; `c-lexer` surfaces directive tokens; a
 `CDialect` implements §5; `c-to-semantic-ir` runs the engine as its
 `post_tokenize` hook. `SIR27`'s preprocessor scope statement is updated.
