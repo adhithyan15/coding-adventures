@@ -279,6 +279,29 @@ observed invocation counters and actual resulting JavaScript.
 
 ## Concrete presentation framing
 
+The compatibility loader first probes decoded root keys without constructing a
+metadata tree. This probe uses the default input-byte ceiling and a structural
+work allowance; absence preserves legacy allocator semantics within that input
+bound. A declared journal dispatches the original text to the bounded checked
+importer, so escaped/duplicate keys and unknown fields remain visible. The
+additional compatibility input ceiling is deliberate: deciding whether input
+declares checked evidence must itself be bounded before retaining its payload.
+
+Scoped APIs are `with_pipeline` and `with_pass`; callbacks return either
+`Ok((value, outcome))` or `Err((error, outcome))`. The outer result distinguishes
+`ScopeError::Recording` (begin rejected before callback) from
+`ScopeError::Callback` (original error after guaranteed terminal recording).
+`record_schedule` accepts borrowed name/policy descriptors and a positive sweep
+cap. Pipeline outcomes serialize as an object with `kind`: `converged`, `cap`,
+`scheduling_failure`, `callback_failure`, `acceptance_failure`, or
+`recording_failure`. Pass outcomes are `accepted` with a boolean `changed`,
+`callback_failure`, or `acceptance_failure`. A pipeline scope serializes as
+`{"kind":"pipeline"}`; a pass scope uses `kind`, `slot`, `sweep`. These fixed
+terminal fields never retain an error message or another copy of the pass name.
+Callback outcomes still undergo independent replay validation at a full export
+or import boundary; the scoped API does not authenticate arbitrary caller
+claims about work it cannot observe.
+
 Initial API and wire names are fixed before the red tests:
 
 - `CVLog::new_checked_chronology(limits)` creates a fresh checked compact log
