@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased — PREP01 header-relative quoted includes
+
+- `RootedFs` resolves a quoted include beside its verified including file
+  before searching declared roots. Primary and system includes search roots
+  only; an unknown origin fails closed.
+- Every candidate retains the same canonical containment, regular-file and
+  bounded-read checks. Direct `RootedFs` calls now reject overlong include
+  spellings before screening or constructing paths.
+- Tests cover search precedence, canonical identity, traversal, symlink escape
+  and real nested C file-input composition.
+
 ## Unreleased — PREP01 condition diagnostics
 
 - Attach the controlling directive's location to an otherwise unlocated

@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — PREP01 nested quoted headers
+
+- Rooted C file input now resolves a quoted include relative to the verified
+  including header before trying declared roots. A real nested C file-input
+  regression distinguishes a sibling header from a same-named root header.
+
 ## Unreleased — PREP01 rooted C file composition
 
 - Add `compile_preprocessed_file` for bounded, rooted C file input: it passes
@@ -8,8 +14,8 @@
   integration test.
 - Extend the deliberately partial C `#if` evaluator with single-operand `!`
   and `&&`/`||` chains, respecting `&&` precedence; unsupported forms fail.
-- Bound the primary entry spelling before copying it. Quoted includes search
-  declared roots only; relative-to-header lookup, full C conditions,
+- Bound the primary entry spelling before copying it. In this initial stage,
+  quoted includes searched declared roots only. Full C conditions,
   stringize/paste and pathless `compile_source` routing remain pending.
 - Preserve the directive location when condition evaluation fails.
 

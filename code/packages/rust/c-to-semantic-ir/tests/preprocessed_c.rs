@@ -88,3 +88,32 @@ fn malformed_condition_reports_its_directive_location() {
     std::fs::remove_dir_all(&root).unwrap();
     assert_eq!((error.line, error.column), (1, 1), "{error}");
 }
+
+#[test]
+fn quoted_nested_header_prefers_its_own_directory() {
+    let root = std::env::temp_dir().join(format!(
+        "prep01_c_nested_{}_{}",
+        std::process::id(),
+        SEQ.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::create_dir(&root).unwrap();
+    std::fs::create_dir(root.join("sub")).unwrap();
+    write_fresh(
+        &root.join("main.c"),
+        b"#include \"sub/a.h\"\nint main(void) { return value(); }\n",
+    );
+    write_fresh(&root.join("sub/a.h"), b"#include \"b.h\"\n");
+    write_fresh(&root.join("sub/b.h"), b"int value(void) { return 7; }\n");
+    write_fresh(&root.join("b.h"), b"int value(void) { return 9; }\n");
+    let module = c_to_semantic_ir::compile_preprocessed_file(
+        "main.c",
+        [root.clone()],
+        "nested_headers",
+        Bounds::default(),
+    )
+    .unwrap();
+    std::fs::remove_dir_all(&root).unwrap();
+    let text = semantic_ir::print_module(&module);
+    assert!(text.contains("(block (int 7))"), "{text}");
+    assert!(!text.contains("(block (int 9))"), "{text}");
+}
