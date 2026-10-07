@@ -6044,6 +6044,7 @@ fn inherits_enclosing_font(node: &LayoutNode, part_styles: &HashMap<String, Stri
 /// | `padding`         | `isDense: true, contentPadding: EdgeInsets`  |
 /// | `border: 0 / none`| `border: InputBorder.none`                   |
 /// | `border: W solid C` | `OutlineInputBorder(borderSide: ..)`       |
+/// | `border-radius`   | `OutlineInputBorder(borderRadius: ..)`       |
 /// | `background`      | `filled: true, fillColor: ..`                |
 ///
 /// Text colour and font are NOT lowered here. They belong on `TextField`'s
@@ -6053,11 +6054,11 @@ fn inherits_enclosing_font(node: &LayoutNode, part_styles: &HashMap<String, Stri
 /// broke Compose (`Color.Transparent`) and Qt (duplicate property) on
 /// #15048. Tracked separately rather than guessed at.
 ///
-/// Anything unrecognised is dropped, which is the same silent loss every
-/// other unlowered Flutter property suffers: this emitter has no style-drop
-/// reporting at all (#12022). Dropping is at least correct-by-omission --
+/// Anything unrecognised is dropped and remains visible in the emitter's
+/// style-degradation report (#12022). Dropping is correct-by-omission:
 /// `css_color_to_dart` returns `None` for `inherit` and `transparent`
-/// rather than inventing a brush.
+/// rather than inventing a brush, and invalid or context-dependent radii
+/// stay unconsumed rather than being misreported as supported.
 fn host_input_decoration_arg(
     node: &LayoutNode,
     part_styles: &HashMap<String, String>,
@@ -6159,10 +6160,22 @@ fn host_input_border_expr(props: &HashMap<String, String>) -> Option<String> {
         side.push(format!("color: {color}"));
     }
     side.push(format!("width: {side_width}"));
-    Some(format!(
-        "OutlineInputBorder(borderSide: BorderSide({}))",
-        side.join(", ")
-    ))
+    let mut outline = vec![format!("borderSide: BorderSide({})", side.join(", "))];
+
+    // Read the property through the recorder only after proving that this
+    // widget occurrence has an outline and that the value is representable.
+    // A direct `style_prop` read before either check would make radius-only
+    // and percentage declarations disappear from #12022's report even though
+    // no Dart consumed them.
+    if let Some(radius) = props
+        .get("border-radius")
+        .and_then(|value| strict_pixel_length(value))
+    {
+        record_style_read("border-radius");
+        outline.push(format!("borderRadius: BorderRadius.circular({radius})"));
+    }
+
+    Some(format!("OutlineInputBorder({})", outline.join(", ")))
 }
 
 /// #15142 -- lower a `HostInput`'s text properties onto `TextField`'s
@@ -16216,6 +16229,72 @@ mod tests {
     }
 
     #[test]
+    fn host_input_radius_reaches_dart_and_leaves_no_style_drop() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", flex_node_with_part("HostInput", "field", vec![]));
+        let s = style_with_part(
+            "X",
+            "field",
+            vec![
+                StyleProp {
+                    name: "border".into(),
+                    value: "1px solid #32463b".into(),
+                },
+                StyleProp {
+                    name: "border-radius".into(),
+                    value: "8px".into(),
+                },
+            ],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains("borderRadius: BorderRadius.circular(8)"),
+            "authored HostInput radius must reach OutlineInputBorder, got:\n{out}"
+        );
+        assert!(
+            dropped_style_properties(&m, &l, &s).is_empty(),
+            "implemented HostInput radius was reported dropped"
+        );
+    }
+
+    #[test]
+    fn host_input_radius_stays_reported_when_it_cannot_be_lowered() {
+        for props in [
+            vec![StyleProp {
+                name: "border-radius".into(),
+                value: "8px".into(),
+            }],
+            vec![
+                StyleProp {
+                    name: "border".into(),
+                    value: "1px solid #32463b".into(),
+                },
+                StyleProp {
+                    name: "border-radius".into(),
+                    value: "50%".into(),
+                },
+            ],
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = layout("X", flex_node_with_part("HostInput", "field", vec![]));
+            let s = style_with_part("X", "field", props);
+
+            let out = from_pipeline(&m, &l, &s).expect("ok").output;
+            assert!(!out.contains("borderRadius:"), "got:\n{out}");
+            let drops = dropped_style_properties(&m, &l, &s);
+            assert_eq!(
+                drops
+                    .iter()
+                    .map(|drop| drop.name.as_str())
+                    .collect::<Vec<_>>(),
+                vec!["border-radius"],
+                "only the unlowerable radius should remain: {drops:?}"
+            );
+        }
+    }
+
+    #[test]
     fn flex_align_lowers_to_cross_axis_alignment() {
         for (tag, value) in [
             ("Row", "center-vertical"),
@@ -17590,10 +17669,47 @@ mod host_input_style_tests {
         );
     }
 
+    /// #16944 -- an outlined input already has the native shape object that
+    /// can carry the authored corner radius. Losing it leaves Flutter's
+    /// Material default in place and makes TaskApp's text fields disagree
+    /// with every other backend.
+    #[test]
+    fn an_outlined_input_keeps_its_authored_border_radius() {
+        let got = host_input_border_expr(&props(&[
+            ("border", "1px solid #32463b"),
+            ("border-radius", "8px"),
+        ]));
+        assert_eq!(
+            got.as_deref(),
+            Some(
+                "OutlineInputBorder(borderSide: BorderSide(color: const Color(0xFF32463B), width: 1), borderRadius: BorderRadius.circular(8))"
+            )
+        );
+    }
+
+    /// A radius cannot be represented without an outline, and percentages
+    /// have no context-independent pixel value. Neither case may invent a
+    /// different input shape merely to silence the degradation reporter.
+    #[test]
+    fn an_unlowerable_input_radius_does_not_invent_an_outline() {
+        assert_eq!(
+            host_input_border_expr(&props(&[("border-radius", "8px")])),
+            None
+        );
+        let got = host_input_border_expr(&props(&[
+            ("border", "1px solid #32463b"),
+            ("border-radius", "50%"),
+        ]));
+        assert_eq!(
+            got.as_deref(),
+            Some("OutlineInputBorder(borderSide: BorderSide(color: const Color(0xFF32463B), width: 1))")
+        );
+    }
+
     /// A style this emitter cannot draw is left to Material's default
-    /// rather than silently redrawn as `solid`. Flutter has no style-drop
-    /// reporting (#12022), so approximating here would be an unrecorded
-    /// lie about what the author asked for.
+    /// rather than silently redrawn as `solid`. The degradation reporter
+    /// keeps that unsupported style visible (#12022), so approximating here
+    /// would be a lie about what the author asked for.
     #[test]
     fn an_undrawable_border_style_is_left_alone() {
         assert_eq!(
