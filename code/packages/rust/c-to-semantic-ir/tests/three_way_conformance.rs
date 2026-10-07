@@ -163,13 +163,14 @@ fn run_emitted_c(cc: &str, src: &str) -> String {
     let cpath = uniq(".c");
     let exe = uniq(std::env::consts::EXE_SUFFIX);
     write_fresh(&cpath, csrc.as_bytes());
-    let build = std::process::Command::new(cc)
-        .args(["-std=c99", "-o"])
-        .arg(&exe)
-        .arg(&cpath)
-        .arg("-lm")  // Linux needs -lm to link floor/ceil/fabs (macOS libSystem folds it in)
-        .output()
-        .expect("emitted C compiler runs");
+    let mut build = std::process::Command::new(cc);
+    build.args(["-std=c99", "-o"]).arg(&exe).arg(&cpath);
+    // Apply the same platform rule as run_reference: Windows CRT owns math;
+    // Unix keeps libm. All generated-C/runtime equivalence assertions remain.
+    if !cfg!(windows) {
+        build.arg("-lm");
+    }
+    let build = build.output().expect("emitted C compiler runs");
     assert!(
         build.status.success(),
         "emitted C failed to compile:\n{}\n--- emitted C ---\n{csrc}",

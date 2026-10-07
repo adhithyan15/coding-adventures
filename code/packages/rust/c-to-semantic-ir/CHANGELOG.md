@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased] — 2026-10-07 — Windows native conformance linking
+
+- Match the existing reference-C platform rule in both emitted-C test helpers:
+  omit Unix `-lm` on Windows, where CRT supplies math and `m.lib` is absent.
+- Preserve all C99 compile/run, output normalization and original C/Ruby/runtime
+  equivalence assertions. Production lowering and compiler selection are unchanged.
+
 ## Unreleased — PREP01 bounded C #if division and remainder
 
 - Accept one checked `/` or `%` in each decimal `#if` logical clause using

@@ -953,14 +953,14 @@ mod tests {
             .ok()?
             .write_all(src.as_bytes())
             .ok()?;
-        let ok = std::process::Command::new(&cc)
-            .arg("-std=c99")
-            .arg("-o")
-            .arg(&exe)
-            .arg(&cpath)
-            .arg("-lm")  // Linux needs -lm to link floor/ceil/fabs (macOS libSystem folds it in)
-            .output()
-            .ok()?;
+        let mut build = std::process::Command::new(&cc);
+        build.arg("-std=c99").arg("-o").arg(&exe).arg(&cpath);
+        // Match the reference leg: Windows CRT supplies math, while -lm asks
+        // its linker for nonexistent m.lib. Unix retains the original libm.
+        if !cfg!(windows) {
+            build.arg("-lm");
+        }
+        let ok = build.output().ok()?;
         assert!(
             ok.status.success(),
             "emitted C failed to compile:\n{}\n{src}",
