@@ -34,6 +34,11 @@ claim to complete either epic or change the canonical ESTree boundary decision.
 5. Tracing must not alter JavaScript bytes for these operations. Declined folds
    must not create fictitious `folded` records. Nested operations must retain
    child transformation records through parent links.
+6. Equal primitive branches must compare their value/raw representation without
+   CV metadata. `flag ? (1+1) : (1+1)` must collapse to `2` with tracing on or
+   off. The primitive replacement must retain both branch fold histories and
+   the available test/composite identities. Broader composite semantic equality
+   remains follow-up work; this safeguard covers the new primitive identities.
 
 ## Verification
 
