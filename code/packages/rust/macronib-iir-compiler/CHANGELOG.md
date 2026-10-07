@@ -3,6 +3,8 @@
 ## 0.1.0
 
 - Compose MacroNib with the generic preprocessor and Nib's existing frontend.
-- Check the primary source byte budget before lexer allocation.
+- Check primary and included source against byte and token budgets before
+  lexer allocation; bound all supplied in-memory includes before copying them.
 - Add `.include`, object-like `.set`, and `.ifdef`/`.else`/`.endif` handling.
-- Verify direct IIR identity against hand-expanded Nib source.
+- Verify direct IIR identity against hand-expanded Nib source, including an
+  eight-backend matrix row.

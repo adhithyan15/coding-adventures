@@ -599,10 +599,13 @@ length and testing full equality when lines are aligned. Negative tests
 must cover malformed directives, undefined includes, recursion and token
 bounds. The engine core must remain unchanged unless a reproducible
 genericity defect is found and documented.
-MacroNib must check the primary file's tightened byte budget before lexing:
-the shared engine receives already-lexed primary tokens and cannot bound
-their earlier allocation itself. Included files keep the engine's existing
-file-read guards.
+MacroNib must check the primary and every included file before lexing. The
+generic lexer materializes the token vector before the shared engine can apply
+its token budget, so each file has a conservative pre-lex source-byte cap no
+larger than the tightened token budget minus the EOF sentinel. The primary
+file also obeys the tightened file and aggregate byte budgets; included files
+retain the engine's read guards. The in-memory include API checks unused files,
+names, count, and aggregate bytes before copying them into `MemoryFs`.
 
 **Slice 4 — the C dialect, and real C.**
 `c.tokens` stops discarding `#…` lines; `c-lexer` surfaces directive tokens; a

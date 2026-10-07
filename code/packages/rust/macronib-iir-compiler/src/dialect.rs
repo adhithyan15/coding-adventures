@@ -7,9 +7,43 @@ use coding_adventures_source_preprocessor::{
 };
 use lexer::token::{Token, TokenType};
 
-/// Stateless MacroNib adapter for the shared preprocessor.
-#[derive(Debug, Default, Clone, Copy)]
-pub struct MacroNibDialect;
+/// MacroNib adapter for the shared preprocessor, carrying the pre-lex byte cap.
+#[derive(Debug, Clone, Copy)]
+pub struct MacroNibDialect {
+    max_prelex_bytes: u64,
+}
+
+impl MacroNibDialect {
+    /// Use the tightest source and token budget before lexing any file.
+    #[must_use]
+    pub fn new(bounds: Bounds) -> Self {
+        let bounds = bounds.tighten(Bounds::default());
+        // A non-EOF token consumes at least one source byte. The generic
+        // lexer materializes all tokens before returning, so cap source bytes
+        // conservatively to ensure the peak token count stays within budget.
+        Self {
+            max_prelex_bytes: bounds
+                .bytes_per_file
+                .min(bounds.total_source_bytes)
+                .min(bounds.tokens_produced.saturating_sub(1)),
+        }
+    }
+
+    pub(crate) fn check_prelex_bytes(&self, text: &str) -> Result<(), PpError> {
+        if u64::try_from(text.len()).unwrap_or(u64::MAX) > self.max_prelex_bytes {
+            return Err(PpError::new(
+                "MacroNib source exceeds the pre-lex byte budget (including token limit)",
+            ));
+        }
+        Ok(())
+    }
+}
+
+impl Default for MacroNibDialect {
+    fn default() -> Self {
+        Self::new(Bounds::default())
+    }
+}
 
 pub(crate) fn strip_eof(tokens: &mut Vec<Token>) {
     while tokens
@@ -148,6 +182,7 @@ impl Dialect for MacroNibDialect {
     }
 
     fn lex(&self, text: &str, _file: FileId) -> Result<Vec<Token>, PpError> {
+        self.check_prelex_bytes(text)?;
         let mut tokens = try_tokenize_macronib(text).map_err(PpError::new)?;
         strip_eof(&mut tokens);
         Ok(tokens)

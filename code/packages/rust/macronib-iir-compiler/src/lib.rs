@@ -55,21 +55,17 @@ pub fn preprocess_source(
     fs: &mut dyn SourceFs,
     bounds: Bounds,
 ) -> Result<PreprocessedUnit, MacroNibError> {
-    // The engine receives an already-lexed primary file, so its file-size
-    // guard cannot protect the work spent lexing that file. Enforce the same
-    // tighten-only bound before the MacroNib lexer allocates its token stream.
+    // The engine receives an already-lexed primary file, so neither its file
+    // nor token guard can protect the work spent lexing that file.
     let bounds = bounds.tighten(Bounds::default());
-    if source.len() as u64 > bounds.bytes_per_file
-        || source.len() as u64 > bounds.total_source_bytes
-    {
-        return Err(MacroNibError::Preprocess(PpError::new(
-            "primary MacroNib source exceeds the preprocessing byte budget",
-        )));
-    }
+    let dialect = MacroNibDialect::new(bounds);
+    dialect
+        .check_prelex_bytes(source)
+        .map_err(MacroNibError::Preprocess)?;
     let mut tokens = try_tokenize_macronib(source).map_err(MacroNibError::Lex)?;
     let sentinel = tokens.last().cloned();
     dialect::strip_eof(&mut tokens);
-    let result = preprocess(tokens, file, &MacroNibDialect, fs, bounds)
+    let result = preprocess(tokens, file, &dialect, fs, bounds)
         .map_err(MacroNibError::Preprocess)?;
     let mut tokens = result.tokens;
     if let Some(sentinel) = sentinel {
@@ -92,6 +88,47 @@ pub fn compile_source_with_includes(
     module_name: &str,
     includes: &[(&str, &str)],
 ) -> Result<IIRModule, MacroNibError> {
+    // MemoryFs clones every supplied entry, including files never included
+    // by this source. Check the complete caller-owned bundle before inserting
+    // anything, so the engine's later read budget is not the first guard.
+    let bounds = Bounds::default();
+    let dialect = MacroNibDialect::new(bounds);
+    dialect
+        .check_prelex_bytes(source)
+        .map_err(MacroNibError::Preprocess)?;
+    let source_bytes = u64::try_from(source.len()).unwrap_or(u64::MAX);
+    let mut total_bytes = source_bytes;
+    if source_bytes > bounds.bytes_per_file || source_bytes > bounds.total_source_bytes {
+        return Err(MacroNibError::Preprocess(PpError::new(
+            "primary MacroNib source exceeds the preprocessing byte budget",
+        )));
+    }
+    if includes.len() > bounds.total_inclusions as usize {
+        return Err(MacroNibError::Preprocess(PpError::new(
+            "MacroNib include set exceeds the preprocessing file budget",
+        )));
+    }
+    for (name, text) in includes {
+        dialect
+            .check_prelex_bytes(text)
+            .map_err(MacroNibError::Preprocess)?;
+        let name_bytes = u64::try_from(name.len()).unwrap_or(u64::MAX);
+        let text_bytes = u64::try_from(text.len()).unwrap_or(u64::MAX);
+        if name_bytes > bounds.token_spelling_bytes || text_bytes > bounds.bytes_per_file {
+            return Err(MacroNibError::Preprocess(PpError::new(
+                "MacroNib include exceeds the preprocessing byte budget",
+            )));
+        }
+        total_bytes = total_bytes
+            .checked_add(name_bytes)
+            .and_then(|n| n.checked_add(text_bytes))
+            .unwrap_or(u64::MAX);
+        if total_bytes > bounds.total_source_bytes {
+            return Err(MacroNibError::Preprocess(PpError::new(
+                "MacroNib include set exceeds the preprocessing byte budget",
+            )));
+        }
+    }
     let mut fs = MemoryFs::new();
     for (name, text) in includes {
         fs.insert(*name, *text);
@@ -207,11 +244,11 @@ mod tests {
 
     #[test]
     fn macro_expansion_obeys_generic_token_budget() {
-        let source = ".set MANY 1 + 1 + 1 + 1\nfn main() -> u4 { return MANY; }\n";
+        let source = ".set X 1 1 1 1 1 1 1 1 1 1\nX X X X X X X X X X\n";
         let mut fs = MemoryFs::new();
         let file = fs.insert("<main>", source);
         let bounds = Bounds {
-            tokens_produced: 4,
+            tokens_produced: 60,
             ..Bounds::default()
         };
         let error = match preprocess_source(source, file, &mut fs, bounds) {
@@ -238,6 +275,57 @@ mod tests {
             Err(MacroNibError::Preprocess(error)) => error,
             _ => panic!("primary source must be bounded before lexing"),
         };
+        assert!(error.to_string().contains("byte budget"), "{error}");
+    }
+
+    #[test]
+    fn dense_primary_tokens_are_bounded_before_lexing() {
+        let source = ";;;;;";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let error = match preprocess_source(
+            source,
+            file,
+            &mut fs,
+            Bounds {
+                tokens_produced: 5,
+                ..Bounds::default()
+            },
+        ) {
+            Err(error) => error,
+            Ok(_) => panic!("dense primary input must be rejected before lexing"),
+        };
+        assert!(error.to_string().contains("pre-lex byte budget"), "{error}");
+    }
+
+    #[test]
+    fn dense_included_tokens_are_bounded_before_lexing() {
+        let source = ".include \"x\"\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        fs.insert("x", ";".repeat(20));
+        let error = match preprocess_source(
+            source,
+            file,
+            &mut fs,
+            Bounds {
+                tokens_produced: 20,
+                ..Bounds::default()
+            },
+        ) {
+            Err(error) => error,
+            Ok(_) => panic!("dense included input must be rejected before lexing"),
+        };
+        assert!(error.to_string().contains("pre-lex byte budget"), "{error}");
+    }
+
+    #[test]
+    fn unused_oversized_include_is_rejected_before_memory_fs_insertion() {
+        let source = "fn main() -> u4 { return 7; }\n";
+        let oversized = "x".repeat(Bounds::default().bytes_per_file as usize + 1);
+        let error = compile_source_with_includes(source, "m", &[("unused.mnib", &oversized)])
+            .unwrap_err();
+        assert!(matches!(error, MacroNibError::Preprocess(_)));
         assert!(error.to_string().contains("byte budget"), "{error}");
     }
 }
