@@ -3887,6 +3887,14 @@ impl Compiler {
             }
             return None;
         }
+        if matches!(node.rule_name.as_str(), "expr_pow" | "factor")
+            && self.contains_power_operator(node)
+        {
+            if let Some(base) = literal_power_identity_base(node, true) {
+                return self.builtin_sign_operand(base);
+            }
+            return None;
+        }
         if matches!(node.rule_name.as_str(), "expr_add" | "simple_arith") {
             let sequence = pieces(node);
             if sequence.len() >= 3 && sequence.len() % 2 == 1 {
@@ -13273,6 +13281,42 @@ mod tests {
         ] {
             let err = compile_source(source, "test").expect_err(
                 "a non-unit, variable, or denominator-position sign exceeds the bounded proof",
+            );
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_unit_power_entier_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(sign(pick()) ^ (2 - 1)); output(x) end",
+            "begin real procedure pick; pick := 3.5; real x; x := entier((abs(sign(pick()))) ^ 1.0); output(x) end",
+            "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier((abs(sign(pick()))) ^ (2 - 1)))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "an exact unit exponent preserves a bounded sign result through entier for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_unit_power_entier_sign_widening_rejects_unproven_exponents() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) ^ 0); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sign(pick()) ^ 2); output(result) end",
+            "begin real procedure pick; pick := -2.25; integer unit; real result; unit := 1; result := entier(sign(pick()) ^ unit); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(1 ^ sign(pick())); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "a non-unit, variable, or exponent-position sign exceeds the bounded proof",
             );
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }
