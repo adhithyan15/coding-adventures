@@ -43,7 +43,9 @@ and snapshot types; no new dependency and no required field on `Token`.
 and limits before constructing the lexer's character vector. An instance method
 `tokenize_with_ranges(limits)` admits additional range ownership before lexing;
 the ordinary constructor has already created its existing character vector.
-Both share the actual standard tokenizer. A snapshot borrows its exact source
+The JavaScript typed range wrapper selects the same actual generated token
+grammar and delegates to this admitted static API. Both capture entry points
+share the actual standard tokenizer. A snapshot borrows its exact source
 buffer and privately owns unchanged tokens and ordered range descriptors. Expose
 read-only source/tokens/pieces access and consuming token extraction.
 
@@ -122,8 +124,10 @@ bounded existing lexer costs, not falsely included in the descriptor counter.
 No source clone or per-token raw-source copy is added. Cursor arithmetic is safe
 under the source ceilings and must never wrap. No unsafe code is introduced.
 
-Capture errors return no successful snapshot; discard the local descriptor
-recorder and prohibit lexer reuse. Lexical malformed input remains an ordinary
+Capture errors return no successful snapshot. Admission rejections execute no
+lexer work and preserve the existing lexer, including hooks. Once execution
+starts, discard the local descriptor recorder on any failure and prohibit capture
+reuse. Ordinary legacy reuse behavior remains unchanged. Lexical malformed input remains an ordinary
 lexer error; unsupported or resource errors are distinguishable. Domain
 validation is read-only and cannot mutate the descriptor/source input. CV04a
 changes no graph/clock state or compiler publication behavior.
@@ -168,3 +172,12 @@ platforms, then expected-head squash merge and fetched-main blob/mode verificati
 before archival. CV04a acceptance selects CV04b; #16970 remains open until both
 contracts pass. Composite/occurrence identities, remaining fold families,
 inline/rename/motion/deletion, output joins and full compiler parity remain open.
+
+## Implementation audit refinement
+
+Actual generated JavaScript grammars vary in processed escape policy; tests locate
+the real String token and measure its raw slice. ES2025 currently rejects bare
+U+2028/U+2029 between tokens. Capture must preserve that existing grammar parity
+gap. Its coordinate cursor handles those terminators when an actual matched
+multiline token/trivia accepts them, and generic controls cover all terminators.
+No grammar acceptance or ASI semantics are changed in CV04a.

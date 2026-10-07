@@ -86,6 +86,21 @@ pub fn tokenize_javascript_typed(
         .map_err(|e| format!("JavaScript tokenization failed: {e}"))
 }
 
+/// Capture exact source intervals using the same generated ECMAScript grammar
+/// and standard matcher as the legacy typed tokenizer (CV04a). The snapshot
+/// borrows `source`; Token values, legacy locations, CVs and ASI flags are equal.
+/// This does not create CV entries or a serialized source inventory; consumers
+/// must bind the captured buffer identity at their own provenance boundary.
+pub fn tokenize_javascript_typed_with_ranges(
+    source: &str,
+    version: EsVersion,
+    limits: lexer::lexical::LexicalLimits,
+) -> Result<lexer::lexical::LexicalSnapshot<'_>, lexer::lexical::LexicalError> {
+    let grammar = _grammar::token_grammar(version.as_str())
+        .expect("compiled JavaScript token grammar missing supported version");
+    GrammarLexer::tokenize_source_with_ranges(source, &grammar, limits)
+}
+
 /// A token paired with the correlation-vector ID assigned to it by
 /// [`tokenize_javascript_with_cv`].
 ///

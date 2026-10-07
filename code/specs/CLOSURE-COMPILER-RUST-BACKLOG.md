@@ -7,12 +7,42 @@ tracked in [#16970](https://github.com/adhithyan15/coding-adventures/issues/1697
 branch `codex/closurec-source-spans-20261007`. CV03 merged and is verified;
 its managed worktree is archived. The detailed [CV04 specification](CV04-exact-lexical-source-intervals.md)
 first accepts CV04a actual matcher capture/domain validation, then CV04b compiler
-source inventory/ingestion-leaf reuse. No source implementation has started;
+source inventory/ingestion-leaf reuse. CV04a implementation and exact range controls are in local validation;
 #16970 remains open until both slices pass. Preserve one active shared-stack PR.
 **Current audit base:** `c0c7b8bc04d972e07348d02143b6f8b867eee1ae`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
+
+## CV04a source capture progress (2026-10-07)
+
+Specification `3c8498f7f4` was committed before tests and source. Actual API-absent
+compile-red controls precede implementation. The source-bound snapshot now captures
+standard matcher/skip/fallback/EOF pieces and independent UTF8/scalar/UTF16
+coordinates. Its read-only detached-partition validator checks complete byte
+coverage, ordinals and coordinate replay; it does not authenticate source bytes,
+recognize Token versus Trivia or validate generic CV metadata. No required Token
+field or dependency was added.
+
+Initial local range controls pass: eight generic tests and four real JavaScript
+tests, including all14 ECMAScript editions and nested template/regex/division
+modes. Existing lexer132 and JavaScript lexer25 tests plus both strict all-target
+Clippy checks pass. Broad consumer/Miri/native CI/security/merge acceptance remain
+pending. These are local results, not accepted delivery.
+
+The real ES2025 grammar rejects bare U+2028/U+2029 between tokens (`a<LS>b`,
+`a<PS>b`), although coordinate capture handles all four ECMAScript terminators in
+admitted matches. Capture preserves the legacy rejection and has an explicit
+negative control. Record this grammar parity gap for repair after the lexical
+source contract; coordinate support is not grammar parity. Per-edition string
+escape policy also varies, so raw-slice tests select actual String tokens rather
+than assuming a uniform processed value. This refinement is documented in a
+lesson without changing grammar or optimizer behavior.
+
+CV04b still requires serialized source/root identity and lexical inventory,
+source-domain import validation, ingestion token reuse through CLOC27 leaves,
+and real compiler-process JS/map/manifest neutrality. Composite/occurrence,
+remaining folds, mutating passes and output mapping remain later requirements.
 
 ## Recovery and provenance acceptance (2026-10-07)
 
