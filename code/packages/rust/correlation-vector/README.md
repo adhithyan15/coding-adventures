@@ -289,9 +289,11 @@ clock on a fresh checked compact log. `journal()` borrows its read-only records;
 other constructors return `None`, meaning chronology unavailable. Accepted
 create/derive/merge/contribution/deletion operations each retain one journal
 record referencing the graph fact, without another copy of arbitrary metadata.
-The clock and CV allocator advance together only when their operation succeeds.
-For chronology logs the event cap charges graph contribution/deletion facts
-plus journal records; ordinary checked logs keep their original accounting.
+Rejected operations consume neither a journal sequence nor a CV identity.
+Contributions and scopes advance the journal independently of identity allocation.
+For chronology logs the event cap charges graph contribution/deletion facts,
+journal records and schedule descriptors; ordinary checked logs keep their
+original accounting.
 
 Full `chronology-v1` snapshots reload through both `from_checked_json` and
 `from_json_string`, retaining their next append sequence. Declared null, unknown,
