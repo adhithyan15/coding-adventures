@@ -400,6 +400,113 @@ would add the six नाम, सा and मम नाम lessons. The guided-cop
 which told the learner to give each म its own headline stroke and let the two
 meet, now points at the strip.
 
+#### Design — the ā sign in a Devanagari word, and phrases word by word
+
+The shared-headline strips drew only मम. Every other Devanagari writing
+headword with a Writing or Script block is refused, and two causes cover
+most of the near misses: the ā sign (नाम, सा, and the sign taught alone), and
+phrases of words separated by a space (मम नाम). This design draws both, and
+keeps refusing everything whose order is not cited.
+
+**ā has no cited ductus today.** None of the eight cited signs is ā, so it
+needs one before it can join a word. The evidence, all reachable and none of
+it copied (the HP Labs data is research-only, so only counts and shares are
+cited):
+
+| claim | evidence | strength |
+|---|---|---|
+| the sign is a stem drawn from the top, then a piece of headline | HP Labs India LipiTk 4.0 Devanagari recognizer, class 47 (ा): 55 of 81 stored native prototypes are one stroke, 54 of those 55 downward; 23 of 81 are the stem and then a short top stroke, drawn left to right in 20 of the 23 | strokes: high. The 1-stroke majority is an artefact of collection: the signs were "collected without the shirorekha" (DvngChar.pdf) |
+| on a consonant the stem comes after the consonant's body and before the headline | the cited आ (Saurmandal, *Devanagari आ stroke order.svg*, frames 1–5): the body, then frame 4 the trailing stem top-to-bottom, then frame 5 the shirorekhā. HP Labs' 83 stored prototypes of आ: 52 (63%) are body strokes, then the bar, then the headline; the bar follows the body in 69% and precedes the headline in 65% | **medium**: indirect (the bar of आ, not a consonant + ā syllable) |
+| cross-check, another script | KanoAI's Gujarati barakhadi templates draw ા after its consonant in all 32 rows that keep the bare consonant outline | cross-script; Gujarati has no headline |
+
+No reachable source records native writers' consonant + ā syllables: HP Labs
+India's `hpl-dvng-iso-word` set, which would, is on a host the authoring
+environment cannot reach. So carrying आ's order onto a consonant is this
+book's reading, and the citation says "medium confidence" in words.
+
+**The ductus.** `devanagari:ा` is two strokes, one lift: "draw the stem
+straight down", then "lift, then draw the shirorekha rightward" over the
+piece of headline Noto Sans Devanagari prints on the sign (x 0 to 273). Its
+mark record cites class 47 for the strokes (`strokeOrderSource`) and the
+cited आ, with the HP Labs and KanoAI counts, for the place
+(`compositionOrder`, `compositionSource`). This revises "Left out: ा" in
+"Devanagari signs drawn alone": that path followed the 1-stroke traces and
+left 9.7% of the printed sign untraced; drawing the headline piece last, as
+the 2-stroke writers and the cited आ do, traces it. So the four lessons that
+teach ā by itself (HI-S06, SA-S06, MR-W01-aa-matra, MW-W01-aa-matra) print a
+strip as well.
+
+**ā in a word.** `composeHeadlineWord` accepts ā only straight after a
+consonant (क to ह). Because the sign's last stroke is a headline labelled
+like every letter's, it splits like a letter: its stem is drawn right after
+its consonant's body, and its piece of headline becomes part of the word's
+one headline. Unicode stores ā after its consonant, so reading order is the
+written order. Shaping with HarfBuzz each of the 33 cited consonants + ā,
+alone and between two of the other cited letters (ई and ऐ, which the font
+splits, left out), gives exactly the `cmap` glyphs at their `hmtx` advances
+in all 2,805 strings, so the composed outline is the printed word. A vowel
+sign after an independent vowel is not a written syllable (after अ the font
+even prints a dotted circle, in all 85 such strings), so ā after a vowel
+letter, at the start of a word or after another sign is refused. The sign
+table (`HEADLINE_WORD_SIGNS`) holds ā
+only, and it reads the place citation from the mark record, so the strip's
+footer and the data cannot drift apart. The footer names the sign by
+position and adds its place:
+
+    letter 1: <न's source>; sign 2: <class 47>; letter 3: <म's source>;
+    the place of sign 2, after its consonant's body: <the cited आ>;
+    the shared headline, drawn last: <HP Labs India counts>
+
+A word of bare letters prints exactly what it printed before.
+
+**Signs still refused.** Each needs a cited order against its consonant AND
+the shared headline, and none has one:
+
+* े and ै: written after the consonant only in Gujarati (KanoAI); in native
+  ऐ the flag precedes the headline in 35 of 58 top sequences, a split. ै
+  also has no ductus (its flags' directions split).
+* ो and ौ: no ductus (ो's 2-stroke form is 51%; ौ has no majority).
+* ी: no headline timing at all, and its drawn form is a 43% minority.
+* ि: its side is unresolved (Gujarati KanoAI: after, 33 of 34; Gurmukhi
+  copyists: before, 10 of 17).
+* ं, ः, ्, ़ and conjuncts: no cited place; ः has no ductus; the virama
+  makes the half forms and conjuncts the font fuses.
+
+**Phrases.** A headword of two or more words separated by single spaces
+(U+0020) and nothing else becomes ONE strip in which every word is composed
+exactly as a word is now: its letters' bodies (and ā stems), then that
+word's own headline. Words come in reading order; the space breaks the
+headline, as the printed phrase does. A one-letter word is that letter's
+own strip, which already ends with its own headline. If any word fails a
+check, the ink fit included, the whole phrase is refused, naming the word
+("word 2 (नाम): …"); a phrase is never printed with a word missing.
+
+* The words are separate ledger entries (`devanagari:मम`,
+  `devanagari:नाम`), printed as the groups of a sequence strip: "How it is
+  written — 2 words, one after another", then "Word 1 of 2 — …" and "Word 2
+  of 2 — …". One entry for the whole phrase would scale a phrase 2,500 font
+  units wide into a 150-unit panel, about half the size of मम's letters; as
+  groups, each word keeps its own scale. The target is `letters: [words]`
+  with `composition: "shared-headline"` (a combination that was refused).
+* Punctuation is refused, not stripped: a label ("नाम: मीरा", "नाव: ___")
+  has a colon no source draws, a sentence ends in । or ".", a list uses
+  commas, dashes or middle dots. Stripping it would print a strip of
+  something the lesson does not ask the learner to write.
+* Length: like a sequence strip, a phrase is a candidate only up to
+  `MAX_SEQUENCE_PIECES` (10) pieces, counting its letters and signs. The
+  implementation measures the tallest strip that cap allows and records it
+  here; the figure must stay at or under the 1,801 units of the tallest
+  printed strip, else the cap tightens.
+
+**What it should unlock.** Ten lessons: Hindi नाम (HI-A1F01-name-label,
+HI-W12-schwa-drop) and ā (HI-S06); Marathi ā (MR-W01-aa-matra); Marwadi सा
+(MW-W01-saa) and ā (MW-W01-aa-matra); Sanskrit ā (SA-S06) and मम नाम
+(SA-W03-mama-nama-guided-copy, -delayed-copy, -dictation). Every lesson that
+gains a strip loses the "copy what you see" disclaimer, as before. Still
+refused: हो (ो), नमः (ः), every conjunct word (नमस्ते, धन्यवाद, अस्ति, स्त),
+every word with ि, े, ी, ं or a nukta, and every label, sentence and list
+that carries punctuation.
+
 #### As built — Bengali, cited to native writers' pen traces
 
 Bengali joins the derived filmstrips (`DERIVED_FILMSTRIP_SCRIPTS.bengali`) with
