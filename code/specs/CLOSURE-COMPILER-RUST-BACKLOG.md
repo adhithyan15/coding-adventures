@@ -9,7 +9,7 @@ its managed worktree is archived. The detailed [CV04 specification](CV04-exact-l
 first accepts CV04a actual matcher capture/domain validation, then CV04b compiler
 source inventory/ingestion-leaf reuse. CV04a implementation and exact range controls are in local validation;
 #16970 remains open until both slices pass. Preserve one active shared-stack PR.
-**Current audit base:** `c0c7b8bc04d972e07348d02143b6f8b867eee1ae`
+**Current audit base:** `2ef032426b5fc69ce19fdf6a0b67fddadcf33dd4`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
@@ -29,13 +29,22 @@ tests, including all14 ECMAScript editions and nested template/regex/division
 modes. Existing lexer132 and JavaScript lexer25 tests plus both strict all-target
 Clippy checks pass. Independent security passed exact lexical candidate `aabf8c847d`, including
 1,555 independently checked coordinate strings, hostile usize offsets and
-capacity boundaries. A subsequent spec-first two-helper Windows emitted-C
-validation repair still needs final-head review: its six original failures are
-now green in the full C package (80 tests), with unchanged runtime equivalence.
-The initial broad run is not accepted: a concurrent shared-target lexer rebuild
-invalidated its remaining rustdoc dependencies (E0460/E0463). Preserve the failed
-logs; rerun the complete frozen batch sequentially. Broad consumer/Miri/native
-CI/final-head security/merge acceptance remain pending. These are local results, not accepted delivery.
+capacity boundaries. The whole frozen candidate `774a8121eecd` subsequently
+passed independent final security review, including the spec-first two-helper
+Windows emitted-C repair. Its six original failures are green in the full C
+package (80 tests), with unchanged runtime equivalence. Full Closurec passes
+1,093 tests across181 targets with zero ignored and strict all-target Clippy.
+The uncontested 181-package shared rerun passes12,224 tests/docs across523 targets
+with68 existing ignores and strict all-target Clippy. The earlier shared-target
+rebuild invalidated rustdoc dependencies (E0460/E0463); its failed logs remain
+preserved and are excluded from acceptance.
+
+Fetched main `2ef032426b5f` merged conflict-free; changed Perl/ALGOL/Mermaid
+consumers require refreshed tests/lint, and the updated production build tool
+requires a fresh plan. Required local Miri has passed runtime-core/dynval-runtime
+and is still executing Twig VM. Native CI/final refreshed-head security/merge
+acceptance remain pending; no branch has been pushed and no CV04a PR exists.
+These are local results, not accepted delivery. #16970 remains open through CV04b.
 
 The real ES2025 grammar rejects bare U+2028/U+2029 between tokens (`a<LS>b`,
 `a<PS>b`), although coordinate capture handles all four ECMAScript terminators in
