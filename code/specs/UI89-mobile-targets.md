@@ -1198,8 +1198,8 @@ compiled in or was filtered out fails the step instead of passing it.
 8. **Flutter:** `flutter create --platforms=android,ios`, per-ABI native
    assets, `path_provider` for state. *Designed in §7. Trestle passed
    its gates on both phones (§7.8, §7.9), and CI builds and gates Journal
-   and Engram the same way (§7.10). Phone file effects and Flutter device
-   UI tests remain (§7.6).*
+   and Engram the same way (§7.10). Phone file effects are designed in
+   §7.11. Flutter device UI tests remain (§7.6).*
 
 iOS goes first because the emitted source already compiles for it; the gap is
 packaging only.
@@ -1427,7 +1427,7 @@ PR is proven in CI.
   and iOS, but it has no save there. Saving needs a document-create intent
   on Android and an export picker on iOS, which means platform code that the
   generated project does not own. That is its own design, after this step,
-  and the refusal message stays until then.
+  and the refusal message stays until then. *Designed in §7.11.*
 - **Device UI tests** for Flutter (`integration_test`), as §4 did for
   Compose and SwiftUI.
 - **Release builds, signing and store packaging**, as §6 says for every
@@ -1558,3 +1558,297 @@ Step 4 brings Journal and Engram along, by the same path:
   native-complete, and `flutter analyze` (Flutter 3.44) finds no issues in
   either.
 
+
+### 7.11 File effects on phones, designed (step 5)
+
+Written before implementation. This is the first item §7.6 left out. A
+Flutter app on Android or iOS answers `files.open` and `files.save` with
+the system's own pickers. Engram's import and export go through the same
+pickers. The contracts, limits and name rules (UI87 §3.1) do not change:
+a phone save refuses exactly the names a desktop save refuses, and an open
+reads at most 50 MiB. Until this lands, each request still fails with
+"… is not available on this platform yet".
+
+**Why `file_selector` is not enough.**
+
+| | Android (`file_selector_android` 0.5.2) | iOS (`file_selector_ios` 0.5.3) |
+|---|---|---|
+| open | reads the **whole** document into memory, then copies it again into the cache, before Dart sees it. A provider's 2 GiB file is 2 GiB of heap, with no stall watch | a copy, through `UIDocumentPickerViewController` |
+| save | `getSaveLocation` is unimplemented | `getSaveLocation` is unimplemented |
+
+So a phone needs platform code: Storage Access Framework intents on Android,
+and the export picker on iOS. A runner belongs to `flutter create` (§7.1),
+so that code cannot live there.
+
+**A plugin the builder owns.** A phone build writes a local Flutter plugin,
+`mosaic_phone_files/`, at the project root, and a path dependency on it in
+`pubspec.yaml`:
+
+    mosaic_phone_files:
+      path: mosaic_phone_files
+
+- Flutter's tooling registers a path-dependency plugin through
+  `GeneratedPluginRegistrant`, as it registers `path_provider`. So nothing in
+  the runner changes, and `flutter create` can run before or after the
+  builder.
+- The plugin has an `android/` half (Kotlin) and an `ios/` half (Swift,
+  with a `Package.swift` for Swift Package Manager and a `.podspec` for
+  CocoaPods, whichever the Flutter tool uses). It declares only the
+  platforms the runtime has: a runtime with only an `android/` half gets a
+  plugin with only `android/`, as the README already names only those
+  platforms (§7.9).
+- A desktop build writes no plugin, and its `pubspec.yaml` and `main.dart`
+  stay byte for byte as they are (§7.8).
+- The plugin's name is reserved: a package whose own Dart files or
+  dependencies use `mosaic_phone_files` is refused, as the other generated
+  names are (UI48 §7.5).
+
+**One channel, two methods, paths not bytes.** The plugin talks over one
+`MethodChannel`, `dev.codingadventures.mosaic/phone_files`, and never
+carries a document's bytes across it:
+
+| method | arguments | answer |
+|---|---|---|
+| `open` | `directory`, `mimeTypes`, `limit` | `{ "path" }`, or null for a cancel |
+| `export` | `path`, `mimeType` | `{ "name" }`, or null for a cancel |
+
+A failure is a `PlatformException` whose code is one of `busy`, `no_window`,
+`activity_gone`, `too_large`, `stalled` or `unreadable`. Dart maps each
+code to a fixed message and never shows the exception's own text, which can
+carry a provider's path. Any other code, a `MissingPluginException`, or an
+answer of the wrong shape gives the generic message: "couldn't read the
+file" for an open, "couldn't save the file" for an export.
+
+- **Why paths.** Up to 50 MiB in a channel message is copied at least
+  twice, and on Android it is encoded on the main thread. A path keeps the
+  bytes in files the app owns. Dart then reads them with the bounded reader
+  it already has (`_mosaicReadOpened`, in a background isolate) and writes
+  them with the exclusive create it already has.
+- **Dart owns the directory.** For each request Dart creates a fresh
+  directory, `<temporary>/mosaic-files/<random>/`. `<temporary>` comes from
+  `path_provider`'s `getTemporaryDirectory()`: `cacheDir` on Android, and
+  the sandbox's `tmp/` on iOS. Dart passes the directory to `open` and stages
+  a save in it. It deletes the directory in a `finally`, whether the request
+  succeeded, was cancelled or failed.
+- **The plugin trusts nothing the channel sends.** Any Dart code in the
+  process can call the channel by its name, so reserving the package name
+  is not a boundary. Every argument is checked as if hostile:
+  - **The directory.** A directory is accepted only when its canonical path
+    is directly below the canonical `<its own temporary>/mosaic-files/`
+    (iOS canonicalizes `/var` to `/private/var` on both sides). The plugin
+    opens a descriptor for it, and creates the open copy relative to that
+    descriptor with `O_CREAT | O_EXCL | O_NOFOLLOW`. It writes only that one
+    new file and deletes nothing.
+  - **The staged file.** `export` accepts only a regular file, not a link,
+    directly inside a directory that passes the same check. It is opened
+    with `O_NOFOLLOW`, checked to be a regular file through that
+    descriptor, and is at most 16 MiB. Its name must pass
+    `mosaicIsPlainFileName` and the executable-extension rule, ported to
+    the plugin's language, whatever Dart already checked. A FIFO, a device,
+    or a link to the app's own `shared_prefs` or databases is refused as
+    `unreadable` before any picker is shown.
+  - **`limit`** is clamped to 50 MiB.
+  - **One call at a time.** A second call while one is waiting is `busy`,
+    whoever makes it.
+- **Dart trusts nothing the plugin answers.** The path from `open` is
+  accepted only when it is a regular file, not a link, directly inside the
+  request's own directory. It is read without resolving links, unlike a
+  desktop dialog's choice, which `_mosaicReadOpened` follows on purpose.
+  Anything else is the generic failure.
+- **Leftovers.** A process killed mid-request leaves its directory behind.
+  Dart makes each request's directory with `Directory.createTemp`, mode
+  0700. Before its first request, each router deletes the entries of
+  `<temporary>/mosaic-files/` that have not changed for more than an hour,
+  aged by each entry's last modification. It does not follow links, and it
+  never deletes a younger entry. The rule of one
+  operation at a time holds for each router, not for the process: a second
+  Flutter engine (an iPad's second scene) may have a request in flight
+  there.
+
+**Android.**
+
+- *The plugin.* `MosaicPhoneFilesPlugin` is a `FlutterPlugin`,
+  `ActivityAware` and `PluginRegistry.ActivityResultListener`. It starts
+  `ACTION_OPEN_DOCUMENT` and `ACTION_CREATE_DOCUMENT` with
+  `startActivityForResult` on the attached activity. A plain
+  `FlutterActivity`, which is what `flutter create` writes, has no
+  `ActivityResultRegistry`, so Compose's `MosaicAndroidDocumentPicker`
+  cannot be reused as it is. The plugin's two request codes are its own,
+  and any other code is not its result.
+- *Open.* The intent asks for the request's MIME types (`*/*` when none
+  map), with `CATEGORY_OPENABLE`. On a background thread, the plugin reads
+  the document through `openAssetFileDescriptor(uri, "r", signal)` and
+  copies **at most `limit + 1` bytes** into `<directory>/<name>`. It stops
+  as soon as the copy passes `limit` and answers `too_large`, so a large
+  document is never read whole. `<name>` is the provider's display name
+  under §3.8's ordinary-name rule, else `document` (below).
+- *Only another app's documents.* A result is used only when its `Uri` has
+  the `content` scheme and an authority that is none of this app's own
+  providers (checked with `PackageManager.resolveContentProvider`). Any
+  other result, `file:` included, is `unreadable`, so a crafted result can
+  never make the plugin read or overwrite the app's private files. No
+  persistable permission is taken.
+- *Save.* `ACTION_CREATE_DOCUMENT` with `EXTRA_TITLE` set to the
+  suggested name and the type Dart chose (§3.8's rule: the name's own type
+  when the request accepts it or anything, else the first accepted type). On
+  a background thread, the staged file is copied into the document
+  through `openAssetFileDescriptor(uri, "wt", signal)` in 64 KiB pieces. The
+  answer's name is the provider's display name, under the same rule. As in
+  §3.8, a failed write is reported and the document is never deleted.
+- *The stall watch, shared.* Both transfers go through §3.8's
+  `MosaicStallWatch` (60 seconds without progress fails them as `stalled`),
+  including the cancellation of `openDocument` and the single close. Those
+  pieces move out of `MosaicFileEffects.kt` into a new template,
+  `MosaicDocumentTransfer.kt`:
+  - `MosaicStallWatch`;
+  - `mosaicWatchedInput` and `mosaicWriteWatched`;
+  - `mosaicReadBounded`;
+  - the display-name and MIME-shape checks;
+  - new: the plugin's directory and staged-file checks (above), which use
+    only `java.io` and `android.system.Os`'s POSIX calls through a small
+    interface, so the JVM harness can run them with a fake.
+
+  It has no `package` line, as the Compose files have none. The Compose
+  Android project gets it beside `MosaicFileEffects.kt`. The plugin gets
+  the same file, and its packaged plugin class imports those declarations
+  by their simple names. Kotlin allows that from the root package, though
+  Java does not.
+  The Android PR confirms it by compiling; if it does not compile, the
+  template gains a package line chosen per destination, and nothing else
+  changes.
+- *One change to the name rule, everywhere.* A name longer than 255 UTF-8
+  bytes is no longer ordinary, because 255 UTF-16 units can be more bytes
+  than a file system's name limit. The clause is added to §3.8's rule on
+  Compose Android, to SwiftUI's iOS rule and to the plugin's, so all three
+  keep one rule. A name the clause refuses is `document`. Apart from this
+  clause and the moved file, Compose and SwiftUI output does not change.
+- *The activity goes away.* `onDetachedFromActivity` (and
+  `ForConfigChanges`, since `flutter create`'s manifest handles rotation
+  itself) answers the waiting call `activity_gone`, and a result that
+  arrives later is dropped. A launch that throws answers `unreadable` and
+  leaves the plugin not waiting.
+
+**iOS.**
+
+- *Open.* `UIDocumentPickerViewController(forOpeningContentTypes:asCopy:
+  true)`. The content types are the `UTType`s of the request's extensions,
+  or `.item` when none map, as in §2.6. Keeping `asCopy: true` was decided
+  after step 6 (§3.8). The plugin moves the system's copy into
+  `<directory>/<name>` with `FileManager.moveItem`, which refuses an
+  existing name, and answers its path. Dart then enforces the limit,
+  as for the SwiftUI open, which also reads the whole copy.
+- *Save.* `UIDocumentPickerViewController(forExporting: [staged], asCopy:
+  true)`. The picker confirms any replace. The answer's name is the last
+  path component of the URL the picker reports.
+- *Names.* The open copy's name and the export's reported name pass the
+  same ordinary-name rule as Android's, else they are `document`.
+- *Where and how long.* These follow `MosaicUIKitDocumentPicker` (§3.8):
+  - the picker is shown from the foreground scene's key window, on its
+    topmost presented view controller;
+  - `no_window` when there is none;
+  - the picker is its own delegate, and a picker released without a delegate
+    call answers a cancel from `deinit`;
+  - a presentation UIKit refuses fails at once.
+
+  The Swift is the plugin's own. The SwiftUI library's picker is typed on
+  that library's router and host, which a plugin module cannot import.
+  The two are kept parallel by a Rust test that checks each has the same
+  presentation and `deinit` rules.
+
+**Dart.**
+
+- *The seam.* The core gains `MosaicPhoneDocuments`, the plugin's two
+  methods as an interface, so the headless conformance test can answer
+  them with fakes:
+
+      abstract interface class MosaicPhoneDocuments {
+        Future<String?> copyForOpening(String directory, List<String> mimeTypes, int limit);
+        Future<String?> export(String stagedPath, String mimeType);
+      }
+
+- *The phone path.* `mosaicRunPhoneFilesOpen` and `mosaicRunPhoneFilesSave`
+  sit beside the desktop functions and share their checks:
+  - **Open:** copy, read the copy with `_mosaicReadOpened`, and answer with
+    the copy's name. A `too_large` from the plugin and an oversized copy
+    both give the desktop's "too large" failure.
+  - **Save:** check the request exactly as `mosaicRunFilesSave` does, before
+    any picker is shown. Stage the bytes as `<directory>/<suggestedName>`
+    with an exclusive create, export, and answer `ok { name }` or
+    `cancelled {}`.
+  - The directory is removed in a `finally` either way.
+  - `mosaicConfirmReplacing` is not used: the provider or picker confirms a
+    replace.
+- *The router.* `installMosaicPlatformRouter` takes `phoneDocuments`.
+  `mosaicPlatformHasFileDialogs` is true on Android and iOS when it is
+  given. The one-at-a-time rule, deferral and the single answer are the
+  router's, unchanged. Without `phoneDocuments` (a phone build made before
+  this step), the "not available" failure stays.
+- *The app seam.* `mosaicOpenForApp(host, id, extensions, limit, ok)` and
+  `mosaicSaveForApp(host, id, suggestedName, bytes, extensions, ok)` lend
+  the router's pickers to a package's own handler, as Kotlin's
+  `openForApp` and `saveForApp` do (§3.11). The busy rule, deferral and
+  exactly-one-answer are shared with `files.*`. They keep §3.11's rules
+  unchanged:
+  - `mosaicCheckSaveName`, and an executable extension refused for an app
+    save whatever the app accepts;
+  - a refusal never throws into the app's handler;
+  - the request in flight, asked for again with the same id, is left to
+    its own picker;
+  - a throw inside the operation still answers the effect and frees the
+    router.
+
+  On desktop they use the
+  dialogs and on a phone the plugin. Engram's Flutter handler moves to the
+  seam, so its `importAnki` and `exportAnki` work on phones. Its desktop
+  behaviour does not change: the seam runs the same dialogs it calls
+  today.
+
+**Gates.**
+
+- **Dart VM.** The conformance harness drives the phone path with fake
+  `MosaicPhoneDocuments`:
+  - a cancel;
+  - a copy that is read and then deleted;
+  - an answered path that is a link, outside the directory, or not a
+    regular file, each refused without being read;
+  - an unknown code, `MissingPluginException` and a malformed answer, each
+    given the generic message;
+  - leftover cleanup that keeps a younger entry and does not follow a link;
+  - an oversized copy, and `too_large`;
+  - each plugin code mapped to its fixed message;
+  - a save refused before `export` is called;
+  - the staged file deleted after success, cancel and failure;
+  - a second request refused as busy;
+  - the app seam, through the same fakes.
+- **Rust.**
+  - A phone build writes the plugin and the path dependency, and a desktop
+    build is unchanged.
+  - Only the runtime's platforms are declared.
+  - The name is reserved.
+  - `MosaicDocumentTransfer.kt` is byte-identical in the Compose Android
+    project and in the plugin.
+  - The plugin's Kotlin and Swift each contain the argument checks above:
+    the directory, the staged file, the clamp, `busy`, and, on Android,
+    the `content` scheme and the authority check.
+- **JVM.** The Compose harness checks the name rule's new 255-byte clause,
+  and that the plugin's directory and staged-file checks refuse a link, a
+  FIFO, a file outside the directory, and an oversized file.
+- **CI.**
+  - The Flutter phone build script (§7.10) also checks that
+    `MosaicPhoneFilesPlugin` is in the APK's dex, and that the plugin's
+    Swift class is in the `Runner.app`.
+  - `flutter analyze` covers the plugin's Dart.
+  - Driving the pickers themselves is the other item of §7.6, the Flutter
+    device UI tests (`integration_test`), which land after this.
+
+**Order.**
+
+1. This design (spec only).
+2. **Dart:** `MosaicPhoneDocuments`, the phone path, the router's
+   `phoneDocuments`, the app seam, and the conformance checks. No phone
+   build passes a `phoneDocuments` yet, so nothing changes on a device.
+3. **Android:** the plugin's `android/` half, `MosaicDocumentTransfer.kt`
+   moved out of `MosaicFileEffects.kt`, the builder writing the plugin, and
+   the dex check. Phone builds pass the plugin, so Android answers.
+4. **iOS:** the plugin's `ios/` half and the `Runner.app` check.
+5. **Engram:** its Flutter handler on the app seam, on every platform.
