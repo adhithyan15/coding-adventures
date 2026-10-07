@@ -36,3 +36,11 @@ export async function generatedFilmstripUrl(
   const { loadFilmstrip } = await import("./filmstrip-sources.ts");
   return loadFilmstrip(language, lessonId);
 }
+
+// The words under a writing lesson's filmstrip. The book captions the same
+// strip from the same module, so "is this headword a LIST of letters?" has one
+// answer in both: a list reads "How these letters are written, stroke by
+// stroke: ক, ণ, শ" rather than "How ক — ণ — শ is written", and a single
+// letter or a word reads exactly as before. The module has no imports, so it
+// costs the first-paint chunk a few hundred bytes.
+export { filmstripCaption } from "@coding-adventures/human-language-data/src/filmstrip-caption.ts";

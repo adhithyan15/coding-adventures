@@ -104,7 +104,7 @@ import {
 } from "./focused.ts";
 import { loadLanguages, saveLanguages } from "./languagestore.ts";
 import { lessonSections } from "./lessonbody.ts";
-import { generatedFigureUrl, generatedFilmstripUrl } from "./figures.ts";
+import { filmstripCaption, generatedFigureUrl, generatedFilmstripUrl } from "./figures.ts";
 import { bookHashStatus, whenBookHashesReady } from "./bookhashes.ts";
 // Per-atom mastery (HL10 §10.1). The scheduler still runs on lessons; this
 // records what the learner actually holds, atom by atom, so a later slice can
@@ -1160,7 +1160,8 @@ function renderLessonBody(lesson: (typeof LESSONS)[number], initiallyOpen = fals
     const figure = el("figure", "lesson-body__figure lesson-body__filmstrip");
     const img = document.createElement("img");
     img.src = url;
-    img.alt = `How ${lesson.headword} is written, stroke by stroke`;
+    // A list of letters is captioned as a list (see figures.ts).
+    img.alt = filmstripCaption(lesson.headword);
     img.loading = "lazy";
     img.decoding = "async";
     const caption = el("figcaption", "lesson-body__figure-caption");
