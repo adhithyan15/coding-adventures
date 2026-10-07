@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+### Fixed - a broken stories file is shown, not hidden (#16928)
+
+`/api/stories` always returned a component's `storiesError` (invalid JSON,
+a fixture the interface rejects), but the browser shell never read it, so a
+broken stories file simply vanished. The sidebar now marks the component
+with a ⚠️ badge (UI19 §6.2), with the reason in its tooltip and in a line
+below the title. Both are set with `textContent`, because the reason can
+quote file contents. Checked in Chromium against a copy of
+`mosaic-pkg-card` whose stories file was made invalid.
+
+### Fixed - no reload at startup, and discovery outside the lock (#16929)
+
+- The watcher's first poll compared every file against an empty snapshot,
+  so every connected browser reloaded about a second after startup with
+  nothing changed. The watcher now takes its starting snapshot before it
+  begins polling, and a test pins that an unchanged tree reports no change.
+- Re-discovery walks the tree and runs `mosaic-compile --describe`
+  subprocesses. It ran while holding the server lock, so every request that
+  reads the catalogue waited on it. It now runs outside the lock, and the
+  new catalogue is swapped in under it, as `handleAPIStories` already did.
+
 ### Fixed (security) - the server listens on loopback only
 
 The README says the server binds to `localhost` only, but it listened on

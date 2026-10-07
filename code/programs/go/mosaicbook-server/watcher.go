@@ -42,29 +42,39 @@ func (s *Server) watchFiles() {
 	// mtimes maps each tracked file path → last-observed modification time.
 	// We include both .mosaic and .stories.json files.
 	mtimes := make(map[string]time.Time)
+	// The starting snapshot (#16929). Without it, the first poll compares
+	// every file against an empty map, reports all of them as new, and
+	// reloads every connected browser a second after startup with nothing
+	// changed. Its result is the baseline, not a change.
+	s.pollFiles(mtimes)
 
 	for {
-		// Sleep first so that if the watcher starts before any files are written
-		// we don't trigger a spurious reload on startup.
 		time.Sleep(1 * time.Second)
-
-		changed := s.pollFiles(mtimes)
-		if changed {
-			// Re-discover components so the in-memory catalogue is fresh.
-			s.mu.Lock()
-			comps, err := s.discoverValidatedComponents()
-			if err != nil {
-				log.Printf("watcher: re-discover error: %v", err)
-			} else {
-				s.components = comps
-				log.Printf("watcher: detected file change; discovered %d component(s)", len(comps))
-			}
-			s.mu.Unlock()
-
-			// Broadcast reload to all SSE clients.
-			s.broadcast(`{"type":"reload","component_id":"all"}`)
+		if s.pollFiles(mtimes) {
+			s.refreshAfterChange()
 		}
 	}
+}
+
+// refreshAfterChange re-discovers the catalogue and tells every browser to
+// reload.
+//
+// Discovery runs WITHOUT the server lock (#16929): it walks the tree and runs
+// `mosaic-compile --describe` subprocesses to validate story fixtures, and
+// holding s.mu through that made every request that reads the catalogue wait
+// on them. The new catalogue is swapped in under the lock, as
+// handleAPIStories already does.
+func (s *Server) refreshAfterChange() {
+	comps, err := s.discoverValidatedComponents()
+	if err != nil {
+		log.Printf("watcher: re-discover error: %v", err)
+	} else {
+		s.mu.Lock()
+		s.components = comps
+		s.mu.Unlock()
+		log.Printf("watcher: detected file change; discovered %d component(s)", len(comps))
+	}
+	s.broadcast(`{"type":"reload","component_id":"all"}`)
 }
 
 // hasWatchedSuffix reports whether a filename is a component source that
