@@ -3881,6 +3881,12 @@ impl Compiler {
         if let Some(child) = single_parenthesized_child(node) {
             return self.builtin_sign_operand(child);
         }
+        if let Some((sign, child)) = single_signed_child(node) {
+            if matches!(sign, "+" | "-") {
+                return self.builtin_sign_operand(child);
+            }
+            return None;
+        }
         if node.rule_name != "proc_call" {
             let children = direct_nodes(node);
             if direct_tokens(node).is_empty() && children.len() == 1 {
@@ -13029,6 +13035,36 @@ mod tests {
                 .expect_err("custom integer procedures have no built-in bounded-result proof");
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_signed_entier_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(-sign(pick())); output(x) end",
+            "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier(+sign(pick())))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "signed built-in sign remains exact through entier widening for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_signed_entier_sign_widening_rejects_sign_overrides() {
+        let err = compile_source(
+            "begin real procedure pick; pick := -2.25; integer procedure sign(x); value x; real x; sign := 1; real result; result := entier(-sign(pick())); output(result) end",
+            "test",
+        )
+        .expect_err("a signed custom sign call has no built-in bounded-result proof");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
