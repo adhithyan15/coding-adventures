@@ -55,9 +55,11 @@ quietly accepting a modern approximation.
 For release pairs that expose arithmetic subtraction, lex adjacent `--` as
 Perl's decrement operator and reject it if decrement semantics are outside the
 partial grammar; spaced binary/unary minus (`1- -2`) remains a separate form.
-For the historical and modern arithmetic-print subsets, accept plain decimal integer literals
-without a leading zero (and `0` itself). A leading-zero literal may use octal
-syntax; reject it until that release's actual numeric rules are implemented.
+For a release pair that declares a plain-decimal arithmetic-print subset,
+accept integer literals without a leading zero (and `0` itself). A
+leading-zero literal may use octal syntax; reject it until that release's
+actual numeric rules are implemented. Earlier partial pairs with broader
+integer token rules still need a separate numeric-boundary audit.
 
 The existing unversioned `perl.tokens` and `perl.grammar` remain the bounded
 Perl 5.38 LANG81 execution grammar until a separately validated versioned
