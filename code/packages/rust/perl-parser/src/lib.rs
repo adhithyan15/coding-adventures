@@ -25,6 +25,7 @@ mod tests {
         token_grammar::parse_token_grammar,
     };
     use lexer::grammar_lexer::GrammarLexer;
+    use std::collections::HashSet;
     use std::path::Path;
 
     #[test]
@@ -32,6 +33,7 @@ mod tests {
         let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
         let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
         let mut checked = 0;
+        let mut releases = HashSet::new();
         for row in inventory
             .lines()
             .filter(|row| !row.starts_with('#'))
@@ -41,10 +43,26 @@ mod tests {
             let [release, _, _, status] = fields.as_slice() else {
                 panic!("malformed Perl release row: {row}");
             };
+            assert!(
+                release.starts_with(|character: char| character.is_ascii_digit())
+                    && release
+                        .chars()
+                        .all(|character| character.is_ascii_alphanumeric()
+                            || "._-".contains(character))
+                    && !release.contains(".."),
+                "unsafe Perl release ID: {release}"
+            );
+            assert!(
+                releases.insert(*release),
+                "duplicate Perl release ID: {release}"
+            );
+            assert!(
+                matches!(*status, "pending" | "partial" | "complete"),
+                "{row}"
+            );
             if *status == "pending" {
                 continue;
             }
-            assert!(matches!(*status, "partial" | "complete"), "{row}");
             let token_text =
                 std::fs::read_to_string(directory.join(format!("perl{release}.tokens"))).unwrap();
             let grammar_text =

@@ -33,8 +33,11 @@ Each release gets its **own** materialized `code/grammars/perl/perl<V>.tokens`
 and `perl<V>.grammar` pair. No release is represented only by an alias to
 another release's files, including maintenance releases with unchanged syntax.
 The filename uses the release's exact public version spelling, normalized only
-where a filesystem character is illegal. A release inventory records that
-normalization, source tag or archive, pair paths, coverage, and validation.
+where a filesystem character is illegal. The release inventory records each
+version's spelling, date, history line or tag, and coverage state. Pair paths
+follow the filename convention above; source revisions and the validated
+subset are recorded in each pair's comments and the release-grammar README.
+Inventory release IDs must be unique and safe to use in those file paths.
 The initial `code/grammars/perl/releases.csv` inventory expands 763 numbered
 releases from a pinned `perlhist.pod` snapshot. An official source-tag audit
 added 11 release candidates omitted there, for 774 pending or partial release
