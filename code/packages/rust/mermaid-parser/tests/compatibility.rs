@@ -188,10 +188,36 @@ fn pinned_treeview_subset_corpus_parses_to_tree_ir() {
             assert_eq!(diagram.nodes.iter().map(|node| node.icon.as_deref()).collect::<Vec<_>>(),
                 [Some("logos:markdown"), Some("none"), Some("devicon:rust"),
                     Some("logos:typescript"), Some("devicon:custom")]);
+        } else if matches!(name, "rooted-box-drawing-hierarchy" | "compact-box-drawing-segments") {
+            assert_eq!(diagram.nodes.iter().map(|node| node.depth).collect::<Vec<_>>(), [0, 1, 2, 1]);
+            assert_eq!(diagram.nodes.iter().map(|node| node.parent_id.as_deref()).collect::<Vec<_>>(),
+                [None, Some("treeview-1"), Some("treeview-2"), Some("treeview-1")]);
+            if name == "compact-box-drawing-segments" {
+                assert_eq!(diagram.nodes[1].class_selector.as_deref(), Some("highlight"));
+                assert_eq!(diagram.nodes[2].description.as_deref(), Some("crate root"));
+            }
         } else {
             assert!(!diagram.nodes.is_empty());
         }
     }
+}
+
+#[test]
+fn treeview_box_drawing_rejects_mixed_indentation_with_original_line_numbers() {
+    let mixed = parse_treeview("treeView-beta\n├── src/\n    index.ts\n└── README.md")
+        .expect_err("box-drawing mode must reject indentation-only children");
+    assert_eq!(mixed.line, 3);
+    assert!(mixed.message.contains("unexpected indentation"));
+
+    let empty = parse_treeview("treeView-beta\nroot/\n├── src/\n│   └── ")
+        .expect_err("empty box-drawing nodes must fail");
+    assert_eq!(empty.line, 4);
+    assert!(empty.message.contains("empty TreeView box-drawing node"));
+
+    let remapped = parse_treeview("treeView-beta\n├── src/\n│\n└── \"unterminated")
+        .expect_err("semantic errors must retain their original source line");
+    assert_eq!(remapped.line, 4);
+    assert!(remapped.message.contains("unterminated TreeView quoted label"));
 }
 
 #[test]

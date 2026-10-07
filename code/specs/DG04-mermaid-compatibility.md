@@ -797,9 +797,12 @@ dedicated tree IR. File/directory identity, quoted and bare labels, title and
 accessibility metadata, `:::class`, `icon()`, and `##` descriptions survive
 through deterministic row layout and backend-neutral connector, highlight,
 marker, and glyph PaintInstructions with native Metal-to-PNG validation.
-Configuration-driven default and filename/extension icon maps, external icon
-pack artwork, custom row geometry, exact typography, and interactive behavior
-remain unsupported at the partial level.
+Box-drawing preprocessing matches the pinned root offset, inferred segment
+width, decoration-line handling, mixed-format rejection, and original-line
+diagnostics. Configuration-driven default and filename/extension icon maps
+resolve into semantic icon identities; registered icon-pack artwork,
+theme-variable styling, exact typography, and interactive behavior remain
+unsupported at the partial level.
 
 ### Railroad Native Slice
 
