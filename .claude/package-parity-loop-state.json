@@ -11,21 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 16918,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16918",
-    "branch": "codex/parity-elixir-windows-selector-20261007",
-    "implementation_revision": "c9484a95082110cbd2d199c4ad6782d92931cc21",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-07T16:19:00Z",
+    "observed_at": "2026-10-07T16:48:52Z",
     "pr_number": 16918,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #16918 opened from independently reviewed implementation c9484a95082110cbd2d199c4ad6782d92931cc21. GitHub reports MERGEABLE; CI and CodeQL checks are queued. Do not enable auto-merge before every required check is terminal and acceptable and GitHub reports no conflict."
+    "status": "merged",
+    "notes": "PR #16918 passed all 33 terminal checks with expected skips and no failures. GitHub reported MERGEABLE/CLEAN; guarded squash auto-merge was enabled for exact head 1fbe2830517b6fd34a7379fa3a9d65593a19a10a, never manually merged. GitHub merged it at 2026-10-07T16:48:52Z as 40c6f6af49c47ef8ad85138e645de82ab69b7bac."
   },
   "last_inventory": {
-    "revision": "7d56e76cbbde034bbf32eac907d51dc21c32a3ee",
+    "revision": "40c6f6af49c47ef8ad85138e645de82ab69b7bac",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1495,
@@ -2019,11 +2013,11 @@
     {
       "id": "build-tool-elixir-canonical-build-membership-and-windows-selection-conformance",
       "title": "Require canonical BUILD membership and select Elixir Windows overrides",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-elixir-discovery-language-registry-conformance"],
       "branch": "codex/parity-elixir-windows-selector-20261007",
       "pr_number": 16918,
-      "notes": "Selected after #16909 merged and the 1,495-identity collision-checked refresh. Elixir's native current_os reports :win32 while the override selector expects :windows, and variant-only BUILD_windows/BUILD_mac can falsely create packages without canonical BUILD. Consume the neutral Windows-override and variant-without-canonical cases through the native selector/front door, preserving canonical membership and platform-specific fallback. The active work is one serial PR; Elixir native no-follow policy remains separately owned.",
+      "notes": "Merged PR #16918 as 40c6f6af49c47ef8ad85138e645de82ab69b7bac after 33 terminal acceptable checks and conflict-free guarded auto-merge. Exact canonical BUILD entry establishes package membership; native Windows selects BUILD_windows and variant-only roots remain non-packages. Elixir native no-follow policy remains separately owned.",
       "validation_notes": "Test-first red run reproduced four focused failures; independent correctness review found and reproduced an exact-case Windows defect before PR, now fixed with a directory-entry check and red/green regression. On the final implementation, 36 focused Discovery tests and the 273-test Elixir package suite pass with two expected skips. Changed Discovery coverage is 91.18%; full package coverage reports 70.33% and still misses its pre-existing 90% aggregate gate. Focused format, warnings-as-errors compile, literal Windows BUILD_windows deps.get/test with a bounded toolchain PATH, escript build, Go build-tool tests/vet/build, neutral 178-case corpus, parity reporter, 868 lesson shards, collision gate, state DAG, and diff checks pass. Independent security and correctness reviews found no remaining blocker. Rebased cleanly onto 7d56e76cbbde034bbf32eac907d51dc21c32a3ee; refreshed collision-checked inventory counts remain unchanged."
     },
     {
@@ -12216,11 +12210,12 @@
     {
       "id": "hash-functions-dt17-vector-and-documentation-correction",
       "title": "Correct governing DT17 hash-function vectors and stale package prose",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": [],
-      "branch": null,
+      "branch": "codex/parity-dt17-vector-correction-20261007",
       "pr_number": null,
-      "notes": "Post-#16744 audit found stale FNV-1a32 and Murmur3_32 examples in DT17 and package documentation while existing tests agree with the algorithms. Correct FNV-1a32(a)=3826002220, FNV-1a32(foobar)=3214735720, Murmur3_32(a,seed=0)=0x3C2569B2, and trace/decimal errors before Swift hash-functions copies the contract. Preserve semantic tests and avoid unrelated implementation churn."
+      "notes": "Selected after #16918 merged and the 1,495-identity collision-checked refresh. Post-#16744 audit found stale FNV-1a32 and Murmur3_32 examples in DT17 and package documentation while existing tests agree with the algorithms. Correct FNV-1a32(a)=3826002220, FNV-1a32(foobar)=3214735720, Murmur3_32(a,seed=0)=0x3C2569B2, and trace/decimal errors before Swift hash-functions copies the contract. Preserve semantic tests and avoid unrelated implementation churn.",
+      "validation_notes": "Spec-first numeric corrections were independently recomputed. Exact Python 3.13 Windows BUILD recipe passed Ruff, format, strict MyPy, and 88 tests at 100% coverage. Python hash-map, bloom-filter, and HyperLogLog downstream Windows BUILD recipes passed 116/47/61 tests at 96.04%/96.15%/98.88% coverage. Go hash-functions tests pass at 95.7% coverage, with vet and build clean. Relevant stale-vector search, zero-collision parity inventory, 870 lesson shards, state DAG, and diff checks pass. Independent security review found no blocker; no algorithm logic or build metadata changed."
     },
     {
       "id": "build-tool-typescript-blog-exact-input-prose-correction",
