@@ -1,19 +1,23 @@
 {
   "language": "punjabi",
   "chapter": 157,
-  "sourceHash": "fnv1a64:89542c54e9b882ea",
+  "sourceHash": "fnv1a64:6cc35e267f2ff691",
   "lessonIds": [
     "PA-W13-form-mixed-cues",
     "PA-W13-form-timed",
     "PA-W13-message-pacing",
     "PA-W13-message-timed",
-    "PA-W13-timed-repair"
+    "PA-W13-timed-repair",
+    "PA-W13-form-clock-return",
+    "PA-W13-repair-check-return",
+    "PA-W13-message-opening-return",
+    "PA-W13-message-purpose-return"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "punjabi/narration/ch157.txt",
   "json": "punjabi/narration/ch157.json",
-  "textHash": "fnv1a64:0b53a3a29d222861",
-  "jsonHash": "fnv1a64:156c9a5ad719f09b",
+  "textHash": "fnv1a64:c8f943bb89dddc1e",
+  "jsonHash": "fnv1a64:dedd1fbaf3941f2c",
   "findings": []
 }

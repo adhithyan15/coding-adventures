@@ -1,0 +1,22 @@
+{
+  "lesson": {
+    "id": "PA-W13-message-opening-return",
+    "language": "punjabi",
+    "chapter": 157,
+    "sequence": 8746,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:41cef1deff925e66",
+    "delivery": "script"
+  },
+  "findings": []
+}

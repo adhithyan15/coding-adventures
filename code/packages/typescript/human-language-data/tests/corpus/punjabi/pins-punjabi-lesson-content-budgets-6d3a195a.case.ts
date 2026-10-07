@@ -83,7 +83,9 @@ it("pins Punjabi lesson-content budgets", () =>
     // again reusing taught language without new idioms, senses, or culture claims.
     // 863 -> 868: two short timed checkpoints, two scaffolds, and one repair;
     // all reuse familiar language without new idioms, senses, or culture claims.
-    lessons: 868,
+    // 868 -> 872: four writing-skill returns; 872 -> 874: two Chapter 158
+    // reviews. None introduces a new idiom, sense, or culture claim.
+    lessons: 874,
     idioms: 6,
     senses: 3,
     cultureClaims: 9,

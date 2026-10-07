@@ -1,13 +1,17 @@
 {
   "language": "punjabi",
   "chapter": 157,
-  "sourceHash": "fnv1a64:462fd680dc73bc9e",
+  "sourceHash": "fnv1a64:23ca0486c8e8a64a",
   "lessonIds": [
     "PA-W13-form-mixed-cues",
     "PA-W13-form-timed",
     "PA-W13-message-pacing",
     "PA-W13-message-timed",
-    "PA-W13-timed-repair"
+    "PA-W13-timed-repair",
+    "PA-W13-form-clock-return",
+    "PA-W13-repair-check-return",
+    "PA-W13-message-opening-return",
+    "PA-W13-message-purpose-return"
   ],
   "tex": "punjabi/book/chapters/ch157-try-the-a1-writing-tasks-with-short-clocks.tex"
 }
