@@ -60,6 +60,14 @@ pub fn compile_preprocessed_file(
     module_name: &str,
     bounds: Bounds,
 ) -> Result<semantic_ir::Module, CLowerError> {
+    let bounds = bounds.tighten(Bounds::default());
+    if u64::try_from(entry.len()).unwrap_or(u64::MAX) > bounds.token_spelling_bytes {
+        return Err(CLowerError {
+            message: "C entry spelling exceeds the token-spelling budget".to_string(),
+            line: 0,
+            column: 0,
+        });
+    }
     let mut fs = RootedFs::new(roots, bounds).map_err(preprocess_error)?;
     let file = fs
         .resolve(&IncludeRequest {
@@ -131,6 +139,14 @@ mod tests {
         assert!(text.contains("(block (int 7))"), "{text}");
         assert!(semantic_ir::validate(&module).is_ok());
         std::fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
+    fn overlong_entry_is_refused_before_copy_or_filesystem_access() {
+        let entry = "x".repeat(65_537);
+        let error = compile_preprocessed_file(&entry, [], "oversized", Bounds::default())
+            .unwrap_err();
+        assert!(error.message.contains("entry spelling"), "{error}");
     }
 
     /// A per-(process, call) unique stem so parallel tests never share a file.
