@@ -6,6 +6,8 @@ use serde_json::Value;
 use std::path::PathBuf;
 use std::process::{Command, Output};
 use std::sync::atomic::{AtomicU64, Ordering};
+#[path = "common/chronology_ndjson.rs"]
+mod chronology_ndjson;
 
 struct Fixture {
     dir: PathBuf,
@@ -189,25 +191,11 @@ fn ndjson_reconstructs_full_cli_evidence_without_footer_event_duplication() {
     let fixture = Fixture::new("report(1+2);");
     success(fixture.run("SIMPLE", true, &["--correlation_vector_format", "NDJSON"]));
     let body = fixture.sidecar();
-    let mut entries = serde_json::Map::new();
-    let mut events = Vec::new();
-    let mut footer = None;
-    for line in body.lines() {
-        let mut value: Value = serde_json::from_str(line).unwrap();
-        if value.get("_event").is_some() {
-            events.push(value["_event"].take());
-        } else if value.get("_meta").is_some() {
-            footer = Some(value["_meta"].take());
-        } else {
-            entries.insert(value["id"].as_str().unwrap().to_owned(), value);
-        }
-    }
-    assert!(!events.is_empty());
-    let mut wire = footer.unwrap();
-    assert!(wire["journal"].get("events").is_none());
-    wire["entries"] = Value::Object(entries);
-    wire["journal"]["events"] = Value::Array(events);
-    reload(&wire.to_string());
+    assert!(body.lines().any(|line| line.starts_with("{\"_event\":")));
+    let footer: Value = serde_json::from_str(body.lines().last().unwrap()).unwrap();
+    assert!(footer["_meta"]["journal"].get("events").is_none());
+    let raw = chronology_ndjson::reconstruct(&body, &GraphLimits::default()).unwrap();
+    reload(&raw);
 }
 
 #[test]
@@ -250,5 +238,150 @@ fn journal_limit_failures_preserve_javascript_map_manifest_and_sidecar_in_all_fo
             before
         );
         assert_eq!(std::fs::read_dir(&fixture.dir).unwrap().count(), 5);
+    }
+}
+
+#[test]
+fn exact_serialization_cap_succeeds_and_one_less_preserves_all_artifacts() {
+    let fixture = Fixture::new("report(1+2);");
+    for options in [
+        vec![],
+        vec!["--correlation_vector_pretty"],
+        vec!["--correlation_vector_format", "NDJSON"],
+    ] {
+        success(fixture.run("SIMPLE", true, &options));
+        let cap = std::fs::metadata(&fixture.paths[3]).unwrap().len();
+        let exact = format!("max_output_bytes={cap}");
+        let mut exact_options = options.clone();
+        exact_options.extend(["--correlation_vector_limits", exact.as_str()]);
+        success(fixture.run("SIMPLE", true, &exact_options));
+        assert_eq!(std::fs::metadata(&fixture.paths[3]).unwrap().len(), cap);
+        for (index, path) in fixture.paths.iter().enumerate() {
+            std::fs::write(path, format!("original {index}")).unwrap();
+        }
+        let before: Vec<_> = fixture
+            .paths
+            .iter()
+            .map(|p| std::fs::read(p).unwrap())
+            .collect();
+        let too_small = format!("max_output_bytes={}", cap - 1);
+        let mut too_small_options = options.clone();
+        too_small_options.extend(["--correlation_vector_limits", too_small.as_str()]);
+        let output = fixture.run("SIMPLE", true, &too_small_options);
+        assert!(!output.status.success());
+        assert!(output.stdout.is_empty());
+        assert!(output.stderr.len() < 8192);
+        assert!(String::from_utf8_lossy(&output.stderr).contains("output bytes limit"));
+        assert_eq!(
+            fixture
+                .paths
+                .iter()
+                .map(|p| std::fs::read(p).unwrap())
+                .collect::<Vec<_>>(),
+            before
+        );
+        assert_eq!(std::fs::read_dir(&fixture.dir).unwrap().count(), 5);
+    }
+}
+
+#[test]
+fn filtered_cli_journal_retains_all_contexts_and_original_watermark() {
+    let fixture = Fixture::new("report(1+2);");
+    success(fixture.run("SIMPLE", true, &[]));
+    let full = reload(&fixture.sidecar());
+    success(fixture.run(
+        "SIMPLE",
+        true,
+        &["--correlation_vector_filter", "constant-fold"],
+    ));
+    let text = fixture.sidecar();
+    let partial: Value = serde_json::from_str(&text).unwrap();
+    assert_eq!(partial["journal"]["coverage"], "partial");
+    assert_eq!(
+        partial["journal"]["last_sequence"],
+        full["journal"]["last_sequence"]
+    );
+    let contexts = |wire: &Value| {
+        wire["journal"]["events"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .filter(|r| {
+                matches!(
+                    r["event"]["kind"].as_str(),
+                    Some("context_begin" | "context_end" | "schedule")
+                )
+            })
+            .cloned()
+            .collect::<Vec<_>>()
+    };
+    assert_eq!(contexts(&partial), contexts(&full));
+    assert!(
+        partial["journal"]["events"].as_array().unwrap().len()
+            < full["journal"]["events"].as_array().unwrap().len()
+    );
+    assert!(CVLog::from_json_string(&text).is_err());
+    assert!(CVLog::from_checked_json(&text, GraphLimits::default()).is_err());
+}
+
+#[test]
+fn canonical_ndjson_adapter_preserves_duplicate_evidence_and_bounds_assembly() {
+    let body = concat!(
+        "{\"contributions\":[],\"deleted\":null,\"id\":\"cv1.0000000000000001\",\"origin\":{\"location\":\"1:1\",\"meta\":{\"id\":\"cv1.0000000000000002\"},\"source\":\"input\",\"timestamp\":null},\"parent_ids\":[]}\n",
+        "{\"_event\":{\"context\":null,\"event\":{\"entity\":\"cv1.0000000000000001\",\"kind\":\"create\"},\"sequence\":\"0000000000000001\"}}\n",
+        "{\"_meta\":{\"enabled\":true,\"identity\":{\"last_sequence\":\"0000000000000001\",\"scheme\":\"compact-v1\"},\"journal\":{\"coverage\":\"full\",\"last_sequence\":\"0000000000000001\",\"version\":\"chronology-v1\"},\"pass_order\":[]}}\n",
+    );
+    let limits = GraphLimits::default();
+    let raw = chronology_ndjson::reconstruct(body, &limits).unwrap();
+    let parsed = reload(&raw);
+    assert_eq!(
+        parsed["entries"]["cv1.0000000000000001"]["origin"]["meta"]["id"], "cv1.0000000000000002",
+        "metadata id does not choose the entry key"
+    );
+    for attack in [
+        body.replace(
+            "\"context\":null",
+            "\"context\":null,\"\\u0063ontext\":null",
+        ),
+        body.replace("\"meta\":{", "\"meta\":{\"dup\":0,\"\\u0064up\":1,"),
+        body.replace(
+            "\"coverage\":\"full\"",
+            "\"coverage\":\"full\",\"\\u0063overage\":\"full\"",
+        ),
+        body.replace(
+            "\"coverage\":\"full\"",
+            "\"coverage\":\"full\",\"events\":[]",
+        ),
+    ] {
+        let raw = chronology_ndjson::reconstruct(&attack, &limits).unwrap();
+        assert!(CVLog::from_checked_json(&raw, limits.clone()).is_err());
+        assert!(CVLog::from_json_string(&raw).is_err());
+    }
+    for limits in [
+        GraphLimits {
+            max_nodes: 0,
+            ..Default::default()
+        },
+        GraphLimits {
+            max_events: 0,
+            ..Default::default()
+        },
+        GraphLimits {
+            max_work: 0,
+            ..Default::default()
+        },
+        GraphLimits {
+            max_input_bytes: body.len() - 1,
+            ..Default::default()
+        },
+    ] {
+        assert!(chronology_ndjson::reconstruct(body, &limits).is_err());
+    }
+    let lines: Vec<_> = body.lines().collect();
+    for malformed in [
+        format!("{}\n{}\n{}\n", lines[1], lines[0], lines[2]),
+        format!("{body}{}\n", lines[1]),
+    ] {
+        assert!(chronology_ndjson::reconstruct(&malformed, &GraphLimits::default()).is_err());
     }
 }

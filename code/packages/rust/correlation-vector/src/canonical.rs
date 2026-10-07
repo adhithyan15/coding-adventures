@@ -6,6 +6,7 @@
 use super::checked::Work;
 use super::{CVEntry, CVLog, Contribution, DeletionRecord, Origin};
 use super::{Journal, JournalEntity, JournalEvent, JournalRecord, JournalSequence};
+use super::{JournalOutcome, JournalPass, JournalScope};
 use serde::ser::{Error, SerializeMap, SerializeSeq};
 use serde::{Serialize, Serializer};
 use serde_json::Value;
@@ -115,12 +116,36 @@ impl Serialize for Canonical<'_, JournalRecord> {
 impl Serialize for Canonical<'_, JournalEvent> {
     fn serialize<S: Serializer>(&self, s: S) -> Result<S::Ok, S::Error> {
         self.1.take::<S::Error>(1)?;
+        match self.0 {
+            JournalEvent::ContextBegin { scope } => {
+                let mut map = s.serialize_map(Some(2))?;
+                map.serialize_entry("kind", "context_begin")?;
+                map.serialize_entry("scope", &Canonical(scope, self.1))?;
+                return map.end();
+            }
+            JournalEvent::Schedule { passes, sweep_cap } => {
+                let mut map = s.serialize_map(Some(3))?;
+                map.serialize_entry("kind", "schedule")?;
+                map.serialize_entry("passes", &Canonical(passes.as_slice(), self.1))?;
+                map.serialize_entry("sweep_cap", sweep_cap)?;
+                return map.end();
+            }
+            JournalEvent::ContextEnd { begin, outcome } => {
+                let mut map = s.serialize_map(Some(3))?;
+                map.serialize_entry("begin", begin)?;
+                map.serialize_entry("kind", "context_end")?;
+                map.serialize_entry("outcome", &Canonical(outcome, self.1))?;
+                return map.end();
+            }
+            _ => {}
+        }
         let (kind, entity, index) = match self.0 {
             JournalEvent::Create { entity } => ("create", entity, None),
             JournalEvent::Derive { entity } => ("derive", entity, None),
             JournalEvent::Merge { entity } => ("merge", entity, None),
             JournalEvent::Contribution { entity, index } => ("contribution", entity, Some(index)),
             JournalEvent::Deletion { entity } => ("deletion", entity, None),
+            _ => unreachable!("scope events serialized above"),
         };
         let mut map = s.serialize_map(Some(2 + usize::from(index.is_some())))?;
         map.serialize_entry("entity", entity)?;
@@ -128,6 +153,63 @@ impl Serialize for Canonical<'_, JournalEvent> {
             map.serialize_entry("index", index)?;
         }
         map.serialize_entry("kind", kind)?;
+        map.end()
+    }
+}
+impl Serialize for Canonical<'_, JournalScope> {
+    fn serialize<S: Serializer>(&self, s: S) -> Result<S::Ok, S::Error> {
+        self.1.take::<S::Error>(1)?;
+        let pass = matches!(self.0, JournalScope::Pass { .. });
+        let mut map = s.serialize_map(Some(if pass { 3 } else { 1 }))?;
+        map.serialize_entry("kind", if pass { "pass" } else { "pipeline" })?;
+        if let JournalScope::Pass { slot, sweep } = self.0 {
+            map.serialize_entry("slot", slot)?;
+            map.serialize_entry("sweep", sweep)?;
+        }
+        map.end()
+    }
+}
+impl Serialize for Canonical<'_, JournalOutcome> {
+    fn serialize<S: Serializer>(&self, s: S) -> Result<S::Ok, S::Error> {
+        self.1.take::<S::Error>(1)?;
+        let kind = match self.0 {
+            JournalOutcome::Accepted { .. } => "accepted",
+            JournalOutcome::Converged => "converged",
+            JournalOutcome::Cap => "cap",
+            JournalOutcome::SchedulingFailure => "scheduling_failure",
+            JournalOutcome::CallbackFailure => "callback_failure",
+            JournalOutcome::AcceptanceFailure => "acceptance_failure",
+            JournalOutcome::RecordingFailure => "recording_failure",
+        };
+        let mut map =
+            s.serialize_map(Some(if matches!(self.0, JournalOutcome::Accepted { .. }) {
+                2
+            } else {
+                1
+            }))?;
+        if let JournalOutcome::Accepted { changed } = self.0 {
+            map.serialize_entry("changed", changed)?;
+        }
+        map.serialize_entry("kind", kind)?;
+        map.end()
+    }
+}
+impl Serialize for Canonical<'_, [JournalPass]> {
+    fn serialize<S: Serializer>(&self, s: S) -> Result<S::Ok, S::Error> {
+        self.1.take::<S::Error>(self.0.len())?;
+        let mut seq = s.serialize_seq(Some(self.0.len()))?;
+        for pass in self.0 {
+            seq.serialize_element(&Canonical(pass, self.1))?;
+        }
+        seq.end()
+    }
+}
+impl Serialize for Canonical<'_, JournalPass> {
+    fn serialize<S: Serializer>(&self, s: S) -> Result<S::Ok, S::Error> {
+        self.1.take::<S::Error>(1)?;
+        let mut map = s.serialize_map(Some(2))?;
+        map.serialize_entry("name", &self.0.name)?;
+        map.serialize_entry("policy", &self.0.policy)?;
         map.end()
     }
 }

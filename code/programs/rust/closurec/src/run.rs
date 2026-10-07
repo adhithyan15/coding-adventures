@@ -1172,7 +1172,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // the end of `run_compiler` to a side-channel file
     // (`closurec-cv.json` by default) when enabled.
     let mut cv_log = if config.special_modes.correlation_vector {
-        coding_adventures_correlation_vector::CVLog::new_checked_compact(
+        coding_adventures_correlation_vector::CVLog::new_checked_chronology(
             config.special_modes.correlation_vector_limits.clone(),
         ).map_err(provenance_error("configuration"))?
     } else {
@@ -1181,9 +1181,8 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // CLOC11.62: per-file CV IDs accumulate so the post-loop
     // stages (wrapper / IIFE / charset / etc.) can derive a
     // single "combined" CV entry with all of them as parents.
-    // That combined entry is the substrate the rest of the
-    // pipeline contributes against — every byte from any input
-    // gets its post-combine provenance recorded there.
+    // That combined entry retains post-combine stage facts. It does not yet
+    // establish source ownership for each emitted byte or a source-map join.
     let mut per_file_cv_ids: Vec<String> = Vec::new();
     for path in &inputs {
         let contents = fs::read_to_string(path).map_err(|e| CompilerError::InputReadError {

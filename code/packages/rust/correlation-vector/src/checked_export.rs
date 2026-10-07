@@ -71,9 +71,13 @@ impl<'a> View<'a> {
                 entries.iter().map(|(id, _)| id.as_str()).collect();
             for record in journal.events() {
                 context.0.borrow_mut().take(1)?;
-                let entity = record.event.entity();
-                let id = format!("cv1.{:016x}", entity.sequence());
-                if filter.sources.is_empty() || selected.contains(id.as_str()) {
+                let selected_record = match record.event.entity() {
+                    Some(entity) => {
+                        selected.contains(format!("cv1.{:016x}", entity.sequence()).as_str())
+                    }
+                    None => true, // scope and schedule records survive every projection
+                };
+                if filter.sources.is_empty() || selected_record {
                     records.push(record);
                 }
             }

@@ -4,6 +4,19 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Added - actual bounded provenance chronology (CV03)
+
+Traced compilation starts a fresh checked chronology log before input graph
+operations. Global records reference accepted facts and actual scoped scheduler
+invocations; compact/pretty JSON and NDJSON retain version/state, and filtered
+journals declare partial coverage with original refs. Native-process tests prove
+the ADVANCED inline/fold result runs in a later sweep, SIMPLE/ADVANCED tracing
+neutrality for JS/map/manifest bytes, fresh-process deterministic full journals,
+both validated reload routes, NDJSON reconstruction and retained filtered
+contexts. Exact serialization caps succeed; one-less and journal admission
+failures preserve all existing artifacts with empty success stdout. Graph facts
+and invocation consistency do not establish complete byte ownership/source maps.
+
 ### Fixed - native ACL fixture diagnostic isolation (CV02)
 
 The `0dfbcf7b10` Windows run passed the new structural-policy and supported

@@ -323,6 +323,7 @@ impl CVLog {
         if entry.deleted.is_some() {
             return Err("checked CV identity is already deleted".into());
         }
+        self.validate_journal_source(source)?;
         let mut usage = state.usage;
         add_bounded(&mut usage.events, 1, state.limits.max_events, "events")?;
         let mut work = Work::new(state.limits.max_work);
@@ -671,7 +672,14 @@ impl CVLog {
     /// validation. Generic from_json_string is allocator-state import and can
     /// retain incomplete recording; compiler query boundaries use this API.
     pub fn from_checked_json(text: &str, limits: GraphLimits) -> Result<Self, String> {
-        let (value, mut work) = super::bounded_json::parse(text, &limits)?;
+        Self::from_checked_json_with_work(text, limits.clone(), Work::new(limits.max_work))
+    }
+    pub(super) fn from_checked_json_with_work(
+        text: &str,
+        limits: GraphLimits,
+        work: Work,
+    ) -> Result<Self, String> {
+        let (value, mut work) = super::bounded_json::parse_with_work(text, &limits, work)?;
         // Reserve the parser's structural visits again before serde consumes the
         // bounded representation. No conversion phase receives a fresh budget.
         work.reserve_conversion()?;

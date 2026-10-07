@@ -414,3 +414,14 @@ match a glob. Normal tests and CI never download or execute the JAR.
 - Shared: `correlation-vector`, `type-sidecar`, `serde`,
   `serde_json`; the explicit oracle maintainer target uses the repository's
   `sha256` crate as a development-only dependency.
+
+Traced runs now start full `chronology-v1` recording before input operations.
+The journal references graph facts and actual pass/pipeline contexts, including
+their sweep/slot, accepted schedule and typed terminal outcomes. It distinguishes
+invocations from the existing distinct `passes`/`execution_order` inventory.
+JSON/pretty JSON retain complete records; NDJSON emits `_event` frames and a
+state-only `_meta` footer. Filtered journals preserve original refs/watermark and
+declare partial coverage. Full journals validate through both CV import APIs.
+Resource or encoding failure follows the existing artifact-preservation
+contract. This adds operation/invocation chronology; exact source/composite/
+output-byte ownership and nonempty source-map mappings remain separate work.

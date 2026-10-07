@@ -1,6 +1,8 @@
 //! CV01: actual compiler sidecars keep compact allocation state in every format.
 use coding_adventures_correlation_vector::CVLog;
-use serde_json::{Map, Value};
+use serde_json::Value;
+#[path = "common/chronology_ndjson.rs"]
+mod chronology_ndjson;
 use std::path::PathBuf;
 use std::process::{Command, Output};
 use std::sync::atomic::{AtomicU64, Ordering};
@@ -56,25 +58,12 @@ fn read_log(fixture: &Fixture, ndjson: bool) -> Value {
     if !ndjson {
         return serde_json::from_str(&text).unwrap();
     }
-    let mut entries = Map::new();
-    let mut metadata = None;
-    for line in text.lines() {
-        let value: Value = serde_json::from_str(line).unwrap();
-        if let Some(meta) = value.get("_meta") {
-            assert!(metadata.is_none());
-            metadata = Some(meta.as_object().unwrap().clone());
-        } else {
-            assert!(metadata.is_none(), "entry after metadata footer");
-            let id = value["id"].as_str().unwrap().to_string();
-            assert!(
-                entries.insert(id, value).is_none(),
-                "duplicate streamed identity"
-            );
-        }
+    let raw = chronology_ndjson::reconstruct(&text, &Default::default()).unwrap();
+    let root: Value = serde_json::from_str(&raw).unwrap();
+    if root["journal"]["coverage"] == "full" {
+        CVLog::from_checked_json(&raw, Default::default()).unwrap();
     }
-    let mut root = metadata.unwrap();
-    root.insert("entries".into(), Value::Object(entries));
-    Value::Object(root)
+    root
 }
 
 #[test]
@@ -121,7 +110,7 @@ fn all_sidecar_formats_preserve_compact_state_and_reload_unique_allocations() {
             }
         }
         // Fresh process, same paths/configuration: identities/history agree even
-        // though canonical object-key serialization is a separate pending slice.
+        // canonical object-key serialization and journal ordering are stable.
         f.run(level, &["--correlation_vector"], &f.output);
         assert_eq!(read_log(&f, false), first.unwrap());
     }
@@ -147,10 +136,8 @@ fn filtered_formats_declare_partial_views_and_cannot_be_reloaded_as_full_logs() 
         assert_eq!(log["identity"]["scheme"], "compact-v1");
         assert_eq!(log["view"]["filtered"], true);
         assert_eq!(log["view"]["complete"], false);
-        assert!(CVLog::from_json_string(&log.to_string())
-            .err()
-            .expect("reject partial view")
-            .contains("filtered"));
+        assert_eq!(log["journal"]["coverage"], "partial");
+        assert!(CVLog::from_json_string(&log.to_string()).is_err());
     }
 }
 

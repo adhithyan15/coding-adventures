@@ -172,11 +172,16 @@ fn absent_chronology_preserves_callbacks_without_context_allocation() {
 
 #[test]
 fn schedule_name_cannot_relabel_retained_pass_contributions() {
-    let mut log = new(64); let root = log.try_create(None).unwrap();
+    let mut log = new(64);
+    let root = log.try_create(None).unwrap();
     accepted_pipeline(&mut log, &root).unwrap();
     let mut wire: Value = serde_json::from_str(&log.to_json_string().unwrap()).unwrap();
-    let schedule = wire["journal"]["events"].as_array_mut().unwrap().iter_mut()
-        .find(|r| r["event"]["kind"] == "schedule").unwrap();
+    let schedule = wire["journal"]["events"]
+        .as_array_mut()
+        .unwrap()
+        .iter_mut()
+        .find(|r| r["event"]["kind"] == "schedule")
+        .unwrap();
     schedule["event"]["passes"][0]["name"] = Value::String("forged".into());
     let encoded = serde_json::to_string(&wire).unwrap();
     assert!(CVLog::from_checked_json(&encoded, GraphLimits::default()).is_err());
@@ -185,18 +190,26 @@ fn schedule_name_cannot_relabel_retained_pass_contributions() {
 
 #[test]
 fn wrong_active_pass_source_rejects_before_graph_or_journal_mutation() {
-    let mut log = new(64); let root = log.try_create(None).unwrap();
+    let mut log = new(64);
+    let root = log.try_create(None).unwrap();
     log.with_pipeline(|cv| {
-        cv.record_schedule(&[("same", JournalPolicy::OneShot)], 1).unwrap();
+        cv.record_schedule(&[("same", JournalPolicy::OneShot)], 1)
+            .unwrap();
         cv.with_pass(0, 0, |cv| {
             let sequence = cv.journal().unwrap().last_sequence();
-            assert!(cv.contribute(&root, "forged", "wrong", HashMap::new()).is_err());
-            assert!(cv.try_delete(&root, "forged", "wrong", HashMap::new()).is_err());
+            assert!(cv
+                .contribute(&root, "forged", "wrong", HashMap::new())
+                .is_err());
+            assert!(cv
+                .try_delete(&root, "forged", "wrong", HashMap::new())
+                .is_err());
             assert_eq!(cv.journal().unwrap().last_sequence(), sequence);
             Ok::<_, (String, PassOutcome)>(((), PassOutcome::Accepted { changed: false }))
-        }).unwrap();
+        })
+        .unwrap();
         Ok::<_, (String, PipelineOutcome)>(((), PipelineOutcome::Converged))
-    }).unwrap();
+    })
+    .unwrap();
     log.validate_graph().unwrap();
     assert!(log.get(&root).unwrap().contributions.is_empty());
     assert!(log.get(&root).unwrap().deleted.is_none());

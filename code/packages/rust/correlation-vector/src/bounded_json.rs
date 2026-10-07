@@ -34,6 +34,13 @@ enum Role {
     Coverage,
     MaybeSequence,
     Kind,
+    Scope,
+    ScopeKind,
+    Outcome,
+    OutcomeKind,
+    Descriptors,
+    Descriptor,
+    Policy,
 }
 impl Role {
     fn child(self, key: &str) -> Result<Self, String> {
@@ -52,6 +59,15 @@ impl Role {
             (Record, "event") => Operation,
             (Operation, "kind") => Kind,
             (Operation, "entity") => Parent,
+            (Operation, "scope") => Scope,
+            (Operation, "begin" | "sweep_cap") | (Scope, "sweep" | "slot") => Sequence,
+            (Operation, "passes") => Descriptors,
+            (Operation, "outcome") => Outcome,
+            (Scope, "kind") => ScopeKind,
+            (Outcome, "kind") => OutcomeKind,
+            (Outcome, "changed") => Bool,
+            (Descriptor, "name") => Text,
+            (Descriptor, "policy") => Policy,
             (Entry, "id") => Parent,
             (Entry, "parent_ids") => Parents,
             (Entry, "contributions") => Events,
@@ -80,8 +96,28 @@ impl Role {
             Identity => &["scheme", "last_sequence"],
             Journal => &["version", "coverage", "last_sequence", "events"],
             Record => &["sequence", "context", "event"],
-            Operation => &["kind", "entity"],
+            Operation | Scope | Outcome => &["kind"],
+            Descriptor => &["name", "policy"],
             _ => &[],
+        }
+    }
+    // Serde's internally tagged unit variants can ignore an otherwise known
+    // field even with deny_unknown_fields. Validate each variant's EXACT shape
+    // while its decoded keys are still present, before typed conversion.
+    fn variant_fields(self, fields: &Map<String, Value>) -> Option<&'static [&'static str]> {
+        use Role::*;
+        let kind = fields.get("kind")?.as_str()?;
+        match (self, kind) {
+            (Operation, "create" | "derive" | "merge" | "deletion") => Some(&["entity", "kind"]),
+            (Operation, "contribution") => Some(&["entity", "index", "kind"]),
+            (Operation, "context_begin") => Some(&["kind", "scope"]),
+            (Operation, "schedule") => Some(&["kind", "passes", "sweep_cap"]),
+            (Operation, "context_end") => Some(&["begin", "kind", "outcome"]),
+            (Scope, "pipeline") => Some(&["kind"]),
+            (Scope, "pass") => Some(&["kind", "slot", "sweep"]),
+            (Outcome, "accepted") => Some(&["changed", "kind"]),
+            (Outcome, _) => Some(&["kind"]),
+            _ => None,
         }
     }
 }
@@ -268,6 +304,7 @@ impl<'de> Visitor<'de> for Seed<'_, '_> {
             Role::Parents => Role::Parent,
             Role::Events => Role::Event,
             Role::Records => Role::Record,
+            Role::Descriptors => Role::Descriptor,
             Role::Stages => Role::Text,
             Role::Metadata => Role::Metadata,
             _ => return Err(A::Error::custom("invalid checked CV array field")),
@@ -309,6 +346,9 @@ impl<'de> Visitor<'de> for Seed<'_, '_> {
                 | Role::Journal
                 | Role::Record
                 | Role::Operation
+                | Role::Scope
+                | Role::Outcome
+                | Role::Descriptor
         ) {
             return Err(A::Error::custom("invalid checked CV object field"));
         }
@@ -353,6 +393,15 @@ impl<'de> Visitor<'de> for Seed<'_, '_> {
                 return Err(A::Error::custom("missing checked CV snapshot field"));
             }
         }
+        if let Some(expected) = self.role.variant_fields(&fields) {
+            if fields.len() != expected.len()
+                || expected.iter().any(|field| !fields.contains_key(*field))
+            {
+                return Err(A::Error::custom(
+                    "CV journal variant has missing or extra fields",
+                ));
+            }
+        }
         Ok(Value::Object(fields))
     }
 }
@@ -371,8 +420,28 @@ impl Seed<'_, '_> {
             Role::Kind
                 if matches!(
                     v,
-                    "create" | "derive" | "merge" | "contribution" | "deletion"
+                    "create"
+                        | "derive"
+                        | "merge"
+                        | "contribution"
+                        | "deletion"
+                        | "context_begin"
+                        | "schedule"
+                        | "context_end"
                 ) => {}
+            Role::ScopeKind if matches!(v, "pipeline" | "pass") => {}
+            Role::OutcomeKind
+                if matches!(
+                    v,
+                    "accepted"
+                        | "converged"
+                        | "cap"
+                        | "scheduling_failure"
+                        | "callback_failure"
+                        | "acceptance_failure"
+                        | "recording_failure"
+                ) => {}
+            Role::Policy if matches!(v, "one-shot" | "fixed-point") => {}
             Role::Parent => {
                 compact_id_sequence(v).map_err(E::custom)?;
             }
@@ -413,7 +482,10 @@ impl<'de> DeserializeSeed<'de> for ArraySeed<'_, '_> {
         }
         // An event array item must be an object; charging before its body also
         // prevents an oversized malformed item from bypassing the event cap.
-        if matches!(self.container, Role::Events | Role::Records) {
+        if matches!(
+            self.container,
+            Role::Events | Role::Records | Role::Descriptors
+        ) {
             add_bounded(
                 &mut self.seed.budget.events,
                 1,
@@ -435,14 +507,18 @@ impl<'de> DeserializeSeed<'de> for ArraySeed<'_, '_> {
     }
 }
 
-pub(super) fn parse(text: &str, limits: &GraphLimits) -> Result<(Value, Work), String> {
+pub(super) fn parse_with_work(
+    text: &str,
+    limits: &GraphLimits,
+    work: Work,
+) -> Result<(Value, Work), String> {
     if text.len() > limits.max_input_bytes {
         return Err("CV input bytes limit exceeded".into());
     }
     limits.validate()?;
     let mut budget = Budget {
         limits,
-        work: Work::new(limits.max_work),
+        work,
         nodes: 0,
         edges: 0,
         events: 0,
@@ -468,7 +544,7 @@ pub(super) fn parse(text: &str, limits: &GraphLimits) -> Result<(Value, Work), S
 /// Decide the trust boundary from decoded root keys without retaining an
 /// arbitrary metadata tree. Input size, nesting and every structural visit are
 /// bounded before the compatibility loader allocates its normal snapshot.
-pub(super) fn declares_journal(text: &str) -> Result<bool, String> {
+pub(super) fn declares_journal(text: &str) -> Result<(bool, Work), String> {
     let limits = GraphLimits::default();
     if text.len() > limits.max_input_bytes {
         return Err("CV input bytes limit exceeded".into());
@@ -581,5 +657,5 @@ pub(super) fn declares_journal(text: &str) -> Result<bool, String> {
     deserializer
         .end()
         .map_err(|e| format!("CV compatibility probe: {e}"))?;
-    Ok(result)
+    Ok((result, work))
 }

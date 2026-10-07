@@ -88,3 +88,42 @@ fn selected_entity_keeps_original_sequence_gaps_and_partial_watermark() {
     assert!(CVLog::from_checked_json(&wire, GraphLimits::default()).is_err());
     assert!(CVLog::from_json_string(&wire).is_err());
 }
+
+#[test]
+fn selecting_every_entity_still_declares_a_partial_journal_view() {
+    let mut log = CVLog::new_checked_chronology(GraphLimits::default()).unwrap();
+    let root = log
+        .try_create(Some(coding_adventures_correlation_vector::Origin {
+            source: "selected".into(),
+            location: "1:1".into(),
+            timestamp: None,
+            meta: HashMap::new(),
+        }))
+        .unwrap();
+    let child = log.try_derive(&root, None).unwrap();
+    log.contribute(&child, "selected", "used", HashMap::new())
+        .unwrap();
+    let sources = ["selected".to_owned()];
+    let text = log
+        .export_snapshot(
+            SnapshotFormat::CompactJson,
+            SourceFilter {
+                sources: &sources,
+                include_origin: true,
+                invert: false,
+            },
+        )
+        .unwrap();
+    let wire: Value = serde_json::from_str(&text).unwrap();
+    assert_eq!(
+        wire["entries"].as_object().unwrap().len(),
+        log.entries().len()
+    );
+    assert_eq!(
+        wire["journal"]["events"].as_array().unwrap().len(),
+        log.journal().unwrap().events().len()
+    );
+    assert_eq!(wire["journal"]["coverage"], "partial");
+    assert!(CVLog::from_json_string(&text).is_err());
+    assert!(CVLog::from_checked_json(&text, GraphLimits::default()).is_err());
+}

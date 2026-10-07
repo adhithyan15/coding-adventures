@@ -303,3 +303,21 @@ and no duplicate events array. The presentation tests demonstrate reconstruction
 through a small adapter followed by the full checked importer; there is no
 direct NDJSON loader. Filtered journals retain original sequences/watermark and
 declare partial coverage, including when the filter selects every entry.
+
+`with_pipeline`, `record_schedule` and `with_pass` record actual scoped
+invocations. Schedules retain ordered names/policies once; pass scopes reference
+their sweep/slot without another name copy. Contribution/deletion sources
+inside a pass must match its resolved schedule name. Every begin reserves its
+terminal slot and sequence capacity before entering a callback; nested ordinary
+errors restore the outer context while preserving failed children. Callback and
+candidate-acceptance failure have distinct typed outcomes. Event caps charge
+C+D+J+S plus outstanding terminal reservations, where S counts descriptors;
+schedule names consume encoded payload bytes.
+
+Full import/export independently replays top-scope references, ordered slots,
+contiguous sweeps, FixedPoint changes, convergence/cap results and failure
+prefixes. Exact per-variant parser fields supplement serde's tagged unit
+variants. Active/abandoned contexts cannot export full evidence; unsupported
+panic recovery leaves an unusable journal. Filtering retains every context and
+schedule. These checks establish internal consistency, not authenticity of an
+artifact rewritten wholesale or lineage omitted by an instrumented caller.

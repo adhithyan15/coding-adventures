@@ -64,7 +64,10 @@ mod cleanup;
 mod journal;
 use checked::CheckedState;
 pub use checked::GraphLimits;
-pub use journal::{Journal, JournalEntity, JournalEvent, JournalRecord, JournalSequence};
+pub use journal::{
+    Journal, JournalEntity, JournalEvent, JournalOutcome, JournalPass, JournalPolicy,
+    JournalRecord, JournalScope, JournalSequence, PassOutcome, PipelineOutcome, ScopeError,
+};
 use serde_json::Value;
 
 // Re-export the sha256 function we use for ID generation.
@@ -1086,8 +1089,9 @@ impl CVLog {
     /// assert_eq!(log2.get(&id).unwrap().id, id);
     /// ```
     pub fn from_json_string(s: &str) -> Result<Self, String> {
-        if bounded_json::declares_journal(s)? {
-            return Self::from_checked_json(s, GraphLimits::default());
+        let (declared, work) = bounded_json::declares_journal(s)?;
+        if declared {
+            return Self::from_checked_json_with_work(s, GraphLimits::default(), work);
         }
         let snap: LogSnapshot =
             serde_json::from_str(s).map_err(|e| format!("deserialization error: {}", e))?;
