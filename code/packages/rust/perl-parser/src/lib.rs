@@ -180,6 +180,7 @@ mod tests {
                     | "5.003_95"
                     | "5.003_96"
                     | "5.003_97"
+                    | "5.003_97a"
                     | "5.38.2"
                     | "5.44.0"
                     | "5.45.3"
@@ -210,6 +211,7 @@ mod tests {
                     | "5.003_95"
                     | "5.003_96"
                     | "5.003_97"
+                    | "5.003_97a"
             ) {
                 let carriage_return = GrammarLexer::new("print(1);\r", &token_grammar).tokenize();
                 assert!(
@@ -222,7 +224,7 @@ mod tests {
                     "{release}: carriage return accepted"
                 );
             }
-            if matches!(*release, "5.003_96" | "5.003_97") {
+            if matches!(*release, "5.003_96" | "5.003_97" | "5.003_97a") {
                 let unknown = GrammarLexer::new("print(1);\u{0001}", &token_grammar).tokenize();
                 assert!(
                     unknown.map_or(true, |tokens| {
