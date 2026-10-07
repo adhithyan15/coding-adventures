@@ -84,7 +84,11 @@ export function lessonSections(markdown: string): LessonSection[] {
 // section, else the first section whose writing stage SHOWS the learner a
 // model. A dictation, a composition or a timed task never gets a strip, and
 // neither does a section with no stage: a strip there would hand over the
-// answer the lesson is testing. A test holds this list equal to the book's.
+// answer the lesson is testing. That holds for a Writing or Script section
+// too: "Writing — short dictation" is skipped, so a Marathi letter lesson's
+// strip goes to its Script section (the model the dictation says to cover),
+// and a lesson with nowhere else shows none. A test holds this list equal to
+// the book's.
 
 /** Writing stages whose section shows the learner a model of what to write. */
 export const MODELLED_WRITING_STAGES: ReadonlySet<string> = new Set([
@@ -95,7 +99,11 @@ export const MODELLED_WRITING_STAGES: ReadonlySet<string> = new Set([
 
 /** The index of the section a filmstrip belongs in, or -1 when none fits. */
 export function filmstripSectionIndex(sections: readonly LessonSection[]): number {
-  const letter = sections.findIndex((section) => /^(?:Writing|Script)\b/.test(section.title.trim()));
+  const showsNoModel = (section: LessonSection): boolean =>
+    section.writingStage !== undefined && !MODELLED_WRITING_STAGES.has(section.writingStage);
+  const letter = sections.findIndex(
+    (section) => /^(?:Writing|Script)\b/.test(section.title.trim()) && !showsNoModel(section),
+  );
   if (letter !== -1) return letter;
   return sections.findIndex(
     (section) => section.writingStage !== undefined && MODELLED_WRITING_STAGES.has(section.writingStage),
