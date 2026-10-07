@@ -200,6 +200,9 @@ Current pairs:
   [`perl-5.003_96` source tag]. Its tagged yacc matches 5.003_95; tokenizer
   changes make unrecognized characters fatal and revise `-a`/`-F` handling
   and diagnostics. The bounded token file rejects unsupported characters.
+- `perl5.003_97.*` is a separate **partial** pair checked against the
+  [`perl-5.003_97` source tag]. Its tagged yacc matches 5.003_96; tokenizer
+  changes string/readline value ownership outside this arithmetic subset.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot, including adjacent `--` and
@@ -273,4 +276,5 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [`perl-5.003_94` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_94
 [`perl-5.003_95` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_95
 [`perl-5.003_96` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_96
+[`perl-5.003_97` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_97
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2
