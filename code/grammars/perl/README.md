@@ -20,6 +20,9 @@ release**, including maintenance and development versions. The filenames are
 An unchanged syntax release still gets its own checked pair. The CSV status is
 `pending`, `partial`, or `complete`; `complete` requires source-backed syntax
 coverage and version-specific positive and negative lexer/parser fixtures.
+The Rust `perl-parser` tests load every non-pending pair from this inventory,
+cross-check token references, and run shared accepted and malformed-source
+probes. These probes verify the recorded subset, not full language coverage.
 
 Current pairs:
 
@@ -45,6 +48,9 @@ Current pairs:
   [`perl-4.0.36` source tag] yacc grammars and tokenizers. Their tagged
   `perly.y` and `toke.c` files differ; neither pair claims complete Perl 4
   syntax coverage.
+- `perl5.000.*` is a separate **partial** arithmetic and `print` pair checked
+  against the [`perl-5.000` source tag]'s `perly.y` and `toke.c`. It does not
+  claim complete Perl 5.000 syntax coverage.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot and does not claim full coverage.
@@ -75,4 +81,5 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [`perl-3.044` source tag]: https://github.com/Perl/perl5/tree/perl-3.044
 [`perl-4.0.00` source tag]: https://github.com/Perl/perl5/tree/perl-4.0.00
 [`perl-4.0.36` source tag]: https://github.com/Perl/perl5/tree/perl-4.0.36
+[`perl-5.000` source tag]: https://github.com/Perl/perl5/tree/perl-5.000
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2

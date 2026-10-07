@@ -8,3 +8,6 @@ description = "Bounded Perl-language parser for the LANG81 native VM pilot"
 grammar-tools = { path = "../grammar-tools" }
 parser = { path = "../parser" }
 coding-adventures-perl-lexer = { path = "../perl-lexer" }
+
+[dev-dependencies]
+lexer = { path = "../lexer" }
