@@ -103,7 +103,7 @@ import {
   meaningAnswerIsCorrect,
 } from "./focused.ts";
 import { loadLanguages, saveLanguages } from "./languagestore.ts";
-import { lessonSections } from "./lessonbody.ts";
+import { filmstripSectionIndex, lessonSections } from "./lessonbody.ts";
 import { filmstripCaption, generatedFigureUrl, generatedFilmstripUrl } from "./figures.ts";
 import { bookHashStatus, whenBookHashesReady } from "./bookhashes.ts";
 // Per-atom mastery (HL10 §10.1). The scheduler still runs on lessons; this
@@ -1115,14 +1115,16 @@ function renderLessonBody(lesson: (typeof LESSONS)[number], initiallyOpen = fals
   // HL41: the equivalents panel goes under the first teaching section, the
   // first one that is not the warm-up, where the book puts it too.
   let teachingSection: HTMLElement | null = null;
-  for (const sectionData of lessonSections(lesson.body)) {
+  const sections = lessonSections(lesson.body);
+  // The book's rule: Writing, else Script, else the first section that shows
+  // a model (guided or delayed copy, trace); see lessonbody.ts.
+  const filmstripAt = filmstripSectionIndex(sections);
+  for (const [index, sectionData] of sections.entries()) {
     const sectionEl = el("section", "lesson-body__section");
     const heading = el("h4", "lesson-body__heading");
     heading.textContent = sectionData.title;
     sectionEl.appendChild(heading);
-    if (filmstripSection === null && /^(?:Writing|Script)\b/.test(sectionData.title.trim())) {
-      filmstripSection = sectionEl;
-    }
+    if (index === filmstripAt) filmstripSection = sectionEl;
     if (teachingSection === null && !/^warm-?up\b/i.test(sectionData.title.trim())) {
       teachingSection = sectionEl;
     }

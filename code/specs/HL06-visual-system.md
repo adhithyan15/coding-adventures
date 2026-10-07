@@ -913,6 +913,13 @@ a letter lesson only when its strip comes from a Writing or Script block
 block practises a letter an earlier lesson taught (ZH-W16-han-observe), so
 counting it would only double-count that letter.
 
+**The app follows the same rule.** language-ladder places a lesson's strip
+itself (the book inserts it from generated targets, so the authored Markdown
+has no image to find). Its `filmstripSectionIndex` applies the same three
+steps, with the same three stages, held equal to the book's by a test. Its
+section parser now reads the stage directive instead of printing it as a line
+of lesson text, which it had been doing for every section with a stage.
+
 **Expected.** Exactly 25 lessons gain a strip: chinese 14 (the seven
 characters' -guided and -delayed lessons), gujarati 10 (GU-C20-ghar,
 GU-C20-mandir, GU-C21-haath, GU-C21-paisa, GU-C22-shaalaa, GU-C22-shahar,
