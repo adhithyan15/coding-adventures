@@ -47,8 +47,9 @@ The item count is enforced before adding children to the traversal queue.
 - The emitted IIR contains arithmetic instructions and the Ruby-specific
   builtins, rather than a precomputed output string or a host Ruby call.
 - Integer range overflow, division by zero, unsupported syntax, and malformed
-  source fail without panics. A separate Ruby oracle cross-checks representative
-  accepted programs.
+  source fail without panics. In particular, the compiler must use a fallible
+  Ruby parser entry point so a lexer error is returned rather than unwrapped.
+  A separate Ruby oracle cross-checks representative accepted programs.
 - Oversized directly supplied AST item counts, nesting, text fields, and module
   names fail before lowering or copying token text.
 
