@@ -16361,6 +16361,45 @@ neutral conformance has broader eventual lane leverage but requires a larger
 wire-contract correction; DT17, event-loop fixture, and Dart/Swift binary-tree
 remain ready alternatives. No second PR was opened while #16909 was active.
 
+## Post-#16918 merge, inventory, and dependency ranking (2026-10-07)
+
+PR #16918 passed 33 terminal acceptable checks (including expected skips)
+with no failures or conflict. Guarded squash auto-merge, not a manual merge,
+landed it at `40c6f6af49c47ef8ad85138e645de82ab69b7bac`. A fresh clean
+checkout of that exact `origin/main` regenerated the collision-checked
+schema-3 inventory: 15 established lanes, 1,495 implementation identities,
+4,765 implementation slots, 1,537 all-reported identities, 178
+high-consensus packages with 262 missing slots, 1,013 singletons (814 Rust),
+five emerging OCaml packages, and zero canonical collisions or unknown
+buckets. These are structural counts, not behavior-parity claims.
+
+Parallel read-only audits found no immediately unowned package-port gap.
+DT17 hash vectors remain an existing dependency-free correction owner: the
+governing FNV/Murmur examples and Python prose conflict with passing Go,
+Python, and TypeScript tests. Correcting that contract precedes the already
+owned Swift hash-functions port and the Dart/Java/Kotlin hash wave; Swift's
+port then unlocks hash-map, hash-set, HyperLogLog, and bloom-filter. The
+existing C#/F# CI-gate owner is also ready and can consume all ten neutral
+cases through one pure shared C# engine with an independent F# facade.
+Haskell's full discovery-registry fixture remains a valid one-lane alternative.
+
+C, C++, and OCaml remain emerging; WASM is an execution target, Mosaic/Twig
+are domain languages, and Starlark is a build language. The existing
+`c-cpp-graduation` owner must decide whether separate native C and C++
+build-tool implementations apply before creating those conditional owners or
+recording a narrow reviewed exception. Special-only substrate and wrapper
+identities are not automatically 15-lane portable packages. OCaml's promotion
+still needs its separately owned full build-tool execution/current-contract,
+three-platform CI, adapter, and denominator gates. No audit finding justifies
+promoting it now.
+
+The quick dependency/leverage pass selects exactly one next slice,
+`hash-functions-dt17-vector-and-documentation-correction`, because it repairs
+the shared governing contract before four missing-lane hash ports copy it and
+unblocks a larger downstream package DAG. The C#/F# CI-gate owner remains
+next-order ready. Live open-PR review found no DT17 or hash-package file
+overlap; the just-merged Elixir PR was the only parity state/roadmap overlap.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

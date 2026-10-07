@@ -23,9 +23,7 @@ class TestFnv1a32KnownVectors:
         assert fnv1a_32(b"") == 2166136261
 
     def test_single_a(self) -> None:
-        # The correct FNV-1a 32-bit value for b"a" is 0xe40c292c = 3826002220.
-        # Note: the spec listed 84696351 (0x50c5d7f) which is actually FNV-1
-        # (multiply-then-XOR), not FNV-1a (XOR-then-multiply).
+        # XOR-then-multiply gives 0xe40c292c, the corrected DT17 vector.
         assert fnv1a_32(b"a") == 3826002220
 
     def test_abc(self) -> None:
@@ -36,8 +34,7 @@ class TestFnv1a32KnownVectors:
         assert fnv1a_32(b"hello") == 1335831723
 
     def test_foobar(self) -> None:
-        # Verified by running the implementation; the spec value 2984838064
-        # does not match the FNV-1a algorithm — it matches an earlier variant.
+        # The corrected DT17 vector matches the XOR-then-multiply algorithm.
         assert fnv1a_32(b"foobar") == 3214735720
 
     def test_str_input(self) -> None:
@@ -126,9 +123,9 @@ class TestFnv1a64KnownVectors:
         assert isinstance(fnv1a_64(bytes(range(256))), int)
 
     def test_abc(self) -> None:
-        # Verify abc produces a valid 64-bit integer distinct from 32-bit
+        # Pin the exact 64-bit value; the old prose had an unfinished placeholder.
         result = fnv1a_64(b"abc")
-        assert 0 <= result < 2**64
+        assert result == 16654208175385433931
         assert result != fnv1a_32(b"abc")
 
 

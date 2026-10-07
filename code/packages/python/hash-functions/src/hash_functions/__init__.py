@@ -21,7 +21,7 @@ Quick start:
     >>> djb2(b"abc")
     193485963
     >>> murmur3_32(b"abc")
-    3016911924
+    3017643002
 """
 
 from hash_functions.algorithms import (
