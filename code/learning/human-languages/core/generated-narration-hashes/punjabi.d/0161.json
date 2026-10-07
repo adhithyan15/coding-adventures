@@ -1,0 +1,18 @@
+{
+  "language": "punjabi",
+  "chapter": 161,
+  "sourceHash": "fnv1a64:5ca0caaa5b31beab",
+  "lessonIds": [
+    "PA-R161-swim-again",
+    "PA-R161-climb-again",
+    "PA-R161-call-again",
+    "PA-R161-use-again"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "punjabi/narration/ch161.txt",
+  "json": "punjabi/narration/ch161.json",
+  "textHash": "fnv1a64:90659d3a2e1482f3",
+  "jsonHash": "fnv1a64:535fc488b2ef4b74",
+  "findings": []
+}

@@ -1,0 +1,419 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 161,
+  "title": "Return to Four More Familiar Actions",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:5ca0caaa5b31beab",
+  "lessons": [
+    {
+      "id": "PA-R161-swim-again",
+      "sequence": 8850,
+      "title": "An old word for swimming",
+      "headword": "ਤਰਨਾ",
+      "romanization": "tarnā",
+      "gloss": "to swim, recalled after a long gap",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:16a2bfdd92ebee51",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is a return to one word you have already met. You need not swim or perform any movement. Hear a meaning, pause, and recall the word aloud."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to swim."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the earlier Punjabi word before the model: ਤਰਨਾ (tarnā)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear ਤਰਨਾ (tarnā)."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall its old meaning, to swim. Now hear to swim and say ਤਰਨਾ (tarnā) before the spoken model. No sentence or new grammar is needed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One last cue: to swim."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਤਰਨਾ (tarnā). Listen and retry once if it does not come back. This is untimed vocabulary retrieval, not scored A1 writing or mock evidence."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R161-climb-again",
+      "sequence": 8860,
+      "title": "An old word for climbing",
+      "headword": "ਚੜ੍ਹਨਾ",
+      "romanization": "caṛhnā",
+      "gloss": "to climb, recalled after a long gap",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:950f5f740d29614d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the previous word for swimming separate. Retrieve just one other familiar action from its meaning; no movement is required."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to climb."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the earlier Punjabi word before the model: ਚੜ੍ਹਨਾ (caṛhnā)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear ਚੜ੍ਹਨਾ (caṛhnā)."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give its old meaning, to climb. Then hear to climb and say ਚੜ੍ਹਨਾ (caṛhnā) before the model. This is the same word you already learned, not a new form."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to climb once more."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਚੜ੍ਹਨਾ (caṛhnā). If it slips away, hear the model and retry once. This untimed return is separate from scored A1 production."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R161-call-again",
+      "sequence": 8870,
+      "title": "An old word for calling",
+      "headword": "ਬੁਲਾਉਣਾ",
+      "romanization": "bulāuṇā",
+      "gloss": "to call, recalled after a long gap",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:553df0bc4de92f94",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here to call means the familiar action word from Chapter 149. Pause before its model; there is no new word or sentence pattern."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to call."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Punjabi word before the model: ਬੁਲਾਉਣਾ (bulāuṇā)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear ਬੁਲਾਉਣਾ (bulāuṇā)."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall to call. Then hear to call and say ਬੁਲਾਉਣਾ (bulāuṇā) before the spoken model. Stay with this single old action."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One last cue: to call."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਬੁਲਾਉਣਾ (bulāuṇā). Listen and retry once if needed. This is not a timed or scored mock."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R161-use-again",
+      "sequence": 8880,
+      "title": "An old word for using",
+      "headword": "ਵਰਤਣਾ",
+      "romanization": "vartṇā",
+      "gloss": "to use, then a return to four familiar actions",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5e447d72dc05d171",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "First retrieve to use on its own. Then hear four already-taught action meanings in a small shuffled mix. Pause before each model. There is no new Punjabi and no scored mock here."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to use."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the old word before the model: ਵਰਤਣਾ (vartṇā)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Pause after each familiar meaning, then hear its model:"
+            },
+            {
+              "kind": "speech",
+              "text": "to call —."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਬੁਲਾਉਣਾ (bulāuṇā)."
+            },
+            {
+              "kind": "speech",
+              "text": "to swim —."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਤਰਨਾ (tarnā)."
+            },
+            {
+              "kind": "speech",
+              "text": "to use —."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਵਰਤਣਾ (vartṇā)."
+            },
+            {
+              "kind": "speech",
+              "text": "to climb —."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਚੜ੍ਹਨਾ (caṛhnā)."
+            },
+            {
+              "kind": "speech",
+              "text": "Only the order of these four old words has changed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to climb, to use, to call, then to swim. Pause after each cue and recall its Punjabi word before the model: ਚੜ੍ਹਨਾ (caṛhnā), ਵਰਤਣਾ (vartṇā), ਬੁਲਾਉਣਾ (bulāuṇā), ਤਰਨਾ (tarnā). Revisit only the old word you missed."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

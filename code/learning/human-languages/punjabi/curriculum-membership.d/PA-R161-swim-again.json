@@ -1,0 +1,11 @@
+{
+  "id": "PA-R161-swim-again",
+  "pathSegment": "PA-PATH-161-ACTION-RETURN",
+  "pathOrder": 0,
+  "extensions": [
+    {
+      "id": "PA-EXT-161-ACTION-RETURN",
+      "order": 0
+    }
+  ]
+}

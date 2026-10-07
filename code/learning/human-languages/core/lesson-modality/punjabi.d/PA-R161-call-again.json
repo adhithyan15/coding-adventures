@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R161-call-again",
+    "language": "punjabi",
+    "chapter": 161,
+    "sequence": 8870,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:553df0bc4de92f94"
+  },
+  "findings": []
+}
