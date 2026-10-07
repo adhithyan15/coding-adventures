@@ -32,6 +32,7 @@
 //!   `to_f`/`to_i`.  The `Feature::Floats` flag is declared only when the program
 //!   actually uses floating point, so integer-only output is unchanged.
 
+pub mod dialect;
 mod lower;
 
 pub use lower::{compile, CLowerError};

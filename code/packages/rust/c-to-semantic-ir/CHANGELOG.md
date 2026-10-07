@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased — PREP01 C directive classifier handoff
+
+- Add a bounded `CDialect` adapter that classifies local includes, object- and
+  function-like defines, simple conditionals and their delimiters for the shared
+  source preprocessor. Tests run an object macro, `#ifdef`, and local include
+  through that engine.
+- `compile_source` remains on its prior source-input parser path. Full `#if`
+  expressions, `defined`, stringize, paste, and frontend composition are still
+  needed before the PREP01 C acceptance program can run.
+
 ## [0.3.0] - 2026-08-17
 
 ### Changed — SIR21 T3b-2 Slice 6: `combine()`'s division reconciliation

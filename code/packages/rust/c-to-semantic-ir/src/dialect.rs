@@ -1,0 +1,340 @@
+//! C's directive syntax for the shared PREP01 engine.
+//!
+//! This is the classification handoff. The C frontend will compose it with
+//! `preprocess` once conditional expressions and C's `#`/`##` macro operators
+//! are implemented. Until then the existing source compiler is unchanged.
+
+use coding_adventures_c_lexer::try_tokenize_c;
+use coding_adventures_source_preprocessor::{
+    macros::MacroTable, Bounds, Dialect, Directive, FileId, IncludeRequest, PpError,
+};
+use lexer::token::{Token, TokenType};
+use std::cell::Cell;
+use std::collections::HashSet;
+
+/// C directive adapter with a finite pre-lex byte budget.
+#[derive(Debug)]
+pub struct CDialect {
+    max_file_bytes: u64,
+    max_total_bytes: u64,
+    lexed_bytes: Cell<u64>,
+}
+
+impl CDialect {
+    /// Construct a dialect whose bounds can only tighten the engine defaults.
+    #[must_use]
+    pub fn new(bounds: Bounds) -> Self {
+        let bounds = bounds.tighten(Bounds::default());
+        let max_total_bytes = bounds
+            .total_source_bytes
+            .min(bounds.tokens_produced.saturating_sub(1));
+        Self {
+            max_file_bytes: bounds.bytes_per_file.min(max_total_bytes),
+            max_total_bytes,
+            lexed_bytes: Cell::new(0),
+        }
+    }
+
+    /// Charge source bytes before `GrammarLexer` allocates a token vector.
+    pub fn reserve_source(&self, source: &str) -> Result<(), PpError> {
+        let bytes = u64::try_from(source.len()).unwrap_or(u64::MAX);
+        if bytes > self.max_file_bytes {
+            return Err(PpError::new("C source exceeds the pre-lex file budget"));
+        }
+        let total = self.lexed_bytes.get().saturating_add(bytes);
+        if total > self.max_total_bytes {
+            return Err(PpError::new(
+                "C source exceeds the aggregate pre-lex budget",
+            ));
+        }
+        self.lexed_bytes.set(total);
+        Ok(())
+    }
+}
+
+impl Default for CDialect {
+    fn default() -> Self {
+        Self::new(Bounds::default())
+    }
+}
+
+fn without_eof(mut line: &[Token]) -> &[Token] {
+    while line
+        .last()
+        .is_some_and(|token| token.type_ == TokenType::Eof)
+    {
+        line = &line[..line.len() - 1];
+    }
+    line
+}
+
+fn identifier(value: &str) -> bool {
+    value.starts_with(|c: char| c.is_ascii_alphabetic() || c == '_')
+        && value.chars().all(|c| c.is_ascii_alphanumeric() || c == '_')
+}
+
+fn directive_error(name: &str, detail: &str) -> PpError {
+    PpError::new(format!("`#{name}` {detail}"))
+}
+
+fn include(rest: &[Token]) -> Result<Directive, PpError> {
+    let [path] = rest else {
+        return Err(directive_error("include", "requires one quoted local path"));
+    };
+    let spelling = &path.value;
+    if spelling.len() < 2 || !spelling.starts_with('"') || !spelling.ends_with('"') {
+        return Err(directive_error("include", "requires one quoted local path"));
+    }
+    Ok(Directive::Include(IncludeRequest {
+        spelling: spelling[1..spelling.len() - 1].to_string(),
+        from: None,
+        system: false,
+    }))
+}
+
+fn define(rest: &[Token]) -> Result<Directive, PpError> {
+    let Some((name, remaining)) = rest.split_first() else {
+        return Err(directive_error("define", "requires a macro name"));
+    };
+    if !identifier(&name.value) {
+        return Err(directive_error("define", "requires an identifier name"));
+    }
+    let touching_paren = remaining.first().is_some_and(|next| {
+        next.value == "(" && next.line == name.line && next.column == name.column + name.value.len()
+    });
+    if !touching_paren {
+        return Ok(Directive::Define {
+            name: name.value.clone(),
+            params: None,
+            body: remaining.to_vec(),
+        });
+    }
+
+    // C's adjacency rule makes `F(x)` function-like and `F (x)` object-like.
+    // Parse the parameter list iteratively; its length is bounded by the
+    // pre-lex source limit and no native recursion is needed.
+    let mut params = Vec::new();
+    let mut seen = HashSet::new();
+    let mut cursor = 1;
+    if remaining
+        .get(cursor)
+        .is_some_and(|token| token.value == ")")
+    {
+        cursor += 1;
+    } else {
+        loop {
+            let Some(param) = remaining.get(cursor) else {
+                return Err(directive_error("define", "has an unclosed parameter list"));
+            };
+            if !identifier(&param.value) || !seen.insert(param.value.as_str()) {
+                return Err(directive_error(
+                    "define",
+                    "has an invalid or duplicate parameter",
+                ));
+            }
+            params.push(param.value.clone());
+            cursor += 1;
+            match remaining.get(cursor).map(|token| token.value.as_str()) {
+                Some(")") => {
+                    cursor += 1;
+                    break;
+                }
+                Some(",") => {
+                    cursor += 1;
+                }
+                _ => {
+                    return Err(directive_error(
+                        "define",
+                        "requires comma-separated parameters",
+                    ))
+                }
+            }
+        }
+    }
+    Ok(Directive::Define {
+        name: name.value.clone(),
+        params: Some(params),
+        body: remaining[cursor..].to_vec(),
+    })
+}
+
+impl Dialect for CDialect {
+    fn classify(&self, line: &[Token]) -> Option<Result<Directive, PpError>> {
+        let line = without_eof(line);
+        let (marker, rest) = line.split_first()?;
+        if marker.value != "#" {
+            return None;
+        }
+        let Some((name, operands)) = rest.split_first() else {
+            return Some(Err(PpError::new("C directive is missing its name")));
+        };
+        let result = match name.value.as_str() {
+            "include" => include(operands),
+            "define" => define(operands),
+            "if" if !operands.is_empty() => Ok(Directive::If(operands.to_vec())),
+            "if" => Err(directive_error("if", "requires an expression")),
+            "ifdef" | "ifndef" => {
+                if operands.len() != 1 || !identifier(&operands[0].value) {
+                    Err(directive_error(
+                        &name.value,
+                        "requires exactly one identifier",
+                    ))
+                } else {
+                    let mut token = operands[0].clone();
+                    token.type_name = Some(
+                        if name.value == "ifdef" {
+                            "PP_IFDEF"
+                        } else {
+                            "PP_IFNDEF"
+                        }
+                        .to_string(),
+                    );
+                    Ok(Directive::If(vec![token]))
+                }
+            }
+            "else" if operands.is_empty() => Ok(Directive::Else),
+            "endif" if operands.is_empty() => Ok(Directive::EndIf),
+            "else" | "endif" => Err(directive_error(&name.value, "takes no operands")),
+            _ => Err(PpError::new(format!(
+                "unknown C directive {}",
+                PpError::quote(&name.value, Bounds::default().diagnostic_quote_bytes)
+            ))),
+        };
+        Some(result)
+    }
+
+    fn prepare_condition(
+        &self,
+        mut tokens: Vec<Token>,
+        macros: &MacroTable,
+    ) -> Result<Vec<Token>, PpError> {
+        if let [token] = tokens.as_mut_slice() {
+            match token.effective_type_name() {
+                "PP_IFDEF" | "PP_IFNDEF" => {
+                    let defined = macros.is_defined(&token.value);
+                    let true_branch = if token.effective_type_name() == "PP_IFDEF" {
+                        defined
+                    } else {
+                        !defined
+                    };
+                    token.value = if true_branch { "1" } else { "0" }.to_string();
+                    token.type_name = Some("INT_LIT".to_string());
+                }
+                _ => {}
+            }
+        }
+        Ok(tokens)
+    }
+
+    fn eval_condition(&self, tokens: &[Token]) -> Result<bool, PpError> {
+        match tokens {
+            [token] if token.effective_type_name() == "INT_LIT" => token
+                .value
+                .parse::<i64>()
+                .map(|value| value != 0)
+                .map_err(|_| PpError::new("C condition integer is out of range")),
+            [token] if identifier(&token.value) => Ok(false),
+            _ => Err(PpError::new(
+                "C conditional expression is not supported by this handoff yet",
+            )),
+        }
+    }
+
+    fn lex(&self, text: &str, _file: FileId) -> Result<Vec<Token>, PpError> {
+        self.reserve_source(text)?;
+        let mut tokens = try_tokenize_c(text).map_err(PpError::new)?;
+        while tokens
+            .last()
+            .is_some_and(|token| token.type_ == TokenType::Eof)
+        {
+            tokens.pop();
+        }
+        Ok(tokens)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use coding_adventures_source_preprocessor::{preprocess, MemoryFs};
+
+    fn directive(source: &str) -> Directive {
+        let tokens = try_tokenize_c(source).unwrap();
+        CDialect::default().classify(&tokens).unwrap().unwrap()
+    }
+
+    #[test]
+    fn quoted_include_and_function_adjacency_are_classified() {
+        match directive("#include \"local.h\"") {
+            Directive::Include(request) => {
+                assert_eq!(request.spelling, "local.h");
+                assert!(!request.system);
+            }
+            other => panic!("unexpected directive: {other:?}"),
+        }
+        match directive("#define F(x,y) x + y") {
+            Directive::Define { params, body, .. } => {
+                assert_eq!(params, Some(vec!["x".to_string(), "y".to_string()]));
+                assert_eq!(body[1].value, "+");
+            }
+            other => panic!("unexpected directive: {other:?}"),
+        }
+        match directive("#define F (x)") {
+            Directive::Define { params, body, .. } => {
+                assert_eq!(params, None);
+                assert_eq!(body[0].value, "(");
+            }
+            other => panic!("unexpected directive: {other:?}"),
+        }
+    }
+
+    #[test]
+    fn malformed_directives_fail_without_panicking() {
+        for source in [
+            "#",
+            "#include x",
+            "#include <stdio.h>",
+            "#define F(x,x) x",
+            "#define F(x,)",
+            "#ifdef",
+            "#else extra",
+            "#unknown",
+        ] {
+            let tokens = try_tokenize_c(source).unwrap();
+            assert!(
+                CDialect::default().classify(&tokens).unwrap().is_err(),
+                "{source}"
+            );
+        }
+    }
+
+    #[test]
+    fn object_macro_ifdef_and_local_include_run_through_shared_engine() {
+        let source =
+            "#define ANSWER 7\n#ifdef ANSWER\n#include \"part.h\"\n#else\nint x = 0;\n#endif\n";
+        let mut fs = MemoryFs::new();
+        fs.insert("part.h", "int x = ANSWER;\n");
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        let values: Vec<_> = result
+            .tokens
+            .iter()
+            .map(|token| token.value.as_str())
+            .collect();
+        assert_eq!(values, ["int", "x", "=", "7", ";"]);
+        assert_eq!(result.map.len(), result.tokens.len());
+    }
+
+    #[test]
+    fn source_limit_is_checked_before_token_allocation() {
+        let dialect = CDialect::new(Bounds {
+            bytes_per_file: 3,
+            ..Bounds::default()
+        });
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", "abcd");
+        assert!(dialect.lex("abcd", file).is_err());
+    }
+}
