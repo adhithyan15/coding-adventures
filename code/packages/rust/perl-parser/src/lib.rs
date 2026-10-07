@@ -178,6 +178,7 @@ mod tests {
                     | "5.003_93"
                     | "5.003_94"
                     | "5.003_95"
+                    | "5.003_96"
                     | "5.38.2"
                     | "5.44.0"
                     | "5.45.3"
@@ -206,6 +207,7 @@ mod tests {
                     | "5.003_93"
                     | "5.003_94"
                     | "5.003_95"
+                    | "5.003_96"
             ) {
                 let carriage_return = GrammarLexer::new("print(1);\r", &token_grammar).tokenize();
                 assert!(
@@ -216,6 +218,18 @@ mod tests {
                             .is_err()
                     }),
                     "{release}: carriage return accepted"
+                );
+            }
+            if *release == "5.003_96" {
+                let unknown = GrammarLexer::new("print(1);\u{0001}", &token_grammar).tokenize();
+                assert!(
+                    unknown.map_or(true, |tokens| {
+                        GrammarParser::new(tokens, parser_grammar.clone())
+                            .with_max_depth(MAX_RULE_DEPTH)
+                            .parse()
+                            .is_err()
+                    }),
+                    "{release}: unrecognized character accepted"
                 );
             }
             checked += 1;
