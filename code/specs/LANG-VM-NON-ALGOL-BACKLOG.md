@@ -123,14 +123,23 @@ bounded C `#if` logical clause and merged as
 `3b80b57819dbb934cb92dc5592d6f6e96ed5e07c` after latest-head CI,
 CodeQL, and books checks passed. Longer and mixed expressions remain explicit
 errors; full C `#if`, stringize/paste, and default frontend routing remain.
+PR #16941 delivered 12 distinct, explicitly partial Perl 5.003_04 through
+5.003_15 token and grammar pairs and merged as
+`4d46c9feeeb1d38ee773fbcb3d5d17bbef094cf6` after latest-head CI,
+CodeQL, and books checks passed. The inventoried 774 releases now have 33
+partial pairs and 741 pending; this is not complete historical coverage.
+The next bounded repair addresses the earlier 18 partial release pairs and
+the unversioned LANG81 pilot, whose decimal token rules accepted Perl octal
+spellings such as `08`, `09`, and `010` incorrectly.
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG82 Perl release grammars (selected):** publish the next bounded
-   source-backed 5.003_04 through 5.003_15 token and grammar pairs as separate,
-   explicitly partial files. Continue the inventory audit and the remaining
-   741 inventoried releases after this installment.
+1. **LANG81/LANG82 Perl numeric boundary (selected):** constrain the earlier
+   18 partial release pairs and the unversioned native pilot to their claimed
+   plain-decimal subset. Reject leading-zero octal spellings before IIR
+   lowering, including invalid octal digits. Retain distinct release files;
+   continue the remaining 741 inventoried releases in later slices.
 2. **PREP01 C:** continue toward full C `#if`, stringize/paste, and default
    frontend routing in separately bounded slices.
 
