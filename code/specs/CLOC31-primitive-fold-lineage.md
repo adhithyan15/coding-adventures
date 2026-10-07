@@ -54,7 +54,9 @@ traced and untraced output. Exercise a declined division-by-zero fold.
 
 Run the affected constant-fold and closurec suites, all-target lint, differential
 ladder and oracle manifest checks. Preserve captured upstream expectations;
-this provenance-only repair does not change the oracle or reduce known gaps.
+this repair does not change the oracle or reduce known gaps. The equality
+guard also corrects an existing signed-zero branch misfold; pin both orders
+and nested composite cases rather than preserving that incorrect behavior.
 
 ## Completion sequence
 
