@@ -67,7 +67,7 @@ history, and local test runs. This file is the result: one ordered list.
 | ID | Problem | Status and evidence | Kind | Size |
 |---|---|---|---|---|
 | X-1 | `ci.yml` on main almost never completes: each push cancels the run before it (`cancel-in-progress`) | **real**. Every one of the last 300 completed `ci.yml` runs on main was cancelled. The last success was on 2026-07-21. The last full build (run 36528879089, 2026-09-29) failed all 15 shards. Nobody can tell from main whether any product is green | CI | M |
-| X-2 | `mosaic-compile` splits `--package-search-path` on `:` on every OS | **real**. `mosaic-compile/src/main.rs:755` uses `split(':')`, so a Windows drive path (`C:\…`) breaks in two. MosaicBook's sibling search path is absolute, so it is affected on Windows. Fix: `std::env::split_paths`, plus OS-specific joining in MosaicBook | bug | S |
+| X-2 | `mosaic-compile` splits `--package-search-path` on `:` on every OS | **real**. `mosaic-compile/src/main.rs:755` uses `split(':')`, so a Windows drive path (`C:\…`) breaks in two. MosaicBook's sibling search path is absolute, so it is affected on Windows. Fix: `std::env::split_paths`, plus OS-specific joining in MosaicBook. #16931 | bug | S |
 | X-3 | Native backends drop authored style properties silently or with a warning only | **partly**. Every backend reports drops (#15532, `mosaic-package-artifact-builder/src/lib.rs:2757-2817`), but the gate fails only on capability degradations. TaskApp's ratchet (`code/scripts/taskapp_native_control_contract.py:22`) allows 741 drops: XAML 77, SwiftUI 142, Compose 89, Qt 193, Flutter 240. Tracked by #12022 | bug | L |
 | X-4 | Style values that start with `{` pass into XAML verbatim, as markup extensions | **real, by design**. `translate_xaml_value` (`mosaic-emit-xaml/src/pipeline.rs:~2698, ~2918`). Harmless while every `.msl` is first-party. See [Decisions needed](#decisions-needed) | decision | S |
 | X-5 | Dependency style axes are not scoped to the call site | **real**. Only XAML guards against it (`xaml/pipeline.rs:1823-1834`, #14482). #14481 | bug | L |
@@ -84,9 +84,9 @@ get analysis only (the drop panel); nothing renders natively. Spec: UI19.
 |---|---|---|---|---|
 | MB-1 | App components could not find dependencies outside their own directory, so VisiCalc, TaskApp, EngramApp and JournalApp failed on every backend | **fixed** on `claude/brave-ride-edfrqw` (c615a9499e, unpushed): `--package-search-path` | bug | S |
 | MB-14 | The server listened on every network interface, not just localhost as its README says. Another machine on the network could fetch previews by sending `Host: localhost` | **fixed** on `claude/brave-ride-edfrqw` (unpushed): it binds `127.0.0.1` | security | S |
-| MB-2 | The browser shell never shows a component's `storiesError` | **real**. `static/index.html` has no reference to it. UI19 §6.2 asks for a ⚠️ badge | bug | S |
-| MB-3 | The watcher reloads once without a change at startup, and re-runs discovery while holding the server lock | **real**. Its file-time snapshot starts empty, so "detected file change" appears 1 second after start. Discovery runs `--describe` subprocesses under `s.mu` (`watcher.go`) | bug | S |
-| MB-4 | Compose ignores `--fixtures` and `--emit-project`, even with `--strict-fixtures` (output byte-identical, exit 0) | **real**. This breaks the `--strict-fixtures` contract in `mosaic-compile.json`. Fail loudly first; the fix is EM-6 | bug | S then M |
+| MB-2 | The browser shell never shows a component's `storiesError` | **real**. `static/index.html` has no reference to it. UI19 §6.2 asks for a ⚠️ badge. #16928 | bug | S |
+| MB-3 | The watcher reloads once without a change at startup, and re-runs discovery while holding the server lock | **real**. Its file-time snapshot starts empty, so "detected file change" appears 1 second after start. Discovery runs `--describe` subprocesses under `s.mu` (`watcher.go`). #16929 | bug | S |
+| MB-4 | Compose ignores `--fixtures` and `--emit-project`, even with `--strict-fixtures` (output byte-identical, exit 0) | **real**. This breaks the `--strict-fixtures` contract in `mosaic-compile.json`. Fail loudly first; the fix is EM-6. #16930 | bug | S then M |
 | MB-5 | Surface's `$mosaic-child-slot` cannot compile in isolation on html, webcomponent or react | **real**. Reproduced: "not yet supported by the pipeline HTML emitter". 3 recorded degradations. #14685 | bug | M |
 | MB-6 | Form-factor layouts (`*.desktop.mll`, `*.touch.mll`) are never discovered | **real**. VisiCalc's Grid and FormulaBar and EngramApp's touch layout are invisible ("2 candidate(s) skipped") | feature | M |
 | MB-7 | App components have no stories, so `--check` cannot cover them, and CI's check scans only `code/packages/mosaic` | **real**. VisiCalc, VisiCalcStartup, VentureChrome and others report "missing explicit .stories.json file" | feature | M |
@@ -126,7 +126,7 @@ was on 2026-09-20.
 | ID | Problem | Status and evidence | Kind | Size |
 |---|---|---|---|---|
 | SW-1 | The Web Component emitter rejects `Path` | **real, reproduced**. It falls through to `UnknownPrimitive` (`mosaic-emit-webcomponent/src/pipeline.rs:3047`), and is waived in `mosaicbook-degradations.json`. Port from `mosaic-emit-html/src/pipeline.rs:1785`, then remove the waiver. #14686 | bug | S–M |
-| SW-2 | Does not compile at all for SwiftUI, Compose, Flutter or Qt | **real, reproduced, no issue yet**:<br>• SwiftUI: "primitive 'Path' is not yet supported".<br>• Compose, Flutter and Qt: "Path prop 'x1' is bound … only supports a literal number".<br>Nothing records it, because MosaicBook gates only browser backends. XAML's #14682 is the template for the bound line geometry | bug | M–L |
+| SW-2 | Does not compile at all for SwiftUI, Compose, Flutter or Qt | **real, reproduced**:<br>• SwiftUI: "primitive 'Path' is not yet supported".<br>• Compose, Flutter and Qt: "Path prop 'x1' is bound … only supports a literal number".<br>Nothing records it, because MosaicBook gates only browser backends. XAML's #14682 is the template for the bound line geometry. #16926 | bug | M–L |
 | SW-3 | No app shell or deploy; only package artifacts and the adapter's WASM test | **real** | feature | L |
 | SW-4 | Collapse-never pinned split: no runtime proof | **real**. `SpiceWorkbench.mll` has no `HostNavigationSplit`, and there is no runnable app to resize. #15699 (parent #15481) | feature | M |
 | SW-5 | No CHANGELOG, and the docs are out of date | **real**:<br>• It is the only `code/packages/mosaic` package without a CHANGELOG.<br>• The README calls data-bound `Path` "a native XAML follow-up"; #14682 already did it.<br>• `spice-full-implementation-plan.md` marks the WASM lifecycle "(in progress)", but #15795 landed it. | docs | S |
@@ -140,7 +140,7 @@ native app.
 
 | ID | Problem | Status and evidence | Kind | Size |
 |---|---|---|---|---|
-| VC-1 | Open and Save cannot work on native hosts | **real, no issue yet**. `visicalc-mosaic-app/src/lib.rs:293` sends `file.open`/`file.save`, but native platform libraries answer only `files.open`/`files.save` (`templates/xaml/MosaicPlatformEffects.cs:153`). UI87 keeps the old names on the browser only "until VisiCalc migrates". The accept list needs a type whose extension is `.visicalc`. Blocks #14548, #14279 and #14276. Coordinate with #16864 | bug | S–M |
+| VC-1 | Open and Save cannot work on native hosts | **real**. `visicalc-mosaic-app/src/lib.rs:293` sends `file.open`/`file.save`, but native platform libraries answer only `files.open`/`files.save` (`templates/xaml/MosaicPlatformEffects.cs:153`). UI87 keeps the old names on the browser only "until VisiCalc migrates". The accept list needs a type whose extension is `.visicalc`. Blocks #14548, #14279 and #14276. Coordinate with #16864. #16927 | bug | S–M |
 | VC-2 | Native selection latency of 242–469 ms | **real**, measured in #16864. #16865 | bug | M |
 | VC-3 | After a click, Right arrow does not move the selection, and Tab does not enter the grid | **real** (2026-10-07 comment). #14278 | bug | M |
 | VC-4 | XAML grid leftovers: formula field width, numeric right alignment | **partly**. #14274 | bug | S–M |
@@ -202,7 +202,7 @@ exist.
 | EM-6 | Compose pipeline mode has no `EmitOptions` or project shell, and ignores `--fixtures` | **real**. `compose/pipeline.rs:69`, `main.rs:1392-1411`. #14704 | feature | M |
 | EM-7 | Permissive XAML shells bind the host by reflection, so mismatches fail silently | **partly**: native-complete shells bind directly. `xaml/pipeline.rs:9047-9192`. #14049 | bug | M |
 | EM-8 | `HostButton` children are dropped on 6 of 8 backends (now reported as a degradation) | **real** as a feature. #15921 | feature | L |
-| EM-9 | webcomponent emits `align: center-vertical` as a raw, invalid inline CSS declaration | **real, no issue yet** | bug | S |
+| EM-9 | webcomponent emits `align: center-vertical` as a raw, invalid inline CSS declaration | **real**. #16932 | bug | S |
 | EM-10 | Compose `Col(width:)` is emitted as a comment | **real**, cosmetic; no product relies on it. #14846 | bug | S |
 | EM-11 | Compose `performScrollTo()` hang | **unverified**. The reporter's own bisection cleared the emitter; the workaround is still in `TaskAppUiTest.kt:53,107`. #14790 | test infra | M |
 | EM-12 | The qualified `pkg::P::C` tag contract is undocumented | docs only: all 8 backends already reject it. #14886 | docs | S |
@@ -235,7 +235,10 @@ exist.
 
 ## Closable now
 
-Each of these was verified on `84252d038a`.
+**Closed on 2026-10-07**, each with a comment naming the fixing PR; every
+entry below except the *Close or narrow* and *Check off* items. #14026, #14886
+and #15921 stay open with a status comment that narrows them. Each of these
+was verified on `84252d038a`.
 - **Fixed by a merged PR:**
   - #13187 (#15018), #13184 and #14360 (#16503), #13022 (`ci.yml:2179`);
   - #14116, #14132 (#15040), #14639 (#14774);
