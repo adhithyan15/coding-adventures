@@ -16,6 +16,8 @@ A host Perl 5.38 process may only serve as a conformance oracle in tests.
 The first slice accepts a file of one or more `print(<expression>);` statements.
 Expressions contain decimal integer literals, parentheses, unary `-`, and
 binary `+`, `-`, and `*`, with Perl's precedence and left associativity.
+The decimal pilot accepts plain digit spellings with no separators and rejects
+multi-digit leading-zero forms such as `010`, which Perl interprets as octal.
 Each `print` has exactly one argument. It writes the argument's decimal form
 without adding a newline. Statement order determines output order.
 
@@ -28,7 +30,10 @@ coercion, list context, builtins beyond `print`, and every other Perl form are
 explicitly unsupported. The parser must reject trailing unconsumed tokens.
 
 Bound source input before lexing, direct AST input before recursive lowering,
-VM instructions, and captured output. Error messages must distinguish malformed
+VM instructions, and captured output. Direct AST input is limited to 16,384
+nodes or tokens, depth 64, 64 KiB per rule name or token field, and one MiB
+aggregate text; the module name is limited to 64 KiB. Count items before
+adding them to the traversal queue. Error messages must distinguish malformed
 source, unsupported syntax, and out-of-range arithmetic.
 
 ## Acceptance
