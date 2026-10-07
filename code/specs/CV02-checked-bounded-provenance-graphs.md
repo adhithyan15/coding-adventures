@@ -157,6 +157,13 @@ Generic allocator imports must remain identifiable as unchecked evidence:
 their typed conversion can discard duplicate metadata keys or synthesize omitted
 arrays before later graph validation. Fallible evidence queries cannot upgrade
 those imports; use the bounded checked import to establish complete evidence.
+An allocator-only import retains a private trust marker that cannot be cleared
+by recording new entries. Its canonical snapshot includes `unchecked_import:
+true`; checked import rejects any presence of this field. Generic save/reload
+keeps the marker and allocator behavior. Ordinary controlled-constructor
+snapshots retain their existing shape; checked imports/constructors have no
+unchecked marker. Serialization cannot launder normalized/defaulted evidence
+into a checked snapshot.
 
 Fallible graph queries distinguish an unknown ID, an invalid/incomplete graph
 and an exhausted work/output limit from an empty successful result. Implement
