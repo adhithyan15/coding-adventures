@@ -123,6 +123,9 @@ Each registered secret carries:
 | `allowed_mode` | `Direct`, `Leased`, or `Both` |
 | `rotated_at_ms` | when the secret was last changed |
 
+How a record and its policy are persisted on disk is specified separately, in
+`D18U-chief-of-staff-sealed-secret-record.md`.
+
 ### Rules
 
 **P1 — mode admissibility.** A lease request against a secret whose
