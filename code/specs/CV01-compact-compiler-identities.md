@@ -60,6 +60,20 @@ Remaining successful call/composite fold lineage is separately tracked by
 
 ## Verification
 
+### Wire and API decisions
+
+Compact-v1 IDs are `cv1.` followed by sixteen lowercase hexadecimal digits,
+starting at one. The JSON `identity` object declares `scheme: "compact-v1"`
+and `last_sequence` as sixteen hexadecimal digits, including zero for an unused
+allocator. Legacy snapshots omit this object. `CVLog::new_compact` opts in;
+`try_create`, `try_derive` and `try_merge` return allocation errors without
+changing state. Existing string-returning APIs fail fast on allocation error;
+they never return a success-shaped substitute. These are allocation checks,
+not the future bounded graph-validation API. Compact import checks ID/state
+shape, matching map keys and counter coverage, including parent identity values.
+Filtered compact views carry `view: {filtered: true, complete: false}` and are
+rejected as full reloadable logs. JSON and NDJSON preserve that declaration.
+
 - Keep the existing generic CV suite and hierarchical spelling contracts green.
 - Verify mixed roots, branching, repeated parents, merges, tombstones,
   contributions, origins, disabled allocation and mode toggling.
