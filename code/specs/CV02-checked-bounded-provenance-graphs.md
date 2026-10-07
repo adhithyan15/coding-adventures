@@ -75,6 +75,15 @@ operation work and serialized output bytes. Every addition uses checked integer
 arithmetic. Rejection leaves graph, allocation watermark and retained usage
 unchanged. Account before inserting or extending; never truncate to fit.
 
+Owned mutation arguments may already exceed limits when the caller transfers
+them. Rejection must dispose of nested metadata iteratively, including early
+identity/parent/event failures and disabled compatibility no-ops. A work budget
+bounds graph processing and serialization, not deallocation of memory already
+constructed and transferred by a caller: safe disposal necessarily visits that
+owned payload. Cleanup must not recurse through arbitrary caller nesting or
+leak rejected evidence. Heap iterator frames may grow with caller nesting;
+do not duplicate all siblings into another unbounded pending-value buffer.
+
 Initial checked defaults are 1,000,000 nodes; 4,000,000 parent edges;
 4,000,000 contribution/deletion events; 1,000,000 metadata JSON values;
 64 metadata nesting levels; 128 MiB retained metadata/text bytes; 128 MiB
