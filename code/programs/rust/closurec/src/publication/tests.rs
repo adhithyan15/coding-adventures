@@ -237,8 +237,9 @@ fn windows_acl_fixture_diagnostics_ignore_path_shadow_and_keep_setup_errors() {
     let fixture = Fixture::new();
     let shadow = fixture.path("shadow-bin");
     fs::create_dir(&shadow).unwrap();
-    // A copied Rust test executable rejects /all, like Git's Unix utility.
-    // It is a deterministic PATH shadow and requires no Git installation.
+    // A copied Rust test executable reports test results instead of account
+    // information. It supplies a deterministic non-native PATH shadow without
+    // requiring Git to be installed on the test host.
     let shadow_exe = shadow.join("whoami.exe");
     fs::copy(std::env::current_exe().unwrap(), &shadow_exe).unwrap();
     let inherited_path = std::env::var_os("PATH").unwrap();
