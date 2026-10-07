@@ -12,12 +12,17 @@
   allow-list, then the payload. Every field is bounded. Decoding is total and
   closed, and rejects unknown tags, truncation, trailing bytes, out-of-order or
   duplicate agent ids, empty allow-lists and empty payloads.
-- `SecretName` restricts names to `[a-z0-9][a-z0-9._-]{0,127}` with no `..`,
-  because the name is used verbatim as a storage key.
+- `SecretName` restricts names to `[a-z0-9][a-z0-9._-]{0,119}` with no `..`,
+  because the name is used verbatim as a storage key. `storage-fs`
+  hex-encodes keys into file names, so 120 bytes becomes 240 characters,
+  under `NAME_MAX`.
 - `ChiefSecretStore` over an already-unsealed `SealedStore`: `put` (overwrite is
   rotation), `delete`, `names`, `load_all` (all-or-nothing, bounded at 1024
   records) and `register_all`. `register_all` decodes everything before it
   registers anything, so a corrupt record leaves the runtime untouched.
-- Listing rebuilds the page cursor from the last key, because
-  `SealedStore::list` drops the backend's `next_cursor`. That is sound because
-  every `storage-core` backend defines the cursor as "skip keys <= cursor".
+- Listing follows the backend's `next_cursor` through the new
+  `SealedStore::list_page`, and never treats a short page as the end.
+  `storage-fs` can return a short page with more records still to come.
+- Documents that the format does not stop rollback. A writer of the storage
+  directory can restore an older valid record, so the directory must be
+  owner-only until freshness binding (P1.20) lands.

@@ -56,7 +56,7 @@ let count = store.register_all(&runtime)?;
 | Rule | Guarantee |
 |---|---|
 | U-D1 | Integrity comes from the sealed store's AEAD. The AAD binds `chief-secrets ∥ 0 ∥ name`, so a record cannot be renamed and cannot be edited. |
-| U-N1 | Secret names are `[a-z0-9][a-z0-9._-]{0,127}` with no `..`. They are used verbatim as storage keys and can never form a path. |
+| U-N1 | Secret names are `[a-z0-9][a-z0-9._-]{0,119}` with no `..`. They are used verbatim as storage keys and can never form a path. 120 bytes hex-encodes to a 240-character file name, under `NAME_MAX`. |
 | U-E1 | Decoding is total and closed. An unknown tag, an out-of-range bound, truncated input or trailing bytes is an error, never a nearest value. |
 | U-E2 | The policy precedes the payload, so a bad policy is rejected before any secret byte is copied. |
 | U-E3 | An `Only` allow-list with no agents is refused when writing and when reading. |
@@ -64,8 +64,13 @@ let count = store.register_all(&runtime)?;
 | U-E5 | An empty payload is refused, so a failed stdin read cannot provision a secret. |
 | U-E6 | Secret bytes live only in zeroizing buffers. Each is allocated once at its final capacity. |
 | U-E7 | No error and no `Debug` output contains a payload or an agent id read from disk. |
-| U-L1 | Loading is all-or-nothing. A corrupt record stops the load and is named, never skipped. |
+| U-L1 | Loading is all-or-nothing. A corrupt record stops the load and is named, never skipped. Paging follows the backend's cursor, so a short page does not end the listing. |
 | U-L2 | At most 1024 records are loaded. |
+
+**The format does not protect against rollback.** Anyone who can write the
+storage directory can restore an older valid record, which undoes a narrowed
+policy or a rotation. Keep the vault directory writable only by the owner.
+Freshness binding is backlog item P1.20.
 
 `privilege_tier` is stored but not enforced. VLT06 records that nothing reads
 it yet.

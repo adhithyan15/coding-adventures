@@ -53,6 +53,20 @@ decrypt every secret in the vault and so gains nothing by widening a policy
 that they could not get by reading the payload directly. The cost would be a
 second owner key to provision, rotate, and lose. Not worth it.
 
+**What the AEAD does not stop: rollback.** The AAD carries no revision, so a
+party who can *write* the storage directory but holds no KEK can restore an
+older ciphertext file for the same name — from a backup, a filesystem
+snapshot, a sync folder — and it still verifies. On the next restart the
+daemon registers the old policy and the old value. Within one KEK epoch that
+undoes a narrowed allow-list, the rotation of a leaked secret, or a delete.
+(After a KEK rotation old records fail as `Tamper`, so the window is bounded by
+the epoch.) A second *signature* would not fix this either — an old record is
+just as validly signed. What fixes it is freshness: a sealed per-namespace
+manifest of name → revision checked at load, or the revision bound into the
+AAD. That is logged as backlog item **P1.20**. Until it lands, the operating
+requirement is that **the vault storage directory is writable only by the
+owner**, which is also what the KEK file's owner-only check already assumes.
+
 ### Why startup-only (U-D4, U-D5)
 
 A live write path would put `vault.put` on the daemon's control plane, which
@@ -68,12 +82,15 @@ because every lease dies with the process.
 | Sealed-store namespace | `chief-secrets` |
 | Record key | the secret name, verbatim |
 
-**U-N1 — secret names are restricted.** A name is 1–128 bytes of ASCII,
+**U-N1 — secret names are restricted.** A name is 1–120 bytes of ASCII,
 starting with `[a-z0-9]`, continuing with `[a-z0-9._-]`, and containing no
 `..`. The restriction exists because the name is used *verbatim* as a storage
 key, which `storage-fs` maps to a path; a conservative charset rules out path
 tricks, case-folding collisions on macOS and Windows, and Unicode confusables,
-without an encoding layer. It is narrower than what the D18D vault tools accept
+without an encoding layer. The length bound comes from the same mapping:
+`storage-fs` hex-encodes the key into the file name, doubling it, so 120 bytes
+is a 240-character file name against Linux's 255-byte `NAME_MAX` (a
+128-byte bound, as first drafted, would have failed on write). It is narrower than what the D18D vault tools accept
 (`MAX_SECRET_NAME_BYTES = 512`, any string). That is safe in the direction it
 errs: a name that cannot be stored cannot be leased, and the tool returns its
 ordinary not-found denial.
@@ -145,6 +162,13 @@ or decode, the load fails and names the offending secret. It does **not** skip
 the record: a silently missing secret surfaces only as a refused legitimate
 caller, far from its cause, and a vault that has been tampered with should stop
 the daemon rather than serve whatever survived.
+
+**U-L1a — paging follows the backend's cursor.** The loader pages with
+`SealedStore::list_page` and stops only when `next_cursor` is `None`. A short
+page is **not** the end: `storage-fs` drops a key deleted between its directory
+scan and its read, so a page can come back short with more to come, and a
+loader that stopped there would miss every later record — the silent gap U-L1
+exists to rule out.
 
 **U-L2 — the load is bounded.** At most 1 024 records. A vault past that bound
 is refused rather than read into memory unbounded.

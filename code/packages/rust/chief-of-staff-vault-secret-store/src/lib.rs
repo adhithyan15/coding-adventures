@@ -26,9 +26,16 @@
 //! Only the sealed store's AEAD (spec decision U-D1). Its additional data binds
 //! every ciphertext to `namespace ∥ 0x00 ∥ key`, so a record for `bank` cannot
 //! be renamed to `weather`, and any flipped bit fails the tag. Anyone who can
-//! produce a record that verifies already holds the KEK — and so can already
-//! read every secret in the vault. A second signature would guard a policy
-//! against a party who has no reason to widen it.
+//! *forge* a record already holds the KEK — and so can already read every
+//! secret in the vault — which is why there is no second signature.
+//!
+//! **The AEAD does not stop rollback.** Nothing binds a record to its revision,
+//! so a party who can write the storage directory but has no KEK can restore
+//! an *older* valid file for the same name — from a backup, a snapshot, a sync
+//! folder — and on the next restart the daemon serves the old policy and the
+//! old value. Within one KEK epoch that undoes a narrowed policy, a rotation
+//! of a leaked secret, or a delete. The storage directory must therefore be
+//! writable only by the owner; freshness binding is backlog item P1.20.
 //!
 //! ## The envelope, version 1
 //!
@@ -102,7 +109,7 @@ pub const MAX_AGENT_ID_BYTES: usize = 256;
 pub const MAX_PAYLOAD_BYTES: usize = 64 * 1024;
 
 /// Longest secret name, in bytes.
-pub const MAX_SECRET_NAME_BYTES: usize = 128;
+pub const MAX_SECRET_NAME_BYTES: usize = 120;
 
 /// Most records the startup loader will read (U-L2).
 pub const MAX_RECORDS: usize = 1024;
@@ -145,7 +152,7 @@ const AGENTS_ONLY: u8 = 1;
 ///
 /// | rule | rules out |
 /// |---|---|
-/// | 1–128 bytes | empty keys, names past common filename limits |
+/// | 1–120 bytes | empty keys; `storage-fs` hex-encodes the key into the file name, doubling it, so 120 bytes is 240 characters against Linux's 255-byte `NAME_MAX` |
 /// | `[a-z0-9]` first | leading `.` (hidden files), leading `-` (flag confusion) |
 /// | then `[a-z0-9._-]` | `/`, `\`, NUL, spaces, upper case (case-folding collisions on macOS and Windows), all non-ASCII (confusables) |
 /// | no `..` | parent-directory segments |
@@ -212,7 +219,7 @@ impl fmt::Display for NameError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.write_str(match self {
             Self::Empty => "secret name is empty",
-            Self::TooLong => "secret name is longer than 128 bytes",
+            Self::TooLong => "secret name is longer than 120 bytes",
             Self::BadStart => "secret name must start with a lower-case letter or digit",
             Self::InvalidCharacter => "secret name may contain only a-z, 0-9, '.', '_' and '-'",
             Self::DotDot => "secret name must not contain '..'",
@@ -608,7 +615,7 @@ impl ChiefSecretStore {
         let mut names = Vec::new();
         let mut cursor = None;
         loop {
-            let page = self.sealed.list(
+            let page = self.sealed.list_page(
                 NAMESPACE,
                 StorageListOptions {
                     prefix: None,
@@ -617,17 +624,21 @@ impl ChiefSecretStore {
                     cursor,
                 },
             )?;
-            // A store this crate wrote returns at most LIST_PAGE_SIZE per
-            // page, so checking after each page bounds memory at
-            // MAX_RECORDS + one page.
-            for stat in &page {
+            for stat in &page.records {
                 let name = SecretName::parse(&stat.key).map_err(|_| StoreError::UnnamedRecord)?;
                 names.push(name);
             }
+            // Checked per page, so memory is bounded at MAX_RECORDS plus one
+            // page even against a backend whose cursor never ends.
             if names.len() > MAX_RECORDS {
                 return Err(StoreError::TooManyRecords);
             }
-            match next_cursor(&page) {
+            // Follow the backend's own cursor. A short page does NOT mean the
+            // listing is over: storage-fs drops a key deleted between its
+            // directory scan and its read, so a page can come back short with
+            // more still to come, and stopping there would silently miss every
+            // record after it -- exactly the missing secret U-L1 forbids.
+            match page.next_cursor {
                 Some(next) => cursor = Some(next),
                 None => break,
             }
@@ -671,17 +682,4 @@ impl ChiefSecretStore {
         }
         Ok(count)
     }
-}
-
-/// `SealedStore::list` returns a flat `Vec` and drops the backend's
-/// `next_cursor`, so the loader rebuilds it. That is sound because every
-/// `storage-core` backend defines the cursor the same way — "skip keys `<=`
-/// cursor", over keys in ascending order — which makes the last key of a full
-/// page exactly the cursor the backend would have returned. A short page means
-/// the listing is complete.
-fn next_cursor(page: &[coding_adventures_vault_sealed_store::SealedStat]) -> Option<String> {
-    if page.len() < LIST_PAGE_SIZE {
-        return None;
-    }
-    page.last().map(|stat| stat.key.clone())
 }

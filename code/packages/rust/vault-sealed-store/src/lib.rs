@@ -140,6 +140,16 @@ pub struct SealedRecord {
     pub plaintext: Zeroizing<Vec<u8>>,
 }
 
+/// One page of [`SealedStore::list_page`]: the records, and where to resume.
+#[derive(Debug, Clone)]
+pub struct SealedPage {
+    /// The records on this page.
+    pub records: Vec<SealedStat>,
+    /// Pass back as `StorageListOptions::cursor` to fetch the next page.
+    /// `None` means the listing is complete.
+    pub next_cursor: Option<String>,
+}
+
 /// A lightweight view that avoids touching the AEAD / KEK at all. Useful for
 /// listings, auditing, and selective fetching.
 #[derive(Debug, Clone)]
@@ -818,6 +828,23 @@ impl SealedStore {
         namespace: &str,
         options: StorageListOptions,
     ) -> Result<Vec<SealedStat>, SealedStoreError> {
+        self.list_page(namespace, options).map(|page| page.records)
+    }
+
+    /// Like [`list`](Self::list), but keeps the backend's continuation cursor.
+    ///
+    /// A caller that pages through a namespace must use this rather than
+    /// infer "done" from a short page. Backends are allowed to return fewer
+    /// records than `page_size` *and still have more*: `storage-fs`, for one,
+    /// drops a key deleted between its directory scan and its read, so a page
+    /// can come back one short while `next_cursor` says to keep going. A
+    /// caller that stopped on the short page would silently miss every record
+    /// after it.
+    pub fn list_page(
+        &self,
+        namespace: &str,
+        options: StorageListOptions,
+    ) -> Result<SealedPage, SealedStoreError> {
         check_external_namespace(namespace)?;
         {
             let guard = self.state.lock().expect("vault state mutex poisoned");
@@ -839,7 +866,10 @@ impl SealedStore {
                 kek_id: meta.kek_id,
             });
         }
-        Ok(out)
+        Ok(SealedPage {
+            records: out,
+            next_cursor: page.next_cursor,
+        })
     }
 
     /// Return a redacted envelope summary for one sealed record.
@@ -2336,6 +2366,41 @@ mod tests {
             assert_eq!(s.kek_id, "kek-1");
             assert!(s.ciphertext_len > 0);
         }
+    }
+
+    #[test]
+    fn list_page_keeps_the_backend_cursor() {
+        let (store, _) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        for key in ["a", "b", "c"] {
+            store.put("ns", key, b"v", None).unwrap();
+        }
+        let page = |cursor| {
+            store
+                .list_page(
+                    "ns",
+                    StorageListOptions {
+                        prefix: None,
+                        recursive: false,
+                        page_size: Some(2),
+                        cursor,
+                    },
+                )
+                .unwrap()
+        };
+        let first = page(None);
+        assert_eq!(first.records.len(), 2);
+        assert_eq!(first.next_cursor.as_deref(), Some("b"));
+        let second = page(first.next_cursor);
+        assert_eq!(second.records.len(), 1);
+        assert_eq!(second.records[0].key, "c");
+        assert_eq!(second.next_cursor, None);
+
+        store.seal();
+        assert!(matches!(
+            store.list_page("ns", StorageListOptions::default()),
+            Err(SealedStoreError::Sealed)
+        ));
     }
 
     #[test]

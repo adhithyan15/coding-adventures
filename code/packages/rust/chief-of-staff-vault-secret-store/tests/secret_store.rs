@@ -6,7 +6,7 @@
 //! a hand-built envelope pins the wire format itself.
 
 use std::collections::BTreeSet;
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 
 use chief_of_staff_vault_runtime::{
     AllowedAgents, ChiefVaultRuntime, SecretPolicy, VaultDeliveryMode, VaultLeaseRequest,
@@ -18,7 +18,10 @@ use chief_of_staff_vault_secret_store::{
     MAX_RECORDS, MAX_RECORD_BYTES, MAX_SECRET_NAME_BYTES, NAMESPACE, VERSION,
 };
 use coding_adventures_vault_sealed_store::SealedStore;
-use storage_core::{InMemoryStorageBackend, StorageBackend};
+use storage_core::{
+    InMemoryStorageBackend, Revision, StorageBackend, StorageError, StorageLease,
+    StorageListOptions, StoragePage, StoragePutInput, StorageRecord, StorageStat,
+};
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -454,7 +457,7 @@ fn delete_removes_and_tolerates_absence() {
 #[test]
 fn listing_pages_past_one_backend_page() {
     let (_, store) = fresh();
-    // 300 spans three pages of 128, which exercises the rebuilt cursor.
+    // 300 spans three pages of 128, so the backend cursor is followed twice.
     for i in 0..300 {
         store
             .put(&name(&format!("s{i:03}")), &weather_policy(), b"k")
@@ -464,6 +467,82 @@ fn listing_pages_past_one_backend_page() {
     assert_eq!(names.len(), 300);
     assert_eq!(names.first(), Some(&name("s000")));
     assert_eq!(names.last(), Some(&name("s299")));
+}
+
+/// A backend that behaves like `storage-fs` when a key is deleted between its
+/// directory scan and its read: the page comes back one record short, but
+/// `next_cursor` still says there is more. The first record of every
+/// non-final page is dropped, and remembered, as if deleted mid-listing.
+struct ShortPages {
+    inner: InMemoryStorageBackend,
+    dropped: Mutex<Vec<String>>,
+}
+
+impl StorageBackend for ShortPages {
+    fn initialize(&self) -> Result<(), StorageError> {
+        self.inner.initialize()
+    }
+    fn get(&self, namespace: &str, key: &str) -> Result<Option<StorageRecord>, StorageError> {
+        self.inner.get(namespace, key)
+    }
+    fn put(&self, input: StoragePutInput) -> Result<StorageRecord, StorageError> {
+        self.inner.put(input)
+    }
+    fn delete(
+        &self,
+        namespace: &str,
+        key: &str,
+        if_revision: Option<&Revision>,
+    ) -> Result<(), StorageError> {
+        self.inner.delete(namespace, key, if_revision)
+    }
+    fn list(
+        &self,
+        namespace: &str,
+        options: StorageListOptions,
+    ) -> Result<StoragePage, StorageError> {
+        let mut page = self.inner.list(namespace, options)?;
+        if namespace == NAMESPACE && page.next_cursor.is_some() && !page.records.is_empty() {
+            let gone = page.records.remove(0);
+            self.dropped.lock().unwrap().push(gone.key);
+        }
+        Ok(page)
+    }
+    fn stat(&self, namespace: &str, key: &str) -> Result<Option<StorageStat>, StorageError> {
+        self.inner.stat(namespace, key)
+    }
+    fn acquire_lease(&self, name: &str, ttl_ms: u64) -> Result<Option<StorageLease>, StorageError> {
+        self.inner.acquire_lease(name, ttl_ms)
+    }
+}
+
+#[test]
+fn a_short_page_with_a_cursor_does_not_end_the_listing() {
+    // Regression: the loader used to treat any page shorter than its page
+    // size as the last one. Against this backend it stopped after 127
+    // records and silently lost the other 170.
+    let backend = Arc::new(ShortPages {
+        inner: InMemoryStorageBackend::new(),
+        dropped: Mutex::new(Vec::new()),
+    });
+    let store = store_over(backend.clone());
+    for i in 0..300 {
+        store
+            .put(&name(&format!("s{i:03}")), &weather_policy(), b"k")
+            .expect("put");
+    }
+    let names = store.names().expect("names");
+    let dropped = backend.dropped.lock().unwrap().clone();
+    assert_eq!(dropped.len(), 2, "two non-final pages");
+    assert_eq!(names.len(), 300 - dropped.len());
+    for i in 0..300 {
+        let n = format!("s{i:03}");
+        assert_eq!(
+            names.contains(&name(&n)),
+            !dropped.contains(&n),
+            "{n} must be listed unless the backend dropped it"
+        );
+    }
 }
 
 // ── U-L1: all or nothing ─────────────────────────────────────────────────────
