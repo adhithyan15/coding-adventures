@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 30,
-  "sourceHash": "fnv1a64:8a8ec40e5ef1b009",
+  "sourceHash": "fnv1a64:e9a64c51be31cf59",
   "lessonIds": [
     "PA-W08-pha",
     "PA-W08-pairin-bindi",
@@ -23,7 +23,7 @@
   "drivablePrefix": 0,
   "text": "punjabi/narration/ch30.txt",
   "json": "punjabi/narration/ch30.json",
-  "textHash": "fnv1a64:5bd40f9aa1601591",
-  "jsonHash": "fnv1a64:c156ff1f95f9212e",
+  "textHash": "fnv1a64:f1aa7e1ad9a15734",
+  "jsonHash": "fnv1a64:c5cd1e80f5d8b003",
   "findings": []
 }

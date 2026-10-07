@@ -17,13 +17,6 @@
     },
     {
       "kind": "script-filmstrip",
-      "lessonId": "FA-W00-alef-dictation",
-      "sourceHash": "fnv1a64:ca622818176f7767",
-      "svgHash": "fnv1a64:5ca9b11e137ad127",
-      "svg": "persian/book/figures/FA-W00-alef-dictation-filmstrip.svg"
-    },
-    {
-      "kind": "script-filmstrip",
       "lessonId": "FA-W00-alef-guided-copy",
       "sourceHash": "fnv1a64:c043d5435cc2d1d4",
       "svgHash": "fnv1a64:5ca9b11e137ad127",
