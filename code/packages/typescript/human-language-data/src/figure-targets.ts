@@ -896,7 +896,8 @@ export function headlinePhraseOf(lesson: ParsedLesson, script: string): string[]
  * phrase grows one band per word. Measured with the cited letters that draw
  * the most movements in the narrowest words (औइ, औझ, धऋ: three rows each),
  * three words print 1,571 units tall, under the 1,801 of the tallest strip
- * already printed; four such words print 2,048, and their frames and
+ * the book has printed legibly (a nine-piece Gujarati list, GU-R13; a
+ * dictation, it prints none now); four such words print 2,048, and their frames and
  * captions would be shrunk past reading. A test in script-ductus
  * (`filmstrip-ledger.test.ts`) renders that worst case and holds it under the
  * line.
