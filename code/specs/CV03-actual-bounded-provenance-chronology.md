@@ -56,6 +56,11 @@ complete source/composite/output-byte coverage or every mutating pass's lineage.
    loading must validate journal evidence through the checked path or reject
    unsupported presence; it must not silently discard this new field.
    Allocator-only imports cannot launder complete graph/journal evidence.
+   `from_json_string` must accept valid full `chronology-v1` through the bounded
+   checked importer with default limits, preserving all records and append
+   state. Reject malformed, unsupported, disabled and partial declarations.
+   Blanket rejection of every present journal is not delivery of this contract;
+   add positive full round-trip and append controls through both import APIs.
 4. Define coverage honestly: accepted graph operations are complete within an
    opted-in log; scheduler contexts describe actual recorded pipeline runs.
    Unscoped lexer/parser/compiler graph events remain globally ordered facts,
