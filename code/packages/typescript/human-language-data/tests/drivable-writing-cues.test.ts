@@ -50,6 +50,7 @@ import { loadEverything, loadModalityManifest } from "../src/loader.js";
 import {
   bareWritingImperatives,
   narratedProseSpans,
+  withoutHtmlComments,
 } from "./drivable-writing-imperatives.js";
 
 const DEBT_DIRECTORY = join(dirname(fileURLToPath(import.meta.url)), "drivable-writing-debt");
@@ -108,6 +109,26 @@ describe("bareWritingImperatives: what fires", () => {
       "Draw the shape. Two bars, short over long. Count the strokes and say what number you expect it to be.",
     ]);
     expect(bareWritingImperatives(markdown)).toHaveLength(1);
+  });
+});
+
+describe("withoutHtmlComments", () => {
+  // The narrator never reads a comment, so neither does the detector. An
+  // unterminated opener hides the rest of the text, as it does in speech.ts.
+  it.each([
+    ["a closed comment", "a <!-- x --> b", "a  b"],
+    ["two comments", "<!-- x -->a<!-- y -->b", "ab"],
+    ["an unterminated opener", "a <!-- Draw it.", "a "],
+    ["a nested opener", "a <!--<!-- x --> Draw", "a  Draw"],
+    ["no comment at all", "Draw the shape.", "Draw the shape."],
+  ])("%s", (_label, input, expected) => {
+    expect(withoutHtmlComments(input)).toBe(expected);
+  });
+
+  it("empties a long run of unclosed openers", () => {
+    // The lazy regex this replaces was quadratic here (800 KB took seconds).
+    // No wall-clock bound: timing asserts flake on a loaded runner.
+    expect(withoutHtmlComments("<!--".repeat(200_000))).toBe("");
   });
 });
 

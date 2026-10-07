@@ -129,6 +129,35 @@ export const BARE_WRITING_IMPERATIVE = new RegExp(
 );
 
 /**
+ * Drop every HTML comment, the way the narrator does.
+ *
+ * A monotonic `indexOf` scan, not `replace(/<!--[\s\S]*?-->/g, "")`. That
+ * regex is quadratic in the number of `<!--` openers when one is never closed
+ * (see the same note in src/info-dump.ts and src/metalanguage.ts), and a single
+ * pass of it is the "incomplete multi-character sanitization" shape code
+ * scanning flags. Here each character is visited once, and an unterminated
+ * `<!--` swallows the rest of the text — exactly what speech.ts does with its
+ * `<!--[\s\S]*?(?:-->|$)` — so nothing the narrator would skip is checked.
+ *
+ *   "a <!-- x --> b"   → "a  b"
+ *   "a <!-- x"         → "a "
+ *   "a <!--<!-- x -->" → "a "
+ */
+export function withoutHtmlComments(markdown: string): string {
+  let out = "";
+  let index = 0;
+  for (;;) {
+    const start = markdown.indexOf("<!--", index);
+    if (start === -1) break;
+    out += markdown.slice(index, start);
+    const end = markdown.indexOf("-->", start + 4);
+    if (end === -1) return out;
+    index = end + 3;
+  }
+  return out + markdown.slice(index);
+}
+
+/**
  * Break one block's Markdown into the spans a narrator would say as one run.
  *
  * Paragraphs are joined across their wrapped lines, because lessons wrap at
@@ -142,7 +171,7 @@ export const BARE_WRITING_IMPERATIVE = new RegExp(
  * what lets "[PAUSE 2s] Draw the shape" be seen as opening with "Draw".
  */
 export function narratedProseSpans(markdown: string): string[] {
-  const text = markdown.replace(/<!--[\s\S]*?-->/g, "").replace(/^```[\s\S]*?^```/gm, "");
+  const text = withoutHtmlComments(markdown).replace(/^```[\s\S]*?^```/gm, "");
   const units: string[] = [];
   let current: string[] = [];
   const flush = (): void => {
