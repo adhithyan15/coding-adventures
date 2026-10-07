@@ -55,6 +55,17 @@ pub fn preprocess_source(
     fs: &mut dyn SourceFs,
     bounds: Bounds,
 ) -> Result<PreprocessedUnit, MacroNibError> {
+    // The engine receives an already-lexed primary file, so its file-size
+    // guard cannot protect the work spent lexing that file. Enforce the same
+    // tighten-only bound before the MacroNib lexer allocates its token stream.
+    let bounds = bounds.tighten(Bounds::default());
+    if source.len() as u64 > bounds.bytes_per_file
+        || source.len() as u64 > bounds.total_source_bytes
+    {
+        return Err(MacroNibError::Preprocess(PpError::new(
+            "primary MacroNib source exceeds the preprocessing byte budget",
+        )));
+    }
     let mut tokens = try_tokenize_macronib(source).map_err(MacroNibError::Lex)?;
     let sentinel = tokens.last().cloned();
     dialect::strip_eof(&mut tokens);
@@ -196,5 +207,25 @@ mod tests {
             _ => panic!("expanded token budget must reject source"),
         };
         assert!(error.to_string().contains("token"), "{error}");
+    }
+
+    #[test]
+    fn primary_source_byte_budget_is_checked_before_lexing() {
+        let source = ".set X 7\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let error = match preprocess_source(
+            source,
+            file,
+            &mut fs,
+            Bounds {
+                bytes_per_file: 4,
+                ..Bounds::default()
+            },
+        ) {
+            Err(MacroNibError::Preprocess(error)) => error,
+            _ => panic!("primary source must be bounded before lexing"),
+        };
+        assert!(error.to_string().contains("byte budget"), "{error}");
     }
 }

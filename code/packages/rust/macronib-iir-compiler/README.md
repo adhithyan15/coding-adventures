@@ -6,6 +6,8 @@ This crate supplies a small dialect adapter to the generic
 macros, resolves includes, tracks provenance, and enforces resource bounds.
 Nib's guarded parser, type checker, and IIR compiler then process the remaining
 tokens. No backend changes are needed.
+The primary file's byte budget is checked before tokenization; included files
+use the shared preprocessor's file-read bounds.
 
 `compile_source` accepts a source string. `compile_source_with_includes` accepts
 an in-memory include set. `preprocess_source` accepts a caller-supplied

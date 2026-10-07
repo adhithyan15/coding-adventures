@@ -599,6 +599,10 @@ length and testing full equality when lines are aligned. Negative tests
 must cover malformed directives, undefined includes, recursion and token
 bounds. The engine core must remain unchanged unless a reproducible
 genericity defect is found and documented.
+MacroNib must check the primary file's tightened byte budget before lexing:
+the shared engine receives already-lexed primary tokens and cannot bound
+their earlier allocation itself. Included files keep the engine's existing
+file-read guards.
 
 **Slice 4 — the C dialect, and real C.**
 `c.tokens` stops discarding `#…` lines; `c-lexer` surfaces directive tokens; a
