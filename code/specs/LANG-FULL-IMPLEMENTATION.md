@@ -1345,6 +1345,8 @@ backend immediately) come before the enabler-dependent items.
   conservative.
   Built-in `sqrt` may likewise map that one positive bounded exponential;
   nested exponentials and user-declared overrides remain conservative.
+  Additional built-in `sqrt` calls may wrap that positive bounded result while
+  preserving the same finite proof.
   Provenance-backed local and other real-name branches remain conservative
   across selector calls. Unary plus
   and unary minus preserve the same runtime-real proof. Additive composition,

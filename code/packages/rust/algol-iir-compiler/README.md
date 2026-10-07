@@ -246,6 +246,8 @@ Built-in `ln` may map that one exponential when its operand remains rooted in
 the bounded sign chain; standalone `ln` and user-declared overrides stay conservative.
 Built-in `sqrt` may likewise map that one positive bounded exponential;
 nested exponentials and user-declared overrides remain conservative.
+Additional built-in `sqrt` calls may wrap that positive bounded result while
+preserving the same finite proof.
 One-sided reassignment remains conservative. `for` loops preserve
 runtime-real provenance for caller-frame locals whose values their bodies leave
 invariant; controlled, changed, captured, and name-promoted storage remains

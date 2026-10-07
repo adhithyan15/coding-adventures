@@ -49,6 +49,8 @@ Built-in `ln` may map that one exponential when its operand remains rooted in
 the bounded sign chain; standalone `ln` and user-declared overrides stay conservative.
 Built-in `sqrt` may likewise map that one positive bounded exponential;
 nested exponentials and user-declared overrides remain conservative.
+Additional built-in `sqrt` calls may wrap that positive bounded result while
+preserving the same finite proof.
 One-sided reassignment remains gated. Unary signs, additive
 composition, multiplication, division, and exponentiation over proven
 runtime-real or finite static operands preserve runtime-real provenance. The

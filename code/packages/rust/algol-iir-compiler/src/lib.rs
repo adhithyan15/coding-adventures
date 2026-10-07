@@ -3874,17 +3874,17 @@ impl Compiler {
         children.len() == 1 && self.is_selector_call_safe_real_procedure_result(children[0])
     }
 
-    fn builtin_nonnegative_unit_sign_operand<'n>(
+    fn builtin_nonnegative_bounded_sign_operand<'n>(
         &self,
         node: &'n GrammarASTNode,
     ) -> Option<&'n GrammarASTNode> {
         if let Some(child) = single_parenthesized_child(node) {
-            return self.builtin_nonnegative_unit_sign_operand(child);
+            return self.builtin_nonnegative_bounded_sign_operand(child);
         }
         if node.rule_name != "proc_call" {
             let children = direct_nodes(node);
             if direct_tokens(node).is_empty() && children.len() == 1 {
-                return self.builtin_nonnegative_unit_sign_operand(children[0]);
+                return self.builtin_nonnegative_bounded_sign_operand(children[0]);
             }
             return None;
         }
@@ -3894,7 +3894,7 @@ impl Compiler {
             .value
             .clone();
         let target_name = self.resolve_procedure_identity(&source_name);
-        if !matches!(target_name.as_str(), "abs" | "sqrt")
+        if !matches!(target_name.as_str(), "abs" | "sqrt" | "exp")
             || self.proc_sigs.contains_key(&target_name)
         {
             return None;
@@ -3905,7 +3905,8 @@ impl Compiler {
         }
         match target_name.as_str() {
             "abs" => self.builtin_sign_operand(actuals[0]),
-            "sqrt" => self.builtin_nonnegative_unit_sign_operand(actuals[0]),
+            "sqrt" => self.builtin_nonnegative_bounded_sign_operand(actuals[0]),
+            "exp" => self.builtin_single_exp_sign_operand(node),
             _ => None,
         }
     }
@@ -4087,9 +4088,7 @@ impl Compiler {
         match target_name.as_str() {
             "sign" => Some(actuals[0]),
             "abs" | "entier" => self.builtin_sign_operand(actuals[0]),
-            "sqrt" => self
-                .builtin_nonnegative_unit_sign_operand(actuals[0])
-                .or_else(|| self.builtin_single_exp_sign_operand(actuals[0])),
+            "sqrt" => self.builtin_nonnegative_bounded_sign_operand(actuals[0]),
             "sin" | "cos" | "arctan" => self.builtin_sign_operand(actuals[0]),
             "exp" if !self.contains_builtin_exp_call(actuals[0]) => {
                 self.builtin_sign_operand(actuals[0])
@@ -13651,6 +13650,40 @@ mod tests {
         ] {
             let err = compile_source(source, "test").expect_err(
                 "nested exponential, non-sign-rooted, and overridden exp mappings must remain conservative",
+            );
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_nested_sqrt_exp_entier_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(sqrt(sqrt(exp(sign(pick()))))); output(x) end",
+            "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier(sqrt(sqrt(exp(abs(sign(pick())))))))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "nested sqrt over one exponential preserves a bounded sign-rooted result through entier for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_nested_sqrt_exp_entier_sign_widening_rejects_unproven_mappings() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(sqrt(exp(exp(sign(pick())))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(sqrt(exp(pick())))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real procedure exp(x); value x; real x; exp := x; real result; result := entier(sqrt(sqrt(exp(sign(pick()))))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "nested exponential, non-sign-rooted, and overridden exp mappings must remain conservative under nested sqrt",
             );
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }
