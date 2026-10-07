@@ -121,7 +121,24 @@ mod tests {
                     .is_ok(),
                 "{release}: spaced minus operators should parse"
             );
-            if matches!(*release, "5.38.2" | "5.44.0" | "5.45.3") {
+            if matches!(
+                *release,
+                "5.003_04"
+                    | "5.003_05"
+                    | "5.003_06"
+                    | "5.003_07"
+                    | "5.003_08"
+                    | "5.003_09"
+                    | "5.003_10"
+                    | "5.003_11"
+                    | "5.003_12"
+                    | "5.003_13"
+                    | "5.003_14"
+                    | "5.003_15"
+                    | "5.38.2"
+                    | "5.44.0"
+                    | "5.45.3"
+            ) {
                 for source in ["print(08);", "print(09);", "print(012);"] {
                     let tokens = GrammarLexer::new(source, &token_grammar)
                         .tokenize()

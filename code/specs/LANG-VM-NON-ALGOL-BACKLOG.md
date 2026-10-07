@@ -118,17 +118,21 @@ header before declared roots and merged as
 `b0c223097bf34f0e4b81f6fca894743c9daa5a08` after latest-head CI, CodeQL,
 and books checks passed. Unknown origin remains rejected; primary and system
 includes remain root-only with the same containment and bounded reads.
+PR #16934 delivered one checked `+`, `-`, or `*` arithmetic operation per
+bounded C `#if` logical clause and merged as
+`3b80b57819dbb934cb92dc5592d6f6e96ed5e07c` after latest-head CI,
+CodeQL, and books checks passed. Longer and mixed expressions remain explicit
+errors; full C `#if`, stringize/paste, and default frontend routing remain.
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **PREP01 C (selected):** add exactly one checked `+`, `-`, or `*` arithmetic
-   operation in each bounded logical `#if` clause, accepting only signed 32-bit
-   decimal operands and results. Continue toward full C `#if`, stringize/paste
-   and default frontend routing after this bounded step.
-2. **LANG82 Perl release grammars:** add distinct source-backed token and
-   grammar files for the 753 remaining inventoried releases, and continue the
-   inventory audit. Every currently published pair remains explicitly partial.
+1. **LANG82 Perl release grammars (selected):** publish the next bounded
+   source-backed 5.003_04 through 5.003_15 token and grammar pairs as separate,
+   explicitly partial files. Continue the inventory audit and the remaining
+   741 inventoried releases after this installment.
+2. **PREP01 C:** continue toward full C `#if`, stringize/paste, and default
+   frontend routing in separately bounded slices.
 
 The following run records the first VM-067 selection.
 

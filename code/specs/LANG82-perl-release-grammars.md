@@ -55,9 +55,11 @@ quietly accepting a modern approximation.
 For release pairs that expose arithmetic subtraction, lex adjacent `--` as
 Perl's decrement operator and reject it if decrement semantics are outside the
 partial grammar; spaced binary/unary minus (`1- -2`) remains a separate form.
-For the modern arithmetic-print subset, accept plain decimal integer literals
-without a leading zero (and `0` itself). A leading-zero literal may use octal
-syntax; reject it until that release's actual numeric rules are implemented.
+For a release pair that declares a plain-decimal arithmetic-print subset,
+accept integer literals without a leading zero (and `0` itself). A
+leading-zero literal may use octal syntax; reject it until that release's
+actual numeric rules are implemented. Earlier partial pairs with broader
+integer token rules still need a separate numeric-boundary audit.
 
 The existing unversioned `perl.tokens` and `perl.grammar` remain the bounded
 Perl 5.38 LANG81 execution grammar until a separately validated versioned
@@ -83,3 +85,37 @@ Keep this work in bounded, spec-first PRs. It may be prepared locally while
 another implementation PR is in CI, but there is only one active implementation
 PR at a time. LANG81 source-to-IIR execution continues to use its declared
 Perl 5.38 subset until a release pair and semantic lowering are ready.
+
+The next local historical slice selects 5.003_07. The official source repository
+has no `perl-5.003_06` tag; that release initially remained pending. Its source
+was then located in official commit `9c6be91f`, whose message introduces the
+5.003_06 patch and whose `patchlevel.h` identifies subversion 6. Use that
+commit to ground a separate 5.003_06 pair. The 5.003_07 pair is checked against
+its own tag; unchanged yacc syntax does not remove the separate-file rule.
+
+The following local slice selects 5.003_08. Its tagged yacc and tokenizer files
+both differ from 5.003_07, especially around lexical `my` scope, interpolation,
+and octal/hexadecimal overflow. Keep the initial release pair limited to the
+arithmetic and `print` forms that those changes do not extend; record it as
+partial and retain negative syntax probes.
+
+The next slice selects tagged 5.003_09. Its yacc changes rearrange lexical
+scope handling, while tokenizer changes mainly concern sigils, interpolation,
+patterns, and locale-aware numeric conversion. Preserve only the bounded
+plain-decimal arithmetic and `print` subset; reject leading-zero multi-digit
+forms and do not infer full syntax coverage from the pair.
+
+The following slice selects tagged 5.003_10. Its yacc source matches 5.003_09;
+the tokenizer changes sigil spacing and a few built-in/identifier decisions,
+outside this bounded print-arithmetic subset. It still needs its own pair and
+separate source note.
+
+The next slice selects tagged 5.003_11. Its yacc changes operator token type
+annotations and block bookkeeping; tokenizer changes cover sigils, patterns
+and numeric-locale setup. Keep the pair partial and independently addressable,
+with the same plain-decimal print-arithmetic limits and negative probes.
+
+This bounded follow-up installment materializes distinct partial pairs through
+5.003_15, including 5.003_06 from its identified source commit. The next
+local group begins at 5.003_16; none of these pairs claims full release syntax
+or changes LANG81's executable Perl 5.38 grammar.

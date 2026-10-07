@@ -212,6 +212,8 @@ fn manifest_declares_task_app() {
         "mosaic-startup-failure",
         "mosaic-startup-retry",
         "expect(startupAttempts, 2)",
+        "topbar fits the declared desktop viewport",
+        "the generated topbar must not report a RenderFlex overflow",
         "timeline legend fits the default constrained viewport",
         "the generated Timeline must not report a RenderFlex overflow",
     ] {
@@ -243,6 +245,39 @@ fn storage_summary_stacks_status_and_location() {
             !summary.contains("align"),
             "a vertical Row alignment has no meaning on the stacked summary"
         );
+    }
+}
+
+/// #13465: Flutter Rows preserve intrinsic child widths and do not wrap. Keep
+/// the descriptive title block above the compact action controls so the topbar
+/// fits TaskApp's declared 1280px desktop viewport on every backend.
+#[test]
+fn topbar_stacks_title_and_controls() {
+    let layout = read("TaskApp.mll");
+    assert!(layout.contains("Column [ topbar ]"));
+    assert!(!layout.contains("Row [ topbar ]"));
+    assert!(layout.contains("Row [ topbar-controls ]"));
+
+    for theme in ["light", "dark"] {
+        let style = read(&format!("TaskApp.{theme}.msl"));
+        let topbar = style
+            .split("part topbar {")
+            .nth(1)
+            .and_then(|rest| rest.split('}').next())
+            .expect("topbar style must exist");
+        assert!(topbar.contains("gap : 12 ;"));
+        assert!(
+            !topbar.contains("align"),
+            "a vertical Row alignment has no meaning on the stacked topbar"
+        );
+
+        let controls = style
+            .split("part topbar-controls {")
+            .nth(1)
+            .and_then(|rest| rest.split('}').next())
+            .expect("topbar-controls style must exist");
+        assert!(controls.contains("gap : 18 ;"));
+        assert!(controls.contains("align : center-vertical ;"));
     }
 }
 

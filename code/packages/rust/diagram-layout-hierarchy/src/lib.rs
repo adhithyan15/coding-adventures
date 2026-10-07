@@ -1,9 +1,9 @@
 //! Deterministic, backend-neutral hierarchy layout.
 
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 
 use diagram_ir::{
-    DiagramDirection, LayoutedSwimlaneDiagram, LayoutedSwimlaneEdge, LayoutedSwimlaneLane,
+    DiagramDirection, DiagramIconGlyph, LayoutedSwimlaneDiagram, LayoutedSwimlaneEdge, LayoutedSwimlaneLane,
     LayoutedSwimlaneNode, LayoutedTreeViewConnector, LayoutedTreeViewDiagram, LayoutedTreeViewNode, LayoutedTreemapDiagram,
     LayoutedTreemapNode, Point, SwimlaneDiagram, TreeViewDiagram, TreemapDiagram,
     LayoutedRailroadDiagram, LayoutedRailroadElement, LayoutedRailroadPath, LayoutedRailroadRule,
@@ -314,8 +314,23 @@ pub fn layout_treemap(diagram: &TreemapDiagram, _canvas_width: f64) -> LayoutedT
     }
 }
 
+/// Integrator-owned icon glyphs keyed by fully qualified Mermaid icon identity.
+#[derive(Clone, Debug, Default)]
+pub struct TreeViewLayoutOptions {
+    pub icon_glyphs: BTreeMap<String, DiagramIconGlyph>,
+}
+
 /// Lay out a TreeView as deterministic indented rows.
-pub fn layout_treeview(diagram: &TreeViewDiagram, _canvas_width: f64) -> LayoutedTreeViewDiagram {
+pub fn layout_treeview(diagram: &TreeViewDiagram, canvas_width: f64) -> LayoutedTreeViewDiagram {
+    layout_treeview_with_options(diagram, canvas_width, None)
+}
+
+/// Lay out a TreeView while resolving registered external icon identities.
+pub fn layout_treeview_with_options(
+    diagram: &TreeViewDiagram,
+    _canvas_width: f64,
+    options: Option<&TreeViewLayoutOptions>,
+) -> LayoutedTreeViewDiagram {
     let row_height = diagram.config.theme.label_font_size * 1.2 + diagram.config.padding_y * 2.0;
     let mut nodes = diagram.nodes.iter().enumerate().map(|(index, node)| {
         let x = 26.0 + node.depth as f64 * (diagram.config.row_indent + diagram.config.padding_x);
@@ -331,6 +346,8 @@ pub fn layout_treeview(diagram: &TreeViewDiagram, _canvas_width: f64) -> Layoute
             kind: node.kind.clone(),
             class_selector: node.class_selector.clone(),
             icon: node.icon.clone(),
+            icon_glyph: node.icon.as_ref().and_then(|icon|
+                options.and_then(|options| options.icon_glyphs.get(icon))).cloned(),
             description: node.description.clone(),
             x,
             y: index as f64 * row_height,
@@ -551,6 +568,30 @@ mod tests {
         assert_eq!(layout.width, layout_treeview(&diagram, 900.0).width);
         assert!(layout.width > layout.nodes[2].description_x.unwrap() + layout.nodes[2].description_width.unwrap());
         assert_eq!(layout.nodes[0].x + layout.nodes[0].width + 2.0, layout.width);
+    }
+
+    #[test]
+    fn treeview_layout_resolves_registered_external_icon_glyphs() {
+        use diagram_ir::{DiagramIconGlyph, TreeViewDiagram, TreeViewNode, TreeViewNodeKind};
+        let config = diagram_ir::TreeViewConfig { show_icons: true, ..Default::default() };
+        let diagram = TreeViewDiagram {
+            title: None, accessibility_title: None, accessibility_description: None, config,
+            nodes: vec![
+                TreeViewNode { id: "known".into(), is_implicit_root: false, parent_id: None, depth: 1,
+                    label: "app.ts".into(), kind: TreeViewNodeKind::File, class_selector: None,
+                    icon: Some("logos:typescript".into()), description: None },
+                TreeViewNode { id: "missing".into(), is_implicit_root: false, parent_id: None, depth: 1,
+                    label: "app.rs".into(), kind: TreeViewNodeKind::File, class_selector: None,
+                    icon: Some("logos:rust".into()), description: None },
+            ],
+        };
+        let options = TreeViewLayoutOptions { icon_glyphs: BTreeMap::from([(
+            "logos:typescript".into(), DiagramIconGlyph { text: "T".into(), font_family: "Icon Font".into() },
+        )]) };
+        let layout = layout_treeview_with_options(&diagram, 500.0, Some(&options));
+        assert_eq!(layout.nodes[0].icon_glyph.as_ref().map(|glyph| glyph.text.as_str()), Some("T"));
+        assert_eq!(layout.nodes[0].icon_glyph.as_ref().map(|glyph| glyph.font_family.as_str()), Some("Icon Font"));
+        assert_eq!(layout.nodes[1].icon_glyph, None);
     }
 
     #[test]

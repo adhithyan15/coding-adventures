@@ -1,0 +1,14 @@
+# Perl 5.003_09 (1996-11-26) grammar: plain-decimal arithmetic-print subset.
+# @version 1
+# PARTIAL: unsupported Perl 5.003_09 syntax is rejected.
+# Evidence: https://github.com/Perl/perl5/blob/perl-5.003_09/perly.y
+# The tagged yacc grammar rearranges lexical `my` scope handling. This pair
+# retains only its arithmetic precedence, unary minus, parenthesized terms,
+# and print statement, and does not claim complete release coverage.
+
+program         = print_statement { print_statement } ;
+print_statement = PRINT LPAREN expr RPAREN SEMICOLON ;
+expr            = term { ( PLUS | MINUS ) term } ;
+term            = unary { STAR unary } ;
+unary           = MINUS unary | atom ;
+atom            = INT | LPAREN expr RPAREN ;
