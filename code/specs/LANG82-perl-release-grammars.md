@@ -102,3 +102,8 @@ scope handling, while tokenizer changes mainly concern sigils, interpolation,
 patterns, and locale-aware numeric conversion. Preserve only the bounded
 plain-decimal arithmetic and `print` subset; reject leading-zero multi-digit
 forms and do not infer full syntax coverage from the pair.
+
+The following slice selects tagged 5.003_10. Its yacc source matches 5.003_09;
+the tokenizer changes sigil spacing and a few built-in/identifier decisions,
+outside this bounded print-arithmetic subset. It still needs its own pair and
+separate source note.
