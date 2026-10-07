@@ -6366,11 +6366,11 @@ fn parse_swimlane_edge_chain(
     lane: Option<usize>,
     diagram: &mut SwimlaneDiagram,
 ) -> Result<(), ParseError> {
-    let Some((operator_at, operator, kind)) = next_swimlane_operator(line) else {
+    let Some(operator) = next_swimlane_operator(line) else {
         return Err(swimlane_error(line_number, "invalid Swimlane edge"));
     };
     let first = parse_swimlane_node_group(
-        &line[..operator_at],
+        &line[..operator.at],
         line_number,
         lane.map(|index| diagram.lanes[index].id.clone()),
     )?;
@@ -6378,11 +6378,12 @@ fn parse_swimlane_edge_chain(
     for node in first {
         upsert_swimlane_node(diagram, node, lane);
     }
-    let mut remainder = &line[operator_at + operator.len()..];
-    let mut edge_kind = kind;
+    let mut remainder = &line[operator.at + operator.len..];
+    let mut edge_kind = operator.kind;
+    let mut inline_label = operator.label;
     loop {
         let trimmed = remainder.trim_start();
-        let (label, after_label) = if let Some(label_body) = trimmed.strip_prefix('|') {
+        let (pipe_label, after_label) = if let Some(label_body) = trimmed.strip_prefix('|') {
             let Some(close) = label_body.find('|') else {
                 return Err(swimlane_error(
                     line_number,
@@ -6396,8 +6397,12 @@ fn parse_swimlane_edge_chain(
         } else {
             (None, trimmed)
         };
+        if inline_label.is_some() && pipe_label.is_some() {
+            return Err(swimlane_error(line_number, "Swimlane edge has multiple labels"));
+        }
+        let label = inline_label.take().or(pipe_label);
         let next = next_swimlane_operator(after_label);
-        let node_text = next.map_or(after_label, |(at, _, _)| &after_label[..at]);
+        let node_text = next.as_ref().map_or(after_label, |operator| &after_label[..operator.at]);
         let nodes = parse_swimlane_node_group(
             node_text,
             line_number,
@@ -6418,11 +6423,12 @@ fn parse_swimlane_edge_chain(
         for node in nodes {
             upsert_swimlane_node(diagram, node, lane);
         }
-        let Some((at, next_operator, next_kind)) = next else {
+        let Some(next_operator) = next else {
             break;
         };
-        remainder = &after_label[at + next_operator.len()..];
-        edge_kind = next_kind;
+        remainder = &after_label[next_operator.at + next_operator.len..];
+        edge_kind = next_operator.kind;
+        inline_label = next_operator.label;
     }
     Ok(())
 }
@@ -6454,16 +6460,44 @@ fn parse_swimlane_node_group(
     Ok(nodes)
 }
 
-fn next_swimlane_operator(value: &str) -> Option<(usize, &'static str, SwimlaneEdgeKind)> {
-    [
+struct SwimlaneOperator {
+    at: usize,
+    len: usize,
+    kind: SwimlaneEdgeKind,
+    label: Option<String>,
+}
+
+fn next_swimlane_operator(value: &str) -> Option<SwimlaneOperator> {
+    let standard = [
         ("-.->", SwimlaneEdgeKind::Dotted),
         ("-->", SwimlaneEdgeKind::Directed),
         ("---", SwimlaneEdgeKind::Undirected),
         ("==>", SwimlaneEdgeKind::Thick),
     ]
     .into_iter()
-    .filter_map(|(operator, kind)| value.find(operator).map(|at| (at, operator, kind)))
-    .min_by_key(|(at, _, _)| *at)
+    .filter_map(|(operator, kind)| value.find(operator).map(|at| SwimlaneOperator {
+        at,
+        len: operator.len(),
+        kind,
+        label: None,
+    }))
+    .min_by_key(|operator| operator.at);
+    let labeled = value.match_indices("--").find_map(|(at, _)| {
+        let tail = &value[at + 2..];
+        let arrow_at = tail.find("-->")?;
+        let label = tail[..arrow_at].trim();
+        (!label.is_empty()).then(|| SwimlaneOperator {
+            at,
+            len: 2 + arrow_at + 3,
+            kind: SwimlaneEdgeKind::Directed,
+            label: Some(label.to_string()),
+        })
+    });
+    match (standard, labeled) {
+        (Some(standard), Some(labeled)) if labeled.at < standard.at => Some(labeled),
+        (Some(standard), _) => Some(standard),
+        (None, labeled) => labeled,
+    }
 }
 
 fn parse_swimlane_node(
