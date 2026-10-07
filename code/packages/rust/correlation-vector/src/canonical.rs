@@ -5,6 +5,7 @@
 //! The validation and encoding phases share one structural work allowance.
 use super::checked::Work;
 use super::{CVEntry, CVLog, Contribution, DeletionRecord, Origin};
+use super::{Journal, JournalEntity, JournalEvent, JournalRecord, JournalSequence};
 use serde::ser::{Error, SerializeMap, SerializeSeq};
 use serde::{Serialize, Serializer};
 use serde_json::Value;
@@ -48,12 +49,16 @@ impl Serialize for Canonical<'_, CVLog> {
         let log = self.0;
         let fields = 3
             + usize::from(log.compact_sequence.is_some())
+            + usize::from(log.journal.is_some())
             + usize::from(log.allocator_only_import);
         let mut map = s.serialize_map(Some(fields))?;
         map.serialize_entry("enabled", &log.enabled)?;
         map.serialize_entry("entries", &Canonical(&log.entries, self.1))?;
         if let Some(last) = log.compact_sequence {
             map.serialize_entry("identity", &Identity(last, self.1))?;
+        }
+        if let Some(journal) = &log.journal {
+            map.serialize_entry("journal", &Canonical(journal, self.1))?;
         }
         self.1.take::<S::Error>(log.pass_order.len())?;
         map.serialize_entry("pass_order", &log.pass_order)?;
@@ -65,6 +70,67 @@ impl Serialize for Canonical<'_, CVLog> {
     }
 }
 pub(super) struct Identity<'a>(pub(super) u64, pub(super) &'a Context);
+
+impl Serialize for JournalSequence {
+    fn serialize<S: Serializer>(&self, s: S) -> Result<S::Ok, S::Error> {
+        s.serialize_str(&format!("{:016x}", self.0))
+    }
+}
+impl Serialize for JournalEntity {
+    fn serialize<S: Serializer>(&self, s: S) -> Result<S::Ok, S::Error> {
+        s.serialize_str(&format!("cv1.{:016x}", self.0))
+    }
+}
+impl Serialize for Canonical<'_, Journal> {
+    fn serialize<S: Serializer>(&self, s: S) -> Result<S::Ok, S::Error> {
+        self.1.take::<S::Error>(1)?;
+        let mut map = s.serialize_map(Some(4))?;
+        map.serialize_entry("coverage", "full")?;
+        map.serialize_entry("events", &Canonical(self.0.events.as_slice(), self.1))?;
+        map.serialize_entry("last_sequence", &JournalSequence(self.0.last_sequence))?;
+        map.serialize_entry("version", "chronology-v1")?;
+        map.end()
+    }
+}
+impl Serialize for Canonical<'_, [JournalRecord]> {
+    fn serialize<S: Serializer>(&self, s: S) -> Result<S::Ok, S::Error> {
+        self.1.take::<S::Error>(self.0.len())?;
+        let mut seq = s.serialize_seq(Some(self.0.len()))?;
+        for record in self.0 {
+            seq.serialize_element(&Canonical(record, self.1))?;
+        }
+        seq.end()
+    }
+}
+impl Serialize for Canonical<'_, JournalRecord> {
+    fn serialize<S: Serializer>(&self, s: S) -> Result<S::Ok, S::Error> {
+        self.1.take::<S::Error>(1)?;
+        let mut map = s.serialize_map(Some(3))?;
+        map.serialize_entry("context", &self.0.context)?;
+        map.serialize_entry("event", &Canonical(&self.0.event, self.1))?;
+        map.serialize_entry("sequence", &self.0.sequence)?;
+        map.end()
+    }
+}
+impl Serialize for Canonical<'_, JournalEvent> {
+    fn serialize<S: Serializer>(&self, s: S) -> Result<S::Ok, S::Error> {
+        self.1.take::<S::Error>(1)?;
+        let (kind, entity, index) = match self.0 {
+            JournalEvent::Create { entity } => ("create", entity, None),
+            JournalEvent::Derive { entity } => ("derive", entity, None),
+            JournalEvent::Merge { entity } => ("merge", entity, None),
+            JournalEvent::Contribution { entity, index } => ("contribution", entity, Some(index)),
+            JournalEvent::Deletion { entity } => ("deletion", entity, None),
+        };
+        let mut map = s.serialize_map(Some(2 + usize::from(index.is_some())))?;
+        map.serialize_entry("entity", entity)?;
+        if let Some(index) = index {
+            map.serialize_entry("index", index)?;
+        }
+        map.serialize_entry("kind", kind)?;
+        map.end()
+    }
+}
 impl Serialize for Identity<'_> {
     fn serialize<S: Serializer>(&self, s: S) -> Result<S::Ok, S::Error> {
         self.1.take::<S::Error>(1)?;

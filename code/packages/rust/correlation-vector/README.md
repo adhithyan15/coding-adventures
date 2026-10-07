@@ -274,7 +274,7 @@ compiler passes         ←  contribute/derive/merge/delete as they transform th
 The CV library has no knowledge of compilers, IR nodes, or any specific domain. It is a
 pure data structure and a set of operations over it.
 
-Generic `from_json_string` imports remain allocator-only even after mutation.
+Generic `from_json_string` imports without a journal remain allocator-only even after mutation.
 Strict queries and validation reject them; their snapshots retain
 `unchecked_import: true`, which checked import rejects. This prevents a
 normalized duplicate key or omitted array from becoming checked evidence
@@ -283,3 +283,23 @@ through save/reload. Use `from_checked_json` at evidence boundaries.
 Checked parsing charges object-key work before the decoder runs and validates
 borrowed key schema/duplicates/encoded payload bytes before ownership copies.
 Escaped-string scratch is bounded by the input-byte cap.
+
+`CVLog::new_checked_chronology(limits)` starts an independent global operation
+clock on a fresh checked compact log. `journal()` borrows its read-only records;
+other constructors return `None`, meaning chronology unavailable. Accepted
+create/derive/merge/contribution/deletion operations each retain one journal
+record referencing the graph fact, without another copy of arbitrary metadata.
+The clock and CV allocator advance together only when their operation succeeds.
+For chronology logs the event cap charges graph contribution/deletion facts
+plus journal records; ordinary checked logs keep their original accounting.
+
+Full `chronology-v1` snapshots reload through both `from_checked_json` and
+`from_json_string`, retaining their next append sequence. Declared null, unknown,
+malformed or partial journals reject rather than disappear. The compatibility
+loader probes decoded root keys before allocating metadata, using default input
+and structural work limits. Canonical JSON/pretty JSON include the journal;
+NDJSON writes entry lines, then `_event` frames, then `_meta` with journal state
+and no duplicate events array. The presentation tests demonstrate reconstruction
+through a small adapter followed by the full checked importer; there is no
+direct NDJSON loader. Filtered journals retain original sequences/watermark and
+declare partial coverage, including when the filter selects every entry.

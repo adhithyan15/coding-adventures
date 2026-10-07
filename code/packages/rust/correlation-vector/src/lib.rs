@@ -57,12 +57,14 @@ mod bounded_json;
 mod canonical;
 mod checked_export;
 pub use checked_export::{SnapshotFormat, SourceFilter, SummaryFormat};
+mod checked;
 #[cfg(test)]
 mod checked_export_tests;
-mod checked;
 mod cleanup;
+mod journal;
 use checked::CheckedState;
 pub use checked::GraphLimits;
+pub use journal::{Journal, JournalEntity, JournalEvent, JournalRecord, JournalSequence};
 use serde_json::Value;
 
 // Re-export the sha256 function we use for ID generation.
@@ -263,6 +265,7 @@ pub struct CVLog {
     /// Compact mode's last allocated sequence, including unstored IDs.
     /// None retains the original hierarchical API and snapshot format.
     compact_sequence: Option<u64>,
+    journal: Option<Journal>,
 }
 
 /// Wire-only allocator state. A hex string avoids losing u64 precision in
@@ -325,6 +328,14 @@ struct LogSnapshot {
     identity: Option<CompactIdentityState>,
     #[serde(default, deserialize_with = "deserialize_present_view")]
     view: Option<Value>,
+    #[serde(default, deserialize_with = "deserialize_present_journal")]
+    journal: Option<Journal>,
+}
+
+fn deserialize_present_journal<'de, D: serde::Deserializer<'de>>(
+    deserializer: D,
+) -> Result<Option<Journal>, D::Error> {
+    Journal::deserialize(deserializer).map(Some)
 }
 
 // Keep field presence distinct from a JSON null marker: even `view: null`
@@ -393,6 +404,7 @@ impl CVLog {
             pass_sources: std::collections::HashSet::new(),
             checked: None,
             allocator_only_import: false,
+            journal: None,
         }
     }
 
@@ -572,6 +584,9 @@ impl CVLog {
             self.entries.insert(id.clone(), entry);
         }
 
+        self.append_graph_record(|| JournalEvent::Create {
+            entity: JournalEntity(compact_id_sequence(&id).expect("checked compact identity")),
+        });
         self.commit_usage(usage);
         Ok(id)
     }
@@ -636,6 +651,8 @@ impl CVLog {
             ));
         }
 
+        let index = u64::try_from(entry.contributions.len())
+            .map_err(|_| "CV contribution index exceeds supported width")?;
         entry.contributions.push(Contribution {
             source: source.to_string(),
             tag: tag.to_string(),
@@ -644,6 +661,10 @@ impl CVLog {
 
         // Track pass order — only add the source if it hasn't appeared before.
         self.record_source(source);
+        self.append_graph_record(|| JournalEvent::Contribution {
+            entity: JournalEntity(compact_id_sequence(cv_id).expect("checked compact identity")),
+            index: JournalSequence(index),
+        });
         self.commit_usage(usage);
 
         Ok(())
@@ -695,6 +716,9 @@ impl CVLog {
             self.entries.insert(id.clone(), entry);
         }
 
+        self.append_graph_record(|| JournalEvent::Derive {
+            entity: JournalEntity(compact_id_sequence(&id).expect("checked compact identity")),
+        });
         self.commit_usage(usage);
         Ok(id)
     }
@@ -746,6 +770,9 @@ impl CVLog {
             self.entries.insert(id.clone(), entry);
         }
 
+        self.append_graph_record(|| JournalEvent::Merge {
+            entity: JournalEntity(compact_id_sequence(&id).expect("checked compact identity")),
+        });
         self.commit_usage(usage);
         Ok(id)
     }
@@ -812,6 +839,9 @@ impl CVLog {
         if self.checked.is_some() {
             self.record_source(source);
         }
+        self.append_graph_record(|| JournalEvent::Deletion {
+            entity: JournalEntity(compact_id_sequence(cv_id).expect("checked compact identity")),
+        });
         self.commit_usage(usage);
         Ok(())
     }
@@ -1056,6 +1086,9 @@ impl CVLog {
     /// assert_eq!(log2.get(&id).unwrap().id, id);
     /// ```
     pub fn from_json_string(s: &str) -> Result<Self, String> {
+        if bounded_json::declares_journal(s)? {
+            return Self::from_checked_json(s, GraphLimits::default());
+        }
         let snap: LogSnapshot =
             serde_json::from_str(s).map_err(|e| format!("deserialization error: {}", e))?;
         Self::from_snapshot(snap)
@@ -1157,6 +1190,7 @@ impl CVLog {
             base_counters,
             child_counters,
             compact_sequence,
+            journal: None,
         })
     }
 }

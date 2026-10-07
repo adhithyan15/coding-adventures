@@ -4,6 +4,21 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - independent bounded graph chronology (CV03)
+
+Fresh `new_checked_chronology` logs retain typed, read-only globally sequenced
+create/derive/merge/contribution/deletion references. Prospective graph and
+journal admission share event/work accounting and reject before consuming
+either watermark. Strict bounded import independently replays node allocation,
+parent creation, contribution indices, tombstones, complete fact coverage and
+first contributor inventory. Present malformed/null/unknown/partial journals
+reject through both import APIs; valid full journals preserve append state.
+Compatibility loading first performs a bounded root-presence probe without
+retaining a metadata tree. Canonical compact/pretty JSON borrow records; NDJSON
+adds `_event` frames and a state-only footer. Filtered views retain original
+sequence gaps/watermark and declare partial coverage, requiring full validation
+before selection. Scheduler invocation scopes are the remaining CV03 work.
+
 ### Added - bounded checked presentation exports (CV02)
 
 Borrowed `SourceFilter`, `SnapshotFormat` and `SummaryFormat` drive fallible

@@ -262,7 +262,7 @@ impl CVLog {
         Ok(())
     }
     pub(super) fn prospective_node(
-        &self,
+        &mut self,
         parents: &[&str],
         origin: Option<&Origin>,
     ) -> Result<Option<Usage>, String> {
@@ -300,10 +300,14 @@ impl CVLog {
             work: &mut work,
         };
         payload.origin(origin)?;
-        Ok(Some(payload.usage))
+        let usage = payload.usage;
+        let limits = state.limits.clone();
+        Ok(Some(
+            self.prepare_journal_record(usage, &limits, &mut work)?,
+        ))
     }
     pub(super) fn prospective_event(
-        &self,
+        &mut self,
         id: &str,
         source: &str,
         tag: &str,
@@ -334,7 +338,11 @@ impl CVLog {
         if !self.pass_sources.contains(source) {
             payload.text(source)?;
         }
-        Ok(Some(payload.usage))
+        let usage = payload.usage;
+        let limits = state.limits.clone();
+        Ok(Some(
+            self.prepare_journal_record(usage, &limits, &mut work)?,
+        ))
     }
     pub(super) fn commit_usage(&mut self, usage: Option<Usage>) {
         if let Some(usage) = usage {
@@ -533,10 +541,11 @@ impl CVLog {
                 return Err("duplicate CV stage declaration".into());
             }
         }
-        let usage = payload.usage;
+        let mut usage = payload.usage;
         if declared_sources != seen_sources {
             return Err("CV stage declarations do not match recorded events".into());
         }
+        self.validate_journal(&mut usage, limits, &mut work)?;
         if let Some(state) = &self.checked {
             if verify_usage && state.usage != usage {
                 return Err("checked CV retained usage is inconsistent".into());
@@ -686,6 +695,7 @@ impl CVLog {
                 usage: Usage::default(),
             }),
             allocator_only_import: false,
+            journal: snapshot.journal,
         };
         let usage = log.validated_graph_with_work(&limits, false, work)?.usage;
         log.checked.as_mut().unwrap().usage = usage;

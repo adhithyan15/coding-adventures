@@ -4,8 +4,8 @@
 //! log first, then charge the reference index, comparisons, sorting and encoding
 //! against that same operation. Every byte goes through one bounded sink.
 use super::canonical::{BoundedWriter, Canonical, Context, Identity};
-use super::{CVEntry, CVLog};
-use serde::ser::SerializeMap;
+use super::{CVEntry, CVLog, JournalRecord, JournalSequence};
+use serde::ser::{SerializeMap, SerializeSeq};
 use serde::{Serialize, Serializer};
 use std::cell::RefCell;
 use std::io::Write;
@@ -40,6 +40,7 @@ pub enum SummaryFormat {
 struct View<'a> {
     log: &'a CVLog,
     entries: Vec<(&'a String, &'a CVEntry)>,
+    records: Vec<&'a JournalRecord>,
     filtered: bool,
     context: Context,
     output_cap: usize,
@@ -60,9 +61,27 @@ impl<'a> View<'a> {
         }
         context.0.borrow_mut().take(entries.len())?;
         entries.sort_unstable_by(|a, b| a.0.cmp(b.0));
+        // The selection index borrows fixed-size entity keys. Charging its
+        // construction and each journal visit keeps filtering inside the same
+        // work allowance as validation and serialization.
+        let mut records = Vec::new();
+        if let Some(journal) = &log.journal {
+            context.0.borrow_mut().take(entries.len())?;
+            let selected: std::collections::HashSet<_> =
+                entries.iter().map(|(id, _)| id.as_str()).collect();
+            for record in journal.events() {
+                context.0.borrow_mut().take(1)?;
+                let entity = record.event.entity();
+                let id = format!("cv1.{:016x}", entity.sequence());
+                if filter.sources.is_empty() || selected.contains(id.as_str()) {
+                    records.push(record);
+                }
+            }
+        }
         Ok(Self {
             log,
             entries,
+            records,
             filtered: !filter.sources.is_empty(),
             context,
             output_cap: limits.max_output_bytes,
@@ -112,6 +131,7 @@ impl Serialize for Root<'_> {
         let fields = 2
             + usize::from(self.1)
             + usize::from(view.log.compact_sequence.is_some())
+            + usize::from(view.log.journal.is_some())
             + usize::from(view.filtered);
         let mut map = serializer.serialize_map(Some(fields))?;
         map.serialize_entry("enabled", &view.log.enabled)?;
@@ -120,6 +140,9 @@ impl Serialize for Root<'_> {
         }
         if let Some(last) = view.log.compact_sequence {
             map.serialize_entry("identity", &Identity(last, &view.context))?;
+        }
+        if view.log.journal.is_some() {
+            map.serialize_entry("journal", &JournalView(view, self.1))?;
         }
         view.context.take::<S::Error>(view.log.pass_order.len())?;
         map.serialize_entry("pass_order", &view.log.pass_order)?;
@@ -130,6 +153,52 @@ impl Serialize for Root<'_> {
     }
 }
 struct Entries<'a>(&'a View<'a>);
+/// JSON retains selected records; the NDJSON footer retains only their common
+/// version, declared coverage and original watermark. Gaps never get renumbered.
+struct JournalView<'a>(&'a View<'a>, bool);
+impl Serialize for JournalView<'_> {
+    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        let view = self.0;
+        view.context.take::<S::Error>(1)?;
+        let mut map = serializer.serialize_map(Some(3 + usize::from(self.1)))?;
+        map.serialize_entry("coverage", if view.filtered { "partial" } else { "full" })?;
+        if self.1 {
+            map.serialize_entry("events", &Records(view))?;
+        }
+        map.serialize_entry(
+            "last_sequence",
+            &JournalSequence(
+                view.log
+                    .journal
+                    .as_ref()
+                    .expect("journal view")
+                    .last_sequence(),
+            ),
+        )?;
+        map.serialize_entry("version", "chronology-v1")?;
+        map.end()
+    }
+}
+struct Records<'a>(&'a View<'a>);
+impl Serialize for Records<'_> {
+    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        self.0.context.take::<S::Error>(self.0.records.len())?;
+        let mut seq = serializer.serialize_seq(Some(self.0.records.len()))?;
+        for record in &self.0.records {
+            seq.serialize_element(&Canonical(*record, &self.0.context))?;
+        }
+        seq.end()
+    }
+}
+struct EventFrame<'a>(&'a JournalRecord, &'a Context);
+impl Serialize for EventFrame<'_> {
+    fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        self.1.take::<S::Error>(1)?;
+        let mut map = serializer.serialize_map(Some(1))?;
+        map.serialize_entry("_event", &Canonical(self.0, self.1))?;
+        map.end()
+    }
+}
 impl Serialize for Entries<'_> {
     fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         self.0.context.take::<S::Error>(self.0.entries.len())?;
@@ -188,6 +257,11 @@ impl CVLog {
             SnapshotFormat::Ndjson => {
                 for (_, entry) in &view.entries {
                     serde_json::to_writer(&mut writer, &Canonical(*entry, &view.context))
+                        .map_err(serialization)?;
+                    writer.write_all(b"\n").map_err(serialization)?;
+                }
+                for record in &view.records {
+                    serde_json::to_writer(&mut writer, &EventFrame(record, &view.context))
                         .map_err(serialization)?;
                     writer.write_all(b"\n").map_err(serialization)?;
                 }
