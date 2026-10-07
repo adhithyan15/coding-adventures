@@ -610,6 +610,11 @@ retain the engine's read guards. The in-memory include API checks unused files,
 names, count, and aggregate bytes before copying them into `MemoryFs`.
 
 **Slice 4 — the C dialect, and real C.**
+The first publishable stage establishes the directive lexer, bounded token
+parser handoff, and a deliberately limited C dialect with direct engine tests.
+It does not satisfy Slice 4's end-to-end acceptance until the C frontend uses
+that preprocessed stream and the remaining C macro and condition semantics are
+implemented.
 `c.tokens` stops discarding `#…` lines; `c-lexer` surfaces directive tokens; a
 `CDialect` implements §5; `c-to-semantic-ir` runs the engine as its
 `post_tokenize` hook. `SIR27`'s preprocessor scope statement is updated.

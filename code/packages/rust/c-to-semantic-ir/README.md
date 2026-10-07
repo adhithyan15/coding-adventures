@@ -18,6 +18,10 @@ pending. The existing C source behavior is unchanged at this stage.
 
 ## API
 
+The PREP01 C directive adapter is currently a staged component. The public
+`compile_source` API below still uses the legacy C source parser path; it does
+not run the generic preprocessor yet.
+
 ```rust
 use c_to_semantic_ir::compile_source;
 let module = compile_source(
