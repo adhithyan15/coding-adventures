@@ -10,8 +10,8 @@ export default [
     caseOrder: 95,
     name: "keeps Bengali after every older script, with its letters and cited rows intact",
     verify: ({ SCRIPTS }) => {
-      // Bengali was the last tab until Gurmukhi joined after it.
-      expect(SCRIPTS.at(-2)!.script).toBe("bengali");
+      // Bengali was the last tab until Gurmukhi, then Latin, joined after it.
+      expect(SCRIPTS.at(-3)!.script).toBe("bengali");
       const bengali = SCRIPTS.find((script) => script.script === "bengali")!;
       expect(bengali.letters).toHaveLength(30);
       expect(bengali.letters.slice(0, 4).map((letter) => letter.glyph)).toEqual(["আ", "ই", "এ", "ও"]);

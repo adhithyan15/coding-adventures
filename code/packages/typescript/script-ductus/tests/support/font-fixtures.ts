@@ -56,3 +56,7 @@ export const bengaliOutline = (character: string) =>
   outline("NotoSansBengali-Static.ttf", character);
 export const gurmukhiOutline = (character: string) =>
   outline("NotoSansGurmukhi-Static.ttf", character);
+// The Latin letters are read from the Noto Sans Latin glyphs that the bundled
+// Devanagari font carries (it has ñ, ß, ¿ and ¡; the Cyrillic subset does not).
+export const latinOutline = (character: string) =>
+  outline("NotoSansDevanagari-Static.ttf", character);

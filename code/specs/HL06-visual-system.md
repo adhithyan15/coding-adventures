@@ -607,6 +607,29 @@ in use (no X or Y), ß, œ, the cited ñ, ¿ and ¡, and seven combining marks
 false. Only the 18 cited rows carry an order. Letter anchoring and script
 closure already skip Latin tracks, so their ceilings do not move.
 
+**As built.** As designed: owner `strokes/latin.ts` (keys `latin:<glyph>`,
+appended last), 18 glyphs, every stroke 1.000 on ink at the default
+tolerances and nothing untraced. Simple letters are one movement (c l o s w),
+most others two (the stem, then "back up" and the rest), so a word strip stays
+short; ñ is three movements over two strokes. Every record's `variation`
+carries the UJI counts at the source's count (for example n: 119 of 120 one
+stroke, 74 of those from the top left), and says where adults differ from the
+school model: most start l at the bottom, as a joined hand does, and UJI has
+no ß, so ß rests on the school model alone. The sequence renderer draws each
+letter at its own scale, so narrow letters (i, l, ¡) print tall, and the
+fourteen-letter Großschreibung strip is the tallest figure in the corpus
+(about 2,380 units, against about 1,800 for the longest earlier strips); the
+block-figure macro shrinks it to 0.45 of the text height.
+
+**Divergence: the inventory.** It also lists the ordinal indicators ª and º
+(Portuguese "1.º / 1.ª" is a headword): they are Latin-script letters the
+design's census missed, because their Unicode names do not say "Latin". And
+the validator's glyph closure turned out not to measure Latin at all (its
+script matchers leave Latin out, so a Latin headword can never report a gap),
+so the inventory's exactness is held by its own evidence module instead: every
+Latin character of every Latin-track headword is listed, and every listed one
+is read.
+
 ### Class B — data diagrams (generated)
 
 Etymology and cousin-web trees built from lesson `roots`, sound-articulation diagrams

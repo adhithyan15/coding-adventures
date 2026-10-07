@@ -1029,6 +1029,16 @@ before XeLaTeX runs.
   letter lists) print a strip. A Gurmukhi word is never composed, because one
   headline runs across it, as in Devanagari.
 
+  Spanish and German followed Punjabi, the first Latin-script tracks.
+  `data/scripts/latin.json` holds exactly the Latin characters the six
+  Latin-script tracks' headwords use (NFD), and 18 of its rows cite the
+  Grundschrift-App or UJIpenchars2's native Spanish writers. `latin` is in
+  `SEPARATE_LETTER_SCRIPTS`, since print letters stand apart, so five lessons
+  print a strip: ñ, "¿ ¡", ß, and the words Großschreibung and weil. Every
+  other Latin writing lesson holds an a, which no source draws in the
+  two-storey form Noto prints, or an uncited mark, so French, Italian,
+  Portuguese and Latin stay switched off.
+
 Print the registry-ordered track table on demand, or verify that its former
 tracked projection remains absent:
 
