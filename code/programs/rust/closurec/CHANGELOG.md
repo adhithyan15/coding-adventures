@@ -4,6 +4,13 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - explicit whitespace limit overrides reject (CV02 review)
+
+Only the exactly empty absent-flag mapping selects default limits. Explicit
+spaces, mixed ASCII whitespace and Unicode whitespace now fail the empty-pair
+grammar. Actual-process regressions first returned exit 0; they now require exit
+1, the empty-pair diagnostic on stderr, empty stdout and preserved destinations.
+
 ### Fixed - checked export failures precede artifact writes (CV02)
 
 Replace snapshot/pretty/filter/NDJSON and text/JSON/KV summary Value round trips

@@ -117,7 +117,13 @@ identical sidecar/summary bytes and unchanged JavaScript. Fresh full compiler:
 both strict all-target lint, 885 valid lessons, whitespace clean. A fixture
 selected a random tombstoned map key in the first full run; it now selects a
 live identity explicitly and the complete library suite passes. These are local
-checks, with the new implementation awaiting independent checkpoint review.
+checks. Independent review at 5a220f6e4a passed the implemented security scope
+and found one override-grammar correctness defect: explicit whitespace selected
+defaults. ASCII/mixed/Unicode-whitespace process probes reproduced exit 0 before
+repair; the absent-value check now tests exact emptiness and rejects those pairs.
+All seven critical process tests, 11 surface tests, two typed-AST alias tests and
+35 configuration unit tests pass after repair, with strict compiler lint and
+887 valid lessons. Final checkpoint review remains required before publishing.
 Current remaining CV02 work: transactional artifact publication/content identity, final full-scope exact-head
 security review and actual CI/merge verification. Configuration and diagnostic
 names are specified before their implementation.

@@ -125,6 +125,9 @@ fn checked_limits_are_real_cli_configuration_with_tracing_neutral_success() {
 #[test]
 fn checked_limits_reject_bad_override_syntax_even_without_tracing() {
     for (raw, detail) in [
+        (" ", "empty override pair"),
+        ("\t \n", "empty override pair"),
+        ("\u{2003}", "empty override pair"),
         ("max_nodes=-1", "unsigned"),
         ("max_nodes=+1", "unsigned"),
         ("max_nodes=1.0", "unsigned"),

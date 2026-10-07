@@ -693,7 +693,9 @@ fn parse_correlation_vector_limits(
     let mut limits = coding_adventures_correlation_vector::GraphLimits::default();
     let invalid = ConfigError::InvalidProvenanceLimits;
     let mut seen = std::collections::HashSet::new();
-    if !raw.trim().is_empty() {
+    // Only the exactly empty mapped absent value selects defaults. Whitespace
+    // supplied explicitly still contains a pair and must satisfy its grammar.
+    if !raw.is_empty() {
         for pair in raw.split(',') {
             if pair.trim().is_empty() {
                 return Err(invalid("empty override pair".into()));
