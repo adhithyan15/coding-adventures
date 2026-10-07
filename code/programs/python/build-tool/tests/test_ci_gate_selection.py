@@ -37,6 +37,7 @@ EXPECTED_IDS = (
     "ci-gate-selection/null-changed-files",
     "ci-gate-selection/package-and-path",
     "ci-gate-selection/recursive-glob",
+    "ci-gate-selection/shared-pattern-at-limit",
     "ci-gate-selection/unrelated-change",
 )
 
