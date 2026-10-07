@@ -5702,7 +5702,8 @@ pub fn parse_cynefin(source: &str) -> Result<CynefinDiagram, ParseError> {
             current_domain = None; continue;
         }
         if let Some((from, rest)) = line.split_once("-->") {
-            let (to, label) = rest.split_once(':').map_or((rest, None), |(to, label)| (to, Some(label.trim().trim_matches('"').to_string())));
+            let (to, label) = rest.split_once(':').map_or((rest, None), |(to, label)|
+                (to, parse_cynefin_quoted_string(label.trim())));
             let from = from.trim().to_ascii_lowercase(); let to = to.trim().to_ascii_lowercase();
             if from != to { diagram.transitions.push(CynefinTransition { from, to, label }); }
             current_domain = None; continue;
@@ -5713,15 +5714,28 @@ pub fn parse_cynefin(source: &str) -> Result<CynefinDiagram, ParseError> {
                 else { diagram.domains.push(CynefinDomain { name: lower, items: Vec::new() }); diagram.domains.len() - 1 };
             current_domain = Some(domain_index); continue;
         }
-        if line.starts_with('"') && line.ends_with('"') {
+        if let Some(label) = parse_cynefin_quoted_string(line) {
             let Some(domain) = current_domain.and_then(|domain| diagram.domains.get_mut(domain)) else {
                 return Err(ParseError { message: "Cynefin item requires a preceding domain".into(), line: line_number, col: 1 });
             };
-            domain.items.push(line.trim_matches('"').to_string()); continue;
+            domain.items.push(label); continue;
         }
         return Err(ParseError { message: format!("unsupported Cynefin statement: {line}"), line: line_number, col: 1 });
     }
     Ok(diagram)
+}
+
+fn parse_cynefin_quoted_string(value: &str) -> Option<String> {
+    let quote = value.chars().next()?;
+    if !matches!(quote, '\'' | '"') || value.chars().last()? != quote { return None; }
+    let mut chars = value[quote.len_utf8()..value.len() - quote.len_utf8()].chars();
+    let mut output = String::new();
+    while let Some(ch) = chars.next() {
+        if ch != '\\' { output.push(ch); continue; }
+        let escaped = chars.next()?;
+        output.push(match escaped { 'n' => '\n', 'r' => '\r', 't' => '\t', 'b' => '\u{0008}', 'f' => '\u{000c}', other => other });
+    }
+    Some(output)
 }
 
 fn parse_cynefin_config(source: &str) -> CynefinConfig {

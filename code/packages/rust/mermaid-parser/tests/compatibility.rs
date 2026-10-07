@@ -195,6 +195,11 @@ fn pinned_cynefin_subset_corpus_parses_to_domain_map_ir() {
             assert_eq!(diagram.config.style.boundary_color, "#334455");
             assert_eq!(diagram.config.style.complex_bg, "#ddeedd");
         }
+        if name == "quoted-strings" {
+            assert_eq!(diagram.domains[0].items,
+                ["Single quoted", "Escaped \"quote\" and \\ slash", "Line\nfeed"]);
+            assert_eq!(diagram.transitions[0].label.as_deref(), Some("Shift's label"));
+        }
     }
     assert_eq!(parse_cynefin("cynefin-beta\nclear").expect("default seed source").config.seed, 145_697_634);
     assert_eq!(parse_cynefin("%%{init: {\"cynefin\": {\"seed\": 0}}}%%\ncynefin-beta\nclear")
