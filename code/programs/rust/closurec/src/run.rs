@@ -1149,7 +1149,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // contributions through the per-file loop and dump them at
     // the end of `run_compiler` to a side-channel file
     // (`closurec-cv.json` by default) when enabled.
-    let mut cv_log = coding_adventures_correlation_vector::CVLog::new(
+    let mut cv_log = coding_adventures_correlation_vector::CVLog::new_compact(
         config.special_modes.correlation_vector,
     );
     // CLOC11.62: per-file CV IDs accumulate so the post-loop
@@ -2346,11 +2346,14 @@ fn format_cv_log_ndjson(
     }
     // Append the metadata footer line.
     let mut meta = serde_json::Map::new();
-    if let Some(po) = root.get("pass_order") {
-        meta.insert("pass_order".to_string(), po.clone());
-    }
-    if let Some(en) = root.get("enabled") {
-        meta.insert("enabled".to_string(), en.clone());
+    // Copy all log-level metadata, including the compact allocator's watermark
+    // and any filtered-view declaration. Clone metadata only, not the entries.
+    if let Some(object) = root.as_object() {
+        for (key, value) in object {
+            if key != "entries" {
+                meta.insert(key.clone(), value.clone());
+            }
+        }
     }
     let mut footer = serde_json::Map::new();
     footer.insert("_meta".to_string(), serde_json::Value::Object(meta));
@@ -2437,6 +2440,12 @@ fn prune_entries_by_source(
         // matches (blocklist).
         if invert { !matches } else { matches }
     });
+    if root.get("identity").is_some() {
+        // A source projection is not a complete graph, even if all remaining
+        // edges happen to resolve. Retain allocator metadata but do not let a
+        // consumer mistake the projection for a full reloadable run log.
+        root["view"] = serde_json::json!({"filtered": true, "complete": false});
+    }
 }
 
 /// Format the contents of an `--output_manifest` file from a

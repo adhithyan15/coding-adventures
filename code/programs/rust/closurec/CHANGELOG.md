@@ -4,6 +4,15 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Changed - compact provenance identities (CV01 / CCR-065)
+
+The shared compiler CV log uses compact-v1 IDs with bounded length independent
+of ancestry depth. JSON/pretty JSON and NDJSON retain allocation metadata;
+filtered sidecars declare partial views rather than full reloadable ancestry.
+CLI tests preserve tracing-neutral emitted bytes and connected primitive fold
+history across formats. Compact allocation does not finish graph validation,
+canonical serialization, composite/source/output coverage or compiler parity.
+
 ### Fixed - oracle capture counter compiles on current CI Rust
 
 The oracle-refresh example reserves aggregate capture bytes with a checked

@@ -170,6 +170,20 @@ as lineage. Composite node spans, other transformations, deletion/motion/inlinin
 events and output-byte/source-map joins remain required by
 [CCR-065](https://github.com/adhithyan15/coding-adventures/issues/15830).
 
+[CV01](../../../specs/CV01-compact-compiler-identities.md) uses compact-v1
+identities in the shared compiler log: `cv1.` plus sixteen hex digits, with
+ancestry carried by parent edges. JSON/pretty JSON and NDJSON preserve the
+allocator version and last-issued watermark, so reload cannot reuse IDs issued
+while storage was disabled. Filtered sidecars explicitly declare partial views
+and are rejected as full reloadable compact logs. NONE still computes the log
+and optional summary without writing a sidecar.
+
+Compact IDs bound identity length, not graph size or query/serialization work.
+Validated resource limits, deterministic serialization and actual pass/sweep
+event chronology remain required foundation work in
+[#16868](https://github.com/adhithyan15/coding-adventures/issues/16868).
+Allocation sequence and the scheduled `passes` list do not supply that chronology.
+
 ### Measured parity
 
 `tests/diff/ladder_*` is an ordered complexity ladder compiled by both

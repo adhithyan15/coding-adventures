@@ -2,10 +2,10 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 **Last reprioritized:** 2026-10-07
-**Current selection:** CCR-065 primitive fold lineage, specified in
-[CLOC31](CLOC31-primitive-fold-lineage.md), branch
-`codex/closurec-fold-lineage-20261007`. No competing Closure PR at selection.
-**Current audit base:** `8ec899e565e2e73eb01c48107acdbe54a66c457a`
+**Current selection:** CCR-065 compact compiler identities, specified in
+[CV01](CV01-compact-compiler-identities.md), branch
+`codex/closurec-compact-ids-20261007`. No competing Closure/shared-stack PR at selection.
+**Current audit base:** `84252d038a9fa2eddb5f92833d0de242969e45c8`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
@@ -22,16 +22,41 @@ completion chat and re-audits live PR state rather than hardcoding a head.
 CCR-065's original bridge audit is stale: CLOC27 already propagates token CVs
 onto leaves and shares the real log. Live inspection found its golden trace
 assertion only proves token presence, while primitive folds read absent
-composite CVs and lose replacement lineage. CLOC31 is the selected repair;
+composite CVs and lose replacement lineage. CLOC31 repaired that primitive gap;
 its stronger end-to-end graph assertions failed before implementation.
 A context probe additionally caught CV metadata disabling conditional collapse
-inside primitive, array and call branches. The selected slice includes native
+inside primitive, array and call branches. The merged slice includes native
 recursive AST equality excluding only CVs, preserving signed-zero distinctions
 and both collapsed primitive branch histories. Context regressions failed
 before these safeguards. Composite lineage and the remaining fold families
 still require the broader provenance/tracing-neutrality audit.
 
-Required next slices: audit remaining fold families; stable composite identities
+CLOC31 merged as [#16866](https://github.com/adhithyan15/coding-adventures/pull/16866)
+at `84252d038a9fa2eddb5f92833d0de242969e45c8`. All 34 attached checks were
+terminal and acceptable on reviewed head `3fa64764eef9de761fb198b22ff9e6191a13de2f`,
+including macOS/Ubuntu/Windows builds and both required gates. Fetched-main
+reachability and matching repaired files were verified. Its clean worktree was
+archived after preserving validation artifacts. CI compatibility repairs retained
+the scheduler's atomic test budget and oracle tool's 32 MiB capture limit.
+
+The next foundation is [#16868](https://github.com/adhithyan15/coding-adventures/issues/16868):
+compact IDs, validated/bounded graph operations and canonical serialization.
+Direct-library depth 1024 has a 2,058-byte final ID and 3,258,509-byte JSON log;
+doubling depth nearly quadruples identity overhead. Shared-ancestor lineage can
+put a child before its parent. The library accepts and reserializes dangling
+parents, mismatched entry IDs and cycles. Five identical fresh CLI runs produced
+five different sidecar byte strings despite structurally equal graphs. CV01
+selects compact allocation first; it does not complete those other requirements.
+
+The remaining-fold inventory is
+[#16875](https://github.com/adhithyan15/coding-adventures/issues/16875).
+Actual SIMPLE/ADVANCED CLI probes fold Math.abs, string case conversion,
+array.join and Object.keys while losing final fold events; the Math.abs input
+retains only the unary child's history. All traced/untraced bytes match. These
+are initial cases requiring result-owned graph tests, not a complete inventory.
+
+Required next slices: compact IDs and checked/bounded graph/serialization APIs;
+audit remaining fold families; stable composite identities
 and shared source spans on the canonical ESTree boundary; typed lineage events
 with actual pass/sweep ordering; all mutating passes (inline/rename first),
 including one-to-many inlining, many-to-one merges, motion and deletion;
@@ -289,7 +314,7 @@ finding is cli-builder local/global same-ID shadowing
 | Rank | ID | Work item | Acceptance evidence | Status |
 |---:|---|---|---|---|
 | 7 | CCR-007 | Wire real VLQ source maps through parser spans, transforms, emitter, wrappers, and output paths. | Upstream source-map vectors plus multi-file, Unicode, wrapper, stdin, and transformed-token end-to-end tests match decoded mappings. | Ready |
-| 7.1 | CCR-065 | **EPIC** — real end-to-end provenance: trace any output byte back through every pass that touched it, including motion, inlining, renaming, and deletion. The bridge writes `cv: None` in 117 places and `cv: Some` nowhere, so no AST node carries an identity; pass contributions attach to the program root, not to nodes; only `constant-fold` records lineage; there is no edge vocabulary for moved/inlined-into/merged/renamed/deleted. | For a program exercising folding, inlining, renaming, motion, and deletion, the sidecar answers: source span of an output byte, every pass that touched it in real order, every call site an inlined body reached, a renamed binding's original name, and a tombstone for deleted code with the responsible pass. | Ready (slice P1 first) — [#15830](https://github.com/adhithyan15/coding-adventures/issues/15830) |
+| 7.1 | CCR-065 | **EPIC** — real end-to-end provenance: trace output bytes through folding, motion, inlining, renaming and deletion. Leaf CVs and CLOC31 primitive lineage are implemented; composite identities, remaining fold families, exact source/output spans, typed chronology and validated bounded graphs remain incomplete. Historical zero-identity bridge counts are superseded by the recovery audit above. | For a program exercising folding, inlining, renaming, motion, and deletion, the sidecar answers: source span of an output byte, every pass that touched it in real order, every call site an inlined body reached, a renamed binding's original name, and a tombstone for deleted code with the responsible pass. | Active: CV01 foundation [#16868](https://github.com/adhithyan15/coding-adventures/issues/16868), remaining folds [#16875](https://github.com/adhithyan15/coding-adventures/issues/16875), epic [#15830](https://github.com/adhithyan15/coding-adventures/issues/15830) |
 | 8 | CCR-008 | Define and enforce `language_in`; stop treating accepted syntax as independent of the selected input mode. | Current upstream accept/reject corpus matches diagnostics and exit status for representative ECMAScript modes. | Ready |
 | 9 | CCR-009 | Implement `language_out` and TRANSPILE_ONLY as real lowering stages rather than identity. Start with optional chaining/nullish coalescing and class features. | Runtime-equivalent output and upstream differential tests across at least two output modes. | Ready |
 | 10 | CCR-010 | Extend binding targets across AST, parser, typed bridge, scope analysis, passes, and emitter for array/object destructuring. | Existing declined conformance cases become value-checked; declaration, assignment, parameter, rest, default, and loop targets pass. | Ready |
