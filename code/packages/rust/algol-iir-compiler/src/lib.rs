@@ -4029,7 +4029,7 @@ impl Compiler {
                 if !self.proc_sigs.contains_key(&target_name)
                     && matches!(
                         target_name.as_str(),
-                        "abs" | "sqrt" | "sin" | "cos" | "ln" | "exp" | "arctan"
+                        "abs" | "sign" | "sqrt" | "sin" | "cos" | "ln" | "exp" | "arctan"
                     )
                 {
                     let actuals = self.standard_fn_actuals(node);
@@ -12919,6 +12919,36 @@ mod tests {
                         == Some("__basic_print_real")
             }));
         }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_builtin_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := sign(pick()); output(x) end",
+            "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(sign(pick()))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "built-in sign widening must preserve runtime-real formatter provenance for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_does_not_trust_sign_overrides() {
+        let err = compile_source(
+            "begin real procedure pick; pick := -2.25; integer procedure sign(x); value x; real x; sign := 1; real result; result := sign(pick()); output(result) end",
+            "test",
+        )
+        .expect_err("a user-declared sign override has no built-in bounded-result proof");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
     #[test]
