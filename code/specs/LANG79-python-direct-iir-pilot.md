@@ -25,6 +25,11 @@ Errors must identify unsupported syntax rather than silently omit it.
 Python float division by zero raises an error; the VM lowering must check that
 case rather than inheriting an IEEE infinity result from a generic `f64` divide.
 
+The pilot rejects source larger than 64 KiB before tokenization. Its AST-input
+entry point also rejects trees exceeding 16,384 nodes or tokens, or 64 nested
+grammar nodes, before recursive lowering. These limits bound frontend and
+generated-IIR work even when an AST is supplied directly by another caller.
+
 `print` is a Python-specific VM builtin registered by the Rust runner. It
 prints one float and a newline. Its accepted display range is zero and finite
 values with absolute magnitude from `1e-4` through `1e15`; values outside
@@ -42,6 +47,8 @@ boundary. This display restriction does not change arithmetic semantics.
 - `print(1.0 / 0.0)` raises a division-by-zero error on the native runner.
 - The emitted `IIRModule` validates before execution; tests confirm that the
   Rust runner does not invoke a host Python process.
+- Oversized source and directly supplied deep or wide ASTs fail with explicit
+  pilot-limit errors before lowering.
 
 The slice is an interpreter pilot, not a Python engine completion claim.
 Bindings, integers, strings, truth, control flow, functions, exceptions,
