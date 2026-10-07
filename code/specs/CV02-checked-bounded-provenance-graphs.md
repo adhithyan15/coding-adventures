@@ -55,6 +55,20 @@ after this foundation. CV02 must not close CCR-065 or the compiler umbrella.
 
 ## Limits and mutation transactions
 
+Initial API names: `GraphLimits` exposes `max_nodes`, `max_edges`, `max_events`,
+`max_metadata_values`, `max_metadata_depth`, `max_metadata_bytes`,
+`max_input_bytes`, `max_work` and `max_output_bytes` with checked defaults.
+`CVLog::new_checked_compact(limits)` returns a fallible enabled checked log;
+`CVLog::from_checked_json(s, limits)` requires complete checked recording.
+`try_ancestors`, `try_descendants` and `try_lineage` are fallible queries;
+`try_lineage` returns borrowed entries. `entries()`, `pass_order()` and
+`is_enabled()` expose read-only state. Existing allocation `try_*` methods and
+`contribute` enforce checked policy on a checked log; add `try_delete` and
+`try_passthrough` for fallible compiler use. Final code must propagate each
+error to its compiler/pass/lexer/parser boundary, rather than leaving `let _`
+around a newly fallible operation. Snapshot and query errors may retain their
+existing string error representation if diagnostics remain clear and useful.
+
 Limits cover retained nodes, parent edges including repeated edges, contribution
 and deletion events, metadata JSON values/depth and bytes, input bytes,
 operation work and serialized output bytes. Every addition uses checked integer
