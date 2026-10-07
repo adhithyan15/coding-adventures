@@ -347,8 +347,14 @@ write complete bytes, sync, and preserve existing file permissions. Track each
 owned path immediately; parent creation records only directories this operation
 actually created. All staging completes before replacing any destination.
 
-Move the existing regular file to its private backup only after rechecking its
-identity and observed metadata. Install the complete stage using a no-clobber
+Back up the existing regular file only after rechecking its identity and observed
+metadata. Create the backup with an exclusive no-clobber hard link, track that
+path's creation immediately, then remove only the still-observed original
+destination. An unexpected backup occupant must remain untouched, including
+one which is a hard link to the original: identity alone does not establish
+ownership of that pathname. Failure after creating the backup but before
+removing the original recognizes the original as already restored and removes
+only the backup link this operation created. Install the complete stage using a no-clobber
 hard link: a newly appeared destination cannot be overwritten. Keep a private
 stage link for ownership checks. Filesystems unable to provide the required
 identity/hard-link semantics reject before claiming success. On a reported
@@ -356,6 +362,9 @@ pre-commit error, roll back in reverse order: remove only a destination whose
 identity matches the held staged file, restore the original with a no-clobber
 link and retain recovery copies when restoration is obstructed. Include the
 original failure and every rollback/cleanup failure with exact recovery paths.
+If no original backup was created, failed destination removal reports that
+destination and its unconfirmed removal instead of naming a nonexistent recovery
+file. Cleanup removes backup links only when their creation was recorded.
 Never recursively delete a user directory or overwrite an unknown replacement.
 Concurrency checks detect replacements at operation boundaries; this transaction
 does not claim to serialize arbitrary outside modifications between syscalls.
