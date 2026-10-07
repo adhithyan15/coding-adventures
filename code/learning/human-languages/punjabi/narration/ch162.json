@@ -4,7 +4,7 @@
   "chapter": 162,
   "title": "Return to Three Familiar A1 Writing Moves",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5acacd54745da998",
+  "sourceHash": "fnv1a64:114977bed3d487e8",
   "lessons": [
     {
       "id": "PA-W16-form-mixed-return",
@@ -20,7 +20,7 @@
         "writing-type",
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:b95f93e9fdb740ef",
+      "sourceHash": "fnv1a64:6c7d0d185f318a81",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -37,7 +37,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The old A, ਕ and B, ਖ cards choose values you have already learned. For this supported return, reopen just the old word banks: A has ਅਮਨ, ਪੰਜਾਬੀ, ਪਿੰਡ; B has ਮਨਨ, ਹਿੰਦੀ, ਸ਼ਹਿਰ. No new word or person is being introduced."
+              "text": "The old A, ਕ and B, ਖ cards choose values you have already learned. For this supported return, reopen the old word banks: A has ਅਮਨ, ਪੰਜਾਬੀ, ਪਿੰਡ; B has ਮਨਨ, ਹਿੰਦੀ, ਸ਼ਹਿਰ. No new word or person is being introduced."
             }
           ]
         },

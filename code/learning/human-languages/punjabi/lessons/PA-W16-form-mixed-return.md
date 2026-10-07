@@ -37,7 +37,7 @@ reviews_of: [PA-W13-form-mixed-cues, PA-W13-form-clock-return]
 <!-- hl-knowledge: introduces=[]; assesses=[PA-A1-FORM-MIXED-CUES-01] -->
 
 The old A · ਕ and B · ਖ cards choose values you have already learned. For
-this supported return, reopen just the old word banks: A has **ਅਮਨ**,
+this supported return, reopen the old word banks: A has **ਅਮਨ**,
 **ਪੰਜਾਬੀ**, **ਪਿੰਡ**; B has **ਮਨਨ**, **ਹਿੰਦੀ**, **ਸ਼ਹਿਰ**. No new word or person
 is being introduced.
 
