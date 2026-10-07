@@ -100,12 +100,15 @@ style TaskApp {
 
   // ── topbar ──────────────────────────────────────────────────────────────
   part topbar {
-    gap : 18 ;
-    align : center-vertical ;
+    gap : 12 ;
     padding-top : 20 ;
     padding-right : 30 ;
     padding-bottom : 14 ;
     padding-left : 30 ;
+  }
+  part topbar-controls {
+    gap : 18 ;
+    align : center-vertical ;
   }
   part title-block {
     width : 100% ;

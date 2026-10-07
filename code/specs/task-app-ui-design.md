@@ -128,10 +128,11 @@ decorate.**
 - **Topbar** — the project's *summary before its detail*: name, "9 tasks · 2 done",
   projected finish date, an **on-track / at-risk pill** (semantic color), and a
   progress ring. The projected finish and the pill both come from the engine's
-  schedule, never computed here. Then the **view switcher** and the theme toggle.
-  Native row layouts must reserve a finite visible width for the progress group
-  at their default desktop window size; a flexible title may grow on web but must
-  not consume the complete native viewport before progress is measured.
+  schedule, never computed here. The title and summary occupy the first line;
+  progress, theme, and complexity controls form a compact second line; then the
+  **view switcher** occupies its own line. This explicit stacking is the portable
+  responsive contract for native backends without flex wrapping: every line must
+  fit the declared 1280 x 900 desktop window without clipping or overflow.
 - **Content** — one view at a time, chosen by the switcher, crossfaded on change.
 
 The summary line is the top of the progressive-disclosure funnel: glanceable state
