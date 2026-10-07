@@ -17,6 +17,48 @@ public sealed record MosaicRuntimeResult(string Status, object? HostIntent = nul
 
 public static class MosaicRuntimeHost
 {
+    // Profiling is opt-in and bounded. Keep disk I/O off the interaction path
+    // and never include application data in diagnostic labels or records.
+    private static readonly string? ProfilePath = Environment.GetEnvironmentVariable("MOSAIC_PROFILE_PATH");
+    private static readonly System.Collections.Concurrent.ConcurrentQueue<string> ProfileSamples = new();
+    private static int ProfileSampleCount;
+    public static IDisposable? BeginProfile(string phase)
+    {
+        if (string.IsNullOrWhiteSpace(ProfilePath)) return null;
+        // Reserve before registering frame callbacks: a minimized window may
+        // receive events without rendering, so pending scopes must be bounded.
+        while (true)
+        {
+            var count = System.Threading.Volatile.Read(ref ProfileSampleCount);
+            if (count >= 4096) return null;
+            if (System.Threading.Interlocked.CompareExchange(ref ProfileSampleCount, count + 1, count) == count)
+                return new ProfileScope(phase);
+        }
+    }
+
+    private sealed class ProfileScope : IDisposable
+    {
+        private readonly string phase;
+        private readonly long started = Stopwatch.GetTimestamp();
+        private readonly long allocated = GC.GetAllocatedBytesForCurrentThread();
+        private int disposed;
+        internal ProfileScope(string phase) => this.phase = phase;
+        public void Dispose()
+        {
+            if (System.Threading.Interlocked.Exchange(ref disposed, 1) != 0) return;
+            var milliseconds = (Stopwatch.GetTimestamp() - started) * 1000.0 / Stopwatch.Frequency;
+            var bytes = GC.GetAllocatedBytesForCurrentThread() - allocated;
+            ProfileSamples.Enqueue(JsonSerializer.Serialize(new { phase, milliseconds, bytes }));
+        }
+    }
+
+    private static void FlushProfile()
+    {
+        if (string.IsNullOrWhiteSpace(ProfilePath)) return;
+        try { File.AppendAllLines(ProfilePath, ProfileSamples.ToArray()); }
+        catch (Exception error) { Debug.WriteLine($"Mosaic profiling export failed: {error.GetType().Name}"); }
+    }
+
     private const int ProtocolVersion = __MOSAIC_PROTOCOL_VERSION__;
     private static readonly bool PersistenceEnabled = __MOSAIC_PERSISTENCE_ENABLED__;
     private const string ApplicationId = "__MOSAIC_APPLICATION_ID__";
@@ -34,6 +76,7 @@ public static class MosaicRuntimeHost
     static MosaicRuntimeHost()
     {
         AppDomain.CurrentDomain.ProcessExit += (_, _) => State?.Dispose();
+        AppDomain.CurrentDomain.ProcessExit += (_, _) => FlushProfile();
     }
 
     public static bool IsAvailable => State is not null;
@@ -566,6 +609,7 @@ public static class MosaicRuntimeHost
 
         public void Dispatch(string name, object payload)
         {
+            using var profile = BeginProfile("dispatch-total");
             lock (gate)
             {
                 EnsureOpen();
@@ -577,7 +621,9 @@ public static class MosaicRuntimeHost
                     ["name"] = name,
                     ["payload"] = payload,
                 };
-                var update = Invoke(envelope, delegate(MosaicBytes input, out MosaicBuffer output)
+                JsonElement update;
+                using (BeginProfile("dispatch-ffi"))
+                update = Invoke(envelope, delegate(MosaicBytes input, out MosaicBuffer output)
                 {
                     return dispatch(app, input, out output);
                 });
@@ -1162,6 +1208,7 @@ public static class MosaicRuntimeHost
             IReadOnlyCollection<string>? requiredProps = null,
             bool strict = false)
         {
+            using var profile = BeginProfile("apply-props");
             lock (gate)
             {
                 EnsureOpen();
@@ -1277,6 +1324,7 @@ public static class MosaicRuntimeHost
 
         private void PersistSnapshot()
         {
+            using var profile = BeginProfile("persist-snapshot");
             var path = StatePath();
             if (path is null) return;
             if (app == IntPtr.Zero || library == IntPtr.Zero) return;

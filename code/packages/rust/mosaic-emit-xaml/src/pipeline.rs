@@ -8958,6 +8958,18 @@ public sealed partial class MainWindow : Window
 
     private async void OnComponentDispatch(object? sender, {name}Event mosaicEvent)
     {{
+        using var handlerProfile = MosaicRuntimeHost.BeginProfile("interaction-handler");
+        var frameProfile = MosaicRuntimeHost.BeginProfile("interaction-next-render");
+        if (frameProfile is not null)
+        {{
+            System.EventHandler<object>? rendered = null;
+            rendered = (_, _) =>
+            {{
+                Microsoft.UI.Xaml.Media.CompositionTarget.Rendering -= rendered;
+                frameProfile.Dispose();
+            }};
+            Microsoft.UI.Xaml.Media.CompositionTarget.Rendering += rendered;
+        }}
         var result = await MosaicRuntimeHost.HandleRequiredEvent(
             this.Component, mosaicEvent, RequiredProps);
         this.StatusText.Text = result.Status;

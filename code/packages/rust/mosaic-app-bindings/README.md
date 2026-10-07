@@ -176,3 +176,20 @@ host uses only Qt Core APIs and is installed automatically by the artifact build
 Linux CI compiles the exact host from a complete generated TaskApp project with
 the shared `mosaic-app-conformance` library, then verifies startup, semantic
 dispatch, snapshot/restore, buffer ownership, and teardown without a display.
+
+### XAML interaction profiling
+
+Set `MOSAIC_PROFILE_PATH` to a writable JSONL file before launching a generated
+XAML app. The host buffers up to 4096 timing samples and appends them on normal
+process exit; no log files are written on the click path. Unset the variable to
+disable instrumentation. A failed export does not fail the application.
+
+Samples contain only a phase, elapsed milliseconds and current-thread managed
+allocated bytes. Phases separate FFI dispatch, snapshot persistence and property
+application. Generated single-root UserControl hosts also time event handling
+and the next WinUI rendering callback. The latter includes queued UI/layout work
+and any intervening events, and is not compositor presentation latency. These
+are diagnostic measurements, not wall-clock durations of automation commands.
+Capture an isolated warm workload and compare the same app/build configuration
+before and after optimization; do not infer a production percentile from a few
+clicks. Hard termination may lose buffered samples.
