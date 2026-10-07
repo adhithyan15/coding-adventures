@@ -70,6 +70,7 @@ const WARDLEY_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/
 const CYNEFIN_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/cynefin-11.16.1-corpus.json"));
 const CYNEFIN_VISUAL_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/cynefin-11.16.1-visual-corpus.json"));
 const TREEVIEW_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/treeview-11.16.1-corpus.json"));
+const TREEVIEW_VISUAL_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/treeview-11.16.1-visual-corpus.json"));
 const RAILROAD_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-11.16.1-corpus.json"));
 const RAILROAD_EBNF_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-ebnf-11.16.1-corpus.json"));
 const RAILROAD_ABNF_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-abnf-11.16.1-corpus.json"));
@@ -159,6 +160,7 @@ fn pinned_railroad_peg_corpus_parses_to_recursive_ir() {
 fn pinned_treeview_subset_corpus_parses_to_tree_ir() {
     let corpus: Value = serde_json::from_str(TREEVIEW_CORPUS).expect("treeview corpus must be JSON");
     assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
+    assert_eq!(corpus["level"].as_str(), Some("full"));
     for fixture in corpus["fixtures"].as_array().expect("fixture array") {
         let name = fixture["name"].as_str().expect("fixture name");
         let diagram = parse_treeview(fixture["source"].as_str().expect("fixture source"))
@@ -200,6 +202,25 @@ fn pinned_treeview_subset_corpus_parses_to_tree_ir() {
             assert_eq!(diagram.nodes.iter().skip(1).map(|node| node.icon.as_deref()).collect::<Vec<_>>(),
                 [Some("mermaid-treeview:folder"), Some("mermaid-treeview:file"),
                     Some("mermaid-treeview:custom")]);
+        } else if name == "parser-terminal-semantics" {
+            assert_eq!(diagram.nodes.iter().skip(1).map(|node| node.label.as_str()).collect::<Vec<_>>(),
+                ["", "my folder", ".gitignore", "docker-compose.yml", "My Documents", "index.js"]);
+            assert!(matches!(diagram.nodes[2].kind, diagram_ir::TreeViewNodeKind::Directory));
+            assert_eq!(diagram.nodes[5].class_selector.as_deref(), Some("my-class"));
+            assert_eq!(diagram.nodes[6].description, None);
+        } else if name == "icon-suppression-and-annotation-order" {
+            assert!(diagram.nodes.iter().skip(1).all(|node| node.icon.as_deref() == Some("none")));
+            assert_eq!(diagram.nodes[1].class_selector.as_deref(), Some("highlight"));
+            assert_eq!(diagram.nodes[1].description.as_deref(), Some("entry point"));
+        } else if name == "unicode-and-emoji-labels" {
+            assert_eq!(diagram.nodes[1].label, "But  _  _ton💓.tsx");
+            assert_eq!(diagram.nodes[2].label, "🚀 rocket-app");
+            assert_eq!(diagram.nodes[3].parent_id.as_deref(), Some("treeview-2"));
+        } else if name == "quoted-complex-hierarchy" {
+            assert_eq!(diagram.nodes.len(), 9);
+            assert_eq!(diagram.nodes[8].depth, 4);
+        } else if name == "multiple-root-hierarchy" {
+            assert_eq!(diagram.nodes.iter().filter(|node| node.parent_id.as_deref() == Some("treeview-root")).count(), 3);
         } else if matches!(name, "rooted-box-drawing-hierarchy" | "compact-box-drawing-segments") {
             assert_eq!(diagram.nodes.iter().map(|node| node.depth).collect::<Vec<_>>(), [0, 1, 2, 3, 2]);
             assert_eq!(diagram.nodes.iter().map(|node| node.parent_id.as_deref()).collect::<Vec<_>>(),
@@ -230,6 +251,35 @@ fn pinned_treeview_subset_corpus_parses_to_tree_ir() {
             assert!(!diagram.nodes.is_empty());
         }
     }
+    for fixture in corpus["invalid"].as_array().expect("invalid fixture array") {
+        let name = fixture["name"].as_str().expect("invalid fixture name");
+        assert!(parse_treeview(fixture["source"].as_str().expect("invalid fixture source")).is_err(),
+            "invalid upstream fixture {name} unexpectedly parsed");
+    }
+}
+
+#[test]
+fn treeview_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
+    let manifest: Value = serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let family = manifest["families"].as_array().expect("families array").iter()
+        .find(|family| family["id"] == "treeview").expect("treeview family");
+    assert_eq!(family["status"].as_str(), Some("full"));
+
+    let syntax: Value = serde_json::from_str(TREEVIEW_CORPUS).expect("treeview corpus must be JSON");
+    let visual: Value = serde_json::from_str(TREEVIEW_VISUAL_CORPUS).expect("treeview visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let syntax_names = syntax["fixtures"].as_array().expect("fixture array").iter()
+        .map(|fixture| fixture["name"].as_str().expect("fixture name")).collect::<BTreeSet<_>>();
+    let visual_names = visual["fixtures"].as_array().expect("visual fixture array").iter()
+        .map(|name| name.as_str().expect("visual fixture name")).collect::<BTreeSet<_>>();
+    assert!(!syntax["invalid"].as_array().expect("invalid fixture array").is_empty());
+    assert!(visual_names.is_subset(&syntax_names));
+    assert_eq!(visual_names.len(), visual["fixtures"].as_array().expect("visual fixture array").len());
+    assert!(BTreeSet::from([
+        "parser-terminal-semantics", "icon-suppression-and-annotation-order", "unicode-and-emoji-labels",
+        "quoted-complex-hierarchy", "multiple-root-hierarchy", "icon-detection-precedence",
+        "rooted-box-drawing-hierarchy", "front-matter-theme-variables", "intrinsic-description-width",
+    ]).is_subset(&syntax_names));
 }
 
 #[test]
