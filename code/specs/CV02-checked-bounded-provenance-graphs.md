@@ -179,6 +179,31 @@ Do not reverse BFS and call it topological order. Avoid rescanning all ancestry
 once per descendant. Return borrowed evidence or bounded copies; cloned payloads
 must not evade limits. Topology is not actual pass/sweep execution chronology.
 
+## Owned AST cleanup at pass boundaries
+
+A scheduler owns both the current program and any returned candidate. Rejecting
+an event, propagating a pass error, rejecting the dependency graph or replacing
+an accepted intermediate program must dispose these trees without recursive
+Rust drop on the caller's stack. Deep trees returned by a custom public pass
+must receive the same protection as built-in folds. Metadata disposal alone
+cannot establish this property.
+
+The shared AST exposes `dispose_program(program: Program)`, which consumes the
+owned tree with an iterative heap work stack. Move children and vector iterators;
+do not clone, leak, serialize or spawn a fallible cleanup thread. Process one
+vector element at a time, so wide sibling lists do not require another copied
+buffer. Match every recursive enum variant and destructure node fields
+exhaustively, making added fields/variants require a cleanup decision at compile
+time. This function does not change normal ownership or wire-format semantics.
+Scheduler guards apply it on error paths and intermediate replacements; transfer
+only the accepted final program to the caller. Callers still own final outputs.
+
+Verification uses an isolated 128 KiB caller, a flat input and a prebuilt
+4096-wrapper candidate whose event is rejected. Also cover deep current trees
+on direct pass errors and dependency-order errors, plus successful replacement.
+Exercise all recursive AST families in the disposal library, including parameter
+defaults, class members, module exports and nested statement containers.
+
 ## Serialization and artifact publication
 
 Validate the full checked graph before filtering, summary or export. Canonical
