@@ -337,7 +337,9 @@ mod tests {
 
     #[test]
     fn legacy_octal_is_not_lowered_as_decimal() {
-        assert!(compile_source("print(010);", "octal").is_err());
+        for source in ["print(010);", "print(08);", "print(09);"] {
+            assert!(compile_source(source, "octal").is_err(), "{source}");
+        }
     }
 
     #[test]

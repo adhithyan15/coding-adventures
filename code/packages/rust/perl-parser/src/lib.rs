@@ -188,6 +188,16 @@ mod tests {
     }
 
     #[test]
+    fn rejects_octal_shaped_source_before_lowering() {
+        for source in ["print(08);", "print(09);", "print(010);"] {
+            assert!(parse_perl(source).is_err(), "{source}");
+        }
+        for source in ["print(0);", "print(10);"] {
+            assert!(parse_perl(source).is_ok(), "{source}");
+        }
+    }
+
+    #[test]
     fn rejects_unsupported_and_trailing_tokens() {
         for source in ["print(1); x", "say(1);", "print(1 / 2);", "print(1, 2);"] {
             assert!(parse_perl(source).is_err(), "{source}");
