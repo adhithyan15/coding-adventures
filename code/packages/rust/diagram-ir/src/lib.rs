@@ -1817,7 +1817,7 @@ pub struct CynefinDiagram { pub title: Option<String>, pub accessibility_title: 
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedCynefinDomain { pub name: String, pub items: Vec<String>, pub overflow_count: usize, pub x: f64, pub y: f64, pub width: f64, pub height: f64, pub center: Point, pub confusion: bool }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedCynefinTransition { pub from: Point, pub to: Point, pub label: Option<String> }
+pub struct LayoutedCynefinTransition { pub from: Point, pub control: Point, pub to: Point, pub label: Option<String> }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedCynefinBoundary { pub start: Point, pub segments: Vec<CubicCurveSegment> }
 #[derive(Clone, Debug, PartialEq)]
