@@ -6,6 +6,11 @@ All notable changes to the `coding-adventures-closure-pass-pipeline` crate will 
 
 ### Fixed
 
+- The fixed-point test helper now decrements its atomic change budget with a
+  sequentially consistent compare-and-exchange loop. This preserves exhaustion
+  behavior while avoiding `fetch_update` deprecation failures in strict CI on
+  newer Rust toolchains; production scheduling is unchanged (CLOC31 CI repair).
+
 - Ready passes now use their registration index as the global tie-breaker in
   topological sorting. A newly ready dependent runs before an independent pass
   registered later. This restores the scheduler's documented ordering contract

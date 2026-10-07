@@ -879,16 +879,26 @@ mod tests {
             use std::sync::atomic::Ordering;
             self.runs.fetch_add(1, Ordering::SeqCst);
             // Decrement the change budget; report `changed` while it lasts.
-            let changed = self
-                .remaining
-                .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |r| {
-                    if r > 0 {
-                        Some(r - 1)
-                    } else {
-                        None
-                    }
-                })
-                .is_ok();
+            // Keep compatibility with toolchains before/after fetch_update's
+            // rename, without suppressing strict deprecation checks in CI.
+            let changed = loop {
+                let remaining = self.remaining.load(Ordering::SeqCst);
+                if remaining == 0 {
+                    break false;
+                }
+                if self
+                    .remaining
+                    .compare_exchange(
+                        remaining,
+                        remaining - 1,
+                        Ordering::SeqCst,
+                        Ordering::SeqCst,
+                    )
+                    .is_ok()
+                {
+                    break true;
+                }
+            };
             Ok(PassOutput {
                 program: ctx.program.clone(),
                 contributions: Vec::new(),
