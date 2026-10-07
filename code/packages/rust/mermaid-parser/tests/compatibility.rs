@@ -1510,6 +1510,17 @@ fn swimlane_flowchart_style_edge_labels_lower_to_semantic_edges() {
 }
 
 #[test]
+fn swimlane_multiline_edges_continue_from_the_previous_endpoint() {
+    let diagram = parse_swimlane(
+        "swimlane-beta TD\nsubgraph Intake\n  Start\nend\nsubgraph Delivery\n  Validate\n  Finish\nend\nStart --> Validate\n  --> Finish",
+    ).expect("multiline Swimlane edges should parse");
+
+    assert_eq!(diagram.edges.len(), 2);
+    assert_eq!((diagram.edges[1].from.as_str(), diagram.edges[1].to.as_str()), ("Validate", "Finish"));
+    assert!(parse_swimlane("swimlane-beta\n--> Missing\nsubgraph A\n  Start\nend").is_err());
+}
+
+#[test]
 fn railroad_dispatches_all_notations_to_recursive_ir() {
     let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
     let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");
