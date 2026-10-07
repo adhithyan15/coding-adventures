@@ -59,6 +59,11 @@ call_ext  3  {u, import_apply}             % x0 = result
 move      {x, 0}       {x, r_dest}         % save result
 ```
 
+The listing records the BEAM05 lowering. BEAM13 adds a separate transient Y
+root: save `r0` before `import_append` and reload that Y slot into `x1`
+before `import_apply`. The scratch X copy is no longer used after the first
+call; see `BEAM13-intermediate-call-gc-roots.md`.
+
 Two `call_ext`s — `erlang:'++'/2` then `erlang:apply/3` — each of which
 clobbers every X-register on real BEAM.
 
@@ -89,7 +94,9 @@ which already wraps its OWN two-call sequence (`erlang:list_to_tuple/1` then
 `ets:insert/2`) in one such pair — `cur_idx` indexes a single `live_across`
 entry per IIR instruction, and `call_closure` is one IIR instruction
 regardless of how many BEAM calls it lowers to, so one save/restore pair is
-correct and sufficient (not one per `call_ext`).
+correct for IIR variables live beyond the instruction (not one per
+`call_ext`). The temporary function atom needed between the two calls uses
+the distinct BEAM13 transient Y slot.
 
 The call result is moved out of `x0` into `r_dest` BEFORE the restore runs,
 mirroring `alloc_array`'s existing ordering: `restore_live_across_imported_call!`

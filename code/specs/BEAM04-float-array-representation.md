@@ -246,12 +246,10 @@ untouched — no new opcodes are needed.
   macros around their `call_ext` sequences (`alloc_array`/`array_set`/
   `array_get` were already in the `live_across` match list before this
   slice, since the `:atomics` path already emits `call_ext`, so no change
-  was needed there). A scratch register staged above `meta.next_reg`
-  surviving an intermediate `call_ext` before being used by a LATER call in
-  the same instruction's lowering (`array_set`'s `Ref` surviving the
-  `list_to_tuple` call before being used by `ets:insert`) is the same
-  pattern `call_closure`'s existing, tested `r0`/`r3` staging already
-  relies on.
+  was needed there). This original slice assumed a scratch X register could
+  carry the table across `list_to_tuple/1`; BEAM13 corrects that assumption
+  by saving the table in a Y root and reloading it for `ets:insert/2`.
+  `call_closure` receives the same intermediate-call repair.
 
 ### Known, documented limitation (not fixed, not exercised by any promoted row)
 
