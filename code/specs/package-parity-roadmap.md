@@ -16164,6 +16164,18 @@ Dependency-ready Haskell CT01 and PNG ports are narrower one-slot alternatives;
 Elixir fixture adoption remains a separate subsequent build-tool owner. There
 is no second active parity PR.
 
+A follow-up reporter run at `1561f63f918ddab136936d72a6c9f0867bd9feaf`
+corrects the inventory snapshot to 1,490 established implementation identities,
+4,760 slots, 1,532 all-reported identities, 1,008 singletons with 14,112
+missing slots, and 809 Rust singletons; the 15-lane, high-consensus, OCaml,
+collision, and unknown-bucket counts are unchanged. The two identities were
+already in the Git tree at `ec1c8d8c7` but omitted by the older checkout used
+for that snapshot: Rust-only `macronib-lexer` and
+`macronib-iir-compiler`. PREP01 and the LANG VM backlog own their
+MacroNib-specific frontend contracts, so the raw singleton count does not
+create 28 automatic generic-language ports. The current Haskell Dune slice
+remains the dependency-ready selection.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
