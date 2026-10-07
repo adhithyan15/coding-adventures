@@ -13,10 +13,10 @@ cousin layer: 216 lessons show another script (max 26 glyphs) — context, never
 script closure: 194 lessons ask the reader to decode a glyph nobody taught them, across 17 non-Latin tracks; 0 of those tracks teach NO letters at all
 exposure: 46 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 1646 glyphs and makes 573 lessons clean on its own
 order: 0 lessons with no declared sequence across 0 tracks; 0 prerequisites and 0 reviews pointing forward
-reinforcement: 156 of 29966 atoms never revisited (1%); missed windows R1 1746, R2 19997, R3 16012, R4 24367
+reinforcement: 156 of 29966 atoms never revisited (1%); missed windows R1 1746, R2 19996, R3 16012, R4 24367
 forward references: 1188 uses of material a later lesson teaches
 writing stages: 23/23 tracks prove the cumulative pre-A1 ladder; 884 evidence blocks, 0 invalid; 162 missing (track, level, stage) pairs
-super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 112 named track/debt items
+super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 110 named track/debt items
 writing ramp: 0 track(s) never practise writing; 6 start after lesson one
 gentleness measurement: 129 lesson(s) remain atom-measurement blind
 VOCABULARY vs HL09 §3.1 targets: malayalam 1440/600 at-or-below A1 (1440 total), telugu 1430/1200 at-or-below A2 (1430 total), kannada 1389/1200 at-or-below A2 (1389 total), persian 1372/600 at-or-below A1 (1372 total), arabic 1262/2500 at-or-below B1 (1262 total); 12 of 23 tracks short of the level they are working on
@@ -47,7 +47,7 @@ per-track ladder (HL09 §3.1), fewest criteria left first, every blocker listed 
   marwadi     touches A2     complete A1     working A2     vocabulary 624/1200 — 3 blockers: spine-nodes 4, verb-vocabulary 34, vocabulary 576
   punjabi     touches A2     complete A1     working A2     vocabulary 623/1200 — 3 blockers: spine-nodes 4, verb-vocabulary 38, vocabulary 577
   urdu        touches A2     complete A2     working B1     vocabulary 1218/2500 — 3 blockers: spine-nodes 5, verb-vocabulary 78, vocabulary 1282
-0 of 5834 book chapters without an HL05 capability; 94 payoffs below the 0.5 representativeness floor; 10 tracks already clean
+0 of 5834 book chapters without an HL05 capability; 85 payoffs below the 0.5 representativeness floor; 12 tracks already clean
 
 Longest effective lessons:
 

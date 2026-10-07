@@ -35,8 +35,8 @@
     "atomsNeverRevisited": 156,
     "forwardReferences": 1188,
     "chaptersWithoutCapability": 0,
-    "chapterPayoffsNotRepresentative": 94,
-    "chapterGateCleanTracks": 10,
+    "chapterPayoffsNotRepresentative": 85,
+    "chapterGateCleanTracks": 12,
     "tracksWithoutWritingStageEvidence": 0,
     "missingWritingStagePairs": 162,
     "invalidWritingStageEvidence": 0,
@@ -12857,27 +12857,6 @@
       {
         "code": "chapter-payoff-not-representative",
         "language": "hindi",
-        "chapter": 3,
-        "lessonId": "HI-C03-practice",
-        "message": "hindi chapter 3 payoff assesses 0/7 of the chapter's atoms (0.00), below the 0.5 floor."
-      },
-      {
-        "code": "chapter-payoff-not-representative",
-        "language": "hindi",
-        "chapter": 4,
-        "lessonId": "HI-C04-practice",
-        "message": "hindi chapter 4 payoff assesses 0/6 of the chapter's atoms (0.00), below the 0.5 floor."
-      },
-      {
-        "code": "chapter-payoff-not-representative",
-        "language": "hindi",
-        "chapter": 5,
-        "lessonId": "HI-C05-practice",
-        "message": "hindi chapter 5 payoff assesses 0/6 of the chapter's atoms (0.00), below the 0.5 floor."
-      },
-      {
-        "code": "chapter-payoff-not-representative",
-        "language": "hindi",
         "chapter": 6,
         "lessonId": "HI-C06-paanch-nasal",
         "message": "hindi chapter 6 payoff assesses 1/6 of the chapter's atoms (0.17), below the 0.5 floor."
@@ -12961,13 +12940,6 @@
       },
       {
         "code": "chapter-payoff-not-representative",
-        "language": "italian",
-        "chapter": 1,
-        "lessonId": "IT-C01-practice",
-        "message": "italian chapter 1 payoff assesses 0/20 of the chapter's atoms (0.00), below the 0.5 floor."
-      },
-      {
-        "code": "chapter-payoff-not-representative",
         "language": "kannada",
         "chapter": 6,
         "lessonId": "KA-C06-dative-subject",
@@ -13000,34 +12972,6 @@
         "chapter": 20,
         "lessonId": "KA-C20-havamana",
         "message": "kannada chapter 20 payoff assesses 2/6 of the chapter's atoms (0.33), below the 0.5 floor."
-      },
-      {
-        "code": "chapter-payoff-not-representative",
-        "language": "malayalam",
-        "chapter": 2,
-        "lessonId": "ML-C02-practice",
-        "message": "malayalam chapter 2 payoff assesses 11/24 of the chapter's atoms (0.46), below the 0.5 floor."
-      },
-      {
-        "code": "chapter-payoff-not-representative",
-        "language": "malayalam",
-        "chapter": 3,
-        "lessonId": "ML-C03-practice",
-        "message": "malayalam chapter 3 payoff assesses 3/11 of the chapter's atoms (0.27), below the 0.5 floor."
-      },
-      {
-        "code": "chapter-payoff-not-representative",
-        "language": "malayalam",
-        "chapter": 4,
-        "lessonId": "ML-C04-practice",
-        "message": "malayalam chapter 4 payoff assesses 3/12 of the chapter's atoms (0.25), below the 0.5 floor."
-      },
-      {
-        "code": "chapter-payoff-not-representative",
-        "language": "malayalam",
-        "chapter": 5,
-        "lessonId": "ML-C05-practice",
-        "message": "malayalam chapter 5 payoff assesses 9/19 of the chapter's atoms (0.47), below the 0.5 floor."
       },
       {
         "code": "chapter-payoff-not-representative",
@@ -13094,17 +13038,10 @@
       },
       {
         "code": "chapter-payoff-not-representative",
-        "language": "portuguese",
-        "chapter": 1,
-        "lessonId": "PT-C01-practice",
-        "message": "portuguese chapter 1 payoff assesses 0/18 of the chapter's atoms (0.00), below the 0.5 floor."
-      },
-      {
-        "code": "chapter-payoff-not-representative",
         "language": "russian",
         "chapter": 1,
         "lessonId": "RU-C01-practice",
-        "message": "russian chapter 1 payoff assesses 0/18 of the chapter's atoms (0.00), below the 0.5 floor."
+        "message": "russian chapter 1 payoff assesses 8/18 of the chapter's atoms (0.44), below the 0.5 floor."
       },
       {
         "code": "chapter-payoff-not-representative",
@@ -13518,7 +13455,7 @@
         "bookChapters": 275,
         "declaredChapters": 275,
         "missingCapability": 0,
-        "findings": 17,
+        "findings": 14,
         "clean": false
       },
       {
@@ -13526,8 +13463,8 @@
         "bookChapters": 259,
         "declaredChapters": 259,
         "missingCapability": 0,
-        "findings": 1,
-        "clean": false
+        "findings": 0,
+        "clean": true
       },
       {
         "language": "japanese",
@@ -13558,7 +13495,7 @@
         "bookChapters": 337,
         "declaredChapters": 337,
         "missingCapability": 0,
-        "findings": 10,
+        "findings": 6,
         "clean": false
       },
       {
@@ -13590,8 +13527,8 @@
         "bookChapters": 255,
         "declaredChapters": 255,
         "missingCapability": 0,
-        "findings": 1,
-        "clean": false
+        "findings": 0,
+        "clean": true
       },
       {
         "language": "punjabi",
@@ -13655,11 +13592,11 @@
       "declaredChapters": 5834,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
-      "payoffsNotRepresentative": 94,
+      "payoffsNotRepresentative": 85,
       "unknownPayoffLessons": 0,
       "titleDrift": 0,
       "duplicateChapters": 0,
-      "cleanTracks": 10,
+      "cleanTracks": 12,
       "payoffRepresentativeness": 0.5
     }
   },
@@ -262871,17 +262808,6 @@
         "revisits": 3
       },
       {
-        "atom": "RU-PRAGMATICS-GREETING-REGISTER",
-        "language": "russian",
-        "introducedBy": "RU-C01-zdravstvuyte",
-        "introducedAt": 1,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "RU-PRAGMATICS-IZVINITE-PROSTITE-01",
         "language": "russian",
         "introducedBy": "RU-C21-prostite",
@@ -330615,6 +330541,16 @@
         "revisits": 8
       },
       {
+        "atom": "RU-PRAGMATICS-GREETING-REGISTER",
+        "language": "russian",
+        "introducedBy": "RU-C01-zdravstvuyte",
+        "introducedAt": 1,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "RU-PRAGMATICS-VY-POLITENESS",
         "language": "russian",
         "introducedBy": "RU-C02-vy-formality",
@@ -346393,7 +346329,7 @@
       "neverRevisitedPercent": 1,
       "missedByWindow": {
         "R1": 1746,
-        "R2": 19997,
+        "R2": 19996,
         "R3": 16012,
         "R4": 24367
       },
@@ -368281,7 +368217,7 @@
           "R3": 892,
           "R4": 1222
         },
-        "payoffSurprises": 17,
+        "payoffSurprises": 14,
         "writingPracticeLessons": 132,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
@@ -368317,7 +368253,7 @@
           {
             "language": "hindi",
             "kind": "payoff-surprise",
-            "count": 17,
+            "count": 14,
             "unit": "chapter payoff finding(s)",
             "detail": "make each chapter payoff assess only taught, representative material"
           },
@@ -368364,7 +368300,7 @@
           "R3": 613,
           "R4": 1135
         },
-        "payoffSurprises": 1,
+        "payoffSurprises": 0,
         "writingPracticeLessons": 4,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
@@ -368389,13 +368325,6 @@
             "count": 2768,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
-          },
-          {
-            "language": "italian",
-            "kind": "payoff-surprise",
-            "count": 1,
-            "unit": "chapter payoff finding(s)",
-            "detail": "make each chapter payoff assess only taught, representative material"
           }
         ],
         "next": {
@@ -368633,7 +368562,7 @@
           "R3": 957,
           "R4": 1470
         },
-        "payoffSurprises": 10,
+        "payoffSurprises": 6,
         "writingPracticeLessons": 129,
         "firstWritingPracticeAt": 1,
         "lessonsBeforeWritingPractice": 1,
@@ -368669,7 +368598,7 @@
           {
             "language": "malayalam",
             "kind": "payoff-surprise",
-            "count": 10,
+            "count": 6,
             "unit": "chapter payoff finding(s)",
             "detail": "make each chapter payoff assess only taught, representative material"
           },
@@ -368937,7 +368866,7 @@
           "R3": 706,
           "R4": 1132
         },
-        "payoffSurprises": 1,
+        "payoffSurprises": 0,
         "writingPracticeLessons": 4,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
@@ -368962,13 +368891,6 @@
             "count": 2916,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
-          },
-          {
-            "language": "portuguese",
-            "kind": "payoff-surprise",
-            "count": 1,
-            "unit": "chapter payoff finding(s)",
-            "detail": "make each chapter payoff assess only taught, representative material"
           }
         ],
         "next": {
@@ -369082,10 +369004,10 @@
         "forwardReferences": 11,
         "atomsTaught": 1393,
         "atomsNeverRevisited": 0,
-        "reinforcementWindowMisses": 2856,
+        "reinforcementWindowMisses": 2855,
         "reinforcementMissesByWindow": {
           "R1": 38,
-          "R2": 1004,
+          "R2": 1003,
           "R3": 685,
           "R4": 1129
         },
@@ -369125,7 +369047,7 @@
           {
             "language": "russian",
             "kind": "reinforcement",
-            "count": 2856,
+            "count": 2855,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
@@ -370048,7 +369970,7 @@
       {
         "language": "russian",
         "kind": "reinforcement",
-        "count": 2856,
+        "count": 2855,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -370125,14 +370047,7 @@
       {
         "language": "hindi",
         "kind": "payoff-surprise",
-        "count": 17,
-        "unit": "chapter payoff finding(s)",
-        "detail": "make each chapter payoff assess only taught, representative material"
-      },
-      {
-        "language": "malayalam",
-        "kind": "payoff-surprise",
-        "count": 10,
+        "count": 14,
         "unit": "chapter payoff finding(s)",
         "detail": "make each chapter payoff assess only taught, representative material"
       },
@@ -370147,6 +370062,13 @@
         "language": "tamil",
         "kind": "payoff-surprise",
         "count": 10,
+        "unit": "chapter payoff finding(s)",
+        "detail": "make each chapter payoff assess only taught, representative material"
+      },
+      {
+        "language": "malayalam",
+        "kind": "payoff-surprise",
+        "count": 6,
         "unit": "chapter payoff finding(s)",
         "detail": "make each chapter payoff assess only taught, representative material"
       },
@@ -370187,20 +370109,6 @@
       },
       {
         "language": "german",
-        "kind": "payoff-surprise",
-        "count": 1,
-        "unit": "chapter payoff finding(s)",
-        "detail": "make each chapter payoff assess only taught, representative material"
-      },
-      {
-        "language": "italian",
-        "kind": "payoff-surprise",
-        "count": 1,
-        "unit": "chapter payoff finding(s)",
-        "detail": "make each chapter payoff assess only taught, representative material"
-      },
-      {
-        "language": "portuguese",
         "kind": "payoff-surprise",
         "count": 1,
         "unit": "chapter payoff finding(s)",
@@ -370339,7 +370247,7 @@
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 6,
       "atomMeasurementBlindLessons": 129,
-      "findings": 112
+      "findings": 110
     }
   },
   "levelGate": {
