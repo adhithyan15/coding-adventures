@@ -773,10 +773,12 @@ validation. Transitions follow Mermaid's center-to-center quadratic curves,
 including perpendicular control-point offsets, tangent-aligned arrowheads, and
 control-point label placement. All Cynefin theme fields for colors, stroke
 widths, and text sizes survive init directives or YAML front matter through
-semantic config IR and backend-neutral Paint lowering. Exact item-box styling
-remains unsupported at the partial level. Confusion domains follow Mermaid's
-three-item display cap
-and lower any hidden count to a backend-neutral `+N more` badge.
+semantic config IR and backend-neutral Paint lowering. Domain items use
+Mermaid's deterministic fallback width, 26-pixel height, four-pixel radius,
+four-pixel spacing, themed fill opacity, and one-pixel outline. Confusion
+domains follow Mermaid's three-item display cap and lower any hidden count to a
+dashed, lower-opacity backend-neutral `+N more` badge. Exact browser text
+measurement remains unsupported at the partial level.
 Positive `width` and `height` plus non-negative `padding` values from Mermaid
 init directives or YAML front matter survive semantic IR and control the inner
 framework and outer canvas dimensions during deterministic layout.

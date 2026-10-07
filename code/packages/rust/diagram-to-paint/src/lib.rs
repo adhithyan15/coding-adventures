@@ -1135,9 +1135,7 @@ pub fn diagram_to_paint_cynefin<S, M, R>(diagram: &LayoutedCynefinDiagram, optio
 where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle = S::Handle> {
     let mut instructions = Vec::new(); let mut text_children = Vec::new();
     for domain in diagram.domains.iter().filter(|domain| !domain.confusion) {
-        let fill = match domain.name.as_str() { "complex" => &diagram.style.complex_bg,
-            "complicated" => &diagram.style.complicated_bg, "clear" => &diagram.style.clear_bg,
-            "chaotic" => &diagram.style.chaotic_bg, _ => &diagram.style.complex_bg };
+        let fill = cynefin_domain_fill(&diagram.style, &domain.name);
         instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: domain.x, y: domain.y,
             width: domain.width, height: domain.height, fill: Some(with_opacity(fill, 0.4)), stroke: None,
             stroke_width: None, corner_radius: None, stroke_dash: None, stroke_dash_offset: None }));
@@ -1195,19 +1193,14 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
                 domain.width - 24.0, 20.0, font_with_size(&options.label_font, Some(diagram.style.item_font_size - 1.0)),
                 css_to_color(&diagram.style.text_color)));
         }
-        for (index, item) in domain.items.iter().enumerate() {
-            let y = if domain.confusion { domain.center.y + if diagram.show_domain_descriptions { 14.0 } else { -2.0 } + index as f64 * 22.0 }
-                else { domain.y + if diagram.show_domain_descriptions { 82.0 } else { 52.0 } + index as f64 * 28.0 };
-            text_children.push(text_node(item, domain.x + 18.0, y, domain.width - 36.0, 24.0,
+        for badge in &domain.item_badges {
+            instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: badge.x, y: badge.y,
+                width: badge.width, height: badge.height,
+                fill: Some(with_opacity(cynefin_domain_fill(&diagram.style, &domain.name), if badge.overflow { 0.6 } else { 0.95 })),
+                stroke: Some(diagram.style.boundary_color.clone()), stroke_width: Some(1.0), corner_radius: Some(4.0),
+                stroke_dash: badge.overflow.then(|| vec![3.0, 2.0]), stroke_dash_offset: None }));
+            text_children.push(text_node(&badge.label, badge.x, badge.y, badge.width, badge.height,
                 font_with_size(&options.label_font, Some(diagram.style.item_font_size)), css_to_color(&diagram.style.text_color)));
-        }
-        if domain.overflow_count > 0 {
-            let y = domain.center.y + if diagram.show_domain_descriptions { 14.0 } else { -2.0 } + domain.items.len() as f64 * 22.0;
-            instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: domain.center.x - 45.0, y,
-                width: 90.0, height: 24.0, fill: Some("#cbd5e1".into()), stroke: None, stroke_width: None,
-                corner_radius: Some(4.0), stroke_dash: None, stroke_dash_offset: None }));
-            text_children.push(text_node(&format!("+{} more", domain.overflow_count), domain.center.x - 40.0, y,
-                80.0, 24.0, font_with_size(&options.label_font, Some(diagram.style.item_font_size)), css_to_color(&diagram.style.text_color)));
         }
     }
     let text_scene = layout_to_paint(&PositionedNode { x: 0.0, y: 0.0, width: diagram.width, height: diagram.height,
@@ -1221,6 +1214,12 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     PaintScene { width: diagram.width, height: diagram.height,
         background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b), instructions, id: None,
         metadata: (!metadata.is_empty()).then_some(metadata) }
+}
+
+fn cynefin_domain_fill<'a>(style: &'a diagram_ir::CynefinStyle, name: &str) -> &'a str {
+    match name { "complex" => &style.complex_bg, "complicated" => &style.complicated_bg,
+        "clear" => &style.clear_bg, "chaotic" => &style.chaotic_bg, "confusion" => &style.confusion_bg,
+        _ => &style.complex_bg }
 }
 
 fn capitalize(value: &str) -> String {
@@ -9373,9 +9372,13 @@ mod tests {
             cliff: diagram_ir::LayoutedCynefinBoundary { start: Point { x: 200.0, y: 150.0 },
                 segments: vec![diagram_ir::CubicCurveSegment { control1: Point { x: 220.0, y: 190.0 },
                     control2: Point { x: 180.0, y: 250.0 }, end: Point { x: 200.0, y: 290.0 } }] },
-            domains: vec![diagram_ir::LayoutedCynefinDomain { name: "complex".into(), items: vec!["Probe".into()], overflow_count: 0, x: 10.0, y: 10.0,
+            domains: vec![diagram_ir::LayoutedCynefinDomain { name: "complex".into(), items: vec!["Probe".into()],
+                item_badges: vec![diagram_ir::LayoutedCynefinItem { label: "Probe".into(), x: 65.0, y: 95.0, width: 70.0, height: 26.0, overflow: false }],
+                overflow_count: 0, x: 10.0, y: 10.0,
                 width: 180.0, height: 130.0, center: Point { x: 100.0, y: 75.0 }, confusion: false },
-                diagram_ir::LayoutedCynefinDomain { name: "confusion".into(), items: vec!["One".into(), "Two".into(), "Three".into()], overflow_count: 2, x: 150.0, y: 110.0,
+                diagram_ir::LayoutedCynefinDomain { name: "confusion".into(), items: vec!["One".into(), "Two".into(), "Three".into()],
+                    item_badges: vec![diagram_ir::LayoutedCynefinItem { label: "+2 more".into(), x: 167.5, y: 230.0, width: 65.0, height: 26.0, overflow: true }],
+                    overflow_count: 2, x: 150.0, y: 110.0,
                     width: 100.0, height: 80.0, center: Point { x: 200.0, y: 150.0 }, confusion: true }],
             transitions: vec![diagram_ir::LayoutedCynefinTransition { from: Point { x: 100.0, y: 75.0 },
                 control: Point { x: 145.0, y: 95.0 }, to: Point { x: 200.0, y: 150.0 }, label: None }] };
@@ -9392,7 +9395,9 @@ mod tests {
                 && path.commands.iter().any(|command| matches!(command, PathCommand::CubicTo { .. })) )));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Path(path) if path.commands.iter().any(|command| matches!(command, PathCommand::QuadTo { .. })) )));
-        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#cbd5e1"))));
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.stroke_dash.as_deref() == Some(&[3.0, 2.0])
+                && rect.fill.as_deref() == Some("rgba(243,229,245,0.6)"))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Ellipse(ellipse) if ellipse.stroke_dash.as_deref() == Some(&[4.0, 2.0])
                 && ellipse.fill.as_deref() == Some("rgba(243,229,245,0.5)"))));
