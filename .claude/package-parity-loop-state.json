@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16956,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16956",
+    "branch": "codex/parity-geometry-arc2d-degenerate-20261007",
+    "implementation_revision": "5d1f67d0874fbbcbf27135557d4c8368b7c85941",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-07T19:49:31Z",
-    "pr_number": 16945,
-    "status": "merged",
-    "notes": "All 35 checks reached acceptable terminal conclusions on head dd82f1f039bb5ae7de449208fb7c6e75471cff72; GitHub reported MERGEABLE/CLEAN. Guarded squash auto-merge completed at 2026-10-07T19:49:31Z as 5dffddfa232698543a6936ebf699e2041530257d. No manual merge."
+    "observed_at": "2026-10-07T20:22:13Z",
+    "pr_number": 16956,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR opened on implementation head 5d1f67d0874fbbcbf27135557d4c8368b7c85941; GitHub reports MERGEABLE but BLOCKED while detect and CodeQL discovery checks are queued. Auto-merge remains disabled until all required checks are terminal and acceptable and no conflict remains."
   },
   "last_inventory": {
     "revision": "4143b306c81edd87fd745ee84df2739c4b9dfa9e",
@@ -12063,10 +12069,10 @@
     {
       "id": "geometry-arc2d-existing-api-degenerate-reconciliation",
       "title": "Reconcile G2D03 existing SVG endpoint API in Rust, TypeScript, Python, C#, and F#",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"],
       "branch": "codex/parity-geometry-arc2d-degenerate-20261007",
-      "pr_number": null,
+      "pr_number": 16956,
       "selected_at": "2026-10-07T19:50:00Z",
       "selection_revision": "4143b306c81edd87fd745ee84df2739c4b9dfa9e",
       "selection_notes": "Selected after #16945 merged and the collision-clean 1,496-identity post-merge refresh registered all three newly discovered owners. This bounded existing-lane G2D03 repair is dependency-ready, exercises the neutral degenerate arc cases, and leaves endpoint API additions and missing-lane ports separate.",
