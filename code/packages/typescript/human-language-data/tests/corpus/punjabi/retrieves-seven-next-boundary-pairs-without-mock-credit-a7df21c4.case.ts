@@ -47,8 +47,18 @@ it("retrieves the seven Punjabi next-boundary pairs without claiming mock credit
 
   const previousPairs = missedPairs(before);
   const currentPairs = missedPairs(after);
+  expect(before.summary.missedByWindow).toEqual({ R1: 56, R2: 567, R3: 513, R4: 578 });
+  expect(after.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 513, R4: 576 });
   expect([...previousPairs].filter((pair) => !currentPairs.has(pair)).sort()).toEqual([
     "R2|PA-A1-TIMED-REPAIR-01",
     ...lexicalAtoms.map((atom) => `R4|${atom}`),
   ].sort());
+  // Four different Chapter 148 action pairs become measurable. #16886 owns
+  // their later retrieval; this tranche must not pretend it taught them.
+  expect([...currentPairs].filter((pair) => !previousPairs.has(pair)).sort()).toEqual([
+    "R4|PA-LEX-C148-ACT148-02",
+    "R4|PA-LEX-C148-ACT148-03",
+    "R4|PA-LEX-C148-ACT148-04",
+    "R4|PA-LEX-C148-ACT148-05",
+  ]);
 });

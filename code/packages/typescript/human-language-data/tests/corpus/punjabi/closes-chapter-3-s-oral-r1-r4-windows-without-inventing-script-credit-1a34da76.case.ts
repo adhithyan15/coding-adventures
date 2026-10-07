@@ -176,6 +176,8 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   // words separately from the timed form and message.
   // Four short writing returns protect the A1 reinforcement claim before
   // Chapter 158 closes five Chapter 146 quality-word R4 pairs. The longer
-  // tail still exposes separate R2/R4 debt tracked in #16801.
-  expect(report.summary.missedByWindow).toEqual({ R1: 56, R2: 567, R3: 513, R4: 578 });
+  // tail still exposes separate R2/R4 debt tracked in #16801. Chapter 159
+  // closes those seven exact pairs; four different Chapter 148 action R4
+  // pairs open at the longer boundary and are tracked in #16886.
+  expect(report.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 513, R4: 576 });
 });

@@ -1,0 +1,10 @@
+{
+  "id": "PA-EXT-159-A1-REPAIR-RETURN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can make one short unscored Gurmukhi form-line attempt and keep its later correction separate from the first attempt.",
+  "prerequisites": [
+    "PA-EXT-157-A1-SHORT-WRITING-CLOCKS"
+  ]
+}

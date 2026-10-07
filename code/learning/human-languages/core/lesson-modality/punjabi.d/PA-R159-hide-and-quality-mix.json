@@ -1,0 +1,21 @@
+{
+  "lesson": {
+    "id": "PA-R159-hide-and-quality-mix",
+    "language": "punjabi",
+    "chapter": 159,
+    "sequence": 8800,
+    "modality": "voice",
+    "derived": "voice",
+    "drivable": true,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:2a48877ab7843171"
+  },
+  "findings": []
+}
