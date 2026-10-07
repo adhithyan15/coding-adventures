@@ -325,6 +325,7 @@ pub fn layout_treeview(diagram: &TreeViewDiagram, _canvas_width: f64) -> Layoute
         let label_width = node.label.chars().count() as f64 * diagram.config.theme.label_font_size * 0.62 + 8.0;
         LayoutedTreeViewNode {
             id: node.id.clone(),
+            is_implicit_root: node.is_implicit_root,
             parent_id: node.parent_id.clone(),
             depth: node.depth,
             label: node.label.clone(),
@@ -533,9 +534,9 @@ mod tests {
             title: None, accessibility_title: None, accessibility_description: None,
             config: diagram_ir::TreeViewConfig::default(),
             nodes: vec![
-                TreeViewNode { id: "root".into(), parent_id: None, depth: 0, label: "src".into(), kind: TreeViewNodeKind::Directory, class_selector: Some("selected highlight".into()), icon: None, description: None },
-                TreeViewNode { id: "child".into(), parent_id: Some("root".into()), depth: 1, label: "a.rs".into(), kind: TreeViewNodeKind::File, class_selector: None, icon: None, description: Some("short".into()) },
-                TreeViewNode { id: "sibling".into(), parent_id: Some("root".into()), depth: 1, label: "longer-name.rs".into(), kind: TreeViewNodeKind::File, class_selector: None, icon: None, description: Some("long".into()) },
+                TreeViewNode { id: "root".into(), is_implicit_root: true, parent_id: None, depth: 0, label: "/".into(), kind: TreeViewNodeKind::Directory, class_selector: Some("selected highlight".into()), icon: None, description: None },
+                TreeViewNode { id: "child".into(), is_implicit_root: false, parent_id: Some("root".into()), depth: 1, label: "a.rs".into(), kind: TreeViewNodeKind::File, class_selector: None, icon: None, description: Some("short".into()) },
+                TreeViewNode { id: "sibling".into(), is_implicit_root: false, parent_id: Some("root".into()), depth: 1, label: "longer-name.rs".into(), kind: TreeViewNodeKind::File, class_selector: None, icon: None, description: Some("long".into()) },
             ],
         };
         let layout = layout_treeview(&diagram, 500.0);

@@ -1751,6 +1751,7 @@ impl Default for TreeViewConfig {
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct TreeViewNode {
     pub id: String,
+    pub is_implicit_root: bool,
     pub parent_id: Option<String>,
     pub depth: usize,
     pub label: String,
@@ -1772,6 +1773,7 @@ pub struct TreeViewDiagram {
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedTreeViewNode {
     pub id: String,
+    pub is_implicit_root: bool,
     pub parent_id: Option<String>,
     pub depth: usize,
     pub label: String,

@@ -5861,8 +5861,12 @@ pub fn parse_treeview(source: &str) -> Result<TreeViewDiagram, ParseError> {
     GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH).parse()
         .map_err(|error| ParseError { message: error.message,
             line: preprocessed.original_line(error.token.line), col: error.token.column })?;
-    let mut diagram = TreeViewDiagram { title: None, accessibility_title: None, accessibility_description: None, config, nodes: Vec::new() };
+    let implicit_root_id = "treeview-root".to_string();
+    let mut diagram = TreeViewDiagram { title: None, accessibility_title: None, accessibility_description: None, config,
+        nodes: vec![TreeViewNode { id: implicit_root_id.clone(), is_implicit_root: true, parent_id: None, depth: 0,
+            label: "/".into(), kind: TreeViewNodeKind::Directory, class_selector: None, icon: None, description: None }] };
     let mut ancestors = Vec::<(usize, usize, String)>::new();
+    let mut authored_node_count = 0usize;
     for (index, raw) in normalized.lines().enumerate() {
         let line_number = preprocessed.original_line(index + 1);
         let trimmed = raw.trim();
@@ -5884,12 +5888,14 @@ pub fn parse_treeview(source: &str) -> Result<TreeViewDiagram, ParseError> {
         let indentation = raw.chars().take_while(|character| character.is_whitespace())
             .map(|character| if character == '\t' { 4 } else { 1 }).sum::<usize>();
         while ancestors.last().is_some_and(|(ancestor_indent, _, _)| *ancestor_indent >= indentation) { ancestors.pop(); }
-        let depth = ancestors.last().map_or(0, |(_, depth, _)| depth + 1);
+        let depth = ancestors.last().map_or(1, |(_, depth, _)| depth + 1);
         let (label, kind, class_selector, icon, description) = parse_treeview_node(trimmed, line_number)?;
         let icon = resolve_treeview_icon(&diagram.config, &label, &kind, icon);
-        let id = format!("treeview-{}", diagram.nodes.len() + 1);
-        let parent_id = ancestors.last().map(|(_, _, id)| id.clone());
-        diagram.nodes.push(TreeViewNode { id: id.clone(), parent_id, depth, label, kind, class_selector, icon, description });
+        authored_node_count += 1;
+        let id = format!("treeview-{authored_node_count}");
+        let parent_id = Some(ancestors.last().map_or_else(|| implicit_root_id.clone(), |(_, _, id)| id.clone()));
+        diagram.nodes.push(TreeViewNode { id: id.clone(), is_implicit_root: false, parent_id, depth, label, kind,
+            class_selector, icon, description });
         ancestors.push((indentation, depth, id));
     }
     Ok(diagram)

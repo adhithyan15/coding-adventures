@@ -787,6 +787,9 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     metadata.insert("treeView.config.lineThickness".into(), diagram.config.line_thickness.to_string());
     metadata.insert("treeView.config.showIcons".into(), diagram.config.show_icons.to_string());
     metadata.insert("treeView.config.defaultIconPack".into(), diagram.config.default_icon_pack.clone());
+    if let Some(root) = diagram.nodes.iter().find(|node| node.is_implicit_root) {
+        metadata.insert("treeView.implicitRootId".into(), root.id.clone());
+    }
     metadata.insert("treeView.theme.labelFontSize".into(), diagram.config.theme.label_font_size.to_string());
     metadata.insert("treeView.theme.labelColor".into(), diagram.config.theme.label_color.clone());
     metadata.insert("treeView.theme.lineColor".into(), diagram.config.theme.line_color.clone());
@@ -9344,11 +9347,11 @@ mod tests {
             width: 420.0, height: 100.0, title: None, accessibility_title: None, accessibility_description: None,
             config,
             nodes: vec![
-                diagram_ir::LayoutedTreeViewNode { id: "root".into(), parent_id: None, depth: 0, label: "src".into(),
+                diagram_ir::LayoutedTreeViewNode { id: "root".into(), is_implicit_root: true, parent_id: None, depth: 0, label: "src".into(),
                     kind: TreeViewNodeKind::Directory, class_selector: Some("highlight".into()), icon: Some("folder".into()),
                     description: None, x: 26.0, y: 12.0, width: 376.0, height: 28.0,
                     label_x: 49.0, label_width: 45.0, description_x: None, description_width: None },
-                diagram_ir::LayoutedTreeViewNode { id: "child".into(), parent_id: Some("root".into()), depth: 1, label: "main.rs".into(),
+                diagram_ir::LayoutedTreeViewNode { id: "child".into(), is_implicit_root: false, parent_id: Some("root".into()), depth: 1, label: "main.rs".into(),
                     kind: TreeViewNodeKind::File, class_selector: None, icon: None, description: Some("entry".into()),
                     x: 68.0, y: 46.0, width: 334.0, height: 28.0,
                     label_x: 73.0, label_width: 95.0, description_x: Some(184.0), description_width: Some(54.4) },
@@ -9376,6 +9379,8 @@ mod tests {
             PaintInstruction::GlyphRun(run) if run.font_size == 20.0)));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("treeView.config.showIcons")),
             Some(&"false".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("treeView.implicitRootId")),
+            Some(&"root".to_string()));
     }
 
     #[test]
