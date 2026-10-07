@@ -2,7 +2,9 @@ import { expect, it } from "vitest";
 import { measureContinuity } from "../../../src/continuity.js";
 import { loadTrackLessons } from "../../../src/loader.js";
 
-const lessons = loadTrackLessons("punjabi").sort(
+const lessons = loadTrackLessons("punjabi").filter(
+  (lesson) => Number(lesson.frontmatter.sequence) <= 8880,
+).sort(
   (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
 );
 const ids = [

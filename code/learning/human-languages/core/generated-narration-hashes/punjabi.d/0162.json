@@ -1,0 +1,17 @@
+{
+  "language": "punjabi",
+  "chapter": 162,
+  "sourceHash": "fnv1a64:5acacd54745da998",
+  "lessonIds": [
+    "PA-W16-form-mixed-return",
+    "PA-W16-form-timed-return",
+    "PA-W16-message-pacing-return"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "punjabi/narration/ch162.txt",
+  "json": "punjabi/narration/ch162.json",
+  "textHash": "fnv1a64:c5f8d3633fc53ffe",
+  "jsonHash": "fnv1a64:4db26c24132b1026",
+  "findings": []
+}
