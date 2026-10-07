@@ -11,21 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 16909,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16909",
-    "branch": "codex/parity-elixir-duplicate-20261007",
-    "implementation_revision": "aded56c24e",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-07T15:02:53Z",
+    "observed_at": "2026-10-07T15:50:21Z",
     "pr_number": 16909,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #16909 opened from tested Elixir duplicate-identity implementation. GitHub reports MERGEABLE, with CI, CodeQL, and human-language detection checks in progress on head fdf7452da1ef14cbc2973aeb3ed616168ddc41b5. Do not enable auto-merge while checks are pending."
+    "status": "merged",
+    "notes": "PR #16909 passed all 28 terminal current-head checks with expected skips and no failure. GitHub reported MERGEABLE/CLEAN; guarded squash auto-merge was enabled for exact head bc21487e26ee154ab3bf0d2151948c4a0e886cbb, never manually merged. GitHub merged it at 2026-10-07T15:50:21Z as 2d4ec84ca28db22bb816473c432251bf35d3b4c0."
   },
   "last_inventory": {
-    "revision": "1da8d7e9d9bdf9911f33172394acd1c326cb72a9",
+    "revision": "2d4ec84ca28db22bb816473c432251bf35d3b4c0",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1495,
@@ -2010,20 +2004,20 @@
     {
       "id": "build-tool-elixir-discovery-duplicate-identity-conformance",
       "title": "Reject duplicate Elixir build-tool package identities",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-elixir-discovery-language-registry-conformance"],
       "branch": "codex/parity-elixir-duplicate-20261007",
       "pr_number": 16909,
-      "notes": "PR #16909 is ready for review with specs, checked neutral fixture, typed duplicate rejection, root-redacted sorted paths, and CLI exit 2. Package-local Elixir tests, real escript, Go build-tool tests/vet/build, corpus, parity, lessons, diff, and independent security review passed. CI is pending; the fixture result is test-local structured data, not a registered process-free adapter."
+      "notes": "Merged PR #16909 as 2d4ec84ca28db22bb816473c432251bf35d3b4c0 after 28 terminal acceptable checks and conflict-free guarded auto-merge. Checked neutral fixture, typed duplicate rejection, root-redacted sorted paths, and CLI exit 2 are now in main. The fixture result is test-local structured data, not a registered process-free adapter."
     },
     {
       "id": "build-tool-elixir-canonical-build-membership-and-windows-selection-conformance",
       "title": "Require canonical BUILD membership and select Elixir Windows overrides",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-elixir-discovery-language-registry-conformance"],
-      "branch": null,
+      "branch": "codex/parity-elixir-windows-selector-20261007",
       "pr_number": null,
-      "notes": "Elixir's native current_os reports :win32 while the override selector expects :windows, and variant-only BUILD_windows/BUILD_mac can falsely create packages without canonical BUILD. Consume the neutral Windows-override and variant-without-canonical cases through the native selector/front door, preserving canonical membership and platform-specific fallback."
+      "notes": "Selected after #16909 merged and the 1,495-identity collision-checked refresh. Elixir's native current_os reports :win32 while the override selector expects :windows, and variant-only BUILD_windows/BUILD_mac can falsely create packages without canonical BUILD. Consume the neutral Windows-override and variant-without-canonical cases through the native selector/front door, preserving canonical membership and platform-specific fallback. The active work is one serial PR; Elixir native no-follow policy remains separately owned."
     },
     {
       "id": "build-tool-lua-dune-build-discovery-fixture-adoption",
@@ -4089,6 +4083,15 @@
       "branch": null,
       "pr_number": null,
       "notes": "Discovered by the post-#14615 Haskell tail audit. CMP06 currently lacks malformed-input behavior and explicit output/resource ceilings. Define a closed byte-exact neutral corpus, stable errors, malformed-stream rejection, and bounded decompression before any new lane claims conformance."
+    },
+    {
+      "id": "brotli-rust-cmp06-wire-reconciliation",
+      "title": "Reconcile Rust Brotli with the bounded CMP06 wire contract",
+      "status": "pending",
+      "depends_on": ["brotli-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The post-#16909 read-only audit found Rust emitting an out-of-spec distance symbol 32 as a no-copy command while CMP06 permits 0-31. Once the corrected neutral corpus fixes the shared sentinel and final-literal wire order, remove Rust's dialect and prove byte-exact and malformed-input behavior without folding existing-lane repair into the neutral prerequisite. Exact and punctuation-insensitive owner-ID and live PR path checks found no collision."
     },
     {
       "id": "brotli-haskell-lane-parity",
@@ -7587,13 +7590,22 @@
       "publication_notes": "Opened ready-for-review PR #12376 from clean validated head 63e5a7adbe3ea06ba3e732564dfe5136ec29b112 after a normal first push from exact origin/main 2e248b9070a4e7a89cea4bef83ad5caa5917148c. Independent implementation, security, build, inventory, and live-ownership audits found no blocker; the exact 12-path diff was clean, mergeable, and had no open or stale ownership overlap. Final reviewed head 283ebd81b8a533b4ceb7a5a0055d09d0e5940477 completed all 29 checks with 23 successes and six expected skips; both CI gates and Linux, macOS, and Windows builds succeeded, and GitHub reported the branch conflict-free. After the loop requested squash auto-merge, GitHub merged it as 49cfa0700c29fa434fdce3e26cc237ccfcf5a3ce at 2026-08-21T05:04:51Z and deleted the source branch."
     },
     {
+      "id": "elixir-zip-png-scale-raw-codec-hardening",
+      "title": "Bound Elixir ZIP raw-codec memory and work before PNG-scale use",
+      "status": "pending",
+      "depends_on": ["zip-raw-rfc1951-elixir-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The post-#16909 read-only audit found raw deflate boxing the full input and rebuilding an array at each cursor, while counted inflate retains every output byte in an array. Before IC18 PNG's 134 MiB maximum RGBA surface, establish byte-backed bounded encode/decode behavior, stable counted/error semantics, foreign round trips, and measured ceiling tests while preserving all 34 RFC1951 fixtures. Exact and punctuation-insensitive owner-ID and live PR path checks found no collision."
+    },
+    {
       "id": "image-codec-png-elixir-lane-parity",
       "title": "Port IC18 image-codec-png to Elixir",
       "status": "pending",
-      "depends_on": ["image-codec-png-language-neutral-conformance", "image-codec-png-apng-neutral-rejection-conformance"],
+      "depends_on": ["image-codec-png-language-neutral-conformance", "image-codec-png-apng-neutral-rejection-conformance", "elixir-zip-png-scale-raw-codec-hardening"],
       "branch": null,
       "pr_number": null,
-      "notes": "Standalone Elixir child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
+      "notes": "Standalone Elixir child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities, after bounded PNG-scale Elixir ZIP raw-codec hardening."
     },
     {
       "id": "image-codec-png-go-lane-parity",

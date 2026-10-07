@@ -16323,6 +16323,44 @@ collisions with a typed diagnostic and sorted repository-relative paths, and
 proves CLI exit 2 through a real escript. The active PR's CI and CodeQL checks
 are pending; no second parity implementation PR will be opened meanwhile.
 
+## Post-#16909 merge, inventory, and dependency ranking (2026-10-07)
+
+PR #16909 passed all 28 terminal current-head checks with expected skips and
+no failures; GitHub reported MERGEABLE/CLEAN. Guarded squash auto-merge (never
+manual merge) landed it at `2d4ec84ca28db22bb816473c432251bf35d3b4c0`.
+The collision-checked schema-3 inventory on that exact main commit remains
+15 established lanes, 1,495 identities, 4,765 implementation slots, 1,537
+all-reported identities, 178 high-consensus packages with 262 missing slots,
+1,013 singletons (814 Rust), five emerging OCaml packages, and zero canonical
+collisions or unknown language buckets. Java and Kotlin have 52 high-consensus
+gaps each; Dart has 96, Swift 51, Haskell four, Elixir one, and C#/F#/Go zero.
+These are structural counts, not behavior-parity claims.
+
+Parallel read-only audits found two exact unowned prerequisites and registered
+them before the next selection. `brotli-rust-cmp06-wire-reconciliation` follows
+the existing neutral Brotli owner: Rust emits an out-of-contract distance
+symbol 32, and CMP06's final-literal/sentinel order must be made deterministic
+before its byte-exact corpus is frozen. `elixir-zip-png-scale-raw-codec-hardening`
+follows the merged Elixir ZIP raw-codec owner and now gates the Elixir PNG port:
+boxed-byte compression and array-per-byte inflation need bounded memory/work
+evidence before a PNG-scale allocation claim. Exact and punctuation-insensitive
+owner-ID checks and live PR path review found no collision or overlap. The
+neutral build-tool corpus has 178 process-free cases, but all 16 adapters remain
+missing and execution cases still need trusted containment; no adapter closure
+is claimed by the recent Elixir discovery PRs. OCaml's five packages remain
+emerging until its separately owned execution, native front-door, CI, and
+adapter gates pass.
+
+The quick dependency/leverage pass chooses one bounded next slice:
+`build-tool-elixir-canonical-build-membership-and-windows-selection-conformance`.
+It follows merged exact-registry and duplicate-identity work, consumes the
+existing Windows-override and variant-without-canonical neutral cases, and
+closes the remaining known portable Elixir discovery selector defect before
+adapter work. The Elixir neutral adapter still has other prerequisites. Brotli
+neutral conformance has broader eventual lane leverage but requires a larger
+wire-contract correction; DT17, event-loop fixture, and Dart/Swift binary-tree
+remain ready alternatives. No second PR was opened while #16909 was active.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
