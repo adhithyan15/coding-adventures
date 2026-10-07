@@ -151,6 +151,12 @@ Current pairs:
 - `perl5.003_16.*` is a separate **partial** pair checked against the
   [`perl-5.003_16` source tag]'s `perly.y` and `toke.c`. Both tagged source
   blobs match 5.003_15; the release has its own files and validation row.
+- `perl5.003_17.*` is a separate **partial** pair checked against the
+  [`perl-5.003_17` source tag]'s `perly.y` and `toke.c`. Yacc matches 5.003_16;
+  tokenizer cleanup at lex end lies outside the accepted print subset.
+- `perl5.003_18.*` is a separate **partial** pair checked against the
+  [`perl-5.003_18` source tag]'s `perly.y` and `toke.c`. Both tagged source
+  blobs match 5.003_17; the release still has distinct files.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot, including adjacent `--` and
@@ -205,4 +211,6 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [`perl-5.003_14` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_14
 [`perl-5.003_15` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_15
 [`perl-5.003_16` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_16
+[`perl-5.003_17` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_17
+[`perl-5.003_18` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_18
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2
