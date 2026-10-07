@@ -12,20 +12,20 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16956,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16956",
-    "branch": "codex/parity-geometry-arc2d-degenerate-20261007",
-    "implementation_revision": "5d1f67d0874fbbcbf27135557d4c8368b7c85941",
+    "number": 16963,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16963",
+    "branch": "codex/parity-buildtool-sharedpattern-20261007",
+    "implementation_revision": "3d7a35fe62fb0ee2e566b775a0c538a1502cb705",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-07T20:22:13Z",
-    "pr_number": 16956,
+    "observed_at": "2026-10-07T21:33:16Z",
+    "pr_number": 16963,
     "status": "checks-pending",
-    "notes": "Ready-for-review PR opened on implementation head 5d1f67d0874fbbcbf27135557d4c8368b7c85941; GitHub reports MERGEABLE but BLOCKED while detect and CodeQL discovery checks are queued. Auto-merge remains disabled until all required checks are terminal and acceptable and no conflict remains."
+    "notes": "Ready-for-review PR opened on implementation head 3d7a35fe62fb0ee2e566b775a0c538a1502cb705; GitHub reports MERGEABLE but BLOCKED while CI detect, CodeQL detection, and human-language detection are queued. Auto-merge remains disabled until all required checks are terminal and acceptable and no conflict remains."
   },
   "last_inventory": {
-    "revision": "4143b306c81edd87fd745ee84df2739c4b9dfa9e",
+    "revision": "513e94670e523cae04f53e4169f4d5833597b5af",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1496,
@@ -1090,11 +1090,26 @@
     {
       "id": "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture",
       "title": "Pin cross-gate shared-pattern deduplication at the CI-gate work ceiling",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling"],
+      "branch": "codex/parity-buildtool-sharedpattern-20261007",
+      "pr_number": 16963,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/16963",
+      "opened_at": "2026-10-07T21:33:16Z",
+      "implementation_revision": "3d7a35fe62fb0ee2e566b775a0c538a1502cb705",
+      "selected_at": "2026-10-07T21:13:00Z",
+      "selection_revision": "513e94670e523cae04f53e4169f4d5833597b5af",
+      "selection_notes": "Selected after #16956 merged, exact-main collision-checked inventory stayed at 15 established lanes, 1,496 identities and zero collisions, and three newly discovered owners were registered. Both dependencies are merged; this fixture-only boundary proof unlocks thirteen pending build-tool consumers without changing host or engine authority.",
+      "notes": "The neutral CI-gate corpus lacks a case where two gates share an identical path pattern at the 50,000,000-unit ceiling. Add an exact-at-limit case with 21 references but 20 distinct patterns, preserving A=true/B=false; the engine must deduplicate patterns across gates before the operation-wide preflight. This is neutral fixture coverage, not a known engine defect. Update corpus counts and both runner assertions; keep host authority out."
+    },
+    {
+      "id": "build-tool-ci-gate-fixture-native-ci-selection",
+      "title": "Schedule native Go and Python CI-gate consumers for neutral fixture-only diffs",
+      "status": "pending",
+      "depends_on": ["build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
       "branch": null,
       "pr_number": null,
-      "notes": "The neutral CI-gate corpus lacks a case where two gates share an identical path pattern at the 50,000,000-unit ceiling. Add an exact-at-limit case with 21 references but 20 distinct patterns, preserving A=true/B=false; the engine must deduplicate patterns across gates before the operation-wide preflight. This is neutral fixture coverage, not a known engine defect. Update corpus counts and both runner assertions; keep host authority out."
+      "notes": "A diff confined to ci-gate-selection-*.json runs the shared conformance oracle but need not select the native Go internal/cigates and Python CI-gate package BUILD fronts. Add exact fixture-path consumer selection and detector regression with Ubuntu proof; avoid broad spec fanout and recheck live workflow overlap before editing."
     },
     {
       "id": "build-tool-ci-gate-selection-match-work-ceiling",
@@ -12069,20 +12084,42 @@
     {
       "id": "geometry-arc2d-existing-api-degenerate-reconciliation",
       "title": "Reconcile G2D03 existing SVG endpoint API in Rust, TypeScript, Python, C#, and F#",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"],
       "branch": "codex/parity-geometry-arc2d-degenerate-20261007",
       "pr_number": 16956,
       "selected_at": "2026-10-07T19:50:00Z",
       "selection_revision": "4143b306c81edd87fd745ee84df2739c4b9dfa9e",
       "selection_notes": "Selected after #16945 merged and the collision-clean 1,496-identity post-merge refresh registered all three newly discovered owners. This bounded existing-lane G2D03 repair is dependency-ready, exercises the neutral degenerate arc cases, and leaves endpoint API additions and missing-lane ports separate.",
-      "notes": "These lanes expose SvgArc evaluate/bounds but return None/null on degeneration, use component-wise <1e-12 endpoint and radius guards, and must retain absolute-radius SVG semantics. Adopt squared-distance <1e-20, absolute radius <1e-10, line evaluation, and ordered bounds with neutral cases and native downstream tests. Preserve optional center conversion and empty cubic output."
+      "notes": "These lanes expose SvgArc evaluate/bounds but return None/null on degeneration, use component-wise <1e-12 endpoint and radius guards, and must retain absolute-radius SVG semantics. Adopt squared-distance <1e-20, absolute radius <1e-10, line evaluation, and ordered bounds with neutral cases and native downstream tests. Preserve optional center conversion and empty cubic output.",
+      "merged_head_revision": "80f2db951a068522ddb4d4e953d5c31cdfea8d19",
+      "merged_at": "2026-10-07T21:12:12Z",
+      "merge_revision": "513e94670e523cae04f53e4169f4d5833597b5af",
+      "merge_notes": "All 35 final-head checks completed acceptably. GitHub reported MERGEABLE/CLEAN, guarded squash auto-merge completed, and no manual merge was used."
+    },
+    {
+      "id": "geometry-2d-neutral-fixture-ci-scheduling",
+      "title": "Schedule the neutral geometry2d validator and test suite in CI",
+      "status": "pending",
+      "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The geometry2d-v1 validator and its unit tests exist but are absent from the unconditional contracts job. Add exact CI scheduling and verify on the live workflow; recheck open workflow PR overlap before editing."
+    },
+    {
+      "id": "geometry-arc2d-go-center-form-spec-reconciliation",
+      "title": "Reconcile Go G2D03 center-form extrema and quadrant segmentation",
+      "status": "pending",
+      "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Clarify center-form inclusion at wrapped and negative sweeps in G2D03, add additive neutral extrema/segment-count cases, then replace Go BboxArc 100-point sampling and exact-quadrant oversegmentation with analytic extrema and ceil(abs(sweep)/(pi/2)). Keep endpoint convenience API as a separate downstream owner."
     },
     {
       "id": "geometry-arc2d-go-endpoint-api-reconciliation",
       "title": "Complete Go G2D03 SVG endpoint-form evaluation and bounds",
       "status": "pending",
-      "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"],
+      "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-arc2d-go-center-form-spec-reconciliation"],
       "branch": null,
       "pr_number": null,
       "notes": "Go currently provides endpoint-to-center conversion but no SvgArc evaluate/bounds convenience API and exact endpoint/<1e-12 radius guards. Add the native equivalent of the neutral degenerate line fallback and ordered bounds; validate Go arc2d and downstream packages."

@@ -253,8 +253,8 @@ in ID order, including false verdicts, or one stable
 existing portable `glob_match` implementation, not host path matching. Python
 `len()` counts Unicode scalars for the preflight; the complete operation-wide
 charge is computed before the first matcher invocation, even if an early gate
-or package intersection would otherwise decide the result. The exact ten
-`ci-gate-selection/*.json` neutral cases must be discovered by ID and replayed
+or package intersection would otherwise decide the result. The entire checked-in
+`ci-gate-selection/*.json` neutral case set must be discovered by ID and replayed
 through this production function in package-local tests. Fixture decoding and
 any registry file I/O remain in tests or future reviewed front-door adapters,
 not in the pure operation. This adoption does not mark a neutral execution
