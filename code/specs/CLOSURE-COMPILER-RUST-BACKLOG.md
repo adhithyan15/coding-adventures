@@ -218,9 +218,12 @@ observe later-sweep inline/fold ordering, tracing-neutral output, deterministic
 bytes and preservation of the entire existing artifact set on cap failures.
 Full compiler validation found three older NDJSON fixture failures; the readers
 now preserve raw records until checked reconstruction, and projection tests use
-the semantic partial-coverage contract. Focused repairs pass; final whole-suite
-checks, independent exact-head review, publication and native CI/merge remain
-pending. This chronology slice does not establish exact source/output coverage,
+the semantic partial-coverage contract. Final local verification passes: 1,093 compiler tests across 181 targets
+with zero ignores, plus 2,279 shared tests/doctests across 91 targets in all 20
+affected packages (49 existing ignores). Compiler and shared strict all-target
+Clippy pass with unknown lints denied; all 936 lessons validate and whitespace
+checks pass. Independent exact-head review, publication and native CI/merge
+remain pending. This chronology slice does not establish exact source/output coverage,
 all fold families, composite spans or provenance for every mutating pass.
 
 The remaining-fold inventory is
