@@ -1,0 +1,20 @@
+# Perl 5.004_03 (1997-09-05) tokens: plain-decimal arithmetic-print subset.
+# @version 1
+# PARTIAL: this does not lex all Perl 5.004_03 source.
+# Evidence: https://github.com/Perl/perl5/tree/perl-5.004_03
+# Tagged toke.c adds input-handle cleanup outside this subset.
+# Unsupported characters, carriage returns and
+# leading-zero forms remain refused.
+
+PRINT     = "print"
+INT       = /0|[1-9][0-9]{0,249}/
+PLUS      = "+"
+DECREMENT = "--"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\n]+/
