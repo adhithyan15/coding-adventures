@@ -64,15 +64,61 @@ Legacy logs omit `identity`; any present field must be a versioned object,
 so `identity: null` is rejected even for empty disabled logs. Import rejects
 duplicate entry keys in both modes before decoding the duplicate payload,
 including equivalent escaped key spellings. It never silently overwrites
-earlier evidence during reload. These checks do not validate metadata-map
-duplicates or the complete graph; those remain foundation requirements.
+earlier evidence during reload. Generic `from_json_string` remains an allocator
+state import; use the checked import below to establish complete graph evidence.
 
 `try_create`, `try_derive` and `try_merge` return allocation errors without
 changing state. The original string-returning methods fail fast if counters
 exhaust or a caller-mutated log would collide; they never wrap or overwrite.
-These are allocation/state checks. Bounded graph validation, topology,
-canonical serialization and event chronology remain separate foundation work;
-compact IDs alone do not bound entry counts or prove complete lineage.
+Generic allocation methods retain their compatibility policy. Checked logs
+also enforce graph and resource limits before mutation. Compact IDs alone do
+not prove complete lineage or actual transformation chronology.
+
+## Checked graph foundation (CV02)
+
+```rust
+use coding_adventures_correlation_vector::{CVLog, GraphLimits};
+let mut log = CVLog::new_checked_compact(GraphLimits::default())?;
+let root = log.try_create(None)?;
+let child = log.try_derive(&root, None)?;
+log.try_passthrough(&child, "analysis")?;
+let evidence = log.try_lineage(&child)?; // borrowed, parent before child
+assert_eq!(evidence.len(), 2);
+let json = log.to_json_string()?;
+let restored = CVLog::from_checked_json(&json, GraphLimits::default())?;
+# Ok::<(), String>(())
+```
+
+Checked logs require full enabled recording, resolved older parents and complete
+allocation coverage. Mutation errors leave allocation, graph and retained usage
+unchanged. Contributions to unknown/deleted entries and repeated deletion fail.
+Deletion records its stage without replacing the original tombstone. Checked
+recording cannot be disabled. `entries()`, `pass_order()` and `is_enabled()`
+replace public field access; `set_enabled` retains generic recording toggles.
+
+`GraphLimits` bounds nodes, repeated parent edges, events, metadata values/depth
+and encoded text bytes, input bytes, structural operation work and export bytes.
+Defaults are 1M nodes, 4M edges/events, 1M metadata values, depth 64, 128 MiB
+payload/import, 64M work units and 512 MiB output. Depth above 64 is rejected.
+Counts and encoding bytes provide finite limits, rather than a precise RAM cap.
+Import/export share work allowances across phases. Destruction of oversized
+caller-owned arguments is iterative; disposing of already-transferred memory
+necessarily visits that payload outside the graph-processing allowance.
+
+Checked import rejects missing/unknown record fields, duplicate decoded keys at
+every level, disabled/incomplete history and declared projections. Queries
+validate the entire graph and use iterative traversal. Ancestry preserves
+nearest-first parent-list order; descendants have deterministic identity order
+within each BFS level; lineage includes reachable entries once with every parent
+before its child. Unknown query IDs return errors. Topology and `pass_order`
+(first occurrence of stage names) do not establish actual execution chronology.
+
+JSON sorts object keys at every level and preserves arrays and numbers. Output
+limits are enforced while writing; checked logs are validated before encoding.
+Generic snapshots retain allocator-only compatibility semantics, with bounded
+payload/encoding. Compiler propagation, format projections and transactional
+artifact publication are the remaining CV02 integration work; this library
+foundation does not complete CCR-065 or prove source-to-output coverage.
 
 ---
 
