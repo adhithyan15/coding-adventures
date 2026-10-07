@@ -38,12 +38,25 @@ version's spelling, date, history line or tag, and coverage state. Pair paths
 follow the filename convention above; source revisions and the validated
 subset are recorded in each pair's comments and the release-grammar README.
 Inventory release IDs must be unique and safe to use in those file paths.
-The initial `code/grammars/perl/releases.csv` inventory expands 763 numbered
-releases from a pinned `perlhist.pod` snapshot. An official source-tag audit
-added 11 release candidates omitted there, for 774 pending or partial release
-rows. The `v5.17.7.0` tag is excluded because its own annotation says that
-no such Perl release occurred. CPAN archives still need comparison before
-treating the inventory as exhaustive.
+The corrected `code/grammars/perl/releases.csv` inventory expands 765 release
+entries from a pinned `perlhist.pod` snapshot. An official source-tag audit
+added 11 release candidates omitted there, for 776 pending or partial release
+rows. The correction adds `p54rc1` and `p54rc2` from the pinned history's
+lines 264 and 265. Historical source archives for both are listed in the
+Perl archive index. The `v5.17.7.0` tag is excluded because its
+own annotation says that no such Perl release occurred. CPAN archives still
+need comparison before treating the inventory as exhaustive.
+
+For `p54rc1` and `p54rc2`, use the separate historical source archives,
+not an alias to 5.004. Both archives' `perly.y` files match the 5.004
+release; `p54rc2`'s `toke.c` also matches 5.004, while `p54rc1` differs
+only in the later addition of the regex `/c` modifier. Keep the two
+release pairs distinct and explicitly partial. Their accepted surface is
+the same plain-decimal `print` arithmetic subset with the 250-digit
+numeric bound; reject leading-zero literals, adjacent decrement, carriage
+returns and unsupported constructs. Check each archive's identity and run
+positive and negative parser probes before changing either inventory row
+from pending to partial.
 
 A pair must not claim to describe the complete language while it covers only
 a pilot subset. Mark partial pairs explicitly, list their accepted constructs,
@@ -162,3 +175,43 @@ plain-decimal token rule may accept at most 250 digits and must reject a
 251-digit literal before parsing. Test both sides of that boundary. This is a
 lexer bound for the historical syntax pair, not a claim that LANG81 can
 execute a 250-digit integer or that other Perl numeric forms are supported.
+
+Prepare the next bounded installment as nine distinct partial pairs for
+5.003_99, 5.003_99a, 5.004, 5.004_01, 5.004_01-t2, 5.004_01_01 through
+5.004_01_03, and 5.004_02. Ground tagged releases in their own official
+source tags and the four trials in their own historical archives. Keep each
+token and grammar file separate even where source blobs agree. Retain the
+plain-decimal `print` arithmetic subset and the 250-digit bound; reject
+leading-zero forms, adjacent decrement, carriage returns, and unsupported
+syntax. Leave 5.004_01-t1 pending until source evidence for that trial is
+established. This installment does not extend executable LANG81 semantics or
+claim full historical release syntax.
+
+The historical 5.004_01-t2 source archive is independently available even
+though the inspected official Git tag list has no t2 tag. Its `patchlevel.h`
+identifies patchlevel 4, subversion 1; its `perly.y` and `toke.c` are
+byte-identical to the tagged final 5.004_01 files. Give t2 distinct partial
+token and grammar files and retain the plain-decimal 250-digit boundary
+probes. Keep 5.004_01-t1 pending until its own source can be established.
+
+The historical 5.004_01_01 trial archive has the same `perly.y` as
+5.004_01-t2. Its `toke.c` changes quoted-curly disambiguation, word
+operator expectations, warnings, and quote delimiter handling; these do not
+expand the plain-decimal `print` arithmetic subset. Give this numbered
+trial its own partial pair, retain the 250-digit decimal bound, and keep
+unsupported constructs rejected.
+
+The historical 5.004_01_03 trial archive keeps the same `perly.y` as
+5.004_01_02. Its `toke.c` changes debugger line hooks only, outside the
+bounded decimal `print` arithmetic subset. Give the trial a distinct
+partial pair with the inherited 250-digit bound and negative probes.
+
+The tagged final 5.004_02 release has `perly.y` and `toke.c` identical
+to the 5.004_01_03 trial archive. It still needs a distinct partial pair;
+retain the tested decimal boundary and unsupported-form rejection.
+
+The historical 5.004_01_02 trial archive again has the same `perly.y`.
+Its tokenizer changes command-line `-p` expansion and quoted delimiter
+handling outside the partial decimal `print` arithmetic subset. Record
+a distinct pair with the inherited 250-digit bound and reject unsupported
+syntax rather than claiming full release coverage.

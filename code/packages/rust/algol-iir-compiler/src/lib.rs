@@ -3894,7 +3894,7 @@ impl Compiler {
             .value
             .clone();
         let target_name = self.resolve_procedure_identity(&source_name);
-        if !matches!(target_name.as_str(), "abs" | "sqrt" | "exp")
+        if !matches!(target_name.as_str(), "abs" | "sqrt" | "exp" | "ln")
             || self.proc_sigs.contains_key(&target_name)
         {
             return None;
@@ -3907,6 +3907,7 @@ impl Compiler {
             "abs" => self.builtin_sign_operand(actuals[0]),
             "sqrt" => self.builtin_nonnegative_bounded_sign_operand(actuals[0]),
             "exp" => self.builtin_single_exp_sign_operand(node),
+            "ln" => self.builtin_single_exp_nonnegative_sign_operand(actuals[0]),
             _ => None,
         }
     }
@@ -3966,6 +3967,17 @@ impl Compiler {
             return None;
         }
         self.builtin_sign_operand(operand)
+    }
+
+    fn builtin_single_exp_nonnegative_sign_operand<'n>(
+        &self,
+        node: &'n GrammarASTNode,
+    ) -> Option<&'n GrammarASTNode> {
+        let operand = self.builtin_exp_operand(node)?;
+        if self.contains_builtin_exp_call(operand) {
+            return None;
+        }
+        self.builtin_nonnegative_bounded_sign_operand(operand)
     }
 
     fn builtin_sign_operand<'n>(
@@ -13684,6 +13696,40 @@ mod tests {
         ] {
             let err = compile_source(source, "test").expect_err(
                 "nested exponential, non-sign-rooted, and overridden exp mappings must remain conservative under nested sqrt",
+            );
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_sqrt_ln_exp_entier_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(sqrt(ln(exp(abs(sign(pick())))))); output(x) end",
+            "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier(sqrt(sqrt(ln(exp(abs(sign(pick()))))))))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "sqrt over ln-exp of a nonnegative bounded sign result preserves provenance through entier for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_sqrt_ln_exp_entier_sign_widening_rejects_unproven_mappings() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(ln(exp(sign(pick()))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(ln(exp(exp(abs(sign(pick()))))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real procedure exp(x); value x; real x; exp := x; real result; result := entier(sqrt(ln(exp(abs(sign(pick())))))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "signed, nested exponential, and overridden exp mappings must remain conservative under sqrt-ln",
             );
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }

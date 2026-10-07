@@ -17,6 +17,10 @@
     {
       "name": "flowchart-style-edge-label",
       "source": "swimlane-beta LR\nsubgraph Dep1\n  Start\n  Process1\nend\nStart --Yes --> Process1 --> Start"
+    },
+    {
+      "name": "multiline-edge-continuation",
+      "source": "swimlane-beta TD\nsubgraph Intake\n  Start([Start])\n  Validate[Validate]\nend\nsubgraph Delivery\n  Process[Process]\n  Finish((Finish))\nend\nStart --> Validate\n  --> Process\n  --> Finish"
     }
   ]
 }

@@ -230,15 +230,24 @@ Acceptance still requires a non-skipped test step and successful package result.
 
 The shared `discovery/language-registry` case needs an additional, bounded
 package-selection rule: changing its exact JSON file schedules each native
-build-tool test consumer (the two .NET fronts plus Go, Lua, Perl, Python, Ruby,
-Rust, Swift, and TypeScript) in the ordinary affected build plan. The rule
+build-tool test consumer (the two .NET fronts plus Elixir, Go, Haskell, Lua,
+Perl, Python, Ruby, Rust, Swift, and TypeScript) in the ordinary affected build plan. The rule
 unites those roots with other changed packages on every platform; it does not
 force a repository-wide build or apply to neighboring fixtures. A missing
 registered consumer is an error rather than a silently skipped test. Native
 fixture adopters must extend the consumer map and its drift test together.
 An explicit `-language` filter selects only the matching consumer; default
-all-language CI validates all ten. Rename detection retains both the old and
+all-language CI validates all twelve. Rename detection retains both the old and
 new paths so moving the fixture cannot silently bypass this rule.
+
+The flat `ci-gate-selection-*.json` case family separately seeds the Go and
+Python build-tool fronts. Their BUILD commands run the native Go
+`internal/cigates` and Python CI-gate fixture suites. This exact relation
+applies to fixture additions, edits, deletions, and renamed old paths on all
+platforms without a forced full build. Other fixture domains, nested paths,
+and filename lookalikes do not select these roots. Missing applicable roots
+fail planning; a single-language run selects only its own consumer. Detector
+tests check both the emitted affected roots/toolchains and reader-map drift.
 
 ## Metadata safety
 

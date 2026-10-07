@@ -1,0 +1,449 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 163,
+  "title": "Return to Making, Sewing, Filling, and Pulling",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:c7fc79f76396c197",
+  "lessons": [
+    {
+      "id": "PA-R163-make-again",
+      "sequence": 8920,
+      "title": "An old word for making",
+      "headword": "ਬਣਾਉਣਾ",
+      "romanization": "baṇāuṇā",
+      "gloss": "to make, recalled after a long gap",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86a2c5339c74cc59",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is one familiar action, heard again after a long gap. Say the word before the model if you can. There is no new Punjabi or scored A1 mock."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to make."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਬਣਾਉਣਾ (baṇāuṇā)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear ਬਣਾਉਣਾ (baṇāuṇā)."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall to make. Now hear to make once more."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਬਣਾਉਣਾ (baṇāuṇā) before the model. One word is enough; no sentence is needed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One last cue: to make."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਬਣਾਉਣਾ (baṇāuṇā). Listen and retry once if the word does not come back."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R163-sew-again",
+      "sequence": 8930,
+      "title": "An old word for sewing",
+      "headword": "ਸਿਉਣਾ",
+      "romanization": "siuṇā",
+      "gloss": "to sew, recalled after a long gap",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6e81b4a8dd451bbf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Retrieve one action you met earlier. Hear the meaning first; there is no need to sew anything. This short return is not scored A1 mock work."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to sew."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਸਿਉਣਾ (siuṇā) before the model."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear ਸਿਉਣਾ (siuṇā)."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall its meaning, to sew. Then hear to sew again."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਸਿਉਣਾ (siuṇā). One familiar word is the whole answer."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to sew once more."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਸਿਉਣਾ (siuṇā). If needed, listen to the model and try again once."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R163-fill-again",
+      "sequence": 8940,
+      "title": "An old word for filling",
+      "headword": "ਭਰਨਾ",
+      "romanization": "bharnā",
+      "gloss": "to fill, recalled after a long gap",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66effb41de74835a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Return to one familiar action. Listen, pause, and say the old word; no new words, sentences, or scored A1 mock are added here."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to fill."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਭਰਨਾ (bharnā)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear ਭਰਨਾ (bharnā)."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall to fill. Now hear to fill."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਭਰਨਾ (bharnā) before the model. Only this old meaning and word are needed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to fill again."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਭਰਨਾ (bharnā). Listen and retry once if the word feels distant."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R163-pull-again",
+      "sequence": 8950,
+      "title": "An old word for pulling",
+      "headword": "ਖਿੱਚਣਾ",
+      "romanization": "khiccṇā",
+      "gloss": "to pull, then a return to four familiar actions",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:96ba4bfa1dcc1e56",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "First retrieve to pull by itself. Then hear four already-taught actions in a small shuffled mix. Pause before each model. This is not scored A1 writing or a complete mock."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to pull."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਖਿੱਚਣਾ (khiccṇā)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Pause after each familiar meaning, then hear its model:"
+            },
+            {
+              "kind": "speech",
+              "text": "to fill —."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਭਰਨਾ (bharnā)."
+            },
+            {
+              "kind": "speech",
+              "text": "to make —."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਬਣਾਉਣਾ (baṇāuṇā)."
+            },
+            {
+              "kind": "speech",
+              "text": "to pull —."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਖਿੱਚਣਾ (khiccṇā)."
+            },
+            {
+              "kind": "speech",
+              "text": "to sew —."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਸਿਉਣਾ (siuṇā)."
+            },
+            {
+              "kind": "speech",
+              "text": "Only the order of these four old words has changed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to sew, to pull, to make, then to fill. Pause after each cue and recall its Punjabi word before the model: ਸਿਉਣਾ (siuṇā), ਖਿੱਚਣਾ (khiccṇā), ਬਣਾਉਣਾ (baṇāuṇā), ਭਰਨਾ (bharnā). Revisit only the old word you missed."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -6221,11 +6221,19 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         edges: Vec::new(),
     };
     let mut current_lane: Option<usize> = None;
+    let mut last_edge_targets: Option<Vec<String>> = None;
     for (index, raw) in prepared.lines().enumerate() {
         let line_number = index + 1;
         let line = raw.trim();
         if line.is_empty() || line.starts_with("%%") {
             continue;
+        }
+        let is_edge = line.contains("-->")
+            || line.contains("---")
+            || line.contains("-.->")
+            || line.contains("==>");
+        if !is_edge {
+            last_edge_targets = None;
         }
         if line.to_ascii_lowercase().starts_with("swimlane-beta") {
             diagram.direction = parse_swimlane_direction(line, line_number)?;
@@ -6274,12 +6282,14 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             }
             continue;
         }
-        if line.contains("-->")
-            || line.contains("---")
-            || line.contains("-.->")
-            || line.contains("==>")
-        {
-            parse_swimlane_edge_chain(line, line_number, current_lane, &mut diagram)?;
+        if is_edge {
+            last_edge_targets = Some(parse_swimlane_edge_chain(
+                line,
+                line_number,
+                current_lane,
+                last_edge_targets.as_deref(),
+                &mut diagram,
+            )?);
             continue;
         }
         let node = parse_swimlane_node(
@@ -6364,20 +6374,28 @@ fn parse_swimlane_edge_chain(
     line: &str,
     line_number: usize,
     lane: Option<usize>,
+    continuation_from: Option<&[String]>,
     diagram: &mut SwimlaneDiagram,
-) -> Result<(), ParseError> {
+) -> Result<Vec<String>, ParseError> {
     let Some(operator) = next_swimlane_operator(line) else {
         return Err(swimlane_error(line_number, "invalid Swimlane edge"));
     };
-    let first = parse_swimlane_node_group(
-        &line[..operator.at],
-        line_number,
-        lane.map(|index| diagram.lanes[index].id.clone()),
-    )?;
-    let mut previous = first.iter().map(|node| node.id.clone()).collect::<Vec<_>>();
-    for node in first {
-        upsert_swimlane_node(diagram, node, lane);
-    }
+    let mut previous = if line[..operator.at].trim().is_empty() {
+        continuation_from.map(<[String]>::to_vec).ok_or_else(|| {
+            swimlane_error(line_number, "Swimlane edge continuation has no previous endpoint")
+        })?
+    } else {
+        let first = parse_swimlane_node_group(
+            &line[..operator.at],
+            line_number,
+            lane.map(|index| diagram.lanes[index].id.clone()),
+        )?;
+        let previous = first.iter().map(|node| node.id.clone()).collect::<Vec<_>>();
+        for node in first {
+            upsert_swimlane_node(diagram, node, lane);
+        }
+        previous
+    };
     let mut remainder = &line[operator.at + operator.len..];
     let mut edge_kind = operator.kind;
     let mut inline_label = operator.label;
@@ -6430,7 +6448,7 @@ fn parse_swimlane_edge_chain(
         edge_kind = next_operator.kind;
         inline_label = next_operator.label;
     }
-    Ok(())
+    Ok(previous)
 }
 
 fn parse_swimlane_node_group(

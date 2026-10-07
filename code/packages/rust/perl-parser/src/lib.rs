@@ -44,7 +44,8 @@ mod tests {
                 panic!("malformed Perl release row: {row}");
             };
             assert!(
-                release.starts_with(|character: char| character.is_ascii_digit())
+                (release.starts_with(|character: char| character.is_ascii_digit())
+                    || matches!(*release, "p54rc1" | "p54rc2"))
                     && release
                         .chars()
                         .all(|character| character.is_ascii_alphanumeric()
@@ -191,6 +192,17 @@ mod tests {
                     | "5.003_97i"
                     | "5.003_97j"
                     | "5.003_98"
+                    | "5.003_99"
+                    | "5.003_99a"
+                    | "p54rc1"
+                    | "p54rc2"
+                    | "5.004"
+                    | "5.004_01-t2"
+                    | "5.004_01"
+                    | "5.004_01_01"
+                    | "5.004_01_02"
+                    | "5.004_01_03"
+                    | "5.004_02"
                     | "5.38.2"
                     | "5.44.0"
                     | "5.45.3"
@@ -232,6 +244,17 @@ mod tests {
                     | "5.003_97i"
                     | "5.003_97j"
                     | "5.003_98"
+                    | "5.003_99"
+                    | "5.003_99a"
+                    | "p54rc1"
+                    | "p54rc2"
+                    | "5.004"
+                    | "5.004_01-t2"
+                    | "5.004_01"
+                    | "5.004_01_01"
+                    | "5.004_01_02"
+                    | "5.004_01_03"
+                    | "5.004_02"
             ) {
                 let carriage_return = GrammarLexer::new("print(1);\r", &token_grammar).tokenize();
                 assert!(
@@ -259,6 +282,17 @@ mod tests {
                     | "5.003_97i"
                     | "5.003_97j"
                     | "5.003_98"
+                    | "5.003_99"
+                    | "5.003_99a"
+                    | "p54rc1"
+                    | "p54rc2"
+                    | "5.004"
+                    | "5.004_01-t2"
+                    | "5.004_01"
+                    | "5.004_01_01"
+                    | "5.004_01_02"
+                    | "5.004_01_03"
+                    | "5.004_02"
             ) {
                 let unknown = GrammarLexer::new("print(1);\u{0001}", &token_grammar).tokenize();
                 assert!(
@@ -271,7 +305,23 @@ mod tests {
                     "{release}: unrecognized character accepted"
                 );
             }
-            if matches!(*release, "5.003_97i" | "5.003_97j" | "5.003_98") {
+            if matches!(
+                *release,
+                "5.003_97i"
+                    | "5.003_97j"
+                    | "5.003_98"
+                    | "5.003_99"
+                    | "5.003_99a"
+                    | "p54rc1"
+                    | "p54rc2"
+                    | "5.004"
+                    | "5.004_01-t2"
+                    | "5.004_01"
+                    | "5.004_01_01"
+                    | "5.004_01_02"
+                    | "5.004_01_03"
+                    | "5.004_02"
+            ) {
                 let accepted = format!("print({});", "9".repeat(250));
                 let tokens = GrammarLexer::new(&accepted, &token_grammar)
                     .tokenize()
