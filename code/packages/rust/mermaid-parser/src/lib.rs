@@ -5851,7 +5851,7 @@ fn prepare_cynefin_source(source: &str) -> Result<(String, Vec<String>), ParseEr
 
 /// Parse Mermaid 11.16.1 TreeView hierarchy and node annotations.
 pub fn parse_treeview(source: &str) -> Result<TreeViewDiagram, ParseError> {
-    let prepared = prepare_line_grammar_source(source)?;
+    let (prepared, multiline_descriptions) = prepare_treeview_source(source)?;
     let normalized = preprocess_treeview_box_drawing(&prepared)?;
     let tokens = try_tokenize_mermaid_treeview(&normalized).map_err(|message| ParseError { message, line: 1, col: 1 })?;
     let grammar = parse_parser_grammar(TREEVIEW_PARSER_GRAMMAR_SOURCE)
@@ -5864,13 +5864,19 @@ pub fn parse_treeview(source: &str) -> Result<TreeViewDiagram, ParseError> {
         let line_number = index + 1;
         let trimmed = raw.trim();
         if trimmed.is_empty() || trimmed == "treeView-beta" || trimmed.starts_with("%%") { continue; }
-        if let Some(value) = trimmed.strip_prefix("title ") { diagram.title = Some(value.trim().to_string()); continue; }
-        if let Some(value) = trimmed.strip_prefix("accTitle:") { diagram.accessibility_title = Some(value.trim().to_string()); continue; }
-        if let Some(value) = trimmed.strip_prefix("accDescr:") { diagram.accessibility_description = Some(value.trim().to_string()); continue; }
-        if let Some(value) = trimmed.strip_prefix("accDescr") {
-            if let Some(value) = value.trim().strip_prefix('{').and_then(|value| value.strip_suffix('}')) {
-                diagram.accessibility_description = Some(value.trim().to_string()); continue;
-            }
+        if let Some(value) = trimmed.strip_prefix("title").filter(|rest| rest.is_empty() || rest.starts_with(' ') || rest.starts_with('\t')) {
+            diagram.title = Some(value.trim().to_string()); continue;
+        }
+        if let Some((_, value)) = trimmed.split_once(':').filter(|(keyword, _)| keyword.trim() == "accTitle") {
+            diagram.accessibility_title = Some(value.trim().to_string()); continue;
+        }
+        if let Some((_, value)) = trimmed.split_once(':').filter(|(keyword, _)| keyword.trim() == "accDescr") {
+            let value = value.trim();
+            diagram.accessibility_description = value.strip_prefix("__TREEVIEW_MULTILINE_")
+                .and_then(|index| index.parse::<usize>().ok())
+                .and_then(|index| multiline_descriptions.get(index).cloned())
+                .or_else(|| Some(value.to_string()));
+            continue;
         }
         let indentation = raw.chars().take_while(|character| character.is_whitespace())
             .map(|character| if character == '\t' { 4 } else { 1 }).sum::<usize>();
@@ -5882,10 +5888,52 @@ pub fn parse_treeview(source: &str) -> Result<TreeViewDiagram, ParseError> {
         diagram.nodes.push(TreeViewNode { id: id.clone(), parent_id, depth, label, kind, class_selector, icon, description });
         ancestors.push((indentation, depth, id));
     }
-    if diagram.nodes.is_empty() {
-        return Err(ParseError { message: "TreeView diagrams require at least one node".into(), line: 1, col: 1 });
-    }
     Ok(diagram)
+}
+
+fn prepare_treeview_source(source: &str) -> Result<(String, Vec<String>), ParseError> {
+    let prepared = prepare_line_grammar_source(source)?;
+    let lines: Vec<_> = prepared.lines().collect();
+    let mut output = Vec::with_capacity(lines.len());
+    let mut multiline_descriptions = Vec::new();
+    let mut index = 0usize;
+    while index < lines.len() {
+        let trimmed = lines[index].trim();
+        let Some(after_keyword) = trimmed.strip_prefix("accDescr") else {
+            output.push(lines[index].to_string());
+            index += 1;
+            continue;
+        };
+        let Some(mut remainder) = after_keyword.trim_start().strip_prefix('{') else {
+            output.push(lines[index].to_string());
+            index += 1;
+            continue;
+        };
+        let start_line = index + 1;
+        let mut description = Vec::new();
+        loop {
+            if let Some((content, trailing)) = remainder.split_once('}') {
+                if !trailing.trim().is_empty() {
+                    return Err(ParseError { message: "unexpected content after TreeView accessibility description".into(), line: index + 1, col: 1 });
+                }
+                description.push(content.trim());
+                break;
+            }
+            description.push(remainder.trim());
+            index += 1;
+            if index == lines.len() {
+                return Err(ParseError { message: "unterminated TreeView accessibility description".into(), line: start_line, col: 1 });
+            }
+            remainder = lines[index];
+        }
+        while description.first().is_some_and(|line| line.is_empty()) { description.remove(0); }
+        while description.last().is_some_and(|line| line.is_empty()) { description.pop(); }
+        let description_index = multiline_descriptions.len();
+        multiline_descriptions.push(description.join("\n"));
+        output.push(format!("accDescr: __TREEVIEW_MULTILINE_{description_index}"));
+        index += 1;
+    }
+    Ok((output.join("\n"), multiline_descriptions))
 }
 
 type ParsedTreeViewNode = (String, TreeViewNodeKind, Option<String>, Option<String>, Option<String>);
