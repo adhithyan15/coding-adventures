@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — PREP01 bounded C #if shifts
+
+- Accept one `<<` or `>>` in each decimal `#if` logical clause, with a
+  nonnegative signed 32-bit left operand and a shift count from 0 through 31.
+  Left-shift results must fit signed 32-bit. Reject negative, overflowing,
+  longer, and mixed expressions explicitly; rooted file-input tests cover
+  branch selection and directive error location.
+
 ## Unreleased — PREP01 bounded C #if division and remainder
 
 - Accept one checked `/` or `%` in each decimal `#if` logical clause using
