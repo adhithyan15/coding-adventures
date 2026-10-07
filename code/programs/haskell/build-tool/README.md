@@ -20,6 +20,14 @@ dependencies from package manifests, hashes package inputs for incremental
 builds, uses git diff information to narrow the build set, and executes
 `BUILD` scripts in dependency order.
 
+Discovery excludes the exact Dune-generated `_build` directory component at
+any depth without excluding source directories named `_Build` or
+`_build-example`. The package-local Hspec suite projects the four checked
+OCaml package BUILD records from the shared language-registry fixture through
+the production `discoverPackages` walk: three are source packages and the
+`_build` record is a decoy. This is a focused discovery slice, not a claim of
+full registry or duplicate-identity conformance.
+
 Extra CI toolchain detection is also available through the pure
 `ToolchainDetection.evaluateToolchainSnapshot` boundary. Callers supply an
 inert package/BUILD snapshot, platform, optional scheduled package set, and

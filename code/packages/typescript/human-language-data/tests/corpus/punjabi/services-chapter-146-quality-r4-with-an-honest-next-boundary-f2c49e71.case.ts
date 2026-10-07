@@ -3,7 +3,11 @@ import { measureContinuity } from "../../../src/continuity.js";
 import { loadTrackLessons } from "../../../src/loader.js";
 
 it("services Chapter 146 quality R4 with an honest next boundary", () => {
-  const lessons = loadTrackLessons("punjabi").sort(
+  // Hold this chapter's historical boundary while Chapter 159 has its own
+  // before/after owner for the next retrieval tranche.
+  const lessons = loadTrackLessons("punjabi").filter(
+    (lesson) => Number(lesson.frontmatter.sequence) <= 8760,
+  ).sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
   );
   const reviewIds = ["PA-R158-food-quality-recall", "PA-R158-truth-and-food-check"];

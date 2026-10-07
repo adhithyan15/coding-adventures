@@ -4,7 +4,11 @@ import { isEtymologyAtom } from "../../../src/level-gate.js";
 import { loadTrackLessons } from "../../../src/loader.js";
 
 it("retrieves short writing skills before the R1/R2 boundary without mock credit", () => {
-  const lessons = loadTrackLessons("punjabi").sort(
+  // Pin the Chapter 157/158 boundary independently of the later Chapter 159
+  // tranche, which has its own exact pair-diff test.
+  const lessons = loadTrackLessons("punjabi").filter(
+    (lesson) => Number(lesson.frontmatter.sequence) <= 8760,
+  ).sort(
     (left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence),
   );
   const ids = [

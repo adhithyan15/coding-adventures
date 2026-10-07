@@ -436,6 +436,17 @@ full source-input registry adoption. The OCaml program identity and complete
 multi-lane discovery registry remain governed by the broader discovery
 contract and are not evidence furnished by this Perl-specific slice.
 
+The Haskell Dune-discovery adopter MUST independently project the four checked
+OCaml package BUILD records from `discovery/language-registry` through its
+production `discoverPackages` walk. Exact `_build` is generated output and
+MUST be absent; `_Build` and `_build-example` MUST remain discoverable alongside
+the ordinary OCaml source package. Assert the three qualified package names
+and repository-relative BUILD paths against the shared fixture's expected
+records on every supported host. This narrow projection does not claim the
+complete registry, program identity, or duplicate-identity behavior; those
+remain separate Haskell conformance items. Adding this native fixture consumer
+MUST also extend the exact fixture-to-build-tool CI selection map.
+
 If two discovered directories still produce one qualified name, discovery
 fails with `DUPLICATE_PACKAGE_IDENTITY`. The diagnostic includes the duplicate
 package identity and every repository-relative package path in sorted order;

@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-07 — re-audited after BEAM13 and LANG78
+Status date: 2026-10-07 — re-audited after MacroNib and LANG79
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -83,19 +83,23 @@ crossing an imported call, and issue #15882 was closed with those findings.
 PR #16870 delivered LANG78's bounded native JavaScript numeric/console
 source-to-IIR pilot and merged as `b0c0a6a7aff9735019ed74e487cd2afc64a74a5a`.
 It runs directly on Rust `vm-core`; Semantic IR is outside this execution path.
+PR #16873 delivered the generic PREP01 MacroNib dialect and merged as
+`c0cb312513a2f3b83b81a82e423d9e5bdaec7c9f` after its full IIR identity
+proof and protected checks passed. PR #16885 delivered LANG79's bounded native
+Python float-expression and `print` pilot and merged as
+`88cfc5a3b874be7c8dd4e237cca229990cd73fdf` after its latest-head checks
+passed. The Python pilot also runs directly on Rust `vm-core`.
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **PREP01 MacroNib (selected):** publish the second generic-preprocessor
-   dialect after its independently expanded Nib IIR identity and backend
-   evidence are complete. Keep the shared preprocessor core unchanged.
-2. **LANG79 Python:** publish the bounded direct-to-IIR float-expression and
-   `print` pilot after rebase, audit, and exact-head review.
-3. **LANG80 Ruby:** publish the bounded direct-to-IIR integer `puts` pilot
-   after rebase, audit, and exact-head review.
-4. **Perl foundation:** add a Rust lexer/parser for one explicit Perl subset,
-   then a source-to-IIR compiler executing on `vm-core`.
+1. **LANG80 Ruby (selected):** publish the bounded direct-to-IIR integer `puts`
+   pilot after rebase, audit, and exact-head review.
+2. **Perl foundation:** publish the bounded Rust lexer/parser and direct-to-IIR
+   `print` arithmetic pilot, then continue the separately tracked historical
+   token and grammar pairs for each public Perl release.
+3. **PREP01 C:** continue the generic-preprocessor C dialect and compose its
+   token output with the existing C parser when the bounded contracts are ready.
 
 The following run records the first VM-067 selection.
 

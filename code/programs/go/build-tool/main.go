@@ -193,6 +193,7 @@ var sharedDiscoveryFixtureConsumers = []struct{ name, language string }{
 	{"dotnet/programs/build-tool-csharp", "csharp"},
 	{"dotnet/programs/build-tool-fsharp", "fsharp"},
 	{"go/programs/build-tool", "go"},
+	{"haskell/programs/build-tool", "haskell"},
 	{"lua/programs/build-tool", "lua"},
 	{"perl/programs/build-tool", "perl"},
 	{"python/programs/build-tool", "python"},
