@@ -22,6 +22,7 @@ import { entries as teluguEntries } from "./strokes/telugu.ts";
 import { entries as malayalamEntries } from "./strokes/malayalam.ts";
 import { entries as bengaliEntries } from "./strokes/bengali.ts";
 import { entries as gurmukhiEntries } from "./strokes/gurmukhi.ts";
+import { entries as latinEntries } from "./strokes/latin.ts";
 
 //
 // The model, in one breath
@@ -311,4 +312,8 @@ export const DUCTUS: Record<string, LetterDuctus> = assembleDuctusRegistry([
   // Gurmukhi joins after Bengali, so again no existing key moves. Its keys
   // carry the script prefix (`gurmukhi:ਕ`).
   { owner: "gurmukhi", entries: gurmukhiEntries },
+  // Latin joins after Gurmukhi, so again no existing key moves. Its keys carry
+  // the script prefix (`latin:n`), which keeps a print n apart from any
+  // look-alike letter another script owns.
+  { owner: "latin", entries: latinEntries },
 ]);

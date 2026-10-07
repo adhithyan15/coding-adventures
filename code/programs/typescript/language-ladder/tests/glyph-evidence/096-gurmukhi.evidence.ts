@@ -9,9 +9,10 @@ export default [
     suite: "independent (word-initial) vowels",
     suiteOrder: 10,
     caseOrder: 96,
-    name: "keeps Gurmukhi the last script, with its letters and cited rows intact",
+    name: "keeps Gurmukhi after every older script, with its letters and cited rows intact",
     verify: ({ SCRIPTS }) => {
-      expect(SCRIPTS.at(-1)!.script).toBe("gurmukhi");
+      // Gurmukhi was the last tab until Latin joined after it.
+      expect(SCRIPTS.at(-2)!.script).toBe("gurmukhi");
       const gurmukhi = SCRIPTS.find((script) => script.script === "gurmukhi")!;
       expect(gurmukhi.letters).toHaveLength(33);
       expect(gurmukhi.letters.slice(0, 5).map((letter) => letter.glyph)).toEqual(["ਅ", "ਆ", "ਇ", "ਈ", "ਉ"]);

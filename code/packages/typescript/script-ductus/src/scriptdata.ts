@@ -44,6 +44,10 @@ import bengali from "../../../../learning/human-languages/data/scripts/bengali.j
 // Gurmukhi is hand-authored the same way: exactly the letters, signs and digits
 // the Punjabi track reads, with a cited ductus on the rows that have one.
 import gurmukhi from "../../../../learning/human-languages/data/scripts/gurmukhi.json";
+// Latin is hand-authored the same way: exactly the characters the six
+// Latin-script tracks' headwords use, with a cited ductus on the rows that
+// have one. Its font is the Noto Sans Latin bundled in the Devanagari file.
+import latin from "../../../../learning/human-languages/data/scripts/latin.json";
 
 /** One base letter (or character/radical) of a script. */
 export interface Letter {
@@ -164,6 +168,8 @@ export const SCRIPTS: ScriptData[] = [
   bengali as ScriptData,
   // Gurmukhi after Bengali: again a new last tab, so no existing index moves.
   gurmukhi as ScriptData,
+  // Latin after Gurmukhi: a new last tab, so no existing index moves.
+  latin as ScriptData,
 ];
 
 /** Resolve a cited letter back to the exact canonical script font that owns it. */

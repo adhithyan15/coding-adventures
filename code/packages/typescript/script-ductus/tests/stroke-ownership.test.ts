@@ -24,6 +24,8 @@ const ownerNames = [
   "hebrew",
   "japanese",
   "kannada",
+  // Latin joins as one owner module after Gurmukhi (print letters).
+  "latin",
   "malayalam",
   "tamil",
   "telugu",
@@ -544,12 +546,21 @@ describe("stroke ownership migration baseline", () => {
       // base (KanjiVG 04e94), so "a short stroke" was wrong. Only the label
       // moves: keys, the ordered key hash and Tamil stay; the non-Tamil data
       // hash moves.
+      //
+      // Latin joins as a new last owner with 18 print glyphs, keyed
+      // `latin:<glyph>`: b c e g h i l n o r s u w ß and G cite the
+      // Grundschrift-App's ordered paths (facts only; the repository has no
+      // licence), and ñ ¿ ¡ cite UJIpenchars2's native Spanish writers (CC BY
+      // 4.0). Appending the owner keeps every existing key in place. Keys move
+      // 604 -> 622 with a new `latin: 18` count, and the ordered key hash and
+      // the non-Tamil data hash move, measured after the last caption was
+      // settled; Tamil and both shared-identity values remain unchanged.
     }).toEqual({
-      keys: 604,
+      keys: 622,
       keyHash:
-        "a2b2c7cb41da0b5f18f4730b9befe6c3f591023f94311c48915e5b341c2b54f5",
+        "932bf4e24bcd0dfc482295e3712b865afdef61b8b85a3ce1140447a10caba106",
       nonTamilDataHash:
-        "0d9338b405d9cb6c7d51bbe641d4daed7a9d92934de0ab6fe85c3d454117a33e",
+        "a45dfceb8aa014d8d918fa5e307be2033d1e583868e07fcd656f30579e99f9a3",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -564,6 +575,7 @@ describe("stroke ownership migration baseline", () => {
         hebrew: 22,
         japanese: 83,
         kannada: 44,
+        latin: 18,
         malayalam: 53,
         "perso-arabic": 24,
         tamil: 36,

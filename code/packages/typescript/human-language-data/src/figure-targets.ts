@@ -89,6 +89,16 @@ export const DERIVED_FILMSTRIP_SCRIPTS: Readonly<Record<string, string>> = {
   // letters with a cited ductus are drawn, and a Gurmukhi WORD is still never
   // composed (one headline runs across it; see SEPARATE_LETTER_SCRIPTS).
   punjabi: "gurmukhi",
+  // HL-C443 sixth rollout: the first Latin-script tracks. Their print letters
+  // follow the Grundschrift-App's ordered paths (a school model, cited as
+  // facts only), with native Spanish writers' counts from UJIpenchars2, and ñ's
+  // tilde, ¿ and ¡ follow those writers. Only Spanish and German join: their
+  // lessons are the only Latin ones whose every letter is cited. Noto Sans
+  // prints a two-storey a, which no source draws, so French, Italian,
+  // Portuguese and Latin, whose writing headwords all hold an a or an
+  // uncited mark, stay off until a source covers it.
+  spanish: "latin",
+  german: "latin",
 };
 
 const GRAPHEMES = new Intl.Segmenter("und", { granularity: "grapheme" });
@@ -184,6 +194,14 @@ export function writingLetterOf(lesson: ParsedLesson): string | undefined {
  * letter and the next. A word in one of these, made only of cited base
  * letters, is honestly drawn as its letters one after another.
  *
+ * Latin is here for its PRINT letters, the hand the cited school model
+ * (the Grundschrift-App) teaches first and the one the bundled outline
+ * prints: each letter stands apart. The joined hand that Grundschrift goes on
+ * to teach is not drawn. A Latin word with punctuation inside it (¿cómo?) is
+ * refused, because ¿ and ? are not base letters; a precomposed ñ is one base
+ * letter with a ductus of its own, and n typed with a combining tilde is
+ * refused, because Latin has no written-order table.
+ *
  * Devanagari, Bengali and Gurmukhi are absent for the reason above (a shared
  * headline). All three have cited letters, so a LIST of them is drawn. A
  * Devanagari WORD is drawn another way (`headlineWordOf`); a Bengali or
@@ -198,6 +216,7 @@ export const SEPARATE_LETTER_SCRIPTS: ReadonlySet<string> = new Set([
   "kannada",
   "telugu",
   "malayalam",
+  "latin",
 ]);
 
 /** What separates the items of a list headword: space, commas, dashes, dots. */
@@ -671,6 +690,18 @@ export function headlineWordOf(lesson: ParsedLesson, script: string): string | u
   return fits ? word : undefined;
 }
 
+/**
+ * The longest sequence a strip may draw, in written pieces.
+ *
+ * A sequence strip shelves every piece's frames into one figure, and the book
+ * shrinks each figure to fit the column. Past about ten pieces the figure is so
+ * tall that the shrunken frames and captions are no longer readable: the
+ * 14-letter "Großschreibung" came out 2,379 units tall, against 1,801 for the
+ * tallest nine-piece strip. A lesson that long is a word to read, not a
+ * stroke-order drill, so it prints no strip rather than an illegible one.
+ */
+export const MAX_SEQUENCE_PIECES = 10;
+
 /** Every lesson on a switched-on track that COULD carry a filmstrip. */
 export function filmstripCandidates(
   lessons: readonly ParsedLesson[],
@@ -685,6 +716,7 @@ export function filmstripCandidates(
     // A sequence first: a one-grapheme headword that is written in two pieces
     // (the two-part sign ோ) is a sequence, not a letter.
     const letters = writingSequenceOf(lesson, script);
+    if (letters !== undefined && letters.length > MAX_SEQUENCE_PIECES) continue;
     if (letters === undefined) {
       // A Devanagari word: one entry, composed from its letters and one
       // shared headline by script-ductus.

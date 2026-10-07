@@ -240,6 +240,10 @@ describe("the real corpus", () => {
       (target) => target.letters !== undefined && target.letters.join("") === target.glyph,
     );
     expect(words.map((target) => target.lessonId).sort()).toEqual([
+      // German print letters stand apart: weil, once its letters gained a
+      // Grundschrift-cited ductus. Großschreibung is cited letter for letter
+      // too, but at 14 pieces it is past MAX_SEQUENCE_PIECES and prints none.
+      "GE-W04-vier-zeilen",
       "GU-C32-ane-write",
       "GU-C33-ke-write",
       "GU-C34-kemke-write",
@@ -295,6 +299,38 @@ describe("the real corpus", () => {
       "HI-W12-schwa-drop",
       "MR-W03-dhanyavad-write",
       "MW-W01-saa",
+    ]) {
+      expect(lessonIds.has(id), id).toBe(false);
+    }
+  });
+
+  it("draws the Latin lessons whose every letter is cited, and no word with an a", () => {
+    // Four lessons: ñ, the list "¿ ¡", ß, and the German word weil.
+    // Großschreibung's letters are all cited, but 14 pieces is past
+    // MAX_SEQUENCE_PIECES, so it prints no strip rather than an illegible one. Every other Spanish and German writing lesson holds an a
+    // (Noto's two-storey a has no source), an accent whose only lesson also
+    // holds one, punctuation inside a word, or an uncited mark (ä ö).
+    const latin = targets.filter((target) => target.script === "latin");
+    expect(
+      Object.fromEntries(latin.map((target) => [target.lessonId, (target.letters ?? [target.glyph]).join(" ")])),
+    ).toEqual({
+      "ES-W02-enye": "ñ",
+      "ES-W03-inverted": "¿ ¡",
+      "GE-W01-eszett": "ß",
+      "GE-W04-vier-zeilen": "w e i l",
+    });
+    const lessonIds = new Set(targets.map((target) => target.lessonId));
+    for (const id of [
+      "ES-W00-hola-guided-copy",
+      "ES-W01-acento",
+      "ES-W01-frase-propia",
+      "ES-W02-cuatro-lineas-ayer",
+      "ES-W02-enye-formas",
+      "ES-C03-como-acento",
+      "ES-W03-question-span",
+      "GE-W01-hallo-guided-copy",
+      "GE-W02-umlauts",
+      "FR-W01-salut-guided-copy",
     ]) {
       expect(lessonIds.has(id), id).toBe(false);
     }

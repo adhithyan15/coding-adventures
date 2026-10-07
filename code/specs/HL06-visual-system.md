@@ -536,6 +536,106 @@ to start" block now point at the numbered strip, in the wording the earlier
 strip lessons use, so the figure-targets guard against a strip lesson
 disclaiming its stroke order holds.
 
+#### Design — the Latin script's first print letters
+
+The six Latin-script tracks (Spanish, French, German, Italian, Portuguese,
+Latin) have about 45 writing lessons, and none prints a strip: there is no
+Latin inventory and no Latin ductus owner. This design adds both, for the
+letters a source covers, and refuses the rest by name.
+
+**Sources.** Letter order comes from the Grundschrift-App
+(`Medien-Treibhaus/grundschrift-app-source`, pinned commit `f6dbd807`), built
+in a research project of the Laborschule at Bielefeld University with the
+Grundschulverband, on the Grundschulverband's Grundschrift model, with a
+teacher advisory team. Each letter is an ordered list of paths, one per
+pen-down stroke, and the app makes the child follow them in order. The
+repository has no licence, so it is a source of facts only (stroke count,
+order, start, direction); no point is copied, and every path is fitted to the
+bundled outline. Native-writer corroboration comes from UJIpenchars2 (Prat et
+al., UCI Machine Learning Repository dataset 177, CC BY 4.0): 60 adult Spanish
+writers, two samples of each character, cited as counts and shares only. UJI
+is also the only source for the marks: the tilde of ñ is written after the n
+(108 of 120) and left to right (104 of those 108), the bar of ¡ comes before
+its dot (114 of 119) and runs downward (109 of 119), and the hook of ¿ comes
+before its dot (108 of 118), starting at the top, heading down and turning
+anticlockwise to the lower right.
+
+**Font.** No bundled font is a Latin font, but Noto Sans Devanagari 2.006
+(`_fonts/NotoSansDevanagari-Static.ttf`) carries the Noto Sans Latin letters,
+including ñ, ß, ¿ and ¡, which the Cyrillic subset lacks. The Latin inventory
+names that file, and the paths are fitted to its Latin outlines at the default
+tolerances, with no override.
+
+**Precomposed letters.** ñ is one code point (NFC) and a base letter, so it is
+its own ductus entry (`latin:ñ`): the n, then a lift, then the tilde, fitted
+to the precomposed glyph. Latin gets no `WRITTEN_SIGN_SIDES` table, so a
+headword typed with a combining tilde (n + U+0303) is refused rather than
+drawn as n and a loose mark. Every Latin-track headword is NFC today.
+
+**Words.** Print letters stand apart (no headline, no joins, no change of
+shape), so `latin` joins `SEPARATE_LETTER_SCRIPTS` and a word of cited letters
+is drawn letter by letter. The strip shows print letters, not the joined hand
+that Grundschrift itself goes on to teach. Punctuation inside a word (¿cómo?)
+is not a base letter, so such a word is refused; a list of single marks
+("¿ ¡") is drawn.
+
+**Refused, with reasons.**
+
+* a and every word with it. Noto Sans prints a two-storey a, and every source
+  draws the one-storey a (a bowl, then the stem). No bundled font has a
+  one-storey a, so no path can both follow a source and lie on the printed
+  letter. This one letter holds back most Latin word lessons (hola, salut,
+  ciao, olá, Hallo, quia, buenos días, ayer, mañana, parce que) and the
+  accent list "á é í ó ú".
+* The grave (à è ù), circumflex, cedilla (ç), æ and œ: no source gives their
+  order or direction. ë ï ÿ, ä and ö only by analogy with ü, so not drawn.
+* Acute accents and ü are sourced (UJI) but unlock nothing without a, so they
+  wait for a later batch. The acute's direction would be recorded as split
+  (up-right in about 62% of samples, down-left in about 30%).
+
+**Scope.** 18 glyphs: G b c e g h i l n o r s u w ß ñ ¿ ¡. Only Spanish and
+German join `DERIVED_FILMSTRIP_SCRIPTS`, the tracks with a lesson these
+letters complete. Four lessons gain a strip: ES-W02-enye (ñ), ES-W03-inverted
+(¿ ¡), GE-W01-eszett (ß) and GE-W04-vier-zeilen (weil). GE-W03-capitalization
+(Großschreibung) is cited letter for letter but stays undrawn: see the length
+cap below. French, Italian, Portuguese and Latin stay
+switched off: none of their writing headwords is fully cited.
+
+**Inventory.** `data/scripts/latin.json` lists every Latin character a
+Latin-track headword uses, NFD-decomposed: 26 small letters, the 24 capitals
+in use (no X or Y), ß, œ, the cited ñ, ¿ and ¡, and seven combining marks
+(grave, acute, circumflex, tilde, macron, diaeresis, cedilla), with `complete`
+false. Only the 18 cited rows carry an order. Letter anchoring and script
+closure already skip Latin tracks, so their ceilings do not move.
+
+**As built.** As designed: owner `strokes/latin.ts` (keys `latin:<glyph>`,
+appended last), 18 glyphs, every stroke 1.000 on ink at the default
+tolerances and nothing untraced. Simple letters are one movement (c l o s w),
+most others two (the stem, then "back up" and the rest), so a word strip stays
+short; ñ is three movements over two strokes. Every record's `variation`
+carries the UJI counts at the source's count (for example n: 119 of 120 one
+stroke, 74 of those from the top left), and says where adults differ from the
+school model: most start l at the bottom, as a joined hand does, and UJI has
+no ß, so ß rests on the school model alone. The sequence renderer draws each
+letter at its own scale, so narrow letters (i, l, ¡) print tall.
+
+**Divergence: a length cap.** The fourteen-letter Großschreibung strip came
+out about 2,380 units tall, against about 1,800 for the longest earlier strip
+(a nine-piece Gujarati list), and the block-figure macro would shrink it to an
+illegible size. `MAX_SEQUENCE_PIECES` (10) now keeps any sequence longer than
+ten written pieces out of the candidates, so such a lesson prints no strip
+rather than an unreadable one. It removes only Großschreibung; every earlier
+strip has nine pieces or fewer.
+
+**Divergence: the inventory.** It also lists the ordinal indicators ª and º
+(Portuguese "1.º / 1.ª" is a headword): they are Latin-script letters the
+design's census missed, because their Unicode names do not say "Latin". And
+the validator's glyph closure turned out not to measure Latin at all (its
+script matchers leave Latin out, so a Latin headword can never report a gap),
+so the inventory's exactness is held by its own evidence module instead: every
+Latin character of every Latin-track headword is listed, and every listed one
+is read.
+
 ### Class B — data diagrams (generated)
 
 Etymology and cousin-web trees built from lesson `roots`, sound-articulation diagrams
