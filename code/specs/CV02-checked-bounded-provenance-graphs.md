@@ -481,6 +481,15 @@ The inherited-denial regression must report the parent/derived policy, token
 user/default owner and actual fresh-open outcome; its rejection requirement
 must not depend on that outcome or skip under a different CI token.
 
+Native diagnostic utilities must resolve from the OS-provided Windows system
+directory, independently of PATH ordering: Git's Unix `whoami.exe` does not
+implement Windows `/all`. Keep strict ACL setup errors fatal, but report optional
+token-diagnostic command failures without making them the fixture's setup exit
+status. A native test with a shadow `whoami.exe` first on the child PATH must
+still report the real Windows utility, apply the intended ACL and reach the
+unconditional publication rejection checks. A missing ACL setup path must still
+fail; diagnostic isolation must not hide setup errors or weaken the policy test.
+
 Unix mode bits alone also do not establish ownership or extended-ACL
 preservation. State native Linux/macOS support separately, check owner/group and
 extended/default ACL policy, and faithfully preserve it or reject unsupported
