@@ -16084,8 +16084,9 @@ identities, then updates the Python and Perl consumers with hard-coded counts
 and reruns the ten live native fixture consumers. Haskell and Elixir adoption
 and the JVM, Dart, and OCaml current-contract gates now depend on that neutral
 repair. It is a smaller, broader, dependency-first ratchet than the Haskell
-single-engine Dune fix or the C#/F# CI-gate engine; recheck live PR overlap
-before publishing it.
+single-engine Dune fix or the C#/F# CI-gate engine. The fresh-main and open-PR
+checks found no path overlap, so this one neutral fixture owner is the next
+in-progress tranche; Haskell implementation remains serially downstream.
 
 ## Autonomous Loop Protocol
 

@@ -720,10 +720,13 @@
     {
       "id": "build-tool-dune-discovery-near-case-neutral-fixture-repair",
       "title": "Pin positive Dune near-case discovery roots in the neutral language-registry fixture",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-language-source-input-registry-corpus-and-engine-audit"],
-      "branch": null,
+      "branch": "codex/parity-dune-discovery-nearcase-fixture-20261007",
       "pr_number": null,
+      "selected_at": "2026-10-07T08:29:41Z",
+      "selection_revision": "8d587b2eb15eae5e06ebea24c75e5a8d1d650100",
+      "selection_notes": "Selected after #16863 auto-merged and the fresh 15-lane inventory remained collision-free. Both prerequisites are merged. The neutral discovery fixture currently proves only negative _build exclusion; adding positive _Build and _build-example witnesses creates a small cross-language ratchet for ten native consumers before Haskell/Elixir adoption and JVM/Dart/OCaml current-contract claims. No other parity PR or open PR path overlap exists; keep this one fixture/consumer-count repair separate from Haskell engine behavior.",
       "notes": "Post-#16863 audit found discovery/language-registry proves only negative exact _build exclusion, although build-tool-conformance.md also claims positive _Build and _build-example preservation. Add Windows-safe distinct-parent OCaml BUILD records and exact expected packages, then update hard-coded Python and Perl consumer counts/lists and validate all ten native fixture consumers. Do not conflate source-collection near-case fixtures with discovery evidence."
     },
     {
