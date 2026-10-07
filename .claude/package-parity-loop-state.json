@@ -12145,7 +12145,7 @@
       "id": "json-value-d20-neutral-conformance",
       "title": "Freeze D20 JSON value and serializer semantics",
       "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
-      "notes": "Dart, Java, and Kotlin lack JSON value and serializer (six slots). Specify value ownership, number/string round trips, canonical error behavior, and independent neutral cases. Java/Kotlin JSON lexer/parser ping stubs are prerequisites, not evidence of parser readiness."
+      "notes": "Post-#16798 re-audit: json-serializer is 12/15 and lacks Dart, Java, Kotlin; this existing D20 umbrella explicitly owns both json-value and json-serializer, so no duplicate serializer owner is added. Freeze value ownership, compact/pretty output, escaping, nonfinite errors, ordering, and independent neutral cases. Java/Kotlin JSON lexer/parser ping stubs are prerequisites, not parser readiness."
     },
     {
       "id": "json-value-dart-java-kotlin-parity",
