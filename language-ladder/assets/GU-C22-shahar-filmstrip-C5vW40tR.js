@@ -1,0 +1,1 @@
+var e=``+new URL(`GU-C22-shahar-filmstrip-DDnYkMh1.svg`,import.meta.url).href;export{e as default};

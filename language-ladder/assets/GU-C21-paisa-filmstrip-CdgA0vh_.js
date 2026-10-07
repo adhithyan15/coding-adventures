@@ -1,0 +1,1 @@
+var e=``+new URL(`GU-C21-paisa-filmstrip-BeslNeFo.svg`,import.meta.url).href;export{e as default};

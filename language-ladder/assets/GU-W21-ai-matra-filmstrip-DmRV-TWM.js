@@ -1,0 +1,1 @@
+var e=``+new URL(`GU-W45-ai-sign-filmstrip-4hwTtrdT.svg`,import.meta.url).href;export{e as default};

@@ -1,0 +1,1 @@
+var e=``+new URL(`GU-C20-mandir-filmstrip-B-YOBjRp.svg`,import.meta.url).href;export{e as default};

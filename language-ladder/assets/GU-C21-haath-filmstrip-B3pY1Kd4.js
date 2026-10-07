@@ -1,0 +1,1 @@
+var e=``+new URL(`GU-C21-haath-filmstrip-COkEC2OT.svg`,import.meta.url).href;export{e as default};

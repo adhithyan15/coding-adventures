@@ -1,0 +1,1 @@
+var e=``+new URL(`GU-C23-dukaan-filmstrip-CjnWfMed.svg`,import.meta.url).href;export{e as default};
