@@ -1705,6 +1705,27 @@ pub enum TreeViewNodeKind {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub struct TreeViewTheme {
+    pub label_font_size: f64,
+    pub label_color: String,
+    pub line_color: String,
+    pub icon_color: String,
+    pub description_color: String,
+    pub highlight_background: String,
+    pub highlight_stroke: String,
+}
+
+impl Default for TreeViewTheme {
+    fn default() -> Self {
+        Self {
+            label_font_size: 16.0, label_color: "black".into(), line_color: "black".into(),
+            icon_color: "#546e7a".into(), description_color: "#6a9955".into(),
+            highlight_background: "rgba(255, 193, 7, 0.15)".into(), highlight_stroke: "#ffc107".into(),
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct TreeViewConfig {
     pub row_indent: f64,
     pub padding_x: f64,
@@ -1714,14 +1735,15 @@ pub struct TreeViewConfig {
     pub default_icon_pack: String,
     pub filename_icons: std::collections::BTreeMap<String, String>,
     pub extension_icons: std::collections::BTreeMap<String, String>,
+    pub theme: TreeViewTheme,
 }
 
 impl Default for TreeViewConfig {
     fn default() -> Self {
         Self {
             row_indent: 10.0, padding_x: 5.0, padding_y: 5.0, line_thickness: 1.0,
-            show_icons: true, default_icon_pack: String::new(), filename_icons: Default::default(),
-            extension_icons: Default::default(),
+            show_icons: false, default_icon_pack: String::new(), filename_icons: Default::default(),
+            extension_icons: Default::default(), theme: TreeViewTheme::default(),
         }
     }
 }
