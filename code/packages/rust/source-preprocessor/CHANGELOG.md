@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — PREP01 condition diagnostics
+
+- Attach the controlling directive's location to an otherwise unlocated
+  `Dialect::eval_condition` error, preserving a position supplied by the
+  dialect. A real C file-input regression covers malformed `#if` syntax.
+
 ## Unreleased — VM-069 conditional operand protection
 
 - `Dialect::prepare_condition` now runs after the raw grouping-depth check and

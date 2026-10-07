@@ -1,8 +1,8 @@
 //! C's directive syntax for the shared PREP01 engine.
 //!
-//! This is the classification handoff. The C frontend will compose it with
-//! `preprocess` once conditional expressions and C's `#`/`##` macro operators
-//! are implemented. Until then the existing source compiler is unchanged.
+//! The rooted C file-input frontend composes this dialect with `preprocess`.
+//! Its condition evaluator remains bounded, and C's `#`/`##` macro operators
+//! remain unsupported. The pathless source compiler retains its legacy path.
 
 use coding_adventures_c_lexer::try_tokenize_c;
 use coding_adventures_source_preprocessor::{

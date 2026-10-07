@@ -65,3 +65,26 @@ fn included_macro_reaches_executable_output() {
         .replace("\r\n", "\n");
     assert_eq!(stdout, "7\n");
 }
+
+#[test]
+fn malformed_condition_reports_its_directive_location() {
+    let root = std::env::temp_dir().join(format!(
+        "prep01_c_bad_{}_{}",
+        std::process::id(),
+        SEQ.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::create_dir(&root).unwrap();
+    write_fresh(
+        &root.join("main.c"),
+        b"#if 1 &&\nint main(void) { return 1; }\n#endif\n",
+    );
+    let error = c_to_semantic_ir::compile_preprocessed_file(
+        "main.c",
+        [root.clone()],
+        "bad_condition",
+        Bounds::default(),
+    )
+    .unwrap_err();
+    std::fs::remove_dir_all(&root).unwrap();
+    assert_eq!((error.line, error.column), (1, 1), "{error}");
+}

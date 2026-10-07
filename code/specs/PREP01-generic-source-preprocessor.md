@@ -625,6 +625,10 @@ file-input path and remaining C semantics are validated. Tests may use
 The file-input API checks the entry spelling against the tightened token
 spelling budget before cloning it into an include request. Its search roots
 come from the embedding host, not C source text.
+This bounded file-input stage searches quoted includes under those declared
+roots. `RootedFs` does not yet search relative to an including header's own
+directory; callers must declare such a directory as a root, and an unresolved
+include fails. Relative-to-header lookup remains required for full C behavior.
 `c.tokens` stops discarding `#…` lines; `c-lexer` surfaces directive tokens; a
 `CDialect` implements §5; `c-to-semantic-ir` runs the engine as its
 `post_tokenize` hook. `SIR27`'s preprocessor scope statement is updated.
