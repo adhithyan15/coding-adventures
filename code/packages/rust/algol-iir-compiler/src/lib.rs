@@ -3874,17 +3874,17 @@ impl Compiler {
         children.len() == 1 && self.is_selector_call_safe_real_procedure_result(children[0])
     }
 
-    fn builtin_abs_sign_operand<'n>(
+    fn builtin_nonnegative_unit_sign_operand<'n>(
         &self,
         node: &'n GrammarASTNode,
     ) -> Option<&'n GrammarASTNode> {
         if let Some(child) = single_parenthesized_child(node) {
-            return self.builtin_abs_sign_operand(child);
+            return self.builtin_nonnegative_unit_sign_operand(child);
         }
         if node.rule_name != "proc_call" {
             let children = direct_nodes(node);
             if direct_tokens(node).is_empty() && children.len() == 1 {
-                return self.builtin_abs_sign_operand(children[0]);
+                return self.builtin_nonnegative_unit_sign_operand(children[0]);
             }
             return None;
         }
@@ -3894,13 +3894,20 @@ impl Compiler {
             .value
             .clone();
         let target_name = self.resolve_procedure_identity(&source_name);
-        if target_name != "abs" || self.proc_sigs.contains_key(&target_name) {
+        if !matches!(target_name.as_str(), "abs" | "sqrt")
+            || self.proc_sigs.contains_key(&target_name)
+        {
             return None;
         }
         let actuals = self.standard_fn_actuals(node);
-        (actuals.len() == 1)
-            .then(|| self.builtin_sign_operand(actuals[0]))
-            .flatten()
+        if actuals.len() != 1 {
+            return None;
+        }
+        match target_name.as_str() {
+            "abs" => self.builtin_sign_operand(actuals[0]),
+            "sqrt" => self.builtin_nonnegative_unit_sign_operand(actuals[0]),
+            _ => None,
+        }
     }
 
     fn builtin_sign_operand<'n>(
@@ -4023,7 +4030,7 @@ impl Compiler {
         match target_name.as_str() {
             "sign" => Some(actuals[0]),
             "abs" | "entier" => self.builtin_sign_operand(actuals[0]),
-            "sqrt" => self.builtin_abs_sign_operand(actuals[0]),
+            "sqrt" => self.builtin_nonnegative_unit_sign_operand(actuals[0]),
             _ => None,
         }
     }
@@ -13412,6 +13419,39 @@ mod tests {
         ] {
             let err = compile_source(source, "test").expect_err(
                 "sqrt without an abs-normalized bounded sign root must remain conservative",
+            );
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_nested_sqrt_entier_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(sqrt(sqrt(abs(sign(pick()))))); output(x) end",
+            "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier(sqrt(sqrt(abs(entier(abs(sign(pick()))))))))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "nested sqrt preserves an abs-normalized bounded sign result through entier for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_nested_sqrt_entier_sign_widening_rejects_unproven_operands() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(sqrt(sign(pick())))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(sqrt(abs(entier(pick()))))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "nested sqrt without an abs-normalized bounded sign root must remain conservative",
             );
             assert!(format!("{err:?}").contains("cannot print a real value"));
         }

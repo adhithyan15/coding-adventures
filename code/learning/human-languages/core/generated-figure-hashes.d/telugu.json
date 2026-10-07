@@ -17,13 +17,6 @@
     },
     {
       "kind": "script-filmstrip",
-      "lessonId": "TE-S01-dictation",
-      "sourceHash": "fnv1a64:6911c133bf6a4acb",
-      "svgHash": "fnv1a64:da733c36e7183dad",
-      "svg": "telugu/book/figures/TE-S01-dictation-filmstrip.svg"
-    },
-    {
-      "kind": "script-filmstrip",
       "lessonId": "TE-S01-letter-ta",
       "sourceHash": "fnv1a64:fdc9320e8adc37b4",
       "svgHash": "fnv1a64:da733c36e7183dad",

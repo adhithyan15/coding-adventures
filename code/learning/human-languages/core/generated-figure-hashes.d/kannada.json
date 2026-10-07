@@ -17,13 +17,6 @@
     },
     {
       "kind": "script-filmstrip",
-      "lessonId": "KA-S01-dictation",
-      "sourceHash": "fnv1a64:9fbd732991563403",
-      "svgHash": "fnv1a64:1cdc142971f07a37",
-      "svg": "kannada/book/figures/KA-S01-dictation-filmstrip.svg"
-    },
-    {
-      "kind": "script-filmstrip",
       "lessonId": "KA-S01-letter-na",
       "sourceHash": "fnv1a64:88f14b895750d57a",
       "svgHash": "fnv1a64:1cdc142971f07a37",

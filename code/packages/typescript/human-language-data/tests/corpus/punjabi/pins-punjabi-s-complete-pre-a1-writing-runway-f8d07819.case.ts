@@ -49,7 +49,9 @@ it("pins Punjabi's complete pre-A1 writing runway", () => {
     "guided-copy",
     "guided-copy",
     "guided-copy",
-    "delayed-copy",
+    // PA-W08-digit-recognition: "Hear: zero, one, two … write one digit after
+    // each word" is a dictation, not the delayed copy it once declared.
+    "dictation-transcription",
     "guided-copy",
     "guided-copy",
     "delayed-copy",

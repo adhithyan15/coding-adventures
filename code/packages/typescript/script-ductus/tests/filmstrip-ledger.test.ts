@@ -336,16 +336,16 @@ describe("Devanagari words in the real corpus", { timeout: LEDGER_BUILD_TIMEOUT_
     );
     // नाम and सा joined when ā gained a cited ductus and a cited place in a
     // word (after its consonant's body, before the headline); मम नाम joined
-    // with them, as the first phrase, composed word by word.
+    // with them, as the first phrase, composed word by word. The -dictation
+    // lessons of मम and मम नाम are not candidates: a dictation block shows the
+    // learner no model, so it never takes a strip (HL06).
     expect(outcomes).toEqual({
       "HI-A1F01-name-label": "नाम: composed",
       "HI-W12-schwa-drop": "नाम: composed",
       "MW-W01-saa": "सा: composed",
       "SA-W03-mama-delayed-copy": "मम: composed",
-      "SA-W03-mama-dictation": "मम: composed",
       "SA-W03-mama-guided-copy": "मम: composed",
       "SA-W03-mama-nama-delayed-copy": "मम नाम: composed",
-      "SA-W03-mama-nama-dictation": "मम नाम: composed",
       "SA-W03-mama-nama-guided-copy": "मम नाम: composed",
     });
   });
@@ -356,8 +356,11 @@ describe("the longest Devanagari phrase the book takes", { timeout: LEDGER_BUILD
     // A phrase strip grows one band per word. The cited letters with the most
     // movements in the narrowest words wrap each word to three rows of
     // frames; three such words is the book's cap (MAX_PHRASE_WORDS), and a
-    // fourth would print 2,048 units tall. The line is the tallest strip in
-    // print (GU-R13-doorway-nine-r3, 1,801.14 units). Composing a word runs
+    // fourth would print 2,048 units tall. The line is the tallest strip the
+    // book has printed legibly (GU-R13-doorway-nine-r3, 1,801.14 units; that
+    // lesson is a dictation and prints none since HL06's no-model rule, which
+    // leaves TA-W11-read-niingal, 1,720, the tallest in print; the line
+    // stays). Composing a word runs
     // the ink checks, so each word is composed once and the strips are built
     // from the same entries.
     const worst = ["औइ", "औझ", "धऋ", "औब"];
