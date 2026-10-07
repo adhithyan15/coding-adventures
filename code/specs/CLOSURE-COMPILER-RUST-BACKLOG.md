@@ -9,7 +9,7 @@ its managed worktree is archived. The detailed [CV04 specification](CV04-exact-l
 first accepts CV04a actual matcher capture/domain validation, then CV04b compiler
 source inventory/ingestion-leaf reuse. CV04a implementation and exact range controls are in local validation;
 #16970 remains open until both slices pass. Preserve one active shared-stack PR.
-**Current audit base:** `2ef032426b5fc69ce19fdf6a0b67fddadcf33dd4`
+**Current audit base:** `ebee9d93ba02febf27a0f6f9333fdbc672467740`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
@@ -39,15 +39,35 @@ with68 existing ignores and strict all-target Clippy. The earlier shared-target
 rebuild invalidated rustdoc dependencies (E0460/E0463); its failed logs remain
 preserved and are excluded from acceptance.
 
-Fetched main `2ef032426b5f` merged conflict-free; changed Perl/ALGOL/Mermaid
-consumers require refreshed tests/lint, and the updated production build tool
-requires a fresh plan. The first local Miri compiled lexer metadata before the final lexer source
-edit (22:36:27 versus22:38:21 UTC). Its log is preserved as rejected stale-source
-evidence; the owned process tree was stopped and the full required script must
-restart against frozen source. Runtime-core/dynval passed in that earlier run,
-but no final-source Miri acceptance is claimed. Native CI/final refreshed-head security/merge
-acceptance remain pending; no branch has been pushed and no CV04a PR exists.
-These are local results, not accepted delivery. #16970 remains open through CV04b.
+Fetched main `ebee9d93ba02` merged conflict-free. Latest Perl/Mermaid/paint
+consumers pass 479 tests/docs across10 targets with zero ignored; strict all-target
+Clippy passes those three plus ALGOL-IIR and LANG-AOT. The prior full five-consumer
+suite is retained as FAIL:1,844 passed/10 failed/1 existing ignored across68 targets.
+All ten failures belong to the already tracked ALGOL multidimensional capture
+cluster / JVM proven-column guard in [#12032](https://github.com/adhithyan15/coding-adventures/issues/12032).
+Clean main at `ebee9d93ba02`, without CV04a, independently reproduces representative
+cells474:NativeAot (BackendRefused) and473:Jvm (Stack size too large), as does the
+candidate. This verifies two cells, not every failing cell separately.
+
+The unchanged production LANG-AOT BUILD intentionally excludes the red unfiltered
+matrix/guard. All49 other explicit targets and all59 assertions selected by its10
+matrix filters actually ran successfully in the broad suite. No BUILD/assertion
+edits were made; the complete LANG-AOT package is not claimed green. Exact native
+baseline logs, source/cell/binary hashes and the full failed suite are preserved,
+with the existing issue updated. The temporary clean-main worktree is queued for
+archival after its executable/receipts were saved outside the worktree.
+
+The first local Miri compiled lexer metadata before the final lexer source edit
+(22:36:27 versus22:38:21 UTC). Its stopped stale-source run is excluded. The full
+required script restarted frozen at `0fb99935d187`: runtime-core/dynval pass again,
+and final lexer metadata compiled at23:04:34 UTC after the source edit. Twig VM
+is still running. Upstream merges do not touch its transitive package dependencies;
+source hashes must remain unchanged and the complete script must exit successfully
+before push. Independent exact `0fb99935d187` security and its three-native-platform
+production-plan selection passed; refreshed docs/head review and final plan remain
+required before publication. No source branch has been pushed and no CV04a PR exists.
+Native CI/actual merge acceptance remain pending; these local results do not claim
+accepted delivery. #16970 remains open through CV04b.
 
 The real ES2025 grammar rejects bare U+2028/U+2029 between tokens (`a<LS>b`,
 `a<PS>b`), although coordinate capture handles all four ECMAScript terminators in
