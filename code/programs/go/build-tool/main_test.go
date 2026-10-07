@@ -62,6 +62,7 @@ func TestEmitBuildPlanCeilingFailureWritesNoPlanOrGateOutputs(t *testing.T) {
 		0,
 		false,
 		registryPath,
+		"all",
 	)
 	if code != 1 {
 		t.Fatalf("emitBuildPlan code = %d, want 1", code)

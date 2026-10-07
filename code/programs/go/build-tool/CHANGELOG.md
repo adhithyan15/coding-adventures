@@ -6,6 +6,13 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- Exact-path native CI selection for changes to the shared
+  `discovery-language-registry.json` fixture. Detect and all platform build-plan
+  overrides now schedule its ten direct build-tool consumers, including both
+  .NET fronts; missing registered roots fail closed and a source-reference test
+  guards future consumer-map drift without forcing all packages. Single-language
+  runs select their own fixture consumer, and rename diffs retain the old path.
+
 - `-validate-build-files` rejects a shared `BUILD` that Windows would run with a
   POSIX environment assignment `cmd /C` cannot execute. Each line is first
   passed through the executor's own Windows rewrite

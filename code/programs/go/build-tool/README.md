@@ -213,6 +213,18 @@ Every gate needs both clauses. Files under `code/specs`, `code/fixtures`,
 is the only thing that can see a fixture or grammar edit. See
 `code/specs/ci-gate-registry.md`.
 
+The shared `discovery/language-registry` case needs an additional, bounded
+package-selection rule: changing its exact JSON file schedules each native
+build-tool test consumer (the two .NET fronts plus Go, Lua, Perl, Python, Ruby,
+Rust, Swift, and TypeScript) in the ordinary affected build plan. The rule
+unites those roots with other changed packages on every platform; it does not
+force a repository-wide build or apply to neighboring fixtures. A missing
+registered consumer is an error rather than a silently skipped test. Native
+fixture adopters must extend the consumer map and its drift test together.
+An explicit `-language` filter selects only the matching consumer; default
+all-language CI validates all ten. Rename detection retains both the old and
+new paths so moving the fixture cannot silently bypass this rule.
+
 ## Metadata safety
 
 A package's CI toolchain is normally inferred purely from its path bucket
