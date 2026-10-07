@@ -64,7 +64,8 @@ Current pairs:
   files differ from 5.001n, and this pair covers only the listed forms.
 - `perl5.002_01.*` is a separate **partial** pair checked against the
   [`perl-5.002_01` source tag]'s `perly.y` and `toke.c`. Its `perly.y` matches
-  5.002 while `toke.c` differs; this pair covers only the listed forms.
+  5.002 while `toke.c` differs; this pair covers only the listed forms and
+  rejects adjacent decrement `--` while allowing spaced binary/unary minus.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot and does not claim full coverage.

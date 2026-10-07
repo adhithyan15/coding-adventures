@@ -72,12 +72,34 @@ mod tests {
                 .tokenize()
                 .unwrap();
             assert!(
-                GrammarParser::new(tokens, parser_grammar)
+                GrammarParser::new(tokens, parser_grammar.clone())
                     .with_max_depth(MAX_RULE_DEPTH)
                     .parse()
                     .is_err(),
                 "{release}: malformed print accepted"
             );
+            if *release == "5.002_01" {
+                let adjacent = GrammarLexer::new("print(1--2);", &token_grammar)
+                    .tokenize()
+                    .unwrap();
+                assert!(
+                    GrammarParser::new(adjacent, parser_grammar.clone())
+                        .with_max_depth(MAX_RULE_DEPTH)
+                        .parse()
+                        .is_err(),
+                    "{release}: decrement parsed as two minus operators"
+                );
+                let spaced = GrammarLexer::new("print(1- -2);", &token_grammar)
+                    .tokenize()
+                    .unwrap();
+                assert!(
+                    GrammarParser::new(spaced, parser_grammar.clone())
+                        .with_max_depth(MAX_RULE_DEPTH)
+                        .parse()
+                        .is_ok(),
+                    "{release}: spaced minus operators should parse"
+                );
+            }
             checked += 1;
         }
         assert!(checked >= 13, "release pair coverage unexpectedly shrank");
