@@ -442,6 +442,9 @@ export const scriptInventoryEvidence = {
       "ച": ["036", 4], "ഛ": ["036", 5], "ഞ": ["036", 7], "ഥ": ["038", 3],
       "ധ": ["038", 4], "ഭ": ["039", 4], "ഫ": ["039", 3], "ള": ["041", 4],
       "ഏ": ["028", 7],
+      // ജ joined later: its short stem's descent is read between arrows 2
+      // and 3, which its variation says at medium confidence.
+      "ജ": ["036", 6],
     };
     for (const [glyph, [page, movements]] of Object.entries(moagRows)) {
       const row = [
@@ -481,8 +484,30 @@ export const scriptInventoryEvidence = {
       expect(mark.compositionOrder, sign).toBeUndefined();
       expect(missingByScript.get("malayalam.json")?.has(sign) ?? false, sign).toBe(false);
     }
+    // ൈ is the one two-run sign: two coils of െ, the gap between them a lift.
+    // No recording of ൈ itself exists here, so its record reasons the lift
+    // and says confidence is medium; like the other signs, it claims no
+    // written order against its consonant.
+    const ai = scripts.malayalam!.marks!.find((entry) => entry.mark === "ൈ")!;
+    expect(ai.role).toBe("vowel-sign");
+    expect(ai.example).toEqual({ base: "ക", combined: "കൈ", sound: "kai" });
+    expect(ai.penLifts).toBe(1);
+    expect(ai.strokeOrder).toEqual([
+      "circle the first small loop",
+      "without lifting, arch over and down to the foot",
+      "lift, then circle the second small loop",
+      "without lifting, arch over and down to its foot",
+    ]);
+    expect(ai.strokeOrderSource?.url).toBe(moagScan("032"));
+    expect(ai.strokeOrderSource?.citation).toMatch(
+      /Table III 'How to Write Internal Vowel Symbols'.*p\. xxii: movements 1-4 for ൈ, written by hand by Thomas Joseph$/,
+    );
+    expect(ai.strokeOrderSource?.variation).toMatch(
+      /only these facts .* are cited; no drawing is copied.*No recording of ൈ itself.*confidence is medium.*claims no written order/,
+    );
+    expect(ai.compositionOrder).toBeUndefined();
     expect(scripts.malayalam!.marks!.map((mark) => mark.mark)).toEqual([
-      "ം", "്", "ാ", "ി", "ീ", "ു", "ൂ", "ൃ", "െ", "േ",
+      "ം", "്", "ാ", "ി", "ീ", "ു", "ൂ", "ൃ", "െ", "േ", "ൈ",
     ]);
   },
 };

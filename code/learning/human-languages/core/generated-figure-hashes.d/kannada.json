@@ -122,6 +122,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "KA-S123-sign-anusvara",
+      "sourceHash": "fnv1a64:ac133face563c191",
+      "svgHash": "fnv1a64:7f6fe71433917495",
+      "svg": "kannada/book/figures/KA-S123-sign-anusvara-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "KA-S124-letter-pa",
       "sourceHash": "fnv1a64:4dad963dcd827585",
       "svgHash": "fnv1a64:5b9275ecb7b02195",
@@ -172,8 +179,8 @@
     {
       "kind": "script-filmstrip",
       "lessonId": "KA-S132-sign-visarga",
-      "sourceHash": "fnv1a64:5a439bc45e5c54fd",
-      "svgHash": "fnv1a64:752c86234d61f9ec",
+      "sourceHash": "fnv1a64:a40b86613155fe91",
+      "svgHash": "fnv1a64:79af0229e0505be4",
       "svg": "kannada/book/figures/KA-S132-sign-visarga-filmstrip.svg"
     },
     {
@@ -203,6 +210,69 @@
       "sourceHash": "fnv1a64:4d1a671e6c7fb1c2",
       "svgHash": "fnv1a64:0abd8ddd7a008bcd",
       "svg": "kannada/book/figures/KA-S139-letter-va-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S140-digit-one",
+      "sourceHash": "fnv1a64:e18a4991bd58861d",
+      "svgHash": "fnv1a64:9715b955a94964c7",
+      "svg": "kannada/book/figures/KA-S140-digit-one-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S141-digit-two",
+      "sourceHash": "fnv1a64:d85707c7a8501b07",
+      "svgHash": "fnv1a64:a1f5ddb6d6f9781b",
+      "svg": "kannada/book/figures/KA-S141-digit-two-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S142-digit-three",
+      "sourceHash": "fnv1a64:ea3e9c57d09ba753",
+      "svgHash": "fnv1a64:a6a263dd3e529abc",
+      "svg": "kannada/book/figures/KA-S142-digit-three-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S143-digit-four",
+      "sourceHash": "fnv1a64:714fd458b6b0f9a4",
+      "svgHash": "fnv1a64:d9a4f2cd032b0a1c",
+      "svg": "kannada/book/figures/KA-S143-digit-four-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S144-digit-five",
+      "sourceHash": "fnv1a64:248777d8bbc32da1",
+      "svgHash": "fnv1a64:4d086c3bfdb9b33e",
+      "svg": "kannada/book/figures/KA-S144-digit-five-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S145-digit-six",
+      "sourceHash": "fnv1a64:9f9e51c499d0da23",
+      "svgHash": "fnv1a64:009a29f9a0769833",
+      "svg": "kannada/book/figures/KA-S145-digit-six-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S146-digit-seven",
+      "sourceHash": "fnv1a64:e75e3a4ebf33e5fc",
+      "svgHash": "fnv1a64:dc9b5d3c109291f0",
+      "svg": "kannada/book/figures/KA-S146-digit-seven-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S147-digit-eight",
+      "sourceHash": "fnv1a64:97d1ea0bd8248d79",
+      "svgHash": "fnv1a64:01fbb5a4f732697a",
+      "svg": "kannada/book/figures/KA-S147-digit-eight-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "KA-S148-digit-nine",
+      "sourceHash": "fnv1a64:64b9a0b7247d0bd2",
+      "svgHash": "fnv1a64:92156ee7066a1b87",
+      "svg": "kannada/book/figures/KA-S148-digit-nine-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",

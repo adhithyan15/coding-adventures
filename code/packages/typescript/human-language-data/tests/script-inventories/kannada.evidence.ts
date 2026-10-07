@@ -52,6 +52,19 @@ export const scriptInventoryEvidence = {
     expect(kannadaAnusvara.compositionSource?.variation).toMatch(
       /consonant-nasalization role.*not a universal handwriting direction.*pen-lift count.*encoded composition convention.*no standalone ductus claim/i,
     );
+    // The standalone ring now carries its own cited ductus, from Chimple's
+    // tracing lessons: one anticlockwise run, drawn last, after its carrier.
+    // The composition record above still makes no handwriting claim.
+    expect(kannadaAnusvara.strokeOrder).toEqual([
+      "circle anticlockwise from the left",
+    ]);
+    expect(kannadaAnusvara.penLifts).toBe(0);
+    expect(kannadaAnusvara.strokeOrderSource?.url).toBe(
+      "https://github.com/chimple/chimple-zips/blob/5b137ab1bbd8516f9b4813f23c0e8e9c99f26156/LIDO_kn4800.zip",
+    );
+    expect(kannadaAnusvara.strokeOrderSource?.variation).toMatch(
+      /all 34 .* drawn last.*anticlockwise.*one source, not two.*no licence.*confidence is medium/,
+    );
     const kannadaA = scripts.kannada!.independentVowels!.find(
       (entry) => entry.glyph === "ಅ",
     )!;
@@ -87,9 +100,12 @@ export const scriptInventoryEvidence = {
     expect(kannadaVisarga.sound).toBe("ḥ");
     expect(kannadaVisarga.penLifts).toBe(1);
     expect(kannadaVisarga.strokeOrder).toEqual([
-      "draw the upper dot as a closed loop",
-      "lift, then draw the lower dot as a closed loop",
+      "circle the upper dot anticlockwise",
+      "lift, then circle the lower dot",
     ]);
+    expect(kannadaVisarga.strokeOrderSource?.variation).toMatch(
+      /Chimple.*all 35.*upper dot comes first.*anticlockwise.*drew the lower dot first while calling it the upper one/,
+    );
     expect(kannadaVisarga.strokeOrderSource?.citation).toMatch(
       /Gopala Krishna A.*Kannada-Alphabet-Aha\.gif.*Kannada visarga ಃ.*569 frames.*22\.76 seconds.*Wikimedia Commons.*2 June 2016/i,
     );
@@ -98,6 +114,39 @@ export const scriptInventoryEvidence = {
     );
     expect(missingByScript.get("kannada.json")?.has("ಃ") ?? false).toBe(false);
     expect(affected.get("ಃ") ?? 0).toBe(0);
+    // The digits ೧-೯ cite Chimple's LIDO digit lesson: one run each, read for
+    // order, start and direction only (the repository has no licence). ೦ has
+    // no source (Chimple's ೧೦ re-uses the ೧ image), so it stays undrawn.
+    const digitMovements: Record<string, number> = {
+      "೧": 3, "೨": 3, "೩": 4, "೪": 5, "೫": 6, "೬": 3, "೭": 3, "೮": 4, "೯": 3,
+    };
+    for (const digit of scripts.kannada!.digits!) {
+      const movements = digitMovements[digit.glyph];
+      if (movements === undefined) {
+        expect(digit.glyph).toBe("೦");
+        expect(digit.strokeOrder).toEqual([]);
+        expect(digit.penLifts).toBeUndefined();
+        expect(digit.strokeOrderSource).toBeUndefined();
+        continue;
+      }
+      expect(digit.role, digit.glyph).toBe("digit");
+      expect(digit.penLifts, digit.glyph).toBe(0);
+      expect(digit.strokeOrder, digit.glyph).toHaveLength(movements);
+      expect(
+        digit.strokeOrder.slice(1).every((step) => step.startsWith("without lifting, ")),
+        digit.glyph,
+      ).toBe(true);
+      expect(digit.strokeOrderNote, digit.glyph).toMatch(/movements in one continuous pen-down run/);
+      expect(digit.strokeOrderSource?.url, digit.glyph).toBe(
+        "https://github.com/chimple/chimple-zips/blob/5b137ab1bbd8516f9b4813f23c0e8e9c99f26156/LIDO_kn2_0318.zip",
+      );
+      expect(digit.strokeOrderSource?.citation, digit.glyph).toMatch(
+        new RegExp(`^Chimple \\(Sutara Learning Foundation, Bangalore\\), LIDO tracing lessons LIDO_kn2_0318 and LIDO_kn2_0319, .* for ${digit.glyph}, trace image `),
+      );
+      expect(digit.strokeOrderSource?.variation, digit.glyph).toMatch(
+        /^Chimple draws .* as one path .*sha256 cc49279b364bdf6f.*no licence, so only facts are cited.*one source.*confidence is medium.*Noto Sans Kannada/,
+      );
+    }
     const kannadaI = scripts.kannada!.independentVowels!.find(
       (entry) => entry.glyph === "ಇ",
     )!;

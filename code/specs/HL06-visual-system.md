@@ -659,6 +659,71 @@ to start" block now point at the numbered strip, in the wording the earlier
 strip lessons use, so the figure-targets guard against a strip lesson
 disclaiming its stroke order holds.
 
+#### As built — Kannada digits and anusvara from a tracing app; Malayalam ജ and ൈ
+
+Twelve more writing lessons print a strip: the Kannada digit lessons ೧ to ೯
+and the anusvara ಂ (Kannada 47 -> 57), and the Malayalam letter ജ and vowel
+sign ൈ (Malayalam 58 -> 60).
+
+**Kannada: one tracing app, read as one source.** The Bangalore literacy NGO
+Sutara Learning Foundation publishes its Chimple course content on GitHub in
+two repositories: `chimple/chimple-zips` (lesson bundles whose trace pictures
+hold hidden, ordered centre-line paths, which the lesson player walks in
+order; no licence) and `chimple/bahama` (recorded traces; MPL-2.0). They come
+from one organisation, so they count as ONE source, and every record says so.
+Only facts are taken (stroke count, order, start, direction); no path or
+artwork is copied, and every path is fitted to Noto Sans Kannada at the
+default tolerances, with no override.
+
+- **Digits ೧-೯** cite the digit lesson `LIDO_kn2_0318` (its sibling
+  `LIDO_kn2_0319` repeats the same paths). Each digit is one path, and
+  Chimple keeps one path per pen-down run elsewhere (the anusvara is a
+  separate last path on every consonant), so each digit is one stroke. Each
+  loop turns the way Chimple's does, and a test holds every caption that
+  says "clockwise" or "anticlockwise" to the turning of its points. The
+  source is designer-authored, single and unlicensed, and no second source
+  for Kannada digits was found, so confidence is medium. **೦ is not drawn:**
+  Chimple's ೧೦ re-uses the ೧ picture and never draws a zero.
+- **ಂ** is one anticlockwise ring, drawn last, in all 34 of Chimple's
+  consonant + anusvara pictures; it starts at the left in 20 of them, so the
+  path does. The recorded ಅಂ agrees (it starts at the top). The ring gets no
+  written-order row: no Kannada writing lesson has a word with ಂ in it.
+- **ಃ was drawn in the wrong order and is fixed.** Its first ductus labelled
+  the first loop "the upper dot" but drew it round the lower one (font units
+  point up, and the path used the smaller y). Its cited animation and all 35
+  of Chimple's consonant + visarga pictures draw the upper dot first, both
+  loops anticlockwise; the paths now do, from near 8 o'clock, and a test
+  holds the first loop above the second.
+- `validate` now holds a digit row that names its strokes to the same rule as
+  a letter (a lift count only with its source), and script-ductus resolves a
+  cited digit's font as it does a letter's.
+
+**Malayalam: two of the glyphs Moag's batch left out.**
+
+- **ജ** cites Moag's six numbered movements (p. xxvi). Moag's arrow 2 stops
+  above the short stem and arrow 3 starts at its foot; with no lift between
+  them (*hand*: one stroke; *grahyam*: 45 of 45 unique samples in one run),
+  the pen can only reach the foot down the stem, so movement 2 ends with that
+  descent and movement 3 climbs it again. That join is read, not drawn, and
+  the record says its confidence is medium.
+- **ൈ** cites Moag's four movements (p. xxii): two coils of െ, each loop then
+  arch. The two coils are separate pieces of ink, so the pen lifts once
+  between them, and each coil is one run, as recorded writers write െ. No
+  recording of ൈ itself was found, so the record says the lift is reasoned
+  and confidence is medium. Noto composes the standalone sign from two copies
+  of െ, so each run is the cited െ path. Like every Malayalam vowel sign it
+  has no written-order row: it is drawn only alone.
+
+**Still not drawn.** ഠ: this round re-read Moag's arrow as clockwise, but
+Thooval and grahyam still run the ring anticlockwise, and no new source
+breaks the tie. ൊ and ോ: Noto's standalone glyphs put a placeholder dot where
+the consonant goes (`period.mlym` between the two parts), which no source
+says to write; tracing the sign alone leaves about 5% of the printed ink
+untraced, above the default limit, and drawing the dot would teach a mark
+nobody writes. Moag also never places the consonant between the parts. ്:
+Moag gives its position only, with no movements. Kannada ೦ and the Kannada
+vowel signs: no source.
+
 #### Design — the Latin script's first print letters
 
 The six Latin-script tracks (Spanish, French, German, Italian, Portuguese,
