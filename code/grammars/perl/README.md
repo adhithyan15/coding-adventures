@@ -169,6 +169,15 @@ Current pairs:
   [`perl-5.003_21` source tag]'s `perly.y` and `toke.c`. Yacc changes format
   subroutine handling; tokenizer changes alternate shebang and braced-word
   handling outside the accepted plain-decimal arithmetic and `print` subset.
+- `perl5.003_22.*` and `perl5.003_23.*` are separate **partial** pairs checked
+  against their respective source tags. Their yacc and tokenizer changes
+  concern subroutine setup, interpolation, shebangs and heredocs outside this
+  plain-decimal arithmetic and `print` subset.
+- `perl5.003_24.*` is a separate **partial** pair checked against the
+  [`perl-5.003_24` source tag]. Its tagged `perly.y` and `toke.c` match 5.003_23.
+- `perl5.003_25.*` is a separate **partial** pair checked against the
+  [`perl-5.003_25` source tag]. Its yacc matches 5.003_24; `toke.c` changes
+  a C prototype outside the accepted subset.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot, including adjacent `--` and
@@ -228,4 +237,8 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [`perl-5.003_19` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_19
 [`perl-5.003_20` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_20
 [`perl-5.003_21` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_21
+[`perl-5.003_22` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_22
+[`perl-5.003_23` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_23
+[`perl-5.003_24` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_24
+[`perl-5.003_25` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_25
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2

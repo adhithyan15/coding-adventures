@@ -209,10 +209,10 @@ release,date,perlhist_line,grammar_status
 5.003_19,1997-Jan-04,233,partial
 5.003_20,1997-Jan-07,234,partial
 5.003_21,1997-Jan-15,235,partial
-5.003_22,1997-Jan-16,236,pending
-5.003_23,1997-Jan-25,237,pending
-5.003_24,1997-Jan-29,238,pending
-5.003_25,1997-Feb-04,239,pending
+5.003_22,1997-Jan-16,236,partial
+5.003_23,1997-Jan-25,237,partial
+5.003_24,1997-Jan-29,238,partial
+5.003_25,1997-Feb-04,239,partial
 5.003_26,1997-Feb-10,240,pending
 5.003_27,1997-Feb-18,241,pending
 5.003_28,1997-Feb-21,242,pending

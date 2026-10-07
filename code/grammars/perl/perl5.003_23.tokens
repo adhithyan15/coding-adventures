@@ -1,0 +1,19 @@
+# Perl 5.003_23 (1997-01-25) tokens: plain-decimal arithmetic-print subset.
+# @version 1
+# PARTIAL: this does not lex all Perl 5.003_23 source.
+# Evidence: https://github.com/Perl/perl5/blob/perl-5.003_23/toke.c
+# Tagged tokenizer changes shebang, heredoc and pattern handling outside
+# this subset. Multi-digit leading-zero forms remain refused.
+
+PRINT     = "print"
+INT       = /0|[1-9][0-9]*/
+PLUS      = "+"
+DECREMENT = "--"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\r\n]+/
