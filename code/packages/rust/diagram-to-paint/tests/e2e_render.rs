@@ -3262,7 +3262,7 @@ line "Target" [35, 50, 68, 82]"##,
         let pixels = render(&scene); write_png(&pixels, "/tmp/mermaid_treeview_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
 
-        let configured = parse_treeview("%%{init: {\"treeView\": {\"rowIndent\": 18, \"paddingX\": 9, \"paddingY\": 7, \"lineThickness\": 3, \"showIcons\": false}}}%%\ntreeView-beta\nproject/\n    src/ icon(folder)\n        main.rs")
+        let configured = parse_treeview("%%{init: {\"treeView\": {\"rowIndent\": 18, \"paddingX\": 9, \"paddingY\": 7, \"lineThickness\": 3, \"useMaxWidth\": false, \"showIcons\": false}}}%%\ntreeView-beta\nproject/\n    src/ icon(folder)\n        main.rs")
             .expect("configured treeview parse failed");
         let configured_layout = layout_treeview(&configured, 720.0);
         assert_eq!(configured_layout.nodes[1].x - configured_layout.nodes[0].x, 27.0);
@@ -3276,6 +3276,8 @@ line "Target" [35, 50, 68, 82]"##,
             .filter(|instruction| matches!(instruction, PaintInstruction::Rect(_))).count(), 0);
         assert_eq!(configured_scene.metadata.as_ref().and_then(|metadata| metadata.get("treeView.config.lineThickness")),
             Some(&"3".to_string()));
+        assert_eq!(configured_scene.metadata.as_ref().and_then(|metadata| metadata.get("treeView.config.useMaxWidth")),
+            Some(&"false".to_string()));
         let configured_pixels = render(&configured_scene);
         write_png(&configured_pixels, "/tmp/mermaid_treeview_config_e2e.png")
             .expect("configured treeview PNG write failed");
