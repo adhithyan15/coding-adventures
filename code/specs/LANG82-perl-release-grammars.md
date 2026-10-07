@@ -187,3 +187,9 @@ operator expectations, warnings, and quote delimiter handling; these do not
 expand the plain-decimal `print` arithmetic subset. Give this numbered
 trial its own partial pair, retain the 250-digit decimal bound, and keep
 unsupported constructs rejected.
+
+The historical 5.004_01_02 trial archive again has the same `perly.y`.
+Its tokenizer changes command-line `-p` expansion and quoted delimiter
+handling outside the partial decimal `print` arithmetic subset. Record
+a distinct pair with the inherited 250-digit bound and reject unsupported
+syntax rather than claiming full release coverage.
