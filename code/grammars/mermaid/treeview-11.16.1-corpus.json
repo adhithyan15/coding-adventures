@@ -1,7 +1,7 @@
 {
   "upstream": "mermaid@11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
-  "scope": "native hierarchy subset with the implicit root, responsive-width intent, renderer-neutral title semantics, built-in icon geometry, integrator-resolved external icon glyphs, pinned box-drawing preprocessing, renderer defaults, theme variables, connector geometry, and aligned descriptions",
+  "scope": "native hierarchy subset with the implicit root, responsive-width intent, renderer-neutral title semantics, built-in icon geometry, pinned icon detection precedence, integrator-resolved external icon glyphs, pinned box-drawing preprocessing, renderer defaults, theme variables, connector geometry, and aligned descriptions",
   "fixtures": [
     {
       "name": "header-only",
@@ -26,6 +26,10 @@
     {
       "name": "icon-resolution-config",
       "source": "%%{init: {\"treeView\": {\"showIcons\": true, \"defaultIconPack\": \"devicon\", \"filenameIcons\": {\"README.md\": \"logos:markdown\", \"package.json\": \"none\"}, \"extensionIcons\": {\".rs\": \"rust\", \"TS\": \"logos:typescript\"}}}}%%\ntreeView-beta\nREADME.md\npackage.json\nmain.RS\napp.ts\nplain.txt\nnotes.txt icon(custom)"
+    },
+    {
+      "name": "icon-detection-precedence",
+      "source": "%%{init: {\"treeView\": {\"showIcons\": true, \"defaultIconPack\": \"devicon\", \"filenameIcons\": {\"component.spec.ts\": \"logos:special\", \"notes.txt\": \"folder\", \"skip.ts\": \"none\", \"empty.ts\": \"\"}, \"extensionIcons\": {\".ts\": \"typescript\", \"bashrc\": \"console\"}}}}%%\ntreeView-beta\ncomponent.spec.ts\nAPP.TS\n.bashrc\nnotes.txt\nskip.ts\nempty.ts"
     },
     {
       "name": "built-in-and-unprefixed-icons",
