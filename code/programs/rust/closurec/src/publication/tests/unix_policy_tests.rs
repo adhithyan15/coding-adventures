@@ -41,6 +41,52 @@ fn ordinary_replacement_preserves_owner_group_and_mode() {
     assert_eq!(fs::read_dir(&fixture.dir).unwrap().count(), 1);
 }
 
+#[test]
+fn new_output_matches_ordinary_creation_with_actual_parent_group_and_umask() {
+    let fixture = Fixture::new();
+    fs::set_permissions(&fixture.dir, Permissions::from_mode(0o2770)).unwrap();
+    let probe_path = fixture.path("ordinary-empty-probe");
+    let probe = OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(&probe_path)
+        .unwrap();
+    let intended = probe.metadata().unwrap();
+    drop(probe);
+    fs::remove_file(probe_path).unwrap();
+    let path = fixture.path("output");
+    publish_outputs(&[(path.clone(), "body".into())]).unwrap();
+    let installed = fs::metadata(&path).unwrap();
+    assert_eq!(installed.uid(), intended.uid());
+    assert_eq!(installed.gid(), intended.gid());
+    assert_eq!(installed.mode() & 0o7777, intended.mode() & 0o7777);
+    assert_eq!(fs::read(path).unwrap(), b"body");
+    assert_eq!(fs::read_dir(&fixture.dir).unwrap().count(), 1);
+}
+
+#[test]
+fn data_bearing_prepared_files_remain_owner_only_until_installation() {
+    let fixture = Fixture::new();
+    let path = fixture.path("output");
+    let mut prepared_modes = Vec::new();
+    let result = publish_with_hook(
+        &[(path.clone(), "prepared bytes".into())],
+        &mut |phase, _| {
+            if phase == Phase::Install {
+                let stage = fixture.recovery().pop().unwrap();
+                assert_eq!(fs::metadata(&stage)?.mode() & 0o077, 0);
+                prepared_modes.push(fs::metadata(stage.join("new"))?.mode() & 0o777);
+                return Err(injected());
+            }
+            Ok(())
+        },
+    );
+    assert!(result.is_err());
+    assert_eq!(prepared_modes, vec![0o600]);
+    assert!(!path.exists());
+    assert_eq!(fs::read_dir(&fixture.dir).unwrap().count(), 0);
+}
+
 #[cfg(target_os = "linux")]
 fn attach_extended_acl(path: &Path, default: bool) {
     use std::ffi::c_void;
