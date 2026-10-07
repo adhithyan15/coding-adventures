@@ -226,11 +226,16 @@ These hashes identify artifacts; they do not establish node-level output joins
 or correct source-map mappings. Exact final security review and native-platform
 CI/merge verification remain required before CV02 acceptance.
 
-Native Windows access-control probes found a further publication defect:
-replacement loses a protected original DACL and staging can inherit broader
-read grants. PR #16905 remains draft until private staging and explicit file
-policy preservation are implemented and reviewed. Ordinary readonly checks do
-not establish Windows DACL or Unix extended-ACL preservation.
+The Windows repair creates staging directories and files atomically with a
+protected current-user DACL. It captures and rechecks owner/group/DACL/protection,
+proves the intended policy on a distinct always-empty probe, and verifies the
+installed policy exactly. Explicit legacy and inherited policies use separately
+verified handle routes; unsupported or stale inherited policies reject before
+originals change. Pre-commit failure restores candidate privacy before rollback.
+Native Windows regressions cover preparation, protected replacement, inherited
+and new-file policy, ACL-only changes, rejection and rollback. PR #16905 remains
+draft pending exact-head independent review and native Linux/macOS ownership and
+extended-ACL copy-or-reject coverage. Audit SACLs/integrity claims are unproven.
 
 ### Measured parity
 

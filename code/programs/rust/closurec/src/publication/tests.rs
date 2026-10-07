@@ -36,6 +36,106 @@ fn injected() -> io::Error {
     io::Error::other("injected filesystem failure")
 }
 
+#[cfg(windows)]
+#[test]
+fn windows_new_outputs_use_actual_parent_policy_and_inherited_outputs_preserve_it() {
+    let fixture = Fixture::new();
+    let parent = observe(&fixture.dir, true).unwrap().unwrap();
+    let policy = windows_security::new_file_policy(&parent.file).unwrap();
+    let path = fixture.path("output");
+    publish_outputs(&[(path.clone(), "first".into())]).unwrap();
+    assert_eq!(observe(&path, false).unwrap().unwrap().policy, policy);
+    publish_outputs(&[(path.clone(), "second".into())]).unwrap();
+    assert_eq!(observe(&path, false).unwrap().unwrap().policy, policy);
+    assert_eq!(fs::read(path).unwrap(), b"second");
+    assert_eq!(fs::read_dir(&fixture.dir).unwrap().count(), 1);
+}
+
+#[cfg(windows)]
+#[test]
+fn windows_acl_only_change_is_detected_without_identity_length_or_mtime_change() {
+    let fixture = Fixture::new();
+    let path = fixture.path("output");
+    fs::write(&path, "original").unwrap();
+    let original = observe(&path, false).unwrap().unwrap();
+    let parent = observe(&fixture.dir, true).unwrap().unwrap();
+    let changed = windows_security::new_file_policy(&parent.file).unwrap();
+    assert_ne!(original.policy, changed);
+    let result = publish_with_hook(&[(path.clone(), "new".into())], &mut |phase, _| {
+        if phase == Phase::Install {
+            changed.apply(&windows_security::policy_handle(&path)?)?;
+        }
+        Ok(())
+    });
+    assert!(result
+        .unwrap_err()
+        .to_string()
+        .contains("destination changed"));
+    let current = observe(&path, false).unwrap().unwrap();
+    assert_eq!(current.id, original.id);
+    assert_eq!(current.len, original.len);
+    assert_eq!(current.modified, original.modified);
+    assert_eq!(current.policy, changed);
+    assert_eq!(fs::read(path).unwrap(), b"original");
+    assert_eq!(fs::read_dir(&fixture.dir).unwrap().count(), 1);
+}
+
+#[cfg(windows)]
+#[test]
+fn windows_policy_failure_restores_original_bytes_and_policy() {
+    let fixture = Fixture::new();
+    let a = fixture.path("existing");
+    let b = fixture.path("missing");
+    fs::write(&a, "original").unwrap();
+    let original = observe(&a, false).unwrap().unwrap();
+    let result = publish_with_hook(
+        &[(a.clone(), "new a".into()), (b.clone(), "new b".into())],
+        &mut |phase, path| {
+            if phase == Phase::Policy && path.file_name() == b.file_name() {
+                Err(injected())
+            } else {
+                Ok(())
+            }
+        },
+    );
+    assert!(result
+        .unwrap_err()
+        .to_string()
+        .contains("injected filesystem failure"));
+    assert!(same_original(
+        &original,
+        &observe(&a, false).unwrap().unwrap()
+    ));
+    assert_eq!(fs::read(a).unwrap(), b"original");
+    assert!(!b.exists());
+    assert_eq!(fs::read_dir(&fixture.dir).unwrap().count(), 1);
+}
+
+#[cfg(windows)]
+#[test]
+fn windows_orphan_inherited_policy_rejects_before_original_mutation() {
+    let fixture = Fixture::new();
+    let original_path = fixture.path("source");
+    publish_outputs(&[(original_path.clone(), "original".into())]).unwrap();
+    let original = observe(&original_path, false).unwrap().unwrap();
+    assert!(original.policy.has_inherited_entries());
+    let private_parent = fixture.path("different-parent");
+    windows_security::create_directory(&private_parent).unwrap();
+    let path = private_parent.join("output");
+    fs::rename(original_path, &path).unwrap();
+    let result = publish_outputs(&[(path.clone(), "new".into())]);
+    assert!(result
+        .unwrap_err()
+        .to_string()
+        .contains("preflight native output policy"));
+    assert!(same_original(
+        &original,
+        &observe(&path, false).unwrap().unwrap()
+    ));
+    assert_eq!(fs::read(path).unwrap(), b"original");
+    assert_eq!(fs::read_dir(private_parent).unwrap().count(), 1);
+}
+
 #[test]
 fn held_object_id_distinguishes_same_bytes_and_detects_hard_links() {
     let fixture = Fixture::new();

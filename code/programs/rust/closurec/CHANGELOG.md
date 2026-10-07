@@ -4,6 +4,23 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed locally - verified Windows publication policies (CV02)
+
+Create prepared directories and files with atomically protected current-user
+DACLs. Capture owner/group/DACL/protection from held handles and recheck policies
+alongside file identity, length and mtime. Before changing originals, round-trip
+intended policies on distinct permanently empty probes. Use verified stage-parent
+handles for explicit legacy policies and destination-parent handles for inherited
+policies, rejecting unsupported or orphan inheritance. Verify final policy exactly
+and restore candidate privacy on pre-commit failure before rollback.
+
+The two previously failing ACL assertions now pass. Four additional native tests
+cover inherited replacement/new-file policy, metadata-preserving ACL changes,
+policy-install failure recovery and stale inherited policy rejection. The Windows
+publication unit suite passes 19 tests; compiler strict all-target lint passes.
+Exact-head security review and Linux/macOS ACL/ownership implementation remain
+pending, so #16905 stays draft. No full SACL/integrity preservation is claimed.
+
 ### Known issue - output and staging access controls (CV02 review)
 
 Additional native Windows probes and independent review reproduced protected
@@ -13,8 +30,9 @@ earlier backup/recovery review PASS is superseded; #16905 remains draft and
 cannot be accepted on the existing ordinary test/CI results. Specification
 `e55e070094` requires atomically private staging objects, explicit captured and
 verified owner/group/DACL policy, supported-policy rejection, policy rechecks
-and native Linux/macOS ACL/ownership coverage. Implementation is pending.
-Two native regression tests now reach and fail the actual policy assertions:
+and native Linux/macOS ACL/ownership coverage. Windows implementation now passes
+the reproductions; Unix coverage and final review remain pending.
+Two native regression tests originally reached and failed the actual policy assertions:
 prepared objects have inherited/unprotected policies, and all four committed
 artifacts lose protected owner-only policies. An initial helper run failed on
 inherited PowerShell module paths before inspecting ACLs; that harness failure

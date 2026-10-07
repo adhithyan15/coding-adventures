@@ -163,8 +163,15 @@ staging directories/files, explicit owner/group/DACL/protection capture and
 verification, policy rechecks, final-policy transition during installation,
 supported-policy rejection and native Linux/macOS ACL/ownership tests. This work
 must precede final review, repaired-head publication, native CI and actual merge.
-All 895 lesson shards validate; the new specification/documentation does not
-implement or validate that repair yet.
+The local Windows repair now passes both ACL reproductions and all 19 publication
+unit tests, including actual-parent/new-file policy, inherited replacement,
+ACL-only changes, policy failure rollback and orphan-inheritance rejection.
+It uses atomically private objects, separate always-empty policy probes, verified
+handle routes, strict final-policy equality and pre-commit privacy restoration.
+Compiler strict all-target lint passes. All 897 lesson shards validate.
+Native Linux/macOS ownership and extended-ACL copy-or-reject work and exact-head
+independent review remain pending; the published draft still contains the known
+defect and cannot be accepted on its older green CI.
 The new native Windows tests first reproduce both policy defects, including all
 four JS/map/manifest/sidecar destinations. Corrected child PowerShell module
 selection is a harness prerequisite, not publication acceptance. Logs distinguish

@@ -13,6 +13,9 @@ use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::time::SystemTime;
 
+#[cfg(windows)]
+mod windows_security;
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 struct Identity([u64; 3]);
 
@@ -86,17 +89,23 @@ struct Observed {
     len: u64,
     modified: Option<SystemTime>,
     permissions: Permissions,
+    #[cfg(windows)]
+    policy: windows_security::Policy,
 }
 impl Observed {
     fn from_file(file: File) -> io::Result<Self> {
         let id = file_identity(&file)?;
         let metadata = file.metadata()?;
+        #[cfg(windows)]
+        let policy = windows_security::Policy::capture(&file)?;
         Ok(Self {
             file,
             id,
             len: metadata.len(),
             modified: metadata.modified().ok(),
             permissions: metadata.permissions(),
+            #[cfg(windows)]
+            policy,
         })
     }
     fn refresh(&mut self) -> io::Result<()> {
@@ -136,6 +145,7 @@ fn observe(path: &Path, directory: bool) -> io::Result<Option<Observed>> {
         // OPEN_REPARSE_POINT prevents following a replaced final symlink;
         // BACKUP_SEMANTICS permits directory handles for ownership checks.
         options.custom_flags(0x0020_0000 | 0x0200_0000);
+        options.access_mode(0x0002_0080); // READ_CONTROL | FILE_READ_ATTRIBUTES
     }
     let observed = Observed::from_file(options.open(path)?)?;
     check_kind(&observed.file.metadata()?, directory)?;
@@ -279,6 +289,10 @@ fn preflight(outputs: &[(PathBuf, String)]) -> Result<Vec<Destination>, Compiler
         let original =
             observe(&path, false).map_err(|error| failure(requested, "preflight output", error))?;
         if let Some(file) = &original {
+            #[cfg(windows)]
+            file.policy
+                .check_assignable_owner()
+                .map_err(|error| failure(requested, "preflight output policy", error))?;
             if file.permissions.readonly() {
                 return Err(failure(
                     requested,
@@ -309,7 +323,11 @@ struct OwnedDirectory {
 impl OwnedDirectory {
     fn check(&self) -> io::Result<()> {
         match observe(&self.path, true)? {
-            Some(current) if current.id == self.observed.id => Ok(()),
+            Some(current)
+                if current.id == self.observed.id && same_policy(&current, &self.observed) =>
+            {
+                Ok(())
+            }
             _ => Err(invalid("owned staging directory changed or disappeared")),
         }
     }
@@ -325,6 +343,10 @@ struct Stage {
     backup_created: bool,
     backed_up: bool,
     installed: bool,
+    #[cfg(windows)]
+    intended_policy: windows_security::Policy,
+    #[cfg(windows)]
+    parent: Observed,
 }
 impl Stage {
     fn new_path(&self) -> PathBuf {
@@ -342,6 +364,8 @@ enum Phase {
     Stage,
     Install,
     BackupRemove,
+    #[cfg(windows)]
+    Policy,
     RollbackRemove,
     Restore,
     Cleanup,
@@ -362,6 +386,22 @@ fn publish_with_hook(
             let path = destination.path.clone();
             ensure_parents(path.parent().unwrap(), &mut parents)
                 .map_err(|error| failure(&path, "create output parents", error))?;
+            #[cfg(windows)]
+            let parent = observe(path.parent().unwrap(), true)
+                .map_err(|error| failure(&path, "capture output parent policy", error))?
+                .ok_or_else(|| {
+                    failure(
+                        &path,
+                        "capture output parent policy",
+                        invalid("output parent disappeared"),
+                    )
+                })?;
+            #[cfg(windows)]
+            let intended_policy = match &destination.original {
+                Some(original) => original.policy.clone(),
+                None => windows_security::new_file_policy(&parent.file)
+                    .map_err(|error| failure(&path, "derive output policy", error))?,
+            };
             let directory = private_directory(path.parent().unwrap())
                 .map_err(|error| failure(&path, "create staging directory", error))?;
             stages.push(Stage {
@@ -371,18 +411,21 @@ fn publish_with_hook(
                 backup_created: false,
                 backed_up: false,
                 installed: false,
+                #[cfg(windows)]
+                intended_policy,
+                #[cfg(windows)]
+                parent,
             });
             let stage = stages.last_mut().unwrap();
+            #[cfg(windows)]
+            verify_policy_support(stage)
+                .map_err(|error| failure(&path, "preflight native output policy", error))?;
             hook(Phase::Stage, &path).map_err(|error| failure(&path, "stage output", error))?;
             stage
                 .directory
                 .check()
                 .map_err(|error| failure(&path, "check staging directory", error))?;
-            let file = OpenOptions::new()
-                .write(true)
-                .read(true)
-                .create_new(true)
-                .open(stage.new_path())
+            let file = create_stage_file(&stage.new_path())
                 .map_err(|error| failure(&path, "create stage file", error))?;
             stage.new = Some(
                 Observed::from_file(file)
@@ -412,13 +455,28 @@ fn publish_with_hook(
                 .map_err(|error| failure(path, "check staging directory", error))?;
             let current = observe(path, false)
                 .map_err(|error| failure(path, "recheck destination", error))?;
+            #[cfg(windows)]
+            {
+                let parent = observe(path.parent().unwrap(), true)
+                    .map_err(|error| failure(path, "recheck output parent", error))?
+                    .ok_or_else(|| {
+                        failure(
+                            path,
+                            "recheck output parent",
+                            invalid("output parent disappeared"),
+                        )
+                    })?;
+                if parent.id != stage.parent.id || parent.policy != stage.parent.policy {
+                    return Err(failure(
+                        path,
+                        "recheck output parent",
+                        invalid("output parent identity or access policy changed"),
+                    ));
+                }
+            }
             match (&stage.destination.original, &current) {
                 (None, None) => {}
-                (Some(old), Some(current))
-                    if old.id == current.id
-                        && old.len == current.len
-                        && old.modified == current.modified =>
-                {
+                (Some(old), Some(current)) if same_original(old, current) => {
                     // A private directory can still acquire an unexpected
                     // occupant. Exclusive link creation cannot overwrite it;
                     // object identity alone never claims ownership of its path.
@@ -450,10 +508,7 @@ fn publish_with_hook(
                     )
                 })?;
             let expected = stage.new.as_ref().unwrap();
-            if prepared.id != expected.id
-                || prepared.len != expected.len
-                || prepared.modified != expected.modified
-            {
+            if !same_original(expected, &prepared) {
                 return Err(failure(
                     path,
                     "recheck prepared file",
@@ -466,6 +521,36 @@ fn publish_with_hook(
                 failure(path, "install complete output without overwrite", error)
             })?;
             stage.installed = true;
+            #[cfg(windows)]
+            {
+                hook(Phase::Policy, path)
+                    .map_err(|error| failure(path, "apply output policy", error))?;
+                let file = windows_security::policy_handle(path)
+                    .map_err(|error| failure(path, "open installed output policy", error))?;
+                if file_identity(&file)
+                    .map_err(|error| failure(path, "identify policy target", error))?
+                    != expected.id
+                {
+                    return Err(failure(
+                        path,
+                        "identify policy target",
+                        invalid("installed policy target changed"),
+                    ));
+                }
+                // Windows' automatic inheritance uses the opened handle's
+                // parent. Legacy explicit unprotected ACLs must not acquire
+                // additional destination-parent grants. Inherited entries need
+                // the actual destination parent; exact readback rejects drift.
+                let policy_file = if stage.intended_policy.has_inherited_entries() {
+                    &file
+                } else {
+                    &expected.file
+                };
+                stage
+                    .intended_policy
+                    .apply(policy_file)
+                    .map_err(|error| failure(path, "apply and verify output policy", error))?;
+            }
             let installed = observe(path, false)
                 .map_err(|error| failure(path, "verify installed output", error))?
                 .ok_or_else(|| {
@@ -490,6 +575,19 @@ fn publish_with_hook(
         Ok(())
     })();
     if let Err(mut error) = prepared {
+        #[cfg(windows)]
+        if let CompilerError::OutputWriteError { message, .. } = &mut error {
+            for stage in &stages {
+                if let Some(new) = &stage.new {
+                    if let Err(error) = new.policy.apply(&new.file) {
+                        message.push_str(&format!(
+                            "; restore prepared-file privacy {}: {error}",
+                            stage.new_path().display()
+                        ));
+                    }
+                }
+            }
+        }
         let problems = rollback(&mut stages, hook);
         let mut cleanup = cleanup_stages(&stages, false, hook);
         for directory in parents.iter().rev() {
@@ -574,14 +672,18 @@ fn private_directory(parent: &Path) -> io::Result<OwnedDirectory> {
         let path = parent.join(format!(".closurec-{}-{sequence}", std::process::id()));
         #[cfg(unix)]
         let mut builder = fs::DirBuilder::new();
-        #[cfg(not(unix))]
+        #[cfg(not(any(unix, windows)))]
         let builder = fs::DirBuilder::new();
         #[cfg(unix)]
         {
             use std::os::unix::fs::DirBuilderExt;
             builder.mode(0o700);
         }
-        match builder.create(&path) {
+        #[cfg(windows)]
+        let created = windows_security::create_directory(&path);
+        #[cfg(not(windows))]
+        let created = builder.create(&path);
+        match created {
             Ok(()) => {
                 let observed = observe(&path, true).map_err(|error|io::Error::new(error.kind(),format!("cannot identify created staging directory {}; retained directory: {error}",path.display())))?.ok_or_else(|| {
                     invalid(format!(
@@ -601,6 +703,81 @@ fn private_directory(parent: &Path) -> io::Result<OwnedDirectory> {
     ))
 }
 
+fn create_stage_file(path: &Path) -> io::Result<File> {
+    #[cfg(windows)]
+    {
+        windows_security::create_file(path)
+    }
+    #[cfg(not(windows))]
+    {
+        OpenOptions::new()
+            .write(true)
+            .read(true)
+            .create_new(true)
+            .open(path)
+    }
+}
+
+#[cfg(windows)]
+fn verify_policy_support(stage: &Stage) -> io::Result<()> {
+    // Never widen the future data-bearing inode, even while it is empty:
+    // tightening a DACL cannot revoke a reader's already-open handle. This
+    // distinct probe remains empty and is destroyed before writing any bytes.
+    let private_path = stage.directory.path.join("policy");
+    let probe = Observed::from_file(windows_security::create_file(&private_path)?)?;
+    let public_path = stage.directory.path.with_extension("policy-probe");
+    let mut linked = false;
+    let checked = (|| {
+        if stage.intended_policy.has_inherited_entries() {
+            fs::hard_link(&private_path, &public_path)?;
+            linked = true;
+            let handle = windows_security::policy_handle(&public_path)?;
+            if file_identity(&handle)? != probe.id {
+                return Err(invalid("native policy probe identity changed"));
+            }
+            stage.intended_policy.apply(&handle)
+        } else {
+            stage.intended_policy.apply(&probe.file)
+        }
+    })();
+    // This held handle keeps WRITE_DAC/WRITE_OWNER despite a restrictive test
+    // policy. Restore privacy before identity-checked removal of owned links.
+    let cleaned = (|| {
+        probe.policy.apply(&probe.file)?;
+        if linked {
+            remove_owned(&public_path, &probe)?;
+        }
+        remove_owned(&private_path, &probe)
+    })();
+    match (checked, cleaned) {
+        (Ok(()), Ok(())) => Ok(()),
+        (Err(error), Ok(())) => Err(error),
+        (checked, Err(error)) => Err(io::Error::new(error.kind(), format!(
+            "native policy probe cleanup failed; retained empty probe {} and {}: {error}; validation: {checked:?}",
+            private_path.display(), public_path.display()
+        ))),
+    }
+}
+
+fn same_original(expected: &Observed, current: &Observed) -> bool {
+    let same = expected.id == current.id
+        && expected.len == current.len
+        && expected.modified == current.modified;
+    same && same_policy(expected, current)
+}
+
+fn same_policy(expected: &Observed, current: &Observed) -> bool {
+    #[cfg(windows)]
+    {
+        expected.policy == current.policy
+    }
+    #[cfg(not(windows))]
+    {
+        let _ = (expected, current);
+        true
+    }
+}
+
 fn remove_owned(path: &Path, expected: &Observed) -> io::Result<()> {
     match observe(path, false)? {
         None => Ok(()),
@@ -611,10 +788,7 @@ fn remove_owned(path: &Path, expected: &Observed) -> io::Result<()> {
 fn remove_original(path: &Path, expected: &Observed) -> io::Result<()> {
     let current = observe(path, false)?
         .ok_or_else(|| invalid("original destination disappeared before backup removal"))?;
-    if current.id != expected.id
-        || current.len != expected.len
-        || current.modified != expected.modified
-    {
+    if !same_original(expected, &current) {
         return Err(invalid(
             "original destination changed before backup removal",
         ));
@@ -648,20 +822,11 @@ fn rollback(
                 let old = observe(&stage.old_path(), false)?
                     .ok_or_else(|| invalid("original backup disappeared"))?;
                 let original = stage.destination.original.as_ref().unwrap();
-                if old.id != original.id
-                    || old.len != original.len
-                    || old.modified != original.modified
-                {
+                if !same_original(original, &old) {
                     return Err(invalid("original backup identity changed"));
                 }
                 match observe(path, false)? {
-                    Some(current)
-                        if current.id == original.id
-                            && current.len == original.len
-                            && current.modified == original.modified =>
-                    {
-                        Ok(())
-                    }
+                    Some(current) if same_original(original, &current) => Ok(()),
                     Some(_) => Err(invalid(
                         "restore destination is occupied by an unknown replacement",
                     )),
