@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Character or language?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c51b5f72470d99f2",
+  "sourceHash": "fnv1a64:0a6a528ca2f4efcb",
   "lessons": [
     {
       "id": "ZH-C16-hear-zi",
@@ -972,7 +972,7 @@
         "writing-type",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:7fa74c38913a7682",
+      "sourceHash": "fnv1a64:4b181adf9f88103a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -990,7 +990,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Say the Chinese language. Look at 语 (yǔ) for five seconds, then cover it."
+              "text": "Say the Chinese language."
             }
           ]
         },
@@ -999,6 +999,10 @@
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at 语 (yǔ) for five seconds, then cover it."
+            },
             {
               "kind": "pause",
               "seconds": 10,

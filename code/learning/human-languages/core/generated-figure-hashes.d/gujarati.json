@@ -3,6 +3,62 @@
   "figures": [
     {
       "kind": "script-filmstrip",
+      "lessonId": "GU-C20-ghar",
+      "sourceHash": "fnv1a64:bdd73e98be52c8cd",
+      "svgHash": "fnv1a64:de734356844b0d72",
+      "svg": "gujarati/book/figures/GU-C20-ghar-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "GU-C20-mandir",
+      "sourceHash": "fnv1a64:02505ed555f292ad",
+      "svgHash": "fnv1a64:91ed9e167cd01314",
+      "svg": "gujarati/book/figures/GU-C20-mandir-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "GU-C21-haath",
+      "sourceHash": "fnv1a64:5d9b07027dfb7fac",
+      "svgHash": "fnv1a64:76b03bb4781d633e",
+      "svg": "gujarati/book/figures/GU-C21-haath-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "GU-C21-paisa",
+      "sourceHash": "fnv1a64:c59f36313c20b689",
+      "svgHash": "fnv1a64:9d60ff53bb84876b",
+      "svg": "gujarati/book/figures/GU-C21-paisa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "GU-C22-shaalaa",
+      "sourceHash": "fnv1a64:99e6884c54b9bc15",
+      "svgHash": "fnv1a64:a3b44e65f978aaf6",
+      "svg": "gujarati/book/figures/GU-C22-shaalaa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "GU-C22-shahar",
+      "sourceHash": "fnv1a64:0e6fd9e67e95734d",
+      "svgHash": "fnv1a64:f4859632caa268ea",
+      "svg": "gujarati/book/figures/GU-C22-shahar-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "GU-C23-dukaan",
+      "sourceHash": "fnv1a64:b31a6204f92d3b87",
+      "svgHash": "fnv1a64:f9177d40cb8df351",
+      "svg": "gujarati/book/figures/GU-C23-dukaan-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "GU-C23-gaam",
+      "sourceHash": "fnv1a64:02387bfadfe11ea3",
+      "svgHash": "fnv1a64:3287829dd0fd2d53",
+      "svg": "gujarati/book/figures/GU-C23-gaam-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "GU-C32-ane-write",
       "sourceHash": "fnv1a64:fec03cc059282c18",
       "svgHash": "fnv1a64:9b2dd5d3e5f433ad",
@@ -420,6 +476,20 @@
       "sourceHash": "fnv1a64:ca57c9a032096aa8",
       "svgHash": "fnv1a64:b58162f6ea64a41e",
       "svg": "gujarati/book/figures/GU-W08-pha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "GU-W20-gha",
+      "sourceHash": "fnv1a64:7db9a782028235a9",
+      "svgHash": "fnv1a64:7b08320acfdf8edc",
+      "svg": "gujarati/book/figures/GU-W20-gha-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "GU-W21-ai-matra",
+      "sourceHash": "fnv1a64:4e39369405dc80fa",
+      "svgHash": "fnv1a64:d16aa65713a5532a",
+      "svg": "gujarati/book/figures/GU-W21-ai-matra-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",

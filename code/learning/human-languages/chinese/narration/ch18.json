@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Looking and reading",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ce49997d1662e026",
+  "sourceHash": "fnv1a64:552585703d1c8c77",
   "lessons": [
     {
       "id": "ZH-C18-hear-kan",
@@ -304,7 +304,7 @@
         "writing-type",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:4590f39305138dcb",
+      "sourceHash": "fnv1a64:b20e0a5d8dda6845",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -328,7 +328,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write 中国 from the meaning China. Then look at 看 (kàn) for five seconds and cover it."
+              "text": "Write 中国 from the meaning China."
             }
           ]
         },
@@ -337,6 +337,10 @@
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at 看 (kàn) for five seconds and cover it."
+            },
             {
               "kind": "pause",
               "seconds": 8,
@@ -1214,7 +1218,7 @@
         "writing-type",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:dfceb9607529a4fd",
+      "sourceHash": "fnv1a64:48bbccd34e9d2795",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1238,7 +1242,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write 好看 (hǎokàn) from the meaning good-looking. Then look at 书 (shū) for five seconds and cover it."
+              "text": "Write 好看 (hǎokàn) from the meaning good-looking."
             }
           ]
         },
@@ -1247,6 +1251,10 @@
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at 书 (shū) for five seconds and cover it."
+            },
             {
               "kind": "pause",
               "seconds": 8,

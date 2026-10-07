@@ -104,10 +104,12 @@ describe("the real corpus", () => {
   });
 
   it("draws every Gujarati sign lesson, and every Gujarati word or list whose signs are cited", () => {
-    // Nine lessons teach a sign by itself; seven word lessons (four words, and
-    // હા three times) and six lists carry one: 22 in all. All are drawn
+    // Ten lessons teach a sign by itself; fourteen word lessons (eleven words,
+    // and હા three times) and six lists carry one: 30 in all. All are drawn
     // consonant first, sign after: KanoAI's barakhadi templates write every
-    // sign after its consonant, even િ.
+    // sign after its consonant, even િ. GU-W21-ai-matra and the seven place
+    // words of chapters 20-23 (મંદિર … ગામ) have no Writing block: their strip
+    // lands in their guided- or delayed-copy practice (figure-targets.ts).
     const gujarati = targets.filter((target) => target.lessonId.startsWith("GU-"));
     const withSign = gujarati.filter((target) =>
       (target.letters ?? [target.glyph]).some((piece) => /^\p{M}+$/u.test(piece)),
@@ -117,6 +119,13 @@ describe("the real corpus", () => {
         withSign.map((target) => [target.lessonId, (target.letters ?? [target.glyph]).join(" ")]),
       ),
     ).toEqual({
+      "GU-C20-mandir": "મ ં દ િ ર",
+      "GU-C21-haath": "હ ા થ",
+      "GU-C21-paisa": "પ ૈ સ ા",
+      "GU-C22-shaalaa": "શ ા ળ ા",
+      "GU-C22-shahar": "શ હ ે ર",
+      "GU-C23-dukaan": "દ ુ ક ા ન",
+      "GU-C23-gaam": "ગ ા મ",
       "GU-C32-ane-write": "અ ન ે",
       "GU-C33-ke-write": "ક ે",
       "GU-C34-kemke-write": "ક ે મ ક ે",
@@ -138,6 +147,7 @@ describe("the real corpus", () => {
       "GU-W03-u-matra": "ુ",
       "GU-W04-i-matra": "િ",
       "GU-W07-uu-matra": "ૂ",
+      "GU-W21-ai-matra": "ૈ",
       "GU-W45-ai-sign": "ૈ",
     });
     // The virama ્ and the vocalic-r sign ૃ have no Gujarati source, so their
@@ -206,8 +216,9 @@ describe("the real corpus", () => {
     });
     // Left undrawn: the signs Noto prints with a piece of headline the traces
     // never draw (ि ी ो ः), the signs whose traces split (ै ौ), a sign
-    // lesson with no Writing or Script block (HI-W03-preposed-i), and every
-    // word or list that puts a sign on a consonant.
+    // lesson with no Writing or Script block and no modelled practice stage
+    // (HI-W03-preposed-i), and every word or list that puts a sign on a
+    // consonant.
     const lessonIds = new Set(targets.map((target) => target.lessonId));
     for (const id of [
       "HI-W128-vowel-sign-i",
@@ -230,7 +241,9 @@ describe("the real corpus", () => {
     // twelve Tamil words whose signs are all written AFTER their consonant
     // (சரி, சரியா, and ten words whose puḷḷi follows its consonant, such as
     // வணக்கம் and நீங்கள்), and the Gujarati words, whose signs are all written after their
-    // consonant (અને, કે, કેમકે, તે, and હા three times), and the Malayalam
+    // consonant (અને, કે, કેમકે, તે, and હા three times, and the eight place
+    // words ઘર … ગામ of chapters 20-23, drawn in their copy practice since
+    // strips may land in a modelled practice block), and the Malayalam
     // word നമ three times, once ന and മ gained their Thooval-cited ductus
     // (its fourth lesson, ML-W01-na-ma-trace, lists "ന മ" and is not a
     // word). A Tamil word
@@ -263,6 +276,14 @@ describe("the real corpus", () => {
       "GE-W01-hallo-dictation",
       "GE-W01-hallo-guided-copy",
       "GE-W04-vier-zeilen",
+      "GU-C20-ghar",
+      "GU-C20-mandir",
+      "GU-C21-haath",
+      "GU-C21-paisa",
+      "GU-C22-shaalaa",
+      "GU-C22-shahar",
+      "GU-C23-dukaan",
+      "GU-C23-gaam",
       "GU-C32-ane-write",
       "GU-C33-ke-write",
       "GU-C34-kemke-write",
