@@ -631,6 +631,10 @@ the token-input API never removes them. The C frontend switches to the
 preprocessor stream before that compatibility path is retired. A local quoted
 header can be lexed as a string token; `<...>` headers remain a separate system
 include policy decision and are not resolved from the host toolchain.
+The staged condition evaluator may accept a single comparison of expanded
+decimal integer literals or undefined identifiers, including `==`, `!=`,
+`<`, `<=`, `>`, and `>=`. It rejects more complex controlling expressions until
+their C integer-constant-expression semantics are implemented.
 *Acceptance:* a C program using `#define` (object- and function-like), `#if`/
 `#ifdef`/`#else`/`#endif` and a real project-local `#include` compiles through
 `c-to-semantic-ir` and executes with the expected result — the first C program
