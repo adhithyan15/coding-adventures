@@ -13,7 +13,8 @@ serve as an independent conformance oracle.
 ## Accepted source subset
 
 The pilot accepts one or more `puts(<expression>)` statements. Each call has
-exactly one positional argument. Expressions contain decimal integer literals,
+exactly one positional argument. Expressions contain plain decimal integer
+literals without separators,
 parentheses, unary `-`, and binary `+`, `-`, `*`, `/` with Ruby's precedence and
 left associativity. Variables, assignments, strings, interpolation, method
 definitions, multiple arguments, and every other construct are rejected with
@@ -23,6 +24,9 @@ remains in force.
 The decimal-only subset rejects multi-digit literals beginning with `0`:
 Ruby interprets legacy forms such as `010` as octal. Until the pilot supports
 their Ruby values, it must reject them rather than lower them as decimal.
+The compiler must also check the lexer's numeric token type before reading
+digits, because Ruby string token values can contain the same digits after
+the lexer removes their quotes.
 
 Ruby integers have arbitrary precision. This pilot accepts only programs for
 which each literal and every intermediate expression value is provably within
