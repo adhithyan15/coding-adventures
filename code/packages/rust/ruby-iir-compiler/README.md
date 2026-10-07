@@ -10,3 +10,7 @@ one-argument `puts` calls with decimal integers, grouping, unary minus,
 and `+`, `-`, `*`, `/`. Every intermediate must fit in `i64`; division uses
 Ruby's floor rule. Other syntax is rejected. See
 [LANG80](../../../specs/LANG80-ruby-direct-iir-pilot.md).
+
+`compile_source` limits input to 64 KiB. `compile_ast` also limits directly
+supplied tree items, nesting, text bytes, and module-name length before
+lowering.

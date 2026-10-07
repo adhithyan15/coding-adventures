@@ -12,8 +12,10 @@ use vm_core::{errors::VMError, value::Value, VMCore};
 
 /// Maximum source size accepted by the first native Ruby pilot.
 pub const MAX_SOURCE_BYTES: usize = 64 * 1024;
-const MAX_AST_NODES: usize = 16_384;
+const MAX_AST_ITEMS: usize = 16_384;
 const MAX_AST_DEPTH: usize = 256;
+const MAX_AST_TEXT_BYTES: usize = 1024 * 1024;
+const MAX_AST_FIELD_BYTES: usize = 64 * 1024;
 const MAX_OUTPUT_BYTES: usize = 1_000_000;
 
 /// Parse Ruby 3.0 source and lower the supported subset directly to IIR.
@@ -28,6 +30,9 @@ pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, Stri
 
 /// Lower a Ruby parser tree without passing through Semantic IR.
 pub fn compile_ast(ast: &GrammarASTNode, module_name: &str) -> Result<IIRModule, String> {
+    if module_name.len() > MAX_AST_FIELD_BYTES {
+        return Err("Ruby IIR module name exceeds the native pilot limit".into());
+    }
     check_ast_budget(ast)?;
     if ast.rule_name != "program" || ast.children.is_empty() {
         return Err("expected Ruby statements in a program".into());
@@ -131,18 +136,49 @@ fn floor_div(left: i128, right: i128) -> i128 {
 
 fn check_ast_budget(root: &GrammarASTNode) -> Result<(), String> {
     let mut pending = vec![(root, 1_usize)];
-    let mut visited = 0_usize;
+    let mut visited = 1_usize;
+    let mut text_bytes = 0_usize;
     while let Some((node, depth)) = pending.pop() {
-        visited += 1;
-        if visited > MAX_AST_NODES || depth > MAX_AST_DEPTH {
-            return Err("Ruby AST exceeds the native pilot limit".into());
+        if depth > MAX_AST_DEPTH {
+            return Err("Ruby AST exceeds the native pilot depth limit".into());
         }
+        count_ast_text(&node.rule_name, &mut text_bytes)?;
         for child in &node.children {
-            if let ASTNodeOrToken::Node(child) = child {
-                pending.push((child, depth + 1));
+            if visited == MAX_AST_ITEMS {
+                return Err("Ruby AST exceeds the native pilot AST item limit".into());
+            }
+            visited += 1;
+            match child {
+                ASTNodeOrToken::Node(inner) => {
+                    if depth == MAX_AST_DEPTH {
+                        return Err("Ruby AST exceeds the native pilot depth limit".into());
+                    }
+                    pending.push((inner, depth + 1));
+                }
+                ASTNodeOrToken::Token(token) => {
+                    count_ast_text(&token.value, &mut text_bytes)?;
+                    if let Some(type_name) = &token.type_name {
+                        count_ast_text(type_name, &mut text_bytes)?;
+                    }
+                    if let Some(cv) = &token.cv {
+                        count_ast_text(cv, &mut text_bytes)?;
+                    }
+                }
             }
         }
     }
+    Ok(())
+}
+
+fn count_ast_text(field: &str, total: &mut usize) -> Result<(), String> {
+    if field.len() > MAX_AST_FIELD_BYTES
+        || total
+            .checked_add(field.len())
+            .is_none_or(|next| next > MAX_AST_TEXT_BYTES)
+    {
+        return Err("Ruby AST exceeds the native pilot AST text limit".into());
+    }
+    *total += field.len();
     Ok(())
 }
 
@@ -316,6 +352,32 @@ fn checked_i64(value: i128) -> Result<i128, String> {
 mod tests {
     use super::*;
 
+    fn empty_node(rule_name: &str) -> GrammarASTNode {
+        GrammarASTNode {
+            rule_name: rule_name.into(),
+            children: vec![],
+            start_line: None,
+            start_column: None,
+            end_line: None,
+            end_column: None,
+        }
+    }
+
+    fn number_token(node: &GrammarASTNode) -> Option<ASTNodeOrToken> {
+        for child in &node.children {
+            match child {
+                ASTNodeOrToken::Token(token) if token.value == "1" => return Some(child.clone()),
+                ASTNodeOrToken::Node(inner) => {
+                    if let Some(token) = number_token(inner) {
+                        return Some(token);
+                    }
+                }
+                _ => {}
+            }
+        }
+        None
+    }
+
     #[test]
     fn executes_ruby_integer_expressions_on_our_vm() {
         assert_eq!(
@@ -353,5 +415,56 @@ mod tests {
             assert!(run_source(source).is_err(), "{source}");
         }
         assert!(compile_source(&" ".repeat(MAX_SOURCE_BYTES + 1), "oversized").is_err());
+    }
+
+    #[test]
+    fn direct_ast_item_and_text_limits_apply_before_lowering() {
+        let mut parser = create_ruby_parser("puts(1)");
+        let parsed = parser.parse().unwrap();
+        let token = number_token(&parsed).unwrap();
+
+        let mut too_many_tokens = empty_node("program");
+        too_many_tokens.children = vec![token.clone(); MAX_AST_ITEMS];
+        assert!(compile_ast(&too_many_tokens, "test")
+            .unwrap_err()
+            .contains("AST item limit"));
+
+        let mut huge_token = token.clone();
+        if let ASTNodeOrToken::Token(value) = &mut huge_token {
+            value.value = "9".repeat(64 * 1024 + 1);
+        }
+        let mut oversized_text = empty_node("program");
+        oversized_text.children.push(huge_token);
+        assert!(compile_ast(&oversized_text, "test")
+            .unwrap_err()
+            .contains("AST text limit"));
+
+        let mut huge_cv = token;
+        if let ASTNodeOrToken::Token(value) = &mut huge_cv {
+            value.cv = Some("c".repeat(64 * 1024 + 1));
+        }
+        let mut oversized_cv = empty_node("program");
+        oversized_cv.children.push(huge_cv);
+        assert!(compile_ast(&oversized_cv, "test")
+            .unwrap_err()
+            .contains("AST text limit"));
+
+        let mut aggregate = empty_node("program");
+        aggregate.children = (0..18)
+            .map(|_| {
+                let mut node = empty_node("child");
+                node.rule_name = "r".repeat(60_000);
+                ASTNodeOrToken::Node(node)
+            })
+            .collect();
+        assert!(compile_ast(&aggregate, "test")
+            .unwrap_err()
+            .contains("AST text limit"));
+
+        assert!(
+            compile_ast(&empty_node("program"), &"m".repeat(64 * 1024 + 1))
+                .unwrap_err()
+                .contains("module name")
+        );
     }
 }
