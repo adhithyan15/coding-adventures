@@ -294,8 +294,8 @@ impl Compiler {
             return Err("unsupported Python arithmetic expression".into());
         }
         let mut left = self.compile_number(first)?;
-        let mut rest = node.children[1..].chunks_exact(2);
-        for pair in &mut rest {
+        let (pairs, remainder) = node.children[1..].as_chunks::<2>();
+        for pair in pairs {
             let (ASTNodeOrToken::Token(operator), ASTNodeOrToken::Node(right_node)) =
                 (&pair[0], &pair[1])
             else {
@@ -324,7 +324,7 @@ impl Compiler {
             }
             left = Operand::Var(dest);
         }
-        if !rest.remainder().is_empty() {
+        if !remainder.is_empty() {
             return Err("incomplete Python arithmetic expression".into());
         }
         Ok(left)
