@@ -95,20 +95,30 @@ pub fn compile_source(source: &str, module_name: &str) -> Result<semantic_ir::Mo
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::io::Write;
     use std::sync::atomic::{AtomicUsize, Ordering};
 
     static SEQ: AtomicUsize = AtomicUsize::new(0);
+
+    fn write_fresh(path: &std::path::Path, contents: &[u8]) {
+        std::fs::OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(path)
+            .unwrap()
+            .write_all(contents)
+            .unwrap();
+    }
 
     #[test]
     fn rooted_preprocessor_feeds_real_c_frontend() {
         let root = uniq("_includes");
         std::fs::create_dir(&root).unwrap();
-        std::fs::write(
-            root.join("main.c"),
-            "#define ANSWER 7\n#if defined(ANSWER) && ANSWER > 0\n#include \"part.h\"\n#endif\nint main(void) { return value(); }\n",
-        )
-        .unwrap();
-        std::fs::write(root.join("part.h"), "int value(void) { return ANSWER; }\n").unwrap();
+        write_fresh(
+            &root.join("main.c"),
+            b"#define ANSWER 7\n#if defined(ANSWER) && ANSWER > 0\n#include \"part.h\"\n#endif\nint main(void) { return value(); }\n",
+        );
+        write_fresh(&root.join("part.h"), b"int value(void) { return ANSWER; }\n");
         let module = compile_preprocessed_file(
             "main.c",
             [root.clone()],
