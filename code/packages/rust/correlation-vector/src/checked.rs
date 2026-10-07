@@ -11,7 +11,7 @@ use std::collections::{BTreeSet, HashMap, HashSet, VecDeque};
 
 /// Finite resource limits for checked graph operations. Counts include repeated
 /// parent edges and deletion records; payload bytes include encoded text/meta.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct GraphLimits {
     pub max_nodes: usize,
     pub max_edges: usize,
@@ -57,7 +57,9 @@ pub(super) fn add_bounded(
 }
 
 impl GraphLimits {
-    pub(super) fn validate(&self) -> Result<(), String> {
+    /// Validate configuration before parsing input or constructing a checked log.
+    /// Counts may be zero; metadata depth cannot exceed the safe hard ceiling.
+    pub fn validate(&self) -> Result<(), String> {
         // Metadata serialization is recursive, so even callers raising other
         // finite caps cannot select a stack-unsafe serialization depth.
         if self.max_metadata_depth > 64 {

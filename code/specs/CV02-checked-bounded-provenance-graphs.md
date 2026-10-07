@@ -229,11 +229,14 @@ Zero is a meaningful limit for rejection tests. Explicit programmatic
 configuration receives the same validation as CLI configuration.
 
 When tracing is enabled, construct the checked compact log with these limits.
-When disabled, retain disabled compact allocation behavior. Every compiler-stage
-CV operation propagates a `CompilerError::Provenance { stage: String,
+When disabled, retain disabled compact allocation behavior. Direct compiler-owned
+CV operations propagate a `CompilerError::Provenance { stage: String,
 message: String }` before any successful output publication. Diagnostics identify
 the stage and preserve the underlying limit/identity/schema explanation; they
-must not panic or discard the error. Parser/configuration/execution failures route diagnostics to stderr with empty
+must not panic or discard the error. Existing typed frontend/pass failures retain
+their compilation-stage diagnostics and underlying details, with failed
+compilation status; do not infer categories from arbitrary message text.
+Parser/configuration/execution failures route diagnostics to stderr with empty
 success stdout; help/version remain successful stdout. No successful fallbacks
 from formatter or summary errors are allowed. Graph validation remains required under format NONE
 and before selecting filtered/summary views.

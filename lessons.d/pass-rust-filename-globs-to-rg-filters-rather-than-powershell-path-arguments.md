@@ -12,3 +12,7 @@ matching source file.
 Use rg -g '*.rs' with an existing directory as the path. Its filter performs
 matching inside rg on every platform. Keep filters before -- and distinguish a
 failed search command from a successful search with no matches.
+
+The same rule applies to script names: do not pass `code/scripts/closure*` as a
+path. Search the real directory with `-g` filters, or locate candidates with
+`rg --files code/scripts` first.

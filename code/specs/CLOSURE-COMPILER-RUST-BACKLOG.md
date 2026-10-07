@@ -94,8 +94,16 @@ a 10,002-node wide graph passes deterministic queries. Isolated small-stack test
 cover 65,536-level metadata, deep mixed AST families and wide sibling lists.
 The compiler EOF test now checks semantic deletion fields rather than JSON key
 order; it explicitly does not prove currently skipped comment/whitespace origins.
-Current remaining CV02 work: checked CLI construction/limit configuration,
-compiler-stage error propagation, every format/filter/summary/NONE boundary,
+The checked CLI/stage checkpoint adds the closed nine-field limit override,
+shared programmatic validation, checked compiler log construction and fallible
+direct-stage/whitespace gap and emit recording. Actual-process tests preserve
+existing artifacts on early cap/configuration failure and verify successful
+checked reload with unchanged output at all five compilation levels. Error
+diagnostics now go to stderr; the typed-AST alias-conflict fixture verifies
+empty stdout. Fresh compiler verification passes 1,043 tests across 177 targets
+with no ignores, plus 70 CV unit tests and 10 doctests; both pass strict lint
+including unknown-lint denial. There are 884 valid lesson shards.
+Current remaining CV02 work: every format/filter/summary/NONE boundary,
 transactional artifact publication/content identity, final full-scope exact-head
 security review and actual CI/merge verification. Configuration and diagnostic
 names are specified before their implementation.

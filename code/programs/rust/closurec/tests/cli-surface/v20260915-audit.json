@@ -11,14 +11,14 @@
     "extracted_surface_sha256": "a7d2346f5ad4bbe77acfe8bc176065d08ea3a8fa9ceb4ee4d05ade68644c8947"
   },
   "local_spec_path": "cli.spec.json",
-  "local_spec_sha256": "9a59145a672a6d61ca69a8f865d44bc0133edeed53e9c3dd35a74748e22b4bed",
+  "local_spec_sha256": "b0bb83812b06fb90cf26bbcbf73a2377f648869ef2ddf9150699549cdc729f28",
   "counts": {
     "upstream_options": 102,
     "upstream_aliases": 7,
-    "local_spec_flags": 112,
+    "local_spec_flags": 113,
     "direct_upstream_flags": 100,
     "generated_flags": 2,
-    "local_extensions": 11,
+    "local_extensions": 12,
     "deprecated_aliases": 1,
     "unsupported_upstream_flags": 0,
     "unsupported_upstream_aliases": 0
@@ -559,6 +559,7 @@
       "correlation_vector_filter_includes_origin",
       "correlation_vector_filter_invert",
       "correlation_vector_format",
+      "correlation_vector_limits",
       "correlation_vector_output",
       "correlation_vector_pretty",
       "correlation_vector_summary",

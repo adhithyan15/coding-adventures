@@ -4,6 +4,20 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Added - checked provenance configuration and stage failures (CV02)
+
+`--correlation_vector_limits` supplies closed, partial overrides of all nine
+shared `GraphLimits` fields. Invalid names, duplicates, non-ASCII/non-decimal
+values, overflow and unsafe metadata depth fail before inputs or output writes.
+Tracing constructs a checked compact log; programmatic configuration uses the
+same validation. Direct compiler CV operations and whitespace gap/emit deletion
+failures now return stage diagnostics with failed-compilation status. Parser,
+configuration and execution errors go to stderr with empty success stdout.
+Actual-process tests verify limits, file preservation on early failure, checked
+reload and tracing-neutral bytes at all five compilation levels. The generated
+help and exact-source-pinned CLI surface audit include the new Rust extension.
+Formatter/summary and transactional publication integration remain unfinished.
+
 ### Fixed - semantic EOF provenance regression assertion (CV02)
 
 The whitespace-only tombstone test reads deletion fields from the same parsed

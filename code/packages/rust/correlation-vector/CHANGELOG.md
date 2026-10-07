@@ -4,6 +4,12 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - public limit configuration validation (CV02)
+
+`GraphLimits::validate` exposes the existing safe metadata-depth ceiling to
+compiler configuration before input work. Limits support `PartialEq`/`Eq` for
+configuration comparison; numeric fields and default values are unchanged.
+
 ### Fixed — CV02 boundary review
 
 - Charge object-key work before decoding; validate borrowed key role, duplicates

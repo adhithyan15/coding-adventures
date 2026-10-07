@@ -100,7 +100,9 @@ replace public field access; `set_enabled` retains generic recording toggles.
 and encoded text bytes, input bytes, structural operation work and export bytes.
 Defaults are 1M nodes, 4M edges/events, 1M metadata values, depth 64, 128 MiB
 payload/import, 64M work units and 512 MiB output. Depth above 64 is rejected.
-Counts and encoding bytes provide finite limits, rather than a precise RAM cap.
+Call public `GraphLimits::validate` to reject unsafe configuration before input
+work. Limits support equality comparison for configuration tests. Counts and
+encoding bytes provide finite limits, rather than a precise RAM cap.
 Import/export share work allowances across phases. Destruction of oversized
 caller-owned arguments is iterative; disposing of already-transferred memory
 necessarily visits that payload outside the graph-processing allowance.

@@ -51,6 +51,8 @@ use std::path::PathBuf;
 /// exactly the bug class we want to surface loudly.
 #[derive(Debug, Clone, PartialEq)]
 pub enum ConfigError {
+    /// CV02: invalid provenance limit overrides or unsafe depth configuration.
+    InvalidProvenanceLimits(String),
     /// `cli.spec.json` declared a flag as one type and we tried to
     /// read it as a different one. The string is human-readable.
     SpecMismatch(String),
@@ -80,6 +82,9 @@ pub enum ConfigError {
 impl std::fmt::Display for ConfigError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+            ConfigError::InvalidProvenanceLimits(message) => {
+                write!(f, "--correlation_vector_limits: {message}")
+            }
             ConfigError::SpecMismatch(s) => write!(f, "cli.spec.json mismatch: {s}"),
             ConfigError::InvalidDefine { name, raw } => write!(
                 f,
@@ -501,6 +506,9 @@ fn read_special_modes(p: &ParseResult) -> Result<SpecialModesConfig, ConfigError
         help_markdown: get_bool(p, "help_markdown")?,
         typed_ast_output_file,
         correlation_vector: get_bool(p, "correlation_vector")?,
+        correlation_vector_limits: parse_correlation_vector_limits(
+            get_str(p, "correlation_vector_limits")?.as_deref().unwrap_or("")
+        )?,
         correlation_vector_output: get_str(p, "correlation_vector_output")?
             .filter(|s| !s.is_empty())
             .map(std::path::PathBuf::from),
@@ -676,6 +684,52 @@ fn get_int(p: &ParseResult, key: &str) -> Result<Option<i64>, ConfigError> {
     }
 }
 
+/// The CLI supports closed, partial overrides of the shared limits value.
+/// Defaults are supplied by GraphLimits itself; unknown/duplicate keys cannot
+/// become ignored configuration. ASCII digits exclude signs and Unicode digits.
+fn parse_correlation_vector_limits(
+    raw: &str,
+) -> Result<coding_adventures_correlation_vector::GraphLimits, ConfigError> {
+    let mut limits = coding_adventures_correlation_vector::GraphLimits::default();
+    let invalid = ConfigError::InvalidProvenanceLimits;
+    let mut seen = std::collections::HashSet::new();
+    if !raw.trim().is_empty() {
+        for pair in raw.split(',') {
+            if pair.trim().is_empty() {
+                return Err(invalid("empty override pair".into()));
+            }
+            let (name, value) = pair
+                .split_once('=')
+                .ok_or_else(|| invalid("expected name=value override".into()))?;
+            let name = name.trim();
+            let value = value.trim();
+            let slot = match name {
+                "max_nodes" => &mut limits.max_nodes,
+                "max_edges" => &mut limits.max_edges,
+                "max_events" => &mut limits.max_events,
+                "max_metadata_values" => &mut limits.max_metadata_values,
+                "max_metadata_depth" => &mut limits.max_metadata_depth,
+                "max_metadata_bytes" => &mut limits.max_metadata_bytes,
+                "max_input_bytes" => &mut limits.max_input_bytes,
+                "max_work" => &mut limits.max_work,
+                "max_output_bytes" => &mut limits.max_output_bytes,
+                _ => return Err(invalid(format!("unknown limit name {name:?}"))),
+            };
+            if !seen.insert(name) {
+                return Err(invalid(format!("duplicate limit name {name:?}")));
+            }
+            if value.is_empty() || !value.bytes().all(|byte| byte.is_ascii_digit()) {
+                return Err(invalid(format!("{name} requires unsigned decimal digits")));
+            }
+            *slot = value
+                .parse::<usize>()
+                .map_err(|_| invalid(format!("{name} overflow for this platform")))?;
+        }
+    }
+    limits.validate().map_err(invalid)?;
+    Ok(limits)
+}
+
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
@@ -698,6 +752,27 @@ mod tests {
             ParserOutput::Parse(r) => r,
             other => panic!("expected Parse, got {other:?}"),
         }
+    }
+
+    #[test]
+    fn correlation_vector_limits_use_shared_defaults_and_partial_overrides() {
+        let default = config_from_parsed(&parse(&[])).unwrap();
+        assert_eq!(
+            default.special_modes.correlation_vector_limits,
+            coding_adventures_correlation_vector::GraphLimits::default()
+        );
+        let changed = config_from_parsed(&parse(&[
+            "--correlation_vector_limits",
+            "max_nodes=0,max_output_bytes=1234,max_metadata_depth=64",
+        ]))
+        .unwrap();
+        let expected = coding_adventures_correlation_vector::GraphLimits {
+            max_nodes: 0,
+            max_output_bytes: 1234,
+            ..Default::default()
+        };
+        assert_eq!(changed.special_modes.correlation_vector_limits, expected);
+        assert!(!changed.special_modes.correlation_vector);
     }
 
     #[test]

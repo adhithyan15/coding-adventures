@@ -96,6 +96,8 @@ impl std::fmt::Display for TypedPipelineStage {
 /// [`io::Error`] (it isn't `Clone`/`PartialEq`).
 #[derive(Debug, Clone, PartialEq)]
 pub enum CompilerError {
+    /// A provenance operation could not record complete evidence for this run.
+    Provenance { stage: String, message: String },
     /// Couldn't read an input file.
     InputReadError {
         path: PathBuf,
@@ -157,6 +159,9 @@ fn compilation_level_name(level: CompilationLevel) -> &'static str {
 impl std::fmt::Display for CompilerError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+            CompilerError::Provenance { stage, message } => {
+                write!(f, "provenance failed at {stage} stage: {message}")
+            }
             CompilerError::InputReadError { path, message, .. } => {
                 write!(f, "failed to read input {}: {message}", path.display())
             }
@@ -188,6 +193,14 @@ impl std::fmt::Display for CompilerError {
 }
 
 impl std::error::Error for CompilerError {}
+/// Keep the original CV failure and its stage; allocate stage text only on error.
+fn provenance_error(stage: &'static str) -> impl FnOnce(String) -> CompilerError {
+    move |message| CompilerError::Provenance {
+        stage: stage.into(),
+        message,
+    }
+}
+
 
 impl CompilerError {
     /// Process exit status for compiler execution errors.
@@ -196,7 +209,7 @@ impl CompilerError {
     /// errors). Existing closurec I/O/configuration failures retain exit 2.
     pub(crate) fn exit_code(&self) -> u8 {
         match self {
-            Self::TypedPipeline { .. } => 1,
+            Self::TypedPipeline { .. } | Self::Provenance { .. } => 1,
             _ => 2,
         }
     }
@@ -589,7 +602,12 @@ pub fn transform_source_with_cv(
                 )
             });
             whitespace_only::whitespace_only_minify(source, es_version, wo_cv)
-                .map_err(CompilerError::Minify)?
+                .map_err(|error| match error {
+                whitespace_only::MinifyError::Provenance(message) => CompilerError::Provenance {
+                    stage: "whitespace_only".into(), message,
+                },
+                other => CompilerError::Minify(other),
+            })?
         }
         // CLOC12.155: SIMPLE runs the typed-AST optimization pipeline (v2).
         //
@@ -791,7 +809,8 @@ pub fn transform_source_with_cv(
         for (k, v) in extras {
             meta.insert(k.to_string(), v);
         }
-        let _ = log.contribute(cv_id, "compilation_level", tag, meta);
+        log.contribute(cv_id, "compilation_level", tag, meta)
+            .map_err(provenance_error("compilation_level"))?;
     }
 
     // Step 2 — `--define / -D` substitution (CLOC11.19). Runs
@@ -826,7 +845,8 @@ pub fn transform_source_with_cv(
             "defines_count".to_string(),
             serde_json::Value::Number((config.defines.defines.len() as u64).into()),
         );
-        let _ = log.contribute(cv_id, "defines", "applied", meta);
+        log.contribute(cv_id, "defines", "applied", meta)
+            .map_err(provenance_error("defines"))?;
     }
 
     Ok(after_defines)
@@ -1012,6 +1032,8 @@ fn collect_externs_property_names(
 /// CLOC11.02: glob-expanded inputs, identity pipeline body. See the
 /// module docstring for the future expansion plan.
 pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerError> {
+    config.special_modes.correlation_vector_limits.validate()
+        .map_err(provenance_error("configuration"))?;
     // Step 0: identity-banner fallback. Empty argv → friendly
     // banner so users running `closurec` with no flags get a
     // useful response rather than a glob error.
@@ -1149,9 +1171,13 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // contributions through the per-file loop and dump them at
     // the end of `run_compiler` to a side-channel file
     // (`closurec-cv.json` by default) when enabled.
-    let mut cv_log = coding_adventures_correlation_vector::CVLog::new_compact(
-        config.special_modes.correlation_vector,
-    );
+    let mut cv_log = if config.special_modes.correlation_vector {
+        coding_adventures_correlation_vector::CVLog::new_checked_compact(
+            config.special_modes.correlation_vector_limits.clone(),
+        ).map_err(provenance_error("configuration"))?
+    } else {
+        coding_adventures_correlation_vector::CVLog::new_compact(false)
+    };
     // CLOC11.62: per-file CV IDs accumulate so the post-loop
     // stages (wrapper / IIFE / charset / etc.) can derive a
     // single "combined" CV entry with all of them as parents.
@@ -1177,14 +1203,14 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                 "byte_len".to_string(),
                 serde_json::Value::Number((contents.len() as u64).into()),
             );
-            Some(cv_log.create(Some(
+            Some(cv_log.try_create(Some(
                 coding_adventures_correlation_vector::Origin {
                     source: "input_file".to_string(),
                     location: path.to_string_lossy().into_owned(),
                     timestamp: None,
                     meta,
                 },
-            )))
+            )).map_err(provenance_error("input"))?)
         } else {
             None
         };
@@ -1266,7 +1292,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                             "token_index".to_string(),
                             serde_json::Value::Number((idx as u64).into()),
                         );
-                        let tok_cv = cv_log.derive(
+                        let tok_cv = cv_log.try_derive(
                             id,
                             Some(coding_adventures_correlation_vector::Origin {
                                 source: "lexer_token".to_string(),
@@ -1279,7 +1305,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                                 timestamp: None,
                                 meta: tmeta,
                             }),
-                        );
+                        ).map_err(provenance_error("lex"))?;
                         token_cv_ids.push(tok_cv);
                     }
                     let mut cmeta = std::collections::HashMap::new();
@@ -1287,9 +1313,9 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                         "token_count".to_string(),
                         serde_json::Value::Number((token_count as u64).into()),
                     );
-                    let _ = cv_log.contribute(
+                    cv_log.contribute(
                         id, "lex", "tokens_emitted", cmeta,
-                    );
+                    ).map_err(provenance_error("lex"))?;
 
                     // CLOC11.65: per-token `defines.applied`.
                     // Walk the token stream; whenever a Name
@@ -1369,12 +1395,12 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                             // token_cv_ids[idx] is valid: same
                             // length and order as tokens (we
                             // built it in lock-step above).
-                            let _ = cv_log.contribute(
+                            cv_log.contribute(
                                 &token_cv_ids[idx],
                                 "defines",
                                 "applied",
                                 dmeta,
-                            );
+                            ).map_err(provenance_error("defines"))?;
                         }
                     }
 
@@ -1437,12 +1463,12 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                                     (tok.value.len() as u64).into(),
                                 ),
                             );
-                            cv_log.delete(
+                            cv_log.try_delete(
                                 &token_cv_ids[idx],
                                 "compilation_level",
                                 "whitespace_only_dropped",
                                 wmeta,
-                            );
+                            ).map_err(provenance_error("compilation_level"))?;
                         }
                     }
                 }
@@ -1452,9 +1478,9 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                         "message".to_string(),
                         serde_json::Value::String(err),
                     );
-                    let _ = cv_log.contribute(
+                    cv_log.contribute(
                         id, "lex", "failed", emeta,
-                    );
+                    ).map_err(provenance_error("lex"))?;
                 }
             }
         }
@@ -1523,7 +1549,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
             "byte_len".to_string(),
             serde_json::Value::Number((combined.len() as u64).into()),
         );
-        Some(cv_log.merge(
+        Some(cv_log.try_merge(
             &parent_refs,
             Some(coding_adventures_correlation_vector::Origin {
                 source: "concatenated_combined_source".to_string(),
@@ -1531,7 +1557,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                 timestamp: None,
                 meta,
             }),
-        ))
+        ).map_err(provenance_error("combined"))?)
     } else {
         None
     };
@@ -1584,12 +1610,12 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                     ((combined.len() + 16) as u64).into(),
                 ),
             );
-            let _ = cv_log.contribute(
+            cv_log.contribute(
                 id,
                 "emit_use_strict",
                 "prepended",
                 meta,
-            );
+            ).map_err(provenance_error("emit_use_strict"))?;
         }
         // Use double quotes to match CC's emission. A trailing
         // newline keeps the directive on its own line, which is
@@ -1632,12 +1658,12 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                 "output_byte_len".to_string(),
                 serde_json::Value::Number((wrapped.len() as u64).into()),
             );
-            let _ = cv_log.contribute(
+            cv_log.contribute(
                 id,
                 "output_wrapper",
                 "substituted",
                 meta,
-            );
+            ).map_err(provenance_error("output_wrapper"))?;
         }
     }
 
@@ -1665,12 +1691,12 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                 "output_byte_len".to_string(),
                 serde_json::Value::Number((isolated.len() as u64).into()),
             );
-            let _ = cv_log.contribute(
+            cv_log.contribute(
                 id,
                 "isolation_mode",
                 "iife_wrapped",
                 meta,
-            );
+            ).map_err(provenance_error("isolation_mode"))?;
         }
     }
 
@@ -1716,7 +1742,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
             "output_byte_len".to_string(),
             serde_json::Value::Number((encoded.len() as u64).into()),
         );
-        let _ = cv_log.contribute(id, "charset", "normalized", meta);
+        cv_log.contribute(id, "charset", "normalized", meta).map_err(provenance_error("charset"))?;
     }
 
     // Step 4: write the output. Two cases:
@@ -1785,7 +1811,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                     js_path.to_string_lossy().into_owned(),
                 ),
             );
-            let js_cv_id = cv_log.derive(
+            let js_cv_id = cv_log.try_derive(
                 parent_id,
                 Some(coding_adventures_correlation_vector::Origin {
                     source: "js_output_file".to_string(),
@@ -1793,18 +1819,18 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                     timestamp: None,
                     meta: origin_meta,
                 }),
-            );
+            ).map_err(provenance_error("js_output_file"))?;
             let mut contrib_meta = std::collections::HashMap::new();
             contrib_meta.insert(
                 "byte_len".to_string(),
                 serde_json::Value::Number((encoded_byte_len as u64).into()),
             );
-            let _ = cv_log.contribute(
+            cv_log.contribute(
                 &js_cv_id,
                 "write_output_file",
                 "wrote",
                 contrib_meta,
-            );
+            ).map_err(provenance_error("write_output_file"))?;
         }
     }
     } // end CLOC11.76 summary_only gate around js CV record
@@ -1831,7 +1857,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                     map_path.to_string_lossy().into_owned(),
                 ),
             );
-            let map_cv_id = cv_log.derive(
+            let map_cv_id = cv_log.try_derive(
                 parent_id,
                 Some(coding_adventures_correlation_vector::Origin {
                     source: "source_map_output".to_string(),
@@ -1839,18 +1865,18 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                     timestamp: None,
                     meta: origin_meta,
                 }),
-            );
+            ).map_err(provenance_error("source_map_output"))?;
             let mut contrib_meta = std::collections::HashMap::new();
             contrib_meta.insert(
                 "byte_len".to_string(),
                 serde_json::Value::Number((map_body.len() as u64).into()),
             );
-            let _ = cv_log.contribute(
+            cv_log.contribute(
                 &map_cv_id,
                 "write_output_file",
                 "wrote",
                 contrib_meta,
-            );
+            ).map_err(provenance_error("write_output_file"))?;
         }
     }
 
@@ -1900,7 +1926,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                     (per_file_cv_ids.len() as u64).into(),
                 ),
             );
-            let manifest_cv_id = cv_log.merge(
+            let manifest_cv_id = cv_log.try_merge(
                 &parent_refs,
                 Some(coding_adventures_correlation_vector::Origin {
                     source: "manifest_output".to_string(),
@@ -1908,18 +1934,18 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                     timestamp: None,
                     meta: origin_meta,
                 }),
-            );
+            ).map_err(provenance_error("manifest_output"))?;
             let mut contrib_meta = std::collections::HashMap::new();
             contrib_meta.insert(
                 "byte_len".to_string(),
                 serde_json::Value::Number((body.len() as u64).into()),
             );
-            let _ = cv_log.contribute(
+            cv_log.contribute(
                 &manifest_cv_id,
                 "write_output_file",
                 "wrote",
                 contrib_meta,
-            );
+            ).map_err(provenance_error("write_output_file"))?;
         }
     }
     } // end CLOC11.76 summary_only gate around manifest write
@@ -4173,6 +4199,19 @@ mod tests {
     // ------------------------------------------------------------------
     // CLOC11.66 — WHITESPACE_ONLY token tombstones
     // ------------------------------------------------------------------
+
+    #[test]
+    fn checked_cv_programmatic_configuration_rejects_unsafe_depth_before_inputs() {
+        let mut config = CompilerConfig::default();
+        config
+            .special_modes
+            .correlation_vector_limits
+            .max_metadata_depth = 65;
+        let error = run_compiler(&config).unwrap_err();
+        assert_eq!(error.exit_code(), 1);
+        assert!(matches!(&error, CompilerError::Provenance { stage, .. } if stage == "configuration"));
+        assert!(error.to_string().contains("cannot exceed 64"));
+    }
 
     #[test]
     fn correlation_vector_tombstones_eof_under_whitespace_only() {

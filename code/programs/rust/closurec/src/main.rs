@@ -123,9 +123,10 @@ pub fn parse_and_run(args: &[String]) -> (String, ExitCode) {
 
 /// CLOC11.75 — version of `parse_and_run` that splits the
 /// output into stdout-bound and stderr-bound text. `main`
-/// uses this to route the CV summary line to stderr when
-/// `--correlation_vector_summary_stderr` is set, without
-/// corrupting an stdout-bound JS payload.
+/// uses this to send parser, configuration and execution errors to stderr,
+/// and routes the CV summary there when
+/// `--correlation_vector_summary_stderr` is set. Successful help, version and
+/// JavaScript payloads remain on stdout.
 ///
 /// All call sites other than `main` and the CLOC11.75 tests
 /// can keep using `parse_and_run` — its return value
@@ -144,8 +145,8 @@ pub fn parse_and_run_with_streams(args: &[String]) -> (String, String, ExitCode)
             // user error. Still surface it so users have a hope
             // of reporting it.
             return (
-                format!("internal error: cli.spec.json failed to load: {}\n", e),
                 String::new(),
+                format!("internal error: cli.spec.json failed to load: {}\n", e),
                 ExitCode::from(70), // EX_SOFTWARE per sysexits.h
             );
         }
@@ -176,7 +177,7 @@ pub fn parse_and_run_with_streams(args: &[String]) -> (String, String, ExitCode)
             // typed CompilerConfig.
             let cfg = match wire::config_from_parsed(&result) {
                 Ok(c) => c,
-                Err(e) => return (format!("{e}\n"), String::new(), ExitCode::from(1)),
+                Err(e) => return (String::new(), format!("{e}\n"), ExitCode::from(1)),
             };
 
             // Step 3.5 (CLOC11.54): --help_markdown short-circuit.
@@ -249,7 +250,7 @@ pub fn parse_and_run_with_streams(args: &[String]) -> (String, String, ExitCode)
             // cli-builder's Display for CliBuilderError already
             // formats nicely (multi-line if there are multiple
             // errors, with "did you mean?" suggestions).
-            (format!("{}\n", e), String::new(), ExitCode::from(1))
+            (String::new(), format!("{}\n", e), ExitCode::from(1))
         }
     }
 }

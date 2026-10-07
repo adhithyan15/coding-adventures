@@ -184,6 +184,30 @@ event chronology remain required foundation work in
 [#16868](https://github.com/adhithyan15/coding-adventures/issues/16868).
 Allocation sequence and the scheduled `passes` list do not supply that chronology.
 
+### Checked provenance limits
+
+Tracing uses the checked compact graph with the shared `GraphLimits` defaults.
+Use partial overrides for a build:
+
+```text
+closurec --js input.js --js_output_file output.js --correlation_vector \
+  --correlation_vector_limits max_nodes=10000,max_output_bytes=1048576
+```
+
+The nine fields are `max_nodes` (1,000,000), `max_edges` (4,000,000),
+`max_events` (4,000,000), `max_metadata_values` (1,000,000),
+`max_metadata_depth` (64), `max_metadata_bytes` (134,217,728),
+`max_input_bytes` (134,217,728), `max_work` (64,000,000), and
+`max_output_bytes` (536,870,912). Byte fields count encoded provenance;
+`max_input_bytes` applies to JSON snapshot import, not JavaScript source files.
+Work allowances apply per graph operation. Omit the flag for defaults.
+Overrides require unique known names and unsigned ASCII decimal values; zero
+is allowed and metadata depth cannot exceed 64. CLI and programmatic settings
+are validated before inputs. Provenance recording failures identify the stage
+and return exit status 1 on stderr with empty success stdout. Formatter,
+summary and transactional output publication still require integration before
+CV02 can be accepted.
+
 ### Measured parity
 
 `tests/diff/ladder_*` is an ordered complexity ladder compiled by both
