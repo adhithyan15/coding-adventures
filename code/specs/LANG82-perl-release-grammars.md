@@ -234,3 +234,12 @@ negative probes for leading-zero forms, decrement adjacency, carriage returns,
 and unsupported characters. This stage does not extend executable LANG81
 semantics or claim full Perl release syntax. Keep `5.004_01-t1` pending until
 its own primary source evidence is found.
+
+A 2026-10-07 inventory audit reparsed the pinned `perlhist.pod` blob,
+including uncertain-date suffixes and expanded range rows. All 765 release
+identifiers found there are present in `releases.csv`; the other 11 rows are
+the separately annotated RC tags already cited by that inventory. This
+checks coverage of those pinned sources only. It does not prove that the
+inventory contains every public release after the snapshot or every
+historical distribution not named there; keep new discoveries explicit and
+never treat a pending or partial row as complete syntax.
