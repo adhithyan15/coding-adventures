@@ -19,7 +19,7 @@
     "notes": "All 33 final-head checks completed acceptably on 863f903c22dc9e7a99288937e891b33c719e4b7b; GitHub reported MERGEABLE/CLEAN, guarded squash auto-merge was enabled, and PR #16963 merged at 22:05:46Z as 820486b82913d88c34718fe4faa3c4d6003595cd without a manual merge."
   },
   "last_inventory": {
-    "revision": "7c36c41e98cadb8bf555f517e913a3b6832c1fbe",
+    "revision": "c0c7b8bc04d972e07348d02143b6f8b867eee1ae",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1496,
@@ -1103,11 +1103,11 @@
     {
       "id": "build-tool-ci-gate-fixture-native-ci-selection",
       "title": "Schedule native Go and Python CI-gate consumers for neutral fixture-only diffs",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
-      "branch": null,
+      "branch": "codex/parity-cigates-native-selection-20261007",
       "pr_number": null,
-      "notes": "A diff confined to ci-gate-selection-*.json runs the shared conformance oracle but need not select the native Go internal/cigates and Python CI-gate package BUILD fronts. Add exact fixture-path consumer selection and detector regression with Ubuntu proof; avoid broad spec fanout and recheck live workflow overlap before editing."
+      "notes": "Selected after #16963 merged and all 30 discovered owners were registered. A diff confined to ci-gate-selection-*.json runs the shared conformance oracle but need not select the native Go internal/cigates and Python CI-gate package BUILD fronts. Add exact fixture-path consumer selection and detector regression with Ubuntu proof; avoid broad spec fanout and recheck live workflow overlap before editing."
     },
     {
       "id": "build-tool-ci-gate-selection-match-work-ceiling",
@@ -12359,7 +12359,7 @@
       "id": "asciidoc-parser-te03-neutral-conformance",
       "title": "Freeze TE03 AsciiDoc parser-to-AST conformance",
       "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
-      "notes": "AsciiDoc parser is missing Dart, Java, and Kotlin. Constrain this owner to document-ast parsing and neutral fixtures; renderer and facade coverage are separate."
+      "notes": "AsciiDoc parser is missing C#, Dart, F#, Haskell, Java, and Kotlin. Constrain this owner to document-ast parsing and neutral fixtures; existing Dart/JVM and separate .NET/Haskell children consume it, while renderer and facade coverage remain separate."
     },
     {
       "id": "asciidoc-parser-dart-java-kotlin-parity",
@@ -12859,7 +12859,7 @@
       "id": "lisp-frontend-neutral-extension",
       "title": "Extend neutral frontend fixtures for Lisp lexer and parser",
       "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
-      "notes": "Lisp lexer/parser are absent in Dart, Java, Kotlin, and Swift. Pin lisp.tokens/lisp.grammar hashes and Python generic token/AST projections for literals, lists, quote, and dotted pairs; Rust's custom S-expression AST is not the generic oracle. Do not broaden the merged v1 twelve-family schema silently."
+      "notes": "Lisp lexer/parser are absent in C#, Dart, F#, Java, Kotlin, and Swift. Pin lisp.tokens/lisp.grammar hashes and Python generic token/AST projections for literals, lists, quote, and dotted pairs; Rust's custom S-expression AST is not the generic oracle. Existing four-lane and separate C#/F# owners consume this extension. Do not broaden the merged v1 twelve-family schema silently."
     },
     {
       "id": "java-kotlin-frontend-escape-none-string-values",
@@ -13346,6 +13346,110 @@
     {
       "id": "suffix-tree-typescript-lane-parity", "title": "Port DT15 suffix tree to TypeScript", "status": "pending", "depends_on": ["suffix-tree-dt15-neutral-conformance"], "branch": null, "pr_number": null,
       "notes": "Absent TypeScript slot; consume neutral suffix indexing, search, and structural fixtures."
+    },
+    {
+      "id": "correlation-vector-cv03-neutral-chronology-conformance", "title": "Classify and fixture portable CV03 checked chronology", "status": "pending", "depends_on": ["correlation-vector-cv00-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Post-#16964 Rust CV03 adds an opted-in versioned checked graph-operation journal and snapshot/reload behavior. Extract portable bounded chronology fixtures from compiler scheduler authority; review applicability to existing correlation-vector lanes without treating closure-pass-pipeline as a 15-lane CLI obligation."
+    },
+    {
+      "id": "commonmark-html-csharp-lane-prerequisites", "title": "Port CommonMark parser and document AST HTML renderer to C#", "status": "pending", "depends_on": ["gfm-fenced-block-ast-and-consumer-contract-repair"], "branch": null, "pr_number": null,
+      "notes": "Two missing portable C# roots in the 9/15 CommonMark and document-ast-to-html families; consume shared parser/renderer fixtures before GFM extensions."
+    },
+    {
+      "id": "commonmark-html-fsharp-lane-prerequisites", "title": "Port CommonMark parser and document AST HTML renderer to F#", "status": "pending", "depends_on": ["gfm-fenced-block-ast-and-consumer-contract-repair"], "branch": null, "pr_number": null,
+      "notes": "Two missing portable F# roots in the 9/15 CommonMark and document-ast-to-html families; prove an F# front door even if a shared .NET engine is reviewed."
+    },
+    {
+      "id": "commonmark-html-haskell-lane-prerequisites", "title": "Port CommonMark parser and document AST HTML renderer to Haskell", "status": "pending", "depends_on": ["gfm-fenced-block-ast-and-consumer-contract-repair"], "branch": null, "pr_number": null,
+      "notes": "Two missing portable Haskell roots in the 9/15 CommonMark and document-ast-to-html families; consume shared parser/renderer fixtures before GFM extensions."
+    },
+    {
+      "id": "gfm-csharp-lane-parity", "title": "Port GFM parser to C#", "status": "pending", "depends_on": ["gfm-language-neutral-conformance-fixture", "commonmark-html-csharp-lane-prerequisites"], "branch": null, "pr_number": null,
+      "notes": "Missing C# GFM extension over CommonMark and HTML renderer prerequisites; preserve TE04 fenced-block source."
+    },
+    {
+      "id": "gfm-fsharp-lane-parity", "title": "Port GFM parser to F#", "status": "pending", "depends_on": ["gfm-language-neutral-conformance-fixture", "commonmark-html-fsharp-lane-prerequisites"], "branch": null, "pr_number": null,
+      "notes": "Missing F# GFM extension over CommonMark and HTML renderer prerequisites; verify the native front door."
+    },
+    {
+      "id": "gfm-haskell-lane-parity", "title": "Port GFM parser to Haskell", "status": "pending", "depends_on": ["gfm-language-neutral-conformance-fixture", "commonmark-html-haskell-lane-prerequisites"], "branch": null, "pr_number": null,
+      "notes": "Missing Haskell GFM extension over CommonMark and HTML renderer prerequisites."
+    },
+    {
+      "id": "asciidoc-parser-csharp-lane-parity", "title": "Port TE03 AsciiDoc parser to C#", "status": "pending", "depends_on": ["asciidoc-parser-te03-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing C# parser slot; separate document AST parsing from renderer and facade authority."
+    },
+    {
+      "id": "asciidoc-parser-fsharp-lane-parity", "title": "Port TE03 AsciiDoc parser to F#", "status": "pending", "depends_on": ["asciidoc-parser-te03-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing F# parser slot; separate document AST parsing from renderer and facade authority."
+    },
+    {
+      "id": "asciidoc-parser-haskell-lane-parity", "title": "Port TE03 AsciiDoc parser to Haskell", "status": "pending", "depends_on": ["asciidoc-parser-te03-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing Haskell parser slot; separate document AST parsing from renderer and facade authority."
+    },
+    {
+      "id": "lisp-frontend-csharp-lane-parity", "title": "Port Lisp lexer and parser to C#", "status": "pending", "depends_on": ["lisp-frontend-neutral-extension"], "branch": null, "pr_number": null,
+      "notes": "C# is absent beyond the existing four-lane frontend owner; consume neutral generic token/AST fixtures, lexer before parser."
+    },
+    {
+      "id": "lisp-frontend-fsharp-lane-parity", "title": "Port Lisp lexer and parser to F#", "status": "pending", "depends_on": ["lisp-frontend-neutral-extension"], "branch": null, "pr_number": null,
+      "notes": "F# is absent beyond the existing four-lane frontend owner; consume neutral generic token/AST fixtures, lexer before parser."
+    },
+    {
+      "id": "des-educational-neutral-conformance", "title": "Classify and fixture portable educational DES", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "DES is 9/15 but has no exact owner. Freeze standard vectors, key/round/error behavior and historical-insecure labeling; do not promote DES as a security recommendation or conflate it with host cryptography."
+    },
+    {
+      "id": "register-vm-neutral-conformance", "title": "Classify and fixture portable register VM", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Register-vm is 9/15 with no exact owner; define pure instruction, register, step, invalid-opcode, and reset vectors separately from stack VM, simulator protocol, and host execution authority."
+    },
+    {
+      "id": "des-educational-csharp-lane-parity", "title": "Port educational DES to C#", "status": "pending", "depends_on": ["des-educational-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established C# slot; consume standard DES vectors with explicit historical-insecure documentation, not a production security claim."
+    },
+    {
+      "id": "register-vm-csharp-lane-parity", "title": "Port portable register VM to C#", "status": "pending", "depends_on": ["register-vm-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established C# slot; consume neutral register/instruction/step/error fixtures, separate from stack VM and host execution."
+    },
+    {
+      "id": "des-educational-dart-lane-parity", "title": "Port educational DES to Dart", "status": "pending", "depends_on": ["des-educational-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established Dart slot; consume standard DES vectors with explicit historical-insecure documentation, not a production security claim."
+    },
+    {
+      "id": "register-vm-dart-lane-parity", "title": "Port portable register VM to Dart", "status": "pending", "depends_on": ["register-vm-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established Dart slot; consume neutral register/instruction/step/error fixtures, separate from stack VM and host execution."
+    },
+    {
+      "id": "des-educational-fsharp-lane-parity", "title": "Port educational DES to F#", "status": "pending", "depends_on": ["des-educational-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established F# slot; consume standard DES vectors with explicit historical-insecure documentation, not a production security claim."
+    },
+    {
+      "id": "register-vm-fsharp-lane-parity", "title": "Port portable register VM to F#", "status": "pending", "depends_on": ["register-vm-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established F# slot; consume neutral register/instruction/step/error fixtures, separate from stack VM and host execution."
+    },
+    {
+      "id": "des-educational-haskell-lane-parity", "title": "Port educational DES to Haskell", "status": "pending", "depends_on": ["des-educational-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established Haskell slot; consume standard DES vectors with explicit historical-insecure documentation, not a production security claim."
+    },
+    {
+      "id": "register-vm-haskell-lane-parity", "title": "Port portable register VM to Haskell", "status": "pending", "depends_on": ["register-vm-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established Haskell slot; consume neutral register/instruction/step/error fixtures, separate from stack VM and host execution."
+    },
+    {
+      "id": "des-educational-java-lane-parity", "title": "Port educational DES to Java", "status": "pending", "depends_on": ["des-educational-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established Java slot; consume standard DES vectors with explicit historical-insecure documentation, not a production security claim."
+    },
+    {
+      "id": "register-vm-java-lane-parity", "title": "Port portable register VM to Java", "status": "pending", "depends_on": ["register-vm-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established Java slot; consume neutral register/instruction/step/error fixtures, separate from stack VM and host execution."
+    },
+    {
+      "id": "des-educational-kotlin-lane-parity", "title": "Port educational DES to Kotlin", "status": "pending", "depends_on": ["des-educational-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established Kotlin slot; consume standard DES vectors with explicit historical-insecure documentation, not a production security claim."
+    },
+    {
+      "id": "register-vm-kotlin-lane-parity", "title": "Port portable register VM to Kotlin", "status": "pending", "depends_on": ["register-vm-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Missing established Kotlin slot; consume neutral register/instruction/step/error fixtures, separate from stack VM and host execution."
     },
     {
       "id": "build-tool-elixir-discovery-no-follow-boundary-review",

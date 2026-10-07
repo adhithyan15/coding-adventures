@@ -16528,7 +16528,7 @@ Select only `build-tool-ci-gate-shared-pattern-dedup-neutral-fixture` next. Both
 PR #16963 completed 33 acceptable final-head checks and merged through
 guarded squash auto-merge at `820486b82913d88c34718fe4faa3c4d6003595cd`;
 there was no manual merge. The refreshed schema-3 report at
-`7c36c41e98cadb8bf555f517e913a3b6832c1fbe` still has 15 established
+`c0c7b8bc04d972e07348d02143b6f8b867eee1ae` still has 15 established
 lanes, 1,496 implementation identities, 4,766 slots, 1,538 all-reported
 identities, 178 high-consensus identities with 262 missing slots, 1,014
 singletons (815 Rust), and five emerging OCaml roots. Canonical collisions
@@ -16545,6 +16545,16 @@ implementations. Cryptographic ports remain gated by neutral and PBKDF2
 prerequisites; Elixir suffix-tree work follows the radix-tree structural
 repair. Existing Java/Kotlin/Dart/Swift/Haskell package, all-lane build-tool,
 and OCaml promotion owners remain open.
+
+A subsequent read-only five-to-nine-lane audit found 26 more explicit owners,
+registered while this CI-selection slice was in progress: CV03 portable
+chronology classification after #16964; C#/F#/Haskell CommonMark and
+document-AST-to-HTML prerequisites plus their GFM children; C#/F#/Haskell
+AsciiDoc parser ports; C#/F# Lisp frontends; and neutral-first educational DES
+and register-VM families with six missing lane children each. These owners
+do not change this serial implementation selection. DES is historically
+insecure and is not a production cryptography recommendation; CV03 compiler
+scheduler authority is not automatically portable to every lane.
 
 Select only `build-tool-ci-gate-fixture-native-ci-selection` next. #16963
 established the neutral shared-pattern oracle, but its fixture-only diff
