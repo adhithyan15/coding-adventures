@@ -68,6 +68,9 @@ Initial API names: `GraphLimits` exposes `max_nodes`, `max_edges`, `max_events`,
 error to its compiler/pass/lexer/parser boundary, rather than leaving `let _`
 around a newly fallible operation. Snapshot and query errors may retain their
 existing string error representation if diagnostics remain clear and useful.
+When a recursive pass uses a large-stack worker, reject and destroy its candidate
+AST inside that worker on a provenance error. Do not return a deep rejected
+candidate to a smaller caller stack only to drop it while propagating the error.
 
 Limits cover retained nodes, parent edges including repeated edges, contribution
 and deletion events, metadata JSON values/depth and bytes, input bytes,
@@ -150,6 +153,10 @@ snapshots whose deletion stage was never declared may reload/export generically
 but cannot claim complete query evidence. Generic import must reject any
 declared `view`, including legacy IDs and null markers, so it cannot discard a
 projection declaration and later upgrade that projection into full evidence.
+Generic allocator imports must remain identifiable as unchecked evidence:
+their typed conversion can discard duplicate metadata keys or synthesize omitted
+arrays before later graph validation. Fallible evidence queries cannot upgrade
+those imports; use the bounded checked import to establish complete evidence.
 
 Fallible graph queries distinguish an unknown ID, an invalid/incomplete graph
 and an exhausted work/output limit from an empty successful result. Implement
