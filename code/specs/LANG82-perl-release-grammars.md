@@ -58,8 +58,19 @@ partial grammar; spaced binary/unary minus (`1- -2`) remains a separate form.
 For a release pair that declares a plain-decimal arithmetic-print subset,
 accept integer literals without a leading zero (and `0` itself). A
 leading-zero literal may use octal syntax; reject it until that release's
-actual numeric rules are implemented. Earlier partial pairs with broader
-integer token rules still need a separate numeric-boundary audit.
+actual numeric rules are implemented. Audit the already landed 1.000 through
+5.003_03 partial pairs against their release tokenizers: each currently uses
+`[0-9]+`, which accepts `08` and `09` as decimal integers. Perl 1's
+[`perly.c`](https://github.com/Perl/perl5/blob/perl-1.0/perly.c), and the
+Perl [2](https://github.com/Perl/perl5/blob/perl-2.0/toke.c),
+[3](https://github.com/Perl/perl5/blob/perl-3.000/toke.c),
+[4](https://github.com/Perl/perl5/blob/perl-4.0.36/toke.c), and
+[5](https://github.com/Perl/perl5/blob/perl-5.003_03/toke.c) tokenizers
+instead enter octal mode after a leading zero and reject `8` and `9` there.
+Keep those existing pairs partial and limit their integer rule to plain
+decimal forms until versioned octal tokenization is implemented. Preserve a
+positive `0`/nonzero-decimal probe and add negative `08`, `09`, and `012`
+probes for every affected pair.
 
 The existing unversioned `perl.tokens` and `perl.grammar` remain the bounded
 Perl 5.38 LANG81 execution grammar until a separately validated versioned
