@@ -114,20 +114,43 @@ void main() {
     final initialFull = initialSlots['allow-timeline'] == 'full';
     final initialViewIndex = (initialSlots['nav-selected-index'] as num)
         .toInt();
+    var toggledFullForTimeline = false;
 
     try {
-      // Compact-width debt remains in controls below the topbar. Consume those
-      // known pre-Timeline exceptions so this regression test remains scoped
-      // to the legend introduced by the next interaction.
-      while (tester.takeException() != null) {}
+      expect(
+        tester.takeException(),
+        isNull,
+        reason: 'the compact shell must not report a layout exception',
+      );
+      if (Platform.environment['MOSAIC_EXPECT_RESTORED'] == '1') {
+        final delete = find.widgetWithText(ElevatedButton, 'Delete').first;
+        expect(delete, findsOneWidget);
+        await tester.ensureVisible(delete);
+        await _settle(tester);
+        expect(
+          tester.getRect(delete).right,
+          lessThanOrEqualTo(800),
+          reason: 'the compact task action viewport must expose Delete',
+        );
+        expect(
+          tester.takeException(),
+          isNull,
+          reason: 'scrolling compact task actions must not overflow',
+        );
+      }
       if (!initialFull) {
         tester
             .widget<ElevatedButton>(
               find.widgetWithText(ElevatedButton, 'Board').first,
             )
             .onPressed!();
+        toggledFullForTimeline = true;
         await _settle(tester);
-        while (tester.takeException() != null) {}
+        expect(
+          tester.takeException(),
+          isNull,
+          reason: 'the compact view switch must not overflow',
+        );
       }
       tester
           .widget<ElevatedButton>(
@@ -149,7 +172,7 @@ void main() {
       // executes this file twice against one persisted snapshot. Restore and
       // persist both the incoming tier and view so this focused layout check
       // is invisible to the lifecycle/persistence contract that follows it.
-      if (!initialFull) {
+      if (toggledFullForTimeline) {
         await host.handleEvent(<String, Object?>{
           'name': 'onToggleProjectComplexity',
           'payload': <String, Object?>{},
