@@ -83,6 +83,13 @@ constructed and transferred by a caller: safe disposal necessarily visits that
 owned payload. Cleanup must not recurse through arbitrary caller nesting or
 leak rejected evidence. Heap iterator frames may grow with caller nesting;
 do not duplicate all siblings into another unbounded pending-value buffer.
+Expose `dispose_metadata(HashMap<String, Value>)` for callers that own pending
+evidence batches. The scheduler transfers returned event metadata into checked
+recording without cloning before validation. On the first recording failure,
+dispose of every remaining event's metadata iteratively before returning the
+error; also dispose safely when there is no program identity to attach it to.
+Preserve public record types' move-field compatibility rather than adding Drop
+implementations that prevent callers from transferring their fields.
 
 Initial checked defaults are 1,000,000 nodes; 4,000,000 parent edges;
 4,000,000 contribution/deletion events; 1,000,000 metadata JSON values;
