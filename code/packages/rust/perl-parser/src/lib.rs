@@ -188,6 +188,7 @@ mod tests {
                     | "5.003_97f"
                     | "5.003_97g"
                     | "5.003_97h"
+                    | "5.003_97i"
                     | "5.38.2"
                     | "5.44.0"
                     | "5.45.3"
@@ -226,6 +227,7 @@ mod tests {
                     | "5.003_97f"
                     | "5.003_97g"
                     | "5.003_97h"
+                    | "5.003_97i"
             ) {
                 let carriage_return = GrammarLexer::new("print(1);\r", &token_grammar).tokenize();
                 assert!(
@@ -250,6 +252,7 @@ mod tests {
                     | "5.003_97f"
                     | "5.003_97g"
                     | "5.003_97h"
+                    | "5.003_97i"
             ) {
                 let unknown = GrammarLexer::new("print(1);\u{0001}", &token_grammar).tokenize();
                 assert!(
@@ -261,6 +264,29 @@ mod tests {
                     }),
                     "{release}: unrecognized character accepted"
                 );
+            }
+            if *release == "5.003_97i" {
+                let accepted = format!("print({});", "9".repeat(250));
+                let tokens = GrammarLexer::new(&accepted, &token_grammar)
+                    .tokenize()
+                    .unwrap();
+                assert!(
+                    GrammarParser::new(tokens, parser_grammar.clone())
+                        .with_max_depth(MAX_RULE_DEPTH)
+                        .parse()
+                        .is_ok(),
+                    "{release}: 250-digit decimal rejected"
+                );
+                let too_long = format!("print({});", "9".repeat(251));
+                let rejected = GrammarLexer::new(&too_long, &token_grammar)
+                    .tokenize()
+                    .map_or(true, |tokens| {
+                        GrammarParser::new(tokens, parser_grammar.clone())
+                            .with_max_depth(MAX_RULE_DEPTH)
+                            .parse()
+                            .is_err()
+                    });
+                assert!(rejected, "{release}: 251-digit decimal accepted");
             }
             checked += 1;
         }
