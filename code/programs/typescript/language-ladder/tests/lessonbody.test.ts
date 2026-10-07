@@ -98,6 +98,35 @@ Study, cover, write.`);
     expect(filmstripSectionIndex([{ title: "Guided Practice — decide before writing", blocks: [] }])).toBe(-1);
   });
 
+  it("never puts the strip in a Writing section that is a dictation or a composition", () => {
+    // ES-W00-hola-dictation: the strip would sit above "Hear: OH-la".
+    const dictation = lessonSections(`# T
+
+## Warm-up
+Cover the answer line lower on this page.
+
+## Writing — short dictation
+<!-- hl-writing-stage: dictation-transcription -->
+
+Write the Spanish greeting from that sound alone.`);
+    expect(filmstripSectionIndex(dictation)).toBe(-1);
+    // MR-W03-ba: the Script section shows the letter the dictation covers.
+    const marathi = lessonSections(`# T
+
+## Script
+> ब
+
+## Writing — heard cue
+<!-- hl-writing-stage: dictation-transcription -->
+
+Cover the model.`);
+    expect(filmstripSectionIndex(marathi)).toBe(0);
+    for (const stage of ["controlled-composition", "connected-composition", "timed-assessment-production"]) {
+      expect(filmstripSectionIndex([{ title: "Writing — task", blocks: [], writingStage: stage }])).toBe(-1);
+    }
+    expect(filmstripSectionIndex([{ title: "Writing — copy", blocks: [], writingStage: "guided-copy" }])).toBe(0);
+  });
+
   it("uses exactly the book's modelled stages", () => {
     expect([...MODELLED_WRITING_STAGES].sort()).toEqual([...BOOK_MODELLED_WRITING_STAGES].sort());
   });

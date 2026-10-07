@@ -325,13 +325,6 @@
     },
     {
       "kind": "script-filmstrip",
-      "lessonId": "ML-W01-na-ma-dictation",
-      "sourceHash": "fnv1a64:f62a82ecbaa5da6c",
-      "svgHash": "fnv1a64:3ca8798c3691e64a",
-      "svg": "malayalam/book/figures/ML-W01-na-ma-dictation-filmstrip.svg"
-    },
-    {
-      "kind": "script-filmstrip",
       "lessonId": "ML-W01-na-ma-guided-copy",
       "sourceHash": "fnv1a64:c5f8305f22e85687",
       "svgHash": "fnv1a64:3ca8798c3691e64a",

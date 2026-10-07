@@ -17,13 +17,6 @@
     },
     {
       "kind": "script-filmstrip",
-      "lessonId": "ES-W00-hola-dictation",
-      "sourceHash": "fnv1a64:cf71c45e126796e2",
-      "svgHash": "fnv1a64:b32c9f520734c05d",
-      "svg": "spanish/book/figures/ES-W00-hola-dictation-filmstrip.svg"
-    },
-    {
-      "kind": "script-filmstrip",
       "lessonId": "ES-W00-hola-guided-copy",
       "sourceHash": "fnv1a64:2bc404ad087462a1",
       "svgHash": "fnv1a64:b32c9f520734c05d",
@@ -42,20 +35,6 @@
       "sourceHash": "fnv1a64:8e9ab235bc74785a",
       "svgHash": "fnv1a64:3b881035ec1038dd",
       "svg": "spanish/book/figures/ES-W01-acento-filmstrip.svg"
-    },
-    {
-      "kind": "script-filmstrip",
-      "lessonId": "ES-W01-frase-propia",
-      "sourceHash": "fnv1a64:78ccb2867dc1ca7d",
-      "svgHash": "fnv1a64:531f0b33546d93cb",
-      "svg": "spanish/book/figures/ES-W01-frase-propia-filmstrip.svg"
-    },
-    {
-      "kind": "script-filmstrip",
-      "lessonId": "ES-W02-cuatro-lineas-ayer",
-      "sourceHash": "fnv1a64:2b33980646fc4a13",
-      "svgHash": "fnv1a64:d79c8e9744d64b55",
-      "svg": "spanish/book/figures/ES-W02-cuatro-lineas-ayer-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",

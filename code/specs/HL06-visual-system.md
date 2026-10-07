@@ -1004,6 +1004,88 @@ now follows the strip. Five Chinese delayed-copy lessons (语 国 文 看 书) s
 Guided Practice, appeared after the model was meant to be covered; the
 look-and-cover sentence now opens the Guided Practice, under the strip.
 
+#### Design — no strip in a Writing block that shows no model
+
+**The gap.** The stage rule above was applied only to the fallback. A
+`## Writing` or `## Script` block took the strip whatever stage it declared,
+and 37 strip lessons declare a no-model stage on that block: 31 dictations
+and 6 compositions (measured from `resolvedFigureTargets`, 829 strips, by the
+declared stage of the block each strip lands in). The other 792 land in an
+observe-trace, guided-copy or delayed-copy block, or in a Writing or Script
+block that declares no stage (the twelve Kannada and Malayalam strips added
+above are all of this last kind); a scan of those blocks for dictation cues
+("YOU HEAR", "from sound", "without a model", "Cover the …") found only
+presentations and copies ("Keep ਪ in front of you and do not cover it").
+
+**What the reader saw.** The book prints a strip at the top of its block,
+under the heading and above the task. In a dictation that is the answer,
+drawn large, above the cue (Spanish chapter 1, before this change):
+
+> **Writing — short dictation**
+> [strip: *How hola is written, letter by letter, stroke by stroke*]
+> *Hear:* *OH-la*. Write the Spanish greeting from that sound alone. Three
+> sounds reached your ear. Four letters belong on your page. Your pen has to
+> supply a letter that the sound never gave you — and it goes first.
+
+The lesson tests exactly the silent *h*, and the strip draws it first. The
+Warm-up had just said "Cover the answer line lower on this page". The
+single-letter dictations say outright that no model is in view, a few lines
+above the strip: SA-S02-dictation "Cover every **न** on the page. Nothing to
+copy, nothing to uncover, and no stroke order in front of you"; KA-S01 and
+FA-W00 the same. The Gujarati spaced-return lessons (GU-R03 … GU-R19,
+"Writing — from sound") print "Cover every model. Write: ja, ka, ka" under a
+strip of ક and જ. The compositions are no better: ES-W01-frase-propia is
+titled "Your own line — the first writing with no model" and printed a strip
+of *buenos días*, the very greeting its 4 p.m. task rules out.
+
+**Is it a check instead?** No. In these lessons the comparison is a sentence
+after the attempt ("Now uncover and compare: **hola**"), inside the same
+block, or a Wrap-up line ("Uncover the model and compare") that points back
+to the model the previous lesson printed. No lesson has a block that is the
+answer key, so there is no later block a strip could honestly move to, and
+the one it is in is read before the task. The Wrap-up blocks are themselves
+recall ("From the heard cue hā alone, write …") or reflection.
+
+**The rule.** A block whose declared stage shows no model (dictation, either
+composition, timed production) is skipped wherever the strip is looked for:
+the first Writing block that is not one, else the first Script block that is
+not one, else the first modelled practice block (`stripBlockIndex`). A block
+that declares no stage is unchanged.
+
+**Expected.** 33 lessons lose their strip and 4 move:
+
+- removed: arabic 1 (AR-W04-arbaa-sutur), french 2 (FR-W01-salut-dictation,
+  FR-W04-quatre-lignes), german 2 (GE-W01-hallo-dictation,
+  GE-W04-vier-zeilen), gujarati 14 (GU-W01-haa-dictation and the thirteen
+  "Writing — from sound" returns GU-R03 … GU-R19), italian 1, kannada 1
+  (KA-S01-dictation), latin 1 (LA-W04-quattuor-versus, Latin's only strip),
+  malayalam 1, persian 1 (FA-W00-alef-dictation), portuguese 1, sanskrit 4
+  (SA-S02-dictation, SA-W03-mama-dictation, SA-W03-mama-nama-dictation,
+  SA-W05-vocalic-r-dictation), spanish 3 (ES-W00-hola-dictation,
+  ES-W01-frase-propia, ES-W02-cuatro-lineas-ayer), telugu 1
+  (TE-S01-dictation). Every one follows copy lessons of the same headword
+  that keep their strips (ES-W00-hola-delayed-copy, SA-S02-letter-na …).
+- moved: MR-W03-ba, -lla, -va, -ya. Their Script block prints the letter and
+  describes its strokes, and the "Writing — heard cue" after it opens "Cover
+  the model". The strip now sits with that model, and is covered with it.
+
+None of the 37 mentions a strip in its prose, so no lesson text moves.
+Letter anchoring is unchanged: `letter-anchoring.ts` asks whether a lesson
+writes a letter (a single-letter dictation does), not whether it prints a
+strip, and no longer goes through the strip placement to ask it. The app's
+`filmstripSectionIndex` skips the same sections. A converse guard joins the
+disclaimer guard: a lesson with no strip may not say "follow the numbered
+strip" or "the strip shows".
+
+**A mislabelled stage.** PA-W08-digit-recognition declared delayed-copy, but
+its practice is "Hear: zero, one, two, two, five, one. Write one digit after
+each word, then compare with A": a heard item turned into writing, which is
+dictation-transcription. It is relabelled, and now says "Cover A" first and
+"uncover A and compare" after, so value A is not in view while the digits are
+written. It prints no strip either way (its digits are not cited). Punjabi
+keeps delayed-copy evidence in eleven other lessons, the first in chapter 1
+(PA-W01-haan-delayed-copy), so no stage gate moves.
+
 ### Class B — data diagrams (generated)
 
 Etymology and cousin-web trees built from lesson `roots`, sound-articulation diagrams

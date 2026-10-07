@@ -78,13 +78,14 @@
 // What counts as a word and as a letter lesson
 // ---------------------------------------------------------------------------
 //
-// A letter lesson is a lesson that gets a stroke-order filmstrip from its own
-// Writing or Script block: `writingLetterOf` from figure-targets.ts, with
-// `letterBlockIndex` found. That means `type: writing`, a one-grapheme
-// headword, and a Writing or Script block. A copy or delayed-copy lesson whose
-// strip lands in its modelled practice block instead (ZH-W16-han-guided) is
-// practice of a letter an earlier lesson taught (ZH-W16-han-observe), so it is
-// not counted again. A LETTER SET counts
+// A letter lesson is a `type: writing` lesson with a one-grapheme headword and
+// a Writing or Script block (`letterBlockIndex` from figure-targets.ts). That
+// is asked of the lesson, not of its strip: a single-letter dictation whose
+// Writing block prints no strip (HL06: a no-model stage never takes one,
+// SA-S02-dictation) still writes its letter, and is counted. A copy or
+// delayed-copy lesson whose strip lands in its modelled practice block
+// (ZH-W16-han-guided) has neither block: it practises a letter an earlier
+// lesson taught (ZH-W16-han-observe), so it is not counted again. A LETTER SET counts
 // too: a writing lesson whose headword lists single letters, like "வ, க" or
 // "௧ ௨ ௩". It writes a few letters side by side rather than one, and each of
 // its letters counts as written. The letters may be followed by the word they
@@ -115,7 +116,7 @@
 // Report-only. The corpus test pins a per-track ceiling, which is a ratchet: a
 // number may fall, and must not rise.
 
-import { letterBlockIndex, writingLetterOf } from "./figure-targets.js";
+import { letterBlockIndex } from "./figure-targets.js";
 import { hasOwn } from "./constants.js";
 import type { ParsedLesson } from "./parse.js";
 import { SCRIPT_SYSTEMS, belongsToAny, readingOrder, systemOf } from "./ramp.js";
@@ -181,8 +182,8 @@ const GRAPHEMES = new Intl.Segmenter("und", { granularity: "grapheme" });
  */
 export function writtenLettersOf(lesson: ParsedLesson): string[] | undefined {
   if (lesson.realization.type !== "writing" || letterBlockIndex(lesson) === -1) return undefined;
-  const letter = writingLetterOf(lesson);
-  if (letter !== undefined) return [letter];
+  const headword = (lesson.realization.headword ?? "").trim();
+  if (headword !== "" && [...GRAPHEMES.segment(headword)].length === 1) return [headword];
   const pieces = (lesson.realization.headword ?? "")
     .split(/[\s,\u00B7\u060C\u3001\u2013\u2014]+/u)
     .filter(Boolean);

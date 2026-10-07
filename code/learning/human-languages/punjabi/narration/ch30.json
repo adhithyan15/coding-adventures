@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Build One Fictional Phone Field",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8a8ec40e5ef1b009",
+  "sourceHash": "fnv1a64:e9a64c51be31cf59",
   "lessons": [
     {
       "id": "PA-W08-pha",
@@ -653,7 +653,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:df8c34eb8babc094",
+      "sourceHash": "fnv1a64:7e90d087bc7f9508",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -692,7 +692,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear: zero, one, two, two, five, one. Write one digit after each word, then compare with A."
+              "text": "Cover A. Hear: zero, one, two, two, five, one. Write one digit after each word, then uncover A and compare."
             }
           ]
         },
