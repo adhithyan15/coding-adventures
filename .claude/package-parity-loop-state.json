@@ -11,21 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 16880,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16880",
-    "branch": "codex/parity-discovery-fixture-native-ci-selection-20261007",
-    "implementation_revision": "f93d1925a82bbd08accc39d1b0d7498541fd547b",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-07T09:45:15Z",
+    "observed_at": "2026-10-07T10:49:18Z",
     "pr_number": 16880,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #16880 opened from exact validated implementation f93d1925a82bbd08accc39d1b0d7498541fd547b after full Go package tests, vet, focused coverage, build-file and emitted-plan validation over 5291 packages, diff check, and read-only security/correctness review. GitHub reports MERGEABLE/BLOCKED with detect and both companion checks queued. Fixture-only native fanout is proven in tests; this implementation head changes the detector, not the shared fixture, so its CI is not ten native executions. Do not enable auto-merge while checks remain pending."
+    "status": "merged",
+    "notes": "PR #16880 completed all 37 final-head checks with 29 successes and eight acceptable skips/neutral results. Both required gates and Linux, macOS, and Windows builds passed; GitHub reported MERGEABLE/CLEAN. Guarded squash auto-merge was enabled for exact head 71d8093f0a48b24eab8ac1929d2a7a997a67b3e5, and GitHub merged it as a380448500add74a18453815e30757e7caa08806 at 2026-10-07T10:49:18Z. No manual merge occurred. The implementation head changes the detector, not the fixture; its unit tests prove ten-consumer fixture fanout, while the next fixture-only change will supply actual ten-native-CI execution evidence."
   },
   "last_inventory": {
-    "revision": "2cd82bda78887a0bbf926b9897eff80ce090c0b9",
+    "revision": "ec1c8d8c733f188c762e1377fe56dc07ecd2faa7",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1488,
@@ -743,10 +737,13 @@
     {
       "id": "build-tool-shared-discovery-fixture-native-ci-selection",
       "title": "Select every native discovery fixture consumer in CI when the shared case changes",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-ci-gate-registry-conformance-corpus-and-engine-audit"],
       "branch": "codex/parity-discovery-fixture-native-ci-selection-20261007",
       "pr_number": 16880,
+      "merge_revision": "a380448500add74a18453815e30757e7caa08806",
+      "merged_at": "2026-10-07T10:49:18Z",
+      "merge_notes": "All 37 final-head checks were terminal and acceptable, with 29 successes and eight skips/neutral results. GitHub reported MERGEABLE/CLEAN; guarded squash auto-merge completed without a manual merge. Exact-path fixture selection is covered by Go tests, but this implementation PR did not itself change the fixture and therefore did not execute all ten native fronts in CI.",
       "selected_at": "2026-10-07T09:18:48Z",
       "selection_revision": "2cd82bda78887a0bbf926b9897eff80ce090c0b9",
       "selection_notes": "Selected after #16872 auto-merged, fresh 15-lane collision inventory, and registration of the newly discovered gap. Both prerequisites are merged and no parity PR remains open. The exact shared fixture is consumed by ten native tests, but #16872 CI selected only Python/Perl; closing this detector blind spot has broader immediate leverage than the single-engine Haskell Dune fix. Keep the Go selection rule exact-path and bounded to known native consumers, then extend its map as future lanes adopt the case.",
@@ -755,10 +752,13 @@
     {
       "id": "build-tool-haskell-dune-build-discovery-conformance",
       "title": "Prove Dune _build discovery exclusion in the Haskell build tool",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-shared-discovery-fixture-native-ci-selection"],
-      "branch": null,
+      "branch": "codex/parity-haskell-dune-discovery-20261007",
       "pr_number": null,
+      "selected_at": "2026-10-07T10:51:43Z",
+      "selection_revision": "ec1c8d8c733f188c762e1377fe56dc07ecd2faa7",
+      "selection_notes": "Selected after #16880 auto-merged, fresh collision-checked 15-lane inventory, registration of the newly discovered Lattice @use and WebP neutral owners, and a live open-PR overlap check. All three prerequisites are merged. This bounded Haskell Dune fixture slice unlocks the Haskell full-registry and duplicate-identity successors plus fixture-CI coverage; dependency-ready Haskell CT01/PNG ports close one slot each and the new neutral contracts need separate specification work. Preserve the complete language-registry and identity defects for their existing successors.",
       "notes": "Haskell does not consume the shared language-registry fixture and mentions _build only in orphan validation. Add the exact discovery rule and language-neutral fixture consumption in one bounded Haskell tranche. When adding this direct consumer, extend the exact CI detector consumer map and drift test so later fixture-only edits select Haskell."
     },
     {
@@ -7695,6 +7695,12 @@
       "notes": "Completion umbrella discovered in the collision-clean 86f47eb4c3 inventory after merged PR #11088 added TypeScript image-codec-png. Close only after the neutral TypeScript-reference foundation and all twelve toolchain-shaped children merge. The final aggregate gate must prove fourteen added established slots reuse the all-lane pixel-container and ZIP owners without duplicated DEFLATE or CRC."
     },
     {
+      "id": "image-codec-webp-neutral-conformance-and-classification",
+      "title": "Classify IC05 WebP as portable and freeze bounded single-frame conformance",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Post-#16880 read-only singleton audit found Rust-only image-codec-webp is a pure pixel/byte codec governed by IC05 and absent from all parity owners or reviewed exceptions. Its current Rust implementation covers a restricted VP8 intra-keyframe encoder, a narrower VP8L encoder than decoder, and single-frame VP8X, not the full aspirational contract. Reconcile IC05 with the authoritative WebP VP8X flags and ALPH stream rules, current-versus-future support, and stale README claims; add independent known-good RIFF/VP8L/restricted-VP8/VP8X fixtures, exact or bounded-lossy pixel outcomes, malformed/bounds checks, and a Rust fixture consumer. Keep fourteen missing-lane ports in later dependency-shaped owners rather than this neutral slice."
+    },
+    {
       "id": "go-paint-codec-png-portable-reconciliation",
       "title": "Migrate Go paint-codec-png from the standard-library PNG codec",
       "status": "merged",
@@ -12596,6 +12602,12 @@
       "title": "Reconcile pure Lattice AST-to-CSS and transpiler contracts",
       "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
       "notes": "Post-#16798 audit found lattice-ast-to-css and lattice-transpiler in only 8/15 established lanes, with fourteen missing slots across C#, Dart, F#, Haskell, Java, Kotlin, and Swift. Define module-free neutral AST-to-CSS and transpiler fixtures under the Lattice v2 and 17-lattice-transpiler specs. Existing @use implementations silently skip directives; record a reviewed exception for the module-free corpus and a separate injected logical-path module-resolution contract before claiming full @use parity. No ambient filesystem authority belongs in this pure owner."
+    },
+    {
+      "id": "lattice-use-module-resolution-neutral-conformance",
+      "title": "Freeze pure Lattice @use module-resolution conformance",
+      "status": "pending", "depends_on": ["lattice-compiler-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Post-#16880 audits confirmed the module-free neutral owner and seven-lane ports defer @use, while no separate injected-module owner existed. Reconcile 17-lattice-transpiler, lattice-v2, and lattice.grammar on qualified variable/mixin/function references, .lattice path and namespace/default semantics, and !default precedence. Pin versioned parse-transform-emit fixtures with an injected logical-path source map, relative and transitive imports, exports and aliases, multiple-import collision policy, deterministic missing-module/cycle/location outcomes, bounded input/depth, and zero ambient filesystem authority. Current tests that silently strip @use are only module-free evidence; do not treat them as a reviewed exception to full transpiler parity. Keep filesystem adapters and lane ports separate."
     },
     {
       "id": "lattice-ast-to-css-missing-lane-parity",

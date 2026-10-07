@@ -16121,6 +16121,49 @@ Elixir become new fixture consumers. Their adoption owners now depend on that
 repair and must extend the exact consumer map when they add native tests. No
 second PR is active.
 
+## Post-#16880 merge, inventory, and next dependency slice (2026-10-07)
+
+PR #16880 completed all 37 final-head checks (29 successes and eight
+acceptable skips/neutral results), including both required gates and all three
+platform builds. GitHub reported `MERGEABLE/CLEAN`; guarded squash auto-merge
+merged it as `a380448500add74a18453815e30757e7caa08806`. No manual merge
+occurred. The detector now seeds ten native build-tool consumers for an exact
+shared discovery-fixture diff on every platform, with single-language scoping,
+missing-root failure, and rename coverage. Its own PR changed detector code,
+not the fixture, so a later fixture-only change is still needed as live
+ten-native-CI execution evidence.
+
+The fresh collision-checked schema-3 inventory at
+`ec1c8d8c733f188c762e1377fe56dc07ecd2faa7` remains 15 established
+lanes, 1,488 implementation identities, 4,758 slots, 1,530 all-reported
+identities, 178 high-consensus packages with 262 missing slots, 1,006
+singletons with 14,084 missing slots, five emerging OCaml packages, and zero
+canonical collisions or unknown buckets. The additional Rust
+`javascript-iir-compiler` singleton is a LANG78 native-frontend pilot, not an
+automatic portable-package port.
+
+Parallel read-only audits found two genuine unowned neutral contracts and
+registered both before this selection. `image-codec-webp` is a portable
+Rust-only IC05 codec, but its current restricted VP8/VP8L/VP8X behavior and
+flag/alpha handling need independent neutral conformance before lane ports.
+The Lattice module-free contract and seven-lane ports explicitly defer `@use`;
+the new injected logical-path module-resolution owner must reconcile the
+specification, grammar, and qualified-reference semantics before full parity
+can be claimed. OCaml promotion, JVM/Dart build tools, all established-lane
+build-tool adapters, Swift high-consensus gaps, and Haskell's four
+high-consensus gaps already have state owners; no new owner was required for
+those audited surfaces.
+
+The quick dependency/leverage pass selects exactly one bounded next item:
+Haskell's Dune `_build` discovery rule and native projection of the four OCaml
+package BUILD records in the checked shared fixture. Its three prerequisites
+are merged, it unlocks Haskell full-registry/duplicate-identity successors,
+and it adds Haskell to the exact native fixture CI-consumer map. The complete
+Haskell language registry and identity defects remain separately owned.
+Dependency-ready Haskell CT01 and PNG ports are narrower one-slot alternatives;
+Elixir fixture adoption remains a separate subsequent build-tool owner. There
+is no second active parity PR.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
