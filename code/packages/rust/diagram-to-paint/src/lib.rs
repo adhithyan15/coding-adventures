@@ -745,18 +745,23 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
             None => diagram.config.show_icons,
         };
         if show_icon {
-            let radius = match node.kind { TreeViewNodeKind::Directory => 3.0, TreeViewNodeKind::File => 1.0 };
             let icon = node.icon.clone().unwrap_or_else(|| match node.kind {
-                TreeViewNodeKind::Directory => "folder".into(), TreeViewNodeKind::File => "file".into(),
+                TreeViewNodeKind::Directory => "mermaid-treeview:folder".into(),
+                TreeViewNodeKind::File => "mermaid-treeview:file".into(),
             });
             let mut icon_metadata = HashMap::new();
-            icon_metadata.insert("treeView.icon".into(), icon);
+            icon_metadata.insert("treeView.icon".into(), icon.clone());
             icon_metadata.insert("treeView.nodeId".into(), node.id.clone());
-            instructions.push(PaintInstruction::Rect(PaintRect {
-                base: PaintBase { metadata: Some(icon_metadata), ..PaintBase::default() }, x: node.x + diagram.config.padding_x,
-                y: node.y + diagram.config.padding_y,
-                width: 14.0, height: 14.0, fill: Some(icon_color.clone()), stroke: Some(icon_color.clone()), stroke_width: Some(1.0),
-                corner_radius: Some(radius), stroke_dash: None, stroke_dash_offset: None }));
+            if matches!(icon.as_str(), "mermaid-treeview:folder" | "mermaid-treeview:file") {
+                instructions.push(PaintInstruction::Path(treeview_builtin_icon_path(&icon, node.x + diagram.config.padding_x,
+                    node.y + diagram.config.padding_y, &icon_color, icon_metadata)));
+            } else {
+                instructions.push(PaintInstruction::Rect(PaintRect {
+                    base: PaintBase { metadata: Some(icon_metadata), ..PaintBase::default() }, x: node.x + diagram.config.padding_x,
+                    y: node.y + diagram.config.padding_y,
+                    width: 14.0, height: 14.0, fill: Some(icon_color.clone()), stroke: Some(icon_color.clone()), stroke_width: Some(1.0),
+                    corner_radius: Some(1.0), stroke_dash: None, stroke_dash_offset: None }));
+            }
         }
         let mut label_font = font_with_size(&options.label_font, Some(diagram.config.theme.label_font_size));
         if matches!(node.kind, TreeViewNodeKind::Directory) { label_font.weight = 700; }
@@ -1977,6 +1982,62 @@ fn line_path(points: &[Point], stroke: &str, stroke_width: f64) -> PaintPath {
         stroke_dash: None,
         stroke_dash_offset: None,
     }
+}
+
+fn treeview_builtin_icon_path(icon: &str, x: f64, y: f64, color: &str, metadata: HashMap<String, String>) -> PaintPath {
+    let scale = 14.0 / 24.0;
+    let point = |px: f64, py: f64| (x + px * scale, y + py * scale);
+    let commands = if icon == "mermaid-treeview:folder" {
+        let (x0, y0) = point(10.59, 4.59);
+        vec![
+            PathCommand::MoveTo { x: x0, y: y0 },
+            PathCommand::ArcTo { rx: 2.0 * scale, ry: 2.0 * scale, x_rotation: 0.0, large_arc: false, sweep: false,
+                x: point(9.17, 4.0).0, y: point(9.17, 4.0).1 },
+            PathCommand::LineTo { x: point(4.0, 4.0).0, y: point(4.0, 4.0).1 },
+            PathCommand::ArcTo { rx: 2.0 * scale, ry: 2.0 * scale, x_rotation: 0.0, large_arc: false, sweep: false,
+                x: point(2.0, 6.0).0, y: point(2.0, 6.0).1 },
+            PathCommand::LineTo { x: point(2.0, 18.0).0, y: point(2.0, 18.0).1 },
+            PathCommand::ArcTo { rx: 2.0 * scale, ry: 2.0 * scale, x_rotation: 0.0, large_arc: false, sweep: false,
+                x: point(4.0, 20.0).0, y: point(4.0, 20.0).1 },
+            PathCommand::LineTo { x: point(20.0, 20.0).0, y: point(20.0, 20.0).1 },
+            PathCommand::ArcTo { rx: 2.0 * scale, ry: 2.0 * scale, x_rotation: 0.0, large_arc: false, sweep: false,
+                x: point(22.0, 18.0).0, y: point(22.0, 18.0).1 },
+            PathCommand::LineTo { x: point(22.0, 8.0).0, y: point(22.0, 8.0).1 },
+            PathCommand::ArcTo { rx: 2.0 * scale, ry: 2.0 * scale, x_rotation: 0.0, large_arc: false, sweep: false,
+                x: point(20.0, 6.0).0, y: point(20.0, 6.0).1 },
+            PathCommand::LineTo { x: point(12.83, 6.0).0, y: point(12.83, 6.0).1 },
+            PathCommand::Close,
+        ]
+    } else {
+        let (x0, y0) = point(6.0, 2.0);
+        vec![
+            PathCommand::MoveTo { x: x0, y: y0 },
+            PathCommand::ArcTo { rx: 2.0 * scale, ry: 2.0 * scale, x_rotation: 0.0, large_arc: false, sweep: false,
+                x: point(4.0, 4.0).0, y: point(4.0, 4.0).1 },
+            PathCommand::LineTo { x: point(4.0, 20.0).0, y: point(4.0, 20.0).1 },
+            PathCommand::ArcTo { rx: 2.0 * scale, ry: 2.0 * scale, x_rotation: 0.0, large_arc: false, sweep: false,
+                x: point(6.0, 22.0).0, y: point(6.0, 22.0).1 },
+            PathCommand::LineTo { x: point(18.0, 22.0).0, y: point(18.0, 22.0).1 },
+            PathCommand::ArcTo { rx: 2.0 * scale, ry: 2.0 * scale, x_rotation: 0.0, large_arc: false, sweep: false,
+                x: point(20.0, 20.0).0, y: point(20.0, 20.0).1 },
+            PathCommand::LineTo { x: point(20.0, 8.83).0, y: point(20.0, 8.83).1 },
+            PathCommand::ArcTo { rx: 2.0 * scale, ry: 2.0 * scale, x_rotation: 0.0, large_arc: false, sweep: false,
+                x: point(19.41, 7.41).0, y: point(19.41, 7.41).1 },
+            PathCommand::LineTo { x: point(14.59, 2.59).0, y: point(14.59, 2.59).1 },
+            PathCommand::ArcTo { rx: 2.0 * scale, ry: 2.0 * scale, x_rotation: 0.0, large_arc: false, sweep: false,
+                x: point(13.17, 2.0).0, y: point(13.17, 2.0).1 },
+            PathCommand::Close,
+            PathCommand::MoveTo { x: point(13.5, 3.9).0, y: point(13.5, 3.9).1 },
+            PathCommand::LineTo { x: point(18.1, 8.5).0, y: point(18.1, 8.5).1 },
+            PathCommand::LineTo { x: point(14.5, 8.5).0, y: point(14.5, 8.5).1 },
+            PathCommand::ArcTo { rx: scale, ry: scale, x_rotation: 0.0, large_arc: false, sweep: false,
+                x: point(13.5, 7.5).0, y: point(13.5, 7.5).1 },
+            PathCommand::Close,
+        ]
+    };
+    PaintPath { base: PaintBase { metadata: Some(metadata), ..PaintBase::default() }, commands,
+        fill: Some(color.to_string()), fill_rule: None, stroke: None, stroke_width: None, stroke_cap: None,
+        stroke_join: None, stroke_dash: None, stroke_dash_offset: None }
 }
 
 /// Filled triangle arrowhead at the tip of a directed edge.
@@ -9348,7 +9409,7 @@ mod tests {
             config,
             nodes: vec![
                 diagram_ir::LayoutedTreeViewNode { id: "root".into(), is_implicit_root: true, parent_id: None, depth: 0, label: "src".into(),
-                    kind: TreeViewNodeKind::Directory, class_selector: Some("highlight".into()), icon: Some("folder".into()),
+                    kind: TreeViewNodeKind::Directory, class_selector: Some("highlight".into()), icon: Some("mermaid-treeview:folder".into()),
                     description: None, x: 26.0, y: 12.0, width: 376.0, height: 28.0,
                     label_x: 49.0, label_width: 45.0, description_x: None, description_width: None },
                 diagram_ir::LayoutedTreeViewNode { id: "child".into(), is_implicit_root: false, parent_id: Some("root".into()), depth: 1, label: "main.rs".into(),
@@ -9365,16 +9426,19 @@ mod tests {
         let scene = diagram_to_paint_treeview(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#123456"))));
-        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Path(_))).count(), 3);
-        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Rect(_))).count(), 2);
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Path(_))).count(), 4);
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Rect(_))).count(), 1);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#345678")
                 && rect.stroke.as_deref() == Some("#456789"))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
-            PaintInstruction::Rect(rect) if rect.fill.as_deref() == Some("#234567"))));
-        assert!(!scene.instructions.iter().any(|instruction| matches!(instruction,
-            PaintInstruction::Rect(rect) if rect.base.metadata.as_ref()
-                .and_then(|metadata| metadata.get("treeView.icon")) == Some(&"file".to_string()))));
+            PaintInstruction::Path(path) if path.fill.as_deref() == Some("#234567")
+                && path.commands.iter().any(|command| matches!(command, PathCommand::ArcTo { .. })))));
+        assert!(!scene.instructions.iter().any(|instruction| match instruction {
+            PaintInstruction::Path(path) => path.base.metadata.as_ref(),
+            PaintInstruction::Rect(rect) => rect.base.metadata.as_ref(),
+            _ => None,
+        }.and_then(|metadata| metadata.get("treeView.icon")) == Some(&"mermaid-treeview:file".to_string())));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
             PaintInstruction::GlyphRun(run) if run.font_size == 20.0)));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("treeView.config.showIcons")),

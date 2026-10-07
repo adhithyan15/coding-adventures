@@ -6003,8 +6003,10 @@ fn resolve_treeview_icon(
     if icon == "none" {
         return Some(icon);
     }
-    if icon.contains(':') || matches!(icon.as_str(), "file" | "folder") || config.default_icon_pack.is_empty() {
+    if icon.contains(':') {
         Some(icon)
+    } else if matches!(icon.as_str(), "file" | "folder") || config.default_icon_pack.is_empty() {
+        Some(format!("mermaid-treeview:{icon}"))
     } else {
         Some(format!("{}:{icon}", config.default_icon_pack))
     }
