@@ -496,6 +496,16 @@ readability without claiming a different-account test from a same-owner process.
 Require native Linux/macOS copy-or-reject cases and another exact-head independent
 security review before publishing the repaired head or accepting native CI.
 
+Native acceptance must verify the selected test command actually runs, not just
+that an OS-labelled job is green. The initial repaired-head build plan selected
+`rust/programs/closurec` on every platform but left `build-windows-os-suites`
+false; `ci.yml` consequently skips the ordinary Windows package-test step.
+Register the compiler's affected-package identity and this specification with
+that step gate. Test both selection clauses through the real gate evaluator,
+with an unrelated Rust change as a negative control. Required native CI must
+show a non-skipped compiler test command and a successful package result on
+Windows as well as Linux/macOS before acceptance.
+
 Commit specification refinements before implementation, then demonstrate the
 current reproductions failing meaningful acceptance tests before repair.
 Exercise compact and legacy contracts, enabled/disabled allocations, full/partial
