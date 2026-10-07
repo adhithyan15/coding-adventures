@@ -6365,22 +6365,33 @@ fn fold_conditional(c: &ConditionalExpression, st: &mut FoldState) -> Expression
     // emitter parenthesises a sequence in argument / sub-expression position, so
     // `w(f()?x:x)` prints `w((f(),x))`, matching the reference compiler.
     //
-    // Branch equality uses derived structural `==`. In the default pipeline
-    // every node carries `cv: None` (the bridge stamps `None`, and folding an
-    // identifier/literal mints nothing), so `a?b:b`'s two `b`s compare equal.
-    // Under `--correlation_vector` the two arms may carry distinct minted CVs;
-    // then `==` is `false` and we conservatively DECLINE — a sound miss, never
-    // a miscompile.
-    if consequent == alternate {
+    // Primitive fold identities describe history, not JavaScript behavior.
+    // Comparing them would make tracing alone disable equal-branch collapse.
+    // Broader composite equality still uses the existing structural comparison.
+    if equal_fold_branches(&consequent, &alternate) {
         let parent = c.cv.clone();
         if is_side_effect_free(&test) {
             // Pure test: the branch on `t` is dead AND `t` has no effect, so the
             // whole conditional is just `X` (`a?b:b`→`b`, `a?1:1`→`1`).
-            let _new_cv = st.fork_cv(&parent, "t ? X : X", "X");
-            return consequent;
+            let new_cv = st.fork_operand_cvs(
+                &[parent.as_deref(), primitive_cv(&test),
+                    primitive_cv(&consequent), primitive_cv(&alternate)],
+                "t ? X : X",
+                "X",
+            );
+            let mut chosen = consequent;
+            if let Some(identity) = primitive_cv_mut(&mut chosen) {
+                *identity = new_cv;
+            }
+            return chosen;
         }
         // Impure test: keep `t`'s effect via the comma sequence `(t, X)`.
-        let new_cv = st.fork_cv(&parent, "t ? X : X", "(t,X)");
+        let new_cv = st.fork_operand_cvs(
+            &[parent.as_deref(), primitive_cv(&test),
+                primitive_cv(&consequent), primitive_cv(&alternate)],
+            "t ? X : X",
+            "(t,X)",
+        );
         return Expression::SequenceExpression(SequenceExpression {
             cv: new_cv,
             expressions: vec![test, consequent],
@@ -6725,6 +6736,42 @@ fn primitive_cv(expr: &Expression) -> Option<&str> {
         Expression::NullLiteral(n) => n.cv.as_deref(),
         Expression::BigIntLiteral(n) => n.cv.as_deref(),
         Expression::UndefinedLiteral(n) => n.cv.as_deref(),
+        _ => None,
+    }
+}
+
+/// Same primitive value/representation, with identity excluded from equality.
+/// Preserve the old comparator for composite expressions; stripping metadata
+/// by serialization would add an unbounded whole-tree allocation here.
+fn equal_fold_branches(left: &Expression, right: &Expression) -> bool {
+    match (left, right) {
+        (Expression::NumericLiteral(a), Expression::NumericLiteral(b)) => {
+            a.value == b.value && a.raw == b.raw
+        }
+        (Expression::StringLiteral(a), Expression::StringLiteral(b)) => {
+            a.value == b.value && a.raw == b.raw
+        }
+        (Expression::BooleanLiteral(a), Expression::BooleanLiteral(b)) => a.value == b.value,
+        (Expression::NullLiteral(_), Expression::NullLiteral(_))
+        | (Expression::UndefinedLiteral(_), Expression::UndefinedLiteral(_)) => true,
+        (Expression::BigIntLiteral(a), Expression::BigIntLiteral(b)) => {
+            a.value == b.value && a.raw == b.raw
+        }
+        _ => left == right,
+    }
+}
+
+/// Stamp only the primitive roots covered by this slice. Composite identities
+/// and their output mappings require the remaining CCR-065 foundation work.
+fn primitive_cv_mut(expr: &mut Expression) -> Option<&mut Option<String>> {
+    match expr {
+        Expression::Identifier(n) => Some(&mut n.cv),
+        Expression::NumericLiteral(n) => Some(&mut n.cv),
+        Expression::StringLiteral(n) => Some(&mut n.cv),
+        Expression::BooleanLiteral(n) => Some(&mut n.cv),
+        Expression::NullLiteral(n) => Some(&mut n.cv),
+        Expression::BigIntLiteral(n) => Some(&mut n.cv),
+        Expression::UndefinedLiteral(n) => Some(&mut n.cv),
         _ => None,
     }
 }

@@ -11,6 +11,8 @@ identities. The trace tests traverse actual parent links, pin both binary inputs
 and nested fold history, exclude unrelated tokens, compare tracing-on/off bytes
 and reject fictitious rewrites for declined folds. The previous source-token
 presence assertion could pass with disconnected replacements.
+An enclosing equal-branch conditional also has a regression check: provenance
+identities must not affect primitive equality or lose either branch's history.
 
 ### Fixed - pass schedule follows registration order when dependencies permit
 

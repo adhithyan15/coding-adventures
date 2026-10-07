@@ -21,3 +21,10 @@ Read live implementation and test assertions before copying an issue's audit.
 For provenance, test connected graph relationships rather than inventory,
 counts, or the existence of roots. Keep emitted-byte parity as a separate
 assertion so tracing cannot quietly change compiler behavior.
+
+A later context probe found exactly that hazard: tracing the repaired
+`flag ? (1+1) : (1+1)` changed `2` to `flag?2:2`, because derived Rust equality
+included the new CV identities. Primitive branch equality now ignores CV
+metadata while preserving value/raw representation and both branch histories.
+Test transformations inside enclosing optimizations too; isolated folds are
+insufficient evidence that tracing is behavior-neutral.

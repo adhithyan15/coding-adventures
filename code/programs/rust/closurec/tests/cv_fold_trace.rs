@@ -189,3 +189,38 @@ fn declined_fold_does_not_claim_a_rewrite() {
             .iter()
             .any(|c| c["source"] == "constant-fold" && c["tag"] == "folded")));
 }
+
+#[test]
+fn equal_folded_branches_ignore_identity_and_keep_both_histories() {
+    let (j, emitted, path) = run("report(flag?(1+1):(1+1));\n", "SIMPLE");
+    assert_eq!(emitted.trim(), "report(2);");
+    let entries = j["entries"].as_object().unwrap();
+    let (id, _) = entries
+        .iter()
+        .find(|(id, e)| {
+            e["contributions"].as_array().unwrap().iter().any(|c| {
+                c["source"] == "constant-fold"
+                    && c["tag"] == "folded"
+                    && c["meta"]["before"] == "t ? X : X"
+                    && c["meta"]["new_cv"] == id.as_str()
+            })
+        })
+        .expect("collapsed primitive branches own a rewrite record");
+    assert_operand_spans(&j, id, &path, &["1:8", "1:14", "1:16", "1:20", "1:22"]);
+    let history = ancestry(&j, id);
+    let branch_folds = history
+        .iter()
+        .filter(|ancestor| {
+            entries[*ancestor]["contributions"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|c| {
+                    c["source"] == "constant-fold"
+                        && c["meta"]["after"] == "2"
+                        && c["meta"]["new_cv"] == ancestor.as_str()
+                })
+        })
+        .count();
+    assert_eq!(branch_folds, 2, "both folded branch histories must survive");
+}
