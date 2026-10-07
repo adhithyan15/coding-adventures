@@ -1,0 +1,691 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-W03-mama-delayed-copy
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 183
+delivery: script
+chapter: 3
+type: writing
+headword: "मम"
+gloss: write the known word for my after its model is covered
+romanization: "mama"
+prerequisites: [SA-W03-mama-guided-copy]
+sounds: [inherent-a]
+roots: [ma-first-person]
+duration:
+  max_seconds: 120
+requires:
+  knowledge: [SA-SCRIPT-RECOG-01, SA-LEX-MAMA]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-SCRIPT-RECOG-01, SA-LEX-MAMA]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
+reviews_of: [SA-W03-mama-guided-copy, SA-C02-mama]
+---
+
+# मम — hide the word, then write it
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-01, SA-LEX-MAMA] -->
+
+Look at **मम** for five seconds. Find the two copies of **म** and the headline
+that joins them. Then cover the word.
+
+## Writing — delayed copy
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-01, SA-LEX-MAMA] -->
+<!-- hl-writing-stage: delayed-copy -->
+
+Wait ten seconds. With the model still covered, write the word meaning “my.”
+There is no tracing guide and no romanized answer to copy.
+
+Only after the word is complete, uncover **मम**. Compare three things in order:
+two equal letter bodies, two right stems, and one joined headline. Repair only
+the first difference you find.
+
+## Wrap-up recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-01, SA-LEX-MAMA] -->
+
+Read the repaired word once and give its meaning. (**मम — “my.”**)
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-W03-mama-dictation
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 184
+delivery: script
+chapter: 3
+type: writing
+headword: "मम"
+gloss: write the known word for my from sound alone
+romanization: "mama"
+prerequisites: [SA-W03-mama-delayed-copy]
+sounds: [inherent-a]
+roots: [ma-first-person]
+duration:
+  max_seconds: 120
+requires:
+  knowledge: [SA-SCRIPT-RECOG-01, SA-LEX-MAMA]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-SCRIPT-RECOG-01, SA-LEX-MAMA]
+skills: [listening, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
+reviews_of: [SA-W03-mama-delayed-copy, SA-C02-mama]
+---
+
+# One heard word — write “my”
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-01, SA-LEX-MAMA] -->
+
+Cover every answer below this line. You will hear one familiar Sanskrit word.
+There is no visible Devanagari model and no romanized answer.
+
+## Writing — word dictation
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-01, SA-LEX-MAMA] -->
+<!-- hl-writing-stage: dictation-transcription -->
+
+[YOU HEAR: the Sanskrit word meaning “my”]
+
+Write the word from sound and meaning alone. Stop after one attempt. Now
+uncover and compare: **मम**. If needed, repair one letter body, one stem, or the
+joined headline — only the first difference.
+
+## Wrap-up recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-01, SA-LEX-MAMA] -->
+
+The hand has now moved from one dictated syllable, **न**, to a whole known word,
+**मम**. Say the word once as you read your answer.
+`,a=e({default:()=>o}),o=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-W03-mama-guided-copy
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 182
+delivery: script
+chapter: 3
+type: writing
+headword: "मम"
+gloss: copy the known word for my from two visible ma syllables
+romanization: "mama"
+prerequisites: [SA-S01-letter-ma, SA-C02-mama]
+sounds: [inherent-a]
+roots: [ma-first-person]
+duration:
+  max_seconds: 150
+requires:
+  knowledge: [SA-SCRIPT-RECOG-01, SA-LEX-MAMA]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-SCRIPT-RECOG-01, SA-LEX-MAMA]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
+reviews_of: [SA-S01-letter-ma, SA-C02-mama]
+---
+
+# मम — one known letter becomes one known word
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-01, SA-LEX-MAMA] -->
+
+Say **मम** — “my.” Point to its two equal parts: **म + म**. Nothing here is
+new vocabulary, and no new shape is hiding in the word.
+
+## Writing — guided copy
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-01, SA-LEX-MAMA] -->
+<!-- hl-writing-stage: guided-copy -->
+
+Keep **मम** visible and follow the numbered strip: write the body of the
+first **म**, then the body of the second, and only then draw one
+**śirorekhā** left to right across both, so the word hangs from one line. Most
+native writers leave the headline for last; some draw it first.
+
+Read what you wrote: **मम**, “my.” Two copies of *ma* make *mama*; neither
+consonant needs a separate vowel sign because each carries its short *a*.
+
+## Wrap-up recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-01, SA-LEX-MAMA] -->
+
+How many written syllables did the word need? (**Two: म + म.**) What made the
+two letters look like one word? (**Their joined headline.**)
+`,s=e({default:()=>c}),c=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-W03-mama-nama-delayed-copy
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 187
+delivery: script
+chapter: 3
+type: writing
+headword: "मम नाम"
+gloss: write the known phrase my name after its model is covered
+romanization: "mama nāma"
+prerequisites: [SA-W03-mama-nama-guided-copy]
+sounds: [inherent-a, long-aa]
+roots: [ma-first-person, naaman-sanskrit]
+duration:
+  max_seconds: 150
+requires:
+  knowledge: [SA-SCRIPT-RECOG-01, SA-SCRIPT-RECOG-02, SA-SCRIPT-RECOG-06, SA-LEX-MAMA, SA-LEX-NAMA]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-SCRIPT-RECOG-01, SA-SCRIPT-RECOG-02, SA-SCRIPT-RECOG-06, SA-LEX-MAMA, SA-LEX-NAMA]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
+reviews_of: [SA-W03-mama-nama-guided-copy, SA-C02-mama-nama-asti]
+---
+
+# मम नाम — hide the phrase, keep its two-word shape
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-MAMA, SA-LEX-NAMA] -->
+
+Look at **मम नाम** for five seconds. Point to the word space and to **◌ा**.
+Then cover the model.
+
+## Writing — delayed phrase copy
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-01, SA-SCRIPT-RECOG-02, SA-SCRIPT-RECOG-06, SA-LEX-MAMA, SA-LEX-NAMA] -->
+<!-- hl-writing-stage: delayed-copy -->
+
+Wait ten seconds. Write “my name” in Sanskrit with no visible answer and no
+romanization. Keep the two words apart, but join the headline within each word.
+
+Only after the phrase is complete, uncover **मम नाम**. Compare meaning order,
+word space, letters, and vowel sign in that order. Repair only the first
+difference.
+
+## Wrap-up recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-MAMA, SA-LEX-NAMA] -->
+
+Read the phrase once. Which word came first? (**मम**, “my.”)
+`,l=e({default:()=>u}),u=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-W03-mama-nama-dictation
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 188
+delivery: script
+chapter: 3
+type: writing
+headword: "मम नाम"
+gloss: write the known phrase my name from sound and meaning alone
+romanization: "mama nāma"
+prerequisites: [SA-W03-mama-nama-delayed-copy]
+sounds: [inherent-a, long-aa]
+roots: [ma-first-person, naaman-sanskrit]
+duration:
+  max_seconds: 150
+requires:
+  knowledge: [SA-SCRIPT-RECOG-01, SA-SCRIPT-RECOG-02, SA-SCRIPT-RECOG-06, SA-LEX-MAMA, SA-LEX-NAMA]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-SCRIPT-RECOG-01, SA-SCRIPT-RECOG-02, SA-SCRIPT-RECOG-06, SA-LEX-MAMA, SA-LEX-NAMA]
+skills: [listening, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
+reviews_of: [SA-W03-mama-nama-delayed-copy, SA-C02-mama-nama-asti]
+---
+
+# Two heard words — write “my name”
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-MAMA, SA-LEX-NAMA] -->
+
+Cover every answer below this line. You will hear a familiar two-word fragment.
+There is no visible Devanagari model and no romanized answer.
+
+## Writing — phrase dictation
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-01, SA-SCRIPT-RECOG-02, SA-SCRIPT-RECOG-06, SA-LEX-MAMA, SA-LEX-NAMA] -->
+<!-- hl-writing-stage: dictation-transcription -->
+
+[YOU HEAR: the Sanskrit phrase meaning “my name”]
+
+Write the two words from sound and meaning alone. Stop after one attempt. Now
+uncover and compare: **मम नाम**. Check meaning order, the one word space, and
+the long-vowel sign in **नाम**. Repair only the first difference.
+
+## Wrap-up recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-MAMA, SA-LEX-NAMA] -->
+
+The runway now reaches a two-word phrase. It does not yet reach a full
+introduction: **अस्ति**, names, punctuation, and connected text remain later
+rungs, after their shapes are taught and recalled in order.
+`,d=e({default:()=>f}),f=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-W03-mama-nama-guided-copy
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 186
+delivery: script
+chapter: 3
+type: writing
+headword: "मम नाम"
+gloss: copy the known phrase my name with a visible model
+romanization: "mama nāma"
+prerequisites: [SA-W03-mama-dictation, SA-S06-vowel-sign-aa, SA-C02-nama]
+sounds: [inherent-a, long-aa]
+roots: [ma-first-person, naaman-sanskrit]
+duration:
+  max_seconds: 180
+requires:
+  knowledge: [SA-SCRIPT-RECOG-01, SA-SCRIPT-RECOG-02, SA-SCRIPT-RECOG-06, SA-LEX-MAMA, SA-LEX-NAMA]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-SCRIPT-RECOG-01, SA-SCRIPT-RECOG-02, SA-SCRIPT-RECOG-06, SA-LEX-MAMA, SA-LEX-NAMA]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
+reviews_of: [SA-W03-mama-dictation, SA-C02-mama, SA-C02-nama, SA-S06-vowel-sign-aa]
+---
+
+# मम नाम — two known words, one visible phrase
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-MAMA, SA-LEX-NAMA] -->
+
+Read **मम नाम** — “my name.” Both words and every shape are already familiar.
+Leave one ordinary word space between them.
+
+## Writing — guided phrase copy
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-01, SA-SCRIPT-RECOG-02, SA-SCRIPT-RECOG-06, SA-LEX-MAMA, SA-LEX-NAMA] -->
+<!-- hl-writing-stage: guided-copy -->
+
+Keep the phrase visible and copy it once.
+
+1. Write **मम**, joining its two letter headlines.
+2. Leave one word space.
+3. Build **ना** from **न + ◌ा**, then add **म** to complete **नाम**.
+
+The vowel sign changes *na* to *nā*; it does not begin a separate letter. Read
+the finished phrase once: **मम नाम**, “my name.”
+
+## Wrap-up recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-06, SA-LEX-NAMA] -->
+
+Which sign makes the long vowel in **नाम**? (**◌ा**, attached to **न**.) Where
+does the pen leave a visible gap? (**Between the two words.**)
+`,p=e({default:()=>m}),m=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-W03-namah-delayed-copy
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 190
+delivery: script
+chapter: 3
+type: writing
+headword: "नमः"
+gloss: write the known namas bow after its visarga model is covered
+romanization: "namaḥ"
+prerequisites: [SA-W03-namah-guided-copy]
+sounds: [inherent-a, visarga]
+roots: [namas]
+duration:
+  max_seconds: 120
+requires:
+  knowledge: [SA-SCRIPT-RECOG-01, SA-SCRIPT-RECOG-02, SA-SCRIPT-RECOG-201, SA-ETYMON-NAMAS-TE]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-SCRIPT-RECOG-01, SA-SCRIPT-RECOG-02, SA-SCRIPT-RECOG-201, SA-ETYMON-NAMAS-TE]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
+reviews_of: [SA-W03-namah-guided-copy, SA-S201-sign-visarga]
+---
+
+# नमः — hide the word, keep the final breath
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-ETYMON-NAMAS-TE, SA-SCRIPT-RECOG-201] -->
+
+Look at **नमः** for five seconds. Point to **न**, **म**, and the visarga
+**ः**. Say *namaḥ*, “a bow, a salutation.” Then cover the model.
+
+## Writing — delayed visarga copy
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-01, SA-SCRIPT-RECOG-02, SA-SCRIPT-RECOG-201, SA-ETYMON-NAMAS-TE] -->
+<!-- hl-writing-stage: delayed-copy -->
+
+Wait ten seconds. Write the known word with no visible answer and no
+romanization. Keep **नम** beneath one headline and place the two visarga dots
+to its right.
+
+Only after the word is complete, uncover **नमः**. Compare the two letters,
+their order, and the final mark. Repair only the first difference.
+
+## Wrap-up recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-201, SA-ETYMON-NAMAS-TE] -->
+
+Read what you wrote. Which known piece of *namaste* did you recover?
+(***Namas***, “a bow,” in its pause form *namaḥ*.)
+`,h=e({default:()=>g}),g=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-W03-namah-dictation
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 191
+delivery: script
+chapter: 3
+type: writing
+headword: "नमः"
+gloss: write the known namas bow from sound and meaning with its final visarga
+romanization: "namaḥ"
+prerequisites: [SA-W03-namah-delayed-copy]
+sounds: [inherent-a, visarga]
+roots: [namas]
+duration:
+  max_seconds: 120
+requires:
+  knowledge: [SA-SCRIPT-RECOG-01, SA-SCRIPT-RECOG-02, SA-SCRIPT-RECOG-201, SA-ETYMON-NAMAS-TE]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-SCRIPT-RECOG-01, SA-SCRIPT-RECOG-02, SA-SCRIPT-RECOG-201, SA-ETYMON-NAMAS-TE]
+skills: [listening, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
+reviews_of: [SA-W03-namah-delayed-copy, SA-C01-namaste]
+---
+
+# A heard bow — write the visarga from sound and meaning
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-ETYMON-NAMAS-TE] -->
+
+Cover every answer below this line. You will hear the familiar word meaning “a
+bow, a salutation,” the first half of *namaste*, now said by itself. There is no
+visible Devanagari model and no romanized answer.
+
+## Writing — visarga dictation
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-01, SA-SCRIPT-RECOG-02, SA-SCRIPT-RECOG-201, SA-ETYMON-NAMAS-TE] -->
+<!-- hl-writing-stage: dictation-transcription -->
+
+[YOU HEAR: *namaḥ* — “a bow, a salutation”]
+
+Write the word from sound and meaning alone. Stop after one attempt. Now
+uncover and compare: **नमः**. Check **न**, **म**, and the final visarga in
+that order. Repair only the first difference.
+
+## Wrap-up recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-201, SA-ETYMON-NAMAS-TE] -->
+
+The runway now carries a Sanskrit-specific mark from recognition to
+independent transcription. Which later debts remain? (**Vocalic ṛ, conjuncts,
+connected text, and independent recall across a longer passage.**)
+`,_=e({default:()=>v}),v=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-W03-namah-guided-copy
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 189
+delivery: script
+chapter: 3
+type: writing
+headword: "नमः"
+gloss: copy the known namas bow in its pause form with a visible visarga
+romanization: "namaḥ"
+prerequisites: [SA-W03-mama-nama-dictation, SA-S201-sign-visarga, SA-C01-namaste]
+sounds: [inherent-a, visarga]
+roots: [namas]
+duration:
+  max_seconds: 150
+requires:
+  knowledge: [SA-SCRIPT-RECOG-01, SA-SCRIPT-RECOG-02, SA-SCRIPT-RECOG-201, SA-ETYMON-NAMAS-TE]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-SCRIPT-RECOG-01, SA-SCRIPT-RECOG-02, SA-SCRIPT-RECOG-201, SA-ETYMON-NAMAS-TE]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: classical
+reviews_of: [SA-W03-mama-nama-dictation, SA-S201-sign-visarga, SA-C01-namaste]
+---
+
+# नमः — the known bow, now ending in a visible breath
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-ETYMON-NAMAS-TE, SA-SCRIPT-RECOG-201] -->
+
+Say the first half of *namaste*: *namas*, “a bow, a salutation.” That meaning is
+already yours. Said by itself at a pause, its final *s* appears as the visarga:
+*namaḥ*. This is the same known word, not new vocabulary.
+
+## Writing — guided visarga copy
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-01, SA-SCRIPT-RECOG-02, SA-SCRIPT-RECOG-201, SA-ETYMON-NAMAS-TE] -->
+<!-- hl-writing-stage: guided-copy -->
+
+Keep **नमः** visible and copy it once.
+
+1. Write **न**, then **म**, joining their headline into one word.
+2. Put **ः** to the right of the final syllable. Its two dots do not join the
+   headline.
+3. Read the result aloud: *na-ma-ḥ* — “a bow, a salutation.”
+
+The page now shows all three things the ear hears: **न + म + ः**.
+
+## Wrap-up recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-201, SA-ETYMON-NAMAS-TE] -->
+
+Which mark carries the final breath? (**ः**, the visarga.) Is *namaḥ* a new
+word here? (**No. It is the known *namas* from *namaste*, said at a pause.**)
+`,y=e({default:()=>b}),b=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-W05-vocalic-r-delayed-copy
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 283
+delivery: script
+chapter: 5
+type: writing
+headword: "ृ"
+gloss: write the known vocalic-r vowel sign after its model is covered
+romanization: "ṛ"
+prerequisites: [SA-W05-vocalic-r-guided-copy]
+sounds: [kr-vocalic]
+roots: []
+duration:
+  max_seconds: 120
+requires:
+  knowledge: [SA-SCRIPT-RECOG-205]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-SCRIPT-RECOG-205]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [language-focus]
+register: neutral
+variety: classical
+reviews_of: [SA-W05-vocalic-r-guided-copy]
+---
+
+# ◌ृ — cover the model, keep the hook in mind
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-205] -->
+
+Look at **◌ृ** for five seconds. Say its sound and job: vocalic *ṛ*, replacing
+the consonant's built-in *a*. Then cover the model.
+
+## Writing — delayed vocalic-r copy
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-205] -->
+<!-- hl-writing-stage: delayed-copy -->
+
+Wait ten seconds. With no visible answer and no romanization, write only the
+vowel mark from memory. Leave an empty place above it for the consonant that
+would carry it; do not draw the dotted teaching circle.
+
+Only after the mark is complete, uncover **◌ृ**. Compare its size, position,
+and direction with your mark. Repair only the first difference.
+
+## Wrap-up recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-205] -->
+
+Where does this dependent vowel sign sit? (**Below the consonant it changes.**)
+`,x=e({default:()=>S}),S=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-W05-vocalic-r-dictation
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 284
+delivery: script
+chapter: 5
+type: writing
+headword: "ृ"
+gloss: write the known vocalic-r vowel sign from its sound and function alone
+romanization: "ṛ"
+prerequisites: [SA-W05-vocalic-r-delayed-copy]
+sounds: [kr-vocalic]
+roots: []
+duration:
+  max_seconds: 120
+requires:
+  knowledge: [SA-SCRIPT-RECOG-205]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-SCRIPT-RECOG-205]
+skills: [listening, writing]
+modes: [interpretive, presentational]
+strands: [language-focus]
+register: neutral
+variety: classical
+reviews_of: [SA-W05-vocalic-r-delayed-copy, SA-S205-vowel-sign-vocalic-r]
+---
+
+# A heard vowel sign — write vocalic r independently
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-205] -->
+
+Cover every answer below this line. You will hear the name and function of one
+known vowel sign. There is no visible Devanagari model and no romanized answer.
+
+## Writing — vocalic-r dictation
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-205] -->
+<!-- hl-writing-stage: dictation-transcription -->
+
+[YOU HEAR: the dependent vowel sign vocalic r, which replaces a consonant's
+built-in *a*]
+
+Write the sign from sound and function alone. Stop after one attempt. Now
+uncover and compare: **◌ृ**. Check its below-consonant position and hook. Repair
+only the first difference. Credit requires the Devanagari mark; a Latin-letter
+transliteration does not count.
+
+## Wrap-up recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-205] -->
+
+The vocalic-r sign has now moved from trace to independent transcription.
+Which later debts remain? (**Conjuncts, connected text, and independent recall
+across a longer passage.**)
+`,C=e({default:()=>w}),w=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: SA-W05-vocalic-r-guided-copy
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 282
+delivery: script
+chapter: 5
+type: writing
+headword: "ृ"
+gloss: copy the known vocalic-r vowel sign while its model stays visible
+romanization: "ṛ"
+prerequisites: [SA-S205-vowel-sign-vocalic-r]
+sounds: [kr-vocalic]
+roots: []
+duration:
+  max_seconds: 150
+requires:
+  knowledge: [SA-SCRIPT-RECOG-205]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [SA-SCRIPT-RECOG-205]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [language-focus]
+register: neutral
+variety: classical
+reviews_of: [SA-S205-vowel-sign-vocalic-r]
+---
+
+# ◌ृ — the known vocalic-r sign, now copied with support
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-205] -->
+
+Point to **◌ृ** and say what it does. It puts the vowel *ṛ* on a consonant and
+replaces that consonant's built-in *a*. This is the same sign you traced in the
+previous lesson, not a new word or a new shape.
+
+## Writing — guided vocalic-r copy
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-205] -->
+<!-- hl-writing-stage: guided-copy -->
+
+Keep **◌ृ** visible and copy the mark once, slowly and larger than print. The
+dotted circle only shows where a consonant would stand; copy the small hook
+below it, not the dotted circle.
+
+Compare your mark with **◌ृ**. Check that the hook sits below the place where a
+consonant would be. Read its sound aloud: *ṛ*.
+
+## Wrap-up recall
+<!-- hl-knowledge: introduces=[]; assesses=[SA-SCRIPT-RECOG-205] -->
+
+What does **◌ृ** add, and what does it remove? (**It adds vocalic *ṛ* and
+removes the consonant's built-in *a*.**)
+`;export{h as a,l as c,r as d,t as f,_ as i,s as l,x as n,p as o,y as r,d as s,C as t,a as u};

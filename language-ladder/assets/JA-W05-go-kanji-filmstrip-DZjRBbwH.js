@@ -1,0 +1,1 @@
+var e=``+new URL(`JA-W05-go-kanji-filmstrip-DPmYihhl.svg`,import.meta.url).href;export{e as default};

@@ -1,0 +1,1 @@
+var e=``+new URL(`SA-W03-mama-dictation-filmstrip-BI42r8Uw.svg`,import.meta.url).href;export{e as default};
