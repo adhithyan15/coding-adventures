@@ -24,11 +24,18 @@ coverage, ordinals and coordinate replay; it does not authenticate source bytes,
 recognize Token versus Trivia or validate generic CV metadata. No required Token
 field or dependency was added.
 
-Initial local range controls pass: eight generic tests and four real JavaScript
+Initial local range controls pass: twelve generic tests and four real JavaScript
 tests, including all14 ECMAScript editions and nested template/regex/division
 modes. Existing lexer132 and JavaScript lexer25 tests plus both strict all-target
-Clippy checks pass. Broad consumer/Miri/native CI/security/merge acceptance remain
-pending. These are local results, not accepted delivery.
+Clippy checks pass. Independent security passed exact lexical candidate `aabf8c847d`, including
+1,555 independently checked coordinate strings, hostile usize offsets and
+capacity boundaries. A subsequent spec-first two-helper Windows emitted-C
+validation repair still needs final-head review: its six original failures are
+now green in the full C package (80 tests), with unchanged runtime equivalence.
+The initial broad run is not accepted: a concurrent shared-target lexer rebuild
+invalidated its remaining rustdoc dependencies (E0460/E0463). Preserve the failed
+logs; rerun the complete frozen batch sequentially. Broad consumer/Miri/native
+CI/final-head security/merge acceptance remain pending. These are local results, not accepted delivery.
 
 The real ES2025 grammar rejects bare U+2028/U+2029 between tokens (`a<LS>b`,
 `a<PS>b`), although coordinate capture handles all four ECMAScript terminators in
