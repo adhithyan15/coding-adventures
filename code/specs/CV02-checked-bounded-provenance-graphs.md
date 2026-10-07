@@ -401,6 +401,62 @@ acceptance.
 
 ## Required verification
 
+### Filesystem access-control refinement
+
+Native Windows probes at published `90010c29de` found two access-control
+failures despite successful ordinary tests: replacing a protected owner-only
+output inherited BUILTIN Users read access, and both staging directory and
+prepared file inherited Users read access before installation. Independent
+probes reproduced both. Rust `Permissions` does not establish Windows DACL
+preservation. The published PR remains draft until this refinement is implemented
+and reviewed; its existing CI cannot accept these unresolved findings.
+
+Create Windows staging directories and files atomically with a protected
+current-user-only discretionary ACL. Keep each prepared file private throughout
+preparation. Directory restrictions alone do not establish file privacy under
+Windows traversal-bypass semantics. Preserve exclusive creation and held-object
+identity checks; do not add a production failure-injection switch or dependency.
+
+Capture the existing file's owner, group and discretionary ACL, including its
+inheritance protection, from a held handle before staging. Recheck that policy
+alongside identity/length/mtime at operation boundaries: an ACL change need not
+alter those metadata fields. Preserve the supported policy exactly or reject it
+before modifying originals. An initial implementation may reject non-current
+owners or policies it cannot faithfully apply; it must not broaden access or
+silently substitute readonly state. Define new destinations' intended policy
+from their actual destination parent and creator, rather than inheriting the
+private staging parent's policy accidentally.
+
+Transition each candidate to its intended final policy during installation,
+after its no-clobber destination link exists and before complete-set commit.
+Use filesystem `SetSecurityInfo`, with the required access rights, then verify
+the applied owner/group/DACL/protection on the held object. Account for parent
+inheritance explicitly, including reopening and identity-verifying the installed
+path when necessary. Setter/verification errors use the existing rollback path;
+the original inode and its original policy remain recoverable. Granting intended
+readers access after per-file installation fits the existing multi-file visibility
+contract. Bound native descriptor, token, ACL and encoded-path buffers and retry
+counts before growing caller-owned storage; reject unsupported states rather
+than using an unverified fallback.
+
+Unix mode bits alone also do not establish ownership or extended-ACL
+preservation. State native Linux/macOS support separately, check owner/group and
+extended/default ACL policy, and faithfully preserve it or reject unsupported
+policy before modifying outputs. Do not treat all `cfg(unix)` targets as proven.
+Full security-descriptor preservation, including audit SACLs, integrity labels
+and claims, is outside an owner/group/DACL claim and remains unproven unless
+separately specified and tested. Do not represent the narrower policy check as
+complete filesystem-security preservation.
+
+Native regressions must first reproduce protected-output access broadening and
+prepared-file inherited grants. Verify atomically private stage files, existing
+protected and unprotected/inherited policies, intended new-file policy, policy
+changes which preserve id/length/mtime, setter/verification failures, rollback
+and cleanup, and bounded/unsupported-policy rejection. Confirm actual ACLs and
+readability without claiming a different-account test from a same-owner process.
+Require native Linux/macOS copy-or-reject cases and another exact-head independent
+security review before publishing the repaired head or accepting native CI.
+
 Commit specification refinements before implementation, then demonstrate the
 current reproductions failing meaningful acceptance tests before repair.
 Exercise compact and legacy contracts, enabled/disabled allocations, full/partial
