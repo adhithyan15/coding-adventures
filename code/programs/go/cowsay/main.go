@@ -112,11 +112,94 @@ func formatBubble(lines []string, isThink bool) string {
 	return strings.Join(result, "\n")
 }
 
-func loadCow(cowName string, root string) string {
-	cowPath := filepath.Join(root, "code", "specs", "cows", cowName+".cow")
-	if _, err := os.Stat(cowPath); os.IsNotExist(err) {
-		cowPath = filepath.Join(root, "code", "specs", "cows", "default.cow")
+// ─── Choosing a cow file safely ─────────────────────────────────────────────
+//
+// `-f NAME` / `--file NAME` picks which cow to draw. The name is glued into a
+// path — `<cows dir>/NAME.cow` — so it is untrusted input that decides which
+// file this program opens and echoes to stdout. Left unchecked, a name can walk
+// out of the cows directory (issue #12169):
+//
+//	name given                    path actually opened
+//	───────────────────────────── ────────────────────────────────────
+//	tux                           code/specs/cows/tux.cow     (fine)
+//	../../../../home/me/notes     /home/me/notes.cow          (escape)
+//	C:\Users\me\x                 C:\Users\me\x.cow           (Windows)
+//
+// The forced `.cow` suffix limits what can be read, and a local CLI already
+// runs with its caller's privileges — but a wrapper script, web service or CI
+// job that forwards someone else's string to `cowsay -f` would hand that
+// someone a file-read primitive. So we defend in two layers, mirroring the
+// C#, F#, Java, Kotlin, Perl, Haskell, Dart, Lua and Swift ports:
+//
+//  1. Syntactic check (isSafeCowName). A cow name is a bare file stem, so
+//     anything that could mean "some other directory" is refused: the path
+//     separators `/` and `\`, parent steps `..`, `:` (Windows drive letters
+//     and alternate data streams), NUL (C APIs stop reading at it, so the OS
+//     would see a different name from the one we checked) and the empty
+//     string. An absolute path always contains `/`, `\` or `:`, so it falls
+//     to the same rule.
+//  2. Containment check (resolveCowPath). After joining, both the cows
+//     directory and the candidate are canonicalized with EvalSymlinks and the
+//     candidate must still sit inside the cows directory. This catches what
+//     string inspection cannot see — e.g. a symlink planted in the cows
+//     directory that points somewhere else.
+//
+// A name failing either layer is treated exactly like a cow that does not
+// exist: we quietly draw default.cow, matching every other port and cowsay's
+// long-standing "unknown cow → default cow" behaviour. Nothing is URL-decoded:
+// `%2F` is three literal characters to the operating system, never a slash.
+
+// isSafeCowName reports whether cowName is a bare file stem that cannot name
+// another directory.
+func isSafeCowName(cowName string) bool {
+	return cowName != "" &&
+		!strings.Contains(cowName, "..") &&
+		!strings.ContainsAny(cowName, "/\\:\x00")
+}
+
+// resolveCowPath maps cowName to a .cow file inside cowsDir, falling back to
+// cowsDir/default.cow when the name is unsafe, missing, or escapes cowsDir.
+func resolveCowPath(cowName string, cowsDir string) string {
+	defaultPath := filepath.Join(cowsDir, "default.cow")
+	if !isSafeCowName(cowName) {
+		return defaultPath
 	}
+
+	// EvalSymlinks fails for a file that does not exist — the "unknown cow"
+	// case — so every error below simply means "use the default".
+	root, err := filepath.EvalSymlinks(cowsDir)
+	if err != nil {
+		return defaultPath
+	}
+	root, err = filepath.Abs(root)
+	if err != nil {
+		return defaultPath
+	}
+	resolved, err := filepath.EvalSymlinks(filepath.Join(cowsDir, cowName+".cow"))
+	if err != nil {
+		return defaultPath
+	}
+	resolved, err = filepath.Abs(resolved)
+	if err != nil {
+		return defaultPath
+	}
+
+	// filepath.Rel yields a path beginning with ".." exactly when resolved lies
+	// outside root; it also errors across Windows volumes (C: vs D:).
+	rel, err := filepath.Rel(root, resolved)
+	if err != nil || rel == ".." || strings.HasPrefix(rel, ".."+string(filepath.Separator)) {
+		return defaultPath
+	}
+	if info, err := os.Stat(resolved); err != nil || !info.Mode().IsRegular() {
+		return defaultPath
+	}
+	return resolved
+}
+
+// loadCow reads the named cow from cowsDir and returns the art between the
+// `<<EOC;` heredoc markers (or the whole file if there are none).
+func loadCow(cowName string, cowsDir string) string {
+	cowPath := resolveCowPath(cowName, cowsDir)
 
 	content, err := os.ReadFile(cowPath)
 	if err != nil {
@@ -294,7 +377,7 @@ func handleParseResult(r *clibuilder.ParseResult, root string) {
 	if cf, ok := flags["cowfile"].(string); ok {
 		cowfile = cf
 	}
-	cowTemplate := loadCow(cowfile, root)
+	cowTemplate := loadCow(cowfile, filepath.Join(root, "code", "specs", "cows"))
 
 	// Replace placeholders
 	cow := strings.ReplaceAll(cowTemplate, "$eyes", eyes)
