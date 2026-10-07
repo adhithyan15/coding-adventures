@@ -1,0 +1,19 @@
+# Perl 5.003_12 (1996-12-19) tokens: plain-decimal arithmetic-print subset.
+# @version 1
+# PARTIAL: this does not lex all Perl 5.003_12 source.
+# Evidence: https://github.com/Perl/perl5/blob/perl-5.003_12/toke.c
+# Only the listed print/arithmetic spellings are accepted. Multi-digit
+# leading-zero forms remain refused rather than interpreted as decimal.
+
+PRINT     = "print"
+INT       = /0|[1-9][0-9]*/
+PLUS      = "+"
+DECREMENT = "--"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\r\n]+/
