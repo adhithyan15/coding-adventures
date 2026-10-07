@@ -60,7 +60,7 @@ def _tuple(value: Any, size: int, where: str) -> tuple[float, ...]:
 def _expected(value: Any, answer: tuple[float, ...], where: str) -> None:
     published = _tuple(value, len(answer), where)
     if any(
-        not math.isclose(got, want, rel_tol=1e-12, abs_tol=ORACLE_TOLERANCE)
+        not math.isclose(got, want, rel_tol=0.0, abs_tol=ORACLE_TOLERANCE)
         for got, want in zip(published, answer, strict=True)
     ):
         raise ValueError(f"{where} differs from independently computed expected result")
@@ -74,14 +74,23 @@ def _validate_case(case: Any) -> str:
         raise ValueError("case id must be canonical lowercase hyphenated text")
     operation = case.get("operation")
     if operation == "point-normalize":
-        _fields(case, {"id", "operation", "point", "expected"}, case_id)
+        _fields(case, {"id", "operation", "point", "expected", "comparison"}, case_id)
         x, y = _tuple(case["point"], 2, f"{case_id}.point")
         magnitude = math.hypot(x, y)
         if magnitude < 1e-12:
             answer = (0.0, 0.0)
         else:
             answer = (x / magnitude, y / magnitude)
-        _expected(case["expected"], answer, f"{case_id}.expected")
+        comparison = "exact" if answer == (0.0, 0.0) else "absolute"
+        if case["comparison"] != comparison:
+            raise ValueError(
+                f"{case_id}.comparison must pin {comparison} output equality"
+            )
+        if comparison == "exact":
+            if _tuple(case["expected"], 2, f"{case_id}.expected") != answer:
+                raise ValueError(f"{case_id}.expected must equal the exact origin")
+        else:
+            _expected(case["expected"], answer, f"{case_id}.expected")
     elif operation == "svg-arc-degenerate":
         _fields(
             case,

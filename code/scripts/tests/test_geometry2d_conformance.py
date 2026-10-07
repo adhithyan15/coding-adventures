@@ -7,8 +7,9 @@ import importlib.util
 import json
 import pathlib
 import unittest
+from typing import Any, Callable
 
-from jsonschema import Draft202012Validator
+from jsonschema import Draft202012Validator  # type: ignore[import-untyped]
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
 SCRIPT = ROOT / "code" / "scripts" / "geometry2d_conformance.py"
@@ -62,6 +63,18 @@ class Geometry2DConformanceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "expected"):
             MODULE.validate_document(changed)
         changed = copy.deepcopy(self.document)
+        changed["cases"][1]["comparison"] = "absolute"
+        with self.assertRaisesRegex(ValueError, "comparison"):
+            MODULE.validate_document(changed)
+        changed = copy.deepcopy(self.document)
+        changed["cases"][1]["expected"] = [5e-16, 0]
+        with self.assertRaisesRegex(ValueError, "exact origin"):
+            MODULE.validate_document(changed)
+        changed = copy.deepcopy(self.document)
+        changed["cases"][4]["expected_bounds"][2] = 2.0000000000015
+        with self.assertRaisesRegex(ValueError, "expected"):
+            MODULE.validate_document(changed)
+        changed = copy.deepcopy(self.document)
         changed["cases"][4]["expected_bounds"] = [3, 4, -2, -2]
         with self.assertRaisesRegex(ValueError, "expected"):
             MODULE.validate_document(changed)
@@ -75,9 +88,17 @@ class Geometry2DConformanceTests(unittest.TestCase):
         changed["cases"][4]["rx"] = 1
         with self.assertRaisesRegex(ValueError, "not degenerate"):
             MODULE.validate_document(changed)
+        changed = copy.deepcopy(self.document)
+        changed["cases"][4]["rx"] = 1e-10
+        with self.assertRaisesRegex(ValueError, "not degenerate"):
+            MODULE.validate_document(changed)
+        changed = copy.deepcopy(self.document)
+        changed["cases"][6]["to"] = [1e-10, 0]
+        with self.assertRaisesRegex(ValueError, "not degenerate"):
+            MODULE.validate_document(changed)
 
     def test_shape_and_semantic_boundaries_rejected(self) -> None:
-        edits = [
+        edits: list[tuple[Callable[[dict[str, Any]], None], str]] = [
             (lambda d: d.update(version=2), "version"),
             (lambda d: d.update(cases=[]), "cases"),
             (lambda d: d["cases"][0].update(id="Bad_ID"), "case id"),
