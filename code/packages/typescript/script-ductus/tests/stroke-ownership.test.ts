@@ -555,12 +555,27 @@ describe("stroke ownership migration baseline", () => {
       // 604 -> 622 with a new `latin: 18` count, and the ordered key hash and
       // the non-Tamil data hash move, measured after the last caption was
       // settled; Tamil and both shared-identity values remain unchanged.
+      //
+      // The one-storey a batch moves the Latin outline to LatinPrint-Subset.ttf
+      // (a renamed subset of SIL's literacy typeface Andika, whose a is the
+      // one-storey a every source teaches), refits all 18 Latin paths to it,
+      // and appends 13 glyphs to the Latin owner: a d p q t y H (Grundschrift)
+      // and the precomposed á é í ó ú ü (UJIpenchars2 for the mark). Keys move
+      // 622 -> 635 with `latin: 31`; the ordered key hash and the non-Tamil
+      // data hash move; Tamil and both shared-identity values stay.
+      //
+      // The ā sign (ा) joins the Devanagari owner, before ु in the signs: the
+      // stem, then the piece of headline Noto prints on it (HP Labs India's
+      // LipiTk class 47 for the strokes; the cited आ for its place in a
+      // word). Keys move 635 -> 636 with `devanagari: 53`; the ordered key
+      // hash and the non-Tamil data hash move; Tamil and both shared-identity
+      // values stay.
     }).toEqual({
-      keys: 622,
+      keys: 636,
       keyHash:
-        "932bf4e24bcd0dfc482295e3712b865afdef61b8b85a3ce1140447a10caba106",
+        "e52c9816c055a36748539ab5cef8fff66e84864940ff302d08489af05317eb28",
       nonTamilDataHash:
-        "a45dfceb8aa014d8d918fa5e307be2033d1e583868e07fcd656f30579e99f9a3",
+        "2aa2d54472b3ebe37be571366646460e5f55a3dfe6f21bf3c181fc79b1fcc626",
       sharedIdentityGroups: 17,
       sharedIdentityHash:
         "59b284847b09cda1297d9cabb3ba4886172bace6323dc93db8d58c9ee5bbf454",
@@ -569,13 +584,13 @@ describe("stroke ownership migration baseline", () => {
         bengali: 9,
         chinese: 60,
         cyrillic: 33,
-        devanagari: 52,
+        devanagari: 53,
         gujarati: 55,
         gurmukhi: 27,
         hebrew: 22,
         japanese: 83,
         kannada: 44,
-        latin: 18,
+        latin: 31,
         malayalam: 53,
         "perso-arabic": 24,
         tamil: 36,

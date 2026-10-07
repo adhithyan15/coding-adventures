@@ -231,6 +231,63 @@ describe("the printed sequence strip", () => {
   });
 });
 
+describe("a Devanagari phrase: a strip of words", () => {
+  // मम नाम is two words, each one composed ledger entry with its own headline.
+  // Only the caller knows a phrase from a list, so it says "Word".
+  const word = (glyph: string) =>
+    entry(glyph, {
+      script: "devanagari",
+      font: "_fonts/NotoSansDevanagari-Static.ttf",
+      source: { citation: `the letters of ${glyph}`, url: "https://example.org/words" },
+    });
+  const words = [word("मम"), word("नाम")];
+
+  it("labels, heads, credits and describes its groups as words, each with its own headline", () => {
+    const figure = renderScriptSequenceFilmstripFigure("SA-W1", "मम नाम", words, "Word");
+    expect(texts(figure.svg, 15)).toEqual(["How it is written — 2 words, one after another"]);
+    expect(texts(figure.svg, 12)).toEqual(["Word 1 of 2 — 2 strokes", "Word 2 of 2 — 2 strokes"]);
+    expect(figure.svg).toContain("Word 1: stroke order after the letters of मम");
+    expect(figure.svg).toContain("Word 2: stroke order after the letters of नाम");
+    expect(figure.svg).toContain('aria-label="How to write मम नाम: 2 words, मम, नाम, one after another"');
+    expect(figure.svg).toMatch(
+      /<desc>2 words written one after another: मम, नाम \(devanagari\)\. Each word is drawn as its letters&apos; bodies in reading order, then one headline over that word; the space between words breaks the headline\. Each word has its own group of frames/,
+    );
+    expect(figure.svg).not.toMatch(/Letter|Part/);
+  });
+
+  it("is told it is a phrase, never guesses it, and hashes the unit only for words", () => {
+    // Without the caller's word the same entries are letters, as before.
+    expect(texts(renderScriptSequenceFilmstripFigure("SA-W1", "मम नाम", words).svg, 12)[0]).toBe(
+      "Letter 1 of 2 — 2 strokes",
+    );
+    expect(JSON.parse(scriptSequenceFilmstripFigureSource("SA-W1", "मम नाम", words, "Word")).unit).toBe("Word");
+    expect(JSON.parse(scriptSequenceFilmstripFigureSource("SA-W1", "मम नाम", words, "Letter")).unit).toBeUndefined();
+    expect(renderScriptSequenceFilmstripFigure("SA-W1", "मम नाम", words, "Word").sourceHash).not.toBe(
+      renderScriptSequenceFilmstripFigure("SA-W1", "मम नाम", words).sourceHash,
+    );
+  });
+
+  it("renders a shared-headline target with letters as a strip of words", () => {
+    const lesson = { realization: { lessonId: "SA-W1" } } as unknown as ParsedLesson;
+    const target: ScriptFilmstripTarget = {
+      kind: "script-filmstrip",
+      lessonId: "SA-W1",
+      script: "devanagari",
+      glyph: "मम नाम",
+      letters: ["मम", "नाम"],
+      composition: "shared-headline",
+      output: "sanskrit/book/figures/SA-W1-filmstrip.svg",
+    };
+    const filmstrips = new Map([
+      ["devanagari:मम", words[0]!],
+      ["devanagari:नाम", words[1]!],
+    ]);
+    const figure = renderFigure(target, lesson, { filmstrips });
+    expect(texts(figure.svg, 12)).toEqual(["Word 1 of 2 — 2 strokes", "Word 2 of 2 — 2 strokes"]);
+    expect(() => assertKnownFigureTarget(target)).not.toThrow();
+  });
+});
+
 describe("rendering a sequence target", () => {
   const lesson = { realization: { lessonId: "TA-W1" } } as unknown as ParsedLesson;
   const target: ScriptFilmstripTarget = {

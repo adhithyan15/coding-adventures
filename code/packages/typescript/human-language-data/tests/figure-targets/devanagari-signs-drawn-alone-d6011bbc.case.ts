@@ -4,9 +4,12 @@
 // time, with no consonant and no headline, so it says how the sign is drawn
 // but not when it is drawn against its consonant or the shared headline.
 // So Devanagari has no row in the composer's written-order table: a sign on a
-// consonant ("कि", "कु") and every word with a sign stay undrawn, and the
-// mark records claim no written order beyond the nukta's existing
-// carrier-first convention.
+// consonant ("कि", "कु") is never drawn letter by letter, and the mark records
+// claim no written order beyond the nukta's existing carrier-first convention
+// and ā's. ā's place (after its consonant's body, before the headline) is
+// cited to the cited आ, which draws the same bar that way; it is used only
+// inside a word composed with one shared headline (devanagari-words-share-
+// one-headline).
 import { describe, expect, it } from "vitest";
 import {
   filmstripCandidates,
@@ -22,8 +25,8 @@ import { lesson } from "./fixture.js";
 
 const LIPITK = "https://lipitk.sourceforge.net/lipi-reco.htm";
 const hindi = (id: string, headword: string) => lesson(id, { language: "hindi", headword });
-/** The eight signs that carry a cited ductus, plus two letters. */
-const CITED = new Set(["ु", "ू", "े", "ं", "़", "्", "ृ", "ँ", "क", "म"]);
+/** The nine signs that carry a cited ductus, plus two letters. */
+const CITED = new Set(["ा", "ु", "ू", "े", "ं", "़", "्", "ृ", "ँ", "क", "म"]);
 const hasDuctus = (script: string, glyph: string) => script === "devanagari" && CITED.has(glyph);
 
 describe("Devanagari signs drawn alone", () => {
@@ -36,7 +39,7 @@ describe("Devanagari signs drawn alone", () => {
   });
 
   it("takes a sign taught alone as one glyph, never as a sequence", () => {
-    for (const sign of ["ु", "ू", "े", "ं", "़", "्", "ृ", "ँ"]) {
+    for (const sign of ["ा", "ु", "ू", "े", "ं", "़", "्", "ृ", "ँ"]) {
       expect(writingSequenceOf(hindi("HI-1", sign), "devanagari"), sign).toBeUndefined();
       expect(writingLetterOf(hindi("HI-1", sign)), sign).toBe(sign);
     }
@@ -62,20 +65,33 @@ describe("Devanagari signs drawn alone", () => {
     ]);
   });
 
-  it("cites a ductus on exactly the eight signs, and no written order for them", () => {
+  it("cites a ductus on exactly the nine signs, and a place only for ā and the nukta", () => {
     const script = loadScripts(defaultCurriculumRoot()).devanagari!;
     const cited = (script.marks ?? []).filter((mark) => mark.strokeOrderSource !== undefined);
-    expect(cited.map((mark) => mark.mark)).toEqual(["ु", "ू", "े", "ं", "़", "्", "ृ", "ँ"]);
+    expect(cited.map((mark) => mark.mark)).toEqual(["ा", "ु", "ू", "े", "ं", "़", "्", "ृ", "ँ"]);
     for (const mark of cited) {
       expect(mark.strokeOrderSource?.url, mark.mark).toBe(LIPITK);
       expect(mark.strokeOrderSource?.variation, mark.mark).toMatch(
-        /written by itself, with no consonant beside it.*composes no Devanagari word from it/,
+        mark.mark === "ा"
+          ? /written by itself, with no consonant beside it.*that place is cited separately \(compositionSource\), and it is the one Devanagari sign a composed word may hold/
+          : /written by itself, with no consonant beside it.*composes no Devanagari word from it/,
       );
     }
-    // Only the nukta carries a written order, and it is the carrier-first
-    // convention cited to Unicode before this change, not to the traces.
+    // The nukta carries the carrier-first convention cited to Unicode before
+    // the traces were; ā carries its place after its consonant's body and
+    // before the headline, cited to the cited आ, at medium confidence.
     const ordered = (script.marks ?? []).filter((mark) => mark.compositionOrder !== undefined);
-    expect(ordered.map((mark) => mark.mark)).toEqual(["़"]);
-    expect(ordered[0]!.compositionSource?.url).toMatch(/^https:\/\/www\.unicode\.org\//);
+    expect(ordered.map((mark) => mark.mark)).toEqual(["ा", "़"]);
+    const [aa, nukta] = ordered;
+    expect(aa!.compositionSource?.url).toBe(
+      "https://commons.wikimedia.org/wiki/File:Devanagari_%E0%A4%86_stroke_order.svg",
+    );
+    expect(aa!.compositionSource?.variation).toContain("at medium confidence");
+    expect(aa!.compositionOrder).toEqual([
+      "write the consonant's body first, without its headline",
+      "draw the ā stem straight down, to the right of the consonant",
+      "draw the headline last, across the consonant and the sign",
+    ]);
+    expect(nukta!.compositionSource?.url).toMatch(/^https:\/\/www\.unicode\.org\//);
   });
 });

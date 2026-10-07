@@ -69,7 +69,11 @@ export interface ScriptFilmstripTarget extends FigureTargetBase {
    * letter's body in reading order, then one headline over the whole word.
    * `glyph` is then the word, and it is one key into the filmstrip ledger,
    * where `script-ductus` composes it from the cited letters and the font.
-   * Never together with `letters`.
+   *
+   * Together with `letters` it is a PHRASE (`headlinePhraseOf`): `letters`
+   * are its words, each one such composed entry (or a one-letter word's own
+   * entry), and the strip prints them word by word, each with its own
+   * headline.
    */
   composition?: "shared-headline";
 }
@@ -319,8 +323,10 @@ export function renderFigure(
       }
       return entry;
     });
-    return target.letters === undefined
-      ? renderScriptFilmstripFigure(target.lessonId, entries[0]!)
+    // A phrase's groups are WORDS, each composed with its own headline.
+    if (target.letters === undefined) return renderScriptFilmstripFigure(target.lessonId, entries[0]!);
+    return target.composition === "shared-headline"
+      ? renderScriptSequenceFilmstripFigure(target.lessonId, target.glyph, entries, "Word")
       : renderScriptSequenceFilmstripFigure(target.lessonId, target.glyph, entries);
   }
   const exhaustive: never = target;

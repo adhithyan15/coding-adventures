@@ -25,12 +25,12 @@ describe("which lessons are filmstrip candidates", () => {
   it("only draws candidates from switched-on tracks, into that track's own book", () => {
     const candidates = filmstripCandidates([
       lesson("TA-S1"),
-      // French stands in for a track that is switched off: every track with
-      // a script of its own is now on, and so are Spanish and German, so a
-      // Latin-script track without a fully cited lesson is the example. (This
-      // was Bengali, then Punjabi, then Spanish, until each one's first cited
-      // letters switched it on.)
-      lesson("FR-S1", { language: "french", headword: "ç" }),
+      // Every track in the corpus is now switched on (the last four, French,
+      // Italian, Portuguese and Latin, joined once the Latin strips moved to
+      // an outline with a one-storey a), so a track the allowlist does not
+      // name stands in for one that is off. (This was Bengali, then Punjabi,
+      // then Spanish, then French, until each one was switched on.)
+      lesson("EL-S1", { language: "greek", headword: "α" }),
     ]);
     expect(candidates).toEqual([
       {
@@ -42,6 +42,6 @@ describe("which lessons are filmstrip candidates", () => {
       },
     ]);
     expect(Object.keys(DERIVED_FILMSTRIP_SCRIPTS)).toContain("tamil");
-    expect(Object.keys(DERIVED_FILMSTRIP_SCRIPTS)).not.toContain("french");
+    expect(Object.keys(DERIVED_FILMSTRIP_SCRIPTS)).not.toContain("greek");
   });
 });
