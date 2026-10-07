@@ -514,6 +514,16 @@ consumer is missing. Respect explicit non-Rust single-language selection, union
 ordinary package edits, retain deleted/renamed source-path triggers, and reject
 near-path matches without a broad force-build fallback.
 
+The first correctly gated Windows run at `0e02820565` failed before tests:
+Rust 1.99's strict Clippy rejected constant-size `chunks_exact(4)` in the native
+SID decoder. Preserve checked descriptor ranges, revision/subauthority bounds,
+little-endian word order and native policy semantics while using statically
+four-byte array chunks. SID lengths are exactly `8 + 4 * subauthority_count`,
+so there is no remainder. Do not suppress the lint or weaken CI. Reproduce the
+strict failure with the CI toolchain, rerun native policy and full compiler
+tests plus strict lint, then require fresh exact-head independent review and
+actual native CI on all three platforms before accepting the repair.
+
 Commit specification refinements before implementation, then demonstrate the
 current reproductions failing meaningful acceptance tests before repair.
 Exercise compact and legacy contracts, enabled/disabled allocations, full/partial
