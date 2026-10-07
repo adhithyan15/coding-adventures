@@ -223,7 +223,43 @@ impl Dialect for CDialect {
                 _ => {}
             }
         }
-        Ok(tokens)
+        // Resolve C's exceptional operator before the generic engine expands
+        // macros. In `defined(NAME)`, NAME is inspected as written, even when
+        // it is itself a macro. The rewrite only shrinks token count and text.
+        let mut prepared = Vec::with_capacity(tokens.len());
+        let mut input = tokens.into_iter();
+        while let Some(mut token) = input.next() {
+            if token.value != "defined" {
+                prepared.push(token);
+                continue;
+            }
+            let Some(next) = input.next() else {
+                return Err(PpError::new("C `defined` requires an identifier"));
+            };
+            let name = if next.value == "(" {
+                let Some(name) = input.next() else {
+                    return Err(PpError::new("C `defined` requires an identifier"));
+                };
+                if input.next().is_none_or(|close| close.value != ")") {
+                    return Err(PpError::new("C `defined` requires a closing `)`"));
+                }
+                name
+            } else {
+                next
+            };
+            if !identifier(&name.value) {
+                return Err(PpError::new("C `defined` requires an identifier"));
+            }
+            token.value = if macros.is_defined(&name.value) {
+                "1"
+            } else {
+                "0"
+            }
+            .to_string();
+            token.type_name = Some("INT_LIT".to_string());
+            prepared.push(token);
+        }
+        Ok(prepared)
     }
 
     fn eval_condition(&self, tokens: &[Token]) -> Result<bool, PpError> {
@@ -336,5 +372,53 @@ mod tests {
         let mut fs = MemoryFs::new();
         let file = fs.insert("<main>", "abcd");
         assert!(dialect.lex("abcd", file).is_err());
+    }
+
+    #[test]
+    fn defined_operands_are_not_macro_expanded() {
+        for condition in ["defined ANSWER", "defined(ANSWER)"] {
+            let source = format!(
+                "#define ANSWER 7\n#if {condition}\nint x = ANSWER;\n#else\nint x = 0;\n#endif\n"
+            );
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+            let values: Vec<_> = result
+                .tokens
+                .iter()
+                .map(|token| token.value.as_str())
+                .collect();
+            assert_eq!(values, ["int", "x", "=", "7", ";"], "{condition}");
+        }
+    }
+
+    #[test]
+    fn undefined_and_malformed_defined_conditions_are_handled() {
+        let source = "#if defined(MISSING)\nint x = 0;\n#else\nint x = 9;\n#endif\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        let values: Vec<_> = result
+            .tokens
+            .iter()
+            .map(|token| token.value.as_str())
+            .collect();
+        assert_eq!(values, ["int", "x", "=", "9", ";"]);
+
+        for expression in ["defined", "defined()", "defined(1)", "defined(X"] {
+            let source = format!("#if {expression}\nint x;\n#endif\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            assert!(
+                preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err(),
+                "{expression}"
+            );
+        }
     }
 }
