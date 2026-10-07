@@ -12,6 +12,9 @@ import com.codingadventures.paintinstructions.paintLine
 import com.codingadventures.paintinstructions.paintPath
 import com.codingadventures.paintinstructions.paintRect
 import org.junit.jupiter.api.Test
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.sign
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
@@ -234,6 +237,129 @@ class PaintVmAsciiTest {
         val s = scene(8, 8, "transparent", listOf(paintLine(0.0, 0.0, 1.0e12, 1.0e12, "#000000", 1.0)))
         val text = okText(render(s, AsciiOptions(8, 8)))
         assertTrue(text.length <= 3, "expected a bounded render, got: $text")
+    }
+
+    // -------------------------------------------------------------------
+    // line — Bresenham regression suite (issue #12093)
+    // -------------------------------------------------------------------
+    //
+    // The diagonal-line loop used to seed its error term with 0 instead of
+    // deltaCol - deltaRow, which made slopes such as (dx=1, dy=3) or
+    // (dx=3, dy=1) overshoot the endpoint and spin forever.
+    //
+    // These tests drive the public render() API with scale 1x1, so one scene
+    // unit is exactly one character cell, then read the drawn cells back out
+    // of the text grid. render() only trims trailing blanks, so the
+    // (row, col) of every non-space character is its true cell coordinate.
+    //
+    // Because a Bresenham walk advances its major axis by exactly one cell
+    // per step, sorting the drawn cells along the major axis in the
+    // direction of travel recovers the walk's order. That lets us check the
+    // path property without reaching into the private loop:
+    //
+    //   * it starts at p0 and ends at p1,
+    //   * it has exactly max(|dx|, |dy|) + 1 cells,
+    //   * consecutive cells differ by exactly 1 on the major axis and by at
+    //     most 1 on the minor axis (an 8-connected path with no gaps or
+    //     doubled-up cells).
+    //
+    // No timeout is used. The fixed loop provably terminates after
+    // max(|dx|, |dy|) + 1 cells (see the invariant in renderLine); a
+    // regression of the seed would hang these tests rather than fail them,
+    // which is still unmistakable in CI.
+
+    private data class GridCell(val row: Int, val col: Int)
+
+    /** Every non-space character in the rendered text, as (row, col). */
+    private fun drawnCells(text: String): List<GridCell> =
+        text.split("\n").flatMapIndexed { row, line ->
+            line.mapIndexedNotNull { col, ch -> if (ch != ' ') GridCell(row, col) else null }
+        }
+
+    /** A 16x16-cell scene holding one line, rendered at one unit per cell. */
+    private fun renderLineCells(row0: Int, col0: Int, row1: Int, col1: Int): String {
+        val line = paintLine(col0.toDouble(), row0.toDouble(), col1.toDouble(), row1.toDouble(), "#000000", 1.0)
+        return okText(render(scene(16, 16, "transparent", listOf(line)), AsciiOptions(1, 1)))
+    }
+
+    /** Render p0 -> p1 and assert the full Bresenham path property. */
+    private fun assertBresenhamPath(row0: Int, col0: Int, row1: Int, col1: Int) {
+        val label = "($row0,$col0) -> ($row1,$col1)"
+        val dRow = row1 - row0
+        val dCol = col1 - col0
+        val colMajor = abs(dCol) >= abs(dRow)
+        val majorSign = if (colMajor) dCol.sign else dRow.sign
+        fun major(c: GridCell) = if (colMajor) c.col else c.row
+        fun minor(c: GridCell) = if (colMajor) c.row else c.col
+
+        val path = drawnCells(renderLineCells(row0, col0, row1, col1)).sortedBy { majorSign * major(it) }
+
+        assertEquals(max(abs(dRow), abs(dCol)) + 1, path.size, "$label cell count, got $path")
+        assertEquals(GridCell(row0, col0), path.first(), "$label start")
+        assertEquals(GridCell(row1, col1), path.last(), "$label end")
+        for ((a, b) in path.zipWithNext()) {
+            assertEquals(abs(majorSign), abs(major(b) - major(a)), "$label major step at $b")
+            assertTrue(abs(minor(b) - minor(a)) <= 1, "$label minor step at $b")
+        }
+    }
+
+    @Test
+    fun `a shallow line (dRow=1, dCol=3) terminates with the exact Bresenham cells`() {
+        assertEquals("──\n  ──", renderLineCells(0, 0, 1, 3))
+        assertBresenhamPath(0, 0, 1, 3)
+    }
+
+    @Test
+    fun `the same shallow line drawn in reverse terminates`() {
+        assertEquals("──\n  ──", renderLineCells(1, 3, 0, 0))
+        assertBresenhamPath(1, 3, 0, 0)
+    }
+
+    @Test
+    fun `a steep line (dx=1, dy=3) terminates with the exact Bresenham cells`() {
+        assertEquals("│\n│\n │\n │", renderLineCells(0, 0, 3, 1))
+        assertBresenhamPath(0, 0, 3, 1)
+    }
+
+    @Test
+    fun `the same steep line drawn in reverse terminates`() {
+        assertEquals("│\n│\n │\n │", renderLineCells(3, 1, 0, 0))
+        assertBresenhamPath(3, 1, 0, 0)
+    }
+
+    @Test
+    fun `covers all eight octants from a central point`() {
+        val deltas = listOf(2 to 5, 5 to 2, 5 to -2, 2 to -5, -2 to -5, -5 to -2, -5 to 2, -2 to 5)
+        for ((dRow, dCol) in deltas) {
+            assertBresenhamPath(7, 7, 7 + dRow, 7 + dCol)
+        }
+    }
+
+    @Test
+    fun `covers the four 45-degree diagonals`() {
+        assertBresenhamPath(7, 7, 11, 11)
+        assertBresenhamPath(7, 7, 11, 3)
+        assertBresenhamPath(7, 7, 3, 3)
+        assertBresenhamPath(7, 7, 3, 11)
+    }
+
+    @Test
+    fun `horizontal, vertical and single-point lines keep the path property`() {
+        assertBresenhamPath(4, 2, 4, 12)
+        assertBresenhamPath(4, 12, 4, 2)
+        assertBresenhamPath(2, 4, 12, 4)
+        assertBresenhamPath(12, 4, 2, 4)
+        assertBresenhamPath(5, 5, 5, 5)
+        assertEquals("     ─", renderLineCells(0, 5, 0, 5))
+    }
+
+    @Test
+    fun `every endpoint within 6 cells of the centre yields a valid path`() {
+        for (dRow in -6..6) {
+            for (dCol in -6..6) {
+                assertBresenhamPath(7, 7, 7 + dRow, 7 + dCol)
+            }
+        }
     }
 
     // -------------------------------------------------------------------
