@@ -1316,7 +1316,9 @@ backend immediately) come before the enabler-dependent items.
   built-in `entier(sign(runtime-real))` retains the proof because `entier`
   receives an already integral `-1`, `0`, or `1`; unrestricted runtime
   `entier` remains conservative. Unary `+` and `-` around the built-in `sign`
-  result preserve the same bound.
+  result preserve the same bound. Built-in integer `abs` may map that bounded
+  result to exact `0` or `1` before `entier`; user-declared overrides remain
+  conservative.
   Provenance-backed local and other real-name branches remain conservative
   across selector calls. Unary plus
   and unary minus preserve the same runtime-real proof. Additive composition,

@@ -221,6 +221,8 @@ widened through an ordinary real assignment or direct real name formal.
 `entier(sign(runtime-real))` retains that proof because `entier` receives an
 already integral `-1`, `0`, or `1`; unrestricted runtime `entier` remains gated.
 Unary `+` and `-` around the built-in `sign` result preserve the same bound.
+Built-in integer `abs` may also map that bounded result to exact `0` or `1`
+before `entier`; a user-declared `abs` remains conservative.
 One-sided reassignment remains conservative. `for` loops preserve
 runtime-real provenance for caller-frame locals whose values their bodies leave
 invariant; controlled, changed, captured, and name-promoted storage remains

@@ -3900,11 +3900,18 @@ impl Compiler {
             .value
             .clone();
         let target_name = self.resolve_procedure_identity(&source_name);
-        if target_name != "sign" || self.proc_sigs.contains_key(&target_name) {
+        if self.proc_sigs.contains_key(&target_name) {
             return None;
         }
         let actuals = self.standard_fn_actuals(node);
-        (actuals.len() == 1).then_some(actuals[0])
+        if actuals.len() != 1 {
+            return None;
+        }
+        match target_name.as_str() {
+            "sign" => Some(actuals[0]),
+            "abs" => self.builtin_sign_operand(actuals[0]),
+            _ => None,
+        }
     }
 
     fn is_selector_call_safe_runtime_real_value(&self, node: &GrammarASTNode) -> bool {
@@ -13064,6 +13071,36 @@ mod tests {
             "test",
         )
         .expect_err("a signed custom sign call has no built-in bounded-result proof");
+        assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_abs_entier_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(abs(sign(pick()))); output(x) end",
+            "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier(abs(-sign(pick()))))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "built-in abs preserves the bounded sign result through entier for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_abs_entier_sign_widening_rejects_abs_overrides() {
+        let err = compile_source(
+            "begin real procedure pick; pick := -2.25; integer procedure abs(x); value x; integer x; abs := x; real result; result := entier(abs(sign(pick()))); output(result) end",
+            "test",
+        )
+        .expect_err("a custom abs call has no built-in bounded-result proof");
         assert!(format!("{err:?}").contains("cannot print a real value"));
     }
 
