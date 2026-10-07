@@ -1312,7 +1312,10 @@ backend immediately) come before the enabler-dependent items.
   name formal. Built-in `sign` also preserves the proof for a selector-safe
   runtime-real operand because its result is always `-1`, `0`, or `1`; the
   same bounded result preserves formatter provenance when widened through an
-  ordinary real assignment or direct real name formal.
+  ordinary real assignment or direct real name formal. A directly nested
+  built-in `entier(sign(runtime-real))` retains the proof because `entier`
+  receives an already integral `-1`, `0`, or `1`; unrestricted runtime
+  `entier` remains conservative.
   Provenance-backed local and other real-name branches remain conservative
   across selector calls. Unary plus
   and unary minus preserve the same runtime-real proof. Additive composition,

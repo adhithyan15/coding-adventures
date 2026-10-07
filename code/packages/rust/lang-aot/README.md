@@ -21,6 +21,8 @@ Built-in `sign` also preserves the proof for a selector-safe runtime-real
 operand because its result is always `-1`, `0`, or `1`.
 The same bounded result preserves runtime-real formatter provenance when it is
 widened through an ordinary real assignment or direct real name formal.
+`entier(sign(runtime-real))` retains that proof because `entier` receives an
+already integral `-1`, `0`, or `1`; unrestricted runtime `entier` remains gated.
 One-sided reassignment remains gated. Unary signs, additive
 composition, multiplication, division, and exponentiation over proven
 runtime-real or finite static operands preserve runtime-real provenance. The

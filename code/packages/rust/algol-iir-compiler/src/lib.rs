@@ -3874,6 +3874,33 @@ impl Compiler {
         children.len() == 1 && self.is_selector_call_safe_real_procedure_result(children[0])
     }
 
+    fn builtin_sign_operand<'n>(
+        &self,
+        node: &'n GrammarASTNode,
+    ) -> Option<&'n GrammarASTNode> {
+        if let Some(child) = single_parenthesized_child(node) {
+            return self.builtin_sign_operand(child);
+        }
+        if node.rule_name != "proc_call" {
+            let children = direct_nodes(node);
+            if direct_tokens(node).is_empty() && children.len() == 1 {
+                return self.builtin_sign_operand(children[0]);
+            }
+            return None;
+        }
+        let source_name = direct_tokens(node)
+            .into_iter()
+            .find(|token| token.effective_type_name() == "NAME")?
+            .value
+            .clone();
+        let target_name = self.resolve_procedure_identity(&source_name);
+        if target_name != "sign" || self.proc_sigs.contains_key(&target_name) {
+            return None;
+        }
+        let actuals = self.standard_fn_actuals(node);
+        (actuals.len() == 1).then_some(actuals[0])
+    }
+
     fn is_selector_call_safe_runtime_real_value(&self, node: &GrammarASTNode) -> bool {
         if self.is_selector_call_safe_real_procedure_result(node) {
             return true;
@@ -3980,6 +4007,18 @@ impl Compiler {
                 if !self.proc_sigs.contains_key(&target_name)
                     && matches!(target_name.as_str(), "sign" | "entier")
                 {
+                    if target_name == "entier" {
+                        let actuals = self.standard_fn_actuals(node);
+                        if actuals.len() == 1
+                            && self
+                                .builtin_sign_operand(actuals[0])
+                                .is_some_and(|operand| {
+                                    self.is_selector_call_safe_runtime_real_value(operand)
+                                })
+                        {
+                            return true;
+                        }
+                    }
                     let mut dependencies = HashSet::new();
                     collect_expression_dependency_names(node, "", &mut dependencies);
                     return dependencies.is_empty()
@@ -4035,6 +4074,15 @@ impl Compiler {
                     let actuals = self.standard_fn_actuals(node);
                     return actuals.len() == 1
                         && self.is_runtime_real_assignment_value(actuals[0]);
+                }
+                if !self.proc_sigs.contains_key(&target_name) && target_name == "entier" {
+                    let actuals = self.standard_fn_actuals(node);
+                    return actuals.len() == 1
+                        && self
+                            .builtin_sign_operand(actuals[0])
+                            .is_some_and(|operand| {
+                                self.is_runtime_real_assignment_value(operand)
+                            });
                 }
             }
         }
@@ -12949,6 +12997,38 @@ mod tests {
         )
         .expect_err("a user-declared sign override has no built-in bounded-result proof");
         assert!(format!("{err:?}").contains("cannot print a real value"));
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_bounded_entier_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(sign(pick())); output(x) end",
+            "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier(sign(pick())))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "entier of built-in runtime sign must preserve exact widening for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_bounded_entier_sign_widening_requires_both_builtins() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; integer procedure sign(x); value x; real x; sign := 1; real result; result := entier(sign(pick())); output(result) end",
+            "begin real procedure pick; pick := -2.25; integer procedure entier(x); value x; integer x; entier := x; real result; result := entier(sign(pick())); output(result) end",
+        ] {
+            let err = compile_source(source, "test")
+                .expect_err("custom integer procedures have no built-in bounded-result proof");
+            assert!(format!("{err:?}").contains("cannot print a real value"));
+        }
     }
 
     #[test]
