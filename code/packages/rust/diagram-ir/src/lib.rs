@@ -1831,7 +1831,7 @@ pub struct LayoutedCynefinItem { pub label: String, pub x: f64, pub y: f64, pub 
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedCynefinDomain { pub name: String, pub items: Vec<String>, pub item_badges: Vec<LayoutedCynefinItem>, pub overflow_count: usize, pub x: f64, pub y: f64, pub width: f64, pub height: f64, pub center: Point, pub label_position: Point, pub model_position: Option<Point>, pub practice_position: Option<Point>, pub confusion: bool }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedCynefinTransition { pub from: Point, pub control: Point, pub to: Point, pub label: Option<String> }
+pub struct LayoutedCynefinTransition { pub from: Point, pub control: Point, pub to: Point, pub label: Option<String>, pub label_position: Option<Point>, pub arrowhead: [Point; 3] }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedCynefinBoundary { pub start: Point, pub segments: Vec<CubicCurveSegment> }
 #[derive(Clone, Debug, PartialEq)]

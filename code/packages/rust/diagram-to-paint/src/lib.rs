@@ -1166,10 +1166,16 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
             PathCommand::QuadTo { cx: transition.control.x, cy: transition.control.y, x: transition.to.x, y: transition.to.y },
         ], fill: None, fill_rule: None, stroke: Some(diagram.style.arrow_color.clone()), stroke_width: Some(diagram.style.arrow_width),
             stroke_cap: Some(StrokeCap::Round), stroke_join: Some(StrokeJoin::Round), stroke_dash: None, stroke_dash_offset: None }));
-        instructions.push(PaintInstruction::Path(simple_arrowhead(&transition.control, &transition.to, &diagram.style.arrow_color)));
-        if let Some(label) = &transition.label { text_children.push(text_node(label, transition.control.x - 65.0,
-            transition.control.y - 30.0, 130.0, 24.0, font_with_size(&options.label_font, Some(diagram.style.item_font_size - 1.0)),
-            css_to_color(&diagram.style.text_color))); }
+        instructions.push(PaintInstruction::Path(PaintPath { base: PaintBase::default(), commands: vec![
+            PathCommand::MoveTo { x: transition.arrowhead[0].x, y: transition.arrowhead[0].y },
+            PathCommand::LineTo { x: transition.arrowhead[1].x, y: transition.arrowhead[1].y },
+            PathCommand::LineTo { x: transition.arrowhead[2].x, y: transition.arrowhead[2].y }, PathCommand::Close,
+        ], fill: Some(diagram.style.arrow_color.clone()), fill_rule: None, stroke: None, stroke_width: None,
+            stroke_cap: None, stroke_join: None, stroke_dash: None, stroke_dash_offset: None }));
+        if let (Some(label), Some(position)) = (&transition.label, &transition.label_position) {
+            text_children.push(text_node(label, position.x - 65.0, position.y - 12.0, 130.0, 24.0,
+                font_with_size(&options.label_font, Some(diagram.style.item_font_size - 1.0)),
+                css_to_color(&diagram.style.text_color))); }
     }
     if let Some(title) = &diagram.title { text_children.push(text_node(title, diagram.title_position.x - (diagram.width - 20.0) / 2.0,
         diagram.title_position.y - 15.0, diagram.width - 20.0, 30.0,
@@ -1186,13 +1192,15 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
                 "chaotic" => (Some("Act -> Sense -> Respond"), "Novel Practices"),
                 _ => (None, "Disorder"),
             };
+            let mut subtitle_font = font_with_size(&options.label_font, Some(diagram.style.item_font_size - 1.0));
+            subtitle_font.italic = true;
             if let (Some(model), Some(position)) = (model, &domain.model_position) { text_children.push(text_node(model,
                 position.x - (domain.width - 24.0) / 2.0, position.y - 10.0,
-                domain.width - 24.0, 20.0, font_with_size(&options.label_font, Some(diagram.style.item_font_size - 1.0)),
+                domain.width - 24.0, 20.0, subtitle_font.clone(),
                 css_to_color(&diagram.style.text_color))); }
             if let Some(position) = &domain.practice_position { text_children.push(text_node(practice,
                     position.x - (domain.width - 24.0) / 2.0, position.y - 10.0,
-                    domain.width - 24.0, 20.0, font_with_size(&options.label_font, Some(diagram.style.item_font_size - 1.0)),
+                    domain.width - 24.0, 20.0, subtitle_font,
                     css_to_color(&diagram.style.text_color))); }
         }
         for badge in &domain.item_badges {
@@ -9387,7 +9395,9 @@ mod tests {
                     label_position: Point { x: 200.0, y: 140.0 }, model_position: None,
                     practice_position: Some(Point { x: 200.0, y: 158.0 }), confusion: true }],
             transitions: vec![diagram_ir::LayoutedCynefinTransition { from: Point { x: 100.0, y: 75.0 },
-                control: Point { x: 145.0, y: 95.0 }, to: Point { x: 200.0, y: 150.0 }, label: None }] };
+                control: Point { x: 145.0, y: 95.0 }, to: Point { x: 200.0, y: 150.0 }, label: Some("Shift".into()),
+                label_position: Some(Point { x: 145.0, y: 89.0 }), arrowhead: [Point { x: 200.6, y: 150.0 },
+                    Point { x: 194.6, y: 153.0 }, Point { x: 194.6, y: 147.0 }] }] };
         let scene = diagram_to_paint_cynefin(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Ellipse(_))));
