@@ -150,42 +150,31 @@ The 19 shared consumers also pass fresh at the unchanged implementation scope:
 2,147 tests across 80 targets, 49 existing ignores and strict lint. All 893 lesson
 shards validate. The repaired full compiler passes 1,064 tests across 178 targets
 with zero ignores and strict all-target lint; final repaired-head review remains pending.
-Current remaining CV02 work: final full-scope exact-head security review and
-actual CI/merge verification. Configuration and diagnostic
-names are specified before their implementation.
-PR [#16905](https://github.com/adhithyan15/coding-adventures/pull/16905) published
-`90010c29de` after the backup/recovery review passed, but subsequent native
-Windows probes and independent confirmation found output DACL broadening and
-prepared-stage inherited read grants. The review is now FAIL and the PR is draft;
-even green CI on that head cannot resolve these findings. Specification
-`e55e070094` precedes the pending access-control repair: atomically private
-staging directories/files, explicit owner/group/DACL/protection capture and
-verification, policy rechecks, final-policy transition during installation,
-supported-policy rejection and native Linux/macOS ACL/ownership tests. This work
-must precede final review, repaired-head publication, native CI and actual merge.
-The local Windows repair now passes both ACL reproductions and all 19 publication
-unit tests, including actual-parent/new-file policy, inherited replacement,
-ACL-only changes, policy failure rollback and orphan-inheritance rejection.
-It uses atomically private objects, separate always-empty policy probes, verified
-handle routes, strict final-policy equality and pre-commit privacy restoration.
-Compiler strict all-target lint passes. An independent follow-up found that an
-OWNER RIGHTS denial could permit retained-handle readback while denying the
-fresh verification open. A committed native red regression reproduces late
-original mutation; the local repair now passes it by proving fresh opens while
-the empty probe has its intended policy. The repaired Windows commit has independent
-scope approval, 20 native publication tests and 1,071 compiler tests across 178
-targets, with no ignores. Linux/macOS UID/GID/mode handling and explicit extended/
-default ACL rejection are implemented locally, with seven native cases each and
-strict cross-checks. Native Unix runtime evidence and complete exact-head
-independent review remain pending; the published draft still contains the known
-defect and cannot be accepted on its older green CI.
-The new native Windows tests first reproduce both policy defects, including all
-four JS/map/manifest/sidecar destinations. Corrected child PowerShell module
-selection is a harness prerequisite, not publication acceptance. Logs distinguish
-the initial module-load errors from the subsequent policy-assertion failures.
-All 896 lesson shards validate. Access-control implementation remains pending;
-do not publish the regression checkpoint until repair and exact-head review pass.
-The foundation and full compiler/provenance goal remain open.
+Current remaining CV02 work: native CI execution and actual merge verification.
+PR [#16905](https://github.com/adhithyan15/coding-adventures/pull/16905) now publishes
+repaired head `3b7928e241`, with full-scope independent security PASS and 1,079
+Windows tests across 180 all-target targets, zero ignores, and strict lint.
+The older `90010c29de` native probes found output DACL broadening and inherited
+stage readers; specification-first repairs create atomically private objects,
+capture/recheck owner/group/DACL/protection, use distinct always-empty policy
+probes and verified handle routes, and restore privacy before rollback. An
+additional OWNER RIGHTS fresh-open regression first reproduced late original
+mutation; the repair proves production fresh opens before changing originals.
+All 20 Windows publication cases pass. Linux/macOS descriptor-bound UID/GID/mode
+preservation and extended/default ACL rejection are implemented, with seven
+native cases each and strict cross-checks. Native Unix runtime is still unproven
+until actual CI executes those cases.
+
+The initial repaired-head CI plan selected Closure on all platforms but left
+`build-windows-os-suites` false, which skips ordinary Windows package tests.
+The gate repair adds the compiler's affected identity and CV02 specification,
+with real-evaluator regressions that first fail both selection clauses and an
+unrelated Rust negative control. Refresh exact-head review and CI after this
+change; require non-skipped compiler test commands and successful native package
+results before accepting the draft. Green job labels or older checks cannot
+substitute for execution evidence. The foundation and full compiler/provenance
+goal remain open; chronology and complete source/node/output coverage are not
+established by this foundation.
 Diagnostic short-circuits (empty-input banner and token-only tree dumps) currently
 return before trace construction. Track their provenance policy with the full
 CLI/diagnostics completion audit; normal compile/export tests do not establish

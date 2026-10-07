@@ -217,6 +217,12 @@ Every gate needs both clauses. Files under `code/specs`, `code/fixtures`,
 is the only thing that can see a fixture or grammar edit. See
 `code/specs/ci-gate-registry.md`.
 
+The `build-windows-os-suites` step gate includes `rust/programs/closurec`
+and its CV02 acceptance specification. Rust toolchain selection alone does not
+run ordinary Windows package tests; this gate makes the compiler's native
+publication/ACL regressions execute for compiler or affected dependency changes.
+Acceptance still requires a non-skipped test step and successful package result.
+
 The shared `discovery/language-registry` case needs an additional, bounded
 package-selection rule: changing its exact JSON file schedules each native
 build-tool test consumer (the two .NET fronts plus Go, Lua, Perl, Python, Ruby,

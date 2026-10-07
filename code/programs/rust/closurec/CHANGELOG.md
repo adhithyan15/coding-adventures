@@ -4,6 +4,15 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - native Windows CI execution gate (CV02)
+
+The repaired-head plan selected the compiler for Windows but left its OS-suite
+gate false, so a green Windows job could skip the native publication/ACL tests.
+Register the compiler's affected identity and CV02 specification with that gate;
+real-registry evaluator regressions first fail both selection clauses and keep
+unrelated Rust changes as a negative control. Native acceptance requires the
+actual compiler test step and package result, not the job label.
+
 ### Added locally - explicit Linux/macOS publication policy support (CV02)
 
 Capture UID/GID/mode from held descriptors and reject foreign output owners.

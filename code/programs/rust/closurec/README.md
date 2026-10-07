@@ -235,7 +235,11 @@ verified handle routes; unsupported or stale inherited policies reject before
 originals change. Pre-commit failure restores candidate privacy before rollback.
 Native Windows regressions cover preparation, protected replacement, inherited
 and new-file policy, ACL-only changes, rejection and rollback. PR #16905 remains
-draft pending complete exact-head independent review and native-platform CI.
+draft pending native-platform CI. Full-scope independent review passed repaired
+head `3b7928e241`; native acceptance must also prove the compiler's test command
+ran. Its first CI plan selected Closure on Windows but left the OS-suite gate
+false, so the gate is now repaired to include the compiler and CV02 specification.
+The updated head requires refreshed review and CI before acceptance.
 Audit SACLs/integrity claims are unproven.
 
 The Linux/macOS implementation supports ordinary owner/group/mode policies.
