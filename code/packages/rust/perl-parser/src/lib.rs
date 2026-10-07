@@ -198,6 +198,7 @@ mod tests {
                     | "5.004_01"
                     | "5.004_01_01"
                     | "5.004_01_02"
+                    | "5.004_01_03"
                     | "5.38.2"
                     | "5.44.0"
                     | "5.45.3"
@@ -246,6 +247,7 @@ mod tests {
                     | "5.004_01"
                     | "5.004_01_01"
                     | "5.004_01_02"
+                    | "5.004_01_03"
             ) {
                 let carriage_return = GrammarLexer::new("print(1);\r", &token_grammar).tokenize();
                 assert!(
@@ -280,6 +282,7 @@ mod tests {
                     | "5.004_01"
                     | "5.004_01_01"
                     | "5.004_01_02"
+                    | "5.004_01_03"
             ) {
                 let unknown = GrammarLexer::new("print(1);\u{0001}", &token_grammar).tokenize();
                 assert!(
@@ -304,6 +307,7 @@ mod tests {
                     | "5.004_01"
                     | "5.004_01_01"
                     | "5.004_01_02"
+                    | "5.004_01_03"
             ) {
                 let accepted = format!("print({});", "9".repeat(250));
                 let tokens = GrammarLexer::new(&accepted, &token_grammar)

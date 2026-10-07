@@ -277,6 +277,12 @@ Current pairs:
   Its `perly.y` matches 5.004_01_01; `toke.c` changes `-p` expansion
   and quoted delimiter handling outside this plain-decimal `print` subset.
   It retains the tested 250-digit decimal bound and claims no full coverage.
+- `perl5.004_01_03.*` is a separate **partial** pair checked against the
+  [historical 5.004_01_03 source archive] (SHA-256
+  `590678a6aa3f9bc838ba0d3b605348bc4c05b911940c6751f5d905ec7db7c359`).
+  Its `perly.y` matches 5.004_01_02; `toke.c` changes debugger line
+  hooks outside this plain-decimal `print` subset. It retains the tested
+  250-digit decimal bound and claims no full-release syntax coverage.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot, including adjacent `--` and
@@ -369,4 +375,5 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [historical 5.004_01-t2 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01-t2.tar.gz
 [historical 5.004_01_01 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01_01.tar.gz
 [historical 5.004_01_02 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01_02.tar.gz
+[historical 5.004_01_03 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01_03.tar.gz
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2

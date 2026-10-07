@@ -188,6 +188,11 @@ expand the plain-decimal `print` arithmetic subset. Give this numbered
 trial its own partial pair, retain the 250-digit decimal bound, and keep
 unsupported constructs rejected.
 
+The historical 5.004_01_03 trial archive keeps the same `perly.y` as
+5.004_01_02. Its `toke.c` changes debugger line hooks only, outside the
+bounded decimal `print` arithmetic subset. Give the trial a distinct
+partial pair with the inherited 250-digit bound and negative probes.
+
 The historical 5.004_01_02 trial archive again has the same `perly.y`.
 Its tokenizer changes command-line `-p` expansion and quoted delimiter
 handling outside the partial decimal `print` arithmetic subset. Record
