@@ -180,6 +180,18 @@ mod tests {
     }
 
     #[test]
+    fn proven_eight_backend_nib_row_is_identical_after_expansion() {
+        // This exact hand-expanded Nib program runs in the lang-aot matrix
+        // on native AOT, LLVM, WASM, JVM, CLR, VM, JIT, and BEAM. Full IIR
+        // identity lets MacroNib use that executed row without a new backend.
+        let macro_source = ".set FACTOR 6\nfn main() -> u8 { return FACTOR * 7; }\n";
+        let nib_source = "\nfn main() -> u8 { return 6 * 7; }\n";
+        let actual = compile_source(macro_source, "m").unwrap();
+        let expected = nib_iir_compiler::compile_source(nib_source, "m").unwrap();
+        assert_eq!(format!("{actual:#?}"), format!("{expected:#?}"));
+    }
+
+    #[test]
     fn include_cycle_and_unclosed_conditional_are_located_errors() {
         let cycle = compile_source_with_includes(
             ".include \"a.mnib\"\n",

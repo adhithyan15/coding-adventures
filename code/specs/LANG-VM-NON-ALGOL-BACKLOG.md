@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-07 — reopened for BEAM GC roots
+Status date: 2026-10-07 — re-audited after BEAM13 and LANG78
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -70,24 +70,32 @@ passed. The Z80 README, crate rustdoc, opcode docs, changelog, and normative 07k
 spec now distinguish shared 8080 instruction bytes and core operations from the
 architectures' different packed flags and arithmetic parity/overflow behavior.
 
-The current queue is:
-
 The 2026-09-30 audit found no remaining item in its scoped completion queue.
 PR #16295 was a separately authored duplicate of merged VM-075 PR #16294 and
-was closed without merging. A 2026-10-07 review of still-open issue #15882 and
-current `iir-to-beam` lowering found two intermediate-call scratch values that
-remain unprotected: the ETS table identifier in `array_set` and the function
-atom in `call_closure`. ETS allocation's length handoff already uses a Y slot.
+was closed without merging. The 2026-10-07 audit then found the BEAM scratch
+root hazard. PR #16862 delivered BEAM13 and merged as
+`e2dae2b55f219e1a4d2a5dc680e789049e3a4dbe`: the ETS table identifier in
+`array_set` and the function atom in `call_closure` now cross imported calls in
+initialized Y slots. ETS allocation's length handoff already used a Y slot.
+The backend-wide `OP_CALL_EXT` audit found no further parked scratch value
+crossing an imported call, and issue #15882 was closed with those findings.
+
+PR #16870 delivered LANG78's bounded native JavaScript numeric/console
+source-to-IIR pilot and merged as `b0c0a6a7aff9735019ed74e487cd2afc64a74a5a`.
+It runs directly on Rust `vm-core`; Semantic IR is outside this execution path.
 The separately owned ALGOL campaign remains outside this backlog.
 
-The renewed queue is:
+The refreshed queue is:
 
-1. **BEAM13 (selected):** root values needed after an intermediate imported
-   call in the ETS `array_set` and `call_closure` paths. Reuse an initialized
-   per-function Y slot, prove the save/call/reload order in emitted bytecode,
-   and run real-Erlang regressions. See `BEAM13-intermediate-call-gc-roots.md`.
-2. **BEAM13 follow-up:** audit other scratch values crossing calls under issue
-   #15882, then close the issue only when its backend-wide claim is covered.
+1. **PREP01 MacroNib (selected):** publish the second generic-preprocessor
+   dialect after its independently expanded Nib IIR identity and backend
+   evidence are complete. Keep the shared preprocessor core unchanged.
+2. **LANG79 Python:** publish the bounded direct-to-IIR float-expression and
+   `print` pilot after rebase, audit, and exact-head review.
+3. **LANG80 Ruby:** publish the bounded direct-to-IIR integer `puts` pilot
+   after rebase, audit, and exact-head review.
+4. **Perl foundation:** add a Rust lexer/parser for one explicit Perl subset,
+   then a source-to-IIR compiler executing on `vm-core`.
 
 The following run records the first VM-067 selection.
 
