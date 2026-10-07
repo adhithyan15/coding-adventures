@@ -1314,6 +1314,10 @@ final class _AskingDialogs implements MosaicFileDialogs {
 
 /// The phone build's document plugin, answered by callbacks. Each records
 /// what it was asked, so a check can see what reached the "picker".
+/// The separator a request directory's paths use, as `Directory.createTemp`
+/// makes them: `/` on phones and POSIX desktops, `\` on Windows.
+final String sep = Platform.pathSeparator;
+
 final class FakePhoneDocuments implements MosaicPhoneDocuments {
   FakePhoneDocuments(this.temporary, {this.open, this.save});
 
@@ -1373,7 +1377,7 @@ Future<void> checkPhoneOpen(Directory directory) async {
   // A copy the plugin made is read, named, typed, and removed with its
   // directory.
   final documents = FakePhoneDocuments(temp, open: (dir, mimes, limit) async {
-    final copy = '$dir/deck.json';
+    final copy = '$dir${sep}deck.json';
     File(copy).writeAsStringSync('{"cards":1}');
     return copy;
   });
@@ -1390,7 +1394,7 @@ Future<void> checkPhoneOpen(Directory directory) async {
   );
   check(documents.lastLimit == mosaicMaxOpenBytes, 'phone open: the 50 MiB limit');
   check(
-    documents.lastDirectory!.startsWith('$temp/$mosaicPhoneFilesDirectoryName/'),
+    documents.lastDirectory!.startsWith('$temp${sep}$mosaicPhoneFilesDirectoryName${sep}'),
     'phone open: a request directory under mosaic-files',
   );
   check(requestDirectories(temp).isEmpty, 'phone open: the copy is removed');
@@ -1400,7 +1404,7 @@ Future<void> checkPhoneOpen(Directory directory) async {
   final spoofed = await mosaicRunPhoneFilesOpen(
     accept,
     FakePhoneDocuments(temp, open: (dir, mimes, limit) async {
-      final copy = '$dir/invoice\u202Efdp.json';
+      final copy = '$dir${sep}invoice\u202Efdp.json';
       File(copy).writeAsStringSync('{}');
       return copy;
     }),
@@ -1412,9 +1416,9 @@ Future<void> checkPhoneOpen(Directory directory) async {
   );
 
   // A temporary directory with a trailing separator, as iOS reports it.
-  final trailing = FakePhoneDocuments('$temp/', open: (dir, mimes, limit) async {
-    check(!dir.contains('//'), 'phone open: no doubled separator');
-    final copy = '$dir/deck.json';
+  final trailing = FakePhoneDocuments('$temp${sep}', open: (dir, mimes, limit) async {
+    check(!dir.contains('${sep}${sep}'), 'phone open: no doubled separator');
+    final copy = '$dir${sep}deck.json';
     File(copy).writeAsStringSync('{}');
     return copy;
   });
@@ -1445,7 +1449,7 @@ Future<void> checkPhoneOpen(Directory directory) async {
   final atLimit = await mosaicRunPhoneFilesOpen(
     accept,
     FakePhoneDocuments(temp, open: (dir, mimes, limit) async {
-      final copy = '$dir/big.json';
+      final copy = '$dir${sep}big.json';
       final handle = File(copy).openSync(mode: FileMode.writeOnly);
       handle.setPositionSync(mosaicMaxOpenBytes - 1);
       handle.writeByteSync(0x20);
@@ -1457,7 +1461,7 @@ Future<void> checkPhoneOpen(Directory directory) async {
   final overLimit = await mosaicRunPhoneFilesOpen(
     accept,
     FakePhoneDocuments(temp, open: (dir, mimes, limit) async {
-      final copy = '$dir/big.json';
+      final copy = '$dir${sep}big.json';
       final handle = File(copy).openSync(mode: FileMode.writeOnly);
       handle.setPositionSync(mosaicMaxOpenBytes);
       handle.writeByteSync(0x20);
@@ -1476,20 +1480,23 @@ Future<void> checkPhoneOpen(Directory directory) async {
   // directory, `..`, a directory and a missing file are each refused unread.
   final secret = File('${directory.path}/phone-secret.txt')
     ..writeAsStringSync('private');
+  // Links only where the harness makes them (as the desktop checks above):
+  // Windows needs a privilege for a symbolic link, and both phones are POSIX.
   final hostile = <String, Future<String?> Function(String, List<String>, int)>{
-    'a link to a private file': (dir, mimes, limit) async {
-      Link('$dir/deck.json').createSync(secret.path);
-      return '$dir/deck.json';
-    },
+    if (!Platform.isWindows)
+      'a link to a private file': (dir, mimes, limit) async {
+        Link('$dir${sep}deck.json').createSync(secret.path);
+        return '$dir${sep}deck.json';
+      },
     'a file outside the directory': (dir, mimes, limit) async => secret.path,
     'a path through ..': (dir, mimes, limit) async =>
-        '$dir/../${dir.split('/').last}/x',
-    'the directory itself': (dir, mimes, limit) async => '$dir/.',
+        '$dir${sep}../${dir.split('/').last}/x',
+    'the directory itself': (dir, mimes, limit) async => '$dir${sep}.',
     'a directory': (dir, mimes, limit) async {
-      Directory('$dir/folder').createSync();
-      return '$dir/folder';
+      Directory('$dir${sep}folder').createSync();
+      return '$dir${sep}folder';
     },
-    'a missing file': (dir, mimes, limit) async => '$dir/missing.json',
+    'a missing file': (dir, mimes, limit) async => '$dir${sep}missing.json',
   };
   for (final MapEntry(key: label, value: answer) in hostile.entries) {
     final outcome = await mosaicRunPhoneFilesOpen(
@@ -1682,6 +1689,7 @@ Future<void> checkPhoneSave(Directory directory) async {
     FakePhoneDocuments(blocked, save: (staged, mime) async => 'x'),
   );
   check(failure(noRoot) == "couldn't save the file", 'phone save: no usable root');
+  if (Platform.isWindows) return; // links: see checkPhoneOpen
   final linkedRoot = Directory('${directory.path}/phone-linked')..createSync();
   Link('${linkedRoot.path}/$mosaicPhoneFilesDirectoryName')
       .createSync(directory.path);
@@ -1704,9 +1712,14 @@ Future<void> checkPhoneLeftovers(Directory directory) async {
   final young = Directory('${root.path}/request-young')..createSync();
   final outside = File('${directory.path}/phone-outside.txt')
     ..writeAsStringSync('keep');
-  final linked = Link('${root.path}/request-link')..createSync(outside.path);
-  // The old directory's link reaches outside: the sweep must not follow it.
-  Link('${old.path}/escape').createSync(outside.path);
+  // Links where the harness makes them (see checkPhoneOpen). The old
+  // directory's link reaches outside: the sweep must not follow it.
+  final withLinks = !Platform.isWindows;
+  final linked = Link('${root.path}/request-link');
+  if (withLinks) {
+    linked.createSync(outside.path);
+    Link('${old.path}/escape').createSync(outside.path);
+  }
 
   // Both directories were just made: a sweep now keeps them, and a sweep an
   // hour and a minute from now finds both old.
@@ -1725,10 +1738,12 @@ Future<void> checkPhoneLeftovers(Directory directory) async {
     'a sweep deletes request directories unchanged for over an hour',
   );
   check(outside.readAsStringSync() == 'keep', 'without following its links');
-  check(
-    linked.existsSync() && outside.existsSync(),
-    'a link in mosaic-files is left alone',
-  );
+  if (withLinks) {
+    check(
+      linked.existsSync() && outside.existsSync(),
+      'a link in mosaic-files is left alone',
+    );
+  }
 
   // The router sweeps before its first request, and keeps what is young:
   // another engine's request in flight looks like this one.

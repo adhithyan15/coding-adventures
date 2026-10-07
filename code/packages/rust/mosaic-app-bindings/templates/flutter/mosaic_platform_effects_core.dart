@@ -1404,6 +1404,11 @@ const String mosaicPhoneFilesDirectoryName = 'mosaic-files';
 /// process may delete it as a leftover of one that was killed.
 const Duration mosaicPhoneLeftoverAge = Duration(hours: 1);
 
+/// The platform's path separator: `/` on both phones. The phone path joins
+/// with it, as `Directory.createTemp` does, so the harness runs it on every
+/// desktop too.
+final String _mosaicSeparator = Platform.pathSeparator;
+
 /// A failure the plugin reported, by its code: `busy`, `no_window`,
 /// `activity_gone`, `too_large`, `stalled` or `unreadable`. The app is told a
 /// fixed message for the code, never the platform's own text, which can carry
@@ -1569,10 +1574,13 @@ Future<Directory> _mosaicPhoneRequestDirectory(
   // Without a trailing separator (iOS's NSTemporaryDirectory() has one), so
   // the request path is the plain form a plugin answers within.
   var temporary = await documents.temporaryDirectory();
-  while (temporary.length > 1 && temporary.endsWith('/')) {
+  while (temporary.length > 1 &&
+      (temporary.endsWith('/') || temporary.endsWith(_mosaicSeparator))) {
     temporary = temporary.substring(0, temporary.length - 1);
   }
-  final root = Directory('$temporary/$mosaicPhoneFilesDirectoryName');
+  final root = Directory(
+    '$temporary$_mosaicSeparator$mosaicPhoneFilesDirectoryName',
+  );
   final type = FileSystemEntity.typeSync(root.path, followLinks: false);
   if (type == FileSystemEntityType.notFound) {
     try {
@@ -1595,7 +1603,7 @@ Future<Directory> _mosaicPhoneRequestDirectory(
 bool mosaicIsCopyInside(String path, String directory) {
   final name = _mosaicBaseName(path);
   if (name.isEmpty || name == '.' || name == '..') return false;
-  if (path != '$directory/$name') return false;
+  if (path != '$directory$_mosaicSeparator$name') return false;
   return FileSystemEntity.typeSync(path, followLinks: false) ==
       FileSystemEntityType.file;
 }
@@ -1677,7 +1685,7 @@ Future<Map<String, Object?>> mosaicRunPhoneFilesSave(
   Directory? request;
   try {
     request = await _mosaicPhoneRequestDirectory(documents, sweep: sweep);
-    final staged = '${request.path}/$name';
+    final staged = '${request.path}$_mosaicSeparator$name';
     if (!await _mosaicStageInBackground(staged, bytes)) {
       return mosaicFailed("couldn't save the file");
     }

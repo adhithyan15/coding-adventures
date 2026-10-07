@@ -1986,7 +1986,7 @@ mod tests {
         // link, directly inside that directory.
         let phone = &core[phone_at..];
         assert!(phone.contains("final file = File(staged)..createSync(exclusive: true);"));
-        assert!(phone.contains("if (path != '$directory/$name') return false;"));
+        assert!(phone.contains("if (path != '$directory$_mosaicSeparator$name') return false;"));
         assert!(phone.contains(
             "return FileSystemEntity.typeSync(path, followLinks: false) ==\n      FileSystemEntityType.file;"
         ));
