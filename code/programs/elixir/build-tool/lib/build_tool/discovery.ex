@@ -148,9 +148,18 @@ defmodule BuildTool.Discovery do
       ["elixir/progress-bar", "go/directed-graph", "python/logic-gates"]
   """
   def discover_packages(root) do
+    discover_packages(root, current_os())
+  end
+
+  @doc """
+  Discovers packages using an explicit platform selector. The native entry
+  point above delegates here; fixture consumers can exercise each platform
+  without changing the host OS or the directory walk.
+  """
+  def discover_packages(root, os) do
     packages =
       root
-      |> walk_dirs([])
+      |> walk_dirs([], os)
       |> Enum.sort_by(&{&1.name, &1.path})
 
     # Discovery must not silently choose one of two roots with the same graph
@@ -281,8 +290,10 @@ defmodule BuildTool.Discovery do
   Priority:
     1. `BUILD_mac` on macOS (Darwin)
     2. `BUILD_linux` on Linux
-    3. `BUILD` (cross-platform fallback)
-    4. `nil` if no BUILD file exists
+    3. `BUILD_windows` on Windows
+    4. `BUILD_mac_and_linux` on macOS or Linux
+    5. `BUILD` (cross-platform fallback)
+    6. `nil` if the canonical BUILD file is absent
 
   ## Example
 
@@ -311,30 +322,36 @@ defmodule BuildTool.Discovery do
       # Returns path to BUILD_mac if it exists, else BUILD_mac_and_linux, else BUILD, else nil
   """
   def get_build_file_for_platform(directory, os) do
-    # Step 1: Check for the most specific platform file.
-    platform_file =
-      case os do
-        :darwin -> Path.join(directory, "BUILD_mac")
-        :linux -> Path.join(directory, "BUILD_linux")
-        :windows -> Path.join(directory, "BUILD_windows")
-        _ -> nil
+    canonical_file = Path.join(directory, "BUILD")
+
+    # A variant is only an alternate recipe for an established package. Test
+    # exact canonical membership before considering host-specific overrides,
+    # or the same tree becomes a different package graph on each platform.
+    if not file_exists?(canonical_file) do
+      nil
+    else
+      # Step 1: Check for the most specific platform file.
+      platform_file =
+        case os do
+          :darwin -> Path.join(directory, "BUILD_mac")
+          :linux -> Path.join(directory, "BUILD_linux")
+          :windows -> Path.join(directory, "BUILD_windows")
+          _ -> nil
+        end
+
+      cond do
+        platform_file != nil and file_exists?(platform_file) ->
+          platform_file
+
+        # Step 2: Check for the shared Unix file (macOS + Linux).
+        os in [:darwin, :linux] and
+            file_exists?(Path.join(directory, "BUILD_mac_and_linux")) ->
+          Path.join(directory, "BUILD_mac_and_linux")
+
+        # Step 3: Fall back to the membership-establishing canonical BUILD.
+        true ->
+          canonical_file
       end
-
-    cond do
-      platform_file != nil and file_exists?(platform_file) ->
-        platform_file
-
-      # Step 2: Check for the shared Unix file (macOS + Linux).
-      os in [:darwin, :linux] and
-          file_exists?(Path.join(directory, "BUILD_mac_and_linux")) ->
-        Path.join(directory, "BUILD_mac_and_linux")
-
-      # Step 3: Fall back to the generic BUILD file.
-      file_exists?(Path.join(directory, "BUILD")) ->
-        Path.join(directory, "BUILD")
-
-      true ->
-        nil
     end
   end
 
@@ -352,13 +369,13 @@ defmodule BuildTool.Discovery do
   # look inside it for sub-packages. This keeps the model simple — a
   # package is a leaf in the directory tree.
 
-  defp walk_dirs(directory, packages) do
+  defp walk_dirs(directory, packages, os) do
     dir_name = Path.basename(directory)
 
     if MapSet.member?(@skip_dirs, dir_name) do
       packages
     else
-      case get_build_file(directory) do
+      case get_build_file_for_platform(directory, os) do
         nil ->
           # Not a package — list all subdirectories and recurse into each one.
           case File.ls(directory) do
@@ -369,7 +386,7 @@ defmodule BuildTool.Discovery do
                 subdir = Path.join(directory, entry)
 
                 if File.dir?(subdir) do
-                  walk_dirs(subdir, acc)
+                  walk_dirs(subdir, acc, os)
                 else
                   acc
                 end
@@ -410,8 +427,14 @@ defmodule BuildTool.Discovery do
   # ---------------------------------------------------------------------------
 
   defp file_exists?(path) do
-    case File.stat(path) do
-      {:ok, %File.Stat{type: :regular}} -> true
+    # File.stat alone accepts a wrong-case basename on case-insensitive hosts.
+    # Check the directory entry before stat so package membership and override
+    # selection use the same exact BUILD names on every platform.
+    with {:ok, entries} <- File.ls(Path.dirname(path)),
+         true <- Enum.member?(entries, Path.basename(path)),
+         {:ok, %File.Stat{type: :regular}} <- File.stat(path) do
+      true
+    else
       _ -> false
     end
   end
@@ -420,7 +443,7 @@ defmodule BuildTool.Discovery do
     case :os.type() do
       {:unix, :darwin} -> :darwin
       {:unix, :linux} -> :linux
-      {:win32, _} -> :win32
+      {:win32, _} -> :windows
       _ -> :unknown
     end
   end

@@ -487,6 +487,19 @@ registered conformance adapter while the adapter manifest still marks Elixir
 missing. Native symlink/no-follow policy and platform-only BUILD membership
 are governed by separate owners.
 
+The Elixir canonical-membership and Windows-selector adopter MUST project the
+checked `discovery/windows-override` and
+`discovery/variant-without-canonical` cases through production discovery.
+Only a regular, exact canonical `BUILD` establishes membership on every host;
+`BUILD_windows`, `BUILD_mac`, `BUILD_linux`, and `BUILD_mac_and_linux` may replace
+the recipe of an existing package but cannot create one. On a Windows host,
+the native OS result `{:win32, _}` MUST select the Windows override before the
+canonical file. The projected BUILD path, selected shell commands, and
+non-Starlark classification MUST come from the override even when canonical
+`BUILD` contains Starlark. macOS and Linux precedence and canonical fallback
+MUST remain unchanged. This is a package-local fixture projection, not a
+registered neutral adapter or a change to native symlink/no-follow policy.
+
 The selected canonical `BUILD` may contain legacy shell lines or Starlark.
 Conformance v1 does not recognize `BUILD.lark` as a package marker; that name in
 older migration documents is aspirational. Implementations must not infer
