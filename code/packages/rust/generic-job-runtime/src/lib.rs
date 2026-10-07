@@ -1749,10 +1749,30 @@ fn restart_allowed(policy: &StdioWorkerRestartPolicy, restart_state: &Mutex<Rest
     }
 }
 
+/// Decrement the in-flight counter, saturating at zero.
+///
+/// Written as an explicit compare-and-swap loop rather than
+/// `AtomicUsize::fetch_update`. Rust 1.99 deprecated `fetch_update` in favour
+/// of `try_update`, which older toolchains do not have, and CI builds with
+/// `-D warnings` on the floating stable toolchain. The loop compiles warning-
+/// free on both sides of the rename, which is the same choice
+/// `closure-pass-pipeline` made.
+///
+/// ```text
+/// load current ──▶ next = current.saturating_sub(1)
+///      ▲                    │
+///      │   lost the race    ▼
+///      └──── compare_exchange_weak(current, next) ──ok──▶ done
+/// ```
 fn decrement_in_flight(in_flight: &AtomicUsize) {
-    let _ = in_flight.fetch_update(Ordering::SeqCst, Ordering::SeqCst, |current| {
-        Some(current.saturating_sub(1))
-    });
+    let mut current = in_flight.load(Ordering::SeqCst);
+    loop {
+        let next = current.saturating_sub(1);
+        match in_flight.compare_exchange_weak(current, next, Ordering::SeqCst, Ordering::SeqCst) {
+            Ok(_) => return,
+            Err(observed) => current = observed,
+        }
+    }
 }
 
 fn remove_pending_job(
