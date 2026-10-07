@@ -128,20 +128,22 @@ PR #16941 delivered 12 distinct, explicitly partial Perl 5.003_04 through
 `4d46c9feeeb1d38ee773fbcb3d5d17bbef094cf6` after latest-head CI,
 CodeQL, and books checks passed. The inventoried 774 releases now have 33
 partial pairs and 741 pending; this is not complete historical coverage.
-The next bounded repair addresses the earlier 18 partial release pairs and
-the unversioned LANG81 pilot, whose decimal token rules accepted Perl octal
-spellings such as `08`, `09`, and `010` incorrectly.
+PR #16947 repaired those earlier 18 partial release pairs and the unversioned
+LANG81 pilot, whose decimal token rules accepted Perl octal spellings such as
+`08`, `09`, and `010` incorrectly. It merged as
+`1ab69d602a7bb9b20f1571bc9c8973d10bc33f08` after latest-head CI,
+CodeQL, and books checks passed. No octal execution is claimed.
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG81/LANG82 Perl numeric boundary (selected):** constrain the earlier
-   18 partial release pairs and the unversioned native pilot to their claimed
-   plain-decimal subset. Reject leading-zero octal spellings before IIR
-   lowering, including invalid octal digits. Retain distinct release files;
-   continue the remaining 741 inventoried releases in later slices.
-2. **PREP01 C:** continue toward full C `#if`, stringize/paste, and default
-   frontend routing in separately bounded slices.
+1. **PREP01 C (selected):** add one checked `/` or `%` operation per bounded
+   `#if` logical clause, with zero-divisor and unsupported-form rejection.
+   Continue full C `#if`, stringize/paste, and default frontend routing in
+   later slices.
+2. **LANG82 Perl release grammars:** continue source-backed distinct pairs
+   for the remaining 741 inventoried releases, with no false completeness
+   claim or fallback to another release's grammar.
 
 The following run records the first VM-067 selection.
 
