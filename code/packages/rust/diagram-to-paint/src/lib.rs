@@ -748,7 +748,14 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
         };
         if show_icon {
             let (fill, radius) = match node.kind { TreeViewNodeKind::Directory => ("#fbbf24", 3.0), TreeViewNodeKind::File => ("#bfdbfe", 1.0) };
-            instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: node.x,
+            let icon = node.icon.clone().unwrap_or_else(|| match node.kind {
+                TreeViewNodeKind::Directory => "folder".into(), TreeViewNodeKind::File => "file".into(),
+            });
+            let mut icon_metadata = HashMap::new();
+            icon_metadata.insert("treeView.icon".into(), icon);
+            icon_metadata.insert("treeView.nodeId".into(), node.id.clone());
+            instructions.push(PaintInstruction::Rect(PaintRect {
+                base: PaintBase { metadata: Some(icon_metadata), ..PaintBase::default() }, x: node.x,
                 y: node.y + (node.height - 16.0) / 2.0,
                 width: 16.0, height: 16.0, fill: Some(fill.into()), stroke: Some("#475569".into()), stroke_width: Some(1.0),
                 corner_radius: Some(radius), stroke_dash: None, stroke_dash_offset: None }));
@@ -776,6 +783,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     metadata.insert("treeView.config.paddingY".into(), diagram.config.padding_y.to_string());
     metadata.insert("treeView.config.lineThickness".into(), diagram.config.line_thickness.to_string());
     metadata.insert("treeView.config.showIcons".into(), diagram.config.show_icons.to_string());
+    metadata.insert("treeView.config.defaultIconPack".into(), diagram.config.default_icon_pack.clone());
     PaintScene { width: diagram.width, height: diagram.height,
         background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b),
         instructions, id: None, metadata: (!metadata.is_empty()).then_some(metadata) }
@@ -9331,6 +9339,10 @@ mod tests {
         let scene = diagram_to_paint_treeview(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Rect(_))).count(), 3);
+        assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect)
+                if rect.base.metadata.as_ref().and_then(|metadata| metadata.get("treeView.icon"))
+                    == Some(&"file".to_string()))));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("treeView.config.showIcons")),
             Some(&"true".to_string()));

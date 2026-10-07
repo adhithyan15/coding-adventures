@@ -3277,6 +3277,26 @@ line "Target" [35, 50, 68, 82]"##,
             .expect("configured treeview PNG write failed");
         assert!(configured_pixels.width > 0 && configured_pixels.height > 0);
 
+        let mapped = parse_treeview("%%{init: {\"treeView\": {\"defaultIconPack\": \"devicon\", \"filenameIcons\": {\"README.md\": \"logos:markdown\", \"package.json\": \"none\"}, \"extensionIcons\": {\".rs\": \"rust\", \"TS\": \"logos:typescript\"}}}}%%\ntreeView-beta\nREADME.md\npackage.json\nmain.RS\napp.ts\nnotes.txt icon(custom)")
+            .expect("mapped treeview parse failed");
+        let mapped_layout = layout_treeview(&mapped, 720.0);
+        let mapped_scene = diagram_to_paint_treeview(&mapped_layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 }, device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 13.0), title_font: font_spec("Helvetica", 18.0),
+            shaper: &shaper, metrics: &metrics, resolver: &resolver,
+        });
+        let mapped_icons = mapped_scene.instructions.iter().filter_map(|instruction| match instruction {
+            PaintInstruction::Rect(rect) => rect.base.metadata.as_ref()
+                .and_then(|metadata| metadata.get("treeView.icon")).map(String::as_str),
+            _ => None,
+        }).collect::<BTreeSet<_>>();
+        assert_eq!(mapped_icons,
+            BTreeSet::from(["devicon:custom", "devicon:rust", "logos:markdown", "logos:typescript"]));
+        let mapped_pixels = render(&mapped_scene);
+        write_png(&mapped_pixels, "/tmp/mermaid_treeview_icon_map_e2e.png")
+            .expect("mapped treeview PNG write failed");
+        assert!(mapped_pixels.width > 0 && mapped_pixels.height > 0);
+
         let empty = parse_treeview("treeView-beta\ntitle\naccTitle: Empty tree\naccDescr {\n  No files are present\n}")
             .expect("empty treeview parse failed");
         let empty_layout = layout_treeview(&empty, 720.0);

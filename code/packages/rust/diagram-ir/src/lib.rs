@@ -1711,11 +1711,18 @@ pub struct TreeViewConfig {
     pub padding_y: f64,
     pub line_thickness: f64,
     pub show_icons: bool,
+    pub default_icon_pack: String,
+    pub filename_icons: std::collections::BTreeMap<String, String>,
+    pub extension_icons: std::collections::BTreeMap<String, String>,
 }
 
 impl Default for TreeViewConfig {
     fn default() -> Self {
-        Self { row_indent: 10.0, padding_x: 5.0, padding_y: 5.0, line_thickness: 1.0, show_icons: true }
+        Self {
+            row_indent: 10.0, padding_x: 5.0, padding_y: 5.0, line_thickness: 1.0,
+            show_icons: true, default_icon_pack: String::new(), filename_icons: Default::default(),
+            extension_icons: Default::default(),
+        }
     }
 }
 
