@@ -39,10 +39,12 @@ declared roots. The primary file and system includes search declared roots
 only. Every resolved candidate must remain inside a declared root; an
 unresolved include fails explicitly.
 `#if` currently handles single decimal comparisons, one checked `+`, `-`,
-`*`, `/`, or `%` within signed 32-bit range, `!` on one operand and
-`&&`/`||` chains. Division and remainder reject a zero divisor, including
-inside a logical clause whose value would otherwise be unnecessary. Longer or
-mixed arithmetic and other unsupported C expressions fail explicitly.
+`*`, `/`, `%`, `<<`, or `>>` within the bounded signed 32-bit subset, `!` on
+one operand and `&&`/`||` chains. Division and remainder reject a zero divisor,
+including inside a logical clause whose value would otherwise be unnecessary. Longer or
+mixed arithmetic and other unsupported C expressions fail explicitly. Shift
+counts must be 0–31, the left operand must be nonnegative, and left-shift
+results must fit signed 32-bit.
 Stringize and paste in macro bodies also fail explicitly.
 
 The pathless `compile_source` API below still uses the legacy C source parser

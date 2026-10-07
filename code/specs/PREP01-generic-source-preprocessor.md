@@ -704,6 +704,17 @@ Longer or mixed arithmetic, unary signs, parentheses, and arithmetic mixed
 with comparisons remain explicit errors. Tests must cover true and false
 quotients/remainders, macro expansion, undefined names, zero divisors, and
 rooted C file-input error locations.
+The next bounded C `#if` stage accepts exactly one `<<` or `>>` between two
+expanded plain-decimal literals or undefined identifiers in each logical
+clause. Both operands and the result must fit signed 32-bit integers. The
+left operand must be nonnegative and the shift count must be 0 through 31;
+negative left values, larger counts, and results outside the signed range
+fail explicitly. This stays within the defined and portable shift behavior
+described by [WG14 N1570 §6.5.7](https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf),
+while deliberately declining other valid C forms. Longer or mixed expressions
+remain unsupported. Test true and false
+results, macro-expanded operands, zero-valued undefined names, boundary
+counts, overflow, and rooted file-input diagnostics.
 Until stringize and paste are implemented, a `#define` replacement containing
 `#` or `##` must fail explicitly rather than emit those operator tokens as C
 source.

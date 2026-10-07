@@ -130,6 +130,27 @@ fn condition_clause(tokens: &[Token]) -> Result<bool, PpError> {
                     .ok_or_else(|| PpError::new("C arithmetic condition result is out of range"))?;
                     Ok(value != 0)
                 }
+                "<<" | ">>" => {
+                    let left = i32::try_from(left)
+                        .map_err(|_| PpError::new("C shift condition operand is out of range"))?;
+                    let right = i32::try_from(right)
+                        .map_err(|_| PpError::new("C shift condition count is out of range"))?;
+                    if left < 0 {
+                        return Err(PpError::new("C shift condition left operand is negative"));
+                    }
+                    let shift = u32::try_from(right)
+                        .map_err(|_| PpError::new("C shift condition count is negative"))?;
+                    if shift >= 32 {
+                        return Err(PpError::new("C shift condition count is too large"));
+                    }
+                    let value = if op.value == "<<" {
+                        i32::try_from(i64::from(left) << shift)
+                            .map_err(|_| PpError::new("C shift condition result is out of range"))?
+                    } else {
+                        left >> shift
+                    };
+                    Ok(value != 0)
+                }
                 "==" => Ok(left == right),
                 "!=" => Ok(left != right),
                 "<" => Ok(left < right),
@@ -724,6 +745,59 @@ mod tests {
             "8 / 2 / 2",
             "8 * 2 / 2",
             "-8 / 2",
+        ] {
+            let source = format!("#if {condition}\nint x;\n#endif\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            assert!(
+                preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err(),
+                "{condition}"
+            );
+        }
+    }
+
+    #[test]
+    fn one_operator_shift_conditions_use_the_portable_signed_subset() {
+        for (condition, expected) in [
+            ("3 << 2", "1"),
+            ("1 >> 2", "0"),
+            ("8 >> 2", "1"),
+            ("0 << 31", "0"),
+            ("COUNT << 1", "1"),
+            ("MISSING << 3", "0"),
+            ("1 << MISSING", "1"),
+            ("8 >> 1 && 1 << 0", "1"),
+        ] {
+            let source = format!(
+                "#define COUNT 2\n#if {condition}\nint x = 1;\n#else\nint x = 0;\n#endif\n"
+            );
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+            let values: Vec<_> = result
+                .tokens
+                .iter()
+                .map(|token| token.value.as_str())
+                .collect();
+            assert_eq!(values, ["int", "x", "=", expected, ";"], "{condition}");
+        }
+
+        for condition in [
+            "1 << 32",
+            "1 << 31",
+            "2147483647 << 1",
+            "1 >> 32",
+            "-1 << 2",
+            "1 << -1",
+            "1 << 2 << 1",
+            "1 + 1 << 2",
+            "010 << 1",
+            "1 << 2 == 4",
+            "1 || 1 << 32",
         ] {
             let source = format!("#if {condition}\nint x;\n#endif\n");
             let mut fs = MemoryFs::new();
