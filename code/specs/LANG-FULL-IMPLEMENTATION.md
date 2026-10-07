@@ -1337,6 +1337,9 @@ backend immediately) come before the enabler-dependent items.
   before `entier`, including nested combinations; domain-sensitive or
   unbounded standard functions and non-sign-rooted runtime operands remain
   conservative.
+  A single built-in `exp` may also map such a bounded chain before `entier`;
+  nested exponential calls remain conservative to keep the finite bound
+  explicit.
   Provenance-backed local and other real-name branches remain conservative
   across selector calls. Unary plus
   and unary minus preserve the same runtime-real proof. Additive composition,
