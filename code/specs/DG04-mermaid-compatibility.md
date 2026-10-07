@@ -992,7 +992,8 @@ silently degrading.
 
 The native Mermaid 11.16.1 Swimlane slice recognizes `swimlane-beta` with all
 five directions, top-level `subgraph` lanes, common process-node shapes,
-directed/undirected/dotted/thick chained links, parallel branch and join
+directed/undirected/dotted/thick chained links, multiline edge continuations,
+parallel branch and join
 endpoints, pipe-delimited and Flowchart-style link labels, titles, and
 accessibility metadata. It lowers through
 dedicated ownership IR and stable lane geometry before producing
