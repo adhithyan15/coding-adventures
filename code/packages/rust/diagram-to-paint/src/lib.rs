@@ -729,7 +729,7 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
                 Point { x: joint_x, y: parent_y + 14.0 },
                 Point { x: joint_x, y: node.y + 14.0 },
                 Point { x: node.x, y: node.y + 14.0 },
-            ], "#64748b", 1.5)));
+            ], "#64748b", diagram.config.line_thickness)));
         }
     }
     if let Some(title) = &diagram.title {
@@ -741,10 +741,15 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
                 width: node.width, height: node.height, fill: Some("#fff7d6".into()), stroke: Some("#f59e0b".into()),
                 stroke_width: Some(1.0), corner_radius: Some(4.0), stroke_dash: None, stroke_dash_offset: None }));
         }
-        let show_icon = node.icon.as_deref().is_some_and(|icon| icon != "none");
+        let show_icon = match node.icon.as_deref() {
+            Some("none") => false,
+            Some(_) => true,
+            None => diagram.config.show_icons,
+        };
         if show_icon {
             let (fill, radius) = match node.kind { TreeViewNodeKind::Directory => ("#fbbf24", 3.0), TreeViewNodeKind::File => ("#bfdbfe", 1.0) };
-            instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: node.x, y: node.y + 6.0,
+            instructions.push(PaintInstruction::Rect(PaintRect { base: PaintBase::default(), x: node.x,
+                y: node.y + (node.height - 16.0) / 2.0,
                 width: 16.0, height: 16.0, fill: Some(fill.into()), stroke: Some("#475569".into()), stroke_width: Some(1.0),
                 corner_radius: Some(radius), stroke_dash: None, stroke_dash_offset: None }));
         }
@@ -766,6 +771,11 @@ where S: TextShaper, M: FontMetrics<Handle = S::Handle>, R: FontResolver<Handle 
     let mut metadata = HashMap::new();
     if let Some(title) = &diagram.accessibility_title { metadata.insert("accessibility.title".into(), title.clone()); }
     if let Some(description) = &diagram.accessibility_description { metadata.insert("accessibility.description".into(), description.clone()); }
+    metadata.insert("treeView.config.rowIndent".into(), diagram.config.row_indent.to_string());
+    metadata.insert("treeView.config.paddingX".into(), diagram.config.padding_x.to_string());
+    metadata.insert("treeView.config.paddingY".into(), diagram.config.padding_y.to_string());
+    metadata.insert("treeView.config.lineThickness".into(), diagram.config.line_thickness.to_string());
+    metadata.insert("treeView.config.showIcons".into(), diagram.config.show_icons.to_string());
     PaintScene { width: diagram.width, height: diagram.height,
         background: format!("rgb({},{},{})", options.background.r, options.background.g, options.background.b),
         instructions, id: None, metadata: (!metadata.is_empty()).then_some(metadata) }
@@ -9308,6 +9318,7 @@ mod tests {
         let opts = make_opts(&shaper, &metrics, &resolver);
         let layout = LayoutedTreeViewDiagram {
             width: 420.0, height: 100.0, title: None, accessibility_title: None, accessibility_description: None,
+            config: diagram_ir::TreeViewConfig::default(),
             nodes: vec![
                 diagram_ir::LayoutedTreeViewNode { id: "root".into(), parent_id: None, depth: 0, label: "src".into(),
                     kind: TreeViewNodeKind::Directory, class_selector: Some("highlight".into()), icon: Some("folder".into()),
@@ -9319,8 +9330,10 @@ mod tests {
         };
         let scene = diagram_to_paint_treeview(&layout, &opts);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
-        assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Rect(_))));
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::Rect(_))).count(), 3);
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("treeView.config.showIcons")),
+            Some(&"true".to_string()));
     }
 
     #[test]

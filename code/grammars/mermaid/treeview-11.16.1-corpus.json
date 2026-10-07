@@ -16,6 +16,14 @@
       "source": "treeView-beta\naccDescr {\n  Files grouped by\n  their directory hierarchy\n}\nproject/"
     },
     {
+      "name": "layout-and-icon-config",
+      "source": "%%{init: {\"treeView\": {\"rowIndent\": 18, \"paddingX\": 9, \"paddingY\": 7, \"lineThickness\": 3, \"showIcons\": false}}}%%\ntreeView-beta\nproject/\n    src/ icon(folder)\n        main.rs"
+    },
+    {
+      "name": "front-matter-config",
+      "source": "---\nconfig:\n  treeView:\n    rowIndent: 14\n    paddingX: 8\n    showIcons: false\n---\ntreeView-beta\nproject/"
+    },
+    {
       "name": "indented-directories-and-files",
       "source": "treeView-beta\nproject/\n    src/\n        index.js\n    README.md"
     },
