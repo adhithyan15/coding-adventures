@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "PA-W16-message-pacing-return",
+    "language": "punjabi",
+    "chapter": 162,
+    "sequence": 8910,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d706e0099552c83e",
+    "detachableSegments": [
+      "Writing — one small timed opening"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

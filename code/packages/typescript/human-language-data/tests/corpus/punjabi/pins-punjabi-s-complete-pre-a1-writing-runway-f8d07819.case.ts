@@ -180,5 +180,9 @@ it("pins Punjabi's complete pre-A1 writing runway", () => {
     "controlled-composition",
     "timed-assessment-production",
     "controlled-composition",
+    // Chapter 162 revisits three already taught writing moves after a gap.
+    "guided-copy",
+    "timed-assessment-production",
+    "controlled-composition",
   ]);
 });
