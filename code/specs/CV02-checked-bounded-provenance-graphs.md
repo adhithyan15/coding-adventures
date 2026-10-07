@@ -89,6 +89,15 @@ not a claim of a precise RAM cap. Callers can select other finite limits;
 compiler configuration must expose a documented way to exercise or raise them.
 Verification must measure real corpus usage before confirming default adequacy.
 
+Depth has a hard serialization ceiling of 64 metadata levels; selecting a larger
+depth is a configuration error, even when other finite budgets are raised.
+Checked snapshot objects require the declared record fields explicitly, reject
+unknown fields and validate nested duplicate keys before typed conversion.
+Only null origins/tombstones/timestamps are nullable; missing parent/history
+arrays cannot silently become synthetic roots or empty history. Generic
+`from_json_string` remains an allocator-state compatibility import; it is not
+checked graph evidence. Compiler query/import/export paths use checked APIs.
+
 Checked roots/derivations/merges reject identity exhaustion/collision, missing
 parents, self-parentage and any parent incompatible with allocation chronology.
 All compact parents precede their child's allocation. Keep parent-list order
