@@ -6,6 +6,10 @@ The **primary build tool** for the coding-adventures monorepo. Compiled to a nat
 
 This tool discovers packages in the monorepo by recursively walking for `BUILD` files, resolves inter-package dependencies, hashes source files for change detection, and only rebuilds packages whose source or dependency inputs changed. Independent packages are built in parallel using Go goroutines.
 
+Changes to the exact shared language-registry discovery fixture schedule all
+eleven native build-tool consumers, including Haskell, on every platform; a
+source-reference check guards the selector map against new direct adopters.
+
 ## Portable source hashing
 
 Extension and declared-source collection share the language-neutral v1 rules.
