@@ -181,9 +181,14 @@ impl Descriptor {
             return Err(invalid("unsupported native SID"));
         }
         let bytes = self.slice(pointer, 8 + usize::from(header[1]) * 4)?;
+        // The checked SID length is a multiple of four. Array chunks preserve
+        // every header/subauthority byte and remove a fallible slice conversion.
         Ok(bytes
-            .chunks_exact(4)
-            .map(|part| u32::from_le_bytes(part.try_into().unwrap()))
+            .as_chunks::<4>()
+            .0
+            .iter()
+            .copied()
+            .map(u32::from_le_bytes)
             .collect())
     }
     fn policy(&self) -> io::Result<Policy> {

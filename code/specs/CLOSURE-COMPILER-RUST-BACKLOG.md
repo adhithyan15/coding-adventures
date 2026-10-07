@@ -179,7 +179,14 @@ toolchain and gate together. Refresh exact-head review and CI after these
 changes; require non-skipped compiler test commands and successful native package
 results before accepting the draft. Green job labels or older checks cannot
 substitute for execution evidence. The foundation and full compiler/provenance
-goal remain open; chronology and complete source/node/output coverage are not
+goal remain open. Correctly gated head `0e02820565` CI run `37655926931` executed
+the Windows general package-test step but failed the compiler's Rust 1.99
+strict Clippy preflight on constant-size SID `chunks_exact(4)`, before tests.
+Specification `0192308acf` preserves the checked SID range/count and byte order;
+fixed array chunks repair that lint without weakening the gate. Matching
+toolchain validation, independent exact-head review and fresh native CI remain
+required. The chronology draft stays outside the checkout until CV02 merges.
+Chronology and complete source/node/output coverage are not
 established by this foundation.
 Diagnostic short-circuits (empty-input banner and token-only tree dumps) currently
 return before trace construction. Track their provenance policy with the full

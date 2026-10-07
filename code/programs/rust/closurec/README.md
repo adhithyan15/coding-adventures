@@ -246,6 +246,11 @@ consumer; production-plan regressions verify the actual native command.
 The published candidate's Linux/macOS native compiler package commands passed;
 the Windows command was skipped, so acceptance awaits refreshed native CI.
 The updated head requires refreshed review and CI before acceptance.
+The correctly gated `0e02820565` Windows job then failed its strict Clippy
+preflight on constant-size SID chunking before compiler tests ran. The decoder
+now uses fixed four-byte arrays after the same bounded SID checks, preserving
+policy identity and word order. Matching-toolchain validation, fresh review
+and another exact-head native run are required before acceptance.
 Audit SACLs/integrity claims are unproven.
 
 The Linux/macOS implementation supports ordinary owner/group/mode policies.

@@ -4,6 +4,15 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - strict native CI SID decoding lint (CV02)
+
+The first correctly gated Windows run at `0e02820565` failed Rust 1.99 strict
+Clippy before compiler tests: constant-size `chunks_exact(4)` was rejected.
+Decode the already range-checked, four-byte-aligned SID length using statically
+sized array chunks. Preserve revision/subauthority checks and little-endian
+word order, remove the slice-conversion unwrap, and keep warnings denied.
+Fresh review, local compiler/policy validation and native CI are required.
+
 ### Fixed - native Windows CI execution gate (CV02)
 
 The repaired-head plan selected the compiler for Windows but left its OS-suite
