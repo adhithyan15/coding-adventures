@@ -17,6 +17,11 @@ replacement retains available operand CVs and owns its `constant-fold/folded`
 contribution. Nested folds retain child history. Other families still require
 the CCR-065 lineage audit; this is not a claim of complete output-byte tracing.
 
+Equal conditional branches use borrowed AST comparison excluding CV metadata,
+including values nested inside composite branches. Signed zero and every other
+represented field remain distinct. Primitive branch collapse retains both
+histories; composite branch lineage remains in CCR-065.
+
 - `ConstantFoldPass` implementing the `Pass` trait from
   [`coding-adventures-closure-pass-pipeline`](../closure-pass-pipeline).
 - `name = "constant-fold"`, `iteration_policy = FixedPoint`, `cost = 2`.

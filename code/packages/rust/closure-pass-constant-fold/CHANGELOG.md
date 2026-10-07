@@ -12,9 +12,11 @@ and deduplicating shared parents even when the composite bridge node has no CV.
 Every `fork_cv` rewrite now records its contribution on the replacement, while
 keeping the existing program-summary contribution. JavaScript bytes are unchanged
 for the repaired operations. Other fold families still need the CCR-065 audit.
-Equal primitive conditional branches compare value/raw representation without
-CV metadata and preserve both branch histories when collapsed. This prevents
-the new identities from changing optimization output in enclosing conditionals.
+Conditional branch equality now uses the AST's borrowed `EqIgnoringCv` traversal,
+including nested arrays and calls. It preserves all other represented fields
+and distinguishes signed zero, fixing incorrect `flag?-0:0` branch collapse.
+Collapsed primitive branches retain both histories. Composite lineage remains
+part of CCR-065; the comparison repair does not claim complete output tracing.
 
 ## [0.111.0] - 2026-07-28
 

@@ -224,3 +224,31 @@ fn equal_folded_branches_ignore_identity_and_keep_both_histories() {
         .count();
     assert_eq!(branch_folds, 2, "both folded branch histories must survive");
 }
+
+#[test]
+fn equal_composite_branches_optimize_identically_with_tracing() {
+    for level in ["SIMPLE", "ADVANCED"] {
+        for (source, expected) in [
+            ("report(flag?[1+1]:[1+1]);\n", "report([2]);"),
+            ("report(flag?f(1+1):f(1+1));\n", "report(f(2));"),
+        ] {
+            let (_, emitted, _) = run(source, level);
+            assert_eq!(emitted.trim(), expected, "{level}: {source}");
+        }
+    }
+}
+
+#[test]
+fn opposite_signed_zero_branches_preserve_the_choice() {
+    for level in ["SIMPLE", "ADVANCED"] {
+        for (source, expected) in [
+            ("report(flag?(-0):(0));\n", "report(flag?-0:0);"),
+            ("report(flag?(0):(-0));\n", "report(flag?0:-0);"),
+            ("report(flag?[-0]:[0]);\n", "report(flag?[-0]:[0]);"),
+            ("report(flag?[0]:[-0]);\n", "report(flag?[0]:[-0]);"),
+        ] {
+            let (_, emitted, _) = run(source, level);
+            assert_eq!(emitted.trim(), expected, "{level}: {source}");
+        }
+    }
+}

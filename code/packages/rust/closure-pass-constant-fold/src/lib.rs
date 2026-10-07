@@ -93,7 +93,7 @@ use coding_adventures_javascript_ast::{
     statement::TaggedStatement, ArrayExpression, AssignmentExpression, AssignmentOperator,
     AssignmentTarget, BinaryExpression,
     BinaryOperator, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression, NewExpression, SequenceExpression, SpreadElement, YieldExpression, AwaitExpression, ImportExpression,
-    Declaration, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
+    Declaration, EqIgnoringCv, Expression, ExpressionStatement, ForInStatement, ForInit, ForOfStatement,
     ForStatement,
     ArrowBody, ArrowFunctionExpression, TaggedTemplateExpression, TemplateLiteral,
     ClassDeclaration, ClassExpression, ClassMember, MethodDefinition, PropertyDefinition,
@@ -6740,25 +6740,10 @@ fn primitive_cv(expr: &Expression) -> Option<&str> {
     }
 }
 
-/// Same primitive value/representation, with identity excluded from equality.
-/// Preserve the old comparator for composite expressions; stripping metadata
-/// by serialization would add an unbounded whole-tree allocation here.
+/// Compare every represented field except CVs, including nested branch values.
+/// Signed zero remains distinct; this borrowed traversal never clones trees.
 fn equal_fold_branches(left: &Expression, right: &Expression) -> bool {
-    match (left, right) {
-        (Expression::NumericLiteral(a), Expression::NumericLiteral(b)) => {
-            a.value == b.value && a.raw == b.raw
-        }
-        (Expression::StringLiteral(a), Expression::StringLiteral(b)) => {
-            a.value == b.value && a.raw == b.raw
-        }
-        (Expression::BooleanLiteral(a), Expression::BooleanLiteral(b)) => a.value == b.value,
-        (Expression::NullLiteral(_), Expression::NullLiteral(_))
-        | (Expression::UndefinedLiteral(_), Expression::UndefinedLiteral(_)) => true,
-        (Expression::BigIntLiteral(a), Expression::BigIntLiteral(b)) => {
-            a.value == b.value && a.raw == b.raw
-        }
-        _ => left == right,
-    }
+    left.eq_ignoring_cv(right)
 }
 
 /// Stamp only the primitive roots covered by this slice. Composite identities

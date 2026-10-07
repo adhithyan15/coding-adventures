@@ -24,7 +24,9 @@ assertion so tracing cannot quietly change compiler behavior.
 
 A later context probe found exactly that hazard: tracing the repaired
 `flag ? (1+1) : (1+1)` changed `2` to `flag?2:2`, because derived Rust equality
-included the new CV identities. Primitive branch equality now ignores CV
-metadata while preserving value/raw representation and both branch histories.
-Test transformations inside enclosing optimizations too; isolated folds are
-insufficient evidence that tracing is behavior-neutral.
+included the new CV identities. A primitive-only comparison still failed inside
+equal arrays and calls, and `f64 ==` incorrectly treated `-0` and `+0` as equal.
+The borrowed AST comparator now ignores CVs recursively while preserving all
+other fields, signed zero and NaN distinctions. Primitive collapse preserves
+both branch histories. Test enclosing optimizations and representation edge
+cases too; isolated folds cannot establish tracing neutrality.
