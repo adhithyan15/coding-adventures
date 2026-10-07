@@ -734,22 +734,66 @@ on first render when the property is its default.
 ## 9. Style application (mosstyle)
 
 The `.msl` source's base `part` properties lower to native attributes and
-scoped text styles. Values are XML-escaped (`escape_xml_attr` — `&`, `"`,
-`<`, `>`) at the point the base attribute fragment is built, the same
-guarantee the `<Setter Value="...">` path always had (#12025). This is the
+scoped text styles. Values are XML-escaped (`escape_style_attr`, whose XML
+layer is `escape_xml_attr` — `&`, `"`, `<`, `>`) at the point the base
+attribute fragment is built, the same guarantee the `<Setter Value="...">`
+path has (#12025). This is the
 single production write path for every base-`part`-derived attribute
 across every primitive, so nothing downstream needs its own escaping.
 
-Style values get the XML layer **only**: a mosstyle value that starts with
-`{` is passed through as a XAML markup extension on purpose
-(`translate_xaml_value`), so it must not be turned into text. Authored
-*literal text* on a layout prop (`label`, `content`, `a11y-label`,
-`pane-title`, `placeholder`, …) is the opposite case and goes through
-`escape_xaml_attr`, which also prepends XAML's `{}` escape when the value
-starts with `{` — `"{x:Null}"` is emitted as `{}{x:Null}` and renders as
-those eight characters, not as the null extension (#15487). Emitter-built
-markup (`StateTrigger` bindings, `xmlns:` declarations) uses
-`escape_xml_attr`.
+Style values that start with `{` are the one place a stylesheet could speak
+XAML markup, and a stylesheet is not necessarily trusted: once packages
+resolve as dependencies, a third-party package's `.msl` is compiled into the
+consumer's XAML. XAML runs any `{…}` attribute value as a markup extension,
+so an unrestricted passthrough would let a package's "style" read the
+consumer's view model (`{Binding …}`), call a method on the consumer's page
+(`{x:Bind M()}`), or null a property (`{x:Null}`). Brace-led style values are
+therefore **allow-listed** (`translate_xaml_value`, enforced again at emission
+by `escape_style_attr`):
+
+| style value (trimmed)                    | XAML output                                   |
+|------------------------------------------|-----------------------------------------------|
+| exactly `{ThemeResource Key}`            | markup — a theme lookup                       |
+| exactly `{StaticResource Key}`           | markup — a resource lookup                    |
+| any other value starting with `{`        | property dropped (no attribute, no `<Setter>`) |
+| any value not starting with `{`          | unchanged (XML-escaped)                       |
+
+`Key` is an identifier: an ASCII letter or `_`, then ASCII letters, digits,
+`_` or `.`, with exactly one space after the extension name — so a key can
+never carry a second argument, a `Converter=`, or a nested extension.
+`{StaticResource a b}`, `{ThemeResource Foo}extra`,
+`{ThemeResource {x:Bind M()}}`, `{}…`, and whitespace-led variants such as
+`  {Binding X}` are all refused. A refused base-`part` property is reported
+by `dropped_style_properties` (and so reaches `mosaic-degradations.json`)
+with a reason naming the allow-list; a refused state property simply emits
+no `<Setter>` for that state.
+
+Refused values are **dropped, not escaped into text**. Authored literal
+text is `{}`-escaped (below) because text is what a label is; a style value
+is handed to a `Brush`/`Double`/enum parser, so `{}{Binding X}` would throw at
+page load — turning the injection into a denial of service in which a
+package can stop its consumer's window from opening. A dropped property
+costs one property and is visible in the report.
+
+Two style paths build one XAML value out of several authored ones:
+`position: absolute`'s `top`/`left` (`Margin="left,top,0,0"`) and per-edge
+`border-*-width`s (`BorderThickness="l,t,r,b"`). A brace-led piece — even an
+allow-listed lookup, which cannot be one number of four — drops the whole
+composite property and reports the offending authored property (once, even
+when a `border-width` shorthand stands in for several edges). The absolute
+part keeps its top-left pinning alignments. A refused per-edge or shorthand
+border colour is likewise reported rather than silently skipped.
+
+No `.msl` in the repo uses a brace-led value today, so this is hardening,
+not a change to any shipped stylesheet's output (#15487 follow-up).
+Widening the allow-list is a deliberate edit to `STYLE_MARKUP_EXTENSIONS`.
+
+Authored *literal text* on a layout prop (`label`, `content`, `a11y-label`,
+`pane-title`, `placeholder`, …) goes through `escape_xaml_attr`, which
+prepends XAML's `{}` escape whenever the value starts with `{` — `"{x:Null}"`
+is emitted as `{}{x:Null}` and renders as those eight characters, not as the
+null extension (#15487). Emitter-built markup (`StateTrigger` bindings,
+`xmlns:` declarations) uses `escape_xml_attr` (XML layer only).
 
 On native Host controls, a `state-when-*` layout
 predicate plus its matching MSL state block lowers to a WinUI
