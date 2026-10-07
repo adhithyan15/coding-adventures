@@ -136,6 +136,14 @@ Build or expose a log only after validation succeeds. Unchecked allocator-only
 compatibility import, if retained, must be named/documented without claiming
 validated provenance and cannot be used for compiler query/export boundaries.
 
+Strict query validation applies regardless of construction/import policy:
+enabled recording, complete compact allocation coverage and a stage declaration
+set matching all recorded contributions and tombstones. Historical allocator
+snapshots whose deletion stage was never declared may reload/export generically
+but cannot claim complete query evidence. Generic import must reject any
+declared `view`, including legacy IDs and null markers, so it cannot discard a
+projection declaration and later upgrade that projection into full evidence.
+
 Fallible graph queries distinguish an unknown ID, an invalid/incomplete graph
 and an exhausted work/output limit from an empty successful result. Implement
 iterative traversal so a deep chain cannot overflow the call stack. For lineage,
