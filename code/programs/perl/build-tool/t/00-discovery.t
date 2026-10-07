@@ -339,13 +339,11 @@ subtest 'neutral OCaml package and Dune decoy projection' => sub {
     my $fixture = load_registry_fixture();
     my @ocaml = grep { $_->{path} =~ m{^code/packages/ocaml/} }
         @{ $fixture->{workspace}{files} };
-    is(scalar @ocaml, 2, 'neutral fixture has package and generated decoy');
+    is(scalar @ocaml, 4, 'neutral fixture has package, generated decoy, and both near-case roots');
     for my $file (@ocaml) {
         (my $package_path = $file->{path}) =~ s{/BUILD$}{};
         make_pkg($root, $package_path, $file->{content_utf8});
     }
-    make_pkg($root, 'code/packages/ocaml/near/_Build/demo');
-    make_pkg($root, 'code/packages/ocaml/near/_build-example/demo');
 
     my $discovery = CodingAdventures::BuildTool::Discovery->new(root => $root);
     $discovery->discover();
@@ -356,7 +354,7 @@ subtest 'neutral OCaml package and Dune decoy projection' => sub {
     } @{ $discovery->packages() };
     is(
         \@relative,
-        [qw(code/packages/ocaml/demo-ocaml code/packages/ocaml/near/_Build/demo code/packages/ocaml/near/_build-example/demo)],
+        [qw(code/packages/ocaml/demo-ocaml code/packages/ocaml/generated-b/_Build/case-source code/packages/ocaml/generated-c/_build-example/near-source)],
         'only exact lowercase _build is pruned during discovery',
     );
     my ($package) = grep { $_->{path} =~ m{demo-ocaml$} }
