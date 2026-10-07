@@ -2,10 +2,11 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 **Last reprioritized:** 2026-10-07
-**Current selection:** CCR-065 compact compiler identities, specified in
-[CV01](CV01-compact-compiler-identities.md), branch
-`codex/closurec-compact-ids-20261007`. No competing Closure/shared-stack PR at selection.
-**Current audit base:** `84252d038a9fa2eddb5f92833d0de242969e45c8`
+**Current selection:** CCR-065 checked/bounded graphs and serialization,
+specified in [CV02](CV02-checked-bounded-provenance-graphs.md), branch
+`codex/closurec-graph-foundation-20261007`. CV01 merged and is verified;
+preserve one active Closure/shared-stack PR.
+**Current audit base:** `059acbf9e06ff7c75b1c84f278d09a13adaf53ff`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
@@ -46,7 +47,26 @@ doubling depth nearly quadruples identity overhead. Shared-ancestor lineage can
 put a child before its parent. The library accepts and reserializes dangling
 parents, mismatched entry IDs and cycles. Five identical fresh CLI runs produced
 five different sidecar byte strings despite structurally equal graphs. CV01
-selects compact allocation first; it does not complete those other requirements.
+selected compact allocation first; it does not complete those other requirements.
+
+CV01 merged as [#16881](https://github.com/adhithyan15/coding-adventures/pull/16881)
+at `ec1c8d8c733f188c762e1377fe56dc07ecd2faa7`. All 34 checks were terminal and
+acceptable on reviewed head `76f7dc78995dc6c66dfcc1f1952bea0b37efcc21`, including
+all three operating systems and required gates. Fetched main contains that
+squash commit and all 14 changed files match the reviewed head. The clean worktree
+was archived after preserving its compiled baseline and validation/audit artifacts.
+Depth 1024 now serializes to 142,567 bytes and depth 4096 to 569,575 bytes, with
+20-byte IDs throughout. Disabled allocation state survives reload; present null
+state and duplicate decoded entry keys reject rather than downgrading/overwriting.
+Full compiler tests: 1,037 passed; CV49 unit/10 doctests; all other 19 consumers
+2,135 passed (49 existing ignored cases). Strict lint and security review passed.
+
+The compact head still accepts cycles/dangling parents and can allocate a
+self-parent edge when deriving from a future unknown ID. Public mutable maps
+bypass checked invariants; reversed BFS still violates DAG topology. CV02 selects
+controlled graph ownership/mutation, explicit budgets, bounded valid traversal,
+checked import and canonical/fail-closed serialization with artifact publication
+tests. Typed actual chronology and full source/node/output coverage remain open.
 
 The remaining-fold inventory is
 [#16875](https://github.com/adhithyan15/coding-adventures/issues/16875).
