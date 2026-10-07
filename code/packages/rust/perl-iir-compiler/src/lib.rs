@@ -231,8 +231,8 @@ impl Compiler {
             return Err("unsupported Perl arithmetic chain".into());
         }
         let mut acc = self.compile_expression(first)?;
-        let mut chunks = node.children[1..].chunks_exact(2);
-        for pair in &mut chunks {
+        let (pairs, remainder) = node.children[1..].as_chunks::<2>();
+        for pair in pairs {
             let [operator, ASTNodeOrToken::Node(right)] = pair else {
                 return Err("unsupported Perl arithmetic chain".into());
             };
@@ -259,7 +259,7 @@ impl Compiler {
                 value,
             };
         }
-        if !chunks.remainder().is_empty() {
+        if !remainder.is_empty() {
             return Err("incomplete Perl arithmetic expression".into());
         }
         Ok(acc)
