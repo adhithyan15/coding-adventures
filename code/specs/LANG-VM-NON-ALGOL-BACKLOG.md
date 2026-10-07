@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-07 — re-audited after MacroNib and LANG79
+Status date: 2026-10-07 — re-audited after LANG80
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -89,17 +89,20 @@ proof and protected checks passed. PR #16885 delivered LANG79's bounded native
 Python float-expression and `print` pilot and merged as
 `88cfc5a3b874be7c8dd4e237cca229990cd73fdf` after its latest-head checks
 passed. The Python pilot also runs directly on Rust `vm-core`.
+PR #16894 delivered LANG80's bounded native Ruby integer `puts` pilot and
+merged as `6a9ece02b7e2725af351ca2beab983b19595f61a` after its latest-head
+checks passed. It runs directly on Rust `vm-core`.
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG80 Ruby (selected):** publish the bounded direct-to-IIR integer `puts`
-   pilot after rebase, audit, and exact-head review.
-2. **Perl foundation:** publish the bounded Rust lexer/parser and direct-to-IIR
-   `print` arithmetic pilot, then continue the separately tracked historical
-   token and grammar pairs for each public Perl release.
-3. **PREP01 C:** continue the generic-preprocessor C dialect and compose its
+1. **LANG81 Perl foundation (selected):** publish the bounded Rust lexer/parser
+   and direct-to-IIR `print` arithmetic pilot.
+2. **PREP01 C:** continue the generic-preprocessor C dialect and compose its
    token output with the existing C parser when the bounded contracts are ready.
+3. **LANG82 Perl release grammars:** continue the separately tracked token and
+   grammar pairs for each public Perl release, with distinct files and source
+   evidence for every release.
 
 The following run records the first VM-067 selection.
 
