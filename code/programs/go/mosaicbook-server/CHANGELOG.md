@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### Fixed (security) - the server listens on loopback only
+
+The README says the server binds to `localhost` only, but it listened on
+`:<port>`, which is every network interface. `requireLocalOrigin` stops DNS
+rebinding from a browser page. It cannot stop another machine on the same
+network, which can simply send `Host: localhost` and receive previews, the
+compiler output they contain, and the file paths that output names. The
+server now listens on `127.0.0.1:<port>`, through `listenAddress`, which a
+test pins. Found by the security review of the `--package-search-path`
+change, which widens what that output can name.
+
 ### Fixed - app components can find their dependencies (`--package-search-path`)
 
 Each packaged component was compiled with only its own package's siblings on

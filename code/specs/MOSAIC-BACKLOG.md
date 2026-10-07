@@ -37,6 +37,7 @@ history, and local test runs. This file is the result: one ordered list.
 
 1. **Security and visible breakage.**
    - EM-1, the XAML `{` literal (*fixed, unpushed*);
+   - MB-14, MosaicBook listened on every interface (*fixed, unpushed*);
    - MB-1, apps cannot be previewed (*fixed, unpushed*);
    - SW-2, SpiceWorkbench does not compile on four native backends;
    - SW-1, `Path` on Web Components;
@@ -82,6 +83,7 @@ get analysis only (the drop panel); nothing renders natively. Spec: UI19.
 | ID | Problem | Status and evidence | Kind | Size |
 |---|---|---|---|---|
 | MB-1 | App components could not find dependencies outside their own directory, so VisiCalc, TaskApp, EngramApp and JournalApp failed on every backend | **fixed** on `claude/brave-ride-edfrqw` (c615a9499e, unpushed): `--package-search-path` | bug | S |
+| MB-14 | The server listened on every network interface, not just localhost as its README says. Another machine on the network could fetch previews by sending `Host: localhost` | **fixed** on `claude/brave-ride-edfrqw` (unpushed): it binds `127.0.0.1` | security | S |
 | MB-2 | The browser shell never shows a component's `storiesError` | **real**. `static/index.html` has no reference to it. UI19 §6.2 asks for a ⚠️ badge | bug | S |
 | MB-3 | The watcher reloads once without a change at startup, and re-runs discovery while holding the server lock | **real**. Its file-time snapshot starts empty, so "detected file change" appears 1 second after start. Discovery runs `--describe` subprocesses under `s.mu` (`watcher.go`) | bug | S |
 | MB-4 | Compose ignores `--fixtures` and `--emit-project`, even with `--strict-fixtures` (output byte-identical, exit 0) | **real**. This breaks the `--strict-fixtures` contract in `mosaic-compile.json`. Fail loudly first; the fix is EM-6 | bug | S then M |

@@ -84,8 +84,8 @@ func main() {
 	// its internal mux and initialises the SSE client map.
 	srv := newServer(absRoot, *compiler, extraSearchPaths...)
 
-	addr := fmt.Sprintf(":%d", *port)
-	log.Printf("MosaicBook server running at http://localhost%s", addr)
+	addr := listenAddress(*port)
+	log.Printf("MosaicBook server running at http://localhost:%d", *port)
 	log.Printf("Scanning for .mosaic files in: %s", absRoot)
 	log.Printf("Using compiler: %s", *compiler)
 
@@ -100,4 +100,16 @@ func main() {
 	// before any route runs.  log.Fatal terminates on bind error (e.g. port
 	// in use).
 	log.Fatal(http.ListenAndServe(addr, requireLocalOrigin(srv.mux)))
+}
+
+// listenAddress is where the server listens: the loopback interface only.
+//
+// It used to be ":<port>", which is every interface. The Host-header check
+// (requireLocalOrigin) stops a browser page being used against the server
+// through DNS rebinding, but not another machine on the network: that
+// machine can simply send "Host: localhost". Binding to 127.0.0.1 is what
+// keeps the server, and the compiler output it renders, on this machine,
+// as the README always said it did.
+func listenAddress(port int) string {
+	return fmt.Sprintf("127.0.0.1:%d", port)
 }
