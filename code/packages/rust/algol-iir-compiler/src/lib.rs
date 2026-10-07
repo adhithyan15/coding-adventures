@@ -3977,6 +3977,16 @@ impl Compiler {
                     return actuals.len() == 1
                         && self.is_selector_call_safe_runtime_real_value(actuals[0]);
                 }
+                if !self.proc_sigs.contains_key(&target_name)
+                    && matches!(target_name.as_str(), "sign" | "entier")
+                {
+                    let mut dependencies = HashSet::new();
+                    collect_expression_dependency_names(node, "", &mut dependencies);
+                    return dependencies.is_empty()
+                        && self
+                            .static_standard_real_value_with_widen(node, false)
+                            .is_some();
+                }
             }
         }
         if !self.contains_procedure_call(node)
@@ -12720,6 +12730,21 @@ mod tests {
     }
 
     #[test]
+    fn al4_runtime_real_calling_selectors_allow_static_integer_function_name_actuals() {
+        let module = compile_source(
+            "begin boolean procedure choose; choose := true; real procedure relay(x); real x; relay := x; real result; result := if choose() then relay(sign(-2.5)) else relay(entier(3.75)); output(result) end",
+            "test",
+        )
+        .expect("a calling selector may choose exact static integer-function real name actuals");
+        let main = module.get_function("main").expect("has main");
+        assert!(main.instructions.iter().any(|instr| {
+            instr.op == "call"
+                && instr.srcs.first().and_then(Operand::as_var)
+                    == Some("__basic_print_real")
+        }));
+    }
+
+    #[test]
     fn al4_runtime_real_conditional_selector_calls_do_not_trust_local_branches() {
         for source in [
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real x; x := pick(); output(if choose() then x else x) end",
@@ -12728,6 +12753,7 @@ mod tests {
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure echo(x); real x; echo := x; real x; x := pick(); output(if choose() then echo(x + 1.0) else echo(x + 1.0)) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure echo(x); real x; echo := x; real x; x := pick(); output(if choose() then echo(x * 2.0) else echo(x * 2.0)) end",
             "begin boolean procedure choose; choose := true; real procedure pick; pick := 2.25; real procedure echo(x); real x; echo := x; real x; x := pick(); output(if choose() then echo(x ^ 2) else echo(x ^ 2)) end",
+            "begin boolean procedure choose; choose := true; integer procedure sign(x); value x; real x; sign := 1; real procedure echo(x); real x; echo := x; output(if choose() then echo(sign(-2.5)) else echo(sign(-2.5))) end",
         ] {
             let err = compile_source(source, "test")
                 .expect_err("a calling selector must not reuse pre-call local provenance");
