@@ -14,9 +14,10 @@ On 2026-10-07, all 337 distinct version names from CPAN's `/src/5.0/`
 does not establish that the inventory covers every historical public release;
 other archive names and pre-Perl-5 sources still need review.
 The pinned history also lists `p54rc1` and `p54rc2` at lines 264 and 265.
-They were omitted from the earlier inventory and are now distinct pending
-rows. Historical archives list both candidates; their token and grammar
-pairs still require source comparison and validation.
+They were omitted from the earlier inventory and now have distinct,
+explicitly partial token and grammar pairs. Historical archives provide
+the source for each candidate; the shared parser probes validate only the
+bounded decimal `print` arithmetic subset.
 
 The user requested a **separate `.tokens` and `.grammar` file for every
 release**, including maintenance and development versions. The filenames are
@@ -257,6 +258,15 @@ Current pairs:
   [`perl-5.004` source tag]. Its tagged yacc matches 5.003_99a; tokenizer
   adds the regex `/c` modifier outside this subset and retains the tested
   250-digit decimal bound.
+- `perlp54rc1.*` and `perlp54rc2.*` are distinct **partial** pairs checked
+  against their separate [p54rc1 source archive] (SHA-256
+  `5a9a9c294931d006007ea471cbc79c94209d181d48a958a2db86cc1a1633e468`)
+  and [p54rc2 source archive] (SHA-256
+  `973d9cadb2a1efbcdac705fe1eb08e351d746f9480aa806d6b54ecc3344e5f9d`).
+  Both yacc files match 5.004. The p54rc2 tokenizer also matches 5.004;
+  p54rc1 lacks its regex `/c` modifier, outside this bounded subset.
+  Both retain the tested 250-digit decimal bound and reject unsupported
+  syntax.
 - `perl5.004_01.*` is a separate **partial** pair checked against the
   [`perl-5.004_01` source tag]. Tagged yacc and tokenizer match 5.004;
   this release still has its own files and tested 250-digit decimal bound.
@@ -380,6 +390,8 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [`perl-5.003_99` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_99
 [`perl-5.003_99a` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_99a
 [`perl-5.004` source tag]: https://github.com/Perl/perl5/tree/perl-5.004
+[p54rc1 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-p54rc1.tar.gz
+[p54rc2 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-p54rc2.tar.gz
 [`perl-5.004_01` source tag]: https://github.com/Perl/perl5/tree/perl-5.004_01
 [`perl-5.004_02` source tag]: https://github.com/Perl/perl5/tree/perl-5.004_02
 [historical 5.004_01-t2 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01-t2.tar.gz
