@@ -210,7 +210,11 @@ remains the bounded public facade and duplicate-rejecting assembly point.
 The six Tamil vowel signs written as separate symbols beside their consonant
 (ா ி ீ ெ ே ை) are owners of the same kind, cited to the native-writer pen
 traces in HP Labs India's LipiTk Tamil recognizer; the book decides where each
-is drawn in a word (`human-language-data`'s `WRITTEN_SIGN_SIDES`).
+is drawn in a word (`human-language-data`'s `WRITTEN_SIGN_SIDES`). The pulli ்
+(`U-BCD`) is the last Tamil owner: one short dab inside the font's disc, its
+order (body first, then the dot, one lift) cited to Abhinaya Rajarajan's
+*Varai* recordings of the 18 consonants with pulli (one writer, facts only,
+confidence medium).
 Gujarati's eleven signs (ા િ ી ુ ૂ ે ૈ ો ૌ ં ઃ) sit at the end of the Gujarati
 owner, keyed `gujarati:<sign>` like its letters, and take their source from the
 sign's mark record (`gujaratiMarkSource`): order, start, direction and lifts

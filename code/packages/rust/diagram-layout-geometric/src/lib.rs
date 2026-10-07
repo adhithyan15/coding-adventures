@@ -7,7 +7,7 @@
 //! bounding box of all elements) and passes elements through unchanged.
 
 use std::collections::HashMap;
-use diagram_ir::{CynefinDiagram, GeoElement, GeometricDiagram, InfoDiagram, IshikawaDiagram, LayoutedCynefinDiagram, LayoutedCynefinDomain, LayoutedCynefinTransition, LayoutedGeometricDiagram, LayoutedInfoDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedVennCircle, LayoutedVennDiagram, LayoutedVennLabel, LayoutedWardleyDiagram, LayoutedWardleyEvolution, LayoutedWardleyLink, LayoutedWardleyNode, Point, VennDiagram, WardleyDiagram};
+use diagram_ir::{CubicCurveSegment, CynefinDiagram, GeoElement, GeometricDiagram, InfoDiagram, IshikawaDiagram, LayoutedCynefinBoundary, LayoutedCynefinDiagram, LayoutedCynefinDomain, LayoutedCynefinTransition, LayoutedGeometricDiagram, LayoutedInfoDiagram, LayoutedIshikawaBone, LayoutedIshikawaDiagram, LayoutedVennCircle, LayoutedVennDiagram, LayoutedVennLabel, LayoutedWardleyDiagram, LayoutedWardleyEvolution, LayoutedWardleyLink, LayoutedWardleyNode, Point, VennDiagram, WardleyDiagram};
 
 pub const VERSION: &str = "0.2.0";
 
@@ -129,11 +129,11 @@ pub fn layout_wardley(diagram: &WardleyDiagram) -> LayoutedWardleyDiagram {
 pub fn layout_cynefin(diagram: &CynefinDiagram) -> LayoutedCynefinDiagram {
     let width = diagram.config.width + diagram.config.padding * 2.0;
     let height = diagram.config.height + diagram.config.padding * 2.0;
-    let top = diagram.config.padding; let left = diagram.config.padding; let gap = 10.0;
-    let domain_width = (diagram.config.width - gap) / 2.0;
-    let domain_height = (diagram.config.height - gap) / 2.0;
-    let specs = [("complex", left, top), ("complicated", left + domain_width + gap, top),
-        ("chaotic", left, top + domain_height + gap), ("clear", left + domain_width + gap, top + domain_height + gap)];
+    let top = diagram.config.padding; let left = diagram.config.padding;
+    let domain_width = diagram.config.width / 2.0;
+    let domain_height = diagram.config.height / 2.0;
+    let specs = [("complex", left, top), ("complicated", left + domain_width, top),
+        ("chaotic", left, top + domain_height), ("clear", left + domain_width, top + domain_height)];
     let mut domains: Vec<_> = specs.into_iter().map(|(name, x, y)| LayoutedCynefinDomain { name: name.into(),
         items: diagram.domains.iter().find(|domain| domain.name == name).map_or_else(Vec::new, |domain| domain.items.clone()),
         overflow_count: 0, x, y, width: domain_width, height: domain_height,
@@ -152,9 +152,42 @@ pub fn layout_cynefin(diagram: &CynefinDiagram) -> LayoutedCynefinDiagram {
         Some(LayoutedCynefinTransition { from: cynefin_boundary_point(from, &to.center),
             to: cynefin_boundary_point(to, &from.center), label: transition.label.clone() })
     }).collect();
+    let boundaries = cynefin_boundaries(&diagram.config, left, top);
     LayoutedCynefinDiagram { width, height, title: diagram.title.clone(), accessibility_title: diagram.accessibility_title.clone(),
         accessibility_description: diagram.accessibility_description.clone(),
-        show_domain_descriptions: diagram.config.show_domain_descriptions, domains, transitions }
+        show_domain_descriptions: diagram.config.show_domain_descriptions, domains, boundaries, transitions }
+}
+
+fn cynefin_boundaries(config: &diagram_ir::CynefinConfig, left: f64, top: f64) -> Vec<LayoutedCynefinBoundary> {
+    let vertical_points: Vec<_> = (0..=7).map(|index| Point { x: left + config.width / 2.0
+        + (cynefin_seeded_random(config.seed.wrapping_add(index * 17)) * 2.0 - 1.0) * config.boundary_amplitude,
+        y: top + index as f64 * config.height / 7.0 }).collect();
+    let horizontal_points: Vec<_> = (0..=7).map(|index| Point { x: left + index as f64 * config.width / 7.0,
+        y: top + config.height / 2.0
+            + (cynefin_seeded_random(config.seed.wrapping_add(100).wrapping_add(index * 23)) * 2.0 - 1.0) * config.boundary_amplitude }).collect();
+    vec![cynefin_curve(&vertical_points, config.seed, config.boundary_amplitude, true),
+        cynefin_curve(&horizontal_points, config.seed.wrapping_add(100), config.boundary_amplitude, false)]
+}
+
+fn cynefin_curve(points: &[Point], seed: i32, amplitude: f64, vertical: bool) -> LayoutedCynefinBoundary {
+    let segments = points.windows(2).enumerate().map(|(index, pair)| {
+        let first = &pair[0]; let second = &pair[1]; let direction = if index % 2 == 0 { 1.0 } else { -1.0 };
+        let offset = amplitude * 1.5 * direction * cynefin_seeded_random(seed
+            .wrapping_add(index as i32 * if vertical { 31 } else { 37 })
+            .wrapping_add(if vertical { 7 } else { 11 }));
+        if vertical { let middle = (first.y + second.y) / 2.0; CubicCurveSegment {
+            control1: Point { x: first.x + offset, y: middle }, control2: Point { x: second.x - offset, y: middle }, end: second.clone() }
+        } else { let middle = (first.x + second.x) / 2.0; CubicCurveSegment {
+            control1: Point { x: middle, y: first.y + offset }, control2: Point { x: middle, y: second.y - offset }, end: second.clone() } }
+    }).collect();
+    LayoutedCynefinBoundary { start: points[0].clone(), segments }
+}
+
+fn cynefin_seeded_random(seed: i32) -> f64 {
+    let mut value = seed.wrapping_add(1_831_565_813);
+    value = (value ^ ((value as u32 >> 15) as i32)).wrapping_mul(value | 1);
+    value ^= value.wrapping_add((value ^ ((value as u32 >> 7) as i32)).wrapping_mul(value | 61));
+    f64::from((value ^ ((value as u32 >> 14) as i32)) as u32) / 4_294_967_296.0
 }
 
 fn cynefin_boundary_point(domain: &LayoutedCynefinDomain, toward: &Point) -> Point {
@@ -354,7 +387,8 @@ mod tests {
     #[test]
     fn cynefin_layout_places_domains_in_fixed_semantic_quadrants() {
         let layout = layout_cynefin(&CynefinDiagram { title: None, accessibility_title: None, accessibility_description: None,
-            config: diagram_ir::CynefinConfig { width: 640.0, height: 420.0, padding: 24.0, show_domain_descriptions: false },
+            config: diagram_ir::CynefinConfig { width: 640.0, height: 420.0, padding: 24.0, show_domain_descriptions: false,
+                boundary_amplitude: 12.0, seed: 17 },
             domains: vec![diagram_ir::CynefinDomain { name: "confusion".into(),
                 items: vec!["One".into(), "Two".into(), "Three".into(), "Four".into(), "Five".into()] }],
             transitions: vec![diagram_ir::CynefinTransition { from: "complex".into(), to: "clear".into(), label: None }] });
@@ -365,6 +399,8 @@ mod tests {
         assert_eq!(layout.domains.iter().find(|domain| domain.name == "confusion").unwrap().overflow_count, 2);
         assert_eq!((layout.width, layout.height), (688.0, 468.0));
         assert!(!layout.show_domain_descriptions);
+        assert_eq!(layout.boundaries.len(), 2);
+        assert!(layout.boundaries.iter().all(|boundary| boundary.segments.len() == 7));
         assert!(layout.transitions[0].from.x > complex.center.x);
         assert!(layout.transitions[0].to.x < clear.center.x);
     }

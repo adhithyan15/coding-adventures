@@ -779,6 +779,8 @@ init directives or YAML front matter survive semantic IR and control the inner
 framework and outer canvas dimensions during deterministic layout.
 The default-enabled `showDomainDescriptions` switch also survives config IR
 and controls backend-neutral model and practice subtitles for all five domains.
+Non-negative `boundaryAmplitude` and integer `seed` values resolve deterministic
+cubic vertical and horizontal domain boundaries before Paint lowering.
 
 ### TreeView Native Slice
 

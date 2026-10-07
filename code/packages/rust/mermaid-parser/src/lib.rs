@@ -5741,9 +5741,16 @@ fn parse_cynefin_config(source: &str) -> CynefinConfig {
     let boolean = |name: &str, fallback: bool| value(name).and_then(|value| match value.to_ascii_lowercase().as_str() {
         "true" => Some(true), "false" => Some(false), _ => None,
     }).unwrap_or(fallback);
+    let seed = value("seed").and_then(|value| value.parse::<i32>().ok()).filter(|seed| *seed != 0)
+        .unwrap_or_else(|| mermaid_string_hash(source));
     CynefinConfig { width: positive("width", defaults.width), height: positive("height", defaults.height),
         padding: non_negative("padding", defaults.padding),
-        show_domain_descriptions: boolean("showDomainDescriptions", defaults.show_domain_descriptions) }
+        show_domain_descriptions: boolean("showDomainDescriptions", defaults.show_domain_descriptions),
+        boundary_amplitude: non_negative("boundaryAmplitude", defaults.boundary_amplitude), seed }
+}
+
+fn mermaid_string_hash(value: &str) -> i32 {
+    value.encode_utf16().fold(0i32, |hash, unit| hash.wrapping_shl(5).wrapping_sub(hash).wrapping_add(i32::from(unit)))
 }
 
 fn prepare_cynefin_source(source: &str) -> Result<(String, Vec<String>), ParseError> {
