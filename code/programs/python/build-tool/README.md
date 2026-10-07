@@ -76,6 +76,18 @@ state, environment, credentials, clock, process, or network resource. Its
 package-local tests dynamically pin and consume every one of the eight graph
 and twelve diff-selection language-neutral cases.
 
+`build_tool.ci_gate_selection` is a separate process-free CI decision boundary.
+It accepts a caller-supplied in-memory registry, nullable affected-package and
+changed-file snapshots, and a force flag. Every gate receives a sorted,
+deterministic `run_` verdict; unavailable snapshots and changes to the fixed
+gating-machinery sentinels run all gates. Before calling the portable glob
+matcher, the operation validates every registry entry and preflights the
+complete deduplicated pattern/file cross product against a 50,000,000-unit
+Unicode-scalar work ceiling. Exceeding it returns only
+`CI_GATE_MATCH_LIMIT_EXCEEDED`, never partial gate outputs. Package-local tests
+replay all ten language-neutral CI-gate selection cases. File loading, Git,
+workflow outputs, and an execution adapter remain outside this pure function.
+
 The source registry includes OCaml `.ml`, `.mli`, and `.opam` inputs plus the
 exact `.ocamlformat`, `dune`, and `dune-project` metadata names in extension
 and declared-source modes; applicable `.opam` manifests remain inputs even

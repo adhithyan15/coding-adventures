@@ -12,20 +12,20 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16798,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16798",
-    "branch": "codex/parity-dart-swift-frontend-fixtures-20261006",
-    "implementation_revision": "fdc3d4e088d137fcbde9a00371756634c7a09d95",
+    "number": 16863,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16863",
+    "branch": "codex/parity-python-ci-gate-selection-20261006",
+    "implementation_revision": "f28430654c760f9003a5d266f090b24f1fea5a61",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-06T11:30:16Z",
-    "pr_number": 16798,
+    "observed_at": "2026-10-07T07:15:01Z",
+    "pr_number": 16863,
     "status": "checks-pending",
-    "notes": "Ready-for-review fixture PR #16798 opened from validated implementation fdc3d4e088d137fcbde9a00371756634c7a09d95 after 11 Python 3.13 contract/oracle tests, 586 Python grammar substrate tests, three passing Dart and Swift substrate suites, Swift embedded-grammar regeneration and lexer coverage BUILD, Ruff, schema-3 collision inventory, diff checks, and independent security re-review. GitHub reports MERGEABLE but BLOCKED while checks are queued; no auto-merge is enabled."
+    "notes": "Ready-for-review Python CI-gate selection PR #16863 is open from validated f28430654c760f9003a5d266f090b24f1fea5a61. Local Python package suite passed 557 tests with 91.56% coverage, full Go build-tool tests/vet passed, focused Ruff/mypy and collision inventory passed, and read-only security review found no actionable issue. GitHub reports MERGEABLE but BLOCKED while initial CI and CodeQL checks are queued; auto-merge is not enabled. Previous parity PR #16798 auto-merged as 665bf2ac6ec08e0ab463b75c2bc4a88828ce76a6."
   },
   "last_inventory": {
-    "revision": "d702210f2fe8180761a384c153e5645b188e975b",
+    "revision": "665bf2ac6ec08e0ab463b75c2bc4a88828ce76a6",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1487,
@@ -9656,10 +9656,13 @@
     {
       "id": "build-tool-python-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the Python build tool",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-python-glob-matcher-complexity-hardening"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/parity-python-ci-gate-selection-20261006",
+      "pr_number": 16863,
+      "selected_at": "2026-10-06T13:24:49Z",
+      "selection_revision": "665bf2ac6ec08e0ab463b75c2bc4a88828ce76a6",
+      "selection_notes": "Selected after #16798 auto-merged and the exact-main 15-lane inventory stayed collision-free at 1,487 identities and 4,757 slots. All three prerequisites are merged, ten neutral cases define the closed result contract, and the Python lane is only three gates from a terminal build-tool adapter. This bounded process-free tranche advances the every-language build-tool mandate without host authority or overlap with the eleven open non-parity PRs; Haskell Dune discovery has higher raw fanout but a longer eleven-gate critical path.",
       "notes": "The exact-main engine audit found no Python CI gate evaluator. Add a typed process-free module and pytest consumption of every neutral case without reading the repository, invoking Git, or writing workflow outputs."
     },
     {
@@ -12148,7 +12151,7 @@
       "id": "json-value-d20-neutral-conformance",
       "title": "Freeze D20 JSON value and serializer semantics",
       "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
-      "notes": "Dart, Java, and Kotlin lack JSON value and serializer (six slots). Specify value ownership, number/string round trips, canonical error behavior, and independent neutral cases. Java/Kotlin JSON lexer/parser ping stubs are prerequisites, not evidence of parser readiness."
+      "notes": "Post-#16798 re-audit: json-serializer is 12/15 and lacks Dart, Java, Kotlin; this existing D20 umbrella explicitly owns both json-value and json-serializer, so no duplicate serializer owner is added. Freeze value ownership, compact/pretty output, escaping, nonfinite errors, ordering, and independent neutral cases. Java/Kotlin JSON lexer/parser ping stubs are prerequisites, not parser readiness."
     },
     {
       "id": "json-value-dart-java-kotlin-parity",
@@ -12237,12 +12240,15 @@
     {
       "id": "dart-swift-language-frontends-neutral-fixtures",
       "title": "Freeze Dart and Swift language-frontend token and AST fixture contract",
-      "status": "pr-open", "depends_on": [],
+      "status": "merged", "depends_on": [],
       "branch": "codex/parity-dart-swift-frontend-fixtures-20261006", "pr_number": 16798,
       "selected_at": "2026-10-06T10:56:00Z",
       "selection_revision": "2547600e9636d1dfd2ad5df9e2cfdf14963d556a",
       "opened_at": "2026-10-06T11:30:16Z",
       "opened_revision": "fdc3d4e088d137fcbde9a00371756634c7a09d95",
+      "merged_at": "2026-10-06T13:08:35Z",
+      "merge_revision": "665bf2ac6ec08e0ab463b75c2bc4a88828ce76a6",
+      "merge_notes": "All 31 final-head checks passed or were expected skips after an unchanged-head retry of the unrelated macOS Forme native-preview race. GitHub auto-merged the PR without a manual merge.",
       "validation_notes": "Exact-main schema-3 inventory after conflict-free rebase on d702210f2f remains 1,487 identities, 4,757 slots, zero collisions and unknown buckets. Python 3.13 fixture tests 11/11 including exact oracle replay; canonical Python grammar substrate 586/586; Dart grammar-tools, lexer, parser tests and analyze pass; Swift grammar-tools, lexer, parser suites 68/61/40 pass; Swift lexer coverage BUILD and embedded grammar check pass; Python validator coverage 82%; Ruff, YAML parse, diff check, and independent security re-review pass. CI is queued on the open PR.",
       "selection_notes": "Selected after #16796 auto-merged, exact-main schema-3 collision inventory remained at 15 established lanes, 1,487 identities and 4,757 slots with no collisions or unknown buckets, and parallel audits found no new unowned package, build-tool, or OCaml gate. This prerequisite-free neutral fixture tranche unlocks twelve already-owned Dart/Swift frontend verticals spanning 48 missing slots, ahead of correlation-vector (seven) and block-RAM (four direct, seven total). No active parity PR or live path overlap exists; use this fresh clean main-based branch and keep lexer/parser implementation for later vertical owners.",
       "notes": "Twelve lexer/parser roots in both lanes produce 48 missing slots: C#, Excel, Java, JavaScript, Lattice, Python, Ruby, SQL, Starlark, TypeScript, Verilog, VHDL. Pin grammar embed/drift and neutral token/AST cases; split subsequent vertical lexer-to-parser slices. Contextual generic closer must precede C#/Java semantic ports."
@@ -12552,6 +12558,144 @@
       "title": "Freeze the pure pluggable stack-VM execution contract",
       "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
       "notes": "The virtual-machine identity exists in 9/15 established lanes and is missing C#, Dart, F#, Haskell, Java, and Kotlin. Reconcile zero-based program counters, handler-owned control flow, stable invalid-opcode and stack-underflow outcomes, immutable step traces, and explicit reset semantics over literal CodeObjects. Keep fixed legacy opcodes, register-vm, simulator-protocol, typed/context/WASM extensions, builtins/call frames, VM-GC integration, and missing-lane ports outside this owner."
+    },
+    {
+      "id": "lattice-compiler-neutral-conformance",
+      "title": "Reconcile pure Lattice AST-to-CSS and transpiler contracts",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Post-#16798 audit found lattice-ast-to-css and lattice-transpiler in only 8/15 established lanes, with fourteen missing slots across C#, Dart, F#, Haskell, Java, Kotlin, and Swift. Define module-free neutral AST-to-CSS and transpiler fixtures under the Lattice v2 and 17-lattice-transpiler specs. Existing @use implementations silently skip directives; record a reviewed exception for the module-free corpus and a separate injected logical-path module-resolution contract before claiming full @use parity. No ambient filesystem authority belongs in this pure owner."
+    },
+    {
+      "id": "lattice-ast-to-css-missing-lane-parity",
+      "title": "Port pure Lattice AST-to-CSS across seven missing lanes",
+      "status": "pending", "depends_on": ["lattice-compiler-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Split C#, Dart, F#, Haskell, Java, Kotlin, and Swift into lane-sized PRs after the neutral AST contract. Dart and Swift also need their separately owned Lattice lexer/parser verticals before end-to-end claims; this owner does not duplicate frontend roots."
+    },
+    {
+      "id": "lattice-transpiler-missing-lane-parity",
+      "title": "Port module-free Lattice transpilation across seven missing lanes",
+      "status": "pending", "depends_on": ["lattice-compiler-neutral-conformance", "lattice-ast-to-css-missing-lane-parity"], "branch": null, "pr_number": null,
+      "notes": "Split C#, Dart, F#, Haskell, Java, Kotlin, and Swift into lane-sized PRs after AST-to-CSS. Preserve the explicit @use exception until an injected module resolver and authority-aware wrapper are separately specified and tested; never silently treat ignored use directives as correct."
+    },
+    {
+      "id": "immutable-list-portability-contract",
+      "title": "Reclassify immutable-list and freeze persistent-list behavior",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Immutable-list is present in seven established lanes, but its governing spec still says native-only and forbids pure implementations despite six existing pure implementations. Reconcile that classification and pin versioned neutral operation traces with named persistent snapshots, push/set/pop/get/from/iterate/equality, Unicode, invalid bounds, and 31/32/33 and 1024/1025 boundaries. Keep structural-sharing and complexity probes lane-internal. Immutable-list-native is a distinct bridge identity."
+    },
+    {
+      "id": "immutable-list-jvm-swift-lane-parity",
+      "title": "Port immutable-list to Java, Kotlin, and Swift",
+      "status": "pending", "depends_on": ["immutable-list-portability-contract"], "branch": null, "pr_number": null,
+      "notes": "Three collision-checked missing slots with no repo-package prerequisite. Split by language, run neutral traces and native persistence/structural-sharing tests, and validate Gradle/JVM 21 or SwiftPM BUILD fronts. Broader five-to-nine-band gaps remain classified separately."
+    },
+    {
+      "id": "red-black-tree-swift-lane-parity",
+      "title": "Port the pure DT09 red-black tree to Swift",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Java/Kotlin already implement DT09 and Swift has the DT07 binary-search-tree starting point, but Swift lacks red-black-tree and no existing owner covers it. Pin integer insert/delete, duplicates, traversal, rank boundaries, persistence, color invariants, and height bounds before a bounded Swift port."
+    },
+    {
+      "id": "rope-dt16-neutral-conformance",
+      "title": "Reconcile DT16 rope Unicode, balancing, and complexity contracts",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Rope is in five established lanes, but Rust indexes Unicode scalars while C# indexes UTF-16 units; both use depth-difference balancing where DT16 specifies a Fibonacci predicate, and some operations flatten despite logarithmic targets. Freeze observable operation vectors separately from structural/performance probes and log existing-lane remediation before new ports."
+    },
+    {
+      "id": "rope-java-kotlin-lane-parity",
+      "title": "Port DT16 rope to Java and Kotlin",
+      "status": "pending", "depends_on": ["rope-dt16-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Both JVM lanes already have DT03 binary-tree, the specified rope prerequisite. Split Java and Kotlin ports and test Unicode indexing, split/delete/rebalance, invariants, complexity, coverage, and BUILD."
+    },
+    {
+      "id": "rope-swift-lane-parity",
+      "title": "Port DT16 rope to Swift after DT03",
+      "status": "pending", "depends_on": ["rope-dt16-neutral-conformance", "binary-tree-dart-swift-lane-parity"], "branch": null, "pr_number": null,
+      "notes": "Swift rope is missing and its DT03 prerequisite is already owned by the Dart/Swift binary-tree item. Implement only after both prerequisites merge; validate SwiftPM coverage and the neutral structural/behavior probes."
+    },
+    {
+      "id": "irc-framing-neutral-conformance",
+      "title": "Close pure IRC framing bounds and recovery in a neutral contract",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "IRC-framing is 8/15, with Dart, Haskell, Java, Kotlin, Lua, Perl, and Swift absent. The spec requires discarding an unterminated line once its buffer exceeds 512 bytes, but inspected Rust/Python/Go/C# feeds retain unbounded bytes until LF; existing overlong tests cover only terminated lines. Define closed feed/drain/reset byte-hex traces, CRLF/LF splits, 510/511 content boundaries, discard-through-next-LF recovery, and buffer ceilings, then remediate present lanes before declaring parity."
+    },
+    {
+      "id": "irc-framing-missing-lane-parity",
+      "title": "Port bounded IRC framing to seven missing lanes",
+      "status": "pending", "depends_on": ["irc-framing-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Split Dart, Haskell, Java, Kotlin, Lua, Perl, and Swift into lane-sized pure byte-buffer packages after bounded recovery is fixed in the neutral oracle. Socket authority remains outside this package and owner."
+    },
+    {
+      "id": "irc-proto-neutral-conformance",
+      "title": "Freeze the pure IRC protocol parser contract",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "IRC-proto is 8/15 and lacks Dart, Haskell, Java, Kotlin, Lua, Perl, and Swift. Define bounded byte-preserving prefix, command, parameter, trailing-field, malformed-line, and round-trip fixtures without socket authority; keep framing as its separate sibling contract."
+    },
+    {
+      "id": "irc-proto-missing-lane-parity",
+      "title": "Port pure IRC protocol parsing to seven missing lanes",
+      "status": "pending", "depends_on": ["irc-proto-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Split seven missing implementation languages by lane and consume the neutral parser corpus. Keep IRC framing and network sockets outside this owner."
+    },
+    {
+      "id": "css-frontend-neutral-extension",
+      "title": "Extend neutral frontend fixtures for CSS success and error tokens",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "CSS lexer/parser are absent in Dart, Java, Kotlin, and Swift; the merged v1 corpus is closed to twelve other families and success AST outcomes. Pin css.tokens/css.grammar hashes and Python generic AST for successful CSS3-subset cases. Add a separately versioned malformed/token-only profile for BAD_STRING/BAD_URL because v1 cannot encode error-token outcomes."
+    },
+    {
+      "id": "lisp-frontend-neutral-extension",
+      "title": "Extend neutral frontend fixtures for Lisp lexer and parser",
+      "status": "pending", "depends_on": ["dart-swift-language-frontends-neutral-fixtures"], "branch": null, "pr_number": null,
+      "notes": "Lisp lexer/parser are absent in Dart, Java, Kotlin, and Swift. Pin lisp.tokens/lisp.grammar hashes and Python generic token/AST projections for literals, lists, quote, and dotted pairs; Rust's custom S-expression AST is not the generic oracle. Do not broaden the merged v1 twelve-family schema silently."
+    },
+    {
+      "id": "java-kotlin-frontend-escape-none-string-values",
+      "title": "Honor escapes:none token values in JVM generic lexers",
+      "status": "pending", "depends_on": ["css-frontend-neutral-extension", "lisp-frontend-neutral-extension"], "branch": null, "pr_number": null,
+      "notes": "Java/Kotlin grammar-tools parse escapes:none but their generic lexer token construction returns raw quoted source. Reconcile delimiter stripping and exact values with Python CSS/Lisp oracle cases before full string-literal lexer parity; keep this substrate repair separate from lane frontends."
+    },
+    {
+      "id": "dart-swift-frontend-error-token-fallback",
+      "title": "Implement declared error-token fallback in Dart and Swift lexers",
+      "status": "pending", "depends_on": ["css-frontend-neutral-extension"], "branch": null, "pr_number": null,
+      "notes": "Dart parses errors: definitions but compiles only normal/skip patterns; Swift grammar-tools discards errors: definitions and its lexer throws on no match. CSS BAD_STRING/BAD_URL recovery requires a bounded generic grammar-tools/lexer substrate repair with negative token-only fixtures before claiming full CSS lexer parity."
+    },
+    {
+      "id": "lisp-frontend-four-lane-parity",
+      "title": "Port Lisp lexer and parser to Dart, Java, Kotlin, and Swift",
+      "status": "pending", "depends_on": ["lisp-frontend-neutral-extension", "java-kotlin-frontend-escape-none-string-values"], "branch": null, "pr_number": null,
+      "notes": "Split four languages into lexer-before-parser verticals, proving literal, list, quote, dotted-pair, token position/EOF, and full generic AST behavior. The JVM string-value substrate is a prerequisite to complete parity; Dart/Swift error-token fallback is CSS-specific."
+    },
+    {
+      "id": "css-frontend-four-lane-parity",
+      "title": "Port CSS lexer and parser to Dart, Java, Kotlin, and Swift",
+      "status": "pending", "depends_on": ["css-frontend-neutral-extension", "java-kotlin-frontend-escape-none-string-values", "dart-swift-frontend-error-token-fallback"], "branch": null, "pr_number": null,
+      "notes": "Split four languages into lexer-before-parser verticals. A plain CSS success fixture alone is insufficient: prove escaped/unescaped string values, BAD_STRING/BAD_URL recovery, exact token positions, EOF, full generic AST, and grammar embed regeneration. Scope is the repository CSS3 subset, not complete browser CSS."
+    },
+    {
+      "id": "suffix-tree-dt15-neutral-conformance",
+      "title": "Reconcile DT15 suffix-tree structure and search complexity",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Suffix-tree is 5/15; Rust's build_ukkonen aliases a simple build and search scans source text, so directory presence is not DT15 behavioral or complexity proof. Define neutral search vectors plus native structural/complexity probes before porting. DT15 depends on radix-tree; do not copy the scan proxy as a completed implementation."
+    },
+    {
+      "id": "suffix-tree-jvm-lane-parity",
+      "title": "Port DT15 suffix-tree to Java and Kotlin",
+      "status": "pending", "depends_on": ["suffix-tree-dt15-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Java/Kotlin have the DT15 radix-tree prerequisite. Split lane ports and validate neutral search, native structural invariants, complexity, and JVM BUILD/test coverage."
+    },
+    {
+      "id": "dart-radix-tree-lane-parity",
+      "title": "Port pure radix-tree prerequisite to Dart",
+      "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "The DT15 audit found no Dart radix-tree package or exact owner. Establish its pure prefix-map contract, Dart tests/coverage/BUILD, and dependency metadata before any Dart suffix-tree port. Swift radix-tree already has a separate pending owner."
+    },
+    {
+      "id": "suffix-tree-dart-swift-lane-parity",
+      "title": "Port DT15 suffix-tree to Dart and Swift after radix-tree",
+      "status": "pending", "depends_on": ["suffix-tree-dt15-neutral-conformance", "dart-radix-tree-lane-parity", "swift-radix-tree-lane-parity"], "branch": null, "pr_number": null,
+      "notes": "Split Dart and Swift implementation PRs once their own radix-tree prerequisite and the reconciled DT15 contract are merged; validate structure and complexity rather than a text-scan proxy."
     }
   ]
 }

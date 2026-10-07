@@ -197,6 +197,23 @@ Java/Kotlin, Dart, and OCaml remain owned by their existing build-tool creation
 and promotion items; the final CI gate aggregate depends on those owners as
 well as every explicit current-front-door leaf.
 
+### Python process-free adoption
+
+The Python build tool's `ci_gate_selection` owner exposes a typed pure function
+over a caller-supplied, already-validated registry and nullable in-memory
+affected-package and changed-file snapshots. The function returns every gate
+in ID order, including false verdicts, or one stable
+`CI_GATE_MATCH_LIMIT_EXCEEDED` diagnostic with no partial gate list. It uses the
+existing portable `glob_match` implementation, not host path matching. Python
+`len()` counts Unicode scalars for the preflight; the complete operation-wide
+charge is computed before the first matcher invocation, even if an early gate
+or package intersection would otherwise decide the result. The exact ten
+`ci-gate-selection/*.json` neutral cases must be discovered by ID and replayed
+through this production function in package-local tests. Fixture decoding and
+any registry file I/O remain in tests or future reviewed front-door adapters,
+not in the pure operation. This adoption does not mark a neutral execution
+adapter ready.
+
 ### Fail open
 
 Every ambiguity resolves to `true`. A malformed registry is a hard error at plan

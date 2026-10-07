@@ -16026,6 +16026,41 @@ only one currently unblocked descendant; two others require separate native
 authority. Freeze the Dart/Swift grammar embed/drift and token/AST contract in
 one bounded fixture tranche before porting any lexer or parser package.
 
+## Post-#16798 inventory, discovered seams, and build-tool priority (2026-10-06)
+
+PR #16798 passed all 31 required checks after an unchanged-head retry of an
+unrelated macOS Forme native-preview test race. GitHub reported a clean merge,
+auto-merge was enabled with an exact head guard, and GitHub merged it at
+`665bf2ac6ec08e0ab463b75c2bc4a88828ce76a6`; no manual merge occurred.
+The fresh merged-main schema-3 inventory still has 15 established lanes,
+1,487 implementation identities, 4,757 slots, 1,529 all-reported identities,
+178 high-consensus identities with 262 gaps, five emerging OCaml packages,
+and zero canonical collisions or unknown language buckets. All 16 build-tool
+adapter manifest records remain missing; the 178-case neutral build-tool corpus
+does not itself constitute a tested front door.
+
+Parallel read-only audits found newly unowned portable work, now registered as
+pending dependency-shaped owners in the state file:
+
+| Seam | Evidence and ordering |
+| --- | --- |
+| Lattice compiler | AST-to-CSS and transpiler each have seven missing lanes; freeze module-free fixtures first, then port AST-to-CSS before transpiler. `@use` is not yet faithfully resolved and needs a separate injected-module contract, not implicit filesystem access. |
+| Persistent structures | Immutable-list needs a governing-spec portability correction before JVM/Swift ports; Swift red-black-tree is a pure missing slot. Rope needs a Unicode/balance/complexity reconciliation before Java/Kotlin and then Swift after its owned binary-tree prerequisite. |
+| IRC | Proto and framing each have seven missing lanes. Framing's existing implementations retain unbounded unterminated input contrary to the spec; close bounded discard/recovery in neutral cases before ports. No socket authority belongs in these pure packages. |
+| CSS and Lisp frontends | Four lanes lack each lexer/parser pair. The merged 12-family fixture schema is closed, so add separate neutral extensions. Java/Kotlin `escapes:none` values and Dart/Swift CSS error-token fallback are substrate blockers before complete parity claims. |
+| Suffix tree | Five lanes report a root, but Rust's scan proxy does not meet DT15 structural/complexity claims. Reconcile conformance first; Java/Kotlin have radix-tree, Swift's radix-tree is owned, and Dart needs a new radix-tree prerequisite. |
+
+The next single implementation tranche is the already-owned, process-free
+Python build-tool CI-gate selection conformance. Its three prerequisites are
+merged, ten neutral cases have closed expected results, and the Python lane is
+only three gates from a terminal adapter, so this small slice advances the
+every-language build-tool mandate without host authority. Haskell Dune BUILD
+discovery has more direct descendants (three, five total) but sits earlier in
+a longer eleven-gate Haskell chain; the ready Dart/Swift Lattice verticals
+advance two package slots per lane after the just-merged fixtures. Keep those
+as separate next choices, do not open a second parity PR, and recheck current
+main and path collisions before pushing.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
