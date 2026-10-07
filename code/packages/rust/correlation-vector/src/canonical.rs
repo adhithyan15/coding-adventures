@@ -12,9 +12,9 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::io::{self, Write};
 
-struct BoundedWriter {
-    bytes: Vec<u8>,
-    cap: usize,
+pub(super) struct BoundedWriter {
+    pub(super) bytes: Vec<u8>,
+    pub(super) cap: usize,
 }
 impl Write for BoundedWriter {
     fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {
@@ -34,13 +34,13 @@ impl Write for BoundedWriter {
     }
 }
 
-struct Context(RefCell<Work>);
+pub(super) struct Context(pub(super) RefCell<Work>);
 impl Context {
-    fn take<E: Error>(&self, amount: usize) -> Result<(), E> {
+    pub(super) fn take<E: Error>(&self, amount: usize) -> Result<(), E> {
         self.0.borrow_mut().take(amount).map_err(E::custom)
     }
 }
-struct Canonical<'a, T: ?Sized>(&'a T, &'a Context);
+pub(super) struct Canonical<'a, T: ?Sized>(pub(super) &'a T, pub(super) &'a Context);
 
 impl Serialize for Canonical<'_, CVLog> {
     fn serialize<S: Serializer>(&self, s: S) -> Result<S::Ok, S::Error> {
@@ -64,7 +64,7 @@ impl Serialize for Canonical<'_, CVLog> {
         map.end()
     }
 }
-struct Identity<'a>(u64, &'a Context);
+pub(super) struct Identity<'a>(pub(super) u64, pub(super) &'a Context);
 impl Serialize for Identity<'_> {
     fn serialize<S: Serializer>(&self, s: S) -> Result<S::Ok, S::Error> {
         self.1.take::<S::Error>(1)?;

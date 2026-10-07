@@ -204,9 +204,12 @@ Work allowances apply per graph operation. Omit the flag for defaults.
 Overrides require unique known names and unsigned ASCII decimal values; zero
 is allowed and metadata depth cannot exceed 64. CLI and programmatic settings
 are validated before inputs. Provenance recording failures identify the stage
-and return exit status 1 on stderr with empty success stdout. Formatter,
-summary and transactional output publication still require integration before
-CV02 can be accepted.
+and return exit status 1 on stderr with empty success stdout. Snapshot and summary exports validate the complete graph and enforce shared
+work/output allowances; pretty whitespace and NDJSON newlines count too. NONE
+validates evidence without applying output-byte caps unless a summary is
+materialized. Payloads are prepared before any JS/map/manifest/sidecar write.
+Filesystem rollback, destination collision protection and artifact content
+identity remain required before CV02 can be accepted.
 
 ### Measured parity
 

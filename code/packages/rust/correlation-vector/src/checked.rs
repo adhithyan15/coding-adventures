@@ -352,6 +352,12 @@ impl CVLog {
             .map(|s| s.limits.clone())
             .unwrap_or_default()
     }
+    /// Presentation APIs always require complete evidence, including generic logs.
+    pub(super) fn checked_export_work(&self) -> Result<(GraphLimits, Work), String> {
+        let limits = self.limits();
+        let graph = self.validated_graph(&limits, true)?;
+        Ok((limits, graph.work))
+    }
     /// Checked exports validate independently; compatibility snapshots retain
     /// allocator-only semantics, but their payload and encoding are still bounded.
     pub(super) fn export_work(&self) -> Result<(GraphLimits, Work), String> {

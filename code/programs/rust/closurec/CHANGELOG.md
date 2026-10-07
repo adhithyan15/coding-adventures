@@ -4,6 +4,18 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - checked export failures precede artifact writes (CV02)
+
+Replace snapshot/pretty/filter/NDJSON and text/JSON/KV summary Value round trips
+and success-shaped fallbacks with the library's bounded borrowed exports. NONE
+also validates complete evidence; its output cap applies only to materialized
+summaries. Prepare all requested payloads before JS/map/manifest/sidecar writes,
+so recording/export failures preserve every existing destination and return no
+success stdout. Real-process tests reproduce zero-output-cap success before the
+repair, verify every view rejects correctly, and compare three fresh identical
+SIMPLE/ADVANCED runs over twelve format/filter/summary combinations. Filesystem
+rollback, destination collision protection and content hashes remain required.
+
 ### Added - checked provenance configuration and stage failures (CV02)
 
 `--correlation_vector_limits` supplies closed, partial overrides of all nine

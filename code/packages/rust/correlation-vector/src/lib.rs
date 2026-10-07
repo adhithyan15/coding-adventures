@@ -55,6 +55,10 @@ use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 mod bounded_json;
 mod canonical;
+mod checked_export;
+pub use checked_export::{SnapshotFormat, SourceFilter, SummaryFormat};
+#[cfg(test)]
+mod checked_export_tests;
 mod checked;
 mod cleanup;
 use checked::CheckedState;

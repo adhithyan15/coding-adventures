@@ -4,6 +4,19 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added - bounded checked presentation exports (CV02)
+
+Borrowed `SourceFilter`, `SnapshotFormat` and `SummaryFormat` drive fallible
+`export_snapshot` and `export_summary`. Full graph validation precedes every
+projection/count operation, including generic controlled logs; allocator-only,
+disabled and gapped evidence rejects. Validation, reference indexes, filtering,
+sorting, counting and encoding share one work allowance. Compact/pretty JSON
+and NDJSON canonicalize every record/metadata object. NDJSON retains root
+metadata and accurate partial-view declarations. Text/JSON/KV summaries stream
+counts, paths and stages through the bounded sink without graph/Value clones.
+Tests cover deterministic records, all root metadata, exact output/work limits,
+partial reload rejection, invalid evidence before empty selection and escaping.
+
 ### Added - public limit configuration validation (CV02)
 
 `GraphLimits::validate` exposes the existing safe metadata-depth ceiling to

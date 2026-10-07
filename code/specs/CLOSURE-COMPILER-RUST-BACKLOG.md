@@ -103,11 +103,29 @@ diagnostics now go to stderr; the typed-AST alias-conflict fixture verifies
 empty stdout. Fresh compiler verification passes 1,043 tests across 177 targets
 with no ignores, plus 70 CV unit tests and 10 doctests; both pass strict lint
 including unknown-lint denial. There are 884 valid lesson shards.
-Current remaining CV02 work: every format/filter/summary/NONE boundary,
-transactional artifact publication/content identity, final full-scope exact-head
+The borrowed checked-export checkpoint validates the complete graph before
+filters/summary and shares work through reference indexes, comparisons, sorting,
+counting and canonical compact/pretty/NDJSON encoding. All summary formats stream
+through a bounded sink. Every filtered view declares partial coverage. CLI export
+failures no longer become `{}`/zero summaries/changed formats; NONE independently
+validates evidence. All payloads are prepared before any JS/map/manifest/sidecar
+write. Real-process regression first reproduced exit 0 under a zero output cap;
+now all views reject and preserve pre-existing destinations and success stdout.
+Seventy-two fresh SIMPLE/ADVANCED processes over twelve configurations produce
+identical sidecar/summary bytes and unchanged JavaScript. Fresh full compiler:
+1,047 passed across 177 targets with no ignores; CV: 76 unit and 10 doctests;
+both strict all-target lint, 885 valid lessons, whitespace clean. A fixture
+selected a random tombstoned map key in the first full run; it now selects a
+live identity explicitly and the complete library suite passes. These are local
+checks, with the new implementation awaiting independent checkpoint review.
+Current remaining CV02 work: transactional artifact publication/content identity, final full-scope exact-head
 security review and actual CI/merge verification. Configuration and diagnostic
 names are specified before their implementation.
 The foundation and full compiler/provenance goal remain open.
+Diagnostic short-circuits (empty-input banner and token-only tree dumps) currently
+return before trace construction. Track their provenance policy with the full
+CLI/diagnostics completion audit; normal compile/export tests do not establish
+source/output coverage for those modes.
 
 The remaining-fold inventory is
 [#16875](https://github.com/adhithyan15/coding-adventures/issues/16875).

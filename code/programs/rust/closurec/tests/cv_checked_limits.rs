@@ -31,6 +31,16 @@ impl Fixture {
         }
     }
     fn run(&self, level: &str, raw_limits: &str, traced: bool, stdout: bool) -> Output {
+        self.run_options(level, raw_limits, traced, stdout, &[])
+    }
+    fn run_options(
+        &self,
+        level: &str,
+        raw_limits: &str,
+        traced: bool,
+        stdout: bool,
+        options: &[&str],
+    ) -> Output {
         let mut command = Command::new(env!("CARGO_BIN_EXE_closurec"));
         command
             .args(["--js"])
@@ -45,7 +55,11 @@ impl Fixture {
         if traced {
             command.arg("--correlation_vector");
         }
-        command.current_dir(&self.dir).output().unwrap()
+        command
+            .args(options)
+            .current_dir(&self.dir)
+            .output()
+            .unwrap()
     }
     fn preserve_existing(&self) {
         std::fs::write(&self.output, "original JS").unwrap();
@@ -165,6 +179,241 @@ fn checked_recording_limit_errors_preserve_files_and_successful_stdout() {
             assert!(message.contains("provenance failed at"), "{message}");
             assert!(message.contains(detail), "{message}");
             fixture.assert_preserved();
+        }
+    }
+}
+
+#[test]
+fn checked_export_limit_errors_preserve_files_before_every_materialized_view() {
+    for options in [
+        vec![],
+        vec!["--correlation_vector_pretty"],
+        vec!["--correlation_vector_format", "NDJSON"],
+        vec!["--correlation_vector_filter", "constant-fold"],
+        vec![
+            "--correlation_vector_format",
+            "NDJSON",
+            "--correlation_vector_filter",
+            "lex",
+            "--correlation_vector_filter_invert",
+        ],
+        vec![
+            "--correlation_vector_format",
+            "NONE",
+            "--correlation_vector_summary",
+        ],
+        vec![
+            "--correlation_vector_format",
+            "NONE",
+            "--correlation_vector_summary",
+            "--correlation_vector_summary_format",
+            "JSON",
+        ],
+        vec![
+            "--correlation_vector_format",
+            "NONE",
+            "--correlation_vector_summary_only",
+            "--correlation_vector_summary",
+            "--correlation_vector_summary_format",
+            "KV",
+        ],
+    ] {
+        for stdout in [false, true] {
+            let fixture = Fixture::new();
+            fixture.preserve_existing();
+            let result =
+                fixture.run_options("SIMPLE", "max_output_bytes=0", true, stdout, &options);
+            assert_eq!(
+                result.status.code(),
+                Some(1),
+                "{options:?}: {}",
+                String::from_utf8_lossy(&result.stderr)
+            );
+            assert!(result.stdout.is_empty());
+            let message = String::from_utf8_lossy(&result.stderr);
+            assert!(message.contains("provenance failed at"), "{message}");
+            assert!(message.contains("output bytes limit"), "{message}");
+            fixture.assert_preserved();
+        }
+    }
+}
+
+#[test]
+fn checked_none_validates_graph_without_materializing_a_sidecar() {
+    let fixture = Fixture::new();
+    fixture.preserve_existing();
+    let accepted = fixture.run_options(
+        "SIMPLE",
+        "max_output_bytes=0",
+        true,
+        false,
+        &["--correlation_vector_format", "NONE"],
+    );
+    assert!(
+        accepted.status.success(),
+        "{}",
+        String::from_utf8_lossy(&accepted.stderr)
+    );
+    assert_eq!(
+        std::fs::read_to_string(&fixture.sidecar).unwrap(),
+        "original provenance"
+    );
+    fixture.preserve_existing();
+    let rejected = fixture.run_options(
+        "SIMPLE",
+        "max_work=100",
+        true,
+        false,
+        &["--correlation_vector_format", "NONE"],
+    );
+    assert_eq!(rejected.status.code(), Some(1));
+    assert!(rejected.stdout.is_empty());
+    let error = String::from_utf8_lossy(&rejected.stderr);
+    assert!(error.contains("validate stage"), "{error}");
+    assert!(error.contains("work limit"), "{error}");
+    fixture.assert_preserved();
+}
+
+#[test]
+fn checked_export_rejection_preserves_the_entire_requested_artifact_set() {
+    let fixture = Fixture::new();
+    fixture.preserve_existing();
+    let map = fixture.dir.join("out.map");
+    let manifest = fixture.dir.join("manifest.txt");
+    std::fs::write(&map, "original map").unwrap();
+    std::fs::write(&manifest, "original manifest").unwrap();
+    let map_arg = map.to_str().unwrap();
+    let manifest_arg = manifest.to_str().unwrap();
+    let result = fixture.run_options(
+        "SIMPLE",
+        "max_output_bytes=0",
+        true,
+        false,
+        &[
+            "--create_source_map",
+            map_arg,
+            "--output_manifest",
+            manifest_arg,
+        ],
+    );
+    assert_eq!(result.status.code(), Some(1));
+    assert!(result.stdout.is_empty());
+    assert_eq!(std::fs::read(&fixture.output).unwrap(), b"original JS");
+    assert_eq!(
+        std::fs::read(&fixture.sidecar).unwrap(),
+        b"original provenance"
+    );
+    assert_eq!(std::fs::read(&map).unwrap(), b"original map");
+    assert_eq!(std::fs::read(&manifest).unwrap(), b"original manifest");
+    assert_eq!(std::fs::read_dir(&fixture.dir).unwrap().count(), 5);
+}
+
+#[test]
+fn checked_process_exports_are_deterministic_across_formats_filters_and_summaries() {
+    use coding_adventures_correlation_vector::{CVLog, GraphLimits};
+    for level in ["SIMPLE", "ADVANCED"] {
+        for options in [
+            vec![],
+            vec!["--correlation_vector_pretty"],
+            vec!["--correlation_vector_format", "NDJSON"],
+            vec!["--correlation_vector_filter", "constant-fold"],
+            vec![
+                "--correlation_vector_pretty",
+                "--correlation_vector_filter",
+                "lexer_token",
+                "--correlation_vector_filter_includes_origin",
+            ],
+            vec![
+                "--correlation_vector_format",
+                "NDJSON",
+                "--correlation_vector_filter",
+                "lex",
+                "--correlation_vector_filter_invert",
+            ],
+            vec!["--correlation_vector_summary"],
+            vec![
+                "--correlation_vector_summary",
+                "--correlation_vector_summary_format",
+                "JSON",
+            ],
+            vec![
+                "--correlation_vector_summary",
+                "--correlation_vector_summary_format",
+                "KV",
+                "--correlation_vector_summary_stderr",
+            ],
+            vec![
+                "--correlation_vector_format",
+                "NONE",
+                "--correlation_vector_summary",
+            ],
+            vec![
+                "--correlation_vector_format",
+                "NONE",
+                "--correlation_vector_summary",
+                "--correlation_vector_summary_only",
+            ],
+            vec![
+                "--correlation_vector_summary",
+                "--correlation_vector_summary_only",
+                "--correlation_vector_summary_format",
+                "JSON",
+            ],
+        ] {
+            let fixture = Fixture::new();
+            let plain = fixture.run(level, "", false, false);
+            assert!(plain.status.success());
+            let expected_js = std::fs::read(&fixture.output).unwrap();
+            let mut previous = None;
+            for _ in 0..3 {
+                let result = fixture.run_options(level, "", true, false, &options);
+                assert!(
+                    result.status.success(),
+                    "{level} {options:?}: {}",
+                    String::from_utf8_lossy(&result.stderr)
+                );
+                assert_eq!(std::fs::read(&fixture.output).unwrap(), expected_js);
+                let none = options.contains(&"NONE");
+                let sidecar = if none {
+                    assert!(!fixture.sidecar.exists());
+                    None
+                } else {
+                    Some(std::fs::read(&fixture.sidecar).unwrap())
+                };
+                if let Some(body) = &sidecar {
+                    let text = std::str::from_utf8(body).unwrap();
+                    let root: serde_json::Value = if options.contains(&"NDJSON") {
+                        let mut lines: Vec<serde_json::Value> = text
+                            .lines()
+                            .map(|s| serde_json::from_str(s).unwrap())
+                            .collect();
+                        let mut root = lines.pop().unwrap()["_meta"].clone();
+                        let entries = lines
+                            .into_iter()
+                            .map(|e| (e["id"].as_str().unwrap().to_string(), e))
+                            .collect();
+                        root["entries"] = serde_json::Value::Object(entries);
+                        root
+                    } else {
+                        serde_json::from_str(text).unwrap()
+                    };
+                    let json = serde_json::to_string(&root).unwrap();
+                    if options.contains(&"--correlation_vector_filter") {
+                        assert_eq!(
+                            root["view"],
+                            serde_json::json!({"complete":false,"filtered":true})
+                        );
+                        assert!(CVLog::from_checked_json(&json, GraphLimits::default()).is_err());
+                    } else {
+                        CVLog::from_checked_json(&json, GraphLimits::default()).unwrap();
+                    }
+                }
+                let current = (result.stdout, result.stderr, sidecar);
+                if let Some(previous) = &previous {
+                    assert_eq!(&current, previous, "{level} {options:?}");
+                }
+                previous = Some(current);
+            }
         }
     }
 }

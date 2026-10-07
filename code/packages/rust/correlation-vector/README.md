@@ -125,8 +125,18 @@ before its child. Unknown query IDs return errors. Topology and `pass_order`
 JSON sorts object keys at every level and preserves arrays and numbers. Output
 limits are enforced while writing; checked logs are validated before encoding.
 Generic snapshots retain allocator-only compatibility semantics, with bounded
-payload/encoding. Compiler propagation, format projections and transactional
-artifact publication are the remaining CV02 integration work; this library
+payload/encoding. `export_snapshot(SnapshotFormat, SourceFilter)` and
+`export_summary(SummaryFormat, SourceFilter, Option<&str>)` are strict presentation
+APIs: they validate the full log before source selection, borrow its records and
+share one work allowance through filtering, sorting, counting and encoding.
+Compact/pretty JSON and NDJSON use canonical records; NDJSON retains all root
+metadata in its `_meta` footer. A nonempty filter always declares partial coverage,
+even when every entry matches; such output cannot be checked-imported. Text,
+JSON and KV summaries count the selected entries but retain full `pass_order`.
+Every produced byte, including indentation and final newlines, is bounded.
+No graph clones, Value round trips or successful error fallbacks are used.
+Compiler publication prepares all payloads before writes, but filesystem rollback,
+collision checks and content identity remain CV02 integration work. This library
 foundation does not complete CCR-065 or prove source-to-output coverage.
 
 ---
