@@ -82,6 +82,60 @@ Current pairs:
   5.003_02; the tokenizer changes only add a system include and replace
   `bcmp` with `memcmp` in quoted-term scanning. The listed arithmetic and
   `print` subset is unchanged, and this pair does not claim full coverage.
+- `perl5.003_04.*` is a separate **partial** pair checked against the
+  [`perl-5.003_04` source tag]'s `perly.y` and `toke.c`. Its `perly.y` matches
+  5.003_03; the sole tokenizer change adds a strict-subs guard for `truncate`,
+  outside this bounded arithmetic and `print` subset. This pair does not
+  claim full Perl 5.003_04 coverage. It accepts plain decimal integers;
+  multi-digit leading-zero forms are excluded because Perl treats them as
+  octal, and `08`/`09` are invalid octal literals.
+- `perl5.003_05.*` is a separate **partial** pair checked against the
+  [`perl-5.003_05` source tag]'s `perly.y` and `toke.c`. Both tagged source
+  files match 5.003_04; this release still has its own files and claims only
+  the listed plain-decimal arithmetic and `print` subset. Leading-zero
+  multi-digit forms remain excluded.
+- `perl5.003_06.*` is a separate **partial** pair checked against the official
+  [5.003_06 patch commit]. Its message introduces the 5.003_06 patch and its
+  `patchlevel.h` identifies subversion 6. That commit's `perly.y` and `toke.c`
+  blobs match the later 5.003_07 tag; only the listed arithmetic and `print`
+  subset is represented, with leading-zero multi-digit forms excluded. The
+  source repository has no 5.003_06 tag.
+- `perl5.003_07.*` is a separate **partial** pair checked against the
+  [`perl-5.003_07` source tag]'s `perly.y` and `toke.c`. Its tagged yacc file
+  matches 5.003_05; tokenizer changes include line buffering and sort handling
+  outside the listed arithmetic and `print` subset. It does not claim full
+  release coverage. Leading-zero multi-digit forms remain excluded.
+- `perl5.003_08.*` is a separate **partial** pair checked against the
+  [`perl-5.003_08` source tag]'s `perly.y` and `toke.c`. The yacc file adds
+  lexical `my` scope, and the tokenizer changes interpolation and octal/hex
+  overflow handling. Those forms remain outside the plain-decimal arithmetic
+  and `print` subset; leading-zero multi-digit forms are rejected.
+- `perl5.003_09.*` is a separate **partial** pair checked against the
+  [`perl-5.003_09` source tag]'s `perly.y` and `toke.c`. Its yacc changes
+  rearrange lexical scope handling; tokenizer changes affect sigils,
+  interpolation and numeric conversion. Only the plain-decimal arithmetic
+  and `print` subset is represented, with leading-zero forms rejected.
+- `perl5.003_10.*` is a separate **partial** pair checked against the
+  [`perl-5.003_10` source tag]'s `perly.y` and `toke.c`. Its yacc blob matches
+  5.003_09; tokenizer changes affect sigil spacing and built-in/identifier
+  handling outside this plain-decimal arithmetic and `print` subset.
+- `perl5.003_11.*` is a separate **partial** pair checked against the
+  [`perl-5.003_11` source tag]'s `perly.y` and `toke.c`. Yacc changes operator
+  token types and block bookkeeping; tokenizer changes cover sigils, patterns
+  and numeric-locale setup outside this plain-decimal arithmetic/print subset.
+- `perl5.003_12.*` is a separate **partial** pair checked against the
+  [`perl-5.003_12` source tag]'s `perly.y` and `toke.c`. Its yacc changes to
+  while/until block forms lie outside the accepted plain-decimal arithmetic
+  and `print` subset; leading-zero forms remain rejected.
+- `perl5.003_13.*` is a separate **partial** pair checked against the
+  [`perl-5.003_13` source tag]'s `perly.y` and `toke.c`. Yacc is unchanged
+  from 5.003_12; tokenizer label recognition changes lie outside this subset.
+- `perl5.003_14.*` is a separate **partial** pair checked against the
+  [`perl-5.003_14` source tag]'s `perly.y` and `toke.c`. Deprecated
+  conditional/loop block forms are removed outside this arithmetic/print subset.
+- `perl5.003_15.*` is a separate **partial** pair checked against the
+  [`perl-5.003_15` source tag]'s `perly.y` and `toke.c`. Both tagged source
+  blobs match 5.003_14, while the release keeps its own pair of files.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot, including adjacent `--` and
@@ -123,4 +177,16 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [`perl-5.003_01` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_01
 [`perl-5.003_02` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_02
 [`perl-5.003_03` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_03
+[`perl-5.003_04` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_04
+[`perl-5.003_05` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_05
+[5.003_06 patch commit]: https://github.com/Perl/perl5/commit/9c6be91f691c6d72250718e13acfc7872e72a19f
+[`perl-5.003_07` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_07
+[`perl-5.003_08` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_08
+[`perl-5.003_09` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_09
+[`perl-5.003_10` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_10
+[`perl-5.003_11` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_11
+[`perl-5.003_12` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_12
+[`perl-5.003_13` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_13
+[`perl-5.003_14` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_14
+[`perl-5.003_15` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_15
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2
