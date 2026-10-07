@@ -1,9 +1,9 @@
 {
   "lesson": {
-    "id": "PA-R158-truth-and-food-check",
+    "id": "PA-W13-message-opening-return",
     "language": "punjabi",
-    "chapter": 158,
-    "sequence": 8760,
+    "chapter": 157,
+    "sequence": 8746,
     "modality": "voice",
     "derived": "voice",
     "drivable": true,
@@ -15,7 +15,8 @@
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:68207270605280fe"
+    "sourceHash": "fnv1a64:55ada97246ca6f92",
+    "delivery": "script"
   },
   "findings": []
 }

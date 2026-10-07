@@ -27,8 +27,8 @@ it("services Chapter 146 quality R4 with an honest next boundary", () => {
     lessons.filter((lesson) => !reviewIds.includes(lesson.realization.lessonId)),
   );
   const after = measureContinuity(lessons);
-  expect(before.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 513, R4: 577 });
-  expect(after.summary.missedByWindow).toEqual({ R1: 57, R2: 568, R3: 513, R4: 574 });
+  expect(before.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 513, R4: 581 });
+  expect(after.summary.missedByWindow).toEqual({ R1: 56, R2: 567, R3: 513, R4: 578 });
 
   const missedPairs = (report: typeof before): Set<string> => new Set(
     report.reinforcement.flatMap((defect) =>
@@ -40,13 +40,11 @@ it("services Chapter 146 quality R4 with an honest next boundary", () => {
   expect([...previousPairs].filter((pair) => !currentPairs.has(pair)).sort()).toEqual(
     qualityAtoms.map((atom) => `R4|${atom}`).sort(),
   );
-  // Extending the measurable tail opens five *different* pairs. #16801 owns
+  // Extending the measurable tail opens three *different* pairs. #16801 owns
   // their later retrieval; they must not be credited to this lexical review.
   expect([...currentPairs].filter((pair) => !previousPairs.has(pair)).sort()).toEqual([
-    "R1|PA-A1-TIMED-REPAIR-01",
-    "R2|PA-A1-FORM-MIXED-CUES-01",
-    "R2|PA-A1-FORM-TIMED-01",
-    "R4|PA-LEX-C147-QUAL147-01",
-    "R4|PA-LEX-C147-QUAL147-02",
+    "R2|PA-A1-TIMED-REPAIR-01",
+    "R4|PA-LEX-C147-QUAL147-05",
+    "R4|PA-LEX-C148-ACT148-01",
   ]);
 });

@@ -55,5 +55,5 @@ Cover the earlier answers. [PAUSE 4s each] Say one old Punjabi word for each:
 **false**, **ripe**, **stale**, **true**, **unripe**.
 
 Check in that same order: **ਝੂਠਾ**, **ਪੱਕਾ**, **ਬੇਹਾ**, **ਸੱਚਾ**,
-**ਕੱਚਾ**. Reopen only a missed Chapter 146 word. These five distant
+**ਕੱਚਾ**. Reopen only a missed earlier quality word. These five distant
 retrievals do not turn the earlier short writing drills into an A1 mock.

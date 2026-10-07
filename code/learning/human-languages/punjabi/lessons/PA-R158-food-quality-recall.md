@@ -33,7 +33,7 @@ reviews_of: [PA-C146-beha, PA-C146-pakka, PA-C146-kacca]
 # Three old quality words at a food stall
 
 These are old words, not a new food lesson. The short A1 form and message clocks
-are finished; this is a separate, untimed return to three words from Chapter 146.
+are finished; this is a separate, untimed return to three earlier quality words.
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C146-QUAL146-01] -->
@@ -51,7 +51,7 @@ the English scenes do not add a Punjabi noun to learn.
 - Fruit ready to eat is **ripe**. [PAUSE 4s] **ਪੱਕਾ** (*pakkā*).
 - Fruit not yet ripe is **unripe**. [PAUSE 4s] **ਕੱਚਾ** (*kaccā*).
 
-The words already carried these meanings in Chapter 146. *Pakkā* can also
+The words already carried these meanings when first taught. *Pakkā* can also
 mean firm; *kaccā* can also mean raw. Do not add a new sense from this review.
 
 ## Wrap-up Recall
@@ -59,4 +59,4 @@ mean firm; *kaccā* can also mean raw. Do not add a new sense from this review.
 
 Cover the three answers. [PAUSE 4s each] Say the Punjabi for **unripe**,
 **stale**, then **ripe**. Check only after all three: **ਕੱਚਾ**, **ਬੇਹਾ**,
-**ਪੱਕਾ**. If one slipped, revisit just that old Chapter 146 word.
+**ਪੱਕਾ**. If one slipped, revisit that earlier quality word.

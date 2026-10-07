@@ -6,5 +6,6 @@
 - Introduce no Punjabi atom, keep this retrieval out of the scored form and
   message evidence, and leave full A1 mocks and human validation outstanding.
 - Pin the exact five Chapter 146 R4 closures without changing continuity
-  thresholds. The longer tail also makes two Chapter 147 R4, two A1 form R2,
-  and one timed-repair R1 misses measurable; #16801 owns those next windows.
+  thresholds. After the four writing returns, the longer tail also makes
+  R2 timed repair and six later R4 lexical misses measurable; #16801 owns
+  those next windows.
