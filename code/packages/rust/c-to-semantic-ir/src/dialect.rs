@@ -281,9 +281,23 @@ impl Dialect for CDialect {
     fn eval_condition(&self, tokens: &[Token]) -> Result<bool, PpError> {
         match tokens {
             [token] => Ok(condition_operand(token)? != 0),
-            [left, op, right] if matches!(op.value.as_str(), "==" | "!=") => {
-                let equal = condition_operand(left)? == condition_operand(right)?;
-                Ok(if op.value == "==" { equal } else { !equal })
+            [left, op, right] => {
+                let left = condition_operand(left)?;
+                let right = condition_operand(right)?;
+                let result = match op.value.as_str() {
+                    "==" => left == right,
+                    "!=" => left != right,
+                    "<" => left < right,
+                    "<=" => left <= right,
+                    ">" => left > right,
+                    ">=" => left >= right,
+                    _ => {
+                        return Err(PpError::new(
+                            "C conditional expression is not supported by this handoff yet",
+                        ))
+                    }
+                };
+                Ok(result)
             }
             _ => Err(PpError::new(
                 "C conditional expression is not supported by this handoff yet",
@@ -438,11 +452,15 @@ mod tests {
     }
 
     #[test]
-    fn expanded_macro_values_support_simple_equality_conditions() {
+    fn expanded_macro_values_support_bounded_comparisons() {
         for (condition, expected) in [
             ("LED_PORT == 7", "1"),
             ("LED_PORT != 7", "0"),
             ("MISSING == 0", "1"),
+            ("LED_PORT > 2", "1"),
+            ("LED_PORT >= 7", "1"),
+            ("LED_PORT < 2", "0"),
+            ("LED_PORT <= 7", "1"),
         ] {
             let source = format!(
                 "#define LED_PORT 7\n#if {condition}\nint x = 1;\n#else\nint x = 0;\n#endif\n"
