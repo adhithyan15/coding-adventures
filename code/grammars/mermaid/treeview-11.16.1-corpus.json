@@ -1,7 +1,7 @@
 {
   "upstream": "mermaid@11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
-  "scope": "native hierarchy subset",
+  "scope": "native hierarchy subset with pinned standard, heavy, and compact box-drawing preprocessing",
   "fixtures": [
     {
       "name": "header-only",
@@ -42,6 +42,14 @@
     {
       "name": "heavy-box-drawing-input",
       "source": "treeView-beta\n┗━━ packages/\n    ┗━━ parser/\n        ┗━━ lib.rs"
+    },
+    {
+      "name": "rooted-box-drawing-hierarchy",
+      "source": "treeView-beta\nproject/\n├── src/\n│   └── index.ts\n│\n└── README.md"
+    },
+    {
+      "name": "compact-box-drawing-segments",
+      "source": "treeView-beta\nproject/\n├─ src/ :::highlight\n│ └─ lib.rs ## crate root\n└─ README.md"
     }
   ]
 }

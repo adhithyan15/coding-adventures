@@ -5853,16 +5853,18 @@ fn prepare_cynefin_source(source: &str) -> Result<(String, Vec<String>), ParseEr
 pub fn parse_treeview(source: &str) -> Result<TreeViewDiagram, ParseError> {
     let config = parse_treeview_config(source);
     let (prepared, multiline_descriptions) = prepare_treeview_source(source)?;
-    let normalized = preprocess_treeview_box_drawing(&prepared)?;
-    let tokens = try_tokenize_mermaid_treeview(&normalized).map_err(|message| ParseError { message, line: 1, col: 1 })?;
+    let preprocessed = preprocess_treeview_box_drawing(&prepared)?;
+    let normalized = &preprocessed.text;
+    let tokens = try_tokenize_mermaid_treeview(normalized).map_err(|message| ParseError { message, line: 1, col: 1 })?;
     let grammar = parse_parser_grammar(TREEVIEW_PARSER_GRAMMAR_SOURCE)
         .unwrap_or_else(|error| panic!("Failed to parse treeview.grammar: {error}"));
     GrammarParser::new(tokens, grammar).with_max_depth(MAX_RULE_DEPTH).parse()
-        .map_err(|error| ParseError { message: error.message, line: error.token.line, col: error.token.column })?;
+        .map_err(|error| ParseError { message: error.message,
+            line: preprocessed.original_line(error.token.line), col: error.token.column })?;
     let mut diagram = TreeViewDiagram { title: None, accessibility_title: None, accessibility_description: None, config, nodes: Vec::new() };
     let mut ancestors = Vec::<(usize, usize, String)>::new();
     for (index, raw) in normalized.lines().enumerate() {
-        let line_number = index + 1;
+        let line_number = preprocessed.original_line(index + 1);
         let trimmed = raw.trim();
         if trimmed.is_empty() || trimmed == "treeView-beta" || trimmed.starts_with("%%") { continue; }
         if let Some(value) = trimmed.strip_prefix("title").filter(|rest| rest.is_empty() || rest.starts_with(' ') || rest.starts_with('\t')) {
@@ -6063,20 +6065,95 @@ fn parse_treeview_node(line: &str, line_number: usize) -> Result<ParsedTreeViewN
     Ok((label, kind, class_selector, icon, description))
 }
 
-fn preprocess_treeview_box_drawing(source: &str) -> Result<String, ParseError> {
-    if !source.chars().any(|character| matches!(character, '│' | '┃' | '└' | '┗' | '├' | '┣' | '─' | '━')) { return Ok(source.to_string()); }
-    let mut output = Vec::new();
-    for (index, raw) in source.lines().enumerate() {
-        let normalized = raw.replace('\t', "    ");
-        if let Some(branch) = normalized.find(['└', '┗', '├', '┣']) {
-            let remainder = normalized[branch + '├'.len_utf8()..].trim_start_matches(['─', '━', ' ']);
-            let branch_column = normalized[..branch].chars().count();
-            if remainder.is_empty() { return Err(ParseError { message: "empty TreeView box-drawing node".into(), line: index + 1, col: branch_column + 1 }); }
-            output.push(format!("{}{}", "    ".repeat(branch_column / 4), remainder));
-        } else if normalized.trim().chars().all(|character| character.is_whitespace() || matches!(character, '│' | '┃')) { continue; }
-        else { output.push(normalized); }
+struct TreeViewBoxDrawingSource {
+    text: String,
+    line_map: Vec<usize>,
+}
+
+impl TreeViewBoxDrawingSource {
+    fn original_line(&self, output_line: usize) -> usize {
+        self.line_map.get(output_line.saturating_sub(1)).copied().unwrap_or(output_line)
     }
-    Ok(output.join("\n"))
+}
+
+fn preprocess_treeview_box_drawing(source: &str) -> Result<TreeViewBoxDrawingSource, ParseError> {
+    let lines = source.lines().collect::<Vec<_>>();
+    let Some(header_index) = lines.iter().position(|line| line.trim() == "treeView-beta") else {
+        return Ok(TreeViewBoxDrawingSource { text: source.to_string(), line_map: Vec::new() });
+    };
+    let content_lines = lines[header_index + 1..].iter().filter_map(|line| {
+        let trimmed = line.trim();
+        if trimmed.is_empty() || trimmed.starts_with("%%") || is_treeview_metadata_line(line)
+            || line.chars().all(|character| character.is_whitespace() || matches!(character, '│' | '┃')) {
+            None
+        } else {
+            Some(line.replace('\t', "    "))
+        }
+    }).collect::<Vec<_>>();
+    if !content_lines.iter().any(|line| contains_treeview_box_character(line)) {
+        return Ok(TreeViewBoxDrawingSource { text: source.to_string(), line_map: Vec::new() });
+    }
+    let segment_width = content_lines.iter().find_map(|line| {
+        treeview_branch_position(line).and_then(|(_, column)| (column > 0).then_some(column))
+    }).unwrap_or(4);
+    let mut output = Vec::new();
+    let mut line_map = Vec::new();
+    for (index, line) in lines.iter().enumerate().take(header_index + 1) {
+        output.push((*line).to_string());
+        line_map.push(index + 1);
+    }
+    for (index, raw) in lines.iter().enumerate().skip(header_index + 1) {
+        let original_line = index + 1;
+        let trimmed = raw.trim();
+        if trimmed.is_empty() || trimmed.starts_with("%%") || is_treeview_metadata_line(raw) {
+            output.push((*raw).to_string());
+            line_map.push(original_line);
+            continue;
+        }
+        if raw.chars().all(|character| character.is_whitespace() || matches!(character, '│' | '┃')) {
+            continue;
+        }
+        let normalized = raw.replace('\t', "    ");
+        if let Some((branch_byte, branch_column)) = treeview_branch_position(&normalized) {
+            let remainder = normalized[branch_byte..].chars().skip(1).collect::<String>();
+            let remainder = remainder.trim_start_matches(['─', '━']).trim_start_matches(' ').trim_end();
+            if remainder.is_empty() {
+                return Err(ParseError { message: "empty TreeView box-drawing node".into(),
+                    line: original_line, col: branch_column + 1 });
+            }
+            let depth = ((branch_column as f64 / segment_width as f64).round() as usize) + 1;
+            output.push(format!("{}{}", "    ".repeat(depth), remainder));
+            line_map.push(original_line);
+        } else if normalized.chars().all(|character| character.is_whitespace()
+            || matches!(character, '─' | '━' | '│' | '┃' | '└' | '┗' | '├' | '┣')) {
+            continue;
+        } else if contains_treeview_box_character(&normalized) || !normalized.starts_with(char::is_whitespace) {
+            output.push(normalized);
+            line_map.push(original_line);
+        } else {
+            return Err(ParseError { message: "unexpected indentation without box-drawing characters".into(),
+                line: original_line, col: 1 });
+        }
+    }
+    Ok(TreeViewBoxDrawingSource { text: output.join("\n"), line_map })
+}
+
+fn contains_treeview_box_character(line: &str) -> bool {
+    line.chars().any(|character| matches!(character, '─' | '━' | '│' | '┃' | '└' | '┗' | '├' | '┣'))
+}
+
+fn treeview_branch_position(line: &str) -> Option<(usize, usize)> {
+    line.char_indices().enumerate().find_map(|(column, (byte, character))|
+        matches!(character, '└' | '┗' | '├' | '┣').then_some((byte, column)))
+}
+
+fn is_treeview_metadata_line(line: &str) -> bool {
+    let trimmed = line.trim_start();
+    trimmed.starts_with("title ") || trimmed.starts_with("title\t")
+        || trimmed.strip_prefix("accTitle").is_some_and(|value| value.trim_start().starts_with(':'))
+        || trimmed.strip_prefix("accDescr").is_some_and(|value| {
+            let value = value.trim_start(); value.starts_with(':') || value.starts_with('{')
+        })
 }
 
 /// Parse Mermaid 11.16.1 Swimlane ownership lanes and Flowchart-style steps.
