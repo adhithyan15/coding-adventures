@@ -43,6 +43,8 @@ preserving the same bound.
 Built-in `sin`, `cos`, and `arctan` may map a bounded sign-rooted result before
 `entier`, including nested combinations; domain-sensitive or unbounded
 standard functions and non-sign-rooted runtime operands remain conservative.
+A single built-in `exp` may also map such a bounded chain before `entier`;
+nested exponential calls remain conservative to keep the finite bound explicit.
 One-sided reassignment remains gated. Unary signs, additive
 composition, multiplication, division, and exponentiation over proven
 runtime-real or finite static operands preserve runtime-real provenance. The
