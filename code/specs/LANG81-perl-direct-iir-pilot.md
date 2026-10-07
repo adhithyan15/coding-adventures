@@ -16,8 +16,10 @@ A host Perl 5.38 process may only serve as a conformance oracle in tests.
 The first slice accepts a file of one or more `print(<expression>);` statements.
 Expressions contain decimal integer literals, parentheses, unary `-`, and
 binary `+`, `-`, and `*`, with Perl's precedence and left associativity.
-The decimal pilot accepts plain digit spellings with no separators and rejects
-multi-digit leading-zero forms such as `010`, which Perl interprets as octal.
+The decimal pilot accepts `0` or an integer beginning with `1`–`9`, with no
+separators. Its lexer/parser reject multi-digit leading-zero forms such as
+`010`, `08`, and `09` before IR lowering; Perl interprets a leading zero as
+octal, and `08`/`09` are invalid octal literals.
 Adjacent `--` is Perl's decrement token and is rejected; spaced binary minus
 followed by unary minus remains accepted.
 Each `print` has exactly one argument. It writes the argument's decimal form
