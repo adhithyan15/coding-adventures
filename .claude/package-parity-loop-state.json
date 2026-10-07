@@ -11,35 +11,29 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 16898,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16898",
-    "branch": "codex/parity-elixir-dune-discovery-20261007",
-    "implementation_revision": "cc4016047bc9873d03008054c52e745f632f0307",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-07T13:37:38Z",
+    "observed_at": "2026-10-07T14:15:02Z",
     "pr_number": 16898,
-    "status": "checks-pending",
-    "notes": "Ready-for-review Elixir Dune fixture adoption PR #16898 opened from tested implementation cc4016047bc9873d03008054c52e745f632f0307. Full Elixir suite, focused/full Go suite, vet, build, neutral corpus, parity reporter tests, lessons, format, diff and read-only security review passed; coverage is 87.76% for changed Discovery but aggregate Elixir remains below the pre-existing 90% gate. GitHub checks are queued. Do not enable auto-merge while pending."
+    "status": "merged",
+    "notes": "PR #16898 passed 29 successful, seven expected skipped, and one neutral final-head checks with no conflict. Auto-merge was enabled only after they became terminal; GitHub merged it at 2026-10-07T14:15:02Z as a7b4a319a3d9d9d3f4e56cc226e2458c11f82f60. No manual merge."
   },
   "last_inventory": {
-    "revision": "c6c014e91fbd01ba71b8722e77f1dca823a45446",
+    "revision": "a7b4a319a3d9d9d3f4e56cc226e2458c11f82f60",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1491,
-    "implementation_package_slots": 4761,
-    "all_reported_identities": 1533,
+    "implementation_identities": 1495,
+    "implementation_package_slots": 4765,
+    "all_reported_identities": 1537,
     "high_consensus_packages": 178,
     "high_consensus_missing_slots": 262,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 181,
     "two_to_four_missing_slots": 2282,
-    "singleton_packages": 1009,
-    "singleton_missing_slots": 14126,
-    "rust_singletons": 810,
+    "singleton_packages": 1013,
+    "singleton_missing_slots": 14182,
+    "rust_singletons": 814,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -1992,20 +1986,20 @@
     {
       "id": "build-tool-elixir-dune-build-discovery-fixture-adoption",
       "title": "Make Elixir consume the Dune discovery fixture",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["ocaml-build-substrate-process-free-core", "build-tool-dune-discovery-near-case-neutral-fixture-repair", "build-tool-shared-discovery-fixture-native-ci-selection"],
       "branch": "codex/parity-elixir-dune-discovery-20261007",
       "pr_number": 16898,
-      "notes": "Elixir already prunes exact _build but does not consume the shared language-registry fixture. Add independent fixture evidence and change behavior only if that evidence exposes a real divergence. When adding this direct consumer, extend the exact CI detector consumer map and drift test so later fixture-only edits select Elixir."
+      "notes": "Merged PR #16898 at a7b4a319a3d9d9d3f4e56cc226e2458c11f82f60. Elixir directly projects four OCaml BUILD records and three positive identities from the shared Dune fixture; the exact native CI selector now includes Elixir. Final CI: 29 success, seven expected skips, one neutral."
     },
     {
       "id": "build-tool-elixir-discovery-language-registry-conformance",
       "title": "Make Elixir discovery match the complete language-registry fixture",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-elixir-dune-build-discovery-fixture-adoption"],
-      "branch": null,
+      "branch": "codex/parity-elixir-registry-20261007",
       "pr_number": null,
-      "notes": "Read-only post-#16891 audit found Elixir's 14-language allowlist omits c/cpp/dart/java/kotlin/mosaic/ocaml/starlark/twig; inference scans any path component and program identities omit programs/. Consume the full shared fixture and enforce exact bucket, identity, generated-tree, specification-tree, and canonical BUILD membership semantics. Keep the narrow Dune fixture predecessor separate."
+      "notes": "Selected after PR #16898 merged and the 1,495-identity collision-gated refresh. Elixir's allowlist still omits c/cpp/dart/java/kotlin/mosaic/starlark/twig; inference scans any path component and program identities omit programs/. Consume the complete 29-file shared fixture and enforce exact bucket, identity, generated-tree, and specification-tree semantics. Canonical BUILD membership and Windows overrides remain separately owned; do not broaden this slice into those contracts."
     },
     {
       "id": "build-tool-elixir-discovery-duplicate-identity-conformance",
@@ -12983,6 +12977,69 @@
       "branch": null,
       "pr_number": null,
       "notes": "Audit includes numeric/date/number-format, lookup, FSRS→Engram→Anki, engineering/financial core and R-vector NA. Split clock/storage host seams; resolve SML02 serial-60 conflict."
+    },
+    {
+      "id": "treap-dt10-neutral-priority-and-lane-conformance",
+      "title": "Freeze deterministic DT10 treap behavior before missing-lane ports",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 collision-checked audit: seven established lanes implement treap, but Go, Elixir, Lua, and Perl are among missing lanes and no exact owner existed. Specify supplied-priority injection, duplicate semantics, rotations, order statistics, and stable vectors without granting host RNG authority; then split lane ports."
+    },
+    {
+      "id": "red-black-tree-dt09-neutral-and-missing-lane-conformance",
+      "title": "Freeze DT09 red-black-tree behavior across missing lanes",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 audit: seven established lanes implement red-black-tree; Go, Elixir, Lua, and Perl are missing, while only Swift had an exact lane owner. Specify insert/delete, duplicate, traversal, rank and invariant vectors before bounded lane children."
+    },
+    {
+      "id": "storage-core-portable-conformance",
+      "title": "Extract a clock-injected portable storage-core contract",
+      "status": "pending",
+      "depends_on": ["bounded-json-rfc8259-portable-core-classification-and-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 audit: Rust-only storage-core has 45 direct dependents and no exact owner. Fixture pure path/token/MIME/metadata, body SHA-256, CAS/create-if-absent, idempotent delete, pagination, leases, and aggregates with injected clock. Reconcile Rust in-memory recursive-list handling and instance-only atomicity; filesystem and SQLite durability remain separate host contracts."
+    },
+    {
+      "id": "xml-parser-xml01-neutral-conformance-and-reference-reconciliation",
+      "title": "Reconcile XML01 parser semantics and bounded neutral fixtures",
+      "status": "pending",
+      "depends_on": ["xml-lexer-f04-language-neutral-conformance-and-target-hook-readiness"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 audit: Rust-only xml-parser has ten direct consumers. Freeze ordered AST, namespace and entity handling, CDATA, comments, processing instructions, malformed QName, and DTD/external rejection. Resolve whitespace after references and add input/node/depth bounds plus XML-char and duplicate expanded-attribute rejection before lane ports."
+    },
+    {
+      "id": "twig-to-semantic-ir-neutral-conformance",
+      "title": "Fixture the portable Twig-to-semantic-IR boundary",
+      "status": "pending",
+      "depends_on": ["compiler-and-ir-rust-singleton-foundation"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 Rust-singleton audit found no exact owner for Twig-to-semantic-IR despite seven direct backend consumers. Separate pure lowering and type-declaration behavior from target-specific CIL/JVM/WASM backends, host compilation, and VM IO."
+    },
+    {
+      "id": "sql-optimizer-neutral-conformance",
+      "title": "Fixture the portable SQL optimizer contract",
+      "status": "pending",
+      "depends_on": ["sql-planner-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 audit found the eight-lane SQL optimizer missing in Go, Elixir, Lua, and Perl without an exact owner. Freeze plan rewrites and stable cost/tie behavior independently of storage and host execution."
+    },
+    {
+      "id": "sql-codegen-and-vm-neutral-conformance",
+      "title": "Fixture portable SQL code generation and VM execution",
+      "status": "pending",
+      "depends_on": ["sql-optimizer-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16898 audit found SQL codegen and VM missing in Go, Elixir, Lua, and Perl without exact owners. Specify deterministic bytecode/trace fixtures and bounded execution, then split codegen and VM lane ports; filesystem and database authority are outside the neutral core."
     }
   ]
 }

@@ -16231,6 +16231,44 @@ override conformance owners without mixing those defects into this PR. The
 JavaScript and smart-home roots have greater eventual leverage but still need
 their neutral prerequisite slices before implementation claims.
 
+## Post-#16898 merge and collision-checked refresh (2026-10-07)
+
+PR #16898 auto-merged at `a7b4a319a3d9d9d3f4e56cc226e2458c11f82f60`
+after 29 successful, seven expected skipped, and one neutral final-head checks;
+it was never merged manually. No parity PR is currently open. Elixir now
+consumes the four-record/three-positive OCaml Dune discovery fixture directly,
+and exact native CI fixture selection includes its test.
+
+The schema-3 collision-gated inventory on that exact main revision has 15
+established lanes, 1,495 implementation identities and 4,765 package slots,
+1,537 all-reported identities, 178 high-consensus packages with 262 missing
+slots, 1,013 singletons with 14,182 missing slots, and 814 Rust singletons.
+Five OCaml packages remain emerging and outside the all-language denominator.
+Canonical collisions and unknown language buckets are zero. Four new
+mainline-only singletons beyond the prior snapshot are not evidence of parity.
+
+Parallel read-only audits registered seven new pending owners before the next
+selection: deterministic-priority DT10 treap, DT09 red-black tree, storage-core,
+XML01 parser, Twig-to-semantic-IR, SQL optimizer, and SQL codegen/VM. These
+distinguish portable behavior from clock, filesystem, database, target backend,
+and security authority. The state graph has 1,135 unique owners and zero
+missing dependency IDs. Go has zero high-consensus gaps; Elixir lacks PNG,
+Lua lacks constant-time compare, and Perl lacks both, with existing exact
+owners. Java/Kotlin/Swift/Dart still have broad portable gaps; Haskell's four
+high-consensus gaps are already owned. OCaml promotion remains gated on its
+native build-tool substrate, current contract, representative CI, and neutral
+adapter rather than counting its five packages prematurely.
+
+The dependency-ready next bounded slice is Elixir discovery language-registry
+conformance, which now has its Dune fixture prerequisite merged. It will use
+the full neutral discovery fixture to correct exact language buckets, package
+identities, generated-tree pruning, and specification-tree handling. Separate
+existing owners retain duplicate-identity rejection and canonical BUILD plus
+Windows override selection, avoiding a catch-all discovery PR. JavaScript
+AST, storage-core, XML parser, and neutral event-loop fixtures have broader
+eventual leverage but require prerequisite reconciliation; the Elixir slice is
+ready now and unlocks its two downstream discovery owners.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
