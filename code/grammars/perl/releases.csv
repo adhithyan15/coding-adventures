@@ -1,4 +1,5 @@
 # Official Perl perlhist.pod blob 2a0c30fc6f1b3e48af6b408cf02cb20e62fe3855; retrieved 2026-10-07.
+# 11 additional RC rows cite annotated official v-tags in perlhist_line.
 # Every row requires separate perl<V>.tokens and perl<V>.grammar files before status=complete.
 release,date,perlhist_line,grammar_status
 1.000,1987-Dec-18,78,partial
@@ -393,6 +394,7 @@ release,date,perlhist_line,grammar_status
 5.12.0-RC4,2010-Apr-06,436,pending
 5.12.0-RC5,2010-Apr-09,437,pending
 5.12.0,2010-Apr-12,439,pending
+5.12.1-RC0,2010-May-07,tag:v5.12.1-RC0,pending
 5.12.1-RC1,2010-May-09,441,pending
 5.12.1-RC2,2010-May-13,442,pending
 5.12.1,2010-May-16,443,pending
@@ -403,7 +405,10 @@ release,date,perlhist_line,grammar_status
 5.12.3-RC3,2011-Jan-17,448,pending
 5.12.3,2011-Jan-21,449,pending
 5.12.4-RC1,2011-Jun-08,450,pending
+5.12.4-RC2,2011-Jun-15,tag:v5.12.4-RC2,pending
 5.12.4,2011-Jun-20,451,pending
+5.12.5-RC1,2012-Nov-03,tag:v5.12.5-RC1,pending
+5.12.5-RC2,2012-Nov-07,tag:v5.12.5-RC2,pending
 5.12.5,2012-Nov-10,452,pending
 5.13.0,2010-Apr-20,454,pending
 5.13.1,2010-May-20,455,pending
@@ -421,9 +426,12 @@ release,date,perlhist_line,grammar_status
 5.14.0-RC2,2011-May-04,467,pending
 5.14.0-RC3,2011-May-11,468,pending
 5.14.0,2011-May-14,470,pending
+5.14.1-RC1,2011-Jun-09,tag:v5.14.1-RC1,pending
 5.14.1,2011-Jun-16,472,pending
 5.14.2-RC1,2011-Sep-19,473,pending
 5.14.2,2011-Sep-26,474,pending
+5.14.3-RC1,2012-Sep-26,tag:v5.14.3-RC1,pending
+5.14.3-RC2,2012-Oct-10,tag:v5.14.3-RC2,pending
 5.14.3,2012-Oct-12,475,pending
 5.14.4-RC1,2013-Mar-05,476,pending
 5.14.4-RC2,2013-Mar-07,477,pending
@@ -467,6 +475,10 @@ release,date,perlhist_line,grammar_status
 5.18.1-RC2,2013-Aug-03,521,pending
 5.18.1-RC3,2013-Aug-08,522,pending
 5.18.1,2013-Aug-12,523,pending
+5.18.2-RC1,2013-Dec-21,tag:v5.18.2-RC1,pending
+5.18.2-RC2,2013-Dec-21,tag:v5.18.2-RC2,pending
+5.18.2-RC3,2013-Dec-21,tag:v5.18.2-RC3,pending
+5.18.2-RC4,2013-Dec-22,tag:v5.18.2-RC4,pending
 5.18.2,2014-Jan-06,524,pending
 5.18.3-RC1,2014-Sep-17,525,pending
 5.18.3-RC2,2014-Sep-27,526,pending

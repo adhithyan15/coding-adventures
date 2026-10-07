@@ -1,11 +1,14 @@
 # Perl release grammars
 
-`releases.csv` inventories 763 numbered releases recorded by the official
-`perlhist.pod` snapshot retrieved on 2026-10-07. It expands historical range
-rows such as `1.001..10` into one row per release. The `perlhist_line` column
-points to the original source line; the snapshot's Git blob ID is in the CSV
-header. Compare this inventory with tagged source and CPAN archives before
-calling it exhaustive, since a history document may omit an interim release.
+`releases.csv` inventories 774 numbered releases from the official
+`perlhist.pod` snapshot and annotated Perl source tags retrieved on 2026-10-07.
+It expands historical range rows such as `1.001..10` into one row per release.
+The `perlhist_line` column points to the source line, or names a `tag:v...`
+when a release candidate is absent from that document. The history snapshot's
+Git blob ID is in the CSV header. A tag comparison found 11 such additional
+release candidates. The `v5.17.7.0` tag is excluded: its annotation explicitly
+says that no version 5.17.7.0 was released; it only preserves Git ancestry.
+Compare this inventory with CPAN archives before calling it exhaustive.
 
 The user requested a **separate `.tokens` and `.grammar` file for every
 release**, including maintenance and development versions. The filenames are
