@@ -195,8 +195,15 @@ chief-of-staff vault list
 
 **U-C1 — the secret comes from stdin, never argv.** argv is visible in `ps`,
 shell history and process accounting. The command reads at most
-`MAX_PAYLOAD_BYTES + 1` bytes, so an oversized input is refused rather than
-truncated.
+`MAX_PAYLOAD_BYTES + 3` bytes: room for a maximum-size secret, the `\r\n`
+that U-C3 strips, and one byte more, so an oversized input is refused rather
+than truncated. It reads through an unbuffered duplicate of the stdin
+descriptor, because the standard library's shared stdin buffer would keep a
+copy of the secret that nothing zeroes.
+
+Errors printed to stderr never quote an argv value. A secret pasted onto
+argv by mistake is refused as an extra argument, and the parser error for that
+names only its kind, not the token.
 
 **U-C2 — an interactive terminal on stdin is refused.** Reading a secret from
 a terminal without disabling echo would print it to the screen. The command

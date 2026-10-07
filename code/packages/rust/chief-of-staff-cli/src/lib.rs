@@ -126,9 +126,37 @@ impl SecretInput for StdinSecretInput {
         io::stdin().is_terminal()
     }
 
+    /// Read through an unbuffered duplicate of the stdin descriptor.
+    ///
+    /// `io::stdin()` sits behind a process-wide 8 KiB `BufReader`. Once the
+    /// space left in our buffer drops below 8 KiB, reads go through that
+    /// shared buffer, and the secret bytes stay there, unzeroed, until the
+    /// process exits. Duplicating the descriptor into a plain `File` makes
+    /// every read land directly in the zeroizing buffer (D18U U-E6).
     fn read_up_to(&mut self, limit: usize) -> io::Result<Zeroizing<Vec<u8>>> {
-        read_bounded(&mut io::stdin().lock(), limit)
+        read_bounded(&mut unbuffered_stdin()?, limit)
     }
+}
+
+#[cfg(unix)]
+fn unbuffered_stdin() -> io::Result<std::fs::File> {
+    use std::os::fd::AsFd;
+    Ok(std::fs::File::from(
+        io::stdin().as_fd().try_clone_to_owned()?,
+    ))
+}
+
+#[cfg(windows)]
+fn unbuffered_stdin() -> io::Result<std::fs::File> {
+    use std::os::windows::io::AsHandle;
+    Ok(std::fs::File::from(
+        io::stdin().as_handle().try_clone_to_owned()?,
+    ))
+}
+
+#[cfg(not(any(unix, windows)))]
+fn unbuffered_stdin() -> io::Result<std::fs::File> {
+    Err(io::Error::from(io::ErrorKind::Unsupported))
 }
 
 /// Read up to `limit` bytes into one zeroizing allocation made up front.
@@ -189,17 +217,30 @@ where
 /// Render an error and every `source()` beneath it, one per `: ` segment.
 ///
 /// The top-level messages are deliberately generic ("command failed"), so
-/// printing only them hides the one fact an operator needs — which flag was
-/// missing, which secret record is corrupt. Every error type in this chain is
-/// payload-blind by construction (field names, secret *names*, never values),
-/// so walking the chain adds detail without adding secrets.
+/// printing only them hides the one fact an operator needs: which flag was
+/// missing, which secret record is corrupt, why the vault would not unseal.
+///
+/// **Not every error in the chain is payload-blind, so this redacts.** The
+/// configuration, KEK-file, sealed-store and record errors carry field names
+/// and secret *names*, never values. The declarative parser's errors are
+/// different: several quote the argv token they rejected (`extra: [...]`,
+/// `Invalid value "..."`). argv is exactly where a hurried operator pastes a
+/// secret by mistake, and stderr lands in terminal scrollback, CI logs and
+/// journald. So parse errors are rendered by kind, and a message is shown
+/// only for the kinds whose text names nothing but flags from the spec.
 pub fn describe_error(error: &CliAppError) -> String {
     use std::error::Error as _;
     let mut text = error.to_string();
     let mut source = error.source();
     while let Some(cause) = source {
-        // Some errors already print their cause inside their own message
-        // (the declarative parser's does); repeating it would only add noise.
+        if let Some(CliError::Parse(parse)) = cause.downcast_ref::<CliError>() {
+            text.push_str(": ");
+            text.push_str(&redacted_parse_error(parse));
+            // Everything beneath is the same parser error, unredacted.
+            break;
+        }
+        // Some errors already print their cause inside their own message;
+        // repeating it would only add noise.
         let cause_text = cause.to_string();
         if !text.contains(&cause_text) {
             text.push_str(": ");
@@ -208,6 +249,38 @@ pub fn describe_error(error: &CliAppError) -> String {
         source = cause.source();
     }
     text
+}
+
+/// Parser error kinds whose message is built only from the command spec
+/// (flag and argument names), never from what was typed. Every other kind is
+/// shown by its kind alone.
+const VALUE_FREE_PARSE_ERRORS: &[&str] = &[
+    "missing_required_flag",
+    "missing_required_argument",
+    "missing_exclusive_group",
+    "exclusive_group_violation",
+    "conflicting_flags",
+    "missing_dependency_flag",
+    "too_few_arguments",
+];
+
+fn redacted_parse_error(error: &cli_builder::CliBuilderError) -> String {
+    let cli_builder::CliBuilderError::ParseErrors(errors) = error else {
+        // Spec and I/O errors describe the embedded spec, not the argv.
+        return error.to_string();
+    };
+    let rendered: Vec<String> = errors
+        .errors
+        .iter()
+        .map(|parse| {
+            if VALUE_FREE_PARSE_ERRORS.contains(&parse.error_type.as_str()) {
+                parse.message.clone()
+            } else {
+                format!("{} (the rejected value is not shown)", parse.error_type)
+            }
+        })
+        .collect();
+    format!("{}; see --help", rendered.join("; "))
 }
 
 /// Resolve process argv and environment and run one CLI action.
@@ -1330,11 +1403,98 @@ hardware_key_timeout = 60
     #[test]
     fn describe_error_does_not_repeat_a_cause_already_shown() {
         let error = CliAppError::Core(
-            parse_argv(&["chief-of-staff".to_string(), "--bogus".to_string()]).unwrap_err(),
+            parse_argv(
+                &[
+                    "chief-of-staff",
+                    "vault",
+                    "put",
+                    "k",
+                    "--mode",
+                    "leased",
+                    "--tier",
+                    "1",
+                ]
+                .iter()
+                .map(|v| v.to_string())
+                .collect::<Vec<_>>(),
+            )
+            .unwrap_err(),
         );
         let text = describe_error(&error);
-        let first = text.find("--bogus").expect("the cause is shown");
-        assert!(!text[first + 1..].contains("--bogus"), "{text}");
+        assert_eq!(text.matches("is required").count(), 1, "{text}");
+    }
+
+    #[test]
+    fn describe_error_never_echoes_a_rejected_argv_value() {
+        // A secret pasted onto argv by mistake: an extra positional, a bad
+        // enum value, a bad integer. None of the typed values may reach
+        // stderr.
+        let leaks: &[&[&str]] = &[
+            &[
+                "chief-of-staff",
+                "vault",
+                "put",
+                "k",
+                "s3cret-AAA",
+                "--mode",
+                "leased",
+                "--tier",
+                "1",
+                "--any-agent",
+            ],
+            &[
+                "chief-of-staff",
+                "vault",
+                "put",
+                "k",
+                "--mode",
+                "s3cret-BBB",
+                "--tier",
+                "1",
+                "--any-agent",
+            ],
+            &[
+                "chief-of-staff",
+                "vault",
+                "put",
+                "k",
+                "--mode",
+                "leased",
+                "--tier",
+                "s3cret-CCC",
+                "--any-agent",
+            ],
+            &["chief-of-staff", "vault", "put", "k", "--s3cret-DDD"],
+        ];
+        for argv in leaks {
+            let error = CliAppError::Core(
+                parse_argv(&argv.iter().map(|v| v.to_string()).collect::<Vec<_>>()).unwrap_err(),
+            );
+            let text = describe_error(&error);
+            assert!(!text.contains("s3cret"), "{text}");
+            assert!(text.contains("not shown"), "{text}");
+        }
+
+        // Value-free kinds keep their helpful message.
+        let missing = CliAppError::Core(
+            parse_argv(
+                &[
+                    "chief-of-staff",
+                    "vault",
+                    "put",
+                    "k",
+                    "--mode",
+                    "leased",
+                    "--tier",
+                    "1",
+                ]
+                .iter()
+                .map(|v| v.to_string())
+                .collect::<Vec<_>>(),
+            )
+            .unwrap_err(),
+        );
+        assert!(describe_error(&missing).contains("--allow-agent, --any-agent"));
     }
 
     #[test]
