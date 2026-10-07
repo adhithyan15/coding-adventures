@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — PREP01 bounded C condition arithmetic
+
+- Accept one checked `+`, `-`, or `*` in each decimal `#if` logical clause,
+  with undefined identifiers read as zero. Reject operands/results outside
+  signed 32-bit range and longer or mixed arithmetic forms explicitly.
+
 ## Unreleased — PREP01 nested quoted headers
 
 - Rooted C file input now resolves a quoted include relative to the verified

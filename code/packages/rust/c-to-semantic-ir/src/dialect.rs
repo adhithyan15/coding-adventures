@@ -106,6 +106,25 @@ fn condition_clause(tokens: &[Token]) -> Result<bool, PpError> {
             let left = condition_operand(left)?;
             let right = condition_operand(right)?;
             match op.value.as_str() {
+                "+" | "-" | "*" => {
+                    // This stage accepts only the signed 32-bit common range.
+                    // Checked operations reject width-dependent or overflowing
+                    // cases instead of silently choosing host C semantics.
+                    let left = i32::try_from(left).map_err(|_| {
+                        PpError::new("C arithmetic condition operand is out of range")
+                    })?;
+                    let right = i32::try_from(right).map_err(|_| {
+                        PpError::new("C arithmetic condition operand is out of range")
+                    })?;
+                    let value = match op.value.as_str() {
+                        "+" => left.checked_add(right),
+                        "-" => left.checked_sub(right),
+                        "*" => left.checked_mul(right),
+                        _ => None,
+                    }
+                    .ok_or_else(|| PpError::new("C arithmetic condition result is out of range"))?;
+                    Ok(value != 0)
+                }
                 "==" => Ok(left == right),
                 "!=" => Ok(left != right),
                 "<" => Ok(left < right),
@@ -598,11 +617,59 @@ mod tests {
             "1 || || 0",
             "(1)",
             "!1 == 0",
-            "1 + 2",
             "0 && (1)",
             "1 || (1)",
         ] {
             let source = format!("#if {condition}\nint x = 1;\n#endif\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            assert!(
+                preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err(),
+                "{condition}"
+            );
+        }
+    }
+
+    #[test]
+    fn one_operator_arithmetic_conditions_use_checked_signed_values() {
+        for (condition, expected) in [
+            ("2 + 3", "1"),
+            ("2 * 3", "1"),
+            ("4 - 4", "0"),
+            ("1 - 2", "1"),
+            ("MISSING + 0", "0"),
+            ("ANSWER + 3", "1"),
+            ("2 + 3 && 1", "1"),
+        ] {
+            let source = format!(
+                "#define ANSWER 2\n#if {condition}\nint x = 1;\n#else\nint x = 0;\n#endif\n"
+            );
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+            let values: Vec<_> = result
+                .tokens
+                .iter()
+                .map(|token| token.value.as_str())
+                .collect();
+            assert_eq!(values, ["int", "x", "=", expected, ";"], "{condition}");
+        }
+
+        for condition in [
+            "2147483647 + 1",
+            "2147483648 + 0",
+            "100000 * 100000",
+            "010 + 1",
+            "1 + 2 + 3",
+            "1 + 2 == 3",
+            "1 / 0",
+            "-1 + 2",
+        ] {
+            let source = format!("#if {condition}\nint x;\n#endif\n");
             let mut fs = MemoryFs::new();
             let file = fs.insert("<main>", &source);
             let dialect = CDialect::default();
