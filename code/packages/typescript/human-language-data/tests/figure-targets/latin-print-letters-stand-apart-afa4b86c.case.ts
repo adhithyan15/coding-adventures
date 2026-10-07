@@ -101,7 +101,7 @@ describe("Latin print letters", () => {
       "![How weil is written, letter by letter, stroke by stroke](figures/GE-W1-filmstrip.svg)",
     );
     expect(filmstripImageMarkdown(marks!)).toBe(
-      "![How the letters ¿ ¡ are written, letter by letter, stroke by stroke](figures/GE-W2-filmstrip.svg)",
+      "![How these letters are written, one after another, stroke by stroke: ¿, ¡](figures/GE-W2-filmstrip.svg)",
     );
   });
 });

@@ -81,7 +81,7 @@ Both signs are yours. Look at them for five seconds:
 Cover the model. Write the two signs in that order and say each beat as you finish it. Uncover the model, compare once, and repair at most one stroke. This short look-hide-write-check cycle is the whole delayed-copy step.
 
 Script — no new sign at all.
-Now write them touching:
+Now write them side by side, one sign and then the other:
 は + い becomes はい (hai).
 ha then i. Two beats, even, neither one stressed. You can now decode the sequence hai. The word lesson after the next sign attaches its useful meaning.
 Nothing new was introduced in this lesson. No stroke, no sound, no word. What changed is where the word now lives: you are no longer recalling a shape you were shown, you are reading it — assembling it out of two pieces you can write from memory and sound out in order.

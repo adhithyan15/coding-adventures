@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { generatedFigureUrl, generatedFilmstripUrl } from "../src/figures.ts";
+import { filmstripCaption, generatedFigureUrl, generatedFilmstripUrl } from "../src/figures.ts";
 
 describe("generated lesson figures", () => {
   it("bundles the canonical SVG shared with the Spanish book", () => {
@@ -29,5 +29,16 @@ describe("generated lesson figures", () => {
   it("rejects unsafe filmstrip lookup keys before loading the source map", async () => {
     await expect(generatedFilmstripUrl("../tamil", "TA-S01-va")).rejects.toThrow(/unsafe/);
     await expect(generatedFilmstripUrl("tamil", "../TA-S01-va")).rejects.toThrow(/unsafe/);
+  });
+
+  it("captions a filmstrip as a letter, a word, or a list of letters", () => {
+    expect(filmstripCaption("ক")).toBe("How ক is written, stroke by stroke");
+    expect(filmstripCaption("はい")).toBe("How はい is written, stroke by stroke");
+    expect(filmstripCaption("ক — ণ — শ")).toBe(
+      "How these letters are written, stroke by stroke: ক, ণ, শ",
+    );
+    expect(filmstripCaption("ن، ت، ث")).toBe(
+      "How these letters are written, stroke by stroke: ن, ت, ث",
+    );
   });
 });

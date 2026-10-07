@@ -51,6 +51,7 @@
 
 import { basename } from "node:path";
 import type { FigureTarget, ScriptFilmstripTarget } from "./figure.js";
+import { LIST_SEPARATORS, listCaptionParts, listItemsOf } from "./filmstrip-caption.js";
 import type { ParsedLesson } from "./parse.js";
 
 /**
@@ -225,9 +226,6 @@ export const SEPARATE_LETTER_SCRIPTS: ReadonlySet<string> = new Set([
   "malayalam",
   "latin",
 ]);
-
-/** What separates the items of a list headword: space, commas, dashes, dots. */
-const LIST_SEPARATORS = /[\s,\u060C\u3001\u2014\u00B7]+/u;
 
 /**
  * One base letter: a single code point of category L that is not a modifier
@@ -579,7 +577,7 @@ export function writingSequenceOf(lesson: ParsedLesson, script: string): string[
     const pieces = writtenPiecesOf(letters[0]!, script);
     return pieces !== undefined && pieces.length >= 2 ? pieces : undefined;
   }
-  if (items.length >= 2 && graphemes.every((item) => item.length === 1)) {
+  if (listItemsOf(headword) !== undefined) {
     // A list keeps a grapheme no table can place (a digit, an uncited sign)
     // as it is: the ledger then decides, exactly as before signs were placed.
     return hasTable ? letters.flatMap((letter) => writtenPiecesOf(letter, script) ?? [letter]) : letters;
@@ -898,11 +896,16 @@ export function withDerivedFilmstrips(
  * A Devanagari phrase reads "How मम नाम is written, word by word, each with
  * its own headline": its strip draws each word that way, one after another.
  * A sequence reads "How はい is written" when its letters spell the headword
- * as one word, and "How the letters வ, க are written" when the headword is a
- * LIST — the letters joined back together are then not the headword, because
- * the separators are gone. A strip that holds a vowel sign reads "How மேசை is
- * written, part by part": its pieces are in WRITTEN order, so they never spell
- * the headword back.
+ * as one word. A strip that holds a vowel sign reads "How மேசை is written,
+ * part by part": its pieces are in WRITTEN order, so they never spell the
+ * headword back.
+ *
+ * A LIST ("ن، ت، ث", "ক — ণ — শ") is not one thing, so it is not captioned as
+ * one: it reads "How these letters are written, one after another, stroke by
+ * stroke: ن, ت, ث" (or "part by part" when a piece is a sign). The letters
+ * come after the sentence, separated by an English comma rather than the
+ * lesson's own separator, so an Arabic comma never lands inside the letter's
+ * script macro in the book (`\ar{ن،}`); see `filmstrip-caption.ts`.
  */
 export function filmstripImageMarkdown(target: ScriptFilmstripTarget): string {
   const file = `figures/${basename(target.output)}`;
@@ -918,9 +921,21 @@ export function filmstripImageMarkdown(target: ScriptFilmstripTarget): string {
   // A strip with a vowel sign in it draws PIECES in written order ("மேசை" is
   // ே, ம, ை, ச), which never spell the headword back, so it is captioned by
   // its parts.
-  if (target.letters.some((letter) => SIGNS_ONLY.test(letter))) {
-    return `![How ${target.glyph} is written, part by part, stroke by stroke](${file})`;
+  const manner = target.letters.some((letter) => SIGNS_ONLY.test(letter))
+    ? "part by part"
+    : undefined;
+  // A list names its items after the sentence, each on its own, so the
+  // lesson's separators (an Arabic ، among them) stay out of the caption.
+  const items = listItemsOf(target.glyph);
+  if (items !== undefined) {
+    const list = listCaptionParts(items);
+    return `![${list.subject}, ${manner ?? "one after another"}, stroke by stroke: ${list.items}](${file})`;
   }
+  if (manner !== undefined) {
+    return `![How ${target.glyph} is written, ${manner}, stroke by stroke](${file})`;
+  }
+  // One word spells itself back; several words ("buenos días") do not,
+  // because the space between them is not drawn.
   const what = target.letters.join("") === target.glyph
     ? `How ${target.glyph} is written`
     : `How the letters ${target.glyph} are written`;

@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Two Answers, Sign by Sign",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2077ce88fd074169",
+  "sourceHash": "fnv1a64:4ed70fe52854e901",
   "lessons": [
     {
       "id": "JA-W01-i",
@@ -331,7 +331,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:d8ad87d72773e6a9",
+      "sourceHash": "fnv1a64:4199c217228972ab",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -378,7 +378,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Now write them touching:"
+              "text": "Now write them side by side, one sign and then the other:"
             },
             {
               "kind": "speech",
