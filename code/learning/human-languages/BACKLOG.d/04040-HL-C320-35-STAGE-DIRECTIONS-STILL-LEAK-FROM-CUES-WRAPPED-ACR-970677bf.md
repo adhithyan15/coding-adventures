@@ -44,3 +44,12 @@ bypasses it.
 Do not fix this by editing the 35 lesson sites. A rendering rule is a candidate
 list, not a patch, and the generator should own the treatment so the next author
 who wraps a cue is not punished for it.
+
+**Status: CLOSED (2026-10-07).** The answer to "which render path do those
+lines take" was: the right one, but one line at a time. `bookVoice` now scans
+each paragraph and list item as a whole through the cue grammar it shares with
+the narration (`delivery-cue.ts`), so a wrapped cue is seen whole; no lesson
+was edited. The same pass fixed the other shapes that leaked (mid-sentence
+pauses, trailing repeats, a cue after prose or a second cue in a bullet,
+qualified prompts like `[YOU SAY (m.): …]`): 60 chapters in 12 books. `check:books`
+now fails any generated chapter that prints a cue's brackets.

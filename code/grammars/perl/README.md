@@ -290,6 +290,21 @@ Current pairs:
   match the preceding 5.004_01_03 trial archive byte for byte, while
   this numbered release keeps distinct files. The tested plain-decimal
   subset retains its 250-digit bound and does not claim full syntax.
+- `perl5.004_02_01.*` is a separate **partial** pair checked against its
+  [historical 5.004_02_01 source archive] (SHA-256
+  `e2fdda04633175d078cd2312a1e49374dbda9a7d35f8d6b95c993f20ee9d5420`).
+  Its `perly.y` and `toke.c` match 5.004_02 byte for byte; this trial keeps
+  distinct files and the tested 250-digit plain-decimal bound.
+- `perl5.004_03-t2.*` is a separate **partial** pair checked against its
+  [historical 5.004_03-t2 source archive] (SHA-256
+  `077ca5870518c79c49a1fd2be9e39bdfbf23ad793cc2e1b87ad7168474e081c4`).
+  Its `perly.y` and `toke.c` match 5.004_02_01 byte for byte; this trial
+  retains the same bounded subset in distinct files.
+- `perl5.004_03.*` is a separate **partial** pair checked against the
+  [`perl-5.004_03` source tag] and historical archive (SHA-256
+  `78b1905fdad1a0c5e1782651c898667b9c9b2a1ead88228021fc9c7752a2c85e`).
+  The tagged yacc file matches 5.004_03-t2; `toke.c` adds input-handle cleanup
+  outside this subset. Its files retain the tested 250-digit decimal bound.
 - `perl5.004_01_02.*` is a separate **partial** pair checked against the
   [historical 5.004_01_02 source archive] (SHA-256
   `185dc7317b340d4ca018f966993bb155bcc834c914fd26e579225d49c01e2a93`).
@@ -394,6 +409,9 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [p54rc2 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-p54rc2.tar.gz
 [`perl-5.004_01` source tag]: https://github.com/Perl/perl5/tree/perl-5.004_01
 [`perl-5.004_02` source tag]: https://github.com/Perl/perl5/tree/perl-5.004_02
+[historical 5.004_02_01 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_02_01.tar.gz
+[historical 5.004_03-t2 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_03-t2.tar.gz
+[`perl-5.004_03` source tag]: https://github.com/Perl/perl5/tree/perl-5.004_03
 [historical 5.004_01-t2 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01-t2.tar.gz
 [historical 5.004_01_01 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01_01.tar.gz
 [historical 5.004_01_02 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01_02.tar.gz

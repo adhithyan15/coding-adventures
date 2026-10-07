@@ -78,6 +78,7 @@ import {
   type ModalityReasonCode,
 } from "./modality.js";
 import type { ParsedLesson } from "./parse.js";
+import { closingBracket, joinQualifier, joinWrappedLines, parseDeliveryCue } from "./delivery-cue.js";
 import {
   collapseSpaces,
   DEFAULT_LINEARISABLE_TABLE_COLUMNS,
@@ -154,6 +155,12 @@ export interface NarrationPrompt {
   kind: "prompt";
   /** The cue verb, uppercased: `SAY`, `WRITE`, `BUILD`, … */
   action: string;
+  /**
+   * The author's words between the verb and the colon, spoken with the verb:
+   * `(m.)` in `[YOU SAY (m.): …]`, `the pattern` in `[YOU RUN the pattern: …]`.
+   * Absent when the cue has none, which is almost every cue.
+   */
+  qualifier?: string;
   /** What to do, already stripped of Markdown. */
   instruction: string;
   /** True when the learner can do this with their mouth alone. */
@@ -307,34 +314,16 @@ export interface RomanizationPair {
 // ---------------------------------------------------------------------------
 // Cue parsing
 // ---------------------------------------------------------------------------
+//
+// The grammar of a cue — where its bracket closes and what its words mean — lives
+// in `delivery-cue.ts`, shared with the printed book. This section only decides
+// what each cue *sounds like*. It used to own a private copy of the grammar, and
+// the two copies disagreed: a `[YOU SAY (m.): …]` was a cue to neither, so the
+// voice read the brackets out as prose, and a cue wrapped across two source lines
+// was a cue to this file but raw text to the book. One grammar, two renderings.
 
 function isDigit(character: string | undefined): boolean {
   return character !== undefined && character >= "0" && character <= "9";
-}
-
-/**
- * Read a decimal number starting at `index`; returns null when there is none.
- *
- * Hand-scanned, like everything else here. `[PAUSE 1.5s]` is not in the corpus today
- * but costs one line to support and would otherwise silently become literal prose.
- */
-function readNumber(text: string, index: number): { value: number; next: number } | null {
-  let cursor = index;
-  let digits = "";
-  while (isDigit(text[cursor])) {
-    digits += text[cursor];
-    cursor += 1;
-  }
-  if (text[cursor] === "." && isDigit(text[cursor + 1])) {
-    digits += ".";
-    cursor += 1;
-    while (isDigit(text[cursor])) {
-      digits += text[cursor];
-      cursor += 1;
-    }
-  }
-  if (digits === "") return null;
-  return { value: Number(digits), next: cursor };
 }
 
 /**
@@ -346,77 +335,47 @@ function readNumber(text: string, index: number): { value: number; next: number 
  * Only the three authored shapes count:
  *
  *   `PAUSE 2s`        `PAUSE 1s each`        `REPEAT x2`        `YOU SAY: …`
+ *
+ * and the prompt shape may carry a qualifier between its verb and its colon —
+ * `YOU SAY (m.): …`, `YOU RUN the pattern: …` — which is spoken with the verb.
  */
 export function parseNarrationCue(inner: string): NarrationCue | null {
-  const text = inner.trim();
-  const source = `[${text}]`;
-
-  if (text.startsWith("PAUSE ")) {
-    const number = readNumber(text, "PAUSE ".length);
-    if (!number) return null;
-    let cursor = number.next;
-    if (text[cursor] === "s") cursor += 1;
-    const rest = text.slice(cursor).trim().toLowerCase();
-    if (rest !== "" && rest !== "each") return null;
-    return { kind: "pause", seconds: number.value, perItem: rest === "each", source };
+  const cue = parseDeliveryCue(inner);
+  if (!cue) return null;
+  const source = `[${joinWrappedLines(inner)}]`;
+  switch (cue.kind) {
+    case "pause":
+      return { kind: "pause", seconds: cue.seconds, perItem: cue.perItem, source };
+    case "repeat":
+      return { kind: "repeat", times: cue.times, source };
+    case "prompt": {
+      const prompt: NarrationPrompt = {
+        kind: "prompt",
+        action: cue.action,
+        instruction: speakableInline(cue.content),
+        spoken: !MANUAL_CUE_ACTIONS.has(cue.action.split(" ")[0] ?? cue.action),
+        scored: false,
+        responseSeconds: PROMPT_RESPONSE_SECONDS,
+        source,
+      };
+      // Present only when authored, so every unqualified prompt's JSON is
+      // byte-for-byte what it was before qualifiers were understood.
+      if (cue.qualifier !== "") prompt.qualifier = speakableInline(cue.qualifier);
+      return prompt;
+    }
   }
-
-  if (text.startsWith("REPEAT ")) {
-    let cursor = "REPEAT ".length;
-    if (text[cursor] === "x" || text[cursor] === "X") cursor += 1;
-    const number = readNumber(text, cursor);
-    if (!number || text.slice(number.next).trim() !== "") return null;
-    return { kind: "repeat", times: number.value, source };
-  }
-
-  if (text.startsWith("YOU ")) {
-    const colon = text.indexOf(":");
-    if (colon === -1) return null;
-    const action = text.slice("YOU ".length, colon).trim();
-    // A cue verb is capitals and spaces — `YOU SAY`, `YOU CHOOSE BY CONTEXT`. Anything
-    // else is prose that happens to open with the word "you", e.g. `[you: see below]`.
-    if (action === "" || !isCueAction(action)) return null;
-    const instruction = speakableInline(text.slice(colon + 1));
-    return {
-      kind: "prompt",
-      action,
-      instruction,
-      spoken: !MANUAL_CUE_ACTIONS.has(action.split(" ")[0] ?? action),
-      scored: false,
-      responseSeconds: PROMPT_RESPONSE_SECONDS,
-      source,
-    };
-  }
-
-  return null;
-}
-
-function isCueAction(action: string): boolean {
-  for (const character of action) {
-    const isUpper = character >= "A" && character <= "Z";
-    if (!isUpper && character !== " ") return false;
-  }
-  return true;
 }
 
 /** A span of a paragraph: either words to say or a directive to obey. */
 type CueSplit = { text: string } | { cue: NarrationCue };
 
 /**
- * How far ahead {@link splitNarrationCues} will look for a cue's closing bracket.
- *
- * 4,096 characters, against a corpus whose longest authored cue is a couple of
- * hundred. It exists to bound the scan, not to reject anything real — see the comment
- * at the loop.
- */
-const MAX_CUE_LENGTH = 4096;
-
-/**
  * Split a paragraph into prose spans and cues.
  *
- * The bracket scan tracks depth, because the corpus nests brackets inside cues for
- * real — `[YOU SAY: the pattern — "[nā] [pēru]"]` — and stopping at the first `]`
- * would cut the cue in half and leave the tail as garbled prose.
+ * The bracket scan ({@link closingBracket}) tracks depth, because the corpus nests
+ * brackets inside cues for real — `[YOU SAY: the pattern — "[nā] [pēru]"]` — and
+ * stopping at the first `]` would cut the cue in half and leave the tail as garbled
+ * prose. Its lookahead is bounded, so the walk stays linear in the paragraph.
  *
  * A bracket run that is not a cue is handed back **including its brackets**, and with
  * any following `(…)` attached, so that Markdown links survive intact for
@@ -442,31 +401,7 @@ export function splitNarrationCues(text: string): CueSplit[] {
       index += 1;
       continue;
     }
-    let depth = 0;
-    let cursor = index;
-    let close = -1;
-    // Bounded lookahead. An unbalanced `[` makes this scan run to the end of the
-    // paragraph and then advance by one character, so a line of nothing but `[[[[[…`
-    // costs O(n²). The longest real cue in the corpus is a couple of hundred
-    // characters, so capping the search keeps every genuine cue intact while making
-    // the total work linear in the text with a fixed constant.
-    const limit = Math.min(text.length, index + MAX_CUE_LENGTH);
-    while (cursor < limit) {
-      const scanned = text[cursor];
-      if (scanned === "\\") {
-        cursor += 2;
-        continue;
-      }
-      if (scanned === "[") depth += 1;
-      else if (scanned === "]") {
-        depth -= 1;
-        if (depth === 0) {
-          close = cursor;
-          break;
-        }
-      }
-      cursor += 1;
-    }
+    const close = closingBracket(text, index);
     if (close === -1) {
       // An unbalanced `[`. Keep it as prose rather than swallowing the rest of the
       // paragraph — losing content is the one outcome this module refuses.
@@ -1020,7 +955,7 @@ function repeatLine(segment: NarrationRepeat): string {
 }
 
 function promptLine(segment: NarrationPrompt): string[] {
-  const verb = segment.action.toLowerCase();
+  const verb = joinQualifier(segment.action.toLowerCase(), segment.qualifier ?? "");
   if (!segment.spoken) {
     return [`[once you have stopped driving — ${verb}: ${segment.instruction}]`];
   }

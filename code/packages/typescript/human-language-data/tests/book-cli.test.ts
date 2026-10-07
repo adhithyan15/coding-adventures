@@ -20,6 +20,7 @@ import {
   materializeBookCompileInputs as materializeBookCompileInputsImpl,
   runBookGeneration as runBookGenerationImpl,
 } from "../src/book-cli.js";
+import { findPrintedDeliveryCues } from "../src/book.js";
 import { defaultCurriculumRoot, loadTrackChapters } from "../src/loader.js";
 
 // These assertions inspect the same immutable checkout. Render its complete
@@ -156,6 +157,106 @@ afterEach(() => {
   vi.restoreAllMocks();
   for (const root of roots.splice(0))
     rmSync(root, { recursive: true, force: true });
+});
+
+describe("no printed chapter shows a delivery cue's brackets", () => {
+  // `{[}YOU SAY: ...{]}` is valid LaTeX: it compiles without a warning and the
+  // generator agrees with itself about it, so before this gate the only way to
+  // find one was to read a PDF. 60 chapters in 12 books shipped that way.
+
+  it("holds for every chapter the generator renders from the real corpus", () => {
+    const leaks: string[] = [];
+    for (const [relative, tex] of realBookOutputs) {
+      if (!relative.endsWith(".tex")) continue;
+      for (const leak of findPrintedDeliveryCues(tex)) {
+        leaks.push(`${relative}:${leak.line} ${leak.opener}`);
+      }
+    }
+    expect(leaks).toEqual([]);
+  });
+
+  it("holds for every chapter file committed to disk, generated or not", () => {
+    // Independent of the generator: read what is actually checked in, so a
+    // chapter that somehow escapes generation is still inspected.
+    const root = defaultCurriculumRoot();
+    const leaks: string[] = [];
+    let chapters = 0;
+    for (const track of readdirSync(root)) {
+      const directory = join(root, track, "book", "chapters");
+      if (!existsSync(directory)) continue;
+      for (const name of readdirSync(directory)) {
+        if (!name.endsWith(".tex")) continue;
+        chapters += 1;
+        const tex = readFileSync(join(directory, name), "utf8");
+        for (const leak of findPrintedDeliveryCues(tex)) {
+          leaks.push(`${track}/book/chapters/${name}:${leak.line} ${leak.opener}`);
+        }
+      }
+    }
+    expect(chapters).toBeGreaterThan(1000);
+    expect(leaks).toEqual([]);
+  });
+
+  it("fails --check and --write when a lesson's cue cannot be put in book voice", () => {
+    // `[YOU SAY it twice]` has no colon, so it is not a cue the grammar can
+    // voice --- and it must not reach the page as one either.
+    const root = fixture();
+    const lessonPath = join(root, "test", "lessons", "hello.md");
+    writeFileSync(
+      lessonPath,
+      readFileSync(lessonPath, "utf8").replace("Say hello.\n", "Say hello. [YOU SAY it twice]\n"),
+    );
+    const errors: string[] = [];
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+      errors.push(String(chunk));
+      return true;
+    });
+    expect(runBookGeneration(["--write"], root)).toBe(1);
+    expect(runBookGeneration(["--check"], root)).toBe(1);
+    expect(errors.join("")).toMatch(
+      /test\/book\/chapters\/ch01-first\.tex:\d+: prints a raw delivery cue \(\{\[\}YOU\)/,
+    );
+  });
+
+  it("scans the compile-only inputs too, not just the committed chapters", () => {
+    // `book.tex` is assembled from authored halves and never committed, so the
+    // stale-output comparison skips it. The cue scan must not: it is typeset
+    // into the same PDF. (The real-corpus test above already walks every
+    // generated .tex, compile-only ones included: 5,972 at the time of writing.)
+    const root = fixture();
+    addAuthoredBookFragments(root);
+    writeFileSync(
+      join(root, "test", "book", "frontmatter.tex"),
+      "\\documentclass{book}\n\\begin{document}\n[PAUSE\t2s]\n\\mainmatter\n\n",
+    );
+    const errors: string[] = [];
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+      errors.push(String(chunk));
+      return true;
+    });
+    expect(runBookGeneration(["--write"], root)).toBe(1);
+    expect(runBookGeneration(["--check"], root)).toBe(1);
+    expect(errors.join("")).toMatch(/test\/book\/book\.tex:3: prints a raw delivery cue \(\[PAUSE\)/);
+  });
+
+  it("passes a lesson whose wrapped cue the book voice converts", () => {
+    const root = fixture();
+    const lessonPath = join(root, "test", "lessons", "hello.md");
+    writeFileSync(
+      lessonPath,
+      readFileSync(lessonPath, "utf8").replace(
+        "Say hello.\n",
+        "Say hello. [YOU SAY: hello,\nthen hello again]\n",
+      ),
+    );
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    expect(runBookGeneration(["--write"], root)).toBe(0);
+    expect(runBookGeneration(["--check"], root)).toBe(0);
+    const tex = readFileSync(join(root, "test", "book", "chapters", "ch01-first.tex"), "utf8");
+    expect(tex).toContain("\\emph{Say it:} hello, then hello again");
+  });
 });
 
 describe("canonical book generator filesystem shell", () => {

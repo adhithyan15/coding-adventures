@@ -1521,6 +1521,16 @@ fn swimlane_multiline_edges_continue_from_the_previous_endpoint() {
 }
 
 #[test]
+fn swimlane_storage_and_subprocess_shapes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Data\n  source[(Database)]\n  process[[Transform]]\nend\nsource --> process",
+    ).expect("storage and subprocess nodes should parse");
+
+    assert_eq!(diagram.nodes[0].shape, diagram_ir::DiagramShape::Cylinder);
+    assert_eq!(diagram.nodes[1].shape, diagram_ir::DiagramShape::Subroutine);
+}
+
+#[test]
 fn railroad_dispatches_all_notations_to_recursive_ir() {
     let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
     let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");

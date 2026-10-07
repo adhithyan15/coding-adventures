@@ -7,6 +7,14 @@ import type {
   CompiledLessonActivity,
 } from "./types.js";
 import { stripHtmlComments } from "./literal-markup.js";
+import {
+  closingBracket,
+  joinQualifier,
+  MAX_CUE_LENGTH,
+  opensDeliveryCue,
+  parseDeliveryCue,
+  type PromptCue,
+} from "./delivery-cue.js";
 import type { ParsedLesson } from "./parse.js";
 import type { ChapterModality } from "./modality.js";
 
@@ -543,12 +551,23 @@ export function bookBlockTitle(authored: string): string {
 // 2. Delivery cues
 // ---------------------------------------------------------------------------
 //
-// Three cue shapes exist across the 1,096 lesson files, and every one of them
-// sits at the start of a line or fills a whole bullet:
+// Three cue shapes exist across the lesson files. Their grammar --- where a cue's
+// bracket closes, and what its words mean --- lives in `delivery-cue.ts`, shared
+// with the narration script, so the page and the voice can never disagree about
+// what is a cue. This section only decides what each one LOOKS like in print:
 //
 //   [PAUSE 2s]      "hold here" --- meaningless in print, so it is deleted.
-//   [REPEAT x2]     "say the next bit twice" --- said in prose instead.
+//   [REPEAT x2]     "say that twice" --- said in prose instead.
 //   [YOU SAY: ...]  "the learner's turn" --- typeset as a practice prompt.
+//
+// A cue can sit anywhere: heading a line, filling a bullet, mid-sentence, or
+// wrapped by the author's editor across two or three source lines. The book used
+// to find cues one source line at a time with anchored regular expressions, so
+// every one of those positions except the first two leaked: 60 generated chapters
+// in 12 books printed `{[}YOU SAY: ...{]}`, `{[}PAUSE 4s{]}` or `{[}REPEAT x2{]}`
+// as literal text. Now each paragraph and each list item is scanned as the one
+// unit Markdown will typeset it as, and `check:books` refuses any chapter that
+// still prints a cue's brackets.
 //
 // `[YOU <VERB>: ...]` uses twenty-eight different verbs. Each needs an English
 // imperative a book can print. Two shapes are possible:
@@ -609,7 +628,7 @@ const CUE_VOICES: Record<string, CueVoice> = {
  *
  * The lookup goes through `hasOwn` rather than a bare index, so a verb that
  * happened to spell an inherited member could never resolve to `Object`'s
- * prototype. `YOU_CUE` already restricts the verb to A--Z and spaces, which
+ * prototype. `parseDeliveryCue` already restricts the verb to A--Z and spaces, which
  * rules that out today; the guard means it stays ruled out if the cue grammar
  * is ever widened.
  */
@@ -618,124 +637,450 @@ function cueVoice(verb: string): CueVoice {
   return known ?? { item: verb.charAt(0) + verb.slice(1).toLowerCase() };
 }
 
-/** `[PAUSE 2s]` / `[PAUSE 1s each]`, always at the head of a line. */
-const PAUSE_CUE = /^\[PAUSE [^\]]*\][ \t]*/;
-
-/** `[REPEAT x2]`, always at the head of a line, always followed by the copy. */
-const REPEAT_CUE = /^\[REPEAT x(\d+)\][ \t]*/;
-
-/**
- * `[YOU SAY: ...]` filling a whole bullet. The closing bracket is anchored to
- * the end because the copy itself may contain brackets --- "what [is] your
- * name?" is a real lesson line --- so a lazy match would truncate it.
- */
-const YOU_CUE = /^\[YOU ([A-Z]+(?: [A-Z]+)*):[ \t]*([\s\S]*)\]$/;
-
 /** A Markdown bullet, matching renderMarkdown's own column-zero rule. */
 const LIST_ITEM = /^- /;
 
+/** How a prompt cue's verb prints, qualifier included: "Say it (m.)". */
+function promptLabel(cue: PromptCue): string {
+  return joinQualifier(cueVoice(cue.action).item, cue.qualifier);
+}
+
+/** `[REPEAT x2]` in words: "Twice through", "3 times through". */
+function repeatLead(times: number): string {
+  return times === 2 ? "Twice through" : `${times} times through`;
+}
+
 /**
- * Strip the timing cues from one non-bullet line.
+ * The book-voice output of {@link voiceCues}, built as a list of pieces.
  *
- * Returns `undefined` when the line was *nothing but* a cue --- a bare
- * `[PAUSE 1s]` on its own line --- because the right print treatment of an
- * instruction to wait is no ink at all.
+ * Why not one growing string: `output += piece` makes a rope, and the two
+ * questions this builder has to answer --- "is the output at the head of a
+ * line?" and "strip the blank before this deleted pause" --- would read the
+ * rope's last characters, which flattens it. Once per cue, that is quadratic:
+ * a line of 40,000 `[REPEAT x2]` cues took fourteen seconds. Looking only at
+ * the last few pieces keeps every question O(1) amortised.
  */
-function stripDeliveryCues(line: string): string | undefined {
-  // A `[YOU SAY: ...]` filling a whole NON-BULLET line. `bookVoice` routes
-  // bullets through `renderCueList`, which puts every cue into book voice --- but
-  // a cue authored as a plain paragraph never reached that path, so it was
-  // emitted verbatim and LaTeX-escaped into `{[}YOU SAY: ...{]}` ON THE PRINTED
-  // PAGE. 93 stage directions across 30 chapter files in 10 tracks shipped that
-  // way (spanish 14 files, hindi 5, gujarati 4, tamil 3), and no gate could see
-  // it: `check:books` compares the generator against itself, and the escaping
-  // makes it valid LaTeX that compiles cleanly.
-  //
-  // Same treatment a lone cue gets inside a list, so the two paths agree.
-  const whole = parseCue(line.trim());
-  if (whole) return `*${cueVoice(whole.verb).item}:* ${whole.content}`;
-  // The same cue INLINE: as a prefix followed by prose ("[YOU SAY: x] Point to
-  // the second word"), or several in one sentence ("[YOU SAY: a], [YOU SAY: b]").
-  // A lazy match to the first `]` is safe HERE and would not be safe for the
-  // whole-line form above: measured across every lesson in the corpus, 26 lines
-  // carry trailing prose after the close bracket and NOT ONE has a `[` inside
-  // the cue content, so there is nothing for a lazy match to truncate.
-  const inline = line.replace(
-    /\[YOU ([A-Z]+(?: [A-Z]+)*):[ \t]*([^\]]*)\]/g,
-    (_all, verb: string, content: string) => `*${cueVoice(verb).item}:* ${content}`,
-  );
-  let text = inline.replace(PAUSE_CUE, "");
-  const repeat = REPEAT_CUE.exec(text);
-  if (repeat) {
-    const times = Number(repeat[1]);
-    const lead = times === 2 ? "Twice through" : `${times} times through`;
-    text = `*${lead}:* ${text.slice(repeat[0].length)}`;
+class VoicedText {
+  private readonly pieces: string[] = [];
+
+  push(piece: string): void {
+    if (piece !== "") this.pieces.push(piece);
   }
-  if (line.trim() !== "" && text.trim() === "") return undefined;
-  return text;
+
+  /** True when everything after the last newline written so far is blank. */
+  atLineHead(): boolean {
+    for (let piece = this.pieces.length - 1; piece >= 0; piece -= 1) {
+      const text = this.pieces[piece] ?? "";
+      for (let index = text.length - 1; index >= 0; index -= 1) {
+        const character = text[index];
+        if (character === "\n") return true;
+        if (character !== " " && character !== "\t") return false;
+      }
+    }
+    return true;
+  }
+
+  /** Drop trailing spaces and tabs (never newlines). Each removed blank is gone for good. */
+  trimTrailingBlanks(): void {
+    while (this.pieces.length > 0) {
+      const last = this.pieces.length - 1;
+      const kept = trimTrailingBlanks(this.pieces[last] ?? "");
+      if (kept !== "") {
+        this.pieces[last] = kept;
+        return;
+      }
+      this.pieces.pop();
+    }
+  }
+
+  toString(): string {
+    return this.pieces.join("");
+  }
 }
 
-interface ParsedCue {
-  verb: string;
-  content: string;
-}
-
-function parseCue(item: string): ParsedCue | undefined {
-  const match = YOU_CUE.exec(item.trim());
-  if (!match) return undefined;
-  return { verb: match[1] ?? "", content: (match[2] ?? "").trim() };
+/** `text` without its trailing spaces and tabs (newlines are kept). */
+function trimTrailingBlanks(text: string): string {
+  let end = text.length;
+  while (end > 0 && (text[end - 1] === " " || text[end - 1] === "\t")) end -= 1;
+  return end === text.length ? text : text.slice(0, end);
 }
 
 /**
- * Gather one Markdown list into logical items, folding each item's wrapped
- * continuation lines into it exactly the way renderMarkdown would (first line
- * after `- `, continuations trimmed, joined by a single space). Because the
- * join is identical, re-emitting an item on one line cannot change the LaTeX.
+ * Put every delivery cue in `text` into book voice, wherever it sits.
+ *
+ * `text` is one unit Markdown will typeset as a single run --- a paragraph's
+ * lines, or one list item --- with its source newlines still in it. A cue may
+ * cross those newlines; that is the case this function exists for:
+ *
+ *     source       Cover the word and write it. [YOU WRITE: the word, then
+ *                  its meaning] Check the spelling.
+ *
+ *     book voice   Cover the word and write it. *Write it:* the word, then its meaning Check the spelling.
+ *
+ * The cue's content is re-joined onto one line exactly as renderMarkdown would
+ * join it (lines trimmed, one space between), so the LaTeX is identical to the
+ * same cue authored on one line. Lines the cue did not cross keep their breaks.
+ *
+ *   pause    deleted, along with the blank it leaves, so "a. [PAUSE 2s] b"
+ *            prints "a. b" and a line that was only a pause prints nothing.
+ *   repeat   at the head of a line it introduces the copy that follows
+ *            ("*Twice through:* ..."); after prose it refers back to it
+ *            ("... let it creak. *Twice through.*").
+ *   prompt   "*Say it:* content", the qualifier carried into the label.
+ *
+ * An index scan, not a regular expression. A `[` that does not open with a cue
+ * keyword costs one comparison (`opensDeliveryCue`); one that does costs at most
+ * `MAX_CUE_LENGTH` steps (`closingBracket`). Either way the walk is linear.
+ * A bracket that is not a cue is copied through and scanning resumes just
+ * inside it, so a gloss like `[I am your friend]` is untouched.
+ */
+function voiceCues(text: string): string {
+  const output = new VoicedText();
+  let index = 0;
+  // Plain runs are copied as slices, not character by character.
+  let copiedTo = 0;
+  while (index < text.length) {
+    const character = text[index];
+    if (character === "\\") {
+      index += 2;
+      continue;
+    }
+    if (character !== "[") {
+      index += 1;
+      continue;
+    }
+    const close = opensDeliveryCue(text, index) ? closingBracket(text, index) : -1;
+    const cue = close === -1 ? null : parseDeliveryCue(text.slice(index + 1, close));
+    if (!cue) {
+      index += 1;
+      continue;
+    }
+    output.push(text.slice(copiedTo, index));
+    let next = close + 1;
+    if (cue.kind === "pause") {
+      // Swallow the blank after the cue too, then decide whether the blank
+      // BEFORE it is still needed: not at the end of a line, and not before
+      // punctuation ("word [PAUSE 2s]." must print "word.").
+      while (text[next] === " " || text[next] === "\t") next += 1;
+      const following = text[next];
+      if (following === undefined || following === "\n" || ".,;:!?)".includes(following)) {
+        output.trimTrailingBlanks();
+      }
+    } else if (cue.kind === "repeat") {
+      if (output.atLineHead()) {
+        while (text[next] === " " || text[next] === "\t") next += 1;
+        output.push(`*${repeatLead(cue.times)}:* `);
+      } else {
+        output.push(`*${repeatLead(cue.times)}.*`);
+      }
+    } else {
+      // A cue inside a cue's content ("[YOU SAY: a [PAUSE 1s] b]") is voiced
+      // too. The content is strictly shorter than the text, so this recursion
+      // always ends.
+      output.push(`*${promptLabel(cue)}:* ${voiceCues(cue.content)}`);
+    }
+    index = next;
+    copiedTo = next;
+  }
+  output.push(text.slice(copiedTo));
+  return output.toString();
+}
+
+/**
+ * A prompt cue that fills a whole list item, or undefined.
+ *
+ * "Whole" is decided by the bracket scan, not by an anchored pattern: the old
+ * `^\[YOU ...:(.*)\]$` read `[YOU HEAR: a] [YOU ANSWER: b]` as ONE cue whose
+ * content was `a] [YOU ANSWER: b`, and printed the inner brackets raw.
+ */
+function wholePromptCue(item: string): PromptCue | undefined {
+  const trimmed = item.trim();
+  if (!trimmed.startsWith("[")) return undefined;
+  if (closingBracket(trimmed, 0) !== trimmed.length - 1) return undefined;
+  const cue = parseDeliveryCue(trimmed.slice(1, -1));
+  return cue?.kind === "prompt" ? cue : undefined;
+}
+
+/**
+ * Gather one Markdown list into logical items, keeping each item's wrapped
+ * continuation lines (trimmed) on their own lines inside it. `voiceCues` joins
+ * them only where a cue crosses them, and renderMarkdown joins the rest with a
+ * single space, so the item typesets exactly as before.
+ *
+ * Each item is gathered as an ARRAY of lines with an {@link OpenCueTracker}
+ * beside it, and joined once at the end. An earlier draft re-joined the item
+ * into one string per line and re-scanned its tail to ask "is a cue still
+ * open?" --- which is quadratic, because reading the tail of a growing
+ * concatenated string flattens it: a bullet followed by 80,000 flush-left
+ * `[YOU a` lines took 28 seconds. Now each line is read exactly once.
  */
 function collectListItems(lines: string[], start: number): { items: string[]; next: number } {
-  const items: string[] = [];
+  const items: string[][] = [];
+  let tracker = new OpenCueTracker();
   let cursor = start;
+  const extend = (line: string): void => {
+    items.at(-1)?.push(line);
+    tracker.feed(line);
+  };
   while (cursor < lines.length) {
     const line = (lines[cursor] ?? "").trimEnd();
     if (LIST_ITEM.test(line)) {
-      items.push(line.slice(2));
+      items.push([]);
+      tracker = new OpenCueTracker();
+      extend(line.slice(2));
       cursor += 1;
       continue;
     }
     if (items.length > 0 && /^\s+\S/.test(line)) {
-      items[items.length - 1] = `${items.at(-1) ?? ""} ${line.trim()}`;
+      extend(line.trim());
+      cursor += 1;
+      continue;
+    }
+    // A Markdown "lazy" continuation: an UNindented line that still belongs to
+    // the item because the cue it is finishing never closed. Tamil chapter 29
+    // wraps a cue's last word flush left ---
+    //
+    //     - [YOU SAY: the honest structural surprise --- no ... at
+    //       all, unlike Tamil's
+    //     neighbours]
+    //
+    // --- and without this the bullet ended at "Tamil's", leaving both halves
+    // printed raw. Only an OPEN cue licenses it; any other flush-left line
+    // still ends the list, exactly as renderMarkdown has always typeset it.
+    if (items.length > 0 && line.trim() !== "" && tracker.hasOpenCue()) {
+      extend(line.trim());
       cursor += 1;
       continue;
     }
     break;
   }
-  return { items, next: cursor };
+  return { items: items.map((item) => item.join("\n")), next: cursor };
+}
+
+/**
+ * Answers "has a delivery cue (`[YOU `, `[PAUSE `, `[REPEAT `) opened in this
+ * item and not yet closed?" while the item's lines are fed in one at a time.
+ *
+ * A running bracket stack: `[` pushes, `]` pops, and a `[` still on the stack
+ * is one no `]` has closed --- exactly when the depth scan in `closingBracket`
+ * would fail. Alongside it, the offsets of the stack entries that open a cue,
+ * in stack order, so the answer is the topmost of them. A cue that opened more
+ * than `MAX_CUE_LENGTH` characters ago can never close within the bound, so it
+ * no longer counts as open; that stops a hostile item from absorbing every
+ * flush-left line after it on the strength of one ancient `[YOU`.
+ *
+ * Each character is read once, so feeding a whole item is linear in its length.
+ */
+class OpenCueTracker {
+  /** For each unclosed `[`, whether it opens a cue. */
+  private readonly stack: boolean[] = [];
+  /** Offsets of the unclosed `[` that open a cue, oldest first. */
+  private readonly cueOffsets: number[] = [];
+  /** Characters fed so far, the newlines that will join the lines included. */
+  private length = 0;
+
+  feed(line: string): void {
+    if (this.length > 0) this.length += 1; // the "\n" that will join this line on
+    // The newline after the line counts as the blank after a keyword: `[YOU`
+    // ending one line with `SAY: …` on the next is a wrapped cue.
+    const text = `${line}\n`;
+    let index = 0;
+    while (index < line.length) {
+      const character = line[index];
+      if (character === "\\") {
+        index += 2;
+        continue;
+      }
+      if (character === "[") {
+        const opensCue = opensDeliveryCue(text, index);
+        this.stack.push(opensCue);
+        if (opensCue) this.cueOffsets.push(this.length + index);
+      } else if (character === "]" && this.stack.length > 0) {
+        if (this.stack.pop() === true) this.cueOffsets.pop();
+      }
+      index += 1;
+    }
+    this.length += line.length;
+  }
+
+  hasOpenCue(): boolean {
+    const newest = this.cueOffsets.at(-1);
+    return newest !== undefined && this.length - newest < MAX_CUE_LENGTH;
+  }
+}
+
+/**
+ * Re-join a list item's lines the way the old collector did and renderMarkdown
+ * still does: continuation lines trimmed, one space between, the first line as
+ * written. (Not `joinWrappedLines`, which also trims the item's outer edges ---
+ * that would be a silent change to bullets that hold no cue at all.)
+ */
+function joinItemLines(item: string): string {
+  if (!item.includes("\n")) return item;
+  return item
+    .split("\n")
+    .map((line, index) => (index === 0 ? line : line.trim()))
+    .join(" ");
 }
 
 /**
  * Turn a collected list back into Markdown, in book voice.
  *
- * Uniform-verb lists of two or more bullets get the instruction once, above
- * the list. Anything else --- a lone cue, a mixed list, a list of ordinary
- * bullets --- keeps the per-bullet form, so no information is lost.
+ * Uniform-verb lists of two or more whole-cue bullets get the instruction once,
+ * above the list. Anything else --- a lone cue, a mixed list, a qualified cue
+ * whose "(m.)" a shared lead-in would lose, a cue that shares its bullet with
+ * prose --- keeps the per-bullet form, so no information is lost. A bullet that
+ * was nothing but a pause has nothing left to print and is dropped.
  */
 function renderCueList(items: string[]): string[] {
-  const cues = items.map(parseCue);
-  if (cues.every((cue) => cue === undefined)) return items.map((item) => `- ${item}`);
-
-  const verbs = new Set(cues.map((cue) => cue?.verb));
+  const cues = items.map(wholePromptCue);
+  const verbs = new Set(cues.map((cue) => cue?.action));
   const uniformVerb = verbs.size === 1 ? [...verbs][0] : undefined;
-  if (uniformVerb !== undefined && items.length > 1) {
+  const leadable = cues.every((cue) => cue !== undefined && cue.qualifier === "");
+  if (uniformVerb !== undefined && leadable && items.length > 1) {
     const lead = cueVoice(uniformVerb).lead;
     if (lead !== undefined) {
-      return [`${lead}:`, "", ...cues.map((cue) => `- ${cue?.content ?? ""}`)];
+      return [`${lead}:`, "", ...cues.map((cue) => `- ${voiceCues(cue?.content ?? "")}`)];
     }
   }
-  return items.map((item, index) => {
-    const cue = cues[index];
-    if (!cue) return `- ${item}`;
-    return `- *${cueVoice(cue.verb).item}:* ${cue.content}`;
-  });
+  const rendered: string[] = [];
+  for (const item of items) {
+    const voiced = joinItemLines(voiceCues(item));
+    if (voiced === "" && item.trim() !== "") continue;
+    rendered.push(`- ${voiced}`);
+  }
+  return rendered;
+}
+
+/**
+ * True when a source line starts a new typeset unit in renderMarkdown rather
+ * than continuing the paragraph above it: a quote, a numbered item, a table row,
+ * a heading, or a block image. A cue is never allowed to reach across one of
+ * these --- its two halves would land in different LaTeX environments.
+ */
+function startsTypesetUnit(line: string): boolean {
+  const trimmed = line.trim();
+  if (trimmed.startsWith(">") || trimmed.startsWith("|") || trimmed.startsWith("#")) return true;
+  if (trimmed.startsWith("![")) return true;
+  let digits = 0;
+  while (trimmed[digits] !== undefined && trimmed[digits]! >= "0" && trimmed[digits]! <= "9") {
+    digits += 1;
+  }
+  return digits > 0 && trimmed[digits] === "." && /\s/.test(trimmed[digits + 1] ?? "");
+}
+
+/** A `> ` blockquote line --- renderMarkdown joins a run of them into one quote. */
+function isQuoteLine(line: string): boolean {
+  return line.startsWith("> ");
+}
+
+/**
+ * Voice one run of consecutive non-blank, non-bullet lines.
+ *
+ * The run is cut into typeset units (see {@link startsTypesetUnit}); each unit
+ * is voiced as one string so a wrapped cue is seen whole. One exception to the
+ * cut: consecutive `> ` lines are ONE unit, because renderMarkdown typesets
+ * them as one quote and the narration speaks them as one utterance --- so a cue
+ * wrapped inside a blockquote is a cue to both. Their `> ` markers come off
+ * before the scan (or they would land inside the cue's content) and go back on
+ * every line after it.
+ *
+ * A line the cues left empty --- a bare `[PAUSE 1s]` --- is dropped: the right
+ * print treatment of an instruction to wait is no ink at all.
+ */
+function voiceProseRun(run: string[]): string[] {
+  const units: string[][] = [];
+  for (const line of run) {
+    const current = units.at(-1);
+    const continuesQuote =
+      current !== undefined && isQuoteLine(line) && isQuoteLine(current.at(-1) ?? "");
+    if (current === undefined || (startsTypesetUnit(line) && !continuesQuote)) units.push([line]);
+    else current.push(line);
+  }
+  const output: string[] = [];
+  for (const unit of units) {
+    const quoted = isQuoteLine(unit[0] ?? "");
+    const prefixes = unit.map((line) => (quoted && isQuoteLine(line) ? "> " : ""));
+    const text = unit.map((line, index) => line.slice(prefixes[index]?.length ?? 0)).join("\n");
+    const voiced = voiceCues(text).split("\n");
+    // If no cue crossed a line, every line is still where it was and gets its
+    // own marker back --- an indented continuation keeps its indentation and no
+    // marker, byte for byte as authored. If one did, the lines no longer line
+    // up with their markers; a quote unit then marks every line, trimmed, which
+    // renderMarkdown joins into the same single quote.
+    const aligned = voiced.length === unit.length;
+    voiced.forEach((line, index) => {
+      const kept = trimTrailingBlanks(line);
+      if (kept.trim() === "") return;
+      if (!quoted) output.push(kept);
+      else if (aligned) output.push(`${prefixes[index] ?? ""}${kept}`);
+      else output.push(`> ${kept.trimStart()}`);
+    });
+  }
+  return output;
+}
+
+// ---------------------------------------------------------------------------
+// 3. The gate: a printed page never shows a cue's brackets
+// ---------------------------------------------------------------------------
+//
+// Every earlier leak of this kind was found by a person reading a PDF, never by
+// a check: `check:books` compares the generator with its own committed output,
+// and `{[}YOU SAY: ...{]}` is perfectly valid LaTeX that compiles without a
+// warning. So the generator's output is now inspected for the one thing it must
+// never contain. The escaped form `{[}` is what renderInlineMarkdown makes of a
+// literal `[`; the bare form is listed too so a future raw-LaTeX path cannot
+// smuggle one past.
+
+/**
+ * What a delivery cue looks like once it has reached a `.tex` file: an opening
+ * bracket, escaped (`{[}`) or bare, then a cue keyword.
+ */
+const PRINTED_CUE_BRACKETS = ["{[}", "["] as const;
+const PRINTED_CUE_KEYWORDS = ["YOU", "PAUSE", "REPEAT"] as const;
+
+/** One raw cue found in generated LaTeX: 1-based line, and the opener it used. */
+export interface PrintedCue {
+  line: number;
+  /** The opener, normalised to one trailing space: `{[}YOU `, `[PAUSE `. */
+  opener: string;
+}
+
+/**
+ * Every place `tex` prints a delivery cue's brackets instead of book voice.
+ * An empty list is the only acceptable answer for a generated chapter.
+ *
+ * The keyword counts when it is followed by a space, a tab, or the end of the
+ * line --- the same "any blank" rule the cue parser uses (`afterKeyword` in
+ * delivery-cue.ts). A gate that wanted exactly one space would have waved
+ * `{[}YOU\tSAY: hi{]}` through, and that is exactly what it once did. `[YOUR`
+ * and `[PAUSED` are words, not cues, and are not flagged.
+ *
+ * Plain `indexOf` scans: linear in the text, no pattern to tune. The escaped
+ * opener cannot also match its bare twin --- `{[}YOU` has a `}` between the `[`
+ * and the word --- so one leak is reported once.
+ */
+export function findPrintedDeliveryCues(tex: string): PrintedCue[] {
+  const found: PrintedCue[] = [];
+  const lines = tex.split("\n");
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index] ?? "";
+    for (const bracket of PRINTED_CUE_BRACKETS) {
+      for (const keyword of PRINTED_CUE_KEYWORDS) {
+        const opener = `${bracket}${keyword}`;
+        let at = line.indexOf(opener);
+        while (at !== -1) {
+          const after = line[at + opener.length];
+          if (after === undefined || after === " " || after === "\t") {
+            found.push({ line: index + 1, opener: `${opener} ` });
+            break;
+          }
+          at = line.indexOf(opener, at + 1);
+        }
+      }
+    }
+  }
+  return found;
 }
 
 /**
@@ -763,9 +1108,19 @@ export function bookVoice(markdown: string): string {
       cursor = next;
       continue;
     }
-    const stripped = stripDeliveryCues(line);
-    if (stripped !== undefined) output.push(stripped);
-    cursor += 1;
+    if (line.trim() === "") {
+      output.push(line);
+      cursor += 1;
+      continue;
+    }
+    const run: string[] = [];
+    while (cursor < lines.length) {
+      const candidate = (lines[cursor] ?? "").trimEnd();
+      if (candidate.trim() === "" || LIST_ITEM.test(candidate)) break;
+      run.push(candidate);
+      cursor += 1;
+    }
+    output.push(...voiceProseRun(run));
   }
   return output.join("\n");
 }

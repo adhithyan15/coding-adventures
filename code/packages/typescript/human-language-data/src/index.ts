@@ -116,6 +116,8 @@ export {
   renderReferenceAppendix,
   bookVoice,
   bookBlockTitle,
+  findPrintedDeliveryCues,
+  type PrintedCue,
   type BookAnswerKeyTarget,
   type BookGenerationTarget,
   type BookGlossaryTarget,
@@ -512,3 +514,12 @@ export {
   serialiseRootSlugBaseline,
 } from "./root-slug-splits.js";
 export { runRootSlugSplitsCli } from "./root-slug-splits-cli.js";
+export {
+  closingBracket,
+  joinQualifier,
+  parseDeliveryCue,
+  type DeliveryCue,
+  type PauseCue,
+  type PromptCue,
+  type RepeatCue,
+} from "./delivery-cue.js";

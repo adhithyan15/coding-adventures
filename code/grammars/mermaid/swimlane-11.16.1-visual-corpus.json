@@ -5,6 +5,7 @@
     "basic-handoff",
     "parallel-branch-and-join",
     "flowchart-style-edge-label",
-    "multiline-edge-continuation"
+    "multiline-edge-continuation",
+    "subprocess-and-database-shapes"
   ]
 }

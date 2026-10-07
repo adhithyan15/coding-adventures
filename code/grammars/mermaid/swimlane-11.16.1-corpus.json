@@ -21,6 +21,10 @@
     {
       "name": "multiline-edge-continuation",
       "source": "swimlane-beta TD\nsubgraph Intake\n  Start([Start])\n  Validate[Validate]\nend\nsubgraph Delivery\n  Process[Process]\n  Finish((Finish))\nend\nStart --> Validate\n  --> Process\n  --> Finish"
+    },
+    {
+      "name": "subprocess-and-database-shapes",
+      "source": "swimlane-beta LR\nsubgraph Data\n  source[(Source data)]\nend\nsubgraph Processing\n  transform[[Transform records]]\nend\nsubgraph Output\n  sink[(Result store)]\nend\nsource --> transform --> sink"
     }
   ]
 }

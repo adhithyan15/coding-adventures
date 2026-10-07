@@ -89,8 +89,14 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "[YOU SAY (m.): maiṁ letā hūṁ, (f.): maiṁ letī hūṁ]."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ letā hūṁ, (f.): maiṁ letī hūṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY (m.): *maiṁ letā hūṁ*  ·  (f.): *maiṁ letī hūṁ*]",
+              "qualifier": "(m.)"
             },
             {
               "kind": "prompt",
@@ -496,8 +502,14 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "[YOU SAY (m.): maiṁ pūchtā hūṁ, (f.): maiṁ pūchtī hūṁ]."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ pūchtā hūṁ, (f.): maiṁ pūchtī hūṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY (m.): *maiṁ pūchtā hūṁ*  ·  (f.): *maiṁ pūchtī hūṁ*]",
+              "qualifier": "(m.)"
             },
             {
               "kind": "prompt",
@@ -638,8 +650,14 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "[YOU SAY (m.): maiṁ madad kartā hūṁ, (f.): maiṁ madad kartī hūṁ]."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ madad kartā hūṁ, (f.): maiṁ madad kartī hūṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY (m.): *maiṁ madad kartā hūṁ*  ·  (f.): *maiṁ madad kartī hūṁ*]",
+              "qualifier": "(m.)"
             },
             {
               "kind": "prompt",

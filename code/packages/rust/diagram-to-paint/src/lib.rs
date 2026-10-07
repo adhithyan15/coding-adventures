@@ -954,16 +954,53 @@ where
                 fill: Some(fill),
                 stroke: Some(stroke),
                 stroke_width: Some(2.0),
-                corner_radius: Some(if node.shape == DiagramShape::Rect {
-                    2.0
-                } else {
-                    18.0
+                corner_radius: Some(match node.shape {
+                    DiagramShape::Rect | DiagramShape::Subroutine => 2.0,
+                    DiagramShape::Cylinder => 12.0,
+                    _ => 18.0,
                 }),
                 stroke_dash: None,
                 stroke_dash_offset: None,
             }),
         };
         instructions.push(shape);
+        match node.shape {
+            DiagramShape::Subroutine => {
+                instructions.push(PaintInstruction::Path(line_path(
+                    &[Point { x: node.x + 11.0, y: node.y }, Point { x: node.x + 11.0, y: node.y + node.height }],
+                    "#1565c0",
+                    1.5,
+                )));
+                instructions.push(PaintInstruction::Path(line_path(
+                    &[Point { x: node.x + node.width - 11.0, y: node.y }, Point { x: node.x + node.width - 11.0, y: node.y + node.height }],
+                    "#1565c0",
+                    1.5,
+                )));
+            }
+            DiagramShape::Cylinder => instructions.push(PaintInstruction::Path(PaintPath {
+                base: PaintBase::default(),
+                commands: vec![
+                    PathCommand::MoveTo { x: node.x + 1.0, y: node.y + 11.0 },
+                    PathCommand::CubicTo {
+                        cx1: node.x + node.width * 0.25,
+                        cy1: node.y + 1.0,
+                        cx2: node.x + node.width * 0.75,
+                        cy2: node.y + 1.0,
+                        x: node.x + node.width - 1.0,
+                        y: node.y + 11.0,
+                    },
+                ],
+                fill: None,
+                fill_rule: None,
+                stroke: Some("#1565c0".into()),
+                stroke_width: Some(1.5),
+                stroke_cap: None,
+                stroke_join: Some(StrokeJoin::Round),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            })),
+            _ => {}
+        }
         text_children.push(text_node(
             &node.label,
             node.x + 8.0,

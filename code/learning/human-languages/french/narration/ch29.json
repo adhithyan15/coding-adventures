@@ -507,8 +507,14 @@
               "source": "[YOU SAY: \"je lis\" then \"nous lisons\" — the *s* appears]"
             },
             {
-              "kind": "speech",
-              "text": "[YOU READ ALOUD, gathering the words one by one: \"le chien, le chat\"]."
+              "kind": "prompt",
+              "action": "READ ALOUD",
+              "instruction": "\"le chien, le chat\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ ALOUD, gathering the words one by one: \"le chien, le chat\"]",
+              "qualifier": ", gathering the words one by one"
             },
             {
               "kind": "prompt",
