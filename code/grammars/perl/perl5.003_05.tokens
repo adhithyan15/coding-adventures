@@ -5,9 +5,10 @@
 # Evidence: https://github.com/Perl/perl5/blob/perl-5.003_05/toke.c
 # Both tagged source files match 5.003_04 exactly. This separate pair still
 # covers only the listed print and arithmetic forms.
+# Leading-zero multi-digit forms may be octal and are outside this subset.
 
 PRINT     = "print"
-INT       = /[0-9]+/
+INT       = /0|[1-9][0-9]*/
 PLUS      = "+"
 DECREMENT = "--"
 MINUS     = "-"

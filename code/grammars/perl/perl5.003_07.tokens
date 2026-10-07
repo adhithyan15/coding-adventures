@@ -5,9 +5,10 @@
 # Evidence: https://github.com/Perl/perl5/blob/perl-5.003_07/toke.c
 # The tagged yacc grammar matches 5.003_05. Tokenizer changes include line
 # buffering and sort handling outside this limited arithmetic-print subset.
+# Leading-zero multi-digit forms may be octal and are outside this subset.
 
 PRINT     = "print"
-INT       = /[0-9]+/
+INT       = /0|[1-9][0-9]*/
 PLUS      = "+"
 DECREMENT = "--"
 MINUS     = "-"

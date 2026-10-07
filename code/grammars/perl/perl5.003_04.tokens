@@ -6,9 +6,10 @@
 # Tagged perly.y matches 5.003_03. The sole tagged toke.c change adds a
 # strict-subs guard for truncate; it does not affect this bounded print and
 # arithmetic subset.
+# Leading-zero multi-digit forms may be octal and are outside this subset.
 
 PRINT     = "print"
-INT       = /[0-9]+/
+INT       = /0|[1-9][0-9]*/
 PLUS      = "+"
 DECREMENT = "--"
 MINUS     = "-"

@@ -86,21 +86,25 @@ Current pairs:
   [`perl-5.003_04` source tag]'s `perly.y` and `toke.c`. Its `perly.y` matches
   5.003_03; the sole tokenizer change adds a strict-subs guard for `truncate`,
   outside this bounded arithmetic and `print` subset. This pair does not
-  claim full Perl 5.003_04 coverage.
+  claim full Perl 5.003_04 coverage. It accepts plain decimal integers;
+  multi-digit leading-zero forms are excluded because Perl treats them as
+  octal, and `08`/`09` are invalid octal literals.
 - `perl5.003_05.*` is a separate **partial** pair checked against the
   [`perl-5.003_05` source tag]'s `perly.y` and `toke.c`. Both tagged source
   files match 5.003_04; this release still has its own files and claims only
-  the listed arithmetic and `print` subset.
+  the listed plain-decimal arithmetic and `print` subset. Leading-zero
+  multi-digit forms remain excluded.
 - `perl5.003_06.*` is a separate **partial** pair checked against the official
   [5.003_06 patch commit]. Its message introduces the 5.003_06 patch and its
   `patchlevel.h` identifies subversion 6. That commit's `perly.y` and `toke.c`
   blobs match the later 5.003_07 tag; only the listed arithmetic and `print`
-  subset is represented. The source repository has no 5.003_06 tag.
+  subset is represented, with leading-zero multi-digit forms excluded. The
+  source repository has no 5.003_06 tag.
 - `perl5.003_07.*` is a separate **partial** pair checked against the
   [`perl-5.003_07` source tag]'s `perly.y` and `toke.c`. Its tagged yacc file
   matches 5.003_05; tokenizer changes include line buffering and sort handling
   outside the listed arithmetic and `print` subset. It does not claim full
-  release coverage.
+  release coverage. Leading-zero multi-digit forms remain excluded.
 - `perl5.003_08.*` is a separate **partial** pair checked against the
   [`perl-5.003_08` source tag]'s `perly.y` and `toke.c`. The yacc file adds
   lexical `my` scope, and the tokenizer changes interpolation and octal/hex
