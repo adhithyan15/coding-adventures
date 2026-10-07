@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-09-30 — complete
+Status date: 2026-10-07 — reopened for BEAM GC roots
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -72,11 +72,22 @@ architectures' different packed flags and arithmetic parity/overflow behavior.
 
 The current queue is:
 
-**Empty.** A fresh audit of current `main`, open issues, open pull requests, and
-the corrected compatibility claims found no actionable non-ALGOL LANG VM item.
-PR #16295 is a separately authored, conflicting duplicate of merged VM-075 PR
-#16294 and does not represent remaining backlog. The separately owned ALGOL
-campaign remains outside this backlog.
+The 2026-09-30 audit found no remaining item in its scoped completion queue.
+PR #16295 was a separately authored duplicate of merged VM-075 PR #16294 and
+was closed without merging. A 2026-10-07 review of still-open issue #15882 and
+current `iir-to-beam` lowering found two intermediate-call scratch values that
+remain unprotected: the ETS table identifier in `array_set` and the function
+atom in `call_closure`. ETS allocation's length handoff already uses a Y slot.
+The separately owned ALGOL campaign remains outside this backlog.
+
+The renewed queue is:
+
+1. **BEAM13 (selected):** root values needed after an intermediate imported
+   call in the ETS `array_set` and `call_closure` paths. Reuse an initialized
+   per-function Y slot, prove the save/call/reload order in emitted bytecode,
+   and run real-Erlang regressions. See `BEAM13-intermediate-call-gc-roots.md`.
+2. **BEAM13 follow-up:** audit other scratch values crossing calls under issue
+   #15882, then close the issue only when its backend-wide claim is covered.
 
 The following run records the first VM-067 selection.
 
