@@ -662,8 +662,14 @@
               "source": "[YOU SAY: **madad karnā** — help-do — to help]"
             },
             {
-              "kind": "speech",
-              "text": "[YOU RUN the pattern: kamm karnā, madad karnā, gall karnā]."
+              "kind": "prompt",
+              "action": "RUN",
+              "instruction": "kamm karnā, madad karnā, gall karnā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RUN the pattern: *kamm karnā*, *madad karnā*, *gall karnā*]",
+              "qualifier": "the pattern"
             },
             {
               "kind": "prompt",
@@ -1024,8 +1030,14 @@
               "source": "[YOU SAY: *mainū̃ panjābī pasand hai*, then its word-for-word sense]"
             },
             {
-              "kind": "speech",
-              "text": "[YOU SWAP the middle: paṛhnā, likhṇā, sochṇā]."
+              "kind": "prompt",
+              "action": "SWAP",
+              "instruction": "paṛhnā, likhṇā, sochṇā",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SWAP the middle: *paṛhnā* · *likhṇā* · *sochṇā*]",
+              "qualifier": "the middle"
             },
             {
               "kind": "prompt",

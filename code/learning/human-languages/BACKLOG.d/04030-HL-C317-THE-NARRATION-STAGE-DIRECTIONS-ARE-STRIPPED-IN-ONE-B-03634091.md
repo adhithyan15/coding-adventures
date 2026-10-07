@@ -45,3 +45,10 @@ someone reading the rendered page.
 the generated `.tex` beside the lesson source and noticed the two did not say the
 same thing. Every automated instrument in the pipeline agreed the chapter was
 fine.
+
+**Status: CLOSED (2026-10-07).** The first repair named above is what shipped:
+the book voices cues in every block, wherever they sit in a line, through the
+same grammar the narration uses (`delivery-cue.ts`). The "nothing fails" half is
+closed too: `check:books` now refuses any generated chapter containing
+`{[}YOU `, `{[}PAUSE ` or `{[}REPEAT `, so the next leak is a red build, not a
+reader's discovery.
