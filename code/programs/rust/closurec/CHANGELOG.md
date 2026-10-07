@@ -4,6 +4,18 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - native ACL fixture diagnostic isolation (CV02)
+
+The `0dfbcf7b10` Windows run passed the new structural-policy and supported
+denial tests, but the inherited fixture stopped before publication: PATH selected
+Git's Unix `whoami.exe`, which rejected Windows `/all`. Prepending Git's `usr/bin`
+locally reproduced the exact failure. Select the diagnostic utility from the
+OS-provided Windows system directory and report its status separately from
+strict ACL setup. Optional diagnostic failure cannot hide an ACL setup error.
+A child-PATH shadow regression verifies the native utility and intended denial;
+a missing setup path remains fatal. No production publication checks change.
+Fresh complete validation, exact-head review and three-platform CI are required.
+
 ### Fixed - token-independent OWNER RIGHTS admission (CV02)
 
 Native Windows CI at `c76de302f8` reached compiler tests and failed the inherited

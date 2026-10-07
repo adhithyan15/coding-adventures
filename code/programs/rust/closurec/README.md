@@ -265,6 +265,15 @@ ACE order and all existing fresh-open/identity/policy proofs. Diagnostics record
 the inherited fixture's actual token, ACL and open outcome. Repaired-head review
 and successful native compiler execution on all three platforms remain required.
 
+The `0dfbcf7b10` Windows run passed the structural-policy controls but its inherited
+fixture's optional token diagnostic found Git's Unix `whoami.exe` through PATH.
+That utility rejected `/all` before publication was tested. The fixture now
+resolves Windows' utility from the OS system directory and isolates optional
+diagnostic status from strict ACL setup. A shadow-PATH regression verifies native
+selection and intended policy; invalid setup paths still fail. The production
+publication protocol and unconditional rejection requirement are unchanged.
+Another reviewed-head native run is required before acceptance.
+
 The Linux/macOS implementation supports ordinary owner/group/mode policies.
 Descriptor-bound extended access/default ACL queries reject unsupported ACLs
 before staging or original mutation. Distinct empty creation probes measure the

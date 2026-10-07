@@ -205,14 +205,29 @@ fn windows_inherited_denial_setup(
         $acl.AddAccessRule([Security.AccessControl.FileSystemAccessRule]::new($sid,'ReadPermissions','ObjectInherit','InheritOnly','Deny'))
         Set-Acl -LiteralPath $env:CLOSUREC_TEST_ACL_PATH -AclObject $acl
         Write-Output ('parent_sddl='+(Get-Acl -LiteralPath $env:CLOSUREC_TEST_ACL_PATH).Sddl)
-        whoami.exe /all
+        # PATH can put Git's Unix whoami.exe ahead of the Windows utility.
+        # Only these optional diagnostics are caught. ACL setup above stays fatal.
+        $nativeWhoami=[IO.Path]::Combine([Environment]::SystemDirectory,'whoami.exe')
+        try {
+            $details=& $nativeWhoami /all 2>&1
+            $diagnosticExit=$LASTEXITCODE
+            Write-Output ('native_whoami_path='+$nativeWhoami)
+            Write-Output ('native_whoami_exit='+$diagnosticExit)
+            Write-Output $details
+        } catch {
+            Write-Output ('native_whoami_unavailable='+$_.Exception.Message)
+        }
+        exit 0
     "#;
     let mut command = std::process::Command::new("powershell.exe");
-    command.args(["-NoProfile", "-NonInteractive", "-Command", script])
+    command
+        .args(["-NoProfile", "-NonInteractive", "-Command", script])
         .env("CLOSUREC_TEST_ACL_PATH", restricted)
         .env_remove("PSModulePath")
         .creation_flags(0x0800_0000);
-    if let Some(path) = child_path { command.env("PATH", path); }
+    if let Some(path) = child_path {
+        command.env("PATH", path);
+    }
     command.output().unwrap()
 }
 
@@ -227,14 +242,27 @@ fn windows_acl_fixture_diagnostics_ignore_path_shadow_and_keep_setup_errors() {
     let shadow_exe = shadow.join("whoami.exe");
     fs::copy(std::env::current_exe().unwrap(), &shadow_exe).unwrap();
     let inherited_path = std::env::var_os("PATH").unwrap();
-    let child_path = std::env::join_paths(std::iter::once(shadow.clone())
-        .chain(std::env::split_paths(&inherited_path))).unwrap();
+    let child_path = std::env::join_paths(
+        std::iter::once(shadow.clone()).chain(std::env::split_paths(&inherited_path)),
+    )
+    .unwrap();
     let restricted = fixture.path("restricted");
     fs::create_dir(&restricted).unwrap();
     let output = windows_inherited_denial_setup(&restricted, Some(&child_path));
-    assert!(output.status.success(), "{}", String::from_utf8_lossy(&output.stderr));
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
     let diagnostics = String::from_utf8_lossy(&output.stdout);
-    assert!(diagnostics.contains("native_whoami_exit=0"), "{diagnostics}");
+    assert!(
+        !diagnostics.contains("running 0 tests"),
+        "PATH shadow ran: {diagnostics}"
+    );
+    assert!(
+        diagnostics.contains("native_whoami_exit=0"),
+        "{diagnostics}"
+    );
     assert!(!diagnostics.contains(shadow_exe.to_str().unwrap()));
     let parent = observe(&restricted, true).unwrap().unwrap();
     let intended = windows_security::new_file_policy(&parent.file).unwrap();
