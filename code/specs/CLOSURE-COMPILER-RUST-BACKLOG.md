@@ -9,7 +9,7 @@ its managed worktree is archived. The detailed [CV04 specification](CV04-exact-l
 first accepts CV04a actual matcher capture/domain validation, then CV04b compiler
 source inventory/ingestion-leaf reuse. CV04a implementation and exact range controls are in local validation;
 #16970 remains open until both slices pass. Preserve one active shared-stack PR.
-**Current audit base:** `ebee9d93ba02febf27a0f6f9333fdbc672467740`
+**Current audit base:** `b490bcf88a0f90a61507150841df9a27fbe246dc`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
@@ -54,8 +54,18 @@ matrix/guard. All49 other explicit targets and all59 assertions selected by its1
 matrix filters actually ran successfully in the broad suite. No BUILD/assertion
 edits were made; the complete LANG-AOT package is not claimed green. Exact native
 baseline logs, source/cell/binary hashes and the full failed suite are preserved,
-with the existing issue updated. The temporary clean-main worktree is queued for
-archival after its executable/receipts were saved outside the worktree.
+with the existing issue updated. The temporary clean-main worktree is archived
+after its executable/receipts were saved outside the worktree; both its directory
+and Git registration are verified absent.
+
+Main `b490bcf88a0f` then merged after a conservative50-package dependency audit
+proved no Miri dependency overlap. Its changelog-only C conflict retains both
+PREP01 shifts and Windows linking entries; the automatically merged native helper
+retains the platform condition. Refreshed full C validation at merge candidate
+`5f817b375a71` passes82 tests across4 targets, zero ignored, and strict all-target
+Clippy. Neither lexical source nor Miri transitive source changed. Independent
+whole-diff security passed exact `31cb1127fc1c`; refreshed merge/docs review and
+final production planning remain pending. No accepted delivery is claimed.
 
 The first local Miri compiled lexer metadata before the final lexer source edit
 (22:36:27 versus22:38:21 UTC). Its stopped stale-source run is excluded. The full
