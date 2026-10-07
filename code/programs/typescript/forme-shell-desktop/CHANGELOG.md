@@ -39,6 +39,11 @@
 
 ### Fixed
 
+- Fixed the loopback preview server dropping connections on macOS: an
+  accepted socket inherits the listener's `O_NONBLOCK` there (Linux's
+  `accept4` does not), so a request read before the client had written
+  failed with `WouldBlock` and the client saw a broken pipe. Each accepted
+  connection is now made blocking, bounded by its read and write timeouts.
 - Fixed macOS single-executable worker assembly for thin Node distributions by
   copying matching thin Mach-O executables directly while retaining universal
   binary thinning and rejecting architecture mismatches.
