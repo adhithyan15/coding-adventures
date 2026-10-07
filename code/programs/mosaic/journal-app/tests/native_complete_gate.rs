@@ -44,15 +44,9 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     (Backend::Qt, "min-height"),
     (Backend::Flutter, "width"),
     (Backend::Flutter, "min-height"),
-    // ---- Flutter (#12022) ----
-    // Measured on first build, in both themes. None is on this package's own
-    // parts (its styles use only properties Flutter lowers); all come from the
-    // components it composes, which pin the same drops themselves:
-    //
-    // - `border-radius` on DraftEditor's two text fields;
-    // - `color` on those composed Text parts is implemented by #15285;
-    // Button and RecordList title font sizes are implemented by #16201.
-    (Backend::Flutter, "border-radius"),
+    // Flutter's former `border-radius` drop on DraftEditor's outlined text
+    // fields is implemented by #16944. Keep this list limited to properties
+    // the current emitters still lose, so it cannot license that regression.
 ];
 
 fn package_root() -> PathBuf {
