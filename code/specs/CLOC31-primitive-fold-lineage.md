@@ -34,11 +34,14 @@ claim to complete either epic or change the canonical ESTree boundary decision.
 5. Tracing must not alter JavaScript bytes for these operations. Declined folds
    must not create fictitious `folded` records. Nested operations must retain
    child transformation records through parent links.
-6. Equal primitive branches must compare their value/raw representation without
-   CV metadata. `flag ? (1+1) : (1+1)` must collapse to `2` with tracing on or
-   off. The primitive replacement must retain both branch fold histories and
-   the available test/composite identities. Broader composite semantic equality
-   remains follow-up work; this safeguard covers the new primitive identities.
+6. Branch equality must compare every AST field recursively except CV identity.
+   `flag ? (1+1) : (1+1)` and equal composite array/call branches must compile
+   identically with tracing on/off. Primitive replacements retain both branch
+   histories and available test/composite identities. Numeric comparison must
+   distinguish signed zero, reject NaN equality, and retain raw representation.
+   Provide a borrowed native comparator in `javascript-ast`; do not clone,
+   serialize, strip JSON metadata or use a hash as equality. Exhaustive node
+   destructuring and variant coverage must make AST additions require review.
 
 ## Verification
 
