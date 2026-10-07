@@ -4,6 +4,17 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
 
 ## [Unreleased]
 
+### Fixed - semantic EOF provenance regression assertion (CV02)
+
+The whitespace-only tombstone test reads deletion fields from the same parsed
+entry rather than assuming struct serialization order. It verifies the EOF
+tombstone and surviving name/number tokens. Its name/comments now accurately
+reflect current EOF coverage; the lexer still skips trivia without recording
+individual comment/whitespace origins.
+Removed the obsolete `doc_list_item_without_indentation` lint allowance; current
+Clippy warned about it even under `-D warnings`. The existing supported doc
+allowances remain. Verification also denies unknown lints explicitly.
+
 ### Changed - compact provenance identities (CV01 / CCR-065)
 
 The shared compiler CV log uses compact-v1 IDs with bounded length independent

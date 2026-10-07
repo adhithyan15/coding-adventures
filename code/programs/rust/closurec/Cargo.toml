@@ -54,6 +54,5 @@ coding_adventures_sha256 = { path = "../../../packages/rust/sha256" }
 # intentional documentation, not Markdown lists, so allow the doc-format lints
 # crate-wide (covers every tests/*.rs target, including ones added later).
 [lints.clippy]
-doc_list_item_without_indentation = "allow"
 doc_lazy_continuation = "allow"
 doc_overindented_list_items = "allow"

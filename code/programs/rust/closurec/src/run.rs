@@ -4175,24 +4175,16 @@ mod tests {
     // ------------------------------------------------------------------
 
     #[test]
-    fn correlation_vector_tombstones_trivia_tokens_under_whitespace_only() {
-        // With --correlation_vector + --compilation_level
-        // WHITESPACE_ONLY, the dropped trivia + EOF tokens
-        // should appear in the sidecar as deleted CV entries
-        // (DeletionRecord present, source=compilation_level,
-        // reason=whitespace_only_dropped). The surviving Name
-        // tokens (var, x, etc.) should NOT be tombstoned.
+    fn correlation_vector_tombstones_eof_under_whitespace_only() {
+        // The lexer currently skips comments/whitespace rather than recording
+        // their own CV entries. This test proves the recorded EOF deletion;
+        // complete trivia/span coverage remains a separate frontend obligation.
         let dir = std::env::temp_dir().join("closurec_cloc11_66_ws_drop");
         let _ = fs::remove_dir_all(&dir);
         fs::create_dir_all(&dir).expect("create dir");
         let in_path = dir.join("a.js");
-        // Comments + whitespace generate trivia tokens; EOF
-        // is always emitted at end.
-        fs::write(
-            &in_path,
-            "// a comment\nvar x = 1; /* block */ var y = 2;",
-        )
-        .expect("write input");
+        // Comments and whitespace are skipped; EOF is always recorded.
+        fs::write(&in_path, "// a comment\nvar x = 1; /* block */ var y = 2;").expect("write input");
         let out_path = dir.join("out.js");
         let sidecar_path = dir.join("out.js.cv.json");
         let cfg = CompilerConfig {
@@ -4213,26 +4205,29 @@ mod tests {
         };
         let _ = run_compiler(&cfg).expect("ok");
         let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
-        // The tombstone reason string lands in the sidecar.
+        let snapshot: serde_json::Value = serde_json::from_str(&body).expect("valid snapshot");
+        let entries = snapshot["entries"].as_object().expect("entries object");
+        // Inspect one deletion record, not adjacent JSON substrings. Canonical
+        // serialization sorts keys; field order is not a semantic guarantee.
         assert!(
-            body.contains("\"reason\":\"whitespace_only_dropped\""),
-            "expected whitespace_only_dropped tombstone, got: {body}"
+            entries.values().any(|entry| {
+                entry["origin"]["source"] == "lexer_token"
+                    && entry["origin"]["meta"]["kind"] == "eof"
+                    && entry["deleted"]["source"] == "compilation_level"
+                    && entry["deleted"]["reason"] == "whitespace_only_dropped"
+                    && entry["deleted"]["meta"]["kind"] == "eof"
+            }),
+            "expected EOF tombstone from compilation_level"
         );
-        // EOF kind always lands (every file ends with EOF
-        // sentinel; the JS grammar happens not to emit COMMENT
-        // tokens — comments are skipped at lex time — so trivia
-        // kind never fires for this grammar today, but the code
-        // path covers both cases against future grammar
-        // evolution).
-        assert!(
-            body.contains("\"kind\":\"eof\""),
-            "expected eof kind tombstone, got: {body}"
-        );
-        // The tombstone landed via the DeletionRecord field.
-        assert!(
-            body.contains("\"source\":\"compilation_level\",\"reason\":\"whitespace_only_dropped\""),
-            "expected DeletionRecord with compilation_level source, got: {body}"
-        );
+        for entry in entries.values().filter(|entry| {
+            entry["origin"]["source"] == "lexer_token"
+                && matches!(
+                    entry["origin"]["meta"]["kind"].as_str(),
+                    Some("name" | "number")
+                )
+        }) {
+            assert!(entry["deleted"].is_null(), "surviving token was tombstoned");
+        }
         let _ = fs::remove_dir_all(&dir);
     }
 

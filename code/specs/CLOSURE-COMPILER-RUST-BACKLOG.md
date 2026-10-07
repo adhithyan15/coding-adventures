@@ -77,16 +77,28 @@ pre-validation scheduler cloning, caller-stack destruction of rejected folds
 and unchecked-import normalization laundering; each has regression evidence
 and a repair. Allocator-only import status now survives canonical export and
 cannot be upgraded through checked queries/reload.
-Lexer/parser/scheduler and constant-fold visitor errors now propagate before
-accepting their candidate results. Six affected crates pass 878 tests (including
-10 CV doctests), with 10 existing ignored cases; strict all-target lint and
-874 lesson shards pass. Direct checked chains have 4,096/8,192 nodes and
-569,436/1,138,780-byte exports; a 10,002-node wide graph passes deterministic
-queries. Isolated small-stack tests cover 65,536-level owned and returned
-metadata. Current remaining CV02 work: other visitor/pass errors, checked CLI
-construction/configuration, every format/filter/summary/NONE boundary,
-transactional artifact publication/content identity, full affected/compiler
-validation, final exact-head security review and actual CI/merge verification.
+Lexer/parser/scheduler, constant-fold and all four current deletion passes
+propagate recording errors before accepting candidates. Historical checkpoint
+09cdb43 passed six affected crates: 878 tests (including 10 CV doctests), with
+10 existing ignored cases. The subsequent key-preflight repair passed all 70 CV
+unit tests and 10 doctests. Independent ownership review passed 4f818174 and its
+corrected dependency-rejection test: scheduler-owned current/candidate trees now
+use iterative disposal on errors and intermediate replacement. Fresh AST and
+pipeline suites pass 145 tests (one existing ignored doctest); four deletion-pass
+suites pass 266 tests (14 existing ignores). The full compiler passes 1,037 tests
+across 176 targets with no ignores. All touched packages and compiler pass strict
+all-target lint; compiler verification explicitly denies unknown lints. There
+are 879 valid lesson shards. These remain local checkpoints, not CI/merge proof.
+Direct checked chains have 4,096/8,192 nodes and 569,436/1,138,780-byte exports;
+a 10,002-node wide graph passes deterministic queries. Isolated small-stack tests
+cover 65,536-level metadata, deep mixed AST families and wide sibling lists.
+The compiler EOF test now checks semantic deletion fields rather than JSON key
+order; it explicitly does not prove currently skipped comment/whitespace origins.
+Current remaining CV02 work: checked CLI construction/limit configuration,
+compiler-stage error propagation, every format/filter/summary/NONE boundary,
+transactional artifact publication/content identity, final full-scope exact-head
+security review and actual CI/merge verification. Configuration and diagnostic
+names are specified before their implementation.
 The foundation and full compiler/provenance goal remain open.
 
 The remaining-fold inventory is

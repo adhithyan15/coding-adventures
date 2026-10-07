@@ -56,17 +56,10 @@ impl Pass for CandidatePass {
         })
     }
 }
-struct ErrorPass(bool);
+struct ErrorPass;
 impl Pass for ErrorPass {
     fn name(&self) -> &'static str {
         "failure"
-    }
-    fn depends_on(&self) -> &[&'static str] {
-        if self.0 {
-            &["missing"]
-        } else {
-            &[]
-        }
     }
     fn run(&self, _: PassContext<'_>) -> Result<PassOutput, PassError> {
         Err(PassError {
@@ -120,7 +113,10 @@ fn checked_cv_owned_program_cleanup_is_iterative() {
                         flat
                     }
                     1 | 2 => {
-                        pipeline.add(Box::new(ErrorPass(scenario == 2)));
+                        pipeline.add(Box::new(ErrorPass));
+                        if scenario == 2 {
+                            pipeline.add(Box::new(ErrorPass));
+                        }
                         deep_program(id)
                     }
                     _ => {
@@ -132,7 +128,7 @@ fn checked_cv_owned_program_cleanup_is_iterative() {
                 match scenario {
                     0 => assert!(result.unwrap_err().message.contains("events limit")),
                     1 => assert_eq!(result.unwrap_err().message, "injected pass error"),
-                    2 => assert!(result.is_err()),
+                    2 => assert_eq!(result.unwrap_err().pass_name, "<duplicate>"),
                     _ => assert!(result.unwrap().program.body.is_empty()),
                 }
             }
