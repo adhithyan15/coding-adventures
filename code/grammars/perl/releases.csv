@@ -17,8 +17,8 @@ release,date,perlhist_line,grammar_status
 1.012,1988-Feb-02,81,pending
 1.013,1988-Feb-02,81,pending
 1.014,1988-Feb-02,81,pending
-1.0.15,2002-Dec-18,82,pending
-1.0_16,2003-Dec-18,83,pending
+1.0.15,2002-Dec-18,82,partial
+1.0_16,2003-Dec-18,83,partial
 2.000,1988-Jun-05,85,pending
 2.001,1988-Jun-28,87,pending
 3.000,1989-Oct-18,89,pending
