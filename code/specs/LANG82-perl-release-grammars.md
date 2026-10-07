@@ -130,3 +130,11 @@ This bounded follow-up installment materializes distinct partial pairs through
 5.003_15, including 5.003_06 from its identified source commit. The next
 local group begins at 5.003_16; none of these pairs claims full release syntax
 or changes LANG81's executable Perl 5.38 grammar.
+
+The next bounded installment is 5.003_16 through 5.003_28. Check each
+release against its own official source tag, retain separate token and
+grammar files even where source blobs match, and record only the
+plain-decimal arithmetic and `print` subset. Parser probes must reject
+adjacent decrement, leading-zero integer forms, and unsupported syntax.
+5.003_26 introduces explicit carriage-return refusal; preserve that
+boundary for 5.003_26 through 5.003_28. LANG81 execution is unchanged.
