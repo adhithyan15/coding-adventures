@@ -180,3 +180,10 @@ identifies patchlevel 4, subversion 1; its `perly.y` and `toke.c` are
 byte-identical to the tagged final 5.004_01 files. Give t2 distinct partial
 token and grammar files and retain the plain-decimal 250-digit boundary
 probes. Keep 5.004_01-t1 pending until its own source can be established.
+
+The historical 5.004_01_01 trial archive has the same `perly.y` as
+5.004_01-t2. Its `toke.c` changes quoted-curly disambiguation, word
+operator expectations, warnings, and quote delimiter handling; these do not
+expand the plain-decimal `print` arithmetic subset. Give this numbered
+trial its own partial pair, retain the 250-digit decimal bound, and keep
+unsupported constructs rejected.

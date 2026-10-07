@@ -264,6 +264,13 @@ Current pairs:
   `1bc2cf4b61399d7a2d2ad5050ab31e5cbd73cae99e1534ec9aefc7dace013ea1`.
   The inventoried 5.004_01-t1 prerelease remains pending until its own
   source evidence is found.
+- `perl5.004_01_01.*` is a separate **partial** pair checked against the
+  [historical 5.004_01_01 source archive] (SHA-256
+  `15391fa5322de2cbae8a245c1f7a367e524070f3e1873bc6ea74dc829f395061`).
+  Its `perly.y` matches 5.004_01-t2; `toke.c` changes quoted-curly
+  recognition, word-operator expectations, warnings and quote delimiters
+  outside this plain-decimal `print` subset. It retains the tested
+  250-digit decimal bound and claims no full-release syntax coverage.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot, including adjacent `--` and
@@ -354,4 +361,5 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [`perl-5.004` source tag]: https://github.com/Perl/perl5/tree/perl-5.004
 [`perl-5.004_01` source tag]: https://github.com/Perl/perl5/tree/perl-5.004_01
 [historical 5.004_01-t2 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01-t2.tar.gz
+[historical 5.004_01_01 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01_01.tar.gz
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2
