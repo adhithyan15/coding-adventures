@@ -68,6 +68,7 @@ const VENN_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../
 const ISHIKAWA_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/ishikawa-11.16.1-corpus.json"));
 const WARDLEY_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/wardley-11.16.1-corpus.json"));
 const CYNEFIN_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/cynefin-11.16.1-corpus.json"));
+const CYNEFIN_VISUAL_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/cynefin-11.16.1-visual-corpus.json"));
 const TREEVIEW_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/treeview-11.16.1-corpus.json"));
 const RAILROAD_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-11.16.1-corpus.json"));
 const RAILROAD_EBNF_CORPUS: &str = include_str!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../../grammars/mermaid/railroad-ebnf-11.16.1-corpus.json"));
@@ -167,11 +168,13 @@ fn pinned_treeview_subset_corpus_parses_to_tree_ir() {
 }
 
 #[test]
-fn pinned_cynefin_subset_corpus_parses_to_domain_map_ir() {
+fn pinned_cynefin_corpus_matches_upstream_acceptance() {
     let corpus: Value = serde_json::from_str(CYNEFIN_CORPUS).expect("cynefin corpus must be JSON");
     assert_eq!(corpus["upstream"].as_str(), Some("mermaid@11.16.1"));
-    for fixture in corpus["fixtures"].as_array().expect("fixture array") {
-        let name = fixture["name"].as_str().expect("fixture name");
+    assert_eq!(corpus["level"].as_str(), Some("full"));
+    assert_eq!(corpus["upstream_commit"].as_str(), Some("7ecca0cd7f1658ef74f4e7e91f925724ef403bbf"));
+    for fixture in corpus["valid"].as_array().expect("valid fixture array") {
+        let name = fixture["id"].as_str().expect("fixture id");
         let diagram = parse_cynefin(fixture["source"].as_str().expect("fixture source"))
             .unwrap_or_else(|error| panic!("cynefin fixture {name} failed: {error}"));
         if name == "accessibility" {
@@ -191,7 +194,8 @@ fn pinned_cynefin_subset_corpus_parses_to_domain_map_ir() {
             assert_eq!((&style.arrow_color, style.arrow_width, &style.confusion_bg, &style.label_color),
                 (&"#224466".to_string(), 4.0, &"#eee1f1".to_string(), &"#101010".to_string()));
         }
-        if name == "theme-front-matter" {
+        if name == "front-matter-config-and-theme" {
+            assert_eq!((diagram.config.width, diagram.config.padding), (680.0, 28.0));
             assert_eq!(diagram.config.style.boundary_color, "#334455");
             assert_eq!(diagram.config.style.complex_bg, "#ddeedd");
         }
@@ -213,13 +217,47 @@ fn pinned_cynefin_subset_corpus_parses_to_domain_map_ir() {
         }
     }
     for fixture in corpus["invalid"].as_array().expect("invalid fixture array") {
-        let name = fixture["name"].as_str().expect("invalid fixture name");
+        let name = fixture["id"].as_str().expect("invalid fixture id");
         assert!(parse_cynefin(fixture["source"].as_str().expect("invalid fixture source")).is_err(),
             "invalid upstream fixture {name} unexpectedly parsed");
     }
     assert_eq!(parse_cynefin("cynefin-beta\nclear").expect("default seed source").config.seed, 145_697_634);
     assert_eq!(parse_cynefin("%%{init: {\"cynefin\": {\"seed\": 0}}}%%\ncynefin-beta\nclear")
         .expect("zero seed source").config.seed, 715_869_649);
+}
+
+#[test]
+fn cynefin_full_status_is_backed_by_pinned_syntax_and_visual_corpora() {
+    let manifest: Value =
+        serde_json::from_str(COMPATIBILITY_MANIFEST).expect("compatibility manifest must be JSON");
+    let family = manifest["families"]
+        .as_array()
+        .expect("families array")
+        .iter()
+        .find(|family| family["id"] == "cynefin")
+        .expect("cynefin family");
+    assert_eq!(family["status"].as_str(), Some("full"));
+
+    let syntax: Value = serde_json::from_str(CYNEFIN_CORPUS).expect("cynefin corpus must be JSON");
+    let visual: Value =
+        serde_json::from_str(CYNEFIN_VISUAL_CORPUS).expect("cynefin visual corpus must be JSON");
+    assert_eq!(syntax["upstream_commit"], visual["upstream_commit"]);
+    let valid_ids = syntax["valid"]
+        .as_array()
+        .expect("valid fixture array")
+        .iter()
+        .map(|fixture| fixture["id"].as_str().expect("fixture id"))
+        .collect::<BTreeSet<_>>();
+    let visual_ids = visual["fixtures"]
+        .as_array()
+        .expect("visual fixture array")
+        .iter()
+        .map(|id| id.as_str().expect("visual fixture id"))
+        .collect::<BTreeSet<_>>();
+    assert!(!syntax["invalid"].as_array().expect("invalid fixture array").is_empty());
+    assert!(!visual_ids.is_empty());
+    assert!(visual_ids.is_subset(&valid_ids));
+    assert_eq!(visual_ids.len(), visual["fixtures"].as_array().expect("visual fixture array").len());
 }
 
 #[test]
