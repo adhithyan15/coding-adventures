@@ -1,0 +1,281 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: HI-S03-letter-a
+spine_node: SPINE-MEET-GREET
+sequence: 515
+delivery: script
+chapter: 8
+type: writing
+headword: "अ"
+gloss: the single character अ — recognised inside words you already say
+romanization: "a"
+prerequisites: [HI-S02-letter-na]
+sounds: []
+roots: []
+duration:
+  max_seconds: 150
+requires:
+  knowledge: [HI-SCRIPT-RECOG-02]
+introduces:
+  knowledge: [HI-SCRIPT-RECOG-03]
+practises:
+  knowledge: [HI-SCRIPT-RECOG-02, HI-SCRIPT-RECOG-03]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [HI-S02-letter-na]
+---
+
+# अ — one character, met inside words you already say
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-02] -->
+
+[PAUSE 1s] Before the new one: न — what does it do?
+
+[PAUSE 2s] One character this time. Just one — and you have been saying it
+for pages without knowing which mark on the page it was.
+
+## Script you'll notice: अ
+<!-- hl-knowledge: introduces=[HI-SCRIPT-RECOG-03]; assesses=[] -->
+
+**अ** — *a*.
+
+It is an **independent vowel** — the shape the vowel *a* takes when a word begins with it, rather than the sign it becomes inside a word.
+
+What it is made of:
+
+- a joined upper-and-lower left body
+- a middle shoulder running into the right stem
+- a right vertical stem
+- the top shirorekhā
+
+You already say these, and every one of them has अ somewhere inside it:
+
+- **अलविदा** — goodbye (alvidā — a final farewell, Persian/Arabic-derived)
+
+## Writing: अ
+<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-03] -->
+
+- **1.** curve around the upper bowl, then continue down and around the lower bowl without lifting
+- **2.** lift and sweep the middle shoulder right
+- **3.** without lifting, climb up the right stem to the headline
+- **4.** descend the right stem top-to-bottom
+- **5.** lift and draw the top shirorekhā left-to-right
+
+**Pen lifts: 2.** The pen comes up 2 times and no more.
+
+> The source shows four movements; most native writers draw अ in three strokes (74% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the shoulder and the headline.
+
+> This is one attested teaching order and not a national standard — handwriting
+> here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari अ stroke order.svg’, frames 1–4, Wikimedia Commons, 5 August 2023.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-03] -->
+
+[PAUSE 1s]
+- [YOU LOOK: at these words, and find अ in the ones that have it]
+
+> अलविदा  ·  नमस्ते
+
+- [YOU TRACE: अ three times, saying *a* as you finish each one]
+- [YOU LOOK: back at any page of this chapter and find अ once more]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-03] -->
+
+[PAUSE 3s] Which character is this — अ? What sound does it carry? (***a***.)
+Name one word you already say that contains it.
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: HI-S04-letter-aa
+spine_node: SPINE-MEET-GREET
+sequence: 525
+delivery: script
+chapter: 9
+type: writing
+headword: "आ"
+gloss: the single character आ — recognised inside words you already say
+romanization: "ā"
+prerequisites: [HI-S03-letter-a]
+sounds: []
+roots: []
+duration:
+  max_seconds: 150
+requires:
+  knowledge: [HI-SCRIPT-RECOG-03]
+introduces:
+  knowledge: [HI-SCRIPT-RECOG-04]
+practises:
+  knowledge: [HI-SCRIPT-RECOG-03, HI-SCRIPT-RECOG-04]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [HI-S03-letter-a]
+---
+
+# आ — one character, met inside words you already say
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-03] -->
+
+[PAUSE 1s] Before the new one: अ — what does it do?
+
+[PAUSE 2s] One character this time. Just one — and you have been saying it
+for pages without knowing which mark on the page it was.
+
+## Script you'll notice: आ
+<!-- hl-knowledge: introduces=[HI-SCRIPT-RECOG-04]; assesses=[] -->
+
+**आ** — *ā*.
+
+It is an **independent vowel** — the shape the vowel *ā* takes when a word begins with it, rather than the sign it becomes inside a word.
+
+What it is made of:
+
+- the joined upper-and-lower left body of अ
+- a middle shoulder running into the inner stem
+- an inner vertical stem
+- a trailing vertical stem
+- the top shirorekhā
+
+You already say these, and every one of them has आ somewhere inside it:
+
+- **आप / तुम** — you (respectful / familiar)
+- **आपका नाम क्या है?** — what's your name?
+- **आप कैसे हैं?** — how are you? (respectful)
+- **आपका स्वागत है** — you're welcome (also "welcome!")
+
+## Writing: आ
+<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-04] -->
+
+- **1.** curve around the upper bowl, then continue down and around the lower bowl without lifting
+- **2.** lift and sweep the middle shoulder right
+- **3.** without lifting, climb up the inner stem to the headline
+- **4.** descend the inner stem top-to-bottom
+- **5.** lift and draw the trailing stem top-to-bottom
+- **6.** lift and draw the top shirorekhā left-to-right
+
+**Pen lifts: 3.** The pen comes up 3 times and no more.
+
+> The source shows five movements; most native writers draw आ in four strokes (71% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts three times: the shoulder runs on up the inner stem and back down it.
+
+> This is one attested teaching order and not a national standard — handwriting
+> here is taught with school-to-school variation. Source: Saurmandal, ‘Devanagari आ stroke order.svg’, frames 1–5, Wikimedia Commons, 5 August 2023.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-04] -->
+
+[PAUSE 1s]
+- [YOU LOOK: at these words, and find आ in the ones that have it]
+
+> आप / तुम  ·  आपका नाम क्या है?  ·  नमस्ते
+
+- [YOU TRACE: आ three times, saying *ā* as you finish each one]
+- [YOU LOOK: back at any page of this chapter and find आ once more]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-04] -->
+
+[PAUSE 3s] Which character is this — आ? What sound does it carry? (***ā***.)
+Name one word you already say that contains it.
+`,a=e({default:()=>o}),o=`---
+schema_version: 2
+introduces_idioms: []
+introduces_senses: []
+introduces_culture_claims: []
+id: HI-S05-sign-virama
+spine_node: SPINE-MEET-GREET
+sequence: 545
+delivery: script
+chapter: 10
+type: writing
+headword: "्"
+gloss: the single character ् — recognised inside words you already say
+romanization: "(vowel killer)"
+prerequisites: [HI-S04-letter-aa]
+sounds: []
+roots: []
+duration:
+  max_seconds: 150
+requires:
+  knowledge: [HI-SCRIPT-RECOG-04]
+introduces:
+  knowledge: [HI-SCRIPT-RECOG-05]
+practises:
+  knowledge: [HI-SCRIPT-RECOG-04, HI-SCRIPT-RECOG-05]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [HI-S04-letter-aa]
+---
+
+# ◌् — one character, met inside words you already say
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-04] -->
+
+[PAUSE 1s] Before the new one: आ — what does it do?
+
+[PAUSE 2s] One character this time. Just one — and you have been saying it
+for pages without knowing which mark on the page it was.
+
+## Script you'll notice: ◌्
+<!-- hl-knowledge: introduces=[HI-SCRIPT-RECOG-05]; assesses=[] -->
+
+**◌्** — *no sound of its own — it takes one away*.
+
+It is a **vowel-killer**. Every consonant in this script arrives with an *a* already inside it — that is what an abugida is. This mark takes the *a* back, leaving the bare consonant. It is how the script writes two consonants in a row.
+
+Where it sits: a stroke below that removes the inherent 'a' and forms a conjunct with the next consonant.
+
+Worked through: **क** + **◌्** = **क्** — *k*.
+
+You already say these, and every one of them has ◌् somewhere inside it:
+
+- **नमस्ते** *namaste* — hello / goodbye (namaste — "I bow to you")
+- **क्या** *kyā* — what
+- **स्त** *sta* — a vowel-less consonant usually fuses with the next consonant into a conjunct
+- **नमस्ते** *namaste* — assemble namaste
+
+## Writing: ◌् — follow the numbered strip
+<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-05] -->
+
+Follow the numbered strip: start where movement 1 begins, and let each panel
+show you the next movement before your pen makes it. Then write ◌् yourself —
+slowly, and larger than it is printed.
+
+> The strip shows **where to start the character and which way to travel**, in
+> one attested order. That is taught with real variation from school to school,
+> so the strip names its source beneath it: treat it as a sound way in, not the
+> only one.
+
+## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-05] -->
+
+[PAUSE 1s]
+- [YOU LOOK: at these words, and find ◌् in the ones that have it]
+
+> नमस्ते  ·  क्या  ·  शिरोरेखा
+
+- [YOU TRACE: ◌् three times, and each time say what it does: **it kills the built-in *a***]
+- [YOU LOOK: back at any page of this chapter and find ◌् once more]
+
+## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-05] -->
+
+[PAUSE 3s] Which character is this — ◌्? What does it do to the consonant it sits on? (**Takes away the built-in *a*.**)
+Name one word you already say that contains it.
+`;export{r as n,t as r,a as t};
