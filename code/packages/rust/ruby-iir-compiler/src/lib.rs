@@ -4,7 +4,7 @@
 //! fits in `i64` before emitting arithmetic, so accepted expressions agree
 //! with Ruby even though Ruby's full integer tower is not implemented yet.
 
-use coding_adventures_ruby_parser::create_ruby_parser;
+use coding_adventures_ruby_parser::try_create_ruby_parser;
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use std::sync::{Arc, Mutex};
@@ -23,7 +23,7 @@ pub fn compile_source(source: &str, module_name: &str) -> Result<IIRModule, Stri
     if source.len() > MAX_SOURCE_BYTES {
         return Err("Ruby source exceeds the native pilot limit".into());
     }
-    let mut parser = create_ruby_parser(source);
+    let mut parser = try_create_ruby_parser(source)?;
     let ast = parser.parse().map_err(|error| error.to_string())?;
     compile_ast(&ast, module_name)
 }
@@ -418,8 +418,17 @@ mod tests {
     }
 
     #[test]
+    fn malformed_source_returns_an_error_without_panicking() {
+        let outcome = std::panic::catch_unwind(|| compile_source("puts(\"unterminated)", "bad"));
+        assert!(
+            matches!(outcome, Ok(Err(_))),
+            "malformed source must remain fallible"
+        );
+    }
+
+    #[test]
     fn direct_ast_item_and_text_limits_apply_before_lowering() {
-        let mut parser = create_ruby_parser("puts(1)");
+        let mut parser = try_create_ruby_parser("puts(1)").unwrap();
         let parsed = parser.parse().unwrap();
         let token = number_token(&parsed).unwrap();
 
