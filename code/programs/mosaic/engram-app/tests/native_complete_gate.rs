@@ -217,7 +217,9 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     (Backend::Flutter, "justify-content"),
     (Backend::Flutter, "min-height"),
     (Backend::Flutter, "text-align"),
-    (Backend::Flutter, "width"),
+    // `width` left this list in #16884: every Engram occurrence is a fixed
+    // leaf width and now lowers through a SizedBox. Percentage widths remain
+    // unsupported and reported in products that author them.
     // Native controls and bare text do not share Container's paint/spacing
     // surface, so these properties remain absent on at least one occurrence.
     (Backend::Flutter, "background"),
