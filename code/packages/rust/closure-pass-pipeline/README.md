@@ -67,3 +67,8 @@ CV02: reject a pass result when its requested program contribution cannot be rec
 Returned contributions transfer metadata into recording before validation,
 and pending/omitted payloads are disposed iteratively if recording fails
 or there is no program identity. They are never recursively cloned first.
+
+Scheduler-owned current and candidate programs are disposed iteratively on errors
+and intermediate replacements, including custom pass candidates. Only accepted
+final output ownership transfers to the caller. This protects cleanup on small
+stacks; it does not establish bounds for arbitrary pass traversal or construction.

@@ -4,6 +4,13 @@ All notable changes to the `coding-adventures-closure-pass-pipeline` crate will 
 
 ## [Unreleased]
 
+### Fixed - safe disposal of scheduler-owned programs (CV02)
+
+Current and candidate AST guards use shared iterative disposal on contribution
+rejection, pass/dependency errors and successful intermediate replacement. The
+accepted final program is transferred to the caller. An isolated 128 KiB caller
+regression reproduces the prior abort and now covers all four ownership paths.
+
 ### Fixed
 
 - Transfer returned metadata before validation; safely drain remaining/omitted
