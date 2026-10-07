@@ -26,6 +26,10 @@ Current pairs:
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot and does not claim full coverage.
+- `perl5.44.0.*` and `perl5.45.3.*` are distinct **partial** pairs for the
+  current stable and development endpoints in the pinned inventory. Their
+  arithmetic and `print` subset is documented by each release's tagged
+  `perlop.pod` and `perlfunc.pod`; they do not claim complete coverage.
 - `perl.tokens` and `perl.grammar` are the unversioned **partial** Perl 5.38
   execution subset used by LANG81. They are not a substitute for the required
   release-specific `perl5.38.*` files.

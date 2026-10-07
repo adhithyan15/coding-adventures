@@ -1,0 +1,17 @@
+# Perl 5.44.0 tokens: LANG81-style print-arithmetic subset only.
+# @version 1
+# PARTIAL: this does not lex all Perl 5.44.0 source.
+# Evidence: https://github.com/Perl/perl5/blob/v5.44.0/pod/perlop.pod
+# and https://github.com/Perl/perl5/blob/v5.44.0/pod/perlfunc.pod
+
+INT       = /[0-9]+/
+NAME      = /[a-zA-Z_][a-zA-Z0-9_]*/
+PLUS      = "+"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\r\n]+/

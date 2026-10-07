@@ -771,8 +771,8 @@ release,date,perlhist_line,grammar_status
 5.43.11,2026-Jun-01,850,pending
 5.44.0-RC1,2026-Jun-22,851,pending
 5.44.0-RC2,2026-Jul-08,852,pending
-5.44.0,2026-Jul-15,853,pending
+5.44.0,2026-Jul-15,853,partial
 5.45.0,2026-Jul-16,855,pending
 5.45.1,2026-Jul-21,856,pending
 5.45.2,2026-Aug-20,857,pending
-5.45.3,2026-Sep-24,858,pending
+5.45.3,2026-Sep-24,858,partial
