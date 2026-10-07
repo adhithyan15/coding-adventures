@@ -87,6 +87,10 @@ Current pairs:
   5.003_03; the sole tokenizer change adds a strict-subs guard for `truncate`,
   outside this bounded arithmetic and `print` subset. This pair does not
   claim full Perl 5.003_04 coverage.
+- `perl5.003_05.*` is a separate **partial** pair checked against the
+  [`perl-5.003_05` source tag]'s `perly.y` and `toke.c`. Both tagged source
+  files match 5.003_04; this release still has its own files and claims only
+  the listed arithmetic and `print` subset.
 - `perl5.38.2.*` is a distinct **partial** pair for the LANG81 print-arithmetic
   subset, checked against the [`v5.38.2` source tag] and Perl 5.38.2 runtime.
   It rejects syntax outside that pilot, including adjacent `--` and
@@ -129,4 +133,5 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [`perl-5.003_02` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_02
 [`perl-5.003_03` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_03
 [`perl-5.003_04` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_04
+[`perl-5.003_05` source tag]: https://github.com/Perl/perl5/tree/perl-5.003_05
 [`v5.38.2` source tag]: https://github.com/Perl/perl5/tree/v5.38.2
