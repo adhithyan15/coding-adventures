@@ -294,6 +294,75 @@ fn failed_original_removal_cleans_only_its_created_backup_link() {
     assert_eq!(fs::read_dir(&fixture.dir).unwrap().count(), 1);
 }
 
+#[cfg(windows)]
+#[test]
+fn windows_prepared_objects_have_protected_current_user_only_access() {
+    use std::os::windows::process::CommandExt;
+    fn script(path: &Path, body: &str) -> serde_json::Value {
+        let output = std::process::Command::new("powershell.exe")
+            .args(["-NoProfile", "-NonInteractive", "-Command", body])
+            .env("CLOSUREC_TEST_ACL_PATH", path)
+            .env_remove("PSModulePath")
+            .creation_flags(0x0800_0000)
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        serde_json::from_slice(&output.stdout).unwrap()
+    }
+    let fixture = Fixture::new();
+    script(
+        &fixture.dir,
+        r#"
+        $ErrorActionPreference='Stop'
+        $acl=Get-Acl -LiteralPath $env:CLOSUREC_TEST_ACL_PATH
+        $users=[Security.Principal.SecurityIdentifier]::new('S-1-5-32-545')
+        $acl.AddAccessRule([Security.AccessControl.FileSystemAccessRule]::new($users,'ReadAndExecute','ContainerInherit,ObjectInherit','None','Allow'))
+        Set-Acl -LiteralPath $env:CLOSUREC_TEST_ACL_PATH -AclObject $acl
+        'true'
+    "#,
+    );
+    let output = fixture.path("output");
+    let mut policies = Vec::new();
+    let result = publish_with_hook(
+        &[(output.clone(), "private prepared bytes".into())],
+        &mut |phase, _| {
+            if phase == Phase::Install {
+                let directory = fixture.recovery().pop().unwrap();
+                for path in [&directory, &directory.join("new")] {
+                    policies.push(script(path, r#"
+                    $ErrorActionPreference='Stop'
+                    $acl=Get-Acl -LiteralPath $env:CLOSUREC_TEST_ACL_PATH
+                    $user=[Security.Principal.WindowsIdentity]::GetCurrent().User.Value
+                    $rules=@($acl.GetAccessRules($true,$true,[Security.Principal.SecurityIdentifier]))
+                    $otherAllows=@($rules | Where-Object { $_.AccessControlType -eq 'Allow' -and $_.IdentityReference.Value -ne $user })
+                    [pscustomobject]@{ protected=$acl.AreAccessRulesProtected; other_allow_count=$otherAllows.Count } | ConvertTo-Json -Compress
+                "#));
+                }
+                return Err(injected());
+            }
+            Ok(())
+        },
+    );
+    assert!(result.is_err());
+    assert!(!output.exists());
+    assert!(fixture.recovery().is_empty());
+    assert_eq!(policies.len(), 2);
+    for policy in policies {
+        assert_eq!(
+            policy["protected"], true,
+            "staging inherited a parent policy"
+        );
+        assert_eq!(
+            policy["other_allow_count"], 0,
+            "staging grants non-user access"
+        );
+    }
+}
+
 #[cfg(unix)]
 #[test]
 fn final_symlinks_reject_and_parent_symlink_aliases_collide() {

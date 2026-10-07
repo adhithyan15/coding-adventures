@@ -166,3 +166,65 @@ fn committed_trace_identifies_actual_input_and_output_content() {
     );
     assert_eq!(std::fs::read_dir(&fixture.dir).unwrap().count(), 6);
 }
+
+#[cfg(windows)]
+#[test]
+fn committed_outputs_preserve_protected_owner_only_access_controls() {
+    use std::os::windows::process::CommandExt;
+    fn policies(fixture: &Fixture, setup: bool) -> serde_json::Value {
+        let script = r#"
+            $ErrorActionPreference='Stop'
+            $root=$env:CLOSUREC_TEST_ACL_ROOT
+            $user=[Security.Principal.WindowsIdentity]::GetCurrent().User
+            if ($env:CLOSUREC_TEST_ACL_SETUP -eq 'true') {
+                $acl=Get-Acl -LiteralPath $root
+                $users=[Security.Principal.SecurityIdentifier]::new('S-1-5-32-545')
+                $acl.AddAccessRule([Security.AccessControl.FileSystemAccessRule]::new($users,'ReadAndExecute','ContainerInherit,ObjectInherit','None','Allow'))
+                Set-Acl -LiteralPath $root -AclObject $acl
+                foreach ($name in @('out.js','out.map','manifest.txt','trace.json')) {
+                    $path=Join-Path $root $name
+                    $acl=Get-Acl -LiteralPath $path
+                    $acl.SetAccessRuleProtection($true,$false)
+                    $acl.SetAccessRule([Security.AccessControl.FileSystemAccessRule]::new($user,'FullControl','Allow'))
+                    Set-Acl -LiteralPath $path -AclObject $acl
+                }
+            }
+            $result=@(foreach ($name in @('out.js','out.map','manifest.txt','trace.json')) {
+                $acl=Get-Acl -LiteralPath (Join-Path $root $name)
+                $rules=@($acl.GetAccessRules($true,$true,[Security.Principal.SecurityIdentifier]) | ForEach-Object {
+                    [pscustomobject]@{ sid=$_.IdentityReference.Value; rights=[int]$_.FileSystemRights; type=[int]$_.AccessControlType; inherited=$_.IsInherited; inheritance=[int]$_.InheritanceFlags; propagation=[int]$_.PropagationFlags }
+                })
+                [pscustomobject]@{ owner=$acl.GetOwner([Security.Principal.SecurityIdentifier]).Value; group=$acl.GetGroup([Security.Principal.SecurityIdentifier]).Value; protected=$acl.AreAccessRulesProtected; rules=$rules }
+            })
+            ConvertTo-Json -InputObject $result -Depth 8 -Compress
+        "#;
+        let output = Command::new("powershell.exe")
+            .args(["-NoProfile", "-NonInteractive", "-Command", script])
+            .env("CLOSUREC_TEST_ACL_ROOT", &fixture.dir)
+            .env("CLOSUREC_TEST_ACL_SETUP", setup.to_string())
+            .env_remove("PSModulePath")
+            .creation_flags(0x0800_0000)
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        serde_json::from_slice(&output.stdout).unwrap()
+    }
+    let fixture = Fixture::new();
+    let expected = policies(&fixture, true);
+    let output = fixture.run(&fixture.paths, true);
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(
+        policies(&fixture, false),
+        expected,
+        "publication broadened protected output access"
+    );
+    assert_eq!(std::fs::read_dir(&fixture.dir).unwrap().count(), 6);
+}

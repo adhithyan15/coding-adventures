@@ -165,6 +165,12 @@ supported-policy rejection and native Linux/macOS ACL/ownership tests. This work
 must precede final review, repaired-head publication, native CI and actual merge.
 All 895 lesson shards validate; the new specification/documentation does not
 implement or validate that repair yet.
+The new native Windows tests first reproduce both policy defects, including all
+four JS/map/manifest/sidecar destinations. Corrected child PowerShell module
+selection is a harness prerequisite, not publication acceptance. Logs distinguish
+the initial module-load errors from the subsequent policy-assertion failures.
+All 896 lesson shards validate. Access-control implementation remains pending;
+do not publish the regression checkpoint until repair and exact-head review pass.
 The foundation and full compiler/provenance goal remain open.
 Diagnostic short-circuits (empty-input banner and token-only tree dumps) currently
 return before trace construction. Track their provenance policy with the full

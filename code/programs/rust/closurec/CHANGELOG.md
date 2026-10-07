@@ -14,6 +14,11 @@ cannot be accepted on the existing ordinary test/CI results. Specification
 `e55e070094` requires atomically private staging objects, explicit captured and
 verified owner/group/DACL policy, supported-policy rejection, policy rechecks
 and native Linux/macOS ACL/ownership coverage. Implementation is pending.
+Two native regression tests now reach and fail the actual policy assertions:
+prepared objects have inherited/unprotected policies, and all four committed
+artifacts lose protected owner-only policies. An initial helper run failed on
+inherited PowerShell module paths before inspecting ACLs; that harness failure
+is kept separate from the meaningful before-repair evidence.
 
 ### Fixed - backup ownership and recovery diagnostics (CV02 review)
 
