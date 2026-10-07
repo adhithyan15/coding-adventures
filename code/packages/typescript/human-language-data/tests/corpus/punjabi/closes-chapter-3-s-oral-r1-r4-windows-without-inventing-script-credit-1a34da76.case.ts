@@ -179,5 +179,8 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   // tail still exposes separate R2/R4 debt tracked in #16801. Chapter 159
   // closes those seven exact pairs; four different Chapter 148 action R4
   // pairs open at the longer boundary and are tracked in #16886.
-  expect(report.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 513, R4: 576 });
+  // Chapters 160 and 161 close those and the following Chapter 149 action
+  // pairs. The current longer tail exposes three A1 writing R3 pairs in
+  // #16915 and four later action R4 pairs in #16916.
+  expect(report.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 516, R4: 576 });
 });
