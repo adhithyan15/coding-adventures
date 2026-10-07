@@ -10,8 +10,9 @@ All notable changes to this project will be documented in this file.
   platform-specific variant can select a recipe. The native Windows selector
   maps BEAM's `{:win32, _}` OS result to `:windows`, so `BUILD_windows` wins over
   canonical Starlark content while variant-only directories remain outside the
-  package graph on every host. Native no-follow policy remains separately
-  owned.
+  package graph on every host. Exact directory-entry checks also reject
+  wrong-case `build` and `build_windows` on case-insensitive hosts. Native
+  no-follow policy remains separately owned.
 - Discovery rejects colliding qualified identities before resolution with a
   typed `DUPLICATE_PACKAGE_IDENTITY` error and sorted repository-relative
   paths. The CLI emits the root-redacted diagnostic and returns exit status 2.

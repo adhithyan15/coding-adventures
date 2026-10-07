@@ -427,8 +427,14 @@ defmodule BuildTool.Discovery do
   # ---------------------------------------------------------------------------
 
   defp file_exists?(path) do
-    case File.stat(path) do
-      {:ok, %File.Stat{type: :regular}} -> true
+    # File.stat alone accepts a wrong-case basename on case-insensitive hosts.
+    # Check the directory entry before stat so package membership and override
+    # selection use the same exact BUILD names on every platform.
+    with {:ok, entries} <- File.ls(Path.dirname(path)),
+         true <- Enum.member?(entries, Path.basename(path)),
+         {:ok, %File.Stat{type: :regular}} <- File.stat(path) do
+      true
+    else
       _ -> false
     end
   end

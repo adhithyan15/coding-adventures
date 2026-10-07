@@ -194,10 +194,30 @@ defmodule BuildTool.DiscoveryTest do
     test "variant files alone never establish canonical package membership", %{tmp_dir: tmp_dir} do
       File.write!(Path.join(tmp_dir, "BUILD_windows"), "echo windows")
       File.write!(Path.join(tmp_dir, "BUILD_mac"), "echo mac")
+      File.write!(Path.join(tmp_dir, "BUILD_linux"), "echo linux")
+      File.write!(Path.join(tmp_dir, "BUILD_mac_and_linux"), "echo unix")
 
       for platform <- [:windows, :darwin, :linux] do
         assert Discovery.get_build_file_for_platform(tmp_dir, platform) == nil
       end
+    end
+
+    test "only exact-case canonical and variant basenames are recognized", %{tmp_dir: tmp_dir} do
+      File.write!(Path.join(tmp_dir, "build"), "echo wrong canonical\n")
+      File.write!(Path.join(tmp_dir, "build_windows"), "echo wrong windows\n")
+
+      assert Discovery.get_build_file_for_platform(tmp_dir, :windows) == nil
+      assert Discovery.discover_packages(tmp_dir, :windows) == []
+
+      # A case-insensitive filesystem cannot hold `build` and `BUILD` together.
+      File.rm!(Path.join(tmp_dir, "build"))
+      File.write!(Path.join(tmp_dir, "BUILD"), "echo canonical\n")
+
+      assert Discovery.get_build_file_for_platform(tmp_dir, :windows) ==
+               Path.join(tmp_dir, "BUILD")
+
+      assert Discovery.discover_packages(tmp_dir, :windows) |> hd() |> Map.fetch!(:build_commands) ==
+               ["echo canonical"]
     end
 
     test "BUILD_mac overrides BUILD_mac_and_linux on darwin", %{tmp_dir: tmp_dir} do
