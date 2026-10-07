@@ -83,3 +83,8 @@ Keep this work in bounded, spec-first PRs. It may be prepared locally while
 another implementation PR is in CI, but there is only one active implementation
 PR at a time. LANG81 source-to-IIR execution continues to use its declared
 Perl 5.38 subset until a release pair and semantic lowering are ready.
+
+The next local historical slice selects 5.003_07. The official source repository
+has no `perl-5.003_06` tag, so 5.003_06 remains pending until its release source
+is independently located. The 5.003_07 pair is checked against its own tag;
+unchanged yacc syntax does not remove the requirement for separate files.
