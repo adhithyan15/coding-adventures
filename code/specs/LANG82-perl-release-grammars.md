@@ -260,3 +260,24 @@ whitespace handling. Those changes do not extend the accepted plain-decimal
 file; preserve the inherited 250-digit lexical bound and negative probes for
 leading zero, decrement adjacency, carriage returns, and unsupported input.
 Do not claim full Perl syntax or add a release alias.
+
+Prepare a following bounded maintenance installment with four separate,
+explicitly partial pairs for `5.004_04-m1` through `-m4`. Each release has
+its own historical source archive at
+`https://mirrors.develooper.com/perl/historical-perl/perl-<release>.tar.gz`.
+Their respective SHA-256 digests are
+`2782e92619e296052d45c5b9fc565e7c5558530ab37d39b761e8c9dd246c7605`,
+`78e7ef63abec177ae1287ba3d20fc9e079dcbf1401eb3229db5a785bf7ef5827`,
+`ce0c07bd7507cc0664d9da358f895f7bd3b67ea09ed92f432e1b0263ebf2acf0`,
+and `8e883ceed74188b2cf69a8cb6247f80e8e8178c8904b9e1591c0342e20148241`.
+The four `perly.y` blobs are byte-identical to each other. Relative to final
+5.004_04, m1 adds postfix `for` and hash-element scalarization; later yacc
+blobs retain those changes. The tokenizer changes across the four releases
+concern interpolation and lexical state, regex modifiers, input handling,
+subscript disambiguation, threading, and filters. Their comment-stripped
+`scan_num` function remains identical to final 5.004_04, including its
+250-digit decimal scan bound. These changes do not widen the accepted
+plain-decimal `print` arithmetic subset. Retain its negative probes for
+leading zero, decrement adjacency, carriage returns, and unsupported input;
+give each release its own token and grammar files without aliases or a claim
+of complete historical syntax.

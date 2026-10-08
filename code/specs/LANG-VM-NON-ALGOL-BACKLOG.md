@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-07 — re-audited after LANG82 Perl 5.004_04
+Status date: 2026-10-08 — re-audited after PREP01 C bitwise conditions
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -182,18 +182,21 @@ CodeQL, and books checks passed. The 776-row inventory now has 84 partial
 pairs and 692 pending; neither complete historical syntax nor exhaustive
 public-release coverage is claimed. The next fresh selection rotates to a
 bounded C bitwise conditional-expression slice.
+PR #16985 delivered exactly one `&`, `|`, or `^` per bounded logical C
+`#if` clause and merged as `6a90a5628cf1f13050f923d125eb6a1acb2d0622`
+after exact-head CI, CodeQL, and books checks passed. The next fresh
+selection rotates to four separate, explicitly partial historical Perl
+5.004_04 maintenance token/grammar pairs. Full C `#if` remains open.
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **PREP01 C (selected):** add exactly one `&`, `|`, or `^` between
-   nonnegative signed 32-bit decimal operands in each bounded `#if` logical
-   clause, with undefined identifiers read as zero and unsupported longer or
-   mixed expressions rejected. Full C `#if`, stringize/paste, and default
-   frontend routing remain open.
-2. **LANG82 Perl release grammars:** continue distinct, source-backed,
-   explicitly partial pairs. Keep 5.004_01-t1 pending until its own source
-   is found; do not imply complete syntax or an exhaustive release inventory.
+1. **LANG82 Perl release grammars (selected):** add separate, source-backed,
+   explicitly partial token and grammar files for 5.004_04-m1 through -m4.
+   Keep 5.004_01-t1 pending until its own source is found; do not imply
+   complete syntax or an exhaustive release inventory.
+2. **PREP01 C:** continue the bounded `#if` expression ladder. Full C `#if`,
+   stringize/paste, and default frontend routing remain open.
 
 The following run records the first VM-067 selection.
 
