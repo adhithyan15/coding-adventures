@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 17104,
   "last_ci_action": {
     "observed_at": "2026-10-08T11:16:49Z",
     "pr_number": 17097,
@@ -1380,10 +1380,12 @@
     {
       "id": "build-tool-ruby-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 20-case process-free graph and diff-selection contract in the Ruby build tool",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-ruby-glob-matcher-complexity-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": "codex/parity-ruby-diff-selection-20261008",
-      "pr_number": null,
+      "pr_number": 17104,
+      "opened_at": "2026-10-08T11:38:55Z",
+      "progress_notes": "Ready-for-review PR #17104 adds the Ruby process-free graph/diff core with all eight graph and twelve diff-selection neutral cases, shared-input fanout, verified boundary digest, exact BUILD fronts, and the 50-million Unicode-scalar pre-match ceiling. Final rebased-head Ruby suite passes 386 tests/1,024 assertions with four platform skips and 92.62% line coverage; touched Ruby lint, syntax, registry sync, BUILD validation, schema-3 zero-collision inventory, diff check, and read-only security review pass. Legacy Git/execution adapter migration is explicitly out of scope.",
       "notes": "Selected after #17097 merged and exact-main collision-checked inventory/owner refresh. All seven prerequisites are merged; no live open PR overlaps Ruby build-tool source/tests or neutral graph/diff fixtures. Complete and dynamically consume the eight-graph and twelve-diff process-free contract, including shared-input multi-consumer selection, through production code, reusing the separately hardened shared Ruby matcher and preserving stable empty failures. Keep execution authority outside this process-free slice."
     },
     {
