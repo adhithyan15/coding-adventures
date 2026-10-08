@@ -191,6 +191,50 @@ def _bezier_bounds(points: tuple[tuple[float, float], ...]) -> tuple[float, ...]
     return (min_x, min_y, max_x - min_x, max_y - min_y)
 
 
+def _center_arc_fields(case: dict[str, Any], case_id: str) -> tuple[float, ...]:
+    """Parse the shared center-form inputs before any angle arithmetic."""
+    cx, cy = _point(case["center"], f"{case_id}.center")
+    rx = _number(case["rx"], f"{case_id}.rx")
+    ry = _number(case["ry"], f"{case_id}.ry")
+    if rx <= 0 or ry <= 0:
+        raise ValueError(f"{case_id} center radii must be positive")
+    start = _number(case["start_angle"], f"{case_id}.start_angle")
+    sweep = _number(case["sweep_angle"], f"{case_id}.sweep_angle")
+    rotation = _number(case["x_rotation"], f"{case_id}.x_rotation")
+    return (cx, cy, rx, ry, start, sweep, rotation)
+
+
+def _center_arc_bounds(fields: tuple[float, ...]) -> tuple[float, ...]:
+    """Derive extrema from the two coordinate derivatives, never samples."""
+    cx, cy, rx, ry, start, sweep, rotation = fields
+    cos_r, sin_r = math.cos(rotation), math.sin(rotation)
+
+    def point(angle: float) -> tuple[float, float]:
+        x_local, y_local = rx * math.cos(angle), ry * math.sin(angle)
+        return (
+            cx + cos_r * x_local - sin_r * y_local,
+            cy + sin_r * x_local + cos_r * y_local,
+        )
+
+    values = [point(start), point(start + sweep)]
+    if sweep != 0:
+        x_base = math.atan2(-ry * sin_r, rx * cos_r)
+        y_base = math.atan2(ry * cos_r, rx * sin_r)
+        for angle in (x_base, x_base + math.pi, y_base, y_base + math.pi):
+            # The positive modulo is directional: the raw angular difference
+            # loses candidates at the seam and on a clockwise traversal.
+            distance = (
+                (angle - start) % math.tau if sweep > 0 else (start - angle) % math.tau
+            )
+            if distance <= abs(sweep):
+                values.append(point(angle))
+    min_x = min(value[0] for value in values)
+    min_y = min(value[1] for value in values)
+    max_x = max(value[0] for value in values)
+    max_y = max(value[1] for value in values)
+    return (min_x, min_y, max_x - min_x, max_y - min_y)
+
+
 def _validate_case(case: Any) -> str:
     if not isinstance(case, dict):
         raise ValueError("case fields must form an object")  # noqa: TRY004 - stable corpus error
@@ -360,6 +404,59 @@ def _validate_case(case: Any) -> str:
             _bezier_bounds(points),
             f"{case_id}.expected_bounds",
         )
+    elif operation == "center-arc-bounds":
+        _fields(
+            case,
+            {
+                "id",
+                "operation",
+                "center",
+                "rx",
+                "ry",
+                "start_angle",
+                "sweep_angle",
+                "x_rotation",
+                "expected_bounds",
+            },
+            case_id,
+        )
+        fields = _center_arc_fields(case, case_id)
+        if abs(fields[5]) > math.tau:
+            raise ValueError(f"{case_id} has invalid sweep")
+        _expected(
+            case["expected_bounds"],
+            _center_arc_bounds(fields),
+            f"{case_id}.expected_bounds",
+        )
+    elif operation == "center-arc-cubics":
+        shared = {
+            "id",
+            "operation",
+            "center",
+            "rx",
+            "ry",
+            "start_angle",
+            "sweep_angle",
+            "x_rotation",
+        }
+        if "expected_error" in case:
+            _fields(case, shared | {"expected_error"}, case_id)
+        else:
+            _fields(case, shared | {"expected_count"}, case_id)
+        fields = _center_arc_fields(case, case_id)
+        sweep = fields[5]
+        if abs(sweep) > math.tau:
+            if case.get("expected_error") != "invalid-sweep":
+                raise ValueError(f"{case_id}.expected_error must pin invalid-sweep")
+        else:
+            count = max(1, math.ceil(abs(sweep) / (math.pi / 2)))
+            if (
+                type(case.get("expected_count")) is not int
+                or case["expected_count"] != count
+            ):
+                raise ValueError(
+                    f"{case_id}.expected_count differs from bounded segments"
+                )
     else:
         raise ValueError(f"{case_id} has unsupported operation")
     return case_id

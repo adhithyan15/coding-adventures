@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add seven closed G2D03 center-form cases: positive/negative wrapped analytic
+  extrema, zero-sweep point bounds, rotated interior extrema, zero/full-turn
+  cubic segment counts, and over-turn fail-stop. The validator derives extrema
+  from coordinate derivatives and directed modulo-angle membership, not native outputs or
+  fixed-step sampling. The v1 transport and tolerance remain unchanged.
 - Add eight closed G2D01/G2D02 records for noncommutative affine composition,
   invertible and threshold-singular matrices, vector translation exclusion,
   quadratic/cubic evaluation and derivatives, de Casteljau split controls,

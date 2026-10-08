@@ -4,8 +4,7 @@ This process-free corpus freezes point normalization, affine composition and
 inversion, quadratic/cubic Bezier algebra, and SVG arc-degeneracy seams in
 [G2D00](../../G2D00-point2d.md), [G2D01](../../G2D01-affine2d.md),
 [G2D02](../../G2D02-bezier2d.md), and [G2D03](../../G2D03-arc2d.md). It is
-not a claim that every existing lane already conforms, nor that rotated
-non-degenerate arc bounds are reconciled. Native flattening repairs use the
+not a claim that every existing lane already conforms. Native flattening repairs use the
 separate `bezier2d-flattening-v1` adversarial corpus.
 
 `point-normalize` takes a two-number point and expects a two-number point.
@@ -36,6 +35,18 @@ derives polynomial answers independently of native implementations and rejects
 changed expectations, incomplete shapes, duplicate IDs/keys, and tolerance
 drift. Existing native readers may filter by operation; adding a new family
 does not imply that an older reader consumes it.
+
+`center-arc-bounds` pins analytic `[x,y,width,height]` bounds for two
+off-grid extrema across the $2\pi$ seam (positive and negative sweep), a
+zero-sweep point rect, and rotated interior extrema. Adapters must account
+for angle periodicity; sampling 100 points does not satisfy these cases.
+`center-arc-cubics` pins one segment
+for zero sweep, four for a full turn, and fail-stop `invalid-sweep` for a span
+exceeding one turn. All center-form inputs must be finite, positive-radius,
+and bounded before any angle arithmetic or allocation. JSON cannot represent
+NaN or infinity, so native readers need separate non-finite rejection tests.
+Existing native readers that filter by operation may continue to consume only
+their earlier families until the separate lane-conformance owners land.
 
 The independent validator recomputes every expected point and rectangle from
 the spec's formulas without calling a package implementation:

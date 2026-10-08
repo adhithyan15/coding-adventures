@@ -18,7 +18,10 @@
         {"$ref": "#/$defs/affineInvert"},
         {"$ref": "#/$defs/affineVector"},
         {"$ref": "#/$defs/bezierQuadratic"},
-        {"$ref": "#/$defs/bezierCubic"}
+        {"$ref": "#/$defs/bezierCubic"},
+        {"$ref": "#/$defs/centerArcBounds"},
+        {"$ref": "#/$defs/centerArcCubicsValid"},
+        {"$ref": "#/$defs/centerArcCubicsInvalid"}
       ]}
     }
   },
@@ -129,6 +132,54 @@
         "expected_derivative": {"$ref": "#/$defs/point"},
         "expected_split": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"$ref": "#/$defs/points4"}},
         "expected_bounds": {"$ref": "#/$defs/bounds"}
+      }
+    },
+    "centerArcBounds": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "operation", "center", "rx", "ry", "start_angle", "sweep_angle", "x_rotation", "expected_bounds"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$"},
+        "operation": {"const": "center-arc-bounds"},
+        "center": {"$ref": "#/$defs/point"},
+        "rx": {"type": "number", "exclusiveMinimum": 0, "maximum": 1000000},
+        "ry": {"type": "number", "exclusiveMinimum": 0, "maximum": 1000000},
+        "start_angle": {"type": "number", "minimum": -1000000, "maximum": 1000000},
+        "sweep_angle": {"type": "number", "minimum": -6.283185307179586, "maximum": 6.283185307179586},
+        "x_rotation": {"type": "number", "minimum": -1000000, "maximum": 1000000},
+        "expected_bounds": {"$ref": "#/$defs/bounds"}
+      }
+    },
+    "centerArcCubicsValid": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "operation", "center", "rx", "ry", "start_angle", "sweep_angle", "x_rotation", "expected_count"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$"},
+        "operation": {"const": "center-arc-cubics"},
+        "center": {"$ref": "#/$defs/point"},
+        "rx": {"type": "number", "exclusiveMinimum": 0, "maximum": 1000000},
+        "ry": {"type": "number", "exclusiveMinimum": 0, "maximum": 1000000},
+        "start_angle": {"type": "number", "minimum": -1000000, "maximum": 1000000},
+        "sweep_angle": {"type": "number", "minimum": -6.283185307179586, "maximum": 6.283185307179586},
+        "x_rotation": {"type": "number", "minimum": -1000000, "maximum": 1000000},
+        "expected_count": {"type": "integer", "minimum": 1, "maximum": 4}
+      }
+    },
+    "centerArcCubicsInvalid": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "operation", "center", "rx", "ry", "start_angle", "sweep_angle", "x_rotation", "expected_error"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$"},
+        "operation": {"const": "center-arc-cubics"},
+        "center": {"$ref": "#/$defs/point"},
+        "rx": {"type": "number", "exclusiveMinimum": 0, "maximum": 1000000},
+        "ry": {"type": "number", "exclusiveMinimum": 0, "maximum": 1000000},
+        "start_angle": {"type": "number", "minimum": -1000000, "maximum": 1000000},
+        "sweep_angle": {"type": "number", "anyOf": [
+          {"minimum": -1000000, "exclusiveMaximum": -6.283185307179586},
+          {"exclusiveMinimum": 6.283185307179586, "maximum": 1000000}
+        ]},
+        "x_rotation": {"type": "number", "minimum": -1000000, "maximum": 1000000},
+        "expected_error": {"const": "invalid-sweep"}
       }
     }
   }
