@@ -669,7 +669,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ஆ (ā) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ஆ in the ones that have it]"
@@ -691,7 +691,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ஆ (ā) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ஆ once more]"

@@ -63,7 +63,7 @@ it: an entrance is the mouth you go in by.
 [PAUSE 1s]
 - [YOU SAY: *iriguchi*]
 - [YOU SAY: *iriguchi*, clapping four beats]
-- [YOU RECALL: point to the sign in **いりぐち** that carries the two-stroke mark, and name the sign under it]
+- [YOU RECALL: say which sign in **いりぐち** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-IRIGUCHI] -->

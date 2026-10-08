@@ -60,7 +60,7 @@ The next lesson writes it.
 [PAUSE 1s]
 - [YOU SAY: *ippai*]
 - [YOU SAY: *ippai*, clapping four beats]
-- [YOU RECALL: point to the sign in **いっぱい** that carries the small circle, and name the sign under it]
+- [YOU RECALL: say which sign in **いっぱい** carries the small circle, and name the sign under it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-IPPAI] -->

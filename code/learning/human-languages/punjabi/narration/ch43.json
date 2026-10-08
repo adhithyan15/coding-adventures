@@ -460,7 +460,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ਥ (tha)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ਥ**]"

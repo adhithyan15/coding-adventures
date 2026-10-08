@@ -1108,7 +1108,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "the first-meeting page once more, aloud",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: the first-meeting page once more, aloud]"

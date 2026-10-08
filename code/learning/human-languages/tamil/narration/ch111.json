@@ -127,7 +127,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ஐந்து and point at ஐ (ai) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ஐந்து** and point at ஐ inside it]"
@@ -154,7 +154,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஐந்து aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஐந்து** aloud once more]"
@@ -281,7 +281,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at மூன்று and point at ◌ூ (ū) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **மூன்று** and point at ◌ூ inside it]"
@@ -308,7 +308,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "மூன்று aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **மூன்று** aloud once more]"
@@ -459,7 +459,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ஏழு and point at ஏ (ē) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ஏழு** and point at ஏ inside it]"
@@ -486,7 +486,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஏழு aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஏழு** aloud once more]"

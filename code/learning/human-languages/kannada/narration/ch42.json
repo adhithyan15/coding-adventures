@@ -936,7 +936,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these three nasals and say which one is today's",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these three nasals and say which one is today's]"
@@ -958,7 +958,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ಜ್ಞ and say which letter sits on top and which is squashed beneath",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ಜ್ಞ and say which letter sits on top and which is squashed beneath]"

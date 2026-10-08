@@ -241,7 +241,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ख (kha) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ख in the ones that have it]"
@@ -263,7 +263,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page and find ख (kha) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page and find ख once more]"
@@ -428,7 +428,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this word and name its two pieces",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this word and name its two pieces]"

@@ -346,7 +346,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two and say which one is standing and which one is riding",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two and say which one is standing and which one is riding]"
@@ -368,7 +368,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ಋ and ◌ೃ (vowel sign ṛ) side by side, and say which one opens a word",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ಋ and ◌ೃ side by side, and say which one opens a word]"

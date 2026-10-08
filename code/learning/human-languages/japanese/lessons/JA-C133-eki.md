@@ -57,7 +57,7 @@ the next lesson writes it.
 [PAUSE 1s]
 - [YOU SAY: *eki*]
 - [YOU SAY: *eki*, clapping two beats]
-- [YOU RECALL: point to the sign in **えき** you can already write, and the one you cannot]
+- [YOU RECALL: name the sign in **えき** you can already write, and the one you cannot]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-EKI] -->

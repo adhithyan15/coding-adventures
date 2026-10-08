@@ -121,7 +121,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ভালো",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: ভালো]"
@@ -266,7 +266,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ভালো আবার",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: ভালো আবার]"
@@ -552,7 +552,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "কেমন ভালো",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: কেমন ভালো]"
@@ -821,7 +821,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "আছি (āchhi)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: আছি]"
@@ -830,7 +830,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "আমি ভালো আছি (āchhi)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: আমি ভালো আছি]"
@@ -1119,7 +1119,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "আছি (āchhi)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: আছি]"
@@ -1128,7 +1128,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "আবার ভালো",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: আবার ভালো]"

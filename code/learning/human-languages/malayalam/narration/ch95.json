@@ -276,7 +276,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at the end of കേൾക്കൂ and അടയ്ക്കൂ, and find what they share",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at the end of **കേൾക്കൂ** and **അടയ്ക്കൂ**, and find what they share]"
@@ -420,7 +420,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at the two words and say which part carries the difference",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at the two words and say which part carries the difference]"

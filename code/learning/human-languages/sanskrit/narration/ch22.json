@@ -658,7 +658,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ड (ḍa) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ड in it]"
@@ -680,7 +680,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ड (ḍa) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ड once more]"

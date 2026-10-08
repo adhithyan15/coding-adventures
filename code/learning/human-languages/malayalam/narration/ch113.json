@@ -107,7 +107,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ശരി and point at ശ (śa) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ശരി** and point at ശ inside it]"
@@ -134,7 +134,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ശരി aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ശരി** aloud once more]"
@@ -261,7 +261,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at നിങ്ങൾ and point at ങ (ṅa) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **നിങ്ങൾ** and point at ങ inside it]"
@@ -288,7 +288,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "നിങ്ങൾ aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **നിങ്ങൾ** aloud once more]"
@@ -415,7 +415,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at നാളെ and point at ള (ḷa) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **നാളെ** and point at ള inside it]"
@@ -442,7 +442,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "നാളെ aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **നാളെ** aloud once more]"
@@ -569,7 +569,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at സുഖം and point at ഖ (kha) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **സുഖം** and point at ഖ inside it]"
@@ -596,7 +596,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "സുഖം aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **സുഖം** aloud once more]"

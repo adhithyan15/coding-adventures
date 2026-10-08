@@ -679,7 +679,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "سلام (salâm) — name each letter from the right, then say the word",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: سلام — name each letter from the right, then say the word]"
@@ -1446,7 +1446,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "سلام بله نه ممنون (salâm, bale, na, mamnun) — name the letters of each before saying it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: سلام بله نه ممنون — name the letters of each before saying it]"
@@ -1587,7 +1587,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ممنون and name each letter from the right",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ممنون** and name each letter from the right]"

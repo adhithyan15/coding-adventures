@@ -58,7 +58,7 @@ place moves across to the listener: *soko*, there, by them. The second sign is t
 [PAUSE 1s]
 - [YOU SAY: *soko*]
 - [YOU SAY: *koko*, pointing at your own feet, then *soko*, pointing at the listener's]
-- [YOU RECALL: point to the sign in **そこ** you can already write, and the one you cannot]
+- [YOU RECALL: name the sign in **そこ** you can already write, and the one you cannot]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-SOKO] -->

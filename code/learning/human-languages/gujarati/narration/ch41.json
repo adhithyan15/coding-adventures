@@ -168,7 +168,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "શહેર",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **શહેર**]"

@@ -119,7 +119,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at فکر کردن and point at ف (fe) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **فکر کردن** and point at ف inside it]"
@@ -146,7 +146,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "فکر کردن aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **فکر کردن** aloud once more]"
@@ -289,7 +289,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at خوشوقتم and point at ق (ghâf) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **خوشوقتم** and point at ق inside it]"
@@ -316,7 +316,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "خوشوقتم aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **خوشوقتم** aloud once more]"
@@ -443,7 +443,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at آمدن and point at آ (alef-e madd) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **آمدن** and point at آ inside it]"
@@ -470,7 +470,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "آمدن aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **آمدن** aloud once more]"

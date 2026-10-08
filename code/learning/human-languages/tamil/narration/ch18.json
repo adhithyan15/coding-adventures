@@ -74,7 +74,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "௩ மணி (maṇi) — the numeral from chapter seven and the hour word you have met, side by side",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **௩ மணி** — the numeral from chapter seven and the hour word you have met, side by side]"
@@ -696,7 +696,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find த (ta) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find த in the ones that have it]"
@@ -718,7 +718,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find த (ta) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find த once more]"

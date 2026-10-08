@@ -494,7 +494,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at उठना (uṭhnā) and name the letter it opens with",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at उठना and name the letter it opens with]"

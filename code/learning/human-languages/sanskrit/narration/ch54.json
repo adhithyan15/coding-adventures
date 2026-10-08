@@ -113,7 +113,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "इति (iti), and say which side of it the quoted words sit on",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **इति**, and say which side of it the quoted words sit on]"
@@ -271,7 +271,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "बालः गच्छति इति (iti) गुरुः चिन्तयति, then say what it means",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **बालः गच्छति इति गुरुः चिन्तयति**, then say what it means]"

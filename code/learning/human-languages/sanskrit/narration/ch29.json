@@ -732,7 +732,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "वैद्यः — name the double stroke above the top bar, and say what it replaced",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **वैद्यः** — name the double stroke above the top bar, and say what it replaced]"
@@ -741,7 +741,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "इदानीम् — name its opening letter, and say why that vowel is full-size here",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **इदानीम्** — name its opening letter, and say why that vowel is full-size here]"

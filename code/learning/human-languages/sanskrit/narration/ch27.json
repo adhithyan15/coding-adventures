@@ -254,7 +254,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ◌ै (ai) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ◌ै in it]"
@@ -276,7 +276,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ै (ai) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ै once more]"

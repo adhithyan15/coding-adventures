@@ -139,7 +139,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ஞாயிறு and point at ஞ (ña) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ஞாயிறு** and point at ஞ inside it]"
@@ -166,7 +166,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஞாயிறு aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஞாயிறு** aloud once more]"
@@ -329,7 +329,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ஊர் and point at ஊ (ū) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ஊர்** and point at ஊ inside it]"
@@ -356,7 +356,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஊர் aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஊர்** aloud once more]"
@@ -495,7 +495,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ஒரு and point at ஒ inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ஒரு** and point at ஒ inside it]"
@@ -522,7 +522,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஒரு aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஒரு** aloud once more]"
@@ -665,7 +665,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at சந்தோஷம் and point at ஷ (ṣa) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **சந்தோஷம்** and point at ஷ inside it]"
@@ -692,7 +692,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "சந்தோஷம் aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **சந்தோஷம்** aloud once more]"

@@ -4,7 +4,7 @@
   "chapter": 132,
   "title": "This and That: So, Re and Ru",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f8feaefd56ec5b37",
+  "sourceHash": "fnv1a64:0a8bccca8f8d1790",
   "lessons": [
     {
       "id": "JA-C132-soko",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:efa9bd8651cf36be",
+      "sourceHash": "fnv1a64:478f15712e51031e",
       "notice": null,
       "blocks": [
         {
@@ -113,11 +113,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in そこ (soko) you can already write, and the one you cannot",
+              "instruction": "name the sign in そこ (soko) you can already write, and the one you cannot",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **そこ** you can already write, and the one you cannot]"
+              "source": "[YOU RECALL: name the sign in **そこ** you can already write, and the one you cannot]"
             }
           ]
         },
@@ -499,7 +499,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f70405a1a3ec5470",
+      "sourceHash": "fnv1a64:0bcc655e022a4298",
       "notice": null,
       "blocks": [
         {
@@ -593,11 +593,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in これ (kore) you can already write, and the one you cannot",
+              "instruction": "name the sign in これ (kore) you can already write, and the one you cannot",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **これ** you can already write, and the one you cannot]"
+              "source": "[YOU RECALL: name the sign in **これ** you can already write, and the one you cannot]"
             }
           ]
         },
@@ -997,7 +997,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41ec93b26ba389a3",
+      "sourceHash": "fnv1a64:bca018e9c1402ab7",
       "notice": null,
       "blocks": [
         {
@@ -1091,11 +1091,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in くるま (kuruma) you cannot write yet, and say which sign it looks like",
+              "instruction": "name the sign in くるま (kuruma) you cannot write yet, and say which sign it looks like",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **くるま** you cannot write yet, and say which sign it looks like]"
+              "source": "[YOU RECALL: name the sign in **くるま** you cannot write yet, and say which sign it looks like]"
             }
           ]
         },
@@ -1412,7 +1412,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "そこ (soko) — there, near the listener",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **そこ** — there, near the listener]"
@@ -1421,7 +1421,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "そと (soto) — outside",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **そと** — outside]"
@@ -1430,7 +1430,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "これ (kore) — this, near you",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **これ** — this, near you]"
@@ -1439,7 +1439,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "それ (sore) — that, near the listener",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **それ** — that, near the listener]"
@@ -1448,7 +1448,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "くるま (kuruma) — a car",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **くるま** — a car]"

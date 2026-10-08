@@ -182,7 +182,7 @@
               "kind": "prompt",
               "action": "COVER",
               "instruction": "write 吗 and 呢 (ne) side by side and compare the left halves",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COVER: write 吗 and 呢 side by side and compare the left halves]"
@@ -587,7 +587,7 @@
               "kind": "prompt",
               "action": "COVER",
               "instruction": "write it again from memory",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COVER: write it again from memory]"

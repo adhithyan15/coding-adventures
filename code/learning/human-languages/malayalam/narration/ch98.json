@@ -278,7 +278,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at കളി inside കളിക്കുക (kaḷikkuka)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **കളി** inside **കളിക്കുക**]"

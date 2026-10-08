@@ -164,7 +164,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at उ (u) and say how many times the pen leaves the page",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at उ and say how many times the pen leaves the page]"
@@ -450,7 +450,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at उ (u) and ऊ (ū) side by side, and name the one difference",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at उ and ऊ side by side, and name the one difference]"
@@ -775,7 +775,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at आ and ओ side by side, and name the one mark that separates them",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at आ and ओ side by side, and name the one mark that separates them]"

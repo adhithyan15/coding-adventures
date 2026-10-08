@@ -134,7 +134,7 @@ And what made it readable? (Everything in it had already been paid for, one chap
 Lesson 4 of 5.
 (म र न अ प ह य त ् ा ी) (pahlī gyārah) — eleven, and three kinds of thing.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: eight letters, one killer, two hangers until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: eight letters, one killer, two hangers and Guided Practice until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 3 seconds]
@@ -152,12 +152,9 @@ kind: hangers. pieces: ा ā, ी ī — replace the built-in a.
 Guided Practice.
 [pause 1 second]
 The three marks, cold, and what each does to the letter it touches.
-[your turn — read: ् — say what it takes away]
-[pause 8 seconds for the answer]
-[your turn — read: ा — say what it replaces, and with what]
-[pause 8 seconds for the answer]
-[your turn — read: ी — the same, and say how it differs from the one above]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: ् — say what it takes away]
+[once you have stopped driving — read: ा — say what it replaces, and with what]
+[once you have stopped driving — read: ी — the same, and say how it differs from the one above]
 All three depend on one fact: a bare consonant is not silent. It already has a vowel, and these either remove it or swap it.
 
 Wrap-up Recall.
@@ -185,13 +182,10 @@ Three of the five are retroflex, and that is the group worth seeing together: Hi
 
 Guided Practice: a vowel written like a letter, and a dot.
 [pause 1 second]
-[your turn — read: ऋ — inherited from Sanskrit, a vowel that behaves like a consonant. Hindi says it ri]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: ऋ — inherited from Sanskrit, a vowel that behaves like a consonant. Hindi says it ri]
 [once you have stopped driving — write: ऋ once, from memory]
-[your turn — read: औ and ौ — the same vowel standing alone, then hanging off a consonant]
-[pause 8 seconds for the answer]
-[your turn — read: ो — the hanger for o]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: औ and ौ — the same vowel standing alone, then hanging off a consonant]
+[once you have stopped driving — read: ो — the hanger for o]
 औ against ौ is the pairing the whole system runs on: a vowel gets a full-size letter when nothing precedes it and a hanging sign when a consonant does.
 
 Wrap-up Recall.

@@ -59,7 +59,7 @@ writes it.
 [PAUSE 1s]
 - [YOU SAY: *shinbun*]
 - [YOU SAY: *shinbun*, clapping four beats]
-- [YOU RECALL: point to the sign in **しんぶん** that carries the two-stroke mark, and name the sign under it]
+- [YOU RECALL: say which sign in **しんぶん** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-SHINBUN] -->

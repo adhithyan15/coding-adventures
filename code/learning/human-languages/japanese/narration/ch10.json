@@ -197,7 +197,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "お once with the model visible",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: **お** once with the model visible]"
@@ -206,7 +206,7 @@
               "kind": "prompt",
               "action": "FIND",
               "instruction": "point to the first sign in おねがいします",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU FIND: point to the first sign in **おねがいします**]"
@@ -680,7 +680,7 @@
               "kind": "prompt",
               "action": "TAP",
               "instruction": "yu | hold | ku | ri",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU TAP: *yu | hold | ku | ri*]"
@@ -810,7 +810,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "ゆ (yu) once",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: **ゆ** once]"
@@ -819,7 +819,7 @@
               "kind": "prompt",
               "action": "FIND",
               "instruction": "point to ゆ at the start of ゆっくり (yukkuri)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU FIND: point to **ゆ** at the start of **ゆっくり**]"

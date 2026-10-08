@@ -57,7 +57,7 @@ is new, and the next lesson writes it.
 [PAUSE 1s]
 - [YOU SAY: *ike*]
 - [YOU SAY: *ike*, clapping two beats]
-- [YOU RECALL: point to the sign in **いけ** you can already write, and the one you cannot]
+- [YOU RECALL: name the sign in **いけ** you can already write, and the one you cannot]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-IKE] -->

@@ -530,3 +530,68 @@ export function writingRecallCues(markdown: string): string[] {
 export function drivableWritingInstructions(markdown: string): string[] {
   return [...bareWritingImperatives(markdown), ...writingRecallCues(markdown)];
 }
+
+// ---------------------------------------------------------------------------
+// Pointing at the page, inside a recall cue
+// ---------------------------------------------------------------------------
+//
+// Writing is not the only thing a recall cue can ask of a hand. Twenty-four
+// drivable Japanese recalls and one Hindi one asked the learner to put a
+// finger on a printed sign:
+//
+//     [YOU RECALL: point to the sign in **でんわ** that carries the two-stroke
+//       mark, and name the sign under it]
+//     [YOU RECALL: say *mulāqāt*, then read **प्रणाम** and point to its **ण**]
+//
+// POINT is one of the narration's `MANUAL_CUE_ACTIONS`, so `[YOU POINT: …]` is
+// deferred; inside RECALL the same request was read to a driver as an
+// ordinary turn. The fix is the one the writing recalls got — say the same
+// thing in a form the ear can do ("say which sign in **でんわ** carries the
+// two-stroke mark, and name the sign under it") — and this is the check that
+// keeps it fixed.
+//
+// It fires on "point to" or "point at" where a recall cue puts a step: at the
+// start of the content, or straight after a step link (", ", ", and ", "; ",
+// " and ", " then ", each optionally followed by "then "). Exactly "point":
+// "points at something near" and "its old pointing stem" describe a word, and
+// "point out" is a gloss ("the French for to point out"). A gloss of "to point
+// at" is not caught either, because "to " is not a step link. Quotations are
+// blanked first, as for the writing chain, so the material being recalled
+// cannot fire it.
+//
+// Deliberately out of scope: "read". A drivable recall that says "then read
+// **आँख**" asks for eyes too, and there are about 770 of them, mostly the
+// Hindi, Marathi and Tamil script-recognition spacing. That is a debt for the
+// driving edition to decide on as a whole (they may want the cue verb READ,
+// which the narration now defers), not something to fold into a check that
+// would then have to carry a ledger of hundreds.
+//
+// Linear: whitespace runs are collapsed in one pass and quotations blanked
+// with the opener-excluding patterns of `withoutQuotations`. The pattern is a
+// choice of fixed literals, an optional fixed literal and two fixed words, so
+// each start position does a bounded amount of work and no quantifier can
+// match the same text two ways.
+
+const POINTING_STEP = /(?:^|, (?:and )?|; | and | then )(?:then )?point (?:to|at)\b/i;
+
+/** Does the content of a recall cue ask the learner to point at the page? */
+export function recallCueAsksToPoint(content: string): boolean {
+  const text = withoutQuotations(content.replace(/\s+/g, " ").trim());
+  return POINTING_STEP.test(text);
+}
+
+/**
+ * Every `[YOU RECALL: …]` cue in `markdown` that a narrator would read as a
+ * spoken instruction to point at the page, quoted as authored.
+ */
+export function pointingRecallCues(markdown: string): string[] {
+  const cues: string[] = [];
+  for (const part of narratedParts(markdown)) {
+    if (!("cue" in part) || part.cue.kind !== "prompt") continue;
+    if (!INSTRUCTION_CUE_ACTIONS.has(part.cue.action)) continue;
+    const raw = parseDeliveryCue(part.cue.source.slice(1, -1));
+    if (raw?.kind !== "prompt") continue;
+    if (recallCueAsksToPoint(raw.content)) cues.push(part.cue.source);
+  }
+  return cues;
+}

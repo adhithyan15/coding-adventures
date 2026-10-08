@@ -294,7 +294,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at था (thā) and name the character carrying its first sound (थ), the one you met in हाथ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **था** and name the character carrying its first sound (**थ**), the one you met in **हाथ**]"

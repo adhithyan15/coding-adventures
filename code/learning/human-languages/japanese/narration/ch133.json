@@ -4,7 +4,7 @@
   "chapter": 133,
   "title": "The Last Four Hiragana: Ki, Ke, Nu and He",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e8bdd782fe438fca",
+  "sourceHash": "fnv1a64:6c9143049afdd8f1",
   "lessons": [
     {
       "id": "JA-C133-eki",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc40182c727f06c4",
+      "sourceHash": "fnv1a64:8149b7713d27c658",
       "notice": null,
       "blocks": [
         {
@@ -104,11 +104,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in えき (eki) you can already write, and the one you cannot",
+              "instruction": "name the sign in えき (eki) you can already write, and the one you cannot",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **えき** you can already write, and the one you cannot]"
+              "source": "[YOU RECALL: name the sign in **えき** you can already write, and the one you cannot]"
             }
           ]
         },
@@ -501,7 +501,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:153ba02c3e9eef7f",
+      "sourceHash": "fnv1a64:def016fcd66a9bff",
       "notice": null,
       "blocks": [
         {
@@ -595,11 +595,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in いけ (ike) you can already write, and the one you cannot",
+              "instruction": "name the sign in いけ (ike) you can already write, and the one you cannot",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **いけ** you can already write, and the one you cannot]"
+              "source": "[YOU RECALL: name the sign in **いけ** you can already write, and the one you cannot]"
             }
           ]
         },
@@ -990,7 +990,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c78ca1f544945a39",
+      "sourceHash": "fnv1a64:6d45e26bdfdc2ddd",
       "notice": null,
       "blocks": [
         {
@@ -1084,11 +1084,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in いぬ (inu) you cannot write yet, and say which sign it looks like",
+              "instruction": "name the sign in いぬ (inu) you cannot write yet, and say which sign it looks like",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **いぬ** you cannot write yet, and say which sign it looks like]"
+              "source": "[YOU RECALL: name the sign in **いぬ** you cannot write yet, and say which sign it looks like]"
             }
           ]
         },
@@ -1474,7 +1474,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1b47f8651bb0fb6",
+      "sourceHash": "fnv1a64:97c3203ac5b2d2a2",
       "notice": null,
       "blocks": [
         {
@@ -1559,11 +1559,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in へや (heya) you can already write, and the one you cannot",
+              "instruction": "name the sign in へや (heya) you can already write, and the one you cannot",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **へや** you can already write, and the one you cannot]"
+              "source": "[YOU RECALL: name the sign in **へや** you can already write, and the one you cannot]"
             }
           ]
         },
@@ -1855,7 +1855,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "えき (eki) — a station",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **えき** — a station]"
@@ -1864,7 +1864,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "きのう (kinō) — yesterday",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **きのう** — yesterday]"
@@ -1873,7 +1873,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "いけ (ike) — a pond",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **いけ** — a pond]"
@@ -1882,7 +1882,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "けさ (kesa) — this morning",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **けさ** — this morning]"
@@ -1891,7 +1891,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "いぬ (inu) — a dog",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **いぬ** — a dog]"
@@ -1900,7 +1900,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ぬの (nuno) — cloth",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ぬの** — cloth]"
@@ -1909,7 +1909,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "へや (heya) — a room",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **へや** — a room]"

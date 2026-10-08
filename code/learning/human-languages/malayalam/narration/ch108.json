@@ -155,7 +155,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two closings, and say which one a Malayalam newspaper prints",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two closings, and say which one a Malayalam newspaper prints]"

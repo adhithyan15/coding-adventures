@@ -112,7 +112,7 @@
               "kind": "prompt",
               "action": "COVER",
               "instruction": "write it again from memory",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COVER: write it again from memory]"

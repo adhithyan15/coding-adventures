@@ -1166,7 +1166,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at औ (au) and say why it is a whole letter rather than a sign",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **औ** and say why it is a whole letter rather than a sign]"
@@ -1175,7 +1175,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at । and say what a modern page is likely to print instead",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **।** and say what a modern page is likely to print instead]"

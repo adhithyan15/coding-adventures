@@ -303,7 +303,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ക (ka) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ക in the ones that have it]"
@@ -325,7 +325,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ക (ka) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ക once more]"
@@ -472,7 +472,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ര (ra) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ര in the ones that have it]"
@@ -494,7 +494,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ര (ra) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ര once more]"

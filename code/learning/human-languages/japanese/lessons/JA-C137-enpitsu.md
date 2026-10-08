@@ -59,7 +59,7 @@ lesson writes it.
 [PAUSE 1s]
 - [YOU SAY: *enpitsu*]
 - [YOU SAY: *enpitsu*, clapping four beats]
-- [YOU RECALL: point to the sign in **えんぴつ** that carries the small circle, and name the sign under it]
+- [YOU RECALL: say which sign in **えんぴつ** carries the small circle, and name the sign under it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-ENPITSU] -->

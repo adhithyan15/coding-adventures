@@ -162,7 +162,7 @@
               "kind": "prompt",
               "action": "COVER",
               "instruction": "write it again and count the bands, not the strokes",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COVER: write it again and count the bands, not the strokes]"
@@ -368,7 +368,7 @@
               "kind": "prompt",
               "action": "COVER",
               "instruction": "write 对 and 欢 (huān) side by side and check the left halves match",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COVER: write 对 and 欢 side by side and check the left halves match]"

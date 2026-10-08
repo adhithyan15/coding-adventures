@@ -131,7 +131,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "کان and ناک — same three letters, and say which is which",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: کان and ناک — same three letters, and say which is which]"
@@ -149,7 +149,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "کالا نیلا لال — name the letters of each before saying it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: کالا نیلا لال — name the letters of each before saying it]"

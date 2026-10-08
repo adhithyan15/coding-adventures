@@ -420,7 +420,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ம — then ற் — then ற — then து",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ம** — then **ற்** — then **ற** — then **து**]"
@@ -429,7 +429,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "மற்றது (maṟṟadu), then எப்போது, then சட்டை — three doublings, three letters",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **மற்றது**, then **எப்போது**, then **சட்டை** — three doublings, three letters]"

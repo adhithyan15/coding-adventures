@@ -110,7 +110,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "بودن (budan) from the right edge, in its two clumps",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **بودن** from the right edge, in its two clumps]"
@@ -303,7 +303,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "رفتن (raftan), then رو",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **رفتن**, then **رو**]"
@@ -466,7 +466,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "آمدن (âmadan), starting at the hatted alef",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **آمدن**, starting at the hatted alef]"
@@ -632,7 +632,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "گ, then گو, then گفتن (goftan)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **گ**, then **گو**, then **گفتن**]"

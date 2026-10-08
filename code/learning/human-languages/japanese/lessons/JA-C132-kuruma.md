@@ -58,7 +58,7 @@ the bottom, and the next lesson writes it.
 [PAUSE 1s]
 - [YOU SAY: *kuruma*]
 - [YOU SAY: *kuruma*, clapping three beats]
-- [YOU RECALL: point to the sign in **くるま** you cannot write yet, and say which sign it looks like]
+- [YOU RECALL: name the sign in **くるま** you cannot write yet, and say which sign it looks like]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-KURUMA] -->

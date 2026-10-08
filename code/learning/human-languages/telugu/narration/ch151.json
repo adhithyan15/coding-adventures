@@ -102,7 +102,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ఛాయ (chāya) — shade or shadow",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ఛాయ** — shade or shadow]"
@@ -111,7 +111,7 @@
               "kind": "prompt",
               "action": "FIND",
               "instruction": "the familiar య at the end",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU FIND: the familiar **య** at the end]"
@@ -272,7 +272,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "ఛ (cha) twice without tracing",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: **ఛ** twice without tracing]"
@@ -290,7 +290,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ఛాయ (chāya)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ఛాయ**]"

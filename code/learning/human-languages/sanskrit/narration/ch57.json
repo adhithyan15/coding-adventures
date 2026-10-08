@@ -127,7 +127,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "शक्नोति (śaknoti), and name the noun English borrowed from its root",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **शक्नोति**, and name the noun English borrowed from its root]"
@@ -274,7 +274,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "इच्छति (icchati), then say what it means",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **इच्छति**, then say what it means]"

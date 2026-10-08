@@ -394,7 +394,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "क्रिकेट (krikeṭ), and find the ि sitting to the left of the stack",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: क्रिकेट, and find the ि sitting to the left of the stack]"

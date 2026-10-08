@@ -117,7 +117,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find the mark that ends it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find the mark that ends it]"

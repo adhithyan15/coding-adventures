@@ -510,7 +510,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two words, and find మ (ma) in each",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two words, and find మ in each]"
@@ -532,7 +532,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at the greeting again and say which syllable మ (ma) carries",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at the greeting again and say which syllable మ carries]"
@@ -667,7 +667,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at the word below, and find ధ (dha) at its front and మ (ma) further in",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at the word below, and find ధ at its front and మ further in]"
@@ -689,7 +689,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at the two characters side by side and say which is which",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at the two characters side by side and say which is which]"
@@ -824,7 +824,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find క (ka) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find క in the ones that have it]"
@@ -846,7 +846,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find క (ka) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find క once more]"
@@ -1158,7 +1158,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at the word below and put a finger on అ at its front",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at the word below and put a finger on అ at its front]"
@@ -1319,7 +1319,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ◌ా (ā) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ◌ా in the ones that have it]"
@@ -1341,7 +1341,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ా (ā) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ా once more]"
@@ -1835,7 +1835,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ◌ే (ē) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ◌ే in the ones that have it]"
@@ -1857,7 +1857,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ే (ē) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ే once more]"

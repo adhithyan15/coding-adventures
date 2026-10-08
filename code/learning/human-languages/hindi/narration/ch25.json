@@ -281,7 +281,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words and find ग (ga) in each one",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words and find ग in each one]"

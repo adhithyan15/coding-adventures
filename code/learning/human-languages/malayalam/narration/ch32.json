@@ -328,7 +328,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at the three on the page — പോകുന്നു, പോയി, പോകും",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at the three on the page — **പോകുന്നു**, **പോയി**, **പോകും**]"

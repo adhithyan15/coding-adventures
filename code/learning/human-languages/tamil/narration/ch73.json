@@ -379,7 +379,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "இ — then ன் — then று",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **இ** — then **ன்** — then **று**]"
@@ -397,7 +397,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "இன்று (iṉṟu), then ஓடு — two words that open on a vowel",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **இன்று**, then **ஓடு** — two words that open on a vowel]"

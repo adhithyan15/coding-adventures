@@ -435,7 +435,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "எ — then ப் — then போ — then து",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **எ** — then **ப்** — then **போ** — then **து**]"
@@ -444,7 +444,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "எப்போது (eppōdu), then அப்போது (appōdu)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **எப்போது**, then **அப்போது**]"

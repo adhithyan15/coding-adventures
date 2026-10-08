@@ -102,7 +102,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ఝరి (jhari) — a stream",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ఝరి** — a stream]"
@@ -111,7 +111,7 @@
               "kind": "prompt",
               "action": "FIND",
               "instruction": "the familiar రి at the end",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU FIND: the familiar **రి** at the end]"
@@ -279,7 +279,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "ఝ (jha) twice without tracing",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: **ఝ** twice without tracing]"
@@ -297,7 +297,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ఝరి (jhari)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ఝరి**]"
@@ -418,7 +418,7 @@
               "kind": "prompt",
               "action": "CIRCLE",
               "instruction": "the first base letter ఝ (jha)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU CIRCLE: the first base letter **ఝ**]"

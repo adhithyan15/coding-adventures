@@ -120,7 +120,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -236,7 +236,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -352,7 +352,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -468,7 +468,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -590,7 +590,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -710,7 +710,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -830,7 +830,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -946,7 +946,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -1058,7 +1058,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -1174,7 +1174,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -1294,7 +1294,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"

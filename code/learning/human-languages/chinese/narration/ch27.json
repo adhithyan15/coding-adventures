@@ -187,7 +187,7 @@
               "kind": "prompt",
               "action": "COVER",
               "instruction": "write 岁 (suì) from memory",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COVER: write 岁 from memory]"
@@ -594,7 +594,7 @@
               "kind": "prompt",
               "action": "COVER",
               "instruction": "write 和 (hé) from memory",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COVER: write 和 from memory]"

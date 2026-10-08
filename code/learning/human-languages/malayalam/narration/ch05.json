@@ -286,7 +286,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ഞ (ña) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ഞ in the ones that have it]"
@@ -308,7 +308,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ഞ (ña) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ഞ once more]"
@@ -455,7 +455,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ൻ in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ൻ in the ones that have it]"
@@ -477,7 +477,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ൻ once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ൻ once more]"
@@ -614,7 +614,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find യ (ya) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find യ in the ones that have it]"
@@ -636,7 +636,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find യ (ya) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find യ once more]"
@@ -1010,7 +1010,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ◌ൊ in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ◌ൊ in the ones that have it]"
@@ -1032,7 +1032,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ൊ once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ൊ once more]"
@@ -1167,7 +1167,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ച (ca) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ച in the ones that have it]"
@@ -1189,7 +1189,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ച (ca) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ച once more]"
@@ -1433,7 +1433,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ൽ (l) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ൽ in the ones that have it]"
@@ -1455,7 +1455,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ൽ (l) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ൽ once more]"
@@ -1833,7 +1833,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ഹ in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ഹ in the ones that have it]"
@@ -1855,7 +1855,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ഹ once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ഹ once more]"
@@ -2151,7 +2151,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ജ (ja) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ജ in the ones that have it]"
@@ -2173,7 +2173,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ജ (ja) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ജ once more]"
@@ -2312,7 +2312,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ല (la) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ല in the ones that have it]"
@@ -2334,7 +2334,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ല (la) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ല once more]"
@@ -2559,7 +2559,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at each letter, then find it in the word beside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at each letter, then find it in the word beside it]"

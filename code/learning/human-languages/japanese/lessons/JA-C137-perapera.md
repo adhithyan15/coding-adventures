@@ -61,7 +61,7 @@ writes it.
 [PAUSE 1s]
 - [YOU SAY: *perapera*]
 - [YOU SAY: *perapera*, clapping four beats]
-- [YOU RECALL: point to the sign in **ぺらぺら** that carries the small circle, and name the sign under it]
+- [YOU RECALL: say which sign in **ぺらぺら** carries the small circle, and name the sign under it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-PERAPERA] -->

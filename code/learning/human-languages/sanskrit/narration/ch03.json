@@ -354,7 +354,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ◌ा (ā) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ◌ा in it]"
@@ -376,7 +376,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ा (ā) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ा once more]"
@@ -794,7 +794,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find म (ma) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find म in it]"
@@ -816,7 +816,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find म (ma) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find म once more]"
@@ -1975,7 +1975,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ◌ु (u) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ◌ु in it]"
@@ -1997,7 +1997,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ु (u) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ु once more]"

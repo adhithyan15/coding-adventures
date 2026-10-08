@@ -19,8 +19,7 @@ Now the part no earlier chapter has had to say: numbers run left to right, insid
 
 Guided Practice.
 [once you have stopped driving — write: ۰ — a dot; ۱ — a stroke]
-[your turn — read: ۱۰ — dah, ten, left to right]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: ۱۰ — dah, ten, left to right]
 
 Wrap-up Recall.
 Sources: Unicode Arabic chart; Omniglot, Numbers in Persian.
@@ -43,8 +42,7 @@ Script — the shapes.
 
 Guided Practice.
 [once you have stopped driving — write: ۲, then ۳ beside it]
-[your turn — read: ۱۲, ۱۳, ۲۳, left to right]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: ۱۲, ۱۳, ۲۳, left to right]
 
 Wrap-up Recall.
 Sources: Unicode Arabic chart; Omniglot, Numbers in Persian.
@@ -69,8 +67,7 @@ If you drill three of the ten harder than the rest, drill these.
 
 Guided Practice.
 [once you have stopped driving — write: ۴, ۵, ۶, saying chahâr, panj, shesh]
-[your turn — read: ۱۴, ۱۵, ۱۶, left to right]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: ۱۴, ۱۵, ۱۶, left to right]
 
 Wrap-up Recall.
 Sources: Unicode Arabic chart; Omniglot, Numbers in Persian.

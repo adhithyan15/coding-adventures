@@ -295,7 +295,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at the number below and find ఐ (ai) at its front",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at the number below and find ఐ at its front]"
@@ -460,7 +460,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two, and say which one holds its vowel and which one does not",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two, and say which one holds its vowel and which one does not]"
@@ -482,7 +482,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ూ (ū) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ూ once more]"
@@ -786,7 +786,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at the number below and find the consonant carrying ొ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at the number below and find the consonant carrying ొ]"
@@ -817,7 +817,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at సంతోషం and find the long one riding its consonant",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at సంతోషం and find the long one riding its consonant]"
@@ -970,7 +970,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two numbers and say which one carries the letter ఒ and which the sign ◌ొ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two numbers and say which one carries the letter ఒ and which the sign ◌ొ]"
@@ -1151,7 +1151,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two words and say which opens on అ and which on ఆ (ā)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two words and say which opens on అ and which on ఆ]"

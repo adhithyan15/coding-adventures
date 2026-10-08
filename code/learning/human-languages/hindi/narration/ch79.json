@@ -115,7 +115,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "पैसा (paisā), and find the ै it shares with कैसे",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: पैसा, and find the ै it shares with कैसे]"

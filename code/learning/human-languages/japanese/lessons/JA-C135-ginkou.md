@@ -59,7 +59,7 @@ becomes *gi*. The next lesson writes it.
 [PAUSE 1s]
 - [YOU SAY: *ginkō*]
 - [YOU SAY: *ginkō*, clapping four beats]
-- [YOU RECALL: point to the sign in **ぎんこう** that carries the two-stroke mark, and name the sign under it]
+- [YOU RECALL: say which sign in **ぎんこう** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-GINKOU] -->

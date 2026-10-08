@@ -113,20 +113,144 @@ export const PROMPT_RESPONSE_SECONDS = 8;
  *
  * `[YOU SAY: …]` and `[YOU ANSWER: …]` are things a driver can do. `[YOU WRITE: …]`
  * and `[YOU TRACE: …]` are not, so the narration says so out loud instead of asking
- * a driver to pick up a pen. Everything not listed here is treated as speakable,
- * which is the safe default: the corpus's long tail (`BUILD`, `CONTRAST`, `SEGMENT`,
- * `PARAPHRASE`, …) is all sayable, and a new verb that is genuinely manual will be
- * caught by the lesson's `type: writing` or its script block long before it gets
- * here.
+ * a driver to pick up a pen:
+ *
+ *     authored                     narrated
+ *     ---------------------------  -----------------------------------------------
+ *     [YOU SAY: hola]              [your turn — say: hola]  [pause 8 seconds …]
+ *     [YOU COPY: **ا** once]       [once you have stopped driving — copy: ا once]
+ *
+ * This set used to stop at six verbs, on the theory that a new verb that was
+ * genuinely manual would be caught by the lesson's `type: writing` or its script
+ * block long before it got here. It was not. `[YOU COPY: …]` sat in three drivable
+ * lessons (MW-C01-raam-raam-saa, FA-C01-practice, TA-C01-practice) and
+ * `[YOU CIRCLE: …]` in a fourth (TE-R152-jhari-recall), none of them a writing
+ * lesson, and the narration read all four to a driver as an ordinary turn. Forty
+ * drivable `[YOU LOOK: at **था** and put your finger on …]` cues and about a hundred
+ * and thirty drivable `[YOU READ: **でぐち** …]` cues did the same to the eyes. So
+ * the default is no longer trusted on its own: {@link SPOKEN_CUE_ACTIONS} lists the
+ * verbs that are NOT here, and a corpus test (`cue-action-classification.test.ts`)
+ * fails on any head verb in neither set. The next new verb is a decision somebody
+ * makes, not a default nobody noticed.
+ *
+ * Each verb, and what it needs besides a voice:
+ *
+ *   verb       needs  why
+ *   ---------  -----  --------------------------------------------------------------
+ *   WRITE      hand   a pen on paper — the case this set was made for
+ *   TRACE      hand   a finger or pen following a letter's outline
+ *   COPY       hand   writing again from a visible model ("**வ** once beside the
+ *                     visible model"); copying a SOUND is authored as SAY, not COPY
+ *   CIRCLE     hand   a pen ring round a letter on the page
+ *   COVER      hand   a hand over the page before writing from memory — every COVER
+ *                     in the corpus is "cover, then write"
+ *   DRAW       hand   no cue uses these four yet. They are the pen verbs the prose
+ *   UNDERLINE  hand   detector in tests/drivable-writing-imperatives.ts already
+ *   MARK       hand   treats as writing, or their nearest siblings, so the first
+ *   TICK       hand   cue to use one is deferred rather than read out
+ *   TAP        hand   tapping out beats with a finger ("*yu | hold | ku | ri*") —
+ *                     the same family as GESTURE
+ *   GESTURE    hand   a movement that carries the meaning
+ *   LABEL      hand   writing a label against something on the page
+ *   FEEL       hand   a hand at the throat or the mouth, feeling the sound
+ *   TEST       hand   the corpus's one TEST is FEEL by another name: "hand at the
+ *                     mouth — **chār** still, **chhe** breathed"
+ *   POINT      eye    a finger on a printed letter
+ *   LOOK       eye    looking at a printed word ("at ಆರು and find the ರ")
+ *   READ       eye    reading printed script, which is the eyes' job whatever the
+ *                     mouth does next — READ ALOUD included (see below)
+ *   FIND       eye    finding a sign inside a printed word
+ *   CHECK      eye    checking a written shape ("compact left side; open right
+ *                     side") — the corpus's one CHECK is a handwriting check
+ *   STACK      eye    placing a component on the page ("point below 五, where 口
+ *                     will go")
+ *
+ * A cue action can be several words — `READ ALOUD`, `COVER AND WRITE`,
+ * `WRITE FROM THE HEARD OR ROMANIZED CUE` — and {@link isManualCueAction} counts the
+ * cue as manual when ANY of its words is listed here, so a `[YOU SAY AND WRITE: …]`
+ * cannot slip through on the strength of its first word.
  */
 export const MANUAL_CUE_ACTIONS: ReadonlySet<string> = new Set([
   "WRITE",
   "TRACE",
-  "POINT",
+  "COPY",
+  "CIRCLE",
+  "COVER",
+  "DRAW",
+  "UNDERLINE",
+  "MARK",
+  "TICK",
+  "TAP",
   "GESTURE",
   "LABEL",
   "FEEL",
+  "TEST",
+  "POINT",
+  "LOOK",
+  "READ",
+  "FIND",
+  "CHECK",
+  "STACK",
 ]);
+
+/**
+ * Cue verbs a driver can do with the voice and the ear alone.
+ *
+ * The narration never consults this set — anything outside {@link MANUAL_CUE_ACTIONS}
+ * is already spoken — so it exists for the corpus test that demands every cue's head
+ * verb (the first word of its action) be classified one way or the other. A verb is
+ * here only when its uses in the corpus can be done by ear: `HEAR` and `LISTEN` are
+ * the ears; `NOTICE`, `CONTRAST`, `SPLIT` and their siblings ask for a thought said
+ * aloud; `COUNT` counts beats and endings as well as dots, and its dot-counting cues
+ * sit in lessons that already need eyes.
+ *
+ * Words that only ever follow a head verb (`ALOUD`, `AND`, `THE`, `BY`, …) are not
+ * listed. They are not verbs, and {@link isManualCueAction} only asks whether they
+ * are manual, which they are not.
+ */
+export const SPOKEN_CUE_ACTIONS: ReadonlySet<string> = new Set([
+  // Speaking, asking and answering.
+  "SAY", "ANSWER", "ASK", "REPLY", "REQUEST", "GREET", "OFFER", "GRANT", "CLOSE",
+  "PUSH", "ADMIT", "HEDGE", "QUALIFY", "REJECT", "STATE", "EXPLAIN", "NAME", "SPELL",
+  "LIST", "PRODUCE", "TRANSLATE", "PARAPHRASE", "NOTE", "REPAIR", "USE", "KEEP",
+  "ADD", "FRAME", "JOIN", "COMBINE", "SWAP", "SWITCH", "TURN", "FLIP", "CONVERT",
+  // Sounds made with the mouth alone.
+  "HUM", "NASALIZE",
+  // Remembering.
+  "RECALL", "RETRIEVE", "RETURN",
+  // Listening.
+  "HEAR", "LISTEN",
+  // Working on words in the head, then saying the result.
+  "BUILD", "REBUILD", "RUN", "SEGMENT", "SPLIT", "STRIP", "SEPARATE", "DERIVE",
+  "APPLY", "PAIR", "MATCH", "CONNECT", "CONTRAST", "COMPARE", "CLASSIFY", "SORT",
+  "CHOOSE", "DECIDE", "IDENTIFY", "NOTICE", "COUNT",
+]);
+
+/**
+ * True when a cue action needs a hand or an eye: when ANY word of it is one of the
+ * {@link MANUAL_CUE_ACTIONS}.
+ *
+ *     WRITE             manual
+ *     READ ALOUD        manual  (READ)
+ *     COVER AND BUILD   manual  (COVER)
+ *     SAY WHY           spoken
+ *     CHOOSE BY CONTEXT spoken
+ *
+ * Before this was a function the narration looked only at the first word, which for
+ * every action in today's corpus gives the same answer. Reading every word costs
+ * nothing and means a hand-on verb later in a compound action is still heard.
+ *
+ * `parseDeliveryCue` always hands over upper-case words joined by one space, but this
+ * is exported, and a caller passing `"write"` or `"SAY\tWRITE"` must not be told
+ * "spoken" — that is the unsafe answer for a driver. So the action is upper-cased and
+ * split on any whitespace run first (one linear pass each).
+ */
+export function isManualCueAction(action: string): boolean {
+  return action
+    .toUpperCase()
+    .split(/\s+/)
+    .some((word) => MANUAL_CUE_ACTIONS.has(word));
+}
 
 /** A silence the lesson asked for. `perItem` marks `[PAUSE 1s each]` over a list. */
 export interface NarrationPause {
@@ -353,7 +477,7 @@ export function parseNarrationCue(inner: string): NarrationCue | null {
         kind: "prompt",
         action: cue.action,
         instruction: speakableInline(cue.content),
-        spoken: !MANUAL_CUE_ACTIONS.has(cue.action.split(" ")[0] ?? cue.action),
+        spoken: !isManualCueAction(cue.action),
         scored: false,
         responseSeconds: PROMPT_RESPONSE_SECONDS,
         source,

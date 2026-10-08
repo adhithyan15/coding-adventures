@@ -58,7 +58,7 @@ voicing mark at its upper right, so *te* becomes *de*. The next lesson writes it
 [PAUSE 1s]
 - [YOU SAY: *denwa*]
 - [YOU SAY: *denwa*, clapping three beats]
-- [YOU RECALL: point to the sign in **でんわ** that carries the two-stroke mark, and name the sign under it]
+- [YOU RECALL: say which sign in **でんわ** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-DENWA] -->

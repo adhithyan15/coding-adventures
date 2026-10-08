@@ -350,7 +350,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two, and say which one begins with the independent vowel",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two, and say which one begins with the independent vowel]"
@@ -372,7 +372,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ಓ (ō) and ೋ side by side, and say which one stands alone",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ಓ and ೋ side by side, and say which one stands alone]"

@@ -596,9 +596,10 @@
         "waitUntilStopped": [
           "Script: the three that are all n",
           "Script: two l-letters and two r-letters",
-          "Script: five that stand alone"
+          "Script: five that stand alone",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: the three that are all n, Script: two l-letters and two r-letters and Script: five that stand alone until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: the three that are all n, Script: two l-letters and two r-letters, Script: five that stand alone and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -702,7 +703,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ந, ண, ன — and say where the tongue goes for each",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ந**, **ண**, **ன** — and say where the tongue goes for each]"
@@ -711,7 +712,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ல, then ழ — and say which one names the language",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ல**, then **ழ** — and say which one names the language]"
@@ -720,7 +721,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ர, then ற — and say which is the harder one",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ர**, then **ற** — and say which is the harder one]"
@@ -729,7 +730,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "வ, ப, ம, க, ச — five in a row, no hesitating",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **வ**, **ப**, **ம**, **க**, **ச** — five in a row, no hesitating]"
@@ -886,7 +887,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஆ and ா — and say what the difference between them is",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஆ** and **ா** — and say what the difference between them is]"
@@ -895,7 +896,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "உ and ு — the same question",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **உ** and **ு** — the same question]"
@@ -904,7 +905,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ி, ே, ோ — name each",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ி**, **ே**, **ோ** — name each]"
@@ -913,7 +914,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ட, த, ய — and say the vowel inside each",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ட**, **த**, **ய** — and say the vowel inside each]"
@@ -980,9 +981,10 @@
         ],
         "waitUntilStopped": [
           "Script: the signs that sit on the wrong side",
-          "Script: த and ழ"
+          "Script: த and ழ",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: the signs that sit on the wrong side and Script: த and ழ until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: the signs that sit on the wrong side, Script: த and ழ and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -1081,7 +1083,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "இல்லை, சரி, என் — three in a row",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **இல்லை**, **சரி**, **என்** — three in a row]"
@@ -1090,7 +1092,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "பெயர், then எப்படி",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **பெயர்**, then **எப்படி**]"
@@ -1099,7 +1101,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "இருக்கிறீர்கள் — slowly, group by group",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **இருக்கிறீர்கள்** — slowly, group by group]"
@@ -1108,7 +1110,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "தமிழ், and name its last letter",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **தமிழ்**, and name its last letter]"
@@ -1164,9 +1166,10 @@
         ],
         "waitUntilStopped": [
           "Script: the square the u-family always formed",
-          "Script: o, standing and hanging"
+          "Script: o, standing and hanging",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: the square the u-family always formed and Script: o, standing and hanging until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: the square the u-family always formed, Script: o, standing and hanging and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -1281,7 +1284,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "உணவு — and point to both u's in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **உணவு** — and point to both u's in it]"
@@ -1290,7 +1293,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஊர், மூன்று, பேசு",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஊர்**, **மூன்று**, **பேசு**]"
@@ -1299,7 +1302,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஒன்று, then போ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஒன்று**, then **போ**]"

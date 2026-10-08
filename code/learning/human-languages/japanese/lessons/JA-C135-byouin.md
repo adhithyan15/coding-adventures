@@ -62,7 +62,7 @@ hair salon.
 [PAUSE 1s]
 - [YOU SAY: *byōin*]
 - [YOU SAY: *byōin*, clapping four beats]
-- [YOU RECALL: point to the sign in **びょういん** that carries the two-stroke mark, and name the sign under it]
+- [YOU RECALL: say which sign in **びょういん** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-BYOUIN] -->

@@ -126,7 +126,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ഇപ്പോൾ, അപ്പോൾ, എപ്പോൾ (eppōḷ) and find the part that is the same in all three",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ഇപ്പോൾ**, **അപ്പോൾ**, **എപ്പോൾ** and find the part that is the same in all three]"
@@ -325,7 +325,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at വരുമ്പോൾ (varumpōḷ) and find the മ്പ you know from ഒമ്പത്",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **വരുമ്പോൾ** and find the **മ്പ** you know from **ഒമ്പത്**]"
@@ -543,7 +543,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at വന്നാൽ (vannāl) and വരുമ്പോൾ (varumpōḷ), and find where the two stop matching",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **വന്നാൽ** and **വരുമ്പോൾ**, and find where the two stop matching]"
@@ -723,7 +723,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at എപ്പോൾ (eppōḷ), വരുമ്പോൾ (varumpōḷ) and വന്നാൽ (vannāl), and say which of the three is asking you something",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **എപ്പോൾ**, **വരുമ്പോൾ** and **വന്നാൽ**, and say which of the three is asking you something]"

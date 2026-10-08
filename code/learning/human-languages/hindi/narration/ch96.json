@@ -332,7 +332,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at आऊँगा (āūṅgā) and put your finger on the letter ऊ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at आऊँगा and put your finger on the letter **ऊ**]"
@@ -854,7 +854,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at आओगे (āoge) and put your finger on the letter ओ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at आओगे and put your finger on the letter **ओ**]"

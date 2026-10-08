@@ -327,7 +327,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find स (sa) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find स in it]"
@@ -349,7 +349,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find स (sa) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find स once more]"
@@ -811,7 +811,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ◌ी (ī) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ◌ी in it]"
@@ -833,7 +833,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ी (ī) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ी once more]"

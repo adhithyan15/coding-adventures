@@ -23,7 +23,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: denwa, clapping three beats]
 [pause 8 seconds for the answer]
-[your turn — recall: point to the sign in でんわ (denwa) that carries the two-stroke mark, and name the sign under it]
+[your turn — recall: say which sign in でんわ (denwa) carries the two-stroke mark, and name the sign under it]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -124,7 +124,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: kaban, clapping three beats]
 [pause 8 seconds for the answer]
-[your turn — recall: point to the sign in かばん (kaban) that carries the two-stroke mark, and name the sign under it]
+[your turn — recall: say which sign in かばん (kaban) carries the two-stroke mark, and name the sign under it]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -223,7 +223,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: taberu, clapping three beats]
 [pause 8 seconds for the answer]
-[your turn — recall: point to the sign in たべる (taberu) that carries the two-stroke mark, and name the sign under it]
+[your turn — recall: say which sign in たべる (taberu) carries the two-stroke mark, and name the sign under it]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -322,7 +322,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: shinbun, clapping four beats]
 [pause 8 seconds for the answer]
-[your turn — recall: point to the sign in しんぶん (shinbun) that carries the two-stroke mark, and name the sign under it]
+[your turn — recall: say which sign in しんぶん (shinbun) carries the two-stroke mark, and name the sign under it]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -384,20 +384,13 @@ Four recalls, then the review.
 Guided Practice — read the seven words.
 [pause 2 seconds after each]
 Read each one aloud and say what it means.
-[your turn — read: でんわ (denwa) — a telephone]
-[pause 8 seconds for the answer]
-[your turn — read: でんしゃ (densha) — a train]
-[pause 8 seconds for the answer]
-[your turn — read: かばん (kaban) — a bag]
-[pause 8 seconds for the answer]
-[your turn — read: ばしょ (basho) — a place]
-[pause 8 seconds for the answer]
-[your turn — read: たべる (taberu) — to eat]
-[pause 8 seconds for the answer]
-[your turn — read: べんきょう (benkyō) — study]
-[pause 8 seconds for the answer]
-[your turn — read: しんぶん (shinbun) — a newspaper]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: でんわ (denwa) — a telephone]
+[once you have stopped driving — read: でんしゃ (densha) — a train]
+[once you have stopped driving — read: かばん (kaban) — a bag]
+[once you have stopped driving — read: ばしょ (basho) — a place]
+[once you have stopped driving — read: たべる (taberu) — to eat]
+[once you have stopped driving — read: べんきょう (benkyō) — study]
+[once you have stopped driving — read: しんぶん (shinbun) — a newspaper]
 Each of these words holds one of the four signs this chapter wrote, and each of those signs is one you already wrote, with the voicing mark added.
 
 Guided Practice — write.

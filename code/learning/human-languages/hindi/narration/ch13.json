@@ -368,7 +368,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find स (sa) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find स in the ones that have it]"
@@ -390,7 +390,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find स (sa) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find स once more]"
@@ -573,7 +573,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find च (ca) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find च in the ones that have it]"
@@ -595,7 +595,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find च (ca) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find च once more]"

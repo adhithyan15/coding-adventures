@@ -83,7 +83,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "خدا (khudā) from the right edge",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **خدا** from the right edge]"
@@ -354,7 +354,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "حافظ (hāfiz)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **حافظ**]"
@@ -474,7 +474,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "spaced Urdu خدا حافظ (khudā hāfiz)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: spaced Urdu **خدا حافظ**]"
@@ -789,7 +789,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "کہانی — name its five letters, and say which face its he wears",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: کہانی — name its five letters, and say which face its he wears]"

@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "malayalam/narration/ch32.txt",
   "json": "malayalam/narration/ch32.json",
-  "textHash": "fnv1a64:22a60d5bd124da2f",
-  "jsonHash": "fnv1a64:babef7993c20af79",
+  "textHash": "fnv1a64:2e5b4f6f56ea155c",
+  "jsonHash": "fnv1a64:860cb66fb4385d0a",
   "findings": []
 }

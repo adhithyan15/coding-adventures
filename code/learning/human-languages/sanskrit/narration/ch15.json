@@ -367,7 +367,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ब (ba) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ब in it]"
@@ -389,7 +389,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ब once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ब once more]"
@@ -760,7 +760,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find उ (u) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find उ in it]"
@@ -782,7 +782,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find उ (u) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find उ once more]"
@@ -1297,7 +1297,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ष (ṣa) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ष in it]"
@@ -1319,7 +1319,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ष (ṣa) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ष once more]"
@@ -1458,7 +1458,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ◌ौ (au) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ◌ौ in it]"
@@ -1480,7 +1480,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ौ (au) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ौ once more]"

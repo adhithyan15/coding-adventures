@@ -649,7 +649,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "राम-राम सा (rām-rām sā)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **राम-राम सा**]"
@@ -667,7 +667,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "राम-राम सा (rām-rām sā) once, keeping the hyphen and space",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: **राम-राम सा** once, keeping the hyphen and space]"

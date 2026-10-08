@@ -165,7 +165,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ಧ (dha) in each",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ಧ in each]"
@@ -187,7 +187,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this book and find ಧ (dha) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this book and find ಧ once more]"
@@ -364,7 +364,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ಭ (bha) in each",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ಭ in each]"
@@ -386,7 +386,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this book and find ಭ (bha) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this book and find ಭ once more]"
@@ -563,7 +563,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ಫ (pha) in each",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ಫ in each]"
@@ -585,7 +585,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this book and find ಫ (pha) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this book and find ಫ once more]"
@@ -742,7 +742,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ಖ (kha) in each",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ಖ in each]"
@@ -764,7 +764,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this book and find ಖ (kha) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this book and find ಖ once more]"
@@ -945,7 +945,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ಘ (gha) in each",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ಘ in each]"
@@ -967,7 +967,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this book and find ಘ (gha) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this book and find ಘ once more]"
@@ -1140,7 +1140,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ಢ (ḍha) in each",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ಢ in each]"
@@ -1162,7 +1162,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this book and find ಢ (ḍha) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this book and find ಢ once more]"
@@ -1331,7 +1331,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ಠ (ṭha) in each",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ಠ in each]"
@@ -1353,7 +1353,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this book and find ಠ (ṭha) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this book and find ಠ once more]"
@@ -1401,9 +1401,10 @@
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
-          "Script: seven shapes, one move"
+          "Script: seven shapes, one move",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script: seven shapes, one move until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: seven shapes, one move and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -1475,7 +1476,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words and find the breathy character in each",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words and find the breathy character in each]"

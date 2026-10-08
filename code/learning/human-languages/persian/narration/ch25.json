@@ -127,7 +127,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at شما and point at ش (shin) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **شما** and point at ش inside it]"
@@ -154,7 +154,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "شما aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **شما** aloud once more]"
@@ -281,7 +281,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at صد and point at ص (sâd) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **صد** and point at ص inside it]"
@@ -308,7 +308,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "صد aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **صد** aloud once more]"
@@ -447,7 +447,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at چطور and point at ط (tâ) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **چطور** and point at ط inside it]"
@@ -474,7 +474,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "چطور aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **چطور** aloud once more]"
@@ -617,7 +617,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at حافظ and point at ظ (zâ) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **حافظ** and point at ظ inside it]"
@@ -644,7 +644,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "حافظ aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **حافظ** aloud once more]"

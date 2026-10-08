@@ -97,7 +97,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "கோபம் (kōpam), and point at the sign of the letter you met last chapter",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **கோபம்**, and point at the sign of the letter you met last chapter]"
@@ -379,7 +379,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ப — then ய — then ம்",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ப** — then **ய** — then **ம்**]"
@@ -397,7 +397,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "பயம் (payam), then கடை, and say which one needed a sign",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **பயம்**, then **கடை**, and say which one needed a sign]"
@@ -667,7 +667,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "சிரி (siri), and point at the sign that appears twice",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **சிரி**, and point at the sign that appears twice]"

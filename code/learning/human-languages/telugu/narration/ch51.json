@@ -250,7 +250,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at కృతజ్ఞత (kṛtajñata), and find the block that has ఞ under it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at కృతజ్ఞత, and find the block that has ఞ under it]"
@@ -272,7 +272,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "ఞ twice without tracing, saying ña as you finish each one",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: ఞ twice without tracing, saying *ña* as you finish each one]"
@@ -690,7 +690,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two, and say which one carries ◌ౌ (au)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two, and say which one carries ◌ౌ]"
@@ -971,7 +971,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at కృతజ్ఞత (kṛtajñata) and find the two-letter stack",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at కృతజ్ఞత and find the two-letter stack]"
@@ -980,7 +980,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at గౌరవం (gauravaṁ) and name the letter underneath the sign",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at గౌరవం and name the letter underneath the sign]"

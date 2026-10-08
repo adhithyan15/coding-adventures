@@ -24,7 +24,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: koko, pointing at your own feet, then soko, pointing at the listener's]
 [pause 8 seconds for the answer]
-[your turn — recall: point to the sign in そこ (soko) you can already write, and the one you cannot]
+[your turn — recall: name the sign in そこ (soko) you can already write, and the one you cannot]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -126,7 +126,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: kore, holding up a pen, then koko, pointing at the floor where you stand]
 [pause 8 seconds for the answer]
-[your turn — recall: point to the sign in これ (kore) you can already write, and the one you cannot]
+[your turn — recall: name the sign in これ (kore) you can already write, and the one you cannot]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -233,7 +233,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: kuruma, clapping three beats]
 [pause 8 seconds for the answer]
-[your turn — recall: point to the sign in くるま (kuruma) you cannot write yet, and say which sign it looks like]
+[your turn — recall: name the sign in くるま (kuruma) you cannot write yet, and say which sign it looks like]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -302,16 +302,11 @@ Then say this — R2, five lessons back.
 Guided Practice — read the five words.
 [pause 2 seconds after each]
 Read each one aloud and say what it means.
-[your turn — read: そこ (soko) — there, near the listener]
-[pause 8 seconds for the answer]
-[your turn — read: そと (soto) — outside]
-[pause 8 seconds for the answer]
-[your turn — read: これ (kore) — this, near you]
-[pause 8 seconds for the answer]
-[your turn — read: それ (sore) — that, near the listener]
-[pause 8 seconds for the answer]
-[your turn — read: くるま (kuruma) — a car]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: そこ (soko) — there, near the listener]
+[once you have stopped driving — read: そと (soto) — outside]
+[once you have stopped driving — read: これ (kore) — this, near you]
+[once you have stopped driving — read: それ (sore) — that, near the listener]
+[once you have stopped driving — read: くるま (kuruma) — a car]
 Two signs do the pointing. こ points near you and そ (so) points near the listener; the sign after them says whether you mean a place or a thing.
 
 Guided Practice — point and write.

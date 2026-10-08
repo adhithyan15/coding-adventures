@@ -380,7 +380,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two, and say which one carries the sign and which carries the standing letter",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two, and say which one carries the sign and which carries the standing letter]"
@@ -402,7 +402,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at హృ, and name its two pieces",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at హృ, and name its two pieces]"

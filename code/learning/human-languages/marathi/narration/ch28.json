@@ -308,7 +308,7 @@
               "kind": "prompt",
               "action": "READ ALOUD",
               "instruction": "नमस्कार, whose halant and whose र you are reusing here",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ ALOUD: **नमस्कार**, whose halant and whose **र** you are reusing here]"

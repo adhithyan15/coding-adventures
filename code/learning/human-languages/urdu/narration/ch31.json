@@ -92,7 +92,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "۱۰ — das, ten, left to right",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **۱۰** — *das*, ten, left to right]"
@@ -209,7 +209,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "۱۲, ۱۳, ۲۳, left to right",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **۱۲**, **۱۳**, **۲۳**, left to right]"
@@ -335,7 +335,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "۱۴, ۱۵, ۱۶, left to right",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **۱۴**, **۱۵**, **۱۶**, left to right]"

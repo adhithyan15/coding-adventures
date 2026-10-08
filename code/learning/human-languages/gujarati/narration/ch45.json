@@ -115,7 +115,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ઘર and point at ઘ (gha) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ઘર** and point at ઘ inside it]"
@@ -142,7 +142,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ઘર aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ઘર** aloud once more]"
@@ -269,7 +269,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at પૈસા and point at ૈ (ai sign) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **પૈસા** and point at ૈ inside it]"
@@ -296,7 +296,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "પૈસા aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **પૈસા** aloud once more]"
@@ -411,7 +411,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "each word in the table aloud, and point at its letter",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: each word in the table aloud, and point at its letter]"

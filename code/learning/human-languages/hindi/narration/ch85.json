@@ -690,9 +690,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script: eight letters, one killer, two hangers"
+          "Script: eight letters, one killer, two hangers",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: eight letters, one killer, two hangers until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: eight letters, one killer, two hangers and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -761,7 +762,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "् — say what it takes away",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **्** — say what it takes away]"
@@ -770,7 +771,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ा — say what it replaces, and with what",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ा** — say what it replaces, and with what]"
@@ -779,7 +780,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ी — the same, and say how it differs from the one above",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ी** — the same, and say how it differs from the one above]"
@@ -895,7 +896,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ऋ — inherited from Sanskrit, a vowel that behaves like a consonant. Hindi says it ri",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ऋ** — inherited from Sanskrit, a vowel that behaves like a consonant. Hindi says it *ri*]"
@@ -913,7 +914,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "औ and ौ — the same vowel standing alone, then hanging off a consonant",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **औ** and **ौ** — the same vowel standing alone, then hanging off a consonant]"
@@ -922,7 +923,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ो — the hanger for o",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ो** — the hanger for *o*]"

@@ -1817,7 +1817,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "你好 and 再见, aloud, with nothing beside them",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 你好 and 再见, aloud, with nothing beside them]"

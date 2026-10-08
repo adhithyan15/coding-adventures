@@ -107,7 +107,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "আমি (āmi)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: আমি]"
@@ -116,7 +116,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "কি",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: কি]"
@@ -125,7 +125,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "আসি",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: আসি]"
@@ -267,7 +267,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "আমি (āmi)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: আমি]"
@@ -404,7 +404,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "তুমি",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: তুমি]"
@@ -650,7 +650,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "আমি (āmi) তুমি",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: আমি তুমি]"
@@ -789,7 +789,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "আমি (āmi)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: আমি]"
@@ -936,7 +936,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "নাম তুমি আমি (āmi) কেমন (kemon)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: নাম তুমি আমি কেমন]"
@@ -945,7 +945,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "নমস্কার",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: নমস্কার]"
@@ -954,7 +954,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "হ্যাঁ না",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: হ্যাঁ না]"

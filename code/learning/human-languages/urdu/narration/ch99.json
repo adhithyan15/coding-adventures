@@ -119,7 +119,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at روز and point at ز (ze) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **روز** and point at ز inside it]"
@@ -146,7 +146,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "روز aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **روز** aloud once more]"
@@ -285,7 +285,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at طرف and point at ط (toe) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **طرف** and point at ط inside it]"
@@ -312,7 +312,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "طرف aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **طرف** aloud once more]"
@@ -427,7 +427,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "each word in the table aloud, and point at its letter",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: each word in the table aloud, and point at its letter]"

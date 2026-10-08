@@ -24,7 +24,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: byōin, clapping four beats]
 [pause 8 seconds for the answer]
-[your turn — recall: point to the sign in びょういん (byōin) that carries the two-stroke mark, and name the sign under it]
+[your turn — recall: say which sign in びょういん (byōin) carries the two-stroke mark, and name the sign under it]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -126,7 +126,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: iriguchi, clapping four beats]
 [pause 8 seconds for the answer]
-[your turn — recall: point to the sign in いりぐち (iriguchi) that carries the two-stroke mark, and name the sign under it]
+[your turn — recall: say which sign in いりぐち (iriguchi) carries the two-stroke mark, and name the sign under it]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -225,7 +225,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: getsuyōbi, clapping five beats]
 [pause 8 seconds for the answer]
-[your turn — recall: point to the sign in げつようび (getsuyōbi) that carries the two-stroke mark, and name the sign under it]
+[your turn — recall: say which sign in げつようび (getsuyōbi) carries the two-stroke mark, and name the sign under it]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -324,7 +324,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: ginkō, clapping four beats]
 [pause 8 seconds for the answer]
-[your turn — recall: point to the sign in ぎんこう (ginkō) that carries the two-stroke mark, and name the sign under it]
+[your turn — recall: say which sign in ぎんこう (ginkō) carries the two-stroke mark, and name the sign under it]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -386,20 +386,13 @@ Four recalls, then the review.
 Guided Practice — read the seven words.
 [pause 2 seconds after each]
 Read each one aloud and say what it means.
-[your turn — read: びょういん (byōin) — a hospital]
-[pause 8 seconds for the answer]
-[your turn — read: どようび (doyōbi) — Saturday]
-[pause 8 seconds for the answer]
-[your turn — read: いりぐち (iriguchi) — an entrance]
-[pause 8 seconds for the answer]
-[your turn — read: でぐち (deguchi) — an exit]
-[pause 8 seconds for the answer]
-[your turn — read: げつようび (getsuyōbi) — Monday]
-[pause 8 seconds for the answer]
-[your turn — read: げんき (genki) — well, healthy]
-[pause 8 seconds for the answer]
-[your turn — read: ぎんこう (ginkō) — a bank]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: びょういん (byōin) — a hospital]
+[once you have stopped driving — read: どようび (doyōbi) — Saturday]
+[once you have stopped driving — read: いりぐち (iriguchi) — an entrance]
+[once you have stopped driving — read: でぐち (deguchi) — an exit]
+[once you have stopped driving — read: げつようび (getsuyōbi) — Monday]
+[once you have stopped driving — read: げんき (genki) — well, healthy]
+[once you have stopped driving — read: ぎんこう (ginkō) — a bank]
 Each of these words holds one of the four signs this chapter wrote. With them, the book writes every sign of the g row, が ぎ (gi) ぐ (gu) げ (ge) ご, and of the b row, ば び (bi) ぶ べ ぼ.
 
 Guided Practice — write.

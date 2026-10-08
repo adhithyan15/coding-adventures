@@ -652,7 +652,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two and say which one carries the breath",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two and say which one carries the breath]"
@@ -674,7 +674,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ಧನ್ಯವಾದ and find the breathed letter at the front of it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ಧನ್ಯವಾದ and find the breathed letter at the front of it]"

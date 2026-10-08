@@ -326,7 +326,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "کیا (kyā) as k + yā",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **کیا** as **k + yā**]"

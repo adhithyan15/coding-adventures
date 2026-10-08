@@ -58,7 +58,7 @@ writes it.
 [PAUSE 1s]
 - [YOU SAY: *heya*]
 - [YOU SAY: *heya*, pointing at the room you are in]
-- [YOU RECALL: point to the sign in **へや** you can already write, and the one you cannot]
+- [YOU RECALL: name the sign in **へや** you can already write, and the one you cannot]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-HEYA] -->

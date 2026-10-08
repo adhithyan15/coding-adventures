@@ -270,7 +270,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ಏಳನೆಯ (ēḷaneya) and find the ಳ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ಏಳನೆಯ and find the ಳ]"
@@ -413,7 +413,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ಎಂಟನೆಯ (eṇṭaneya) and find the ಂ still sitting before ಟ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ಎಂಟನೆಯ and find the ಂ still sitting before ಟ]"
@@ -556,7 +556,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ಒಂಬತ್ತನೆಯ (ombattaneya) and find the doubled ತ್ತ untouched",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ಒಂಬತ್ತನೆಯ and find the doubled ತ್ತ untouched]"
@@ -1160,7 +1160,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ೧ನೇ (modalanē) and say it aloud in full",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **೧ನೇ** and say it aloud in full]"
@@ -1169,7 +1169,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ೩ನೇ and say it aloud in full",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **೩ನೇ** and say it aloud in full]"

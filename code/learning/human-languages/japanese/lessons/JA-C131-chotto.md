@@ -60,7 +60,7 @@ writes it.
 [PAUSE 1s]
 - [YOU SAY: *chotto*]
 - [YOU SAY: *chotto*, clapping three beats — the middle clap is silent]
-- [YOU RECALL: point to the two small signs in **ちょっと** and say which one holds and which one joins]
+- [YOU RECALL: name the two small signs in **ちょっと** and say which one holds and which one joins]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-CHOTTO] -->

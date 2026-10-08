@@ -76,7 +76,9 @@ import {
   drivableWritingInstructions,
   narratedProseSpans,
   opensChainedOrFrontedWriting,
+  pointingRecallCues,
   recallCueAsksForWriting,
+  recallCueAsksToPoint,
   withoutHtmlComments,
   writingRecallCues,
 } from "./drivable-writing-imperatives.js";
@@ -347,6 +349,63 @@ describe("recallCueAsksForWriting stays linear", () => {
 });
 
 // ---------------------------------------------------------------------------
+// Pointing at the page, inside a recall cue
+// ---------------------------------------------------------------------------
+//
+// The positives are the shapes the corpus had before they were rewritten for
+// the ear; the controls are corpus recall cues that mention pointing and ask
+// for none, and the rewrites themselves.
+
+describe("pointingRecallCues: what fires", () => {
+  it.each([
+    ["a recall that opens with point to", "- [YOU RECALL: point to the sign in **これ** you can already write, and the one you cannot]"],
+    ["a mark to find", "- [YOU RECALL: point to the sign in **でんわ** that carries the two-stroke mark, and name the sign under it]"],
+    ["point chained on with and", "- [YOU RECALL: say *mulāqāt*, then read **प्रणाम** and point to its **ण**]"],
+    ["point at, after a comma", "[YOU RECALL: say *ek*, point at **ए**]"],
+    ["point after then", "[YOU RECALL: say *do* then point at **द**]"],
+    ["point after a semicolon", "[YOU RECALL: say *tīn*; then point to **त**]"],
+    ["a capital at the start", "[YOU RECALL: Point to the small **っ** — **R2**]"],
+    ["a cue wrapped across two source lines", "- [YOU RECALL: point to the sign in **くるま**\n  you cannot write yet]"],
+  ])("%s", (_label, markdown) => {
+    expect(pointingRecallCues(markdown)).toHaveLength(1);
+  });
+});
+
+describe("pointingRecallCues: what does not fire", () => {
+  it.each([
+    ["the rewrite of a sign to name", "- [YOU RECALL: name the sign in **これ** you can already write, and the one you cannot]"],
+    ["the rewrite of a mark to find", "- [YOU RECALL: say which sign in **でんわ** carries the two-stroke mark, and name the sign under it]"],
+    ["the rewrite of a chained point", "- [YOU RECALL: say *mulāqāt*, then spell **प्रणाम** aloud letter by letter, naming its **ण** as you reach it]"],
+    ["a word that points", "[YOU RECALL: two chapters back, the word that points at something near — *ei*]"],
+    ["a pointing stem", "[YOU RECALL: *и*, the one-letter joiner, and its old pointing stem]"],
+    ["point out, as a gloss", "[YOU RECALL: say the French for to imagine, then the French for to point out, then say *informer* again]"],
+    ["point at, as a gloss", "[YOU RECALL: say the Persian for to point at, then say *nešân dâdan* again]"],
+    ["a quotation being recalled", '[YOU RECALL: say "and point to it" once more]'],
+    ["the POINT cue itself", "[YOU POINT: to **؟** at the end]"],
+    ["a say cue", "[YOU SAY: then point to the door]"],
+  ])("%s", (_label, markdown) => {
+    expect(pointingRecallCues(markdown)).toEqual([]);
+  });
+});
+
+describe("recallCueAsksToPoint stays linear", () => {
+  // About 50,000 characters each; only the answers are asserted, because
+  // timing bounds flake on a loaded runner.
+  it.each([
+    ["a long run of spaces before the verb", `say it${" ".repeat(50_000)}and point to it`, true],
+    ["a long run of spaces with no verb", `say it${" ".repeat(50_000)}x`, false],
+    ["many links with no verb", `say ${"it, and then ".repeat(4_000)}stop`, false],
+    ["many links, the last one pointing", `say ${"it, and then ".repeat(4_000)}point at it`, true],
+    ["many near misses", `${"and point out ".repeat(4_000)}`, false],
+    ["many unclosed quotation openers", `say ${"“".repeat(50_000)} and point to it`, true],
+    ["a quotation that hides every link", `say “${"and point to ".repeat(4_000)}” now`, false],
+  ])("%s", (_label, content, expected) => {
+    expect(content.length).toBeGreaterThan(40_000);
+    expect(recallCueAsksToPoint(content)).toBe(expected);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // The corpus
 // ---------------------------------------------------------------------------
 
@@ -485,6 +544,28 @@ describe("drivable lessons carry no bare writing imperative", () => {
         problems.push(
           `FIXED ${id}: no longer offends (or is no longer drivable). ` +
             `Remove it from tests/drivable-writing-debt/${track}.json — the ledger only shrinks.`,
+        );
+      }
+    }
+    expect(problems, problems.join("\n")).toEqual([]);
+  });
+});
+
+describe("drivable lessons carry no recall cue that points at the page", () => {
+  it("no drivable lesson asks a driver to point", () => {
+    // No ledger: every such cue was rewritten for the ear when the check
+    // arrived, so the corpus answer is exactly zero. The fixtures above keep
+    // the detector honest, since a detector that matched nothing would also
+    // report zero here.
+    const problems: string[] = [];
+    for (const lesson of lessons) {
+      const id = String(lesson.frontmatter.id);
+      if (!drivableIds.has(id)) continue;
+      for (const cue of pointingRecallCues(lessonMarkdown(lesson))) {
+        problems.push(
+          `${id}: a drivable recall asks the listener to point at the page. Say the same ` +
+            `thing for the ear ("name the sign in …", "say which sign in … carries …"), ` +
+            `or make it a [YOU POINT: …] cue, which the narration defers:\n       ${cue.slice(0, 160)}`,
         );
       }
     }

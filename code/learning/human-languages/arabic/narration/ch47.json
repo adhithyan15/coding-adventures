@@ -107,7 +107,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at إلى اللقاء and point at إ (alif with hamza below) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **إلى اللقاء** and point at إ inside it]"
@@ -134,7 +134,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "إلى اللقاء aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **إلى اللقاء** aloud once more]"
@@ -269,7 +269,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at إلى اللقاء and point at ى (alif maqṣūra) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **إلى اللقاء** and point at ى inside it]"
@@ -296,7 +296,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "إلى اللقاء aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **إلى اللقاء** aloud once more]"
@@ -435,7 +435,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at عفوا and point at ف (fāʾ) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **عفوا** and point at ف inside it]"
@@ -462,7 +462,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "عفوا aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **عفوا** aloud once more]"
@@ -605,7 +605,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at إلى اللقاء and point at ق (qāf) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **إلى اللقاء** and point at ق inside it]"
@@ -632,7 +632,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "إلى اللقاء aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **إلى اللقاء** aloud once more]"

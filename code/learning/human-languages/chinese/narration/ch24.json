@@ -178,7 +178,7 @@
               "kind": "prompt",
               "action": "COVER",
               "instruction": "write it again, and check the long stroke reaches the corner",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COVER: write it again, and check the long stroke reaches the corner]"
@@ -554,7 +554,7 @@
               "kind": "prompt",
               "action": "COVER",
               "instruction": "write 个 (gè) from memory",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COVER: write 个 from memory]"

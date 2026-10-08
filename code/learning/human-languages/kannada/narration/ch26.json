@@ -373,7 +373,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two and say which one is the long standing vowel",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two and say which one is the long standing vowel]"
@@ -395,7 +395,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ನೀವು and find the riding half of today's letter inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ನೀವು and find the riding half of today's letter inside it]"

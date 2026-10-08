@@ -422,7 +422,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ச — then ரி — then யா",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ச** — then **ரி** — then **யா**]"
@@ -431,7 +431,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "சரி, then சரியா (sariyā) — a statement, then a question",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **சரி**, then **சரியா** — a statement, then a question]"

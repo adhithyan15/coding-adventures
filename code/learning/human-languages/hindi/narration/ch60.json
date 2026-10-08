@@ -297,7 +297,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two words and find the dot in each",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two words and find the dot in each]"

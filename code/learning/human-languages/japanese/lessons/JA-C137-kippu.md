@@ -59,7 +59,7 @@ lesson writes it.
 [PAUSE 1s]
 - [YOU SAY: *kippu*]
 - [YOU SAY: *kippu*, clapping three beats]
-- [YOU RECALL: point to the sign in **きっぷ** that carries the small circle, and name the sign under it]
+- [YOU RECALL: say which sign in **きっぷ** carries the small circle, and name the sign under it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-KIPPU] -->

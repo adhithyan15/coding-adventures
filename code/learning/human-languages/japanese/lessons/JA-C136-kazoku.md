@@ -59,7 +59,7 @@ so *so* becomes *zo*. The next lesson writes it.
 [PAUSE 1s]
 - [YOU SAY: *kazoku*]
 - [YOU SAY: *kazoku*, clapping three beats]
-- [YOU RECALL: point to the sign in **かぞく** that carries the two-stroke mark, and name the sign under it]
+- [YOU RECALL: say which sign in **かぞく** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-KAZOKU] -->

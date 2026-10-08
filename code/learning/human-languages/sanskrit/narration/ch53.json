@@ -114,7 +114,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "यः (yaḥ), and name the ending it shares with नरः",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **यः**, and name the ending it shares with **नरः**]"
@@ -240,7 +240,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "तत् and सः (saḥ), and say what the two have in common",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **तत्** and **सः**, and say what the two have in common]"
@@ -386,7 +386,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "यः (yaḥ) गच्छति सः (saḥ) पश्यति, then say what it means in English",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **यः गच्छति सः पश्यति**, then say what it means in English]"
@@ -539,7 +539,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "यत्र ग्रामः तत्र मार्गः, then say what it means",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **यत्र ग्रामः तत्र मार्गः**, then say what it means]"

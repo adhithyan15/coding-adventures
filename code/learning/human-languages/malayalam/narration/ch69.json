@@ -626,9 +626,10 @@
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
-          "Script: six letters, one killer, two hangers"
+          "Script: six letters, one killer, two hangers",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script: six letters, one killer, two hangers until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script: six letters, one killer, two hangers and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -696,7 +697,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "് — say what it removes",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **്** — say what it removes]"
@@ -705,7 +706,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ി — say what it replaces",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ി** — say what it replaces]"
@@ -714,7 +715,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ാ — say the same, and say how it differs from the one above",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ാ** — say the same, and say how it differs from the one above]"

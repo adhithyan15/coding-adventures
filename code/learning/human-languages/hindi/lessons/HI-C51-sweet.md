@@ -59,7 +59,7 @@ Five, and the run is closed: a flower, a garland, a courtyard, a table, a sweet.
 - [YOU SAY: *miṭhāī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *phūl*, *mālā*, *āṁgan*, *mez*, *miṭhāī*]
-- [YOU RECALL: say *mulāqāt*, then read **प्रणाम** and point to its **ण**]
+- [YOU RECALL: say *mulāqāt*, then spell **प्रणाम** aloud letter by letter, naming its **ण** as you reach it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C51-WELCOME-01, HI-LEX-C51-WELCOME-02, HI-LEX-C51-WELCOME-03, HI-LEX-C51-WELCOME-04, HI-LEX-C51-WELCOME-05] -->

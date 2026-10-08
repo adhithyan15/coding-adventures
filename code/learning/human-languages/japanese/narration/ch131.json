@@ -4,7 +4,7 @@
   "chapter": 131,
   "title": "Tea, Please: Small Ya, Small Yo and Wo",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2b4452d8d380d7c4",
+  "sourceHash": "fnv1a64:2e16eca13f62cb22",
   "lessons": [
     {
       "id": "JA-C131-ocha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:efcccf579871b50e",
+      "sourceHash": "fnv1a64:0ecbd290123b786e",
       "notice": null,
       "blocks": [
         {
@@ -113,11 +113,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in おちゃ (ocha) you can already write, and the one you cannot",
+              "instruction": "name the sign in おちゃ (ocha) you can already write, and the one you cannot",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **おちゃ** you can already write, and the one you cannot]"
+              "source": "[YOU RECALL: name the sign in **おちゃ** you can already write, and the one you cannot]"
             }
           ]
         },
@@ -512,7 +512,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e3a30f21bade614",
+      "sourceHash": "fnv1a64:ad373adc2347aea4",
       "notice": null,
       "blocks": [
         {
@@ -615,11 +615,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the two small signs in ちょっと (chotto) and say which one holds and which one joins",
+              "instruction": "name the two small signs in ちょっと (chotto) and say which one holds and which one joins",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the two small signs in **ちょっと** and say which one holds and which one joins]"
+              "source": "[YOU RECALL: name the two small signs in **ちょっと** and say which one holds and which one joins]"
             }
           ]
         },
@@ -1427,7 +1427,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "おちゃ (ocha) — two beats",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **おちゃ** — two beats]"
@@ -1436,7 +1436,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "いしゃ (isha) — two beats",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **いしゃ** — two beats]"
@@ -1445,7 +1445,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ちょっと (chotto) — three beats",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ちょっと** — three beats]"
@@ -1454,7 +1454,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "としょかん (toshokan) — four beats",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **としょかん** — four beats]"
