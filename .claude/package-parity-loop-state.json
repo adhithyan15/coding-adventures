@@ -13675,7 +13675,7 @@
       "notes": "New Rust-only canonical chief-of-staff-net-fetch root arrived on main def09f02. D18V specifies signed-manifest HTTPS/TLS authorization and vault lease redemption; the capability manifest declares net:dns and net:connect. This is a credential-bearing host operation, not a portable package lane target. Exclude from parity delivery pending a separate native-security review."
     },
     {
-      "id": "build-tool-resolution-fixture-native-ci-selection", "title": "Gate native resolution fixture readers", "status": "pending", "depends_on": ["build-tool-fixtures", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": null, "pr_number": null,
+      "id": "build-tool-resolution-fixture-native-ci-selection", "title": "Gate native resolution fixture readers", "status": "in-progress", "depends_on": ["build-tool-fixtures", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-resolution-fixture-ci-20261008", "pr_number": null,
       "notes": "Twenty-six flat resolution cases have direct but heterogeneous native readers in Go/Haskell/Lua/Perl/Python/Ruby/Rust/Swift/TypeScript. Haskell constructs some field-aware case names dynamically; freeze an exact per-case/subfamily reader map and source-reference drift check before fixture-only CI selection. Keep neutral fallback and test three platforms, language filtering, missing-root atomicity, rename source, plans, and toolchains. Rank after graph/diff, ahead of hashing-cache subject to mapping complexity."
     },
     {

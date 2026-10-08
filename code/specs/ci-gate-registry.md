@@ -211,6 +211,37 @@ demonstrate scheduling; C# and F# are distinct roots sharing `dotnet`.
 New native readers or case rosters MUST update the exact relation and a
 source-reference drift test together, including dynamic domain enumeration.
 
+The twenty-six flat `code/specs/fixtures/build-tool-v1/cases/resolution-*.json`
+cases have a heterogeneous native reader relation. A changed case MUST seed
+only its direct test fronts, before affected/prerequisite closure. The following
+abbreviations denote `<language>/programs/build-tool`: G=Go, H=Haskell,
+L=Lua, P=Perl, Y=Python, B=Ruby, R=Rust, S=Swift, T=TypeScript.
+
+| Case stem after `resolution-` | Direct readers |
+| --- | --- |
+| `build-deps-comment` | G, H, B |
+| `dart-field-aware`, `dotnet-cross-language-field-aware`, `haskell-field-aware` | G, H, Y |
+| `dotnet-csharp-field-aware`, `dotnet-fsharp-field-aware`, `gradle-java-field-aware`, `gradle-kotlin-field-aware` | G, H, Y |
+| `ecosystem-scoped-aliases` | G, Y |
+| `elixir-field-aware`, `go-field-aware`, `perl-field-aware`, `ruby-field-aware`, `swift-field-aware`, `typescript-field-aware` | G, H |
+| `elixir-program-package` | B, R |
+| `elixir-self-edge` | R |
+| `lua-cycle`, `lua-field-aware`, `lua-program-package`, `python-diamond`, `python-field-aware`, `rust-field-aware` | H |
+| `lua-utf8`, `lua-invalid-utf8` | G, H, L, P, B, R, S, T |
+| `ocaml-field-aware` | G |
+
+The case-to-reader map MUST match the checked-in resolution corpus exactly:
+new valid flat cases are unknown, not neutral-only, until classified. Reader
+drift checks MUST include Haskell's dynamically assembled Gradle/.NET case
+names and Rust's package-local `src/resolver.rs` test module. Classify raw Git
+paths without OS cleanup; nested or backslash paths, empty stems, case
+variants, backups, and sibling domains do not match. Added, modified, deleted,
+and renamed paths (including the deleted source) participate. Ordinary package
+changes unite with the fixture roots without forcing a full build. Explicit
+language filters seed only applicable readers; a missing applicable root or
+unknown valid case MUST fail before a partial plan is emitted. Linux, macOS,
+and Windows plans MUST expose the selected affected roots and toolchain flags.
+
 ## Evaluation
 
 A gate is **required** when ANY of the following holds:
