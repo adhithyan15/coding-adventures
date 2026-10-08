@@ -252,6 +252,9 @@ nonzero terms, repeated sign operands, and overrides remain gated.
 Variable-free exact multiplicative unit factors may likewise surround it, with
 unit division allowed only when the sign result is the numerator; non-unit,
 dynamic, repeated-sign, denominator-sign, and overridden forms remain gated.
+An exact variable-free exponent chain evaluating to one may preserve that sign
+result as the power base; other exponents, a sign-rooted exponent, and
+overrides remain gated.
 Built-in `sin`, `cos`, and `arctan` may map a bounded sign-rooted result before
 `entier`, including nested combinations; domain-sensitive or unbounded
 standard functions and non-sign-rooted runtime operands remain conservative.

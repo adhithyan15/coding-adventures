@@ -3949,6 +3949,15 @@ impl Compiler {
             }
             return None;
         }
+        if pieces(node)
+            .iter()
+            .any(|piece| matches!(piece, Piece::Op(op) if op == "^" || op == "**"))
+        {
+            if let Some(base) = literal_power_identity_base(node, true) {
+                return self.builtin_direct_sign_operand(base);
+            }
+            return None;
+        }
         if matches!(node.rule_name.as_str(), "expr_add" | "simple_arith") {
             let sequence = pieces(node);
             if sequence.len() >= 3 && sequence.len() % 2 == 1 {
@@ -4112,8 +4121,9 @@ impl Compiler {
             }
             return None;
         }
-        if matches!(node.rule_name.as_str(), "expr_pow" | "factor")
-            && self.contains_power_operator(node)
+        if pieces(node)
+            .iter()
+            .any(|piece| matches!(piece, Piece::Op(op) if op == "^" || op == "**"))
         {
             if let Some(base) = literal_power_identity_base(node, true) {
                 return self.builtin_sign_operand(base);
@@ -13833,6 +13843,44 @@ mod tests {
         ] {
             let err = compile_source(source, "test").expect_err(
                 "non-unit, dynamic, denominator-position, and overridden multiplicative cosine mappings under sqrt must remain conservative",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "{source:?} failed with an unexpected diagnostic: {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_sqrt_cos_power_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(sqrt(cos(sign(pick()) ^ 1))); output(x) end",
+            "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier(sqrt(sqrt(cos(((0 - sign(pick())) * (-1)) ^ (1 ^ 1))))))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "sqrt preserves cosine over an identity-powered bounded sign result for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_sqrt_cos_power_sign_widening_rejects_unproven_operands() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(sign(pick()) ^ 2))); output(result) end",
+            "begin real procedure pick; pick := -2.25; integer exponent; real result; exponent := 1; result := entier(sqrt(cos(sign(pick()) ^ exponent))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(1 ^ sign(pick())))); output(result) end",
+            "begin real procedure pick; pick := -2.25; integer procedure sign(x); value x; real x; sign := 0; real result; result := entier(sqrt(cos(sign(pick()) ^ 1))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "non-identity, dynamic, exponent-position, and overridden power cosine mappings under sqrt must remain conservative",
             );
             assert!(
                 format!("{err:?}").contains("cannot print a real value"),
