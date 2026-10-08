@@ -17075,6 +17075,41 @@ singleton has a selection-blocked native-authority review for its shared unsafe
 boundary and documented Windows handle-list gap. It remains outside portable
 delivery and the all-language denominator.
 
+## Post-#17136 inventory and Arc2D reconciliation ranking
+
+PR #17136 passed eight successful and 24 expected skipped final-head checks,
+was enabled for squash auto-merge only after all were terminal and GitHub
+reported no conflict, and merged as `780fd6bb73e1e5727157d067dcd88d76c6f97e82`.
+The exact fetched-main schema-3 inventory has 15 established lanes, 1,499
+implementation identities, 4,781 occupied slots, 1,541 all-reported
+identities, 178 high-consensus packages with 250 missing slots, 818 Rust
+singletons, zero collisions, and zero unknown buckets. Arc2D now has a
+structural root in every established lane, which does not imply that older
+lanes satisfy the new center-form behavior. OCaml remains an emerging
+five-package lane, outside the denominator until its build-tool front door,
+adapter, CI and promotion gates pass.
+
+The one newly added identity outside #17136 is Rust
+`chief-of-staff-linux-sandbox`. Its Landlock, seccomp and pre-exec authority
+boundary is native host-security work, not a portable parity candidate; a
+selection-blocked review owner records it separately before choosing the next
+portable item. Read-only G2D03 audits found that Go's 100-sample bounds miss
+three off-grid neutral extrema by roughly 4–5e-5, a full turn emits five
+cubics, and direct center forms have no finite/one-turn fail-stop. The
+existing Go center-form owner is now the smallest high-leverage prerequisite
+for its separately owned SVG endpoint API. Its current package tests and vet
+pass but cover only 87.4% of statements, below the 95% target. The later Go
+endpoint owner must use strict `abs(radius)<1e-10` and endpoint
+distance-squared `<1e-20` guards, not its stale `<1e-12` note.
+
+Ten other established lanes still sample Arc2D bounds, Haskell needs the
+finite/one-turn guard, and Perl oversegments an exact full turn. The existing
+cross-lane owner must be split by toolchain after neutral-fixture CI scheduling;
+C#/F# is a bounded shared-.NET candidate. OCaml status-doc repair is ready
+but lower leverage than the Go geometry prerequisite, while its full native
+build-tool and adapter remain blocked by the upstream Go oracle/substrate
+chain. No second parity PR was opened during #17136.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
