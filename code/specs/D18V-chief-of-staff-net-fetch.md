@@ -73,7 +73,8 @@ the calling host's **signed** agent manifest declares both:
 - `net:dns` with the URL's host as target, and
 - `net:connect` with `host:port` as target, where port 443 is the default.
 
-Matching is exact, with no wildcards. Hosts are compared after lowercasing and
+Matching is exact, with no wildcards. A malformed `net` target in a signed
+manifest, such as a wildcard, is an error and is never skipped silently. Hosts are compared after lowercasing and
 removing one trailing dot. This is the same rule `operation-primitives`'
 `OperationHttpClient` already applies, and that crate is reused rather than
 reimplemented.
@@ -146,8 +147,11 @@ in.
 **V-S2 — the secret goes into exactly one header.** `credential.header` is one
 of `authorization`, `x-api-key` or `x-auth-token`. The value sent is
 `scheme + " " + secret` when `scheme` is given (`Bearer`, `Basic`, `Token`),
-otherwise the secret alone. The secret must be printable ASCII with no CR or
-LF, or the call fails with `credential_refused` and nothing is sent.
+otherwise the secret alone. The secret must be 8–4 096 bytes of printable
+ASCII with no space, CR or LF, or the call fails with `credential_refused` and
+nothing is sent. The 8-byte minimum exists for V-S4: scrubbing a one- or
+two-byte secret from a response would redact ordinary text, and real API keys
+are never that short.
 
 **V-S3 — a lease is consumed only by the host it was issued to.** A
 `VaultRef` is a bearer reference, and a reference that leaks onto a channel
@@ -171,11 +175,11 @@ the diagram run first. A refused URL never consumes a lease.
 
 ## Privilege
 
-The definition declares Tier 1 when `credential` is present and Tier 0
-otherwise. As VLT06 records for `privilege_tier`, **the daemon's model-tool
-path does not enforce tiers today** (#13980: "tier ceiling … inert in
-production"). This is stated here so the declared tier is not mistaken for a
-control.
+A D18D definition carries one tier, and `net.fetch` declares Tier 1, the
+tier for the credentialed case. As VLT06 records for `privilege_tier`, **the
+daemon's model-tool path does not enforce tiers today** (#13980: "tier
+ceiling … inert in production"). This is stated here so the declared tier is
+not mistaken for a control.
 
 ## Audit
 
