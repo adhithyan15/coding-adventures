@@ -17045,6 +17045,36 @@ depends on this contract; sampled existing lanes have a separate conformance
 owner. Ruby repository-boundary digest adoption and C#/F# Bezier flattening
 repair remain independently owned and rank next after the geometry chain.
 
+## Post-#17127 inventory and next geometry port
+
+PR #17127 passed seven required checks (25 expected skips), was enabled for
+squash auto-merge only after GitHub reported `CLEAN/MERGEABLE`, and merged as
+`8b9dbfc487fea50e8c2d2ad22c9385a0b4e02452`. The exact fetched-main
+schema-3 inventory is unchanged at 15 established lanes, 1,498 implementation
+identities, 4,777 occupied slots, 1,540 all-reported identities, 178
+high-consensus packages with 253 missing slots, 817 Rust singletons, zero
+collisions, and zero unknown buckets. OCaml remains an emerging five-package
+lane; its full native build tool, adapter and three-platform promotion gates
+are owned but not complete.
+
+The new G2D03 corpus has 23 cases, including wrapped and rotated center-form
+bounds plus bounded cubic sweeps. The dependency-ready Java/Kotlin/Dart Arc2D
+port ranks first: it fills three high-consensus slots atop the merged Point2D,
+Bezier2D and Trig foundations. The pre-existing Go and other-lane center-form
+repairs remain separate. The read-only audit registered an umbrella for the
+12 existing Affine2D/Bezier2D lanes that do not yet dynamically consume the
+eight G2D01/G2D02 neutral cases; split it by toolchain before implementation.
+The existing geometry fixture-CI owner now covers both `geometry2d-v1` and
+`bezier2d-flattening-v1` validators in the unconditional contracts job. The
+C#/F# Bezier flattening owner includes the required >=95% coverage gate.
+
+Ruby already consumes reverse-diff fixtures, so its boundary-digest owner now
+depends on the separately owned portable dependency-hashing repair; do not
+reimplement GraphDiff. The newly discovered `chief-of-staff-spawn-isolation`
+singleton has a selection-blocked native-authority review for its shared unsafe
+boundary and documented Windows handle-list gap. It remains outside portable
+delivery and the all-language denominator.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
