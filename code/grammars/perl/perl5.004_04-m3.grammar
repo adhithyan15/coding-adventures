@@ -1,0 +1,15 @@
+# Perl 5.004_04-m3 (1998-05-15) plain-decimal arithmetic-print subset.
+# @version 1
+# PARTIAL: unsupported Perl 5.004_04-m3 syntax is rejected.
+# Evidence: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_04-m3.tar.gz
+# Archive SHA-256: ce0c07bd7507cc0664d9da358f895f7bd3b67ea09ed92f432e1b0263ebf2acf0
+# The maintenance perly.y adds postfix for and hash-element scalarization
+# outside this subset; all four maintenance yacc blobs agree.
+# This separate file retains arithmetic precedence, parentheses, and print only.
+
+program         = print_statement { print_statement } ;
+print_statement = PRINT LPAREN expr RPAREN SEMICOLON ;
+expr            = term { ( PLUS | MINUS ) term } ;
+term            = unary { STAR unary } ;
+unary           = MINUS unary | atom ;
+atom            = INT | LPAREN expr RPAREN ;

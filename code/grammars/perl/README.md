@@ -315,6 +315,15 @@ Current pairs:
   5.004_03, the yacc changes loop line handling and the tokenizer changes
   `glob` and quote delimiters outside this bounded decimal `print` subset.
   The tested 250-digit boundary remains; none claims complete syntax.
+- `perl5.004_04-m1.*` through `-m4.*` are four more separate **partial**
+  pairs checked against their own [5.004_04-m1 archive],
+  [5.004_04-m2 archive], [5.004_04-m3 archive], and
+  [5.004_04-m4 archive]. Their yacc blobs are identical to one another;
+  tokenizer revisions concern lexical state, regex flags, input handling,
+  threading, and filters outside the decimal `print` subset. The
+  comment-stripped numeric scanner retains the
+  250-digit limit. Each release has its own files and still rejects other
+  Perl syntax.
 - `perl5.004_01_02.*` is a separate **partial** pair checked against the
   [historical 5.004_01_02 source archive] (SHA-256
   `185dc7317b340d4ca018f966993bb155bcc834c914fd26e579225d49c01e2a93`).
@@ -427,6 +436,10 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [5.004_04-t3 archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_04-t3.tar.gz
 [5.004_04-t4 archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_04-t4.tar.gz
 [historical final archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_04.tar.gz
+[5.004_04-m1 archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_04-m1.tar.gz
+[5.004_04-m2 archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_04-m2.tar.gz
+[5.004_04-m3 archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_04-m3.tar.gz
+[5.004_04-m4 archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_04-m4.tar.gz
 [`perl-5.004_03` source tag]: https://github.com/Perl/perl5/tree/perl-5.004_03
 [historical 5.004_01-t2 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01-t2.tar.gz
 [historical 5.004_01_01 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01_01.tar.gz

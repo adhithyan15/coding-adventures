@@ -211,6 +211,10 @@ mod tests {
                     | "5.004_04-t3"
                     | "5.004_04-t4"
                     | "5.004_04"
+                    | "5.004_04-m1"
+                    | "5.004_04-m2"
+                    | "5.004_04-m3"
+                    | "5.004_04-m4"
                     | "5.38.2"
                     | "5.44.0"
                     | "5.45.3"
@@ -271,6 +275,10 @@ mod tests {
                     | "5.004_04-t3"
                     | "5.004_04-t4"
                     | "5.004_04"
+                    | "5.004_04-m1"
+                    | "5.004_04-m2"
+                    | "5.004_04-m3"
+                    | "5.004_04-m4"
             ) {
                 let carriage_return = GrammarLexer::new("print(1);\r", &token_grammar).tokenize();
                 assert!(
@@ -317,6 +325,10 @@ mod tests {
                     | "5.004_04-t3"
                     | "5.004_04-t4"
                     | "5.004_04"
+                    | "5.004_04-m1"
+                    | "5.004_04-m2"
+                    | "5.004_04-m3"
+                    | "5.004_04-m4"
             ) {
                 let unknown = GrammarLexer::new("print(1);\u{0001}", &token_grammar).tokenize();
                 assert!(
@@ -353,6 +365,10 @@ mod tests {
                     | "5.004_04-t3"
                     | "5.004_04-t4"
                     | "5.004_04"
+                    | "5.004_04-m1"
+                    | "5.004_04-m2"
+                    | "5.004_04-m3"
+                    | "5.004_04-m4"
             ) {
                 let accepted = format!("print({});", "9".repeat(250));
                 let tokens = GrammarLexer::new(&accepted, &token_grammar)
