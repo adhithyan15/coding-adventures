@@ -1554,6 +1554,22 @@ fn swimlane_cloud_and_bang_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_classic_shape_attributes_and_aliases_reach_semantic_ir() {
+    use diagram_ir::DiagramShape;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Workflow\n  process@{ shape: rect }\n  event@{ shape: rounded }\n  choice@{ shape: question }\n  input@{ shape: in-out }\n  manual@{ shape: trap-t }\n  database@{ shape: db }\n  subprocess@{ shape: subproc }\n  stop@{ shape: double-circle }\nend\nprocess --> event --> choice --> input --> manual --> database --> subprocess --> stop",
+    ).expect("classic Swimlane shape attributes should parse");
+
+    let shapes = diagram.nodes.iter().map(|node| node.shape.clone()).collect::<Vec<_>>();
+    assert_eq!(shapes, [
+        DiagramShape::Rect, DiagramShape::RoundedRect, DiagramShape::Diamond,
+        DiagramShape::ParallelogramRight, DiagramShape::InvertedTrapezoid,
+        DiagramShape::Cylinder, DiagramShape::Subroutine, DiagramShape::DoubleCircle,
+    ]);
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",

@@ -35,6 +35,10 @@
       "source": "swimlane-beta LR\nsubgraph Runtime\n  hosted@{ shape: cloud, label: \"Hosted service\" }\nend\nsubgraph Response\n  alert@{ label: \"Failure alert\", shape: bang }\nend\nhosted --> alert"
     },
     {
+      "name": "classic-shape-attributes-and-aliases",
+      "source": "swimlane-beta LR\nsubgraph Workflow\n  process@{ shape: rect, label: \"Process\" }\n  event@{ shape: event, label: \"Event\" }\n  choice@{ shape: question, label: \"Decision\" }\n  input@{ shape: in-out, label: \"Input\" }\nend\nsubgraph Storage\n  manual@{ shape: trap-t, label: \"Manual\" }\n  database@{ shape: db, label: \"Database\" }\n  subprocess@{ shape: subproc, label: \"Subprocess\" }\n  stop@{ shape: double-circle, label: \"Stop\" }\nend\nprocess --> event --> choice --> input --> manual --> database --> subprocess --> stop"
+    },
+    {
       "name": "input-output-and-asymmetric-shapes",
       "source": "swimlane-beta LR\nsubgraph Intake\n  input[/Receive payload/]\nend\nsubgraph Review\n  flag>Manual review]\nend\ninput --> flag"
     },
