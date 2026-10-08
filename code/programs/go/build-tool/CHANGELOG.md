@@ -6,6 +6,13 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- Case-exact native CI selection for all twenty-six checked
+  `resolution-*.json` conformance fixtures. Each case schedules only its
+  direct Go, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, or TypeScript
+  readers; unknown flat cases fail closed until classified. Three-platform
+  plans, language filters, missing-root atomicity, rename-source behavior,
+  and native reader/corpus drift are covered without changing the resolver.
+
 - Bounded native CI selection for the eight flat `graph-*.json` and twelve
   `diff-selection-*.json` conformance cases. Exact path matching schedules
   eleven direct build-tool readers on Linux, macOS, and Windows before

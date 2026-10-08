@@ -191,6 +191,7 @@ const toolchainDetectionFixturePrefix = "code/specs/fixtures/build-tool-v1/cases
 const sourceCollectionFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/source-collection-"
 const graphFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/graph-"
 const diffSelectionFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/diff-selection-"
+const resolutionFixtureCasePrefix = "code/specs/fixtures/build-tool-v1/cases/resolution-"
 
 const closureProvenanceSpecPath = "code/specs/CV02-checked-bounded-provenance-graphs.md"
 const closureProvenanceConsumer = "rust/programs/closurec"
@@ -284,6 +285,47 @@ var graphDiffNativeFixtureConsumers = []struct{ name, language string }{
 	{"perl/programs/build-tool", "perl"},
 	{"python/programs/build-tool", "python"},
 	{"swift/programs/build-tool", "swift"},
+}
+
+// Resolution readers are case-specific: most native fronts intentionally run
+// only a subset of the shared corpus. An unknown flat case fails closed so a
+// newly added fixture cannot pass CI without scheduling any native test.
+// The letters are local table keys, not fixture input or user-controlled code.
+var resolutionNativeFixtureReaders = map[rune]struct{ name, language string }{
+	'G': {"go/programs/build-tool", "go"},
+	'H': {"haskell/programs/build-tool", "haskell"},
+	'L': {"lua/programs/build-tool", "lua"},
+	'P': {"perl/programs/build-tool", "perl"},
+	'Y': {"python/programs/build-tool", "python"},
+	'B': {"ruby/programs/build-tool", "ruby"},
+	'R': {"rust/programs/build-tool", "rust"},
+	'S': {"swift/programs/build-tool", "swift"},
+	'T': {"typescript/programs/build-tool", "typescript"},
+}
+
+var resolutionNativeFixtureCases = map[string]string{
+	"build-deps-comment": "GHB",
+	"dart-field-aware":   "GHY", "dotnet-cross-language-field-aware": "GHY", "haskell-field-aware": "GHY",
+	"dotnet-csharp-field-aware": "GHY", "dotnet-fsharp-field-aware": "GHY",
+	"gradle-java-field-aware": "GHY", "gradle-kotlin-field-aware": "GHY",
+	"ecosystem-scoped-aliases": "GY",
+	"elixir-field-aware":       "GH", "go-field-aware": "GH", "perl-field-aware": "GH",
+	"ruby-field-aware": "GH", "swift-field-aware": "GH", "typescript-field-aware": "GH",
+	"elixir-program-package": "BR", "elixir-self-edge": "R",
+	"lua-cycle": "H", "lua-field-aware": "H", "lua-program-package": "H",
+	"python-diamond": "H", "python-field-aware": "H", "rust-field-aware": "H",
+	"lua-utf8": "GHLPBRST", "lua-invalid-utf8": "GHLPBRST",
+	"ocaml-field-aware": "G",
+}
+
+// A raw Git path is already slash-separated. Do not clean it: normalizing a
+// nested or backslash lookalike would incorrectly broaden the CI selection.
+func resolutionFixtureCase(changed string) string {
+	name, ok := strings.CutPrefix(changed, resolutionFixtureCasePrefix)
+	if !ok || !strings.HasSuffix(name, ".json") || len(name) <= len(".json") || strings.ContainsAny(name, "/\\") {
+		return ""
+	}
+	return strings.TrimSuffix(name, ".json")
 }
 
 func hasCIGateFixturePath(changedFiles []string) bool {
@@ -425,13 +467,22 @@ func changedPackageRootsForPlatformAndLanguage(
 	ciGateFixtureChanged := hasCIGateFixturePath(changedFiles)
 	toolchainFixtureChanged := hasToolchainDetectionFixturePath(changedFiles)
 	graphDiffFixtureChanged := hasGraphDiffFixturePath(changedFiles)
+	resolutionCases := map[string]bool{}
+	for _, path := range changedFiles {
+		if caseName := resolutionFixtureCase(path); caseName != "" {
+			if _, known := resolutionNativeFixtureCases[caseName]; !known {
+				return nil, fmt.Errorf("resolution fixture case %q has no classified native readers", caseName)
+			}
+			resolutionCases[caseName] = true
+		}
+	}
 	sourceFixtureFamilies := map[string]bool{}
 	for _, path := range changedFiles {
 		if family := sourceCollectionFixtureFamily(path); family != "" {
 			sourceFixtureFamilies[family] = true
 		}
 	}
-	if !discoveryFixtureChanged && !ciGateFixtureChanged && !toolchainFixtureChanged && !graphDiffFixtureChanged && len(sourceFixtureFamilies) == 0 {
+	if !discoveryFixtureChanged && !ciGateFixtureChanged && !toolchainFixtureChanged && !graphDiffFixtureChanged && len(resolutionCases) == 0 && len(sourceFixtureFamilies) == 0 {
 		return changed, nil
 	}
 
@@ -481,6 +532,18 @@ func changedPackageRootsForPlatformAndLanguage(
 			}
 			if !available[consumer.name] {
 				return nil, fmt.Errorf("graph/diff fixture consumer %q is missing from discovered packages", consumer.name)
+			}
+			changed[consumer.name] = true
+		}
+	}
+	for caseName := range resolutionCases {
+		for _, code := range resolutionNativeFixtureCases[caseName] {
+			consumer := resolutionNativeFixtureReaders[code]
+			if language != "all" && consumer.language != language {
+				continue
+			}
+			if !available[consumer.name] {
+				return nil, fmt.Errorf("resolution fixture %q consumer %q is missing from discovered packages", caseName, consumer.name)
 			}
 			changed[consumer.name] = true
 		}
