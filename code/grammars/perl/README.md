@@ -333,6 +333,27 @@ Current pairs:
   matches the [`perl-5.004_05` source tag]. The decimal scanner is identical
   throughout, with the tested 250-digit bound. These pairs still reject
   carriage returns and unsupported Perl syntax in the bounded subset.
+- `perl5.004_50.*` is a separate **partial** development-release pair checked
+  against its own [5.004_50 historical source archive] (SHA-256
+  `458f5850e8b36f9280fcd713210f83472901577e930b41e3f8dfd243a64b9938`).
+  Its yacc changes loop and subroutine productions from 5.004_05; the
+  comment-stripped `scan_num` body is identical, retaining the tested
+  250-digit decimal bound. Only plain-decimal `print` arithmetic is accepted;
+  other syntax, carriage returns, and leading-zero forms remain rejected.
+- `perl5.004_51.*` is another separate **partial** development-release pair
+  checked against its own [5.004_51 historical source archive] (SHA-256
+  `940e33d409ea7c5eb93dfabac3b53f5822a7a8522f0ced54e721a0853a80ba2f`).
+  Its `perly.y` and `toke.c` blobs match 5.004_50 byte for byte, including
+  the 250-digit decimal bound. It keeps its own files and the same bounded
+  rejection probes; matching source does not imply full syntax coverage.
+- `perl5.004_52.*` is a separate **partial** development-release pair checked
+  against its own [5.004_52 historical source archive] (SHA-256
+  `f5edcffd4bf28db7bad95562470e37d57da65503822abb77de049b4d18cddd09`).
+  Its `perly.y` matches 5.004_51 byte for byte; `toke.c` changes input
+  handling and diagnostics outside the plain-decimal `print` subset. The
+  comment-stripped numeric scanner remains identical with the tested
+  250-digit bound. The separate files reject unsupported syntax, carriage
+  returns, and leading-zero forms.
 - `perl5.004_01_02.*` is a separate **partial** pair checked against the
   [historical 5.004_01_02 source archive] (SHA-256
   `185dc7317b340d4ca018f966993bb155bcc834c914fd26e579225d49c01e2a93`).
@@ -455,6 +476,9 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [MT8]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_05-MT8.tar.gz
 [MT9]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_05-MT9.tar.gz
 [final 5.004_05]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_05.tar.gz
+[5.004_50 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_50.tar.gz
+[5.004_51 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_51.tar.gz
+[5.004_52 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_52.tar.gz
 [`perl-5.004_05` source tag]: https://github.com/Perl/perl5/tree/perl-5.004_05
 [`perl-5.004_03` source tag]: https://github.com/Perl/perl5/tree/perl-5.004_03
 [historical 5.004_01-t2 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01-t2.tar.gz

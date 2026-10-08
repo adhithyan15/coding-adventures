@@ -304,3 +304,41 @@ stage's plain-decimal `print` arithmetic subset. Keep carriage returns,
 leading-zero literals, decrement adjacency, and unsupported characters
 rejected by the partial grammar, with separate files for every release and
 no complete historical syntax claim.
+
+Prepare the next development-release installment as a distinct, explicitly
+partial token/grammar pair for `5.004_50`. Its own historical source archive
+is `https://mirrors.develooper.com/perl/historical-perl/perl-5.004_50.tar.gz`
+with SHA-256
+`458f5850e8b36f9280fcd713210f83472901577e930b41e3f8dfd243a64b9938`.
+Compared with final 5.004_05, its `perly.y` changes loop and subroutine
+productions while `toke.c` has broader lexical-state differences; neither
+widens this stage's plain-decimal `print` arithmetic subset. The
+comment-and-whitespace-stripped `scan_num` body is identical to 5.004_05,
+including the 250-digit decimal scan bound. Accept at most 250 digits and
+reject 251, leading-zero literals, adjacent decrement, carriage returns,
+and unsupported characters. Keep its two files separate, without aliasing
+another release or claiming complete historical syntax.
+
+Extend that bounded development installment with a separate, explicitly
+partial `5.004_51` pair. Its own historical archive is
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_51.tar.gz`
+with SHA-256
+`940e33d409ea7c5eb93dfabac3b53f5822a7a8522f0ced54e721a0853a80ba2f`.
+Its `perly.y` and `toke.c` blobs are byte-identical to the 5.004_50 archive,
+including the comment-stripped numeric scanner and 250-digit decimal bound.
+It still requires its own token and grammar files and the same negative probes;
+shared source blobs do not make the two public releases aliases or complete
+syntax implementations.
+
+Continue the development-release installment with a separate, explicitly
+partial `5.004_52` token/grammar pair. Its own historical archive is
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_52.tar.gz`
+with SHA-256
+`f5edcffd4bf28db7bad95562470e37d57da65503822abb77de049b4d18cddd09`.
+Its `perly.y` is byte-identical to 5.004_51, while `toke.c` changes input
+handling and diagnostics outside the plain-decimal `print` arithmetic subset.
+The comment-and-whitespace-stripped `scan_num` body remains identical to
+5.004_51, retaining the 250-digit decimal scan bound. Accept at most 250
+digits and reject 251, leading-zero literals, adjacent decrement, carriage
+returns, and unsupported characters. Keep both files distinct and labeled
+partial; source continuity does not establish full historical syntax.
