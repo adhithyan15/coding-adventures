@@ -14,7 +14,8 @@ type centerCase struct {
 	ID             string     `json:"id"`
 	Operation      string     `json:"operation"`
 	Center         [2]float64 `json:"center"`
-	Rx, Ry         float64    `json:"rx"`
+	Rx             float64    `json:"rx"`
+	Ry             float64    `json:"ry"`
 	StartAngle     float64    `json:"start_angle"`
 	SweepAngle     float64    `json:"sweep_angle"`
 	XRotation      float64    `json:"x_rotation"`
@@ -143,4 +144,45 @@ func TestCenterArcRejectsNonfiniteDerivedOutput(t *testing.T) {
 	requirePanicIs(t, ErrInvalidCenterArc, func() { EvalArc(a, 0) })
 	requirePanicIs(t, ErrInvalidCenterArc, func() { BboxArc(a) })
 	requirePanicIs(t, ErrInvalidCenterArc, func() { ToCubicBeziers(a) })
+	requirePanicIs(t, ErrInvalidCenterArc, func() { EvalArc(unitArc, math.MaxFloat64) })
+	a = unitArc
+	a.Rx = math.MaxFloat64
+	a.SweepAngle = 2 * math.Pi
+	requirePanicIs(t, ErrInvalidCenterArc, func() { TangentArc(a, 0.25) })
+	a = unitArc
+	a.Rx = math.MaxFloat64
+	a.SweepAngle = 2 * math.Pi
+	requirePanicIs(t, ErrInvalidCenterArc, func() { BboxArc(a) })
+}
+
+func TestExistingEndpointConversionBranches(t *testing.T) {
+	for _, tc := range []struct {
+		name, from, to string
+		start, end     point2d.Point
+		rx, ry         float64
+		large, sweep   bool
+		wantPresent    bool
+	}{
+		{name: "scaled-negative-radius", start: point2d.NewPoint(0, 0), end: point2d.NewPoint(10, 0), rx: -0.1, ry: 1, sweep: true, wantPresent: true},
+		{name: "large-clockwise", start: point2d.NewPoint(1, 0), end: point2d.NewPoint(0, 1), rx: 1, ry: 1, large: true, sweep: false, wantPresent: true},
+		{name: "small-clockwise", start: point2d.NewPoint(1, 0), end: point2d.NewPoint(0, 1), rx: 1, ry: 1, sweep: false, wantPresent: true},
+		{name: "large-counterclockwise", start: point2d.NewPoint(1, 0), end: point2d.NewPoint(0, 1), rx: 1, ry: 1, large: true, sweep: true, wantPresent: true},
+		{name: "tiny-distance", start: point2d.NewPoint(0, 0), end: point2d.NewPoint(1e-13, 0), rx: 1, ry: 1, sweep: true},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			a, ok := ToCenterArc(SvgArc{From: tc.start, To: tc.end, Rx: tc.rx, Ry: tc.ry, LargeArc: tc.large, Sweep: tc.sweep})
+			if ok != tc.wantPresent {
+				t.Fatalf("center presence = %v, want %v", ok, tc.wantPresent)
+			}
+			if ok && (!finite(a.Center.X, a.Center.Y, a.Rx, a.Ry, a.StartAngle, a.SweepAngle) || a.Rx <= 0 || a.Ry <= 0) {
+				t.Fatalf("invalid center result: %+v", a)
+			}
+		})
+	}
+	if angleBetween(0, 0, 1, 0) != 0 {
+		t.Fatal("zero vector angle")
+	}
+	if angleBetween(1, 0, 0, -1) >= 0 {
+		t.Fatal("clockwise vector angle")
+	}
 }
