@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-07 — re-audited after LANG82 Perl 5.004_03
+Status date: 2026-10-07 — re-audited after PREP01 C conditional shifts
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -169,18 +169,22 @@ CodeQL, and books checks passed. The 776-row inventory now has 79 partial
 pairs and 697 pending; neither complete historical syntax nor exhaustive
 public-release coverage is claimed. The next fresh selection rotates to the
 prepared PREP01 C conditional-shift slice.
+PR #16978 delivered exactly one checked `<<` or `>>` per bounded logical C
+`#if` clause and merged as `b490bcf88a0f90a61507150841df9a27fbe246dc`
+after exact-head CI, CodeQL, and books checks passed. The next fresh
+selection rotates to five distinct, explicitly partial, archive-backed Perl
+5.004_04 trial and final release token/grammar pairs. Full C `#if` remains
+open.
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **PREP01 C (selected):** add exactly one checked `<<` or `>>` operation
-   per bounded logical `#if` clause, with a nonnegative signed 32-bit left
-   operand, a shift count from 0 through 31, a representable left-shift
-   result, and explicit rejection of longer or mixed expressions. Keep full
-   C `#if`, stringize/paste, and default frontend routing for later slices.
-2. **LANG82 Perl release grammars:** continue distinct, source-backed,
-   explicitly partial pairs. Keep 5.004_01-t1 pending until its own source
-   is found; do not imply complete syntax or an exhaustive release inventory.
+1. **LANG82 Perl release grammars (selected):** add separate, source-backed,
+   explicitly partial token and grammar pairs for 5.004_04-t1 through t4
+   and final 5.004_04. Keep 5.004_01-t1 pending until its own source is
+   found; do not imply complete syntax or an exhaustive release inventory.
+2. **PREP01 C:** continue bounded conditional-expression support. Full C
+   `#if`, stringize/paste, and default frontend routing remain open.
 
 The following run records the first VM-067 selection.
 

@@ -243,3 +243,20 @@ checks coverage of those pinned sources only. It does not prove that the
 inventory contains every public release after the snapshot or every
 historical distribution not named there; keep new discoveries explicit and
 never treat a pending or partial row as complete syntax.
+
+Prepare a separate bounded installment for `5.004_04-t1`, `-t2`, `-t3`,
+`-t4`, and final `5.004_04`. Their own historical source archives have
+SHA-256 digests `a159185d580f409b14bd286baca770ef3ca6457c7db851e3663438cb60cb03b0`,
+`c4c806d35feda5dd177880ccf13562610eb32afac64af4dfc86a0e56d2171030`,
+`3337caa03309b6f772dedde87b40600c04911e795cf64c9efa6949a9c2cae744`,
+`57a25365088de1d57a27516b84f39cc10f92403394e537f3405ec3cbfa151968`,
+and `a33e436a815e7dc16ea539eb566d7e5ac4852f2ed16bbcdf4105c6df748bcef0`,
+respectively. All five archives have byte-identical `perly.y` and `toke.c`;
+the final archive's blobs also match the official `perl-5.004_04` tag.
+Relative to 5.004_03, its yacc changes loop source-line construction,
+while its tokenizer changes `glob` classification and quote-delimiter
+whitespace handling. Those changes do not extend the accepted plain-decimal
+`print` arithmetic subset. Give every release a distinct token and grammar
+file; preserve the inherited 250-digit lexical bound and negative probes for
+leading zero, decrement adjacency, carriage returns, and unsupported input.
+Do not claim full Perl syntax or add a release alias.
