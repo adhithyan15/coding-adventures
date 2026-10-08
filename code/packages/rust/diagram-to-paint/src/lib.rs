@@ -989,12 +989,14 @@ where
                     stroke_dash_offset: None,
                 })
             }
-            DiagramShape::Cloud | DiagramShape::Bang | DiagramShape::Hourglass | DiagramShape::Triangle => {
+            DiagramShape::Cloud | DiagramShape::Bang | DiagramShape::Hourglass
+            | DiagramShape::Triangle | DiagramShape::InvertedTriangle => {
                 let commands = match node.shape {
                     DiagramShape::Cloud => cloud_path_commands(node.x, node.y, node.width, node.height),
                     DiagramShape::Bang => polygon_path_commands(&bang_polygon_points(node.x, node.y, node.width, node.height)),
                     DiagramShape::Hourglass => polygon_path_commands(&hourglass_polygon_points(node.x, node.y, node.width, node.height)),
-                    _ => polygon_path_commands(&triangle_polygon_points(node.x, node.y, node.width, node.height)),
+                    DiagramShape::Triangle => polygon_path_commands(&triangle_polygon_points(node.x, node.y, node.width, node.height)),
+                    _ => polygon_path_commands(&inverted_triangle_polygon_points(node.x, node.y, node.width, node.height)),
                 };
                 PaintInstruction::Path(PaintPath {
                     base: PaintBase::default(), commands, fill: Some(fill.clone()), fill_rule: None,
@@ -1782,6 +1784,10 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
             let points = triangle_polygon_points(node.x, node.y, node.width, node.height);
             polygon_node_instruction(node, &points)
         }
+        DiagramShape::InvertedTriangle => {
+            let points = inverted_triangle_polygon_points(node.x, node.y, node.width, node.height);
+            polygon_node_instruction(node, &points)
+        }
         DiagramShape::Cloud => {
             PaintInstruction::Path(PaintPath {
                 base: PaintBase::default(),
@@ -2073,6 +2079,14 @@ fn triangle_polygon_points(x: f64, y: f64, width: f64, height: f64) -> Vec<(f64,
         (x + width / 2.0, y),
         (x + width, y + height),
         (x, y + height),
+    ]
+}
+
+fn inverted_triangle_polygon_points(x: f64, y: f64, width: f64, height: f64) -> Vec<(f64, f64)> {
+    vec![
+        (x, y),
+        (x + width, y),
+        (x + width / 2.0, y + height),
     ]
 }
 
