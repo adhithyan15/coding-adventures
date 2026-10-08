@@ -73,6 +73,9 @@ Additional built-in `sqrt` calls may wrap that positive bounded result while
 preserving the same finite proof.
 Built-in `sqrt` may also map `ln(exp(...))` when the exponential operand is
 already nonnegative and bounded; signed and nested-exponential forms stay conservative.
+Before cosine and outer `sqrt`, built-in `exp` may map a nonpositive
+unit-bounded sign-rooted range surrounded by variable-free exact additive zero
+terms; positive, repeated, dynamic, and overridden forms remain conservative.
 One-sided reassignment remains gated. Unary signs, additive
 composition, multiplication, division, and exponentiation over proven
 runtime-real or finite static operands preserve runtime-real provenance. The

@@ -4078,6 +4078,46 @@ impl Compiler {
                 _ => None,
             };
         }
+        if matches!(node.rule_name.as_str(), "expr_add" | "simple_arith") {
+            let sequence = pieces(node);
+            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
+                let mut sign_operand = None;
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return None;
+                        };
+                        let preceding_op = index
+                            .checked_sub(1)
+                            .and_then(|op_index| sequence.get(op_index));
+                        let candidate = match preceding_op {
+                            None => self.builtin_nonpositive_unit_sign_operand(operand),
+                            Some(Piece::Op(op)) if op == "+" => {
+                                self.builtin_nonpositive_unit_sign_operand(operand)
+                            }
+                            Some(Piece::Op(op)) if op == "-" => {
+                                self.builtin_nonnegative_unit_sign_operand(operand)
+                            }
+                            _ => return None,
+                        };
+                        if let Some(operand) = candidate {
+                            if sign_operand.replace(operand).is_some() {
+                                return None;
+                            }
+                        } else if !expr_static_real_arithmetic_value_with(operand, &|_| None)
+                            .is_some_and(|value| value == 0.0)
+                        {
+                            return None;
+                        }
+                    } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-")) {
+                        return None;
+                    }
+                }
+                if sign_operand.is_some() {
+                    return sign_operand;
+                }
+            }
+        }
         if node.rule_name != "proc_call" {
             let children = direct_nodes(node);
             if direct_tokens(node).is_empty() && children.len() == 1 {
@@ -14212,6 +14252,45 @@ mod tests {
         ] {
             let err = compile_source(source, "test").expect_err(
                 "unbounded, positive, and overridden exponential cosine mappings under sqrt must remain conservative",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "{source:?} failed with an unexpected diagnostic: {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_sqrt_cos_additive_nonpositive_exp_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(sqrt(cos(exp(0 - abs(sign(pick())))))); output(x) end",
+            "begin real procedure pick; pick := 0.0; real procedure relay(x); real x; relay := x; output(relay(entier(sqrt(cos(exp(0 - sqrt(abs(sign(pick()))) + 0)))))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "sqrt preserves cosine over an additive nonpositive unit exponential for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_sqrt_cos_additive_nonpositive_exp_sign_widening_rejects_unproven_operands() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp(0 + abs(sign(pick())))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp(0 - abs(sign(pick())) - abs(sign(pick())))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp(0 - pick())))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real procedure abs(x); value x; real x; abs := 0.0; real result; result := entier(sqrt(cos(exp(0 - abs(sign(pick())))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; integer procedure sign(x); value x; real x; sign := 0; real result; result := entier(sqrt(cos(exp(0 - abs(sign(pick())))))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "positive, unbounded, and overridden additive exponential cosine mappings under sqrt must remain conservative",
             );
             assert!(
                 format!("{err:?}").contains("cannot print a real value"),
