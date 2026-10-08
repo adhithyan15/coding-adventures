@@ -795,6 +795,22 @@ position already supplied by the dialect. This stage does not
 add `#elif`, stringize, paste, or pathless frontend routing. Tests must cover
 definition removal and redefinition, an initially undefined name, skipped
 branch preservation, malformed C directives, and a rooted C file-input path.
+
+The next conditional-branch stage adds `Directive::Elif(condition)` to the
+generic engine and recognizes nonempty `#elif` expressions in the C dialect.
+An `elif` belongs to the current conditional group, not a nested one. Its
+condition is prepared, macro-expanded, bounded, and evaluated through the
+same path as `if` only when the parent emits, no earlier branch was taken,
+and no `else` has appeared. Otherwise its condition is not evaluated or
+expanded; raw input tokens still count toward the traversal budgets. The
+first true branch wins, and `else` emits only if no earlier branch won.
+Reject `elif` without a group, `elif` after `else`, and a second `else` at
+the directive location. An included file cannot attach an `elif` or `else`
+to its includer's group. `#elif` reuses the deliberately bounded C `#if`
+expression subset; this stage does not add C arithmetic or stringize/paste.
+Tests cover branch selection, macro and `defined` preparation, skipped
+condition budget behavior, malformed ordering, nesting, and rooted C input.
+
 *Acceptance:* a C program using `#define` (object- and function-like), `#if`/
 `#ifdef`/`#else`/`#endif` and a real project-local `#include` compiles through
 `c-to-semantic-ir` and executes with the expected result — the first C program

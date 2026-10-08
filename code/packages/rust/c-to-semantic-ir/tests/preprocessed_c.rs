@@ -90,6 +90,42 @@ fn malformed_condition_reports_its_directive_location() {
 }
 
 #[test]
+fn rooted_elif_selects_macro_branch_and_reports_active_condition_error() {
+    let root = std::env::temp_dir().join(format!(
+        "prep01_c_elif_{}_{}",
+        std::process::id(),
+        SEQ.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::create_dir(&root).unwrap();
+    write_fresh(
+        &root.join("good.c"),
+        b"#define FLAG 7\n#if 0\nint value(void) { return 0; }\n#elif defined(FLAG) && FLAG == 7\nint value(void) { return FLAG; }\n#elif 1 / 0\nint value(void) { return 9; }\n#endif\n",
+    );
+    write_fresh(
+        &root.join("bad.c"),
+        b"#if 0\nint value(void) { return 0; }\n#elif 1 / 0\nint value(void) { return 1; }\n#endif\n",
+    );
+    let module = c_to_semantic_ir::compile_preprocessed_file(
+        "good.c",
+        [root.clone()],
+        "elif_good",
+        Bounds::default(),
+    )
+    .unwrap();
+    let text = semantic_ir::print_module(&module);
+    assert!(text.contains("(block (int 7))"), "{text}");
+    let error = c_to_semantic_ir::compile_preprocessed_file(
+        "bad.c",
+        [root.clone()],
+        "elif_bad",
+        Bounds::default(),
+    )
+    .unwrap_err();
+    std::fs::remove_dir_all(&root).unwrap();
+    assert_eq!((error.line, error.column), (3, 1), "{error}");
+}
+
+#[test]
 fn quoted_nested_header_prefers_its_own_directory() {
     let root = std::env::temp_dir().join(format!(
         "prep01_c_nested_{}_{}",

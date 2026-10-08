@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — PREP01 conditional alternatives
+
+- Add `Directive::Elif` to select the first true branch of one conditional
+  group through the existing bounded condition path. Conditions in a skipped
+  parent or after a taken branch do not prepare or expand.
+- Reject `elif` after `else` and duplicate `else` with directive locations;
+  included files cannot attach a branch to an enclosing file's group.
+
 ## Unreleased — PREP01 generic macro undefinition
 
 - Add `Directive::Undef` and `MacroTable::undef` so dialects can remove the

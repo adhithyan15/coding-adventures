@@ -344,6 +344,8 @@ impl Dialect for CDialect {
             },
             "if" if !operands.is_empty() => Ok(Directive::If(operands.to_vec())),
             "if" => Err(directive_error("if", "requires an expression")),
+            "elif" if !operands.is_empty() => Ok(Directive::Elif(operands.to_vec())),
+            "elif" => Err(directive_error("elif", "requires an expression")),
             "ifdef" | "ifndef" => {
                 if operands.len() != 1 || !identifier(&operands[0].value) {
                     Err(directive_error(
@@ -530,6 +532,7 @@ mod tests {
             "#undef F extra",
             "#undef F(x)",
             "#ifdef",
+            "#elif",
             "#else extra",
             "#unknown",
         ] {
@@ -573,6 +576,19 @@ mod tests {
             .iter()
             .map(|token| token.value.as_str())
             .collect();
+        assert_eq!(values, ["int", "x", "=", "7", ";"]);
+        assert_eq!(result.map.len(), result.tokens.len());
+    }
+
+    #[test]
+    fn c_elif_reuses_bounded_if_conditions_and_first_true_branch_wins() {
+        let source = "#define FLAG 7\n#if 0\nint x = 0;\n#elif defined(FLAG) && FLAG == 7\nint x = FLAG;\n#elif 1 / 0\nint x = 99;\n#else\nint x = 10;\n#endif\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        let values: Vec<_> = result.tokens.iter().map(|token| token.value.as_str()).collect();
         assert_eq!(values, ["int", "x", "=", "7", ";"]);
         assert_eq!(result.map.len(), result.tokens.len());
     }
