@@ -318,3 +318,14 @@ including the 250-digit decimal scan bound. Accept at most 250 digits and
 reject 251, leading-zero literals, adjacent decrement, carriage returns,
 and unsupported characters. Keep its two files separate, without aliasing
 another release or claiming complete historical syntax.
+
+Extend that bounded development installment with a separate, explicitly
+partial `5.004_51` pair. Its own historical archive is
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_51.tar.gz`
+with SHA-256
+`940e33d409ea7c5eb93dfabac3b53f5822a7a8522f0ced54e721a0853a80ba2f`.
+Its `perly.y` and `toke.c` blobs are byte-identical to the 5.004_50 archive,
+including the comment-stripped numeric scanner and 250-digit decimal bound.
+It still requires its own token and grammar files and the same negative probes;
+shared source blobs do not make the two public releases aliases or complete
+syntax implementations.
