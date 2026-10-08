@@ -187,5 +187,7 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   // Chapters 163-165 return the old action words separately. The Chapter 165
   // boundary closes four Chapter 151 R4 pairs and exposes two later Chapter
   // 152 pairs in #17006; the earlier three are tracked in #16974.
-  expect(report.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 515, R4: 577 });
+  // Chapter 168 closes three date-form R4 pairs and exposes one later selector
+  // pair in #17058, after the separate A/B example debt in #17041.
+  expect(report.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 515, R4: 575 });
 });

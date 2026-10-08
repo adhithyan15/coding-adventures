@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "PA-R168-date-label-again",
+    "language": "punjabi",
+    "chapter": 168,
+    "sequence": 9080,
+    "modality": "pen",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:d5ddb3a4ebaf9862",
+    "delivery": "script",
+    "authored": "pen",
+    "authoredReason": "The learner must inspect the printed label and copy its Gurmukhi marks.",
+    "overridden": true
+  },
+  "findings": []
+}

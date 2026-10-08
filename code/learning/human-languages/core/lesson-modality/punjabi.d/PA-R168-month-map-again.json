@@ -1,0 +1,25 @@
+{
+  "lesson": {
+    "id": "PA-R168-month-map-again",
+    "language": "punjabi",
+    "chapter": 168,
+    "sequence": 9090,
+    "modality": "pen",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:3c86e0b57baaab90",
+    "delivery": "script",
+    "authored": "pen",
+    "authoredReason": "The learner must inspect two printed Gurmukhi-digit codes and copy them.",
+    "overridden": true
+  },
+  "findings": []
+}
