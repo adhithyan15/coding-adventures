@@ -11,15 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 17109,
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-08T12:16:13Z",
+    "observed_at": "2026-10-08T12:31:05Z",
     "pr_number": 17109,
-    "status": "checks-pending",
-    "notes": "Ready-for-review geometry neutral fixture PR #17109 is open and conflict-free. Initial CI, CodeQL, and human-language detect checks are queued; wait for every required check to become terminal and acceptable before enabling auto-merge."
+    "status": "merged",
+    "notes": "PR #17109 completed every terminal acceptable CI and CodeQL check with no conflict. Guarded squash auto-merge completed as 34fc85f7e0da67a7d41d0e229ab3c975ccb55342 and was verified on fetched origin/main; it was not manually merged. No parity PR remains open."
   },
   "last_inventory": {
-    "revision": "44919f4a28c3665871280a71807d2ffb6718b957",
+    "revision": "34fc85f7e0da67a7d41d0e229ab3c975ccb55342",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1497,
@@ -12156,10 +12156,12 @@
     {
       "id": "geometry-affine2d-bezier2d-java-kotlin-dart-lane-parity",
       "title": "Implement affine2d and bezier2d parity in Java, Kotlin, and Dart",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["geometry-point2d-java-kotlin-dart-lane-parity", "geometry-affine2d-bezier2d-neutral-fixture-extension"],
-      "branch": null,
+      "branch": "codex/parity-geometry2d-java-kotlin-dart-20261008",
       "pr_number": null,
+      "selection_revision": "34fc85f7e0da67a7d41d0e229ab3c975ccb55342",
+      "selection_notes": "Selected after #17109 auto-merged and the exact-main schema-3 collision-checked inventory stayed at 15 established lanes, 1,497 identities, 4,770 occupied slots, and zero collisions or unknown buckets. Both dependencies are merged and six Java/Kotlin/Dart Affine2D/Bezier2D package slots are absent; this port unlocks three Arc2D slots downstream. A parallel read-only audit found no new unowned gap or overlapping open PR. The independent Ruby repository-boundary digest adoption remains dependency-ready but ranks second by immediate portable-slot leverage. OCaml execution and native build-tool milestones retain existing owners and remain outside the established denominator.",
       "notes": "Port the G2D01 and G2D02 pure transform and curve layers as one dependency-shaped tranche, dynamically consuming neutral fixtures and preserving bounded finite arithmetic."
     },
     {
@@ -13626,8 +13628,10 @@
       "notes": "Audit confirmed all twelve existing lanes use midpoint-to-chord flatness and unbounded recursion. Five bounded child owners now claim C#/F#, Python/Ruby/Perl, Go/Rust, Haskell/Swift, and TypeScript/Elixir/Lua. Do not claim this umbrella merged until every lane has tested coverage or a reviewed exception."
     },
     {
-      "id": "geometry-affine2d-bezier2d-neutral-fixture-extension", "title": "Add dynamic G2D01/G2D02 neutral fixtures", "status": "pr-open", "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-bezier2d-flattening-termination-contract"], "branch": "codex/parity-geometry2d-neutral-fixtures-20261008", "pr_number": 17109,
+      "id": "geometry-affine2d-bezier2d-neutral-fixture-extension", "title": "Add dynamic G2D01/G2D02 neutral fixtures", "status": "merged", "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-bezier2d-flattening-termination-contract"], "branch": "codex/parity-geometry2d-neutral-fixtures-20261008", "pr_number": 17109,
       "opened_at": "2026-10-08T12:16:06Z",
+      "merged_at": "2026-10-08T12:31:05Z",
+      "merge_commit": "34fc85f7e0da67a7d41d0e229ab3c975ccb55342",
       "selection_revision": "44919f4a28c3665871280a71807d2ffb6718b957",
       "selection_notes": "Selected after #17104 auto-merged and an exact-main schema-3 collision-checked refresh. Both prerequisites are merged. A read-only leverage pass ranks this neutral G2D01/G2D02 fixture extension first because it unlocks six missing Java/Kotlin/Dart Affine2D and Bezier2D slots, with three Arc2D slots downstream. The Ruby boundary reverse-diff/digest adoption is now independently ready and ranks second. No live open PR overlaps geometry2d fixtures/specs or parity state/roadmap. OCaml milestone review found no new unowned gap; existing pending owners retain its native build-tool and denominator gates.",
       "notes": "Extend the corrected G2D01/G2D02 neutral contract with affine composition/inversion and Bezier evaluation, derivative, split, and bounds cases before Java/Kotlin/Dart fixture-consumed parity. Keep existing-lane flattening repairs separately owned."
