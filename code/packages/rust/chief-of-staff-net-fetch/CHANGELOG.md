@@ -22,7 +22,9 @@
     offered the tool.
 - `is_public` plus single resolution: every resolved address must be public,
   and the connection goes to the checked address. This closes DNS rebinding
-  onto the daemon's own loopback API.
+  onto the daemon's own loopback API. IPv6 is an allowlist of global unicast
+  `2000::/3`, minus Teredo, 6to4, ORCHID, benchmarking and documentation.
+  NAT64 and every IPv4-embedding form are refused.
 - `TlsTransport` connects through `tls-platform`'s `connect_addr`, so SNI and
   certificate verification use the host name while the socket goes to the
   checked address. No redirects are followed.
@@ -35,7 +37,29 @@
   - The secret is injected into exactly one allowlisted header.
   - It must be 8–4096 bytes of printable ASCII.
   - The lease is redeemed only after authorization and the address check.
-  - Every echo of the header value or the secret is scrubbed from the response.
+  - Every echo is masked in place in the raw zeroizing response before
+    anything parses or copies it. Each byte becomes `*`, so framing survives
+    and no unmasked copy exists. The masked forms are as sent, JSON-escaped and
+    percent-encoded, plus a trailing prefix when the stream was cut.
+  - `CredentialSource::redeem` receives the destination `host:port` (V-S7), so
+    the vault can refuse to send a secret to a host it was not provisioned for.
   - Request and response buffers are zeroizing.
+- Chunked decoding checks every server-supplied size against the bytes
+  present and the remaining budget, using checked arithmetic. A size near
+  `usize::MAX` can no longer wrap and panic.
 - `tool_definition()` publishes the D18D definition, whose header schemas
   enumerate the allowlists. It passes D18S S-I7's peer-naming check.
+
+### Security review, round 1 (fixed before the first push)
+
+- **HIGH**: a CR, LF or space in the URL went verbatim onto the request line,
+  defeating the header allowlist. Fixed at the root in `operation-primitives`'
+  preflight (RFC 3986 characters only), so every caller is covered.
+- **MEDIUM**: an echo straddling the truncation point escaped a scrub that
+  ran after truncation. Masking now runs first, on the whole raw buffer.
+- **MEDIUM**: a lease was not bound to a destination. V-S7 adds that binding.
+- **MEDIUM**: chunk-size overflow could panic the daemon.
+- **LOW-MEDIUM**: IPv6 ranges that embed or translate IPv4 were treated as
+  public.
+- **LOW** and **INFO**: response-side copies of the secret, and encoded
+  echoes, were missed. Both are covered by in-place masking.

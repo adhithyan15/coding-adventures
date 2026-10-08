@@ -7,7 +7,8 @@ network work itself, and returns a bounded, scrubbed response.
 
 It is also where a Chief vault lease is spent. In leased mode the model only
 ever holds an opaque `vault_ref`. `net.fetch` redeems it inside the daemon,
-writes the secret into one request header, and scrubs it from whatever comes
+for this host and this destination only. It writes the secret into one
+request header, and masks every echo of it, in place, out of whatever comes
 back.
 
 ```text
@@ -17,7 +18,7 @@ model ── net.fetch { url, credential: { vault_ref, header: "x-api-key" } }
             ▼  resolve once; every address must be public
             ▼  redeem the lease (only now, and only for this host)
             ▼  TLS to the checked address, SNI = host
-            ▼  bounded read; scrub every echo of the secret
+            ▼  bounded read; mask every echo of the secret in place
 model ◀── { status, headers, body, truncated }
 ```
 
@@ -47,9 +48,12 @@ let tool_output = response.to_json();
 
 - **HTTPS only, no redirects.** A 3xx response comes back with its `location`.
   Following it could send a credential to a host the manifest never named.
-- **No IP literals, no internal addresses.** The refused ranges are loopback,
-  private, link-local (cloud metadata), CGNAT, multicast, documentation and
-  reserved, plus IPv4-mapped forms of all of these.
+- **No IP literals, no internal addresses.** The refused IPv4 ranges are
+  loopback, private, link-local (cloud metadata), CGNAT, multicast,
+  documentation and reserved. IPv6 must be global unicast, and NAT64, 6to4,
+  Teredo and the IPv4-mapped and translated forms are refused.
+- **No request smuggling.** URL paths and queries are restricted to RFC 3986
+  characters, so no CR, LF or space can reach the request line.
 - **Fixed headers.** A model may set `accept`, `accept-language`,
   `content-type`, `user-agent`, `if-none-match` and `if-modified-since`. The
   daemon owns `host`, `connection`, `accept-encoding` and `content-length`.

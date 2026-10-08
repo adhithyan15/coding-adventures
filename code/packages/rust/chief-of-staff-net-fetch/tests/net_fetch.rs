@@ -75,6 +75,7 @@ struct OneLease {
     vault_ref: &'static str,
     secret: &'static [u8],
     redeemed: RefCell<u32>,
+    destinations: RefCell<Vec<String>>,
 }
 
 impl OneLease {
@@ -83,12 +84,14 @@ impl OneLease {
             vault_ref: "vault-lease:abc",
             secret,
             redeemed: RefCell::new(0),
+            destinations: RefCell::new(Vec::new()),
         }
     }
 }
 
 impl CredentialSource for OneLease {
-    fn redeem(&self, vault_ref: &str) -> Result<Zeroizing<Vec<u8>>, FetchError> {
+    fn redeem(&self, vault_ref: &str, destination: &str) -> Result<Zeroizing<Vec<u8>>, FetchError> {
+        self.destinations.borrow_mut().push(destination.to_string());
         if vault_ref != self.vault_ref || *self.redeemed.borrow() > 0 {
             return Err(FetchError::CredentialRefused);
         }
@@ -557,27 +560,142 @@ fn a_leased_secret_goes_into_exactly_one_header_and_is_consumed_once() {
 }
 
 #[test]
-fn every_echo_of_the_secret_is_scrubbed() {
-    let echo = b"HTTP/1.1 401 Unauthorized\r\nContent-Type: text/plain\r\nETag: tok-1234567890\r\n\
-                 Content-Length: 66\r\n\r\nbad header 'Bearer tok-1234567890' (token tok-1234567890 is unknown)";
+fn every_echo_of_the_secret_is_masked_in_place() {
+    let body = "bad header 'Bearer tok-1234567890' (token tok-1234567890 is unknown)";
+    let echo = format!(
+        "HTTP/1.1 401 Unauthorized\r\nContent-Type: text/plain\r\nETag: tok-1234567890\r\n\
+         Content-Length: {}\r\n\r\n{body}",
+        body.len()
+    );
     let lease = OneLease::new(b"tok-1234567890");
-    let response = NetFetch::new(routable(), FakeTransport::returning(echo))
+    let response = NetFetch::new(routable(), FakeTransport::returning(echo.as_bytes()))
         .execute(&weather_allowlist(), &request(LEASED), Some(&lease))
         .unwrap();
-    assert!(
-        !response.body.contains("tok-1234567890"),
-        "{}",
-        response.body
-    );
+    assert!(!response.body.contains("tok-"), "{}", response.body);
     assert!(
         !response.body.contains("Bearer"),
-        "the whole header value is one redaction"
+        "the whole header value is one masked run"
     );
-    assert_eq!(response.body.matches("[redacted]").count(), 2);
+    // Same length, so Content-Length still framed the body exactly.
+    assert_eq!(response.body.len(), body.len());
+    assert!(response.body.starts_with("bad header '*"));
     assert!(response
         .headers
         .iter()
-        .all(|(_, value)| !value.contains("tok-1234567890")));
+        .all(|(_, value)| !value.contains("tok-")));
+    // V-S7: the lease source was told where the secret is going.
+    assert_eq!(
+        *lease.destinations.borrow(),
+        vec!["api.weather.gov:443".to_string()]
+    );
+}
+
+#[test]
+fn json_escaped_and_percent_encoded_echoes_are_masked_too() {
+    let secret: &'static [u8] = b"abc/def\"ghi+jkl";
+    let body = r#"{"echo":"abc\/def\"ghi+jkl","url":"https://x/?k=abc%2Fdef%22ghi%2Bjkl"}"#;
+    let raw = format!(
+        "HTTP/1.1 200 OK\r\nContent-Length: {}\r\n\r\n{body}",
+        body.len()
+    );
+    let call = request(
+        r#"{"url":"https://api.weather.gov/","method":"GET",
+            "credential":{"vault_ref":"vault-lease:abc","header":"x-api-key"}}"#,
+    );
+    let response = NetFetch::new(routable(), FakeTransport::returning(raw.as_bytes()))
+        .execute(&weather_allowlist(), &call, Some(&OneLease::new(secret)))
+        .unwrap();
+    for fragment in ["abc", "def", "ghi", "jkl"] {
+        assert!(
+            !response.body.contains(fragment),
+            "{fragment}: {}",
+            response.body
+        );
+    }
+}
+
+#[test]
+fn an_echo_straddling_the_wire_cut_is_masked_up_to_the_cut() {
+    // Pad an endless body so the echo begins a few bytes before the wire
+    // limit; only a prefix of the secret makes it into the buffer.
+    let limits = Limits::default();
+    let head = b"HTTP/1.0 200 OK\r\n\r\n";
+    let mut raw = head.to_vec();
+    raw.extend(std::iter::repeat_n(
+        b'.',
+        limits.max_wire_bytes - head.len() - 5,
+    ));
+    raw.extend_from_slice(b"tok-1234567890 and more");
+    let lease = OneLease::new(b"tok-1234567890");
+    let response = NetFetch::new(routable(), FakeTransport::returning(&raw))
+        .execute(
+            &weather_allowlist(),
+            &request(
+                r#"{"url":"https://api.weather.gov/","method":"GET",
+                    "credential":{"vault_ref":"vault-lease:abc","header":"x-api-key"}}"#,
+            ),
+            Some(&lease),
+        )
+        .unwrap();
+    assert!(response.truncated);
+    // The body bound cuts before the straddling echo; what survives has no
+    // trace of it, and the raw tail that held "tok-1" was masked anyway.
+    assert!(!response.body.contains("tok"));
+}
+
+#[test]
+fn request_lines_cannot_be_smuggled_through_the_url() {
+    let transport = FakeTransport::returning(OK);
+    for smuggling in [
+        "https://api.weather.gov/a\\r\\nx-evil: 1",
+        "https://api.weather.gov/a b",
+        "https://api.weather.gov/?q=1\\nHost: evil",
+    ] {
+        let call = request(&format!(r#"{{"url":"{smuggling}","method":"GET"}}"#));
+        assert_eq!(
+            NetFetch::new(routable(), &transport)
+                .execute(&weather_allowlist(), &call, None)
+                .unwrap_err(),
+            FetchError::Unauthorized,
+            "{smuggling}"
+        );
+    }
+    assert!(transport.nothing_sent());
+}
+
+#[test]
+fn hostile_chunk_sizes_are_protocol_errors_not_panics() {
+    for raw in [
+        &b"HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\n\r\nffffffffffffffff\r\nab"[..],
+        b"HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\n\r\nfffffffffffffffe\r\nab\r\n",
+    ] {
+        assert_eq!(fetch_raw(raw).unwrap_err(), FetchError::Protocol);
+    }
+    let mut long_line = b"HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\n\r\n1;".to_vec();
+    long_line.extend(std::iter::repeat_n(b'x', 200));
+    long_line.extend_from_slice(b"\r\na\r\n0\r\n\r\n");
+    assert_eq!(fetch_raw(&long_line).unwrap_err(), FetchError::Protocol);
+    let mut unterminated = b"HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\n\r\n".to_vec();
+    unterminated.extend(std::iter::repeat_n(b'1', 200));
+    assert_eq!(fetch_raw(&unterminated).unwrap_err(), FetchError::Protocol);
+}
+
+#[test]
+fn ipv6_is_global_unicast_only() {
+    for refused in [
+        "64:ff9b::a00:1", // NAT64 to 10.0.0.1
+        "64:ff9b:1::1",   // local-use NAT64
+        "2002:a00:1::1",  // 6to4 embedding 10.0.0.1
+        "2001::1",        // Teredo
+        "2001:2::1",      // benchmarking
+        "2001:10::1",     // ORCHID
+        "2001:20::1",     // ORCHIDv2
+        "::ffff:0:a00:1", // IPv4-translated
+        "100::1",         // discard
+    ] {
+        assert!(!is_public(refused.parse().unwrap()), "{refused}");
+    }
+    assert!(is_public("2a00:1450:4001:80b::200e".parse().unwrap()));
 }
 
 #[test]
@@ -816,7 +934,8 @@ fn the_tls_transport_reports_a_refused_connection_as_network() {
             b"GET / HTTP/1.1\r\n\r\n",
             &Limits::default(),
         )
-        .err().unwrap();
+        .err()
+        .unwrap();
     assert!(
         matches!(
             error,

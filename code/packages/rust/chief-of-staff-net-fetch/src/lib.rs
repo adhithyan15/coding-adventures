@@ -11,9 +11,9 @@
 //!
 //! `net.fetch` is that operation. A model asks for a URL; the daemon decides
 //! whether this host may reach it, does the network work itself, and hands
-//! back a bounded, scrubbed response. When a credential is involved the model
+//! back a bounded, masked response. When a credential is involved the model
 //! only ever holds an opaque lease reference — the secret is redeemed inside
-//! the daemon, written into one request header, and scrubbed from whatever
+//! the daemon, written into one request header, and masked out of whatever
 //! comes back.
 //!
 //! ## The pipeline, in the order it runs
@@ -29,14 +29,14 @@
 //!        │  Resolver + is_public ..... V-R2 every address public, keep one
 //!        ▼
 //!   SocketAddr (checked)
-//!        │  CredentialSource::redeem . V-S3 only now is a lease consumed (V-S6)
+//!        │  CredentialSource::redeem . V-S3/S7 only now is a lease consumed (V-S6)
 //!        ▼
 //!   request bytes (zeroizing) ........ V-S2 secret in exactly one header
 //!        │  Transport::exchange ...... V-R1 TLS to the CHECKED address
 //!        ▼
 //!   raw response (zeroizing)
+//!        │  mask_echoes .............. V-S4 every echo masked IN PLACE, first
 //!        │  decode_response .......... V-R5..R7 bounds, header allowlist, UTF-8
-//!        │  scrub .................... V-S4 every echo of the secret redacted
 //!        ▼
 //!   FetchResponse → JSON for the model
 //! ```
@@ -90,7 +90,7 @@ pub const MAX_REQUEST_BODY_BYTES: usize = 64 * 1024;
 pub const MAX_RESPONSE_HEAD_BYTES: usize = 32 * 1024;
 /// Largest response body returned to the model, in bytes.
 pub const MAX_RESPONSE_BODY_BYTES: usize = 256 * 1024;
-/// Shortest secret that may be injected (V-S2). Below this, scrubbing the bare
+/// Shortest secret that may be injected (V-S2). Below this, masking the bare
 /// secret from a response would redact ordinary text.
 pub const MIN_SECRET_BYTES: usize = 8;
 /// Longest secret that may be injected (V-S2).
@@ -103,7 +103,6 @@ const MAX_WIRE_BYTES: usize = MAX_RESPONSE_HEAD_BYTES + MAX_RESPONSE_BODY_BYTES 
 
 const DEFAULT_HTTPS_PORT: u16 = 443;
 const DEFAULT_USER_AGENT: &str = "chief-of-staff-net-fetch/0.1";
-const REDACTED: &str = "[redacted]";
 
 /// Request headers a model may set (V-R4). The daemon owns every other one.
 pub const ALLOWED_REQUEST_HEADERS: &[&str] = &[
@@ -421,6 +420,10 @@ fn object<'a>(value: &'a JsonValue, why: &'static str) -> Result<&'a Fields, Fet
     let JsonValue::Object(fields) = value else {
         return Err(FetchError::InvalidRequest(why));
     };
+    // Bound before the quadratic duplicate scan below.
+    if fields.len() > 32 {
+        return Err(FetchError::InvalidRequest("too many fields"));
+    }
     for (index, (key, _)) in fields.iter().enumerate() {
         if fields[..index].iter().any(|(earlier, _)| earlier == key) {
             return Err(FetchError::InvalidRequest("duplicate key"));
@@ -571,17 +574,30 @@ fn is_public_v4(v4: Ipv4Addr) -> bool {
         || a >= 240) // reserved
 }
 
+/// IPv6 is an allowlist, not a denylist: only global unicast `2000::/3`,
+/// minus the ranges inside it that embed or translate an IPv4 address or are
+/// not servers. A denylist missed NAT64 `64:ff9b::/96` the first time round,
+/// which on a DNS64 network reaches RFC 1918 hosts — so everything outside
+/// `2000::/3` (NAT64, IPv4-compatible and -translated forms, discard `100::/64`,
+/// ULA, link-local, multicast, loopback) is refused by construction.
+///
+/// | refused inside `2000::/3` | why |
+/// |---|---|
+/// | `2001::/32` Teredo | tunnels to an embedded IPv4 address |
+/// | `2001:2::/48` | benchmarking |
+/// | `2001:10::/28`, `2001:20::/28` | ORCHID identifiers, not addresses |
+/// | `2001:db8::/32` | documentation |
+/// | `2002::/16` 6to4 | tunnels to an embedded IPv4 address |
 fn is_public_v6(v6: Ipv6Addr) -> bool {
-    let segments = v6.segments();
-    let first = segments[0];
-    !(v6.is_loopback()
-        || v6.is_unspecified()
-        || v6.is_multicast()
-        || (first & 0xfe00) == 0xfc00      // unique local
-        || (first & 0xffc0) == 0xfe80      // link-local
-        || (first & 0xffc0) == 0xfec0      // site-local (deprecated)
-        || first == 0x2001 && segments[1] == 0x0db8 // documentation
-        || segments[..6] == [0, 0, 0, 0, 0, 0]) // IPv4-compatible / reserved
+    let s = v6.segments();
+    let global_unicast = (s[0] & 0xe000) == 0x2000;
+    global_unicast
+        && !(s[0] == 0x2001 && s[1] == 0x0000)            // Teredo
+        && !(s[0] == 0x2001 && s[1] == 0x0002 && s[2] == 0) // benchmarking
+        && !(s[0] == 0x2001 && (s[1] & 0xfff0) == 0x0010)  // ORCHID
+        && !(s[0] == 0x2001 && (s[1] & 0xfff0) == 0x0020)  // ORCHIDv2
+        && !(s[0] == 0x2001 && s[1] == 0x0db8)            // documentation
+        && s[0] != 0x2002 // 6to4
 }
 
 /// Resolves a host name. A trait so tests never touch DNS.
@@ -619,13 +635,20 @@ fn checked_address(resolver: &dyn Resolver, target: &Target) -> Result<SocketAdd
 
 /// Redeems a lease into secret bytes.
 ///
-/// Implemented by the daemon over the vault runtime. The implementation must
-/// refuse a lease that was not issued to the calling host (V-S3) without
-/// consuming it — this crate cannot check that itself, because it never sees
-/// who a lease belongs to.
+/// Implemented by the daemon over the vault runtime, which knows two things
+/// this crate never sees, and must refuse **without consuming the lease**
+/// unless both hold:
+///
+/// - **V-S3** the lease was issued to the calling host;
+/// - **V-S7** the secret is allowed to be sent to `destination` (`host:port`).
+///
+/// V-S7 exists because a manifest can name several hosts: without it, a key
+/// minted for one API could be written into a request to another the same
+/// agent may reach, where it could be logged or reflected in a form the
+/// response mask does not recognize.
 pub trait CredentialSource {
-    /// Atomically consume `vault_ref` and return its payload.
-    fn redeem(&self, vault_ref: &str) -> Result<Zeroizing<Vec<u8>>, FetchError>;
+    /// Atomically consume `vault_ref` for a request to `destination`.
+    fn redeem(&self, vault_ref: &str, destination: &str) -> Result<Zeroizing<Vec<u8>>, FetchError>;
 }
 
 /// The header value a secret becomes: `scheme + " " + secret`, or the secret.
@@ -824,7 +847,7 @@ pub struct FetchResponse {
     pub status: u16,
     /// Allowlisted response headers, lowercased names.
     pub headers: Vec<(String, String)>,
-    /// The UTF-8 body, scrubbed.
+    /// The UTF-8 body, with every echo of a secret masked.
     pub body: String,
     /// Whether the body was cut at [`MAX_RESPONSE_BODY_BYTES`].
     pub truncated: bool,
@@ -853,7 +876,8 @@ impl FetchResponse {
     }
 }
 
-/// Decode a raw response into a [`FetchResponse`] (scrubbing happens after).
+/// Decode a raw response into a [`FetchResponse`]. When a credential was
+/// used, `raw` has already been through [`mask_echoes`].
 ///
 /// `hit_wire_limit` says the transport stopped at its byte cap, so a body
 /// that ends early is *truncated*, not malformed.
@@ -904,13 +928,28 @@ fn decode_response(raw: &[u8], hit_wire_limit: bool) -> Result<FetchResponse, Fe
     })
 }
 
+/// Longest accepted chunk-size line (hex digits plus any extensions).
+const MAX_CHUNK_LINE_BYTES: usize = 128;
+
 /// Chunked transfer decoding. Returns `(body, truncated)`.
+///
+/// The chunk size is the server's word, and the server is not trusted: a
+/// size near `usize::MAX` makes `size + 2` wrap, and a naive slice then
+/// panics the daemon. So every size is checked against what could possibly
+/// fit — the bytes actually present and the remaining body budget — with
+/// checked arithmetic, before any slice is taken.
 fn decode_chunked(mut input: &[u8], hit_wire_limit: bool) -> Result<(Vec<u8>, bool), FetchError> {
     let mut body = Vec::new();
     loop {
         let Some(line_end) = find(input, b"\r\n") else {
+            if input.len() > MAX_CHUNK_LINE_BYTES {
+                return Err(FetchError::Protocol);
+            }
             return incomplete(body, hit_wire_limit);
         };
+        if line_end > MAX_CHUNK_LINE_BYTES {
+            return Err(FetchError::Protocol);
+        }
         let size_text =
             std::str::from_utf8(&input[..line_end]).map_err(|_| FetchError::Protocol)?;
         let size_text = size_text.split(';').next().unwrap_or("").trim();
@@ -919,18 +958,23 @@ fn decode_chunked(mut input: &[u8], hit_wire_limit: bool) -> Result<(Vec<u8>, bo
         if size == 0 {
             return Ok((body, false));
         }
-        if input.len() < size + 2 {
-            body.extend_from_slice(&input[..size.min(input.len())]);
+        let remaining_budget = MAX_RESPONSE_BODY_BYTES.saturating_sub(body.len());
+        let framed = size.checked_add(2).ok_or(FetchError::Protocol)?;
+        if input.len() < framed {
+            // Not all here: either the stream was cut at the wire limit, or
+            // the server lied about the size.
+            body.extend_from_slice(&input[..size.min(input.len()).min(remaining_budget)]);
             return incomplete(body, hit_wire_limit);
         }
-        if &input[size..size + 2] != b"\r\n" {
+        if &input[size..framed] != b"\r\n" {
             return Err(FetchError::Protocol);
         }
-        body.extend_from_slice(&input[..size]);
-        if body.len() > MAX_RESPONSE_BODY_BYTES {
+        if size > remaining_budget {
+            body.extend_from_slice(&input[..remaining_budget]);
             return Ok((body, true));
         }
-        input = &input[size + 2..];
+        body.extend_from_slice(&input[..size]);
+        input = &input[framed..];
     }
 }
 
@@ -967,22 +1011,84 @@ fn find(haystack: &[u8], needle: &[u8]) -> Option<usize> {
         .position(|window| window == needle)
 }
 
-/// V-S4: replace every echo of the header value, then of the bare secret.
+/// V-S4: overwrite every echo of the secret in the raw response, in place.
 ///
-/// Longest first, so `Bearer <secret>` becomes one `[redacted]` rather than
-/// `Bearer [redacted]` — which would still disclose the scheme in use, and
-/// would mean the order of replacements decided what leaked.
-fn scrub(response: &mut FetchResponse, header_value: &str, secret: &str) {
-    for needle in [header_value, secret] {
-        if response.body.contains(needle) {
-            response.body = response.body.replace(needle, REDACTED);
-        }
-        for (_, value) in &mut response.headers {
-            if value.contains(needle) {
-                *value = value.replace(needle, REDACTED);
+/// This runs on the zeroizing wire buffer **before** anything parses or copies
+/// it, which is what makes three properties hold at once:
+///
+/// - **No unmasked copy ever exists.** `http1` copies header values (including
+///   ones off the allowlist, like an echoed `authorization`) into ordinary
+///   `String`s; masking first means those copies are already clean.
+/// - **Framing survives.** Each byte becomes `*`, so lengths do not change and
+///   `Content-Length` and chunk sizes still describe the body.
+/// - **A cut cannot split an echo out of the mask.** The whole buffer is
+///   masked before the body is truncated to its bound. When the stream itself
+///   was cut at the wire limit, a trailing *prefix* of a needle is masked too,
+///   so an echo straddling the cut does not leak all but its last byte.
+///
+/// Each needle is masked in its exact form and in the two encodings an API is
+/// most likely to reflect it in: JSON string escaping (`\"`, `\\`, `\/`)
+/// and percent-encoding. Longest first, so the header value is masked as one
+/// run rather than leaving its scheme word behind.
+fn mask_echoes(raw: &mut [u8], needles: &[&[u8]], stream_was_cut: bool) {
+    let mut variants: Vec<Vec<u8>> = Vec::new();
+    for needle in needles {
+        for variant in [
+            needle.to_vec(),
+            json_escaped(needle),
+            percent_encoded(needle),
+        ] {
+            if variant.len() >= MIN_SECRET_BYTES && !variants.contains(&variant) {
+                variants.push(variant);
             }
         }
     }
+    variants.sort_by_key(|variant| std::cmp::Reverse(variant.len()));
+    for variant in &variants {
+        let mut start = 0;
+        while let Some(found) = find(&raw[start..], variant) {
+            let at = start + found;
+            raw[at..at + variant.len()].fill(b'*');
+            start = at + variant.len();
+        }
+    }
+    if stream_was_cut {
+        for variant in &variants {
+            let longest = variant.len().saturating_sub(1).min(raw.len());
+            if let Some(k) = (1..=longest).rev().find(|k| raw.ends_with(&variant[..*k])) {
+                let end = raw.len();
+                raw[end - k..].fill(b'*');
+            }
+        }
+    }
+}
+
+fn json_escaped(bytes: &[u8]) -> Vec<u8> {
+    let mut out = Vec::with_capacity(bytes.len() * 2);
+    for &byte in bytes {
+        if matches!(byte, b'"' | b'\\' | b'/') {
+            out.push(b'\\');
+        }
+        out.push(byte);
+    }
+    out
+}
+
+fn percent_encoded(bytes: &[u8]) -> Vec<u8> {
+    const HEX: &[u8; 16] = b"0123456789ABCDEF";
+    let mut out = Vec::with_capacity(bytes.len() * 3);
+    for &byte in bytes {
+        if byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'.' | b'_' | b'~') {
+            out.push(byte);
+        } else {
+            out.extend_from_slice(&[
+                b'%',
+                HEX[usize::from(byte >> 4)],
+                HEX[usize::from(byte & 15)],
+            ]);
+        }
+    }
+    out
 }
 
 // ── The operation ────────────────────────────────────────────────────────────
@@ -1029,7 +1135,8 @@ impl<R: Resolver, T: Transport> NetFetch<R, T> {
             None => None,
             Some(spec) => {
                 let source = credentials.ok_or(FetchError::CredentialRefused)?;
-                let secret = source.redeem(&spec.vault_ref)?;
+                let destination = format!("{}:{}", target.host, target.port);
+                let secret = source.redeem(&spec.vault_ref, &destination)?;
                 let value = credential_value(spec, &secret)?;
                 Some((spec.header, secret, value))
             }
@@ -1042,19 +1149,19 @@ impl<R: Resolver, T: Transport> NetFetch<R, T> {
                 .as_ref()
                 .map(|(header, _, value)| (*header, value.as_slice())),
         );
-        let raw = self
+        let mut raw = self
             .transport
             .exchange(&target.host, address, &wire, &self.limits)?;
         drop(wire);
-        let mut response = decode_response(&raw, raw.len() >= self.limits.max_wire_bytes)?;
-
+        let stream_was_cut = raw.len() >= self.limits.max_wire_bytes;
         if let Some((_, secret, value)) = &redeemed {
-            // Both were validated as printable ASCII, so these are lossless.
-            let value = std::str::from_utf8(value).map_err(|_| FetchError::CredentialRefused)?;
-            let secret = std::str::from_utf8(secret).map_err(|_| FetchError::CredentialRefused)?;
-            scrub(&mut response, value, secret);
+            mask_echoes(
+                &mut raw,
+                &[value.as_slice(), secret.as_slice()],
+                stream_was_cut,
+            );
         }
-        Ok(response)
+        decode_response(&raw, stream_was_cut)
     }
 }
 
@@ -1164,6 +1271,28 @@ mod unit {
             Err(FetchError::Protocol)
         );
         assert_eq!(decode_chunked(b"2", true).unwrap(), (Vec::new(), true));
+    }
+
+    #[test]
+    fn mask_echoes_masks_a_prefix_left_at_a_cut_and_nothing_else() {
+        let needles: [&[u8]; 1] = [b"tok-1234567890"];
+        let mut cut = b"data data tok-12345".to_vec();
+        mask_echoes(&mut cut, &needles, true);
+        assert_eq!(&cut, b"data data *********");
+        // Without a cut, a partial is ordinary text and is left alone.
+        let mut whole = b"data data tok-12345".to_vec();
+        mask_echoes(&mut whole, &needles, false);
+        assert_eq!(&whole, b"data data tok-12345");
+        // Exact echoes are masked wherever they are, lengths unchanged.
+        let mut echo = b"<tok-1234567890><tok-1234567890>".to_vec();
+        mask_echoes(&mut echo, &needles, false);
+        assert_eq!(&echo, b"<**************><**************>");
+    }
+
+    #[test]
+    fn encodings_cover_json_and_percent_forms() {
+        assert_eq!(json_escaped(br#"a/b"c\d"#), br#"a\/b\"c\\d"#.to_vec());
+        assert_eq!(percent_encoded(b"a/b c~"), b"a%2Fb%20c~".to_vec());
     }
 
     #[test]

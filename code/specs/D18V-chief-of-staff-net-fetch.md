@@ -97,6 +97,14 @@ SNI set to the URL host, the bundled roots, and hostname verification. Plain
 HTTP is never offered.
 
 **V-R2 — resolve, then check every address, then connect to the checked one.**
+For IPv6 this is an allowlist: only global unicast `2000::/3` is accepted, and
+inside that, Teredo `2001::/32`, benchmarking `2001:2::/48`, ORCHID
+`2001:10::/28` and `2001:20::/28`, documentation `2001:db8::/32` and 6to4
+`2002::/16` are refused. Several of those embed or translate an IPv4 address,
+as NAT64 `64:ff9b::/96` does outside `2000::/3`; on a DNS64 network NAT64
+reaches RFC 1918 hosts. A denylist missed NAT64 in the first draft, which is
+why IPv6 is now an allowlist.
+
 The daemon resolves the host itself and refuses unless **every** resolved
 address is public. It refuses loopback, private (RFC 1918, ULA `fc00::/7`),
 link-local, CGNAT `100.64.0.0/10`, unspecified, multicast, broadcast,
@@ -128,7 +136,12 @@ contain CR, LF or NUL, so headers cannot be smuggled in.
 | Response head | 32 KiB |
 | Response body | 256 KiB; beyond that, `truncated: true` |
 
-The body is decoded from `Content-Length`, chunked, or read until EOF. A
+The body is decoded from `Content-Length`, chunked, or read until EOF. A chunk
+size is the server's word and the server is not trusted. Every size is checked
+with checked arithmetic against the bytes actually present and the remaining
+body budget before any slice is taken, and a chunk-size line longer than 128
+bytes is a protocol error. Without this, a size near `usize::MAX` would wrap
+`size + 2` and panic the daemon. A
 compressed body cannot occur, because `accept-encoding: identity` is forced.
 
 **V-R6 — response headers are allowlisted.** `content-type`, `content-length`,
@@ -161,14 +174,39 @@ call that requires the same attested agent. A mismatch fails with
 `credential_refused` and leaves the lease unconsumed, so its rightful holder
 still has it.
 
-**V-S4 — every echo of the secret is scrubbed.** Some APIs reflect request
-headers, for example in error bodies. Before the response leaves the daemon,
-every occurrence of the injected header value, and of the secret alone, is
-replaced in the response body and headers with `[redacted]`.
+**V-S4 — every echo of the secret is masked in place, before parsing.** Some
+APIs reflect request headers, for example in error bodies. The raw response
+buffer is masked **before** anything parses or copies it: every byte of every
+echo becomes `*`. This gives three guarantees:
 
-**V-S5 — the secret lives only in zeroizing memory.** The request buffer that
-contains it is allocated once at its final size, zeroized after the write, and
-never logged.
+- **No unmasked copy exists.** The HTTP parser copies header values into
+  ordinary strings, including headers off the allowlist such as an echoed
+  `authorization`. Those copies are already clean.
+- **Framing survives.** Lengths do not change, so `Content-Length` and chunk
+  sizes still describe the body. The model learns the secret's length, which
+  is already bounded to 8–4 096 bytes, and nothing else about it.
+- **A cut cannot leak part of an echo.** The whole buffer is masked before the
+  body is truncated. When the stream itself was cut at the wire limit, a
+  trailing *prefix* of a needle is masked too. Otherwise an echo lined up with
+  the cut could leak all but its last byte.
+
+Each needle is masked in three forms: as sent, JSON-string-escaped
+(`\"`, `\\`, `\/`), and percent-encoded. That covers the encodings an API is
+most likely to reflect it in. Other encodings are not covered. V-S7 is the
+stronger control.
+
+**V-S5 — the secret lives only in zeroizing memory.** The request buffer is
+allocated once at its final size and zeroized after the write. The response
+buffer is zeroizing and is masked before any copy is made.
+
+**V-S7 — a secret goes only to the destinations it was provisioned for.**
+`CredentialSource::redeem` receives the request's `host:port`. The vault
+refuses, without consuming the lease, unless the secret's record allows that
+destination. A manifest can name several hosts, and without this rule a key
+minted for one API could be written into a request to another host the same
+agent may reach. That host could then log it, or reflect it in an encoding
+V-S4 does not recognize. The destination list is part of the secret's sealed
+record (D18U version 2, P1.4c).
 
 **V-S6 — the lease is consumed only after authorization.** Steps 1 and 3 of
 the diagram run first. A refused URL never consumes a lease.
