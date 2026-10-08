@@ -151,3 +151,27 @@ fn kill_session_ends_what_the_child_left_behind() {
         "the grandchild kept the pipe open"
     );
 }
+
+#[test]
+fn has_exited_tells_an_exit_without_reaping_it() {
+    let mut child = Command::new("/bin/sh")
+        .args(["-c", "exit 3"])
+        .spawn()
+        .unwrap();
+    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(5);
+    while !chief_of_staff_spawn_isolation::has_exited(&child).unwrap() {
+        assert!(std::time::Instant::now() < deadline, "never exited");
+        std::thread::sleep(std::time::Duration::from_millis(5));
+    }
+    // Still waitable: has_exited did not reap it, so its pid was still ours.
+    assert!(chief_of_staff_spawn_isolation::has_exited(&child).unwrap());
+    assert_eq!(child.wait().unwrap().code(), Some(3));
+}
+
+#[test]
+fn has_exited_is_false_for_a_running_child() {
+    let mut child = Command::new("sleep").arg("5").spawn().unwrap();
+    assert!(!chief_of_staff_spawn_isolation::has_exited(&child).unwrap());
+    child.kill().unwrap();
+    child.wait().unwrap();
+}

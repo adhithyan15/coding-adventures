@@ -186,6 +186,11 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     if has_marker("EXIT_BEFORE_READY") {
         return Ok(());
     }
+    if has_marker("NEVER_READY") {
+        // Complete the bootstrap, then never say Ready.
+        thread::sleep(Duration::from_secs(30));
+        return Ok(());
+    }
     let mut digest = package.digest();
     if has_marker("WRONG_READY") {
         digest[0] ^= 0xff;

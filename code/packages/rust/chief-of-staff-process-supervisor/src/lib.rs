@@ -326,6 +326,9 @@ struct OwnedInstance {
     pending_data_plane_request: Option<DataPlaneRequest>,
     /// This host's request budget (D18S S-K5, P2.6b).
     requests: TokenBucket,
+    /// When a host still `Starting` is ended: it has had the bootstrap
+    /// timeout to say it is ready (review round 9).
+    ready_deadline: Instant,
     /// How many of this host's requests the budget refused.
     rate_limited: u64,
 }
@@ -335,14 +338,27 @@ impl OwnedInstance {
         !matches!(self.phase, InstancePhase::Exited { .. })
     }
 
-    fn finish_exit(&mut self, status: ExitStatus) {
-        // Whatever the host left behind dies with it (review round 8, L1
-        // and L3): a descendant holding its stdout would keep the reader
-        // from end-of-file, and one holding its stdin would keep the writer
-        // blocked.
-        if let Some(child) = self.child.take() {
-            let _ = chief_of_staff_spawn_isolation::kill_session(&child);
+    /// Reap the host if it has exited, killing its session first.
+    ///
+    /// Whatever the host left behind dies with it (review round 8): a
+    /// descendant holding its stdout would keep the reader from end-of-file,
+    /// and one holding its stdin would keep the writer blocked. The exit is
+    /// seen with `has_exited`, which does not reap, so the session kill runs
+    /// while the pid, and so the group id, is still the host's (round 9).
+    fn try_reap(&mut self) -> Result<Option<ExitStatus>, ProcessSupervisorError> {
+        let Some(child) = self.child.as_mut() else {
+            return Ok(None);
+        };
+        if chief_of_staff_spawn_isolation::has_exited(child).unwrap_or(false) {
+            let _ = chief_of_staff_spawn_isolation::kill_session(child);
         }
+        child
+            .try_wait()
+            .map_err(|_| ProcessSupervisorError::ProcessIo)
+    }
+
+    fn finish_exit(&mut self, status: ExitStatus) {
+        self.child.take();
         self.stdin.take();
         if let Some(reader) = self.reader.take() {
             join_bounded(reader);
@@ -356,26 +372,22 @@ impl OwnedInstance {
 
     fn hard_kill_and_reap(&mut self) -> Result<(), ProcessSupervisorError> {
         self.stdin.take();
-        let status = if let Some(child) = self.child.as_mut() {
-            match child
-                .try_wait()
-                .map_err(|_| ProcessSupervisorError::ProcessIo)?
-            {
-                Some(status) => status,
-                None => {
-                    // The whole session, then the child itself (a no-op if
-                    // the group kill already reached it).
-                    let _ = chief_of_staff_spawn_isolation::kill_session(child);
-                    child
-                        .kill()
-                        .map_err(|_| ProcessSupervisorError::ProcessIo)?;
-                    child
-                        .wait()
-                        .map_err(|_| ProcessSupervisorError::ProcessIo)?
-                }
+        let status = match self.try_reap()? {
+            Some(status) => status,
+            None => {
+                let Some(child) = self.child.as_mut() else {
+                    return Ok(());
+                };
+                // The whole session, then the child itself (a no-op if the
+                // group kill already reached it), both before the reap.
+                let _ = chief_of_staff_spawn_isolation::kill_session(child);
+                child
+                    .kill()
+                    .map_err(|_| ProcessSupervisorError::ProcessIo)?;
+                child
+                    .wait()
+                    .map_err(|_| ProcessSupervisorError::ProcessIo)?
             }
-        } else {
-            return Ok(());
         };
         self.finish_exit(status);
         Ok(())
@@ -394,43 +406,44 @@ impl OwnedInstance {
         // the next refresh.
         self.drain_records(dispatcher, Some(MAX_RECORDS_PER_DRAIN))?;
 
-        if let Some(child) = self.child.as_mut() {
-            if let Some(status) = child
-                .try_wait()
-                .map_err(|_| ProcessSupervisorError::ProcessIo)?
-            {
-                // The child can exit between the drain above and this
-                // `try_wait`, while the reader thread is still on its way to
-                // delivering the child's last records or the end-of-stream
-                // failure.  Once the phase is `Exited`, `refresh` never looks
-                // at the channel again, so settling now would silently turn
-                // "exited before ready" into a clean exit:
-                //
-                //   supervisor                 reader thread
-                //   ----------                 -------------
-                //   drain: channel empty
-                //                              read_record -> EOF
-                //   try_wait: exited
-                //   finish_exit -> Exited      send(Failure)   <- never read
-                //
-                // Joining the reader first means every event it will ever
-                // send is already queued, and the second drain surfaces it.
-                // This is the same join `finish_exit` always performed, just
-                // moved ahead of the drain, so it waits no longer than before.  A failure found here reaps through
-                // `hard_kill_and_reap`, which sees the exit status and
-                // finishes the exit itself.
-                if let Some(child) = self.child.as_ref() {
-                    // Descendants first, so the reader sees end-of-file.
-                    let _ = chief_of_staff_spawn_isolation::kill_session(child);
-                }
-                if let Some(reader) = self.reader.take() {
-                    join_bounded(reader);
-                }
-                // Uncapped: the reader is joined, so the queue is final, and
-                // bounded by the reader channel's capacity.
-                self.drain_records(dispatcher, None)?;
-                self.finish_exit(status);
+        if let Some(status) = self.try_reap()? {
+            // `try_reap` has already killed the host's session, so the
+            // reader sees end-of-file.
+            //
+            // The child can exit between the drain above and this
+            // `try_wait`, while the reader thread is still on its way to
+            // delivering the child's last records or the end-of-stream
+            // failure.  Once the phase is `Exited`, `refresh` never looks
+            // at the channel again, so settling now would silently turn
+            // "exited before ready" into a clean exit:
+            //
+            //   supervisor                 reader thread
+            //   ----------                 -------------
+            //   drain: channel empty
+            //                              read_record -> EOF
+            //   try_wait: exited
+            //   finish_exit -> Exited      send(Failure)   <- never read
+            //
+            // Joining the reader first means every event it will ever
+            // send is already queued, and the second drain surfaces it.
+            // This is the same join `finish_exit` always performed, just
+            // moved ahead of the drain, so it waits no longer than before.  A failure found here reaps through
+            // `hard_kill_and_reap`, which sees the exit status and
+            // finishes the exit itself.
+            if let Some(reader) = self.reader.take() {
+                join_bounded(reader);
             }
+            // Uncapped: the reader is joined, so the queue is final, and
+            // bounded by the reader channel's capacity.
+            self.drain_records(dispatcher, None)?;
+            self.finish_exit(status);
+            return Ok(());
+        }
+        // A host that never becomes ready is ended (review round 9). It has
+        // had the bootstrap timeout to send Ready since its spawn.
+        if self.phase == InstancePhase::Starting && Instant::now() >= self.ready_deadline {
+            let _ = self.hard_kill_and_reap();
+            return Err(ProcessSupervisorError::BootstrapTimeout);
         }
         Ok(())
     }
@@ -632,6 +645,7 @@ impl ProcessHostSupervisor {
         registration: &HostRegistration,
     ) -> Result<OwnedInstance, ProcessSupervisorError> {
         let request_budget = self.request_budget;
+        let ready_timeout = self.config.bootstrap_timeout;
         let package_path = Path::new(registration.package_path().as_str());
         let package = verify_agent_package(package_path, self.keyring.as_ref())
             .map_err(|_| ProcessSupervisorError::PackageVerification)?;
@@ -695,7 +709,8 @@ impl ProcessHostSupervisor {
         // From the first byte, the host's stdin is written by its own thread
         // (review round 8, L2): a host that sends its hello and then stops
         // reading cannot block the supervisor in startup either. A frame it
-        // never reads just leaves the startup or readiness timeout to fire.
+        // never reads leaves the bootstrap timeout (no hello) or the
+        // readiness deadline in `refresh` (no Ready) to end it.
         let stdin = match RecordWriter::start(BufWriter::new(child_stdin)) {
             Ok(stdin) => stdin,
             Err(error) => {
@@ -776,6 +791,7 @@ impl ProcessHostSupervisor {
                 started_at_ns,
                 last_heartbeat_ns: None,
                 requests: TokenBucket::new(request_budget),
+                ready_deadline: Instant::now() + ready_timeout,
                 rate_limited: 0,
             }),
             Err(error) => {
@@ -902,13 +918,10 @@ impl HostSupervisor for ProcessHostSupervisor {
 
         let deadline = Instant::now() + self.config.graceful_stop_timeout;
         loop {
-            if let Some(status) = instance
-                .child
-                .as_mut()
-                .ok_or(ProcessSupervisorError::ProcessIo)?
-                .try_wait()
-                .map_err(|_| ProcessSupervisorError::ProcessIo)?
-            {
+            if instance.child.is_none() {
+                return Err(ProcessSupervisorError::ProcessIo);
+            }
+            if let Some(status) = instance.try_reap()? {
                 instance.finish_exit(status);
                 return Ok(());
             }

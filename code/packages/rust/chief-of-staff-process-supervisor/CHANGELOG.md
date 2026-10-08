@@ -38,6 +38,15 @@
   - Test: the test host's new `ORPHAN` mode leaves a `sleep` holding its
     stdout. Stopping the host returns promptly, and the `sleep` is dead.
     Mutation-checked: without the session kill, it fails.
+- **Review round 9:**
+  - The session kill now always runs before the host is reaped, while its
+    pid is still its own. `try_reap` sees the exit with `has_exited`
+    (`waitid(WNOWAIT)`), kills the session, then reaps. `refresh`, `stop` and
+    `hard_kill_and_reap` all go through it.
+  - **Readiness deadline.** A host still `Starting` once the bootstrap
+    timeout has passed since its spawn is ended, with `BootstrapTimeout`.
+    Before this, a host that never sent Ready stayed `Starting` forever.
+    Test: the test host's new `NEVER_READY` mode. Mutation-checked.
 
 - **Descriptor isolation at the production agent spawn** (D18S S-I2, S-I3;
   #13980 P2.2). `spawn_verified` now calls

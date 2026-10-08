@@ -140,6 +140,7 @@ fn package_digest(path: &Path) -> [u8; 32] {
         "EXIT_BEFORE_READY",
         "FLOOD",
         "IGNORE_TERMINATE",
+        "NEVER_READY",
         "ORPHAN",
         "NO_HEARTBEAT",
         "OVERSIZED_BOOTSTRAP",
@@ -629,6 +630,39 @@ fn a_host_over_its_request_budget_is_refused_not_dispatched() {
         15
     );
     supervisor.stop(registration.host_name()).unwrap();
+}
+
+#[test]
+fn a_host_that_never_becomes_ready_is_ended() {
+    // Review round 9: a host that finished the bootstrap but never sent
+    // Ready used to stay Starting forever. It now has the bootstrap timeout.
+    let package = TestPackage::new("never-ready", Some("NEVER_READY"));
+    let registration = package.registration("never-ready-host");
+    let mut supervisor = new_supervisor(
+        Arc::new(keyring()),
+        Arc::new(generate_identity_keypair()),
+        Duration::from_millis(500),
+        Duration::from_secs(2),
+    );
+    supervisor.start(&registration).unwrap();
+    let deadline = Instant::now() + Duration::from_secs(5);
+    let error = loop {
+        match supervisor.inspect(&registration) {
+            Err(error) => break error,
+            Ok(_) => {
+                assert!(Instant::now() < deadline, "the host was never ended");
+                thread::sleep(Duration::from_millis(20));
+            }
+        }
+    };
+    assert_eq!(error, ProcessSupervisorError::BootstrapTimeout);
+    // Killed, so no exit code.
+    let exited = await_phase(
+        &mut supervisor,
+        &registration,
+        SupervisorPhase::Exited { exit_code: None },
+    );
+    assert_eq!(exited.process_id(), None);
 }
 
 #[cfg(target_os = "linux")]

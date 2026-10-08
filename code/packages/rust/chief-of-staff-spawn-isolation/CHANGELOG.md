@@ -8,6 +8,10 @@
   An isolated child leads its own session, so this ends whatever it left
   behind as well (D18S S-K5; #13980 P2.6b). On Windows it does nothing.
   A test checks that a grandchild holding the child's stdout dies with it.
+- `has_exited(&Child)`: whether a child has exited, without reaping it
+  (`waitid(WNOWAIT)` on Unix), so `kill_session` can run while the pid is
+  still the child's. `kill_session` now documents that a descendant which
+  called `setsid` or `setpgid` itself survives it.
 
 ### Added
 

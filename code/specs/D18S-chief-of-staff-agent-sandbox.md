@@ -1510,8 +1510,14 @@ through S-I3 before two weeks are spent on Windows.
          Ending it breaks the pipe, which frees the writer. Startup frames
          use the same writer.
        - ending a host kills its whole session (`killpg`): it leads its own
-         session (S-I3's `setsid`), so whatever it left behind dies with
-         it. Joining its reader is bounded too.
+         session (S-I3's `setsid`), so whatever it left behind dies with it.
+         The kill runs before the reap (`waitid(WNOWAIT)`), so the group id
+         is still the host's. A descendant that started a session of its own
+         escapes it, and only a subreaper or a cgroup would catch that. The
+         sandbox denies agents process creation in the first place. Joining
+         the reader is bounded at 2 s;
+       - a host still `Starting` when the bootstrap timeout has passed is
+         ended.
      - Length bounds already exist on every frame and field, and are
        unchanged.
    - **P2.6c, beneath-resolution (S-K5).** The `openat2(RESOLVE_BENEATH |
