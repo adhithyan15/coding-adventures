@@ -153,6 +153,37 @@ F# remain distinct package roots but share the canonical `dotnet` toolchain
 flag. Every new direct native reader MUST extend this relation and a
 source-reference drift test in the same change.
 
+The flat `code/specs/fixtures/build-tool-v1/cases/source-collection-*.json`
+family has three bounded direct-native-consumer relations. The seven
+package-local cases (neither `repository-` nor `shared-input-` after the
+`source-collection-` prefix) MUST seed `dotnet/programs/build-tool-csharp`,
+`dotnet/programs/build-tool-fsharp`, and `<language>/programs/build-tool` for
+Elixir, Go, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript. Rust
+currently names only two of those seven cases; selecting its front for the
+whole local subfamily is intentional conservative over-selection. The nine
+`source-collection-repository-*.json` cases MUST seed only C#, F#, and Swift
+build-tool roots. The four `source-collection-shared-input-*.json` cases MUST
+seed only C# and F# build-tool roots. These relations record native test
+readers, not a claim that every front replays every fixture in its subfamily.
+The shared `contracts-build-tool-conformance` gate remains responsible for
+all cases, including cases with no native reader.
+
+Only a flat filename with a nonempty stem after its most specific prefix and
+a final `.json` extension belongs to one of these subfamilies. Classify
+`repository-` and `shared-input-` before the package-local fallback; empty
+subfamily stems, nested paths, backslash spellings, wrong case, backups, and
+sibling fixture families MUST NOT seed these roots. The relation applies to
+added, modified, deleted, and renamed paths, including the deleted source of
+a rename. On detect and all Linux, macOS, and Windows plan overrides, union
+the applicable native roots with ordinary changed package roots before
+affected/prerequisite closure without forcing a full build. Explicit
+single-language plans seed and validate only readers in that language.
+Missing applicable registered roots MUST fail before an incomplete plan is
+written. The unforced affected set and toolchain flags MUST demonstrate
+native scheduling; C# and F# are separate roots sharing the `dotnet` flag.
+A new direct native reader or changed native fixture roster MUST update the
+relation and its source-reference drift test together.
+
 ## Evaluation
 
 A gate is **required** when ANY of the following holds:
