@@ -403,3 +403,17 @@ unsupported input in the partial grammar. As for 5.004_55, excluding CR
 from this subset makes no claim about platform-wide historical rejection
 behavior. Keep separate files, leave later releases pending, and do not
 claim complete historical syntax.
+
+Add a separate, explicitly partial `5.004_58` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_58.tar.gz`
+source archive, SHA-256
+`3aea97f0fcd26b867512710d93625f9810dbb6c31c579035d24198fef1bdb977`.
+Compared with `5.004_57`, `perly.y` changes the `OP_GELEM` action for a
+symbol-table expression. `toke.c` changes lexical-state restoration, regex
+interpolation, method lookup, filters, hash-brace disambiguation, and heredoc
+line tracking. Those paths are outside this standalone plain-decimal arithmetic
+`print` subset. Its `scan_num` body is byte-identical to `5.004_57`, retaining
+the 250-digit decimal bound. Accept 250 digits; reject 251, leading-zero forms,
+adjacent decrement, carriage returns, and other unsupported input in the
+partial grammar. Keep its files separate, leave later releases pending, and do
+not claim full historical syntax or platform-wide rejection parity.
