@@ -54,7 +54,9 @@ use chief_of_staff_vault_secret_store::{ChiefSecretStore, StoreError};
 use coding_adventures_json_serializer::serialize as serialize_json;
 use coding_adventures_json_value::{parse as parse_json, JsonValue};
 use coding_adventures_storage_fs::FsStorageBackend;
-use coding_adventures_vault_sealed_store::{SealedStore, SealedStoreError};
+use coding_adventures_vault_sealed_store::{
+    AnchorError, FileFreshnessAnchor, SealedStore, SealedStoreError,
+};
 use coding_adventures_x3dh::generate_identity_keypair;
 use embeddable_http_server::HttpServerOptions;
 use hue_core::{
@@ -308,6 +310,9 @@ pub enum ChiefDaemonError {
     /// A sealed secret record could not be loaded into the vault runtime
     /// (D18V V-D1: one bad record stops startup).
     ChiefVaultLoad(StoreError),
+    /// The vault's freshness anchor directory could not be opened safely
+    /// (VLT01 F11).
+    ChiefVaultAnchor(AnchorError),
     /// The local operator credential could not be loaded or created safely.
     Credential(CredentialFileError),
     /// Local bearer policy construction failed.
@@ -459,6 +464,7 @@ impl Display for ChiefDaemonError {
             Self::ChiefVaultSecret(_) => "chief daemon: vault KEK file failed",
             Self::ChiefVault(_) => "chief daemon: vault failed to open",
             Self::ChiefVaultLoad(_) => "chief daemon: vault secrets failed to load",
+            Self::ChiefVaultAnchor(_) => "chief daemon: vault freshness anchor failed",
             Self::Credential(_) => "chief daemon: operator credential failed",
             Self::Authentication(_) => "chief daemon: local authentication policy failed",
             Self::Policy(_) => "chief daemon: approval policy composition failed",
@@ -486,6 +492,7 @@ impl std::error::Error for ChiefDaemonError {
             Self::ChiefVaultSecret(error) => Some(error),
             Self::ChiefVault(error) => Some(error),
             Self::ChiefVaultLoad(error) => Some(error),
+            Self::ChiefVaultAnchor(error) => Some(error),
             _ => None,
         }
     }
@@ -499,6 +506,9 @@ impl std::error::Error for ChiefDaemonError {
 ///
 /// Otherwise this reads the 32-byte owner-only KEK file, opens
 /// `[vault] storage_path`, and unseals the store, initializing it on first use.
+/// The store is anchored (VLT01 F11) in `<kek_path>.freshness/`, created
+/// owner-only next to the KEK, so a rolled-back storage directory is caught
+/// across restarts.
 /// It is the same sequence the six smart-home pairing vaults use, written once
 /// here so the CLI's `vault put` and the daemon's startup load cannot open the
 /// vault two different ways.
@@ -528,9 +538,26 @@ pub fn open_chief_vault(
         .as_slice()
         .try_into()
         .map_err(|_| ChiefDaemonError::ChiefVaultSecret(SecretFileError::InvalidLength))?;
+    // VLT01 F11: the freshness anchor lives next to the KEK, in the
+    // directory whose owner-only-ness the KEK check already relies on, and
+    // outside the storage directory it protects. An index older than the
+    // anchor, or a missing index the anchor remembers, is then Tamper even
+    // across restarts.
+    let mut anchor_dir = kek_path.clone().into_os_string();
+    anchor_dir.push(".freshness");
+    let anchor_dir = PathBuf::from(anchor_dir);
+    // An anchor inside the directory it protects protects nothing: whoever
+    // can roll the storage back could roll the anchor back with it.
+    if anchor_dir.starts_with(&vault_dir) {
+        return Err(ChiefDaemonError::ChiefVaultAnchor(
+            AnchorError::InsecureDirectory,
+        ));
+    }
+    let anchor =
+        FileFreshnessAnchor::open(anchor_dir).map_err(ChiefDaemonError::ChiefVaultAnchor)?;
     let backend: Arc<dyn StorageBackend> = Arc::new(FsStorageBackend::new(vault_dir));
     backend.initialize().map_err(ChiefDaemonError::Storage)?;
-    let vault = SealedStore::new(backend);
+    let vault = SealedStore::with_anchor(backend, Arc::new(anchor));
     if vault
         .status()
         .map_err(ChiefDaemonError::ChiefVault)?

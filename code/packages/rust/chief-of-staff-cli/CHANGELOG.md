@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- `vault put` and `vault delete` now advance the vault's freshness anchor in
+  `<kek_path>.freshness/` (VLT01 F11). A new end-to-end test puts back a
+  snapshot of the whole vault directory after a rotation, and shows the
+  daemon's loader refusing it.
 - The `vault put` end-to-end test now loads the record through the daemon's
   own startup loader, `load_chief_vault_runtime`, instead of re-creating it.
   A new test shows that one corrupt record stops that load entirely (D18V

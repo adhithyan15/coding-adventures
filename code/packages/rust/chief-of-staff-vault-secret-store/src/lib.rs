@@ -34,10 +34,9 @@
 //! folder, it would have the daemon serve the old policy and the old value
 //! on the next restart. `vault-sealed-store`'s freshness index (VLT01 F1-F10)
 //! now catches a stale or resurrected record: it reads as `Tamper`, and
-//! [`ChiefSecretStore::register_all`] fails closed. An old index restored
-//! together with an old record it pins is still accepted after a restart
-//! (VLT01 F10, P1.20b), so the storage directory must stay writable only by
-//! the owner.
+//! [`ChiefSecretStore::register_all`] fails closed. The daemon opens the
+//! store with a freshness anchor next to the KEK (VLT01 F11), so an old
+//! index restored with an old record is refused too, across restarts.
 //!
 //! ## The envelope, version 2
 //!

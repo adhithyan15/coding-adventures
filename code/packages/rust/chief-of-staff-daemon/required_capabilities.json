@@ -18,13 +18,13 @@
     {
       "category": "fs",
       "action": "create",
-      "target": "configured credential and state paths",
+      "target": "configured credential and state paths, and the <kek_path>.freshness vault anchor directory",
       "justification": "Composes owner-only credential publication and filesystem-backed durable registry initialization."
     },
     {
       "category": "fs",
       "action": "write",
-      "target": "configured credential and state paths",
+      "target": "configured credential and state paths, and the <kek_path>.freshness vault anchor files",
       "justification": "Persists the local credential and durable orchestrator intent through their existing bounded adapters."
     },
     {

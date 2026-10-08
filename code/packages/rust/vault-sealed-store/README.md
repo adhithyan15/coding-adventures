@@ -102,10 +102,12 @@ See the spec for the full argument. In short:
     one.
   - A running process also refuses any index older than one it has seen
     (the epoch floor).
-  - Not detected: an old index restored **with** an old record it pins,
-    after a restart and before any write. That needs an anchor outside the
-    storage directory (P1.20b), so the storage directory must still be
-    writable only by its owner.
+  - Without an anchor, an old index restored **with** an old record it pins,
+    after a restart and before any write, is not detected.
+    `SealedStore::with_anchor` closes that (F11). It keeps each namespace's
+    highest index epoch outside the storage directory, so an older index, or
+    a deleted one, is `Tamper`. `FileFreshnessAnchor` is a ready-made anchor
+    in an owner-only directory.
 - The only key-derived persisted artifact is a verifier AEAD of 16 zero
   bytes. For password-derived KEKs, an attacker's only path is offline
   brute force against Argon2id at the configured parameters.
