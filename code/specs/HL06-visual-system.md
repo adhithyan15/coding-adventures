@@ -1086,6 +1086,39 @@ written. It prints no strip either way (its digits are not cited). Punjabi
 keeps delayed-copy evidence in eleven other lessons, the first in chapter 1
 (PA-W01-haan-delayed-copy), so no stage gate moves.
 
+#### Design — the app places its strip with the book's code
+
+**The gap.** The two paragraphs above say the app "applies the same three
+steps". It did not. language-ladder's `filmstripSectionIndex` took the first
+section titled Writing OR Script, whichever came first; the book takes the
+first Writing block and looks for a Script block only when there is none. A
+letter lesson laid out Warm-up / "Script you'll notice: د" / "Writing: د"
+showed its strip under the Script heading in the app and under the Writing
+heading in print. The test that held the two "equal" compared only the list
+of modelled stages, not the steps. Measured over the corpus (every writing
+lesson with a committed `<id>-filmstrip.svg`, 795): 435 strips sat in a
+different section, all of them a Script section above the book's Writing
+block (malayalam 57, kannada 54, hindi 47, sanskrit 43, telugu 43, gujarati
+41, marathi 39, tamil 37, urdu 18, persian 16, arabic 13, marwadi 10, punjabi
+10, russian 5, bengali 1, japanese 1). No strip appeared or disappeared.
+
+**The rule now has one home.** `strip-placement.ts` in human-language-data
+holds `filmstripBlockIndex`, `stripBlockIndex`, `letterBlockIndex`,
+`modelledPracticeBlockIndex` and `MODELLED_WRITING_STAGES`, moved unchanged
+from `figure-targets.ts`, which re-exports them. The module has no imports,
+because `figure-targets.ts` needs `node:path` and the app's eager chunk has
+a size budget. The app runs `filmstripBlockIndex` on the book's own parse of
+the body (`parseBodyBlocks`) and translates the block index into a section
+through each section's `blockIndex`: the app shows the preamble as a section
+and drops a heading with nothing under it, and the book does neither. A
+corpus test checks, for all 795 lessons, that the section the app picks is
+the block the book's `parseLesson` picks, by index and by heading.
+
+**One deliberate gap.** FA-C03-chist is a word lesson with a declared strip
+(glyph چ, placed in the block that introduces it). The app shows strips only
+on writing lessons and captions them from the headword, which would read
+"How چیست is written", so it still shows none there.
+
 ### Class B — data diagrams (generated)
 
 Etymology and cousin-web trees built from lesson `roots`, sound-articulation diagrams
