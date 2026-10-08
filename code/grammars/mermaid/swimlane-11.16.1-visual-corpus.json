@@ -17,6 +17,7 @@
     "quoted-unicode-lane-labels",
     "html-entity-labels",
     "metadata-entities",
-    "inline-node-styles"
+    "inline-node-styles",
+    "named-node-classes"
   ]
 }

@@ -6222,6 +6222,8 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
     };
     let mut current_lane: Option<usize> = None;
     let mut last_edge_targets: Option<Vec<String>> = None;
+    let mut class_styles = HashMap::new();
+    let mut pending_classes = Vec::new();
     let mut pending_styles = Vec::new();
     for (index, raw) in prepared.lines().enumerate() {
         let line_number = index + 1;
@@ -6280,6 +6282,24 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             }
             continue;
         }
+        if let Some(value) = line.strip_prefix("classDef ") {
+            let Some((name, declarations)) = value.trim().split_once(char::is_whitespace) else {
+                return Err(swimlane_error(line_number, "Swimlane classDef requires a name and declarations"));
+            };
+            class_styles.insert(name.to_string(), parse_swimlane_style_declarations(declarations, line_number)?);
+            continue;
+        }
+        if let Some(value) = line.strip_prefix("class ") {
+            let Some((node_ids, classes)) = value.trim().split_once(char::is_whitespace) else {
+                return Err(swimlane_error(line_number, "Swimlane class requires nodes and a class name"));
+            };
+            pending_classes.push((
+                node_ids.split(',').map(str::trim).filter(|value| !value.is_empty()).map(str::to_string).collect::<Vec<_>>(),
+                classes.split(',').map(str::trim).filter(|value| !value.is_empty()).map(str::to_string).collect::<Vec<_>>(),
+                line_number,
+            ));
+            continue;
+        }
         if let Some(value) = line.strip_prefix("style ") {
             pending_styles.push(parse_swimlane_style(value, line_number)?);
             continue;
@@ -6313,6 +6333,24 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             "Swimlane diagrams require at least one lane and one node",
         ));
     }
+    if let Some(style) = class_styles.get("default") {
+        for node in &mut diagram.nodes {
+            merge_state_style(&mut node.style, style);
+        }
+    }
+    for (node_ids, classes, line) in pending_classes {
+        for node_id in node_ids {
+            let node = diagram.nodes.iter_mut().find(|node| node.id == node_id).ok_or_else(|| {
+                swimlane_error(line, format!("Swimlane class references unknown node {node_id:?}"))
+            })?;
+            for class in &classes {
+                let style = class_styles.get(class).ok_or_else(|| {
+                    swimlane_error(line, format!("Swimlane class references unknown class {class:?}"))
+                })?;
+                merge_state_style(&mut node.style, style);
+            }
+        }
+    }
     for (node_id, style, line) in pending_styles {
         let node = diagram.nodes.iter_mut().find(|node| node.id == node_id).ok_or_else(|| {
             swimlane_error(line, format!("Swimlane style references unknown node {node_id:?}"))
@@ -6326,8 +6364,12 @@ fn parse_swimlane_style(value: &str, line: usize) -> Result<(String, DiagramStyl
     let Some((node_id, declarations)) = value.trim().split_once(char::is_whitespace) else {
         return Err(swimlane_error(line, "Swimlane style requires a node id and declarations"));
     };
+    Ok((node_id.to_string(), parse_swimlane_style_declarations(declarations, line)?, line))
+}
+
+fn parse_swimlane_style_declarations(value: &str, line: usize) -> Result<DiagramStyle, ParseError> {
     let mut style = DiagramStyle::default();
-    for declaration in split_style_declarations(declarations) {
+    for declaration in split_style_declarations(value) {
         let (property, value) = declaration.split_once(':').ok_or_else(|| {
             swimlane_error(line, format!("invalid Swimlane style {declaration:?}"))
         })?;
@@ -6349,7 +6391,7 @@ fn parse_swimlane_style(value: &str, line: usize) -> Result<(String, DiagramStyl
             property => return Err(swimlane_error(line, format!("unsupported Swimlane style property {property:?}"))),
         }
     }
-    Ok((node_id.to_string(), style, line))
+    Ok(style)
 }
 
 fn parse_swimlane_style_number(value: &str, line: usize) -> Result<f64, ParseError> {
