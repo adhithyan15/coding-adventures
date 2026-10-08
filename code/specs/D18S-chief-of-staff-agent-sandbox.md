@@ -1472,11 +1472,18 @@ through S-I3 before two weeks are spent on Windows.
      - Linux also sets `PR_SET_DUMPABLE=0`, which also stops a same-UID
        process from ptracing the daemon or reading `/proc/<pid>/mem`;
      - macOS also uses `ptrace(PT_DENY_ATTACH)`;
-     - each setting is read back to check it.
+     - each setting that has a getter is read back to check it.
+       `PT_DENY_ATTACH` has none.
 
-     Windows' process DACL is step 8. Until then, the report the function
-     returns says Windows applied nothing.
-     Agents are unaffected: `exec` resets dumpability for the new image.
+     Some measures are still missing, and the report the function returns
+     lists them:
+     - Windows' process DACL, which is step 8;
+     - on macOS, the Hardened Runtime without `get-task-allow`. That signing
+       setting, not `PT_DENY_ATTACH`, is what stops `task_for_pid` memory
+       reads.
+
+     Agents become dumpable again, because `exec` resets dumpability for
+     the new image. Every child does inherit the zero core limit.
    - **P2.6b, per-agent rate limits (S-K5).** A token bucket per host at the
      supervisor's dispatch point. Over-limit requests get a data-plane
      failure; they do not end the agent.

@@ -22,11 +22,16 @@
 //!              is D18S step 8)                           `CoreDumpProtection`
 //! ```
 //!
-//! Every setting is read back after it is made, and a mismatch is an error:
-//! S-P3 asks for loud failure, and the caller refuses to start.
+//! Every setting that can be read back is, and a mismatch is an error: S-P3
+//! asks for loud failure, and the caller refuses to start. `PT_DENY_ATTACH`
+//! has no getter, so its success is the call's own return value. On macOS,
+//! `task_for_pid` memory reads are stopped by the Hardened Runtime without
+//! `get-task-allow` (a build-signing setting), not by `PT_DENY_ATTACH`; until
+//! the build signs that way, the report lists it as missing.
 //!
-//! An agent is not affected: `exec` resets dumpability for the new image,
-//! and the agent's own limits come from its sandbox plan.
+//! Children: `exec` resets dumpability for the new image, so an agent is
+//! dumpable again. The zero core limit is inherited by every child, with a
+//! hard limit it cannot raise, which costs a child nothing.
 
 #![deny(unsafe_op_in_unsafe_fn)]
 
@@ -154,7 +159,12 @@ mod platform {
         if unsafe { libc::ptrace(libc::PT_DENY_ATTACH, 0, std::ptr::null_mut(), 0) } != 0 {
             return Err(failed(MEASURE));
         }
-        protection.applied.push(MEASURE);
+        protection
+            .applied
+            .push("ptrace(PT_DENY_ATTACH) (no getter: not read back)");
+        protection
+            .missing
+            .push("Hardened Runtime without get-task-allow (task_for_pid memory reads)");
         Ok(())
     }
 

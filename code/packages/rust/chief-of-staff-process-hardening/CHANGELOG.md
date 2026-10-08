@@ -12,7 +12,10 @@
     root-owned, and refuses ptrace from any process of the same user;
   - macOS: `ptrace(PT_DENY_ATTACH)`.
 
-  Each measure is read back after it is set, and a mismatch is an error.
+  Each measure that has a getter is read back, and a mismatch is an error.
+  `PT_DENY_ATTACH` has none. On macOS, the report also lists the Hardened
+  Runtime without `get-task-allow` as missing. That is what stops
+  `task_for_pid` reads, and it is a build-signing setting.
   The returned `CoreDumpProtection` lists what was applied, and what this
   platform still lacks: the BSDs' attach denial, and Windows' process DACL
   (step 8).
