@@ -12,7 +12,8 @@ All notable changes to the Go build tool will be documented in this file.
   neutral-only readers. Unknown flat cases fail closed. Raw-path and
   three-platform matching, language filters, missing roots, rename sources,
   emitted plans, and direct-reader drift are covered without forcing a full
-  build or changing plan execution behavior.
+  build or changing plan execution behavior. Git diff now emits NUL-delimited
+  raw paths, so quoted non-ASCII names cannot bypass unknown-case rejection.
 
 - Case-exact native CI selection for the twenty-two checked
   `validation-*.json` fixtures. Nine orphan-crate/tracked-artifact cases

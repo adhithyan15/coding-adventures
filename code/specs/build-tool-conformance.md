@@ -1404,7 +1404,9 @@ for `plan-replace-existing` and TypeScript for
 and `plan-future-version` are currently neutral-only. A new valid flat plan
 case MUST fail closed until its native-reader relation is classified. Raw
 Git paths, including both sides of renames, MUST be matched without OS
-normalization; nested, backslash-spelled, case-varied, and backup lookalikes
+normalization or Git quote-path decoding. The change detector MUST preserve
+raw path bytes through an unambiguous delimiter, including non-ASCII names;
+nested, backslash-spelled, case-varied, and backup lookalikes
 do not belong to this family. Ordinary changed roots remain selected, and
 explicit language filtering, missing applicable BUILD roots, and Linux,
 macOS, and Windows plan/toolchain checks follow the exact-reader relation.
