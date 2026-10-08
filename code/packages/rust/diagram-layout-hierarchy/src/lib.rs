@@ -260,6 +260,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         lanes,
         nodes,
         edges,
+        links: diagram.links.clone(),
     }
 }
 
@@ -659,6 +660,7 @@ mod tests {
                 kind: SwimlaneEdgeKind::Directed,
                 start_marker: EdgeMarker::Circle, end_marker: EdgeMarker::Point,
             }],
+            links: Vec::new(),
         };
         let layout = layout_swimlane(&diagram);
         assert!(layout.lanes[1].y > layout.lanes[0].y);
@@ -681,7 +683,7 @@ mod tests {
             nodes: vec![SwimlaneNode { id: "long".into(),
                 label: "A substantially longer process description".into(),
                 lane_id: Some("lane".into()), shape: DiagramShape::Rect, classes: Vec::new(), style: Default::default() }],
-            edges: vec![],
+            edges: vec![], links: Vec::new(),
         };
         let layout = layout_swimlane(&diagram);
         assert!(layout.nodes[0].width > 132.0);

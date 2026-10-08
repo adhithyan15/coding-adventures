@@ -1917,7 +1917,7 @@ pub struct SwimlaneEdge {
 pub struct SwimlaneDiagram {
     pub direction: DiagramDirection, pub title: Option<String>, pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>, pub lanes: Vec<SwimlaneLane>, pub nodes: Vec<SwimlaneNode>,
-    pub edges: Vec<SwimlaneEdge>,
+    pub edges: Vec<SwimlaneEdge>, pub links: Vec<GraphLink>,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneLane { pub id: String, pub label: String, pub x: f64, pub y: f64, pub width: f64, pub height: f64 }
@@ -1936,6 +1936,7 @@ pub struct LayoutedSwimlaneDiagram {
     pub width: f64, pub height: f64, pub direction: DiagramDirection, pub title: Option<String>,
     pub accessibility_title: Option<String>, pub accessibility_description: Option<String>,
     pub lanes: Vec<LayoutedSwimlaneLane>, pub nodes: Vec<LayoutedSwimlaneNode>, pub edges: Vec<LayoutedSwimlaneEdge>,
+    pub links: Vec<GraphLink>,
 }
 
 // GRAMMAR VISUALIZATION FAMILY
