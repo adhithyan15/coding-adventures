@@ -1,8 +1,8 @@
 //! C's directive syntax for the shared PREP01 engine.
 //!
 //! The rooted C file-input frontend composes this dialect with `preprocess`.
-//! Its condition evaluator remains bounded. A single raw-token `#` stringize
-//! subset is supported; `##` remains unsupported.
+//! Its condition evaluator remains bounded. Single raw-token `#` stringize
+//! and identifier-prefix `##` paste subsets are supported.
 
 use coding_adventures_c_lexer::try_tokenize_c;
 use coding_adventures_source_preprocessor::{
@@ -367,13 +367,27 @@ impl Dialect for CDialect {
     fn paste(&self, left: &Token, right: &Token) -> Option<Token> {
         if left.type_ != TokenType::Name
             || right.type_ != TokenType::Name
+            || left.effective_type_name() != "NAME"
+            || right.effective_type_name() != "NAME"
             || !identifier(&left.value)
             || !identifier(&right.value)
         {
             return None;
         }
+        let spelling = format!("{}{}", left.value, right.value);
+        // C keywords also match the identifier character pattern. Admit only
+        // spellings that the actual C lexer classifies as one NAME token.
+        let lexed = try_tokenize_c(&spelling).ok()?;
+        if !matches!(lexed.as_slice(), [name, eof]
+            if name.type_ == TokenType::Name
+                && name.effective_type_name() == "NAME"
+                && name.value == spelling
+                && eof.type_ == TokenType::Eof)
+        {
+            return None;
+        }
         let mut result = right.clone();
-        result.value = format!("{}{}", left.value, right.value);
+        result.value = spelling;
         Some(result)
     }
 
@@ -773,6 +787,8 @@ mod tests {
             "#define P(x) pre ## x\nP(a+b)\n",
             "#define P(x) pre ## x\nP(4)\n",
             "#define P(x) pre ## x\nP(\"a\")\n",
+            "#define P(x) i ## x\nP(nt)\n",
+            "#define P(x) int32_ ## x\nP(t)\n",
             "#define P(x) pre ## x\nP(NAME)\n",
         ] {
             let mut fs = MemoryFs::new();

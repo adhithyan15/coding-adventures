@@ -915,8 +915,9 @@ remain pending.
 The next C paste stage accepts exactly one `##` in a function-like macro
 replacement list, in the shape `<literal identifier> ## <parameter>`. The
 argument must contain exactly one raw identifier token. Concatenate the two
-spellings into one valid C identifier token, then make it available for the
-normal macro rescan. The pasted parameter uses its raw spelling instead of
+spellings into one token that the C lexer classifies as a `NAME`, excluding
+keywords formed by paste, then make it available for the normal macro rescan.
+The pasted parameter uses its raw spelling instead of
 its pre-expanded value, as required for a parameter adjacent to `##` by
 WG14 N843 §6.10.3.3. Source:
 <https://www.open-std.org/jtc1/sc22/wg14/www/docs/n843.pdf>.
@@ -925,8 +926,9 @@ For example, with `#define NAME tail`, `#define preNAME 7`, and
 formed from `tail`.
 
 Keep all existing source, token, text, fuel, expansion-depth, and output
-bounds. Project the pasted spelling's bytes and token count before building
-it, validate the dialect hook's returned token type and exact spelling, and
+bounds. Project the pasted spelling's bytes, per-token spelling, and token
+count before building it, validate the dialect hook's returned token type and
+exact spelling, and
 retain the raw argument's source position and expansion chain alongside the
 invocation. Reject empty or multi-token arguments; numeric, string, and
 punctuation operands; multiple paste operators; paste at either end; two

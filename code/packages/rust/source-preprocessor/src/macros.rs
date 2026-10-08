@@ -686,10 +686,13 @@ fn substitute_function_like(
             if raw.len() != 1 {
                 return Err(PpError::new("bounded paste requires one raw argument token"));
             }
+            let pasted_bytes =
+                (token.value.len() as u64).saturating_add(raw[0].token.value.len() as u64);
+            if pasted_bytes > bounds.token_spelling_bytes {
+                return Err(PpError::new("pasted token exceeds the spelling budget"));
+            }
             projected_tokens = projected_tokens.saturating_add(1);
-            projected_bytes = projected_bytes.saturating_add(
-                token.value.len() as u64 + raw[0].token.value.len() as u64,
-            );
+            projected_bytes = projected_bytes.saturating_add(pasted_bytes);
             cursor += 3;
             continue;
         }
