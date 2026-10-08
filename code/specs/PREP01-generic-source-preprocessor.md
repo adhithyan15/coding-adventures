@@ -872,3 +872,37 @@ variadic macros, `__has_include`, and a minimal in-VFS `stdint.h`/`stdio.h`.
    containment, regular-file and byte-cap rules, opened read-only, with no
    implicit fallback to an undeclared host path.** The containment property
    does not get weakened to accommodate the answer.
+
+## 10. Bounded C stringize stage
+
+The next C handoff stage accepts `#parameter` only in a function-like macro
+replacement list and only when the corresponding argument contains exactly
+one identifier or plain-decimal preprocessing token. It emits one C string
+literal token containing that argument's original spelling, including quotes.
+For example, with `#define WORD expanded` and `#define S(x) #x`, `S(WORD)`
+emits `"WORD"`; ordinary `x` substitution still pre-expands to `expanded`.
+This follows WG14 N843 §6.10.3.2's distinction between the spelling of the
+argument and macro-expanded substitution. Source:
+<https://open-std.org/jtc1/sc22/wg14/www/docs/n843.htm>.
+
+The generic engine preserves each collected argument before pre-expansion and
+passes the raw token to the dialect's `stringize` hook only for a parameter
+immediately preceded by `#`. An argument used only for stringizing is not
+pre-expanded. A parameter used elsewhere in the same replacement list still
+gets its separately pre-expanded form there. MacroOct and MacroNib keep their
+default unsupported hook and reject the operator. The C dialect rejects `#`
+outside that exact shape, rejects `##`, and rejects empty, multi-token,
+string-literal, character-literal, non-decimal, or malformed arguments in this
+stage. These are explicit subset limits, not claims about all C preprocessing.
+
+Before constructing the quoted token, the engine projects its maximum bytes
+from the bounded raw token spelling, checks token-spelling and aggregate
+synthesized-byte limits, and charges the produced token. The returned token
+must be a C string literal with source and expansion provenance; a hook that
+returns an oversized or malformed result fails closed. Definition and
+invocation errors retain directive or call-site positions. Tests cover raw
+versus pre-expanded spelling, mixed raw/plain parameter use, literal and
+malformed operator rejection, non-C rejection, and tight byte and fuel bounds
+through the rooted C frontend and generic engine. Token paste and broader
+stringizing, including whitespace collapse and escaping within literals,
+remain pending.
