@@ -15,9 +15,10 @@ the core directive shapes and run object and function-like macros, local
 includes, `#ifdef`, `defined`, bounded decimal comparisons, one-operator
 arithmetic and bounded logical conditions in `#if` through the generic engine.
 `compile_preprocessed_file` uses that token stream with declared include roots
-before parsing and lowering.
-The pathless `compile_source` API retains its legacy behavior. Full C `#if`
-expressions, stringize, paste and default frontend routing remain pending.
+before parsing and lowering. Pathless `compile_source` uses the same bounded
+preprocessor with an in-memory primary source. Every active include fails
+closed because that API has no include roots. Full C `#if` expressions,
+stringize, and paste remain pending.
 
 ## API
 
@@ -62,8 +63,10 @@ Stringize and paste in macro bodies also fail explicitly.
 unexpanded name. It is inert in a skipped conditional group; malformed
 operands fail with the directive location on the rooted file-input path.
 
-The pathless `compile_source` API below still uses the legacy C source parser
-path and does not run the generic preprocessor.
+The pathless `compile_source` API below preprocesses directives before the
+token-input C parser. It supports the bounded directive forms above but cannot
+read host files or resolve active includes. Use `compile_preprocessed_file`
+when the translation unit needs headers.
 
 ```rust
 use c_to_semantic_ir::compile_source;
