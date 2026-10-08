@@ -30,6 +30,7 @@ pub enum DiagramShape {
     Hexagon,
     Hourglass,
     Triangle,
+    InvertedTriangle,
     Cloud,
     Bang,
     Stadium,

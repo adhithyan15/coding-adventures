@@ -3544,6 +3544,11 @@ line "Target" [35, 50, 68, 82]"##,
                     PaintInstruction::Path(path) if path.commands.len() == 4
                 )), "triangle shape must lower to a closed three-point path");
             }
+            if fixture_name == "flipped-triangle-manual-file-shape" {
+                assert!(scene.instructions.iter().any(|instruction| matches!(instruction,
+                    PaintInstruction::Path(path) if path.commands.len() == 4
+                )), "flipped triangle must lower to a closed three-point path");
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));

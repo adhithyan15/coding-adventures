@@ -6888,6 +6888,7 @@ fn parse_swimlane_shape_attributes(
                     "hex" | "hexagon" | "prepare" => DiagramShape::Hexagon,
                     "hourglass" | "collate" => DiagramShape::Hourglass,
                     "tri" | "extract" | "triangle" => DiagramShape::Triangle,
+                    "flip-tri" | "flipped-triangle" | "manual-file" => DiagramShape::InvertedTriangle,
                     "cloud" => DiagramShape::Cloud,
                     "bang" => DiagramShape::Bang,
                     "stadium" | "pill" | "terminal" => DiagramShape::Stadium,

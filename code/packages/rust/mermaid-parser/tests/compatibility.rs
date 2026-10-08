@@ -1589,6 +1589,15 @@ fn swimlane_triangle_and_extract_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_flipped_triangle_and_manual_file_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Manual\n  first@{ shape: flip-tri, label: \"First\" }\n  second@{ shape: manual-file, label: \"Second\" }\nend\nfirst --> second",
+    ).expect("Swimlane flipped-triangle aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::InvertedTriangle));
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",

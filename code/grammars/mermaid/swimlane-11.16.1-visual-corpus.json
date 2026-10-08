@@ -12,6 +12,7 @@
     "classic-shape-attributes-and-aliases",
     "hourglass-collate-shape",
     "triangle-extract-shape",
+    "flipped-triangle-manual-file-shape",
     "input-output-and-asymmetric-shapes",
     "sloped-flowchart-shapes",
     "quoted-unicode-node-labels",
