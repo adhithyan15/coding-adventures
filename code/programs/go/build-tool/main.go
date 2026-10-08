@@ -189,6 +189,8 @@ const sharedDiscoveryFixturePath = "code/specs/fixtures/build-tool-v1/cases/disc
 const ciGateFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/ci-gate-selection-"
 const toolchainDetectionFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/toolchain-detection-"
 const sourceCollectionFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/source-collection-"
+const graphFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/graph-"
+const diffSelectionFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/diff-selection-"
 
 const closureProvenanceSpecPath = "code/specs/CV02-checked-bounded-provenance-graphs.md"
 const closureProvenanceConsumer = "rust/programs/closurec"
@@ -267,6 +269,23 @@ var sourceCollectionSharedInputFixtureConsumers = []struct{ name, language strin
 	{"dotnet/programs/build-tool-fsharp", "fsharp"},
 }
 
+// Graph and diff-selection share this native reader set. Four of these
+// fronts (Java, Kotlin, Dart, OCaml) exercise process-free cores only: their
+// tests dispatch by decoded domain rather than literal case filenames.
+var graphDiffNativeFixtureConsumers = []struct{ name, language string }{
+	{"dotnet/programs/build-tool-csharp", "csharp"},
+	{"dotnet/programs/build-tool-fsharp", "fsharp"},
+	{"java/programs/build-tool", "java"},
+	{"kotlin/programs/build-tool", "kotlin"},
+	{"dart/programs/build-tool", "dart"},
+	{"ocaml/programs/build-tool", "ocaml"},
+	{"go/programs/build-tool", "go"},
+	{"haskell/programs/build-tool", "haskell"},
+	{"perl/programs/build-tool", "perl"},
+	{"python/programs/build-tool", "python"},
+	{"swift/programs/build-tool", "swift"},
+}
+
 func hasCIGateFixturePath(changedFiles []string) bool {
 	for _, changed := range changedFiles {
 		name, ok := strings.CutPrefix(changed, ciGateFixturePrefix)
@@ -310,6 +329,21 @@ func sourceCollectionFixtureFamily(changed string) string {
 		return ""
 	}
 	return "local"
+}
+
+// Raw Git paths must match a flat checked case. Never clean or normalize the
+// path first: a backslash or nested spelling is not another route to the
+// corpus, and a sibling fixture domain must not schedule these readers.
+func hasGraphDiffFixturePath(changedFiles []string) bool {
+	for _, changed := range changedFiles {
+		for _, prefix := range []string{graphFixturePrefix, diffSelectionFixturePrefix} {
+			name, ok := strings.CutPrefix(changed, prefix)
+			if ok && strings.HasSuffix(name, ".json") && len(name) > len(".json") && !strings.ContainsAny(name, "/\\") {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 func changedPackageRootsForPlatform(
@@ -390,13 +424,14 @@ func changedPackageRootsForPlatformAndLanguage(
 	discoveryFixtureChanged := containsPath(changedFiles, sharedDiscoveryFixturePath)
 	ciGateFixtureChanged := hasCIGateFixturePath(changedFiles)
 	toolchainFixtureChanged := hasToolchainDetectionFixturePath(changedFiles)
+	graphDiffFixtureChanged := hasGraphDiffFixturePath(changedFiles)
 	sourceFixtureFamilies := map[string]bool{}
 	for _, path := range changedFiles {
 		if family := sourceCollectionFixtureFamily(path); family != "" {
 			sourceFixtureFamilies[family] = true
 		}
 	}
-	if !discoveryFixtureChanged && !ciGateFixtureChanged && !toolchainFixtureChanged && len(sourceFixtureFamilies) == 0 {
+	if !discoveryFixtureChanged && !ciGateFixtureChanged && !toolchainFixtureChanged && !graphDiffFixtureChanged && len(sourceFixtureFamilies) == 0 {
 		return changed, nil
 	}
 
@@ -435,6 +470,17 @@ func changedPackageRootsForPlatformAndLanguage(
 			}
 			if !available[consumer.name] {
 				return nil, fmt.Errorf("toolchain-detection fixture consumer %q is missing from discovered packages", consumer.name)
+			}
+			changed[consumer.name] = true
+		}
+	}
+	if graphDiffFixtureChanged {
+		for _, consumer := range graphDiffNativeFixtureConsumers {
+			if language != "all" && consumer.language != language {
+				continue
+			}
+			if !available[consumer.name] {
+				return nil, fmt.Errorf("graph/diff fixture consumer %q is missing from discovered packages", consumer.name)
 			}
 			changed[consumer.name] = true
 		}

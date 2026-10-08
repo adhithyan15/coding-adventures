@@ -12,19 +12,20 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 17000,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/17000",
-    "branch": "codex/parity-source-collection-fixture-ci-20261008",
-    "item_id": "build-tool-source-collection-fixture-native-ci-selection"
+    "number": 17013,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/17013",
+    "branch": "codex/parity-graph-diff-fixture-ci-20261008",
+    "implementation_revision": "3082fffc9265af50f46aa67b248072d42954c881",
+    "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-08T01:38:00Z",
-    "pr_number": 17000,
-    "status": "pending",
-    "notes": "Ready-for-review PR #17000 is open and mergeable. Initial CI and CodeQL checks are queued; no auto-merge requested while checks are pending."
+    "observed_at": "2026-10-08T02:43:20Z",
+    "pr_number": 17013,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #17013 opened after Go full package/race/vet/build, eleven-reader local validation with explicit Perl full-suite caveat, 5,305-package BUILD plan, neutral corpus, lessons, collision-free parity, diff, and independent security review. GitHub reports MERGEABLE with initial checks queued; do not enable auto-merge until every final-head check is terminal acceptable and no conflict remains. Prior PR #17000 merged via guarded auto-merge as 523c29ad136f9eb0f0191235ee6d2243bdbe0f68."
   },
   "last_inventory": {
-    "revision": "def09f02d44cef3dfdd5a4b3e3cf9b7b4efd7eec",
+    "revision": "523c29ad136f9eb0f0191235ee6d2243bdbe0f68",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1497,
@@ -13526,8 +13527,8 @@
       "notes": "Selected after #16981 merged and an unchanged, collision-free 15-lane inventory. Twelve native direct readers of the toolchain-detection corpus need exact flat-family, three-platform, single-language, and missing-root CI selection without broad specs fanout. A fixture-only change currently reaches neutral validation but not those native test fronts. Rebased conflict-free onto origin/main 8efe4884ea5a828b81807fea84b959e50330c172 after confirming zero overlap with 39 intervening main paths; the refreshed inventory still has 1,496 identities, 4,766 slots, zero collisions, and zero unknown buckets."
     },
     {
-      "id": "build-tool-graph-diff-fixture-native-ci-selection", "title": "Gate native graph/diff fixture readers", "status": "pending", "depends_on": ["build-tool-ci-gate-fixture-native-ci-selection", "build-tool-neutral-graph-diff-corpus-completion"], "branch": null, "pr_number": null,
-      "notes": "Eleven native direct readers of graph-/diff-selection corpora, including JVM/Dart pure cores and emerging OCaml. Add exact-package, three-platform, missing-root CI selection."
+      "id": "build-tool-graph-diff-fixture-native-ci-selection", "title": "Gate native graph/diff fixture readers", "status": "pr-open", "depends_on": ["build-tool-ci-gate-fixture-native-ci-selection", "build-tool-neutral-graph-diff-corpus-completion"], "branch": "codex/parity-graph-diff-fixture-ci-20261008", "pr_number": 17013,
+      "notes": "Selected after #17000 merged and the 1,272-item collision-checked backlog refresh. Eight graph and twelve diff-selection flat cases have eleven direct native test roots: C#/F#/Java/Kotlin/Dart/OCaml/Go/Haskell/Perl/Python/Swift. Java/Kotlin/Dart/OCaml enumerate by domain and exact IDs, not literal flat names; OCaml remains emerging. Freeze exact raw-path selection, three-platform/single-language plans, missing-root atomicity, rename source, toolchains, and dynamic/explicit reader drift. Do not claim core-only lanes have a complete build-tool front door or adapter."
     },
     {
       "id": "transistors-physical-model-neutral-conformance", "title": "Freeze educational transistor physical-model fixtures", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
@@ -13616,7 +13617,7 @@
       "notes": "Read-only security review of the registry slice observed pre-existing File.dir?/1 recursion through directory symlinks without canonical-root or visited-inode checks. This is host filesystem authority, not portable language-registry behavior; review an explicit no-follow/boundary policy and applicable native tests separately. Excluded from this portable parity delivery loop pending host-security review."
     },
     {
-      "id": "build-tool-source-collection-fixture-native-ci-selection", "title": "Gate native source-collection fixture readers", "status": "pr-open", "depends_on": ["build-tool-pure-domain-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-site-authored-resource-source-input-extension", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-source-collection-fixture-ci-20261008", "pr_number": 17000,
+      "id": "build-tool-source-collection-fixture-native-ci-selection", "title": "Gate native source-collection fixture readers", "status": "merged", "depends_on": ["build-tool-pure-domain-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-site-authored-resource-source-input-extension", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-source-collection-fixture-ci-20261008", "pr_number": 17000,
       "notes": "Selected after #16989 merged and all newly discovered owners were registered. Twenty exact flat source-collection cases have direct native readers in twelve build-tool fronts, including an Elixir local-case reader found during independent source review; fixture-only diffs seed only the neutral gate. Map seven local cases to twelve fronts, nine repository cases to C#/F#/Swift, and four shared-input cases to C#/F#; verify dynamic and explicit reader drift, three-platform/single-language selection, rename source, and missing-root atomicity. Do not change production collectors or claim every reader replays every case."
     },
     {
@@ -13625,7 +13626,7 @@
     },
     {
       "id": "build-tool-validation-fixture-native-ci-selection", "title": "Gate native validation fixture readers", "status": "pending", "depends_on": ["build-tool-validation-oracle-corpus", "build-tool-tracked-artifact-validation-corpus", "build-tool-orphan-crate-validation-corpus", "build-tool-orphan-package-root-validation-corpus-and-go-adoption", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": null, "pr_number": null,
-      "notes": "The flat validation family has 23 cases, but direct native readers cover only scoped subfamilies: four orphan-package-root cases in Go, four orphan-crate/exemption and five tracked-artifact cases in ten other fronts, plus one Lua Windows sibling case in Go. Nine one-off cases have no verified native reader; avoid blanket validation-* fanout."
+      "notes": "The flat validation family has 22 cases, but direct native readers cover only scoped subfamilies: four orphan-package-root cases in Go, four orphan-crate/exemption and five tracked-artifact cases in ten other fronts, plus one Lua Windows sibling case in Go. Eight one-off cases have no verified native reader; avoid blanket validation-* fanout."
     },
     {
       "id": "actor-d19-portable-core-neutral-conformance", "title": "Freeze D19 actor portable core and host-adapter boundary", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
@@ -13670,6 +13671,66 @@
     {
       "id": "chief-of-staff-net-fetch-native-authority-review", "title": "Classify D18V net.fetch as native network authority", "status": "pending", "selection_blocked": true, "depends_on": [], "branch": null, "pr_number": null,
       "notes": "New Rust-only canonical chief-of-staff-net-fetch root arrived on main def09f02. D18V specifies signed-manifest HTTPS/TLS authorization and vault lease redemption; the capability manifest declares net:dns and net:connect. This is a credential-bearing host operation, not a portable package lane target. Exclude from parity delivery pending a separate native-security review."
+    },
+    {
+      "id": "build-tool-resolution-fixture-native-ci-selection", "title": "Gate native resolution fixture readers", "status": "pending", "depends_on": ["build-tool-fixtures", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": null, "pr_number": null,
+      "notes": "Twenty-six flat resolution cases have direct but heterogeneous native readers in Go/Haskell/Lua/Perl/Python/Ruby/Rust/Swift/TypeScript. Haskell constructs some field-aware case names dynamically; freeze an exact per-case/subfamily reader map and source-reference drift check before fixture-only CI selection. Keep neutral fallback and test three platforms, language filtering, missing-root atomicity, rename source, plans, and toolchains. Rank after graph/diff, ahead of hashing-cache subject to mapping complexity."
+    },
+    {
+      "id": "javascript-lang78-iir-compiler-portability-classification", "title": "Classify JavaScript LANG78 IIR compiler core versus runner", "status": "pending", "selection_blocked": true, "depends_on": ["compiler-and-ir-rust-singleton-foundation"], "branch": null, "pr_number": null,
+      "notes": "Existing Rust-only javascript-iir-compiler is a LANG78 native-frontend pilot, not an automatic fourteen-lane port. Review pure bounded source/typed-AST-to-IIR lowering and diagnostics separately from jsvm argv, file reads, stdout/stderr, exit, and VM runner. No package capability manifest exists; do not assert whole-package zero authority or overlap the separate LANG-VM queue. Decide applicable portable lanes only after an exact spec/capability classification."
+    },
+    {
+      "id": "ir-to-intel-4004-compiler-neutral-assembly-conformance", "title": "Freeze pure IR-to-Intel-4004 assembly conformance", "status": "pending", "depends_on": ["compiler-ir-aot-neutral-conformance", "intel-4004-ir-validator-neutral-hardware-conformance"], "branch": null, "pr_number": null,
+      "notes": "NIB01 governs deterministic IR-to-4004 assembly and diagnostics. Existing Go/Python/Rust/TypeScript implementations form a four-lane reference. Freeze neutral vectors after compiler-IR and 4004 validator contracts; keep host writers out."
+    },
+    {
+      "id": "ir-to-intel-4004-compiler-eleven-lane-parity", "title": "Classify eleven missing IR-to-Intel-4004 compiler lanes", "status": "pending", "depends_on": ["ir-to-intel-4004-compiler-neutral-assembly-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/Elixir/F#/Haskell/Java/Kotlin/Lua/Perl/Ruby/Swift lack this pure lowering stage. Split by lane; each child needs its local 4004 validator, and C#/Dart/F#/Java/Kotlin/Swift additionally need local compiler-IR. Rust-only codegen-core is not a universal dependency."
+    },
+    {
+      "id": "intel8008-simulator-neutral-lifecycle-conformance", "title": "Freeze Intel 8008 simulator lifecycle and full-state fixtures", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "07f defines checked load/step/bounded run, 16KiB memory, eight-word stack, flags and port-latch snapshots, 256 opcode classification, and fail-before-mutation. Existing Go/Perl/Python/Rust/TypeScript cores are process-free reference lanes. This dependency-free neutral contract unlocks simulator and gate-level parity."
+    },
+    {
+      "id": "intel8008-simulator-ten-lane-parity", "title": "Classify ten missing Intel 8008 simulator lanes", "status": "pending", "depends_on": ["intel8008-simulator-neutral-lifecycle-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/Elixir/F#/Haskell/Java/Kotlin/Lua/Ruby/Swift lack the portable 07f core. Split by lane after neutral lifecycle fixtures; keep external process/device I/O out of the bounded in-memory port-latch contract."
+    },
+    {
+      "id": "intel8008-gatelevel-neutral-state-conformance", "title": "Freeze Intel 8008 gate-level full-state differential conformance", "status": "pending", "depends_on": ["intel8008-simulator-neutral-lifecycle-conformance"], "branch": null, "pr_number": null,
+      "notes": "07f2 requires gate-backed datapaths and all-opcode/full-state differential equality against 07f, not transistor timing. Existing Go/Perl/Python/Rust/TypeScript lanes are references. Arithmetic and logic-gates are real inputs; logic-gates already covers all fifteen lanes."
+    },
+    {
+      "id": "intel8008-gatelevel-ten-lane-parity", "title": "Classify ten missing Intel 8008 gate-level lanes", "status": "pending", "depends_on": ["intel8008-gatelevel-neutral-state-conformance", "intel8008-simulator-ten-lane-parity"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/Elixir/F#/Haskell/Java/Kotlin/Lua/Ruby/Swift lack 07f2. Split by lane; each child needs its matching 07f simulator, and Dart/Java/Kotlin additionally depend on their pending arithmetic-lane owner. Go/Rust manifests confirm arithmetic dependency; do not universalize Go's transistor import."
+    },
+    {
+      "id": "arm1-simulator-07e-neutral-full-state-conformance", "title": "Freeze ARM1 simulator full-state differential conformance", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "07e defines deterministic checked ARMv1 load/step/run, 64MiB logical address space, 27 physical registers, flags/interrupts, and atomic failures. Eight established lanes exist and a 599-vector Python full-state differential reference is available. No host capability required by Go/Rust manifests."
+    },
+    {
+      "id": "arm1-simulator-seven-lane-parity", "title": "Classify seven missing ARM1 simulator lanes", "status": "pending", "depends_on": ["arm1-simulator-07e-neutral-full-state-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/F#/Haskell/Java/Kotlin/Swift lack the 07e pure core. Split per lane after neutral full-state fixtures; do not conflate bounded simulator behavior with host hardware execution."
+    },
+    {
+      "id": "arm1-gatelevel-07e2-neutral-differential-conformance", "title": "Freeze ARM1 gate-level differential conformance", "status": "pending", "depends_on": ["arm1-simulator-07e-neutral-full-state-conformance"], "branch": null, "pr_number": null,
+      "notes": "07e2 requires gate-backed ALU/condition/shifter and full-state differential equality with 07e, not transistor timing. Eight established lanes exist; Rust/Go manifests have empty capabilities and use logic-gates/arithmetic/simulator."
+    },
+    {
+      "id": "arm1-gatelevel-seven-lane-parity", "title": "Classify seven missing ARM1 gate-level lanes", "status": "pending", "depends_on": ["arm1-gatelevel-07e2-neutral-differential-conformance", "arm1-simulator-seven-lane-parity"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/F#/Haskell/Java/Kotlin/Swift lack 07e2. Split per lane; each child needs its matching 07e simulator, and Dart/Java/Kotlin additionally need their existing pending arithmetic-lane owner. Logic-gates already spans all fifteen lanes."
+    },
+    {
+      "id": "branch-predictor-d02-neutral-conformance", "title": "Freeze D02 branch predictor neutral conformance", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "D02 defines static, one-bit, two-bit/BTB predict-update behavior and statistics. Eight established lanes exist; Go/Rust/TypeScript manifests have empty capabilities and depend on state-machine and directed-graph, both fifteen-lane foundations. Reconcile the spec's logical clock narrative with implementations that do not import a clock package."
+    },
+    {
+      "id": "branch-predictor-seven-lane-parity", "title": "Classify seven missing D02 branch predictor lanes", "status": "pending", "depends_on": ["branch-predictor-d02-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/F#/Haskell/Java/Kotlin/Swift lack the pure predictor. Split per lane after neutral fixtures; require local state-machine/directed-graph but not an absent clock port unless the chosen API actually imports it."
+    },
+    {
+      "id": "mermaid-swimlane-quoted-label-parser-neutral-conformance", "title": "Classify DG04 Swimlane quoted-label parser semantics", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Existing Rust-only Mermaid parser gained quoted Unicode Swimlane labels on main #17001; the hierarchy-layout owner explicitly excludes parsing. Freeze quoted/escaped Unicode, label normalization, malformed quote rejection, node-shape ambiguity, and exact semantic IR against pinned DG04/corpus before deciding applicable portable parser lanes. Routing, typography, Metal, and full Mermaid compatibility are separate."
     }
   ]
 }

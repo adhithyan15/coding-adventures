@@ -16669,6 +16669,42 @@ package, so `chief-of-staff-net-fetch-native-authority-review` is registered
 as a pending, selection-blocked host-security classification, not an
 all-language port or work for this parity PR.
 
+### Post-#17000 merged-main refresh
+
+PR #17000 merged by guarded auto-merge as `523c29ad136f9eb0f0191235ee6d2243bdbe0f68`
+after 29 successful, seven skipped, and one neutral terminal checks, without
+failure or merge conflict. The exact merged-main schema-3 inventory remains
+collision-free: 15 established languages, 1,497 implementation identities,
+4,767 occupied slots, 1,539 all-reported identities, and zero unknown
+language buckets. OCaml's five package roots still belong to its emerging
+lane and do not enlarge the denominator. The source-collection CI owner is
+merged; preserve the ten D19/IR-optimizer/4004-validator/JVM-class-file
+owners and the blocked net-fetch authority review already carried by that PR.
+
+Parallel audits registered newly discovered work before the next selection:
+
+| Family | New pending owner chain | Boundary and prerequisite |
+| --- | --- | --- |
+| Resolution fixture CI | `build-tool-resolution-fixture-native-ci-selection` | 26 flat cases, nine heterogeneous native readers, exact per-case map needed; after merged fixture and CI-gate prerequisites. |
+| JavaScript LANG78 IIR | `javascript-lang78-iir-compiler-portability-classification` | Selection-blocked Rust pilot classification: separate pure bounded lowering from `jsvm` file/process/stdio authority and the LANG-VM queue; do not infer fourteen port obligations. |
+| IR-to-Intel-4004 compiler | `ir-to-intel-4004-compiler-neutral-assembly-conformance` → `ir-to-intel-4004-compiler-eleven-lane-parity` | 4/15; wait for compiler-IR and 4004-validator neutral contracts, then split children by local prerequisites. |
+| Intel 8008 simulator and gate level | `intel8008-simulator-neutral-lifecycle-conformance` → `intel8008-simulator-ten-lane-parity`; `intel8008-gatelevel-neutral-state-conformance` → `intel8008-gatelevel-ten-lane-parity` | Both 5/15; 07f bounded full-state simulator precedes 07f2 differential gate-level work, with same-lane simulator and arithmetic prerequisites. |
+| ARM1 simulator and gate level | `arm1-simulator-07e-neutral-full-state-conformance` → `arm1-simulator-seven-lane-parity`; `arm1-gatelevel-07e2-neutral-differential-conformance` → `arm1-gatelevel-seven-lane-parity` | Both 8/15; 599-vector full-state reference precedes gate-backed differential and same-lane simulator/arithmetic ports. |
+| Branch predictor | `branch-predictor-d02-neutral-conformance` → `branch-predictor-seven-lane-parity` | 8/15; reconcile D02 logical clock language with existing clock-free state-machine/directed-graph manifests. |
+| Mermaid Swimlane parser | `mermaid-swimlane-quoted-label-parser-neutral-conformance` | DG04 quoted Unicode labels affect Rust parser semantics, not the already owned layout hierarchy; freeze exact IR before considering portable parser lanes. |
+
+Correct the pending validation-fixture selector's inventory to 22 checked
+flat cases: 14 have scoped direct native readers and eight remain
+neutral-only one-offs. Graph/diff remains the highest-leverage ready CI
+selection slice: eight `graph-*.json` plus twelve `diff-selection-*.json`
+cases have eleven direct native readers, including Java/Kotlin/Dart process-free
+cores and emerging OCaml. Both existing prerequisites are merged. Choose
+exactly `build-tool-graph-diff-fixture-native-ci-selection` next, in a fresh
+clean branch, before the more heterogeneous resolution and hashing selectors.
+This fixture gate does not promote any core-only build-tool lane to a complete
+CLI/adapter. The dependency-ready Intel 8008 and ARM1 neutral simulator
+contracts remain separate future implementation slices.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

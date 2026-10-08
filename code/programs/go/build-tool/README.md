@@ -10,6 +10,13 @@ Changes to the exact shared language-registry discovery fixture schedule all
 eleven native build-tool consumers, including Haskell, on every platform; a
 source-reference check guards the selector map against new direct adopters.
 
+Changes to the flat shared `graph-*.json` and `diff-selection-*.json`
+conformance cases also schedule their eleven direct native readers on each
+platform. This fixture-only CI selection is bounded by the active language
+filter, fails if an applicable reader root is missing, and does not force a
+full build. Java, Kotlin, Dart, and OCaml readers are process-free domain
+cores; the selection does not imply full build-tool adapter parity.
+
 ## Portable source hashing
 
 Extension and declared-source collection share the language-neutral v1 rules.
