@@ -11,15 +11,21 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 17060,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/17060",
+    "branch": "codex/parity-validation-fixture-ci-20261008",
+    "implementation_revision": "aa0c879b0744d944ae862d4f3653766ceced72c8",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-08T06:34:33Z",
-    "pr_number": 17042,
-    "status": "merged",
-    "notes": "PR #17042 passed 29 successful, seven skipped, and one neutral terminal checks after an unrelated macOS Forme performance-gate rerun. GitHub reported no conflict; guarded auto-merge completed as 4a73b025cbb245fc0164fdfd19d1ba6142b11b88, verified on fetched origin/main. It was not manually merged."
+    "observed_at": "2026-10-08T07:28:52Z",
+    "pr_number": 17060,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #17060 opened from the tested clean parity worktree after #17042 was verified merged. Initial GitHub checks are queued and mergeability is MERGEABLE; auto-merge remains disabled until every final-head required check is terminal acceptable and conflict-free. No other parity PR is open."
   },
   "last_inventory": {
-    "revision": "bedf869390378fde9a0443090da080416caaf400",
+    "revision": "57ff56c81c0b683dad83858e974ea09e918c63e1",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1497,
@@ -13632,7 +13638,7 @@
       "notes": "Selected after #17028 merged and newly discovered work was registered. Eleven checked hashing-cache cases have direct native readers in nine build-tool fronts: C#/F#/Lua all cases, Python missing/hit/corrupt, Go/Perl/Ruby/Swift missing, and TypeScript corrupt. Fixture-only diffs do not select those BUILD roots. Use a closed exact case-to-reader map, independent source-reference drift evidence, neutral fallback, and three-platform/language/rename/missing-root tests; some fronts assert only digest slices rather than replaying the full oracle. Separate from Lua/Perl hashing-cache implementation owners."
     },
     {
-      "id": "build-tool-validation-fixture-native-ci-selection", "title": "Gate native validation fixture readers", "status": "in-progress", "depends_on": ["build-tool-validation-oracle-corpus", "build-tool-tracked-artifact-validation-corpus", "build-tool-orphan-crate-validation-corpus", "build-tool-orphan-package-root-validation-corpus-and-go-adoption", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-validation-fixture-ci-20261008", "pr_number": null,
+      "id": "build-tool-validation-fixture-native-ci-selection", "title": "Gate native validation fixture readers", "status": "pr-open", "depends_on": ["build-tool-validation-oracle-corpus", "build-tool-tracked-artifact-validation-corpus", "build-tool-orphan-crate-validation-corpus", "build-tool-orphan-package-root-validation-corpus-and-go-adoption", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-validation-fixture-ci-20261008", "pr_number": 17060,
       "notes": "Selected from collision-checked bedf869390 main after #17042 merged; all five prerequisites are merged and no active parity PR or direct open-PR overlap remains. The flat validation family has 22 cases, but direct native readers cover only scoped subfamilies: four orphan-package-root cases in Go, four orphan-crate/exemption and five tracked-artifact cases in eleven non-Go fronts, plus one Lua Windows sibling case in Go. Fourteen cases have native readers; eight one-off cases have no verified native reader. Perl composes filenames dynamically; avoid blanket validation-* fanout."
     },
     {
