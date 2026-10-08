@@ -11,21 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 16989,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16989",
-    "branch": "codex/parity-toolchain-fixture-ci-20261007",
-    "implementation_revision": "119262645b4be58a3d4a8cb9de9bf6f5278a11fb",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-08T00:28:51Z",
+    "observed_at": "2026-10-08T01:11:07Z",
     "pr_number": 16989,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #16989 opened after final-head Go package/race/vet/build, 5,304-package BUILD-plan, neutral-corpus, lessons, parity, diff, and independent SHIP security validation. GitHub reports MERGEABLE with initial checks pending; do not enable auto-merge until every final-head check is terminal acceptable and no conflict remains. Prior PR #16981 merged through guarded auto-merge as 26e5792ae7ba88fe1918c55ce4a4bf3c41a2fa2f."
+    "status": "merged",
+    "notes": "Final-head #16989 completed 29 successful, seven skipped, and one neutral checks with no failure. GitHub reported MERGEABLE/CLEAN; guarded squash auto-merge merged it as 52b53049ecb38094d0c93b6f59a767884032b63e. No manual merge was performed."
   },
   "last_inventory": {
-    "revision": "8efe4884ea5a828b81807fea84b959e50330c172",
+    "revision": "52b53049ecb38094d0c93b6f59a767884032b63e",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1496,
@@ -13523,7 +13517,7 @@
       "notes": "Seven Brainfuck/Nib/AOT families each 9/15 and 42 structural slots absent in C#/Dart/F#/Java/Kotlin/Swift. Separate BF02 IR producer from Nib frontend, then split per dependency and lane before ports; no native-runtime scope."
     },
     {
-      "id": "build-tool-toolchain-detection-fixture-native-ci-selection", "title": "Gate native toolchain-detection fixture readers", "status": "pr-open", "depends_on": ["build-tool-ci-gate-fixture-native-ci-selection", "build-tool-extra-ci-toolchain-declaration-corpus"], "branch": "codex/parity-toolchain-fixture-ci-20261007", "pr_number": 16989,
+      "id": "build-tool-toolchain-detection-fixture-native-ci-selection", "title": "Gate native toolchain-detection fixture readers", "status": "merged", "depends_on": ["build-tool-ci-gate-fixture-native-ci-selection", "build-tool-extra-ci-toolchain-declaration-corpus"], "branch": "codex/parity-toolchain-fixture-ci-20261007", "pr_number": 16989,
       "notes": "Selected after #16981 merged and an unchanged, collision-free 15-lane inventory. Twelve native direct readers of the toolchain-detection corpus need exact flat-family, three-platform, single-language, and missing-root CI selection without broad specs fanout. A fixture-only change currently reaches neutral validation but not those native test fronts. Rebased conflict-free onto origin/main 8efe4884ea5a828b81807fea84b959e50330c172 after confirming zero overlap with 39 intervening main paths; the refreshed inventory still has 1,496 identities, 4,766 slots, zero collisions, and zero unknown buckets."
     },
     {
@@ -13615,6 +13609,58 @@
       "branch": null,
       "pr_number": null,
       "notes": "Read-only security review of the registry slice observed pre-existing File.dir?/1 recursion through directory symlinks without canonical-root or visited-inode checks. This is host filesystem authority, not portable language-registry behavior; review an explicit no-follow/boundary policy and applicable native tests separately. Excluded from this portable parity delivery loop pending host-security review."
+    },
+    {
+      "id": "build-tool-source-collection-fixture-native-ci-selection", "title": "Gate native source-collection fixture readers", "status": "pending", "depends_on": ["build-tool-pure-domain-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-site-authored-resource-source-input-extension", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": null, "pr_number": null,
+      "notes": "Twenty exact flat source-collection cases have direct native readers in eleven build-tool fronts, but fixture-only diffs seed only the neutral gate. Map seven local cases to eleven fronts, nine repository cases to C#/F#/Swift, and four shared-input cases to C#/F#; verify dynamic and explicit reader drift, three-platform/single-language selection, rename source, and missing-root atomicity. Do not change production collectors or claim every reader replays every case."
+    },
+    {
+      "id": "build-tool-hashing-cache-fixture-native-ci-selection", "title": "Gate native hashing-cache fixture readers", "status": "pending", "depends_on": ["build-tool-pure-domain-corpus", "build-tool-neutral-dependency-hashing-adversarial-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": null, "pr_number": null,
+      "notes": "Eleven checked hashing-cache cases have direct test references in nine distinct native build-tool fronts; fixture-only diffs do not select those BUILD roots. Use exact family matching and per-reader evidence; some fronts replay only a subset. Separate from existing Lua/Perl hashing-cache implementation owners."
+    },
+    {
+      "id": "build-tool-validation-fixture-native-ci-selection", "title": "Gate native validation fixture readers", "status": "pending", "depends_on": ["build-tool-validation-oracle-corpus", "build-tool-tracked-artifact-validation-corpus", "build-tool-orphan-crate-validation-corpus", "build-tool-orphan-package-root-validation-corpus-and-go-adoption", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": null, "pr_number": null,
+      "notes": "The flat validation family has 23 cases, but direct native readers cover only scoped subfamilies: four orphan-package-root cases in Go, four orphan-crate/exemption and five tracked-artifact cases in ten other fronts, plus one Lua Windows sibling case in Go. Nine one-off cases have no verified native reader; avoid blanket validation-* fanout."
+    },
+    {
+      "id": "actor-d19-portable-core-neutral-conformance", "title": "Freeze D19 actor portable core and host-adapter boundary", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Actor is 8/15 across established lanes, with seven missing slots. Specify deterministic V1 Message/Channel/ActorSystem mailbox and round-robin behavior separately from generated timestamps, IDs, and disk persistence; do not treat host adapters as portable core parity."
+    },
+    {
+      "id": "actor-d19-seven-lane-parity", "title": "Classify seven missing D19 actor lanes", "status": "pending", "depends_on": ["actor-d19-portable-core-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/F#/Haskell/Java/Kotlin/Swift lack actor; split by lane after neutral core and adapter boundary, preserving host-authority exclusions."
+    },
+    {
+      "id": "ir-optimizer-neutral-ir-to-ir-conformance", "title": "Freeze pure compiler IR optimizer semantics", "status": "pending", "depends_on": ["compiler-ir-aot-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Generic ir-optimizer is 6/15; existing Rust NOP removal, Haskell identity, and Python/TypeScript multipass behavior diverge. Freeze shared minimum, optional pass tiers, canonical IR round-trip, and semantic preservation before ports."
+    },
+    {
+      "id": "ir-optimizer-nine-lane-parity", "title": "Classify nine missing IR optimizer lanes", "status": "pending", "depends_on": ["ir-optimizer-neutral-ir-to-ir-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/F#/Java/Kotlin/Lua/Perl/Ruby/Swift lack the pure optimizer. Split by lane; six BF03-dependent lanes need their local compiler-ir prerequisite, while Lua/Perl/Ruby can proceed after neutral conformance."
+    },
+    {
+      "id": "intel-4004-ir-validator-neutral-hardware-conformance", "title": "Freeze pure Intel 4004 IR validation contract", "status": "pending", "depends_on": ["compiler-ir-aot-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Intel 4004 IR validator is 5/15 and distinct from assembler owners. Reconcile Python/Go hardware-limit checks with Rust opcode-only checks, IR schema, diagnostic order, and invalid inputs without assembler, packager, simulator, or host I/O scope."
+    },
+    {
+      "id": "intel-4004-ir-validator-ten-lane-parity", "title": "Classify ten missing Intel 4004 IR validator lanes", "status": "pending", "depends_on": ["intel-4004-ir-validator-neutral-hardware-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/F#/Haskell/Java/Kotlin/Lua/Perl/Ruby/Swift lack the pure validator. Split by lane; C#/Dart/F#/Java/Kotlin/Swift require same-lane BF03 compiler-ir before porting."
+    },
+    {
+      "id": "jvm-class-file-neutral-byte-conformance", "title": "Freeze JVM class-file pure byte contract", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "JVM class-file is 4/15 in Go/Python/Rust/TypeScript. Freeze conservative magic/version, constant-pool subset, Code attribute, bounded parser errors and byte round-trip; exclude filesystem, class loading, and VM execution."
+    },
+    {
+      "id": "jvm-class-file-eleven-lane-parity", "title": "Classify eleven missing JVM class-file lanes", "status": "pending", "depends_on": ["jvm-class-file-neutral-byte-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/Elixir/F#/Haskell/Java/Kotlin/Lua/Perl/Ruby/Swift lack the pure byte foundation. Split per lane; same-lane JVM lowering and source-to-JVM wrappers depend on it."
+    },
+    {
+      "id": "ir-to-jvm-class-file-neutral-byte-lowering-conformance", "title": "Freeze pure compiler IR-to-JVM byte lowering", "status": "pending", "depends_on": ["compiler-ir-aot-neutral-conformance", "jvm-class-file-neutral-byte-conformance"], "branch": null, "pr_number": null,
+      "notes": "IR-to-JVM backend is 4/15. Specify pure IR-to-class bytes separately from optional disk writer; Python writer declares no filesystem capability and TypeScript writer invokes an undeclared Python subprocess, so host-writer parity requires separate capability review."
+    },
+    {
+      "id": "ir-to-jvm-class-file-eleven-lane-parity", "title": "Classify eleven missing IR-to-JVM lowering lanes", "status": "pending", "depends_on": ["ir-to-jvm-class-file-neutral-byte-lowering-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/Elixir/F#/Haskell/Java/Kotlin/Lua/Perl/Ruby/Swift lack pure lowering. Split per lane; each needs local jvm-class-file and compiler-ir, with six BF03 compiler-ir ports still separately owned. Exclude optional host writer pending capability review."
     }
   ]
 }

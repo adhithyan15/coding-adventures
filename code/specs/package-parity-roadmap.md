@@ -16621,6 +16621,44 @@ selection, fail-closed missing-root behavior, source-reference drift tests,
 and emitted-plan/toolchain evidence. Keep production toolchain evaluators,
 workflow changes, and the graph/diff fixture selector outside this slice.
 
+## Post-#16989 merged refresh (2026-10-08)
+
+PR #16989 passed 29 successful, seven skipped, and one neutral final-head
+checks. GitHub reported `MERGEABLE` and `CLEAN`; guarded squash auto-merge
+merged it as `52b53049ecb38094d0c93b6f59a767884032b63e` without a manual
+merge. The exact merged-main schema-3 inventory is unchanged: 15 established
+lanes, 1,496 implementation identities, 4,766 occupied slots, 1,538
+all-reported identities, and zero canonical collisions or unknown buckets.
+The completion bands remain 178/262, 123/934, 181/2,282, and
+1,014/14,196; OCaml's five package roots remain emerging. No new identity or
+high-consensus gap arose from the intervening merges.
+
+Parallel read-only audits found and collision-checked additional owners
+before the next selection. These are backlog records, not completed ports:
+
+| Family | Newly registered pending owner chain | Boundary and leverage |
+| --- | --- | --- |
+| Source-collection fixture CI | `build-tool-source-collection-fixture-native-ci-selection` | Twenty flat cases have eleven native reader fronts; use the verified 7 local / 9 repository / 4 shared-input reader maps, not a blanket all-front fanout. All selector prerequisites are merged. |
+| Hashing-cache fixture CI | `build-tool-hashing-cache-fixture-native-ci-selection` | Eleven cases have nine native reader fronts; distinguish fixture-only scheduling from existing Lua/Perl evaluator owners. |
+| Validation fixture CI | `build-tool-validation-fixture-native-ci-selection` | Select only native-read subfamilies and two Go one-offs; nine other one-off cases remain neutral-only until readers exist. |
+| D19 actor | `actor-d19-portable-core-neutral-conformance` → `actor-d19-seven-lane-parity` | Eight of fifteen lanes exist; isolate deterministic mailbox/round-robin core from clock, ID, and persistence adapters. |
+| Generic IR optimizer | `ir-optimizer-neutral-ir-to-ir-conformance` → `ir-optimizer-nine-lane-parity` | Six lanes exist; reconcile identity, NOP-only, and multipass behavior after the compiler-IR contract. |
+| Intel 4004 IR validator | `intel-4004-ir-validator-neutral-hardware-conformance` → `intel-4004-ir-validator-ten-lane-parity` | Five lanes exist; freeze pure hardware checks separately from assembler/simulator and same-lane compiler-IR prerequisites. |
+| JVM class-file | `jvm-class-file-neutral-byte-conformance` → `jvm-class-file-eleven-lane-parity` | Four lanes exist; pure class-byte parser/builder is prerequisite to JVM lowering and wrapper ports. |
+| IR-to-JVM class-file | `ir-to-jvm-class-file-neutral-byte-lowering-conformance` → `ir-to-jvm-class-file-eleven-lane-parity` | Four lanes exist; pure lowering depends on compiler-IR and class-file contracts. Optional disk writers have separate filesystem/process-capability concerns and are not silently included. |
+
+Dependency/leverage ranking favors the source-collection fixture selector next:
+its neutral and CI-selector prerequisites are merged, its 20 checked cases
+have direct tests in eleven native build-tool fronts, and fixture-only edits
+currently do not schedule those BUILD roots. Existing graph/diff selector,
+new validation/hash selectors, Ruby CI-gate parity, and DT28 neutral
+conformance remain separate owners. Select exactly
+`build-tool-source-collection-fixture-native-ci-selection` for one fresh
+worktree/PR. Freeze the exact path and reader map in the CI-gate spec, then
+test three platforms, language filtering, missing-root atomicity, rename
+source, emitted roots/toolchains, and native-reader drift before implementing
+the Go selector. Keep production source collectors and workflows untouched.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
