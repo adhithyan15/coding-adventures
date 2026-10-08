@@ -1994,6 +1994,15 @@ fn main() { out(1, VALUE); }\n",
         expect: Expect::Stdout("0"),
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
     },
+    // ALGOL 60 — an exact identity exponent retains the [-1, 1] sign bound
+    // before cosine, sqrt, outer entier, and real widening.
+    Prog {
+        lang: Language::Algol60,
+        ext: "alg",
+        src: "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(sign(pick()) ^ 1))); output(result) end",
+        expect: Expect::Stdout("0"),
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit],
+    },
     // ALGOL 60 — nested sqrt calls preserve an abs-normalized bounded sign
     // result before entier and real widening.
     Prog {
@@ -13315,6 +13324,31 @@ fn algol_sqrt_cos_multiplicative_sign_widening_runs_on_every_available_standard_
             assert!(
                 !toolchain_available,
                 "{backend:?} toolchain is present but sqrt-cos-multiplicative-sign widening did not complete"
+            );
+            continue;
+        };
+        assert_cell(backend, program, result);
+    }
+}
+
+#[test]
+fn algol_sqrt_cos_power_sign_widening_runs_on_every_available_standard_backend() {
+    let program = PROGRAMS
+        .iter()
+        .find(|program| {
+            program.lang == Language::Algol60
+                && program
+                    .src
+                    .contains("result := entier(sqrt(cos(sign(pick()) ^ 1))); output(result)")
+        })
+        .expect("the ALGOL sqrt-cos-power-sign widening program must remain in the matrix");
+
+    for backend in [NativeAot, Llvm, Wasm, Jvm, Clr, Vm, Jit] {
+        let toolchain_available = toolchain_available(backend);
+        let Some(result) = run(backend, program) else {
+            assert!(
+                !toolchain_available,
+                "{backend:?} toolchain is present but sqrt-cos-power-sign widening did not complete"
             );
             continue;
         };
