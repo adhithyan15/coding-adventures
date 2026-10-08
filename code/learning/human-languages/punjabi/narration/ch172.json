@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 172,
+  "title": "Return to the Three Familiar Form Lines",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:01eed8eae727c9b8",
+  "lessons": [
+    {
+      "id": "PA-R172-form-order-again",
+      "sequence": 9150,
+      "title": "Three old form labels in their old order",
+      "headword": "ਉਮਰ: · ਫ਼ੋਨ: · ਤਾਰੀਖ਼:",
+      "romanization": "three familiar form labels",
+      "gloss": "return to the already-taught age, phone, date line order",
+      "script": "gurmukhi",
+      "modality": "pen",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d59651a423f0b4a9",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop before marking the page. This is a short return to an old fictional form, not a request for personal information or a scored A1 mock."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The familiar model stays visible. The first line is ਉਮਰ: (age), the second ਫ਼ੋਨ: (phone), and the third ਤਾਰੀਖ਼: (date). Point down the three lines once. There is no new label or value here."
+            },
+            {
+              "kind": "speech",
+              "text": "ਉਮਰ: ______ ਫ਼ੋਨ: ______ ਤਾਰੀਖ਼: ______."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the model visible. Copy only those three labels onto three empty lines, in the same order. Leave every value blank. Check the first label before copying the second, then check the second before copying the third. If one line is misplaced, move that label only; do not invent a value."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the model for five seconds. Point to where age, phone, and date belong on three empty lines; then uncover and compare. The visible model remains available for another gentle try. This is not independent timed writing."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
