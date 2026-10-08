@@ -1484,9 +1484,21 @@ through S-I3 before two weeks are spent on Windows.
 
      Agents become dumpable again, because `exec` resets dumpability for
      the new image. Every child does inherit the zero core limit.
-   - **P2.6b, per-agent rate limits (S-K5).** A token bucket per host at the
-     supervisor's dispatch point. Over-limit requests get a data-plane
-     failure; they do not end the agent.
+   - **P2.6b, per-agent rate limits (S-K5).** Each supervised host has its
+     own token bucket, checked when a data-plane request arrives, before it
+     reaches the dispatcher or the pending slot.
+     - The default is a burst of 128 requests, refilled at 64 per second,
+       measured on the supervisor's injected monotonic clock. That is far
+       above what a legitimate host sends: an idle host polls 4 times a
+       second, and a busy turn sends a few dozen requests. A host looping
+       as fast as it can is capped at the refill rate.
+     - An over-limit request is answered at once with `Failed { Unavailable
+       }`. Hosts already treat that as "idle, retry later", so the wire
+       protocol does not change, and the agent is not ended for it.
+     - Each host's count of refused requests is readable from the
+       supervisor, for the audit record.
+     - Length bounds already exist on every frame and field, and are
+       unchanged.
    - **P2.6c, beneath-resolution (S-K5).** The `openat2(RESOLVE_BENEATH |
      RESOLVE_NO_SYMLINKS | RESOLVE_NO_MAGICLINKS)` primitive, plus the
      startup proof that the broker's roots are disjoint from S-I6's
