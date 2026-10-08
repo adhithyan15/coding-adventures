@@ -10,7 +10,12 @@
   path that does not exist yet is compared through its nearest existing
   ancestor. A relative path is made absolute first. A path with `..` in its
   missing tail cannot be compared exactly, so it is refused as an overlap:
-  the proof fails closed.
+  the proof fails closed. The same goes for an ancestor that exists but
+  cannot be resolved (`EACCES`, `ELOOP`, `ENOTDIR`); only `ENOENT` counts as
+  missing. After the open, the descriptor's own path (`/proc/self/fd`,
+  `F_GETPATH`) must equal the path that was proved; otherwise the result is
+  `RootMoved`. On macOS, `O_NOFOLLOW_ANY` is proved honored first, or the
+  result is `Unsupported`.
 - `BrokerRoot::open_beneath(name, Read | Write)`. The kernel resolves the
   agent-supplied name beneath the root's descriptor, in one step:
   - on Linux, `openat2` with `RESOLVE_BENEATH | RESOLVE_NO_SYMLINKS |
@@ -21,7 +26,10 @@
   Names are checked before any system call: relative, no `.`, `..` or empty
   component, no NUL, at most 4 KiB. Only a regular file with exactly one
   link is returned. It is close-on-exec, opened non-blocking until `fstat`
-  proves it regular, and never created or truncated.
+  proves it regular, and never created or truncated. A caller replacing
+  the contents calls `set_len` afterwards. The link count is defence in
+  depth: the guarantee is that agents cannot link, and that the
+  never-grantable directories are 0700.
 - `tests/beneath.rs` covers:
   - symlink escapes, absolute and relative, through a directory, and to
     `/proc`;
@@ -33,6 +41,9 @@
   - a FIFO, under a deadline;
   - the handle's access, close-on-exec and blocking flags;
   - root overlap in both directions, through symlinks, with a
-    not-yet-existing vault path, with a relative one, and with a `..` the
-    proof cannot resolve;
+    not-yet-existing vault path, with a relative one, with a `..` the
+    proof cannot resolve, and under an unsearchable directory (run as
+    non-root);
+  - (unit) a root opened through a parent swapped for a symlink is caught
+    by the descriptor-path check;
   - a sibling that only shares a name prefix with the root.

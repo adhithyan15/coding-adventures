@@ -56,6 +56,11 @@ pub enum Access {
     /// Read only.
     Read,
     /// Write only. The file must exist: creation is not brokered here.
+    ///
+    /// The file is opened at offset 0, neither truncated nor in append
+    /// mode. Truncating in `open` would happen before the checks, to a file
+    /// they might then refuse. A caller replacing the contents calls
+    /// `set_len` on the returned file, after the checks have passed.
     Write,
 }
 
@@ -66,6 +71,9 @@ pub enum BrokerRootError {
     Unsupported,
     /// The root is not an existing directory.
     RootNotDirectory(PathBuf),
+    /// The directory opened is not the one checked: the root's path changed
+    /// between the disjointness proof and the open.
+    RootMoved(PathBuf),
     /// The root and a never-grantable path overlap: one contains the other,
     /// or the never-grantable path cannot be compared exactly (see
     /// `canonical_or_nearest`).
@@ -92,6 +100,11 @@ impl fmt::Display for BrokerRootError {
             Self::RootNotDirectory(root) => {
                 write!(f, "broker root {} is not a directory", root.display())
             }
+            Self::RootMoved(root) => write!(
+                f,
+                "broker root {} changed between its check and its open",
+                root.display()
+            ),
             Self::Overlap {
                 root,
                 never_grantable,
@@ -132,7 +145,9 @@ impl BrokerRoot {
     /// path that does not exist yet is compared through its nearest
     /// existing ancestor.
     pub fn open(root: &Path, never_grantable: &[&Path]) -> Result<Self, BrokerRootError> {
-        if !cfg!(any(target_os = "linux", target_os = "macos")) {
+        if !cfg!(any(target_os = "linux", target_os = "macos"))
+            || !platform::beneath_primitive_works()
+        {
             return Err(BrokerRootError::Unsupported);
         }
         let not_directory = || BrokerRootError::RootNotDirectory(root.to_path_buf());
@@ -154,6 +169,14 @@ impl BrokerRoot {
             }
         }
         let directory = platform::open_root(&canonical).ok_or_else(not_directory)?;
+        // The proof above was about a path, and the open was by path too: a
+        // parent directory swapped for a symlink in between would leave the
+        // descriptor naming a directory nobody checked. So ask the kernel
+        // what the descriptor actually is, and refuse unless it is the
+        // directory the proof was about.
+        if platform::descriptor_path(&directory).as_deref() != Some(canonical.as_path()) {
+            return Err(BrokerRootError::RootMoved(canonical));
+        }
         Ok(Self {
             path: canonical,
             directory,
@@ -192,7 +215,8 @@ impl BrokerRoot {
 ///    exists: canonical   missing: appended as plain names
 /// ```
 ///
-/// The tail must be plain names. A `..` in it cannot be resolved without the
+/// Only a component that does not exist (`ENOENT`) counts as missing. The
+/// tail must be plain names. A `..` in it cannot be resolved without the
 /// directories it climbs out of (`missing/../x` might be anywhere once
 /// `missing` is a symlink), so such a path is `None`, and the caller treats
 /// it as an overlap. A relative path is made absolute first, against the
@@ -202,12 +226,19 @@ fn canonical_or_nearest(path: &Path) -> Option<PathBuf> {
     let mut tail = Vec::new();
     let mut current = absolute.as_path();
     loop {
-        if let Ok(canonical) = std::fs::canonicalize(current) {
-            return Some(
-                tail.iter()
-                    .rev()
-                    .fold(canonical, |path, part| path.join(part)),
-            );
+        match std::fs::canonicalize(current) {
+            Ok(canonical) => {
+                return Some(
+                    tail.iter()
+                        .rev()
+                        .fold(canonical, |path, part| path.join(part)),
+                )
+            }
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
+            // It exists but cannot be resolved (no search permission, a
+            // symlink loop, a file used as a directory): where it leads is
+            // unknown, so the proof fails closed.
+            Err(_) => return None,
         }
         match current.components().next_back() {
             Some(Component::Normal(name)) => {
@@ -285,6 +316,58 @@ mod platform {
         }
         // SAFETY: a fresh descriptor the kernel just returned.
         Some(unsafe { File::from_raw_fd(fd) })
+    }
+
+    /// What the kernel says `file` is, by path.
+    #[cfg(target_os = "linux")]
+    pub(super) fn descriptor_path(file: &File) -> Option<PathBuf> {
+        std::fs::read_link(format!("/proc/self/fd/{}", file.as_raw_fd())).ok()
+    }
+
+    #[cfg(target_os = "macos")]
+    pub(super) fn descriptor_path(file: &File) -> Option<PathBuf> {
+        use std::os::unix::ffi::OsStringExt;
+        let mut buffer = vec![0u8; libc::PATH_MAX as usize];
+        // SAFETY: F_GETPATH writes at most MAXPATHLEN (= PATH_MAX) bytes,
+        // NUL included, into a buffer of that size.
+        if unsafe { libc::fcntl(file.as_raw_fd(), libc::F_GETPATH, buffer.as_mut_ptr()) } < 0 {
+            return None;
+        }
+        buffer.truncate(buffer.iter().position(|&byte| byte == 0)?);
+        Some(PathBuf::from(std::ffi::OsString::from_vec(buffer)))
+    }
+
+    #[cfg(not(any(target_os = "linux", target_os = "macos")))]
+    pub(super) fn descriptor_path(_file: &File) -> Option<PathBuf> {
+        None
+    }
+
+    /// Linux: `openat2` is either there or fails every open (`ENOSYS`
+    /// before 5.6), which already fails closed.
+    #[cfg(not(target_os = "macos"))]
+    pub(super) fn beneath_primitive_works() -> bool {
+        true
+    }
+
+    /// macOS: `O_NOFOLLOW_ANY` arrived in macOS 11, and an older kernel
+    /// ignores an unknown open flag, which would fail open. So prove it is
+    /// honored: `/etc` is a symlink to `private/etc` on every macOS, so
+    /// with the flag honored, opening `/etc/hosts` fails with `ELOOP`.
+    #[cfg(target_os = "macos")]
+    pub(super) fn beneath_primitive_works() -> bool {
+        // SAFETY: a NUL-terminated literal path; a new descriptor or -1.
+        let fd = unsafe {
+            libc::open(
+                c"/etc/hosts".as_ptr(),
+                libc::O_RDONLY | libc::O_CLOEXEC | libc::O_NOFOLLOW_ANY,
+            )
+        };
+        if fd >= 0 {
+            // SAFETY: the descriptor just opened, closed once.
+            unsafe { libc::close(fd) };
+            return false;
+        }
+        std::io::Error::last_os_error().raw_os_error() == Some(libc::ELOOP)
     }
 
     /// The open flags for `access`: close-on-exec, no controlling
@@ -394,6 +477,14 @@ mod platform {
         None
     }
 
+    pub(super) fn descriptor_path(_file: &File) -> Option<PathBuf> {
+        None
+    }
+
+    pub(super) fn beneath_primitive_works() -> bool {
+        false
+    }
+
     pub(super) fn open_beneath(
         _root: &BrokerRoot,
         _name: &str,
@@ -410,6 +501,28 @@ mod platform {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[cfg(any(target_os = "linux", target_os = "macos"))]
+    #[test]
+    fn the_descriptor_path_reveals_a_root_opened_through_a_swapped_parent() {
+        // What `BrokerRoot::open` guards against: the root's parent became
+        // a symlink after the proof. The open still succeeds (O_NOFOLLOW
+        // covers only the last component), but the descriptor's own path
+        // is where it really went, and no longer matches.
+        let base = std::env::temp_dir().join(format!("broker-roots-unit-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&base);
+        std::fs::create_dir_all(base.join("real/root")).unwrap();
+        std::os::unix::fs::symlink(base.join("real"), base.join("swapped")).unwrap();
+        let real = std::fs::canonicalize(base.join("real/root")).unwrap();
+
+        let through_symlink = base.join("swapped/root");
+        let directory = platform::open_root(&through_symlink).unwrap();
+        let seen = platform::descriptor_path(&directory);
+        assert_eq!(seen.as_deref(), Some(real.as_path()));
+        assert_ne!(seen.as_deref(), Some(through_symlink.as_path()));
+        assert!(platform::beneath_primitive_works());
+        std::fs::remove_dir_all(&base).unwrap();
+    }
 
     #[test]
     fn names_must_be_plain_relative_paths() {

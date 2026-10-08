@@ -355,6 +355,28 @@ mod supported {
     }
 
     #[test]
+    fn a_never_grantable_path_under_an_unsearchable_directory_fails_closed() {
+        // Only "does not exist" counts as missing. A directory that exists
+        // but cannot be searched might hold a symlink into the root, so
+        // the path beneath it cannot be compared and the root is refused.
+        // Root ignores permissions, so there it proves nothing.
+        // SAFETY: geteuid has no preconditions.
+        if unsafe { libc::geteuid() } == 0 {
+            return;
+        }
+        use std::os::unix::fs::PermissionsExt;
+        let scratch = Scratch::new();
+        fs::create_dir_all(scratch.path("locked/inner")).unwrap();
+        fs::set_permissions(scratch.path("locked"), fs::Permissions::from_mode(0o000)).unwrap();
+        let refused = overlap(
+            &scratch.path("root"),
+            &[&scratch.path("locked/inner/vault")],
+        );
+        fs::set_permissions(scratch.path("locked"), fs::Permissions::from_mode(0o700)).unwrap();
+        assert!(refused);
+    }
+
+    #[test]
     fn a_sibling_sharing_a_name_prefix_is_not_an_overlap() {
         // Containment is by whole path components: root2 is not inside root.
         let scratch = Scratch::new();
