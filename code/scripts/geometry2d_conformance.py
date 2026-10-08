@@ -224,9 +224,7 @@ def _center_arc_bounds(fields: tuple[float, ...]) -> tuple[float, ...]:
             # The positive modulo is directional: the raw angular difference
             # loses candidates at the seam and on a clockwise traversal.
             distance = (
-                (angle - start) % math.tau
-                if sweep > 0
-                else (start - angle) % math.tau
+                (angle - start) % math.tau if sweep > 0 else (start - angle) % math.tau
             )
             if distance <= abs(sweep):
                 values.append(point(angle))
@@ -410,8 +408,15 @@ def _validate_case(case: Any) -> str:
         _fields(
             case,
             {
-                "id", "operation", "center", "rx", "ry", "start_angle",
-                "sweep_angle", "x_rotation", "expected_bounds",
+                "id",
+                "operation",
+                "center",
+                "rx",
+                "ry",
+                "start_angle",
+                "sweep_angle",
+                "x_rotation",
+                "expected_bounds",
             },
             case_id,
         )
@@ -425,8 +430,14 @@ def _validate_case(case: Any) -> str:
         )
     elif operation == "center-arc-cubics":
         shared = {
-            "id", "operation", "center", "rx", "ry", "start_angle",
-            "sweep_angle", "x_rotation",
+            "id",
+            "operation",
+            "center",
+            "rx",
+            "ry",
+            "start_angle",
+            "sweep_angle",
+            "x_rotation",
         }
         if "expected_error" in case:
             _fields(case, shared | {"expected_error"}, case_id)
@@ -439,8 +450,13 @@ def _validate_case(case: Any) -> str:
                 raise ValueError(f"{case_id}.expected_error must pin invalid-sweep")
         else:
             count = max(1, math.ceil(abs(sweep) / (math.pi / 2)))
-            if type(case.get("expected_count")) is not int or case["expected_count"] != count:
-                raise ValueError(f"{case_id}.expected_count differs from bounded segments")
+            if (
+                type(case.get("expected_count")) is not int
+                or case["expected_count"] != count
+            ):
+                raise ValueError(
+                    f"{case_id}.expected_count differs from bounded segments"
+                )
     else:
         raise ValueError(f"{case_id} has unsupported operation")
     return case_id

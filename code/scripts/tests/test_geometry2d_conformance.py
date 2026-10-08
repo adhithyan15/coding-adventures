@@ -32,12 +32,12 @@ class Geometry2DConformanceTests(unittest.TestCase):
         self.assertEqual(
             list(Draft202012Validator(schema).iter_errors(self.document)), []
         )
-        self.assertEqual(MODULE.validate_document(self.document), 21)
+        self.assertEqual(MODULE.validate_document(self.document), 22)
         self.assertEqual(
             MODULE.validate_document(
                 MODULE.parse_json(CORPUS.read_text(encoding="utf-8"))
             ),
-            21,
+            22,
         )
 
     def test_complete_operation_and_case_roster(self) -> None:
@@ -60,6 +60,7 @@ class Geometry2DConformanceTests(unittest.TestCase):
             "bezier-cubic-x-overshoot",
             "arc-center-bounds-positive-wrap",
             "arc-center-bounds-negative-wrap",
+            "arc-center-bounds-zero-sweep",
             "arc-center-cubics-zero",
             "arc-center-cubics-full-turn",
             "arc-center-cubics-over-turn",
@@ -96,6 +97,10 @@ class Geometry2DConformanceTests(unittest.TestCase):
             (
                 "arc-center-bounds-negative-wrap",
                 lambda c: c["expected_bounds"].__setitem__(1, -0.5),
+            ),
+            (
+                "arc-center-bounds-zero-sweep",
+                lambda c: c["expected_bounds"].__setitem__(2, 1),
             ),
             ("arc-center-cubics-zero", lambda c: c.update(expected_count=0)),
             ("arc-center-cubics-full-turn", lambda c: c.update(expected_count=5)),
