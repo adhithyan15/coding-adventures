@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ca7015d11a9cf221",
+  "sourceHash": "fnv1a64:e299040b8f35a82c",
   "lessons": [
     {
       "id": "HI-C01-namaste",
@@ -1532,7 +1532,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b41443b11c7b57bd",
+      "sourceHash": "fnv1a64:f8e78da629aceb35",
       "notice": null,
       "blocks": [
         {
@@ -1597,11 +1597,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read all five aloud, left to right",
+              "instruction": "all five words from memory — the two hellos, the two thanks, and the farewell",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: read all five aloud, left to right]"
+              "source": "[YOU SAY: all five words from memory — the two hellos, the two thanks, and the farewell]"
             },
             {
               "kind": "prompt",

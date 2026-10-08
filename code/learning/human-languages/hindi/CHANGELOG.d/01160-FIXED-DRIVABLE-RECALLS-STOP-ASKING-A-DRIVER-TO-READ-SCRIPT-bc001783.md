@@ -37,3 +37,10 @@ stays `drivable: true` (only its `core/lesson-modality` source hash changes).
 - Regenerated: 34 book chapters and their hashes, the narration (`.json` and
   `.txt`) and narration hashes for the same chapters, and the 118
   `core/lesson-modality` owners (source hash only).
+
+HI-C01-practice's opening Guided Practice turn was
+`[YOU SAY: read all five aloud, left to right]`: a spoken cue asking a driver
+to read the chapter's printed words off the page. It names nothing in bold,
+so the reading detector cannot see it; a security review found it by hand. It
+now asks for the same five words from memory, by meaning ("the two hellos,
+the two thanks, and the farewell"), which a driver can do.
