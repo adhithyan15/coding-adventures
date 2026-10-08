@@ -616,6 +616,12 @@ fn emit_component(
             source: emit_string_equals_converter_source(&options.namespace),
         });
     }
+    if ctx.needs_uppercase_converter {
+        if_helpers.push(EmittedFile {
+            filename: "UppercaseConverter.cs".to_string(),
+            source: emit_uppercase_converter_source(&options.namespace),
+        });
+    }
 
     // Fix B1: when --emit-project is on, populate the full project
     // shell (csproj + App + MainWindow + manifest + build.ps1 + README).
@@ -750,6 +756,7 @@ pub const SHELL_RESERVED_NAMES: &[&str] = &[
     "BoolToVisibilityConverter",
     "FocusStateToBoolConverter",
     "StringEqualsConverter",
+    "UppercaseConverter",
 ];
 
 /// Why `type_name` -- a variant of `component` -- cannot be declared, or
@@ -1123,6 +1130,8 @@ struct EmitContext<'a> {
     /// Tracks whether a UI49 state is owned by a `one-of` slot. Such states
     /// compare the slot's string value with the state's closed-set name.
     needs_string_equals_converter: bool,
+    /// Tracks whether bound Text content needs CSS uppercase conversion.
+    needs_uppercase_converter: bool,
     /// One `RowVm` per `For` block in the component. Becomes
     /// `XamlEmitResult::for_view_models`.
     row_vms: Vec<RowVm>,
@@ -1236,6 +1245,7 @@ impl<'a> EmitContext<'a> {
             needs_bool_to_vis: false,
             needs_focus_state_converter: false,
             needs_string_equals_converter: false,
+            needs_uppercase_converter: false,
             row_vms: Vec::new(),
             row_projections: Vec::new(),
             host_handlers: Vec::new(),
@@ -1424,6 +1434,8 @@ struct PartStyleEntry {
     /// — like `flex`, has no 1:1 XAML setter and is read straight off
     /// the raw mosstyle props rather than surviving into `base_fragment`.
     elevation: Option<ElevationTier>,
+    /// Supported base `text-transform` value for Text content.
+    text_transform_uppercase: Option<bool>,
 }
 
 /// Layout hints a `Row`/`Column`'s `<Grid>` lowering needs but that have no
@@ -1690,6 +1702,15 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
         let base_fragment = build_style_fragment(&part.base);
         let flex = extract_flex_hints(&part.base);
         let elevation = part_elevation_tier(&part.base);
+        let text_transform_uppercase = part
+            .base
+            .iter()
+            .find(|prop| prop.name == "text-transform")
+            .and_then(|prop| match prop.value.trim().trim_matches('"') {
+                "uppercase" => Some(true),
+                "none" => Some(false),
+                _ => None,
+            });
         let states = part
             .states
             .iter()
@@ -1715,6 +1736,7 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
             || !part.states.is_empty()
             || has_flex_hints
             || elevation.is_some()
+            || text_transform_uppercase.is_some()
         {
             out.insert(
                 part.name.clone(),
@@ -1724,6 +1746,7 @@ fn build_part_style_map(style: &StyleDef) -> PartStyleMap {
                     states,
                     flex,
                     elevation,
+                    text_transform_uppercase,
                 },
             );
         }
@@ -2641,6 +2664,11 @@ pub fn dropped_style_properties(style: &mosstyle_compiler::StyleDef) -> Vec<Drop
                 // (`part_elevation_tier`), same shape as the flex hints
                 // above — it has no 1:1 XAML setter of its own.
                 "elevation" => matches!(drop.value.as_str(), "raised" | "overlay"),
+                // TextBlock has no casing property. Text nodes consume these
+                // through literal rewriting or the generated binding converter.
+                "text-transform" => {
+                    matches!(drop.value.trim().trim_matches('"'), "uppercase" | "none")
+                }
                 // `box-shadow` no longer drives ThemeShadow directly —
                 // `elevation` does. A non-inset box-shadow is only
                 // "consumed" (not a genuine drop) when the same part
@@ -3702,7 +3730,10 @@ fn emit_xaml(
 
     // After walking, declare any generated converter resources exactly once.
     // We splice them in after the open root tag.
-    if ctx.needs_bool_to_vis || ctx.needs_focus_state_converter || ctx.needs_string_equals_converter
+    if ctx.needs_bool_to_vis
+        || ctx.needs_focus_state_converter
+        || ctx.needs_string_equals_converter
+        || ctx.needs_uppercase_converter
     {
         let resources_tag = match shape {
             RootShape::UserControl => "UserControl.Resources",
@@ -3714,6 +3745,7 @@ fn emit_xaml(
             ctx.needs_bool_to_vis,
             ctx.needs_focus_state_converter,
             ctx.needs_string_equals_converter,
+            ctx.needs_uppercase_converter,
         );
         let split_at = find_root_open_close(&out)
             .map(|p| p + 2)
@@ -4892,6 +4924,23 @@ fn emit_text_style_resources(
 /// `Text [name] (content: "literal")` → `<TextBlock Text="literal"/>`.
 /// `Text [name] (content: row.value)` → `<TextBlock Text="{x:Bind Row.Value}"/>`
 /// when `row` is a `For`-bound name (PR-2).
+fn xaml_text_transform_uppercase(node: &LayoutNode, part_styles: &PartStyleMap) -> Option<bool> {
+    part_styles
+        .get(node.part_name.as_deref()?)?
+        .text_transform_uppercase
+}
+
+fn xaml_text_binding(path: &str, uppercase: bool, ctx: &mut EmitContext<'_>) -> String {
+    if uppercase {
+        ctx.needs_uppercase_converter = true;
+        format!(
+            " Text=\"{{x:Bind {path}, Converter={{StaticResource UppercaseConverter}}, Mode=OneWay}}\""
+        )
+    } else {
+        format!(" Text=\"{{x:Bind {path}, Mode=OneWay}}\"")
+    }
+}
+
 fn emit_text(
     node: &LayoutNode,
     indent: usize,
@@ -4908,6 +4957,7 @@ fn emit_text(
         .collect::<String>();
     let font_size = inherited_font_size_attr(node, &text_style, ctx)?;
     text_style.push_str(&font_size);
+    let uppercase = xaml_text_transform_uppercase(node, part_styles).unwrap_or(false);
 
     let mut accessibility_attrs = String::new();
     match find_prop_value(node, "a11y-label") {
@@ -4988,13 +5038,11 @@ fn emit_text(
             // must be OneWay. `x:Bind`'s default is OneTime, which
             // renders the value once and never again — the defect that
             // froze every label in the generated TaskApp.
-            format!(
-                " Text=\"{{x:Bind {}, Mode=OneWay}}\"",
-                ctx.slot_xbind_path(slot)
-            )
+            xaml_text_binding(&ctx.slot_xbind_path(slot), uppercase, ctx)
         }
         Some(LayoutPropValue::String(s)) => {
-            let escaped = escape_xaml_attr(s);
+            let value = if uppercase { s.to_uppercase() } else { s.clone() };
+            let escaped = escape_xaml_attr(&value);
             format!(" Text=\"{escaped}\"")
         }
         Some(LayoutPropValue::Keyword(k)) => {
@@ -5004,9 +5052,10 @@ fn emit_text(
             // the React backend's behaviour pre-PR-2).
             if ctx.lookup_for_binding(k).is_some() || ctx.lookup_for_index(k).is_some() {
                 let pascal = kebab_to_pascal_case(k);
-                format!(" Text=\"{{x:Bind {pascal}, Mode=OneWay}}\"")
+                xaml_text_binding(&pascal, uppercase, ctx)
             } else {
-                let escaped = escape_xaml_attr(k);
+                let value = if uppercase { k.to_uppercase() } else { k.clone() };
+                let escaped = escape_xaml_attr(&value);
                 format!(" Text=\"{escaped}\"")
             }
         }
@@ -5020,10 +5069,10 @@ fn emit_text(
             // OneWay is never wrong here — only occasionally redundant.
             match lower_expr_for_xbind(src, ctx) {
                 ExprLowering::Bindable(path) => {
-                    format!(" Text=\"{{x:Bind {path}, Mode=OneWay}}\"")
+                    xaml_text_binding(&path, uppercase, ctx)
                 }
                 ExprLowering::Helper(call) => {
-                    format!(" Text=\"{{x:Bind {call}, Mode=OneWay}}\"")
+                    xaml_text_binding(&call, uppercase, ctx)
                 }
                 ExprLowering::Unsupported(reason) => {
                     return Err(PipelineEmitError::UnsupportedExpression(reason));
@@ -7828,6 +7877,7 @@ fn emit_converter_resource_block(
     needs_bool_to_vis: bool,
     needs_focus_state: bool,
     needs_string_equals: bool,
+    needs_uppercase: bool,
 ) -> String {
     let pad = " ".repeat(indent);
     let pad2 = " ".repeat(indent + 4);
@@ -7851,6 +7901,13 @@ fn emit_converter_resource_block(
         writeln!(
             out,
             "{pad2}<local:StringEqualsConverter x:Key=\"StringEqualsConverter\"/>"
+        )
+        .unwrap();
+    }
+    if needs_uppercase {
+        writeln!(
+            out,
+            "{pad2}<local:UppercaseConverter x:Key=\"UppercaseConverter\"/>"
         )
         .unwrap();
     }
@@ -7952,6 +8009,31 @@ fn emit_string_equals_converter_source(namespace: &str) -> String {
              public object Convert(object value, Type targetType, object parameter, string language)\n    \
              {{\n        \
                  return string.Equals(value as string, parameter as string, StringComparison.Ordinal);\n    \
+             }}\n\n    \
+             public object ConvertBack(object value, Type targetType, object parameter, string language)\n    \
+             {{\n        \
+                 throw new NotImplementedException();\n    \
+             }}\n\
+         }}\n"
+    )
+}
+
+/// C# source for CSS `text-transform: uppercase` on bound TextBlock content.
+/// WinUI has no TextBlock casing property, so literals are transformed during
+/// emission and live values pass through this one-way converter.
+fn emit_uppercase_converter_source(namespace: &str) -> String {
+    format!(
+        "// Auto-generated by mosaic-emit-xaml. Do not edit.\n\
+         using System;\n\
+         using Microsoft.UI.Xaml.Data;\n\
+         \n\
+         namespace {namespace};\n\
+         \n\
+         public sealed class UppercaseConverter : IValueConverter\n\
+         {{\n    \
+             public object Convert(object value, Type targetType, object parameter, string language)\n    \
+             {{\n        \
+                 return value?.ToString()?.ToUpperInvariant() ?? string.Empty;\n    \
              }}\n\n    \
              public object ConvertBack(object value, Type targetType, object parameter, string language)\n    \
              {{\n        \
@@ -15369,6 +15451,37 @@ mod tests {
     }
 
     #[test]
+    fn uppercase_text_transform_uses_a_live_binding_converter() {
+        let c = component("Foo", vec![slot("greeting", SlotType::Text, true)], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Text".to_string(),
+                part_name: Some("label".to_string()),
+                props: vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::SlotRef("greeting".to_string()),
+                }],
+                children: Vec::new(),
+            },
+        );
+        let s = style_for_box("label", vec![("text-transform", "uppercase")]);
+        let r = compile(&c, &l, &s);
+
+        assert!(r.xaml.contains("Text=\"{x:Bind Greeting, Converter={StaticResource UppercaseConverter}, Mode=OneWay}\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("<local:UppercaseConverter x:Key=\"UppercaseConverter\"/>"));
+        assert!(r.if_helpers.iter().any(|file| {
+            file.filename == "UppercaseConverter.cs" && file.source.contains("ToUpperInvariant")
+        }));
+        assert!(dropped_style_properties(&s).is_empty());
+
+        let unsupported = style_for_box("label", vec![("text-transform", "capitalize")]);
+        let drops = dropped_style_properties(&unsupported);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "text-transform");
+    }
+
+    #[test]
     fn text_with_kebab_slot_pascal_cases_in_xbind() {
         let c = component(
             "Foo",
@@ -20976,6 +21089,7 @@ mod tests {
             emit_bool_to_vis_converter_source("Mosaic.Generated"),
             emit_focus_state_to_bool_converter_source("Mosaic.Generated"),
             emit_string_equals_converter_source("Mosaic.Generated"),
+            emit_uppercase_converter_source("Mosaic.Generated"),
         ] {
             names.extend(declared(&source));
         }
@@ -20983,7 +21097,7 @@ mod tests {
         names.dedup();
         assert_eq!(
             names,
-            ["App", "BoolToVisibilityConverter", "FocusStateToBoolConverter", "MainWindow", "StringEqualsConverter"]
+            ["App", "BoolToVisibilityConverter", "FocusStateToBoolConverter", "MainWindow", "StringEqualsConverter", "UppercaseConverter"]
         );
         for name in &names {
             assert!(SHELL_RESERVED_NAMES.contains(&name.as_str()), "{name} is not reserved");

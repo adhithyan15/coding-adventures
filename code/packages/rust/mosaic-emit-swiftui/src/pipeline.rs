@@ -145,6 +145,28 @@ mod letter_spacing_tests {
         assert!(chain.contains(".tracking(-0.44)"), "{chain}");
         assert!(dropped.is_empty(), "{dropped:?}");
     }
+
+    #[test]
+    fn uppercase_text_transform_lowers_to_text_case() {
+        let props = vec![StyleProp {
+            name: "text-transform".into(),
+            value: "uppercase".into(),
+        }];
+
+        let (chain, dropped) =
+            swiftui_modifier_chain_with_drops(&props, &[], &[], 0, None);
+
+        assert!(chain.contains(".textCase(.uppercase)"), "{chain}");
+        assert!(dropped.is_empty(), "{dropped:?}");
+
+        let unsupported = vec![StyleProp {
+            name: "text-transform".into(),
+            value: "capitalize".into(),
+        }];
+        let (_, dropped) =
+            swiftui_modifier_chain_with_drops(&unsupported, &[], &[], 0, None);
+        assert_eq!(dropped, unsupported);
+    }
 }
 
 #[derive(Clone, Copy)]
@@ -2470,6 +2492,7 @@ fn swiftui_modifier_chain_with_drops(
     let mut font_family_mono = PropBucket::new(layer_count);
     let mut font_weight = PropBucket::new(layer_count);
     let mut letter_spacing = PropBucket::new(layer_count);
+    let mut text_case = PropBucket::new(layer_count);
     let mut border_width = PropBucket::new(layer_count);
     let mut border_color = PropBucket::new(layer_count);
     // UI79 -- per-edge borders. SwiftUI's `.border` strokes all four
@@ -2619,6 +2642,11 @@ fn swiftui_modifier_chain_with_drops(
                     dropped.push(p.clone());
                 }
             }
+            "text-transform" => match p.value.trim().trim_matches('"') {
+                "uppercase" => set(&mut text_case, ".uppercase".to_string()),
+                "none" => set(&mut text_case, "nil".to_string()),
+                _ => dropped.push(p.clone()),
+            },
             "border-width" => {
                 if let Some(v) = px_or_none(&p.value) {
                     set(&mut border_width, v);
@@ -2770,6 +2798,11 @@ fn swiftui_modifier_chain_with_drops(
     if !letter_spacing.empty() {
         let expr = layer_value(&letter_spacing, state_layers, "0");
         out.push_str(&format!("\n{pad}.tracking({expr})"));
+    }
+
+    if !text_case.empty() {
+        let expr = layer_value(&text_case, state_layers, "nil");
+        out.push_str(&format!("\n{pad}.textCase({expr})"));
     }
 
     // 4. .padding — insets the content before the frame sizes it.

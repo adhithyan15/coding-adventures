@@ -36,6 +36,32 @@ mod letter_spacing_tests {
         assert_eq!(style.letter_spacing.as_deref(), Some("0.07.em"));
         assert!(style.dropped.is_empty(), "{:?}", style.dropped);
     }
+
+    #[test]
+    fn uppercase_text_transform_reaches_text_content() {
+        let props = vec![StyleProp {
+            name: "text-transform".into(),
+            value: "uppercase".into(),
+        }];
+        let style = compose_box_style(&props, &[], None, 0, None);
+
+        assert!(style.dropped.is_empty(), "{:?}", style.dropped);
+        let text = cell_text_style(&TextStyleCtx::default(), &style);
+        assert_eq!(
+            text_call("label", Some(&text), None),
+            "Text(text = (label).uppercase())"
+        );
+
+        let unsupported = vec![StyleProp {
+            name: "text-transform".into(),
+            value: "capitalize".into(),
+        }];
+        let style = compose_box_style(&unsupported, &[], None, 0, None);
+        assert_eq!(
+            style.dropped,
+            vec![("text-transform".to_string(), "capitalize".to_string())]
+        );
+    }
 }
 
 impl std::fmt::Display for PipelineEmitError {
@@ -4686,6 +4712,8 @@ struct ComposeStyle {
     font_size: Option<String>,
     /// Relative text tracking expressed as a Compose `TextUnit` expression.
     letter_spacing: Option<String>,
+    /// Kotlin Boolean expression deciding whether descendant text is uppercased.
+    text_transform_uppercase: Option<String>,
     /// Properties this builder saw and did not lower, as `(name, value)`.
     ///
     /// Collected BY the builder rather than by a parallel list of "things
@@ -4803,6 +4831,7 @@ fn compose_box_style(
     let mut font_size = PropBucket::new(layer_count);
     let mut font_family_mono = PropBucket::new(layer_count);
     let mut letter_spacing = PropBucket::new(layer_count);
+    let mut text_transform_uppercase = PropBucket::new(layer_count);
     let mut border_width = PropBucket::new(layer_count);
     let mut border_color = PropBucket::new(layer_count);
     // UI79 -- `dashed`/`dotted`; `None` means the solid `Modifier.border`.
@@ -4953,6 +4982,11 @@ fn compose_box_style(
                     dropped.push((p.name.clone(), p.value.clone()));
                 }
             }
+            "text-transform" => match p.value.trim().trim_matches('"') {
+                "uppercase" => set(&mut text_transform_uppercase, "true".to_string()),
+                "none" => set(&mut text_transform_uppercase, "false".to_string()),
+                _ => dropped.push((p.name.clone(), p.value.clone())),
+            },
             "border-width" => {
                 if let Some(v) = px_or_none(&p.value) {
                     set(&mut border_width, v);
@@ -5355,6 +5389,15 @@ fn compose_box_style(
             numeric_layer_value(&letter_spacing, state_layers, "0")
         ))
     };
+    let text_transform_uppercase_out = if text_transform_uppercase.empty() {
+        None
+    } else {
+        Some(layer_value(
+            &text_transform_uppercase,
+            state_layers,
+            "false",
+        ))
+    };
 
     ComposeStyle {
         modifier,
@@ -5368,6 +5411,7 @@ fn compose_box_style(
         font_family_mono: !font_family_mono.empty(),
         font_size: font_size_out,
         letter_spacing: letter_spacing_out,
+        text_transform_uppercase: text_transform_uppercase_out,
         font_weight,
     }
 }
@@ -5460,6 +5504,8 @@ struct TextStyleCtx {
     bound_size: Option<String>,
     /// Compose `TextUnit` expression for authored CSS letter spacing.
     letter_spacing: Option<String>,
+    /// Kotlin Boolean expression deciding whether the displayed value is uppercased.
+    text_transform_uppercase: Option<String>,
     /// Compose `FontWeight.*` expression for an authored `font-weight`.
     weight: Option<String>,
 }
@@ -5554,6 +5600,11 @@ fn sheet_text_style(part_styles: &PartStyleMap, part_name: &str) -> TextStyleCtx
                         ctx.letter_spacing = Some(format!("{number}.em"));
                     }
                 }
+                "text-transform" => match p.value.trim().trim_matches('"') {
+                    "uppercase" => ctx.text_transform_uppercase = Some("true".to_string()),
+                    "none" => ctx.text_transform_uppercase = Some("false".to_string()),
+                    _ => {}
+                },
                 _ => {}
             }
         }
@@ -5583,6 +5634,9 @@ fn cell_text_style(inherited: &TextStyleCtx, style: &ComposeStyle) -> TextStyleC
     }
     if let Some(spacing) = &style.letter_spacing {
         ctx.letter_spacing = Some(spacing.clone());
+    }
+    if let Some(uppercase) = &style.text_transform_uppercase {
+        ctx.text_transform_uppercase = Some(uppercase.clone());
     }
     ctx
 }
@@ -5746,6 +5800,11 @@ fn text_call_aligned(
     modifier: Option<&str>,
     text_align: Option<&str>,
 ) -> String {
+    let value_expr = match text_ctx.and_then(|ctx| ctx.text_transform_uppercase.as_deref()) {
+        Some("false") | None => value_expr.to_string(),
+        Some("true") => format!("({value_expr}).uppercase()"),
+        Some(condition) => format!("if ({condition}) ({value_expr}).uppercase() else {value_expr}"),
+    };
     let mut args = text_ctx.map(TextStyleCtx::text_args).unwrap_or_default();
     if let Some(align) = text_align {
         write!(args, ", textAlign = {align}").unwrap();
@@ -6423,6 +6482,7 @@ fn emit_container_frame(
                     font_family_mono: false,
                     font_size: None,
                     letter_spacing: None,
+                    text_transform_uppercase: None,
                     dropped: Vec::new(),
                     gap: None,
                     font_weight: None,
@@ -6703,6 +6763,7 @@ fn emit_container(
                 font_family_mono: false,
                 font_size: None,
                 letter_spacing: None,
+                text_transform_uppercase: None,
                 dropped: Vec::new(),
                 gap: None,
                 font_weight: None,
@@ -6762,6 +6823,7 @@ fn emit_container(
                     font_family_mono: false,
                     font_size: None,
                     letter_spacing: None,
+                    text_transform_uppercase: None,
                     dropped: Vec::new(),
                     gap: None,
                     font_weight: None,
@@ -6784,6 +6846,7 @@ fn emit_container(
                     font_family_mono: false,
                     font_size: None,
                     letter_spacing: None,
+                    text_transform_uppercase: None,
                     dropped: Vec::new(),
                     gap: None,
                     font_weight: None,
