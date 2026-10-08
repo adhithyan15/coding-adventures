@@ -44,6 +44,10 @@ let response = NetFetch::production().execute(&allowlist, &request, Some(&leases
 let tool_output = response.to_json();
 ```
 
+A long-lived composition that should not carry the resolver and transport
+type parameters can hold an `Arc<dyn Fetcher>` instead. Every `NetFetch` is a
+`Fetcher`, and `fetch` is `execute`.
+
 ## Rules worth knowing
 
 - **HTTPS only, no redirects.** A 3xx response comes back with its `location`.

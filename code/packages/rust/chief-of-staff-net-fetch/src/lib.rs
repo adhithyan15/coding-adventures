@@ -1232,6 +1232,52 @@ impl<R: Resolver, T: Transport> NetFetch<R, T> {
     }
 }
 
+/// One `net.fetch` execution, behind an object-safe face.
+///
+/// [`NetFetch`] is generic over its resolver and transport, which is right for
+/// the operation and awkward for a consumer that holds one in a long-lived
+/// composition: every type that stores it would inherit the two parameters.
+/// The daemon holds `Arc<dyn Fetcher>` instead. Production passes
+/// [`NetFetch::production`], and an end-to-end test passes a `NetFetch` over a
+/// fake resolver and transport, so authorization, address checks, credential
+/// redemption and masking all still run for real. Only DNS and the TLS
+/// transport are replaced.
+///
+/// **Sealed.** Only `NetFetch` implements it. A `Fetcher` is handed the
+/// daemon's lease redeemer, so an implementation that skipped
+/// [`NetAllowlist::authorize`] or the public-address check would be a way to
+/// spend a credential anywhere. Sealing makes "every fetcher is the real
+/// pipeline" a property of the types (D18V V-D5a), not a convention. A test
+/// that wants a different network passes a [`Resolver`] and a [`Transport`]
+/// to [`NetFetch::new`] instead.
+pub trait Fetcher: Send + Sync + sealed::Sealed {
+    /// See [`NetFetch::execute`].
+    fn fetch(
+        &self,
+        allowlist: &NetAllowlist,
+        request: &FetchRequest,
+        credentials: Option<&dyn CredentialSource>,
+    ) -> Result<FetchResponse, FetchError>;
+}
+
+mod sealed {
+    /// The private supertrait that seals [`super::Fetcher`].
+    pub trait Sealed {}
+
+    impl<R: super::Resolver, T: super::Transport> Sealed for super::NetFetch<R, T> {}
+}
+
+impl<R: Resolver, T: Transport> Fetcher for NetFetch<R, T> {
+    fn fetch(
+        &self,
+        allowlist: &NetAllowlist,
+        request: &FetchRequest,
+        credentials: Option<&dyn CredentialSource>,
+    ) -> Result<FetchResponse, FetchError> {
+        self.execute(allowlist, request, credentials)
+    }
+}
+
 // ── The D18D definition ──────────────────────────────────────────────────────
 
 /// The `net.fetch` tool definition.

@@ -59,8 +59,8 @@ use chief_of_staff_host_runtime::{
     verify_agent_package, HostProfile, HostProfileRuntime, PackageKeyring,
 };
 use chief_of_staff_net_fetch::{
-    parse_request, tool_definition as net_fetch_definition, CredentialSource, FetchError,
-    NetAllowlist, NetFetch, Resolver, Transport, NET_FETCH_TOOL_ID,
+    parse_request, tool_definition as net_fetch_definition, CredentialSource, FetchError, Fetcher,
+    NetAllowlist, NET_FETCH_TOOL_ID,
 };
 use chief_of_staff_pipeline_bindings::HostPipelineBinding;
 use chief_of_staff_tool_api::{
@@ -120,27 +120,27 @@ struct SurfaceKey {
 }
 
 /// The `net.fetch` + `vault.request_lease` model-tool source.
-pub(crate) struct AgentModelTools<R: Resolver + 'static, T: Transport + 'static> {
+pub(crate) struct AgentModelTools {
     keyring: Arc<PackageKeyring>,
     vault: Option<Arc<ChiefVaultRuntime>>,
-    fetch: Arc<NetFetch<R, T>>,
+    fetch: Arc<dyn Fetcher>,
     clock: Arc<dyn UnixTimeClock>,
     surfaces: Mutex<HashMap<SurfaceKey, Arc<AgentSurface>>>,
 }
 
-impl<R: Resolver + 'static, T: Transport + 'static> AgentModelTools<R, T> {
+impl AgentModelTools {
     /// Compose the source. `vault` is `None` when no vault is configured, and
     /// then `vault.request_lease` is offered to nobody (V-D1).
     pub(crate) fn new(
         keyring: Arc<PackageKeyring>,
         vault: Option<Arc<ChiefVaultRuntime>>,
-        fetch: NetFetch<R, T>,
+        fetch: Arc<dyn Fetcher>,
         clock: Arc<dyn UnixTimeClock>,
     ) -> Self {
         Self {
             keyring,
             vault,
-            fetch: Arc::new(fetch),
+            fetch,
             clock,
             surfaces: Mutex::new(HashMap::new()),
         }
@@ -296,7 +296,7 @@ impl<R: Resolver + 'static, T: Transport + 'static> AgentModelTools<R, T> {
                 host_name: surface.host_name.clone(),
             });
             let response = fetch
-                .execute(
+                .fetch(
                     allowlist,
                     &request,
                     source
@@ -420,7 +420,7 @@ impl VaultDirectDelivery for NoDirectDelivery {
     }
 }
 
-impl<R: Resolver + 'static, T: Transport + 'static> ModelToolDispatcher for AgentModelTools<R, T> {
+impl ModelToolDispatcher for AgentModelTools {
     fn definitions(
         &self,
         binding: &HostPipelineBinding,
@@ -492,7 +492,7 @@ mod tests {
     use chief_of_staff_channel_endpoints::AgentId as ChannelAgentId;
     use chief_of_staff_host_control_protocol::{LaunchBindings, LevelOneModelBinding};
     use chief_of_staff_host_runtime::{sign_agent_package, PackageKeyType, TrustedPackageKey};
-    use chief_of_staff_net_fetch::{read_limited, Limits};
+    use chief_of_staff_net_fetch::{read_limited, Limits, NetFetch, Resolver, Transport};
     use chief_of_staff_pipeline_bindings::PipelineId;
     use chief_of_staff_service_registry::{HostName, HostRegistration, PackagePath, RestartPolicy};
     use chief_of_staff_tool_api::PrivilegeTier;
@@ -720,22 +720,16 @@ mod tests {
         Arc::new(vault)
     }
 
-    fn tools(
-        vault: Option<Arc<ChiefVaultRuntime>>,
-        recorder: &Recorder,
-    ) -> AgentModelTools<PublicResolver, Recorder> {
+    fn tools(vault: Option<Arc<ChiefVaultRuntime>>, recorder: &Recorder) -> AgentModelTools {
         AgentModelTools::new(
             keyring(),
             vault,
-            NetFetch::new(PublicResolver, recorder.clone()),
+            Arc::new(NetFetch::new(PublicResolver, recorder.clone())),
             Arc::new(SystemUnixTimeClock),
         )
     }
 
-    fn offered(
-        tools: &AgentModelTools<PublicResolver, Recorder>,
-        binding: &HostPipelineBinding,
-    ) -> Vec<String> {
+    fn offered(tools: &AgentModelTools, binding: &HostPipelineBinding) -> Vec<String> {
         tools
             .definitions(binding)
             .unwrap()
@@ -752,10 +746,7 @@ mod tests {
         }
     }
 
-    fn lease(
-        tools: &AgentModelTools<PublicResolver, Recorder>,
-        binding: &HostPipelineBinding,
-    ) -> String {
+    fn lease(tools: &AgentModelTools, binding: &HostPipelineBinding) -> String {
         let result = tools
             .execute(
                 binding,
