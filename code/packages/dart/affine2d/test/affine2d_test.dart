@@ -60,6 +60,9 @@ void main() {
     expect(Affine2D.rotate(0.4).determinant(), closeTo(1, 1e-10));
     expect(Affine2D.scale(0, 1).invert(), isNull);
     final translated = Affine2D.translate(3, 5);
+    expect(translated, const Affine2D(1, 0, 0, 1, 3, 5));
+    expect(translated == Affine2D.identity(), isFalse);
+    expect(translated.hashCode, const Affine2D(1, 0, 0, 1, 3, 5).hashCode);
     nearMatrix(
       Affine2D.identity().toArray(),
       translated.multiply(translated.invert()!).toArray(),
