@@ -192,15 +192,13 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
             let Some(node) = diagram.nodes.iter().find(|node| &node.id == node_id) else {
                 continue;
             };
-            let compact_control = matches!(node.shape, DiagramShape::SmallCircle | DiagramShape::FramedCircle);
-            let resolved_node_width = if compact_control {
-                14.0
-            } else if horizontal_flow {
-                swimlane_node_width(&node.shape, &node.label)
-            } else {
-                node_width
+            let (resolved_node_width, resolved_node_height) = match node.shape {
+                DiagramShape::SmallCircle | DiagramShape::FramedCircle => (14.0, 14.0),
+                DiagramShape::ForkJoin if horizontal_flow => (10.0, 70.0),
+                DiagramShape::ForkJoin => (70.0, 10.0),
+                _ if horizontal_flow => (swimlane_node_width(&node.shape, &node.label), node_height),
+                _ => (node_width, node_height),
             };
-            let resolved_node_height = if compact_control { 14.0 } else { node_height };
             let (node_x, node_y) = if horizontal_flow {
                 (
                     horizontal_cursor,
@@ -289,10 +287,11 @@ fn swimlane_edge_endpoints(
 }
 
 fn swimlane_node_width(shape: &DiagramShape, label: &str) -> f64 {
-    if matches!(shape, DiagramShape::SmallCircle | DiagramShape::FramedCircle) {
-        return 14.0;
+    match shape {
+        DiagramShape::SmallCircle | DiagramShape::FramedCircle => 14.0,
+        DiagramShape::ForkJoin => 10.0,
+        _ => (label.chars().count() as f64 * 7.2 + 28.0).clamp(132.0, 260.0),
     }
-    (label.chars().count() as f64 * 7.2 + 28.0).clamp(132.0, 260.0)
 }
 /// Lay out a treemap using stable alternating slice-and-dice partitions.
 pub fn layout_treemap(diagram: &TreemapDiagram, _canvas_width: f64) -> LayoutedTreemapDiagram {
@@ -706,7 +705,7 @@ mod tests {
             direction: DiagramDirection::Lr, title: None, accessibility_title: None,
             accessibility_description: None,
             lanes: vec![SwimlaneLane { id: "runtime".into(), label: "Runtime".into(),
-                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into()] }],
+                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into(), "fork".into()] }],
             nodes: vec![
                 SwimlaneNode { id: "hosted".into(), label: "Hosted".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::Cloud, classes: Vec::new(), style: Default::default() },
@@ -728,6 +727,8 @@ mod tests {
                     shape: DiagramShape::SmallCircle, classes: Vec::new(), style: Default::default() },
                 SwimlaneNode { id: "stop".into(), label: "Stop".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::FramedCircle, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "fork".into(), label: "Fork".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::ForkJoin, classes: Vec::new(), style: Default::default() },
             ],
             edges: vec![], links: Vec::new(), callbacks: Vec::new(),
         };
@@ -744,6 +745,8 @@ mod tests {
         assert_eq!((layout.nodes[8].width, layout.nodes[8].height), (14.0, 14.0));
         assert_eq!(layout.nodes[9].shape, DiagramShape::FramedCircle);
         assert_eq!((layout.nodes[9].width, layout.nodes[9].height), (14.0, 14.0));
+        assert_eq!(layout.nodes[10].shape, DiagramShape::ForkJoin);
+        assert_eq!((layout.nodes[10].width, layout.nodes[10].height), (10.0, 70.0));
     }
 
     #[test]

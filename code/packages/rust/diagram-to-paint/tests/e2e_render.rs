@@ -3571,6 +3571,13 @@ line "Target" [35, 50, 68, 82]"##,
                     PaintInstruction::Ellipse(_)
                 )).count() >= 3, "start and stop controls must lower to three ellipse instructions");
             }
+            if fixture_name == "fork-join-control-shapes" {
+                assert!(layout.nodes.iter().all(|node| node.width == 10.0 && node.height == 70.0),
+                    "horizontal fork and join controls must use narrow vertical bars");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Rect(rect) if rect.width == 10.0 && rect.height == 70.0
+                )).count() >= 2, "fork and join controls must lower to filled bar instructions");
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));

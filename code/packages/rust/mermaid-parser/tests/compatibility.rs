@@ -1641,6 +1641,15 @@ fn swimlane_start_and_stop_control_shapes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_fork_and_join_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Control\n  first@{ shape: fork }\n  second@{ shape: join }\nend\nfirst --> second",
+    ).expect("Swimlane fork and join controls should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::ForkJoin));
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",

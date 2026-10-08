@@ -931,6 +931,19 @@ where
                 stroke_dash: stroke_dash.clone(),
                 stroke_dash_offset: None,
             }),
+            DiagramShape::ForkJoin => PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(),
+                x: node.x,
+                y: node.y,
+                width: node.width,
+                height: node.height,
+                fill: Some(stroke.clone()),
+                stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width),
+                corner_radius: None,
+                stroke_dash: stroke_dash.clone(),
+                stroke_dash_offset: None,
+            }),
             DiagramShape::Diamond | DiagramShape::Hexagon | DiagramShape::ParallelogramRight
             | DiagramShape::ParallelogramLeft | DiagramShape::Trapezoid
             | DiagramShape::InvertedTrapezoid | DiagramShape::Asymmetric => {
@@ -1101,7 +1114,9 @@ where
             })),
             _ => {}
         }
-        if !matches!(node.shape, DiagramShape::SmallCircle | DiagramShape::FramedCircle) {
+        if !matches!(node.shape,
+            DiagramShape::SmallCircle | DiagramShape::FramedCircle | DiagramShape::ForkJoin
+        ) {
             let text_color = node.style.text_color.as_deref().and_then(parse_css_color).unwrap_or(Color {
                 r: 13, g: 71, b: 161, a: 255,
             });
@@ -1861,6 +1876,19 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
                 opacity: None,
             })
         }
+        DiagramShape::ForkJoin => PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: node.x,
+            y: node.y,
+            width: node.width,
+            height: node.height,
+            fill: Some(node.style.stroke.clone()),
+            stroke: Some(node.style.stroke.clone()),
+            stroke_width: Some(node.style.stroke_width),
+            corner_radius: None,
+            stroke_dash: node.style.stroke_dash.clone(),
+            stroke_dash_offset: None,
+        }),
         DiagramShape::Cloud => {
             PaintInstruction::Path(PaintPath {
                 base: PaintBase::default(),

@@ -67,6 +67,10 @@
       "source": "swimlane-beta LR\nsubgraph Control\n  begin@{ shape: small-circle }\n  finish@{ shape: framed-circle }\nend\nbegin --> finish"
     },
     {
+      "name": "fork-join-control-shapes",
+      "source": "swimlane-beta LR\nsubgraph Control\n  first@{ shape: fork }\nend\nsubgraph Merge\n  second@{ shape: join }\nend\nfirst --> second"
+    },
+    {
       "name": "input-output-and-asymmetric-shapes",
       "source": "swimlane-beta LR\nsubgraph Intake\n  input[/Receive payload/]\nend\nsubgraph Review\n  flag>Manual review]\nend\ninput --> flag"
     },
