@@ -6237,15 +6237,15 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             continue;
         }
         if let Some(value) = line.strip_prefix("title ") {
-            diagram.title = Some(value.trim().to_string());
+            diagram.title = Some(normalize_swimlane_label(value));
             continue;
         }
         if let Some(value) = line.strip_prefix("accTitle:") {
-            diagram.accessibility_title = Some(value.trim().to_string());
+            diagram.accessibility_title = Some(normalize_swimlane_label(value));
             continue;
         }
         if let Some(value) = line.strip_prefix("accDescr:") {
-            diagram.accessibility_description = Some(value.trim().to_string());
+            diagram.accessibility_description = Some(normalize_swimlane_label(value));
             continue;
         }
         if let Some(value) = line.strip_prefix("subgraph ") {
