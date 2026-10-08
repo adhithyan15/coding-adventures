@@ -121,25 +121,33 @@ pub fn run_source(source: &str) -> Result<String, JavaScriptRunError> {
     let mut vm = VMCore::new();
     vm.max_instructions = Some(100_000);
     vm.builtins_mut().register("js_console_log", move |args| {
-        let Some(Value::Float(number)) = args.first() else {
-            return Err(vm_core::errors::VMError::Custom(
-                "js_console_log expects one JavaScript Number".into(),
-            ));
+        let rendered = match args {
+            [] => None,
+            [Value::Float(number)] => {
+                Some(format_js_number(*number).map_err(vm_core::errors::VMError::Custom)?)
+            }
+            _ => {
+                return Err(vm_core::errors::VMError::Custom(
+                    "js_console_log expects zero or one JavaScript Number".into(),
+                ))
+            }
         };
         let mut sink = captured.lock().map_err(|_| {
             vm_core::errors::VMError::Custom("JavaScript console lock poisoned".into())
         })?;
-        let rendered = format_js_number(*number).map_err(vm_core::errors::VMError::Custom)?;
+        let appended_bytes = rendered.as_ref().map_or(1, |text| text.len() + 1);
         if sink
             .len()
-            .checked_add(rendered.len() + 1)
+            .checked_add(appended_bytes)
             .is_none_or(|length| length > 1_000_000)
         {
             return Err(vm_core::errors::VMError::Custom(
                 "JavaScript console output limit exceeded".into(),
             ));
         }
-        sink.push_str(&rendered);
+        if let Some(rendered) = rendered {
+            sink.push_str(&rendered);
+        }
         sink.push('\n');
         Ok(Value::Null)
     });
@@ -197,16 +205,14 @@ impl Compiler {
     fn compile_statement(&mut self, expr: &Expression) -> Result<(), String> {
         if let Expression::CallExpression(call) = expr {
             if is_console_log(&call.callee) {
-                if call.arguments.len() != 1 {
-                    return Err("native console.log pilot requires exactly one argument".into());
+                if call.arguments.len() > 1 {
+                    return Err("native console.log pilot requires at most one argument".into());
                 }
-                let value = self.compile_number(&call.arguments[0])?;
-                self.emit(
-                    "call_builtin",
-                    None,
-                    vec![Operand::Var("js_console_log".into()), value],
-                    "void",
-                );
+                let mut operands = vec![Operand::Var("js_console_log".into())];
+                if let Some(argument) = call.arguments.first() {
+                    operands.push(self.compile_number(argument)?);
+                }
+                self.emit("call_builtin", None, operands, "void");
                 return Ok(());
             }
         }
@@ -275,6 +281,37 @@ mod tests {
             "3\n0.5\n"
         );
         assert_eq!(run_source("console.log(-(1 + 2) * 3);").unwrap(), "-9\n");
+    }
+
+    #[test]
+    fn empty_console_log_lowers_directly_and_preserves_effect_order() {
+        let ast = parse_javascript_program("console.log();", EsVersion::Es2020).unwrap();
+        let module = compile_ast(&ast, "empty-log").unwrap();
+        let calls: Vec<_> = module.functions[0]
+            .instructions
+            .iter()
+            .filter(|instruction| instruction.op == "call_builtin")
+            .collect();
+        assert_eq!(calls.len(), 1);
+        assert_eq!(
+            calls[0].srcs.len(),
+            1,
+            "only the builtin name is an operand"
+        );
+        assert_eq!(
+            run_source("console.log(); console.log(7);").unwrap(),
+            "\n7\n"
+        );
+    }
+
+    #[test]
+    fn empty_console_output_survives_later_vm_error_but_compile_errors_emit_nothing() {
+        let error = run_source("console.log(); console.log(1e21);").unwrap_err();
+        assert_eq!(error.output, "\n");
+        assert!(error.message.contains("number display outside"));
+        let error = run_source("console.log(); console.log(1, 2);").unwrap_err();
+        assert!(error.output.is_empty());
+        assert!(error.message.contains("requires"));
     }
 
     #[test]

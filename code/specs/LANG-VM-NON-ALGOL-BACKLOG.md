@@ -310,20 +310,25 @@ exhaustive-release claim. The next selection rotates to PREP01's bounded
 conditional alternatives: generic `Elif`, C `#elif`, and duplicate-`else`
 rejection.
 
+PR #17081 delivered the bounded generic `Elif` and C `#elif` conditional
+alternatives, plus positioned rejection of orphan `elif`, `elif` after `else`,
+and duplicate `else`. It merged as
+`5c7deaa8cba493ef269b51fac4c46cc9cdcba8be` after exact-head CI,
+CodeQL, and books checks passed. The next selection rotates to LANG78's
+bounded zero-argument JavaScript `console.log()` frontend stage.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **PREP01 conditional alternatives (selected):** select the first true
-   `if`/`elif`/`else` branch through the generic bounded engine, expose the
-   current C `#if` subset through `#elif`, and reject duplicate `else`.
+1. **LANG78 JavaScript (selected):** lower an exact zero-argument
+   `console.log()` call from its typed AST to InterpreterIR and run it on Rust
+   vm-core, with Node only as a conformance oracle.
 2. **LANG82 continued:** continue distinct source-backed partial pairs. Keep
    5.004_01-t1 pending until its own source is found; do not imply complete
    syntax or an exhaustive release inventory.
 3. **PREP01 C:** continue the bounded conditional ladder. Full C `#if` and
    stringize/paste remain open.
-4. **LANG78 JavaScript:** the completed output repair leaves the broader
-   source/AST-to-IIR frontend subset open; Node remains a conformance oracle.
 
 The following run records the first VM-067 selection.
 

@@ -72,6 +72,16 @@ out-of-range display supplies a reachable runtime-error regression; the host
 JavaScript runtime serves only as an oracle for the ordering of completed
 console effects, never as the executor of the IIR module.
 
+The next bounded JavaScript stage also accepts `console.log()` with no
+arguments through the existing typed JavaScript AST. Lower it directly to an
+IIR builtin call with no value operand; the Rust VM appends exactly one newline
+while preserving the order and output cap of completed console effects. The
+one-argument numeric form is unchanged, and two or more arguments and other
+callees still reject. A later accepted VM error retains the preceding empty
+log's newline; a compile error returns no output. Test source-to-AST-to-IIR
+execution and direct typed-AST lowering, with Node used only as an output
+oracle. The broader JavaScript coercion and string-display rules stay open.
+
 ## Slice B — Python
 
 Create `python-iir-compiler` against `python-parser`'s grammar tree. Its first
