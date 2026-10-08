@@ -4,7 +4,7 @@
   "chapter": 72,
   "title": "When It Happens, and What You Want",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:3be5d4dfdbdde7e1",
+  "sourceHash": "fnv1a64:b0a187e7cca670cc",
   "lessons": [
     {
       "id": "KA-C72-when-clause",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88ef22238010434a",
+      "sourceHash": "fnv1a64:e119e06fc292b0de",
       "notice": null,
       "blocks": [
         {
@@ -165,11 +165,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say hēḷu, then read ಅಂತ",
+              "instruction": "say hēḷu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *hēḷu*, then read **ಅಂತ**]"
+              "source": "[YOU RECALL: say *hēḷu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಅಂತ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಅಂತ**]"
             }
           ]
         },

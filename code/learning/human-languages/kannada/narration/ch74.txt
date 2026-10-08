@@ -89,10 +89,8 @@ Warm-up.
 [pause 2 seconds]
 [your turn — recall: say mūraneya — R1]
 [pause 8 seconds for the answer]
-[your turn — recall: read ಟ, and say its sound — R2]
-[pause 8 seconds for the answer]
-[your turn — recall: read the sign ೇ, and say what it does to a letter — R3]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: ಟ, then say its sound — R2]
+[once you have stopped driving — read: the sign ೇ, then say what it does to a letter — R3]
 [your turn — recall: say kaḍime — R4]
 [pause 8 seconds for the answer]
 

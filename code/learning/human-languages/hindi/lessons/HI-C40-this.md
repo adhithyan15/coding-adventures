@@ -56,7 +56,8 @@ coincidence. It is the whole system, and the last lesson of this chapter says so
 [PAUSE 1s]
 - [YOU SAY: "यह" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
-- [YOU RECALL: say *dūdh*, then read **आँख**]
+- [YOU RECALL: say *dūdh*]
+- [YOU READ: **आँख**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-01] -->

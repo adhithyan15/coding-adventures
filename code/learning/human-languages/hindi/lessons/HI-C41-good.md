@@ -57,7 +57,8 @@ adjective you will ever meet here.
 [PAUSE 1s]
 - [YOU SAY: "अच्छा" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
-- [YOU RECALL: say *ādmī*, then read **वहाँ**]
+- [YOU RECALL: say *ādmī*]
+- [YOU READ: **वहाँ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-03] -->

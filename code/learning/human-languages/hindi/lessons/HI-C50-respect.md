@@ -59,7 +59,8 @@ Three, and this one is built into the grammar.
 - [YOU SAY: *ādar*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ādar*, then *ehsān*, then *ābhār*, back down the run]
-- [YOU RECALL: say *zarūr*, then read **सफ़र**]
+- [YOU RECALL: say *zarūr*]
+- [YOU READ: **सफ़र**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02, HI-LEX-C50-COURTESY-03] -->

@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "The Sky",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:50ecf5b5bf29da6a",
+  "sourceHash": "fnv1a64:77de51c909476aad",
   "lessons": [
     {
       "id": "HI-C55-sun",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e30dcf2721515993",
+      "sourceHash": "fnv1a64:25e5bbcb457f313d",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say kandhā, then read गाय",
+              "instruction": "say kandhā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *kandhā*, then read **गाय**]"
+              "source": "[YOU RECALL: say *kandhā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "गाय",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **गाय**]"
             }
           ]
         },
@@ -412,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae07aa0226f8e94e",
+      "sourceHash": "fnv1a64:041b5acf0acf2574",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +511,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "पीठ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **पीठ**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read पीठ, then say chiṛiyā",
+              "instruction": "say chiṛiyā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **पीठ**, then say *chiṛiyā*]"
+              "source": "[YOU RECALL: say *chiṛiyā*]"
             }
           ]
         },
@@ -543,7 +561,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88498d22d9e230fe",
+      "sourceHash": "fnv1a64:3d977952e0407020",
       "notice": null,
       "blocks": [
         {
@@ -634,11 +652,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say hoṇṭh, then read बकरी",
+              "instruction": "say hoṇṭh",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *hoṇṭh*, then read **बकरी**]"
+              "source": "[YOU RECALL: say *hoṇṭh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "बकरी",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **बकरी**]"
             }
           ]
         },

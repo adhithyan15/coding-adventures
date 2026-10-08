@@ -60,7 +60,8 @@ Five words for how a person carries themselves: hospitality, conduct, humility, 
 - [YOU SAY: *saralaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *ātithyam* and *saralaḥ* together]
-- [YOU RECALL: say *chatram*, then read **बहु**]
+- [YOU RECALL: say *chatram*]
+- [YOU READ: **बहु**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C43-COURTESY-01, SA-LEX-C43-COURTESY-02, SA-LEX-C43-COURTESY-03, SA-LEX-C43-COURTESY-04, SA-LEX-C43-COURTESY-05] -->

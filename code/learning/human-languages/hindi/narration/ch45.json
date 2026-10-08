@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "Things You Ask For",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:02d14e621f544bc8",
+  "sourceHash": "fnv1a64:7799d606b661b9a5",
   "lessons": [
     {
       "id": "HI-C45-fruit",
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f484e05b6fda5833",
+      "sourceHash": "fnv1a64:bc34656dedd9dcd9",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +240,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "सुनना",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **सुनना**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read सुनना, then say beṭā",
+              "instruction": "say beṭā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **सुनना**, then say *beṭā*]"
+              "source": "[YOU RECALL: say *beṭā*]"
             }
           ]
         },
@@ -281,7 +290,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8420cfb41fec0c79",
+      "sourceHash": "fnv1a64:454319328945abc1",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +381,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say bolnā, then read बेटी",
+              "instruction": "say bolnā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *bolnā*, then read **बेटी**]"
+              "source": "[YOU RECALL: say *bolnā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "बेटी",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **बेटी**]"
             }
           ]
         },
@@ -412,7 +430,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f24d8c5f5195ffe",
+      "sourceHash": "fnv1a64:2f36c0794f78de08",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +520,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "लिखना",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **लिखना**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read लिखना, then say parivār",
+              "instruction": "say parivār",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **लिखना**, then say *parivār*]"
+              "source": "[YOU RECALL: say *parivār*]"
             }
           ]
         },

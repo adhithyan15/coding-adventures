@@ -4,7 +4,7 @@
   "chapter": 71,
   "title": "Once More, and Which One",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:adb8bf111af3e1b8",
+  "sourceHash": "fnv1a64:ce7a6db2d89aaa4e",
   "lessons": [
     {
       "id": "KA-C71-another",
@@ -367,7 +367,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd5c105086548692",
+      "sourceHash": "fnv1a64:5785b324c4c04032",
       "notice": null,
       "blocks": [
         {
@@ -497,12 +497,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಅಲ್ವಾ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಅಲ್ವಾ**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read ಅಲ್ವಾ, then say yāke",
+              "instruction": "say yāke",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಅಲ್ವಾ**, then say *yāke*]"
+              "source": "[YOU RECALL: say *yāke*]"
             }
           ]
         },

@@ -65,11 +65,12 @@ A place to eat, and the first meal of the day to eat there.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C73-EATING-01, HI-LEX-C73-EATING-02, HI-LEX-C72-COST-05, HI-LEX-C71-TODAY-02, HI-LEX-C72-COST-02] -->
 
 [PAUSE 1s]
-- [YOU RECALL: read **ख़रीदना**, then say it without looking]
+- [YOU READ: **ख़रीदना**, then say it without looking]
 - [YOU SAY: *nāshtā*]
 - [YOU SAY: *nāshtā karnā*]
 - [YOU WRITE: होटल once more, then नाश्ता beside the printed model]
-- [YOU RECALL: read **भी**, then say *rupayā*]
+- [YOU READ: **भी**]
+- [YOU RECALL: say *rupayā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C73-EATING-01, HI-LEX-C73-EATING-02] -->

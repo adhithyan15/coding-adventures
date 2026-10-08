@@ -56,7 +56,8 @@ Five, and the run is closed: a cow, a goat, a hen, a crow, and the word for ever
 - [YOU SAY: *paṟavai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *pasu*, *āṭu*, *kōḻi*, *kākkai*, *paṟavai*]
-- [YOU RECALL: say *ākaṭṭum*, then read **கனல்**]
+- [YOU RECALL: say *ākaṭṭum*]
+- [YOU READ: **கனல்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C58-ANIMAL-01, TA-LEX-C58-ANIMAL-02, TA-LEX-C58-ANIMAL-03, TA-LEX-C58-ANIMAL-04, TA-LEX-C58-ANIMAL-05] -->

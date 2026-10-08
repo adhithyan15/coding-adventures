@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Verbs of Mind and Motion",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:48493f6cce85c288",
+  "sourceHash": "fnv1a64:ead6a5f62d1f144f",
   "lessons": [
     {
       "id": "SA-C22-hear",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c8c68cc773507f6",
+      "sourceHash": "fnv1a64:03e72be70de6f362",
       "notice": null,
       "blocks": [
         {
@@ -107,11 +107,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say naraḥ, then read नारी",
+              "instruction": "say naraḥ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *naraḥ*, then read **नारी**]"
+              "source": "[YOU RECALL: say *naraḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "नारी",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **नारी**]"
             }
           ]
         },
@@ -147,7 +156,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b76b54e87501f422",
+      "sourceHash": "fnv1a64:743ac2676165f86a",
       "notice": null,
       "blocks": [
         {
@@ -233,12 +242,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read बालः",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "बालः",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **बालः**]"
+              "source": "[YOU READ: **बालः**]"
             }
           ]
         },
@@ -411,7 +420,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f6a26b5202d5557",
+      "sourceHash": "fnv1a64:41eb4436cac7384f",
       "notice": null,
       "blocks": [
         {
@@ -497,12 +506,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read जनः",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "जनः",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **जनः**]"
+              "source": "[YOU READ: **जनः**]"
             }
           ]
         },

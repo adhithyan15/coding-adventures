@@ -67,7 +67,9 @@ You can put a choice in front of somebody and take their answer.
 - [YOU OFFER: *pāl vēṇḍumā, alladu tēnīr vēṇḍumā?*]
 - [YOU OFFER SHORT: *pāl alladu tēnīr?*]
 - [YOU ANSWER: name one of them]
-- [YOU RECALL: say *alladu*, then read **ஆனால்**, then make the full offer]
+- [YOU RECALL: say *alladu*]
+- [YOU READ: **ஆனால்**]
+- [YOU RECALL: make the full offer]
 - [YOU RETURN TO: read **சரியா**, say *uṭaṉē* and say *varuttam* — three distances back — then offer two of them with அல்லது]
 
 ## Wrap-up Recall

@@ -56,7 +56,8 @@ Three, and the third leaves no room for doubt.
 - [YOU SAY: *niccayamāka*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pōdum*, then *niccayamāka*, and feel how much longer the second is]
-- [YOU RECALL: say *mūkku*, then read **மருத்துவர்**]
+- [YOU RECALL: say *mūkku*]
+- [YOU READ: **மருத்துவர்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C47-REPLY-01, TA-LEX-C47-REPLY-02, TA-LEX-C47-REPLY-03] -->

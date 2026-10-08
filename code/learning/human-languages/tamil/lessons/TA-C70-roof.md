@@ -61,7 +61,8 @@ Five: a table, a bed, a wall, a floor and a roof.
 - [YOU SAY: *mēlē*, then *kūrai*; *kīḻē*, then *tarai*]
 - [YOU SAY: all five — *mēsai*, *kaṭṭil*, *suvar*, *tarai*, *kūrai*]
 - [YOU RECALL: say *suvar*, then say *tarai*, then say *kūrai*]
-- [YOU RECALL: say *pai*, then read **நிலையம்**]
+- [YOU RECALL: say *pai*]
+- [YOU READ: **நிலையம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C70-ROOM-03, TA-LEX-C70-ROOM-04, TA-LEX-C70-ROOM-01, TA-LEX-C70-ROOM-02, TA-LEX-C70-ROOM-05] -->

@@ -58,7 +58,7 @@ Four. A door, a chair, the pattern at the threshold, a flower.
 - [YOU SAY: *pūvŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pūvŭ*, then *kōlaṁ*, the two things laid at a doorway]
-- [YOU RECALL: read **പുറപ്പെടുക**]
+- [YOU READ: **പുറപ്പെടുക**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C52-WELCOME-01, ML-LEX-C52-WELCOME-02, ML-LEX-C52-WELCOME-03, ML-LEX-C52-WELCOME-04] -->

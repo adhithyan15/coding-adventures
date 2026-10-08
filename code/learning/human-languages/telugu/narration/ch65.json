@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "More Good Manners",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6a538c09b320cbb3",
+  "sourceHash": "fnv1a64:574e3821f07af8dd",
   "lessons": [
     {
       "id": "TE-C65-welcome",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac73c719213cb07d",
+      "sourceHash": "fnv1a64:5143509fe31eded7",
       "notice": null,
       "blocks": [
         {
@@ -114,11 +114,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ākali, then read కూడా and say what it means",
+              "instruction": "say ākali",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ākali*, then read **కూడా** and say what it means]"
+              "source": "[YOU RECALL: say *ākali*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "కూడా, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **కూడా**, then say what it means]"
             }
           ]
         },
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5abd49d6753e41a7",
+      "sourceHash": "fnv1a64:ba44c3a94d169e47",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +257,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "నిద్ర",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **నిద్ర**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read నిద్ర, then say mātramē",
+              "instruction": "say mātramē",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **నిద్ర**, then say *mātramē*]"
+              "source": "[YOU RECALL: say *mātramē*]"
             }
           ]
         },
@@ -289,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eb6714d048e3cf8e",
+      "sourceHash": "fnv1a64:e5eee13b011e7efa",
       "notice": null,
       "blocks": [
         {
@@ -384,11 +402,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say daggu, then read అయితే and say what it means",
+              "instruction": "say daggu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *daggu*, then read **అయితే** and say what it means]"
+              "source": "[YOU RECALL: say *daggu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "అయితే, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **అయితే**, then say what it means]"
             }
           ]
         },
@@ -424,7 +451,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ac600d3835b2f34",
+      "sourceHash": "fnv1a64:6ba51a32aa742e00",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +545,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "రోగం",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **రోగం**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read రోగం, then say taruvāta",
+              "instruction": "say taruvāta",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **రోగం**, then say *taruvāta*]"
+              "source": "[YOU RECALL: say *taruvāta*]"
             }
           ]
         },
@@ -559,7 +595,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66603adb847f3a00",
+      "sourceHash": "fnv1a64:5249bef7732aed74",
       "notice": null,
       "blocks": [
         {
@@ -654,11 +690,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ārōgyaṁ, then read ఇంకా and say what it means",
+              "instruction": "say ārōgyaṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ārōgyaṁ*, then read **ఇంకా** and say what it means]"
+              "source": "[YOU RECALL: say *ārōgyaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ఇంకా, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ఇంకా**, then say what it means]"
             }
           ]
         },

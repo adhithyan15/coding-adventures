@@ -59,7 +59,9 @@ Three garments, and a Tamil word English never borrowed.
 [PAUSE 1s]
 - [YOU SAY: *puḍavai*]
 - [YOU SAY: *talai*, *saṭṭai*, *puḍavai* — three words, one ending]
-- [YOU RECALL: say *vēṭṭi*, then read **சட்டை**, then say *puḍavai*]
+- [YOU RECALL: say *vēṭṭi*]
+- [YOU READ: **சட்டை**]
+- [YOU RECALL: say *puḍavai*]
 - [YOU RECALL: say *veḷiyē*]
 
 ## Wrap-up Recall

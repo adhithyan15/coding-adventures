@@ -65,7 +65,8 @@ letter and start hearing it as **வெளி** with an ending on it.
 - [YOU SAY: *veḷiyē*]
 - [YOU SAY: *uḷḷē vā*, then *veḷiyē pō*]
 - [YOU SAY: the bare pair — *uḷ* and *veḷi* — then both with the ending]
-- [YOU RECALL: read **களம்**, then say *tiṟa*]
+- [YOU READ: **களம்**]
+- [YOU RECALL: say *tiṟa*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-03, TA-LEX-C66-WHICHWAY-04] -->

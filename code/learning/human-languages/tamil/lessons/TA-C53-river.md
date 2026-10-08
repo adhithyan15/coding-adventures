@@ -56,7 +56,8 @@ The first of five things in a stretch of country.
 - [YOU SAY: *nadi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vitai*, then *nadi*, the seed and the water that reaches it]
-- [YOU RECALL: say *ākāyam*, then read **மரம்**]
+- [YOU RECALL: say *ākāyam*]
+- [YOU READ: **மரம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C52-TREE-04, TA-LEX-C52-TREE-05, TA-LEX-C53-LAND-01] -->

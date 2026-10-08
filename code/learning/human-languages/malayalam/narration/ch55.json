@@ -4,7 +4,7 @@
   "chapter": 55,
   "title": "Ground Underfoot",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cfc07e5b0d87f677",
+  "sourceHash": "fnv1a64:e7d30f0214e59f19",
   "lessons": [
     {
       "id": "ML-C55-river",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3dd5d368c71e700b",
+      "sourceHash": "fnv1a64:98ce383e72b76777",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read സൂര്യൻ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "സൂര്യൻ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **സൂര്യൻ**]"
+              "source": "[YOU READ: **സൂര്യൻ**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ecb535a54a4e211",
+      "sourceHash": "fnv1a64:aafa9cdad15d1121",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read നക്ഷത്രം",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "നക്ഷത്രം",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **നക്ഷത്രം**]"
+              "source": "[YOU READ: **നക്ഷത്രം**]"
             }
           ]
         },

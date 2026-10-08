@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "The House Itself",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8d235183a6758786",
+  "sourceHash": "fnv1a64:f5b5852ddad49c5a",
   "lessons": [
     {
       "id": "TE-C67-wall",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:641f7bd0e22415f4",
+      "sourceHash": "fnv1a64:d83d7515aa16318e",
       "notice": null,
       "blocks": [
         {
@@ -114,11 +114,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say svāgataṁ, then read పొలం and say what it means",
+              "instruction": "say svāgataṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *svāgataṁ*, then read **పొలం** and say what it means]"
+              "source": "[YOU RECALL: say *svāgataṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "పొలం, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **పొలం**, then say what it means]"
             }
           ]
         },
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22c41eb7f539fedc",
+      "sourceHash": "fnv1a64:b5b8a96045b3e668",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +257,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "మర్యాద",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **మర్యాద**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read మర్యాద, then say vari",
+              "instruction": "say vari",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **మర్యాద**, then say *vari*]"
+              "source": "[YOU RECALL: say *vari*]"
             }
           ]
         },
@@ -289,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a5ff76c5fc504c4",
+      "sourceHash": "fnv1a64:271e8e1e613f34a4",
       "notice": null,
       "blocks": [
         {
@@ -384,11 +402,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say manavi, then read గడ్డి and say what it means",
+              "instruction": "say manavi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *manavi*, then read **గడ్డి** and say what it means]"
+              "source": "[YOU RECALL: say *manavi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "గడ్డి, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **గడ్డి**, then say what it means]"
             }
           ]
         },
@@ -424,7 +451,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f71bf02a0ad92be",
+      "sourceHash": "fnv1a64:7aa1222a1fe4b2d8",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +545,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "అనుమతి",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **అనుమతి**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read అనుమతి, then say kallaṁ",
+              "instruction": "say kallaṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **అనుమతి**, then say *kallaṁ*]"
+              "source": "[YOU RECALL: say *kallaṁ*]"
             }
           ]
         },
@@ -559,7 +595,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa352d74405b0f7c",
+      "sourceHash": "fnv1a64:25cfcf9df7c10980",
       "notice": null,
       "blocks": [
         {
@@ -654,11 +690,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say nammakaṁ, then read పంట and say what it means",
+              "instruction": "say nammakaṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *nammakaṁ*, then read **పంట** and say what it means]"
+              "source": "[YOU RECALL: say *nammakaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "పంట, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **పంట**, then say what it means]"
             }
           ]
         },

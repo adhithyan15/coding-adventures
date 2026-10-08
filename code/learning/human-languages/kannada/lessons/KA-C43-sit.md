@@ -54,7 +54,7 @@ One more everyday action. Three more follow, and each reuses the ones before it.
 - [YOU SAY: *kuḷitukō*]
 - [YOU SAY: it again, to someone standing in a doorway]
 - [YOU SAY: it after *bā*, so the two sit together]
-- [YOU RECALL: read **ಎಲ್ಲಿ**]
+- [YOU READ: **ಎಲ್ಲಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-COME, KA-LEX-SIT] -->

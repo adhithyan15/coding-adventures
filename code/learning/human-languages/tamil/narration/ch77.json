@@ -4,7 +4,7 @@
   "chapter": 77,
   "title": "Saying, and Thinking",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ba2c3e6fa8ae5102",
+  "sourceHash": "fnv1a64:af5f597d633379c0",
   "lessons": [
     {
       "id": "TA-C77-say",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f4a605f65ba67ab4",
+      "sourceHash": "fnv1a64:1198560ecc5eaee2",
       "notice": null,
       "blocks": [
         {
@@ -125,12 +125,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஆனால்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஆனால்**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read ஆனால், then offer pāl alladu tēnīr?, then say sol",
+              "instruction": "offer pāl alladu tēnīr?, then say sol",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ஆனால்**, then offer *pāl alladu tēnīr?*, then say *sol*]"
+              "source": "[YOU RECALL: offer *pāl alladu tēnīr?*, then say *sol*]"
             },
             {
               "kind": "prompt",
@@ -494,7 +503,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41925dd0455c1bf1",
+      "sourceHash": "fnv1a64:875cfa961d1194cf",
       "notice": null,
       "blocks": [
         {
@@ -605,11 +614,29 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say \"sari\" eṉṟu solluṅgaḷ, then read சொல், then give your opinion",
+              "instruction": "say \"sari\" eṉṟu solluṅgaḷ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *\"sari\" eṉṟu solluṅgaḷ*, then read **சொல்**, then give your opinion]"
+              "source": "[YOU RECALL: say *\"sari\" eṉṟu solluṅgaḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சொல் (sol)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சொல்**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "give your opinion",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: give your opinion]"
             },
             {
               "kind": "prompt",

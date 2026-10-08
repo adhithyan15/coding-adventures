@@ -72,7 +72,9 @@ build out of a verb.
 - [YOU SAY: *varum pōdu*]
 - [YOU SAY: *nīṅgaḷ varum pōdu, solluṅgaḷ*]
 - [YOU SEPARATE: say *pālum* and then *varum* — the same ending, two different jobs]
-- [YOU RECALL: answer *appōdu*, then read **எப்போது**, then say the whole *varum pōdu* line]
+- [YOU RECALL: answer *appōdu*]
+- [YOU READ: **எப்போது**]
+- [YOU RECALL: say the whole *varum pōdu* line]
 - [YOU RETURN TO: say *-ā*, *naḍa* and *adaṉāl* — three distances back — then say when one of them happens]
 
 ## Wrap-up Recall

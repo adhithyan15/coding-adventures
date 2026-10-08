@@ -58,7 +58,8 @@ Four, and this one is about order.
 - [YOU SAY: *taruvāta*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bhōjanaṁ taruvāta*, then just *taruvāta*, and say how the two differ]
-- [YOU RECALL: read **గొడుగు**, then say *rōgaṁ*]
+- [YOU READ: **గొడుగు**]
+- [YOU RECALL: say *rōgaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C64-JOIN-01, TE-LEX-C64-JOIN-02, TE-LEX-C64-JOIN-03, TE-LEX-C64-JOIN-04] -->

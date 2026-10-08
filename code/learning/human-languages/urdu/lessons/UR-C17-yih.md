@@ -85,7 +85,9 @@ That is what this chapter buys back.
 - [YOU READ: کان and ناک, naming their letters from the right]
 - [YOU SAY: the near word **yih**, and name what it still needs to become a
   sentence — *hai*]
-- [YOU RECALL: say *roṭī*, then read **لال**, then say *safed*]
+- [YOU RECALL: say *roṭī*]
+- [YOU READ: **لال**]
+- [YOU RECALL: say *safed*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-YIH] -->

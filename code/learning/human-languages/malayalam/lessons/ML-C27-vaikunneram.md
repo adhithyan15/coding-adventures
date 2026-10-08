@@ -75,7 +75,8 @@ phrasebook sources agree on a cleaner practical split.
 - [YOU SAY: the everyday verb root — vaikuka, "to get late"]
 - [YOU SAY: the honest tension — Wiktionary blurs afternoon/evening;
   phrasebooks split them cleanly]
-- [YOU RECALL: say *nāya, pūcca*, then read **പച്ച, മഞ്ഞ**]
+- [YOU RECALL: say *nāya, pūcca*]
+- [YOU READ: **പച്ച, മഞ്ഞ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C27-VAIKUNNERAM-01, ML-CONCEPT-C27-VAIKUNNERAM-02] -->

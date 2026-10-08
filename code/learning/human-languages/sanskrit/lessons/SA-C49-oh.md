@@ -60,7 +60,8 @@ Five more replies: then, as, only, again and again, and oh.
 - [YOU SAY: *aho*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *tarhi* and *aho* together]
-- [YOU RECALL: say *talam*, then read **हंसः**]
+- [YOU RECALL: say *talam*]
+- [YOU READ: **हंसः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C49-REPLY-01, SA-LEX-C49-REPLY-02, SA-LEX-C49-REPLY-03, SA-LEX-C49-REPLY-04, SA-LEX-C49-REPLY-05] -->

@@ -60,7 +60,8 @@ Manners understood as training rather than as polish.
 - [YOU SAY: *vinayaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ātithyam*, then *vinayaḥ*]
-- [YOU RECALL: read **कलशः**, then say *sahasā*]
+- [YOU READ: **कलशः**]
+- [YOU RECALL: say *sahasā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C42-REPLY-05, SA-LEX-C43-COURTESY-01, SA-LEX-C43-COURTESY-02] -->

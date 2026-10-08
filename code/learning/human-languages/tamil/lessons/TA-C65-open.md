@@ -67,7 +67,8 @@ Four doings, and a verb that belongs to a noun you already carry.
 - [YOU SAY: *kadavu*, then *tiṟa* — the thing, then the act]
 - [YOU SAY: *naṉṟi*, then *tiṟa*, and hear the same **ற** twice]
 - [YOU SAY: *niṟuttu*, then *tiṟa*]
-- [YOU RECALL: read **நம்பிக்கை**, then say *kaḷam*]
+- [YOU READ: **நம்பிக்கை**]
+- [YOU RECALL: say *kaḷam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C65-DOING-03, TA-LEX-C65-DOING-04] -->

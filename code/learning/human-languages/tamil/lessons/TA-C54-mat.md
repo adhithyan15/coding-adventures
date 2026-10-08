@@ -56,7 +56,8 @@ The first of five things a house puts in front of you.
 - [YOU SAY: *pāy*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kirāmam*, then *pāy*, the village and what is unrolled for you in it]
-- [YOU RECALL: say *maram*, then read **நதி**]
+- [YOU RECALL: say *maram*]
+- [YOU READ: **நதி**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C53-LAND-04, TA-LEX-C53-LAND-05, TA-LEX-C54-HOUSE-01] -->

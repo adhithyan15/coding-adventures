@@ -56,7 +56,8 @@ Two: this moment, and the stuff moments are made of.
 - [YOU SAY: *nēram*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ippōdu*, then *nēram*, so the two sit together]
-- [YOU RECALL: read **மாணவன்**, then say *pōdum*]
+- [YOU READ: **மாணவன்**]
+- [YOU RECALL: say *pōdum*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C47-REPLY-05, TA-LEX-C48-LEAVE-01, TA-LEX-C48-LEAVE-02] -->

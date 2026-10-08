@@ -62,7 +62,8 @@ Both ends of the daylight, and the middle between them.
 - [YOU SAY: *sāyam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *madhyāhnaḥ*, then *sāyam*]
-- [YOU RECALL: say *namratā*, then read **पीतः**]
+- [YOU RECALL: say *namratā*]
+- [YOU READ: **पीतः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C45-DAYTIME-01, SA-LEX-C45-DAYTIME-02, SA-LEX-C45-DAYTIME-03] -->

@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "The Sentence Learns to End",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:cac5032e3a9f8d27",
+  "sourceHash": "fnv1a64:a5d31a715633254f",
   "lessons": [
     {
       "id": "UR-C17-yih",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61326d1dd023a8fe",
+      "sourceHash": "fnv1a64:8a1200c96ab9eabe",
       "notice": null,
       "blocks": [
         {
@@ -133,11 +133,29 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say roṭī, then read لال, then say safed",
+              "instruction": "say roṭī",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *roṭī*, then read **لال**, then say *safed*]"
+              "source": "[YOU RECALL: say *roṭī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "لال",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **لال**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say safed",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *safed*]"
             }
           ]
         },
@@ -198,7 +216,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:403629ac4d93466c",
+      "sourceHash": "fnv1a64:514e97692137ed40",
       "notice": null,
       "blocks": [
         {
@@ -311,12 +329,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "کالا",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **کالا**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read کالا, then say nīlā, then say qamīz",
+              "instruction": "say nīlā, then say qamīz",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **کالا**, then say *nīlā*, then say *qamīz*]"
+              "source": "[YOU RECALL: say *nīlā*, then say *qamīz*]"
             }
           ]
         },

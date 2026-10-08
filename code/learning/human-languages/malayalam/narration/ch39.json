@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Tea, Coffee, Milk",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:d9cf62414bdb651f",
+  "sourceHash": "fnv1a64:a6895ba594735741",
   "lessons": [
     {
       "id": "ML-C39-chaaya",
@@ -170,7 +170,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a1f7ac9e31c097c7",
+      "sourceHash": "fnv1a64:1d7f4330f55fe049",
       "notice": null,
       "blocks": [
         {
@@ -269,12 +269,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read മകൻ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "മകൻ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **മകൻ**]"
+              "source": "[YOU READ: **മകൻ**]"
             }
           ]
         },
@@ -310,7 +310,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5bbc76a0bf316f25",
+      "sourceHash": "fnv1a64:399ecc3a23efc6c3",
       "notice": null,
       "blocks": [
         {
@@ -419,11 +419,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say makaḷ, then read കണ്ണ്",
+              "instruction": "say makaḷ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *makaḷ*, then read **കണ്ണ്**]"
+              "source": "[YOU RECALL: say *makaḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "കണ്ണ്",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **കണ്ണ്**]"
             }
           ]
         },

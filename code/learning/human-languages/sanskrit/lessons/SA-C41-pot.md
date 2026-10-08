@@ -60,7 +60,8 @@ The pot that holds water and welcomes people.
 - [YOU SAY: *kalaśaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *cakram*, then *kalaśaḥ*]
-- [YOU RECALL: read **विहगः**, then say *śarkarā*]
+- [YOU READ: **विहगः**]
+- [YOU RECALL: say *śarkarā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C40-FOOD-05, SA-LEX-C41-CRAFT-01, SA-LEX-C41-CRAFT-02] -->

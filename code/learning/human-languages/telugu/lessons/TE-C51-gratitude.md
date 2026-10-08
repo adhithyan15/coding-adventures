@@ -56,7 +56,8 @@ A second word for thanks, with a different picture inside it.
 - [YOU SAY: *kṛtajñata*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kṛtajñata*, then *dhanyavādamulu*, and say which one remembers a debt]
-- [YOU RECALL: say *nijaṁ*, then read **ఇప్పుడు** and say what it means]
+- [YOU RECALL: say *nijaṁ*]
+- [YOU READ: **ఇప్పుడు**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C50-LEAVE-04, TE-LEX-C50-LEAVE-05, TE-LEX-C51-COURTESY-01] -->

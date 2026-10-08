@@ -59,7 +59,8 @@ Four.
 - [YOU SAY: *bharosā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bharosā*, then *dost*, and say who takes the weight]
-- [YOU RECALL: read **बुख़ार**, then say *kam*]
+- [YOU READ: **बुख़ार**]
+- [YOU RECALL: say *kam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C65-GRACE-01, HI-LEX-C65-GRACE-02, HI-LEX-C65-GRACE-03, HI-LEX-C65-GRACE-04] -->

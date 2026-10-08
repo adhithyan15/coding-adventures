@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "All the Way Up, and On a Sign",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:9e224abe8390f58c",
+  "sourceHash": "fnv1a64:98f502cb2c11cc84",
   "lessons": [
     {
       "id": "KA-C75-sixth",
@@ -452,7 +452,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c012c626dead48a8",
+      "sourceHash": "fnv1a64:7b31e5be12d8ed30",
       "notice": null,
       "blocks": [
         {
@@ -486,12 +486,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ವ, and say its sound — R3",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ವ, then say its sound — R3",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ವ**, and say its sound — **R3**]"
+              "source": "[YOU READ: **ವ**, then say its sound — **R3**]"
             },
             {
               "kind": "prompt",
@@ -1053,7 +1053,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23aed7322e266e8b",
+      "sourceHash": "fnv1a64:d776c3a68afad379",
       "notice": null,
       "blocks": [
         {
@@ -1087,12 +1087,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಜ, and say its sound — R3",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಜ, then say its sound — R3",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಜ**, and say its sound — **R3**]"
+              "source": "[YOU READ: **ಜ**, then say its sound — **R3**]"
             },
             {
               "kind": "prompt",

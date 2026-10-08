@@ -55,7 +55,9 @@ adjective you will ever meet here.
 [PAUSE 1s]
 - [YOU SAY: "बड़ा" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
-- [YOU RECALL: say *dost*, then read **यह**, then say *vah*]
+- [YOU RECALL: say *dost*]
+- [YOU READ: **यह**]
+- [YOU RECALL: say *vah*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-01] -->

@@ -77,7 +77,8 @@ Negate it and you have the most useful excuse in the language:
 - [YOU SAY: **बोलना** (*bolnā*) → **बोल सकता हूँ** (*bol saktā hūṁ*), then **आना** (*ānā*) → **आ सकता हूँ** (*ā saktā hūṁ*)]
 - [YOU SAY: **मैं कल नहीं आ सकता** (*maiṁ kal nahīṁ ā saktā*)]
 - [YOU SAY: which of the two verbs takes the ending — **सकना, and it goes last**]
-- [YOU RECALL: say *aur*, then read **… या …**]
+- [YOU RECALL: say *aur*]
+- [YOU READ: **… या …**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-SAKNA-01, HI-GRAMMAR-SAKNA-STEM-01] -->

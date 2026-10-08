@@ -56,7 +56,7 @@ Four.
 - [YOU SAY: *porake*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *porake*, then *raṅgōli*, and say which one comes first]
-- [YOU RECALL: read **ಕಾಗೆ**]
+- [YOU READ: **ಕಾಗೆ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C62-MADE-01, KA-LEX-C62-MADE-02, KA-LEX-C62-MADE-03, KA-LEX-C62-MADE-04] -->

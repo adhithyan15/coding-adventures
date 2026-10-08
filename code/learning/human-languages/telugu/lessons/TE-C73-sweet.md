@@ -58,7 +58,8 @@ One. The taste every count opens with.
 - [YOU SAY: *tīpi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tīpi*, then *cakkera*, and say which one is the taste]
-- [YOU RECALL: say *māma*, then read **అంగడి** and say what it means]
+- [YOU RECALL: say *māma*]
+- [YOU READ: **అంగడి**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C72-MARKET-04, TE-LEX-C72-MARKET-05, TE-LEX-C73-TASTE-01] -->

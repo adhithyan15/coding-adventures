@@ -59,7 +59,8 @@ A second going-root, and a noun made from it.
 - [YOU SAY: *yātrā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gacchati*, then *yātrā*, and say which one sounds like setting out]
-- [YOU RECALL: say *rājā*, then read **अलम्**]
+- [YOU RECALL: say *rājā*]
+- [YOU READ: **अलम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C28-LEAVE-01, SA-LEX-C28-LEAVE-02, SA-LEX-C28-LEAVE-03] -->

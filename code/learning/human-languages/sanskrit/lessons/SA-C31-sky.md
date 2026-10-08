@@ -59,7 +59,8 @@ A new set of words, and the space that everything else in this chapter sits in.
 - [YOU SAY: *ākāśaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *añjaliḥ*, then *ākāśaḥ*]
-- [YOU RECALL: say *kṛpayā*, then read **द्वारम्**]
+- [YOU RECALL: say *kṛpayā*]
+- [YOU READ: **द्वारम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C30-WELCOME-04, SA-LEX-C30-WELCOME-05, SA-LEX-C31-SKY-01] -->

@@ -59,7 +59,8 @@ Salt, and a word with no European relatives at all.
 - [YOU SAY: *lavaṇam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *madhu*, then *lavaṇam*]
-- [YOU RECALL: say *parvataḥ*, then read **अस्थि**]
+- [YOU RECALL: say *parvataḥ*]
+- [YOU READ: **अस्थि**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C35-HOUSE-01, SA-LEX-C35-HOUSE-02, SA-LEX-C35-HOUSE-03] -->

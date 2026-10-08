@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Two Things Joined",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:1d27bcd80c5a5050",
+  "sourceHash": "fnv1a64:b657bdcc1d92fa7c",
   "lessons": [
     {
       "id": "SA-C52-ca",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c5d9940b351f851",
+      "sourceHash": "fnv1a64:3022f3efd951ea1b",
       "notice": null,
       "blocks": [
         {
@@ -95,11 +95,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say mātulaḥ, then read मातामही and say what it means",
+              "instruction": "say mātulaḥ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *mātulaḥ*, then read **मातामही** and say what it means]"
+              "source": "[YOU RECALL: say *mātulaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "मातामही, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **मातामही**, then say what it means]"
             },
             {
               "kind": "prompt",

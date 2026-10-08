@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "Who Someone Is",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:66eef2a82553a053",
+  "sourceHash": "fnv1a64:9f278c7f32a65164",
   "lessons": [
     {
       "id": "HI-C47-teacher",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6bbc3357b50eab0",
+      "sourceHash": "fnv1a64:184f71f0fd1ff54a",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say phal, then read बाल",
+              "instruction": "say phal",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *phal*, then read **बाल**]"
+              "source": "[YOU RECALL: say *phal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "बाल",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **बाल**]"
             }
           ]
         },
@@ -281,7 +290,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bdaa8120689b1346",
+      "sourceHash": "fnv1a64:ec865e6c771bc948",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +381,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say dīyā, then read कान",
+              "instruction": "say dīyā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *dīyā*, then read **कान**]"
+              "source": "[YOU RECALL: say *dīyā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "कान",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **कान**]"
             }
           ]
         },
@@ -412,7 +430,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc01ec2588d96daa",
+      "sourceHash": "fnv1a64:1f70794a04814f52",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +520,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "नमक",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **नमक**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read नमक, then say nāk",
+              "instruction": "say nāk",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **नमक**, then say *nāk*]"
+              "source": "[YOU RECALL: say *nāk*]"
             }
           ]
         },
@@ -543,7 +570,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61b6e371fdbb8801",
+      "sourceHash": "fnv1a64:5f62887e1e860531",
       "notice": null,
       "blocks": [
         {
@@ -634,11 +661,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say sābun, then read गला",
+              "instruction": "say sābun",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *sābun*, then read **गला**]"
+              "source": "[YOU RECALL: say *sābun*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "गला",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **गला**]"
             }
           ]
         },

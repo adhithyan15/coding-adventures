@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Noon and Midnight",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:bf7f70180a9c5dff",
+  "sourceHash": "fnv1a64:0982fac426c22cce",
   "lessons": [
     {
       "id": "ML-C17-ucha-paathira",
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64cab8e531a34f85",
+      "sourceHash": "fnv1a64:bf0aaf35fd5405ff",
       "notice": null,
       "blocks": [
         {
@@ -212,12 +212,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read തല കൈ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "തല കൈ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **തല കൈ**]"
+              "source": "[YOU READ: **തല കൈ**]"
             }
           ]
         },

@@ -37,7 +37,7 @@ reviews_of: [SA-S225-letter-vocalic-r, SA-C59-bharatiyah, SA-C54-iti-clause, SA-
 
 [PAUSE 2s] A second kind of number word begins here, so the recalls come first, at the four growing distances this book measures.
 
-- [YOU RECALL: read **ऋ** — **R1**, one lesson back]
+- [YOU READ: **ऋ** — **R1**, one lesson back]
 - [YOU RECALL: say *bhāratīyaḥ* — **R2**, five lessons back]
 - [YOU RECALL: close a quoted thought with *iti* — **R3**, twenty lessons back]
 - [YOU RECALL: say *sahasā* — **R4**, eighty lessons back]

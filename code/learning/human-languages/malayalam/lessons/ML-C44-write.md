@@ -54,7 +54,7 @@ That closes the run: look, listen, speak, write.
 - [YOU SAY: *eḻutū*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *saṁsārikkū*, so the two sit together]
-- [YOU RECALL: read **പുതിയ**]
+- [YOU READ: **പുതിയ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-SPEAK, ML-LEX-WRITE] -->

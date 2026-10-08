@@ -59,7 +59,8 @@ The fourth of five, and a guess that this book will not make.
 - [YOU SAY: *chiṛiyā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *chiṛiyā*, small and feminine]
-- [YOU RECALL: read **चीनी**, then say *pīṭh*]
+- [YOU READ: **चीनी**]
+- [YOU RECALL: say *pīṭh*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C54-ANIMAL-01, HI-LEX-C54-ANIMAL-02, HI-LEX-C54-ANIMAL-03, HI-LEX-C54-ANIMAL-04] -->

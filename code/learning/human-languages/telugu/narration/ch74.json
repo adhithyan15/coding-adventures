@@ -4,7 +4,7 @@
   "chapter": 74,
   "title": "And, But, Or",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:48543cb1a53396f6",
+  "sourceHash": "fnv1a64:8d3d48551d2dc7c9",
   "lessons": [
     {
       "id": "TE-C74-and",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:70f60553b95fba3c",
+      "sourceHash": "fnv1a64:b233dec003256f96",
       "notice": null,
       "blocks": [
         {
@@ -119,11 +119,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say aṅgaḍi, then read తీపి and say what it means",
+              "instruction": "say aṅgaḍi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *aṅgaḍi*, then read **తీపి** and say what it means]"
+              "source": "[YOU RECALL: say *aṅgaḍi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "తీపి, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **తీపి**, then say what it means]"
             }
           ]
         },
@@ -159,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3764833a570bc12",
+      "sourceHash": "fnv1a64:dd5ab4b0a9edd420",
       "notice": null,
       "blocks": [
         {
@@ -258,12 +267,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "డబ్బు",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **డబ్బు**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read డబ్బు, then say pulupu",
+              "instruction": "say pulupu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **డబ్బు**, then say *pulupu*]"
+              "source": "[YOU RECALL: say *pulupu*]"
             }
           ]
         },
@@ -299,7 +317,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:97a8d6e37642c23b",
+      "sourceHash": "fnv1a64:b73166a4031a8b81",
       "notice": null,
       "blocks": [
         {
@@ -399,11 +417,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say dhara, then read చేదు and say what it means",
+              "instruction": "say dhara",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *dhara*, then read **చేదు** and say what it means]"
+              "source": "[YOU RECALL: say *dhara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "చేదు, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **చేదు**, then say what it means]"
             }
           ]
         },
@@ -439,7 +466,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4299543f32739641",
+      "sourceHash": "fnv1a64:d9b39d820a233f51",
       "notice": null,
       "blocks": [
         {
@@ -538,12 +565,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "తూకం",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **తూకం**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read తూకం, then say kāraṁ",
+              "instruction": "say kāraṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **తూకం**, then say *kāraṁ*]"
+              "source": "[YOU RECALL: say *kāraṁ*]"
             }
           ]
         },

@@ -58,7 +58,7 @@ Four. Salt, and the fruit, and the cloth, and the lamp.
 - [YOU SAY: *uppŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *uppŭ*, then *paḻaṁ*, and notice the *p* the cousins kept in one word and lost in the other]
-- [YOU RECALL: read **കേൾക്കൂ**]
+- [YOU READ: **കേൾക്കൂ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C46-ASK-01, ML-LEX-C46-ASK-02, ML-LEX-C46-ASK-03, ML-LEX-C46-ASK-04] -->

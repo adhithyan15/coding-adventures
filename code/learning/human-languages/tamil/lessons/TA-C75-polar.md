@@ -66,7 +66,8 @@ Every sentence you already own can now be a question.
 - [YOU SAY: *sariyā?*]
 - [YOU SAY: *nīṅgaḷ nalamā?*]
 - [YOU TURN: say *idu pāl*, then ask *idu pālā?*]
-- [YOU RECALL: read **பாலும்**, then say *pālum tēnīrum illai*, then ask *sariyā?*]
+- [YOU READ: **பாலும்**]
+- [YOU RECALL: say *pālum tēnīrum illai*, then ask *sariyā?*]
 - [YOU RETURN TO: say *āṇḍu*, say *tākam* and read **ஓ** — three distances back — then ask about one of them with -ஆ]
 
 ## Wrap-up Recall

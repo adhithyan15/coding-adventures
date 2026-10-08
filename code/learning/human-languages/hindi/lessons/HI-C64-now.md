@@ -59,7 +59,8 @@ The first of five words of degree and pace.
 - [YOU SAY: *ab*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ab*, then *abhī*, and say which one draws a line]
-- [YOU RECALL: say *rassī*, then read **भूख**]
+- [YOU RECALL: say *rassī*]
+- [YOU READ: **भूख**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C63-STATE-04, HI-LEX-C63-STATE-05, HI-LEX-C64-MEASURE-01] -->

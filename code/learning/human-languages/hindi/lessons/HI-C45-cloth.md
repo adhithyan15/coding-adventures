@@ -59,7 +59,8 @@ Two: a fruit and a cloth.
 - [YOU SAY: *kapṛā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *phal*, then *kapṛā*, and ask for each with *kṛpayā* in front]
-- [YOU RECALL: read **सुनना**, then say *beṭā*]
+- [YOU READ: **सुनना**]
+- [YOU RECALL: say *beṭā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-PEOPLE, HI-LEX-C45-ASK-01, HI-LEX-C45-ASK-02] -->

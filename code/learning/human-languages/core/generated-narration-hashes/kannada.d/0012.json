@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 12,
-  "sourceHash": "fnv1a64:71d5fb363c2467ae",
+  "sourceHash": "fnv1a64:a6055a12c857987c",
   "lessonIds": [
     "KA-C12-kutumba",
     "KA-S121-letter-sa",
@@ -11,7 +11,7 @@
   "drivablePrefix": 1,
   "text": "kannada/narration/ch12.txt",
   "json": "kannada/narration/ch12.json",
-  "textHash": "fnv1a64:70c319baf21c76ba",
-  "jsonHash": "fnv1a64:c734a8a45533cad9",
+  "textHash": "fnv1a64:2cd2dfce262cbb43",
+  "jsonHash": "fnv1a64:38b5a5ecf62f39a3",
   "findings": []
 }

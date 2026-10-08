@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "People --- and the Four Noun Endings",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3365d3b67b4f9a52",
+  "sourceHash": "fnv1a64:6ef3e9c484b90ad3",
   "lessons": [
     {
       "id": "SA-C20-man",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9363adf2bca3a86b",
+      "sourceHash": "fnv1a64:faad2423d02303bb",
       "notice": null,
       "blocks": [
         {
@@ -120,11 +120,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say kadā, then read षट्",
+              "instruction": "say kadā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *kadā*, then read **षट्**]"
+              "source": "[YOU RECALL: say *kadā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "षट्",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **षट्**]"
             }
           ]
         },
@@ -298,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:81939d6314580b63",
+      "sourceHash": "fnv1a64:746114c19d71964d",
       "notice": null,
       "blocks": [
         {
@@ -389,11 +398,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say kati, then read अष्ट",
+              "instruction": "say kati",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *kati*, then read **अष्ट**]"
+              "source": "[YOU RECALL: say *kati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "अष्ट",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **अष्ट**]"
             }
           ]
         },
@@ -429,7 +447,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c04269c928278d84",
+      "sourceHash": "fnv1a64:4e6b56aa6d8ae8d0",
       "notice": null,
       "blocks": [
         {
@@ -523,12 +541,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "कुतः",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **कुतः**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read कुतः, then say navan",
+              "instruction": "say navan",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **कुतः**, then say *navan*]"
+              "source": "[YOU RECALL: say *navan*]"
             }
           ]
         },

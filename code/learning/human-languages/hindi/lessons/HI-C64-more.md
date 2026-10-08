@@ -59,7 +59,8 @@ Five: अब, जल्दी, धीरे, कम, ज़्यादा. Enou
 - [YOU SAY: *zyādā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *bilkul*]
-- [YOU RECALL: say *lakṛī*, then read **दर्द**]
+- [YOU RECALL: say *lakṛī*]
+- [YOU READ: **दर्द**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C64-MEASURE-01, HI-LEX-C64-MEASURE-02, HI-LEX-C64-MEASURE-03, HI-LEX-C64-MEASURE-04, HI-LEX-C64-MEASURE-05] -->

@@ -56,7 +56,8 @@ Three: a little, a lot, and not as much as there ought to be.
 - [YOU SAY: *kuṟaivu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *niṟaiya*, then *kuṟaivu*, plenty and then not enough]
-- [YOU RECALL: say *katti*, then read **உதடு**]
+- [YOU RECALL: say *katti*]
+- [YOU READ: **உதடு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C56-AMOUNT-01, TA-LEX-C56-AMOUNT-02, TA-LEX-C56-AMOUNT-03] -->

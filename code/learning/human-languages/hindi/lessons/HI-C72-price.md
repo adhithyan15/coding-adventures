@@ -72,7 +72,8 @@ Three: पैसा, रुपया, दाम — and a question you can ask w
 - [YOU SAY: *dām*]
 - [YOU SAY: *dām kyā hai?*]
 - [YOU SAY: it again, pointing at something in the room]
-- [YOU RECALL: say *krikeṭ*, then read **आज**]
+- [YOU RECALL: say *krikeṭ*]
+- [YOU READ: **आज**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-KYA-01, HI-LEX-C72-COST-03] -->

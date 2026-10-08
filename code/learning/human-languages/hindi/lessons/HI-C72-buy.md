@@ -69,7 +69,8 @@ what a thing costs.
 - [YOU SAY: *dām kyā hai?*, then *bahut mahãgā*]
 - [YOU WRITE: महँगा from memory, then ख़रीदना beside the printed model]
 - [YOU SAY: all five in order]
-- [YOU RECALL: say *ārām*, then read **बहुत**]
+- [YOU RECALL: say *ārām*]
+- [YOU READ: **बहुत**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-03, HI-LEX-C72-COST-05] -->

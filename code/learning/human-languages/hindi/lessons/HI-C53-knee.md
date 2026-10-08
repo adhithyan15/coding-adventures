@@ -59,7 +59,8 @@ The second of five, and a word with a twin that means something else entirely.
 - [YOU SAY: *ghuṭnā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ghuṭnā*, then *kandhā* — the joint low, the joint high]
-- [YOU RECALL: read **माला**, then say *dāl*]
+- [YOU READ: **माला**]
+- [YOU RECALL: say *dāl*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C52-KITCHEN-05, HI-LEX-C53-BODY-01, HI-LEX-C53-BODY-02] -->

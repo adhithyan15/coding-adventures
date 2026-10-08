@@ -56,7 +56,8 @@ Four.
 - [YOU SAY: *kaḷam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kaḷam*, then *nel*, and say what is brought to which]
-- [YOU RECALL: read **உடனே**, then say *nambikkai*]
+- [YOU READ: **உடனே**]
+- [YOU RECALL: say *nambikkai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C64-HARVEST-01, TA-LEX-C64-HARVEST-02, TA-LEX-C64-HARVEST-03, TA-LEX-C64-HARVEST-04] -->

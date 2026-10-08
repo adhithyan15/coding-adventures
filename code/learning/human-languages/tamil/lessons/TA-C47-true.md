@@ -56,7 +56,8 @@ The first of five short replies.
 - [YOU SAY: *uṇmai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *uṇmai*, then *sari*, so the two agreements sit together]
-- [YOU RECALL: say *kaṇ*, then read **ஆசிரியர்**]
+- [YOU RECALL: say *kaṇ*]
+- [YOU READ: **ஆசிரியர்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C46-ROLE-04, TA-LEX-C46-ROLE-05, TA-LEX-C47-REPLY-01] -->

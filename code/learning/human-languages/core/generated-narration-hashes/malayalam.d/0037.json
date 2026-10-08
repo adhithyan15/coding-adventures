@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 37,
-  "sourceHash": "fnv1a64:f0e9f2df213b4580",
+  "sourceHash": "fnv1a64:66e758c31cd57f83",
   "lessonIds": [
     "ML-C37-kannu",
     "ML-C37-chevi",
@@ -13,7 +13,7 @@
   "drivablePrefix": 4,
   "text": "malayalam/narration/ch37.txt",
   "json": "malayalam/narration/ch37.json",
-  "textHash": "fnv1a64:a6a9e7ed0c925e75",
-  "jsonHash": "fnv1a64:6e16db9971ac790e",
+  "textHash": "fnv1a64:e805177360700685",
+  "jsonHash": "fnv1a64:f20995758468a702",
   "findings": []
 }

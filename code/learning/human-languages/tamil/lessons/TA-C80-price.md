@@ -69,7 +69,9 @@ A whole shop exchange: choose one of two, ask the price, question the answer.
 - [YOU ASK: *vilai evvaḷavu?*]
 - [YOU ASK: *idu evvaḷavu?*]
 - [YOU PUSH BACK: *vilai kuṟaivā?*]
-- [YOU RECALL: say *oṉṟu iṅgē, maṟṟadu aṅgē*, then read **மற்றது**, then ask the price]
+- [YOU RECALL: say *oṉṟu iṅgē, maṟṟadu aṅgē*]
+- [YOU READ: **மற்றது**]
+- [YOU RECALL: ask the price]
 - [YOU RETURN TO: say *mūḍu*, say *āṉāl* and read **எப்போது** — three distances back — then set two of them against each other, one and the other]
 
 ## Wrap-up Recall

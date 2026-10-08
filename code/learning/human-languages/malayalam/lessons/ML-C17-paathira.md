@@ -60,7 +60,7 @@ vocabulary does not.
 - [YOU SAY: *pātirā* — midnight]
 - [YOU SAY: *paathi* — half]
 - [YOU SAY: Malayalam *paathi* versus Sanskrit *ardha* — same job, different roots]
-- [YOU RECALL: read **തല കൈ**]
+- [YOU READ: **തല കൈ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C17-PAATHIRA-01] -->

@@ -58,7 +58,8 @@ The first thing a house makes for itself.
 - [YOU SAY: *dāraṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dāraṁ*, then *dayacēsi*, and ask for it politely]
-- [YOU RECALL: say *gēde*, then read **పెరుగు** and say what it means]
+- [YOU RECALL: say *gēde*]
+- [YOU READ: **పెరుగు**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C61-KITCHEN-04, TE-LEX-C61-KITCHEN-05, TE-LEX-C62-MADE-01] -->

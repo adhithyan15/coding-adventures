@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Numbers 11–20 and Weather",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f0d23f1111abbfc8",
+  "sourceHash": "fnv1a64:87f4fa8aa117cdd2",
   "lessons": [
     {
       "id": "ML-C20-pathinonnu-irupathu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5df576c84b99202e",
+      "sourceHash": "fnv1a64:86450fdeba14259e",
       "notice": null,
       "blocks": [
         {
@@ -102,11 +102,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say vasantakālaṁ venalkkālaṁ maḻakkālaṁ śaityakālaṁ, then read വെള്ളം അരി ചോറ്",
+              "instruction": "say vasantakālaṁ venalkkālaṁ maḻakkālaṁ śaityakālaṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *vasantakālaṁ venalkkālaṁ maḻakkālaṁ śaityakālaṁ*, then read **വെള്ളം അരി ചോറ്**]"
+              "source": "[YOU RECALL: say *vasantakālaṁ venalkkālaṁ maḻakkālaṁ śaityakālaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "വെള്ളം അരി ചോറ്",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **വെള്ളം അരി ചോറ്**]"
             }
           ]
         },

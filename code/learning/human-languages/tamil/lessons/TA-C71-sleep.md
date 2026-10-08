@@ -61,7 +61,8 @@ Two verbs, and the day has both ends.
 - [YOU SAY: *tūkkam*, then *tūṅgu* — the thing, then the doing]
 - [YOU SAY: *vāṅgu*, then *tūṅgu*, and find the sound they share]
 - [YOU RECALL: say *kūrai*, then say *eḻu*, then say *tūṅgu*]
-- [YOU RECALL: read **பேருந்து**, then say *kaṭṭil*]
+- [YOU READ: **பேருந்து**]
+- [YOU RECALL: say *kaṭṭil*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C70-ROOM-05, TA-LEX-C71-DAY-01, TA-LEX-C71-DAY-02] -->

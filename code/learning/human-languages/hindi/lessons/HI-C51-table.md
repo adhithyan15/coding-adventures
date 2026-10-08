@@ -59,7 +59,8 @@ Four, and one of them came off a ship.
 - [YOU SAY: *mez*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mez*, then *āṁgan*, one of them standing inside the other]
-- [YOU RECALL: read **निकलना**, then say *āśīrvād*]
+- [YOU READ: **निकलना**]
+- [YOU RECALL: say *āśīrvād*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C51-WELCOME-01, HI-LEX-C51-WELCOME-02, HI-LEX-C51-WELCOME-03, HI-LEX-C51-WELCOME-04] -->

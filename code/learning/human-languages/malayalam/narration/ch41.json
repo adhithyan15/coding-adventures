@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Pointing, and Asking",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:9aa9b672c72da88b",
+  "sourceHash": "fnv1a64:b8cbb88880713e38",
   "lessons": [
     {
       "id": "ML-C41-this",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01678528641a647c",
+      "sourceHash": "fnv1a64:48d11ff4e25e0a8e",
       "notice": null,
       "blocks": [
         {
@@ -90,11 +90,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say cevi, then read മൂക്ക്",
+              "instruction": "say cevi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *cevi*, then read **മൂക്ക്**]"
+              "source": "[YOU RECALL: say *cevi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "മൂക്ക്",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **മൂക്ക്**]"
             }
           ]
         },
@@ -130,7 +139,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:538a8b65a484e77b",
+      "sourceHash": "fnv1a64:daf2a11521c87953",
       "notice": null,
       "blocks": [
         {
@@ -200,12 +209,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read വായ്",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "വായ്",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **വായ്**]"
+              "source": "[YOU READ: **വായ്**]"
             }
           ]
         },
@@ -343,7 +352,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd5fbec767b8fa7c",
+      "sourceHash": "fnv1a64:24c3412a6e738d34",
       "notice": null,
       "blocks": [
         {
@@ -413,12 +422,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ഹൃദയം",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ഹൃദയം",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ഹൃദയം**]"
+              "source": "[YOU READ: **ഹൃദയം**]"
             }
           ]
         },
@@ -565,7 +574,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e059cfa8ebad8e4",
+      "sourceHash": "fnv1a64:56408898257048ce",
       "notice": null,
       "blocks": [
         {
@@ -635,12 +644,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "ചായ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ചായ**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read ചായ, then say kāppi",
+              "instruction": "say kāppi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ചായ**, then say *kāppi*]"
+              "source": "[YOU RECALL: say *kāppi*]"
             }
           ]
         },

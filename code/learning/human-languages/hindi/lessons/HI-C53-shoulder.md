@@ -59,7 +59,8 @@ The first of five more parts of the body.
 - [YOU SAY: *kandhā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kandhā*, and touch it]
-- [YOU RECALL: say *phūl*, then read **चावल**]
+- [YOU RECALL: say *phūl*]
+- [YOU READ: **चावल**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C52-KITCHEN-04, HI-LEX-C52-KITCHEN-05, HI-LEX-C53-BODY-01] -->

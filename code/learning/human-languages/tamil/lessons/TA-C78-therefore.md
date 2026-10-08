@@ -67,7 +67,9 @@ The reason can now go on either side of the result.
 - [YOU SAY: *adaṉāl*]
 - [YOU SAY: *enakkut tākam. adaṉāl tēnīr vēṇḍum.*]
 - [YOU FLIP: say the same two facts with *ēṉeṉṟāl* instead]
-- [YOU RECALL: say *ēṉeṉṟāl*, then read **ஏன்**, then say *adaṉāl*]
+- [YOU RECALL: say *ēṉeṉṟāl*]
+- [YOU READ: **ஏன்**]
+- [YOU RECALL: say *adaṉāl*]
 - [YOU RETURN TO: read **சொல்**, say *pul* and say *āṇḍu* — three distances back — then ask ஏன் about one of them]
 
 ## Wrap-up Recall

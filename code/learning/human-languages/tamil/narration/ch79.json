@@ -4,7 +4,7 @@
   "chapter": 79,
   "title": "When",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f1612ee6d83e49b3",
+  "sourceHash": "fnv1a64:f5a150fbbf0f33e9",
   "lessons": [
     {
       "id": "TA-C79-when-question",
@@ -510,7 +510,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:deef13b055dff3c0",
+      "sourceHash": "fnv1a64:f05241001689f12c",
       "notice": null,
       "blocks": [
         {
@@ -621,11 +621,29 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "answer appōdu, then read எப்போது (eppōdu), then say the whole varum pōdu line",
+              "instruction": "answer appōdu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: answer *appōdu*, then read **எப்போது**, then say the whole *varum pōdu* line]"
+              "source": "[YOU RECALL: answer *appōdu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "எப்போது (eppōdu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **எப்போது**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the whole varum pōdu line",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the whole *varum pōdu* line]"
             },
             {
               "kind": "prompt",

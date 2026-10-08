@@ -4,7 +4,7 @@
   "chapter": 60,
   "title": "Animals Around a House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:02bd4c79cc83336e",
+  "sourceHash": "fnv1a64:70e145281f2b275f",
   "lessons": [
     {
       "id": "ML-C60-cow",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f756d7216661618d",
+      "sourceHash": "fnv1a64:bcd96737fa822433",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read കുറവ്",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "കുറവ്",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **കുറവ്**]"
+              "source": "[YOU READ: **കുറവ്**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e56b780ffeaed3a2",
+      "sourceHash": "fnv1a64:bf9af5e25b137090",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read വേണ്ട",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "വേണ്ട",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **വേണ്ട**]"
+              "source": "[YOU READ: **വേണ്ട**]"
             }
           ]
         },

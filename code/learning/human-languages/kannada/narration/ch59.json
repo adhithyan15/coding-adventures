@@ -4,7 +4,7 @@
   "chapter": 59,
   "title": "Weather and Ground",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b16e8dd5c6117a1c",
+  "sourceHash": "fnv1a64:916e2e4cc1587f77",
   "lessons": [
     {
       "id": "KA-C59-wind",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b34a1ef4e7d8307",
+      "sourceHash": "fnv1a64:b2cde7a9f889550d",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಬೆನ್ನು",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಬೆನ್ನು",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಬೆನ್ನು**]"
+              "source": "[YOU READ: **ಬೆನ್ನು**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:abd9bef0accf1694",
+      "sourceHash": "fnv1a64:6e6622754faba612",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಭುಜ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಭುಜ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಭುಜ**]"
+              "source": "[YOU READ: **ಭುಜ**]"
             }
           ]
         },

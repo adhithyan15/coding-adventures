@@ -59,7 +59,8 @@ Five: रस्सी, सूई, टोकरी, मिट्टी, लकड
 - [YOU SAY: *lakṛī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *merā nām* and your own name]
-- [YOU RECALL: say *mor*, then read **चूल्हा**]
+- [YOU RECALL: say *mor*]
+- [YOU READ: **चूल्हा**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02, HI-LEX-C62-HANDS-03, HI-LEX-C62-HANDS-04, HI-LEX-C62-HANDS-05] -->

@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Fire and Stone",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fd2ab82202325ab1",
+  "sourceHash": "fnv1a64:362004e0008d3de6",
   "lessons": [
     {
       "id": "SA-C38-fire",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a401ec3b656fd29",
+      "sourceHash": "fnv1a64:eea3838878fe366f",
       "notice": null,
       "blocks": [
         {
@@ -114,11 +114,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say api, then read शान्तिः",
+              "instruction": "say api",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *api*, then read **शान्तिः**]"
+              "source": "[YOU RECALL: say *api*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "शान्तिः",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **शान्तिः**]"
             }
           ]
         },
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8de4f377eabe7616",
+      "sourceHash": "fnv1a64:60f8f25b60e4bfd6",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +257,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "सर्वम्",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **सर्वम्**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read सर्वम्, then say sādaram",
+              "instruction": "say sādaram",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **सर्वम्**, then say *sādaram*]"
+              "source": "[YOU RECALL: say *sādaram*]"
             }
           ]
         },
@@ -289,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:843f9eb9056fd8e2",
+      "sourceHash": "fnv1a64:23941ce76d8b1b52",
       "notice": null,
       "blocks": [
         {
@@ -384,11 +402,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say tathā, then read प्रसन्नः",
+              "instruction": "say tathā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *tathā*, then read **प्रसन्नः**]"
+              "source": "[YOU RECALL: say *tathā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "प्रसन्नः",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **प्रसन्नः**]"
             }
           ]
         },
@@ -424,7 +451,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:701902b5a400eceb",
+      "sourceHash": "fnv1a64:dbc64efe128b3273",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +545,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "मन्दम्",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **मन्दम्**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read मन्दम्, then say abhinandanam",
+              "instruction": "say abhinandanam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **मन्दम्**, then say *abhinandanam*]"
+              "source": "[YOU RECALL: say *abhinandanam*]"
             }
           ]
         },
@@ -559,7 +595,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31be40db265cd842",
+      "sourceHash": "fnv1a64:0bc71c850e17d4de",
       "notice": null,
       "blocks": [
         {
@@ -654,11 +690,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say samyak, then read आशीर्वादः",
+              "instruction": "say samyak",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *samyak*, then read **आशीर्वादः**]"
+              "source": "[YOU RECALL: say *samyak*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "आशीर्वादः",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **आशीर्वादः**]"
             }
           ]
         },

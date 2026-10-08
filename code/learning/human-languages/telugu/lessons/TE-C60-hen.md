@@ -58,7 +58,8 @@ Three.
 - [YOU SAY: *kōḍi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kōḍi*, then *mēka*, and say which one wakes you]
-- [YOU RECALL: say *takkuva*, then read **ఇసుక** and say what it means]
+- [YOU RECALL: say *takkuva*]
+- [YOU READ: **ఇసుక**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C60-ANIMAL-01, TE-LEX-C60-ANIMAL-02, TE-LEX-C60-ANIMAL-03] -->

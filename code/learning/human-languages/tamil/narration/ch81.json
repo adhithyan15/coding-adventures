@@ -4,7 +4,7 @@
   "chapter": 81,
   "title": "Two Tamils",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:43c005e9b6c0aab5",
+  "sourceHash": "fnv1a64:b037f476f53c12e4",
   "lessons": [
     {
       "id": "TA-C81-two-tamils",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a08e49d6b418a81",
+      "sourceHash": "fnv1a64:1e818e2cbe20bc47",
       "notice": null,
       "blocks": [
         {
@@ -135,12 +135,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "மற்றது",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மற்றது**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read மற்றது, then ask vilai evvaḷavu?, then say both forms of but",
+              "instruction": "ask vilai evvaḷavu?, then say both forms of but",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **மற்றது**, then ask *vilai evvaḷavu?*, then say both forms of *but*]"
+              "source": "[YOU RECALL: ask *vilai evvaḷavu?*, then say both forms of *but*]"
             },
             {
               "kind": "prompt",
@@ -185,7 +194,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:47c9a62dda537165",
+      "sourceHash": "fnv1a64:5ff1bb478787cde3",
       "notice": null,
       "blocks": [
         {
@@ -291,12 +300,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "மற்றது",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மற்றது**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read மற்றது, then ask vilai evvaḷavu?, then say both forms of the quotation line",
+              "instruction": "ask vilai evvaḷavu?, then say both forms of the quotation line",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **மற்றது**, then ask *vilai evvaḷavu?*, then say both forms of the quotation line]"
+              "source": "[YOU RECALL: ask *vilai evvaḷavu?*, then say both forms of the quotation line]"
             },
             {
               "kind": "prompt",

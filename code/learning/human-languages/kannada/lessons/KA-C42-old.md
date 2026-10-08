@@ -54,7 +54,8 @@ adjective you will ever meet here.
 [PAUSE 1s]
 - [YOU SAY: "ಹಳೆಯ" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
-- [YOU RECALL: say *adu*, then read **ಇಲ್ಲಿ**]
+- [YOU RECALL: say *adu*]
+- [YOU READ: **ಇಲ್ಲಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-05] -->

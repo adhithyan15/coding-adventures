@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 59,
-  "sourceHash": "fnv1a64:60d60a67721b627f",
+  "sourceHash": "fnv1a64:0b032a39380b004e",
   "lessonIds": [
     "TE-C59-wind",
     "TE-C59-mist",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch59.txt",
   "json": "telugu/narration/ch59.json",
-  "textHash": "fnv1a64:710d26bfed3ad12f",
-  "jsonHash": "fnv1a64:4fa6e1021f21decd",
+  "textHash": "fnv1a64:7d829107580b438a",
+  "jsonHash": "fnv1a64:4ff7d1b571c18117",
   "findings": []
 }

@@ -70,7 +70,9 @@ An opinion, which is the first thing here that is yours rather than a fact.
 - [YOU SAY: *niṉaikkiṟēṉ*]
 - [YOU SAY: *idu nalla vīḍu eṉṟu niṉaikkiṟēṉ*]
 - [YOU SWAP: put *idu siṟiya kaḍai* in the front half and say the whole thing]
-- [YOU RECALL: say *"sari" eṉṟu solluṅgaḷ*, then read **சொல்**, then give your opinion]
+- [YOU RECALL: say *"sari" eṉṟu solluṅgaḷ*]
+- [YOU READ: **சொல்**]
+- [YOU RECALL: give your opinion]
 - [YOU RETURN TO: read **ஆனால்**, say *tayakkam* and say *nēṟṟu* — three distances back — then quote one of them with என்று]
 
 ## Wrap-up Recall

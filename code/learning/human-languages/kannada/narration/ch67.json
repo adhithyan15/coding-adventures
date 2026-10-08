@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "And, Or, But",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:15cdc3da9234c0de",
+  "sourceHash": "fnv1a64:3c436bb0f3066d2f",
   "lessons": [
     {
       "id": "KA-C67-and",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f49126236b31c01",
+      "sourceHash": "fnv1a64:865707f0bd06b6fd",
       "notice": null,
       "blocks": [
         {
@@ -132,11 +132,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say vinanti, then read ಅನುಮತಿ",
+              "instruction": "say vinanti",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *vinanti*, then read **ಅನುಮತಿ**]"
+              "source": "[YOU RECALL: say *vinanti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಅನುಮತಿ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಅನುಮತಿ**]"
             }
           ]
         },
@@ -369,7 +378,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c246443ded8453d9",
+      "sourceHash": "fnv1a64:ae108c28b38bd129",
       "notice": null,
       "blocks": [
         {
@@ -481,12 +490,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಸಂಕೋಚ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಸಂಕೋಚ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಸಂಕೋಚ**]"
+              "source": "[YOU READ: **ಸಂಕೋಚ**]"
             }
           ]
         },
@@ -690,7 +699,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a29641dd30be101",
+      "sourceHash": "fnv1a64:7f40ecf2b4dc707d",
       "notice": null,
       "blocks": [
         {
@@ -817,12 +826,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಸೌಜನ್ಯ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಸೌಜನ್ಯ**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read ಸೌಜನ್ಯ, then say hola",
+              "instruction": "say hola",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಸೌಜನ್ಯ**, then say *hola*]"
+              "source": "[YOU RECALL: say *hola*]"
             }
           ]
         },

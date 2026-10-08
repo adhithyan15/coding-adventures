@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "Asking Nicely",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9150f2e29b582b05",
+  "sourceHash": "fnv1a64:d0574bce984933ab",
   "lessons": [
     {
       "id": "HI-C65-kindness",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b5ab85565cf43e24",
+      "sourceHash": "fnv1a64:fe94d3b4ae0b686a",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say bhūkh, then read अब",
+              "instruction": "say bhūkh",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *bhūkh*, then read **अब**]"
+              "source": "[YOU RECALL: say *bhūkh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "अब",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **अब**]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82110d9066fbffd1",
+      "sourceHash": "fnv1a64:d81ee01ffcaa371b",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +249,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "प्यास",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **प्यास**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read प्यास, then say jaldī",
+              "instruction": "say jaldī",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **प्यास**, then say *jaldī*]"
+              "source": "[YOU RECALL: say *jaldī*]"
             }
           ]
         },
@@ -281,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eb0a9fd0f10c046c",
+      "sourceHash": "fnv1a64:2bf8d731673b165a",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +390,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say nīnd, then read धीरे",
+              "instruction": "say nīnd",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *nīnd*, then read **धीरे**]"
+              "source": "[YOU RECALL: say *nīnd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "धीरे",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **धीरे**]"
             }
           ]
         },
@@ -412,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a490656b905fb23",
+      "sourceHash": "fnv1a64:de88e5df0f304ea1",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +529,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "बुख़ार",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **बुख़ार**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read बुख़ार, then say kam",
+              "instruction": "say kam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **बुख़ार**, then say *kam*]"
+              "source": "[YOU RECALL: say *kam*]"
             }
           ]
         },
@@ -543,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b98dfa25cd44006",
+      "sourceHash": "fnv1a64:e36efdb8196a8774",
       "notice": null,
       "blocks": [
         {
@@ -634,11 +670,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say dard, then read ज़्यादा",
+              "instruction": "say dard",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *dard*, then read **ज़्यादा**]"
+              "source": "[YOU RECALL: say *dard*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ज़्यादा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ज़्यादा**]"
             }
           ]
         },

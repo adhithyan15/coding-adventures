@@ -54,7 +54,7 @@ That closes the run: child, son, daughter, and the word for all of them together
 - [YOU SAY: *kuṭumbam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *makaḷ*, so the two sit together]
-- [YOU RECALL: read **பழைய**]
+- [YOU READ: **பழைய**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-DAUGHTER, TA-LEX-FAMILY] -->

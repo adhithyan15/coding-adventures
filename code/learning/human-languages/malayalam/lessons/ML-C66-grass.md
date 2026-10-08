@@ -58,7 +58,7 @@ Two.
 - [YOU SAY: *pullŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *paśu*, then *pullŭ*, and say which one eats the other]
-- [YOU RECALL: read **ഉടനെ**]
+- [YOU READ: **ഉടനെ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C65-ASK-05, ML-LEX-C66-PADDY-01, ML-LEX-C66-PADDY-02] -->

@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Rain, Sun, Wind, Heat, Cold",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:39898ab1e5f5b52d",
+  "sourceHash": "fnv1a64:e67f4a290eb956e5",
   "lessons": [
     {
       "id": "UR-C15-barish",
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3adaf91a64f82a55",
+      "sourceHash": "fnv1a64:2edadfeddcb6ac49",
       "notice": null,
       "blocks": [
         {
@@ -250,12 +250,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read منہ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "منہ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **منہ**]"
+              "source": "[YOU READ: **منہ**]"
             }
           ]
         },

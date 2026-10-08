@@ -57,7 +57,7 @@ One more everyday action. That closes the run: four everyday actions, each met o
 - [YOU SAY: *smarati*]
 - [YOU SAY: it again, to someone standing in a doorway]
 - [YOU SAY: it after *tiṣṭhati*, so the two sit together]
-- [YOU RECALL: read **दश**]
+- [YOU READ: **दश**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-STAND, SA-LEX-REMEMBER] -->

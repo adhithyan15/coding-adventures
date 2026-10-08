@@ -4,7 +4,7 @@
   "chapter": 72,
   "title": "The Market",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fa5befc3774e2665",
+  "sourceHash": "fnv1a64:7bfcec34e9c3a2c5",
   "lessons": [
     {
       "id": "TE-C72-shop",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02dc9508ca9639dc",
+      "sourceHash": "fnv1a64:1452cc4fb1ad66dc",
       "notice": null,
       "blocks": [
         {
@@ -114,11 +114,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say eluka, then read మామ and say what it means",
+              "instruction": "say eluka",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *eluka*, then read **మామ** and say what it means]"
+              "source": "[YOU RECALL: say *eluka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "మామ, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **మామ**, then say what it means]"
             }
           ]
         },
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a9f7850f206821c5",
+      "sourceHash": "fnv1a64:d07b999ca3b41933",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +257,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "కప్ప",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **కప్ప**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read కప్ప, then say atta",
+              "instruction": "say atta",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **కప్ప**, then say *atta*]"
+              "source": "[YOU RECALL: say *atta*]"
             }
           ]
         },
@@ -289,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c77e4a0377f9993",
+      "sourceHash": "fnv1a64:892d59cfd62a5927",
       "notice": null,
       "blocks": [
         {
@@ -384,11 +402,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say dōma, then read బావ and say what it means",
+              "instruction": "say dōma",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *dōma*, then read **బావ** and say what it means]"
+              "source": "[YOU RECALL: say *dōma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "బావ, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **బావ**, then say what it means]"
             }
           ]
         },
@@ -424,7 +451,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc9fc913bf206d74",
+      "sourceHash": "fnv1a64:a76cd0e77432acb6",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +545,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "ఉడుత",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ఉడుత**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read ఉడుత, then say maradalu",
+              "instruction": "say maradalu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ఉడుత**, then say *maradalu*]"
+              "source": "[YOU RECALL: say *maradalu*]"
             }
           ]
         },
@@ -559,7 +595,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8fec672bd7e3808a",
+      "sourceHash": "fnv1a64:ef693aeea8036cb4",
       "notice": null,
       "blocks": [
         {
@@ -654,11 +690,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say sālīḍu, then read అల్లుడు and say what it means",
+              "instruction": "say sālīḍu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *sālīḍu*, then read **అల్లుడు** and say what it means]"
+              "source": "[YOU RECALL: say *sālīḍu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "అల్లుడు, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **అల్లుడు**, then say what it means]"
             }
           ]
         },

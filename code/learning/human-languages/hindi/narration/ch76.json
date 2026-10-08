@@ -4,7 +4,7 @@
   "chapter": 76,
   "title": "Ways of Going",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:97b6f8c0c9d99fa9",
+  "sourceHash": "fnv1a64:f39e875e98fec19a",
   "lessons": [
     {
       "id": "HI-C69-vehicle",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6d94b18c6547fbe",
+      "sourceHash": "fnv1a64:377771986adcd9b8",
       "notice": null,
       "blocks": [
         {
@@ -87,11 +87,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say bhāshā, then read अंग्रेज़ी and say what it means",
+              "instruction": "say bhāshā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *bhāshā*, then read **अंग्रेज़ी** and say what it means]"
+              "source": "[YOU RECALL: say *bhāshā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "अंग्रेज़ी, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **अंग्रेज़ी**, then say what it means]"
             },
             {
               "kind": "prompt",
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21053cba0d879325",
+      "sourceHash": "fnv1a64:538db53ebf598439",
       "notice": null,
       "blocks": [
         {
@@ -230,12 +239,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read अंग्रेज़ी, then say it without looking",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "अंग्रेज़ी, then say it without looking",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **अंग्रेज़ी**, then say it without looking]"
+              "source": "[YOU READ: **अंग्रेज़ी**, then say it without looking]"
             },
             {
               "kind": "prompt",

@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "Describing Things",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:8c47142519db33b4",
+  "sourceHash": "fnv1a64:282e1f76d9a455af",
   "lessons": [
     {
       "id": "ML-C42-big",
@@ -351,7 +351,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16a671a67e51ec57",
+      "sourceHash": "fnv1a64:8b74c9dfd245160f",
       "notice": null,
       "blocks": [
         {
@@ -425,12 +425,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ഇത്",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ഇത്",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ഇത്**]"
+              "source": "[YOU READ: **ഇത്**]"
             }
           ]
         },
@@ -466,7 +466,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1735a31d742db1b0",
+      "sourceHash": "fnv1a64:1fe8caaf688e4334",
       "notice": null,
       "blocks": [
         {
@@ -541,11 +541,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say atŭ, then read ഇവിടെ",
+              "instruction": "say atŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *atŭ*, then read **ഇവിടെ**]"
+              "source": "[YOU RECALL: say *atŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ഇവിടെ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ഇവിടെ**]"
             }
           ]
         },

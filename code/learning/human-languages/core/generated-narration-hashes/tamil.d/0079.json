@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 79,
-  "sourceHash": "fnv1a64:f1612ee6d83e49b3",
+  "sourceHash": "fnv1a64:f5a150fbbf0f33e9",
   "lessonIds": [
     "TA-C79-when-question",
     "TA-C79-then",
@@ -12,7 +12,7 @@
   "drivablePrefix": 2,
   "text": "tamil/narration/ch79.txt",
   "json": "tamil/narration/ch79.json",
-  "textHash": "fnv1a64:d3ec11ee66c8335d",
-  "jsonHash": "fnv1a64:2ab1306db62413d4",
+  "textHash": "fnv1a64:bce297c5e3c7daf3",
+  "jsonHash": "fnv1a64:6818104e8d4b9e35",
   "findings": []
 }

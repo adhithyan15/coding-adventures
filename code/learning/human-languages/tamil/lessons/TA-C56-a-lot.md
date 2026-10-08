@@ -56,7 +56,8 @@ Two, and they are opposite ends of one question.
 - [YOU SAY: *niṟaiya*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *siṟitu*, then *niṟaiya*, the little and the lot]
-- [YOU RECALL: read **கூடை**, then say *mutuku*]
+- [YOU READ: **கூடை**]
+- [YOU RECALL: say *mutuku*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C55-BODY-05, TA-LEX-C56-AMOUNT-01, TA-LEX-C56-AMOUNT-02] -->

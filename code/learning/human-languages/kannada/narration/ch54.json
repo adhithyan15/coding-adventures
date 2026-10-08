@@ -4,7 +4,7 @@
   "chapter": 54,
   "title": "The Tree",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2b380fb18f38dc5a",
+  "sourceHash": "fnv1a64:398251b35349203f",
   "lessons": [
     {
       "id": "KA-C54-tree",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1dd93c491f1efb24",
+      "sourceHash": "fnv1a64:402c8839a42998a2",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಕುರ್ಚಿ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಕುರ್ಚಿ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಕುರ್ಚಿ**]"
+              "source": "[YOU READ: **ಕುರ್ಚಿ**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4bc90c0309131f80",
+      "sourceHash": "fnv1a64:7dbdab4e67727ae0",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಹೂವು",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಹೂವು",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಹೂವು**]"
+              "source": "[YOU READ: **ಹೂವು**]"
             }
           ]
         },

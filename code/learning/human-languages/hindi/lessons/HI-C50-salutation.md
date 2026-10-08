@@ -59,7 +59,8 @@ Five, and the run is closed: gratitude, a favour, respect, a blessing, a bow.
 - [YOU SAY: *praṇām*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *ābhār*, *ehsān*, *ādar*, *āśīrvād*, *praṇām*]
-- [YOU RECALL: say *bilkul*, then read **मुलाक़ात**]
+- [YOU RECALL: say *bilkul*]
+- [YOU READ: **मुलाक़ात**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02, HI-LEX-C50-COURTESY-03, HI-LEX-C50-COURTESY-04, HI-LEX-C50-COURTESY-05] -->

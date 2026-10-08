@@ -4,7 +4,7 @@
   "chapter": 61,
   "title": "In the Kitchen",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:caf4ccb94c02a2d6",
+  "sourceHash": "fnv1a64:a9bbd37369a9c781",
   "lessons": [
     {
       "id": "KA-C61-curd",
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:09b25c457d1d58ae",
+      "sourceHash": "fnv1a64:e4f9d3b7cd4dbb9c",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +240,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಮಂಜು",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಮಂಜು",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಮಂಜು**]"
+              "source": "[YOU READ: **ಮಂಜು**]"
             }
           ]
         },
@@ -412,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:821bcfe081e9076e",
+      "sourceHash": "fnv1a64:b3cead9e6e77b336",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +502,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಕೆಸರು",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಕೆಸರು",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಕೆಸರು**]"
+              "source": "[YOU READ: **ಕೆಸರು**]"
             }
           ]
         },

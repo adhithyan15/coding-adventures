@@ -79,7 +79,8 @@ half of.
 - [YOU SAY: *tēnīr kuḍi*, then *pāl kuḍi*]
 - [YOU SAY: which of *sāppiḍu* and *kuḍi* takes *sādam*, and which takes
   *taṇṇīr*]
-- [YOU RECALL: say *vēṇḍukōḷ*, then read **நெல்**]
+- [YOU RECALL: say *vēṇḍukōḷ*]
+- [YOU READ: **நெல்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C64-HARVEST-05, TA-LEX-C65-DOING-01] -->

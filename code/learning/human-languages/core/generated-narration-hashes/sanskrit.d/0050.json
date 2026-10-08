@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 50,
-  "sourceHash": "fnv1a64:e596b1452b7c369f",
+  "sourceHash": "fnv1a64:0d09608e31ed1293",
   "lessonIds": [
     "SA-C50-sound",
     "SA-C50-question",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch50.txt",
   "json": "sanskrit/narration/ch50.json",
-  "textHash": "fnv1a64:236224f1490b870a",
-  "jsonHash": "fnv1a64:81fddbe8664a1c5b",
+  "textHash": "fnv1a64:859c09ff4e4b7e93",
+  "jsonHash": "fnv1a64:2cc770a5809c5d9c",
   "findings": []
 }

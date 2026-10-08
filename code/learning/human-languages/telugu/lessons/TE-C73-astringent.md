@@ -58,7 +58,8 @@ Five: తీపి, పులుపు, చేదు, కారం, వగరు
 - [YOU SAY: *vagaru*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then take your leave with *veḷḷostānu*]
-- [YOU RECALL: say *alluḍu*, then read **బేరం** and say what it means]
+- [YOU RECALL: say *alluḍu*]
+- [YOU READ: **బేరం**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C73-TASTE-01, TE-LEX-C73-TASTE-02, TE-LEX-C73-TASTE-03, TE-LEX-C73-TASTE-04, TE-LEX-C73-TASTE-05] -->

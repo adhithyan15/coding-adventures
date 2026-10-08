@@ -56,7 +56,7 @@ Four, and the fourth one is built exactly like the first word of this book.
 - [YOU SAY: *āśīrvāda*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *āśīrvāda*, then *dhanyavāda*, and hear *-vāda* close both]
-- [YOU RECALL: read **ಬಹುಶಃ**]
+- [YOU READ: **ಬಹುಶಃ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C51-COURTESY-01, KA-LEX-C51-COURTESY-02, KA-LEX-C51-COURTESY-03, KA-LEX-C51-COURTESY-04] -->

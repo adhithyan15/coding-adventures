@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 65,
-  "sourceHash": "fnv1a64:6a538c09b320cbb3",
+  "sourceHash": "fnv1a64:574e3821f07af8dd",
   "lessonIds": [
     "TE-C65-welcome",
     "TE-C65-manners",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch65.txt",
   "json": "telugu/narration/ch65.json",
-  "textHash": "fnv1a64:fa5bdd70e122c44b",
-  "jsonHash": "fnv1a64:dde246e538fc0c3a",
+  "textHash": "fnv1a64:9367aaade1ac3902",
+  "jsonHash": "fnv1a64:6df76bb539d0e63f",
   "findings": []
 }

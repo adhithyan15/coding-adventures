@@ -59,7 +59,8 @@ Two of five.
 - [YOU SAY: *uṅglī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *uṅglī*, then *bāl*, and touch each as you name it]
-- [YOU RECALL: read **बेटी**, then say *kapṛā*]
+- [YOU READ: **बेटी**]
+- [YOU RECALL: say *kapṛā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C45-ASK-05, HI-LEX-C46-BODY-01, HI-LEX-C46-BODY-02] -->

@@ -4,7 +4,7 @@
   "chapter": 80,
   "title": "One, the Other, and the Price",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:9629f34afa42041d",
+  "sourceHash": "fnv1a64:f7b867d2b3dbe741",
   "lessons": [
     {
       "id": "TA-C80-other",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c7c3cf166355de6",
+      "sourceHash": "fnv1a64:88832201c42baf46",
       "notice": null,
       "blocks": [
         {
@@ -117,12 +117,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "எப்போது",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **எப்போது**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read எப்போது, then say varum pōdu, then say maṟṟadu",
+              "instruction": "say varum pōdu, then say maṟṟadu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **எப்போது**, then say *varum pōdu*, then say *maṟṟadu*]"
+              "source": "[YOU RECALL: say *varum pōdu*, then say *maṟṟadu*]"
             },
             {
               "kind": "prompt",
@@ -136,11 +145,29 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ēṉ, then read ஏனென்றால், then say adaṉāl",
+              "instruction": "say ēṉ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ēṉ*, then read **ஏனென்றால்**, then say *adaṉāl*]"
+              "source": "[YOU RECALL: say *ēṉ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஏனென்றால்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஏனென்றால்**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say adaṉāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *adaṉāl*]"
             }
           ]
         },
@@ -495,7 +522,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d494e374dbb66b3",
+      "sourceHash": "fnv1a64:6c4c4261f966b9fb",
       "notice": null,
       "blocks": [
         {
@@ -606,11 +633,29 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say oṉṟu iṅgē, maṟṟadu aṅgē, then read மற்றது, then ask the price",
+              "instruction": "say oṉṟu iṅgē, maṟṟadu aṅgē",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *oṉṟu iṅgē, maṟṟadu aṅgē*, then read **மற்றது**, then ask the price]"
+              "source": "[YOU RECALL: say *oṉṟu iṅgē, maṟṟadu aṅgē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "மற்றது (maṟṟadu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மற்றது**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ask the price",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: ask the price]"
             },
             {
               "kind": "prompt",

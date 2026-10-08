@@ -58,7 +58,7 @@ Four.
 - [YOU SAY: *śarkkara*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śarkkara*, then the English word *sugar*, and hear one word twice]
-- [YOU RECALL: read **പുക**]
+- [YOU READ: **പുക**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C61-SHELF-01, ML-LEX-C61-SHELF-02, ML-LEX-C61-SHELF-03, ML-LEX-C61-SHELF-04] -->

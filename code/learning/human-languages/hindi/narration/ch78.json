@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "Today, and How Much",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:728f5b0aacb56461",
+  "sourceHash": "fnv1a64:df436b4f4efb560f",
   "lessons": [
     {
       "id": "HI-C71-today",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eade2efd3a13720e",
+      "sourceHash": "fnv1a64:c89a9cf1c98882de",
       "notice": null,
       "blocks": [
         {
@@ -87,11 +87,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say gānā, then read आराम and say what it means",
+              "instruction": "say gānā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *gānā*, then read **आराम** and say what it means]"
+              "source": "[YOU RECALL: say *gānā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "आराम, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **आराम**, then say what it means]"
             },
             {
               "kind": "prompt",
@@ -123,11 +132,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say gāṛī, then read रेल",
+              "instruction": "say gāṛī",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *gāṛī*, then read **रेल**]"
+              "source": "[YOU RECALL: say *gāṛī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "रेल",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **रेल**]"
             }
           ]
         },
@@ -163,7 +181,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7316e3005571f2c",
+      "sourceHash": "fnv1a64:99e6ea5025251b0c",
       "notice": null,
       "blocks": [
         {
@@ -243,12 +261,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read आराम, then say it without looking",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "आराम, then say it without looking",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **आराम**, then say it without looking]"
+              "source": "[YOU READ: **आराम**, then say it without looking]"
             },
             {
               "kind": "prompt",
@@ -279,12 +297,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "स्टेशन",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **स्टेशन**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read स्टेशन, then say ṭikaṭ",
+              "instruction": "say ṭikaṭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **स्टेशन**, then say *ṭikaṭ*]"
+              "source": "[YOU RECALL: say *ṭikaṭ*]"
             }
           ]
         },

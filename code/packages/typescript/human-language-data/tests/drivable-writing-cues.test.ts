@@ -64,6 +64,11 @@
 // imperative in prose, and a `[YOU RECALL: …]` cue whose content asks for
 // writing ("[YOU RECALL: write **ば** — **R1**]"). The second is a cue, but
 // RECALL is a spoken action, so the narration reads it out with no deferral.
+//
+// Two more checks at the end of this file read recall cues for the page
+// rather than the pen: pointing at a sign, and reading printed script. Both
+// demand exactly zero in drivable lessons, with no ledger, because every such
+// cue was fixed in the change that added the check.
 
 import { type Dirent, existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -77,8 +82,10 @@ import {
   narratedProseSpans,
   opensChainedOrFrontedWriting,
   pointingRecallCues,
+  readingRecallCues,
   recallCueAsksForWriting,
   recallCueAsksToPoint,
+  recallCueAsksToReadScript,
   withoutHtmlComments,
   writingRecallCues,
 } from "./drivable-writing-imperatives.js";
@@ -406,6 +413,83 @@ describe("recallCueAsksToPoint stays linear", () => {
 });
 
 // ---------------------------------------------------------------------------
+// Reading printed script, inside a recall cue
+// ---------------------------------------------------------------------------
+//
+// The positives are corpus recalls as they were before the reading moved out
+// into a `[YOU READ: …]` cue, one per shape the fix met; the controls are
+// corpus recalls that say "read" and ask nobody to look, and the fixed forms.
+
+describe("readingRecallCues: what fires", () => {
+  it.each([
+    ["a recall that is only a reading", "- [YOU RECALL: read **दाँत**]"],
+    ["a reading after a spoken step", "- [YOU RECALL: say *dūdh*, then read **आँख**]"],
+    ["a reading before a spoken step", "- [YOU RECALL: read **बच्चा**, then say *yahā̃*]"],
+    ["a reading with its meaning to say", "- [YOU RECALL: say *ghās*, then read **कुआँ** and say what it means]"],
+    ["two readings around a spoken step", "- [YOU RECALL: read **ತಿನ್ನು**, then say *nōḍu*, then read **ಗೊತ್ತು**]"],
+    ["a spaced reading", "- [YOU RECALL: read **ऋ** — **R1**, one lesson back]"],
+    ["a reading off the page", "- [YOU RECALL: read **さようなら** off the page — **R4**, eighty lessons back]"],
+    ["a sign named by a noun", "- [YOU RECALL: read the sign **ೇ**, and say what it does to a letter — **R3**]"],
+    ["a two-word noun phrase", "- [YOU RECALL: read the form label **आवडती कृती** and say why it ends in **-ती**]"],
+    ["something printed", "- [YOU RECALL: read a printed ticket and say the figure on it aloud — **R3**]"],
+    ["a reading after a semicolon", "[YOU RECALL: say *tīn*; read **त**]"],
+    ["a reading after and", "[YOU RECALL: say *do* and then read **द**]"],
+    ["reading aloud", "[YOU RECALL: say *ek*, then read aloud **एक**]"],
+    ["a capital at the start", "[YOU RECALL: Read **ऋ** — **R1**]"],
+    [
+      "a cue wrapped across two source lines",
+      "- [YOU RECALL: read **மற்றது**, then ask *vilai evvaḷavu?*, then say both forms of the\n  quotation line]",
+    ],
+  ])("%s", (_label, markdown) => {
+    expect(readingRecallCues(markdown)).toHaveLength(1);
+  });
+});
+
+describe("readingRecallCues: what does not fire", () => {
+  it.each([
+    ["the fixed form of a reading after a spoken step", "- [YOU RECALL: say *dīyā*]\n- [YOU READ: **कान**]"],
+    ["the fixed form of a spaced reading", "- [YOU READ: **ऋ** — **R1**, one lesson back]"],
+    ["the fixed form with its meaning to say", "- [YOU RECALL: say *ghās*]\n- [YOU READ: **कुआँ**, then say what it means]"],
+    ["the word for read, as a gloss", "[YOU RECALL: say the Japanese for to read, then the Japanese for to write, then say *hanasu* again]"],
+    ["a gloss later in the chain", "[YOU RECALL: say the Marwadi for to stay, then the Marwadi for to read, then say *jāṇṇo* again]"],
+    ["material being recalled", "[YOU RECALL: say the line of your message that means *I read Marathi*]"],
+    ["a meaning, recalled by ear", "[YOU RECALL: read *reception* on a sign — **R1**, one lesson back]"],
+    ["two meanings, recalled by ear", "[YOU RECALL: read *open*, then *not yet open*, and say which one lets you in]"],
+    ["reading out what was heard", "[YOU RECALL: read out the number you heard, then say it again]"],
+    ["a phrase that stops before the script", "[YOU RECALL: read the whole line, then say **हाँ**]"],
+    ["what the learner has read", "[YOU RECALL: say the first word you read in **देवनागरी**]"],
+    ["a verb that ends in read", "[YOU RECALL: say *sūī*, then thread **धागा** through it]"],
+    ["a quotation being recalled", '[YOU RECALL: say "then read **किताब**" once more]'],
+    ["the READ cue itself", "[YOU READ: **किताब**, then say it without looking]"],
+    // SAY is not read inside: its content is the material spoken.
+    ["a say cue", "[YOU SAY: **છ** on its own, then read **છે**]"],
+  ])("%s", (_label, markdown) => {
+    expect(readingRecallCues(markdown)).toEqual([]);
+  });
+});
+
+describe("recallCueAsksToReadScript stays linear", () => {
+  // About 50,000 characters each; only the answers are asserted, because
+  // timing bounds flake on a loaded runner.
+  it.each([
+    ["a long run of spaces before the verb", `say it${" ".repeat(50_000)}then read **क**`, true],
+    ["a long run of spaces with no verb", `say it${" ".repeat(50_000)}x`, false],
+    ["a long run of spaces after the verb", `read${" ".repeat(50_000)}**क**`, true],
+    ["many links with no verb", `say ${"it, and then ".repeat(4_000)}stop`, false],
+    ["many links, the last one reading", `say ${"it, and then ".repeat(4_000)}read **क**`, true],
+    ["many readings of nothing printed", `${"then read the whole line ".repeat(2_000)}`, false],
+    ["many readings of meanings", `${"then read *a word* ".repeat(2_500)}`, false],
+    ["many articles before a far script", `read ${"the ".repeat(12_500)}**क**`, false],
+    ["many unclosed quotation openers", `say ${"“".repeat(50_000)} and read **क**`, true],
+    ["a quotation that hides every link", `say “${"and read **क** ".repeat(4_000)}” now`, false],
+    ["many stars", `read ${"*".repeat(50_000)}`, true],
+  ])("%s", (_label, content, expected) => {
+    expect(content.length).toBeGreaterThan(40_000);
+    expect(recallCueAsksToReadScript(content)).toBe(expected);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // The corpus
 // ---------------------------------------------------------------------------
 
@@ -570,5 +654,41 @@ describe("drivable lessons carry no recall cue that points at the page", () => {
       }
     }
     expect(problems, problems.join("\n")).toEqual([]);
+  });
+});
+
+describe("drivable lessons carry no recall cue that asks to read script", () => {
+  it("no drivable lesson asks a driver to read the page inside a recall", () => {
+    // No ledger: every such cue was split into a recall and a READ cue when
+    // the check arrived, so the corpus answer is exactly zero.
+    const problems: string[] = [];
+    for (const lesson of lessons) {
+      const id = String(lesson.frontmatter.id);
+      if (!drivableIds.has(id)) continue;
+      for (const cue of readingRecallCues(lessonMarkdown(lesson))) {
+        problems.push(
+          `${id}: a drivable recall asks the listener to read printed script. Move the ` +
+            `reading into its own [YOU READ: …] cue, which the narration defers, and keep ` +
+            `the spoken steps in the recall, in the authored order:\n       ${cue.slice(0, 160)}`,
+        );
+      }
+    }
+    expect(problems, problems.join("\n")).toEqual([]);
+  });
+
+  it("the reading check still fires on the real corpus, where reading is legitimate", () => {
+    // Anti-vacuity, as for the writing check: a detector that matched nothing
+    // would also report zero above. The lessons that are NOT drivable keep
+    // their reading recalls (their narration already opens with the
+    // hands-and-eyes notice), so the detector must keep finding them there.
+    let reading = 0;
+    for (const lesson of lessons) {
+      if (drivableIds.has(String(lesson.frontmatter.id))) continue;
+      if (readingRecallCues(lessonMarkdown(lesson)).length > 0) reading += 1;
+    }
+    // A floor set well below the count measured when this was written
+    // (66 non-drivable lessons), and high enough that a detector which lost most
+    // of its matches fails here rather than passing quietly.
+    expect(reading, "non-drivable lessons with a reading recall").toBeGreaterThan(40);
   });
 });

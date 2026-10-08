@@ -58,8 +58,11 @@ Three, and one of them is a visitor.
 [PAUSE 1s]
 - [YOU SAY: *rayil*]
 - [YOU SAY: *vaṇḍi*, then *rayil* — and say which one is Tamil's own]
-- [YOU RECALL: say *pērundu*, then read **வண்டி**, then say *rayil*]
-- [YOU RECALL: say *puḍavai*, then read **பணம்**]
+- [YOU RECALL: say *pērundu*]
+- [YOU READ: **வண்டி**]
+- [YOU RECALL: say *rayil*]
+- [YOU RECALL: say *puḍavai*]
+- [YOU READ: **பணம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C69-GOING-02, TA-SCRIPT-READ-VANDI-01, TA-LEX-C69-GOING-03] -->

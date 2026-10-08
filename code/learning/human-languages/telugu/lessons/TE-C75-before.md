@@ -57,7 +57,8 @@ Both ends of an order: ముందు and తరువాత.
 - [YOU SAY: *mundu*, once more]
 - [YOU SAY: say *mundu*, then *taruvāta*, and put a meal between them]
 - [YOU RECALL: say *mariyu*, then *udayam*, then say *mundu*]
-- [YOU RECALL: read **కారం**, then say *enduku*]
+- [YOU READ: **కారం**]
+- [YOU RECALL: say *enduku*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C75-WHEN-02, TE-LEX-C75-WHEN-03, TE-LEX-C75-WHEN-04, TE-LEX-C74-LINK-01, TE-ETYMON-C26-UDAYAM-01, TE-PRAGMATICS-C26-UDAYAM-02] -->

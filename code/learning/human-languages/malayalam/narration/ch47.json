@@ -4,7 +4,7 @@
   "chapter": 47,
   "title": "The Leg and the Tooth",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bcfff71578ee150b",
+  "sourceHash": "fnv1a64:7fb8e2932a148491",
   "lessons": [
     {
       "id": "ML-C47-leg",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f1618c663117073",
+      "sourceHash": "fnv1a64:b5a166cf02782dd5",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read മുത്തച്ഛൻ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "മുത്തച്ഛൻ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **മുത്തച്ഛൻ**]"
+              "source": "[YOU READ: **മുത്തച്ഛൻ**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:daa8fd08d726e89b",
+      "sourceHash": "fnv1a64:757f2d5b3d5eb46d",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ഭർത്താവ്",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ഭർത്താവ്",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ഭർത്താവ്**]"
+              "source": "[YOU READ: **ഭർത്താവ്**]"
             }
           ]
         },

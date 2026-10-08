@@ -58,7 +58,8 @@ Four. The one who matches బావ.
 - [YOU SAY: *maradalu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bāva*, then *maradalu*, and say which of the two is the woman]
-- [YOU RECALL: read **సుత్తి**, then say *uḍuta*]
+- [YOU READ: **సుత్తి**]
+- [YOU RECALL: say *uḍuta*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C71-KIN-01, TE-LEX-C71-KIN-02, TE-LEX-C71-KIN-03, TE-LEX-C71-KIN-04] -->

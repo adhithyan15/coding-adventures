@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "Doing, and Undoing",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:67b1d3620d7f03eb",
+  "sourceHash": "fnv1a64:cbec2370f8bb8fde",
   "lessons": [
     {
       "id": "TA-C65-drink",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89e29242265f7d5c",
+      "sourceHash": "fnv1a64:b22c612b794a7326",
       "notice": null,
       "blocks": [
         {
@@ -123,11 +123,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say vēṇḍukōḷ, then read நெல்",
+              "instruction": "say vēṇḍukōḷ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *vēṇḍukōḷ*, then read **நெல்**]"
+              "source": "[YOU RECALL: say *vēṇḍukōḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "நெல்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **நெல்**]"
             }
           ]
         },
@@ -163,7 +172,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ceeeceae8e960cd9",
+      "sourceHash": "fnv1a64:dd045d075962d86b",
       "notice": null,
       "blocks": [
         {
@@ -266,12 +275,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "அனுமதி",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **அனுமதி**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read அனுமதி, then say pul",
+              "instruction": "say pul",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **அனுமதி**, then say *pul*]"
+              "source": "[YOU RECALL: say *pul*]"
             }
           ]
         },
@@ -458,7 +476,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7bbabc1da018b770",
+      "sourceHash": "fnv1a64:7ff2b3e941fbff48",
       "notice": null,
       "blocks": [
         {
@@ -562,11 +580,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say tayakkam, then read பயிர்",
+              "instruction": "say tayakkam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *tayakkam*, then read **பயிர்**]"
+              "source": "[YOU RECALL: say *tayakkam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "பயிர்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பயிர்**]"
             }
           ]
         },
@@ -602,7 +629,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1d9663a693f27e1",
+      "sourceHash": "fnv1a64:e86ea7132d0f822b",
       "notice": null,
       "blocks": [
         {
@@ -705,12 +732,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "நம்பிக்கை",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **நம்பிக்கை**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read நம்பிக்கை, then say kaḷam",
+              "instruction": "say kaḷam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **நம்பிக்கை**, then say *kaḷam*]"
+              "source": "[YOU RECALL: say *kaḷam*]"
             }
           ]
         },
@@ -746,7 +782,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6832ad75d2edb697",
+      "sourceHash": "fnv1a64:0c0cde554fc02c01",
       "notice": null,
       "blocks": [
         {
@@ -868,11 +904,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say paṇivu, then read அறுவடை",
+              "instruction": "say paṇivu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *paṇivu*, then read **அறுவடை**]"
+              "source": "[YOU RECALL: say *paṇivu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "அறுவடை",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **அறுவடை**]"
             }
           ]
         },

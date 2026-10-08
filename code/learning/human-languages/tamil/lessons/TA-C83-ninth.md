@@ -37,7 +37,7 @@ reviews_of: [TA-C83-eighth, TA-C82-fourth, TA-C78-for-the-sake-of, TA-W23-read-s
 - [YOU RECALL: say *eṭṭāvadu* — **R1**]
 - [YOU RECALL: say *nāṉkāvadu* — **R2**]
 - [YOU RECALL: say why you are doing something with *-kkāga* — **R3**]
-- [YOU RECALL: read **சட்டை** — **R4**]
+- [YOU READ: **சட்டை** — **R4**]
 
 ## You'll want to know: ஒன்பதாவது
 <!-- hl-knowledge: introduces=[TA-LEX-C83-ORDINAL-04]; assesses=[TA-GRAMMAR-C82-ORDINAL-04] -->

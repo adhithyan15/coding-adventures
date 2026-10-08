@@ -60,7 +60,8 @@ Five things about light and warmth: the sun, a ray, light, shade, heat.
 - [YOU SAY: *tāpaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *raviḥ* and *tāpaḥ* together]
-- [YOU RECALL: say *nīlaḥ*, then read **संवत्सरः**]
+- [YOU RECALL: say *nīlaḥ*]
+- [YOU READ: **संवत्सरः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C46-LIGHT-01, SA-LEX-C46-LIGHT-02, SA-LEX-C46-LIGHT-03, SA-LEX-C46-LIGHT-04, SA-LEX-C46-LIGHT-05] -->

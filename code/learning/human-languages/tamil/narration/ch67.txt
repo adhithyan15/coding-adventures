@@ -26,8 +26,9 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — recall: say valadu, then say iḍadu, then say saṭṭai]
 [pause 8 seconds for the answer]
-[your turn — recall: say mēlē, then read கீழே]
+[your turn — recall: say mēlē]
 [pause 8 seconds for the answer]
+[once you have stopped driving — read: கீழே]
 
 Wrap-up Recall.
 [pause 3 seconds]
@@ -58,8 +59,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — recall: say iḍadu, then say saṭṭai, then say vēṭṭi]
 [pause 8 seconds for the answer]
-[your turn — recall: read உள்ளே]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: உள்ளே]
 
 Wrap-up Recall.
 [pause 3 seconds]
@@ -119,7 +119,10 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: talai, saṭṭai, puḍavai — three words, one ending]
 [pause 8 seconds for the answer]
-[your turn — recall: say vēṭṭi, then read சட்டை (saṭṭai), then say puḍavai]
+[your turn — recall: say vēṭṭi]
+[pause 8 seconds for the answer]
+[once you have stopped driving — read: சட்டை (saṭṭai)]
+[your turn — recall: say puḍavai]
 [pause 8 seconds for the answer]
 [your turn — recall: say veḷiyē]
 [pause 8 seconds for the answer]
@@ -150,10 +153,10 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: seruppu, then vāsal — and say which side of the door each one is on]
 [pause 8 seconds for the answer]
-[your turn — recall: read சட்டை (saṭṭai), then say puḍavai, then say seruppu]
+[once you have stopped driving — read: சட்டை (saṭṭai)]
+[your turn — recall: say puḍavai, then say seruppu]
 [pause 8 seconds for the answer]
-[your turn — recall: read வலது]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: வலது]
 
 Wrap-up Recall.
 [pause 3 seconds]

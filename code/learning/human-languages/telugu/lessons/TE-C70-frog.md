@@ -58,7 +58,8 @@ Two. And the roof is still కప్పు.
 - [YOU SAY: *kappa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kappu*, then *kappa*, and say which one is the roof]
-- [YOU RECALL: read **గొంతు**, then say *rampaṁ*]
+- [YOU READ: **గొంతు**]
+- [YOU RECALL: say *rampaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C69-TOOL-05, TE-LEX-C70-CREATURE-01, TE-LEX-C70-CREATURE-02] -->

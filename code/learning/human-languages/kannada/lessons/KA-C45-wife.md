@@ -54,7 +54,7 @@ That closes the run: grandfather, grandmother, husband, wife.
 - [YOU SAY: *heṇḍati*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *gaṇḍa*, so the two sit together]
-- [YOU RECALL: read **ಕುಳಿತುಕೋ**]
+- [YOU READ: **ಕುಳಿತುಕೋ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-HUSBAND, KA-LEX-WIFE] -->

@@ -86,7 +86,8 @@ means the working one.
 - [YOU WRITE: کام — three letters, right to left, letting the line fall]
 - [YOU TRACE: **kām** ← Prakrit *kamma* ← Sanskrit *karman* → borrowed into
   English as **karma**]
-- [YOU RECALL: read **کالا**, then say *nīlā*, then say *qamīz*]
+- [YOU READ: **کالا**]
+- [YOU RECALL: say *nīlā*, then say *qamīz*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KAAM, UR-ETYMON-KAAM-KARMA] -->

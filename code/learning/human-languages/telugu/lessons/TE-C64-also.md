@@ -58,7 +58,8 @@ The first joining word.
 - [YOU SAY: *kūḍā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nēnu kūḍā*, then *perugu kūḍā*, and say what each one adds]
-- [YOU RECALL: say *dāraṁ*, then read **ఆకలి** and say what it means]
+- [YOU RECALL: say *dāraṁ*]
+- [YOU READ: **ఆకలి**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C63-HEALTH-04, TE-LEX-C63-HEALTH-05, TE-LEX-C64-JOIN-01] -->

@@ -58,7 +58,8 @@ Five: ఎలుక, కప్ప, దోమ, ఉడుత, సాలీడు. E
 - [YOU SAY: *sālīḍu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *avunu* for the ones in your house and *lēdu* for the rest]
-- [YOU RECALL: say *kaburu*, then read **కర్ర** and say what it means]
+- [YOU RECALL: say *kaburu*]
+- [YOU READ: **కర్ర**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C70-CREATURE-01, TE-LEX-C70-CREATURE-02, TE-LEX-C70-CREATURE-03, TE-LEX-C70-CREATURE-04, TE-LEX-C70-CREATURE-05] -->

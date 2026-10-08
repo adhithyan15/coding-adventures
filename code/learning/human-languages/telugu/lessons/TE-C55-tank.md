@@ -58,7 +58,8 @@ Two waters: one that moves, one that was kept.
 - [YOU SAY: *ceruvu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ceruvu*, then *nadi*, and say which one people made]
-- [YOU RECALL: read **సూర్యుడు**, then say *komma*]
+- [YOU READ: **సూర్యుడు**]
+- [YOU RECALL: say *komma*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C54-TREE-05, TE-LEX-C55-ROAD-01, TE-LEX-C55-ROAD-02] -->

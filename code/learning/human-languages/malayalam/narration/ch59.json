@@ -4,7 +4,7 @@
   "chapter": 59,
   "title": "What the Air Carries",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bf4596aa8b970b78",
+  "sourceHash": "fnv1a64:b79a9fe21c1a4f6d",
   "lessons": [
     {
       "id": "ML-C59-wind",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a5b79b6ba85240b",
+      "sourceHash": "fnv1a64:078f4833cfe31ae9",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read മുതുക്",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "മുതുക്",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **മുതുക്**]"
+              "source": "[YOU READ: **മുതുക്**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21d7d25f672fc874",
+      "sourceHash": "fnv1a64:9a975e215fb2750a",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read നഖം",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "നഖം",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **നഖം**]"
+              "source": "[YOU READ: **നഖം**]"
             }
           ]
         },

@@ -56,7 +56,8 @@ That closes the run: affection, respect, gladness, a good wish, and thanks with 
 - [YOU SAY: *mikka naṉṟi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *aṉbu*, *mariyādai*, *santōṣam*, *vāḻttu*, *mikka naṉṟi*]
-- [YOU RECALL: say *appaḍiyē*, then read **புறப்படு**]
+- [YOU RECALL: say *appaḍiyē*]
+- [YOU READ: **புறப்படு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C49-COURTESY-01, TA-LEX-C49-COURTESY-02, TA-LEX-C49-COURTESY-03, TA-LEX-C49-COURTESY-04, TA-LEX-C49-COURTESY-05] -->

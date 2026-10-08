@@ -59,7 +59,8 @@ The third of five, and a narrowing you can watch happen.
 - [YOU SAY: *māthā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *māthā*, and then सिर, which you met when the head was first named]
-- [YOU RECALL: say *āṁgan*, then read **तेल**]
+- [YOU RECALL: say *āṁgan*]
+- [YOU READ: **तेल**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C53-BODY-01, HI-LEX-C53-BODY-02, HI-LEX-C53-BODY-03] -->

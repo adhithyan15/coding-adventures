@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "Family and Friend",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:47a3b2e73e28c901",
+  "sourceHash": "fnv1a64:e5885e499637dbac",
   "lessons": [
     {
       "id": "ML-C35-kudumbam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e1a4c15491e5aa3",
+      "sourceHash": "fnv1a64:a2f36b2bfa33f611",
       "notice": null,
       "blocks": [
         {
@@ -114,11 +114,29 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say uṇṭŭ, then read പോകുക, then say varuka",
+              "instruction": "say uṇṭŭ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *uṇṭŭ*, then read **പോകുക**, then say *varuka*]"
+              "source": "[YOU RECALL: say *uṇṭŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "പോകുക",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **പോകുക**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say varuka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *varuka*]"
             }
           ]
         },

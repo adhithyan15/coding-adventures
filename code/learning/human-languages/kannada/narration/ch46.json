@@ -4,7 +4,7 @@
   "chapter": 46,
   "title": "Things You Ask For",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:5b2cd1c4b3291cb5",
+  "sourceHash": "fnv1a64:24efee3173f33a44",
   "lessons": [
     {
       "id": "KA-C46-fruit",
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8c210637c90072f",
+      "sourceHash": "fnv1a64:b86a5c2743cacbc1",
       "notice": null,
       "blocks": [
         {
@@ -244,12 +244,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಕೊಡು",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಕೊಡು",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಕೊಡು**]"
+              "source": "[YOU READ: **ಕೊಡು**]"
             }
           ]
         },
@@ -420,7 +420,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9481e2d41cb4c21",
+      "sourceHash": "fnv1a64:08a67fb79eab9069",
       "notice": null,
       "blocks": [
         {
@@ -510,12 +510,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಕೇಳು",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಕೇಳು",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಕೇಳು**]"
+              "source": "[YOU READ: **ಕೇಳು**]"
             }
           ]
         },

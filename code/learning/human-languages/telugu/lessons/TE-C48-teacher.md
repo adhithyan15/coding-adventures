@@ -56,7 +56,8 @@ The first of five roles.
 - [YOU SAY: *guruvu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *guruvu*, then *guruvāraṁ*, and say what the two have in common]
-- [YOU RECALL: say *paṇḍu*, then read **కాలు** and say what it means]
+- [YOU RECALL: say *paṇḍu*]
+- [YOU READ: **కాలు**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C47-BODY-04, TE-LEX-C47-BODY-05, TE-LEX-C48-ROLE-01] -->

@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Counting One to Ten",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:8ed2c777420350e0",
+  "sourceHash": "fnv1a64:ce150889fb604d6c",
   "lessons": [
     {
       "id": "KA-C07-ondu",
@@ -143,7 +143,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:851deae4ac2e813b",
+      "sourceHash": "fnv1a64:40ee18277b84cc91",
       "notice": null,
       "blocks": [
         {
@@ -222,12 +222,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಇರು",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಇರು",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಇರು**]"
+              "source": "[YOU READ: **ಇರು**]"
             }
           ]
         },
@@ -568,7 +568,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3267472a74cc4699",
+      "sourceHash": "fnv1a64:fe65ef3e7725b543",
       "notice": null,
       "blocks": [
         {
@@ -647,12 +647,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read -ಗೆ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "-ಗೆ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **-ಗೆ**]"
+              "source": "[YOU READ: **-ಗೆ**]"
             }
           ]
         },

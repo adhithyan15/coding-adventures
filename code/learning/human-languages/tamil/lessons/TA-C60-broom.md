@@ -56,7 +56,8 @@ Four.
 - [YOU SAY: *tuṭaippam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tuṭaippam*, then *kōlam*, and say which one comes first]
-- [YOU RECALL: read **காக்கை**, then say *vellam*]
+- [YOU READ: **காக்கை**]
+- [YOU RECALL: say *vellam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C60-MADE-01, TA-LEX-C60-MADE-02, TA-LEX-C60-MADE-03, TA-LEX-C60-MADE-04] -->

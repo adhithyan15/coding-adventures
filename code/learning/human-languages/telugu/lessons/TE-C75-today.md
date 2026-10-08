@@ -57,7 +57,8 @@ The day you are in.
 - [YOU SAY: *ivāḷa*, once more]
 - [YOU SAY: say *ivāḷa*, then *rēpu*, and say which is nearer]
 - [YOU RECALL: say *bhōjanaṁ*, then say *ivāḷa*]
-- [YOU RECALL: say *tīpi*, then read **మరియు** and say what it means]
+- [YOU RECALL: say *tīpi*]
+- [YOU READ: **మరియు**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C74-LINK-05, TE-GRAMMAR-C74-LINK-05, TE-LEX-C75-WHEN-01, TE-ETYMON-C40-BHOJANAM-02, TE-LEX-C40-BHOJANAM-01] -->

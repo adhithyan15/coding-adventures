@@ -59,7 +59,8 @@ Honey, and a word that reached from Ireland to China.
 - [YOU SAY: *madhu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dugdham*, then *madhu*]
-- [YOU RECALL: read **सेतुः**, then say *grīvā*]
+- [YOU READ: **सेतुः**]
+- [YOU RECALL: say *grīvā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C34-LIMB-05, SA-LEX-C35-HOUSE-01, SA-LEX-C35-HOUSE-02] -->

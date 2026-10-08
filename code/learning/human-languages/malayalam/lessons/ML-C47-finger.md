@@ -58,7 +58,7 @@ Four. A leg, a tooth, hair, a finger.
 - [YOU SAY: *viral*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *viral*, then *kāl*, and hear the same chillu close both]
-- [YOU RECALL: read **ഭർത്താവ്**]
+- [YOU READ: **ഭർത്താവ്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C47-BODY-01, ML-LEX-C47-BODY-02, ML-LEX-C47-BODY-03, ML-LEX-C47-BODY-04] -->

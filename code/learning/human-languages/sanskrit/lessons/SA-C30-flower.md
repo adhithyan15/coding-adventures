@@ -59,7 +59,8 @@ A flower to set beside the fruit you already had.
 - [YOU SAY: *puṣpam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *puṣpam*, then *phalam*, and say them as one pair]
-- [YOU RECALL: say *yātrā*, then read **प्रणामः**]
+- [YOU RECALL: say *yātrā*]
+- [YOU READ: **प्रणामः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C30-WELCOME-01, SA-LEX-C30-WELCOME-02, SA-LEX-C30-WELCOME-03] -->

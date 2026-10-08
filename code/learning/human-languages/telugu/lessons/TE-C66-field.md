@@ -58,7 +58,8 @@ The ground everything else here stands on.
 - [YOU SAY: *polaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *polaṁ*, then *grāmaṁ*, and say which one feeds the other]
-- [YOU RECALL: say *kūḍā*, then read **స్వాగతం** and say what it means]
+- [YOU RECALL: say *kūḍā*]
+- [YOU READ: **స్వాగతం**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C65-MANNERS-04, TE-LEX-C65-MANNERS-05, TE-LEX-C66-FIELD-01] -->

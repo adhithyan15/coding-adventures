@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 56,
-  "sourceHash": "fnv1a64:bb1219f889b4ce65",
+  "sourceHash": "fnv1a64:ce4621a037c70a8f",
   "lessonIds": [
     "HI-C56-road",
     "HI-C56-village",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch56.txt",
   "json": "hindi/narration/ch56.json",
-  "textHash": "fnv1a64:33103292dcd96b45",
-  "jsonHash": "fnv1a64:c13c7eb5031ef7ed",
+  "textHash": "fnv1a64:6f78606f2706eee6",
+  "jsonHash": "fnv1a64:136264b7f95c88ed",
   "findings": []
 }

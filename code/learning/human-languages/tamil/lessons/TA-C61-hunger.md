@@ -56,7 +56,8 @@ The first of five feelings.
 - [YOU SAY: *pasi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pasu*, then *pasi*, and hold the two endings apart]
-- [YOU RECALL: say *tayir*, then read **ஊசி**]
+- [YOU RECALL: say *tayir*]
+- [YOU READ: **ஊசி**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C60-MADE-04, TA-LEX-C60-MADE-05, TA-LEX-C61-FEEL-01] -->

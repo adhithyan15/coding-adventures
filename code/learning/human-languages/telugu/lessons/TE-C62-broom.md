@@ -58,7 +58,8 @@ Three, and this one starts the day.
 - [YOU SAY: *cīpuru*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *cīpuru*, then *muggu*, and say which one comes first]
-- [YOU RECALL: say *kōḍi*, then read **నూనె** and say what it means]
+- [YOU RECALL: say *kōḍi*]
+- [YOU READ: **నూనె**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C62-MADE-01, TE-LEX-C62-MADE-02, TE-LEX-C62-MADE-03] -->

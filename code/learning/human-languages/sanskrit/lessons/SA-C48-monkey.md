@@ -60,7 +60,8 @@ A word built out of two you had already.
 - [YOU SAY: *vānaraḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *chāgaḥ*, then *vānaraḥ*]
-- [YOU RECALL: read **छाया**, then say *stambhaḥ*]
+- [YOU READ: **छाया**]
+- [YOU RECALL: say *stambhaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C48-BEAST-02, SA-LEX-C48-BEAST-03, SA-LEX-C48-BEAST-04] -->

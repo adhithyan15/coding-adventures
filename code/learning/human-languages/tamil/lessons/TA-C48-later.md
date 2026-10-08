@@ -56,7 +56,8 @@ Four, and the fourth one puts off the parting.
 - [YOU SAY: *piṟaku*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *payaṇam*, then *piṟaku*, and let the hard *ṟ* land in the second]
-- [YOU RECALL: read **விவசாயி**, then say *oruvēḷai*]
+- [YOU READ: **விவசாயி**]
+- [YOU RECALL: say *oruvēḷai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C48-LEAVE-01, TA-LEX-C48-LEAVE-02, TA-LEX-C48-LEAVE-03, TA-LEX-C48-LEAVE-04] -->

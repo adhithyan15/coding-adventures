@@ -4,7 +4,7 @@
   "chapter": 76,
   "title": "But, and Or",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8e43dea92a776dcd",
+  "sourceHash": "fnv1a64:bd881b026d5b0b16",
   "lessons": [
     {
       "id": "TA-C76-but",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:326f0ce02de7a159",
+      "sourceHash": "fnv1a64:551128a436d98ac7",
       "notice": null,
       "blocks": [
         {
@@ -129,12 +129,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "சரியா",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சரியா**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read சரியா, then ask varalāmā?, then say āṉāl",
+              "instruction": "ask varalāmā?, then say āṉāl",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **சரியா**, then ask *varalāmā?*, then say *āṉāl*]"
+              "source": "[YOU RECALL: ask *varalāmā?*, then say *āṉāl*]"
             },
             {
               "kind": "prompt",
@@ -148,11 +157,29 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say iṉṟu, then read நேற்று, then say muṉbu",
+              "instruction": "say iṉṟu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *iṉṟu*, then read **நேற்று**, then say *muṉbu*]"
+              "source": "[YOU RECALL: say *iṉṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "நேற்று",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **நேற்று**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say muṉbu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *muṉbu*]"
             }
           ]
         },
@@ -532,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0475ad170a19163a",
+      "sourceHash": "fnv1a64:f379626df771f59a",
       "notice": null,
       "blocks": [
         {
@@ -639,11 +666,29 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say alladu, then read ஆனால் (āṉāl), then make the full offer",
+              "instruction": "say alladu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *alladu*, then read **ஆனால்**, then make the full offer]"
+              "source": "[YOU RECALL: say *alladu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஆனால் (āṉāl)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஆனால்**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "make the full offer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: make the full offer]"
             },
             {
               "kind": "prompt",

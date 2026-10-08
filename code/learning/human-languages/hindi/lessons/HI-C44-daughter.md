@@ -57,7 +57,7 @@ Two of four, and one vowel doing all the work.
 - [YOU SAY: *beṭī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *beṭā*, and hear only the last vowel move]
-- [YOU RECALL: read **बैठना**]
+- [YOU READ: **बैठना**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-SON, HI-LEX-DAUGHTER] -->

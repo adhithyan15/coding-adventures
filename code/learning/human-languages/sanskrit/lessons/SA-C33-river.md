@@ -59,7 +59,8 @@ A river, and a word that survived every one of its neighbours.
 - [YOU SAY: *nadī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dāru*, then *nadī*]
-- [YOU RECALL: say *ākāśaḥ*, then read **तरुः**]
+- [YOU RECALL: say *ākāśaḥ*]
+- [YOU READ: **तरुः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C32-TREE-04, SA-LEX-C32-TREE-05, SA-LEX-C33-LAND-01] -->

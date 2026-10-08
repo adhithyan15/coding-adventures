@@ -76,7 +76,8 @@ the cheapest way there is to hold two words instead of one.
 - [YOU SAY: for each of *naḍa* and *tiṟa*, the word that undoes it]
 - [YOU SAY: *taṇṇīr kuḍi*, then *kadavu*, then *mūḍu*]
 - [YOU READ: **குடி** — the one word of the five you have spelled out]
-- [YOU RECALL: say *paṇivu*, then read **அறுவடை**]
+- [YOU RECALL: say *paṇivu*]
+- [YOU READ: **அறுவடை**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C65-DOING-01, TA-LEX-C65-DOING-02, TA-LEX-C65-DOING-03, TA-LEX-C65-DOING-04, TA-LEX-C65-DOING-05] -->

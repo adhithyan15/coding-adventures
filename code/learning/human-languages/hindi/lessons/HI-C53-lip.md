@@ -59,7 +59,8 @@ The fifth of five. That is the body, from the forehead down.
 - [YOU SAY: *hoṇṭh*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *hoṇṭh*, *māthā*, *kandhā*, *pīṭh*, *ghuṭnā* — top to bottom]
-- [YOU RECALL: say *miṭhāī*, then read **सब्ज़ी**]
+- [YOU RECALL: say *miṭhāī*]
+- [YOU READ: **सब्ज़ी**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C53-BODY-01, HI-LEX-C53-BODY-02, HI-LEX-C53-BODY-03, HI-LEX-C53-BODY-04, HI-LEX-C53-BODY-05] -->

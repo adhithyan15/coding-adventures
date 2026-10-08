@@ -67,7 +67,7 @@ land, one over sea — meeting on the very same tea-shop counter.
 - [YOU SAY: the long road — "qahwah … kahve … caffè … coffee … kāppi"]
 - [YOU SAY: two drinks, two roads — "cāya," overland; "kāppi," by sea]
 - [YOU SAY: two hearts, still — "hṛdayaṁ … neñcŭ"]
-- [YOU RECALL: read **മകൻ**]
+- [YOU READ: **മകൻ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C39-KAAPI-01, ML-CONCEPT-C39-KAAPI-02, ML-CONCEPT-C39-CHAAYA-01, ML-CONCEPT-C39-CHAAYA-02, ML-CONCEPT-C38-NENCHU-01, ML-CONCEPT-C38-NENCHU-02] -->

@@ -56,7 +56,8 @@ The first of five things above you.
 - [YOU SAY: *ākāyam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vaṇakkam*, then *ākāyam*, as you would greet somebody out of doors]
-- [YOU RECALL: say *aṉbu*, then read **வாசல்**]
+- [YOU RECALL: say *aṉbu*]
+- [YOU READ: **வாசல்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C50-WELCOME-04, TA-LEX-C50-WELCOME-05, TA-LEX-C51-SKY-01] -->

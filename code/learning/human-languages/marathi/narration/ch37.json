@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Who, and How Many",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:5bee760e28c8734e",
+  "sourceHash": "fnv1a64:a3e344163085e77c",
   "lessons": [
     {
       "id": "MR-C37-kon",
@@ -304,7 +304,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ecc9f2cb97d13f7",
+      "sourceHash": "fnv1a64:a35f57d26bf6c4b7",
       "notice": null,
       "blocks": [
         {
@@ -364,12 +364,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read the form label आवडती कृती and say why it ends in -ती",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "the form label आवडती कृती, then say why it ends in -ती",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read the form label **आवडती कृती** and say why it ends in **-ती**]"
+              "source": "[YOU READ: the form label **आवडती कृती**, then say why it ends in **-ती**]"
             },
             {
               "kind": "activity",

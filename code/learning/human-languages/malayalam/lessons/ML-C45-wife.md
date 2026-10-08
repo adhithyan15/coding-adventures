@@ -54,7 +54,7 @@ That closes the run: grandfather, grandmother, husband, wife.
 - [YOU SAY: *bhārya*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *bharttāvŭ*, and name the root they share]
-- [YOU RECALL: read **ഉറങ്ങൂ**]
+- [YOU READ: **ഉറങ്ങൂ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-HUSBAND, ML-LEX-WIFE] -->

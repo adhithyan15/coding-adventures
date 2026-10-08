@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 82,
-  "sourceHash": "fnv1a64:5d32427c7c2d9488",
+  "sourceHash": "fnv1a64:1b6cf87078891560",
   "lessonIds": [
     "TA-C82-first",
     "TA-C82-second",
@@ -14,7 +14,7 @@
   "drivablePrefix": 0,
   "text": "tamil/narration/ch82.txt",
   "json": "tamil/narration/ch82.json",
-  "textHash": "fnv1a64:cafa438efde23ac7",
-  "jsonHash": "fnv1a64:324a63c3c1dfa178",
+  "textHash": "fnv1a64:8d8576e019347353",
+  "jsonHash": "fnv1a64:f1bde4f909430d37",
   "findings": []
 }

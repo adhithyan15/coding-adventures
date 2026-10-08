@@ -56,7 +56,8 @@ Four: to sit on, to carry in, to cut with, and to eat from.
 - [YOU SAY: *kiṇṇam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *katti*, then *kiṇṇam*, and let the ண double this time]
-- [YOU RECALL: read **வேர்**, then say *pātai*]
+- [YOU READ: **வேர்**]
+- [YOU RECALL: say *pātai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C54-HOUSE-01, TA-LEX-C54-HOUSE-02, TA-LEX-C54-HOUSE-03, TA-LEX-C54-HOUSE-04] -->

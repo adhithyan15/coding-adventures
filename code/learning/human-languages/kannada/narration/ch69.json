@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "Asking, and Asking Why",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:725c9be14b612d67",
+  "sourceHash": "fnv1a64:8c4e40b0c3cdb8b5",
   "lessons": [
     {
       "id": "KA-S136-vowel-sign-uu",
@@ -361,7 +361,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03999865d059df4a",
+      "sourceHash": "fnv1a64:13ea261155d40cf2",
       "notice": null,
       "blocks": [
         {
@@ -497,12 +497,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಅಥವಾ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಅಥವಾ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಅಥವಾ**]"
+              "source": "[YOU READ: **ಅಥವಾ**]"
             }
           ]
         },
@@ -538,7 +538,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:411e58754b44ea95",
+      "sourceHash": "fnv1a64:9ccbe2f6b88d470f",
       "notice": null,
       "blocks": [
         {
@@ -669,11 +669,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ādare, then read ನಾನೂ",
+              "instruction": "say ādare",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ādare*, then read **ನಾನೂ**]"
+              "source": "[YOU RECALL: say *ādare*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ನಾನೂ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ನಾನೂ**]"
             }
           ]
         },

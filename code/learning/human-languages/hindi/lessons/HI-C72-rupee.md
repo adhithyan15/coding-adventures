@@ -66,11 +66,11 @@ Money in general, and the unit it is counted in.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-01, HI-LEX-C72-COST-02, HI-LEX-C71-TODAY-03, HI-LEX-C70-LEISURE-02] -->
 
 [PAUSE 1s]
-- [YOU RECALL: read **बहुत**, then say it without looking]
+- [YOU READ: **बहुत**, then say it without looking]
 - [YOU SAY: *rupayā*]
 - [YOU SAY: *das rupaye*]
 - [YOU WRITE: पैसा once more, then रुपया beside the printed model]
-- [YOU RECALL: read **खेलना**]
+- [YOU READ: **खेलना**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-01, HI-LEX-C72-COST-02] -->

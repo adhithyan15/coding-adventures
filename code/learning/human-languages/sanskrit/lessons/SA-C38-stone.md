@@ -60,7 +60,8 @@ One piece of the mountain, small enough to touch.
 - [YOU SAY: *śilā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bhasma*, then *śilā*]
-- [YOU RECALL: say *tathā*, then read **प्रसन्नः**]
+- [YOU RECALL: say *tathā*]
+- [YOU READ: **प्रसन्नः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C38-EARTH-01, SA-LEX-C38-EARTH-02, SA-LEX-C38-EARTH-03] -->

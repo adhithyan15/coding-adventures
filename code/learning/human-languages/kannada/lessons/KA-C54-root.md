@@ -58,7 +58,7 @@ Four, and the lowest one shows the law.
 - [YOU SAY: *bēru*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bēru*, then *bāgilu*, and hear the same *b* opening both]
-- [YOU RECALL: read **ಹೂವು**]
+- [YOU READ: **ಹೂವು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C54-TREE-01, KA-LEX-C54-TREE-02, KA-LEX-C54-TREE-03, KA-LEX-C54-TREE-04] -->

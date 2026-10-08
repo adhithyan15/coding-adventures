@@ -4,7 +4,7 @@
   "chapter": 56,
   "title": "Things About the House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d799470bd4f4817c",
+  "sourceHash": "fnv1a64:637354f2d933e6d9",
   "lessons": [
     {
       "id": "ML-C56-mat",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb5d2d8bb601c8c2",
+      "sourceHash": "fnv1a64:7ce6c56c1c4ebfec",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read കൊമ്പ്",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "കൊമ്പ്",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **കൊമ്പ്**]"
+              "source": "[YOU READ: **കൊമ്പ്**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b18a098782a0dabc",
+      "sourceHash": "fnv1a64:71ed1974b9a6398c",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read വേര്",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "വേര്",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **വേര്**]"
+              "source": "[YOU READ: **വേര്**]"
             }
           ]
         },

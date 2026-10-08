@@ -58,7 +58,8 @@ Five: నది, చెరువు, గుట్ట, గ్రామం, బా
 - [YOU SAY: *bāṭa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then ask a stranger the way to the నది using *dayacēsi*]
-- [YOU RECALL: say *mabbu*, then read **మొక్క** and say what it means]
+- [YOU RECALL: say *mabbu*]
+- [YOU READ: **మొక్క**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C55-ROAD-01, TE-LEX-C55-ROAD-02, TE-LEX-C55-ROAD-03, TE-LEX-C55-ROAD-04, TE-LEX-C55-ROAD-05] -->

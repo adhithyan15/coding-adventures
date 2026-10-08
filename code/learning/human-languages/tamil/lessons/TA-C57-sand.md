@@ -56,7 +56,8 @@ Two: what moves, and one of the things it moves.
 - [YOU SAY: *maṇal*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kāṟṟu*, then *maṇal*, the wind and what it carries]
-- [YOU RECALL: read **முதுகு**, then say *niṟaiya*]
+- [YOU READ: **முதுகு**]
+- [YOU RECALL: say *niṟaiya*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C56-AMOUNT-05, TA-LEX-C57-FIRE-01, TA-LEX-C57-FIRE-02] -->

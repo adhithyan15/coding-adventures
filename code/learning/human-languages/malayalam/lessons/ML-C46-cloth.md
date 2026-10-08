@@ -58,7 +58,7 @@ Two: a fruit and a cloth.
 - [YOU SAY: *tuṇi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *paḻaṁ*, then *tuṇi*, and ask for each one with *dayavāyi*]
-- [YOU RECALL: read **തരൂ**]
+- [YOU READ: **തരൂ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-WIFE, ML-LEX-C46-ASK-01, ML-LEX-C46-ASK-02] -->

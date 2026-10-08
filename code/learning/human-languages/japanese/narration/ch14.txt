@@ -166,8 +166,7 @@ Three recalls before the run.
 [pause 8 seconds for the answer]
 [your turn — recall: say my father — R3, twenty lessons back]
 [pause 8 seconds for the answer]
-[your turn — recall: read さようなら off the page — R4, eighty lessons back]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: さようなら off the page — R4, eighty lessons back]
 Nothing new arrives here. This is the first time the five stand in numerical order, and that has been deliberate.
 
 Guided Practice — the run, and the two you started with.

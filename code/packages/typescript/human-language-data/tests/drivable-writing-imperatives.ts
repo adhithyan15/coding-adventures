@@ -58,7 +58,9 @@
 // One kind of cue is not safe either. `[YOU RECALL: write **ば** — **R1**]` is
 // a cue, but RECALL is a spoken action, so the narration reads it to a driver
 // as "recall: write ば". The last section of this module, "Inside a recall
-// cue", reads those, and `drivableWritingInstructions` runs both.
+// cue", reads those, and `drivableWritingInstructions` runs both. The two
+// sections after it read recall cues for the other things a hand or an eye
+// does on the page: pointing at a sign, and reading printed script.
 //
 // "Not inside a cue" is decided by the narration renderer's own cue splitter,
 // `splitNarrationCues`, not by a second bracket regex. The question being asked
@@ -559,12 +561,10 @@ export function drivableWritingInstructions(markdown: string): string[] {
 // blanked first, as for the writing chain, so the material being recalled
 // cannot fire it.
 //
-// Deliberately out of scope: "read". A drivable recall that says "then read
-// **आँख**" asks for eyes too, and there are about 770 of them, mostly the
-// Hindi, Marathi and Tamil script-recognition spacing. That is a debt for the
-// driving edition to decide on as a whole (they may want the cue verb READ,
-// which the narration now defers), not something to fold into a check that
-// would then have to carry a ledger of hundreds.
+// "read" is not this check's business. A recall that says "then read **आँख**"
+// asks for eyes too, and has its own check below ("Reading the page, inside a
+// recall cue"), because its fix is different: a reading step cannot be said
+// for the ear, so it moves out into a `[YOU READ: …]` cue.
 //
 // Linear: whitespace runs are collapsed in one pass and quotations blanked
 // with the opener-excluding patterns of `withoutQuotations`. The pattern is a
@@ -592,6 +592,144 @@ export function pointingRecallCues(markdown: string): string[] {
     const raw = parseDeliveryCue(part.cue.source.slice(1, -1));
     if (raw?.kind !== "prompt") continue;
     if (recallCueAsksToPoint(raw.content)) cues.push(part.cue.source);
+  }
+  return cues;
+}
+
+// ---------------------------------------------------------------------------
+// Reading the page, inside a recall cue
+// ---------------------------------------------------------------------------
+//
+// The spaced script-recognition recalls in the Indic tracks were authored as
+// one spoken cue holding a reading step:
+//
+//     authored                                    narrated
+//     -----------------------------------------   ------------------------------------------
+//     [YOU RECALL: say *dīyā*, then read **कान**]  "your turn — recall: say dīyā, then read कान"
+//
+// A driver can say *dīyā*. They cannot read कान: reading printed script is the
+// eyes' job, whatever the mouth does next, which is why READ is one of the
+// narration's `MANUAL_CUE_ACTIONS`. Unlike pointing, there is no way to say a
+// reading step for the ear — "say the word for ear" is a different exercise
+// (production), not the recognition the recall was spaced to revisit. So the
+// fix keeps the reading and moves it into a READ cue of its own, in the order
+// the author gave, and leaves the spoken steps in the recall:
+//
+//     - [YOU RECALL: say *dīyā*]          your turn — recall: say dīyā
+//     - [YOU READ: **कान**]               once you have stopped driving — read: कान
+//
+// The book prints the pair as "*Recall:* say *dīyā*" and "*Read it:* **कान**".
+//
+// It fires on "read" where a recall cue puts a step — at the start of the
+// content, or after the same step links as the pointing check (", ", ", and ",
+// "; ", " and ", " then ", each optionally followed by "then ") — when what
+// is read is on the page. "On the page" means one of three objects, each a
+// shape the corpus had:
+//
+//   object                                     example from the corpus
+//   -----------------------------------------  ----------------------------------------------
+//   script, in bold, straight after the verb   [YOU RECALL: read **ऋ** — **R1**, one lesson back]
+//                                              [YOU RECALL: say *ghās*, then read **कुआँ** and say …]
+//   a short noun phrase that reaches script:   [YOU RECALL: read the sign **ೇ**, and say what it …]
+//     a/an/the, at most two plain words, bold  [YOU RECALL: read the form label **आवडती कृती** and …]
+//   something printed                          [YOU RECALL: read a printed ticket and say the figure …]
+//
+// "aloud" or "out" may sit between the verb and its object ("read aloud
+// **X**"), since reading script aloud is still reading it.
+//
+// The controls, all corpus recalls that say "read" and ask nobody to look:
+//
+//   [YOU RECALL: say the Japanese for to read, then …]
+//                                       a gloss: "to " is not a step link
+//   [YOU RECALL: say the line of your message that means *I read Marathi*]
+//                                       material being recalled, after "I "
+//   [YOU RECALL: read *reception* on a sign — **R1**, one lesson back]
+//                                       an ITALIC English meaning, not printed
+//                                       script: nothing is on the page, so the
+//                                       learner retrieves the sign's word from
+//                                       memory and says it, which an ear can do
+//   [YOU RECALL: read *open*, then *not yet open*, and say which one lets you in]
+//                                       the same, two meanings in a row
+//
+// Only RECALL is read, as for writing and pointing. Two drivable cue shapes
+// outside it say "read **…**" too and are deliberately left to their own
+// decision: twelve Tamil `[YOU RETURN TO: read **…**, say … — three distances
+// back — then …]` reviews and two Gujarati `[YOU SAY: … then read **…**]`
+// prompts. SAY's content is the material spoken, and RETURN TO is a review
+// verb whose spacing note binds three steps into one, so neither splits as
+// mechanically as a recall does.
+//
+// Linear, and with no nested quantifier: whitespace runs are collapsed in one
+// pass and quotations blanked as before. `READING_STEP` is a choice of fixed
+// literals, an optional fixed literal and a fixed word, so each start position
+// does a bounded amount of work; it ends in a lookahead rather than consuming
+// the space after "read", so "read then read **X**" still sees its second
+// step. Each match then looks at most `READ_OBJECT_WINDOW` characters ahead, in
+// plain code (`readsTheObjectOnThePage`), so a text of N characters costs
+// O(N) however many "read"s it holds.
+
+const READING_STEP = /(?:^|, (?:and )?|; | and | then )(?:then )?read(?= )/gi;
+
+/** How far past "read " the object test looks. Every corpus object fits well inside it. */
+const READ_OBJECT_WINDOW = 80;
+
+/** The words that may open a noun phrase whose head is printed script. */
+const ARTICLES: ReadonlySet<string> = new Set(["a", "an", "the"]);
+
+/** "aloud" and "out" may stand between the verb and its object. */
+const READ_PARTICLES: ReadonlySet<string> = new Set(["aloud", "out"]);
+
+/**
+ * Is the text just after "read " something on the page? `ahead` is at most
+ * `READ_OBJECT_WINDOW` characters, so this is constant work per call.
+ *
+ *   "**कान**"                         yes  script
+ *   "aloud **कान**"                   yes  script, read aloud
+ *   "the sign **ೇ**, and say …"      yes  article, one plain word, script
+ *   "the form label **आवडती कृती**"   yes  article, two plain words, script
+ *   "a printed ticket and say …"      yes  printed
+ *   "*reception* on a sign"           no   an italic meaning
+ *   "out the number you heard"        no   no script, nothing printed
+ *   "the whole line, then say **X**"  no   a comma ends the phrase before the script
+ */
+function readsTheObjectOnThePage(ahead: string): boolean {
+  const words = ahead.split(" ");
+  let index = 0;
+  if (READ_PARTICLES.has((words[index] ?? "").toLowerCase())) index += 1;
+  const first = words[index] ?? "";
+  if (first.startsWith("**")) return true;
+  if (!ARTICLES.has(first.toLowerCase())) return false;
+  // Up to two plain lower-case words, then the script or "printed".
+  for (let step = 1; step <= 3; step += 1) {
+    const word = words[index + step] ?? "";
+    if (word.startsWith("**") || word.toLowerCase() === "printed") return true;
+    if (!/^[a-z]+$/.test(word)) return false;
+  }
+  return false;
+}
+
+/** Does the content of a recall cue ask the learner to read script on the page? */
+export function recallCueAsksToReadScript(content: string): boolean {
+  const text = withoutQuotations(content.replace(/\s+/g, " ").trim());
+  for (const step of text.matchAll(READING_STEP)) {
+    const from = (step.index ?? 0) + step[0].length + 1;
+    if (readsTheObjectOnThePage(text.slice(from, from + READ_OBJECT_WINDOW))) return true;
+  }
+  return false;
+}
+
+/**
+ * Every `[YOU RECALL: …]` cue in `markdown` that a narrator would read as a
+ * spoken instruction to read printed script, quoted as authored.
+ */
+export function readingRecallCues(markdown: string): string[] {
+  const cues: string[] = [];
+  for (const part of narratedParts(markdown)) {
+    if (!("cue" in part) || part.cue.kind !== "prompt") continue;
+    if (!INSTRUCTION_CUE_ACTIONS.has(part.cue.action)) continue;
+    const raw = parseDeliveryCue(part.cue.source.slice(1, -1));
+    if (raw?.kind !== "prompt") continue;
+    if (recallCueAsksToReadScript(raw.content)) cues.push(part.cue.source);
   }
   return cues;
 }

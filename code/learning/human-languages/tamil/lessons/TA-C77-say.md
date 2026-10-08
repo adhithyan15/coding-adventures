@@ -67,7 +67,8 @@ A verb you have been saying since chapter eight, now yours to use.
 - [YOU SAY: *sol*]
 - [YOU SAY: *sol*, then *solluṅgaḷ* — the bare verb, then the polite one]
 - [YOU NOTICE: the second meaning, *a word*]
-- [YOU RECALL: read **ஆனால்**, then offer *pāl alladu tēnīr?*, then say *sol*]
+- [YOU READ: **ஆனால்**]
+- [YOU RECALL: offer *pāl alladu tēnīr?*, then say *sol*]
 - [YOU RETURN TO: say *nāṉ uḷḷē varalāmā?*, *mutalil* and *siri* — three distances back — then quote one of them with என்று]
 
 ## Wrap-up Recall

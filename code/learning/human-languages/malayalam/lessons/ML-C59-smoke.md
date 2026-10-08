@@ -58,7 +58,7 @@ Four, and this one rises.
 - [YOU SAY: *puka*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ceḷi*, then *puka*, and say which of the two you would see from a distance]
-- [YOU RECALL: read **നഖം**]
+- [YOU READ: **നഖം**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C59-AIR-01, ML-LEX-C59-AIR-02, ML-LEX-C59-AIR-03, ML-LEX-C59-AIR-04] -->

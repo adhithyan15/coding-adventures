@@ -60,8 +60,10 @@ Four, and the feelings start doing something.
 - [YOU SAY: *siri*]
 - [YOU READ: **சிரி**, and point at the sign that appears twice]
 - [YOU SAY: *kōpam*, then *siri* — and say which one is a verb]
-- [YOU RECALL: read **பயம்**, then say *varuttam*, then say *siri*]
-- [YOU RECALL: read **தரை**, then say *kaḻuvu*]
+- [YOU READ: **பயம்**]
+- [YOU RECALL: say *varuttam*, then say *siri*]
+- [YOU READ: **தரை**]
+- [YOU RECALL: say *kaḻuvu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-PAYAM-01, TA-LEX-C72-FEEL-03, TA-LEX-C72-FEEL-04] -->

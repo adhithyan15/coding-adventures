@@ -58,7 +58,8 @@ Three: what is up, what is out, and what is under.
 - [YOU SAY: *vēru*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vēru*, then *komma*, and say which end of the చెట్టు each one is at]
-- [YOU RECALL: say *muggu*, then read **చంద్రుడు** and say what it means]
+- [YOU RECALL: say *muggu*]
+- [YOU READ: **చంద్రుడు**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C54-TREE-01, TE-LEX-C54-TREE-02, TE-LEX-C54-TREE-03] -->

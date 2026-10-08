@@ -64,7 +64,8 @@ for their everyday word.
 - [YOU SAY: "nāyi" — dog, solid native Dravidian, no mystery]
 - [YOU SAY: "bekku" — cat, a different Dravidian root than Tamil's everyday
   word]
-- [YOU RECALL: say *caitra vaiśākha jyēṣṭha āṣāḍha śrāvaṇa bhādrapada āśvayuja kārtīka mārgaśira puṣya māgha phālguṇa*, then read **ಮಧ್ಯಾಹ್ನ ಮಧ್ಯರಾತ್ರಿ**]
+- [YOU RECALL: say *caitra vaiśākha jyēṣṭha āṣāḍha śrāvaṇa bhādrapada āśvayuja kārtīka mārgaśira puṣya māgha phālguṇa*]
+- [YOU READ: **ಮಧ್ಯಾಹ್ನ ಮಧ್ಯರಾತ್ರಿ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C20-HANNONDU-IPPATTU-01, KA-ETYMON-C20-HANNONDU-IPPATTU-02, KA-ETYMON-C21-NAAYI-BEKKU-01, KA-ETYMON-C21-NAAYI-BEKKU-02] -->

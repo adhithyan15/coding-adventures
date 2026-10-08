@@ -59,7 +59,8 @@ The fourth of five, and the second time you have seen that trade.
 - [YOU SAY: *pīṭh*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pīṭh*, then *kandhā* — the back and the shoulder above it]
-- [YOU RECALL: read **मेज़**, then say *chīnī*]
+- [YOU READ: **मेज़**]
+- [YOU RECALL: say *chīnī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C53-BODY-01, HI-LEX-C53-BODY-02, HI-LEX-C53-BODY-03, HI-LEX-C53-BODY-04] -->

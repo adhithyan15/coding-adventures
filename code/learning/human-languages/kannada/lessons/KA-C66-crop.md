@@ -56,7 +56,7 @@ Four.
 - [YOU SAY: *beḷe*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bīja*, then *beḷe*, and say which one comes first]
-- [YOU RECALL: read **ಬೇಗ**]
+- [YOU READ: **ಬೇಗ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C66-FIELD-01, KA-LEX-C66-FIELD-02, KA-LEX-C66-FIELD-03, KA-LEX-C66-FIELD-04] -->

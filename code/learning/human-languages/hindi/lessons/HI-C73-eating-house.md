@@ -67,11 +67,13 @@ The first of five words for a meal you did not cook.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C73-EATING-01, HI-LEX-C72-COST-04, HI-LEX-C72-COST-05, HI-LEX-C71-TODAY-01, HI-LEX-C72-COST-01] -->
 
 [PAUSE 1s]
-- [YOU RECALL: say *mahãgā*, then read **ख़रीदना** and say what it means]
+- [YOU RECALL: say *mahãgā*]
+- [YOU READ: **ख़रीदना**, then say what it means]
 - [YOU HEAR: *hoṭal*]
 - [YOU SAY: *hoṭal*]
 - [YOU SAY: *chāy hoṭal*]
-- [YOU RECALL: say *āj*, then read **पैसा**]
+- [YOU RECALL: say *āj*]
+- [YOU READ: **पैसा**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C73-EATING-01] -->

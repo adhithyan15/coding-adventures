@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 80,
-  "sourceHash": "fnv1a64:9629f34afa42041d",
+  "sourceHash": "fnv1a64:f7b867d2b3dbe741",
   "lessonIds": [
     "TA-C80-other",
     "TA-C80-one-and-other",
@@ -12,7 +12,7 @@
   "drivablePrefix": 2,
   "text": "tamil/narration/ch80.txt",
   "json": "tamil/narration/ch80.json",
-  "textHash": "fnv1a64:76736d4980d33719",
-  "jsonHash": "fnv1a64:df38657053e543c3",
+  "textHash": "fnv1a64:573623db49793895",
+  "jsonHash": "fnv1a64:eaa4047cf7a51f26",
   "findings": []
 }

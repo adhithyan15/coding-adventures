@@ -60,7 +60,8 @@ Two animals, one with cousins abroad and one without.
 - [YOU SAY: *vṛkaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *siṁhaḥ*, then *vṛkaḥ*]
-- [YOU RECALL: read **रश्मिः**, then say *vātāyanam*]
+- [YOU READ: **रश्मिः**]
+- [YOU RECALL: say *vātāyanam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C47-DWELL-05, SA-LEX-C48-BEAST-01, SA-LEX-C48-BEAST-02] -->

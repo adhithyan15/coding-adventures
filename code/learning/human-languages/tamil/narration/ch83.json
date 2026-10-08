@@ -4,7 +4,7 @@
   "chapter": 83,
   "title": "All the Way Up, and On a Calendar",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:78aff62ee5914a09",
+  "sourceHash": "fnv1a64:c79abf923120ffc1",
   "lessons": [
     {
       "id": "TA-C83-sixth",
@@ -153,7 +153,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:39065f033eefcc3b",
+      "sourceHash": "fnv1a64:7800bab9bb6c9ef3",
       "notice": null,
       "blocks": [
         {
@@ -187,12 +187,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ஏன் — R3",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ஏன் — R3",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ஏன்** — **R3**]"
+              "source": "[YOU READ: **ஏன்** — **R3**]"
             },
             {
               "kind": "prompt",
@@ -439,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d020cc37f179dc89",
+      "sourceHash": "fnv1a64:0253fbdcf321e2e9",
       "notice": null,
       "blocks": [
         {
@@ -482,12 +482,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read சட்டை — R4",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "சட்டை — R4",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **சட்டை** — **R4**]"
+              "source": "[YOU READ: **சட்டை** — **R4**]"
             }
           ]
         },
@@ -883,7 +883,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b35c6d6ddf7e3e47",
+      "sourceHash": "fnv1a64:8cfffb61d854eed7",
       "notice": null,
       "blocks": [
         {
@@ -917,12 +917,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read எப்போது — R3",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "எப்போது — R3",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **எப்போது** — **R3**]"
+              "source": "[YOU READ: **எப்போது** — **R3**]"
             },
             {
               "kind": "prompt",

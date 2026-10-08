@@ -56,7 +56,8 @@ Two.
 - [YOU SAY: *cālu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *cālu*, then *nijaṁ*, and say which one you would use to stop someone pouring]
-- [YOU RECALL: read **పన్ను**, then say *vidyārthi*]
+- [YOU READ: **పన్ను**]
+- [YOU RECALL: say *vidyārthi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-05, TE-LEX-C49-REPLY-01, TE-LEX-C49-REPLY-02] -->

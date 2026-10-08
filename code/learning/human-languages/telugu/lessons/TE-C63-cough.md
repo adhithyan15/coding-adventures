@@ -58,7 +58,8 @@ Three.
 - [YOU SAY: *daggu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *daggu*, then *nidra*, and say which one keeps you from the other]
-- [YOU RECALL: say *nūne*, then read **చీపురు** and say what it means]
+- [YOU RECALL: say *nūne*]
+- [YOU READ: **చీపురు**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C63-HEALTH-01, TE-LEX-C63-HEALTH-02, TE-LEX-C63-HEALTH-03] -->

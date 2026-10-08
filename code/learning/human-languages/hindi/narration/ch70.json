@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Able, and Willing",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:9fc37e48af7ad942",
+  "sourceHash": "fnv1a64:00b8da21e0750fbb",
   "lessons": [
     {
       "id": "HI-C70-sakna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a48f7d89da97108e",
+      "sourceHash": "fnv1a64:b81dd412f0feeb1a",
       "notice": null,
       "blocks": [
         {
@@ -126,11 +126,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say aur, then read … या …",
+              "instruction": "say aur",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *aur*, then read **… या …**]"
+              "source": "[YOU RECALL: say *aur*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "… या …",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **… या …**]"
             },
             {
               "kind": "activity",
@@ -189,7 +198,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0555b41505932bdd",
+      "sourceHash": "fnv1a64:7cc1c5c506c62c21",
       "notice": null,
       "blocks": [
         {
@@ -297,12 +306,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read लेकिन",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "लेकिन",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **लेकिन**]"
+              "source": "[YOU READ: **लेकिन**]"
             },
             {
               "kind": "activity",

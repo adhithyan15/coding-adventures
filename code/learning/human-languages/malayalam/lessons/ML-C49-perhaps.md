@@ -58,7 +58,7 @@ Four. True, enough, certainly, perhaps.
 - [YOU SAY: *orupakṣē*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *orupakṣē*, then *tīrccayāyuṁ*, the hedge and the promise]
-- [YOU RECALL: read **വിരൽ**]
+- [YOU READ: **വിരൽ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C49-REPLY-01, ML-LEX-C49-REPLY-02, ML-LEX-C49-REPLY-03, ML-LEX-C49-REPLY-04] -->

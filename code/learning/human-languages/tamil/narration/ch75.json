@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "Yes or No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:02147d3ca910d4bb",
+  "sourceHash": "fnv1a64:6ffa3059c1a44d0c",
   "lessons": [
     {
       "id": "TA-C75-polar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6f495ed1f8df9e51",
+      "sourceHash": "fnv1a64:ade9fba4c304e66d",
       "notice": null,
       "blocks": [
         {
@@ -127,12 +127,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "பாலும்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பாலும்**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read பாலும், then say pālum tēnīrum illai, then ask sariyā?",
+              "instruction": "say pālum tēnīrum illai, then ask sariyā?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **பாலும்**, then say *pālum tēnīrum illai*, then ask *sariyā?*]"
+              "source": "[YOU RECALL: say *pālum tēnīrum illai*, then ask *sariyā?*]"
             },
             {
               "kind": "prompt",
@@ -497,7 +506,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d354d0302a20e49c",
+      "sourceHash": "fnv1a64:23bedef91bff654c",
       "notice": null,
       "blocks": [
         {
@@ -608,11 +617,29 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "answer sariyā?, then read சரியா, then ask varalāmā?",
+              "instruction": "answer sariyā?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: answer *sariyā?*, then read **சரியா**, then ask *varalāmā?*]"
+              "source": "[YOU RECALL: answer *sariyā?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சரியா (sariyā)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சரியா**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "ask varalāmā?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: ask *varalāmā?*]"
             },
             {
               "kind": "prompt",

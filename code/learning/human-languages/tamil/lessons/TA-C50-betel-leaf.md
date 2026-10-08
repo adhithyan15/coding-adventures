@@ -56,7 +56,8 @@ Four, and the fourth is the one you are sent home with.
 - [YOU SAY: *veṟṟilai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *malar*, then *veṟṟilai*, and let the hard *ṟ* double in the second]
-- [YOU RECALL: read **பிறகு**, then say *vāḻttu*]
+- [YOU READ: **பிறகு**]
+- [YOU RECALL: say *vāḻttu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C50-WELCOME-01, TA-LEX-C50-WELCOME-02, TA-LEX-C50-WELCOME-03, TA-LEX-C50-WELCOME-04] -->

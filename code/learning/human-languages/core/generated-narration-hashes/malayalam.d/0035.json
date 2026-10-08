@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 35,
-  "sourceHash": "fnv1a64:47a3b2e73e28c901",
+  "sourceHash": "fnv1a64:e5885e499637dbac",
   "lessonIds": [
     "ML-C35-kudumbam",
     "ML-C35-suhruthu",
@@ -11,7 +11,7 @@
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch35.txt",
   "json": "malayalam/narration/ch35.json",
-  "textHash": "fnv1a64:01a8f2e1d41518bb",
-  "jsonHash": "fnv1a64:ed7ecf5dbbcc3a36",
+  "textHash": "fnv1a64:2ae6222f5bbc1cf9",
+  "jsonHash": "fnv1a64:c54fe9f2b0fe081c",
   "findings": []
 }

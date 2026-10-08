@@ -4,7 +4,7 @@
   "chapter": 74,
   "title": "And, and Also",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:382d07687487109b",
+  "sourceHash": "fnv1a64:0de45c92af1f774b",
   "lessons": [
     {
       "id": "TA-C74-and",
@@ -522,7 +522,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e95d0a0b594ccd3",
+      "sourceHash": "fnv1a64:c951f40173ea8153",
       "notice": null,
       "blocks": [
         {
@@ -634,11 +634,29 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say nāṉum, then read பாலும், then say pālum tēnīrum illai",
+              "instruction": "say nāṉum",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *nāṉum*, then read **பாலும்**, then say *pālum tēnīrum illai*]"
+              "source": "[YOU RECALL: say *nāṉum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "பாலும் (pālum)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பாலும்**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say pālum tēnīrum illai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *pālum tēnīrum illai*]"
             },
             {
               "kind": "prompt",

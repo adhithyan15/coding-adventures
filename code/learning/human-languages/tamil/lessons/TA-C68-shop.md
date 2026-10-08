@@ -58,7 +58,9 @@ The place the next four words happen in.
 - [YOU SAY: *kaḍai*]
 - [YOU SAY: *kaḍai*, then name one thing from last chapter you would go there for]
 - [YOU RECALL: say *seruppu*, then say *toppi*, then say *kaḍai*]
-- [YOU RECALL: say *mēlē*, then read **கீழே**, then say *saṭṭai*]
+- [YOU RECALL: say *mēlē*]
+- [YOU READ: **கீழே**]
+- [YOU RECALL: say *saṭṭai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C67-WEAR-04, TA-LEX-C67-WEAR-05, TA-LEX-C68-SHOP-01] -->

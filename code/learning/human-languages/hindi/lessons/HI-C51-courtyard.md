@@ -59,7 +59,8 @@ Three, and this one is where you seat the guest.
 - [YOU SAY: *āṁgan*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *āṁgan*, then *mālā*, then *phūl*, back down the run]
-- [YOU RECALL: say *safar*, then read **आदर**]
+- [YOU RECALL: say *safar*]
+- [YOU READ: **आदर**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C51-WELCOME-01, HI-LEX-C51-WELCOME-02, HI-LEX-C51-WELCOME-03] -->

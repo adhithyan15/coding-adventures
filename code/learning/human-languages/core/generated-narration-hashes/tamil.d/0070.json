@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 70,
-  "sourceHash": "fnv1a64:cb2665c767894c19",
+  "sourceHash": "fnv1a64:4bf42b14fd294aec",
   "lessonIds": [
     "TA-C70-table",
     "TA-C70-bed",
@@ -14,7 +14,7 @@
   "drivablePrefix": 2,
   "text": "tamil/narration/ch70.txt",
   "json": "tamil/narration/ch70.json",
-  "textHash": "fnv1a64:8326b79f52f3e962",
-  "jsonHash": "fnv1a64:8d95058109199411",
+  "textHash": "fnv1a64:0f72afccea66a502",
+  "jsonHash": "fnv1a64:68fa50db6503ad9b",
   "findings": []
 }

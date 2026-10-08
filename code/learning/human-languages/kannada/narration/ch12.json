@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Family",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:71d5fb363c2467ae",
+  "sourceHash": "fnv1a64:a6055a12c857987c",
   "lessons": [
     {
       "id": "KA-C12-kutumba",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e028cc3caa9ee2f0",
+      "sourceHash": "fnv1a64:0cc1e515410bbd86",
       "notice": null,
       "blocks": [
         {
@@ -122,11 +122,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say dayaviṭṭu, then read ಕ್ಷಮಿಸಿ",
+              "instruction": "say dayaviṭṭu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *dayaviṭṭu*, then read **ಕ್ಷಮಿಸಿ**]"
+              "source": "[YOU RECALL: say *dayaviṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಕ್ಷಮಿಸಿ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಕ್ಷಮಿಸಿ**]"
             }
           ]
         },

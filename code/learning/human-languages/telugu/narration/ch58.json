@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "More Short Replies",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0695d7309e85d607",
+  "sourceHash": "fnv1a64:c216a86560e5ea08",
   "lessons": [
     {
       "id": "TE-C58-a-little",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:83e31f8958984069",
+      "sourceHash": "fnv1a64:8f1f38a87f4571f7",
       "notice": null,
       "blocks": [
         {
@@ -114,11 +114,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say cāpa, then read మెడ and say what it means",
+              "instruction": "say cāpa",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *cāpa*, then read **మెడ** and say what it means]"
+              "source": "[YOU RECALL: say *cāpa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "మెడ, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **మెడ**, then say what it means]"
             }
           ]
         },
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05b02dcb464854ad",
+      "sourceHash": "fnv1a64:68ece671e4959091",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +257,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "బుట్ట",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **బుట్ట**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read బుట్ట, then say vīpu",
+              "instruction": "say vīpu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **బుట్ట**, then say *vīpu*]"
+              "source": "[YOU RECALL: say *vīpu*]"
             }
           ]
         },
@@ -289,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f40375425b67b3c3",
+      "sourceHash": "fnv1a64:7e46595d7a6ec0d7",
       "notice": null,
       "blocks": [
         {
@@ -384,11 +402,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say katti, then read పెదవి and say what it means",
+              "instruction": "say katti",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *katti*, then read **పెదవి** and say what it means]"
+              "source": "[YOU RECALL: say *katti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "పెదవి, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **పెదవి**, then say what it means]"
             }
           ]
         },
@@ -424,7 +451,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17a8812f963672e2",
+      "sourceHash": "fnv1a64:447d966dae400b38",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +545,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "గిన్నె",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **గిన్నె**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read గిన్నె, then say gōru",
+              "instruction": "say gōru",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **గిన్నె**, then say *gōru*]"
+              "source": "[YOU RECALL: say *gōru*]"
             }
           ]
         },
@@ -559,7 +595,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f271d94ca36af9e1",
+      "sourceHash": "fnv1a64:6801e77e8a5c48b3",
       "notice": null,
       "blocks": [
         {
@@ -654,11 +690,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say peṭṭe, then read ఎముక and say what it means",
+              "instruction": "say peṭṭe",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *peṭṭe*, then read **ఎముక** and say what it means]"
+              "source": "[YOU RECALL: say *peṭṭe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ఎముక, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ఎముక**, then say what it means]"
             }
           ]
         },

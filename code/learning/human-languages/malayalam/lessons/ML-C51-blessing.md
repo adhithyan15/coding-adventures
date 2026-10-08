@@ -58,7 +58,7 @@ Four. Gratitude, a favour, respect, a blessing.
 - [YOU SAY: *anugrahaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *anugrahaṁ*, then *bahumānaṁ*, both of them things given rather than taken]
-- [YOU RECALL: read **ഒരുപക്ഷേ**]
+- [YOU READ: **ഒരുപക്ഷേ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C51-COURTESY-01, ML-LEX-C51-COURTESY-02, ML-LEX-C51-COURTESY-03, ML-LEX-C51-COURTESY-04] -->

@@ -56,7 +56,8 @@ Two.
 - [YOU SAY: *pul*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pul*, then *pal*, and hold the two vowels apart]
-- [YOU RECALL: read **இன்னும்**, then say *aṉumati*]
+- [YOU READ: **இன்னும்**]
+- [YOU RECALL: say *aṉumati*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C63-MANNERS-05, TA-LEX-C64-HARVEST-01, TA-LEX-C64-HARVEST-02] -->

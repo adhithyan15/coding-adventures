@@ -58,7 +58,8 @@ One. What a house is measured by before anything is put inside it.
 - [YOU SAY: *gōḍa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gōḍa*, then *namaskāram*, as though greeting somebody at a freshly painted one]
-- [YOU RECALL: say *svāgataṁ*, then read **పొలం** and say what it means]
+- [YOU RECALL: say *svāgataṁ*]
+- [YOU READ: **పొలం**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C66-FIELD-04, TE-LEX-C66-FIELD-05, TE-LEX-C67-WALL-01] -->
