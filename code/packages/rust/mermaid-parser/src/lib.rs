@@ -6886,6 +6886,7 @@ fn parse_swimlane_shape_attributes(
                     "circle" | "circ" => DiagramShape::Ellipse,
                     "diam" | "decision" | "diamond" | "question" => DiagramShape::Diamond,
                     "hex" | "hexagon" | "prepare" => DiagramShape::Hexagon,
+                    "hourglass" | "collate" => DiagramShape::Hourglass,
                     "cloud" => DiagramShape::Cloud,
                     "bang" => DiagramShape::Bang,
                     "stadium" | "pill" | "terminal" => DiagramShape::Stadium,

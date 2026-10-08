@@ -28,6 +28,7 @@ pub enum DiagramShape {
     Ellipse,
     Diamond,
     Hexagon,
+    Hourglass,
     Cloud,
     Bang,
     Stadium,

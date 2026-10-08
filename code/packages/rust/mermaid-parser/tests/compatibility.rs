@@ -1550,7 +1550,7 @@ fn swimlane_cloud_and_bang_attributes_reach_semantic_ir() {
     assert_eq!(diagram.nodes[0].shape, diagram_ir::DiagramShape::Cloud);
     assert_eq!(diagram.nodes[1].label, "Failure alert");
     assert_eq!(diagram.nodes[1].shape, diagram_ir::DiagramShape::Bang);
-    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ shape: hourglass }\nend").is_err());
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ shape: browser }\nend").is_err());
 }
 
 #[test]
@@ -1567,6 +1567,16 @@ fn swimlane_classic_shape_attributes_and_aliases_reach_semantic_ir() {
         DiagramShape::ParallelogramRight, DiagramShape::InvertedTrapezoid,
         DiagramShape::Cylinder, DiagramShape::Subroutine, DiagramShape::DoubleCircle,
     ]);
+}
+
+#[test]
+fn swimlane_hourglass_and_collate_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Merge\n  collect@{ shape: collate, label: \"Collect\" }\n  combine@{ shape: hourglass, label: \"Combine\" }\nend\ncollect --> combine",
+    ).expect("Swimlane hourglass aliases should parse");
+
+    assert_eq!(diagram.nodes[0].shape, diagram_ir::DiagramShape::Hourglass);
+    assert_eq!(diagram.nodes[1].shape, diagram_ir::DiagramShape::Hourglass);
 }
 
 #[test]
