@@ -7,11 +7,11 @@
     "AR-C42-lines",
     "AR-C42-first-passage"
   ],
-  "voiceLessons": 3,
-  "drivablePrefix": 3,
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
   "text": "arabic/narration/ch42.txt",
   "json": "arabic/narration/ch42.json",
-  "textHash": "fnv1a64:4ab079cb74542547",
-  "jsonHash": "fnv1a64:3de7347ebf805ffa",
+  "textHash": "fnv1a64:0c5a2526e7a0e145",
+  "jsonHash": "fnv1a64:07c5cf5e80db5346",
   "findings": []
 }

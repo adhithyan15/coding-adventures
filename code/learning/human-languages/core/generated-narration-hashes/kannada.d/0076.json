@@ -7,11 +7,11 @@
     "KA-C76-lines",
     "KA-C76-modala-oduvike"
   ],
-  "voiceLessons": 3,
-  "drivablePrefix": 3,
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
   "text": "kannada/narration/ch76.txt",
   "json": "kannada/narration/ch76.json",
-  "textHash": "fnv1a64:4ff182b5e9407a16",
-  "jsonHash": "fnv1a64:95c876cce18e78e1",
+  "textHash": "fnv1a64:1a2d5852ed701240",
+  "jsonHash": "fnv1a64:ff2168fc7f6eaf58",
   "findings": []
 }

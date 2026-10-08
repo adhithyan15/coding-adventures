@@ -8,10 +8,12 @@
     "derived": "sight",
     "drivable": false,
     "reasons": [
+      "reading-type",
       "sight-cue"
     ],
     "coreModality": "sight",
     "coreReasons": [
+      "reading-type",
       "sight-cue"
     ],
     "coreDrivable": false,

@@ -827,8 +827,37 @@ function narrateTable(
   };
 }
 
-/** The needs sentence fragments, one per rule that made this lesson non-drivable. */
+/**
+ * The needs sentence fragments, one per rule that made this lesson non-drivable.
+ *
+ * One exception to "one per rule": a reading lesson names its eyes ONCE. Each eye
+ * rule used to contribute its own "your eyes, …" fragment, and a reading lesson that
+ * also tripped the cue detector came out as "your eyes, to read the printed text
+ * yourself and your eyes, because the lesson points at something written down" — the
+ * same organ twice, the second time for a reason the first already gave (the thing
+ * the cue points at IS the printed text). So for a reading lesson:
+ *
+ *   reason          fragment
+ *   --------------  -----------------------------------------------------------
+ *   reading-type    "your eyes, to read the printed text yourself"   (the head)
+ *   sight-cue       dropped — the cue points at the text being read
+ *   script-block    folded in: "… and for letter shapes on the page"
+ *   wide-table      folded in: "… and for one table that cannot be read aloud"
+ *
+ * Every other lesson is unchanged, so this moves no notice outside the reading type.
+ */
 function noticeNeeds(entry: LessonModality, skipped: NarrationTableSkipped[]): string[] {
+  const tables =
+    skipped.length === 1
+      ? "one table that cannot be read aloud"
+      : `${skipped.length || "some"} tables that cannot be read aloud`;
+  if (entry.reasons.includes("reading-type")) {
+    const also: string[] = [];
+    if (entry.reasons.includes("script-block")) also.push("for letter shapes on the page");
+    if (entry.reasons.includes("wide-table")) also.push(`for ${tables}`);
+    // No `writing-type` to add: a lesson has one type, and this one is `reading`.
+    return [`your eyes, ${joinList(["to read the printed text yourself", ...also])}`];
+  }
   const needs: string[] = [];
   for (const reason of entry.reasons) {
     if (reason === "writing-type") needs.push("a pen and something to write on");
@@ -836,13 +865,7 @@ function noticeNeeds(entry: LessonModality, skipped: NarrationTableSkipped[]): s
     if (reason === "sight-cue") {
       needs.push("your eyes, because the lesson points at something written down");
     }
-    if (reason === "wide-table") {
-      needs.push(
-        skipped.length === 1
-          ? "your eyes for one table that cannot be read aloud"
-          : `your eyes for ${skipped.length || "some"} tables that cannot be read aloud`,
-      );
-    }
+    if (reason === "wide-table") needs.push(`your eyes for ${tables}`);
   }
   return needs;
 }
@@ -870,16 +893,26 @@ function buildNotice(
     .filter((title) => title !== "");
   const needs = noticeNeeds(entry, skipped);
 
+  // A reading lesson cannot be split into "listen now" and "come back later": the
+  // modality rule that made it `sight` says so (the text is the whole lesson, and the
+  // questions are about what was read), so its notice must not offer a split the rule
+  // denies. It says what the chapter header says of a chapter that starts with one —
+  // save it for when you have stopped — and drops the "not fully" hedge to match.
+  const isReading = entry.reasons.includes("reading-type");
   const opening =
     entry.modality === "pen"
       ? "Before we start: this one needs your hands, so it is not a driving lesson."
-      : "Before we start: this one needs your eyes, so it is not fully a driving lesson.";
+      : isReading
+        ? "Before we start: this one needs your eyes, so it is not a driving lesson."
+        : "Before we start: this one needs your eyes, so it is not fully a driving lesson.";
   const needsSentence =
     needs.length > 0 ? ` You will want ${joinList(needs)}.` : "";
-  const sections = waitUntilStopped.length === 1 ? "the section" : "the sections";
-  const skipSentence =
-    waitUntilStopped.length > 0
-      ? ` You can listen to everything else now — leave ${sections} called ${joinList(waitUntilStopped)} until you have stopped, and I will say so again when we reach it.`
+  const plural = waitUntilStopped.length !== 1;
+  const sections = plural ? "the sections" : "the section";
+  const skipSentence = isReading
+    ? " The questions are about what you read, so save the whole lesson for when you have stopped."
+    : waitUntilStopped.length > 0
+      ? ` You can listen to everything else now — leave ${sections} called ${joinList(waitUntilStopped)} until you have stopped, and I will say so again when we reach ${plural ? "them" : "it"}.`
       : " You can listen to all of it now and come back to the parts that need looking at once you have stopped.";
 
   return {
@@ -1164,7 +1197,9 @@ export function renderChapterNarrationText(
       ? `All ${count} can be done entirely by ear.`
       : chapter.drivablePrefix === 0
         ? "The first lesson already needs your eyes or your hands, so save this one for when you have stopped."
-        : `You can do the first ${chapter.drivablePrefix} of them in the car; after that you will want to have stopped.`;
+        : chapter.drivablePrefix === 1
+          ? "You can do the first one in the car; after that you will want to have stopped."
+          : `You can do the first ${chapter.drivablePrefix} of them in the car; after that you will want to have stopped.`;
   const lines: string[] = [
     `${titleCase(track)}, chapter ${chapter.chapter}: ${chapter.title}.`,
     `${plural(count, "lesson")}. ${drivable}`,

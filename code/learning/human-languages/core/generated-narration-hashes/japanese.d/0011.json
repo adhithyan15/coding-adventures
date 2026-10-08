@@ -16,11 +16,11 @@
     "JA-C11-me-eye",
     "JA-C11-body-map"
   ],
-  "voiceLessons": 8,
+  "voiceLessons": 7,
   "drivablePrefix": 0,
   "text": "japanese/narration/ch11.txt",
   "json": "japanese/narration/ch11.json",
-  "textHash": "fnv1a64:aca661bcd8020ed5",
-  "jsonHash": "fnv1a64:35026fdeab153b69",
+  "textHash": "fnv1a64:1640960b1f2a3084",
+  "jsonHash": "fnv1a64:c2cfa54e29efb2e5",
   "findings": []
 }

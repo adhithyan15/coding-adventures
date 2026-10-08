@@ -7,11 +7,11 @@
     "FA-C21-answers",
     "FA-C21-adad"
   ],
-  "voiceLessons": 2,
+  "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "persian/narration/ch21.txt",
   "json": "persian/narration/ch21.json",
-  "textHash": "fnv1a64:a8b18c7ab6d679ec",
-  "jsonHash": "fnv1a64:9dae7cf13cb23c05",
+  "textHash": "fnv1a64:e02efab65a9318c8",
+  "jsonHash": "fnv1a64:384c0337882a299e",
   "findings": []
 }

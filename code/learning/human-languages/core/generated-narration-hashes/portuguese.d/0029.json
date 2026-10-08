@@ -7,11 +7,11 @@
     "PT-C29-linhas",
     "PT-C29-primeira-leitura"
   ],
-  "voiceLessons": 3,
-  "drivablePrefix": 3,
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
   "text": "portuguese/narration/ch29.txt",
   "json": "portuguese/narration/ch29.json",
-  "textHash": "fnv1a64:cd6a0c956d047953",
-  "jsonHash": "fnv1a64:493b68e4e913048c",
+  "textHash": "fnv1a64:9ad423013c57e631",
+  "jsonHash": "fnv1a64:420a0f7f68db61c5",
   "findings": []
 }

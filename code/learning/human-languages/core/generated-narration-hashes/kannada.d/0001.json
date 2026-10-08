@@ -18,7 +18,7 @@
   "drivablePrefix": 0,
   "text": "kannada/narration/ch01.txt",
   "json": "kannada/narration/ch01.json",
-  "textHash": "fnv1a64:1c1612a25a84216c",
-  "jsonHash": "fnv1a64:3d5e008ac9ba6669",
+  "textHash": "fnv1a64:42c8c13ef9de18e8",
+  "jsonHash": "fnv1a64:ab32195e8ccd9db9",
   "findings": []
 }

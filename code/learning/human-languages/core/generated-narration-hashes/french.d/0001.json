@@ -23,7 +23,7 @@
   "drivablePrefix": 1,
   "text": "french/narration/ch01.txt",
   "json": "french/narration/ch01.json",
-  "textHash": "fnv1a64:9921ecb25facf851",
+  "textHash": "fnv1a64:067c7c3d906b7807",
   "jsonHash": "fnv1a64:7f428881fbdb1746",
   "findings": []
 }

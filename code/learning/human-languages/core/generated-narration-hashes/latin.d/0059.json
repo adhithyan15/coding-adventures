@@ -9,11 +9,11 @@
     "LA-C59-social-exchange",
     "LA-C59-dies-meus"
   ],
-  "voiceLessons": 4,
+  "voiceLessons": 2,
   "drivablePrefix": 1,
   "text": "latin/narration/ch59.txt",
   "json": "latin/narration/ch59.json",
-  "textHash": "fnv1a64:8baa2c30bee26bf6",
-  "jsonHash": "fnv1a64:967d3e5ff1a27b93",
+  "textHash": "fnv1a64:3258536a7588aeae",
+  "jsonHash": "fnv1a64:b1e7e70b2ee6bcf9",
   "findings": []
 }

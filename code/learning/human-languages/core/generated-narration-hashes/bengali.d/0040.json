@@ -8,11 +8,11 @@
     "BN-C40-prothom-path",
     "BN-W40-a1-timed-production"
   ],
-  "voiceLessons": 2,
+  "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "bengali/narration/ch40.txt",
   "json": "bengali/narration/ch40.json",
-  "textHash": "fnv1a64:5cc5c060b956bb71",
-  "jsonHash": "fnv1a64:29e14e00f0a8bde2",
+  "textHash": "fnv1a64:2e832e7cf99413d1",
+  "jsonHash": "fnv1a64:6e09a1252aa086d3",
   "findings": []
 }

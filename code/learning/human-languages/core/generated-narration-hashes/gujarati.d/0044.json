@@ -7,11 +7,11 @@
     "GU-C44-lines",
     "GU-C44-pehli-vanchan"
   ],
-  "voiceLessons": 3,
-  "drivablePrefix": 3,
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
   "text": "gujarati/narration/ch44.txt",
   "json": "gujarati/narration/ch44.json",
-  "textHash": "fnv1a64:269e09bdd6d79b96",
-  "jsonHash": "fnv1a64:f40009ca5ab0d0cc",
+  "textHash": "fnv1a64:4dbffcb4cddcd1e0",
+  "jsonHash": "fnv1a64:422adcf03b591511",
   "findings": []
 }

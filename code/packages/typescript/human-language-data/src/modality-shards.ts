@@ -38,6 +38,7 @@ const DANGEROUS_IDENTITIES = new Set(["__proto__", "constructor", "prototype"]);
 const MODALITIES = new Set<Modality>(["voice", "sight", "pen"]);
 const REASONS = new Set<ModalityReasonCode>([
   "writing-type",
+  "reading-type",
   "writing-block",
   "script-block",
   "sight-cue",

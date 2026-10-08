@@ -22,7 +22,7 @@
   "drivablePrefix": 2,
   "text": "sanskrit/narration/ch02.txt",
   "json": "sanskrit/narration/ch02.json",
-  "textHash": "fnv1a64:17dac50ba53a231d",
-  "jsonHash": "fnv1a64:7d784826640034f6",
+  "textHash": "fnv1a64:506b161d55f3b3db",
+  "jsonHash": "fnv1a64:9f1cc26e7c570eb0",
   "findings": []
 }

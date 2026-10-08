@@ -3,7 +3,7 @@
   "language": "japanese",
   "chapter": 12,
   "title": "Seven More Body Words, Spaced on Purpose",
-  "drivablePrefix": 20,
+  "drivablePrefix": 19,
   "sourceHash": "fnv1a64:da2b00c5da72b633",
   "lessons": [
     {
@@ -2013,13 +2013,23 @@
       "romanization": "atama, kami, ha, kata, onaka, senaka, koshi",
       "gloss": "head, hair, tooth, shoulder, belly, back, waist",
       "script": "japanese",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
       "sourceHash": "fnv1a64:9a9218b896a20959",
-      "notice": null,
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
+      },
       "blocks": [
         {
           "index": 0,

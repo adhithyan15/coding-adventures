@@ -7,11 +7,11 @@
     "TE-C83-lines",
     "TE-C83-modati-chadavu"
   ],
-  "voiceLessons": 2,
+  "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "telugu/narration/ch83.txt",
   "json": "telugu/narration/ch83.json",
-  "textHash": "fnv1a64:8be997e2b75e5275",
-  "jsonHash": "fnv1a64:d1a5e22e561cdb29",
+  "textHash": "fnv1a64:2d2efe9dd5157481",
+  "jsonHash": "fnv1a64:8ce304311da5ca56",
   "findings": []
 }

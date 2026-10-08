@@ -28,7 +28,7 @@
   "drivablePrefix": 1,
   "text": "tamil/narration/ch07.txt",
   "json": "tamil/narration/ch07.json",
-  "textHash": "fnv1a64:83e36a07d8281d40",
-  "jsonHash": "fnv1a64:5ccbdb872170e804",
+  "textHash": "fnv1a64:715b2bb302add6ed",
+  "jsonHash": "fnv1a64:2dddcdb659750ceb",
   "findings": []
 }

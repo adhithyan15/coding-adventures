@@ -20,7 +20,7 @@
   "drivablePrefix": 1,
   "text": "japanese/narration/ch09.txt",
   "json": "japanese/narration/ch09.json",
-  "textHash": "fnv1a64:fb079e27ed8ba271",
-  "jsonHash": "fnv1a64:c16c48f7c32e1358",
+  "textHash": "fnv1a64:99535735b8fe95e4",
+  "jsonHash": "fnv1a64:d48d03995bf54e4b",
   "findings": []
 }

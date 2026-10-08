@@ -11,11 +11,11 @@
     "TA-R84-words-the-script-pages-built",
     "TA-R84-the-u-family-completed"
   ],
-  "voiceLessons": 3,
-  "drivablePrefix": 3,
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
   "text": "tamil/narration/ch84.txt",
   "json": "tamil/narration/ch84.json",
-  "textHash": "fnv1a64:4237491e718a4db8",
-  "jsonHash": "fnv1a64:e4c51eaacf6b91d6",
+  "textHash": "fnv1a64:81f0ab28ccd0baae",
+  "jsonHash": "fnv1a64:5a0eeced2258aae1",
   "findings": []
 }
