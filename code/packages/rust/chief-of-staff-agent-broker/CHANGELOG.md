@@ -21,3 +21,9 @@
 - Before encrypting, the broker checks every reserved header, and refuses
   to encrypt twice under one sequence (nonce reuse) within its lifetime.
 - Delivery receipts are per broker, capped at 4096.
+- Security review round 1:
+  - a refused commit is followed by `AbandonAppend`;
+  - the descriptor tripwire scans up to the open-file limit, not just the
+    next descriptor;
+  - the README says plainly that the daemon, which supplies definitions,
+    is not defended against.

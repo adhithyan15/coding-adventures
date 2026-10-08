@@ -17,6 +17,10 @@
   crates' codecs: D18B bindings, D18C definitions, D18M messages, D18H
   headers, D18G grants and data-plane records.
 - Payload-blind `Debug` for callbacks and replies.
+- `MAX_PAGE_MESSAGE_BYTES` (the response cap less 1 KiB) bounds a page's
+  messages. `MAX_PAGE_BYTES` (960 KiB) bounds messages and grants
+  together, so the worst case (64 grants with 4 KiB identities) still fits
+  one frame.
 - Tests:
   - every frame round-trips;
   - every truncation and any trailing byte is refused;

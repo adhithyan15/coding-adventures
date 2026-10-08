@@ -578,6 +578,63 @@ fn the_broker_refuses_to_encrypt_under_a_header_it_did_not_ask_for() {
 }
 
 #[test]
+fn a_refused_commit_gives_the_reservation_back_and_the_channel_moves_on() {
+    use chief_of_staff_channel_crypto::Sequence;
+
+    /// Refuses the first commit, as a store hiccup would.
+    struct RefuseFirstCommit<'a> {
+        honest: Daemon<'a>,
+        refused: bool,
+    }
+    impl ChannelCallbacks for RefuseFirstCommit<'_> {
+        fn call(
+            &mut self,
+            request_id: RequestId,
+            call: Callback,
+        ) -> Result<CallbackOutcome, BrokerError> {
+            if call.op() == CallbackOp::CommitAppend && !self.refused {
+                // Refused without reaching storage. (The server's own
+                // refused-commit-then-abandon path is in broker-callbacks.)
+                self.refused = true;
+                self.honest.calls.push(CallbackOp::CommitAppend);
+                return Ok(CallbackOutcome::Refused {
+                    op: CallbackOp::CommitAppend,
+                    refusal: chief_of_staff_agent_broker::protocol::Refusal::Unavailable,
+                });
+            }
+            self.honest.call(request_id, call)
+        }
+    }
+
+    let world = World::new();
+    let mut weather = publisher();
+    let request = publish(1, b"first try");
+    let mut flaky = RefuseFirstCommit {
+        honest: Daemon::new(&world.backend, &world.metadata, &world.weather),
+        refused: false,
+    };
+    flaky.honest.in_flight = InFlight::for_request(&request);
+    assert_eq!(
+        failure(weather.serve(&request, &mut flaky).unwrap()),
+        DataPlaneFailure::Unavailable
+    );
+    assert_eq!(flaky.honest.calls.last(), Some(&CallbackOp::AbandonAppend));
+    let state = ChannelStore::new(&world.backend, channel())
+        .state()
+        .unwrap();
+    assert_eq!(state.pending_header, None, "the reservation was given back");
+
+    // The next publish goes through, at the next sequence.
+    let mut daemon = Daemon::new(&world.backend, &world.metadata, &world.weather);
+    let DataPlaneResponse::Published { sequence, .. } =
+        daemon.relay(&mut weather, publish(2, b"second try"))
+    else {
+        panic!("not published")
+    };
+    assert_eq!(Sequence(sequence), Sequence(1));
+}
+
+#[test]
 fn the_broker_never_encrypts_twice_under_one_sequence() {
     use chief_of_staff_channel_crypto::Sequence;
     let world = World::new();

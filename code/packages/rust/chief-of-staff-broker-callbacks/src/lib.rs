@@ -59,11 +59,11 @@ use std::collections::BTreeSet;
 
 use chief_of_staff_broker_protocol::{
     definition_digest, Callback, CallbackOp, CallbackOutcome, CallbackReply, Refusal,
-    MAX_CALLBACKS_PER_REQUEST, MAX_PAGE_BYTES, MAX_PAGE_MESSAGES,
+    MAX_CALLBACKS_PER_REQUEST, MAX_PAGE_BYTES, MAX_PAGE_MESSAGES, MAX_PAGE_MESSAGE_BYTES,
 };
-use chief_of_staff_channel_crypto::wire::{encode_message, ChannelWireError};
+use chief_of_staff_channel_crypto::wire::{encode_key_grant, encode_message, ChannelWireError};
 use chief_of_staff_channel_crypto::{
-    verify_channel_key_grant_signature, ChannelCryptoError, ChannelId, KeyEpoch,
+    verify_channel_key_grant_signature, ChannelCryptoError, ChannelId,
     SealedChannelKeyGrant, Sequence,
 };
 use chief_of_staff_channel_endpoints::{
@@ -113,8 +113,28 @@ pub struct InFlight {
     kind: RequestKind,
     channel_id: ChannelId,
     callbacks: u32,
-    reserved: Option<Sequence>,
-    append_closed: bool,
+    append: Append,
+    grants_loaded: bool,
+    grants_saved: bool,
+}
+
+/// Where a Publish is in its one append:
+///
+/// ```text
+///   None ──ReserveAppend──► Reserved(s) ──CommitAppend(s)──► Committing(s) ──ok──► Closed
+///                               │                                │
+///                               └──────AbandonAppend(s)──────────┴──────────────► Closed
+/// ```
+///
+/// A refused commit leaves `Committing(s)`, from which the broker may still
+/// give the reservation back. Otherwise the channel would stay stuck behind
+/// it until the broker is replaced.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum Append {
+    None,
+    Reserved(Sequence),
+    Committing(Sequence),
+    Closed,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -143,8 +163,9 @@ impl InFlight {
             kind,
             channel_id: ChannelId(*channel),
             callbacks: 0,
-            reserved: None,
-            append_closed: false,
+            append: Append::None,
+            grants_loaded: false,
+            grants_saved: false,
         })
     }
 
@@ -156,10 +177,9 @@ impl InFlight {
     /// The reservation a Publish made and neither committed nor abandoned.
     /// The caller abandons it if the broker ends mid-request.
     pub fn open_reservation(&self) -> Option<Sequence> {
-        if self.append_closed {
-            None
-        } else {
-            self.reserved
+        match self.append {
+            Append::Reserved(sequence) | Append::Committing(sequence) => Some(sequence),
+            Append::None | Append::Closed => None,
         }
     }
 
@@ -200,29 +220,39 @@ impl InFlight {
                 return Err(Violation::PageTooLarge);
             }
         }
-        // The append sequence: one reserve, then exactly one commit or one
-        // abandon, of that reservation, and nothing after.
-        match call {
-            Callback::ReserveAppend { .. } if self.reserved.is_some() => {
-                Err(Violation::AppendOutOfOrder)
+        // The append: grant work first, each step at most once; then one
+        // reservation; then one commit attempt and, at most once, giving
+        // the reservation back.
+        let next = match (call, self.append) {
+            (Callback::LoadMissingGrants { .. }, Append::None) if !self.grants_loaded => {
+                self.grants_loaded = true;
+                self.append
             }
-            Callback::CommitAppend { message, .. } => match (self.reserved, self.append_closed) {
-                (Some(sequence), false) if message.header().fields().sequence() == sequence => {
-                    Ok(())
-                }
-                _ => Err(Violation::AppendOutOfOrder),
-            },
-            Callback::AbandonAppend { sequence, .. } => match (self.reserved, self.append_closed) {
-                (Some(reserved), false) if reserved.0 == *sequence => Ok(()),
-                _ => Err(Violation::AppendOutOfOrder),
-            },
-            Callback::SaveGrants { .. } | Callback::LoadMissingGrants { .. }
-                if self.reserved.is_some() =>
+            (Callback::SaveGrants { .. }, Append::None) if !self.grants_saved => {
+                self.grants_saved = true;
+                self.append
+            }
+            (Callback::LoadMissingGrants { .. } | Callback::SaveGrants { .. }, _) => {
+                return Err(Violation::AppendOutOfOrder)
+            }
+            // The server records the reservation once it is made.
+            (Callback::ReserveAppend { .. }, Append::None) => self.append,
+            (Callback::ReserveAppend { .. }, _) => return Err(Violation::AppendOutOfOrder),
+            (Callback::CommitAppend { message, .. }, Append::Reserved(sequence))
+                if message.header().fields().sequence() == sequence =>
             {
-                Err(Violation::AppendOutOfOrder)
+                Append::Committing(sequence)
             }
-            _ => Ok(()),
-        }
+            (Callback::CommitAppend { .. }, _) => return Err(Violation::AppendOutOfOrder),
+            (
+                Callback::AbandonAppend { sequence, .. },
+                Append::Reserved(reserved) | Append::Committing(reserved),
+            ) if reserved.0 == *sequence => Append::Closed,
+            (Callback::AbandonAppend { .. }, _) => return Err(Violation::AppendOutOfOrder),
+            _ => self.append,
+        };
+        self.append = next;
+        Ok(())
     }
 }
 
@@ -406,23 +436,23 @@ impl<'a> CallbackServer<'a> {
                         plaintext_hash,
                     )
                     .map_err(store_refusal)?;
-                in_flight.reserved = Some(header.fields().sequence());
+                in_flight.append = Append::Reserved(header.fields().sequence());
                 Ok(CallbackReply::Reserved(header))
             }
             Callback::CommitAppend { message, .. } => {
                 // The store refuses any header but the pending one, which
                 // this daemon minted; the signature must be the
-                // definition's originator's.
-                in_flight.append_closed = true;
+                // definition's originator's. Refused, the reservation stays
+                // open for the broker to abandon.
                 let committed = store
                     .commit_encrypted(&message, &definition.originator().public_key)
                     .map_err(store_refusal)?;
+                in_flight.append = Append::Closed;
                 Ok(CallbackReply::Committed {
                     sequence: committed.header().fields().sequence().0,
                 })
             }
             Callback::AbandonAppend { sequence, .. } => {
-                in_flight.append_closed = true;
                 let abandoned = store
                     .abandon_pending_at(Sequence(sequence))
                     .map_err(store_refusal)?;
@@ -449,11 +479,30 @@ impl<'a> CallbackServer<'a> {
         let page = store
             .read_for_receiver(agent.as_bytes(), limit.min(MAX_PAGE_MESSAGES))
             .map_err(store_refusal)?;
+        // Whole messages, while both budgets hold: the messages alone must
+        // decrypt into a response the host can take, and messages plus the
+        // grants they need must fit one frame.
         let mut messages = Vec::new();
-        let mut bytes = 0usize;
+        let mut grants: Vec<SealedChannelKeyGrant> = Vec::new();
+        let mut epochs = BTreeSet::new();
+        let mut message_bytes = 0usize;
+        let mut page_bytes = 0usize;
         for message in page.messages {
             let size = encode_message(&message).map_err(wire_refusal)?.len();
-            if bytes + size > MAX_PAGE_BYTES {
+            let epoch = message.header().fields().key_epoch();
+            let mut grant = None;
+            let mut grant_size = 0;
+            if !epochs.contains(&epoch) {
+                grant = store
+                    .key_grant(epoch, agent.as_bytes())
+                    .map_err(store_refusal)?;
+                if let Some(grant) = &grant {
+                    grant_size = encode_key_grant(grant).map_err(wire_refusal)?.len();
+                }
+            }
+            if message_bytes + size > MAX_PAGE_MESSAGE_BYTES
+                || page_bytes + size + grant_size > MAX_PAGE_BYTES
+            {
                 if messages.is_empty() {
                     // One message larger than any page: it can never be
                     // delivered this way, and is refused, not skipped.
@@ -461,21 +510,11 @@ impl<'a> CallbackServer<'a> {
                 }
                 break;
             }
-            bytes += size;
+            message_bytes += size;
+            page_bytes += size + grant_size;
+            epochs.insert(epoch);
+            grants.extend(grant);
             messages.push(message);
-        }
-        let epochs: BTreeSet<KeyEpoch> = messages
-            .iter()
-            .map(|message| message.header().fields().key_epoch())
-            .collect();
-        let mut grants = Vec::with_capacity(epochs.len());
-        for epoch in epochs {
-            if let Some(grant) = store
-                .key_grant(epoch, agent.as_bytes())
-                .map_err(store_refusal)?
-            {
-                grants.push(grant);
-            }
         }
         Ok(CallbackReply::ReceiverPage {
             first_unread: first_unread.0,

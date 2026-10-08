@@ -77,7 +77,7 @@ use chief_of_staff_channel_endpoints::ChannelDefinition;
 use chief_of_staff_host_control_protocol::{
     decode_data_plane_request, decode_data_plane_response, encode_data_plane_request,
     encode_data_plane_response, DataPlaneRequest, DataPlaneResponse, RequestId,
-    MAX_LAUNCH_CHANNEL_BINDINGS,
+    MAX_DATA_PLANE_RECORD_BYTES, MAX_LAUNCH_CHANNEL_BINDINGS,
 };
 use chief_of_staff_pipeline_bindings::{
     decode_host_binding, encode_host_binding, HostPipelineBinding,
@@ -105,9 +105,14 @@ pub const KEY_BYTES: usize = 32;
 pub const FIRST_KEY_DESCRIPTOR: i32 = 3;
 /// The most messages one receiver page returns.
 pub const MAX_PAGE_MESSAGES: usize = 64;
-/// The most encoded message bytes one receiver page returns. Whole messages
-/// only, and it leaves headroom inside one frame for the grants.
+/// The most bytes one receiver page carries, messages and grants together:
+/// whole records only, inside one frame with room for the frame's own
+/// fields.
 pub const MAX_PAGE_BYTES: usize = 960 * 1024;
+/// The most encoded *message* bytes in one page. A message never decrypts
+/// into a larger data-plane record than it was stored as, so a page within
+/// this bound always fits the host's response.
+pub const MAX_PAGE_MESSAGE_BYTES: usize = MAX_DATA_PLANE_RECORD_BYTES - 1024;
 /// The most grants, or receiver indices, one callback carries: a channel
 /// has at most this many receivers.
 pub const MAX_GRANTS: usize = 1024;
@@ -840,12 +845,20 @@ fn encode_outcome(out: &mut Encoder, outcome: &CallbackOutcome) -> Result<(), Pr
                         let bytes =
                             encode_message(message).map_err(|_| ProtocolError::NestedRecord)?;
                         total += bytes.len();
-                        if total > MAX_PAGE_BYTES {
+                        if total > MAX_PAGE_MESSAGE_BYTES {
                             return Err(ProtocolError::Malformed);
                         }
-                        out.bytes32(&bytes, MAX_PAGE_BYTES)?;
+                        out.bytes32(&bytes, MAX_PAGE_MESSAGE_BYTES)?;
                     }
                     if grants.len() > MAX_PAGE_MESSAGES {
+                        return Err(ProtocolError::Malformed);
+                    }
+                    for grant in grants {
+                        total += encode_key_grant(grant)
+                            .map_err(|_| ProtocolError::NestedRecord)?
+                            .len();
+                    }
+                    if total > MAX_PAGE_BYTES {
                         return Err(ProtocolError::Malformed);
                     }
                     encode_grants(out, grants)?;
@@ -898,15 +911,21 @@ fn decode_outcome(input: &mut Decoder<'_>) -> Result<CallbackOutcome, ProtocolEr
             let mut messages = Vec::with_capacity(count);
             let mut total = 0usize;
             for _ in 0..count {
-                let bytes = input.bytes32(MAX_PAGE_BYTES)?;
+                let bytes = input.bytes32(MAX_PAGE_MESSAGE_BYTES)?;
                 total += bytes.len();
-                if total > MAX_PAGE_BYTES {
+                if total > MAX_PAGE_MESSAGE_BYTES {
                     return Err(ProtocolError::Malformed);
                 }
                 messages.push(decode_message(bytes).map_err(|_| ProtocolError::NestedRecord)?);
             }
+            let before = input.rest.len();
             let grants = decode_grants(input)?;
             if grants.len() > MAX_PAGE_MESSAGES {
+                return Err(ProtocolError::Malformed);
+            }
+            // Grant bytes count against the page as well (their length
+            // prefixes and count included, which only tightens it).
+            if total + (before - input.rest.len()) > MAX_PAGE_BYTES {
                 return Err(ProtocolError::Malformed);
             }
             CallbackReply::ReceiverPage {

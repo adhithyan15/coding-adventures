@@ -651,8 +651,16 @@ impl ChannelBroker {
                 sequence: committed,
             }) if committed == sequence.0 => {}
             Answer::Reply(_) => return Err(BrokerError::WrongReply),
-            Answer::Failed(failure) => return Ok(Attempt::Done(Err(failure))),
-            Answer::Changed => return Ok(Attempt::Done(Err(DataPlaneFailure::Unauthorized))),
+            // A refused commit leaves the reservation pending; give it back,
+            // or every later publish on the channel would wait behind it.
+            Answer::Failed(failure) => {
+                self.abandon(id, channel, sequence, callbacks)?;
+                return Ok(Attempt::Done(Err(failure)));
+            }
+            Answer::Changed => {
+                self.abandon(id, channel, sequence, callbacks)?;
+                return Ok(Attempt::Done(Err(DataPlaneFailure::Unauthorized)));
+            }
         }
         Ok(Attempt::Done(Ok(DataPlaneResponse::Published {
             id,

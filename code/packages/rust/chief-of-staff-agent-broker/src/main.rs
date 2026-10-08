@@ -41,14 +41,15 @@ fn run() -> Result<(), u8> {
 
     let count = i32::try_from(slots.len()).map_err(|_| 65u8)?;
     // Exactly the slot descriptors were inherited above stdio: each slot's
-    // is open, and the one after the last is not. The supervisor's
-    // close-everything-else is the guarantee; this is a tripwire.
+    // is open, and no other is, at any number up to the descriptor limit.
+    // The supervisor's close-everything-else is the guarantee; this is a
+    // tripwire that it held.
     for fd in FIRST_KEY_DESCRIPTOR..FIRST_KEY_DESCRIPTOR + count {
         if !descriptor_is_open(fd) {
             return Err(66);
         }
     }
-    if descriptor_is_open(FIRST_KEY_DESCRIPTOR + count) {
+    if (FIRST_KEY_DESCRIPTOR + count..descriptor_limit()).any(descriptor_is_open) {
         return Err(66);
     }
     let files: Vec<std::fs::File> = (FIRST_KEY_DESCRIPTOR..FIRST_KEY_DESCRIPTOR + count)
@@ -99,6 +100,21 @@ fn descriptor_is_open(fd: i32) -> bool {
     // SAFETY: F_GETFD only reads the descriptor's flags; on a closed
     // descriptor it fails with EBADF and touches nothing.
     unsafe { libc::fcntl(fd, libc::F_GETFD) != -1 }
+}
+
+/// One past the highest descriptor number this process could hold, capped
+/// so the scan stays cheap: 65,536 checks are well under a millisecond's
+/// work each way.
+#[cfg(unix)]
+#[allow(unsafe_code)]
+fn descriptor_limit() -> i32 {
+    // SAFETY: sysconf reads a configuration value and touches nothing.
+    let limit = unsafe { libc::sysconf(libc::_SC_OPEN_MAX) };
+    if limit <= 0 {
+        1024
+    } else {
+        limit.min(65_536) as i32
+    }
 }
 
 /// Take ownership of an inherited key descriptor.

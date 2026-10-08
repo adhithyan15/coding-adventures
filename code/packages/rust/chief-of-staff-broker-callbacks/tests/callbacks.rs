@@ -635,6 +635,32 @@ fn a_publish_gets_one_reservation_then_one_commit_or_abandon() {
     );
 }
 
+#[test]
+fn grant_work_happens_at_most_once_per_publish() {
+    let world = World::new();
+    let server = world.server(&world.weather);
+    let mut in_flight = InFlight::for_request(&publish_request(REPORTS)).unwrap();
+    let load = || Callback::LoadMissingGrants {
+        channel_id: channel(REPORTS),
+        definition_digest: digest(),
+    };
+    let save = || Callback::SaveGrants {
+        channel_id: channel(REPORTS),
+        definition_digest: digest(),
+        grants: Vec::new(),
+    };
+    ok(serve(&server, &mut in_flight, load()));
+    assert_eq!(
+        serve(&server, &mut in_flight, load()).unwrap_err(),
+        Violation::AppendOutOfOrder
+    );
+    ok(serve(&server, &mut in_flight, save()));
+    assert_eq!(
+        serve(&server, &mut in_flight, save()).unwrap_err(),
+        Violation::AppendOutOfOrder
+    );
+}
+
 // ---- refusals: ordinary answers -------------------------------------------
 
 #[test]
@@ -879,23 +905,34 @@ fn a_commit_signed_by_anyone_else_is_refused_and_the_reservation_can_be_abandone
     );
     let store = ChannelStore::new(&world.backend, channel(REPORTS));
     assert!(store.state().unwrap().pending_header.is_some());
+    assert_eq!(in_flight.open_reservation(), Some(Sequence(0)));
 
-    // The broker's next request abandons it, and the channel moves on.
-    let mut next = InFlight::for_request(&publish_request(REPORTS)).unwrap();
+    // The same request gives the reservation back, once, and the channel
+    // moves on rather than staying stuck until the broker is replaced.
     assert_eq!(
-        refused(serve(
+        ok(serve(
             &server,
-            &mut next,
-            Callback::ReserveAppend {
+            &mut in_flight,
+            Callback::AbandonAppend {
                 channel_id: channel(REPORTS),
-                definition_digest: digest(),
-                content_type: "text/plain".to_owned(),
-                plaintext_hash: plaintext_hash(b"y"),
+                sequence: 0
             }
         )),
-        Refusal::PendingAppend
+        CallbackReply::Abandoned { abandoned: true }
     );
-    assert!(store.abandon_pending_at(Sequence(0)).unwrap());
+    assert_eq!(in_flight.open_reservation(), None);
+    assert_eq!(
+        serve(
+            &server,
+            &mut in_flight,
+            Callback::AbandonAppend {
+                channel_id: channel(REPORTS),
+                sequence: 0
+            }
+        )
+        .unwrap_err(),
+        Violation::AppendOutOfOrder
+    );
     assert_eq!(publish(&world, b"after"), 1, "sequence 0 stays consumed");
 }
 

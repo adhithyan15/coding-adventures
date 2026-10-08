@@ -13,5 +13,15 @@
     direction, definition, membership and digest are checked.
   - **Storage checks:** grants and messages are checked without keys
     before anything is written.
-- Receiver pages are bounded by bytes (960 KiB of whole messages) as well
-  as by count, and carry the receiver's grants for every epoch in the page.
+- Receiver pages are bounded by count and by bytes:
+  - their messages fit under the data-plane response cap, so they always
+    decrypt into a response the host can take;
+  - messages plus the grants they carry fit within 960 KiB.
+
+  A page carries the receiver's grants for every epoch in it.
+- The append is an explicit state machine:
+  - grant lookups and grant saves at most once each, before the
+    reservation;
+  - one reservation;
+  - one commit attempt;
+  - a refused commit can still be abandoned, once.

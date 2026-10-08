@@ -377,6 +377,63 @@ fn bounds_are_enforced_on_the_way_out_and_on_the_way_in() {
 }
 
 #[test]
+fn a_page_must_fit_the_hosts_response_and_its_grants_must_fit_the_frame() {
+    // Messages alone over the response bound: refused.
+    let big = vec![0u8; 400 * 1024];
+    let over_response = ToBroker::CallbackResult {
+        callback_id: 1,
+        outcome: CallbackOutcome::Ok(CallbackReply::ReceiverPage {
+            first_unread: 0,
+            messages: vec![message(0, &big), message(1, &big)],
+            grants: Vec::new(),
+        }),
+    };
+    assert!(encode_to_broker(&over_response).is_err());
+
+    // Messages within it, but grants for many epochs push the page over:
+    // refused too. Long identities make each grant over 8 KiB.
+    let long = vec![b'a'; 4096];
+    let grants: Vec<_> = (0..64u64)
+        .map(|epoch| {
+            seal_channel_key(
+                &long,
+                &long,
+                channel(),
+                KeyEpoch(epoch),
+                &ChannelMasterKey::from_bytes([0xa5; 32]),
+                &ReceiverKeyPair::from_private_key([0x42; 32])
+                    .unwrap()
+                    .public_key(),
+                &signing_key(),
+            )
+            .unwrap()
+        })
+        .collect();
+    let near_limit = vec![0u8; 700 * 1024];
+    let over_frame = ToBroker::CallbackResult {
+        callback_id: 1,
+        outcome: CallbackOutcome::Ok(CallbackReply::ReceiverPage {
+            first_unread: 0,
+            messages: vec![message(0, &near_limit)],
+            grants: grants.clone(),
+        }),
+    };
+    assert!(encode_to_broker(&over_frame).is_err());
+    // The same grants with a small message fit.
+    let within = ToBroker::CallbackResult {
+        callback_id: 1,
+        outcome: CallbackOutcome::Ok(CallbackReply::ReceiverPage {
+            first_unread: 0,
+            messages: vec![message(0, b"small")],
+            grants,
+        }),
+    };
+    let bytes = encode_to_broker(&within).unwrap();
+    assert!(bytes.len() <= MAX_FRAME_BYTES);
+    assert_eq!(decode_to_broker(&bytes).unwrap(), within);
+}
+
+#[test]
 fn hand_built_hostile_counts_are_refused_before_allocation() {
     // A Bootstrap claiming 65535 slots in a tiny body.
     let mut body = encode_to_broker(&ToBroker::Bootstrap {

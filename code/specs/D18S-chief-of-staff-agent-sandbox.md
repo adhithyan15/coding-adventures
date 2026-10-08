@@ -1822,6 +1822,12 @@ through S-I3 before two weeks are spent on Windows.
         - A second acknowledgement of the same message is refused, as the
           old dispatcher refused it, because its receipt is gone once
           acknowledged.
+        - A page's messages are bounded so they always decrypt into a
+          response the host can take. Messages plus grants are bounded to
+          fit one frame.
+        - A refused commit may be abandoned within the same request, so a
+          failed publish does not leave the channel stuck until the broker
+          is replaced.
      2. **P2.6d-2:** the supervisor launches a broker per agent, by digest,
         and routes the channel operations to it. Pending reservations are
         abandoned at launch. `ExactChannelKeyAuthority` leaves the daemon

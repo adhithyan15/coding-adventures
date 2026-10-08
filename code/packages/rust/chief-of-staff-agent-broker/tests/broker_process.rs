@@ -159,6 +159,11 @@ struct Broker {
 /// Spawn the broker with `keys` on 3..3+n, and `extra` more descriptors
 /// left open after them.
 fn spawn(keys: &[&Path], extra: usize) -> Broker {
+    spawn_with_stray(keys, extra, None)
+}
+
+/// As [`spawn`], plus one stray descriptor left open at `stray`.
+fn spawn_with_stray(keys: &[&Path], extra: usize, stray: Option<i32>) -> Broker {
     let files: Vec<fs::File> = keys
         .iter()
         .map(|path| open_owner_only_secret(path).unwrap_or_else(|_| fs::File::open(path).unwrap()))
@@ -195,6 +200,11 @@ fn spawn(keys: &[&Path], extra: usize) -> Broker {
             }
             for fd in 3 + count..1024 {
                 libc::close(fd);
+            }
+            if let Some(stray) = stray {
+                if libc::dup2(0, stray) < 0 {
+                    return Err(std::io::Error::last_os_error());
+                }
             }
             Ok(())
         });
@@ -348,6 +358,19 @@ fn a_descriptor_beyond_the_slots_stops_the_broker_before_any_key_is_read() {
     let (ready, code) = comes_up(&[&keys[0], &keys[1]], 1);
     assert!(!ready);
     assert_ne!(code, 0);
+}
+
+#[test]
+fn a_stray_descriptor_anywhere_above_the_slots_stops_the_broker() {
+    let scratch = Scratch::new();
+    let keys = good_keys(&scratch);
+    let mut broker = spawn_with_stray(&[&keys[0], &keys[1]], 0, Some(900));
+    broker.send(&bootstrap());
+    assert!(
+        broker.receive().is_none(),
+        "came up with a stray descriptor"
+    );
+    assert_ne!(broker.exit_code(), 0);
 }
 
 #[test]

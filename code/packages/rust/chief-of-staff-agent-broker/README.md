@@ -54,6 +54,21 @@ agent.
   request.
 - **Every callback reply** must answer the callback it was asked;
   anything else is fatal.
+- **A refused commit** is followed by an abandon of that reservation, so
+  the channel is not left stuck behind it.
+- **Descriptors:** at start it scans every descriptor number up to the
+  open-file limit (capped at 65,536). Anything open above the key slots
+  stops it.
+
+## What it does not defend against
+
+The daemon. The daemon supplies the channel definition, including the
+receiver list, so a compromised daemon could add a receiver and have the
+broker seal the channel key to a key of its choosing. That is within the
+design: the daemon can open every key file anyway (D18S P2.6d, key
+custody). Key custody here decides which address space holds the keys. It
+is not a defence against the supervisor. What the broker does defend
+against is a daemon that replays or alters a reserved header, as above.
 
 ## Behaviour
 

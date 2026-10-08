@@ -9,8 +9,10 @@ needs. `CallbackServer::serve` answers, in three steps:
 
 1. **Does the callback fit the request in flight?** It must have the same
    request id and the same channel, an operation allowed for that kind of
-   request, and budget left (16 per request). A Publish gets one
-   reservation, then one commit or one abandon of exactly that sequence.
+   request, and budget left (16 per request). A Publish gets its grant
+   lookups and saves at most once each, then one reservation, then one
+   commit attempt. A refused commit may still be abandoned, once, so the
+   channel is not left stuck.
 
    No means a `Violation`: an honest broker never does this, so the caller
    ends the broker.
