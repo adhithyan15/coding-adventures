@@ -742,6 +742,9 @@ Coverage threshold: ≥ 95% lines.
 | Lua        | `code/packages/lua/arc2d/`                     | `coding_adventures.arc2d`                |
 | Perl       | `code/packages/perl/arc2d/`                    | `CodingAdventures::Arc2D`                |
 | Swift      | `code/packages/swift/arc2d/`                   | `Arc2D`                                  |
+| Java       | `code/packages/java/arc2d/`                    | `com.codingadventures.arc2d`             |
+| Kotlin     | `code/packages/kotlin/arc2d/`                  | `com.codingadventures.arc2d`             |
+| Dart       | `code/packages/dart/arc2d/`                    | `coding_adventures_arc2d`                |
 
 ---
 
