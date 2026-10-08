@@ -1382,13 +1382,27 @@ through S-I3 before two weeks are spent on Windows.
      `AT_EMPTY_PATH`, and kills `execve` and any other `execveat`. It is
      installed with `SECCOMP_FILTER_FLAG_NEW_LISTENER`.
      - The hook sends the listener descriptor to the parent over a
-       socketpair made for that one spawn (`SCM_RIGHTS`, allowed only on
-       that socket's descriptor number), then closes its own copy.
+       socketpair made for that `apply` (`SCM_RIGHTS`; the first filter
+       allows `sendmsg` only on that socket's descriptor number), then
+       closes its own copy.
+     - **The seal.** The hook then stacks a second filter that kills
+       `sendmsg` and `seccomp`. Stacked filters only tighten, so the agent
+       never has either. The first filter allows `seccomp` only as
+       `SET_MODE_FILTER` with no flags, so not even the hook can open a
+       second listener. (Without the seal, a pinned descriptor number is not
+       an object: with a socket for a channel, which S-I2 permits, the agent
+       could `dup2` it onto that number and pass descriptors.)
      - A thread in the parent receives it, answers the first notification
        with `SECCOMP_USER_NOTIF_FLAG_CONTINUE`, then closes the listener.
        With no listener, every later `execveat` fails with `ENOSYS`.
      - The thread is started before `spawn`, because `spawn` blocks until
        the exec completes.
+     - The thread trusts nothing it receives. A message that is not exactly
+       one descriptor, or a descriptor that is not a seccomp listener
+       (checked with `SECCOMP_IOCTL_NOTIF_ID_VALID`), is closed and skipped.
+       The wait for the exec is bounded, at 30 s. On any failure the
+       listener is dropped, so the spawn errors with `ENOSYS` and never
+       hangs.
      - The exec it continues is always the hook's own. No agent code runs
        before it, so `CONTINUE`'s documented weakness (the target can change
        its arguments in memory after the check) has nothing to exploit: the
@@ -1407,6 +1421,11 @@ through S-I3 before two weeks are spent on Windows.
      `TZ`, `LANG`, `LANGUAGE`, `LC_ALL`, `LC_COLLATE`, `LC_CTYPE`,
      `LC_MESSAGES`, `LC_MONETARY`, `LC_NUMERIC`, `LC_TIME`, `NO_COLOR`.
      - A command setting any other name is refused at `apply`.
+     - A value must be a name, not a path: letters, digits and `._+-@,`,
+       with `/` only inside (`America/New_York`), and never `..`. Otherwise
+       glibc would read the path it names at start.
+     - A refused `apply` also poisons the command, with a hook that refuses
+       every spawn, so an ignored error cannot launch an unconfined agent.
      - The deny-list is checked as well, redundantly: the `LD_`, `DYLD_`,
        `PYTHON`, `COMPlus_` and `DOTNET_` prefixes, and every exact name
        S-I4a lists.
@@ -1428,6 +1447,10 @@ through S-I3 before two weeks are spent on Windows.
        in CI only.
      - `LinuxConfinement::launch_verification()` reports which classes were
        verified at launch and which only in CI, for the audit record.
+   - *Availability.* `NEW_LISTENER` returns `EBUSY` under an ancestor filter
+     that already has a listener, as some container runtimes install, and
+     the shim's checks need `/proc`. Both refuse every launch (S-P3); they
+     never degrade.
    - *Not done here:*
      - runtime profiles for interpreted agents: the syscall allowlist and
        the runtime-image read rules Deno or CPython (`-S -I`) need;

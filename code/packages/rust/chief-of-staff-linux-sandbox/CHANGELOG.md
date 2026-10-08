@@ -68,3 +68,18 @@
   - opening `/` must return Landlock's.
 - `launch_verification()` lists the classes each launch confirms and those
   only CI does.
+- Security review round 4 fixes:
+  - **The seal** (M1): after sending the listener, the hook stacks a second
+    filter that kills `sendmsg` and `seccomp`. A pinned descriptor number
+    had let an agent with a socket channel `dup2` it there and pass
+    descriptors. The first filter allows `seccomp` only as
+    `SET_MODE_FILTER` with no flags.
+  - **Poisoning** (M2): a failed `apply` checks everything before touching
+    the command, and poisons it with a hook that refuses every spawn.
+  - The exec-once thread validates what it receives, as one descriptor that
+    is a seccomp listener; closes extras; keeps serving after a bad message;
+    and bounds its wait at 30 s (L1).
+  - `MSG_NOSIGNAL` on the send (L2).
+  - Bounds-checked `getdents64` parsing (L3).
+  - Environment values must be names, not paths (L4).
+  - An availability note for `EBUSY` and missing `/proc` (L5).

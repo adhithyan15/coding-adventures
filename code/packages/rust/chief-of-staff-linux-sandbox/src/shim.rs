@@ -91,11 +91,15 @@ const DENIED_NAMES: [&str; 31] = [
 ];
 
 /// Refuse any name outside the closed set, and, redundantly, any name on the
-/// deny-list.
+/// deny-list. Values are constrained too (review round 4, L4): `TZ=/path` or
+/// a locale value with a path in it makes glibc read that file at start. The
+/// sandbox would bound the read, but a value is a name, not a path: letters,
+/// digits and `._+-@,`, with `/` allowed only inside (`America/New_York`)
+/// and never `..`.
 pub(crate) fn check_environment<'a>(
-    names: impl IntoIterator<Item = &'a [u8]>,
+    variables: impl IntoIterator<Item = (&'a [u8], &'a [u8])>,
 ) -> Result<(), ConfinementError> {
-    for name in names {
+    for (name, value) in variables {
         let shown = || String::from_utf8_lossy(name).into_owned();
         let denied = DENIED_NAMES.iter().any(|denied| denied.as_bytes() == name)
             || DENIED_PREFIXES
@@ -113,6 +117,15 @@ pub(crate) fn check_environment<'a>(
         {
             return Err(ConfinementError::Environment(format!(
                 "{}: not in the grantable set",
+                shown()
+            )));
+        }
+        let plain = value
+            .iter()
+            .all(|byte| byte.is_ascii_alphanumeric() || b"._+-@,/".contains(byte));
+        if !plain || value.starts_with(b"/") || value.windows(2).any(|pair| pair == b"..") {
+            return Err(ConfinementError::Environment(format!(
+                "{}: its value must be a plain name, not a path",
                 shown()
             )));
         }
@@ -174,21 +187,46 @@ fn high(fd: OwnedFd) -> io::Result<OwnedFd> {
 }
 
 /// Receive each child's listener in turn and let its one exec through.
+///
+/// Only the supervisor and its forked children, before they exec, can send
+/// here; the agent never holds the child end. Even so (review round 4,
+/// L1) nothing received is trusted: a message that is not exactly one
+/// descriptor, or a descriptor that is not a seccomp listener, is closed and
+/// skipped, and the service keeps going. It stops only when every copy of
+/// the child end is closed.
 fn serve(parent_end: OwnedFd) {
-    while let Some(listener) = receive_descriptor(parent_end.as_raw_fd()) {
-        continue_first_exec(listener);
+    loop {
+        match receive(parent_end.as_raw_fd()) {
+            Received::Closed => return,
+            Received::Nothing => continue,
+            Received::Descriptor(fd) => {
+                if is_listener(&fd) {
+                    continue_first_exec(fd);
+                }
+            }
+        }
     }
 }
 
-/// `recvmsg` one descriptor sent with `SCM_RIGHTS`. `None` once every copy
-/// of the other end is closed, or on any error.
-fn receive_descriptor(socket: RawFd) -> Option<OwnedFd> {
+enum Received {
+    /// Every sender is gone (or the socket failed): stop serving.
+    Closed,
+    /// A message without exactly one descriptor: ignore it.
+    Nothing,
+    Descriptor(OwnedFd),
+}
+
+/// `recvmsg` one message. Every descriptor it carries is taken into an
+/// `OwnedFd`, so any beyond the first is closed, not leaked.
+fn receive(socket: RawFd) -> Received {
     let mut byte = [0u8; 1];
     let mut iov = libc::iovec {
         iov_base: byte.as_mut_ptr().cast(),
         iov_len: 1,
     };
-    let mut control = [0u64; 4];
+    // Room for several descriptors, so extras arrive (and are closed)
+    // rather than being truncated into the void.
+    let mut control = [0u64; 16];
     // SAFETY: an all-zero msghdr is valid; the fields set below point at
     // live buffers of the sizes given.
     let mut message: libc::msghdr = unsafe { std::mem::zeroed() };
@@ -197,26 +235,60 @@ fn receive_descriptor(socket: RawFd) -> Option<OwnedFd> {
     message.msg_control = control.as_mut_ptr().cast();
     message.msg_controllen = std::mem::size_of_val(&control) as _;
     // SAFETY: `message` describes valid buffers; MSG_CMSG_CLOEXEC marks the
-    // received descriptor close-on-exec.
+    // received descriptors close-on-exec.
     let received = unsafe { libc::recvmsg(socket, &mut message, libc::MSG_CMSG_CLOEXEC) };
-    if received <= 0 {
-        return None;
+    if received < 0 {
+        return if io::Error::last_os_error().raw_os_error() == Some(libc::EINTR) {
+            Received::Nothing
+        } else {
+            Received::Closed
+        };
     }
-    // SAFETY: the kernel filled `control`; CMSG_FIRSTHDR reads within it.
-    let header = unsafe { libc::CMSG_FIRSTHDR(&message) };
-    if header.is_null() {
-        return None;
+    if received == 0 {
+        return Received::Closed;
     }
-    // SAFETY: `header` points into `control`, as checked above.
-    let header = unsafe { &*header };
-    if header.cmsg_level != libc::SOL_SOCKET || header.cmsg_type != libc::SCM_RIGHTS {
-        return None;
+    let mut descriptors: Vec<OwnedFd> = Vec::new();
+    // SAFETY: the kernel filled `control`; the CMSG_* walk stays inside it.
+    let mut header = unsafe { libc::CMSG_FIRSTHDR(&message) };
+    while !header.is_null() {
+        // SAFETY: a header the CMSG walk returned, inside `control`.
+        let current = unsafe { &*header };
+        if current.cmsg_level == libc::SOL_SOCKET && current.cmsg_type == libc::SCM_RIGHTS {
+            // SAFETY: CMSG_LEN(0) is arithmetic.
+            let payload = current.cmsg_len as usize - unsafe { libc::CMSG_LEN(0) } as usize;
+            for index in 0..payload / std::mem::size_of::<RawFd>() {
+                // SAFETY: `index` is within this header's payload.
+                let fd = unsafe {
+                    std::ptr::read_unaligned(libc::CMSG_DATA(current).cast::<RawFd>().add(index))
+                };
+                // SAFETY: the kernel installed it in this process for us.
+                descriptors.push(unsafe { OwnedFd::from_raw_fd(fd) });
+            }
+        }
+        // SAFETY: advances within `message`'s control buffer, or to null.
+        header = unsafe { libc::CMSG_NXTHDR(&message, header) };
     }
-    // SAFETY: an SCM_RIGHTS message carries at least one descriptor here.
-    let fd = unsafe { std::ptr::read_unaligned(libc::CMSG_DATA(header).cast::<RawFd>()) };
-    // SAFETY: the kernel just installed it in this process for us.
-    Some(unsafe { OwnedFd::from_raw_fd(fd) })
+    if message.msg_flags & libc::MSG_CTRUNC != 0 || descriptors.len() != 1 {
+        return Received::Nothing;
+    }
+    Received::Descriptor(descriptors.pop().unwrap())
 }
+
+/// Whether `fd` is a seccomp listener. `NOTIF_ID_VALID` on an id that was
+/// never issued answers ENOENT on a listener, and ENOTTY or EINVAL on
+/// anything else.
+fn is_listener(fd: &OwnedFd) -> bool {
+    let id: u64 = u64::MAX;
+    // SAFETY: a valid descriptor and a pointer to a u64, as the ioctl takes.
+    let answer = unsafe { libc::ioctl(fd.as_raw_fd(), libc::SECCOMP_IOCTL_NOTIF_ID_VALID, &id) };
+    answer != 0 && io::Error::last_os_error().raw_os_error() == Some(libc::ENOENT)
+}
+
+/// How long the service waits for a child's exec after receiving its
+/// listener. The child sends the listener just before its probes and exec,
+/// so this is generous; when it lapses the listener is dropped and that
+/// child's exec fails with ENOSYS rather than the spawn hanging.
+const EXEC_WAIT_MS: libc::c_int = 30_000;
 
 /// Answer the first notification on `listener` with CONTINUE, then drop
 /// it. If anything fails, the listener is dropped all the same, and the
@@ -229,7 +301,7 @@ fn continue_first_exec(listener: OwnedFd) {
     };
     // SAFETY: one valid pollfd. A child that dies before its exec hangs
     // up the listener, and poll returns with POLLHUP.
-    let ready = unsafe { libc::poll(&mut poll, 1, -1) };
+    let ready = unsafe { libc::poll(&mut poll, 1, EXEC_WAIT_MS) };
     if ready != 1 || poll.revents & libc::POLLIN == 0 {
         return;
     }
@@ -297,7 +369,9 @@ pub(crate) fn send_listener(socket: RawFd, listener: RawFd) -> io::Result<()> {
     // SAFETY: CMSG_DATA points inside the control buffer.
     unsafe { std::ptr::write_unaligned(libc::CMSG_DATA(header).cast::<RawFd>(), listener) };
     // SAFETY: a valid socket and message.
-    if unsafe { libc::sendmsg(socket, &message, 0) } != 1 {
+    // MSG_NOSIGNAL (review round 4, L2): a dead service is an EPIPE the
+    // spawn reports, never a SIGPIPE that kills the child unreported.
+    if unsafe { libc::sendmsg(socket, &message, libc::MSG_NOSIGNAL) } != 1 {
         return Err(io::Error::last_os_error());
     }
     Ok(())
@@ -341,8 +415,16 @@ fn for_each_entry(
         while at < read as usize {
             // linux_dirent64: d_ino (8), d_off (8), d_reclen (2), d_type
             // (1), then the NUL-terminated name.
-            let length = u16::from_ne_bytes([buffer[at + 16], buffer[at + 17]]) as usize;
-            let name = &buffer[at + 19..at + length];
+            // Bounds-checked (review round 4, L3): a panic here, after
+            // fork, would allocate. A malformed record refuses the spawn.
+            let length = match buffer.get(at + 16..at + 18) {
+                Some(bytes) => u16::from_ne_bytes([bytes[0], bytes[1]]) as usize,
+                None => return Err(refused()),
+            };
+            let name = match buffer.get(at + 19..at + length) {
+                Some(name) if length > 19 => name,
+                _ => return Err(refused()),
+            };
             let name = &name[..name
                 .iter()
                 .position(|byte| *byte == 0)
@@ -471,7 +553,8 @@ mod tests {
 
     #[test]
     fn the_environment_is_a_closed_set() {
-        assert!(check_environment([b"TZ".as_slice(), b"LC_ALL"]).is_ok());
+        let named = |name: &'static [u8]| (name, b"C".as_slice());
+        assert!(check_environment([named(b"TZ"), named(b"LC_ALL")]).is_ok());
         for name in [
             b"HOME".as_slice(),
             b"PATH",
@@ -483,20 +566,58 @@ mod tests {
             b"tz",
             b"",
         ] {
-            assert!(check_environment([name]).is_err(), "{name:?}");
+            assert!(
+                check_environment([(name, b"C".as_slice())]).is_err(),
+                "{name:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn values_are_names_not_paths() {
+        for value in [
+            b"UTC".as_slice(),
+            b"America/New_York",
+            b"en_US.UTF-8",
+            b"C.UTF-8",
+            b"de_DE@euro",
+            b"1",
+            b"",
+        ] {
+            assert!(
+                check_environment([(b"TZ".as_slice(), value)]).is_ok(),
+                "{value:?}"
+            );
+        }
+        for value in [
+            b"/etc/passwd".as_slice(),
+            b":/vault/secrets",
+            b"../../vault",
+            b"Europe/../../x",
+            b"UTC\n",
+            b"a b",
+            b"$(id)",
+        ] {
+            assert!(
+                check_environment([(b"TZ".as_slice(), value)]).is_err(),
+                "{value:?}"
+            );
         }
     }
 
     #[test]
     fn the_deny_list_wins_with_its_own_reason() {
-        let error = check_environment([b"LD_PRELOAD".as_slice()]).unwrap_err();
+        let error = check_environment([(b"LD_PRELOAD".as_slice(), b"x".as_slice())]).unwrap_err();
         assert!(error.to_string().contains("deny-list"), "{error}");
     }
 
     #[test]
     fn no_grantable_name_is_denied() {
         for name in GRANTABLE_ENVIRONMENT {
-            assert!(check_environment([name.as_bytes()]).is_ok(), "{name}");
+            assert!(
+                check_environment([(name.as_bytes(), b"C".as_slice())]).is_ok(),
+                "{name}"
+            );
         }
     }
 }

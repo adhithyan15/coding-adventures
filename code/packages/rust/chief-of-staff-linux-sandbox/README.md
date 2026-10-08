@@ -67,12 +67,16 @@ let child = command.spawn()?; // a spawn error if any step failed
   The hook sends the listener to a thread in the supervisor. That thread lets
   the first exec through, then closes the listener, so every later exec gets
   `ENOSYS` (D18S S-I4d, second option). The agent cannot exec anything at
-  all: not another program, not itself, not the loader.
+  all: not another program, not itself, not the loader. The hook then stacks
+  a second filter, the seal, that kills `sendmsg` and `seccomp`. The agent
+  never has either, even with a socket for a channel.
 - **Environment.** The agent gets exactly the variables set on the command
   with `env`, and nothing inherited, with or without `env_clear`. Every name
   must be in `GRANTABLE_ENVIRONMENT` (`TZ`, `LANG`, `LANGUAGE`, the `LC_*`
   categories, `NO_COLOR`). Anything else refuses at `apply`, `LD_PRELOAD`
-  and the rest of S-I4a's deny-list above all.
+  and the rest of S-I4a's deny-list above all. Values must be names, not
+  paths (`America/New_York` yes, `/etc/passwd` or `../x` no). A refused
+  `apply` poisons the command: spawning it anyway fails with `EPERM`.
 - **The shim's checks** (D18S step 5), in the child before Landlock: exactly
   one thread (`/proc/self/task`), and every descriptor but 0-2
   close-on-exec (`/proc/self/fd`).
@@ -110,6 +114,10 @@ Any of these refuses the launch rather than confining "what it can" (S-P3):
 - **Wiring.** `spawn_verified` does not call this yet (step 9). That is also
   where S-I6's never-grantable paths are checked: only the supervisor knows
   where the vault and the audit log live.
+- **Every environment.** `SECCOMP_FILTER_FLAG_NEW_LISTENER` fails with
+  `EBUSY` under an ancestor filter that already has a listener, as some
+  container runtimes install, and the shim's checks need `/proc`. Either
+  refuses every launch rather than running unconfined.
 - **Metadata.** Landlock mediates opening, not lookup. An agent can still
   `stat` any path, and learn that a file exists, its size and its times. It
   cannot read the file.

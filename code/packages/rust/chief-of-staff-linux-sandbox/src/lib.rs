@@ -280,9 +280,18 @@ impl LinuxConfinement {
     /// outside the grantable set (`GRANTABLE_ENVIRONMENT`). Each call
     /// starts the exec-once service for the spawns of that command.
     pub fn apply<'a>(&self, command: &'a mut Command) -> Result<&'a mut Command, ConfinementError> {
-        chief_of_staff_spawn_isolation::isolate(command);
+        // On Linux, `install` checks everything before it touches the
+        // command, and isolates it itself (review round 4, M2): an `Err`
+        // leaves the command exactly as it was.
         #[cfg(target_os = "linux")]
-        linux::install(std::sync::Arc::clone(&self.prepared), command)?;
+        if let Err(error) = linux::install(std::sync::Arc::clone(&self.prepared), command) {
+            // And the command is poisoned: spawning it anyway fails, so an
+            // ignored `Err` can never launch an unconfined agent.
+            linux::poison(command);
+            return Err(error);
+        }
+        #[cfg(not(target_os = "linux"))]
+        chief_of_staff_spawn_isolation::isolate(command);
         Ok(command)
     }
 

@@ -14,7 +14,7 @@
 //!   opendir <path>     list a directory; "ok" or "errno=<n>"
 //!   socket | unix      socket(AF_INET) / socket(AF_UNIX)
 //!   fork               a new process (clone without CLONE_THREAD)
-//!   io_uring | ptrace | kill | tiocsti | mount | bpf
+//!   io_uring | ptrace | kill | tiocsti | mount | bpf | seccomp | sendmsg
 //! ```
 //!
 //! Under the sandbox, each denied syscall class kills the process with
@@ -191,6 +191,43 @@ fn main() {
                     std::ptr::null(),
                 )
             };
+            println!("survived");
+        }
+        Some("seccomp") => {
+            // Stacking a filter: allowed to the hook, sealed for the agent.
+            unsafe {
+                libc::syscall(
+                    libc::SYS_seccomp,
+                    libc::SECCOMP_SET_MODE_FILTER,
+                    0,
+                    std::ptr::null::<u8>(),
+                )
+            };
+            println!("survived");
+        }
+        Some("sendmsg") => {
+            // Pass /dev/null over stdout. Unconfined, stdout is a pipe and
+            // this is ENOTSOCK; confined, sendmsg is sealed.
+            let null = unsafe { libc::open(c"/dev/null".as_ptr(), libc::O_RDONLY) };
+            let mut byte = [0u8; 1];
+            let mut iov = libc::iovec {
+                iov_base: byte.as_mut_ptr().cast(),
+                iov_len: 1,
+            };
+            let mut control = [0u64; 4];
+            let mut message: libc::msghdr = unsafe { std::mem::zeroed() };
+            message.msg_iov = &mut iov;
+            message.msg_iovlen = 1;
+            message.msg_control = control.as_mut_ptr().cast();
+            message.msg_controllen = unsafe { libc::CMSG_SPACE(4) } as _;
+            unsafe {
+                let header = &mut *libc::CMSG_FIRSTHDR(&message);
+                header.cmsg_level = libc::SOL_SOCKET;
+                header.cmsg_type = libc::SCM_RIGHTS;
+                header.cmsg_len = libc::CMSG_LEN(4) as _;
+                std::ptr::write_unaligned(libc::CMSG_DATA(header).cast::<i32>(), null);
+                libc::sendmsg(1, &message, libc::MSG_NOSIGNAL);
+            }
             println!("survived");
         }
         Some("bpf") => {

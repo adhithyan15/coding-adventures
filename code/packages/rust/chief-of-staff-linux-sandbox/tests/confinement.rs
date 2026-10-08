@@ -93,6 +93,7 @@ fn each_denied_syscall_class_kills_the_agent() {
     let confined = confinement(&[]);
     for mode in [
         "socket", "unix", "fork", "io_uring", "ptrace", "kill", "tiocsti", "mount", "bpf",
+        "seccomp", "sendmsg",
     ] {
         let control = run(None, &[mode]);
         assert_eq!(
@@ -511,5 +512,38 @@ fn every_spawn_of_one_command_gets_its_own_exec() {
     for _ in 0..3 {
         let output = command.output().unwrap();
         assert_eq!(stdout(&output), "hello\nthread=4", "{output:?}");
+    }
+}
+
+#[test]
+fn a_failed_apply_leaves_a_command_that_cannot_spawn() {
+    // Review round 4, M2: an Err from apply must not leave a command that
+    // spawns unconfined if the caller ignores it.
+    let confined = confinement(&[]);
+    let mut command = Command::new(PROBE);
+    command
+        .args(["read", "/etc/passwd"])
+        .env("HOME", "/root")
+        .stdin(Stdio::null());
+    assert!(confined.apply(&mut command).is_err());
+    let error = command
+        .output()
+        .expect_err("a poisoned command must not spawn");
+    assert_eq!(error.kind(), std::io::ErrorKind::PermissionDenied);
+}
+
+#[test]
+fn an_environment_value_must_be_a_name_not_a_path() {
+    let confined = confinement(&[]);
+    for value in ["/etc/passwd", ":/vault", "../x"] {
+        let mut command = Command::new(PROBE);
+        command.env("TZ", value);
+        assert!(
+            matches!(
+                confined.apply(&mut command),
+                Err(ConfinementError::Environment(_))
+            ),
+            "TZ={value}"
+        );
     }
 }
