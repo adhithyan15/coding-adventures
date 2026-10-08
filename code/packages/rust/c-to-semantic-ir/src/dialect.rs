@@ -151,6 +151,25 @@ fn condition_clause(tokens: &[Token]) -> Result<bool, PpError> {
                     };
                     Ok(value != 0)
                 }
+                "&" | "|" | "^" => {
+                    // This deliberately stays in the common nonnegative i32
+                    // range. Signed negative bitwise values can depend on C's
+                    // integer representation and are left to a later stage.
+                    let left = i32::try_from(left)
+                        .map_err(|_| PpError::new("C bitwise condition operand is out of range"))?;
+                    let right = i32::try_from(right)
+                        .map_err(|_| PpError::new("C bitwise condition operand is out of range"))?;
+                    if left < 0 || right < 0 {
+                        return Err(PpError::new("C bitwise condition operand is negative"));
+                    }
+                    let value = match op.value.as_str() {
+                        "&" => left & right,
+                        "|" => left | right,
+                        "^" => left ^ right,
+                        _ => unreachable!(),
+                    };
+                    Ok(value != 0)
+                }
                 "==" => Ok(left == right),
                 "!=" => Ok(left != right),
                 "<" => Ok(left < right),
@@ -798,6 +817,58 @@ mod tests {
             "010 << 1",
             "1 << 2 == 4",
             "1 || 1 << 32",
+        ] {
+            let source = format!("#if {condition}\nint x;\n#endif\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            assert!(
+                preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err(),
+                "{condition}"
+            );
+        }
+    }
+
+    #[test]
+    fn one_operator_bitwise_conditions_use_nonnegative_signed_values() {
+        for (condition, expected) in [
+            ("6 & 3", "1"),
+            ("4 & 3", "0"),
+            ("4 | 1", "1"),
+            ("0 | 0", "0"),
+            ("7 ^ 7", "0"),
+            ("7 ^ 2", "1"),
+            ("MASK & 2", "1"),
+            ("MISSING | 0", "0"),
+            ("2147483647 ^ 2147483647", "0"),
+            ("0 | 1 && 3 & 2", "1"),
+        ] {
+            let source =
+                format!("#define MASK 3\n#if {condition}\nint x = 1;\n#else\nint x = 0;\n#endif\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+            let values: Vec<_> = result
+                .tokens
+                .iter()
+                .map(|token| token.value.as_str())
+                .collect();
+            assert_eq!(values, ["int", "x", "=", expected, ";"], "{condition}");
+        }
+
+        for condition in [
+            "-1 & 1",
+            "1 | -1",
+            "2147483648 & 1",
+            "1 ^ 2147483648",
+            "010 & 1",
+            "1 & 2 & 3",
+            "1 + 2 & 3",
+            "1 & 2 == 0",
+            "1 || 1 & 2 & 3",
         ] {
             let source = format!("#if {condition}\nint x;\n#endif\n");
             let mut fs = MemoryFs::new();
