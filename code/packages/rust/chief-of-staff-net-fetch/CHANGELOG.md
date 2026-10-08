@@ -80,3 +80,14 @@
   matcher builds none.
 - **INFO**: lowercase, partial and `\u00XX` encodings slipped through. The
   per-byte matcher covers them.
+
+### Security review, round 3 (converged: LOW and INFO only)
+
+- **LOW**: a greedy matcher missed a plain echo of a secret that itself
+  contains `%25` or `\\`. The matcher now tracks every live reading, capped at
+  16.
+- **INFO**: the size of the dropped tail revealed the secret's length. It is
+  now a fixed maximum.
+- **INFO, not changed**: matching costs O(n × m) only against a server that
+  already holds the secret, which the model cannot trigger. Destination
+  binding (V-S7, P1.4c) limits that server to the secret's own API.

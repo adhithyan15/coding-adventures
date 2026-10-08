@@ -933,14 +933,13 @@ fn decode_response(
         // matcher cannot see. Masking a tail only when it looks like a prefix
         // of the secret would be an oracle: whether it got masked would tell
         // the model whether its guess was right, one byte at a time. So the
-        // tail is dropped unconditionally, by a length that depends only on
-        // the needles' lengths -- never on the content.
-        let tail = needles
-            .iter()
-            .map(|needle| needle.len() * MAX_ENCODED_BYTE_LEN)
-            .max()
-            .unwrap_or(0)
-            .saturating_sub(1);
+        // tail is dropped unconditionally, by a fixed length that depends on
+        // neither the content nor the secret.
+        // The longest possible needle (scheme word, space, maximum secret),
+        // not the actual one: a tail sized by the real secret would let a
+        // model that knows the full response length work out the secret's
+        // length.
+        let tail = (MAX_SECRET_BYTES + "Bearer ".len()) * MAX_ENCODED_BYTE_LEN - 1;
         let keep = body.len().saturating_sub(tail);
         body.truncate(keep);
     }
@@ -1092,14 +1091,42 @@ fn mask_echoes(buffer: &mut [u8], needles: &[&[u8]]) {
 
 /// If `needle` is echoed at `start`, in any per-byte encoding, where it ends.
 ///
-/// Greedy and non-backtracking, so a scan stays linear in practice: each byte
-/// takes the first encoding that decodes to it.
+/// Tracks every live haystack offset rather than committing to the first
+/// encoding that fits. Committing is wrong when the secret itself contains an
+/// encoding introducer: for a secret holding `%25`, the plain echo `%25` and
+/// the encoded `%` start the same way, and a greedy matcher that takes `%25`
+/// as one encoded byte falls out of step and misses the echo entirely. The
+/// live set stays tiny — each needle byte advances an offset by 1, 2, 3 or 6
+/// — and is capped, so the scan stays linear.
 fn match_echo(haystack: &[u8], start: usize, needle: &[u8]) -> Option<usize> {
-    let mut at = start;
+    const MAX_LIVE_OFFSETS: usize = 16;
+    let mut live: Vec<usize> = vec![start];
     for &byte in needle {
-        at += encoded_byte_at(haystack, at, byte)?;
+        let mut next: Vec<usize> = Vec::with_capacity(live.len() * 2);
+        for &at in &live {
+            for length in encodings_of_byte_at(haystack, at, byte) {
+                let end = at + length;
+                if !next.contains(&end) && next.len() < MAX_LIVE_OFFSETS {
+                    next.push(end);
+                }
+            }
+        }
+        if next.is_empty() {
+            return None;
+        }
+        live = next;
     }
-    Some(at)
+    // Mask as much as any reading of the echo covers.
+    live.into_iter().max()
+}
+
+/// Every length at `at` that encodes `byte`: plain, and each escape form.
+fn encodings_of_byte_at(haystack: &[u8], at: usize, byte: u8) -> impl Iterator<Item = usize> {
+    let encoded = encoded_byte_at(haystack, at, byte);
+    let plain = (haystack.get(at) == Some(&byte)).then_some(1);
+    encoded
+        .into_iter()
+        .chain(plain.filter(|_| encoded != Some(1)))
 }
 
 /// How many bytes at `at` encode `byte`, if any.
@@ -1341,6 +1368,20 @@ mod unit {
         let mut form = b"x=Bearer+abcdefgh".to_vec();
         mask_echoes(&mut form, &spaced);
         assert_eq!(&form, b"x=***************");
+    }
+
+    #[test]
+    fn a_secret_containing_escape_introducers_is_masked_when_echoed_plainly() {
+        // Greedy matching took "%25" as one encoded "%" and fell out of step;
+        // the live-offset matcher tries both readings.
+        for secret in [&b"ab%25cd\\\\ef"[..], b"x\\u0041yz123"] {
+            let mut buffer = [b"<".as_slice(), secret, b">"].concat();
+            mask_echoes(&mut buffer, &[secret]);
+            let mut expected = vec![b'*'; buffer.len()];
+            expected[0] = b'<';
+            *expected.last_mut().unwrap() = b'>';
+            assert_eq!(buffer, expected, "{}", String::from_utf8_lossy(secret));
+        }
     }
 
     #[test]

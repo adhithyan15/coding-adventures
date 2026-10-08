@@ -196,17 +196,22 @@ in**: as itself, as `%XX` in either hex case, as a JSON `\u00XX` escape, as a
 backslash escape of `"`, `\` or `/`, or, for the space after a scheme word, as
 a form-encoding `+`. This covers mixed encodings as well: Python's `quote`
 leaving `/` alone, Go's `\u003c`, PHP's `\/`, and lowercase escapes. It also
-never builds an encoded copy of the secret. The matcher is greedy and does not
-backtrack. Other encodings, such as base64, are not covered, and V-S7 is the
-stronger control.
+never builds an encoded copy of the secret. The matcher tracks every live
+reading rather than committing to the first encoding that fits, because a
+secret that itself contains `%25` or `\\` would otherwise be missed when echoed
+plainly. The set of live readings is capped at 16, so the scan stays linear.
+Other encodings, such as base64, are not covered, and V-S7 is the stronger
+control.
 
 **V-S4a — a truncated credentialed body loses a fixed tail.** An echo cut off
 at the end is only a partial match, which the matcher cannot see. Masking such
 a tail only when it looks like a prefix of the secret would be an oracle:
 whether the tail was masked would tell the model whether its guess was right,
-one byte at a time. So whenever a credentialed response is truncated, the last
-`6 × longest needle − 1` bytes of the body are dropped unconditionally. The
-amount depends only on the needles' lengths, never on the content. An
+one byte at a time. So whenever a credentialed response is truncated, a fixed
+tail of `6 × (4 096 + 7) − 1` bytes is dropped unconditionally. That is enough
+for the longest possible encoded partial echo. The amount depends on neither
+the content nor the actual secret, so the tail size does not reveal the
+secret's length either. An
 unauthenticated response loses nothing beyond the documented bound.
 
 **V-S5 — the secret lives only in zeroizing memory.** The request buffer is
