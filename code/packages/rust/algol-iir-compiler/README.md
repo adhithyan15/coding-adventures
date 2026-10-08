@@ -257,9 +257,11 @@ result as the power base; other exponents, a sign-rooted exponent, and
 overrides remain gated.
 Built-in `abs` may normalize that sign-rooted result while retaining the same
 bound; non-sign-rooted operands and `abs` or `sign` overrides remain gated.
-Built-in `sqrt` may similarly normalize a nonnegative bounded sign-rooted
+Built-in `sqrt` may similarly normalize a nonnegative unit-bounded sign-rooted
 result before cosine; unrestricted operands and `sqrt` or inner-function
 overrides remain gated.
+Built-in `entier` may also normalize that nonnegative unit range before cosine;
+unrestricted operands and `entier` or inner-function overrides remain gated.
 Built-in `sin`, `cos`, and `arctan` may map a bounded sign-rooted result before
 `entier`, including nested combinations; domain-sensitive or unbounded
 standard functions and non-sign-rooted runtime operands remain conservative.

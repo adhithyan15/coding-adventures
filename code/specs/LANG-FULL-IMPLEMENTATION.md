@@ -1357,9 +1357,12 @@ backend immediately) come before the enabler-dependent items.
   Built-in `abs` may normalize that sign-rooted result while retaining the same
   bound; non-sign-rooted operands and `abs` or `sign` overrides remain
   conservative.
-  Built-in `sqrt` may likewise normalize a nonnegative bounded sign-rooted
+  Built-in `sqrt` may likewise normalize a nonnegative unit-bounded sign-rooted
   result before cosine; unrestricted operands and `sqrt` or inner-function
   overrides remain conservative.
+  Built-in `entier` may also normalize that nonnegative unit range before
+  cosine; unrestricted operands and `entier` or inner-function overrides remain
+  conservative.
   Built-in `sin`, `cos`, and `arctan` may map a bounded sign-rooted result
   before `entier`, including nested combinations; domain-sensitive or
   unbounded standard functions and non-sign-rooted runtime operands remain
