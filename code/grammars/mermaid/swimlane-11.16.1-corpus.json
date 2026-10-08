@@ -39,6 +39,10 @@
       "source": "swimlane-beta LR\nsubgraph Workflow\n  process@{ shape: rect, label: \"Process\" }\n  event@{ shape: event, label: \"Event\" }\n  choice@{ shape: question, label: \"Decision\" }\n  input@{ shape: in-out, label: \"Input\" }\nend\nsubgraph Storage\n  manual@{ shape: trap-t, label: \"Manual\" }\n  database@{ shape: db, label: \"Database\" }\n  subprocess@{ shape: subproc, label: \"Subprocess\" }\n  stop@{ shape: double-circle, label: \"Stop\" }\nend\nprocess --> event --> choice --> input --> manual --> database --> subprocess --> stop"
     },
     {
+      "name": "hourglass-collate-shape",
+      "source": "swimlane-beta LR\nsubgraph Merge\n  collect@{ shape: collate, label: \"Collect\" }\nend\nsubgraph Output\n  combine@{ shape: hourglass, label: \"Combine\" }\nend\ncollect --> combine"
+    },
+    {
       "name": "input-output-and-asymmetric-shapes",
       "source": "swimlane-beta LR\nsubgraph Intake\n  input[/Receive payload/]\nend\nsubgraph Review\n  flag>Manual review]\nend\ninput --> flag"
     },
