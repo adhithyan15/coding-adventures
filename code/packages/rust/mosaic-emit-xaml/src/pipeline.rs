@@ -2349,6 +2349,41 @@ fn per_edge_border(name: &str) -> Option<(usize, &'static str)> {
     }
 }
 
+/// A solid per-edge style is carried by the same native border that carries
+/// that edge's positive pixel width. Keep non-solid values and style-only
+/// declarations visible to the degradation reporter.
+fn lowered_solid_per_edge_style(
+    props: &[mosstyle_compiler::StyleProp],
+    name: &str,
+    value: &str,
+) -> bool {
+    let Some(edge) = name
+        .strip_prefix("border-")
+        .and_then(|rest| rest.strip_suffix("-style"))
+        .filter(|edge| matches!(*edge, "top" | "right" | "bottom" | "left"))
+    else {
+        return false;
+    };
+    if value.trim() != "solid" {
+        return false;
+    }
+    let width_name = format!("border-{edge}-width");
+    props
+        .iter()
+        .rev()
+        .find(|prop| prop.name == width_name)
+        .and_then(|prop| {
+            prop.value
+                .trim()
+                .strip_suffix("px")
+                .unwrap_or(prop.value.trim())
+                .trim()
+                .parse::<f64>()
+                .ok()
+        })
+        .is_some_and(|width| width.is_finite() && width > 0.0)
+}
+
 /// UI79 -- the XAML attributes a part's per-edge borders lower to, plus
 /// any edge colour WinUI's single `BorderBrush` cannot paint.
 type PerEdgeBorder = (Vec<(String, String)>, Vec<RawStyleDrop>);
@@ -2651,6 +2686,9 @@ pub fn dropped_style_properties(style: &mosstyle_compiler::StyleDef) -> Vec<Drop
             continue;
         }
         for drop in raw_drops {
+            if lowered_solid_per_edge_style(&part.base, &drop.name, &drop.value) {
+                continue;
+            }
             let consumed_via_flex_hints = match drop.name.as_str() {
                 "flex-grow" => true,
                 "align-items" => drop.value.trim() == "center",
@@ -23919,6 +23957,37 @@ mod tests {
         assert!(per_edge_border("border-bottom-style").is_none());
         assert_eq!(per_edge_border("border-bottom-width"), Some((2, "width")));
         assert_eq!(per_edge_border("border-left-color"), Some((3, "color")));
+    }
+
+    #[test]
+    fn solid_edge_style_is_consumed_only_with_a_positive_width() {
+        let props = |width: &str| {
+            vec![
+                StyleProp {
+                    name: "border-bottom-width".to_string(),
+                    value: width.to_string(),
+                },
+                StyleProp {
+                    name: "border-bottom-style".to_string(),
+                    value: "solid".to_string(),
+                },
+            ]
+        };
+        assert!(lowered_solid_per_edge_style(
+            &props("1px"),
+            "border-bottom-style",
+            "solid"
+        ));
+        assert!(!lowered_solid_per_edge_style(
+            &props("0px"),
+            "border-bottom-style",
+            "solid"
+        ));
+        assert!(!lowered_solid_per_edge_style(
+            &props("1px"),
+            "border-bottom-style",
+            "dashed"
+        ));
     }
 
     /// X4: `background: "transparent"` in `.msl` must emit

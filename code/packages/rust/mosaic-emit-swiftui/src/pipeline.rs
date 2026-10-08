@@ -2128,6 +2128,26 @@ fn per_edge_border(name: &str) -> Option<(usize, &'static str)> {
     }
 }
 
+fn lowered_solid_per_edge_style(props: &[StyleProp], name: &str, value: &str) -> bool {
+    let Some(edge) = name
+        .strip_prefix("border-")
+        .and_then(|rest| rest.strip_suffix("-style"))
+        .filter(|edge| matches!(*edge, "top" | "right" | "bottom" | "left"))
+    else {
+        return false;
+    };
+    if value.trim() != "solid" {
+        return false;
+    }
+    let width_name = format!("border-{edge}-width");
+    props
+        .iter()
+        .rev()
+        .find(|prop| prop.name == width_name)
+        .and_then(|prop| strip_css_px(prop.value.trim()).parse::<f64>().ok())
+        .is_some_and(|width| width.is_finite() && width > 0.0)
+}
+
 /// A SwiftUI `Color` expression for an authored colour, or `None` when the
 /// value is not one this emitter can resolve.
 ///
@@ -3154,6 +3174,9 @@ pub fn dropped_style_properties(
         expand_border_shorthand(&mut base);
         let (_, drops) = swiftui_modifier_chain_with_drops(&base, &[], &[], 0, None);
         for drop in drops {
+            if lowered_solid_per_edge_style(&base, &drop.name, &drop.value) {
+                continue;
+            }
             if (drop.name == "gap" && consumed_gap.contains(part.name.as_str()))
                 || (drop.name == "align" && consumed_align.contains(part.name.as_str()))
             {
@@ -14115,6 +14138,31 @@ mod tests {
         assert!(per_edge_border("border-bottom-style").is_none());
         assert_eq!(per_edge_border("border-bottom-width"), Some((2, "width")));
         assert_eq!(per_edge_border("border-left-color"), Some((3, "color")));
+    }
+
+    #[test]
+    fn solid_edge_style_is_consumed_only_with_a_positive_width() {
+        let props = |width: &str| {
+            vec![
+                sp("border-bottom-width", width),
+                sp("border-bottom-style", "solid"),
+            ]
+        };
+        assert!(lowered_solid_per_edge_style(
+            &props("1px"),
+            "border-bottom-style",
+            "solid"
+        ));
+        assert!(!lowered_solid_per_edge_style(
+            &props("0px"),
+            "border-bottom-style",
+            "solid"
+        ));
+        assert!(!lowered_solid_per_edge_style(
+            &props("1px"),
+            "border-bottom-style",
+            "dashed"
+        ));
     }
 
     #[test]

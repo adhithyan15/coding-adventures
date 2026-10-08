@@ -4921,9 +4921,22 @@ fn css_color_to_dart(s: &str) -> Option<String> {
 /// `border-width`/`border-color` shorthand -- the CSS cascade answer, and
 /// UI79 §3 rule 3.
 ///
-/// `border-<edge>-style` is not consulted: only `solid` is drawn. The
-/// occurrence-aware style recorder therefore reports a `dashed` style as a
-/// drop instead of allowing this lowering gap to stay silent (#12022).
+/// A matching `border-<edge>-style: solid` is consumed when this function
+/// emits that edge. Other styles remain unread so the occurrence-aware
+/// degradation reporter keeps them explicit (#12022).
+fn lowered_solid_per_edge_style(
+    props: &HashMap<String, String>,
+    edge: &str,
+    width: Option<&String>,
+) -> bool {
+    width
+        .and_then(|value| strict_pixel_length(value))
+        .is_some_and(|width| width > 0.0)
+        && props
+            .get(&format!("border-{edge}-style"))
+            .is_some_and(|style| style.trim() == "solid")
+}
+
 fn per_edge_border_expr(m: &HashMap<String, String>) -> Option<String> {
     let edges = ["top", "right", "bottom", "left"];
     if !edges
@@ -4962,6 +4975,10 @@ fn per_edge_border_expr(m: &HashMap<String, String>) -> Option<String> {
             .map(|v| parse_pixel_value(v))
             .or_else(|| fallback_w.clone());
         let Some(w) = w else { continue };
+        if lowered_solid_per_edge_style(m, e, raw) {
+            let style_name = format!("border-{e}-style");
+            record_style_read(&style_name);
+        }
         let c = style_prop(m, &format!("border-{e}-color"))
             .and_then(|v| css_color_to_dart(v))
             .or_else(|| fallback_c.clone())
@@ -12301,6 +12318,34 @@ mod tests {
                 .map(|(k, v)| (k.to_string(), v.to_string()))
                 .collect::<HashMap<String, String>>()
         };
+
+        let solid = m(&[
+            ("border-bottom-width", "1px"),
+            ("border-bottom-style", "solid"),
+        ]);
+        assert!(lowered_solid_per_edge_style(
+            &solid,
+            "bottom",
+            solid.get("border-bottom-width")
+        ));
+        let dashed = m(&[
+            ("border-bottom-width", "1px"),
+            ("border-bottom-style", "dashed"),
+        ]);
+        assert!(!lowered_solid_per_edge_style(
+            &dashed,
+            "bottom",
+            dashed.get("border-bottom-width")
+        ));
+        let zero = m(&[
+            ("border-bottom-width", "0px"),
+            ("border-bottom-style", "solid"),
+        ]);
+        assert!(!lowered_solid_per_edge_style(
+            &zero,
+            "bottom",
+            zero.get("border-bottom-width")
+        ));
 
         // No edge authored -> None, which is what leaves `Border.all` in
         // place at the call site.

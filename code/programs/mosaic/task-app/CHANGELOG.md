@@ -7,6 +7,15 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.1` accumulate here until the next version is
 cut.
 
+### Fixed — solid native edge borders leave degradation reports (#17098)
+
+All five native emitters now treat `border-{top,right,bottom,left}-style:
+solid` as consumed only when the matching positive-width edge is actually
+drawn. Fresh strict generation retires 70 false-positive allowances, reducing
+the measured style debt to 38 XAML, 83 SwiftUI, 50 Compose, 130 Qt, and 144
+Flutter drops. Dashed, suppressing, invalid-width, and style-only declarations
+remain explicit degradations.
+
 ### Fixed — Qt and Flutter preserve authored font weights (#17073)
 
 Qt layout containers now pass supported `font-weight` values to descendant

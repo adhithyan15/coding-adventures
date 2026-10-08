@@ -2590,6 +2590,9 @@ pub fn dropped_style_properties_in_layout(
     for part in &style.parts {
         let built = compose_box_style(&part.base, &[], None, 0, None);
         for (name, value) in built.dropped {
+            if lowered_solid_per_edge_style(&part.base, &name, &value) {
+                continue;
+            }
             // UI59 §4 -- the width floor is universal, so `flex-shrink: 0`
             // on a guarded part is honoured and is not a drop. A POSITIVE
             // value asks to shrink below content, which the floor refuses,
@@ -2831,6 +2834,34 @@ fn per_edge_border_style(name: &str) -> bool {
             which == "style" && matches!(edge, "top" | "right" | "bottom" | "left")
         })
         .unwrap_or(false)
+}
+
+fn lowered_solid_per_edge_style(props: &[StyleProp], name: &str, value: &str) -> bool {
+    let Some(edge) = name
+        .strip_prefix("border-")
+        .and_then(|rest| rest.strip_suffix("-style"))
+        .filter(|edge| matches!(*edge, "top" | "right" | "bottom" | "left"))
+    else {
+        return false;
+    };
+    if value.trim() != "solid" {
+        return false;
+    }
+    let width_name = format!("border-{edge}-width");
+    props
+        .iter()
+        .rev()
+        .find(|prop| prop.name == width_name)
+        .and_then(|prop| {
+            prop.value
+                .trim()
+                .strip_suffix("px")
+                .unwrap_or(prop.value.trim())
+                .trim()
+                .parse::<f64>()
+                .ok()
+        })
+        .is_some_and(|width| width.is_finite() && width > 0.0)
 }
 
 /// UI79 -- does any part in this stylesheet author a per-edge border?
@@ -14921,6 +14952,31 @@ mod tests {
         // recognised by the reporter and NOT by the lowering.
         assert!(per_edge_border_style("border-bottom-style"));
         assert!(!per_edge_border_style("border-top-left-radius"));
+    }
+
+    #[test]
+    fn solid_edge_style_is_consumed_only_with_a_positive_width() {
+        let props = |width: &str| {
+            vec![
+                sprop("border-bottom-width", width),
+                sprop("border-bottom-style", "solid"),
+            ]
+        };
+        assert!(lowered_solid_per_edge_style(
+            &props("1px"),
+            "border-bottom-style",
+            "solid"
+        ));
+        assert!(!lowered_solid_per_edge_style(
+            &props("0px"),
+            "border-bottom-style",
+            "solid"
+        ));
+        assert!(!lowered_solid_per_edge_style(
+            &props("1px"),
+            "border-bottom-style",
+            "dashed"
+        ));
     }
 
     /// UI61 — the axis reaches the modifier chain, and the
