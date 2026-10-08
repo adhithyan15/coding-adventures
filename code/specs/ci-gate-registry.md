@@ -270,6 +270,32 @@ partial plan is emitted. C and F share the `dotnet` toolchain, while each
 remains a separately selected native test front. Some readers assert digest
 slices rather than the full neutral cache-decision result.
 
+The twenty-two flat `code/specs/fixtures/build-tool-v1/cases/validation-*.json`
+cases have the following closed native validator relation. C/F are the distinct
+`dotnet/programs/build-tool-csharp` and `dotnet/programs/build-tool-fsharp`
+fronts; E/H/L/P/Y/B/R/S/T denote the Elixir, Haskell, Lua, Perl, Python,
+Ruby, Rust, Swift, and TypeScript `<language>/programs/build-tool` fronts;
+G denotes Go.
+
+| Case stem after `validation-` | Direct readers |
+| --- | --- |
+| `orphan-crates-clean`, `orphan-crates-unlisted`, `orphan-exemptions-invalid`, `orphan-exemptions-stale` | C, F, E, H, L, P, Y, B, R, S, T |
+| `tracked-artifacts-aliases`, `tracked-artifacts-clean`, `tracked-artifacts-forbidden`, `tracked-artifacts-invalid`, `tracked-artifacts-unicode-boundaries` | C, F, E, H, L, P, Y, B, R, S, T |
+| `orphan-package-root-exemptions-invalid`, `orphan-package-root-exemptions-stale`, `orphan-package-roots-clean`, `orphan-package-roots-unlisted`, `lua-windows-sibling-parity-absent` | G |
+| `clean-build`, `clean-full`, `dependency-oracles`, `identity-manifest-ambiguous`, `missing-build`, `path-unsafe`, `starlark-declarations-invalid`, `toolchain-unsupported` | neutral gate only |
+
+This map MUST match the checked corpus and native test sources, including
+Perl's dynamically constructed fixture names. A new valid flat case is
+unknown, not implicitly neutral-only, and MUST fail before a partial plan.
+Added, modified, deleted, and renamed paths (including the deleted source)
+participate; nested paths, backslash spellings, empty stems, case variants,
+backup files, and other fixture domains do not. Ordinary changed package
+roots unite with direct readers without forcing a full build. Explicit
+language filters select only applicable readers; missing applicable roots
+fail before planning. Linux, macOS, and Windows plans MUST expose unforced
+affected roots and toolchain flags; C/F share `dotnet` but remain separate
+fronts. Neutral-only cases still run the shared fixture gate.
+
 ## Evaluation
 
 A gate is **required** when ANY of the following holds:

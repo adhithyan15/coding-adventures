@@ -16691,7 +16691,7 @@ Parallel audits registered newly discovered work before the next selection:
 | Intel 8008 simulator and gate level | `intel8008-simulator-neutral-lifecycle-conformance` → `intel8008-simulator-ten-lane-parity`; `intel8008-gatelevel-neutral-state-conformance` → `intel8008-gatelevel-ten-lane-parity` | Both 5/15; 07f bounded full-state simulator precedes 07f2 differential gate-level work, with same-lane simulator and arithmetic prerequisites. |
 | ARM1 simulator and gate level | `arm1-simulator-07e-neutral-full-state-conformance` → `arm1-simulator-seven-lane-parity`; `arm1-gatelevel-07e2-neutral-differential-conformance` → `arm1-gatelevel-seven-lane-parity` | Both 8/15; 599-vector full-state reference precedes gate-backed differential and same-lane simulator/arithmetic ports. |
 | Branch predictor | `branch-predictor-d02-neutral-conformance` → `branch-predictor-seven-lane-parity` | 8/15; reconcile D02 logical clock language with existing clock-free state-machine/directed-graph manifests. |
-| Mermaid Swimlane parser | `mermaid-swimlane-quoted-label-parser-neutral-conformance` → `mermaid-swimlane-entity-label-parser-neutral-conformance` | DG04 quoted Unicode labels and their interaction with entity decoding precede remaining entity-label behavior. Open #17038 already owns unquoted lane/node/pipe-edge entity baselines; the later child should classify inline edges and malformed/unknown or broader numeric entities without duplicating those cases. Neither parser owner overlaps the layout hierarchy. |
+| Mermaid Swimlane parser | `mermaid-swimlane-quoted-label-parser-neutral-conformance` → `mermaid-swimlane-entity-label-parser-neutral-conformance` | DG04 quoted Unicode labels and their interaction with entity decoding precede remaining entity-label behavior. Merged #17038 owns unquoted lane/node/pipe-edge entity baselines and #17049 owns metadata title/accTitle/accDescr entity baselines; the later child should classify residual inline edges and malformed/unknown or broader numeric entities without duplication. Neither parser owner overlaps the layout hierarchy. |
 
 Correct the pending validation-fixture selector's inventory to 22 checked
 flat cases: 14 have scoped direct native readers and eight remain
@@ -16771,8 +16771,9 @@ logic-gates and arithmetic foundations are already present; a clock-driven
 pipeline is a separate optional sibling-API concern, not part of FP01's
 required public core. Dart/Java/Kotlin FP01 ports depend on their separately
 owned same-lane arithmetic ports. No open PR owns FP01. The existing Mermaid
-Swimlane parser owner absorbs #17026 marker-vector review and open #17038
-entity-label semantics without duplicate owners or overlapping selection.
+Swimlane parser owner absorbs #17026 marker-vector review and the now-merged
+#17038/#17049 entity-label semantics without duplicate owners or overlapping
+selection.
 
 The dependency/leverage pass selects exactly
 `build-tool-hashing-cache-fixture-native-ci-selection` next: its four
@@ -16786,6 +16787,45 @@ selector. Point2D Java/Kotlin/Dart remains the strongest ready package DAG
 but is a larger three-lane port. OCaml promotion still depends on its
 scaffold, full build-tool front, adapter, three-platform CI, and capability
 gates; the present core-only packages do not promote its denominator.
+
+### Post-#17042 merged-main refresh (2026-10-08)
+
+Guarded auto-merge of #17042 completed as `4a73b025cbb245fc0164fdfd19d1ba6142b11b88`
+after 29 successful, seven skipped, and one neutral terminal checks. The
+unrelated macOS Forme web-quality performance leg initially measured 0.92
+against a 0.95 median threshold, then passed on a failed-job rerun without
+changing the parity implementation. The merge is an ancestor of fetched main;
+no parity PR remains open. From `bedf869390378fde9a0443090da080416caaf400`,
+the schema-3 collision-gated reporter still finds 15 established lanes,
+1,497 implementation identities, 4,767 occupied slots, 1,539 all-reported
+identities, zero canonical collisions, and zero unknown buckets. The
+high-consensus band remains 178 identities and 262 missing slots; the 5–9,
+2–4, and singleton bands remain 123/934, 181/2,282, and 1,015/14,210.
+OCaml remains five emerging roots outside the all-language denominator. No
+new package-root identity was introduced since #17028.
+
+Classify intervening merged behavior under existing owners: #17030/#17043
+ALGOL bounded sqrt/cos sign widening; #17040 emitting-only preprocessor
+`Undef`; #17036 deterministic Vault F1–F9 freshness under its portable core
+while F10 external anchoring remains native authority; #17035/#17047 partial
+Perl release-grammar fixtures under the existing frontend owner; and
+#17038/#17049 Mermaid label and metadata entity baselines under the two
+ordered parser owners. Remaining Vault work overlaps its existing owner;
+Perl's release-grammar work is merged. Neither is the next parity slice.
+Read-only audits across all established lanes found
+the inspected high-consensus gaps already owned, not silently complete.
+
+The next coherent item is
+`build-tool-validation-fixture-native-ci-selection`: all five prerequisites
+are merged, and 14 of 22 checked flat validation cases have direct native
+readers. Nine orphan-crate/tracked-artifact cases select eleven non-Go fronts;
+five orphan-package-root/Lua-Windows-sibling cases select Go; eight one-off
+cases remain neutral-only. Perl constructs fixture names dynamically, so
+the exact case-to-reader evidence and an unclassified-case fail-closed test
+are essential. Select this fixture-only CI tranche before the plan selector
+(two native-read cases of five); Point2D Java/Kotlin/Dart remains the
+strongest ready package DAG, but is a larger three-lane port. Native
+build-tool adapters, including OCaml, remain separate dependency-gated work.
 
 ## Autonomous Loop Protocol
 
