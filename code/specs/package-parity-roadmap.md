@@ -16845,6 +16845,14 @@ package-root identity appeared. The next priority pass compares the already
 ready five-case plan-fixture selector (two native-read cases) with the larger
 Point2D Java/Kotlin/Dart package DAG and other dependency-ready owners.
 
+That pass selected exactly `build-tool-plan-fixture-native-ci-selection`:
+both dependencies are merged, no parity PR or direct plan-fixture overlap is
+open, and its two direct native readers can be scheduled by a five-case
+closed map without altering plan semantics. The three neutral-only cases
+remain neutral-only. Point2D Java/Kotlin/Dart has greater package leverage
+but is a larger multi-lane implementation DAG; it remains queued. The two
+new Swimlane parser owners are also queued behind this bounded CI slice.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
