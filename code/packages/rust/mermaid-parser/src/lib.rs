@@ -6881,8 +6881,22 @@ fn parse_swimlane_shape_attributes(
             "label" => label = Some(value),
             "shape" => {
                 shape = Some(match value.to_ascii_lowercase().as_str() {
+                    "rect" | "proc" | "process" | "rectangle" => DiagramShape::Rect,
+                    "rounded" | "event" => DiagramShape::RoundedRect,
+                    "circle" | "circ" => DiagramShape::Ellipse,
+                    "diam" | "decision" | "diamond" | "question" => DiagramShape::Diamond,
+                    "hex" | "hexagon" | "prepare" => DiagramShape::Hexagon,
                     "cloud" => DiagramShape::Cloud,
                     "bang" => DiagramShape::Bang,
+                    "stadium" | "pill" | "terminal" => DiagramShape::Stadium,
+                    "lean-r" | "in-out" | "lean-right" => DiagramShape::ParallelogramRight,
+                    "lean-l" | "lean-left" | "out-in" => DiagramShape::ParallelogramLeft,
+                    "trap-b" | "priority" | "trapezoid" | "trapezoid-bottom" => DiagramShape::Trapezoid,
+                    "trap-t" | "inv-trapezoid" | "manual" | "trapezoid-top" => DiagramShape::InvertedTrapezoid,
+                    "fr-rect" | "framed-rectangle" | "subproc" | "subprocess" | "subroutine" => DiagramShape::Subroutine,
+                    "cyl" | "cylinder" | "database" | "db" => DiagramShape::Cylinder,
+                    "dbl-circ" | "double-circle" => DiagramShape::DoubleCircle,
+                    "odd" => DiagramShape::Asymmetric,
                     other => return Err(swimlane_error(line, format!("unsupported Swimlane attribute shape {other:?}"))),
                 });
             }

@@ -9,6 +9,7 @@
     "subprocess-and-database-shapes",
     "hexagon-and-double-circle-shapes",
     "cloud-and-bang-attribute-shapes",
+    "classic-shape-attributes-and-aliases",
     "input-output-and-asymmetric-shapes",
     "sloped-flowchart-shapes",
     "quoted-unicode-node-labels",
