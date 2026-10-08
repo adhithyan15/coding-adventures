@@ -6,7 +6,7 @@
 
 use std::collections::VecDeque;
 use std::fs;
-use std::os::unix::fs::PermissionsExt;
+use std::os::unix::fs::{DirBuilderExt, PermissionsExt};
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicU64, AtomicUsize, Ordering};
 use std::sync::{Arc, Mutex};
@@ -76,13 +76,16 @@ struct Scratch(PathBuf);
 impl Scratch {
     fn new() -> Self {
         static NEXT: AtomicUsize = AtomicUsize::new(0);
-        let path = std::env::temp_dir().join(format!(
+        // Under Cargo's per-target scratch directory, not a shared /tmp,
+        // and created 0700 by this call alone (review round 1): the key
+        // files live here.
+        let path = Path::new(env!("CARGO_TARGET_TMPDIR")).join(format!(
             "broker-e2e-{}-{}",
             std::process::id(),
             NEXT.fetch_add(1, Ordering::Relaxed)
         ));
         let _ = fs::remove_dir_all(&path);
-        fs::create_dir_all(&path).unwrap();
+        fs::DirBuilder::new().mode(0o700).create(&path).unwrap();
         Self(fs::canonicalize(path).unwrap())
     }
 

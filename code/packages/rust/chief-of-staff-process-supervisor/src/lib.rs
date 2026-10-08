@@ -391,6 +391,10 @@ struct HostLink {
     control: Option<OrchestratorControl>,
     writer: Option<RecordWriter>,
     pending: Option<DataPlaneRequest>,
+    /// The pending request is with the agent's broker, whose relay answers
+    /// it. It is not offered to `pending_data_plane_request`, and
+    /// `respond_data_plane` may not answer it (P2.6d-2b review round 1).
+    relayed: bool,
 }
 
 type SharedLink = Arc<Mutex<HostLink>>;
@@ -416,6 +420,7 @@ fn respond_on(
         .ok_or(ProcessSupervisorError::ProcessIo)?
         .send(frame)?;
     link.pending = None;
+    link.relayed = false;
     Ok(())
 }
 
@@ -433,6 +438,10 @@ struct OwnedBroker {
     child: Option<Child>,
     relay: BrokerRelay,
     identity: (PipelineId, Vec<u8>),
+    /// Latched once an end is seen: the relay's report is consumed when it
+    /// is read, and the host must still be ended on a later refresh if
+    /// ending it failed this time (P2.6d-2b review round 1).
+    ended: bool,
 }
 
 impl OwnedBroker {
@@ -457,12 +466,13 @@ impl OwnedBroker {
     /// process exited. The exit is seen without reaping, so the session
     /// kill that follows still reaches the right group.
     fn has_ended(&mut self) -> bool {
-        if self.relay.ended().is_some() {
-            return true;
+        if !self.ended {
+            self.ended = self.relay.ended().is_some()
+                || self.child.as_ref().is_some_and(|child| {
+                    matches!(chief_of_staff_spawn_isolation::has_exited(child), Ok(true))
+                });
         }
-        self.child.as_ref().is_some_and(|child| {
-            matches!(chief_of_staff_spawn_isolation::has_exited(child), Ok(true))
-        })
+        self.ended
     }
 }
 
@@ -533,6 +543,7 @@ impl OwnedInstance {
         if let Ok(mut link) = self.link.lock() {
             link.control.take();
             link.pending = None;
+            link.relayed = false;
         }
         // The host's end ends its broker.
         if let Some(broker) = self.broker.as_mut() {
@@ -582,7 +593,12 @@ impl OwnedInstance {
         self.drain_records(dispatcher, Some(MAX_RECORDS_PER_DRAIN))?;
 
         // The broker's end, or misbehaviour, ends its host.
+        // The broker is ended here, whatever happens to the host: if
+        // ending the host fails, the latched end tries again next refresh.
         if self.broker.as_mut().is_some_and(OwnedBroker::has_ended) {
+            if let Some(broker) = self.broker.as_mut() {
+                broker.end();
+            }
             let _ = self.hard_kill_and_reap();
             return Err(ProcessSupervisorError::Broker);
         }
@@ -676,23 +692,25 @@ impl OwnedInstance {
                                 }
                                 continue;
                             }
-                            let stored = lock(&self.link)
-                                .map(|mut link| link.pending = Some(request.clone()));
+                            // A channel operation goes to the agent's broker,
+                            // never waited on here: its relay answers the
+                            // host itself (D18S P2.6d-2b).
+                            let relayed =
+                                self.broker.is_some() && InFlight::for_request(&request).is_some();
+                            let stored = lock(&self.link).map(|mut link| {
+                                link.pending = Some(request.clone());
+                                link.relayed = relayed;
+                            });
                             if let Err(error) = stored {
                                 let _ = self.hard_kill_and_reap();
                                 return Err(error);
                             }
-                            // A channel operation goes to the agent's broker,
-                            // never waited on here: its relay answers the
-                            // host itself (D18S P2.6d-2b).
-                            if InFlight::for_request(&request).is_some() {
-                                if let Some(broker) = self.broker.as_ref() {
-                                    if broker.relay.relay(request).is_err() {
-                                        let _ = self.hard_kill_and_reap();
-                                        return Err(ProcessSupervisorError::Broker);
-                                    }
-                                    continue;
+                            if let Some(broker) = self.broker.as_ref().filter(|_| relayed) {
+                                if broker.relay.relay(request).is_err() {
+                                    let _ = self.hard_kill_and_reap();
+                                    return Err(ProcessSupervisorError::Broker);
                                 }
+                                continue;
                             }
                             if let Some(dispatcher) = dispatcher {
                                 let response = dispatcher.dispatch(&self.registration, &request);
@@ -916,6 +934,7 @@ impl ProcessHostSupervisor {
                         child: Some(child),
                         relay,
                         identity,
+                        ended: false,
                     });
                 }
                 Err(_) => {
@@ -1122,6 +1141,7 @@ impl ProcessHostSupervisor {
                     control: Some(control),
                     writer: Some(stdin),
                     pending: None,
+                    relayed: false,
                 })),
                 broker: None,
                 phase: InstancePhase::Starting,
@@ -1166,7 +1186,8 @@ impl ProcessHostSupervisor {
             .get_mut(host_name.as_str())
             .ok_or(ProcessSupervisorError::HostNotFound)?;
         instance.refresh(dispatcher)?;
-        Ok(lock(&instance.link)?.pending.clone())
+        let link = lock(&instance.link)?;
+        Ok(link.pending.clone().filter(|_| !link.relayed))
     }
 
     /// Send the exact correlated response for a host's pending request.
@@ -1181,6 +1202,11 @@ impl ProcessHostSupervisor {
             .get_mut(host_name.as_str())
             .ok_or(ProcessSupervisorError::HostNotFound)?;
         instance.refresh(dispatcher)?;
+        // A request with the broker is the broker's to answer. Refused
+        // without ending the host: the host did nothing wrong.
+        if lock(&instance.link)?.relayed {
+            return Err(ProcessSupervisorError::Control);
+        }
         if let Err(error) = instance.send_data_plane_response(response) {
             let _ = instance.hard_kill_and_reap();
             return Err(error);

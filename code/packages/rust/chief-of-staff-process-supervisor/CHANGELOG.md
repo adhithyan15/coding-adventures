@@ -19,6 +19,12 @@
     host in the order the channel numbered them.
   - New errors: `BrokerLaunch`, `BrokerBusy`, `Broker`. New accessor:
     `broker_process_id`, for the audit record and tests.
+  - Review round 1:
+    - a request with the broker is not offered to
+      `pending_data_plane_request`, and `respond_data_plane` refuses to
+      answer it;
+    - a broker's end is latched, and the broker is ended at once, even if
+      ending its host fails; the host is tried again on the next refresh.
 - The stalled-host queue test no longer races the writer thread. It used
   to assert a refusal right after the queue first filled, but the thread
   could take its first frame in between, which freed a slot (seen on macOS
