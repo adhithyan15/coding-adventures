@@ -89,14 +89,34 @@ full Miri acceptance. A complete new frozen script pass remains required before
 push, with final source/runner hashes and exact-head independent security.
 
 Current main `52b53049ecb3` is merged, preserving both C changelog entries and
-every upstream change. Its newer Perl/Mermaid/ALGOL/C/Compose shared consumers
-need consolidated current-source validation; the previous known LANG-AOT full
-FAIL and two exact old-base baseline cells remain retained. Upstream PROGRAMS
-insertions shift numeric cell indexes, so any new cell probe must rediscover its
-actual source. Current BUILD selections and the new ALGOL native regressions
-will run without editing assertions/filters. Current Go build-tool source also
-changed, requiring actual rebuild/plan generation. Refreshed current-head review,
-planning, full local Miri and native CI/actual merge acceptance remain pending.
+every upstream change through that base. At actual tested candidate
+`b1dfc5bc242e3518fd208e29dd862bb13a88c0fc`, all15 consolidated commands pass:
+1,818 tests/docs across83 targets, zero failures and one existing ignore. These
+include six full Perl/Mermaid/paint/ALGOL-IIR/C/Compose suites, every unchanged
+LANG-AOT production BUILD command, both new sqrt/entier and sqrt/nonnegative
+native regressions (exactly1 selected/pass each), and strict all-target Clippy
+for all seven consumers. The previous known LANG-AOT full FAIL and two exact
+old-base baseline cells remain retained. PROGRAMS insertions shift numeric cell
+indexes; new cell probes must rediscover actual source.
+
+Independent security passes exact `b1dfc5bc242e`. Its rebuilt actual Go tool
+passes12 CI-gate/toolchain fixture tests and vet; the non-forced production plan
+selects the real Closurec test command on all three native platforms. Planning
+does not establish native CI success. The corrected complete local Miri script
+is still running against that frozen candidate, with497 source/runner hashes
+unchanged. It passed the formerly aborting host-input test inside the actual
+full run, but its unfinished Twig library target is not accepted.
+
+New main through audited `e71e05f3b839` is deferred until this run terminates.
+The conservative source audit detects the workspace Cargo.toml adding an
+unrelated member; do not bypass the merge guard or assume equivalent resolution.
+Fresh dependency/input evidence is required when reconciling main. Other newer
+Perl/Mermaid/diagram/C/JavaScript-IIR/ALGOL/native-emitter and Go selector changes
+require validation of their actual current consumers. Newly added ALGOL native
+controls and Go source-collection/graph-diff/resolution fixture tests must be
+selected explicitly; older passing counts do not cover them. Preserve all
+failure receipts, and refresh final-head review/planning after reconciliation.
+Full local Miri and native CI/actual merge acceptance remain pending.
 No source branch has been pushed and no CV04a PR exists. #16970 remains open
 through CV04b; these local results do not claim accepted delivery.
 
