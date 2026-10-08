@@ -57,6 +57,14 @@ places one eager browser key per glyph in the bundle. Script Ductus and Language
 Ladder install the same plugin, so their tests, development servers, and
 production builds all read the same canonical data.
 
+The registry pin follows it too. `tests/stroke-ownership.test.ts` pins every
+key, their order, every byte of non-Tamil data and every count, but each
+script's numbers live in their own `tests/stroke-ownership/<script>.json`, so a
+Kannada PR and a Malayalam PR never edit the same pin. After a deliberate
+stroke change, run `npm run generate:stroke-ownership`, check that the diff
+touches only the scripts you meant to change, and say why in your release
+note.
+
 Release notes follow the same ownership rule. Add one strict
 `CHANGELOG.d/NNNNN-HEADING-SLUG-<digest>.md` fragment with a level-3 heading;
 do not edit or commit `CHANGELOG.md`. Run `npm run unshard:docs` only when a
