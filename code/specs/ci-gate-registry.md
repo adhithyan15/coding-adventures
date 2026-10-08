@@ -184,6 +184,33 @@ native scheduling; C# and F# are separate roots sharing the `dotnet` flag.
 A new direct native reader or changed native fixture roster MUST update the
 relation and its source-reference drift test together.
 
+The exact flat `code/specs/fixtures/build-tool-v1/cases/graph-*.json` and
+`code/specs/fixtures/build-tool-v1/cases/diff-selection-*.json` families have
+eight and twelve checked cases respectively. Any added, modified, deleted,
+or renamed path in either family, including the deleted source of a rename,
+MUST seed their eleven direct native readers before affected/prerequisite
+closure: `dotnet/programs/build-tool-csharp`,
+`dotnet/programs/build-tool-fsharp`, and `<language>/programs/build-tool` for
+Java, Kotlin, Dart, OCaml, Go, Haskell, Perl, Python, and Swift. Java, Kotlin,
+Dart, and OCaml tests discover `cases/*.json` by decoded `graph` and
+`diff_selection` domains and pin all twenty IDs; they are real native readers
+even without literal fixture filenames. OCaml is still an emerging lane, and
+these fixtures exercise process-free cores only in Java/Kotlin/Dart/OCaml, not
+complete build-tool front doors or neutral adapters.
+
+Classify raw Git paths without OS cleanup. Only the exact prefix, a nonempty
+flat stem, and a final lower-case `.json` extension belong to either family;
+nested paths, backslash spellings, empty stems, case variants, backups, and
+sibling fixture domains MUST NOT seed these roots. Ordinary changed package
+roots are united with the native readers, without forcing a full build.
+Detect and Linux, macOS, and Windows plan overrides MUST schedule applicable
+readers. Explicit single-language planning seeds and validates only that
+language's reader. A missing applicable discovered root MUST fail before any
+partial plan is emitted. Unforced affected sets and toolchain flags MUST
+demonstrate scheduling; C# and F# are distinct roots sharing `dotnet`.
+New native readers or case rosters MUST update the exact relation and a
+source-reference drift test together, including dynamic domain enumeration.
+
 ## Evaluation
 
 A gate is **required** when ANY of the following holds:
