@@ -5289,6 +5289,17 @@ fn flutter_letter_spacing(props: &HashMap<String, String>) -> Option<f64> {
     Some((pixels * 1_000_000.0).round() / 1_000_000.0)
 }
 
+fn flutter_text_transform_uppercase(props: &HashMap<String, String>) -> Option<bool> {
+    let raw = props.get("text-transform")?.trim().trim_matches('"').trim();
+    let uppercase = match raw {
+        "uppercase" => true,
+        "none" => false,
+        _ => return None,
+    };
+    record_style_read("text-transform");
+    Some(uppercase)
+}
+
 fn flutter_box_style(
     base: &HashMap<String, String>,
     layers: &[StateLayer],
@@ -5671,11 +5682,19 @@ fn emit_text(
     ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
-    let text = if let Some(s) = find_string_prop(node, "content") {
-        format!("Text(\"{}\")", escape_dart_string(s))
+    let text_props = node
+        .part_name
+        .as_deref()
+        .and_then(|part| part_styles.get(part))
+        .map(String::as_str)
+        .map(parse_style_props)
+        .unwrap_or_default();
+    let uppercase = flutter_text_transform_uppercase(&text_props).unwrap_or(false);
+    let (value, is_const) = if let Some(s) = find_string_prop(node, "content") {
+        (format!("\"{}\"", escape_dart_string(s)), false)
     } else if let Some(slot) = find_slot_ref_prop(node, "content") {
         let camel = to_camel_case_first_lower(slot);
-        format!("Text({camel})")
+        (camel, false)
     } else if let Some(expr_text) = node
         .props
         .iter()
@@ -5687,10 +5706,19 @@ fn emit_text(
     {
         // UI28-1 / U29-D1 — Expr content passes verbatim into Text so
         // surrounding For-loop bindings remain live.
-        format!("Text({expr_text})")
+        (expr_text.to_string(), false)
     } else {
-        "const Text(\"\")".to_string()
+        ("\"\"".to_string(), true)
     };
+    let value = if uppercase {
+        format!("({value}).toUpperCase()")
+    } else {
+        value
+    };
+    let text = format!(
+        "{}Text({value})",
+        if is_const && !uppercase { "const " } else { "" }
+    );
 
     let size = effective_font_size(node, part_styles, ctx)?;
     let base = table_text_style(host_input_text_style_arg(node, part_styles), ctx);
@@ -5712,13 +5740,6 @@ fn emit_text(
     // containers and host buttons. Keeping this before the accessibility
     // wrappers means Semantics/ExcludeSemantics still describe the entire
     // padded visual node rather than only its glyph child (#16241).
-    let text_props = node
-        .part_name
-        .as_deref()
-        .and_then(|part| part_styles.get(part))
-        .map(String::as_str)
-        .map(parse_style_props)
-        .unwrap_or_default();
     let text = match flutter_padding_edges(&text_props) {
         Some(edges) => {
             let insets = flutter_edge_insets(&edges, false);
@@ -16129,6 +16150,41 @@ mod tests {
             drops.is_empty(),
             "implemented typography was reported dropped: {drops:?}"
         );
+    }
+
+    #[test]
+    fn text_transform_uppercase_rewrites_display_content_and_unknown_values_drop() {
+        let m = component("X", vec![], vec![]);
+        let mut text = flex_node_with_part("Text", "label", vec![]);
+        text.props.push(LayoutProp {
+            name: "content".into(),
+            value: LayoutPropValue::String("Task label".into()),
+        });
+        let l = layout("X", text);
+        let s = style_with_part(
+            "X",
+            "label",
+            vec![StyleProp {
+                name: "text-transform".into(),
+                value: "uppercase".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(out.contains("Text((\"Task label\").toUpperCase())"), "{out}");
+        assert!(dropped_style_properties(&m, &l, &s).is_empty());
+
+        let unsupported = style_with_part(
+            "X",
+            "label",
+            vec![StyleProp {
+                name: "text-transform".into(),
+                value: "capitalize".into(),
+            }],
+        );
+        let drops = dropped_style_properties(&m, &l, &unsupported);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "text-transform");
     }
 
     // ====================================================================

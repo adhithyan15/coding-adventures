@@ -147,6 +147,20 @@ mod letter_spacing_tests {
                 .any(|line| line == "font.letterSpacing: 0.66")
         );
     }
+
+    #[test]
+    fn uppercase_text_transform_lowers_to_qt_capitalization() {
+        let props = vec![StyleProp {
+            name: "text-transform".into(),
+            value: "uppercase".into(),
+        }];
+
+        assert!(
+            qml_text_part_style_lines(&props)
+                .iter()
+                .any(|line| line == "font.capitalization: Font.AllUppercase")
+        );
+    }
 }
 
 /// Errors the Qt pipeline emitter can return.
@@ -3132,6 +3146,23 @@ fn qml_letter_spacing(props: &[StyleProp]) -> Option<String> {
     Some(((pixels * 1_000_000.0).round() / 1_000_000.0).to_string())
 }
 
+fn qml_text_capitalization(props: &[StyleProp]) -> Option<&'static str> {
+    let raw = props
+        .iter()
+        .find(|prop| prop.name == "text-transform")?
+        .value
+        .trim()
+        .trim_matches('"')
+        .trim();
+    let capitalization = match raw {
+        "uppercase" => "Font.AllUppercase",
+        "none" => "Font.MixedCase",
+        _ => return None,
+    };
+    record_style_read(props, "text-transform");
+    Some(capitalization)
+}
+
 fn qml_text_part_style_lines(props: &[StyleProp]) -> Vec<String> {
     let mut lines = Vec::new();
     if let Some(color) = style_prop(props, "color").and_then(qml_hex_color_or_none) {
@@ -3148,6 +3179,9 @@ fn qml_text_part_style_lines(props: &[StyleProp]) -> Vec<String> {
     }
     if let Some(spacing) = qml_letter_spacing(props) {
         lines.push(format!("font.letterSpacing: {spacing}"));
+    }
+    if let Some(capitalization) = qml_text_capitalization(props) {
+        lines.push(format!("font.capitalization: {capitalization}"));
     }
     if let Some(align) = style_prop(props, "text-align").and_then(qml_text_align) {
         lines.push(format!("horizontalAlignment: {align}"));

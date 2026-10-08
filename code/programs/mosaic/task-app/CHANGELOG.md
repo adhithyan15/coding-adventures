@@ -7,6 +7,14 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.1` accumulate here until the next version is
 cut.
 
+### Fixed — native text preserves authored uppercase transforms (#17052)
+
+XAML, SwiftUI, Compose, Qt, and Flutter now lower TaskApp's supported
+`text-transform: uppercase` labels through their native text APIs. Fresh strict
+generation retires all 55 `text-transform` allowances and reduces the
+style-drop inventories to 54 XAML, 99 SwiftUI, 66 Compose, 140 Qt, and 174
+Flutter. `none` remains an identity and unsupported values stay visible.
+
 ### Fixed — SwiftUI stacks preserve cross-axis alignment (#17031)
 
 TaskApp's `Row` parts now carry authored `align: center-vertical` through to
