@@ -220,6 +220,37 @@ mod tests {
     }
 
     #[test]
+    fn negated_comparison_selects_rooted_branch_and_locates_errors() {
+        let root = uniq("_negated_comparison_if");
+        std::fs::create_dir(&root).unwrap();
+        write_fresh(
+            &root.join("main.c"),
+            b"#define FLAG 7\n#if !(FLAG == 0)\nint value(void) { return 7; }\n#else\nint value(void) { return 0; }\n#endif\n",
+        );
+        let module = compile_preprocessed_file(
+            "main.c",
+            [root.clone()],
+            "negated_comparison_if",
+            Bounds::default(),
+        )
+        .unwrap();
+        let text = semantic_ir::print_module(&module);
+        assert!(text.contains("(block (int 7))"), "{text}");
+        assert!(!text.contains("(block (int 0))"), "{text}");
+
+        write_fresh(&root.join("invalid.c"), b"#if !(1 + 2)\nint x;\n#endif\n");
+        let error = compile_preprocessed_file(
+            "invalid.c",
+            [root.clone()],
+            "invalid_negated_comparison_if",
+            Bounds::default(),
+        )
+        .unwrap_err();
+        assert_eq!((error.line, error.column), (1, 1), "{error}");
+        std::fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
     fn overlong_entry_is_refused_before_copy_or_filesystem_access() {
         let entry = "x".repeat(65_537);
         let error = compile_preprocessed_file(&entry, [], "oversized", Bounds::default())

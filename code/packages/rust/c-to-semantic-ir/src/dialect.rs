@@ -99,6 +99,17 @@ fn condition_operand(token: &Token) -> Result<i64, PpError> {
 }
 
 fn condition_clause(tokens: &[Token]) -> Result<bool, PpError> {
+    // Peel one exact negated comparison. The inner slice has three tokens, so
+    // this call cannot recurse again or turn parentheses into a general parser.
+    if let [not, open, _, op, _, close] = tokens {
+        if not.value == "!"
+            && open.value == "("
+            && close.value == ")"
+            && matches!(op.value.as_str(), "==" | "!=" | "<" | "<=" | ">" | ">=")
+        {
+            return condition_clause(&tokens[2..5]).map(|value| !value);
+        }
+    }
     // Unwrap at most one pair. Matching only these exact shapes keeps nested
     // and mixed forms outside the bounded evaluator without recursive parsing.
     let tokens = match tokens {
@@ -716,6 +727,52 @@ mod tests {
             "2 < 3)",
             "1 || ((1))",
             "1 || (1 + 2)",
+        ] {
+            let source = format!("#if {condition}\nint x;\n#endif\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            assert!(
+                preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err(),
+                "{condition}"
+            );
+        }
+    }
+
+    #[test]
+    fn one_negated_comparison_clause_keeps_the_bounded_shapes() {
+        for (condition, expected) in [
+            ("!(1 == 2)", "1"),
+            ("!(1 < 2)", "0"),
+            ("!(ANSWER != 7)", "1"),
+            ("!(MISSING == 0)", "0"),
+            ("0 || !(1 == 2) && 1", "1"),
+        ] {
+            let source = format!(
+                "#define ANSWER 7\n#if {condition}\nint x = 1;\n#else\nint x = 0;\n#endif\n"
+            );
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+            let values: Vec<_> = result
+                .tokens
+                .iter()
+                .map(|token| token.value.as_str())
+                .collect();
+            assert_eq!(values, ["int", "x", "=", expected, ";"], "{condition}");
+        }
+        for condition in [
+            "!(1)",
+            "!((1 == 2))",
+            "!(1 + 2)",
+            "!(1 << 2)",
+            "!(1 && 0)",
+            "!(1 == 2) == 1",
+            "!(010 == 10)",
+            "1 || !(1 + 2)",
         ] {
             let source = format!("#if {condition}\nint x;\n#endif\n");
             let mut fs = MemoryFs::new();
