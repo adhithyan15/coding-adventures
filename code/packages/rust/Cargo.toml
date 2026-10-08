@@ -1221,6 +1221,7 @@ members = [
   "chief-of-staff-spawn-isolation",
   "chief-of-staff-linux-sandbox",
   "chief-of-staff-process-hardening",
+  "chief-of-staff-broker-roots",
   "chief-of-staff-daemon-authority-provisioning",
   "chief-of-staff-daemon",
   "chief-of-staff-daemon-service-files",

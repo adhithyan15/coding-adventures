@@ -1520,10 +1520,54 @@ through S-I3 before two weeks are spent on Windows.
          ended.
      - Length bounds already exist on every frame and field, and are
        unchanged.
-   - **P2.6c, beneath-resolution (S-K5).** The `openat2(RESOLVE_BENEATH |
-     RESOLVE_NO_SYMLINKS | RESOLVE_NO_MAGICLINKS)` primitive, plus the
-     startup proof that the broker's roots are disjoint from S-I6's
-     never-grantable set. Brokered `fs:*` operations attach to it.
+   - **P2.6c, beneath-resolution (S-K5).** It lives in
+     `chief-of-staff-broker-roots`. No brokered `fs:*` operation exists
+     yet; when one does, it must go through this crate.
+     - `BrokerRoot::open(path, never_grantable)` opens a supervisor-chosen
+       root directory. It refuses the root if, after resolving symlinks,
+       the root lies inside any never-grantable path, or any never-grantable
+       path lies inside the root. This is the start-time proof S-K5 asks
+       for. It fails closed: a never-grantable path it cannot compare
+       exactly is treated as an overlap. That covers a `..` after its last
+       existing directory, and an ancestor that exists but cannot be
+       searched. After opening the root, it asks the kernel for the
+       descriptor's path (`/proc/self/fd` on Linux, `F_GETPATH` on macOS),
+       and refuses unless that path is the one it checked.
+     - `open_beneath(relative, Read | Write)` resolves an agent-supplied
+       path by the platform's own primitive, never by `realpath` and then
+       `open`:
+       - Linux: `openat2(RESOLVE_BENEATH | RESOLVE_NO_SYMLINKS |
+         RESOLVE_NO_MAGICLINKS | RESOLVE_NO_XDEV)`. `RESOLVE_NO_XDEV` also
+         refuses to cross a mount point, so a bind mount placed inside a
+         root cannot be walked into;
+       - macOS: `openat` with `O_NOFOLLOW_ANY`, after refusing absolute
+         paths and `..` components. An older kernel would silently ignore
+         that flag, so `BrokerRoot::open` first checks that the flag is
+         honored: opening `/etc/hosts` must fail with `ELOOP`. Otherwise
+         the root is `Unsupported`. macOS has no mount-crossing refusal;
+         mounting inside a root needs privilege an agent does not have;
+       - every other platform: a refusal. Without the primitive, the
+         broker does not offer the operation (S-P3).
+     - What it returns is a **regular file**, never a directory. It is
+       close-on-exec, and it carries only the access asked for. A write
+       never creates or truncates: truncating inside `open` would happen
+       before the checks. A caller replacing contents calls `set_len`
+       after the checks.
+     - The open is non-blocking until `fstat` proves the file regular, so
+       a FIFO planted in the root cannot hang the broker.
+     - A file with more than one hard link is refused. That catches a hard
+       link into the root from anywhere, the vault included, without the
+       broker having to know every never-grantable inode. It also refuses
+       a legitimately hard-linked file, which costs nothing here.
+       The check is **defence in depth**, not a guarantee. An actor who
+       can link a protected file into the root can unlink it again between
+       the open and the `fstat`, and the count reads 1. Agents cannot link
+       at all: the sandbox plan grants neither `link` nor the Landlock
+       right. So the guarantee rests on the daemon keeping every
+       never-grantable directory mode 0700, because linking a file needs
+       search permission on its directory. P2.6d must check that when the
+       broker starts.
+     - Paths are length-bounded (4 KiB), and refused if they contain NUL.
    - **P2.6d, one contained broker per agent (S-K7).** The dispatcher moves
      out of the daemon into one process per agent. Each holds only that
      agent's channel keys and runs under its own sandbox plan.
