@@ -10,7 +10,7 @@
   "drivablePrefix": 0,
   "text": "arabic/narration/ch45.txt",
   "json": "arabic/narration/ch45.json",
-  "textHash": "fnv1a64:310e10cc2f90f128",
-  "jsonHash": "fnv1a64:b1738f4edac09978",
+  "textHash": "fnv1a64:b82656108ebb4515",
+  "jsonHash": "fnv1a64:db4e8a7bdab838c5",
   "findings": []
 }

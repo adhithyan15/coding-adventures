@@ -24,11 +24,10 @@
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, to read the printed text yourself",
-          "your eyes, because the lesson points at something written down"
+          "your eyes, to read the printed text yourself"
         ],
         "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, to read the printed text yourself and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
       },
       "blocks": [
         {
@@ -242,7 +241,7 @@
         "waitUntilStopped": [
           "Reading"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, to read the printed text yourself. You can listen to everything else now — leave the section called Reading until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
       },
       "blocks": [
         {
@@ -491,7 +490,7 @@
         "waitUntilStopped": [
           "Reading"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, to read the printed text yourself. You can listen to everything else now — leave the section called Reading until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not a driving lesson. You will want your eyes, to read the printed text yourself. The questions are about what you read, so save the whole lesson for when you have stopped."
       },
       "blocks": [
         {
@@ -737,7 +736,7 @@
           "Script: eight letters, one killer, two hangers",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: eight letters, one killer, two hangers and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: eight letters, one killer, two hangers and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -877,7 +876,7 @@
           "Script: five consonants, and the retroflex row they belong to",
           "Guided Practice: a vowel written like a letter, and a dot"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: five consonants, and the retroflex row they belong to and Guided Practice: a vowel written like a letter, and a dot until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: five consonants, and the retroflex row they belong to and Guided Practice: a vowel written like a letter, and a dot until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
