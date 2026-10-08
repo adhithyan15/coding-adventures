@@ -6645,13 +6645,14 @@ fn parse_swimlane_node(
 
 fn normalize_swimlane_label(value: &str) -> String {
     let value = value.trim();
-    if value.len() >= 2 && value.starts_with('"') && value.ends_with('"') {
+    let normalized = if value.len() >= 2 && value.starts_with('"') && value.ends_with('"') {
         value[1..value.len() - 1]
             .replace("\\\"", "\"")
             .replace("\\\\", "\\")
     } else {
         value.to_string()
-    }
+    };
+    commonmark_parser::entities::decode_entities(&normalized)
 }
 
 fn upsert_swimlane_node(diagram: &mut SwimlaneDiagram, node: SwimlaneNode, lane: Option<usize>) {
