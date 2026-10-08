@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Require separate, explicitly partial Perl 5.004_56 and 5.004_57
+  token/grammar pairs and apply the established decimal-boundary and
+  unsupported-input probes to each.
+
 - Require separate partial Perl 5.004_50, 5.004_51, and 5.004_52 token/grammar pairs and apply
   existing leading-zero, carriage-return, unsupported-character, and
   250-digit decimal probes to each.

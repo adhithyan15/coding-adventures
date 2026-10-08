@@ -227,6 +227,8 @@ mod tests {
                     | "5.004_53"
                     | "5.004_54"
                     | "5.004_55"
+                    | "5.004_56"
+                    | "5.004_57"
                     | "5.38.2"
                     | "5.44.0"
                     | "5.45.3"
@@ -303,6 +305,8 @@ mod tests {
                     | "5.004_53"
                     | "5.004_54"
                     | "5.004_55"
+                    | "5.004_56"
+                    | "5.004_57"
             ) {
                 let carriage_return = GrammarLexer::new("print(1);\r", &token_grammar).tokenize();
                 assert!(
@@ -365,6 +369,8 @@ mod tests {
                     | "5.004_53"
                     | "5.004_54"
                     | "5.004_55"
+                    | "5.004_56"
+                    | "5.004_57"
             ) {
                 let unknown = GrammarLexer::new("print(1);\u{0001}", &token_grammar).tokenize();
                 assert!(
@@ -417,6 +423,8 @@ mod tests {
                     | "5.004_53"
                     | "5.004_54"
                     | "5.004_55"
+                    | "5.004_56"
+                    | "5.004_57"
             ) {
                 let accepted = format!("print({});", "9".repeat(250));
                 let tokens = GrammarLexer::new(&accepted, &token_grammar)
@@ -460,6 +468,22 @@ mod tests {
             .any(|row| row.starts_with("5.004_55,") && row.ends_with(",partial")));
         assert!(directory.join("perl5.004_55.tokens").is_file());
         assert!(directory.join("perl5.004_55.grammar").is_file());
+    }
+
+    #[test]
+    fn perl_5_004_56_and_57_have_distinct_partial_pairs() {
+        let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
+        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
+        for release in ["5.004_56", "5.004_57"] {
+            assert!(
+                inventory
+                    .lines()
+                    .any(|row| row.starts_with(&format!("{release},")) && row.ends_with(",partial")),
+                "{release}: expected partial inventory row"
+            );
+            assert!(directory.join(format!("perl{release}.tokens")).is_file());
+            assert!(directory.join(format!("perl{release}.grammar")).is_file());
+        }
     }
 
     #[test]
