@@ -2,6 +2,30 @@
 
 ## Unreleased
 
+- **Every vault the daemon opens is now anchored** (VLT01 F11; #13980
+  P1.20c). The six smart-home pairing vaults (Hue, ONVIF, Axis, ZoneMinder,
+  Reolink, Synology) share the Chief vault's storage root, but they used to
+  open it with `SealedStore::new`. So a restored snapshot of the root was
+  `Tamper` for the Chief namespaces, yet still loaded the pairing
+  credentials it held.
+  - All seven openers now go through `open_anchored_vault`. It keeps the
+    anchor in `<kek_path>.freshness/`, refuses an anchor inside the storage
+    directory, and runs only after the KEK file has been read.
+  - An anchor failure on a pairing vault is reported as
+    `ChiefDaemonError::ChiefVaultAnchor`. It is the same storage root.
+  - New `ChiefDaemonError::ChiefVaultAnchorInsideStorage`. It replaces the
+    misleading `AnchorError::InsecureDirectory` for an anchor placed inside
+    the storage directory, or storage placed inside the anchor.
+    - The check now resolves symlinks once the storage directory exists, and
+      on Unix it compares device and inode numbers.
+    - Before this, a symlinked `storage_path` put the anchor inside the
+      storage, and the check passed.
+  - A source-level test pins that no production opener calls
+    `SealedStore::new`. It also counts the eight `open_anchored_vault`
+    sites: the definition, the Chief vault and six pairing services.
+  - The new test restores a snapshot of a pairing vault after a credential
+    rotation. It loads the old credential without the anchor, and is
+    `Tamper` through the daemon's opener.
 - `open_chief_vault` now anchors the vault (VLT01 F11) in
   `<kek_path>.freshness/`, created owner-only next to the KEK. A consistent
   snapshot of the storage directory put back, records and index together, is
