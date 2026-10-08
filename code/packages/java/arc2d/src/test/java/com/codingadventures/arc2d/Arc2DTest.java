@@ -142,4 +142,14 @@ class Arc2DTest {
         CenterArc overflow = new CenterArc(new Point(Double.MAX_VALUE, 0), Double.MAX_VALUE, 1, 0, 1, 0);
         assertThrows(IllegalArgumentException.class, overflow::toCubicBeziers);
     }
+
+    @Test void degenerateLineRejectsNonfiniteResults() {
+        SvgArc line = new SvgArc(new Point(-1e308, 0), new Point(1e308, 0),
+                0, 1, 0, false, true);
+        assertThrows(IllegalArgumentException.class, line::boundingBox);
+        assertThrows(IllegalArgumentException.class, () -> line.evaluate(0.5));
+        SvgArc ordinary = new SvgArc(Point.origin(), new Point(1, 1), 0, 1, 0, false, true);
+        assertThrows(IllegalArgumentException.class, () -> ordinary.evaluate(Double.NaN));
+        assertThrows(IllegalArgumentException.class, () -> ordinary.evaluate(Double.POSITIVE_INFINITY));
+    }
 }

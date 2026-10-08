@@ -136,4 +136,13 @@ class Arc2DTest {
         val overflow = CenterArc(Point(Double.MAX_VALUE, 0.0), Double.MAX_VALUE, 1.0, 0.0, 1.0, 0.0)
         assertThrows(IllegalArgumentException::class.java) { overflow.toCubicBeziers() }
     }
+
+    @Test fun degenerateLineRejectsNonfiniteResults() {
+        val line = SvgArc(Point(-1e308, 0.0), Point(1e308, 0.0), 0.0, 1.0, 0.0, false, true)
+        assertThrows(IllegalArgumentException::class.java) { line.boundingBox() }
+        assertThrows(IllegalArgumentException::class.java) { line.evaluate(0.5) }
+        val ordinary = SvgArc(Point.origin(), Point(1.0, 1.0), 0.0, 1.0, 0.0, false, true)
+        assertThrows(IllegalArgumentException::class.java) { ordinary.evaluate(Double.NaN) }
+        assertThrows(IllegalArgumentException::class.java) { ordinary.evaluate(Double.POSITIVE_INFINITY) }
+    }
 }
