@@ -212,8 +212,15 @@ fn the_agent_gets_the_commands_arguments_and_exactly_its_environment() {
 fn what_runs_is_the_file_prepared_not_whatever_the_path_names_later() {
     // The binary is opened at prepare and exec'd by descriptor, so
     // replacing the path in between changes nothing.
-    let agent = temp_file("swapped-agent", "");
-    std::fs::copy(PROBE, &agent).unwrap();
+    //
+    // The agent is a hard link to the probe, made beside it (the same
+    // filesystem), never a copy. Copying writes the file, and a test thread
+    // that forks while the write descriptor is open hands it to its child
+    // until that child's exec. Exec'ing a file someone holds open for
+    // writing fails with ETXTBSY. CI hit exactly that.
+    let agent = Path::new(PROBE).with_file_name(format!("swapped-agent-{}", std::process::id()));
+    let _ = std::fs::remove_file(&agent);
+    std::fs::hard_link(PROBE, &agent).unwrap();
     let confined = LinuxConfinement::prepare(&plan(&[]), &agent).unwrap();
     std::fs::remove_file(&agent).unwrap();
     std::fs::write(&agent, b"#!/bin/sh\necho swapped\n").unwrap();
