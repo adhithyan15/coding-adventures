@@ -138,6 +138,7 @@ pub fn run_source(source: &str) -> Result<String, PythonRunError> {
     let captured = Arc::clone(&output);
     let captured_empty = Arc::clone(&output);
     let captured_two = Arc::clone(&output);
+    let captured_three = Arc::clone(&output);
     let mut vm = VMCore::new();
     vm.max_instructions = Some(100_000);
     vm.builtins_mut().register("py_float_div", |args| {
@@ -192,6 +193,26 @@ pub fn run_source(source: &str) -> Result<String, PythonRunError> {
             let second = format_python_float(*right).map_err(VMError::Custom)?;
             let line = format!("{first} {second}\n");
             let mut sink = captured_two
+                .lock()
+                .map_err(|_| VMError::Custom("Python output lock poisoned".into()))?;
+            if sink.len() + line.len() > 1_000_000 {
+                return Err(VMError::Custom("Python output limit exceeded".into()));
+            }
+            sink.push_str(&line);
+            Ok(Value::Null)
+        });
+    vm.builtins_mut()
+        .register("py_print_three_floats", move |args| {
+            let [Value::Float(first), Value::Float(second), Value::Float(third)] = args else {
+                return Err(VMError::Custom(
+                    "py_print_three_floats expects three floats".into(),
+                ));
+            };
+            let first = format_python_float(*first).map_err(VMError::Custom)?;
+            let second = format_python_float(*second).map_err(VMError::Custom)?;
+            let third = format_python_float(*third).map_err(VMError::Custom)?;
+            let line = format!("{first} {second} {third}\n");
+            let mut sink = captured_three
                 .lock()
                 .map_err(|_| VMError::Custom("Python output lock poisoned".into()))?;
             if sink.len() + line.len() > 1_000_000 {
@@ -291,6 +312,22 @@ impl Compiler {
                     "call_builtin",
                     None,
                     vec![Operand::Var("py_print_two_floats".into()), left, right],
+                    "void",
+                );
+            }
+            Some(PrintCall::Three(first, second, third)) => {
+                let first = self.compile_number(first)?;
+                let second = self.compile_number(second)?;
+                let third = self.compile_number(third)?;
+                self.emit(
+                    "call_builtin",
+                    None,
+                    vec![
+                        Operand::Var("py_print_three_floats".into()),
+                        first,
+                        second,
+                        third,
+                    ],
                     "void",
                 );
             }
@@ -437,6 +474,7 @@ enum PrintCall<'a> {
     Empty,
     One(&'a GrammarASTNode),
     Two(&'a GrammarASTNode, &'a GrammarASTNode),
+    Three(&'a GrammarASTNode, &'a GrammarASTNode, &'a GrammarASTNode),
 }
 
 fn positional_argument(node: &GrammarASTNode) -> Result<&GrammarASTNode, String> {
@@ -507,12 +545,26 @@ fn print_argument(expression: &GrammarASTNode) -> Result<Option<PrintCall<'_>>, 
                         positional_argument(second)?,
                     )))
                 }
+                [ASTNodeOrToken::Node(first), ASTNodeOrToken::Token(comma_one), ASTNodeOrToken::Node(second), ASTNodeOrToken::Token(comma_two), ASTNodeOrToken::Node(third)]
+                    if [comma_one, comma_two].iter().all(|comma| {
+                        comma.value == ","
+                            && comma.type_ == TokenType::Comma
+                            && comma.type_name.is_none()
+                    }) =>
+                {
+                    Ok(Some(PrintCall::Three(
+                        positional_argument(first)?,
+                        positional_argument(second)?,
+                        positional_argument(third)?,
+                    )))
+                }
                 _ => Err(
-                    "native Python print requires at most two positional float expressions".into(),
+                    "native Python print requires at most three positional float expressions"
+                        .into(),
                 ),
             }
         }
-        _ => Err("native Python print requires zero to two expression arguments".into()),
+        _ => Err("native Python print requires zero to three expression arguments".into()),
     }
 }
 
@@ -555,11 +607,34 @@ mod tests {
     }
 
     #[test]
-    fn direct_ast_two_argument_print_requires_actual_comma_token() {
-        fn forge_comma(node: &mut GrammarASTNode, named: bool) -> bool {
+    fn three_float_print_uses_two_spaces_and_keeps_prior_output_on_error() {
+        assert_eq!(
+            run_source("print(1.0 + 2.0, -0.0, 2.5)\n").unwrap(),
+            "3.0 -0.0 2.5\n"
+        );
+        let error = run_source("print(1.0, 2.0, 3.0)\nprint(2.0, 3.0, 1.0 / 0.0)\n").unwrap_err();
+        assert_eq!(error.output, "1.0 2.0 3.0\n");
+        assert!(error.message.contains("ZeroDivisionError"));
+        let second_error = run_source("print(1.0)\nprint(2.0, 1.0 / 0.0, 3.0)\n").unwrap_err();
+        assert_eq!(second_error.output, "1.0\n");
+        let display_error = run_source("print(1.0)\nprint(2.0, 1e20, 3.0)\n").unwrap_err();
+        assert_eq!(display_error.output, "1.0\n");
+        assert!(display_error.message.contains("display outside"));
+        let third_display_error = run_source("print(1.0)\nprint(2.0, 3.0, 1e20)\n").unwrap_err();
+        assert_eq!(third_display_error.output, "1.0\n");
+        assert!(third_display_error.message.contains("display outside"));
+    }
+
+    #[test]
+    fn direct_ast_multi_argument_print_requires_actual_comma_tokens() {
+        fn forge_comma(node: &mut GrammarASTNode, remaining: &mut usize, named: bool) -> bool {
             for child in &mut node.children {
                 match child {
                     ASTNodeOrToken::Token(token) if token.value == "," => {
+                        if *remaining != 0 {
+                            *remaining -= 1;
+                            continue;
+                        }
                         if named {
                             token.type_name = Some("STRING".into());
                         } else {
@@ -568,7 +643,7 @@ mod tests {
                         return true;
                     }
                     ASTNodeOrToken::Node(inner) => {
-                        if forge_comma(inner, named) {
+                        if forge_comma(inner, remaining, named) {
                             return true;
                         }
                     }
@@ -577,10 +652,15 @@ mod tests {
             }
             false
         }
-        for named in [false, true] {
-            let mut ast = parse_python("print(1.0, 2.0)\n", "3.12").unwrap();
-            assert!(forge_comma(&mut ast, named));
-            assert!(compile_ast(&ast, "forged").is_err());
+        for (source, count) in [("print(1.0, 2.0)\n", 1), ("print(1.0, 2.0, 3.0)\n", 2)] {
+            for index in 0..count {
+                for named in [false, true] {
+                    let mut ast = parse_python(source, "3.12").unwrap();
+                    let mut remaining = index;
+                    assert!(forge_comma(&mut ast, &mut remaining, named));
+                    assert!(compile_ast(&ast, "forged").is_err());
+                }
+            }
         }
     }
 
@@ -608,7 +688,7 @@ mod tests {
             false
         }
 
-        for source in ["print()\n", "print(1.0)\n"] {
+        for source in ["print()\n", "print(1.0)\n", "print(1.0, 2.0, 3.0)\n"] {
             for value in ["print", "(", ")"] {
                 for variant in [false, true] {
                     let mut ast = parse_python(source, "3.12").unwrap();
@@ -648,7 +728,8 @@ mod tests {
             "print(1 + 2)\n",
             "print(1.0 // 2.0)\n",
             "x = 1.0\n",
-            "print(1.0, 2.0, 3.0)\n",
+            "print(1.0, 2.0, 3.0, 4.0)\n",
+            "print(1.0, 2.0, end=3.0)\n",
             "print(1.0, end=2.0)\n",
             "other()\n",
         ] {

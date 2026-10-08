@@ -97,3 +97,22 @@ while evaluating the second argument must not emit part of that call's line;
 earlier completed print calls remain visible. For example,
 `print(1.0 + 2.0, -0.0)` prints `3.0 -0.0\n`, and a later
 `print(2.0, 1.0 / 0.0)` retains only the earlier output.
+
+## Bounded follow-up: three positional float arguments
+
+Accept exactly `print(<float expression>, <float expression>, <float expression>)`
+from the Python 3.12 grammar tree. Lower all three expressions from left to
+right to InterpreterIR, then invoke one Rust `vm-core` builtin that appends
+their displayed values with one space between each and one final newline.
+Host Python is a conformance oracle only; Semantic IR stays outside execution.
+Keep the existing float display range, output-byte budget, source and direct-AST
+limits, and typed prior-output error behavior. A failure while evaluating any
+argument or displaying any value must append none of that call's line, while
+earlier completed calls remain visible.
+
+The call must have three positional `argument` nodes separated by actual comma
+tokens. Keep exact `print` callee and parenthesis token-kind checks for direct
+AST callers, and reject forged comma kinds, keyword or unpacking arguments,
+four or more arguments, and unsupported expressions. `print(1.0, -0.0, 2.5)`
+must yield `1.0 -0.0 2.5\n`. A later `print(2.0, 3.0, 1.0 / 0.0)` must retain
+only the earlier completed line.
