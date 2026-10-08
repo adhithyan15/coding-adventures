@@ -55,10 +55,14 @@ on:
   pull_request:
     branches: [main]
 
-# Cancel in-progress runs for the same branch
+# One run per branch at a time. Superseded runs are cancelled everywhere but
+# main (below).
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # A run on main always finishes, so main's state is always known; a
+  # newer push queues behind it (GitHub keeps only the newest waiting).
+  # Pull requests and other branches still cancel superseded runs.
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 permissions:
   contents: read

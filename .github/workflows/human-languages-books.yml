@@ -42,7 +42,10 @@ permissions:
 
 concurrency:
   group: human-languages-books-${{ github.ref }}
-  cancel-in-progress: true
+  # A run on main always finishes, so main's state is always known; a
+  # newer push queues behind it (GitHub keeps only the newest waiting).
+  # Pull requests and other branches still cancel superseded runs.
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   detect:
