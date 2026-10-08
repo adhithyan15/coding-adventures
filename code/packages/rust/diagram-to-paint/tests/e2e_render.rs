@@ -3477,7 +3477,7 @@ line "Target" [35, 50, 68, 82]"##,
 
     #[test]
     fn render_mermaid_swimlane_to_png() {
-        let diagram = parse_swimlane("swimlane-beta LR\ntitle Support escalation\naccTitle: Accessible support flow\nsubgraph Customer\n  request([Open request])\n  receive((Receive update))\nend\nsubgraph Support\n  triage{Known issue?}\n  answer[Send answer]\nend\nsubgraph Engineering\n  resolve[Prepare fix]\nend\nclick request href \"https://example.com/request\" \"Open request\" _blank\nclick triage call inspectIssue(triage, urgent) \"Inspect issue\"\nrequest --> triage\ntriage -->|Known| answer --> receive\ntriage -.->|Escalate| resolve ==> answer").expect("swimlane parse failed");
+        let diagram = parse_swimlane("swimlane-beta LR\ntitle Support escalation\naccTitle: Accessible support flow\nsubgraph Customer\n  request([Open request])\n  receive((Receive update))\nend\nsubgraph Support\n  triage{Known issue?}\n  answer[Send answer]\nend\nsubgraph Engineering\n  resolve[Prepare fix]\nend\nclick request href \"https://example.com/request\" \"Open request\" _blank\nclick triage call inspectIssue(triage, urgent) \"Inspect issue\"\nclick answer showAnswer \"Show answer\"\nrequest --> triage\ntriage -->|Known| answer --> receive\ntriage -.->|Escalate| resolve ==> answer").expect("swimlane parse failed");
         let layout = layout_swimlane(&diagram);
         let shaper = CoreTextShaper; let metrics = CoreTextMetrics; let resolver = CoreTextResolver::new();
         let scene = diagram_to_paint_swimlane(&layout, &DiagramToPaintOptions {
@@ -3490,6 +3490,8 @@ line "Target" [35, 50, 68, 82]"##,
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.node.request.link.target")), Some(&"_blank".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.node.triage.callback.name")), Some(&"inspectIssue".to_string()));
         assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.node.triage.callback.arguments")), Some(&"triage, urgent".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.node.answer.callback.name")), Some(&"showAnswer".to_string()));
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("swimlane.node.answer.callback.tooltip")), Some(&"Show answer".to_string()));
         assert!(scene.metadata.as_ref().is_some_and(|metadata| metadata.contains_key("swimlane.node.request.link.bounds")));
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         let pixels = render(&scene); write_png(&pixels, "/tmp/mermaid_swimlane_e2e.png").expect("PNG write failed");

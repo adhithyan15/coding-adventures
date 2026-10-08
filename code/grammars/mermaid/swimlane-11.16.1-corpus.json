@@ -85,6 +85,10 @@
     {
       "name": "click-callback-action",
       "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nclick request call openRequest(request, priority) \"Open request\"\nrequest --> done"
+    },
+    {
+      "name": "click-legacy-callback-alias",
+      "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nclick request openRequest \"Open request\"\nrequest --> done"
     }
   ]
 }

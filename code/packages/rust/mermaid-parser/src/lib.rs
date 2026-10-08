@@ -6428,7 +6428,29 @@ fn parse_swimlane_click(value: &str, line: usize) -> Result<SwimlaneInteraction,
             arguments: (!arguments.is_empty()).then(|| arguments.to_string()), tooltip,
         }));
     }
-    let rest = rest.strip_prefix("href").map(str::trim_start).unwrap_or(rest);
+    let explicit_href = rest.strip_prefix("href")
+        .filter(|trailing| trailing.starts_with(char::is_whitespace))
+        .map(str::trim_start);
+    if !rest.starts_with('"') && explicit_href.is_none() {
+        let (name, trailing) = rest.split_once(char::is_whitespace).unwrap_or((rest, ""));
+        if name.is_empty() || !name.chars().all(|character| character.is_ascii_alphanumeric() || matches!(character, '_' | '.')) {
+            return Err(swimlane_error(line, "invalid Swimlane callback name"));
+        }
+        let trailing = trailing.trim_start();
+        let (tooltip, trailing) = if trailing.starts_with('"') {
+            let (tooltip, trailing) = take_swimlane_quoted_value(trailing, line, "tooltip")?;
+            (Some(tooltip), trailing)
+        } else {
+            (None, trailing)
+        };
+        if !trailing.trim().is_empty() {
+            return Err(swimlane_error(line, "unsupported trailing Swimlane callback syntax"));
+        }
+        return Ok(SwimlaneInteraction::Callback(GraphCallback {
+            node_id: node_id.to_string(), name: name.to_string(), arguments: None, tooltip,
+        }));
+    }
+    let rest = explicit_href.unwrap_or(rest);
     let (url, rest) = take_swimlane_quoted_value(rest, line, "URL")?;
     let rest = rest.trim_start();
     let (tooltip, rest) = if rest.starts_with('"') {
