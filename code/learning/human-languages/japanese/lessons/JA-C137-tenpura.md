@@ -38,7 +38,7 @@ reviews_of: [JA-W137-pu, JA-W11-te, JA-W01-n, JA-W08-ra, JA-C137-enpitsu, JA-C13
 
 [PAUSE 20s] Four recalls before the new word.
 
-- [YOU RECALL: write **ぷ** — **R1**, one lesson back]
+- [YOU WRITE: **ぷ** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *a pencil* — **R2**, five lessons back]
 - [YOU RECALL: say *a bank* — **R3**, twenty lessons back]
 - [YOU RECALL: say *shameless* — **R4**, eighty lessons back]
@@ -59,7 +59,7 @@ beats, *te–n–pu–ra*. After **ん** the *p* comes out clearly, as in
 [PAUSE 1s]
 - [YOU SAY: *tenpura*]
 - [YOU SAY: *kippu*, then *tenpura*, and listen for the *pu* in both]
-- [YOU RECALL: write **てんぷら**, four signs for four beats]
+- [YOU WRITE: **てんぷら** from memory, four signs for four beats]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C137-TENPURA] -->

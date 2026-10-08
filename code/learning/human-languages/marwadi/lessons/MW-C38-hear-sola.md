@@ -37,10 +37,10 @@ reviews_of: [MW-W38-lla, MW-C37-hear-tera, MW-C25-lavo]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-LLA-01, MW-LEX-TERA-01, MW-SCRIPT-LAVO-01, MW-SCRIPT-CHAUDA-01] -->
 
 [PAUSE 18s]
-- [YOU RECALL: write **ळ** — **R1**]
+- [YOU WRITE: **ळ** from memory — **R1**]
 - [YOU RECALL: say *terā*, five lessons back — **R2**]
-- [YOU RECALL: write **लावो** — **R4**]
-- [YOU RECALL: write **चौदा** — **R2**]
+- [YOU WRITE: **लावो** from memory — **R4**]
+- [YOU WRITE: **चौदा** from memory — **R2**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-SOLA-01]; assesses=[MW-LEX-CHHA-SIX-01, MW-SCRIPT-LLA-01] -->

@@ -38,7 +38,7 @@ reviews_of: [JA-W134-be, JA-W01-n, JA-W133-ki, JA-W131-small-yo, JA-W03-u, JA-C1
 
 [PAUSE 20s] Four recalls before the new word.
 
-- [YOU RECALL: write **べ** — **R1**, one lesson back]
+- [YOU WRITE: **べ** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *a bag*, the one you carry to work — **R2**, five lessons back]
 - [YOU RECALL: say *a station* — **R3**, twenty lessons back]
 - [YOU RECALL: say *well-behaved*, of a child or a pet — **R4**, eighty lessons back]
@@ -59,7 +59,7 @@ the *o*, as it does in **きのう**. You write every sign in it now.
 [PAUSE 1s]
 - [YOU SAY: *benkyō*]
 - [YOU SAY: *taberu*, then *benkyō*, and listen for the *be* in both]
-- [YOU RECALL: write **べんきょう**, five signs for four beats]
+- [YOU WRITE: **べんきょう** from memory, five signs for four beats]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C134-BENKYOU] -->

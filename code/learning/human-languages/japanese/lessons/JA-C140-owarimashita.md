@@ -40,8 +40,8 @@ reviews_of: [JA-C140-sakki, JA-C139-dokonimo, JA-W137-pu, JA-W132-so]
 
 - [YOU RECALL: say *a moment ago* — **R1**, one lesson back]
 - [YOU RECALL: say *nowhere*, with a negative verb — **R2**, five lessons back]
-- [YOU RECALL: write **ぷ** — **R3**, twenty lessons back]
-- [YOU RECALL: write **そ** — **R4**, eighty lessons back]
+- [YOU WRITE: **ぷ** from memory — **R3**, twenty lessons back]
+- [YOU WRITE: **そ** from memory — **R4**, eighty lessons back]
 
 ## You'll want to know: おわりました
 <!-- hl-knowledge: introduces=[JA-LEX-C140-OWARIMASHITA]; assesses=[] -->

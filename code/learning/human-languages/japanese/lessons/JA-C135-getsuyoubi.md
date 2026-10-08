@@ -40,8 +40,8 @@ reviews_of: [JA-C135-deguchi, JA-W13-tsu, JA-W08-yo, JA-W03-u, JA-W135-bi, JA-W1
 [PAUSE 20s] Four recalls before the new word.
 
 - [YOU RECALL: say *an exit* — **R1**, one lesson back]
-- [YOU RECALL: write **び** — **R2**, five lessons back]
-- [YOU RECALL: write **へ** — **R3**, twenty lessons back]
+- [YOU WRITE: **び** from memory — **R2**, five lessons back]
+- [YOU WRITE: **へ** from memory — **R3**, twenty lessons back]
 - [YOU RECALL: say *amazing* — **R4**, eighty lessons back]
 
 ## You'll want to know: げつようび

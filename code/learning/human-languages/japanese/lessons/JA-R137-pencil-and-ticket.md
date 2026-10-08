@@ -37,7 +37,7 @@ reviews_of: [JA-C137-ippai, JA-W137-pa, JA-C137-shinpai, JA-C137-enpitsu, JA-W13
 
 [PAUSE 20s] Four recalls, then the review.
 
-- [YOU RECALL: write **ぺ** — **R1**, one lesson back]
+- [YOU WRITE: **ぺ** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *a ticket* — **R2**, five lessons back]
 - [YOU RECALL: say *a family* — **R3**, twenty lessons back]
 - [YOU RECALL: say *pitch black* — **R4**, eighty lessons back]

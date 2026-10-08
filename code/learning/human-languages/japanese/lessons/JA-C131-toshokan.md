@@ -57,7 +57,7 @@ Five signs, four beats: *to–sho–ka–n*. **し** with **ょ** after it is on
 [PAUSE 1s]
 - [YOU SAY: *toshokan*]
 - [YOU SAY: *toshokan*, clapping four beats]
-- [YOU RECALL: write **としょかん**, keeping the second sign small]
+- [YOU WRITE: **としょかん** from memory, keeping the second sign small]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C131-TOSHOKAN, JA-SCRIPT-SMALL-YO-01] -->

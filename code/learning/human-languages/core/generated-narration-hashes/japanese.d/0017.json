@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 17,
-  "sourceHash": "fnv1a64:458803fab22c7005",
+  "sourceHash": "fnv1a64:c72925521d5270a0",
   "lessonIds": [
     "JA-W17-mu",
     "JA-C17-muttsu",
@@ -17,7 +17,7 @@
   "drivablePrefix": 0,
   "text": "japanese/narration/ch17.txt",
   "json": "japanese/narration/ch17.json",
-  "textHash": "fnv1a64:6b2d8d3c7133ff10",
-  "jsonHash": "fnv1a64:f5e0f45c305af0f6",
+  "textHash": "fnv1a64:6281b9da983de85d",
+  "jsonHash": "fnv1a64:317ca3335eb069a7",
   "findings": []
 }

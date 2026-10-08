@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Sixteen to Nineteen, Counting Down",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:99948f5e6cbfaba1",
+  "sourceHash": "fnv1a64:3cf40e7eddfa9d0f",
   "lessons": [
     {
       "id": "MW-W38-lla",
@@ -156,7 +156,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1cd401f868ffe12d",
+      "sourceHash": "fnv1a64:65c26865c7402f17",
       "notice": null,
       "blocks": [
         {
@@ -172,12 +172,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ळ (ḷa) — R1",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ळ (ḷa) from memory — R1",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ळ** — **R1**]"
+              "source": "[YOU WRITE: **ळ** from memory — **R1**]"
             },
             {
               "kind": "prompt",
@@ -190,21 +190,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write लावो — R4",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "लावो from memory — R4",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **लावो** — **R4**]"
+              "source": "[YOU WRITE: **लावो** from memory — **R4**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write चौदा — R2",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "चौदा from memory — R2",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **चौदा** — **R2**]"
+              "source": "[YOU WRITE: **चौदा** from memory — **R2**]"
             }
           ]
         },
@@ -543,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db2e305955931751",
+      "sourceHash": "fnv1a64:9ba17059caf87241",
       "notice": null,
       "blocks": [
         {
@@ -559,12 +559,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write अ (a) — R1",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "अ (a) from memory — R1",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **अ** — **R1**]"
+              "source": "[YOU WRITE: **अ** from memory — **R1**]"
             },
             {
               "kind": "prompt",
@@ -777,7 +777,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27388fce930e6016",
+      "sourceHash": "fnv1a64:0111ca0759c12a0c",
       "notice": null,
       "blocks": [
         {
@@ -793,12 +793,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write सतरा (satarā) — R1",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "सतरा (satarā) from memory — R1",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **सतरा** — **R1**]"
+              "source": "[YOU WRITE: **सतरा** from memory — **R1**]"
             },
             {
               "kind": "prompt",
@@ -1160,7 +1160,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:772c191d895bf3cc",
+      "sourceHash": "fnv1a64:d85a4e87ab9e6aa6",
       "notice": null,
       "blocks": [
         {
@@ -1176,12 +1176,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write उ (u) — R1",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "उ (u) from memory — R1",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **उ** — **R1**]"
+              "source": "[YOU WRITE: **उ** from memory — **R1**]"
             },
             {
               "kind": "prompt",

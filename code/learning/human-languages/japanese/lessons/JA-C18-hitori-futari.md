@@ -39,7 +39,7 @@ reviews_of: [JA-C18-nin, JA-C16-hitotsu, JA-C16-futatsu, JA-W11-te]
 - [YOU RECALL: say *three people* — **R1**, one lesson back]
 - [YOU RECALL: say *nine things* — **R2**, five lessons back]
 - [YOU RECALL: say *ten*, then *twelve* — **R3**, twenty lessons back]
-- [YOU RECALL: write **て** — **R4**, eighty lessons back]
+- [YOU WRITE: **て** from memory — **R4**, eighty lessons back]
 
 ## You'll Want to Know — hear and say
 <!-- hl-knowledge: introduces=[JA-LEX-HITORI-FUTARI]; assesses=[JA-SCRIPT-HI-01, JA-SCRIPT-FU-01, JA-SCRIPT-RI-01, JA-LEX-NIN] -->

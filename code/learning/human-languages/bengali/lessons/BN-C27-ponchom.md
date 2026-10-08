@@ -36,7 +36,7 @@ reviews_of: [BN-W06-nya, BN-C24-amra, BN-C14-shobuj, BN-C06-numbers-1-5]
 
 [PAUSE 2s] Three recalls, then the word the last lesson bought a letter for.
 
-- [YOU RECALL: write **ঞ**, and say where it is made — **R1**, one lesson back]
+- [YOU WRITE: **ঞ** from memory, and say where it is made — **R1**, one lesson back]
 - [YOU RECALL: say *we* — **R3**, twenty lessons back]
 - [YOU RECALL: say *green* — **R4**, eighty lessons back]
 

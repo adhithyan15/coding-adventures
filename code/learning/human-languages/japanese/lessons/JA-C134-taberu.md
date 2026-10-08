@@ -40,8 +40,8 @@ reviews_of: [JA-C134-basho, JA-W11-ta, JA-W132-ru, JA-W134-de, JA-C122-kantan]
 [PAUSE 20s] Four recalls before the new word.
 
 - [YOU RECALL: say *a place* — **R1**, one lesson back]
-- [YOU RECALL: write **で** — **R2**, five lessons back]
-- [YOU RECALL: write **る** — **R3**, twenty lessons back]
+- [YOU WRITE: **で** from memory — **R2**, five lessons back]
+- [YOU WRITE: **る** from memory — **R3**, twenty lessons back]
 - [YOU RECALL: say *easy to do*, the opposite of complicated — **R4**, eighty lessons back]
 
 ## You'll want to know: たべる

@@ -38,7 +38,7 @@ reviews_of: [JA-W137-pi, JA-W01-i, JA-W11-small-tsu, JA-W133-ki, JA-C137-ippai, 
 
 [PAUSE 20s] Four recalls before the new word.
 
-- [YOU RECALL: write **ぴ** — **R1**, one lesson back]
+- [YOU WRITE: **ぴ** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *full*, or *a lot* — **R2**, five lessons back]
 - [YOU RECALL: say *Monday* — **R3**, twenty lessons back]
 - [YOU RECALL: say *cute* — **R4**, eighty lessons back]
@@ -60,7 +60,7 @@ in **いっぱい**. You write every sign in it now.
 [PAUSE 1s]
 - [YOU SAY: *ippiki*]
 - [YOU SAY: *ippai*, then *ippiki*, and listen for the held beat in both]
-- [YOU RECALL: write **いっぴき**, with the **っ** small and low]
+- [YOU WRITE: **いっぴき** from memory, with the **っ** small and low]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C137-IPPIKI] -->

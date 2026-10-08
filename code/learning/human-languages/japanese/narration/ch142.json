@@ -4,7 +4,7 @@
   "chapter": 142,
   "title": "Notices: Caution, No Smoking, Reception, Open",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:0c30525e304ad58b",
+  "sourceHash": "fnv1a64:f5fc3a0c6b23997c",
   "lessons": [
     {
       "id": "JA-C142-chuui",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a919ad4b0fb69ac",
+      "sourceHash": "fnv1a64:355421961622c562",
       "notice": null,
       "blocks": [
         {
@@ -66,12 +66,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write る — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "る from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **る** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **る** from memory — **R4**, eighty lessons back]"
             }
           ]
         },
@@ -508,7 +508,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd20b32a73901c3c",
+      "sourceHash": "fnv1a64:b0f7e3f8e2993f72",
       "notice": null,
       "blocks": [
         {
@@ -555,12 +555,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write き — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "き from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **き** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **き** from memory — **R4**, eighty lessons back]"
             }
           ]
         },
@@ -1001,7 +1001,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2343cb03918e4d9f",
+      "sourceHash": "fnv1a64:18d9d92f229d5231",
       "notice": null,
       "blocks": [
         {
@@ -1039,12 +1039,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write け — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "け from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **け** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **け** from memory — **R4**, eighty lessons back]"
             }
           ]
         },

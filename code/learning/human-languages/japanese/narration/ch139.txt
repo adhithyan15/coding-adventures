@@ -49,10 +49,8 @@ Four recalls before the new word.
 [pause 8 seconds for the answer]
 [your turn — recall: say I work, politely — R2, five lessons back]
 [pause 8 seconds for the answer]
-[your turn — recall: write ぜ — R3, twenty lessons back]
-[pause 8 seconds for the answer]
-[your turn — recall: write small ゃ — R4, eighty lessons back]
-[pause 8 seconds for the answer]
+[once you have stopped driving — write: ぜ from memory — R3, twenty lessons back]
+[once you have stopped driving — write: small ゃ from memory — R4, eighty lessons back]
 
 You'll want to know: ちがいます.
 ちがいます — chigaimasu — "it is different", and so, as an answer, "no, that is not right". It is the polite form of the verb ちがう, chigau, "to differ". When someone asks whether a thing is so and it is not, this is the everyday answer.
@@ -155,10 +153,8 @@ Four recalls before the new word.
 [pause 8 seconds for the answer]
 [your turn — recall: say I go to bed, politely — R2, five lessons back]
 [pause 8 seconds for the answer]
-[your turn — recall: write ぱ — R3, twenty lessons back]
-[pause 8 seconds for the answer]
-[your turn — recall: write small ょ — R4, eighty lessons back]
-[pause 8 seconds for the answer]
+[once you have stopped driving — write: ぱ from memory — R3, twenty lessons back]
+[once you have stopped driving — write: small ょ from memory — R4, eighty lessons back]
 
 You'll want to know: だれも.
 だれも — dare mo — "nobody", "not anyone". Like なにも (nani mo), it needs a negative verb.

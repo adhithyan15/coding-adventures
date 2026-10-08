@@ -37,7 +37,7 @@ reviews_of: [JA-C134-denwa, JA-W134-de, JA-C134-densha, JA-C134-kaban, JA-W134-b
 
 [PAUSE 20s] Four recalls, then the review.
 
-- [YOU RECALL: write **ぶ** — **R1**, one lesson back]
+- [YOU WRITE: **ぶ** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *to eat* — **R2**, five lessons back]
 - [YOU RECALL: say *a pond* — **R3**, twenty lessons back]
 - [YOU RECALL: say *suspicious* — **R4**, eighty lessons back]

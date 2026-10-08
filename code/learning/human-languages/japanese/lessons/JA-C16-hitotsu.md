@@ -36,9 +36,9 @@ reviews_of: [JA-W16-hi, JA-C14-ichi, JA-C15-roku, JA-W09-mo]
 
 [PAUSE 25s] Three recalls, then the first word of a second count.
 
-- [YOU RECALL: write **ひ** — **R1**, one lesson back]
+- [YOU WRITE: **ひ** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *six* — **R2**, five lessons back]
-- [YOU RECALL: write **も** — **R4**, eighty lessons back]
+- [YOU WRITE: **も** from memory — **R4**, eighty lessons back]
 
 ## You'll Want to Know — hear and say
 <!-- hl-knowledge: introduces=[JA-LEX-HITOTSU]; assesses=[JA-SCRIPT-HI-01, JA-SCRIPT-TO-01, JA-SCRIPT-TSU-01, JA-LEX-ICHI] -->

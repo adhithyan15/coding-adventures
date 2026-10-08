@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 14,
-  "sourceHash": "fnv1a64:530e6187928ee82c",
+  "sourceHash": "fnv1a64:fadbf9d99e887c7d",
   "lessonIds": [
     "JA-C14-ichi",
     "JA-C14-go",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "japanese/narration/ch14.txt",
   "json": "japanese/narration/ch14.json",
-  "textHash": "fnv1a64:bc854db7bbe509f3",
-  "jsonHash": "fnv1a64:3bedfe441221eff5",
+  "textHash": "fnv1a64:7969d33e5dd804a7",
+  "jsonHash": "fnv1a64:ec3f5961170387bb",
   "findings": []
 }

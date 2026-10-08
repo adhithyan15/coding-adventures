@@ -40,8 +40,8 @@ reviews_of: [JA-C137-shinpai, JA-W01-e, JA-W01-n, JA-W13-tsu, JA-W136-ze, JA-W13
 [PAUSE 20s] Four recalls before the new word.
 
 - [YOU RECALL: say *worry* — **R1**, one lesson back]
-- [YOU RECALL: write **ぜ** — **R2**, five lessons back]
-- [YOU RECALL: write **ぐ** — **R3**, twenty lessons back]
+- [YOU WRITE: **ぜ** from memory — **R2**, five lessons back]
+- [YOU WRITE: **ぐ** from memory — **R3**, twenty lessons back]
 - [YOU RECALL: say *fine*, small and detailed — **R4**, eighty lessons back]
 
 ## You'll want to know: えんぴつ

@@ -41,7 +41,7 @@ reviews_of: [JA-C142-uketsuke, JA-C141-tsumori, JA-C138-nemasu, JA-W133-ki]
 - [YOU RECALL: read *reception* on a sign — **R1**, one lesson back]
 - [YOU RECALL: say *a plan*, what you mean to do — **R2**, five lessons back]
 - [YOU RECALL: say *I go to bed*, politely — **R3**, twenty lessons back]
-- [YOU RECALL: write **き** — **R4**, eighty lessons back]
+- [YOU WRITE: **き** from memory — **R4**, eighty lessons back]
 
 ## You'll want to know: えいぎょうちゅう
 <!-- hl-knowledge: introduces=[JA-LEX-C142-EIGYOUCHUU]; assesses=[] -->

@@ -40,7 +40,7 @@ reviews_of: [PA-C44-chautha, PA-C43-kitthe, PA-C40-kyon, PA-W07-age-spacing]
 [PAUSE 2s] Four recalls, at four distances.
 
 - [YOU RECALL: say *chauthā* — **R1**, one lesson back]
-- [YOU RECALL: ask *kitthe?* and write it — **R2**, five lessons back]
+- [YOU WRITE: *kitthe?* from memory, saying the question aloud as you write it — **R2**, five lessons back]
 - [YOU RECALL: ask *kyoṁ?* — **R3**, twenty lessons back]
 - [YOU RECALL: say how much space a written answer needs on a form — **R4**, eighty-one lessons back]
 

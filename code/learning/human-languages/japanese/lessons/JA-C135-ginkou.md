@@ -40,8 +40,8 @@ reviews_of: [JA-C135-genki, JA-W01-n, JA-W01-ko, JA-W03-u, JA-W135-gu, JA-W134-d
 [PAUSE 20s] Four recalls before the new word.
 
 - [YOU RECALL: say *well*, as in healthy — **R1**, one lesson back]
-- [YOU RECALL: write **ぐ** — **R2**, five lessons back]
-- [YOU RECALL: write **で** — **R3**, twenty lessons back]
+- [YOU WRITE: **ぐ** from memory — **R2**, five lessons back]
+- [YOU WRITE: **で** from memory — **R3**, twenty lessons back]
 - [YOU RECALL: say *very young*, of a small child — **R4**, eighty lessons back]
 
 ## You'll want to know: ぎんこう

@@ -40,8 +40,8 @@ reviews_of: [JA-C140-senshuu, JA-C139-janai, JA-W137-pi, JA-W131-wo]
 
 - [YOU RECALL: say *last week* — **R1**, one lesson back]
 - [YOU RECALL: say *is not*, plainly — **R2**, five lessons back]
-- [YOU RECALL: write **ぴ** — **R3**, twenty lessons back]
-- [YOU RECALL: write **を** — **R4**, eighty lessons back]
+- [YOU WRITE: **ぴ** from memory — **R3**, twenty lessons back]
+- [YOU WRITE: **を** from memory — **R4**, eighty lessons back]
 
 ## You'll want to know: せんげつ
 <!-- hl-knowledge: introduces=[JA-LEX-C140-SENGETSU]; assesses=[] -->

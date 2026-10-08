@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 139,
-  "sourceHash": "fnv1a64:f489f4b24f6f3736",
+  "sourceHash": "fnv1a64:cd614d5eaeb67f99",
   "lessonIds": [
     "JA-C139-desuka",
     "JA-C139-chigaimasu",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "japanese/narration/ch139.txt",
   "json": "japanese/narration/ch139.json",
-  "textHash": "fnv1a64:054e0bfd498d9c2d",
-  "jsonHash": "fnv1a64:29d6d69995a17545",
+  "textHash": "fnv1a64:5321f10f6508db73",
+  "jsonHash": "fnv1a64:61b6a3b6fb9c58af",
   "findings": []
 }

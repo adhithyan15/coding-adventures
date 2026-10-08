@@ -38,7 +38,7 @@ reviews_of: [JA-W137-pa, JA-W10-shi, JA-W01-n, JA-W01-i, JA-C136-kaze, JA-C135-i
 
 [PAUSE 20s] Four recalls before the new word.
 
-- [YOU RECALL: write **ぱ** — **R1**, one lesson back]
+- [YOU WRITE: **ぱ** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *a wind*, or *a cold* — **R2**, five lessons back]
 - [YOU RECALL: say *an entrance* — **R3**, twenty lessons back]
 - [YOU RECALL: say *brave* — **R4**, eighty lessons back]
@@ -59,7 +59,7 @@ first. You write every sign in it now.
 [PAUSE 1s]
 - [YOU SAY: *shinpai*]
 - [YOU SAY: *ippai*, then *shinpai*, and listen for the *pai* in both]
-- [YOU RECALL: write **しんぱい**, with the circle small and open]
+- [YOU WRITE: **しんぱい** from memory, with the circle small and open]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C137-SHINPAI] -->

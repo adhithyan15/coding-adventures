@@ -4,7 +4,7 @@
   "chapter": 139,
   "title": "Is It? No: Nothing, Nobody, Nowhere",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:f489f4b24f6f3736",
+  "sourceHash": "fnv1a64:cd614d5eaeb67f99",
   "lessons": [
     {
       "id": "JA-C139-desuka",
@@ -189,7 +189,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:860e77a591148290",
+      "sourceHash": "fnv1a64:4ad9f3e56815fdf8",
       "notice": null,
       "blocks": [
         {
@@ -227,21 +227,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぜ — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぜ from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぜ** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **ぜ** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write small ゃ — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "small ゃ from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write small **ゃ** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: small **ゃ** from memory — **R4**, eighty lessons back]"
             }
           ]
         },
@@ -677,7 +677,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b62877ce8ef460d4",
+      "sourceHash": "fnv1a64:651bacb13a603f24",
       "notice": null,
       "blocks": [
         {
@@ -715,21 +715,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぱ — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぱ from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぱ** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **ぱ** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write small ょ — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "small ょ from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write small **ょ** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: small **ょ** from memory — **R4**, eighty lessons back]"
             }
           ]
         },

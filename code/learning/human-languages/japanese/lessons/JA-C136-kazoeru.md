@@ -38,7 +38,7 @@ reviews_of: [JA-W136-zo, JA-W03-ka, JA-W01-e, JA-W132-ru, JA-C135-ginkou, JA-C13
 
 [PAUSE 20s] Four recalls before the new word.
 
-- [YOU RECALL: write **ぞ** — **R1**, one lesson back]
+- [YOU WRITE: **ぞ** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *a bank* — **R2**, five lessons back]
 - [YOU RECALL: say *to eat* — **R3**, twenty lessons back]
 - [YOU RECALL: say *ordinary* — **R4**, eighty lessons back]
@@ -60,7 +60,7 @@ sign in it now.
 [PAUSE 1s]
 - [YOU SAY: *kazoeru*]
 - [YOU SAY: *kazoku*, then *kazoeru*, and listen for the *kazo* in both]
-- [YOU RECALL: write **かぞえる**, four signs for four beats]
+- [YOU WRITE: **かぞえる** from memory, four signs for four beats]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C136-KAZOERU] -->

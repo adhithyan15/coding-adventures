@@ -41,8 +41,31 @@
 // The ledger is one file per track, not one list, because content PRs are
 // per track. Two PRs paying down Japanese and Marwadi debt at the same time
 // should not collide in a shared file.
+//
+// When the last track's debt is paid the directory itself disappears: git does
+// not keep an empty directory, so deleting the last `<track>.json` deletes
+// `drivable-writing-debt/` too. A missing directory therefore means "no track
+// has debt", read exactly like a missing file, and not a crash in `readdirSync`
+// that would take the whole file's tests down with it. Reading absence as
+// empty is safe HERE, unlike for a section directory a generator needs (see
+// the lesson on "drive this to zero" programmes): the ledger is exact, so a
+// directory lost by mistake while debt remains is not silent. Every lesson it
+// listed is reported as NEW debt. The same is true of
+// the anti-vacuity check: it can no longer ask for "some drivable lesson
+// offends", because the goal is that none does. It asks instead that the
+// detector still fires on the real corpus — on the lessons that are NOT
+// drivable, where writing in prose is legitimate pen work.
+//
+// ---------------------------------------------------------------------------
+// What counts as telling the listener to write
+// ---------------------------------------------------------------------------
+//
+// Two things, both from `drivable-writing-imperatives.ts`: a bare writing
+// imperative in prose, and a `[YOU RECALL: …]` cue whose content asks for
+// writing ("[YOU RECALL: write **ば** — **R1**]"). The second is a cue, but
+// RECALL is a spoken action, so the narration reads it out with no deferral.
 
-import { readdirSync, readFileSync } from "node:fs";
+import { type Dirent, existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
@@ -50,9 +73,12 @@ import { loadEverything, loadModalityManifest } from "../src/loader.js";
 import {
   bareWritingImperatives,
   clausesOf,
+  drivableWritingInstructions,
   narratedProseSpans,
   opensChainedOrFrontedWriting,
+  recallCueAsksForWriting,
   withoutHtmlComments,
+  writingRecallCues,
 } from "./drivable-writing-imperatives.js";
 
 const DEBT_DIRECTORY = join(dirname(fileURLToPath(import.meta.url)), "drivable-writing-debt");
@@ -238,6 +264,89 @@ describe("clausesOf", () => {
 });
 
 // ---------------------------------------------------------------------------
+// Inside a recall cue
+// ---------------------------------------------------------------------------
+//
+// RECALL is a spoken cue action, so the narration reads "[YOU RECALL: write
+// **ば** — **R1**]" to a driver as "recall: write ば". The positives are the
+// four shapes the corpus had; the controls are corpus recall cues that mention
+// writing and ask for none, and the cues the fix turned them into.
+
+describe("writingRecallCues: what fires", () => {
+  it.each([
+    ["a spaced recall that opens with write", "- [YOU RECALL: write **ば** — **R1**, one lesson back]"],
+    ["a qualified sign", "- [YOU RECALL: write small **ゃ** — **R4**, eighty lessons back]"],
+    ["a recall that opens with draw", "- [YOU RECALL: draw the **।** and say what it marks — **R2**, five lessons back]"],
+    ["write, then a spoken check", "- [YOU RECALL: write **ঞ**, and say where it is made — **R1**, one lesson back]"],
+    ["a writing verb chained onto a spoken one", "- [YOU RECALL: ask *kitthe?* and write it — **R2**, five lessons back]"],
+    [
+      "a chain after a question mark inside the cue",
+      "- [YOU RECALL: answer *kuṭhe?* with *ithe*, then *tithe*, and write **तिथे** once]",
+    ],
+    ["a fronted phrase inside the cue", "[YOU RECALL: the last sign; with the page covered, write it]"],
+    ["a cue wrapped across two source lines", "- [YOU RECALL: write **पंदरा**,\n  five lessons back — **R2**]"],
+    ["a cue after prose", "[PAUSE 2s] Four recalls, at four distances. [YOU RECALL: write **け** — **R4**]"],
+  ])("%s", (_label, markdown) => {
+    expect(writingRecallCues(markdown)).toHaveLength(1);
+    expect(drivableWritingInstructions(markdown)).toHaveLength(1);
+  });
+
+  it("quotes the cue as authored, one entry per cue", () => {
+    const markdown = "[PAUSE 22s]\n- [YOU RECALL: write **पंदरा** — **R1**]\n- [YOU RECALL: write **इ** — **R2**]\n- [YOU RECALL: say *do*]";
+    expect(writingRecallCues(markdown)).toEqual(["[YOU RECALL: write **पंदरा** — **R1**]", "[YOU RECALL: write **इ** — **R2**]"]);
+  });
+});
+
+describe("writingRecallCues: what does not fire", () => {
+  it.each([
+    ["the fixed form", "- [YOU WRITE: **ば** from memory — **R1**, one lesson back]"],
+    ["the fixed form of a chain", "- [YOU RECALL: answer *kuṭhe?* with *ithe*, then *tithe*]\n- [YOU WRITE: **तिथे** once, from memory]"],
+    ["a recall with no writing in it", "- [YOU RECALL: say *chauthā* — **R1**, one lesson back]"],
+    ["the word for write, as a gloss", "[YOU RECALL: say the Japanese for to write, then the Japanese for to speak, then say *matsu* again]"],
+    ["a gloss after a semicolon", "[YOU RECALL: say the Persian for to sew, then the Persian for to pull; to draw, then say *rikhtan* again]"],
+    ["what the learner can already write", "[YOU RECALL: point to the sign in **これ** you can already write, and the one you cannot]"],
+    ["what the learner cannot write yet", "[YOU RECALL: point to the sign in **くるま** you cannot write yet, and say which sign it looks like]"],
+    ["a memory of having written", "[YOU RECALL: the first letters you wrote — **р с н б д е т** — and the one that looks like an English R]"],
+    ["a memory of learning to write", "[YOU RECALL: *ek* and the letter **ए** you had to learn to write it]"],
+    ["a past participle", "[YOU RECALL: say how much space a written answer needs on a form — **R4**, eighty lessons back]"],
+    ["a quotation being recalled", '[YOU RECALL: say "I read and write Spanish" once more]'],
+    // SAY is not read inside: its content is the material spoken, and in a
+    // target language that material may well be about writing.
+    ["a say cue about writing", "[YOU SAY: write it down, please]"],
+    ["a bare word in prose", "Recall how you wrote it."],
+  ])("%s", (_label, markdown) => {
+    expect(writingRecallCues(markdown)).toEqual([]);
+  });
+});
+
+describe("recallCueAsksForWriting stays linear", () => {
+  // Each input is about 50,000 characters, sized so that a scan that restarts
+  // at every candidate and rescans to the end would stall the suite. Only the
+  // answers are asserted: timing bounds flake on a loaded runner.
+  it.each([
+    ["a long run of spaces before the verb", `ask it${" ".repeat(50_000)}and write it`, true],
+    ["a long run of spaces with no verb", `ask it${" ".repeat(50_000)}x`, false],
+    ["many unclosed quotation openers", `say ${"“".repeat(50_000)} and write it`, true],
+    ["a quotation that hides every link", `say “${"and write ".repeat(5_000)}” now`, false],
+    ["a long chain of links with no verb", `say ${"it, and ".repeat(6_000)}stop`, false],
+    ["many clauses, the last one writing", `${"say it. ".repeat(6_000)}write it`, true],
+    ["many question marks", `${"which? ".repeat(7_000)}none`, false],
+    ["many stars", `${"*".repeat(50_000)} write`, false],
+  ])("%s", (_label, content, expected) => {
+    expect(content.length).toBeGreaterThan(40_000);
+    expect(recallCueAsksForWriting(content)).toBe(expected);
+  });
+
+  it("walks a 50k-character paragraph of recall cues", () => {
+    const markdown = "[YOU RECALL: write **ば**] ".repeat(2_000);
+    expect(markdown.length).toBeGreaterThan(40_000);
+    expect(writingRecallCues(markdown)).toHaveLength(2_000);
+    // An unclosed cue swallows nothing: past MAX_CUE_LENGTH it is prose.
+    expect(writingRecallCues(`[YOU RECALL: write ${"x ".repeat(25_000)}`)).toEqual([]);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // The corpus
 // ---------------------------------------------------------------------------
 
@@ -246,7 +355,12 @@ const manifest = loadModalityManifest();
 const drivableIds = new Set(manifest.lessons.filter((row) => row.drivable).map((row) => row.id));
 const lessonById = new Map(lessons.map((lesson) => [String(lesson.frontmatter.id), lesson]));
 
-/** Every drivable lesson's bare writing imperatives, grouped by track. Clean lessons are absent. */
+/** The whole of a lesson as the narrator reads it: the preamble and every block. */
+function lessonMarkdown(lesson: (typeof lessons)[number]): string {
+  return [lesson.preamble, ...lesson.blocks.map((block) => block.markdown ?? "")].join("\n\n");
+}
+
+/** Every drivable lesson's instructions to write, grouped by track. Clean lessons are absent. */
 function findOffenders(): Map<string, Map<string, string[]>> {
   const byTrack = new Map<string, Map<string, string[]>>();
   for (const lesson of lessons) {
@@ -254,8 +368,8 @@ function findOffenders(): Map<string, Map<string, string[]>> {
     if (!drivableIds.has(id)) continue;
     // A drivable lesson has no detachable block to set aside: the whole lesson
     // is read, so the preamble and every block are scanned.
-    const markdown = [lesson.preamble, ...lesson.blocks.map((block) => block.markdown ?? "")].join("\n\n");
-    const hits = bareWritingImperatives(markdown);
+    const markdown = lessonMarkdown(lesson);
+    const hits = drivableWritingInstructions(markdown);
     if (hits.length === 0) continue;
     const track = byTrack.get(lesson.language) ?? new Map<string, string[]>();
     track.set(id, hits);
@@ -264,10 +378,18 @@ function findOffenders(): Map<string, Map<string, string[]>> {
   return byTrack;
 }
 
+/**
+ * The ledger files, or none when the directory is absent (every track's debt
+ * paid; see the header).
+ */
+function ledgerEntries(): Dirent[] {
+  return existsSync(DEBT_DIRECTORY) ? readdirSync(DEBT_DIRECTORY, { withFileTypes: true }) : [];
+}
+
 /** The committed ledger: track -> the lesson ids recorded as debt. */
 function loadDebt(): Map<string, string[]> {
   const debt = new Map<string, string[]>();
-  for (const entry of readdirSync(DEBT_DIRECTORY, { withFileTypes: true })) {
+  for (const entry of ledgerEntries()) {
     const track = entry.name.replace(/\.json$/, "");
     debt.set(track, JSON.parse(readFileSync(join(DEBT_DIRECTORY, entry.name), "utf8")) as string[]);
   }
@@ -284,7 +406,26 @@ describe("drivable lessons carry no bare writing imperative", () => {
     // two empty sides.
     const scanned = lessons.filter((lesson) => drivableIds.has(String(lesson.frontmatter.id)));
     expect(scanned.length).toBeGreaterThan(1000);
-    expect(offenders.size).toBeGreaterThan(0);
+  });
+
+  it("the detector still fires on the real corpus, where writing is legitimate", () => {
+    // The other half of anti-vacuity. With every track's debt paid, "no
+    // drivable lesson offends" is also what a detector that had stopped
+    // matching anything would report. The lessons that are NOT drivable carry
+    // real pen work in both shapes — prose ("Write all five from dictation.")
+    // and recall cues ("[YOU RECALL: write **ば** — **R1**]") — and their
+    // narration already opens with the hands-and-eyes notice, so they are
+    // where the detector must keep firing.
+    let prose = 0;
+    let recall = 0;
+    for (const lesson of lessons) {
+      if (drivableIds.has(String(lesson.frontmatter.id))) continue;
+      const markdown = lessonMarkdown(lesson);
+      if (bareWritingImperatives(markdown).length > 0) prose += 1;
+      if (writingRecallCues(markdown).length > 0) recall += 1;
+    }
+    expect(prose, "pen lessons with a prose writing instruction").toBeGreaterThan(50);
+    expect(recall, "pen lessons with a writing recall cue").toBeGreaterThan(5);
   });
 
   it("the #12070 lessons are still drivable, and clean", () => {
@@ -300,7 +441,7 @@ describe("drivable lessons carry no bare writing imperative", () => {
 
   it("the debt ledger is well formed", () => {
     const languages = new Set(registry.languages.map((language) => language.id));
-    for (const entry of readdirSync(DEBT_DIRECTORY, { withFileTypes: true })) {
+    for (const entry of ledgerEntries()) {
       expect(entry.isFile(), `${entry.name} is a plain file`).toBe(true);
       expect(entry.name, "ledger files are <track>.json").toMatch(/^[a-z]+\.json$/);
       expect(languages.has(entry.name.replace(/\.json$/, "")), `${entry.name} names a registered track`).toBe(true);
@@ -326,8 +467,9 @@ describe("drivable lessons carry no bare writing imperative", () => {
       for (const [id, spans] of found) {
         if (recorded.has(id)) continue;
         problems.push(
-          `NEW  ${id}: a drivable lesson tells the listener to write in bare prose. ` +
-            `Author it as a [YOU WRITE: …] cue (or make the task spoken):\n` +
+          `NEW  ${id}: a drivable lesson tells the listener to write, in bare prose or a spoken cue. ` +
+            `Author it as a [YOU WRITE: …] cue (or make the task spoken); a ` +
+            `[YOU RECALL: write X — **R1**] becomes [YOU WRITE: X from memory — **R1**]:\n` +
             spans.map((span) => `       ${span.slice(0, 160)}`).join("\n"),
         );
       }

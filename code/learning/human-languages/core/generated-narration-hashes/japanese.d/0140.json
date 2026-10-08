@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 140,
-  "sourceHash": "fnv1a64:20524bb6e0fd716d",
+  "sourceHash": "fnv1a64:9e8b499b637adf99",
   "lessonIds": [
     "JA-C140-senshuu",
     "JA-C140-sengetsu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch140.txt",
   "json": "japanese/narration/ch140.json",
-  "textHash": "fnv1a64:f871d1498315f283",
-  "jsonHash": "fnv1a64:e165822acd091382",
+  "textHash": "fnv1a64:200250a980efcbcd",
+  "jsonHash": "fnv1a64:ff06272cc84d860d",
   "findings": []
 }

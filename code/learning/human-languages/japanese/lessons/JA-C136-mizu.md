@@ -40,8 +40,8 @@ reviews_of: [JA-C136-kazoeru, JA-W09-mi, JA-W135-gi, JA-W134-be, JA-C126-umai]
 [PAUSE 20s] Four recalls before the new word.
 
 - [YOU RECALL: say *to count* — **R1**, one lesson back]
-- [YOU RECALL: write **ぎ** — **R2**, five lessons back]
-- [YOU RECALL: write **べ** — **R3**, twenty lessons back]
+- [YOU WRITE: **ぎ** from memory — **R2**, five lessons back]
+- [YOU WRITE: **べ** from memory — **R3**, twenty lessons back]
 - [YOU RECALL: say *tasty*, or *skilful* — **R4**, eighty lessons back]
 
 ## You'll want to know: みず

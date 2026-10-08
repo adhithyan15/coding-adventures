@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Saying No",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3c320c5bebd7be9d",
+  "sourceHash": "fnv1a64:891ff8a8bfd9e015",
   "lessons": [
     {
       "id": "MW-C39-hear-koni",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f556813ec3db226",
+      "sourceHash": "fnv1a64:e94dd83eee09afc6",
       "notice": null,
       "blocks": [
         {
@@ -44,21 +44,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write अठारा — R2",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "अठारा from memory — R2",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **अठारा** — **R2**]"
+              "source": "[YOU WRITE: **अठारा** from memory — **R2**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write बारा — R3",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "बारा from memory — R3",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **बारा** — **R3**]"
+              "source": "[YOU WRITE: **बारा** from memory — **R3**]"
             }
           ]
         },
@@ -271,7 +271,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f54f84f7ac94d56",
+      "sourceHash": "fnv1a64:24b670e4a316f9a6",
       "notice": null,
       "blocks": [
         {
@@ -287,12 +287,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write कोनी (konī) — R1",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "कोनी (konī) from memory — R1",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **कोनी** — **R1**]"
+              "source": "[YOU WRITE: **कोनी** from memory — **R1**]"
             },
             {
               "kind": "prompt",
@@ -305,12 +305,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write तेरा — R3",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "तेरा from memory — R3",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **तेरा** — **R3**]"
+              "source": "[YOU WRITE: **तेरा** from memory — **R3**]"
             },
             {
               "kind": "prompt",

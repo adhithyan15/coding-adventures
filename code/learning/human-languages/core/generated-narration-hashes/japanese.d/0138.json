@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 138,
-  "sourceHash": "fnv1a64:d38b96288c3071d4",
+  "sourceHash": "fnv1a64:9419e0bda36c0e4a",
   "lessonIds": [
     "JA-C138-okimasu",
     "JA-C138-hatarakimasu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch138.txt",
   "json": "japanese/narration/ch138.json",
-  "textHash": "fnv1a64:d56768121f9bc286",
-  "jsonHash": "fnv1a64:93f70cc10afc3b2d",
+  "textHash": "fnv1a64:33158323fc49b4e4",
+  "jsonHash": "fnv1a64:08eabf94f6fe9bb6",
   "findings": []
 }

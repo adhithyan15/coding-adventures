@@ -4,7 +4,7 @@
   "chapter": 133,
   "title": "The Last Four Hiragana: Ki, Ke, Nu and He",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:801cb61e48104965",
+  "sourceHash": "fnv1a64:e8bdd782fe438fca",
   "lessons": [
     {
       "id": "JA-C133-eki",
@@ -348,7 +348,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ea57541763ffa08",
+      "sourceHash": "fnv1a64:17e576dc436a2278",
       "notice": null,
       "blocks": [
         {
@@ -441,12 +441,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write きのう (kinō), four strokes for the first sign",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "きのう (kinō) from memory, four strokes for the first sign",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **きのう**, four strokes for the first sign]"
+              "source": "[YOU WRITE: **きのう** from memory, four strokes for the first sign]"
             }
           ]
         },
@@ -501,7 +501,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea288169928c8a25",
+      "sourceHash": "fnv1a64:153ba02c3e9eef7f",
       "notice": null,
       "blocks": [
         {
@@ -539,12 +539,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ゃ, small, in おちゃ — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ゃ from memory, small, in おちゃ — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ゃ**, small, in **おちゃ** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **ゃ** from memory, small, in **おちゃ** — **R3**, twenty lessons back]"
             }
           ]
         },
@@ -838,7 +838,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d8db17c6c8e6d0c",
+      "sourceHash": "fnv1a64:2f4c7779b04a4dc6",
       "notice": null,
       "blocks": [
         {
@@ -931,12 +931,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write けさ (kesa), three strokes for the first sign and three for the second",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "けさ (kesa) from memory, three strokes for the first sign and three for the second",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **けさ**, three strokes for the first sign and three for the second]"
+              "source": "[YOU WRITE: **けさ** from memory, three strokes for the first sign and three for the second]"
             }
           ]
         },
@@ -990,7 +990,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba29543cf619d7ff",
+      "sourceHash": "fnv1a64:c78ca1f544945a39",
       "notice": null,
       "blocks": [
         {
@@ -1028,12 +1028,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ょ, small, in ちょっと — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ょ from memory, small, in ちょっと — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ょ**, small, in **ちょっと** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **ょ** from memory, small, in **ちょっと** — **R3**, twenty lessons back]"
             }
           ]
         },
@@ -1331,7 +1331,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0aa2c499829e328",
+      "sourceHash": "fnv1a64:6c0c6b016e5b72a2",
       "notice": null,
       "blocks": [
         {
@@ -1415,12 +1415,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぬの (nuno), two strokes for the first sign and one for the second",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぬの (nuno) from memory, two strokes for the first sign and one for the second",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぬの**, two strokes for the first sign and one for the second]"
+              "source": "[YOU WRITE: **ぬの** from memory, two strokes for the first sign and one for the second]"
             }
           ]
         },
@@ -1474,7 +1474,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1fb7c16de490b498",
+      "sourceHash": "fnv1a64:c1b47f8651bb0fb6",
       "notice": null,
       "blocks": [
         {
@@ -1503,12 +1503,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write を — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "を from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **を** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **を** from memory — **R3**, twenty lessons back]"
             }
           ]
         },

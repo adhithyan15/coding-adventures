@@ -4,7 +4,7 @@
   "chapter": 134,
   "title": "Phone and Train: De, Ba, Be and Bu",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a4198a49b57fae20",
+  "sourceHash": "fnv1a64:d9e8f11a173427f0",
   "lessons": [
     {
       "id": "JA-C134-denwa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a93abc90ebb4fd0b",
+      "sourceHash": "fnv1a64:a1933bfc5800b97b",
       "notice": null,
       "blocks": [
         {
@@ -39,21 +39,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぬ — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぬ from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぬ** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: **ぬ** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write そ — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "そ from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **そ** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **そ** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
@@ -326,7 +326,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96e91e0b8b1503be",
+      "sourceHash": "fnv1a64:0dd253cc4dc916c8",
       "notice": null,
       "blocks": [
         {
@@ -346,12 +346,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write で (de) — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "で (de) from memory — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **で** — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **で** from memory — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -428,12 +428,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write でんしゃ (densha), with the ゃ small and low",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "でんしゃ (densha) from memory, with the ゃ small and low",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **でんしゃ**, with the **ゃ** small and low]"
+              "source": "[YOU WRITE: **でんしゃ** from memory, with the **ゃ** small and low]"
             }
           ]
         },
@@ -487,7 +487,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88673b5485a78479",
+      "sourceHash": "fnv1a64:0fc1a0828f9ddde9",
       "notice": null,
       "blocks": [
         {
@@ -516,21 +516,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write へ — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "へ from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **へ** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: **へ** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write れ — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "れ from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **れ** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **れ** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
@@ -794,7 +794,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:600a93551b493b18",
+      "sourceHash": "fnv1a64:e7ceebfc185c46e2",
       "notice": null,
       "blocks": [
         {
@@ -814,12 +814,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ば — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ば from memory — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ば** — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ば** from memory — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -896,12 +896,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ばしょ (basho), three signs for two beats",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ばしょ (basho) from memory, three signs for two beats",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ばしょ**, three signs for two beats]"
+              "source": "[YOU WRITE: **ばしょ** from memory, three signs for two beats]"
             }
           ]
         },
@@ -955,7 +955,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:921c19ae87962e7a",
+      "sourceHash": "fnv1a64:b0eb5b97302a0d52",
       "notice": null,
       "blocks": [
         {
@@ -984,21 +984,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write で (de) — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "で (de) from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **で** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: **で** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write る — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "る from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **る** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **る** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
@@ -1262,7 +1262,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41a50f9c57d528e8",
+      "sourceHash": "fnv1a64:ed930e89d047c9e4",
       "notice": null,
       "blocks": [
         {
@@ -1282,12 +1282,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write べ (be) — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "べ (be) from memory — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **べ** — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **べ** from memory — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -1364,12 +1364,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write べんきょう (benkyō), five signs for four beats",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "べんきょう (benkyō) from memory, five signs for four beats",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **べんきょう**, five signs for four beats]"
+              "source": "[YOU WRITE: **べんきょう** from memory, five signs for four beats]"
             }
           ]
         },
@@ -1424,7 +1424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b337936b31214d37",
+      "sourceHash": "fnv1a64:5bcca701905558e7",
       "notice": null,
       "blocks": [
         {
@@ -1453,21 +1453,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ば — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ば from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ば** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: **ば** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write き — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "き from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **き** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **き** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
@@ -1740,7 +1740,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0073fb1187f8901",
+      "sourceHash": "fnv1a64:aa739488b81a79c1",
       "notice": null,
       "blocks": [
         {
@@ -1760,12 +1760,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぶ (bu) — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぶ (bu) from memory — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぶ** — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ぶ** from memory — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",

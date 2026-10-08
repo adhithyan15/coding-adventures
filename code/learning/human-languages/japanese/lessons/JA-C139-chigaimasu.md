@@ -40,8 +40,8 @@ reviews_of: [JA-C139-desuka, JA-C138-hatarakimasu, JA-W136-ze, JA-W131-small-ya]
 
 - [YOU RECALL: ask *is it ...?*, politely — **R1**, one lesson back]
 - [YOU RECALL: say *I work*, politely — **R2**, five lessons back]
-- [YOU RECALL: write **ぜ** — **R3**, twenty lessons back]
-- [YOU RECALL: write small **ゃ** — **R4**, eighty lessons back]
+- [YOU WRITE: **ぜ** from memory — **R3**, twenty lessons back]
+- [YOU WRITE: small **ゃ** from memory — **R4**, eighty lessons back]
 
 ## You'll want to know: ちがいます
 <!-- hl-knowledge: introduces=[JA-LEX-C139-CHIGAIMASU]; assesses=[] -->

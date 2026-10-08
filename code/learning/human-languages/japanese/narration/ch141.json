@@ -4,7 +4,7 @@
   "chapter": 141,
   "title": "Next Week, Next Year: Plans and the Future",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:681de5c43f10feac",
+  "sourceHash": "fnv1a64:b89d69376c7decef",
   "lessons": [
     {
       "id": "JA-C141-raishuu",
@@ -347,7 +347,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:044c1e6dc7798b00",
+      "sourceHash": "fnv1a64:11e840d6cbbd4220",
       "notice": null,
       "blocks": [
         {
@@ -385,21 +385,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぺ — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぺ from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぺ** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **ぺ** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write れ — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "れ from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **れ** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **れ** from memory — **R4**, eighty lessons back]"
             }
           ]
         },

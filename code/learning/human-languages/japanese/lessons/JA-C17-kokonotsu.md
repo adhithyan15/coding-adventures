@@ -36,7 +36,7 @@ reviews_of: [JA-W17-no, JA-C15-ku, JA-C10-koko]
 
 [PAUSE 25s] Three recalls, then the longest word in the chapter.
 
-- [YOU RECALL: write **の** — **R1**, one lesson back]
+- [YOU WRITE: **の** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *nine* — **R3**, twenty lessons back]
 - [YOU RECALL: say *here* — **R4**, eighty lessons back]
 

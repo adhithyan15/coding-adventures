@@ -48,7 +48,8 @@ pointed finger. Name every answer you have now.
 - [YOU SAY: *gharā-* once, then run *madhye · var · khālī · javaḷ · samor*]
 - [YOU SAY: *lāmb* — and notice it took no stem]
 - [YOU SAY: *ujvā ḍoḷā*, *ḍāvā kān* — the two sides, before their nouns]
-- [YOU RECALL: answer *kuṭhe?* with *ithe*, then *tithe*, and write **तिथे** once]
+- [YOU RECALL: answer *kuṭhe?* with *ithe*, then *tithe*]
+- [YOU WRITE: **तिथे** once, from memory]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-GRAMMAR-OBLIQUE, MR-QUESTION-KUTHE, MR-LEX-LAAMB] -->

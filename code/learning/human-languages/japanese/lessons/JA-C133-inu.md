@@ -41,7 +41,7 @@ reviews_of: [JA-C133-kesa, JA-W01-i, JA-W09-me, JA-W133-ki, JA-W131-small-yo, JA
 [YOU WRITE: **き** — **R2**, five lessons back]
 
 - [YOU RECALL: say *kind* — **R4**, eighty lessons back]
-- [YOU RECALL: write **ょ**, small, in **ちょっと** — **R3**, twenty lessons back]
+- [YOU WRITE: **ょ** from memory, small, in **ちょっと** — **R3**, twenty lessons back]
 
 ## You'll want to know: いぬ
 <!-- hl-knowledge: introduces=[JA-LEX-ANCHOR-INU]; assesses=[JA-SCRIPT-I-01, JA-SCRIPT-ME-01] -->

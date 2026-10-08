@@ -40,8 +40,8 @@ reviews_of: [JA-C137-tenpura, JA-W08-ra, JA-W137-pi, JA-W135-gi, JA-C129-tanomos
 [PAUSE 20s] Four recalls before the new word.
 
 - [YOU RECALL: say *tempura* — **R1**, one lesson back]
-- [YOU RECALL: write **ぴ** — **R2**, five lessons back]
-- [YOU RECALL: write **ぎ** — **R3**, twenty lessons back]
+- [YOU WRITE: **ぴ** from memory — **R2**, five lessons back]
+- [YOU WRITE: **ぎ** from memory — **R3**, twenty lessons back]
 - [YOU RECALL: say *reliable* — **R4**, eighty lessons back]
 
 ## You'll want to know: ぺらぺら

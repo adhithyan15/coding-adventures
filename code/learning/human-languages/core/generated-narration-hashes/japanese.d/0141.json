@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 141,
-  "sourceHash": "fnv1a64:681de5c43f10feac",
+  "sourceHash": "fnv1a64:b89d69376c7decef",
   "lessonIds": [
     "JA-C141-raishuu",
     "JA-C141-raigetsu",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch141.txt",
   "json": "japanese/narration/ch141.json",
-  "textHash": "fnv1a64:125560e05f889a1c",
-  "jsonHash": "fnv1a64:234e849a86c3dc57",
+  "textHash": "fnv1a64:752b04611df661d8",
+  "jsonHash": "fnv1a64:872c089f9fec3eb8",
   "findings": []
 }

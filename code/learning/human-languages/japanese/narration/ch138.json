@@ -4,7 +4,7 @@
   "chapter": 138,
   "title": "My Day: Get Up, Work, Walk, Go Home, Sleep",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d38b96288c3071d4",
+  "sourceHash": "fnv1a64:9419e0bda36c0e4a",
   "lessons": [
     {
       "id": "JA-C138-okimasu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d8f6d8e8a33396f",
+      "sourceHash": "fnv1a64:54ab6cc2de37612f",
       "notice": null,
       "blocks": [
         {
@@ -39,21 +39,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぷ — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぷ from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぷ** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: **ぷ** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぞ — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぞ from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぞ** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **ぞ** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
@@ -505,7 +505,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6038d5e393725a99",
+      "sourceHash": "fnv1a64:ef0e86726fa252d9",
       "notice": null,
       "blocks": [
         {
@@ -534,21 +534,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぺ — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぺ from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぺ** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: **ぺ** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ず — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ず from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ず** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **ず** from memory — **R3**, twenty lessons back]"
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Eleven to Fifteen",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:85e25acb32ca9c52",
+  "sourceHash": "fnv1a64:59c63988b68fec2a",
   "lessons": [
     {
       "id": "MW-W37-i",
@@ -130,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:231d8d8f2e286d04",
+      "sourceHash": "fnv1a64:577dc72a3580e898",
       "notice": null,
       "blocks": [
         {
@@ -146,12 +146,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write इ, the letter the last lesson stood up — R1",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "इ (i) from memory, the letter the last lesson stood up — R1",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **इ**, the letter the last lesson stood up — **R1**]"
+              "source": "[YOU WRITE: **इ** from memory, the letter the last lesson stood up — **R1**]"
             },
             {
               "kind": "prompt",
@@ -164,12 +164,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write पैसा ले लो — R4",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "पैसा ले लो from memory — R4",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **पैसा ले लो** — **R4**]"
+              "source": "[YOU WRITE: **पैसा ले लो** from memory — **R4**]"
             }
           ]
         },
@@ -345,7 +345,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37547c038ba7ab93",
+      "sourceHash": "fnv1a64:1c8d9a46d52e5973",
       "notice": null,
       "blocks": [
         {
@@ -361,21 +361,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write इग्यारा (igyārā) — R1",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "इग्यारा (igyārā) from memory — R1",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **इग्यारा** — **R1**]"
+              "source": "[YOU WRITE: **इग्यारा** from memory — **R1**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write the figures ०, १ and २ — R3",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "the figures ०, १ and २ from memory — R3",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write the figures **०**, **१** and **२** — **R3**]"
+              "source": "[YOU WRITE: the figures **०**, **१** and **२** from memory — **R3**]"
             },
             {
               "kind": "prompt",
@@ -570,7 +570,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a4ce52d90baa6a6",
+      "sourceHash": "fnv1a64:3afeb2f957bc9946",
       "notice": null,
       "blocks": [
         {
@@ -586,21 +586,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write बारा (bārā) — R1",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "बारा (bārā) from memory — R1",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **बारा** — **R1**]"
+              "source": "[YOU WRITE: **बारा** from memory — **R1**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write इ, five lessons back — R2",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "इ from memory, five lessons back — R2",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **इ**, five lessons back — **R2**]"
+              "source": "[YOU WRITE: **इ** from memory, five lessons back — **R2**]"
             },
             {
               "kind": "prompt",
@@ -613,12 +613,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write the figures ३, ४ and ५ — R3",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "the figures ३, ४ and ५ from memory — R3",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write the figures **३**, **४** and **५** — **R3**]"
+              "source": "[YOU WRITE: the figures **३**, **४** and **५** from memory — **R3**]"
             },
             {
               "kind": "prompt",
@@ -818,7 +818,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b04542f34ff7ba9b",
+      "sourceHash": "fnv1a64:ff79007d342ae0ef",
       "notice": null,
       "blocks": [
         {
@@ -834,30 +834,30 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write तेरा (terā) — R1",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "तेरा (terā) from memory — R1",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **तेरा** — **R1**]"
+              "source": "[YOU WRITE: **तेरा** from memory — **R1**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write इग्यारा (igyārā), five lessons back — R2",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "इग्यारा (igyārā) from memory, five lessons back — R2",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **इग्यारा**, five lessons back — **R2**]"
+              "source": "[YOU WRITE: **इग्यारा** from memory, five lessons back — **R2**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write the figures ६, ७ and ८ — R3",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "the figures ६, ७ and ८ from memory — R3",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write the figures **६**, **७** and **८** — **R3**]"
+              "source": "[YOU WRITE: the figures **६**, **७** and **८** from memory — **R3**]"
             },
             {
               "kind": "prompt",
@@ -1062,7 +1062,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34e7bb8338e45baa",
+      "sourceHash": "fnv1a64:60f43802c1a3124a",
       "notice": null,
       "blocks": [
         {
@@ -1078,39 +1078,39 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write चौदा (caudā) — R1",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "चौदा (caudā) from memory — R1",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **चौदा** — **R1**]"
+              "source": "[YOU WRITE: **चौदा** from memory — **R1**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write तेरा (terā), five lessons back — R2",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "तेरा (terā) from memory, five lessons back — R2",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **तेरा**, five lessons back — **R2**]"
+              "source": "[YOU WRITE: **तेरा** from memory, five lessons back — **R2**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write the figure ९ — R3",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "the figure ९ from memory — R3",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write the figure **९** — **R3**]"
+              "source": "[YOU WRITE: the figure **९** from memory — **R3**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write बारा (bārā) — R2",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "बारा (bārā) from memory — R2",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **बारा** — **R2**]"
+              "source": "[YOU WRITE: **बारा** from memory — **R2**]"
             }
           ]
         },
