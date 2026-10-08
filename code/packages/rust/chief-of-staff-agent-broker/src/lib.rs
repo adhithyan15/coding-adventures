@@ -843,6 +843,75 @@ impl<R: std::io::Read, W: std::io::Write> ChannelCallbacks for FramedCallbacks<R
     }
 }
 
+// ---------------------------------------------------------------------------
+// The process
+// ---------------------------------------------------------------------------
+
+/// Run a broker process over `stdin` and `stdout`, returning the exit code
+/// to use on failure.
+///
+/// ```text
+///   suppress core dumps (P2.6a), before any key exists
+///   read Bootstrap: the binding, and the key slot table
+///   adopt(n): the n inherited key descriptors, checked and taken
+///   read each key, re-checking the owner-only policy on its descriptor;
+///     drop the descriptors
+///   Ready { public halves }
+///   serve requests, one at a time, until Terminate
+/// ```
+///
+/// `adopt` is the one step that needs `unsafe`: taking ownership of
+/// inherited descriptors. It lives with the binary, so this library stays
+/// `forbid(unsafe_code)`. The exit codes are 65 (protocol), 66 (descriptors,
+/// from `adopt`), 67 (keys), 70 (hardening) and 74 (writing).
+pub fn serve_process(
+    stdin: impl std::io::Read,
+    stdout: impl std::io::Write,
+    adopt: impl FnOnce(usize) -> Result<Vec<std::fs::File>, u8>,
+) -> Result<(), u8> {
+    use protocol::{FromBroker, ToBroker, KEY_BYTES};
+
+    chief_of_staff_process_hardening::suppress_core_dumps().map_err(|_| 70u8)?;
+
+    let mut frames = FramedCallbacks::new(stdin, stdout);
+    let ToBroker::Bootstrap { binding, slots } = frames.receive().map_err(|_| 65u8)? else {
+        return Err(65);
+    };
+    let files = adopt(slots.len())?;
+    if files.len() != slots.len() {
+        return Err(66);
+    }
+    let keys = LoadedKeys::load(&binding, &slots, |index| {
+        chief_of_staff_daemon_secret_file::read_owner_only_secret_from(&files[index], KEY_BYTES)
+            .map_err(|_| KeyError::Unreadable)
+    })
+    .map_err(|_| 67u8)?;
+    // The keys are in this process now; the descriptors are not needed.
+    drop(files);
+
+    frames
+        .send(&FromBroker::Ready {
+            public_keys: keys.public_keys().to_vec(),
+        })
+        .map_err(|_| 74u8)?;
+
+    let mut broker = ChannelBroker::new(binding, keys);
+    loop {
+        match frames.receive().map_err(|_| 65u8)? {
+            ToBroker::Request(request) => {
+                let response = broker.serve(&request, &mut frames).map_err(|_| 65u8)?;
+                frames
+                    .send(&FromBroker::Response(response))
+                    .map_err(|_| 74u8)?;
+            }
+            ToBroker::Terminate => return Ok(()),
+            // A second Bootstrap, or a callback result with no callback
+            // outstanding: the peer is not following the protocol.
+            _ => return Err(65),
+        }
+    }
+}
+
 /// Which callbacks an operation may need, for documentation and tests.
 pub fn callbacks_for(request: &DataPlaneRequest) -> &'static [CallbackOp] {
     match request {

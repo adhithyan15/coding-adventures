@@ -27,63 +27,30 @@ fn main() -> ExitCode {
 
 #[cfg(unix)]
 fn run() -> Result<(), u8> {
-    use chief_of_staff_agent_broker::protocol::{
-        FromBroker, ToBroker, FIRST_KEY_DESCRIPTOR, KEY_BYTES,
-    };
-    use chief_of_staff_agent_broker::{ChannelBroker, FramedCallbacks, KeyError, LoadedKeys};
+    use chief_of_staff_agent_broker::protocol::FIRST_KEY_DESCRIPTOR;
 
-    chief_of_staff_process_hardening::suppress_core_dumps().map_err(|_| 70u8)?;
-
-    let mut frames = FramedCallbacks::new(std::io::stdin().lock(), std::io::stdout().lock());
-    let ToBroker::Bootstrap { binding, slots } = frames.receive().map_err(|_| 65u8)? else {
-        return Err(65);
-    };
-
-    let count = i32::try_from(slots.len()).map_err(|_| 65u8)?;
-    // Exactly the slot descriptors were inherited above stdio: each slot's
-    // is open, and no other is, at any number up to the descriptor limit.
-    // The supervisor's close-everything-else is the guarantee; this is a
-    // tripwire that it held.
-    for fd in FIRST_KEY_DESCRIPTOR..FIRST_KEY_DESCRIPTOR + count {
-        if !descriptor_is_open(fd) {
-            return Err(66);
-        }
-    }
-    if (FIRST_KEY_DESCRIPTOR + count..descriptor_limit()).any(descriptor_is_open) {
-        return Err(66);
-    }
-    let files: Vec<std::fs::File> = (FIRST_KEY_DESCRIPTOR..FIRST_KEY_DESCRIPTOR + count)
-        .map(adopt)
-        .collect();
-    let keys = LoadedKeys::load(&binding, &slots, |index| {
-        chief_of_staff_daemon_secret_file::read_owner_only_secret_from(&files[index], KEY_BYTES)
-            .map_err(|_| KeyError::Unreadable)
-    })
-    .map_err(|_| 67u8)?;
-    // The keys are in this process now; the descriptors are not needed.
-    drop(files);
-
-    frames
-        .send(&FromBroker::Ready {
-            public_keys: keys.public_keys().to_vec(),
-        })
-        .map_err(|_| 74u8)?;
-
-    let mut broker = ChannelBroker::new(binding, keys);
-    loop {
-        match frames.receive().map_err(|_| 65u8)? {
-            ToBroker::Request(request) => {
-                let response = broker.serve(&request, &mut frames).map_err(|_| 65u8)?;
-                frames
-                    .send(&FromBroker::Response(response))
-                    .map_err(|_| 74u8)?;
+    chief_of_staff_agent_broker::serve_process(
+        std::io::stdin().lock(),
+        std::io::stdout().lock(),
+        |count| {
+            let count = i32::try_from(count).map_err(|_| 65u8)?;
+            // Exactly the slot descriptors were inherited above stdio: each
+            // slot's is open, and no other is, at any number up to the
+            // descriptor limit. The supervisor's close-everything-else is
+            // the guarantee; this is a tripwire that it held.
+            for fd in FIRST_KEY_DESCRIPTOR..FIRST_KEY_DESCRIPTOR + count {
+                if !descriptor_is_open(fd) {
+                    return Err(66);
+                }
             }
-            ToBroker::Terminate => return Ok(()),
-            // A second Bootstrap, or a callback result with no callback
-            // outstanding: the peer is not following the protocol.
-            _ => return Err(65),
-        }
-    }
+            if (FIRST_KEY_DESCRIPTOR + count..descriptor_limit()).any(descriptor_is_open) {
+                return Err(66);
+            }
+            Ok((FIRST_KEY_DESCRIPTOR..FIRST_KEY_DESCRIPTOR + count)
+                .map(adopt)
+                .collect())
+        },
+    )
 }
 
 #[cfg(not(unix))]
