@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-08 — re-audited after native Python empty print
+Status date: 2026-10-08 — re-audited after Perl 5.004_62
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -338,19 +338,28 @@ directly to InterpreterIR and Rust vm-core; host Ruby remains an oracle.
 The next selection rotates to LANG82's distinct, explicitly partial Perl
 5.004_62 pair, backed by its own historical source archive.
 
+PR #17105 delivered that distinct, own-archive-backed partial 5.004_62 pair
+and merged as `a80edd11ace79bb46f384ae00e12e35db1172dd0` after exact-head
+CI, CodeQL, and books checks passed. The 776-row inventory now has 107
+explicitly partial pairs and 669 pending. Neither complete syntax nor an
+exhaustive public-release inventory is claimed. The next selection rotates
+to PREP01's bounded C `#if`/`#elif` logical short-circuit stage.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG82 continued (selected):** add a distinct, own-archive-backed partial
-   5.004_62 token/grammar pair. Keep 5.004_01-t1 pending until its own source
-   is found; do not imply complete syntax or an exhaustive release inventory.
+1. **PREP01 C (selected):** short-circuit value computation in the existing
+   bounded `#if`/`#elif` logical clauses while still rejecting malformed or
+   unsupported clauses after expansion. Full C `#if` and stringize/paste
+   remain open.
 2. **LANG80 Ruby:** the zero-argument parenthesized stage is complete; broader
    native frontend semantics remain open, with host Ruby only as an oracle.
 3. **LANG78 JavaScript:** the zero-argument stage is complete; broader native
    frontend semantics remain open, with Node only as a conformance oracle.
-4. **PREP01 C:** continue the bounded conditional ladder. Full C `#if` and
-   stringize/paste remain open.
+4. **LANG82 continued:** source-audit the next distinct Perl release pair.
+   Keep 5.004_01-t1 pending until its own source is found; do not imply
+   complete syntax or an exhaustive release inventory.
 
 The following run records the first VM-067 selection.
 
