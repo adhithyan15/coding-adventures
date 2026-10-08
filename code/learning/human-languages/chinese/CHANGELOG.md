@@ -87,6 +87,7 @@ lessons. Every edited lesson stays `drivable: true` (only its
     its paragraph, so the book no longer runs "*Cover:* the page The next
     question …" together (ZH-C12-nu, ZH-C12-ren, ZH-C18-shu, ZH-C19-ma,
     ZH-R12..R19, 17 lessons).
+- **Second review follow-up:** ZH-R18-book-reading-r1 and ZH-R18-looking-three-r1 no longer defer the check on 看 until after the writing step, where "before deciding" came too late. *kàn* is audible, so the prose now says "Listen for *kàn* before deciding …" before the answers, and the CHECK cue is gone.
 
 ## Fixed — drivable lessons stop asking a driver to gesture
 

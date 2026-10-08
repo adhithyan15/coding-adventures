@@ -38,6 +38,7 @@ lessons. Every edited lesson stays `drivable: true` (only its
   - Cues that opened with *it*, *them*, *this* or *these* name their object, so
     the book no longer prints "*Read it:* them again" (RU-C27-notices): "[YOU
     READ: the six notices again, and notice the list turns over halfway]".
+- **Second review follow-up:** RU-C25-practice's cue reads "the twelve amounts, printed and shuffled" (the noun was missing).
 
 ## Fixed — RU-C85-date's warm-up stops telling a driver to write
 

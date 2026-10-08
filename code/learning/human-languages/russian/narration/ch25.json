@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Twenty, a Hundred, and the Number That Named a Family",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:0acf1ed8961f835b",
+  "sourceHash": "fnv1a64:87061b771cc5cafe",
   "lessons": [
     {
       "id": "RU-C25-dvadtsat",
@@ -285,7 +285,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f18a4cd17e99a51",
+      "sourceHash": "fnv1a64:0ed5b51bbbd537e1",
       "notice": null,
       "blocks": [
         {
@@ -340,11 +340,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the twelve printed shuffled, then say each",
+              "instruction": "the twelve amounts, printed and shuffled, then say each",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the twelve printed shuffled, then say each]"
+              "source": "[YOU READ: the twelve amounts, printed and shuffled, then say each]"
             },
             {
               "kind": "prompt",

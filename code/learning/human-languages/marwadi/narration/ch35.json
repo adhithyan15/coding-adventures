@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "The Ten Digit Signs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:78e4f671c8384526",
+  "sourceHash": "fnv1a64:c22360acac7041e1",
   "lessons": [
     {
       "id": "MW-W35-digits-zero-one-two",
@@ -1009,7 +1009,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3230ccf9d6150833",
+      "sourceHash": "fnv1a64:0abc2acf08594ead",
       "notice": null,
       "blocks": [
         {
@@ -1053,7 +1053,7 @@
             },
             {
               "kind": "speech",
-              "text": "Speaking."
+              "text": "Reading aloud."
             },
             {
               "kind": "prompt",

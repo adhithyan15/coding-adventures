@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 1,
-  "sourceHash": "fnv1a64:f913fa69cb1643ec",
+  "sourceHash": "fnv1a64:61d02592088a80b2",
   "lessonIds": [
     "MW-W01-ra",
     "MW-W01-aa-matra",
@@ -16,6 +16,6 @@
   "text": "marwadi/narration/ch01.txt",
   "json": "marwadi/narration/ch01.json",
   "textHash": "fnv1a64:20adb49a7b1de247",
-  "jsonHash": "fnv1a64:0ba26b9b47fc9c3c",
+  "jsonHash": "fnv1a64:ab28d8a62834f7c4",
   "findings": []
 }

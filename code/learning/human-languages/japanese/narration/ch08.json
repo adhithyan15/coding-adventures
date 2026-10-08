@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "One Goodbye, Sign by Sign",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d06a49f208c1b504",
+  "sourceHash": "fnv1a64:7f108d0cfd11c99a",
   "lessons": [
     {
       "id": "JA-C08-hear-sayounara",
@@ -623,7 +623,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa20f87a12784226",
+      "sourceHash": "fnv1a64:e57bbc08c9320376",
       "notice": null,
       "blocks": [
         {
@@ -679,10 +679,6 @@
             {
               "kind": "speech",
               "text": "Speak: answer a parting cue with sayōnara on five morae."
-            },
-            {
-              "kind": "speech",
-              "text": "Reading:"
             },
             {
               "kind": "prompt",

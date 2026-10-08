@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Haan Sa: A Respectful Yes, Sign by Sign",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ff9c742acb3afcca",
+  "sourceHash": "fnv1a64:e39b585d4b88d192",
   "lessons": [
     {
       "id": "MW-W03-ha",
@@ -509,7 +509,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:144a2a4d8693b74c",
+      "sourceHash": "fnv1a64:49144ca72f3a1e64",
       "notice": null,
       "blocks": [
         {
@@ -550,10 +550,6 @@
             {
               "kind": "speech",
               "text": "Speak: hear “Will you come?” and answer yes respectfully, without notes."
-            },
-            {
-              "kind": "speech",
-              "text": "Reading:"
             },
             {
               "kind": "prompt",

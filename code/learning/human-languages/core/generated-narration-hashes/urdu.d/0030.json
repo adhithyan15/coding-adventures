@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 30,
-  "sourceHash": "fnv1a64:4760d18afb7ce0ca",
+  "sourceHash": "fnv1a64:4ea81ea4443cdb09",
   "lessonIds": [
     "UR-C30-bees",
     "UR-C30-sau",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "urdu/narration/ch30.txt",
   "json": "urdu/narration/ch30.json",
-  "textHash": "fnv1a64:98135191120f4b77",
-  "jsonHash": "fnv1a64:099c7d28b0dbe2e1",
+  "textHash": "fnv1a64:a5de5c0fd420851d",
+  "jsonHash": "fnv1a64:f4d15b9f878eed28",
   "findings": []
 }

@@ -39,3 +39,4 @@ lessons. Every edited lesson stays `drivable: true` (only its
     READ: the six lines again, …]".
   - Four-skill items drop the "**Reading:**" label in front of a READ cue, which
     the book printed as "Reading: *Read it:* …" (UR-C30-practice).
+- **Second review follow-up:** UR-C30-practice's cue reads "the twelve amounts, printed and shuffled" (the noun was missing).

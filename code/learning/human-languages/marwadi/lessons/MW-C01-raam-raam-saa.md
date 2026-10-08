@@ -59,8 +59,10 @@ greeting merely because the scripts are shared.
 ## Guided Practice — use and write it
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-RAAM-RAAM-SAA, MW-REGISTER-SAA] -->
 
-- [YOU HEAR: *rām-rām sā*] [YOU ANSWER: **राम-राम सा**]
-- [YOU READ: **राम-राम सा**] [YOU SAY: the line without romanization]
+- [YOU HEAR: *rām-rām sā*]
+- [YOU ANSWER: **राम-राम सा**]
+- [YOU READ: **राम-राम सा**]
+- [YOU SAY: the line without romanization]
 - [YOU COPY: **राम-राम सा** once, keeping the hyphen and space]
 
 ## Wrap-up recall

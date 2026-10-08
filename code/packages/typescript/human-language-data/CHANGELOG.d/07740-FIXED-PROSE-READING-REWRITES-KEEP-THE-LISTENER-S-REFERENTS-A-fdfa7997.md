@@ -75,3 +75,4 @@
   LA-C59-social-exchange "again and find the two things handled" → "again for
   the two things handled", AR-C42-first-passage "again, and this time notice
   the hinge" → "again for the hinge". No declared duration changed.
+- A second review found eight leftovers, now fixed: two double-cue list items in MW-C01-raam-raam-saa, two `**Reading:**` labels in front of COVER cues (JA-C08-sayounara, MW-C03-practice), a missing noun in RU-C25-practice and UR-C30-practice, a CHECK cue in two ZH-R18 lessons deferred past the point it was needed (now spoken: "Listen for *kàn* …"), and MW-C35-ticket-four's reading step labelled **Speaking.**

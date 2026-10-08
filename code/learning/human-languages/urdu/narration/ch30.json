@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Twenty, a Hundred, and the Nine Words That Are Not Here",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:4760d18afb7ce0ca",
+  "sourceHash": "fnv1a64:4ea81ea4443cdb09",
   "lessons": [
     {
       "id": "UR-C30-bees",
@@ -286,7 +286,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:44fd65d067f9c536",
+      "sourceHash": "fnv1a64:931fce209f2376be",
       "notice": null,
       "blocks": [
         {
@@ -335,11 +335,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the twelve printed shuffled, then say each",
+              "instruction": "the twelve amounts, printed and shuffled, then say each",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the twelve printed shuffled, then say each]"
+              "source": "[YOU READ: the twelve amounts, printed and shuffled, then say each]"
             },
             {
               "kind": "speech",

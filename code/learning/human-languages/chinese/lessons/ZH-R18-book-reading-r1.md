@@ -39,12 +39,11 @@ reviews_of: [ZH-C18-shu, ZH-C18-kanshu]
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-SHU-01, ZH-SCRIPT-SHU-01, ZH-LEX-KANSHU-01, ZH-ORTHO-KANSHU-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Hear the two meanings in mixed order. Say each answer.
+Hear the two meanings in mixed order. Listen for *kàn* before deciding noun or
+activity, then say each answer.
 [YOU READ: each Mandarin form without pinyin]
 
 [YOU WRITE: each one]
-
-[YOU CHECK: whether 看 is present before deciding noun or activity]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-SHU-01, ZH-LEX-KANSHU-01] -->

@@ -70,3 +70,4 @@ lessons. Every edited lesson stays `drivable: true` (only its
   - MW-C35-ticket-four "3. **Reading.** Given a stall with six labelled goods,
     say which is dearest and which is cheapest." → "3. [YOU READ: the labels on
     a stall of six goods, then say which is dearest and which is cheapest]".
+- **Second review follow-up:** MW-C01-raam-raam-saa's two double-cue list items are now four items, so the book no longer prints "Hear: … Answer: …" on one line. MW-C03-practice drops the `**Reading:**` label in front of its COVER cue. MW-C35-ticket-four's item 2 is labelled **Reading aloud.**, not **Speaking.**, because the whole step is a deferred reading.

@@ -44,7 +44,7 @@ Four skills, scored separately.
 
 1. **Listening.** Hear twelve amounts named.
    [YOU WRITE: each as a Devanagari figure]
-2. **Speaking.** [YOU READ: twelve printed tickets aloud as Marwadi words, including every one of **४**, **५**, **७** and **८**]
+2. **Reading aloud.** [YOU READ: twelve printed tickets aloud as Marwadi words, including every one of **४**, **५**, **७** and **८**]
 3. [YOU READ: the labels on a stall of six goods, then say which is dearest and which is cheapest]
 4. **Writing.** [YOU WRITE: all ten digits from dictation, out of order, then **१०**, **२०** and **१००**]
 

@@ -78,6 +78,7 @@ lessons. Every edited lesson stays `drivable: true` (only its
     its paragraph, so the book no longer runs "*Cover:* the page The next
     question …" together (JA-C09-sumimasen, JA-C10-wakarimashita, the JA-C12
     body words, JA-R12, JA-R13; 17 lessons).
+- **Second review follow-up:** JA-C08-sayounara drops the `**Reading:**` label in front of its COVER cue, which printed as "Reading: Cover:" and left "Reading:" alone in the narration.
 
 ## Fixed — drivable lessons stop asking a driver to gesture
 

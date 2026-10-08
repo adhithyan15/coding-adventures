@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Ram-Ram Sa: A Greeting the Hand Can Make",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f913fa69cb1643ec",
+  "sourceHash": "fnv1a64:61d02592088a80b2",
   "lessons": [
     {
       "id": "MW-W01-ra",
@@ -579,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f095efdee40fa804",
+      "sourceHash": "fnv1a64:f2f5e53998dec3c4",
       "notice": null,
       "blocks": [
         {

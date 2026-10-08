@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 18,
-  "sourceHash": "fnv1a64:954471e725d2dac0",
+  "sourceHash": "fnv1a64:10c8381053274850",
   "lessonIds": [
     "ZH-C18-hear-kan",
     "ZH-W18-kan-observe",
@@ -31,7 +31,7 @@
   "drivablePrefix": 0,
   "text": "chinese/narration/ch18.txt",
   "json": "chinese/narration/ch18.json",
-  "textHash": "fnv1a64:f720e2415642d95e",
-  "jsonHash": "fnv1a64:f7bcce324c81f16a",
+  "textHash": "fnv1a64:69cf0c61fce97668",
+  "jsonHash": "fnv1a64:1df9540e85ebbecb",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Looking and reading",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:954471e725d2dac0",
+  "sourceHash": "fnv1a64:10c8381053274850",
   "lessons": [
     {
       "id": "ZH-C18-hear-kan",
@@ -899,7 +899,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fea83f3d8f694b80",
+      "sourceHash": "fnv1a64:9dd92e3422d26654",
       "notice": null,
       "blocks": [
         {
@@ -926,7 +926,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the three meanings in mixed order. Say each Mandarin answer."
+              "text": "Hear the three meanings in mixed order. Listen for what comes beside kàn before deciding the whole meaning, then say each Mandarin answer."
             },
             {
               "kind": "prompt",
@@ -945,15 +945,6 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU WRITE: each one]"
-            },
-            {
-              "kind": "prompt",
-              "action": "CHECK",
-              "instruction": "the neighbour of 看 (kàn) before deciding the whole meaning",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU CHECK: the neighbour of 看 before deciding the whole meaning]"
             }
           ]
         },
@@ -1768,7 +1759,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8f129b5daa15fa3",
+      "sourceHash": "fnv1a64:a1484e511ce61923",
       "notice": null,
       "blocks": [
         {
@@ -1795,7 +1786,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the two meanings in mixed order. Say each answer."
+              "text": "Hear the two meanings in mixed order. Listen for kàn before deciding noun or activity, then say each answer."
             },
             {
               "kind": "prompt",
@@ -1814,15 +1805,6 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU WRITE: each one]"
-            },
-            {
-              "kind": "prompt",
-              "action": "CHECK",
-              "instruction": "whether 看 (kàn) is present before deciding noun or activity",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU CHECK: whether 看 is present before deciding noun or activity]"
             }
           ]
         },
