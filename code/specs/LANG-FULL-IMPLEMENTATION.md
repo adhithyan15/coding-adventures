@@ -1343,7 +1343,10 @@ backend immediately) come before the enabler-dependent items.
   nonnegative. Non-sign-rooted, exponential, and overridden forms remain
   conservative.
   Unary `+` and `-` may wrap that direct `sign` result without changing the
-  `[-1, 1]` bound; additive and other computed wrappers remain conservative.
+  `[-1, 1]` bound; nonzero additive and other computed wrappers remain
+  conservative.
+  Variable-free exact additive zero terms may also surround that sign result;
+  nonzero terms, repeated sign operands, and overrides remain conservative.
   Built-in `sin`, `cos`, and `arctan` may map a bounded sign-rooted result
   before `entier`, including nested combinations; domain-sensitive or
   unbounded standard functions and non-sign-rooted runtime operands remain
