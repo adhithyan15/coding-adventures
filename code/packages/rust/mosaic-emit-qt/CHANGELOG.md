@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-08 (solid per-edge border reporting)
+
+- `border-{top,right,bottom,left}-style: solid` is now recorded as consumed
+  when Qt emits the same positive-width edge strip. Unsupported, zero-width,
+  and style-only declarations remain explicit degradations (#17098).
+
 ## 2026-10-08 (layout containers inherit font weight)
 
 - `Row`, `Column`, and `Stack` parts now pass supported authored

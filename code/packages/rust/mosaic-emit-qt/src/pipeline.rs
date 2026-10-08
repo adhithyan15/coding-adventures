@@ -3013,6 +3013,15 @@ fn has_per_edge_border(props: &[StyleProp]) -> bool {
     })
 }
 
+fn lowered_solid_per_edge_style(props: &[StyleProp], edge: &str, width: &str) -> bool {
+    width.parse::<f64>().is_ok_and(|width| width > 0.0)
+        && props
+            .iter()
+            .rev()
+            .find(|p| p.name == format!("border-{edge}-style"))
+            .is_some_and(|p| p.value.trim() == "solid")
+}
+
 /// UI79 -- the child `Rectangle`s that draw a part's authored edges.
 ///
 /// QML's `Rectangle.border` is all-four-edges, exactly like Compose's
@@ -3041,6 +3050,10 @@ fn qml_per_edge_border_lines(props: &[StyleProp], pad: &str) -> Vec<String> {
         // nothing, which is worse than refusing it here.
         if w.starts_with('-') {
             continue;
+        }
+        if lowered_solid_per_edge_style(props, edge, &w) {
+            let style_name = format!("border-{edge}-style");
+            record_style_read(props, &style_name);
         }
         let c = props
             .iter()
@@ -16297,6 +16310,22 @@ mod tests {
         assert!(has_per_edge_border(&[sp("border-bottom-width", "1px")]));
         assert!(!has_per_edge_border(&[sp("border-bottom-color", "#243146")]));
         assert!(!has_per_edge_border(&[sp("border-width", "1px")]));
+    }
+
+    #[test]
+    fn solid_edge_style_is_consumed_only_with_a_positive_width() {
+        let props = vec![
+            sp("border-bottom-width", "1px"),
+            sp("border-bottom-style", "solid"),
+        ];
+        assert!(lowered_solid_per_edge_style(&props, "bottom", "1"));
+        assert!(!lowered_solid_per_edge_style(&props, "bottom", "0"));
+        assert!(!lowered_solid_per_edge_style(&props, "top", "1"));
+        let dashed = vec![
+            sp("border-bottom-width", "1px"),
+            sp("border-bottom-style", "dashed"),
+        ];
+        assert!(!lowered_solid_per_edge_style(&dashed, "bottom", "1"));
     }
 
     fn sp(name: &str, value: &str) -> StyleProp {

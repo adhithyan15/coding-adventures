@@ -165,6 +165,12 @@ rather than letting them read as silent gaps.
     #17052 lowers supported uppercase text transforms through all five native
     text APIs, retiring another 55 allowances and reducing the inventories to
     54 XAML, 99 SwiftUI, 66 Compose, 140 Qt, and 174 Flutter drops.
+    #17073 then preserves supported TaskApp font weights in Qt and Flutter,
+    reducing those two inventories to 138 and 158. #17098 removes solid
+    per-edge border styles only where a supported positive-width edge is
+    actually drawn, retiring another 70 false positives and reducing the
+    fresh inventories to 38 XAML, 83 SwiftUI, 50 Compose, 130 Qt, and 144
+    Flutter drops.
     Keep the per-property maxima in the shared TaskApp contract so no new
     property or increased occurrence count can enter while fixes drive those
     inventories toward #12022's zero-drop hard fail. Do not call the existing
