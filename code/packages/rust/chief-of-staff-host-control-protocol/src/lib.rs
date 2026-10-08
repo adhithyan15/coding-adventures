@@ -14,16 +14,17 @@ mod data_plane;
 mod launch;
 
 pub use data_plane::{
-    validate_data_plane_response, CompletionCall, CompletionFinishReason, CompletionProvider,
-    CompletionResult, CompletionUsage, DataPlaneFailure, DataPlaneMessage, DataPlaneOperation,
-    DataPlaneRequest, DataPlaneResponse, ModelToolCall, ModelToolChoice, ModelToolDefinition,
-    ModelToolResult, PromptMessage, PromptRole, RequestId, ToolCompletionCall,
-    ToolCompletionOutput, ToolCompletionResult, MAX_DATA_PLANE_MESSAGES,
-    MAX_DATA_PLANE_PAYLOAD_BYTES, MAX_DATA_PLANE_RECORD_BYTES, MAX_MODEL_TOOLS,
-    MAX_MODEL_TOOL_CALL_ID_BYTES, MAX_MODEL_TOOL_DESCRIPTION_BYTES, MAX_MODEL_TOOL_JSON_BYTES,
-    MAX_MODEL_TOOL_NAME_BYTES,
+    decode_data_plane_request, decode_data_plane_response, encode_data_plane_request,
+    encode_data_plane_response, validate_data_plane_response, CompletionCall,
+    CompletionFinishReason, CompletionProvider, CompletionResult, CompletionUsage,
+    DataPlaneFailure, DataPlaneMessage, DataPlaneOperation, DataPlaneRequest, DataPlaneResponse,
+    ModelToolCall, ModelToolChoice, ModelToolDefinition, ModelToolResult, PromptMessage,
+    PromptRole, RequestId, ToolCompletionCall, ToolCompletionOutput, ToolCompletionResult,
+    MAX_DATA_PLANE_MESSAGES, MAX_DATA_PLANE_PAYLOAD_BYTES, MAX_DATA_PLANE_RECORD_BYTES,
+    MAX_MODEL_TOOLS, MAX_MODEL_TOOL_CALL_ID_BYTES, MAX_MODEL_TOOL_DESCRIPTION_BYTES,
+    MAX_MODEL_TOOL_JSON_BYTES, MAX_MODEL_TOOL_NAME_BYTES,
 };
-use data_plane::{DataRecord, ACKNOWLEDGED_RESPONSE_TAG, ACKNOWLEDGE_REQUEST_TAG};
+use data_plane::{DataRecord, DataRecordRef, ACKNOWLEDGED_RESPONSE_TAG, ACKNOWLEDGE_REQUEST_TAG};
 use data_plane::{
     COMPLETED_RESPONSE_TAG, COMPLETE_REQUEST_TAG, COMPLETE_WITH_TOOLS_REQUEST_TAG,
     EXECUTE_TOOL_REQUEST_TAG, FAILED_RESPONSE_TAG, LIST_MODEL_TOOLS_REQUEST_TAG,
@@ -725,12 +726,12 @@ fn encode_record(record: ControlRecord) -> Result<Vec<u8>, ControlError> {
             output.extend_from_slice(&encode_launch_bindings(&bindings));
         }
         ControlRecord::Request(request) => {
-            let (tag, body) = data_plane::encode(&DataRecord::Request(request))?;
+            let (tag, body) = data_plane::encode(DataRecordRef::Request(&request))?;
             output.push(tag);
             output.extend_from_slice(&body);
         }
         ControlRecord::Response(response) => {
-            let (tag, body) = data_plane::encode(&DataRecord::Response(response))?;
+            let (tag, body) = data_plane::encode(DataRecordRef::Response(&response))?;
             output.push(tag);
             output.extend_from_slice(&body);
         }

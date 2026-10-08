@@ -459,7 +459,7 @@ pub enum DataPlaneResponse {
 /// an oversized or malformed result becomes a stable adapter failure instead of a
 /// later authenticated-session framing failure.
 pub fn validate_data_plane_response(response: &DataPlaneResponse) -> Result<(), ControlError> {
-    encode(&DataRecord::Response(response.clone())).map(|_| ())
+    encode(DataRecordRef::Response(response)).map(|_| ())
 }
 
 impl DataPlaneResponse {
@@ -498,10 +498,72 @@ pub(crate) enum DataRecord {
     Response(DataPlaneResponse),
 }
 
-pub(crate) fn encode(record: &DataRecord) -> Result<(u8, Vec<u8>), ControlError> {
+impl DataRecord {
+    pub(crate) fn as_ref(&self) -> DataRecordRef<'_> {
+        match self {
+            Self::Request(request) => DataRecordRef::Request(request),
+            Self::Response(response) => DataRecordRef::Response(response),
+        }
+    }
+}
+
+/// A borrowed [`DataRecord`], so encoding never clones a payload.
+#[derive(Clone, Copy)]
+pub(crate) enum DataRecordRef<'a> {
+    Request(&'a DataPlaneRequest),
+    Response(&'a DataPlaneResponse),
+}
+
+/// Encode one data-plane request as `tag || body`: the bytes the secure
+/// host channel carries after its header (D18S P2.6d).
+///
+/// The supervisor relays a request it has already decoded and checked to
+/// the agent's broker in this form, so both sides use this one codec, with
+/// all its bounds.
+pub fn encode_data_plane_request(request: &DataPlaneRequest) -> Result<Vec<u8>, ControlError> {
+    tagged(encode(DataRecordRef::Request(request))?)
+}
+
+/// Encode one data-plane response as `tag || body`.
+pub fn encode_data_plane_response(response: &DataPlaneResponse) -> Result<Vec<u8>, ControlError> {
+    tagged(encode(DataRecordRef::Response(response))?)
+}
+
+/// Decode `tag || body` as a request. A response, an unknown tag, a
+/// truncated body, or trailing bytes are all refused.
+pub fn decode_data_plane_request(bytes: &[u8]) -> Result<DataPlaneRequest, ControlError> {
+    match untagged(bytes)? {
+        DataRecord::Request(request) => Ok(request),
+        DataRecord::Response(_) => Err(ControlError::InvalidDataPlaneRecord),
+    }
+}
+
+/// Decode `tag || body` as a response, refusing a request.
+pub fn decode_data_plane_response(bytes: &[u8]) -> Result<DataPlaneResponse, ControlError> {
+    match untagged(bytes)? {
+        DataRecord::Response(response) => Ok(response),
+        DataRecord::Request(_) => Err(ControlError::InvalidDataPlaneRecord),
+    }
+}
+
+fn tagged((tag, body): (u8, Vec<u8>)) -> Result<Vec<u8>, ControlError> {
+    let mut bytes = Vec::with_capacity(1 + body.len());
+    bytes.push(tag);
+    bytes.extend_from_slice(&body);
+    Ok(bytes)
+}
+
+fn untagged(bytes: &[u8]) -> Result<DataRecord, ControlError> {
+    let (&tag, body) = bytes
+        .split_first()
+        .ok_or(ControlError::InvalidDataPlaneRecord)?;
+    decode(tag, body)
+}
+
+pub(crate) fn encode(record: DataRecordRef<'_>) -> Result<(u8, Vec<u8>), ControlError> {
     let mut encoder = Encoder::default();
     let tag = match record {
-        DataRecord::Request(request) => {
+        DataRecordRef::Request(request) => {
             encoder.u64(request.id().get());
             match request {
                 DataPlaneRequest::Receive {
@@ -555,7 +617,7 @@ pub(crate) fn encode(record: &DataRecord) -> Result<(u8, Vec<u8>), ControlError>
                 DataPlaneRequest::ListModelTools { .. } => LIST_MODEL_TOOLS_REQUEST_TAG,
             }
         }
-        DataRecord::Response(response) => {
+        DataRecordRef::Response(response) => {
             encoder.u64(response.id().get());
             match response {
                 DataPlaneResponse::Received { messages, .. } => {
@@ -1440,6 +1502,60 @@ impl<'a> Decoder<'a> {
 mod tests {
     use super::*;
 
+    fn encode_owned(record: &DataRecord) -> Result<(u8, Vec<u8>), ControlError> {
+        encode(record.as_ref())
+    }
+
+    #[test]
+    fn the_public_relay_codec_round_trips_and_refuses_everything_else() {
+        let request = DataPlaneRequest::Publish {
+            id: RequestId::new(9).unwrap(),
+            channel_id: uuid_v7(1),
+            content_type: "text/plain".to_string(),
+            payload: b"hello broker".to_vec(),
+        };
+        let response = DataPlaneResponse::Received {
+            id: RequestId::new(9).unwrap(),
+            messages: vec![DataPlaneMessage {
+                message_id: uuid_v7(2),
+                sequence: 4,
+                timestamp_ns: 5,
+                content_type: "text/plain".to_string(),
+                payload: b"hello host".to_vec(),
+            }],
+        };
+        let request_bytes = encode_data_plane_request(&request).unwrap();
+        let response_bytes = encode_data_plane_response(&response).unwrap();
+        assert_eq!(decode_data_plane_request(&request_bytes).unwrap(), request);
+        assert_eq!(
+            decode_data_plane_response(&response_bytes).unwrap(),
+            response
+        );
+
+        // Each kind only as itself.
+        assert!(decode_data_plane_response(&request_bytes).is_err());
+        assert!(decode_data_plane_request(&response_bytes).is_err());
+        // Nothing, every truncation, and any trailing byte.
+        assert!(decode_data_plane_request(&[]).is_err());
+        for cut in 0..request_bytes.len() {
+            assert!(
+                decode_data_plane_request(&request_bytes[..cut]).is_err(),
+                "{cut}"
+            );
+        }
+        let mut trailing = request_bytes.clone();
+        trailing.push(0);
+        assert!(decode_data_plane_request(&trailing).is_err());
+        // An out-of-bounds request is refused on the way out, too.
+        let too_big = DataPlaneRequest::Publish {
+            id: RequestId::new(9).unwrap(),
+            channel_id: uuid_v7(1),
+            content_type: "text/plain".to_string(),
+            payload: vec![0; MAX_DATA_PLANE_PAYLOAD_BYTES + 1],
+        };
+        assert!(encode_data_plane_request(&too_big).is_err());
+    }
+
     fn uuid_v7(last: u8) -> [u8; 16] {
         let mut bytes = [0u8; 16];
         bytes[6] = 0x70;
@@ -1544,14 +1660,14 @@ mod tests {
             id: RequestId::new(1).unwrap(),
             call: call_with_all_roles(),
         });
-        let (tag, body) = encode(&request).unwrap();
+        let (tag, body) = encode_owned(&request).unwrap();
         assert_eq!(decode(tag, &body).unwrap(), request);
 
         let tool_request = DataRecord::Request(DataPlaneRequest::CompleteWithTools {
             id: RequestId::new(2).unwrap(),
             call: Box::new(tool_call()),
         });
-        let (tag, body) = encode(&tool_request).unwrap();
+        let (tag, body) = encode_owned(&tool_request).unwrap();
         assert_eq!(tag, COMPLETE_WITH_TOOLS_REQUEST_TAG);
         assert_eq!(decode(tag, &body).unwrap(), tool_request);
 
@@ -1559,14 +1675,14 @@ mod tests {
             id: RequestId::new(3).unwrap(),
             result: Box::new(tool_result()),
         });
-        let (tag, body) = encode(&tool_response).unwrap();
+        let (tag, body) = encode_owned(&tool_response).unwrap();
         assert_eq!(tag, TOOL_COMPLETED_RESPONSE_TAG);
         assert_eq!(decode(tag, &body).unwrap(), tool_response);
 
         let catalog_request = DataRecord::Request(DataPlaneRequest::ListModelTools {
             id: RequestId::new(4).unwrap(),
         });
-        let (tag, body) = encode(&catalog_request).unwrap();
+        let (tag, body) = encode_owned(&catalog_request).unwrap();
         assert_eq!(tag, LIST_MODEL_TOOLS_REQUEST_TAG);
         assert_eq!(decode(tag, &body).unwrap(), catalog_request);
 
@@ -1574,7 +1690,7 @@ mod tests {
             id: RequestId::new(4).unwrap(),
             tools: tool_call().tools,
         });
-        let (tag, body) = encode(&catalog_response).unwrap();
+        let (tag, body) = encode_owned(&catalog_response).unwrap();
         assert_eq!(tag, MODEL_TOOLS_LISTED_RESPONSE_TAG);
         assert_eq!(decode(tag, &body).unwrap(), catalog_response);
 
@@ -1588,7 +1704,7 @@ mod tests {
                 id: RequestId::new(2).unwrap(),
                 result: Box::new(result(reason)),
             });
-            let (tag, body) = encode(&response).unwrap();
+            let (tag, body) = encode_owned(&response).unwrap();
             assert_eq!(decode(tag, &body).unwrap(), response);
         }
 
@@ -1604,7 +1720,7 @@ mod tests {
                 id: RequestId::new(3).unwrap(),
                 failure,
             });
-            let (tag, body) = encode(&response).unwrap();
+            let (tag, body) = encode_owned(&response).unwrap();
             assert_eq!(decode(tag, &body).unwrap(), response);
         }
     }
@@ -1681,7 +1797,7 @@ mod tests {
         ];
         for request in invalid_requests {
             assert_eq!(
-                encode(&DataRecord::Request(request)),
+                encode_owned(&DataRecord::Request(request)),
                 Err(ControlError::InvalidDataPlaneRecord)
             );
         }
@@ -1703,7 +1819,7 @@ mod tests {
             Err(ControlError::InvalidDataPlaneRecord)
         );
         assert_eq!(
-            encode(&DataRecord::Response(too_many_messages)),
+            encode_owned(&DataRecord::Response(too_many_messages)),
             Err(ControlError::InvalidDataPlaneRecord)
         );
         let aggregate_too_large = DataPlaneResponse::Received {
@@ -1720,7 +1836,7 @@ mod tests {
                 .collect(),
         };
         assert_eq!(
-            encode(&DataRecord::Response(aggregate_too_large)),
+            encode_owned(&DataRecord::Response(aggregate_too_large)),
             Err(ControlError::InvalidDataPlaneRecord)
         );
         let invalid_published = DataPlaneResponse::Published {
@@ -1734,7 +1850,7 @@ mod tests {
             Err(ControlError::InvalidDataPlaneRecord)
         );
         assert_eq!(
-            encode(&DataRecord::Response(invalid_published)),
+            encode_owned(&DataRecord::Response(invalid_published)),
             Err(ControlError::InvalidDataPlaneRecord)
         );
         let empty_catalog = DataPlaneResponse::ModelToolsListed {
@@ -1780,7 +1896,7 @@ mod tests {
         ];
         for call in invalid_calls {
             assert_eq!(
-                encode(&DataRecord::Request(DataPlaneRequest::Complete {
+                encode_owned(&DataRecord::Request(DataPlaneRequest::Complete {
                     id,
                     call,
                 })),
@@ -1791,7 +1907,7 @@ mod tests {
         let mut invalid_result = result(CompletionFinishReason::Stop);
         invalid_result.provider.vendor = String::new();
         assert_eq!(
-            encode(&DataRecord::Response(DataPlaneResponse::Completed {
+            encode_owned(&DataRecord::Response(DataPlaneResponse::Completed {
                 id,
                 result: Box::new(invalid_result),
             })),
@@ -1833,7 +1949,7 @@ mod tests {
         ];
         for call in invalid_tool_calls {
             assert_eq!(
-                encode(&DataRecord::Request(DataPlaneRequest::CompleteWithTools {
+                encode_owned(&DataRecord::Request(DataPlaneRequest::CompleteWithTools {
                     id,
                     call: Box::new(call),
                 })),
@@ -1848,7 +1964,7 @@ mod tests {
             arguments: serde_json::json!({}),
         });
         assert_eq!(
-            encode(&DataRecord::Response(DataPlaneResponse::ToolCompleted {
+            encode_owned(&DataRecord::Response(DataPlaneResponse::ToolCompleted {
                 id,
                 result: Box::new(invalid_tool_result),
             })),
