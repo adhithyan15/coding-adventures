@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-08 — re-audited after Perl 5.004_59
+Status date: 2026-10-08 — re-audited after native Python empty print
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -295,13 +295,20 @@ partial pairs and 672 pending, without a full-syntax or exhaustive-release
 claim. The next fresh selection rotates to LANG79's bounded native Python
 zero-argument `print()` stage.
 
+PR #17071 delivered that bounded native Python `print()` stage and merged as
+`a44b6c33cefc576b84f60eda5d7255e308ce1abd` after exact-head CI,
+CodeQL, and books checks passed. The Rust VM emits one newline for an empty
+call; grammar-AST lowering also validates real callee and delimiter token
+kinds for both supported print forms. The next fresh selection rotates to
+LANG82's separate, explicitly partial Perl 5.004_60 pair.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG79 Python `print()` (selected):** lower exact zero-argument calls from
-   the Python grammar AST directly to InterpreterIR, then execute the newline
-   effect on Rust vm-core. Keep host Python as a conformance oracle.
+1. **LANG82 historical 5.004_60 (selected):** land its own-archive-backed,
+   distinct token/grammar pair for the bounded plain-decimal print subset.
+   Keep it explicitly partial and exclude CR from its accepted subset.
 2. **LANG82 continued:** continue distinct source-backed partial pairs. Keep
    5.004_01-t1 pending until its own source is found; do not imply complete
    syntax or an exhaustive release inventory.
