@@ -1893,6 +1893,22 @@ through S-I3 before two weeks are spent on Windows.
           channel operation does not wait for the next refresh.
         - Non-channel requests stay with the in-daemon dispatcher.
         - Without `[hosts.broker]`, today's path is unchanged.
+        - The table is `executable` plus `sha256`, both required. The
+          digest is the trust anchor, so a table without one is refused.
+          The daemon verifies the binary at startup, so a wrong one stops
+          the daemon rather than every launch. The launcher verifies it
+          again before each launch, through the descriptor it executes.
+        - The broker's key table is `[data_plane] channel_keys`, slot for
+          slot. The daemon opens none of those files for the broker: the
+          launcher opens one agent's files when it launches that agent's
+          broker. In 2b the daemon still provisions the same keys for its
+          own path; 2c removes it.
+        - Off Linux, `[hosts.broker]` is refused at startup (S-P3). That
+          is not the open 2c decision below, which is about
+          `channel_keys` *without* `[hosts.broker]`.
+        - Tested end to end in `chief-of-staff-broker-e2e`, on Linux: the
+          supervisor, the real broker serve loop and a scripted host, as
+          three processes.
 
         **2c, the flip.**
         - `channel_keys` requires `[hosts.broker]`.

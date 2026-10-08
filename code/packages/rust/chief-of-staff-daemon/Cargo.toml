@@ -15,6 +15,9 @@ path = "src/main.rs"
 
 [dependencies]
 actor = { path = "../actor" }
+chief-of-staff-broker-launcher = { path = "../chief-of-staff-broker-launcher" }
+chief-of-staff-broker-protocol = { path = "../chief-of-staff-broker-protocol" }
+chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
 chief-of-staff-channel-endpoints = { path = "../chief-of-staff-channel-endpoints" }
 chief-of-staff-daemon-api = { path = "../chief-of-staff-daemon-api" }
 chief-of-staff-daemon-authority-provisioning = { path = "../chief-of-staff-daemon-authority-provisioning" }
@@ -73,6 +76,7 @@ websocket-runtime = { path = "../websocket-runtime" }
 windows-sys = { version = "0.52", features = ["Win32_Storage_FileSystem"] }
 
 [dev-dependencies]
+coding_adventures_sha256 = { path = "../sha256" }
 coding_adventures_ed25519 = { path = "../ed25519" }
 chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }
 

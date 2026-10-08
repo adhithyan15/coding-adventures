@@ -6,16 +6,24 @@
 mod agent_tools;
 
 use actor::{ActorError, ActorSystem};
+#[cfg(target_os = "linux")]
+use chief_of_staff_broker_launcher::VerifyError;
+use chief_of_staff_broker_launcher::{
+    BrokerKeyFiles, KeyFileDeclaration, RelayConfig, VerifiedExecutable,
+};
+use chief_of_staff_broker_protocol::KeyKind;
+use chief_of_staff_channel_crypto::ChannelId;
 use chief_of_staff_channel_endpoints::{
-    MessageId, MessageMetadata, MessageMetadataError, MessageMetadataSource,
+    AgentId as ChannelAgentId, MessageId, MessageMetadata, MessageMetadataError,
+    MessageMetadataSource,
 };
 use chief_of_staff_daemon_api::{BindAddress, DaemonApi, DaemonApiError};
 use chief_of_staff_daemon_authority_provisioning::{
     provision_authorities, AuthorityProvisioningError,
 };
 use chief_of_staff_daemon_config::{
-    parse_config, AxisPairingConfig, ChiefConfig, ConfigError, OnvifPairingConfig,
-    ReolinkPairingConfig, SmartHomeListenerConfig, SmartHomeToolGrantConfig,
+    parse_config, AxisPairingConfig, ChannelKeyAccess, ChiefConfig, ConfigError,
+    OnvifPairingConfig, ReolinkPairingConfig, SmartHomeListenerConfig, SmartHomeToolGrantConfig,
     SmartHomeToolGrantStatus, SynologyPairingConfig, ZoneMinderPairingConfig,
 };
 use chief_of_staff_daemon_credential::{load_or_create_credential, CredentialFileError};
@@ -36,9 +44,10 @@ use chief_of_staff_host_data_plane::{
 use chief_of_staff_host_runtime::PackageKeyring;
 use chief_of_staff_net_fetch::{Fetcher, NetFetch, Resolver, Transport};
 use chief_of_staff_orchestrator_core::OrchestratorCore;
+use chief_of_staff_pipeline_bindings::PipelineId;
 use chief_of_staff_process_supervisor::{
-    DurableHostLaunchBindings, HostProgram, MonotonicClock, ProcessSupervisorConfig,
-    ProcessSupervisorError, SystemMonotonicClock, UuidV7SessionIdSource,
+    ChannelBrokers, DurableHostLaunchBindings, HostProgram, MonotonicClock,
+    ProcessSupervisorConfig, ProcessSupervisorError, SystemMonotonicClock, UuidV7SessionIdSource,
 };
 use chief_of_staff_service_reconciler::{ConfigError as ReconcileConfigError, ReconcileConfig};
 use chief_of_staff_smart_home_tools::{
@@ -330,6 +339,17 @@ pub enum ChiefDaemonError {
     Process(ProcessSupervisorError),
     /// Reconciliation configuration was invalid.
     Reconciliation(ReconcileConfigError),
+    /// `[hosts.broker]` names an executable that is not the pinned binary,
+    /// or that could not be verified (D18S S-K1).
+    #[cfg(target_os = "linux")]
+    BrokerExecutable(VerifyError),
+    /// `[hosts.broker]` is configured where no verified broker launch
+    /// exists yet (S-P3): refused, rather than run unverified.
+    BrokerUnsupported,
+    /// `[data_plane] channel_keys` could not be turned into broker key
+    /// slots: an identifier the channel layer refuses, or a channel declared
+    /// in both directions for one agent.
+    BrokerKeys,
     /// The host transport provider could not initialize.
     Platform(PlatformError),
     /// The authenticated WebSocket runtime failed.
@@ -479,6 +499,12 @@ impl Display for ChiefDaemonError {
             Self::Storage(_) => "chief daemon: durable storage failed",
             Self::Process(_) => "chief daemon: process supervision failed",
             Self::Reconciliation(_) => "chief daemon: reconciliation configuration failed",
+            #[cfg(target_os = "linux")]
+            Self::BrokerExecutable(_) => "chief daemon: broker executable failed verification",
+            Self::BrokerUnsupported => {
+                "chief daemon: [hosts.broker] is not supported on this platform"
+            }
+            Self::BrokerKeys => "chief daemon: channel keys cannot be given to brokers",
             Self::Platform(_) => "chief daemon: transport provider failed",
             Self::Runtime(_) => "chief daemon: runtime failed",
             Self::Shutdown(_) => "chief daemon: shutdown listener failed",
@@ -900,6 +926,8 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
         .transpose()
         .map_err(ChiefDaemonError::SmartHome)?;
     let unix_clock: Arc<dyn UnixTimeClock> = Arc::new(SystemUnixTimeClock);
+    let channel_brokers =
+        compose_channel_brokers(&config, home, Arc::clone(&backend), Arc::clone(&clock))?;
     let data_plane = compose_host_data_plane_with_controller(
         &config,
         home,
@@ -1021,6 +1049,7 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
         keyring,
         launch_bindings,
         data_plane,
+        channel_brokers,
         Arc::new(generate_identity_keypair()),
         clock,
         Box::new(UuidV7SessionIdSource),
@@ -1033,6 +1062,107 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
         config.orchestrator().port(),
     ));
     run_platform(address, api, schedule, smart_home_http)
+}
+
+/// Give each agent its own channel broker, when `[hosts.broker]` is set
+/// (D18S P2.6d-2b).
+///
+/// The broker's key table is `[data_plane] channel_keys`, slot for slot: a
+/// read declaration becomes the receiver private key, a write declaration
+/// the signing seed and the channel master key. Nothing here opens a key
+/// file. The launcher opens each agent's files as it launches that agent's
+/// broker, owner-only or refused, and hands them over by descriptor.
+///
+/// The binary is verified against its pinned digest here, once, so that a
+/// wrong binary stops startup rather than every launch. The launcher checks
+/// it again, through the same descriptor it executes, before each launch.
+///
+/// Without `[hosts.broker]` this returns `None`, and channel requests go to
+/// the in-daemon dispatcher as before. Off Linux, a configured broker is
+/// refused: there is no verified launch there yet, and running the broker
+/// unverified would be the one thing worse than not running it.
+fn compose_channel_brokers(
+    config: &ChiefConfig,
+    home: &Path,
+    backend: Arc<dyn StorageBackend>,
+    clock: Arc<dyn MonotonicClock>,
+) -> Result<Option<ChannelBrokers>, ChiefDaemonError> {
+    let Some(broker) = config.host_broker() else {
+        return Ok(None);
+    };
+    let executable = broker
+        .executable()
+        .resolve(home)
+        .map_err(ChiefDaemonError::Config)?;
+    let keys = broker_key_files(config, home)?;
+    let program = verify_broker_executable(&executable, broker.sha256())?;
+    let metadata: Arc<dyn MessageMetadataSource> =
+        Arc::new(SystemMessageMetadataSource::new(clock));
+    Ok(Some(ChannelBrokers::new(
+        program,
+        keys,
+        backend,
+        metadata,
+        RelayConfig::default(),
+        config.host_defaults().bootstrap_timeout(),
+    )))
+}
+
+#[cfg(target_os = "linux")]
+fn verify_broker_executable(
+    path: &Path,
+    sha256: [u8; 32],
+) -> Result<Arc<VerifiedExecutable>, ChiefDaemonError> {
+    VerifiedExecutable::open(path, sha256)
+        .map(Arc::new)
+        .map_err(ChiefDaemonError::BrokerExecutable)
+}
+
+#[cfg(not(target_os = "linux"))]
+fn verify_broker_executable(
+    _path: &Path,
+    _sha256: [u8; 32],
+) -> Result<Arc<VerifiedExecutable>, ChiefDaemonError> {
+    Err(ChiefDaemonError::BrokerUnsupported)
+}
+
+/// `[data_plane] channel_keys` as the launcher's key table, paths resolved.
+fn broker_key_files(config: &ChiefConfig, home: &Path) -> Result<BrokerKeyFiles, ChiefDaemonError> {
+    let mut declarations = Vec::new();
+    for key in config.data_plane().channel_keys() {
+        let pipeline_id =
+            PipelineId::new(key.pipeline_id()).map_err(|_| ChiefDaemonError::BrokerKeys)?;
+        let agent_id = ChannelAgentId::new(key.agent_id().as_bytes().to_vec())
+            .map_err(|_| ChiefDaemonError::BrokerKeys)?;
+        let channel_id = ChannelId(key.channel_id());
+        let paths = match key.access() {
+            ChannelKeyAccess::Read => {
+                vec![(KeyKind::ReceiverPrivateKey, key.receiver_private_key_path())]
+            }
+            ChannelKeyAccess::Write => vec![
+                (
+                    KeyKind::OriginatorSigningSeed,
+                    key.originator_signing_seed_path(),
+                ),
+                (KeyKind::ChannelMasterKey, key.channel_master_key_path()),
+            ],
+        };
+        for (kind, path) in paths {
+            // The parser fills exactly the paths its access needs.
+            let path = path
+                .ok_or(ChiefDaemonError::BrokerKeys)?
+                .resolve(home)
+                .map_err(ChiefDaemonError::Config)?;
+            declarations.push(KeyFileDeclaration {
+                pipeline_id,
+                agent_id: agent_id.clone(),
+                channel_id,
+                kind,
+                path,
+            });
+        }
+    }
+    BrokerKeyFiles::new(declarations).map_err(|_| ChiefDaemonError::BrokerKeys)
 }
 
 /// Compose the exact production host data plane from validated daemon authority.
@@ -3739,7 +3869,9 @@ mod tests {
     }
     use super::*;
     use chief_of_staff_channel_endpoints::AgentId as ChannelAgentId;
-    use chief_of_staff_host_control_protocol::{LaunchBindings, LevelOneModelBinding};
+    use chief_of_staff_host_control_protocol::{
+        ChannelBinding, ChannelBindingAccess, LaunchBindings, LevelOneModelBinding,
+    };
     use chief_of_staff_pipeline_bindings::{HostPipelineBinding, PipelineId};
     use chief_of_staff_service_registry::{HostName, HostRegistration, PackagePath, RestartPolicy};
     use smart_home_automation_runtime::{
@@ -4087,6 +4219,144 @@ hardware_key_timeout = 60
             "chief daemon: data-plane authority provisioning failed"
         );
         assert!(!error.to_string().contains("missing-private-key.bin"));
+    }
+
+    const BROKER_CHANNEL_KEYS: &str = "[data_plane]\nchannel_keys = [\n  { pipeline_id = \"018f0c10-7b4a-7cc0-8000-000000000001\", agent_id = \"weather\", channel_id = \"018f0c10-7b4a-7cc0-8000-000000000002\", access = \"read\", private_key_path = \"~/keys/inbox.x25519\" },\n  { pipeline_id = \"018f0c10-7b4a-7cc0-8000-000000000001\", agent_id = \"weather\", channel_id = \"018f0c10-7b4a-7cc0-8000-000000000003\", access = \"write\", signing_seed_path = \"~/keys/outbox.seed\", channel_key_path = \"~/keys/outbox.cmk\" },\n]\nollama_models = []\n";
+
+    /// A broker table for `executable`, pinned to `digest`.
+    fn broker_config(executable: &Path, digest: [u8; 32]) -> ChiefConfig {
+        let hex: String = digest.iter().map(|byte| format!("{byte:02x}")).collect();
+        parse_config(&format!(
+            "{VALID_CONFIG}\n{BROKER_CHANNEL_KEYS}\n[hosts.broker]\nexecutable = \"{}\"\nsha256 = \"{hex}\"\n",
+            executable.display()
+        ))
+        .unwrap()
+    }
+
+    fn broker_backend_and_clock() -> (Arc<dyn StorageBackend>, Arc<dyn MonotonicClock>) {
+        (
+            Arc::new(InMemoryStorageBackend::new()),
+            Arc::new(SystemMonotonicClock::new()),
+        )
+    }
+
+    #[test]
+    fn without_a_broker_table_channel_requests_stay_in_the_daemon() {
+        let directory = TestDir::new();
+        let config = parse_config(&format!("{VALID_CONFIG}\n{BROKER_CHANNEL_KEYS}")).unwrap();
+        let (backend, clock) = broker_backend_and_clock();
+        assert!(
+            compose_channel_brokers(&config, &directory.0, backend, clock)
+                .unwrap()
+                .is_none()
+        );
+    }
+
+    #[test]
+    fn channel_keys_become_the_broker_s_slots_with_home_resolved() {
+        let directory = TestDir::new();
+        let config = broker_config(Path::new("/unused"), [0; 32]);
+        let keys = broker_key_files(&config, &directory.0).unwrap();
+        let pipeline_id = config.data_plane().channel_keys()[0].pipeline_id();
+        let channel = |key: usize| config.data_plane().channel_keys()[key].channel_id();
+        let binding = HostPipelineBinding::new(
+            PipelineId::new(pipeline_id).unwrap(),
+            HostRegistration::new(
+                HostName::new("weather").unwrap(),
+                PackagePath::new("/srv/weather.agent").unwrap(),
+                [7; 32],
+                RestartPolicy::Always,
+            ),
+            ChannelAgentId::new(b"weather".to_vec()).unwrap(),
+            LaunchBindings::new(
+                vec![
+                    ChannelBinding::new("inbox", ChannelBindingAccess::Read, channel(0)).unwrap(),
+                    ChannelBinding::new("outbox", ChannelBindingAccess::Write, channel(1)).unwrap(),
+                ],
+                None,
+            )
+            .unwrap(),
+        );
+        let slots = keys.slots_for(&binding).unwrap();
+        let paths: Vec<_> = slots
+            .iter()
+            .map(|(slot, path)| (slot.kind, path.clone()))
+            .collect();
+        assert_eq!(
+            paths,
+            vec![
+                (
+                    KeyKind::ReceiverPrivateKey,
+                    directory.0.join("keys/inbox.x25519")
+                ),
+                (
+                    KeyKind::OriginatorSigningSeed,
+                    directory.0.join("keys/outbox.seed")
+                ),
+                (
+                    KeyKind::ChannelMasterKey,
+                    directory.0.join("keys/outbox.cmk")
+                ),
+            ]
+        );
+    }
+
+    #[cfg(target_os = "linux")]
+    #[test]
+    fn the_broker_binary_is_verified_at_startup() {
+        let directory = TestDir::new();
+        let executable = directory.0.join("broker");
+        fs::write(&executable, b"#!/bin/false\n").unwrap();
+        let digest = coding_adventures_sha256::sha256(b"#!/bin/false\n");
+        let (backend, clock) = broker_backend_and_clock();
+        assert!(compose_channel_brokers(
+            &broker_config(&executable, digest),
+            &directory.0,
+            Arc::clone(&backend),
+            Arc::clone(&clock),
+        )
+        .unwrap()
+        .is_some());
+
+        // Not the pinned bytes: startup stops, rather than every launch.
+        let mut wrong = digest;
+        wrong[0] ^= 1;
+        assert!(matches!(
+            compose_channel_brokers(
+                &broker_config(&executable, wrong),
+                &directory.0,
+                Arc::clone(&backend),
+                Arc::clone(&clock),
+            ),
+            Err(ChiefDaemonError::BrokerExecutable(
+                VerifyError::DigestMismatch
+            ))
+        ));
+        assert!(matches!(
+            compose_channel_brokers(
+                &broker_config(&directory.0.join("absent"), digest),
+                &directory.0,
+                backend,
+                clock,
+            ),
+            Err(ChiefDaemonError::BrokerExecutable(VerifyError::Unreadable))
+        ));
+    }
+
+    #[cfg(not(target_os = "linux"))]
+    #[test]
+    fn a_broker_table_is_refused_where_no_verified_launch_exists() {
+        let directory = TestDir::new();
+        let (backend, clock) = broker_backend_and_clock();
+        assert!(matches!(
+            compose_channel_brokers(
+                &broker_config(&directory.0.join("broker"), [0; 32]),
+                &directory.0,
+                backend,
+                clock,
+            ),
+            Err(ChiefDaemonError::BrokerUnsupported)
+        ));
     }
 
     #[test]

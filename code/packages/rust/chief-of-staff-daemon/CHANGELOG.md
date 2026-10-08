@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- **`[hosts.broker]` gives each agent its own channel broker** (D18S
+  P2.6d-2b; #13980). The broker's key table is `[data_plane] channel_keys`,
+  slot for slot, with home-relative paths resolved. The daemon opens no key
+  file for it: the launcher opens each agent's files when it launches that
+  agent's broker.
+  - The binary is verified against its pinned digest at startup, so a wrong
+    binary stops the daemon instead of failing every launch. It is checked
+    again before each launch, through the descriptor that is executed.
+  - Off Linux, `[hosts.broker]` is refused at startup
+    (`BrokerUnsupported`): there is no verified launch there yet.
+  - New errors: `BrokerExecutable`, `BrokerUnsupported`, `BrokerKeys`.
+  - Without the table, nothing changes. In this step the daemon still loads
+    the channel keys for its own path as well; P2.6d-2c removes that.
 - **The daemon suppresses its own core dumps before it starts** (D18S S-I5;
   #13980 P2.6a). The daemon holds every agent's channel keys. `main` now
   calls `chief_of_staff_process_hardening::suppress_core_dumps` before

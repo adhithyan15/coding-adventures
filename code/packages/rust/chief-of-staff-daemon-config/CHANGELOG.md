@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add an optional `[hosts.broker]` table: `executable` and `sha256`, both
+  required when the table is present (D18S P2.6d-2b). The digest is
+  64 lowercase hex digits; anything else is refused.
 - Add an optional `[vault] kek_path`, the owner-only key-encryption-key file
   for the Chief vault. Same shape and same 32-byte owner-only file as the six
   smart-home pairing vaults, so it introduces no new key handling.

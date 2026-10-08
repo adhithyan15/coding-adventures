@@ -59,6 +59,12 @@
     },
     {
       "category": "proc",
+      "action": "exec",
+      "target": "the [hosts.broker] executable, verified against its pinned sha256",
+      "justification": "Composes one channel broker per agent (D18S P2.6d-2b); the binary is hashed through the descriptor that is executed, at startup and before every launch."
+    },
+    {
+      "category": "proc",
       "action": "signal",
       "target": "self and owned host children",
       "justification": "Receives cooperative service shutdown and reaps owned children during teardown."
