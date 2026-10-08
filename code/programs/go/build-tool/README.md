@@ -17,6 +17,14 @@ filter, fails if an applicable reader root is missing, and does not force a
 full build. Java, Kotlin, Dart, and OCaml readers are process-free domain
 cores; the selection does not imply full build-tool adapter parity.
 
+Changes to a flat shared `resolution-*.json` case schedule only its checked
+direct native readers. The twenty-six cases have different reader subsets
+across Go, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript;
+new cases must be classified before CI can plan them. This selection remains
+unforced, honors the language filter, and fails if an applicable native root
+is missing. The [CI-gate registry](../../../specs/ci-gate-registry.md)
+contains the exact case-to-reader relation.
+
 ## Portable source hashing
 
 Extension and declared-source collection share the language-neutral v1 rules.
