@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/chief-of-staff-net-fetch",
+  "capabilities": [
+    {
+      "category": "net",
+      "action": "dns",
+      "target": "hosts named by the calling agent's signed manifest net:dns entries",
+      "justification": "Resolves the requested host once so every answer can be checked for public routability before connecting (D18V V-R2)."
+    },
+    {
+      "category": "net",
+      "action": "connect",
+      "target": "host:port pairs named by the calling agent's signed manifest net:connect entries, at a checked public address",
+      "justification": "Performs the agent's HTTPS request on its behalf, so a leased credential is injected inside the daemon and never reaches the agent (D18V)."
+    }
+  ],
+  "justification": "net.fetch is the host-mediated network operation: the daemon reaches only what an agent's signed manifest declares, over verified TLS to a checked public address. It has no filesystem, process, or environment authority."
+}
