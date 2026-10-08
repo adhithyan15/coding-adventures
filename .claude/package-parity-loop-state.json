@@ -19,21 +19,21 @@
     "notes": "Final-head #16989 completed 29 successful, seven skipped, and one neutral checks with no failure. GitHub reported MERGEABLE/CLEAN; guarded squash auto-merge merged it as 52b53049ecb38094d0c93b6f59a767884032b63e. No manual merge was performed."
   },
   "last_inventory": {
-    "revision": "52b53049ecb38094d0c93b6f59a767884032b63e",
+    "revision": "def09f02d44cef3dfdd5a4b3e3cf9b7b4efd7eec",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1496,
-    "implementation_package_slots": 4766,
-    "all_reported_identities": 1538,
+    "implementation_identities": 1497,
+    "implementation_package_slots": 4767,
+    "all_reported_identities": 1539,
     "high_consensus_packages": 178,
     "high_consensus_missing_slots": 262,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 181,
     "two_to_four_missing_slots": 2282,
-    "singleton_packages": 1014,
-    "singleton_missing_slots": 14196,
-    "rust_singletons": 815,
+    "singleton_packages": 1015,
+    "singleton_missing_slots": 14210,
+    "rust_singletons": 816,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -13661,6 +13661,10 @@
     {
       "id": "ir-to-jvm-class-file-eleven-lane-parity", "title": "Classify eleven missing IR-to-JVM lowering lanes", "status": "pending", "depends_on": ["ir-to-jvm-class-file-neutral-byte-lowering-conformance"], "branch": null, "pr_number": null,
       "notes": "C#/Dart/Elixir/F#/Haskell/Java/Kotlin/Lua/Perl/Ruby/Swift lack pure lowering. Split per lane; each needs local jvm-class-file and compiler-ir, with six BF03 compiler-ir ports still separately owned. Exclude optional host writer pending capability review."
+    },
+    {
+      "id": "chief-of-staff-net-fetch-native-authority-review", "title": "Classify D18V net.fetch as native network authority", "status": "pending", "selection_blocked": true, "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "New Rust-only canonical chief-of-staff-net-fetch root arrived on main def09f02. D18V specifies signed-manifest HTTPS/TLS authorization and vault lease redemption; the capability manifest declares net:dns and net:connect. This is a credential-bearing host operation, not a portable package lane target. Exclude from parity delivery pending a separate native-security review."
     }
   ]
 }
