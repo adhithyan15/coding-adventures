@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "How Are You?",
   "drivablePrefix": 12,
-  "sourceHash": "fnv1a64:a699b822893c04f5",
+  "sourceHash": "fnv1a64:6a5bd44d5207e840",
   "lessons": [
     {
       "id": "IT-C02-prego",
@@ -244,7 +244,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64d62ee9718166e7",
+      "sourceHash": "fnv1a64:3fff7af07176f487",
       "notice": null,
       "blocks": [
         {
@@ -300,11 +300,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Prego\" while handing over an imaginary cup",
+              "instruction": "\"Prego\" as you offer someone a cup",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Prego\" while handing over an imaginary cup]"
+              "source": "[YOU SAY: \"Prego\" as you offer someone a cup]"
             }
           ]
         },

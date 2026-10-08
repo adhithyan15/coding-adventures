@@ -609,6 +609,10 @@ describe("gestureSpokenCues: what fires", () => {
     // A nested cue whose verb is manual.
     ["a nested show", "- [YOU HEAR: *añcŭ*; YOU SHOW: 5]"],
     ["a nested write", "[YOU SAY: *ek*; YOU WRITE: **एक**]"],
+    ["a nested action of several words", "[YOU SAY: *ek*; YOU WRITE FROM MEMORY: **एक**]"],
+    // Handing something over.
+    ["handing over, as the manner", '- [YOU SAY: "Prego" while handing over an imaginary cup]'],
+    ["handing something over", "- [YOU SAY: *here you go*, handing something over]"],
     ["a cue wrapped across two source lines", "- [YOU SAY: *eki*,\n  clapping two beats]"],
   ])("%s", (_label, markdown) => {
     expect(gestureSpokenCues(markdown)).toHaveLength(1);
@@ -655,6 +659,11 @@ describe("gestureSpokenCues: what does not fire", () => {
     ["a quotation being said", '[YOU SAY: "and clap twice" once more]'],
     ["a nested spoken cue", "[YOU HEAR: *ek*; YOU SAY: one]"],
     ["nested words in lower case", "[YOU SAY: you show: 5 of them]"],
+    ["the word for handing over", "[YOU RECALL: say the Italian for to hand over]"],
+    // English material to put into the language: only the participle
+    // ("while handing over", ", handing something over") is the manner of saying it.
+    ["a meaning to translate", "[YOU SAY: hand over a gift; congratulate your friend]"],
+    ["a list of meanings", "[YOU SAY: dries up, floats, begins, finishes, hands over]"],
   ])("%s", (_label, markdown) => {
     expect(gestureSpokenCues(markdown)).toEqual([]);
   });
@@ -679,6 +688,8 @@ describe("spokenCueAsksForGesture stays linear", () => {
     ["many nested spoken cues, the last one manual", `${"YOU SAY: a; ".repeat(5_000)}YOU SHOW: 5`, true],
     ["a long run of capitals before a colon", `YOU ${"A".repeat(50_000)}: x`, false],
     ["many YOUs with no colon", `${"YOU SHOW ".repeat(6_000)}`, false],
+    ["a long run of capital words with no colon", `${"YOU ".repeat(12_000)}x`, false],
+    ["many near misses on hand", `${"and hand it in ".repeat(3_000)}`, false],
   ])("%s", (_label, content, expected) => {
     expect(content.length).toBeGreaterThan(40_000);
     expect(spokenCueAsksForGesture(content)).toBe(expected);

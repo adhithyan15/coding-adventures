@@ -11,7 +11,10 @@ defers (`[YOU POINT: …]`, `[YOU READ: …]`: "once you have stopped driving �
 cues in drivable lessons. Every edited lesson stays `drivable: true` (only its
 `core/lesson-modality` source hash changes).
 
-- **Count:** 1 spoken cue in 1 drivable lesson.
+- **Count:** 2 spoken cues in 2 drivable lessons.
+- IT-C02-prego-here-you-are: `"Prego" while handing over an imaginary cup`
+  → `"Prego" as you offer someone a cup` (found by the security review; the
+  gesture check now knows "hand over").
 - IT-C02-cosi-cosi: "*koh-ZEE koh-ZEE*, with a hand-wobble" → "with a shrug in
   the voice". The warm-up's scene ("you wobble a hand and say *così così*")
   describes what Italians do and is unchanged.

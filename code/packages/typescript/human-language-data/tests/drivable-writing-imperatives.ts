@@ -891,10 +891,14 @@ export function readingSpokenCues(markdown: string): string[] {
 // "touching the sound once", which is a Malayalam single consonant), "raise"
 // with a finger or a hand (not "raise the pitch"), "hold up", "show" with a
 // number of fingers, "gesture"/"gesturing", "wave goodbye"/"wave your hand"
-// (not "wave away an apology", a speech act), "nod" and "shake your head".
+// (not "wave away an apology", a speech act), "handing over" and "handing
+// something over" (only the participle, the manner of saying a word; "hand
+// over a gift" and "hands over" are English meanings to put into the
+// language), "nod" and "shake your head".
 //
 // A nested cue is read with the narration's own `isManualCueAction`, so the
-// day a lesson nests `YOU WRITE:` inside a `[YOU SAY: …]`, it is caught by the
+// day a lesson nests `YOU WRITE:` (or a longer action such as
+// `YOU WRITE FROM MEMORY:`) inside a `[YOU SAY: …]`, it is caught by the
 // same list that decides deferral. SHOW and CLAP joined `MANUAL_CUE_ACTIONS`
 // for this: no cue heads with either now, but SHOW is the verb the nested
 // finger-counting cues used.
@@ -947,7 +951,7 @@ export function readingSpokenCues(markdown: string): string[] {
 const GESTURE_LINK = String.raw`(?:^|, |; | — |: | and | then | while | as you | by )(?:and then |and |then |now |also )?`;
 
 /** The gesture verbs, each only in a form that is always a movement of the body. See the header. */
-const GESTURE_VERB = String.raw`(?:point(?:ing)?(?! out\b)(?=[ ,.;:]|$)|clap(?:s|ping)?\b|tap(?:ping)? (?:twice|once|out)\b|tap(?:ping)? (?:the |its )?(?:two |three |four |five |six |even )?(?:beats?|groups?|syllables?|morae)\b|touch(?:ing)? (?:it|them|each|your|yourself|one|a|an|something)\b|rais(?:e|ing) (?:one more|one|a|each|your|both) (?:finger|hand)s?\b|hold(?:ing)? (?:up|it up|them up)\b|show(?:ing)? (?:\d|(?:one|two|three|four|five|your) fingers?\b)|gestur(?:e|ing)\b|wav(?:e|ing) (?:goodbye|your hand|a hand)\b|nod(?:ding)?\b|shak(?:e|ing) your head\b)`;
+const GESTURE_VERB = String.raw`(?:point(?:ing)?(?! out\b)(?=[ ,.;:]|$)|clap(?:s|ping)?\b|tap(?:ping)? (?:twice|once|out)\b|tap(?:ping)? (?:the |its )?(?:two |three |four |five |six |even )?(?:beats?|groups?|syllables?|morae)\b|touch(?:ing)? (?:it|them|each|your|yourself|one|a|an|something)\b|rais(?:e|ing) (?:one more|one|a|each|your|both) (?:finger|hand)s?\b|hold(?:ing)? (?:up|it up|them up)\b|show(?:ing)? (?:\d|(?:one|two|three|four|five|your) fingers?\b)|gestur(?:e|ing)\b|wav(?:e|ing) (?:goodbye|your hand|a hand)\b|handing (?:it |them |something |things )?over\b|nod(?:ding)?\b|shak(?:e|ing) your head\b)`;
 
 const GESTURE_STEP = new RegExp(GESTURE_LINK + GESTURE_VERB, "i");
 
@@ -955,8 +959,14 @@ const GESTURE_STEP = new RegExp(GESTURE_LINK + GESTURE_VERB, "i");
 const GESTURE_MANNER =
   /with (?:a|one|both|your|each) (?:small )?(?:hands?|bow|head-bow)\b|\b(?:palms|hands) together\b|\bpressed palms\b|\bmatching gesture\b|\bhand (?:at|in front of) (?:your|the) mouth\b/i;
 
-/** A cue nested inside another cue's content: "[YOU HEAR: *añcŭ*; YOU SHOW: 5]". Case-sensitive, as the cue grammar is. */
-const NESTED_CUE = /\bYOU ([A-Z]+):/g;
+/**
+ * A cue nested inside another cue's content: "[YOU HEAR: *añcŭ*; YOU SHOW: 5]".
+ * Case-sensitive, as the cue grammar is. The action may be several words
+ * ("YOU WRITE FROM MEMORY:"), but at most five: a fixed bound, so a long run
+ * of "YOU YOU YOU …" with no colon costs a bounded scan from each start rather
+ * than one to the end of the text.
+ */
+const NESTED_CUE = /\bYOU ([A-Z]+(?: [A-Z]+){0,4}):/g;
 
 /** Does the content of a spoken cue ask the learner to make a gesture? */
 export function spokenCueAsksForGesture(content: string): boolean {
