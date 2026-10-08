@@ -396,6 +396,48 @@ Deleting files is always possible for someone with write access, and is a
 denial of service. Freshness makes it visible as `Tamper`, and cannot
 prevent it.
 
+**F11: the freshness anchor (P1.20b).** F10's residuals all need old files
+the attacker already holds, because nothing in the storage directory remembers
+how far the index has moved. An anchor is a small, monotonic record kept
+**outside** that directory, somewhere the attacker is assumed unable to
+write. A store built with `SealedStore::with_anchor` consults it:
+
+- **Reading an index.** If the anchor holds epoch `E` for the namespace, an
+  absent index is `Tamper`, and so is an authentic index with
+  `epoch < E`. The first rule closes "delete the index and restore a v1
+  file". The second closes every restored-pair and hidden-pair case in F10,
+  across restarts.
+- **Writing an index.** After the index write succeeds, the anchor is
+  advanced to the new epoch. The order is index first, then anchor: a crash
+  in between leaves the anchor behind, which is weaker for one write but
+  never refuses an index the vault itself wrote. An anchor never moves
+  down.
+
+The anchor is trusted because of **where** it is, not because of
+cryptography. A MAC would not help: an old copy of a MAC'd anchor is just as
+valid. So an attacker who can also write the anchor's location is back to
+F10, and nothing worse.
+
+`FileFreshnessAnchor` is the provided implementation. It keeps one file per
+namespace in a directory:
+
+- The file name is the hex-encoded namespace.
+- The content is the decimal epoch and a newline.
+- Each write goes to a temporary file, which is synced and then renamed into
+  place.
+- On Unix, the directory is created `0700` and the files `0600`.
+- A symlink, a non-regular file, or content that is not exactly a canonical
+  `u64` is refused with an error. It is never treated as absent.
+
+One file per namespace means two processes writing different namespaces of
+the same store never contend, for example the CLI writing the Chief vault
+while the daemon writes a pairing vault.
+
+**Who is anchored today.** Only the Chief vault: `open_chief_vault` keeps its
+anchor in `<kek_path>.freshness/`, next to the KEK. The six smart-home
+pairing vaults and the OAuth credential store still open `SealedStore::new`,
+so F10 still applies to them. Anchoring them is backlog item P1.20c.
+
 ## Seal / unseal state machine
 
 ```text
