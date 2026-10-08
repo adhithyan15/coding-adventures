@@ -91,6 +91,16 @@ func TestCenterArcNeutralFixtures(t *testing.T) {
 					if curves[0].P1 != p || curves[0].P2 != p || curves[0].P3 != p {
 						t.Fatal("zero sweep must yield one degenerate cubic")
 					}
+				} else {
+					start, end := EvalArc(c.arc(), 0), EvalArc(c.arc(), 1)
+					if !ptApproxEq(curves[0].P0, start) || !ptApproxEq(curves[len(curves)-1].P3, end) {
+						t.Fatal("cubic endpoints differ from center arc")
+					}
+					for i := 1; i < len(curves); i++ {
+						if !ptApproxEq(curves[i-1].P3, curves[i].P0) {
+							t.Fatalf("segments %d and %d are discontinuous", i-1, i)
+						}
+					}
 				}
 			})
 		}
@@ -135,6 +145,18 @@ func TestCenterArcRejectsInvalidInputs(t *testing.T) {
 	for _, value := range []float64{math.NaN(), math.Inf(1)} {
 		requirePanicIs(t, ErrInvalidCenterArc, func() { EvalArc(unitArc, value) })
 		requirePanicIs(t, ErrInvalidCenterArc, func() { TangentArc(unitArc, value) })
+	}
+}
+
+func TestQuarterCircleCubicControls(t *testing.T) {
+	curves := ToCubicBeziers(unitArc)
+	if len(curves) != 1 {
+		t.Fatalf("quarter circle segments = %d", len(curves))
+	}
+	k := (4.0 / 3.0) * math.Tan(math.Pi/8)
+	if !ptApproxEq(curves[0].P1, point2d.NewPoint(1, k)) ||
+		!ptApproxEq(curves[0].P2, point2d.NewPoint(k, 1)) {
+		t.Fatalf("quarter circle controls = %v, %v; want (1,%g), (%g,1)", curves[0].P1, curves[0].P2, k, k)
 	}
 }
 
