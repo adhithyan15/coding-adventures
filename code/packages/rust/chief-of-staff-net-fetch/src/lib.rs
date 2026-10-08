@@ -876,12 +876,22 @@ impl FetchResponse {
     }
 }
 
-/// Decode a raw response into a [`FetchResponse`]. When a credential was
-/// used, `raw` has already been through [`mask_echoes`].
+/// Decode a raw response into a [`FetchResponse`].
+///
+/// `needles` are the injected header value and the secret, or empty for an
+/// unauthenticated call. When present, `raw` has already been masked (which
+/// covers the headers and the parser's copies of them), and the body is
+/// masked **again after decoding**: chunked framing can sit in the middle of
+/// an echo (`Bear\r\n9\r\nr tok…`), so no raw-byte pass can see it, and only
+/// the reassembled body shows the whole secret.
 ///
 /// `hit_wire_limit` says the transport stopped at its byte cap, so a body
 /// that ends early is *truncated*, not malformed.
-fn decode_response(raw: &[u8], hit_wire_limit: bool) -> Result<FetchResponse, FetchError> {
+fn decode_response(
+    raw: &[u8],
+    hit_wire_limit: bool,
+    needles: &[&[u8]],
+) -> Result<FetchResponse, FetchError> {
     let head_end = find(raw, b"\r\n\r\n").ok_or(FetchError::Protocol)? + 4;
     if head_end > MAX_RESPONSE_HEAD_BYTES {
         return Err(FetchError::Protocol);
@@ -889,25 +899,52 @@ fn decode_response(raw: &[u8], hit_wire_limit: bool) -> Result<FetchResponse, Fe
     let parsed = http1::parse_response_head(&raw[..head_end]).map_err(|_| FetchError::Protocol)?;
     let body_bytes = &raw[parsed.body_offset.min(raw.len())..];
 
+    // The decoded body may hold a reassembled secret until it is masked, so
+    // it is zeroizing and allocated once at its final capacity.
+    let owned = |bytes: &[u8]| {
+        let mut body = Zeroizing::new(Vec::with_capacity(bytes.len()));
+        body.extend_from_slice(bytes);
+        body
+    };
     let (mut body, mut truncated) = match parsed.body_kind {
-        BodyKind::None => (Vec::new(), false),
+        BodyKind::None => (Zeroizing::new(Vec::new()), false),
         BodyKind::ContentLength(length) => {
             if body_bytes.len() >= length {
-                (body_bytes[..length].to_vec(), false)
+                (owned(&body_bytes[..length]), false)
             } else if hit_wire_limit {
-                (body_bytes.to_vec(), true)
+                (owned(body_bytes), true)
             } else {
                 return Err(FetchError::Protocol);
             }
         }
-        BodyKind::UntilEof => (body_bytes.to_vec(), hit_wire_limit),
+        BodyKind::UntilEof => (owned(body_bytes), hit_wire_limit),
         BodyKind::Chunked => decode_chunked(body_bytes, hit_wire_limit)?,
     };
+
+    if !needles.is_empty() {
+        mask_echoes(&mut body, needles);
+    }
     if body.len() > MAX_RESPONSE_BODY_BYTES {
         body.truncate(MAX_RESPONSE_BODY_BYTES);
         truncated = true;
     }
-    let body = utf8_body(body, truncated)?;
+    if truncated && !needles.is_empty() {
+        // An echo cut off at the end is only a *partial* match, which the
+        // matcher cannot see. Masking a tail only when it looks like a prefix
+        // of the secret would be an oracle: whether it got masked would tell
+        // the model whether its guess was right, one byte at a time. So the
+        // tail is dropped unconditionally, by a length that depends only on
+        // the needles' lengths -- never on the content.
+        let tail = needles
+            .iter()
+            .map(|needle| needle.len() * MAX_ENCODED_BYTE_LEN)
+            .max()
+            .unwrap_or(0)
+            .saturating_sub(1);
+        let keep = body.len().saturating_sub(tail);
+        body.truncate(keep);
+    }
+    let body = utf8_body(body.to_vec(), truncated)?;
 
     let headers = parsed
         .head
@@ -938,8 +975,11 @@ const MAX_CHUNK_LINE_BYTES: usize = 128;
 /// panics the daemon. So every size is checked against what could possibly
 /// fit — the bytes actually present and the remaining body budget — with
 /// checked arithmetic, before any slice is taken.
-fn decode_chunked(mut input: &[u8], hit_wire_limit: bool) -> Result<(Vec<u8>, bool), FetchError> {
-    let mut body = Vec::new();
+fn decode_chunked(
+    mut input: &[u8],
+    hit_wire_limit: bool,
+) -> Result<(Zeroizing<Vec<u8>>, bool), FetchError> {
+    let mut body = Zeroizing::new(Vec::with_capacity(MAX_RESPONSE_BODY_BYTES.min(input.len())));
     loop {
         let Some(line_end) = find(input, b"\r\n") else {
             if input.len() > MAX_CHUNK_LINE_BYTES {
@@ -978,7 +1018,10 @@ fn decode_chunked(mut input: &[u8], hit_wire_limit: bool) -> Result<(Vec<u8>, bo
     }
 }
 
-fn incomplete(body: Vec<u8>, hit_wire_limit: bool) -> Result<(Vec<u8>, bool), FetchError> {
+fn incomplete(
+    body: Zeroizing<Vec<u8>>,
+    hit_wire_limit: bool,
+) -> Result<(Zeroizing<Vec<u8>>, bool), FetchError> {
     if hit_wire_limit {
         Ok((body, true))
     } else {
@@ -1011,84 +1054,83 @@ fn find(haystack: &[u8], needle: &[u8]) -> Option<usize> {
         .position(|window| window == needle)
 }
 
-/// V-S4: overwrite every echo of the secret in the raw response, in place.
+/// The most bytes one needle byte can occupy in a response: `\u00XX`.
+const MAX_ENCODED_BYTE_LEN: usize = 6;
+
+/// V-S4: overwrite every echo of every needle with `*`, in place.
 ///
-/// This runs on the zeroizing wire buffer **before** anything parses or copies
-/// it, which is what makes three properties hold at once:
+/// Run twice: on the raw zeroizing wire buffer before anything parses or
+/// copies it (headers, and the parser's copies of them, are then clean), and
+/// on the decoded body (where a chunk boundary inside an echo has been
+/// joined back together). Each matched byte becomes `*`, so lengths never
+/// change and `Content-Length` and chunk sizes still frame the body.
 ///
-/// - **No unmasked copy ever exists.** `http1` copies header values (including
-///   ones off the allowlist, like an echoed `authorization`) into ordinary
-///   `String`s; masking first means those copies are already clean.
-/// - **Framing survives.** Each byte becomes `*`, so lengths do not change and
-///   `Content-Length` and chunk sizes still describe the body.
-/// - **A cut cannot split an echo out of the mask.** The whole buffer is
-///   masked before the body is truncated to its bound. When the stream itself
-///   was cut at the wire limit, a trailing *prefix* of a needle is masked too,
-///   so an echo straddling the cut does not leak all but its last byte.
-///
-/// Each needle is masked in its exact form and in the two encodings an API is
-/// most likely to reflect it in: JSON string escaping (`\"`, `\\`, `\/`)
-/// and percent-encoding. Longest first, so the header value is masked as one
-/// run rather than leaving its scheme word behind.
-fn mask_echoes(raw: &mut [u8], needles: &[&[u8]], stream_was_cut: bool) {
-    let mut variants: Vec<Vec<u8>> = Vec::new();
+/// An echo is found in whatever mix of encodings it was reflected in: each
+/// byte of the needle may appear as itself, as `%XX` in either hex case, as a
+/// JSON `\u00XX` escape, as a backslash escape of `"` `\\` `/`, or (for the
+/// space in `Bearer <secret>`) as a form-encoding `+`. Matching byte by byte
+/// covers Python's `quote` keeping `/`, Go's `\u003c`, PHP's `\/`, and
+/// lowercase escapes, without enumerating every combination as a variant --
+/// and so without ever materializing an encoded copy of the secret.
+fn mask_echoes(buffer: &mut [u8], needles: &[&[u8]]) {
     for needle in needles {
-        for variant in [
-            needle.to_vec(),
-            json_escaped(needle),
-            percent_encoded(needle),
-        ] {
-            if variant.len() >= MIN_SECRET_BYTES && !variants.contains(&variant) {
-                variants.push(variant);
-            }
+        if needle.len() < MIN_SECRET_BYTES {
+            continue;
         }
-    }
-    variants.sort_by_key(|variant| std::cmp::Reverse(variant.len()));
-    for variant in &variants {
-        let mut start = 0;
-        while let Some(found) = find(&raw[start..], variant) {
-            let at = start + found;
-            raw[at..at + variant.len()].fill(b'*');
-            start = at + variant.len();
-        }
-    }
-    if stream_was_cut {
-        for variant in &variants {
-            let longest = variant.len().saturating_sub(1).min(raw.len());
-            if let Some(k) = (1..=longest).rev().find(|k| raw.ends_with(&variant[..*k])) {
-                let end = raw.len();
-                raw[end - k..].fill(b'*');
+        let mut position = 0;
+        while position < buffer.len() {
+            match match_echo(buffer, position, needle) {
+                Some(end) => {
+                    buffer[position..end].fill(b'*');
+                    position = end;
+                }
+                None => position += 1,
             }
         }
     }
 }
 
-fn json_escaped(bytes: &[u8]) -> Vec<u8> {
-    let mut out = Vec::with_capacity(bytes.len() * 2);
-    for &byte in bytes {
-        if matches!(byte, b'"' | b'\\' | b'/') {
-            out.push(b'\\');
-        }
-        out.push(byte);
+/// If `needle` is echoed at `start`, in any per-byte encoding, where it ends.
+///
+/// Greedy and non-backtracking, so a scan stays linear in practice: each byte
+/// takes the first encoding that decodes to it.
+fn match_echo(haystack: &[u8], start: usize, needle: &[u8]) -> Option<usize> {
+    let mut at = start;
+    for &byte in needle {
+        at += encoded_byte_at(haystack, at, byte)?;
     }
-    out
+    Some(at)
 }
 
-fn percent_encoded(bytes: &[u8]) -> Vec<u8> {
-    const HEX: &[u8; 16] = b"0123456789ABCDEF";
-    let mut out = Vec::with_capacity(bytes.len() * 3);
-    for &byte in bytes {
-        if byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'.' | b'_' | b'~') {
-            out.push(byte);
-        } else {
-            out.extend_from_slice(&[
-                b'%',
-                HEX[usize::from(byte >> 4)],
-                HEX[usize::from(byte & 15)],
-            ]);
+/// How many bytes at `at` encode `byte`, if any.
+fn encoded_byte_at(haystack: &[u8], at: usize, byte: u8) -> Option<usize> {
+    let rest = haystack.get(at..)?;
+    let first = *rest.first()?;
+    if first == b'%' && rest.len() >= 3 && hex_pair(rest[1], rest[2]) == Some(byte) {
+        return Some(3);
+    }
+    if first == b'\\' {
+        if rest.len() >= 6
+            && matches!(rest[1], b'u' | b'U')
+            && rest[2] == b'0'
+            && rest[3] == b'0'
+            && hex_pair(rest[4], rest[5]) == Some(byte)
+        {
+            return Some(6);
+        }
+        if rest.len() >= 2 && rest[1] == byte && matches!(byte, b'"' | b'\\' | b'/') {
+            return Some(2);
         }
     }
-    out
+    if byte == b' ' && first == b'+' {
+        return Some(1);
+    }
+    (first == byte).then_some(1)
+}
+
+fn hex_pair(high: u8, low: u8) -> Option<u8> {
+    let digit = |c: u8| (c as char).to_digit(16).map(|d| d as u8);
+    Some(digit(high)? << 4 | digit(low)?)
 }
 
 // ── The operation ────────────────────────────────────────────────────────────
@@ -1154,14 +1196,12 @@ impl<R: Resolver, T: Transport> NetFetch<R, T> {
             .exchange(&target.host, address, &wire, &self.limits)?;
         drop(wire);
         let stream_was_cut = raw.len() >= self.limits.max_wire_bytes;
-        if let Some((_, secret, value)) = &redeemed {
-            mask_echoes(
-                &mut raw,
-                &[value.as_slice(), secret.as_slice()],
-                stream_was_cut,
-            );
-        }
-        decode_response(&raw, stream_was_cut)
+        let needles: Vec<&[u8]> = match &redeemed {
+            Some((_, secret, value)) => vec![value.as_slice(), secret.as_slice()],
+            None => Vec::new(),
+        };
+        mask_echoes(&mut raw, &needles);
+        decode_response(&raw, stream_was_cut, &needles)
     }
 }
 
@@ -1255,44 +1295,66 @@ mod unit {
     #[test]
     fn chunked_decoding_handles_extensions_and_detects_truncation() {
         let complete = b"4;ext=1\r\nwiki\r\n5\r\npedia\r\n0\r\n\r\n";
-        assert_eq!(
-            decode_chunked(complete, false).unwrap(),
-            (b"wikipedia".to_vec(), false)
-        );
+        let (body, truncated) = decode_chunked(complete, false).unwrap();
+        assert_eq!((body.as_slice(), truncated), (&b"wikipedia"[..], false));
         let cut = b"4\r\nwiki\r\n5\r\npe";
-        assert_eq!(decode_chunked(cut, false), Err(FetchError::Protocol));
+        assert_eq!(decode_chunked(cut, false).err(), Some(FetchError::Protocol));
+        let (body, truncated) = decode_chunked(cut, true).unwrap();
+        assert_eq!((body.as_slice(), truncated), (&b"wikipe"[..], true));
         assert_eq!(
-            decode_chunked(cut, true).unwrap(),
-            (b"wikipe".to_vec(), true)
+            decode_chunked(b"zz\r\n", false).err(),
+            Some(FetchError::Protocol)
         );
-        assert_eq!(decode_chunked(b"zz\r\n", false), Err(FetchError::Protocol));
         assert_eq!(
-            decode_chunked(b"2\r\nabXX", false),
-            Err(FetchError::Protocol)
+            decode_chunked(b"2\r\nabXX", false).err(),
+            Some(FetchError::Protocol)
         );
-        assert_eq!(decode_chunked(b"2", true).unwrap(), (Vec::new(), true));
+        let (body, truncated) = decode_chunked(b"2", true).unwrap();
+        assert_eq!((body.as_slice(), truncated), (&b""[..], true));
     }
 
     #[test]
-    fn mask_echoes_masks_a_prefix_left_at_a_cut_and_nothing_else() {
-        let needles: [&[u8]; 1] = [b"tok-1234567890"];
-        let mut cut = b"data data tok-12345".to_vec();
-        mask_echoes(&mut cut, &needles, true);
-        assert_eq!(&cut, b"data data *********");
-        // Without a cut, a partial is ordinary text and is left alone.
-        let mut whole = b"data data tok-12345".to_vec();
-        mask_echoes(&mut whole, &needles, false);
-        assert_eq!(&whole, b"data data tok-12345");
-        // Exact echoes are masked wherever they are, lengths unchanged.
-        let mut echo = b"<tok-1234567890><tok-1234567890>".to_vec();
-        mask_echoes(&mut echo, &needles, false);
-        assert_eq!(&echo, b"<**************><**************>");
+    fn mask_echoes_masks_every_encoding_in_place() {
+        let needles: [&[u8]; 1] = [b"tok/12\"34"];
+        // Each echo, in some encoding, between angle brackets: the whole
+        // inside must become `*`, and the brackets must survive.
+        for echoed in [
+            &br#"<tok/12"34>"#[..],
+            br#"<tok\/12\"34>"#,
+            b"<tok%2F12%2234>",
+            b"<tok%2f12%2234>",
+            br#"<tok\u002f12\u002234>"#,
+            b"<tok/12%2234>",
+        ] {
+            let mut buffer = echoed.to_vec();
+            mask_echoes(&mut buffer, &needles);
+            let mut expected = vec![b'*'; echoed.len()];
+            expected[0] = b'<';
+            *expected.last_mut().unwrap() = b'>';
+            assert_eq!(buffer, expected, "{}", String::from_utf8_lossy(echoed));
+        }
+        // A partial echo is ordinary text and is left alone.
+        let mut partial = br#"<tok/12"3>"#.to_vec();
+        mask_echoes(&mut partial, &needles);
+        assert_eq!(&partial, br#"<tok/12"3>"#);
+        let spaced: [&[u8]; 1] = [b"Bearer abcdefgh"];
+        let mut form = b"x=Bearer+abcdefgh".to_vec();
+        mask_echoes(&mut form, &spaced);
+        assert_eq!(&form, b"x=***************");
     }
 
     #[test]
-    fn encodings_cover_json_and_percent_forms() {
-        assert_eq!(json_escaped(br#"a/b"c\d"#), br#"a\/b\"c\\d"#.to_vec());
-        assert_eq!(percent_encoded(b"a/b c~"), b"a%2Fb%20c~".to_vec());
+    fn short_needles_are_never_masked() {
+        let mut buffer = b"abc abc".to_vec();
+        mask_echoes(&mut buffer, &[b"abc"]);
+        assert_eq!(&buffer, b"abc abc");
+    }
+
+    #[test]
+    fn hex_pairs_decode_both_cases_and_refuse_non_hex() {
+        assert_eq!(hex_pair(b'2', b'F'), Some(0x2f));
+        assert_eq!(hex_pair(b'2', b'f'), Some(0x2f));
+        assert_eq!(hex_pair(b'g', b'0'), None);
     }
 
     #[test]

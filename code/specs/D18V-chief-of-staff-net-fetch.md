@@ -174,30 +174,46 @@ call that requires the same attested agent. A mismatch fails with
 `credential_refused` and leaves the lease unconsumed, so its rightful holder
 still has it.
 
-**V-S4 — every echo of the secret is masked in place, before parsing.** Some
-APIs reflect request headers, for example in error bodies. The raw response
-buffer is masked **before** anything parses or copies it: every byte of every
-echo becomes `*`. This gives three guarantees:
+**V-S4 — every echo of the secret is masked in place, twice.** Some APIs
+reflect request headers, for example in error bodies. Each echo's bytes are
+overwritten with `*`, at two points:
 
-- **No unmasked copy exists.** The HTTP parser copies header values into
-  ordinary strings, including headers off the allowlist such as an echoed
-  `authorization`. Those copies are already clean.
-- **Framing survives.** Lengths do not change, so `Content-Length` and chunk
-  sizes still describe the body. The model learns the secret's length, which
-  is already bounded to 8–4 096 bytes, and nothing else about it.
-- **A cut cannot leak part of an echo.** The whole buffer is masked before the
-  body is truncated. When the stream itself was cut at the wire limit, a
-  trailing *prefix* of a needle is masked too. Otherwise an echo lined up with
-  the cut could leak all but its last byte.
+1. **On the raw response buffer, before anything parses or copies it.** The
+   HTTP parser copies header values into ordinary strings, including headers
+   off the allowlist such as an echoed `authorization`. Masking first means
+   those copies are already clean.
+2. **On the decoded body.** Chunked framing can sit in the middle of an echo
+   (`…Bear` · `\r\n9\r\n` · `r tok…`). No raw-byte pass can see that echo,
+   and decoding joins it back together, so the reassembled body is masked
+   again.
 
-Each needle is masked in three forms: as sent, JSON-string-escaped
-(`\"`, `\\`, `\/`), and percent-encoded. That covers the encodings an API is
-most likely to reflect it in. Other encodings are not covered. V-S7 is the
+Lengths never change, so `Content-Length` and chunk sizes still describe the
+body. The model learns the secret's length, already bounded to 8–4 096 bytes,
+and nothing else about it.
+
+An echo is matched **byte by byte, in whatever encoding each byte came back
+in**: as itself, as `%XX` in either hex case, as a JSON `\u00XX` escape, as a
+backslash escape of `"`, `\` or `/`, or, for the space after a scheme word, as
+a form-encoding `+`. This covers mixed encodings as well: Python's `quote`
+leaving `/` alone, Go's `\u003c`, PHP's `\/`, and lowercase escapes. It also
+never builds an encoded copy of the secret. The matcher is greedy and does not
+backtrack. Other encodings, such as base64, are not covered, and V-S7 is the
 stronger control.
 
+**V-S4a — a truncated credentialed body loses a fixed tail.** An echo cut off
+at the end is only a partial match, which the matcher cannot see. Masking such
+a tail only when it looks like a prefix of the secret would be an oracle:
+whether the tail was masked would tell the model whether its guess was right,
+one byte at a time. So whenever a credentialed response is truncated, the last
+`6 × longest needle − 1` bytes of the body are dropped unconditionally. The
+amount depends only on the needles' lengths, never on the content. An
+unauthenticated response loses nothing beyond the documented bound.
+
 **V-S5 — the secret lives only in zeroizing memory.** The request buffer is
-allocated once at its final size and zeroized after the write. The response
-buffer is zeroizing and is masked before any copy is made.
+allocated once at its final size and zeroized after the write. The raw
+response buffer and the decoded body are both zeroizing, and each is masked
+before any copy is made. The matcher never builds an encoded copy of the
+secret.
 
 **V-S7 — a secret goes only to the destinations it was provisioned for.**
 `CredentialSource::redeem` receives the request's `host:port`. The vault

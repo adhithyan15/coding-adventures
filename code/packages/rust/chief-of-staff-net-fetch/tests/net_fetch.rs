@@ -946,3 +946,71 @@ fn the_tls_transport_reports_a_refused_connection_as_network() {
     // And the production composition is constructible.
     let _ = NetFetch::production();
 }
+
+// ── Round-2 review: chunk-split echoes, and no tail oracle ───────────────────
+
+const KEYED: &str = r#"{"url":"https://api.weather.gov/","method":"GET",
+    "credential":{"vault_ref":"vault-lease:abc","header":"authorization","scheme":"Bearer"}}"#;
+
+#[test]
+fn an_echo_split_across_chunks_is_masked_after_reassembly() {
+    // "Bearer tok-1234567890" arrives as "...Bear" | "er tok-1234" | "567890...".
+    let raw = b"HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\n\r\n\
+                9\r\nseen Bear\r\nb\r\ner tok-1234\r\n9\r\n567890 ok\r\n0\r\n\r\n";
+    let response = NetFetch::new(routable(), FakeTransport::returning(raw))
+        .execute(
+            &weather_allowlist(),
+            &request(KEYED),
+            Some(&OneLease::new(b"tok-1234567890")),
+        )
+        .unwrap();
+    assert!(!response.body.contains("tok-"), "{}", response.body);
+    assert!(!response.body.contains("1234567890"), "{}", response.body);
+    assert_eq!(response.body, "seen ********************* ok");
+}
+
+#[test]
+fn a_truncated_body_loses_the_same_tail_whatever_its_content() {
+    // Two responses cut at the wire limit, identical except whether the last
+    // bytes are a correct guess at the secret's prefix. The model must not be
+    // able to tell them apart from what comes back.
+    let limits = Limits::default();
+    let head = b"HTTP/1.0 200 OK\r\n\r\n";
+    let build = |tail: &[u8]| {
+        let mut raw = head.to_vec();
+        raw.extend(std::iter::repeat_n(
+            b'.',
+            limits.max_wire_bytes - head.len() - tail.len(),
+        ));
+        raw.extend_from_slice(tail);
+        raw
+    };
+    let right = build(b"tok-12");
+    let wrong = build(b"xyz-12");
+    let fetch = |raw: &[u8]| {
+        NetFetch::new(routable(), FakeTransport::returning(raw))
+            .execute(
+                &weather_allowlist(),
+                &request(KEYED),
+                Some(&OneLease::new(b"tok-1234567890")),
+            )
+            .unwrap()
+    };
+    let (a, b) = (fetch(&right), fetch(&wrong));
+    assert!(a.truncated && b.truncated);
+    assert_eq!(
+        a.body, b.body,
+        "the tail treatment must not depend on content"
+    );
+    assert!(!a.body.contains("tok"));
+}
+
+#[test]
+fn unauthenticated_truncation_keeps_the_full_bounded_body() {
+    // The tail drop exists only to protect a secret; with no credential,
+    // nothing is dropped beyond the documented bound.
+    let mut endless = b"HTTP/1.0 200 OK\r\n\r\n".to_vec();
+    endless.extend(std::iter::repeat_n(b'b', 400 * 1024));
+    let response = fetch_raw(&endless).unwrap();
+    assert_eq!(response.body.len(), MAX_RESPONSE_BODY_BYTES);
+}

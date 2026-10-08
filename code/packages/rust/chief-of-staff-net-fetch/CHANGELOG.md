@@ -37,10 +37,14 @@
   - The secret is injected into exactly one allowlisted header.
   - It must be 8–4096 bytes of printable ASCII.
   - The lease is redeemed only after authorization and the address check.
-  - Every echo is masked in place in the raw zeroizing response before
-    anything parses or copies it. Each byte becomes `*`, so framing survives
-    and no unmasked copy exists. The masked forms are as sent, JSON-escaped and
-    percent-encoded, plus a trailing prefix when the stream was cut.
+  - Every echo is masked in place, with each byte becoming `*`, twice: on
+    the raw zeroizing response before anything parses or copies it, and on the
+    decoded body, where chunk boundaries inside an echo have been joined back
+    together. A per-byte matcher accepts each byte as itself, as `%XX` in
+    either case, as `\u00XX`, as a backslash escape, or as `+` for a space. It
+    never builds an encoded copy of the secret.
+  - A truncated credentialed body loses a fixed-length tail that depends only
+    on the needles' lengths, so the tail treatment is not an oracle.
   - `CredentialSource::redeem` receives the destination `host:port` (V-S7), so
     the vault can refuse to send a secret to a host it was not provisioned for.
   - Request and response buffers are zeroizing.
@@ -63,3 +67,16 @@
   public.
 - **LOW** and **INFO**: response-side copies of the secret, and encoded
   echoes, were missed. Both are covered by in-place masking.
+
+### Security review, round 2 (fixed before the first push)
+
+- **MEDIUM**, a regression from round 1's fix: masking only the raw buffer
+  missed an echo that chunked framing had split. The decoded body is now
+  masked too.
+- **LOW-MEDIUM**: masking a cut tail only when it matched a prefix of the
+  secret leaked the secret a byte at a time. The tail is now dropped
+  unconditionally.
+- **LOW**: the encoded variants were plain copies of the secret. The per-byte
+  matcher builds none.
+- **INFO**: lowercase, partial and `\u00XX` encodings slipped through. The
+  per-byte matcher covers them.
