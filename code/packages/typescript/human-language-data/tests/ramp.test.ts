@@ -214,13 +214,21 @@ describe("what the measurement cannot see", () => {
   });
 });
 
+// The whole corpus, loaded and measured once, at import. Both snapshot cases
+// below read the same immutable checkout, and each used to load it afresh:
+// loading is most of their cost (about 10s each on an idle machine), and on a
+// loaded full-suite run the first case crossed its 30s budget while every
+// assertion held. Import time has no per-test budget, the pattern book-cli and
+// chapter-modality-book already use (see
+// lessons.d/whole-corpus-work-in-a-test-body-is-a-timeout-on-a.md).
+const corpusReport = measureRamp(loadEverything().lessons, loadChapterPolicy());
+
 describe("corpus snapshot", () => {
   // The first reproducible measurement of the gentle ramp. The quoted "52 over-budget
   // lessons" was an ad-hoc count no test reproduced, and it could not be reproduced
   // because the answer depends on how much of the corpus is schema-v2 that day.
   it("pins the ramp, and the size of its blind spot", () => {
-    const { lessons } = loadEverything();
-    const report = measureRamp(lessons, loadChapterPolicy());
+    const report = corpusReport;
 
     expect(report.policy).toEqual({ maxNewAtomsPerLesson: 3, maxNewAtomsPerChapter: 12 });
     expect(report.summary.lessonViolations).toBe(
@@ -267,8 +275,7 @@ describe("corpus snapshot", () => {
   });
 
   it("names the steepest lesson, which is where a burn-down starts", () => {
-    const { lessons } = loadEverything();
-    const report = measureRamp(lessons, loadChapterPolicy());
+    const report = corpusReport;
     // 6 -> 4: Bengali's one-to-five, the last six-atom lesson, split its দুই history
     // into a continuation. 4 -> none: PA-C07-hona, PA-C07-khana and RU-C03-govorit,
     // the last three at four atoms, split too. The burn-down this test named the
