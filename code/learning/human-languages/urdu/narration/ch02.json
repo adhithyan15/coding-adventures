@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Give your name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:eb66e4f530ec13d2",
+  "sourceHash": "fnv1a64:1e8403540e2c56d1",
   "lessons": [
     {
       "id": "UR-C02-mera-naam",
@@ -155,7 +155,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a91d63450aeed8cb",
+      "sourceHash": "fnv1a64:7cdc2d4e1f6bdfd3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -246,11 +246,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "at the right edge of an Urdu word, where your pen would begin",
+              "instruction": "the right edge of an Urdu word, where your pen would begin",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: at the right edge of an Urdu word, where your pen would begin]"
+              "source": "[YOU POINT: the right edge of an Urdu word, where your pen would begin]"
             }
           ]
         },

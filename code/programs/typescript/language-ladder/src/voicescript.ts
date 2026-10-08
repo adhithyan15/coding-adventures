@@ -9,7 +9,8 @@
 // narration generator has been emitting typed segments for a while — `pause`
 // with seconds, `speech` with text, `prompt` with an instruction and a response
 // budget, `activity` with its accepted answers, `table` pre-flattened into
-// utterances, `repeat` with a count. So this module does not parse anything.
+// utterances, `table-skipped` with the sentence that stands in for a table too
+// wide to say, `repeat` with a count. So this module does not parse anything.
 // It walks a structure the corpus already guarantees and turns it into a flat
 // list of instructions a player can execute without thinking.
 //
@@ -259,6 +260,18 @@ function appendSegment(
         const text = utterance.trim();
         if (text !== "") steps.push({ kind: "speak", text });
       }
+      return;
+    }
+    case "table-skipped": {
+      // A table too wide (or too irregular) to read row by row. The generator has
+      // already written the sentence a voice says in its place — "There is a table
+      // here I cannot read to you — 5 columns and 3 rows, and … Come back and look
+      // at it when you have stopped." — and the narration's plain-text script prints
+      // exactly that line. Skipping it silently left a driver with no idea that
+      // anything had been left out, so voice mode says it too: spoken, with no
+      // answer gap, because there is nothing to answer at the wheel.
+      const text = (segment.text ?? "").trim();
+      if (text !== "") steps.push({ kind: "speak", text });
       return;
     }
     case "repeat": {

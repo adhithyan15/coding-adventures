@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Ask and Answer Names",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:dac6dbaadaa8b77c",
+  "sourceHash": "fnv1a64:79d1c5b0a672be37",
   "lessons": [
     {
       "id": "UR-C03-aap-tum-tu",
@@ -536,7 +536,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e25027a14ce306da",
+      "sourceHash": "fnv1a64:85d9810b4e003eb0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -626,11 +626,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "to ؟ at the end",
+              "instruction": "؟ at the end",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: to **؟** at the end]"
+              "source": "[YOU POINT: **؟** at the end]"
             }
           ]
         },

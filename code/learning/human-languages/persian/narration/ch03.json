@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Ask and Answer Names",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:523130c19f60daa2",
+  "sourceHash": "fnv1a64:3f4dfa49b671626d",
   "lessons": [
     {
       "id": "FA-C03-shoma-to",
@@ -408,7 +408,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:09fc810f7ecc8342",
+      "sourceHash": "fnv1a64:9b8bc1b0f9f7b3ba",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -498,11 +498,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "to ؟ at the end of the right-to-left question",
+              "instruction": "؟ at the end of the right-to-left question",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: to **؟** at the end of the right-to-left question]"
+              "source": "[YOU POINT: **؟** at the end of the right-to-left question]"
             }
           ]
         },

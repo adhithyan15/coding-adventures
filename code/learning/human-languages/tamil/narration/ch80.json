@@ -4,7 +4,7 @@
   "chapter": 80,
   "title": "One, the Other, and the Price",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f65385d509cc6b9c",
+  "sourceHash": "fnv1a64:d8dcc3e1425380e2",
   "lessons": [
     {
       "id": "TA-C80-other",
@@ -406,7 +406,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:14e2fa4d716565fe",
+      "sourceHash": "fnv1a64:0dae30be52a53fb2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -509,11 +509,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "in each one, the letter carrying the புள்ளி",
+              "instruction": "the letter carrying the புள்ளி in each one",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: in each one, the letter carrying the **புள்ளி**]"
+              "source": "[YOU POINT: the letter carrying the **புள்ளி** in each one]"
             },
             {
               "kind": "prompt",

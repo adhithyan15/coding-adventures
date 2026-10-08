@@ -1192,11 +1192,31 @@ export function renderChapterNarrationText(
 ): string {
   const track = languageName ?? chapter.language;
   const count = chapter.lessons.length;
+  // The second line counts the lessons and then says how far a driver gets. Every
+  // branch is worded for the count it can see, because a sentence built for "many"
+  // reads wrong at one and two:
+  //
+  //   lessons  drivable  says
+  //   -------  --------  ------------------------------------------------------------
+  //   1        1         "It can be done entirely by ear."      (not "All 1 can …")
+  //   2        2         "Both can be done entirely by ear."    (not "All 2 can …")
+  //   n > 2    n         "All n can be done entirely by ear."
+  //   1        0         "It needs your eyes or your hands, so save it for …"
+  //                       (there is no "first lesson" when there is only one)
+  //   n > 1    0         "The first lesson already needs your eyes or your hands, …"
+  //   n > 1    1         "You can do the first one in the car; …"
+  //   n > 2    k > 1     "You can do the first k of them in the car; …"
   const drivable =
     chapter.drivablePrefix === count
-      ? `All ${count} can be done entirely by ear.`
+      ? count === 1
+        ? "It can be done entirely by ear."
+        : count === 2
+          ? "Both can be done entirely by ear."
+          : `All ${count} can be done entirely by ear.`
       : chapter.drivablePrefix === 0
-        ? "The first lesson already needs your eyes or your hands, so save this one for when you have stopped."
+        ? count === 1
+          ? "It needs your eyes or your hands, so save it for when you have stopped."
+          : "The first lesson already needs your eyes or your hands, so save this one for when you have stopped."
         : chapter.drivablePrefix === 1
           ? "You can do the first one in the car; after that you will want to have stopped."
           : `You can do the first ${chapter.drivablePrefix} of them in the car; after that you will want to have stopped.`;

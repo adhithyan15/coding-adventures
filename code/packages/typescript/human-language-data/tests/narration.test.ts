@@ -720,10 +720,36 @@ describe("chapters", () => {
   it("says so plainly when a whole chapter is drivable, or when none of it is", () => {
     expect(
       renderChapterNarrationText(narrateChapter("spanish", 1, chapterLessons.slice(0, 2))),
-    ).toContain("All 2 can be done entirely by ear.");
+    ).toContain("2 lessons. Both can be done entirely by ear.");
     expect(
-      renderChapterNarrationText(narrateChapter("spanish", 1, [chapterLessons[2]!])),
-    ).toContain("save this one for when you have stopped");
+      renderChapterNarrationText(
+        narrateChapter("spanish", 1, [
+          ...chapterLessons.slice(0, 2),
+          lesson({ id: "ES-C01-d", sequence: 25, body: "## Warm-up\n\nThird, by sequence." }),
+        ]),
+      ),
+    ).toContain("3 lessons. All 3 can be done entirely by ear.");
+    expect(
+      renderChapterNarrationText(
+        narrateChapter("spanish", 1, [
+          chapterLessons[2]!,
+          lesson({ id: "ES-C01-z", sequence: 40, body: "## Warm-up\n\nAfter the table." }),
+        ]),
+      ),
+    ).toContain(
+      "2 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.",
+    );
+  });
+
+  it("words a one-lesson chapter for one lesson, not \"All 1\" or \"the first lesson\"", () => {
+    const drivable = renderChapterNarrationText(narrateChapter("spanish", 1, [chapterLessons[0]!]));
+    expect(drivable).toContain("\n1 lesson. It can be done entirely by ear.\n");
+    expect(drivable).not.toContain("All 1");
+    const notDrivable = renderChapterNarrationText(narrateChapter("spanish", 1, [chapterLessons[2]!]));
+    expect(notDrivable).toContain(
+      "\n1 lesson. It needs your eyes or your hands, so save it for when you have stopped.\n",
+    );
+    expect(notDrivable).not.toContain("The first lesson");
   });
 
   it("says \"the first one\", not \"the first 1 of them\"", () => {

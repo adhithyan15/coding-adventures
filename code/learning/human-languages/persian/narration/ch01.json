@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings and responses",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0895cb6249412fe2",
+  "sourceHash": "fnv1a64:25d177e2f0c50cfc",
   "lessons": [
     {
       "id": "FA-C01-salam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:18883d2683f99439",
+      "sourceHash": "fnv1a64:9a990f2919320b1b",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -114,11 +114,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "to the right edge, where Persian reading begins",
+              "instruction": "the right edge, where Persian reading begins",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: to the right edge, where Persian reading begins]"
+              "source": "[YOU POINT: the right edge, where Persian reading begins]"
             },
             {
               "kind": "prompt",
@@ -759,7 +759,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:576e03b49b930086",
+      "sourceHash": "fnv1a64:4be23bc2b8b4e162",
       "notice": null,
       "blocks": [
         {
@@ -826,11 +826,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "to the right edge where each Persian line begins",
+              "instruction": "the right edge where each Persian line begins",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: to the right edge where each Persian line begins]"
+              "source": "[YOU POINT: the right edge where each Persian line begins]"
             },
             {
               "kind": "prompt",

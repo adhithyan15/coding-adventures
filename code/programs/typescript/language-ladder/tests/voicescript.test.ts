@@ -120,6 +120,33 @@ describe("building a spoken script", () => {
     expect(steps.filter((s) => s.kind === "speak")).toHaveLength(1);
   });
 
+  it("says the notice that stands in for a table too wide to read, as the narration does", () => {
+    const text =
+      "There is a table here I cannot read to you — 5 columns and 3 rows, and it has too many " +
+      "columns to say as sentences. Come back and look at it when you have stopped.";
+    const steps = buildVoiceScript(
+      lesson([
+        {
+          segments: [
+            { kind: "speech", text: "Before." },
+            { kind: "table-skipped", text: `  ${text}  ` },
+            { kind: "speech", text: "After." },
+          ],
+        },
+      ]),
+    );
+    // Spoken in place, trimmed, with no answer gap: there is nothing to answer.
+    expect(steps).toEqual([
+      { kind: "speak", text: "Before." },
+      { kind: "speak", text },
+      { kind: "speak", text: "After." },
+    ]);
+    // A notice with no words is not worth an utterance.
+    expect(buildVoiceScript(lesson([{ segments: [{ kind: "table-skipped", text: " " }] }]))).toEqual(
+      [],
+    );
+  });
+
   it("repeats the block it sits in, the number of extra times asked", () => {
     const steps = buildVoiceScript(
       lesson([
@@ -360,6 +387,30 @@ describe("against the real narration", () => {
     expect(respondCount(first)).toBeGreaterThan(0);
     // And it fits inside the authored five-minute budget with room to speak.
     expect(scriptSilence(first)).toBeLessThan(180);
+  });
+});
+
+describe("skipped tables in the real narration", () => {
+  it("speaks every French chapter-one table notice, the line the .txt script prints", async () => {
+    const chapter = (await import(
+      "../../../../learning/human-languages/french/narration/ch01.json"
+    )) as unknown as { default: { lessons: NarrationLesson[] } };
+    let seen = 0;
+    for (const source of chapter.default.lessons) {
+      const notices = source.blocks
+        .flatMap((block) => block.segments)
+        .filter((segment) => segment.kind === "table-skipped")
+        .map((segment) => (segment.text ?? "").trim());
+      const spoken = buildVoiceScript(source)
+        .filter((step) => step.kind === "speak")
+        .map((step) => step.text);
+      for (const notice of notices) {
+        seen += 1;
+        expect(notice).toMatch(/^There is a table here I cannot read to you/);
+        expect(spoken).toContain(notice);
+      }
+    }
+    expect(seen).toBeGreaterThan(0);
   });
 });
 

@@ -48,6 +48,8 @@ import {
 interface CueUse {
   lessonId: string;
   drivable: boolean;
+  /** The cue's words after the colon, still Markdown. */
+  content: string;
   source: string;
 }
 
@@ -58,14 +60,18 @@ interface CueUse {
  * is bounded by MAX_CUE_LENGTH) find each end, so the scan is linear in the
  * text however many brackets it holds.
  */
-function promptCues(text: string): Array<{ action: string; source: string }> {
-  const cues: Array<{ action: string; source: string }> = [];
+function promptCues(text: string): Array<{ action: string; content: string; source: string }> {
+  const cues: Array<{ action: string; content: string; source: string }> = [];
   for (let open = text.indexOf("["); open !== -1; open = text.indexOf("[", open + 1)) {
     const close = closingBracket(text, open);
     if (close < 0) continue;
     const cue = parseDeliveryCue(text.slice(open + 1, close));
     if (cue?.kind !== "prompt") continue;
-    cues.push({ action: cue.action, source: text.slice(open, close + 1).replace(/\s+/g, " ") });
+    cues.push({
+      action: cue.action,
+      content: cue.content,
+      source: text.slice(open, close + 1).replace(/\s+/g, " "),
+    });
   }
   return cues;
 }
@@ -84,7 +90,7 @@ for (const lesson of lessons) {
     for (const cue of promptCues(text)) {
       const head = cue.action.split(" ")[0] ?? cue.action;
       const uses = usesByVerb.get(head) ?? [];
-      uses.push({ lessonId, drivable: drivableIds.has(lessonId), source: cue.source });
+      uses.push({ lessonId, drivable: drivableIds.has(lessonId), content: cue.content, source: cue.source });
       usesByVerb.set(head, uses);
     }
   }
@@ -176,6 +182,26 @@ describe("every cue verb in the corpus is classified", () => {
       );
     }
     expect(problems, problems.join("\n")).toEqual([]);
+  });
+});
+
+describe("a POINT cue names what to point at", () => {
+  it("does not open with the preposition the book's label already says", () => {
+    // The book prints `[YOU POINT: …]` as "*Point to:* …" and the narration as
+    // "point: …", so the cue's own words must be the thing pointed at. Older
+    // cues wrote "[YOU POINT: to the right edge …]", which printed "Point to:
+    // to the right edge"; "at …" printed "Point to: at …". The fix is in the
+    // lessons, not the renderer: stripping a leading "to" in the renderer
+    // would also strip it from a cue that means it ("to and fro" is a thing a
+    // learner could point at), and it would leave the narration's "point: to
+    // …" to a second rule of its own.
+    const uses = usesByVerb.get("POINT") ?? [];
+    expect(uses.length).toBeGreaterThan(20);
+    const leading = uses.filter((use) => /^(?:to|at|towards?|in|on)\b/i.test(use.content));
+    expect(
+      leading.map((use) => `${use.lessonId}: ${use.source}`),
+      'drop the leading preposition: "[YOU POINT: the right edge]", not "[YOU POINT: to the right edge]"',
+    ).toEqual([]);
   });
 });
 

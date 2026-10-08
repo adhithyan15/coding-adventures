@@ -62,7 +62,7 @@ you have.
 [PAUSE 1s]
 - [YOU READ: **ம** — then **ற்** — then **ற** — then **து**]
 - [YOU READ: **மற்றது**, then **எப்போது**, then **சட்டை** — three doublings, three letters]
-- [YOU POINT: in each one, the letter carrying the **புள்ளி**]
+- [YOU POINT: the letter carrying the **புள்ளி** in each one]
 - [YOU RECALL: say *maṟṟadu*, then say *oṉṟu iṅgē, maṟṟadu aṅgē*, then read **மற்றது**]
 - [YOU RETURN TO: say *tiṟa*, *nāṉ uḷḷē varalāmā?* and *appōdu* — three distances back — then set two of them against each other, one and the other]
 

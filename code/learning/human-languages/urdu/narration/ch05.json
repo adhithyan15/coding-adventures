@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Take Leave",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b57389b3369292c5",
+  "sourceHash": "fnv1a64:e123d64b9a2dbc65",
   "lessons": [
     {
       "id": "UR-C05-khuda",
@@ -702,7 +702,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:4ee8f9e0aeaed822",
+      "sourceHash": "fnv1a64:89a9e85d7a29bb60",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -832,11 +832,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "at the gol he that closes شکریہ",
+              "instruction": "the gol he that closes شکریہ",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: at the gol he that closes **شکریہ**]"
+              "source": "[YOU POINT: the gol he that closes **شکریہ**]"
             }
           ]
         },

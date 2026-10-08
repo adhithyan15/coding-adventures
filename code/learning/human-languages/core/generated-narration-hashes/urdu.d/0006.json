@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 6,
-  "sourceHash": "fnv1a64:fbe76e6108503088",
+  "sourceHash": "fnv1a64:e4ce90a919334c0a",
   "lessonIds": [
     "UR-C06-hona",
     "UR-W06-nun-ghunna",
@@ -15,7 +15,7 @@
   "drivablePrefix": 1,
   "text": "urdu/narration/ch06.txt",
   "json": "urdu/narration/ch06.json",
-  "textHash": "fnv1a64:92ab2a7de5e21714",
-  "jsonHash": "fnv1a64:9504ec1f6d5f5df3",
+  "textHash": "fnv1a64:b0f13e38192f6c89",
+  "jsonHash": "fnv1a64:5cd1504c1ec8eab5",
   "findings": []
 }
