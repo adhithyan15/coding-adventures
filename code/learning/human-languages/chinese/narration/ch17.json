@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Language or country?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6bc4eff08fdbf0f1",
+  "sourceHash": "fnv1a64:69c7defc0430dea2",
   "lessons": [
     {
       "id": "ZH-C17-hear-zhongwen",
@@ -1199,7 +1199,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:457c7ba2834019b1",
+      "sourceHash": "fnv1a64:690d6ab718724971",
       "notice": null,
       "blocks": [
         {
@@ -1225,8 +1225,17 @@
           "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "without looking back, written character, Chinese character, and Chinese language",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: without looking back, **written character**, **Chinese character**, and **Chinese language**]"
+            },
+            {
               "kind": "speech",
-              "text": "Without looking back, write written character, Chinese character, and Chinese language. Read each answer aloud only after all three are complete."
+              "text": "Read each answer aloud only after all three are complete."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Looking and reading",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9f56f6b792310a7e",
+  "sourceHash": "fnv1a64:daf2b67196492856",
   "lessons": [
     {
       "id": "ZH-C18-hear-kan",
@@ -1634,7 +1634,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f8f535721b392dc",
+      "sourceHash": "fnv1a64:582967263a1b0eb4",
       "notice": null,
       "blocks": [
         {
@@ -1660,8 +1660,17 @@
           "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "without looking back, look, see, and good-looking from mixed meaning cards",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: without looking back, **look**, **see**, and **good-looking** from mixed meaning cards]"
+            },
+            {
               "kind": "speech",
-              "text": "Without looking back, write look, see, and good-looking from mixed meaning cards. Read each answer aloud only after all three are complete."
+              "text": "Read each answer aloud only after all three are complete."
             }
           ]
         },

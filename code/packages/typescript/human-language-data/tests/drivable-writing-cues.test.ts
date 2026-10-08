@@ -49,7 +49,9 @@ import { describe, expect, it } from "vitest";
 import { loadEverything, loadModalityManifest } from "../src/loader.js";
 import {
   bareWritingImperatives,
+  clausesOf,
   narratedProseSpans,
+  opensChainedOrFrontedWriting,
   withoutHtmlComments,
 } from "./drivable-writing-imperatives.js";
 
@@ -96,6 +98,29 @@ describe("bareWritingImperatives: what fires", () => {
     ["circling a letter", "Circle **ఝ**. Check its three rounded bowls."],
     ["a sentence after a closing parenthesis", "(**ai**.) Write the three forms."],
     ["prose after a cue", "[YOU SAY: hǎo] Write 好 once."],
+  ])("%s", (_label, markdown) => {
+    expect(bareWritingImperatives(markdown)).toHaveLength(1);
+  });
+
+  // The two shapes a hand review of #16893/#16994 found the single regex
+  // missing. Each is a sentence from a drivable lesson that the audio edition
+  // read to a driver as written.
+  it.each([
+    ["say and write", "[PAUSE 8s] Say and write **the Chinese language** without a model."],
+    ["a three-verb chain", "Hear all three in a mixed order. Say, read, and write each answer."],
+    ["a chain with a wait in it", "Read **人**. Cover it, wait five seconds, and write it."],
+    ["a chain after a bold step label", "4. **Writing:** hear all six and write them without a model."],
+    ["a chain after a colon", "A date needs an ordinal: say *первый, второй, третий*, and write the first as a sign writes it, *1-й*."],
+    ["a chain after a connective", "Say it; read **हां सा**; then cover and write it."],
+    ["a comma-linked step", "Say *nānā*, write **बाप**, and say the known paternal-grandmother word."],
+    ["a chain with a dashed aside", "Say *a doctor* — **R1**, one lesson back — and write the small sign in it."],
+    ["a chain around a quoted cue word", "Then hear “younger sister,” say **いもうと**, read **ちち・はは**, and write all three."],
+    ["a fronted phrase", "Without looking back, write **look**, **see**, and **good-looking** from mixed meaning cards."],
+    ["a longer fronted phrase", "From sound and spoken names only, write *dhanyavād*, visarga, independent *ā*, and *bha*."],
+    ["two fronted phrases", "Give the greeting. Then, with the new word covered, write **आ**, then **भ**."],
+    ["a fronted phrase in a numbered step", "2. Beside each, write the number that needed it."],
+    ["a chain after a fronted phrase", "With every model hidden, identify, say, read, and write **बस** in a shuffled order."],
+    ["a chain into rewrite", "Repair only what was missed and rewrite that alone."],
   ])("%s", (_label, markdown) => {
     expect(bareWritingImperatives(markdown)).toHaveLength(1);
   });
@@ -152,6 +177,63 @@ describe("bareWritingImperatives: what does not fire", () => {
     ["an HTML comment", "<!-- Write this later -->\nSay **hǎo**."],
   ])("%s", (_label, markdown) => {
     expect(bareWritingImperatives(markdown)).toEqual([]);
+  });
+
+  // Controls for the chained and fronted shapes. Each is a corpus sentence
+  // that has a writing verb after "and", after a comma, or after a fronted
+  // phrase, and asks nobody to write.
+  it.each([
+    ["the fixed form of a chain", "Read **人**. Cover it and wait five seconds. [YOU WRITE: the character]"],
+    ["the fixed form of a fronted phrase", "[YOU WRITE: without looking back, **look**, **see**, and **good-looking**]"],
+    ["a list of skills", "That closes the run: look, listen, speak, write."],
+    ["a quotation being said", 'Say "I read and write Spanish". (*Leo y escribo español*.)'],
+    ["a chain after a subject", "Water is what you have; wine is what you buy, ship, tax and write down."],
+    ["a chain after an adverb", "Only then will you read and write the whole word."],
+    ["a chain after a subordinate", "The writing track hasn't reached it, so read it for now and draw it later."],
+    ["a notice quoted in a reading", "The notice tells you what to do: go to the desk, and write your name."],
+    ["a subordinate clause, not a fronted phrase", "(It is not open yet; when it opens, write your name at reception; do not smoke.)"],
+    ["a gloss pair", "*Bā*, come; *bare*, write. Both chapters used one more word in passing."],
+    ["a list of phrases", "In Hindi, how do you say it, show me, I could not hear, write it down."],
+    ["a description with a subject", "You can now name the telephone, write and send a letter, and say an address."],
+    ["a chain that copies a sound", "Listen and copy the rhythm of the line."],
+    ["a glossed chain", "Say the words for to weigh and to draw."],
+    ["a chained recall question", "Loudly? (**ಜೋರಾಗಿ**.) Say it and write it down? (**ಬರೆದು ಕೊಡಿ**.)"],
+  ])("%s", (_label, markdown) => {
+    expect(bareWritingImperatives(markdown)).toEqual([]);
+  });
+});
+
+describe("clausesOf", () => {
+  // The chained and fronted tests judge one clause at a time, so where a
+  // clause starts is what decides which verb "opens" it.
+  it.each([
+    ["sentences", "Say it. Write it.", ["Say it.", "Write it."]],
+    ["a bold step label", "4. **Writing:** hear all six and write them.", ["4.", "**Writing:", "hear all six and write them."]],
+    ["semicolons and a closing parenthesis", "(**ai**.) Say it; then cover and write it.", ["(**ai**.", "Say it;", "then cover and write it."]],
+    ["a stop with no space after it", "1.5 metres", ["1.5 metres"]],
+  ])("%s", (_label, span, expected) => {
+    expect(clausesOf(span)).toEqual(expected);
+  });
+
+  it("stays linear on a long run of clauses and a long chain with no writing verb", () => {
+    // No wall-clock bound (timing asserts flake on a loaded runner); the cases
+    // are sized so a quadratic scan would stall the suite.
+    expect(clausesOf("Say it. ".repeat(100_000))).toHaveLength(100_000);
+    expect(opensChainedOrFrontedWriting(`Say ${"it, ".repeat(100_000)}and stop`)).toBe(false);
+    expect(opensChainedOrFrontedWriting(`Without ${"looking ".repeat(100_000)}back, write it`)).toBe(false);
+  });
+
+  it("stays linear on the two inputs a security review found quadratic", () => {
+    // Before the fix each took over a second at this size: an unanchored
+    // `\s+and\s+` restarting at every space of a long run, and `“[^”]*”`
+    // rescanning from every unclosed opener. Only the answers are asserted.
+    const spaces = " ".repeat(40_000);
+    expect(opensChainedOrFrontedWriting(`say${spaces}x`)).toBe(false);
+    expect(opensChainedOrFrontedWriting(`Say it${spaces}and${spaces}write it`)).toBe(true);
+    const openers = "“".repeat(40_000);
+    expect(opensChainedOrFrontedWriting(`Say ${openers}`)).toBe(false);
+    expect(opensChainedOrFrontedWriting(`Say ${openers} and write it`)).toBe(true);
+    expect(opensChainedOrFrontedWriting(`Say “${"and write ".repeat(4_000)}” now`)).toBe(false);
   });
 });
 

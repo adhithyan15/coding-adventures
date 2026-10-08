@@ -32,10 +32,28 @@
 // What this module does
 // ---------------------------------------------------------------------------
 //
-// It finds the bare form: an imperative writing verb that opens a sentence (or
-// a "…, then write …" clause) in prose that is NOT inside a bracketed cue. The
-// test beside it (`drivable-writing-cues.test.ts`) runs it over every
-// drivable lesson in every track.
+// It finds the bare form: an imperative writing verb in prose that is NOT
+// inside a bracketed cue, in one of four places.
+//
+//   shape                                        example from the corpus
+//   -------------------------------------------  ----------------------------------------
+//   opening a sentence                           "4. Write all five from dictation."
+//   opening a "…, then write" clause             "Say *desh*, then write **देश**."
+//   after a fronted phrase                       "Without looking back, write **look** …"
+//   chained onto another step verb               "Say, read, and write each answer."
+//                                                "Look, cover, wait five seconds, and write it."
+//                                                "4. **Writing:** hear all six and write them."
+//
+// The first two are one regex, `BARE_WRITING_IMPERATIVE`. The last two came
+// later: a hand review of the #16893/#16994 fixes found the same writing
+// tasks hiding behind a fronted "Without looking back," and behind an earlier
+// imperative ("Say and write …") where the verb opens nothing. Those two are
+// judged one clause at a time by `opensChainedOrFrontedWriting`, because a
+// single regex that let any amount of text sit between a step verb and "and
+// write" would need a lazy `[^.]*?` across the whole sentence — the shape that
+// goes quadratic and that code scanning flags. The test beside this module
+// (`drivable-writing-cues.test.ts`) runs all four over every drivable lesson
+// in every track.
 //
 // "Not inside a cue" is decided by the narration renderer's own cue splitter,
 // `splitNarrationCues`, not by a second bracket regex. The question being asked
@@ -64,6 +82,14 @@
 //   *fijar* — draw, harden, fasten          a verb followed by a comma is a list of glosses
 //   Write it down? (**ಬರೆದು ಕೊಡಿ**.)          a question answered in brackets is a recall prompt
 //   Trace *nox* back to PIE                 "trace" is the etymologist's verb here; not matched
+//   look, listen, speak, write.             a chain with no object is a list of skills
+//   Say "I read and write Spanish".         a quotation is the material being said
+//   wine is what you buy, ship, tax and     a chain only counts after a step verb
+//     write down                              ("Say", "Cover", "Hear" …) opens the clause
+//   go to the desk, and write your name     "go" is not a step verb: this is a notice
+//                                             in a reading passage, not the lesson
+//   when it opens, write your name          a subordinate clause is not a fronted phrase
+//   *bare*, write.                          a fronted phrase is plain words only
 //
 // Deliberately out of scope: `trace`, `mark`, `label`, `print` and `fill in`.
 // In this corpus every sentence-initial "Trace" is etymology ("Trace it back
@@ -201,12 +227,171 @@ export function narratedProseSpans(markdown: string): string[] {
 }
 
 /**
+ * The verbs that open a non-writing step a writing verb is chained onto.
+ *
+ * "Say, read, and write each." "Cover it, wait five seconds, and write it."
+ * "Hear all six and write them." In each the sentence opens with an
+ * imperative the narrator can say safely, and the writing verb rides in on a
+ * coordinating ", and" / " and" / ",". The opening verb is what makes the
+ * whole chain an instruction: "wine is what you buy, ship, tax and write down"
+ * opens with a subject, and "only then will you read and write the whole
+ * word" with an adverb, so neither is a chain.
+ *
+ * The list is the set of step verbs the corpus actually opens chains with.
+ * It is closed on purpose. "Go to the desk, and write your name" is what a
+ * notice in a Japanese reading passage says, not what the lesson asks, and
+ * "go" is not here; nor is any verb that is more often a noun in a lesson
+ * ("Form", "Practice", "Watch").
+ */
+const CHAIN_OPENER = String.raw`(?:say|read|hear|listen|cover|uncover|hide|look|wait|pause|recall|repeat|repair|greet|identify|name|retrieve|check|speak|point|turn|count|ask|answer|picture|imagine|perform|run)\b`;
+
+/**
+ * A short phrase fronted before the imperative: "Without looking back, write",
+ * "From sound alone, write", "With the page covered, write", "Beside each,
+ * write", "Then, with the new word covered, write".
+ *
+ * It must open with one of a closed set of words — the adverbials and
+ * prepositions lessons use to set up a recall step — and run, in plain words
+ * only, to a comma. Plain words means no `*`, `(` or quote can sit in it, so
+ * "*bare*, write" (a gloss pair) and "In Hindi, how do you say it, show me, I
+ * could not hear, write it down" (a list of phrases) are not fronted phrases.
+ * A subordinate clause ("when it opens, write your name at reception", which
+ * is a reading passage quoting a notice) is deliberately not in the set.
+ *
+ * At most two may stack ("Then, with the new word covered,"), and each is at
+ * most eight words. Both bounds keep the match linear: the words are separated
+ * by a required run of spaces, which no word character can also match, so the
+ * engine never has two ways to split the same text.
+ */
+const FRONTED_PHRASE = String.raw`(?:then|now|next|finally|first|again|afterwards|(?:without|from|with|beside|below|underneath|under)(?:\s+[a-z'’-]+){0,7}),\s+`;
+
+/** A clause may open with a list marker, a bold label opener, and a connective, exactly as `SENTENCE_START` allows. */
+const CLAUSE_LEAD = String.raw`^(?:(?:[-*+]|\d+[.)])\s+)?(?:\*\*)?(?:(?:then|now|and|also)\s+)?`;
+
+/** "Without looking back, write …" — a writing verb straight after one or two fronted phrases. */
+const FRONTED_WRITING = new RegExp(
+  `${CLAUSE_LEAD}(?:${FRONTED_PHRASE}){1,2}${WRITING_VERB}${NOT_A_MENTION}`,
+  "i",
+);
+
+/** A clause that opens (after any lead and fronted phrases) with a chain-opening step verb. */
+const CHAIN_START = new RegExp(`${CLAUSE_LEAD}(?:${FRONTED_PHRASE}){0,2}${CHAIN_OPENER}`, "i");
+
+/**
+ * The link that carries a writing verb into a chain: ", and write", " and
+ * write", ", write", optionally with "then" ("and then write").
+ *
+ * The verb must be followed by a word, not by the end of the sentence. That
+ * is the guard for a list of skills — "look, listen, speak, write." — where
+ * every item is a bare verb and nothing is being written. "Say, read, and
+ * write each." has its object; "That closes the run: look, listen, speak,
+ * write." does not.
+ *
+ * Every gap is ONE literal space, not `\s+`, because the clause has had its
+ * whitespace runs collapsed (see `opensChainedOrFrontedWriting`). That is a
+ * linearity fix, not a style choice: an unanchored `\s+and\s+` restarts at
+ * every space of a long run and rescans the rest of it, so "say", 40,000
+ * spaces and "x" took over a second.
+ *
+ * `CHAIN_NOT_A_MENTION` is `NOT_A_MENTION` without its recall-question
+ * lookahead. That lookahead scans to the end of the sentence from every
+ * candidate, which is quadratic in an unanchored search; the question case is
+ * handled once per clause instead (a clause that ends in "?" is skipped).
+ */
+const CHAIN_NOT_A_MENTION = String.raw`(?!\*{0,2} (?:is|was|means)\b)(?!,)(?!: )`;
+
+const CHAIN_LINK = new RegExp(
+  String.raw`(?:, (?:and )?| and )(?:then )?${WRITING_VERB}${CHAIN_NOT_A_MENTION}(?= [^\s.,;:!?])`,
+  "i",
+);
+
+/**
+ * Where a clause ends. The same stops `SENTENCE_START` recognises, with the
+ * same optional closer between the stop and the space, so "**Writing:** hear
+ * all six and write them" splits into "**Writing:**" and "hear all six and
+ * write them", and the second is judged as a clause of its own.
+ */
+const CLAUSE_BREAK = /[.!?;:][)*"”’]{0,3}\s+/g;
+
+/**
+ * The clauses of one span, in order, each keeping its stop character ("." "?"
+ * …) so a question can be told from an instruction. A single forward pass over
+ * the span's stops: no clause is re-scanned, so the total work is linear in the
+ * span.
+ */
+export function clausesOf(span: string): string[] {
+  const clauses: string[] = [];
+  let from = 0;
+  for (const stop of span.matchAll(CLAUSE_BREAK)) {
+    const end = (stop.index ?? 0) + 1;
+    clauses.push(span.slice(from, end));
+    from = (stop.index ?? 0) + stop[0].length;
+  }
+  clauses.push(span.slice(from));
+  return clauses.filter((clause) => clause.trim() !== "");
+}
+
+/**
+ * Does this clause tell the listener to write, in one of the two shapes the
+ * single regex cannot see?
+ *
+ *   fronted       "Without looking back, write **look**, **see** …"
+ *   chained       "Say, read, and write each answer."
+ *                 "Look, cover, wait five seconds, and write the word."
+ *                 "hear all six and write them" (after a "**Writing:**" label)
+ *
+ * The chained test runs only when the clause opens with a step verb from
+ * `CHAIN_OPENER`; the link itself is then looked for anywhere in the clause
+ * outside quotation marks (see `withoutQuotations`).
+ *
+ * A clause that ends in "?" is a question, not an instruction: "Say it and
+ * write it down? (**…**.)" is a recall prompt with its answer in brackets, the
+ * same exclusion `NOT_A_MENTION` makes for the single regex.
+ *
+ * Whitespace runs are collapsed to one space first (one linear pass), so every
+ * later pattern can name a gap as a single literal space. Each regex is then
+ * applied once per clause, and none has a quantifier over a group that can
+ * match the same text two ways, so the cost stays linear.
+ */
+export function opensChainedOrFrontedWriting(clause: string): boolean {
+  const text = clause.replace(/\s+/g, " ").trim();
+  if (text.endsWith("?")) return false;
+  if (FRONTED_WRITING.test(text)) return true;
+  if (!CHAIN_START.test(text)) return false;
+  return CHAIN_LINK.test(withoutQuotations(text));
+}
+
+/**
+ * The clause with its quoted stretches blanked out.
+ *
+ * `Say "I read and write Spanish".` opens with a step verb and contains " and
+ * write", but that writing is inside the sentence being taught: the learner
+ * is asked to SAY it. Whatever sits in double quotation marks is material, not
+ * a further step, so it is removed before the chain is looked for. A quote
+ * that is only a cue word ("Then hear “younger sister,” say **いもうと**, …
+ * and write all three") loses its two words and keeps the chain around it.
+ *
+ * Each pattern is one opening quote, a run that contains NEITHER quote mark,
+ * and the closing quote. Excluding the opener from the run is what keeps the
+ * scan linear: with `“[^”]*”`, a run of unclosed `“` let every opener scan to
+ * the end of the clause before failing (40,000 of them took over a second).
+ * Here a failed attempt stops at the next `“`, which is where the next attempt
+ * starts, so each character is read a bounded number of times. For the
+ * straight quote the opener and closer are the same character, so `"[^"]*"`
+ * already has that property. An unclosed quote is left as it is.
+ */
+function withoutQuotations(clause: string): string {
+  return clause.replace(/"[^"]*"/g, "\"\"").replace(/“[^“”]*”/g, "“”");
+}
+
+/**
  * Every span of `markdown` that a narrator would read as a bare instruction to
  * write. Returns the spans themselves, so a failure message can quote them.
  */
 export function bareWritingImperatives(markdown: string): string[] {
   return narratedProseSpans(markdown).filter((span) => {
     BARE_WRITING_IMPERATIVE.lastIndex = 0;
-    return BARE_WRITING_IMPERATIVE.test(span);
+    if (BARE_WRITING_IMPERATIVE.test(span)) return true;
+    return clausesOf(span).some(opensChainedOrFrontedWriting);
   });
 }

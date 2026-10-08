@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Character or language?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:388c5849d6436e4a",
+  "sourceHash": "fnv1a64:65082600dd02950e",
   "lessons": [
     {
       "id": "ZH-C16-hear-zi",
@@ -1194,7 +1194,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89504d5a5f4c3cfd",
+      "sourceHash": "fnv1a64:dcd2d206cefc56b9",
       "notice": null,
       "blocks": [
         {
@@ -1210,7 +1210,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say and write the Chinese language without a model."
+              "text": "Say the Chinese language."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the Chinese language, without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **the Chinese language**, without a model]"
             }
           ]
         },
@@ -1221,7 +1230,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear written character, Chinese character, and Chinese language in a mixed order. Say, read, and write each answer. For the two 汉 (hàn) compounds, listen for the ending before choosing 字 (zì) or 语 (yǔ)."
+              "text": "Hear written character, Chinese character, and Chinese language in a mixed order. Say and read each answer."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "each answer — for the two 汉 (hàn) compounds, listen for the ending before choosing 字 (zì) or 语 (yǔ)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: each answer — for the two 汉 compounds, listen for the ending before choosing 字 or 语]"
             }
           ]
         },

@@ -38,7 +38,7 @@ reviews_of: [RU-C85-weekend]
 
 [PAUSE 2s] Before the new one: say the Russian for a second, then the Russian for the weekend.
 
-[PAUSE 2s] A date needs an ordinal: say *первый, второй, третий*, and write the first as a sign writes it, *1-й*.
+[PAUSE 2s] A date needs an ordinal: say *первый, второй, третий*. [YOU WRITE: the first as a sign writes it, *1-й*]
 
 ## You'll want to know: дата
 <!-- hl-knowledge: introduces=[RU-LEX-C85-TIME85-03]; assesses=[] -->
