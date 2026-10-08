@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 168,
-  "sourceHash": "fnv1a64:7c0885679ed5947b",
+  "sourceHash": "fnv1a64:2bc859956588975f",
   "lessonIds": [
     "PA-R168-date-label-again",
     "PA-R168-month-map-again",
@@ -12,6 +12,6 @@
   "text": "punjabi/narration/ch168.txt",
   "json": "punjabi/narration/ch168.json",
   "textHash": "fnv1a64:3fb9b754aee9cfbb",
-  "jsonHash": "fnv1a64:456897aa5669a396",
+  "jsonHash": "fnv1a64:4a433dcaf316343e",
   "findings": []
 }

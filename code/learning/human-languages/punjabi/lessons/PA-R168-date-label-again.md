@@ -6,7 +6,6 @@ introduces_culture_claims: []
 id: PA-R168-date-label-again
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 9080
-delivery: script
 modality: pen
 modality_reason: "The learner must inspect the printed label and copy its Gurmukhi marks."
 chapter: 168

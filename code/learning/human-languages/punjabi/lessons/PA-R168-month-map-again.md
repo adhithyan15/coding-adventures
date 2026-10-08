@@ -6,7 +6,6 @@ introduces_culture_claims: []
 id: PA-R168-month-map-again
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 9090
-delivery: script
 modality: pen
 modality_reason: "The learner must inspect two printed Gurmukhi-digit codes and copy them."
 chapter: 168

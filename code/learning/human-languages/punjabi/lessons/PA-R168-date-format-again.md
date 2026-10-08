@@ -6,7 +6,6 @@ introduces_culture_claims: []
 id: PA-R168-date-format-again
 spine_node: SPINE-EXCHANGE-NAMES
 sequence: 9100
-delivery: script
 modality: pen
 modality_reason: "The learner must inspect the printed date frame and copy its boxes."
 chapter: 168

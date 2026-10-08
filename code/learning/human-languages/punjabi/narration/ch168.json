@@ -4,7 +4,7 @@
   "chapter": 168,
   "title": "Return to the Date Line",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7c0885679ed5947b",
+  "sourceHash": "fnv1a64:2bc859956588975f",
   "lessons": [
     {
       "id": "PA-R168-date-label-again",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:d5ddb3a4ebaf9862",
+      "sourceHash": "fnv1a64:af7f077b2b134ae5",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -88,7 +88,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:3c86e0b57baaab90",
+      "sourceHash": "fnv1a64:9a7148b2c58ec9ed",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:300eeb575cb24e6d",
+      "sourceHash": "fnv1a64:3356f5efd5f480ca",
       "notice": {
         "modality": "pen",
         "needs": [
