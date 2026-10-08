@@ -67,6 +67,10 @@ The pathless `compile_source` API below preprocesses directives before the
 token-input C parser. It supports the bounded directive forms above but cannot
 read host files or resolve active includes. Use `compile_preprocessed_file`
 when the translation unit needs headers.
+The three-way conformance harness keeps standard headers for its native C
+oracle and passes the same program body without those headers to this pathless
+API; fixed-width type names and `printf` are part of this frontend's bounded
+subset.
 
 ```rust
 use c_to_semantic_ir::compile_source;

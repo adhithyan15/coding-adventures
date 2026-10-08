@@ -7,6 +7,9 @@
   forms reach lowering. Active includes fail closed without host file access,
   including an include that names the in-memory primary source; skipped
   includes remain inert. The rooted file-input API retains its include policy.
+- Keep the native C headers in the three-way conformance oracle while passing
+  its directive-free program body to pathless frontend lowering; cover every
+  corpus case without depending on a native compiler or Ruby installation.
 
 ## Unreleased — PREP01 bounded C #undef
 
