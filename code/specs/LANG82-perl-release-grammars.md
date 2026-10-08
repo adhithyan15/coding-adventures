@@ -304,3 +304,17 @@ stage's plain-decimal `print` arithmetic subset. Keep carriage returns,
 leading-zero literals, decrement adjacency, and unsupported characters
 rejected by the partial grammar, with separate files for every release and
 no complete historical syntax claim.
+
+Prepare the next development-release installment as a distinct, explicitly
+partial token/grammar pair for `5.004_50`. Its own historical source archive
+is `https://mirrors.develooper.com/perl/historical-perl/perl-5.004_50.tar.gz`
+with SHA-256
+`458f5850e8b36f9280fcd713210f83472901577e930b41e3f8dfd243a64b9938`.
+Compared with final 5.004_05, its `perly.y` changes loop and subroutine
+productions while `toke.c` has broader lexical-state differences; neither
+widens this stage's plain-decimal `print` arithmetic subset. The
+comment-and-whitespace-stripped `scan_num` body is identical to 5.004_05,
+including the 250-digit decimal scan bound. Accept at most 250 digits and
+reject 251, leading-zero literals, adjacent decrement, carriage returns,
+and unsupported characters. Keep its two files separate, without aliasing
+another release or claiming complete historical syntax.
