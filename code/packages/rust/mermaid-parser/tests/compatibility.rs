@@ -1568,6 +1568,21 @@ left --> wide --> narrow"#,
 }
 
 #[test]
+fn swimlane_quoted_node_labels_normalize_into_semantic_ir() {
+    let diagram = parse_swimlane(
+        r#"swimlane-beta LR
+subgraph Intake
+  request["Request \"priority\" service"]
+  done(("Complete ✓"))
+end
+request --> done"#,
+    ).expect("quoted Swimlane labels should parse");
+
+    assert_eq!(diagram.nodes[0].label, "Request \"priority\" service");
+    assert_eq!(diagram.nodes[1].label, "Complete ✓");
+}
+
+#[test]
 fn railroad_dispatches_all_notations_to_recursive_ir() {
     let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
     let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");
