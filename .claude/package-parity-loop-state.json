@@ -11,12 +11,17 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 17168,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/17168",
+    "branch": "codex/parity-arc2d-csharp-fsharp-20261008",
+    "item_id": "geometry-arc2d-csharp-fsharp-center-form-conformance"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-08T17:57:11Z",
-    "pr_number": 17148,
-    "status": "merged",
-    "notes": "Final-head retry completed with 31 successful and seven expected skipped checks, including the previously flaky Windows Forme job and CI gate. GitHub reported CLEAN/MERGEABLE; guarded squash auto-merge merged #17148 without a manual merge. Exact merge commit 435df54f862f154b216e1204e299ffc67a713af6 was fetched on origin/main."
+    "observed_at": "2026-10-08T18:22:41Z",
+    "pr_number": 17168,
+    "status": "pr-open",
+    "notes": "Ready-for-review PR #17168 opened from locally validated head 3bd0babfc7e5a1fb73e57d675fb11c308437ae19. GitHub reports MERGEABLE with initial detect, CodeQL and book-detection checks in progress; do not enable auto-merge until every required check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "89c47895e1303bf1baaae2da7290f3ae1be1a879",
@@ -12239,14 +12244,18 @@
     {
       "id": "geometry-arc2d-csharp-fsharp-center-form-conformance",
       "title": "Conform C# and F# Arc2D center forms to G2D03",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["geometry-arc2d-center-form-bounds-and-sweep-neutral-contract", "geometry-2d-neutral-fixture-ci-scheduling"],
       "branch": "codex/parity-arc2d-csharp-fsharp-20261008",
-      "pr_number": null,
+      "pr_number": 17168,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/17168",
+      "opened_at": "2026-10-08T18:22:35Z",
+      "opened_revision": "3bd0babfc7e5a1fb73e57d675fb11c308437ae19",
       "selected_at": "2026-10-08T18:00:19Z",
       "selection_revision": "435df54f862f154b216e1204e299ffc67a713af6",
       "rebase_revision": "89c47895e1303bf1baaae2da7290f3ae1be1a879",
       "rebase_notes": "Rebased conflict-free over unrelated Bengali, Chief broker-root and language-ladder merges before publication. Refreshed the collision-gated schema-3 inventory: one new Rust-only native-security singleton was classified and registered, with zero collisions/unknown buckets. No C#/F# Arc2D package path overlap or second parity PR appeared.",
+      "validation_notes": "Ready-for-review PR #17168: red-before-green C#/F# Arc2D fixture/fail-stop tests. Final rebased head passes 10 tests per Arc2D lane with C# 97.01% line/96.77% branch and F# 98.83% line/95.31% branch coverage. Same-lane point2d, bezier2d, trig dependency suites pass (C# 4+5+12, F# 4+5+5). Neutral geometry validator passes 23 cases/11 unit tests; collision-gated schema-3 inventory at fetched main has 15 established lanes, 1,501 identities, 4,783 slots, zero collisions/unknown buckets. Go build-tool tests/vet and real plan validation of 45 BUILD files, 5,320 packages and eight affected nodes pass; orphan checks OK with 38 tracked exemptions. C# dotnet format whitespace, diff hygiene and independent exact-head security review pass. dotnet format does not support F#; F# compiles/tests without warnings. Initial PR checks are pending.",
       "selection_notes": "Selected only after #17148 actually merged, final 38 checks were acceptable, origin/main was fetched, collision-gated schema-3 inventory regenerated, and three newly discovered owners were registered. The merged G2D03 and now-unconditional geometry fixture contracts make C#/F# a bounded shared .NET implementation slice with direct dependency leverage. Java/Kotlin/Dart arithmetic and NET00 require upstream neutral adjudication; Haskell CT01 is ready but a narrower one-lane leaf; OCaml promotion remains upstream-blocked. No active parity PR or exact Arc2D package-path overlap was found.",
       "notes": "First bounded child of the 11-lane Arc2D existing-center-form umbrella. C# and F# currently sample 100 points for bounds and use unchecked integer quadrant segmentation; both already link geometry2d-v1 but must dynamically consume its four center-bounds and three center-cubics records. Implement analytic rotated extrema, finite/valid one-turn fail-stop before allocation, zero/full-turn segment rules, native invalid/nonfinite tests, same-lane point2d/bezier2d/trig regression and real .NET coverage/build validation. G2D03 and merged neutral validators govern; no Go endpoint or absent-lane port in this slice."
     },
