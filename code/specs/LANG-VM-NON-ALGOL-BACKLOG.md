@@ -194,18 +194,27 @@ CodeQL, and books checks passed. The 776-row inventory now has 88 partial
 pairs and 688 pending; neither complete syntax nor exhaustive public-release
 coverage is claimed. The next fresh selection rotates to the prepared bounded
 PREP01 parenthesized C conditional-expression slice.
+
+PR #16996 delivered that bounded parenthesized C `#if` slice and merged as
+`def09f02d44cef3dfdd5a4b3e3cf9b7b4efd7eec` after exact-head CI,
+CodeQL, and books checks passed. The next fresh selection rotates to LANG78's
+prepared JavaScript console-output error repair. Full C `#if`, stringize/paste,
+and default frontend routing remain open.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **PREP01 C (selected):** accept one outer parenthesis pair around a single
-   operand, negated operand, or comparison in a bounded `#if` clause. Reject
-   nested or mixed unsupported forms. Full C `#if`, stringize/paste, and
-   default frontend routing remain open.
+1. **LANG78 JavaScript (selected):** retain completed `console.log` output
+   when a later native VM instruction fails, then emit that output before the
+   CLI diagnostic. Keep the direct source/AST-to-IIR path on Rust `vm-core`;
+   Node remains an effect-order conformance oracle.
 2. **LANG82 Perl release grammars:** continue separate source-backed partial
    files, with six 5.004_05 maintenance pairs prepared locally. Keep
    5.004_01-t1 pending until its own source is found; do not imply complete
    syntax or an exhaustive release inventory.
+3. **PREP01 C:** continue the bounded `#if` expression ladder. Full C `#if`,
+   stringize/paste, and default frontend routing remain open.
 
 The following run records the first VM-067 selection.
 

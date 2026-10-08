@@ -94,9 +94,28 @@ fn check_expression_budget(expr: &Expression, remaining: &mut usize) -> Result<(
     Ok(())
 }
 
+/// VM failure with console output completed by earlier JavaScript statements.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct JavaScriptRunError {
+    pub output: String,
+    pub message: String,
+}
+
+impl std::fmt::Display for JavaScriptRunError {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        formatter.write_str(&self.message)
+    }
+}
+
+impl std::error::Error for JavaScriptRunError {}
+
 /// Execute source on this repository's Rust VM and collect console output.
-pub fn run_source(source: &str) -> Result<String, String> {
-    let mut module = compile_source(source, "javascript-script")?;
+pub fn run_source(source: &str) -> Result<String, JavaScriptRunError> {
+    let mut module =
+        compile_source(source, "javascript-script").map_err(|message| JavaScriptRunError {
+            output: String::new(),
+            message,
+        })?;
     let output = Arc::new(Mutex::new(String::new()));
     let captured = Arc::clone(&output);
     let mut vm = VMCore::new();
@@ -124,13 +143,21 @@ pub fn run_source(source: &str) -> Result<String, String> {
         sink.push('\n');
         Ok(Value::Null)
     });
-    vm.execute(&mut module, "main", &[])
-        .map_err(|e| e.to_string())?;
+    let execution = vm.execute(&mut module, "main", &[]);
     let result = output
         .lock()
-        .map_err(|_| "JavaScript console lock poisoned")?
+        .map_err(|_| JavaScriptRunError {
+            output: String::new(),
+            message: "JavaScript console lock poisoned".into(),
+        })?
         .clone();
-    Ok(result)
+    match execution {
+        Ok(_) => Ok(result),
+        Err(error) => Err(JavaScriptRunError {
+            output: result,
+            message: error.to_string(),
+        }),
+    }
 }
 
 fn format_js_number(number: f64) -> Result<String, String> {
@@ -248,6 +275,17 @@ mod tests {
             "3\n0.5\n"
         );
         assert_eq!(run_source("console.log(-(1 + 2) * 3);").unwrap(), "-9\n");
+    }
+
+    #[test]
+    fn retains_completed_console_output_before_vm_error() {
+        let error = run_source("console.log(7); console.log(1e21);").unwrap_err();
+        assert_eq!(error.output, "7\n");
+        assert!(error.message.contains("number display outside"));
+
+        let error = run_source("let x = 1;").unwrap_err();
+        assert!(error.output.is_empty());
+        assert!(error.message.contains("unsupported JavaScript statement"));
     }
 
     #[test]

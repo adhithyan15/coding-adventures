@@ -62,6 +62,16 @@ Acceptance requires actual source → parser → IIR → `VMCore` tests for
 unsupported construct. A separate Node oracle may cross-check results.
 The native runtime test may not invoke Node to execute the compiled module.
 
+For the next bounded JavaScript runner stage, preserve output from every
+completed `console.log` when a later accepted statement fails during VM
+execution. Return that prior output alongside the runtime diagnostic, and
+have the `jsvm` command write and flush it to stdout before reporting the
+error on stderr. Compilation failures have no completed output. The supported
+source subset and number-display range do not expand in this stage. A later
+out-of-range display supplies a reachable runtime-error regression; the host
+JavaScript runtime serves only as an oracle for the ordering of completed
+console effects, never as the executor of the IIR module.
+
 ## Slice B — Python
 
 Create `python-iir-compiler` against `python-parser`'s grammar tree. Its first

@@ -1,6 +1,6 @@
 //! Run the current JavaScript pilot with this repository's native Rust VM.
 
-use std::io::Read;
+use std::io::{Read, Write};
 
 fn main() {
     let path = match std::env::args().nth(1) {
@@ -32,7 +32,16 @@ fn main() {
     match javascript_iir_compiler::run_source(&source) {
         Ok(output) => print!("{output}"),
         Err(error) => {
-            eprintln!("{path}: {error}");
+            let mut stdout = std::io::stdout().lock();
+            if let Err(write_error) = stdout
+                .write_all(error.output.as_bytes())
+                .and_then(|_| stdout.flush())
+            {
+                eprintln!("{path}: cannot write prior output: {write_error}");
+                std::process::exit(1);
+            }
+            drop(stdout);
+            eprintln!("{path}: {}", error.message);
             std::process::exit(1);
         }
     }
