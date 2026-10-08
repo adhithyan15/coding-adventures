@@ -58,7 +58,8 @@ Five: కొంచెం, ఎక్కువ, తక్కువ, వద్ద�
 - [YOU SAY: *antē*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then refuse a second helping with *vaddu*, *antē*]
-- [YOU RECALL: say *peṭṭe*, then read **ఎముక** and say what it means]
+- [YOU RECALL: say *peṭṭe*]
+- [YOU READ: **ఎముక**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C58-REPLY-01, TE-LEX-C58-REPLY-02, TE-LEX-C58-REPLY-03, TE-LEX-C58-REPLY-04, TE-LEX-C58-REPLY-05] -->

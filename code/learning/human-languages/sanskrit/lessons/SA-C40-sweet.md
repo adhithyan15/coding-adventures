@@ -60,7 +60,8 @@ Five things from a kitchen: curd, sugar, butter, greens, a sweet.
 - [YOU SAY: *modakaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *dadhi* and *modakaḥ* together]
-- [YOU RECALL: say *mṛttikā*, then read **सर्पः**]
+- [YOU RECALL: say *mṛttikā*]
+- [YOU READ: **सर्पः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C40-FOOD-01, SA-LEX-C40-FOOD-02, SA-LEX-C40-FOOD-03, SA-LEX-C40-FOOD-04, SA-LEX-C40-FOOD-05] -->

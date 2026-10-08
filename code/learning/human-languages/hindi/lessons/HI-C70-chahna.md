@@ -76,7 +76,7 @@ that separate construction for later.
 - [YOU SAY: the pair back to back — **बोल सकता हूँ** (*bol saktā hūṁ*) / **बोलना चाहता हूँ** (*bolnā chāhtā hūṁ*)]
 - [YOU SAY: **मैं आना चाहता हूँ** (*maiṁ ānā chāhtā hūṁ*) against **मैं आ सकता हूँ** (*maiṁ ā saktā hūṁ*)]
 - [YOU SAY: **चाह** (*chāh*), "longing"; then **चाहना** (*chāhnā*), "to want"]
-- [YOU RECALL: read **लेकिन**]
+- [YOU READ: **लेकिन**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-CHAHNA-01, HI-GRAMMAR-SAKNA-STEM-01] -->

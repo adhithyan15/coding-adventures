@@ -56,7 +56,8 @@ That closes the run: a teacher, a student, a doctor, a farmer, a guest.
 - [YOU SAY: *viruntāḷi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *āsiriyar*, *māṇavaṉ*, *maruttuvar*, *vivasāyi*, *viruntāḷi*]
-- [YOU RECALL: say *puttakam*, then read **வயிறு**]
+- [YOU RECALL: say *puttakam*]
+- [YOU READ: **வயிறு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C46-ROLE-01, TA-LEX-C46-ROLE-02, TA-LEX-C46-ROLE-03, TA-LEX-C46-ROLE-04, TA-LEX-C46-ROLE-05] -->

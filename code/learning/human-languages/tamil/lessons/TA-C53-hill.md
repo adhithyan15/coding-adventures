@@ -56,7 +56,8 @@ Two: the water, and what it comes down from.
 - [YOU SAY: *malai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nadi*, then *malai*, the water and the high ground behind it]
-- [YOU RECALL: read **சூரியன்**, then say *kiḷai*]
+- [YOU READ: **சூரியன்**]
+- [YOU RECALL: say *kiḷai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C52-TREE-05, TA-LEX-C53-LAND-01, TA-LEX-C53-LAND-02] -->

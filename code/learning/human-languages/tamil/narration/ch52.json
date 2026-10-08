@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "A Tree",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9251b1cbf84d4066",
+  "sourceHash": "fnv1a64:0e03e5c64c20f870",
   "lessons": [
     {
       "id": "TA-C52-tree",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff81256384dd3f6b",
+      "sourceHash": "fnv1a64:dccc2efdac8333df",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say vāsal, then read ஆகாயம்",
+              "instruction": "say vāsal",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *vāsal*, then read **ஆகாயம்**]"
+              "source": "[YOU RECALL: say *vāsal*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஆகாயம்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஆகாயம்**]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c7df4674e66b354b",
+      "sourceHash": "fnv1a64:614d3a49020b3e09",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +249,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "கோலம்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **கோலம்**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read கோலம், then say sūriyaṉ",
+              "instruction": "say sūriyaṉ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **கோலம்**, then say *sūriyaṉ*]"
+              "source": "[YOU RECALL: say *sūriyaṉ*]"
             }
           ]
         },
@@ -281,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1abeaa6a9e7a695",
+      "sourceHash": "fnv1a64:64f956e390dc74d1",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +390,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say malar, then read நிலா",
+              "instruction": "say malar",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *malar*, then read **நிலா**]"
+              "source": "[YOU RECALL: say *malar*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "நிலா",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **நிலா**]"
             }
           ]
         },
@@ -412,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64cc4bbd3ebe35ba",
+      "sourceHash": "fnv1a64:461898568139f936",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +529,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "வெற்றிலை",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **வெற்றிலை**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read வெற்றிலை, then say viṇmīṉ",
+              "instruction": "say viṇmīṉ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **வெற்றிலை**, then say *viṇmīṉ*]"
+              "source": "[YOU RECALL: say *viṇmīṉ*]"
             }
           ]
         },
@@ -543,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1db826557cefbae7",
+      "sourceHash": "fnv1a64:f671ebb7eb72656d",
       "notice": null,
       "blocks": [
         {
@@ -634,11 +670,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say varavēṟpu, then read மேகம்",
+              "instruction": "say varavēṟpu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *varavēṟpu*, then read **மேகம்**]"
+              "source": "[YOU RECALL: say *varavēṟpu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "மேகம்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மேகம்**]"
             }
           ]
         },

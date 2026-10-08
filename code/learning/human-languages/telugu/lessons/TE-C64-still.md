@@ -58,7 +58,8 @@ Five: కూడా, మాత్రమే, అయితే, తరువాత, 
 - [YOU SAY: *iṅkā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then answer *antē?* with *iṅkā undi*]
-- [YOU RECALL: say *addaṁ*, then read **ఆరోగ్యం** and say what it means]
+- [YOU RECALL: say *addaṁ*]
+- [YOU READ: **ఆరోగ్యం**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C64-JOIN-01, TE-LEX-C64-JOIN-02, TE-LEX-C64-JOIN-03, TE-LEX-C64-JOIN-04, TE-LEX-C64-JOIN-05] -->

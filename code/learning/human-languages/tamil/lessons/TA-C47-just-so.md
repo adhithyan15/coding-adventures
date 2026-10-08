@@ -56,7 +56,8 @@ That closes the run: true, enough, certainly, perhaps, just so.
 - [YOU SAY: *appaḍiyē*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *uṇmai*, *pōdum*, *niccayamāka*, *oruvēḷai*, *appaḍiyē*]
-- [YOU RECALL: say *vayiṟu*, then read **விருந்தாளி**]
+- [YOU RECALL: say *vayiṟu*]
+- [YOU READ: **விருந்தாளி**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C47-REPLY-01, TA-LEX-C47-REPLY-02, TA-LEX-C47-REPLY-03, TA-LEX-C47-REPLY-04, TA-LEX-C47-REPLY-05] -->

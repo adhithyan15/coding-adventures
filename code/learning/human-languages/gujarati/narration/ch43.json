@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "Past Five, and the Balance Turns Over",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:28308be6551d38da",
+  "sourceHash": "fnv1a64:10c9f2d4fcb89483",
   "lessons": [
     {
       "id": "GU-C39-chha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f5e5ce185a58d07a",
+      "sourceHash": "fnv1a64:b7a8ee22f70b97ca",
       "notice": null,
       "blocks": [
         {
@@ -152,11 +152,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "છ (chha) on its own, then read છે — same shape, different job",
+              "instruction": "છ (chha) on its own",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **છ** on its own, then read **છે** — same shape, different job]"
+              "source": "[YOU SAY: **છ** on its own]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "છે — same shape, different job",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **છે** — same shape, different job]"
             },
             {
               "kind": "activity",
@@ -216,7 +225,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0e64a2892e84887",
+      "sourceHash": "fnv1a64:56055e3d0091383b",
       "notice": null,
       "blocks": [
         {
@@ -323,11 +332,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "chha, sāt — then read સાત sign by sign",
+              "instruction": "chha, sāt",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *chha, sāt* — then read **સાત** sign by sign]"
+              "source": "[YOU SAY: *chha, sāt*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "સાત (sāt) sign by sign",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **સાત** sign by sign]"
             },
             {
               "kind": "prompt",

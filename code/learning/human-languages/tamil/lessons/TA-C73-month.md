@@ -60,8 +60,10 @@ Above the day: the month.
 [PAUSE 1s]
 - [YOU SAY: *mādam*]
 - [YOU SAY: *nāḷ*, then *mādam* — smaller, then bigger]
-- [YOU RECALL: read **இன்று**, then say *muṉbu*, then say *mādam*]
-- [YOU RECALL: read **கழுவு**, then say *siri*]
+- [YOU READ: **இன்று**]
+- [YOU RECALL: say *muṉbu*, then say *mādam*]
+- [YOU READ: **கழுவு**]
+- [YOU RECALL: say *siri*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-INRU-01, TA-LEX-C73-WHEN-03, TA-LEX-C73-WHEN-04] -->

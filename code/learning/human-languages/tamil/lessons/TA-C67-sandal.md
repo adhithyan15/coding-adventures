@@ -57,8 +57,9 @@ Four, and the run has reached the floor.
 [PAUSE 1s]
 - [YOU SAY: *seruppu*]
 - [YOU SAY: *seruppu*, then *vāsal* — and say which side of the door each one is on]
-- [YOU RECALL: read **சட்டை**, then say *puḍavai*, then say *seruppu*]
-- [YOU RECALL: read **வலது**]
+- [YOU READ: **சட்டை**]
+- [YOU RECALL: say *puḍavai*, then say *seruppu*]
+- [YOU READ: **வலது**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-SATTAI-01, TA-LEX-C67-WEAR-03, TA-LEX-C67-WEAR-04] -->

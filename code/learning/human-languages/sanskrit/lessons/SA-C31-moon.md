@@ -59,7 +59,8 @@ A second word overhead, and a candle lit from the same root.
 - [YOU SAY: *candraḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ākāśaḥ*, then *candraḥ*]
-- [YOU RECALL: read **क्षम्यताम्**, then say *āsanam*]
+- [YOU READ: **क्षम्यताम्**]
+- [YOU RECALL: say *āsanam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C30-WELCOME-05, SA-LEX-C31-SKY-01, SA-LEX-C31-SKY-02] -->

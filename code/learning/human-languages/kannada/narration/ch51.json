@@ -4,7 +4,7 @@
   "chapter": 51,
   "title": "Courtesy Words",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d15b79830f148f0f",
+  "sourceHash": "fnv1a64:9a250ad341d027f2",
   "lessons": [
     {
       "id": "KA-C51-gratitude",
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a46b5014ffd120b",
+      "sourceHash": "fnv1a64:d4f2e315cb7c788b",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +240,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಸಾಕು",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಸಾಕು",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಸಾಕು**]"
+              "source": "[YOU READ: **ಸಾಕು**]"
             }
           ]
         },
@@ -412,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dfcbfac35539cde4",
+      "sourceHash": "fnv1a64:84dff7fbff0abdec",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +502,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಬಹುಶಃ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಬಹುಶಃ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಬಹುಶಃ**]"
+              "source": "[YOU READ: **ಬಹುಶಃ**]"
             }
           ]
         },

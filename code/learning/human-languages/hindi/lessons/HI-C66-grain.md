@@ -59,7 +59,8 @@ Three.
 - [YOU SAY: *anāj*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *anāj*, then *chāval*, and say which one is the sack]
-- [YOU RECALL: say *dhīre*, then read **अनुमति**]
+- [YOU RECALL: say *dhīre*]
+- [YOU READ: **अनुमति**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C66-FIELD-01, HI-LEX-C66-FIELD-02, HI-LEX-C66-FIELD-03] -->

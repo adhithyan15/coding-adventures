@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "Why, and Because",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a1a689599d0c0f14",
+  "sourceHash": "fnv1a64:516a405470650ee8",
   "lessons": [
     {
       "id": "TA-C78-why",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b59d23ab29edcdb",
+      "sourceHash": "fnv1a64:bb2b7befff63ff9b",
       "notice": null,
       "blocks": [
         {
@@ -129,21 +129,48 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "சொல்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சொல்**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read சொல், then say idu nalla vīḍu eṉṟu niṉaikkiṟēṉ, then ask ēṉ?",
+              "instruction": "say idu nalla vīḍu eṉṟu niṉaikkiṟēṉ, then ask ēṉ?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **சொல்**, then say *idu nalla vīḍu eṉṟu niṉaikkiṟēṉ*, then ask *ēṉ?*]"
+              "source": "[YOU RECALL: say *idu nalla vīḍu eṉṟu niṉaikkiṟēṉ*, then ask *ēṉ?*]"
             },
             {
               "kind": "prompt",
               "action": "RETURN TO",
-              "instruction": "say pāl vēṇḍumā, alladu tēnīr vēṇḍumā?, say nambikkai and read இன்று — three distances back — then ask ஏன் (ēṉ) about one of them",
+              "instruction": "say pāl vēṇḍumā, alladu tēnīr vēṇḍumā? and say nambikkai — three distances back",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETURN TO: say *pāl vēṇḍumā, alladu tēnīr vēṇḍumā?*, say *nambikkai* and read **இன்று** — three distances back — then ask ஏன் about one of them]"
+              "source": "[YOU RETURN TO: say *pāl vēṇḍumā, alladu tēnīr vēṇḍumā?* and say *nambikkai* — three distances back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "இன்று",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **இன்று**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RETURN TO",
+              "instruction": "ask ஏன் (ēṉ) about one of them",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RETURN TO: ask ஏன் about one of them]"
             },
             {
               "kind": "prompt",
@@ -188,7 +215,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb9227e738bd07d9",
+      "sourceHash": "fnv1a64:d0476cf1223155e1",
       "notice": null,
       "blocks": [
         {
@@ -334,12 +361,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "அல்லது",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **அல்லது**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read அல்லது, then say sol",
+              "instruction": "say sol",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **அல்லது**, then say *sol*]"
+              "source": "[YOU RECALL: say *sol*]"
             }
           ]
         },
@@ -542,7 +578,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58a0eb02a6212f8b",
+      "sourceHash": "fnv1a64:a0a14e2339910283",
       "notice": null,
       "blocks": [
         {
@@ -649,20 +685,47 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ēṉeṉṟāl, then read ஏன், then say adaṉāl",
+              "instruction": "say ēṉeṉṟāl",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ēṉeṉṟāl*, then read **ஏன்**, then say *adaṉāl*]"
+              "source": "[YOU RECALL: say *ēṉeṉṟāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஏன் (ēṉ)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஏன்**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say adaṉāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *adaṉāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சொல்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சொல்**]"
             },
             {
               "kind": "prompt",
               "action": "RETURN TO",
-              "instruction": "read சொல், say pul and say āṇḍu — three distances back — then ask ஏன் (ēṉ) about one of them",
+              "instruction": "say pul and say āṇḍu — three distances back — then ask ஏன் (ēṉ) about one of them",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETURN TO: read **சொல்**, say *pul* and say *āṇḍu* — three distances back — then ask ஏன் about one of them]"
+              "source": "[YOU RETURN TO: say *pul* and say *āṇḍu* — three distances back — then ask ஏன் about one of them]"
             }
           ]
         },

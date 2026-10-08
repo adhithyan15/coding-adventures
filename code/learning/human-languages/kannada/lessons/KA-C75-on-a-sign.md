@@ -36,7 +36,7 @@ reviews_of: [KA-C75-short-form, KA-C75-eighth, KA-S150-letter-ja, KA-C60-hen, KA
 [PAUSE 2s]
 - [YOU RECALL: say *modalanē* — **R1**]
 - [YOU RECALL: say *eṇṭaneya* — **R2**]
-- [YOU RECALL: read **ಜ**, and say its sound — **R3**]
+- [YOU READ: **ಜ**, then say its sound — **R3**]
 - [YOU RECALL: say *kōḷi* — **R4**]
 
 ## Grammar Lens: the digit does the counting for you

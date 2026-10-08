@@ -26,8 +26,9 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — recall: say siri, then say aḻu, then say iṉṟu]
 [pause 8 seconds for the answer]
-[your turn — recall: say eḻu, then read கோபம்]
+[your turn — recall: say eḻu]
 [pause 8 seconds for the answer]
+[once you have stopped driving — read: கோபம்]
 
 Wrap-up Recall.
 [pause 3 seconds]
@@ -60,7 +61,8 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — recall: say aḻu, then say iṉṟu, then say nēṟṟu]
 [pause 8 seconds for the answer]
-[your turn — recall: read தூங்கு, then say payam]
+[once you have stopped driving — read: தூங்கு]
+[your turn — recall: say payam]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -123,10 +125,14 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: nēṟṟu, then muṉbu — one is a day, one is any earlier moment]
 [pause 8 seconds for the answer]
-[your turn — recall: say nēṟṟu, then read இன்று (iṉṟu), then say muṉbu]
+[your turn — recall: say nēṟṟu]
 [pause 8 seconds for the answer]
-[your turn — recall: say ōḍu, then read வருத்தம்]
+[once you have stopped driving — read: இன்று (iṉṟu)]
+[your turn — recall: say muṉbu]
 [pause 8 seconds for the answer]
+[your turn — recall: say ōḍu]
+[pause 8 seconds for the answer]
+[once you have stopped driving — read: வருத்தம்]
 
 Wrap-up Recall.
 [pause 3 seconds]
@@ -155,9 +161,11 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: nāḷ, then mādam — smaller, then bigger]
 [pause 8 seconds for the answer]
-[your turn — recall: read இன்று (iṉṟu), then say muṉbu, then say mādam]
+[once you have stopped driving — read: இன்று (iṉṟu)]
+[your turn — recall: say muṉbu, then say mādam]
 [pause 8 seconds for the answer]
-[your turn — recall: read கழுவு, then say siri]
+[once you have stopped driving — read: கழுவு]
+[your turn — recall: say siri]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -192,8 +200,9 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — recall: say muṉbu, then say mādam, then say āṇḍu]
 [pause 8 seconds for the answer]
-[your turn — recall: say viḷaiyāḍu, then read அழு]
+[your turn — recall: say viḷaiyāḍu]
 [pause 8 seconds for the answer]
+[once you have stopped driving — read: அழு]
 
 Wrap-up Recall.
 [pause 3 seconds]

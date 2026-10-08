@@ -71,7 +71,8 @@ Four: a price, and a judgement to pass on it.
 - [YOU SAY: *mahãgā*, with the nose in the middle]
 - [YOU SAY: *bahut mahãgā*]
 - [YOU WRITE: महँगा, putting the ँ above the ह]
-- [YOU RECALL: read **गाना**, then say *bhī*]
+- [YOU READ: **गाना**]
+- [YOU RECALL: say *bhī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-03, HI-LEX-C72-COST-04] -->

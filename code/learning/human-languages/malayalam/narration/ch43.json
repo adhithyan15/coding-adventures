@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "More Everyday Verbs",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:9f44b5e192847622",
+  "sourceHash": "fnv1a64:39013d4fc3aeb3f5",
   "lessons": [
     {
       "id": "ML-C43-run",
@@ -137,7 +137,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b5030aca8500580",
+      "sourceHash": "fnv1a64:b4275c77beefa9ee",
       "notice": null,
       "blocks": [
         {
@@ -223,12 +223,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ആര്",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ആര്",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ആര്**]"
+              "source": "[YOU READ: **ആര്**]"
             }
           ]
         },

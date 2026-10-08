@@ -67,12 +67,14 @@ The first of five words for saying where you are from.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C68-ORIGIN-01, HI-JOIN-TAG-NA-01, HI-LEX-C66-FIELD-04, HI-LEX-C66-FIELD-05, HI-JOIN-KYON-01, HI-JOIN-KAB-01] -->
 
 [PAUSE 1s]
-- [YOU RECALL: say *ghās*, then read **कुआँ** and say what it means]
+- [YOU RECALL: say *ghās*]
+- [YOU READ: **कुआँ**, then say what it means]
 - [YOU HEAR: *desh*, said once slowly and once at speed]
 - [YOU SAY: *desh*]
 - [YOU SAY: *yah ek desh hai nā?* — last chapter's tag, on your new word]
 - [YOU READ: देश, then say what it means]
-- [YOU RECALL: say *kyoṁ*, then read **कब**]
+- [YOU RECALL: say *kyoṁ*]
+- [YOU READ: **कब**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C68-ORIGIN-01] -->

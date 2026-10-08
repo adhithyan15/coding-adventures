@@ -56,7 +56,8 @@ Five, and the run is closed: paddy, grass, a standing crop, a threshing floor, a
 - [YOU SAY: *aṟuvaṭai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *nel*, *pul*, *payir*, *kaḷam*, *aṟuvaṭai*]
-- [YOU RECALL: say *mutalil*, then read **பணிவு**]
+- [YOU RECALL: say *mutalil*]
+- [YOU READ: **பணிவு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C64-HARVEST-01, TA-LEX-C64-HARVEST-02, TA-LEX-C64-HARVEST-03, TA-LEX-C64-HARVEST-04, TA-LEX-C64-HARVEST-05] -->

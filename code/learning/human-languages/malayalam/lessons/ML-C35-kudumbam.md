@@ -75,7 +75,9 @@ stayed native; the collective came later, and came borrowed.
   amma, cēṭṭan, aniyan, cēcci, aniyatti … kuṭumbaṁ"]
 - [YOU SAY: bare against dressed — "kuṭumba" (Kannada), "kuṭumbaṁ"
   (Malayalam)]
-- [YOU RECALL: say *uṇṭŭ*, then read **പോകുക**, then say *varuka*]
+- [YOU RECALL: say *uṇṭŭ*]
+- [YOU READ: **പോകുക**]
+- [YOU RECALL: say *varuka*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C35-KUDUMBAM-01, ML-CONCEPT-C35-KUDUMBAM-02, ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02] -->

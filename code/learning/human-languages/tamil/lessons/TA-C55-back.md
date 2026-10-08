@@ -56,7 +56,8 @@ Two: what a garland goes round, and what you turn on somebody.
 - [YOU SAY: *mutuku*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kaḻuttu*, then *mutuku*, the top of you and the length below it]
-- [YOU RECALL: read **மலை**, then say *kūṭai*]
+- [YOU READ: **மலை**]
+- [YOU RECALL: say *kūṭai*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C54-HOUSE-05, TA-LEX-C55-BODY-01, TA-LEX-C55-BODY-02] -->

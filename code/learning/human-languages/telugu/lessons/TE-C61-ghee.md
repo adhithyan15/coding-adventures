@@ -58,7 +58,8 @@ Two, and the second is made out of the first.
 - [YOU SAY: *neyyi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *neyyi*, then *perugu*, and say which one is poured]
-- [YOU RECALL: read **మంచు**, then say *mēka*]
+- [YOU READ: **మంచు**]
+- [YOU RECALL: say *mēka*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C60-ANIMAL-05, TE-LEX-C61-KITCHEN-01, TE-LEX-C61-KITCHEN-02] -->

@@ -59,7 +59,8 @@ Two: gratitude, and the thing it is owed for.
 - [YOU SAY: *ehsān*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ehsān*, then *ābhār*, the favour and the thanks for it]
-- [YOU RECALL: read **बस**, then say *parsoṁ*]
+- [YOU READ: **बस**]
+- [YOU RECALL: say *parsoṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C49-LEAVE-05, HI-LEX-C50-COURTESY-01, HI-LEX-C50-COURTESY-02] -->

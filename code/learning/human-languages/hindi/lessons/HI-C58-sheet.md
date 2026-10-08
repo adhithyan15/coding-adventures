@@ -59,7 +59,8 @@ The fifth of five. That is the house, wall to roof.
 - [YOU SAY: *chādar*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *chādar*, *sīṛhī*, *khiṛkī*, *chat*, *dīvār* — name the house]
-- [YOU RECALL: say *khet*, then read **मिठास**]
+- [YOU RECALL: say *khet*]
+- [YOU READ: **मिठास**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C58-HOUSE-01, HI-LEX-C58-HOUSE-02, HI-LEX-C58-HOUSE-03, HI-LEX-C58-HOUSE-04, HI-LEX-C58-HOUSE-05] -->

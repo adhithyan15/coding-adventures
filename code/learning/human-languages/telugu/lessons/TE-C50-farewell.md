@@ -56,7 +56,8 @@ Five: ఇప్పుడు, ఎల్లుండి, ప్రయాణం, �
 - [YOU SAY: *veḷḷostānu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *veḷḷostānu*, then the reply *veḷḷi raṇḍi*, and say why neither half stands alone]
-- [YOU RECALL: say *atithi*, then read **అలాగే** and say what it means]
+- [YOU RECALL: say *atithi*]
+- [YOU READ: **అలాగే**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C50-LEAVE-01, TE-LEX-C50-LEAVE-02, TE-LEX-C50-LEAVE-03, TE-LEX-C50-LEAVE-04, TE-LEX-C50-LEAVE-05] -->

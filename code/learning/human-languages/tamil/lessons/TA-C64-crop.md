@@ -56,7 +56,8 @@ Three, and the three are carefully apart.
 - [YOU SAY: *payir*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vayal*, then *payir*, then *nel*, in that order]
-- [YOU RECALL: say *sīkkiram*, then read **தயக்கம்**]
+- [YOU RECALL: say *sīkkiram*]
+- [YOU READ: **தயக்கம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C64-HARVEST-01, TA-LEX-C64-HARVEST-02, TA-LEX-C64-HARVEST-03] -->

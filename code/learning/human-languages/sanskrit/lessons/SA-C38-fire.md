@@ -60,7 +60,8 @@ Fire, named as a thing rather than as an action.
 - [YOU SAY: *agniḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *āśīrvādaḥ*, then *agniḥ*]
-- [YOU RECALL: say *api*, then read **शान्तिः**]
+- [YOU RECALL: say *api*]
+- [YOU READ: **शान्तिः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C37-COURTESY-04, SA-LEX-C37-COURTESY-05, SA-LEX-C38-EARTH-01] -->

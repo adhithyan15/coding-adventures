@@ -58,7 +58,8 @@ Two: శబ్దం and గొంతు. Sound in general, and the sound a pers
 - [YOU SAY: *gontu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gontu*, then *śabdaṁ*, and say which one is the wider word]
-- [YOU RECALL: read **వరి**, then say *kappu*]
+- [YOU READ: **వరి**]
+- [YOU RECALL: say *kappu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C67-WALL-05, TE-LEX-C68-SOUND-01, TE-LEX-C68-SOUND-02] -->

@@ -60,7 +60,8 @@ A reply that is honest about not being certain.
 - [YOU SAY: *prāyaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sahasā*, then *prāyaḥ*]
-- [YOU RECALL: say *navanītam*, then read **प्लवः**]
+- [YOU RECALL: say *navanītam*]
+- [YOU READ: **प्लवः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C42-REPLY-01, SA-LEX-C42-REPLY-02, SA-LEX-C42-REPLY-03] -->

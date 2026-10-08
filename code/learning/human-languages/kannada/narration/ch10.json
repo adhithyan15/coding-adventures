@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Days of the Week",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ad2c1f1eadc83831",
+  "sourceHash": "fnv1a64:5860b3d3018857bb",
   "lessons": [
     {
       "id": "KA-C10-vaara",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06231d7d789dffdf",
+      "sourceHash": "fnv1a64:2cd135eac8d4ccdf",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ēḷu, then read ಎಂಟು",
+              "instruction": "say ēḷu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ēḷu*, then read **ಎಂಟು**]"
+              "source": "[YOU RECALL: say *ēḷu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಎಂಟು",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಎಂಟು**]"
             }
           ]
         },

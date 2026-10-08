@@ -68,7 +68,7 @@ inherited word traces back to a tidy Indo-European root.
 - [YOU NAME: two other inherited dead ends already met — **کان** and
   *roṭī*]
 - [YOU SAY: *āj bārish hai yā dhūp?* — "Is it rain today, or sunshine?"]
-- [YOU RECALL: read **منہ**]
+- [YOU READ: **منہ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-DHOOP, UR-ETYMON-DHOOP-PRAKRIT, UR-SCRIPT-KHUDA-HAFIZ-SPACED, UR-LEX-AANKH] -->

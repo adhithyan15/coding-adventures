@@ -58,7 +58,8 @@ Two: గోడ and కప్పు. Sides, and a lid.
 - [YOU SAY: *kappu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gōḍa*, then *kappu*, and say which one holds up the other]
-- [YOU RECALL: read **మర్యాద**, then say *vari*]
+- [YOU READ: **మర్యాద**]
+- [YOU RECALL: say *vari*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C66-FIELD-05, TE-LEX-C67-WALL-01, TE-LEX-C67-WALL-02] -->

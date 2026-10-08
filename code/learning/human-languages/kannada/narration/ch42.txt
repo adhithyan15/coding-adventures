@@ -47,8 +47,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: it once with a word you already know after it]
 [pause 8 seconds for the answer]
-[your turn — recall: read ಹಾಲು]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: ಹಾಲು]
 
 Wrap-up Recall.
 [pause 3 seconds]
@@ -101,8 +100,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: it once with a word you already know after it]
 [pause 8 seconds for the answer]
-[your turn — recall: read ಇದು]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: ಇದು]
 
 Wrap-up Recall.
 [pause 3 seconds]
@@ -128,8 +126,9 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: it once with a word you already know after it]
 [pause 8 seconds for the answer]
-[your turn — recall: say adu, then read ಇಲ್ಲಿ]
+[your turn — recall: say adu]
 [pause 8 seconds for the answer]
+[once you have stopped driving — read: ಇಲ್ಲಿ]
 
 Wrap-up Recall.
 [pause 3 seconds]

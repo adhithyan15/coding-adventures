@@ -58,7 +58,7 @@ Two.
 - [YOU SAY: *uṭane*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pinne*, then *uṭane*, and say which of the two leaves a gap]
-- [YOU RECALL: read **നൂല്**]
+- [YOU READ: **നൂല്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C63-FEEL-05, ML-LEX-C64-SMALL-01, ML-LEX-C64-SMALL-02] -->

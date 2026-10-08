@@ -4,7 +4,7 @@
   "chapter": 71,
   "title": "Through the Day",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c86ff787e964f73c",
+  "sourceHash": "fnv1a64:50a267046056e9b2",
   "lessons": [
     {
       "id": "TA-C71-rise",
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dda318a2af0e758a",
+      "sourceHash": "fnv1a64:c89c764d6d513c96",
       "notice": null,
       "blocks": [
         {
@@ -260,12 +260,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "பேருந்து",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பேருந்து**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read பேருந்து, then say kaṭṭil",
+              "instruction": "say kaṭṭil",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **பேருந்து**, then say *kaṭṭil*]"
+              "source": "[YOU RECALL: say *kaṭṭil*]"
             }
           ]
         },
@@ -441,7 +450,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1634452aee6317f",
+      "sourceHash": "fnv1a64:d67f826a0915cddd",
       "notice": null,
       "blocks": [
         {
@@ -545,11 +554,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say rayil, then read சுவர்",
+              "instruction": "say rayil",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *rayil*, then read **சுவர்**]"
+              "source": "[YOU RECALL: say *rayil*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சுவர்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சுவர்**]"
             }
           ]
         },
@@ -585,7 +603,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2fc0f0f2da4c52ac",
+      "sourceHash": "fnv1a64:df63ae9899e29864",
       "notice": null,
       "blocks": [
         {
@@ -684,12 +702,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "சாலை",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சாலை**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read சாலை, then say tarai",
+              "instruction": "say tarai",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **சாலை**, then say *tarai*]"
+              "source": "[YOU RECALL: say *tarai*]"
             }
           ]
         },
@@ -725,7 +752,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e542d43b804d028f",
+      "sourceHash": "fnv1a64:17aaab0701fa95f7",
       "notice": null,
       "blocks": [
         {
@@ -829,11 +856,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say nilaiyam, then read கூரை",
+              "instruction": "say nilaiyam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *nilaiyam*, then read **கூரை**]"
+              "source": "[YOU RECALL: say *nilaiyam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "கூரை",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **கூரை**]"
             }
           ]
         },

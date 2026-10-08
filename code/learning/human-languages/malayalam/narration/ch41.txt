@@ -20,8 +20,9 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: it once with a word you already know after it]
 [pause 8 seconds for the answer]
-[your turn — recall: say cevi, then read മൂക്ക്]
+[your turn — recall: say cevi]
 [pause 8 seconds for the answer]
+[once you have stopped driving — read: മൂക്ക്]
 
 Wrap-up Recall.
 [pause 3 seconds]
@@ -46,8 +47,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: it once with a word you already know after it]
 [pause 8 seconds for the answer]
-[your turn — recall: read വായ്]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: വായ്]
 
 Wrap-up Recall.
 [pause 3 seconds]
@@ -96,8 +96,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: it once with a word you already know after it]
 [pause 8 seconds for the answer]
-[your turn — recall: read ഹൃദയം]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: ഹൃദയം]
 
 Wrap-up Recall.
 [pause 3 seconds]
@@ -148,7 +147,8 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: it once with a word you already know after it]
 [pause 8 seconds for the answer]
-[your turn — recall: read ചായ, then say kāppi]
+[once you have stopped driving — read: ചായ]
+[your turn — recall: say kāppi]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.

@@ -4,7 +4,7 @@
   "chapter": 53,
   "title": "Which One, That One",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d277c9d8cec2e922",
+  "sourceHash": "fnv1a64:b5259b3dd7ef9916",
   "lessons": [
     {
       "id": "SA-C53-yah",
@@ -434,7 +434,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:229bab646a37dedf",
+      "sourceHash": "fnv1a64:89851b08422cfa27",
       "notice": null,
       "blocks": [
         {
@@ -529,11 +529,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say तत्र, then read यत्र and say what the swap did",
+              "instruction": "say तत्र",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say **तत्र**, then read **यत्र** and say what the swap did]"
+              "source": "[YOU RECALL: say **तत्र**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "यत्र, then say what the swap did",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **यत्र**, then say what the swap did]"
             },
             {
               "kind": "prompt",

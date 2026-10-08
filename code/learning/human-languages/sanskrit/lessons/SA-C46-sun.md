@@ -60,7 +60,8 @@ The third thing overhead, beside the sky and the moon.
 - [YOU SAY: *raviḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *saṁvatsaraḥ*, then *raviḥ*]
-- [YOU RECALL: say *śvetaḥ*, then read **प्रातः**]
+- [YOU RECALL: say *śvetaḥ*]
+- [YOU READ: **प्रातः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C45-DAYTIME-04, SA-LEX-C45-DAYTIME-05, SA-LEX-C46-LIGHT-01] -->

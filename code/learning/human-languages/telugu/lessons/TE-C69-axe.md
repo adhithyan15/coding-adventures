@@ -58,7 +58,8 @@ One. Heavy, and handed over rather than thrown.
 - [YOU SAY: *goḍḍali*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dayacēsi*, then *goḍḍali*, in that order]
-- [YOU RECALL: say *gōḍa*, then read **శబ్దం** and say what it means]
+- [YOU RECALL: say *gōḍa*]
+- [YOU READ: **శబ్దం**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C68-SOUND-04, TE-LEX-C68-SOUND-05, TE-LEX-C69-TOOL-01] -->

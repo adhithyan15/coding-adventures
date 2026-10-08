@@ -25,7 +25,10 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — recall: say seruppu, then say toppi, then say kaḍai]
 [pause 8 seconds for the answer]
-[your turn — recall: say mēlē, then read கீழே, then say saṭṭai]
+[your turn — recall: say mēlē]
+[pause 8 seconds for the answer]
+[once you have stopped driving — read: கீழே]
+[your turn — recall: say saṭṭai]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -59,7 +62,8 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — recall: say toppi, then say kaḍai, then say vilai]
 [pause 8 seconds for the answer]
-[your turn — recall: read உள்ளே, then say vēṭṭi]
+[once you have stopped driving — read: உள்ளே]
+[your turn — recall: say vēṭṭi]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -119,10 +123,14 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: vaṇakkam, then paṇam — and say what the two have in common]
 [pause 8 seconds for the answer]
-[your turn — recall: say vilai, then read கடை (kaḍai), then say paṇam]
+[your turn — recall: say vilai]
 [pause 8 seconds for the answer]
-[your turn — recall: say veḷiyē, then read புடவை]
+[once you have stopped driving — read: கடை (kaḍai)]
+[your turn — recall: say paṇam]
 [pause 8 seconds for the answer]
+[your turn — recall: say veḷiyē]
+[pause 8 seconds for the answer]
+[once you have stopped driving — read: புடவை]
 
 Wrap-up Recall.
 [pause 3 seconds]
@@ -151,9 +159,11 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: koṭu, then vāṅgu — and say which way each hand is moving]
 [pause 8 seconds for the answer]
-[your turn — recall: read கடை (kaḍai), then say paṇam, then say vāṅgu]
+[once you have stopped driving — read: கடை (kaḍai)]
+[your turn — recall: say paṇam, then say vāṅgu]
 [pause 8 seconds for the answer]
-[your turn — recall: read வலது, then say seruppu]
+[once you have stopped driving — read: வலது]
+[your turn — recall: say seruppu]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -185,8 +195,9 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — recall: say paṇam, then say vāṅgu, then say pai]
 [pause 8 seconds for the answer]
-[your turn — recall: say iḍadu, then read தொப்பி]
+[your turn — recall: say iḍadu]
 [pause 8 seconds for the answer]
+[once you have stopped driving — read: தொப்பி]
 
 Wrap-up Recall.
 [pause 3 seconds]

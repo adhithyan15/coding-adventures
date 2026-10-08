@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "The Sky and Its Lights",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:246722aa4f221dee",
+  "sourceHash": "fnv1a64:0ab407183a9920ca",
   "lessons": [
     {
       "id": "SA-C31-sky",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:faa2e54a725e87a3",
+      "sourceHash": "fnv1a64:fd91240e569bea05",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say kṛpayā, then read द्वारम्",
+              "instruction": "say kṛpayā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *kṛpayā*, then read **द्वारम्**]"
+              "source": "[YOU RECALL: say *kṛpayā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "द्वारम्",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **द्वारम्**]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21a4d8020f0f2d22",
+      "sourceHash": "fnv1a64:a0b6ca18dbcc16f2",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +249,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "क्षम्यताम्",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **क्षम्यताम्**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read क्षम्यताम्, then say āsanam",
+              "instruction": "say āsanam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **क्षम्यताम्**, then say *āsanam*]"
+              "source": "[YOU RECALL: say *āsanam*]"
             }
           ]
         },
@@ -281,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec32c3e471730ed7",
+      "sourceHash": "fnv1a64:0d966db021e7f4b5",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +390,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say praṇāmaḥ, then read पुष्पम्",
+              "instruction": "say praṇāmaḥ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *praṇāmaḥ*, then read **पुष्पम्**]"
+              "source": "[YOU RECALL: say *praṇāmaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "पुष्पम्",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **पुष्पम्**]"
             }
           ]
         },
@@ -412,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2166f025924d3278",
+      "sourceHash": "fnv1a64:431f1526608cb150",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +529,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "उपकारः",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **उपकारः**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read उपकारः, then say mālā",
+              "instruction": "say mālā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **उपकारः**, then say *mālā*]"
+              "source": "[YOU RECALL: say *mālā*]"
             }
           ]
         },
@@ -543,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23449c0224d461aa",
+      "sourceHash": "fnv1a64:6dfb61e018dc7cc0",
       "notice": null,
       "blocks": [
         {
@@ -634,11 +670,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say dhanyaḥ, then read अञ्जलिः",
+              "instruction": "say dhanyaḥ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *dhanyaḥ*, then read **अञ्जलिः**]"
+              "source": "[YOU RECALL: say *dhanyaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "अञ्जलिः",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **अञ्जलिः**]"
             }
           ]
         },

@@ -58,7 +58,8 @@ Three. And a పాత పాట is an old song, which is a phrase you have now 
 - [YOU SAY: *pāṭa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pāta*, then *pāṭa*, and hear the one letter between them]
-- [YOU RECALL: say *gaḍḍi*, then read **గడప** and say what it means]
+- [YOU RECALL: say *gaḍḍi*]
+- [YOU READ: **గడప**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C68-SOUND-01, TE-LEX-C68-SOUND-02, TE-LEX-C68-SOUND-03] -->

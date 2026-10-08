@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "More Everyday Verbs",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:c55a478f80705041",
+  "sourceHash": "fnv1a64:ffd74f70165afc51",
   "lessons": [
     {
       "id": "KA-C43-come",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0cd1227752a22651",
+      "sourceHash": "fnv1a64:472449d4f6d7dc15",
       "notice": null,
       "blocks": [
         {
@@ -97,11 +97,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say alli, then read ಯಾರು",
+              "instruction": "say alli",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *alli*, then read **ಯಾರು**]"
+              "source": "[YOU RECALL: say *alli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಯಾರು",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಯಾರು**]"
             }
           ]
         },
@@ -137,7 +146,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fcb15e9056078195",
+      "sourceHash": "fnv1a64:e08a4a1ead2db509",
       "notice": null,
       "blocks": [
         {
@@ -223,12 +232,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಎಲ್ಲಿ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಎಲ್ಲಿ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಎಲ್ಲಿ**]"
+              "source": "[YOU READ: **ಎಲ್ಲಿ**]"
             }
           ]
         },
@@ -382,7 +391,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:729f11dfc98ad964",
+      "sourceHash": "fnv1a64:f1b58ec3e37ae3a4",
       "notice": null,
       "blocks": [
         {
@@ -468,12 +477,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ದೊಡ್ಡ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ದೊಡ್ಡ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ದೊಡ್ಡ**]"
+              "source": "[YOU READ: **ದೊಡ್ಡ**]"
             }
           ]
         },

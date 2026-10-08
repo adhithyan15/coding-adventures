@@ -60,7 +60,8 @@ Trust, described as the moment you stop holding your breath.
 - [YOU SAY: *viśvāsaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *namratā*, then *viśvāsaḥ*]
-- [YOU RECALL: read **दर्पणः**, then say *kiñcit*]
+- [YOU READ: **दर्पणः**]
+- [YOU RECALL: say *kiñcit*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C43-COURTESY-02, SA-LEX-C43-COURTESY-03, SA-LEX-C43-COURTESY-04] -->

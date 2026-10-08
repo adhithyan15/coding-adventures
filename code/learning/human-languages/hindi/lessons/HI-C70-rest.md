@@ -68,7 +68,8 @@ lets go of you.
 - [YOU SAY: *ārām karnā*]
 - [YOU WRITE: गाना and then आराम, both from memory]
 - [YOU SAY: all five in order]
-- [YOU RECALL: say *angrezī*, then read **जाना**]
+- [YOU RECALL: say *angrezī*]
+- [YOU READ: **जाना**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-04, HI-LEX-C70-LEISURE-05] -->

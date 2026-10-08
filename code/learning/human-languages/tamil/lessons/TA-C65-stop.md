@@ -68,7 +68,8 @@ Three doings, and the first pair that undoes itself: *naḍa* against *niṟuttu
 - [YOU SAY: *naḍa*, then *niṟuttu* — moving, then halted]
 - [YOU SAY: *niṟuttu* the way you would call it across a street]
 - [YOU SAY: *vāṉilai*, and name the piece of it this verb is related to]
-- [YOU RECALL: say *tayakkam*, then read **பயிர்**]
+- [YOU RECALL: say *tayakkam*]
+- [YOU READ: **பயிர்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C65-DOING-02, TA-LEX-C65-DOING-03] -->

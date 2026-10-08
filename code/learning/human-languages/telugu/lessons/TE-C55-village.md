@@ -58,7 +58,8 @@ Four.
 - [YOU SAY: *grāmaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *grāmaṁ*, then *ceruvu*, and say which one a village is built around]
-- [YOU RECALL: read **చుక్క**, then say *vittanaṁ*]
+- [YOU READ: **చుక్క**]
+- [YOU RECALL: say *vittanaṁ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C55-ROAD-01, TE-LEX-C55-ROAD-02, TE-LEX-C55-ROAD-03, TE-LEX-C55-ROAD-04] -->

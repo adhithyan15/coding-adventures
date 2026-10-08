@@ -53,7 +53,8 @@ coincidence. It is the whole system, and the last lesson of this chapter says so
 [PAUSE 1s]
 - [YOU SAY: "யார்" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
-- [YOU RECALL: say *viḍai*, then read **ஒரு**]
+- [YOU RECALL: say *viḍai*]
+- [YOU READ: **ஒரு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-05] -->

@@ -57,7 +57,7 @@ That closes the run: look, listen, speak, write.
 - [YOU SAY: *likhnā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it after *bolnā*, so the two sit together]
-- [YOU RECALL: read **पुराना**]
+- [YOU READ: **पुराना**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-SPEAK, HI-LEX-WRITE] -->

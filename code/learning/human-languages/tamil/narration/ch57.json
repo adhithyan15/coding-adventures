@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "Wind and Fire",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cdc3a54456aa11c5",
+  "sourceHash": "fnv1a64:98765b29b616dd8f",
   "lessons": [
     {
       "id": "TA-C57-wind",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08ce68ecafe119a4",
+      "sourceHash": "fnv1a64:40e077743067a430",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say kaḻuttu, then read சிறிது",
+              "instruction": "say kaḻuttu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *kaḻuttu*, then read **சிறிது**]"
+              "source": "[YOU RECALL: say *kaḻuttu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சிறிது",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சிறிது**]"
             }
           ]
         },
@@ -150,7 +159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c46d8d8e8a23ad9",
+      "sourceHash": "fnv1a64:472f26740e3c5d39",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +249,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "முதுகு",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **முதுகு**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read முதுகு, then say niṟaiya",
+              "instruction": "say niṟaiya",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **முதுகு**, then say *niṟaiya*]"
+              "source": "[YOU RECALL: say *niṟaiya*]"
             }
           ]
         },
@@ -281,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a02cf7ad35ff9d3d",
+      "sourceHash": "fnv1a64:8e21ecd3d87ec579",
       "notice": null,
       "blocks": [
         {
@@ -372,11 +390,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say utaṭu, then read குறைவு",
+              "instruction": "say utaṭu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *utaṭu*, then read **குறைவு**]"
+              "source": "[YOU RECALL: say *utaṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "குறைவு",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **குறைவு**]"
             }
           ]
         },
@@ -412,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df554266221ac623",
+      "sourceHash": "fnv1a64:5bacbd44a1ac0be9",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +529,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "நகம்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **நகம்**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read நகம், then say tēvaiyillai",
+              "instruction": "say tēvaiyillai",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **நகம்**, then say *tēvaiyillai*]"
+              "source": "[YOU RECALL: say *tēvaiyillai*]"
             }
           ]
         },
@@ -543,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:760e9724712d5acb",
+      "sourceHash": "fnv1a64:8150b56daf915f47",
       "notice": null,
       "blocks": [
         {
@@ -634,11 +670,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say elumbu, then read ஆகட்டும்",
+              "instruction": "say elumbu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *elumbu*, then read **ஆகட்டும்**]"
+              "source": "[YOU RECALL: say *elumbu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஆகட்டும்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஆகட்டும்**]"
             }
           ]
         },

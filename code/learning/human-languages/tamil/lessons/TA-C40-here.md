@@ -53,7 +53,8 @@ coincidence. It is the whole system, and the last lesson of this chapter says so
 [PAUSE 1s]
 - [YOU SAY: "இங்கே" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
-- [YOU RECALL: say *sugam*, then read **எவ்வளவு**]
+- [YOU RECALL: say *sugam*]
+- [YOU READ: **எவ்வளவு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-03] -->

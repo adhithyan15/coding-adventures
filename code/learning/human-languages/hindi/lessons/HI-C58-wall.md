@@ -59,7 +59,8 @@ The first of five parts of the house.
 - [YOU SAY: *dīvār*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dīvār*, and दरवाज़ा in it]
-- [YOU RECALL: say *saṛak*, then read **तोहफ़ा**]
+- [YOU RECALL: say *saṛak*]
+- [YOU READ: **तोहफ़ा**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C57-GIFT-04, HI-LEX-C57-GIFT-05, HI-LEX-C58-HOUSE-01] -->

@@ -60,7 +60,8 @@ What carries you over when there is no bridge.
 - [YOU SAY: *plavaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kalaśaḥ*, then *plavaḥ*]
-- [YOU RECALL: say *matsyaḥ*, then read **नवनीतम्**]
+- [YOU RECALL: say *matsyaḥ*]
+- [YOU READ: **नवनीतम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C41-CRAFT-01, SA-LEX-C41-CRAFT-02, SA-LEX-C41-CRAFT-03] -->

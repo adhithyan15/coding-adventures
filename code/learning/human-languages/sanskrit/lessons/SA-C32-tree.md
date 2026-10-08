@@ -59,7 +59,8 @@ One tree, picked out of a forest you already know.
 - [YOU SAY: *taruḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *himam*, then *taruḥ*]
-- [YOU RECALL: say *dvāram*, then read **आकाशः**]
+- [YOU RECALL: say *dvāram*]
+- [YOU READ: **आकाशः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C31-SKY-04, SA-LEX-C31-SKY-05, SA-LEX-C32-TREE-01] -->

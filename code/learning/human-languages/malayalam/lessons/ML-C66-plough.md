@@ -58,7 +58,9 @@ Four.
 - [YOU SAY: *kalappa*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *karṣakan*, then *kalappa*, and say which one holds the other]
-- [YOU RECALL: read **മാത്രം**, then say *sammataṁ*, then read **മര്യാദ**]
+- [YOU READ: **മാത്രം**]
+- [YOU RECALL: say *sammataṁ*]
+- [YOU READ: **മര്യാദ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C66-PADDY-01, ML-LEX-C66-PADDY-02, ML-LEX-C66-PADDY-03, ML-LEX-C66-PADDY-04] -->

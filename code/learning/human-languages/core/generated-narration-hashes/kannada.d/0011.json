@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 11,
-  "sourceHash": "fnv1a64:505503b1f71433a8",
+  "sourceHash": "fnv1a64:5a186fd3603a977c",
   "lessonIds": [
     "KA-C11-bannagalu",
     "KA-S120-letter-ha",
@@ -11,7 +11,7 @@
   "drivablePrefix": 1,
   "text": "kannada/narration/ch11.txt",
   "json": "kannada/narration/ch11.json",
-  "textHash": "fnv1a64:7c34a93e35163d47",
-  "jsonHash": "fnv1a64:1929e9cd3c97615d",
+  "textHash": "fnv1a64:ac1b95172de366a2",
+  "jsonHash": "fnv1a64:2452ee7d8fe5054b",
   "findings": []
 }

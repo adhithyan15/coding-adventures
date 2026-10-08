@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "Day",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a36b0db5f09b564f",
+  "sourceHash": "fnv1a64:a67a2dea67b3a67f",
   "lessons": [
     {
       "id": "ML-C23-divasam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a8cce9a782e9c916",
+      "sourceHash": "fnv1a64:2c6467b48bdeb5f8",
       "notice": null,
       "blocks": [
         {
@@ -93,11 +93,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say pātirā, then read മണി",
+              "instruction": "say pātirā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *pātirā*, then read **മണി**]"
+              "source": "[YOU RECALL: say *pātirā*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "മണി",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **മണി**]"
             }
           ]
         },

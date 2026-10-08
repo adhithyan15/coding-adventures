@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Four Core Colours",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:505503b1f71433a8",
+  "sourceHash": "fnv1a64:5a186fd3603a977c",
   "lessons": [
     {
       "id": "KA-C11-bannagalu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be6b26e0c124db4a",
+      "sourceHash": "fnv1a64:7f426dede20e22e6",
       "notice": null,
       "blocks": [
         {
@@ -110,11 +110,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ombattu, then read ಹತ್ತು",
+              "instruction": "say ombattu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ombattu*, then read **ಹತ್ತು**]"
+              "source": "[YOU RECALL: say *ombattu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಹತ್ತು",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಹತ್ತು**]"
             }
           ]
         },

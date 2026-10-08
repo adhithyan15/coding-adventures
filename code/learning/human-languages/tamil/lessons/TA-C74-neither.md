@@ -68,7 +68,9 @@ the lot.
 - [YOU SAY: *pālum tēnīrum illai*]
 - [YOU SAY: *mēsaiyum kaṭṭilum illai*]
 - [YOU TURN: say the list, then say it again with இல்லை on the end]
-- [YOU RECALL: say *nāṉum*, then read **பாலும்**, then say *pālum tēnīrum illai*]
+- [YOU RECALL: say *nāṉum*]
+- [YOU READ: **பாலும்**]
+- [YOU RECALL: say *pālum tēnīrum illai*]
 - [YOU RETURN TO: say *mādam*, *pasi* and *tūṅgu* — three distances back — then join two of them with -உம்]
 
 ## Wrap-up Recall

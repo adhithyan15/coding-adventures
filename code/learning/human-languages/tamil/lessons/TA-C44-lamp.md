@@ -58,7 +58,8 @@ Three, and the third one shines.
 - [YOU SAY: *viḷakku*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tuṇi*, then *viḷakku*, and hear the doubled letter in the second]
-- [YOU RECALL: say *paṭi*, then read **மகன்**]
+- [YOU RECALL: say *paṭi*]
+- [YOU READ: **மகன்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C44-ASK-01, TA-LEX-C44-ASK-02, TA-LEX-C44-ASK-03] -->

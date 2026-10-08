@@ -59,7 +59,8 @@ Five courtesies, and the first word of this book opened up.
 - [YOU SAY: *dhanyaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then take *dhanyavādaḥ* apart into its two pieces]
-- [YOU RECALL: say *evam*, then read **स्वस्ति**]
+- [YOU RECALL: say *evam*]
+- [YOU READ: **स्वस्ति**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C29-COURTESY-01, SA-LEX-C29-COURTESY-02, SA-LEX-C29-COURTESY-03, SA-LEX-C29-COURTESY-04, SA-LEX-C29-COURTESY-05] -->

@@ -56,7 +56,8 @@ Three: air, dry ground, and wet ground.
 - [YOU SAY: *sēṟu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *maṇal*, then *sēṟu*, dry ground and wet]
-- [YOU RECALL: say *utaṭu*, then read **குறைவு**]
+- [YOU RECALL: say *utaṭu*]
+- [YOU READ: **குறைவு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C57-FIRE-01, TA-LEX-C57-FIRE-02, TA-LEX-C57-FIRE-03] -->

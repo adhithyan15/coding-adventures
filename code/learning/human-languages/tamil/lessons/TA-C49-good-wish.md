@@ -56,7 +56,8 @@ Four, and the fourth one is given rather than felt.
 - [YOU SAY: *vāḻttu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *santōṣam*, then *vāḻttu*, and feel the ழ glide in the second]
-- [YOU RECALL: read **ஒருவேளை**, then say *piṟaku*]
+- [YOU READ: **ஒருவேளை**]
+- [YOU RECALL: say *piṟaku*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C49-COURTESY-01, TA-LEX-C49-COURTESY-02, TA-LEX-C49-COURTESY-03, TA-LEX-C49-COURTESY-04] -->

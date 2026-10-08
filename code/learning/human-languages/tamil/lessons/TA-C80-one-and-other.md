@@ -68,7 +68,9 @@ Both directions now: a way to put two things together, and a way to tell them ap
 - [YOU BUILD: *oṉṟu periya vīḍu, maṟṟadu siṟiya vīḍu*]
 - [YOU CONTRAST: *pālum tēnīrum* against *oṉṟu … maṟṟadu* — held together, then held apart]
 - [YOU RECALL: say *varum pōdu*, then say *maṟṟadu*, then say the whole pair]
-- [YOU RETURN TO: say *niṟuttu*, read **சரியா** and say *eppōdu* — three distances back — then set two of them against each other, one and the other]
+- [YOU RETURN TO: say *niṟuttu*]
+- [YOU READ: **சரியா**]
+- [YOU RETURN TO: say *eppōdu* — three distances back — then set two of them against each other, one and the other]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-C79-WHEN-03, TA-LEX-C80-OTHER-01, TA-GRAMMAR-C80-OTHER-02, TA-LEX-C65-DOING-03, TA-SCRIPT-READ-SARIYAA-01, TA-LEX-C79-WHEN-01] -->

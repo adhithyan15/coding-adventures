@@ -58,7 +58,7 @@ Four.
 - [YOU SAY: *cūlŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sūci*, then *cūlŭ*, and say which of the two you hold in a fist]
-- [YOU RECALL: read **കാക്ക**]
+- [YOU READ: **കാക്ക**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C62-HAND-01, ML-LEX-C62-HAND-02, ML-LEX-C62-HAND-03, ML-LEX-C62-HAND-04] -->

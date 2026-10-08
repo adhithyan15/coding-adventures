@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 65,
-  "sourceHash": "fnv1a64:67b1d3620d7f03eb",
+  "sourceHash": "fnv1a64:cbec2370f8bb8fde",
   "lessonIds": [
     "TA-C65-drink",
     "TA-C65-walk",
@@ -15,7 +15,7 @@
   "drivablePrefix": 2,
   "text": "tamil/narration/ch65.txt",
   "json": "tamil/narration/ch65.json",
-  "textHash": "fnv1a64:26365e12c1cf5d3f",
-  "jsonHash": "fnv1a64:a5d855ce9eb71fde",
+  "textHash": "fnv1a64:7c91dcdb671552be",
+  "jsonHash": "fnv1a64:6ff27949a0649509",
   "findings": []
 }

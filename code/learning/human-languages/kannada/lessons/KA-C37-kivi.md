@@ -64,7 +64,7 @@ something else.
 - [YOU SAY: the shared root's two lives — "cevi, literary … kātu,
   everyday"]
 - [YOU SAY: eye, then ear — "kaṇṇu … kivi"]
-- [YOU RECALL: read **ತೆಗೆದುಕೊ**]
+- [YOU READ: **ತೆಗೆದುಕೊ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C37-KIVI-01, KA-ETYMON-C37-KIVI-02, KA-LEX-C37-KANNU-01, KA-ETYMON-C37-KANNU-02] -->

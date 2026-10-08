@@ -58,7 +58,7 @@ Four.
 - [YOU SAY: *cuma*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kākka*, then *cuma*, and say what the making of the two words has in common]
-- [YOU RECALL: read **ശർക്കര**]
+- [YOU READ: **ശർക്കര**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C63-FEEL-01, ML-LEX-C63-FEEL-02, ML-LEX-C63-FEEL-03, ML-LEX-C63-FEEL-04] -->

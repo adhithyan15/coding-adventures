@@ -58,7 +58,8 @@ Four. The one whose second meaning you are likelier to hear.
 - [YOU SAY: *sutti*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sutti*, then *goḍḍali*, and say which one has a short handle]
-- [YOU RECALL: read **మెట్టు**, then say *arupu*]
+- [YOU READ: **మెట్టు**]
+- [YOU RECALL: say *arupu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C69-TOOL-01, TE-LEX-C69-TOOL-02, TE-LEX-C69-TOOL-03, TE-LEX-C69-TOOL-04] -->

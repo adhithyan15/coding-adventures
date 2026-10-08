@@ -60,7 +60,8 @@ The other half of a pair you already had half of.
 - [YOU SAY: *yathā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *tarhi*, then *yathā*]
-- [YOU RECALL: read **वातायनम्**, then say *vṛkaḥ*]
+- [YOU READ: **वातायनम्**]
+- [YOU RECALL: say *vṛkaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C48-BEAST-05, SA-LEX-C49-REPLY-01, SA-LEX-C49-REPLY-02] -->

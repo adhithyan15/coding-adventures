@@ -62,7 +62,7 @@ words you now hold combine into the third without anything new.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C69-GOING-01, HI-LEX-C69-GOING-02, HI-LEX-C68-ORIGIN-05] -->
 
 [PAUSE 1s]
-- [YOU RECALL: read **अंग्रेज़ी**, then say it without looking]
+- [YOU READ: **अंग्रेज़ी**, then say it without looking]
 - [YOU SAY: *rel*]
 - [YOU SAY: *rel*, then *gāṛī*, then *relgāṛī*]
 - [YOU WRITE: गाड़ी once more, without looking]

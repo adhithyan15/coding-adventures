@@ -67,7 +67,9 @@ sitting right beside *snēhita* the way **ನೆರವು** sits beside *sahāya
 - [YOU SAY: the loan, then the native pair — "snēhita … geḷeya, geḷati"]
 - [YOU SAY: oil, then affection — "snēha: oil … snēha: love"]
 - [YOU SAY: family, then friend — "kuṭumba … snēhita"]
-- [YOU RECALL: read **ತಿನ್ನು**, then say *nōḍu*, then read **ಗೊತ್ತು**]
+- [YOU READ: **ತಿನ್ನು**]
+- [YOU RECALL: say *nōḍu*]
+- [YOU READ: **ಗೊತ್ತು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C35-SNEHITA-01, KA-ETYMON-C35-SNEHITA-02, KA-LEX-C35-KUTUMBA-01, KA-ETYMON-C35-KUTUMBA-02] -->

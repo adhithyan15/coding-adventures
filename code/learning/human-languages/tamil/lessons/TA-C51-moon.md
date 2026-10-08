@@ -56,7 +56,8 @@ Three: the space, the day light, and the night one.
 - [YOU SAY: *nilā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sūriyaṉ*, then *nilā*, and let the second one end long]
-- [YOU RECALL: say *santōṣam*, then read **மலர்**]
+- [YOU RECALL: say *santōṣam*]
+- [YOU READ: **மலர்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C51-SKY-01, TA-LEX-C51-SKY-02, TA-LEX-C51-SKY-03] -->

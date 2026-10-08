@@ -60,7 +60,8 @@ A one-word answer to how things stand.
 - [YOU SAY: *tarhi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *haṁsaḥ*, then *tarhi*]
-- [YOU RECALL: say *bhittiḥ*, then read **सिंहः**]
+- [YOU RECALL: say *bhittiḥ*]
+- [YOU READ: **सिंहः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C48-BEAST-04, SA-LEX-C48-BEAST-05, SA-LEX-C49-REPLY-01] -->

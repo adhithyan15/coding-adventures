@@ -58,7 +58,8 @@ Three.
 - [YOU SAY: *ayitē*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sarē*, then *ayitē*, and put the two together]
-- [YOU RECALL: say *cīpuru*, then read **దగ్గు** and say what it means]
+- [YOU RECALL: say *cīpuru*]
+- [YOU READ: **దగ్గు**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C64-JOIN-01, TE-LEX-C64-JOIN-02, TE-LEX-C64-JOIN-03] -->

@@ -38,7 +38,7 @@ reviews_of: [MW-C37-pandara, MW-C37-chauda, MW-C37-tera, MW-C37-baara, MW-C37-ig
 [PAUSE 22s]
 - [YOU WRITE: **पंदरा** from memory — **R1**]
 - [YOU WRITE: **इ** from memory, the letter five lessons back stood up — **R2**]
-- [YOU RECALL: read a printed ticket and say the figure on it aloud — **R3**]
+- [YOU READ: a printed ticket, then say the figure on it aloud — **R3**]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-IGYAARA-01, MW-LEX-BAARA-01, MW-LEX-TERA-01, MW-LEX-CHAUDA-01, MW-LEX-PANDARA-01, MW-SCRIPT-IGYAARA-01, MW-SCRIPT-BAARA-01, MW-SCRIPT-TERA-01, MW-SCRIPT-CHAUDA-01, MW-SCRIPT-PANDARA-01] -->

@@ -58,7 +58,8 @@ Two: a door and a chair.
 - [YOU SAY: *kurcī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kurcī*, then *kūrcō*, and say why the two are not related]
-- [YOU RECALL: read **ఎల్లుండి**, then say *mēlu*]
+- [YOU READ: **ఎల్లుండి**]
+- [YOU RECALL: say *mēlu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C51-COURTESY-05, TE-LEX-C52-WELCOME-01, TE-LEX-C52-WELCOME-02] -->

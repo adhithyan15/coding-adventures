@@ -63,7 +63,8 @@ Five: today, yesterday, and the three units above the day.
 - [YOU SAY: *vayathu*, then *āṇḍu* — the question, and what the answer counts]
 - [YOU SAY: the three sizes in order — *nāḷ*, *mādam*, *āṇḍu*]
 - [YOU RECALL: say *muṉbu*, then say *mādam*, then say *āṇḍu*]
-- [YOU RECALL: say *viḷaiyāḍu*, then read **அழு**]
+- [YOU RECALL: say *viḷaiyāḍu*]
+- [YOU READ: **அழு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C73-WHEN-03, TA-LEX-C73-WHEN-04, TA-LEX-C73-WHEN-01, TA-LEX-C73-WHEN-02, TA-LEX-C73-WHEN-05] -->

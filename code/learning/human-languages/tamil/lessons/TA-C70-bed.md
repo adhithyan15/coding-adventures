@@ -62,7 +62,8 @@ Two, and you can now name where you sleep.
 - [YOU SAY: *kaṭṭil*]
 - [YOU SAY: *tūkkam*, then *kaṭṭil* — the thing and the place]
 - [YOU RECALL: say *nilaiyam*, then say *mēsai*, then say *kaṭṭil*]
-- [YOU RECALL: read **விலை**, then say *pērundu*]
+- [YOU READ: **விலை**]
+- [YOU RECALL: say *pērundu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C69-GOING-05, TA-LEX-C70-ROOM-01, TA-LEX-C70-ROOM-02] -->

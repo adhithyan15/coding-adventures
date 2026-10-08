@@ -58,7 +58,7 @@ Four.
 - [YOU SAY: *mātraṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kuṟaccŭ*, then *mātraṁ*, and say which one sets a limit]
-- [YOU RECALL: read **ചൂല്**]
+- [YOU READ: **ചൂല്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C64-SMALL-01, ML-LEX-C64-SMALL-02, ML-LEX-C64-SMALL-03, ML-LEX-C64-SMALL-04] -->

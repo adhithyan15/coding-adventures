@@ -36,7 +36,7 @@ reviews_of: [KA-C75-eighth, KA-C74-fourth, KA-S139-letter-va, KA-C59-mud]
 [PAUSE 2s]
 - [YOU RECALL: say *eṇṭaneya* — **R1**]
 - [YOU RECALL: say *nālkaneya* — **R2**]
-- [YOU RECALL: read **ವ**, and say its sound — **R3**]
+- [YOU READ: **ವ**, then say its sound — **R3**]
 - [YOU RECALL: say *kesaru* — **R4**]
 
 ## You'll want to know: ಒಂಬತ್ತನೆಯ

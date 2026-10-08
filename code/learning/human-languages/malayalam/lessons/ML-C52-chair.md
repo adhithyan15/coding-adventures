@@ -58,7 +58,7 @@ Two: a door, and a chair.
 - [YOU SAY: *kasēra*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kasēra*, then *vātil*, the way in and the seat beyond it]
-- [YOU RECALL: read **മറ്റന്നാൾ**]
+- [YOU READ: **മറ്റന്നാൾ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C51-COURTESY-05, ML-LEX-C52-WELCOME-01, ML-LEX-C52-WELCOME-02] -->

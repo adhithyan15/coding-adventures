@@ -58,7 +58,8 @@ The first thing you would ask the way to.
 - [YOU SAY: *nadi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nadi*, then *dayacēsi*, and put the two together as a question]
-- [YOU RECALL: say *ākāśaṁ*, then read **చెట్టు** and say what it means]
+- [YOU RECALL: say *ākāśaṁ*]
+- [YOU READ: **చెట్టు**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C54-TREE-04, TE-LEX-C54-TREE-05, TE-LEX-C55-ROAD-01] -->

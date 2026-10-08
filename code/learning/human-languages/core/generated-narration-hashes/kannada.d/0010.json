@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 10,
-  "sourceHash": "fnv1a64:ad2c1f1eadc83831",
+  "sourceHash": "fnv1a64:5860b3d3018857bb",
   "lessonIds": [
     "KA-C10-vaara",
     "KA-S119-vowel-sign-oo",
@@ -11,7 +11,7 @@
   "drivablePrefix": 1,
   "text": "kannada/narration/ch10.txt",
   "json": "kannada/narration/ch10.json",
-  "textHash": "fnv1a64:09338379933702d4",
-  "jsonHash": "fnv1a64:03ab256fea576f15",
+  "textHash": "fnv1a64:566bb554c845709d",
+  "jsonHash": "fnv1a64:d20c1f121756eed3",
   "findings": []
 }

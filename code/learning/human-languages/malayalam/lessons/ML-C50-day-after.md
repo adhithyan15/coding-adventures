@@ -58,7 +58,7 @@ Two: now, and the day after tomorrow.
 - [YOU SAY: *maṟṟannāḷ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ippōḷ*, then *maṟṟannāḷ*, the nearest time and a far one]
-- [YOU RECALL: read **വിദ്യാർത്ഥി**]
+- [YOU READ: **വിദ്യാർത്ഥി**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C49-REPLY-05, ML-LEX-C50-LEAVE-01, ML-LEX-C50-LEAVE-02] -->

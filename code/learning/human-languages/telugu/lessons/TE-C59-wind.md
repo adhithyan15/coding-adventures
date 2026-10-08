@@ -58,7 +58,8 @@ The first reason to start saying goodbye.
 - [YOU SAY: *gāli*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gāli*, then *veḷḷostānu*, and use the one as a reason for the other]
-- [YOU RECALL: say *meḍa*, then read **కొంచెం** and say what it means]
+- [YOU RECALL: say *meḍa*]
+- [YOU READ: **కొంచెం**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C58-REPLY-04, TE-LEX-C58-REPLY-05, TE-LEX-C59-WEATHER-01] -->

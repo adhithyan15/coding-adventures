@@ -4,7 +4,7 @@
   "chapter": 79,
   "title": "When",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f1612ee6d83e49b3",
+  "sourceHash": "fnv1a64:7d3c3d35f12acf0d",
   "lessons": [
     {
       "id": "TA-C79-when-question",
@@ -190,7 +190,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dde96c55d31a7b80",
+      "sourceHash": "fnv1a64:ba5bc2377fd0b140",
       "notice": null,
       "blocks": [
         {
@@ -313,11 +313,29 @@
             {
               "kind": "prompt",
               "action": "RETURN TO",
-              "instruction": "say aṟuvaṭai, read பாலும் and say ēṉeṉṟāl — three distances back — then say when one of them happens",
+              "instruction": "say aṟuvaṭai",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETURN TO: say *aṟuvaṭai*, read **பாலும்** and say *ēṉeṉṟāl* — three distances back — then say when one of them happens]"
+              "source": "[YOU RETURN TO: say *aṟuvaṭai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "பாலும்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பாலும்**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RETURN TO",
+              "instruction": "say ēṉeṉṟāl — three distances back — then say when one of them happens",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RETURN TO: say *ēṉeṉṟāl* — three distances back — then say when one of them happens]"
             }
           ]
         },
@@ -510,7 +528,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:deef13b055dff3c0",
+      "sourceHash": "fnv1a64:f05241001689f12c",
       "notice": null,
       "blocks": [
         {
@@ -621,11 +639,29 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "answer appōdu, then read எப்போது (eppōdu), then say the whole varum pōdu line",
+              "instruction": "answer appōdu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: answer *appōdu*, then read **எப்போது**, then say the whole *varum pōdu* line]"
+              "source": "[YOU RECALL: answer *appōdu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "எப்போது (eppōdu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **எப்போது**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say the whole varum pōdu line",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say the whole *varum pōdu* line]"
             },
             {
               "kind": "prompt",

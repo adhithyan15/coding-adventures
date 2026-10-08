@@ -60,7 +60,8 @@ The opening in the wall, named for what comes through it.
 - [YOU SAY: *vātāyanam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bhittiḥ*, then *vātāyanam*]
-- [YOU RECALL: read **मध्याह्नः**, then say *raśmiḥ*]
+- [YOU READ: **मध्याह्नः**]
+- [YOU RECALL: say *raśmiḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C46-LIGHT-05, SA-LEX-C47-DWELL-01, SA-LEX-C47-DWELL-02] -->

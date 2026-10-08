@@ -57,7 +57,8 @@ Three of the four, and a root that names a person by what happened to them.
 - [YOU SAY: *sūnuḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: it beside *sunus* and *son*, and hear the one word underneath]
-- [YOU RECALL: say *tiṣṭhati*, then read **क्रीडति**]
+- [YOU RECALL: say *tiṣṭhati*]
+- [YOU READ: **क्रीडति**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-MOTHER, SA-LEX-SON] -->

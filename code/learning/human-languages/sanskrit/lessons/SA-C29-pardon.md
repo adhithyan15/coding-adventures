@@ -59,7 +59,8 @@ An apology that never names who should do the forgiving.
 - [YOU SAY: *kṣamyatām*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *astu*, then *kṣamyatām*, and say what both leave out]
-- [YOU RECALL: read **साधु**, then say *paraśvaḥ*]
+- [YOU READ: **साधु**]
+- [YOU RECALL: say *paraśvaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C28-LEAVE-05, SA-LEX-C29-COURTESY-01, SA-LEX-C29-COURTESY-02] -->

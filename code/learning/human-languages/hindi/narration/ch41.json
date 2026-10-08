@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Describing Things",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:343312c6f7d879a5",
+  "sourceHash": "fnv1a64:480a0d8e368996b1",
   "lessons": [
     {
       "id": "HI-C41-big",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9130763b7014a024",
+      "sourceHash": "fnv1a64:aa332d1158353c10",
       "notice": null,
       "blocks": [
         {
@@ -90,11 +90,29 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say dost, then read यह, then say vah",
+              "instruction": "say dost",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *dost*, then read **यह**, then say *vah*]"
+              "source": "[YOU RECALL: say *dost*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "यह",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **यह**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say vah",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *vah*]"
             }
           ]
         },
@@ -130,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:92995d15052b2feb",
+      "sourceHash": "fnv1a64:a0604ea2dc959e89",
       "notice": null,
       "blocks": [
         {
@@ -204,12 +222,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "बच्चा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **बच्चा**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read बच्चा, then say yahā̃",
+              "instruction": "say yahā̃",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **बच्चा**, then say *yahā̃*]"
+              "source": "[YOU RECALL: say *yahā̃*]"
             }
           ]
         },
@@ -245,7 +272,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63540b06bdb5eeab",
+      "sourceHash": "fnv1a64:d73814866b493529",
       "notice": null,
       "blocks": [
         {
@@ -320,11 +347,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ādmī, then read वहाँ",
+              "instruction": "say ādmī",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ādmī*, then read **वहाँ**]"
+              "source": "[YOU RECALL: say *ādmī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "वहाँ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **वहाँ**]"
             }
           ]
         },

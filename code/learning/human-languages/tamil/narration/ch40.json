@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Pointing, and Asking",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:bf3721296042a041",
+  "sourceHash": "fnv1a64:03961cfba57c9d37",
   "lessons": [
     {
       "id": "TA-C40-this",
@@ -232,7 +232,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a0d07dcd38dd4e7",
+      "sourceHash": "fnv1a64:afb106bdb9a191f9",
       "notice": null,
       "blocks": [
         {
@@ -303,11 +303,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say sugam, then read எவ்வளவு",
+              "instruction": "say sugam",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *sugam*, then read **எவ்வளவு**]"
+              "source": "[YOU RECALL: say *sugam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "எவ்வளவு",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **எவ்வளவு**]"
             }
           ]
         },
@@ -445,7 +454,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe95da429dca311f",
+      "sourceHash": "fnv1a64:b5cb05c0395ea17d",
       "notice": null,
       "blocks": [
         {
@@ -516,11 +525,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say viḍai, then read ஒரு",
+              "instruction": "say viḍai",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *viḍai*, then read **ஒரு**]"
+              "source": "[YOU RECALL: say *viḍai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஒரு",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஒரு**]"
             }
           ]
         },

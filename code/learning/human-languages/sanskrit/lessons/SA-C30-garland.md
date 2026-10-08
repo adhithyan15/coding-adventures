@@ -59,7 +59,8 @@ A third word with no proven travels, and a garland made of the last one.
 - [YOU SAY: *mālā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *puṣpam*, then *mālā*, and name what turns one into the other]
-- [YOU RECALL: read **शुभम्**, then say *upakāraḥ*]
+- [YOU READ: **शुभम्**]
+- [YOU RECALL: say *upakāraḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C30-WELCOME-02, SA-LEX-C30-WELCOME-03, SA-LEX-C30-WELCOME-04] -->

@@ -62,11 +62,12 @@ The pair every shutter in the country is painted with.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-01, HI-LEX-C74-SIGNS-02, HI-LEX-C73-EATING-05, HI-LEX-C72-COST-02, HI-LEX-C73-EATING-02] -->
 
 [PAUSE 1s]
-- [YOU RECALL: read **पीना**, then say it without looking]
+- [YOU READ: **पीना**, then say it without looking]
 - [YOU SAY: *khulā*, then *band*]
 - [YOU READ: बंद, and check that it is not बंदर]
 - [YOU WRITE: **खुला** (*khulā*) once more, then बंद beside it]
-- [YOU RECALL: read **रुपया**, then say *nāshtā*]
+- [YOU READ: **रुपया**]
+- [YOU RECALL: say *nāshtā*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-01, HI-LEX-C74-SIGNS-02] -->

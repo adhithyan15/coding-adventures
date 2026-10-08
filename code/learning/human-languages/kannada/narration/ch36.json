@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "One Root, Three Endings",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:481551ab8293b355",
+  "sourceHash": "fnv1a64:e4d73c7282f8391f",
   "lessons": [
     {
       "id": "KA-C36-magu",
@@ -146,7 +146,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f34a834138ad3d4e",
+      "sourceHash": "fnv1a64:0dec7b609948edb4",
       "notice": null,
       "blocks": [
         {
@@ -236,12 +236,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಅರ್ಥಮಾಡಿಕೊ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಅರ್ಥಮಾಡಿಕೊ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಅರ್ಥಮಾಡಿಕೊ**]"
+              "source": "[YOU READ: **ಅರ್ಥಮಾಡಿಕೊ**]"
             }
           ]
         },

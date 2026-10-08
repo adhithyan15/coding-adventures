@@ -64,7 +64,8 @@ You have met that doubling before without being told it was the same thing:
 - [YOU SAY: *uḷḷē* — hold the doubled ள]
 - [YOU SAY: *uḷḷē vā* — "come in"]
 - [YOU SAY: *mēlē*, *kīḻē*, *uḷḷē* — three place-words, one ending]
-- [YOU RECALL: say *payir*, then read **நிறுத்து**]
+- [YOU RECALL: say *payir*]
+- [YOU READ: **நிறுத்து**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-03] -->

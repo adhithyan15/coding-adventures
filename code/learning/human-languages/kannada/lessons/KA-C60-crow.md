@@ -56,7 +56,7 @@ Four.
 - [YOU SAY: *kāge*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kāge*, then *kōḷi*, and say which one is kept and which one turns up]
-- [YOU RECALL: read **ಬೇಡ**]
+- [YOU READ: **ಬೇಡ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C60-ANIMAL-01, KA-LEX-C60-ANIMAL-02, KA-LEX-C60-ANIMAL-03, KA-LEX-C60-ANIMAL-04] -->

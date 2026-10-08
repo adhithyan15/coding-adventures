@@ -60,7 +60,8 @@ Fire, and what fire leaves.
 - [YOU SAY: *bhasma*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *agniḥ*, then *bhasma*]
-- [YOU RECALL: read **सर्वम्**, then say *sādaram*]
+- [YOU READ: **सर्वम्**]
+- [YOU RECALL: say *sādaram*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C37-COURTESY-05, SA-LEX-C38-EARTH-01, SA-LEX-C38-EARTH-02] -->

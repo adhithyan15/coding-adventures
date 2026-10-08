@@ -56,7 +56,8 @@ Two.
 - [YOU SAY: *mēlu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mēlu*, then *manci*, and say which one is a thing done and which is a quality]
-- [YOU RECALL: read **చాలు**, then say *elluṇḍi*]
+- [YOU READ: **చాలు**]
+- [YOU RECALL: say *elluṇḍi*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C50-LEAVE-05, TE-LEX-C51-COURTESY-01, TE-LEX-C51-COURTESY-02] -->

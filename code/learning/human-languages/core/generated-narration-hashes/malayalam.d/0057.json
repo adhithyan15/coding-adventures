@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 57,
-  "sourceHash": "fnv1a64:6d252340b1e2cb12",
+  "sourceHash": "fnv1a64:5156f9a502933d3e",
   "lessonIds": [
     "ML-C57-neck",
     "ML-C57-back",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "malayalam/narration/ch57.txt",
   "json": "malayalam/narration/ch57.json",
-  "textHash": "fnv1a64:f298faf8f28948de",
-  "jsonHash": "fnv1a64:961fde79a604d2d2",
+  "textHash": "fnv1a64:c71f4bbad3962010",
+  "jsonHash": "fnv1a64:48030e2b5eafacdb",
   "findings": []
 }

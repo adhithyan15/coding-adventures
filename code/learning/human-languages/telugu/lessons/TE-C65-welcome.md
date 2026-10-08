@@ -58,7 +58,8 @@ The first thing said at a door.
 - [YOU SAY: *svāgataṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *svāgataṁ*, then *paravālēdu*, and say which one answers a thank-you]
-- [YOU RECALL: say *ākali*, then read **కూడా** and say what it means]
+- [YOU RECALL: say *ākali*]
+- [YOU READ: **కూడా**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C64-JOIN-04, TE-LEX-C64-JOIN-05, TE-LEX-C65-MANNERS-01] -->

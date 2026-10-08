@@ -56,7 +56,8 @@ Three: the door, the chair, and the mark on the ground in front of both.
 - [YOU SAY: *muggu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *muggu*, then *talupu*, and say which one is outside the other]
-- [YOU RECALL: say *prayāṇaṁ*, then read **గౌరవం** and say what it means]
+- [YOU RECALL: say *prayāṇaṁ*]
+- [YOU READ: **గౌరవం**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C52-WELCOME-01, TE-LEX-C52-WELCOME-02, TE-LEX-C52-WELCOME-03] -->

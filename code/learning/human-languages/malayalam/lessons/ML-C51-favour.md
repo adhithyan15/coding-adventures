@@ -58,7 +58,7 @@ Two: gratitude, and a favour.
 - [YOU SAY: *upakāraṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *upakāraṁ*, then *dayavāyi*, two courtesies made the same way]
-- [YOU RECALL: read **മതി**]
+- [YOU READ: **മതി**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C50-LEAVE-05, ML-LEX-C51-COURTESY-01, ML-LEX-C51-COURTESY-02] -->

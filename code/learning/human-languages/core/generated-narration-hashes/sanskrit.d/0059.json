@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 59,
-  "sourceHash": "fnv1a64:a76f3dd63dd25007",
+  "sourceHash": "fnv1a64:45ba8f3196dd3d91",
   "lessonIds": [
     "SA-C59-desha",
     "SA-C59-bharatam",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "sanskrit/narration/ch59.txt",
   "json": "sanskrit/narration/ch59.json",
-  "textHash": "fnv1a64:bfca065dca4e35ed",
-  "jsonHash": "fnv1a64:5ed166e3eed83981",
+  "textHash": "fnv1a64:e60d4dabd5e70d85",
+  "jsonHash": "fnv1a64:8efc7b196c393f44",
   "findings": []
 }

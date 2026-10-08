@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Sons, Daughters, and Everyone Else",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:9652717dbad8c05a",
+  "sourceHash": "fnv1a64:6547d3556b1ec508",
   "lessons": [
     {
       "id": "HI-C44-son",
@@ -146,7 +146,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce638728a2a6191b",
+      "sourceHash": "fnv1a64:2d905ff288f3ae35",
       "notice": null,
       "blocks": [
         {
@@ -232,12 +232,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read बैठना",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "बैठना",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **बैठना**]"
+              "source": "[YOU READ: **बैठना**]"
             }
           ]
         },
@@ -400,7 +400,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:357ece5545e0251c",
+      "sourceHash": "fnv1a64:8351cb995d456368",
       "notice": null,
       "blocks": [
         {
@@ -486,12 +486,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read देना",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "देना",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **देना**]"
+              "source": "[YOU READ: **देना**]"
             }
           ]
         },

@@ -58,7 +58,7 @@ Four: the tree, the branch, the trunk, and what holds it down.
 - [YOU SAY: *vērŭ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *taṭi*, then *vērŭ*, and say which end of the tree each one names]
-- [YOU RECALL: read **പൂവ്**]
+- [YOU READ: **പൂവ്**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C54-TREE-01, ML-LEX-C54-TREE-02, ML-LEX-C54-TREE-03, ML-LEX-C54-TREE-04] -->

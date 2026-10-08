@@ -4,7 +4,7 @@
   "chapter": 62,
   "title": "Things People Make",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1871023668d029b3",
+  "sourceHash": "fnv1a64:68a2544cae0811ec",
   "lessons": [
     {
       "id": "TE-C62-thread",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23fe1aabfd625d05",
+      "sourceHash": "fnv1a64:1e94c175f737aaef",
       "notice": null,
       "blocks": [
         {
@@ -114,11 +114,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say gēde, then read పెరుగు and say what it means",
+              "instruction": "say gēde",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *gēde*, then read **పెరుగు** and say what it means]"
+              "source": "[YOU RECALL: say *gēde*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "పెరుగు, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **పెరుగు**, then say what it means]"
             }
           ]
         },
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66c3a4a9a87e90be",
+      "sourceHash": "fnv1a64:85f82cdaf06bf6f0",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +257,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "మేక",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **మేక**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read మేక, then say neyyi",
+              "instruction": "say neyyi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **మేక**, then say *neyyi*]"
+              "source": "[YOU RECALL: say *neyyi*]"
             }
           ]
         },
@@ -289,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e2970da2a15b6b6",
+      "sourceHash": "fnv1a64:4645f951a68eabae",
       "notice": null,
       "blocks": [
         {
@@ -384,11 +402,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say kōḍi, then read నూనె and say what it means",
+              "instruction": "say kōḍi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *kōḍi*, then read **నూనె** and say what it means]"
+              "source": "[YOU RECALL: say *kōḍi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "నూనె, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **నూనె**, then say what it means]"
             }
           ]
         },
@@ -424,7 +451,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b05a1af9aa475602",
+      "sourceHash": "fnv1a64:27f9d6c6451d32bc",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +545,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "చీమ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **చీమ**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read చీమ, then say cakkera",
+              "instruction": "say cakkera",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **చీమ**, then say *cakkera*]"
+              "source": "[YOU RECALL: say *cakkera*]"
             }
           ]
         },
@@ -559,7 +595,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:68c89b6331bf2ac6",
+      "sourceHash": "fnv1a64:bc8bb1b2b02cd618",
       "notice": null,
       "blocks": [
         {
@@ -654,11 +690,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say pakṣi, then read మిరప and say what it means",
+              "instruction": "say pakṣi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *pakṣi*, then read **మిరప** and say what it means]"
+              "source": "[YOU RECALL: say *pakṣi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "మిరప, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **మిరప**, then say what it means]"
             }
           ]
         },

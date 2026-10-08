@@ -56,7 +56,7 @@ Four.
 - [YOU SAY: *bēga*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *īga*, then *bēga*, and say which one has not happened yet]
-- [YOU RECALL: read **ಪೊರಕೆ**]
+- [YOU READ: **ಪೊರಕೆ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C64-JOIN-01, KA-LEX-C64-JOIN-02, KA-LEX-C64-JOIN-03, KA-LEX-C64-JOIN-04] -->

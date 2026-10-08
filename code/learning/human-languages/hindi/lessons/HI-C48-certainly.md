@@ -59,7 +59,8 @@ Three: true, enough, certainly.
 - [YOU SAY: *zarūr*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *zarūr*, then *bas*, then *sac*, back down the run]
-- [YOU RECALL: say *kān*, then read **किसान**]
+- [YOU RECALL: say *kān*]
+- [YOU READ: **किसान**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C48-REPLY-01, HI-LEX-C48-REPLY-02, HI-LEX-C48-REPLY-03] -->

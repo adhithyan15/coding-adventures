@@ -69,7 +69,8 @@ Two things in one sentence, for the first time.
 <!-- hl-knowledge: introduces=[]; assesses=[SA-JOIN-CA-01, SA-LEX-ANNAM-FOOD, SA-LEX-PANIYAM-WATER, SA-LEX-C51-KIN-04, SA-LEX-C51-KIN-05] -->
 
 [PAUSE 1s]
-- [YOU RECALL: say *mātulaḥ*, then read **मातामही** and say what it means]
+- [YOU RECALL: say *mātulaḥ*]
+- [YOU READ: **मातामही**, then say what it means]
 - [YOU HEAR: *annaṁ pānīyaṁ ca*, said once slowly and once at speed]
 - [YOU SAY: *annaṁ pānīyaṁ ca*]
 - [YOU READ: **च**, and say where in the phrase it stands]

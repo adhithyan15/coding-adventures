@@ -58,7 +58,8 @@ Two. Both of them cut; only one cuts straight.
 - [YOU SAY: *rampaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *goḍḍali*, then *rampaṁ*, and say which one leaves a straight edge]
-- [YOU RECALL: read **కప్పు**, then say *gontu*]
+- [YOU READ: **కప్పు**]
+- [YOU RECALL: say *gontu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C68-SOUND-05, TE-LEX-C69-TOOL-01, TE-LEX-C69-TOOL-02] -->

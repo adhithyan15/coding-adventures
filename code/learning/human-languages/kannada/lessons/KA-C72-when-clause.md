@@ -77,7 +77,8 @@ Two events in one sentence, and one of them says when.
 - [YOU RECALL: say *ಅ* once more]
 - [YOU RECALL: say *innondu* once more]
 - [YOU RECALL: from much earlier — say *cāpe*, *nōḍu*, *tinnu*, *iru*, and say what each one means]
-- [YOU RECALL: say *hēḷu*, then read **ಅಂತ**]
+- [YOU RECALL: say *hēḷu*]
+- [YOU READ: **ಅಂತ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C04-HOOGI-BARUTTENE-02, KA-GRAMMAR-C32-BAA-02, KA-GRAMMAR-C71-MORE-02, KA-GRAMMAR-C72-WANT-02, KA-LEX-C32-BAA-01, KA-LEX-C32-IRU-01, KA-LEX-C32-NOODU-01, KA-LEX-C32-TINNU-01, KA-LEX-C56-HOUSE-01, KA-LEX-C71-MORE-01, KA-LEX-C71-MORE-04, KA-LEX-C71-MORE-05, KA-LEX-C72-WANT-01, KA-SCRIPT-RECOG-135] -->

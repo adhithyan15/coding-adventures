@@ -59,7 +59,8 @@ A word you could have built yourself out of two you had.
 - [YOU SAY: *paraśvaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śvaḥ*, then *paraśvaḥ*, and say what *para* contributes]
-- [YOU RECALL: read **शिष्यः**, then say *sādhu*]
+- [YOU READ: **शिष्यः**]
+- [YOU RECALL: say *sādhu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C27-REPLY-05, SA-LEX-C28-LEAVE-01, SA-LEX-C28-LEAVE-02] -->

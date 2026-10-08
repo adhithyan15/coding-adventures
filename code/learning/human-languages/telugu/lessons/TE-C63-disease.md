@@ -58,7 +58,8 @@ Four.
 - [YOU SAY: *rōgaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *rōgaṁ*, then *daggu*, and say which one is the smaller trouble]
-- [YOU RECALL: read **చక్కెర**, then say *goḍugu*]
+- [YOU READ: **చక్కెర**]
+- [YOU RECALL: say *goḍugu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C63-HEALTH-01, TE-LEX-C63-HEALTH-02, TE-LEX-C63-HEALTH-03, TE-LEX-C63-HEALTH-04] -->

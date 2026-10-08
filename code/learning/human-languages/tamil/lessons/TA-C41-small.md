@@ -54,7 +54,8 @@ adjective you will ever meet here.
 [PAUSE 1s]
 - [YOU SAY: "சிறிய" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
-- [YOU RECALL: read **எவ்வளவு**, then say *iṅgē*]
+- [YOU READ: **எவ்வளவு**]
+- [YOU RECALL: say *iṅgē*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-02] -->

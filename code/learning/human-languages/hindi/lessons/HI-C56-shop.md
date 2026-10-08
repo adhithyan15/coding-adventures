@@ -59,7 +59,8 @@ The fourth of five, and a well-travelled road you have walked before.
 - [YOU SAY: *dukān*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *dukān*, in the *bāzār*]
-- [YOU RECALL: say *chiṛiyā*, then read **बादल**]
+- [YOU RECALL: say *chiṛiyā*]
+- [YOU READ: **बादल**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C56-ROAD-01, HI-LEX-C56-ROAD-02, HI-LEX-C56-ROAD-03, HI-LEX-C56-ROAD-04] -->

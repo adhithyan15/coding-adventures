@@ -59,8 +59,11 @@ Three, and the room has an edge.
 [PAUSE 1s]
 - [YOU SAY: *suvar*]
 - [YOU SAY: *suvar*, then *uḷḷē* and *veḷiyē* — the wall, and its two sides]
-- [YOU RECALL: say *kaṭṭil*, then read **மேசை**, then say *suvar*]
-- [YOU RECALL: say *paṇam*, then read **ரயில்**]
+- [YOU RECALL: say *kaṭṭil*]
+- [YOU READ: **மேசை**]
+- [YOU RECALL: say *suvar*]
+- [YOU RECALL: say *paṇam*]
+- [YOU READ: **ரயில்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C70-ROOM-02, TA-SCRIPT-READ-MESAI-01, TA-LEX-C70-ROOM-03] -->

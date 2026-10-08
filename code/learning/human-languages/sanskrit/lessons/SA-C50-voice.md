@@ -60,7 +60,8 @@ A sound narrowed down to the human one.
 - [YOU SAY: *vāṇī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *praśnaḥ*, then *vāṇī*]
-- [YOU RECALL: say *chāgaḥ*, then read **केवलम्**]
+- [YOU RECALL: say *chāgaḥ*]
+- [YOU READ: **केवलम्**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C50-SOUND-01, SA-LEX-C50-SOUND-02, SA-LEX-C50-SOUND-03] -->

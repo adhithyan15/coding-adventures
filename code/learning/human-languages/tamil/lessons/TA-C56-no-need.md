@@ -56,7 +56,8 @@ Four, and this one is the polite way out.
 - [YOU SAY: *tēvaiyillai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kuṟaivu*, then *tēvaiyillai*, and let the whole of the second run as one word]
-- [YOU RECALL: read **கிண்ணம்**, then say *nakam*]
+- [YOU READ: **கிண்ணம்**]
+- [YOU RECALL: say *nakam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C56-AMOUNT-01, TA-LEX-C56-AMOUNT-02, TA-LEX-C56-AMOUNT-03, TA-LEX-C56-AMOUNT-04] -->

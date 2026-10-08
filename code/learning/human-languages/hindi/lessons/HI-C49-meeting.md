@@ -59,7 +59,8 @@ Five, and the run is closed: right now, the far day, a journey, setting out, a m
 - [YOU SAY: *mulāqāt*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *abhī*, *parsoṁ*, *safar*, *nikalnā*, *mulāqāt*]
-- [YOU RECALL: say *paṛosī*, then read **बिलकुल**]
+- [YOU RECALL: say *paṛosī*]
+- [YOU READ: **बिलकुल**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C49-LEAVE-01, HI-LEX-C49-LEAVE-02, HI-LEX-C49-LEAVE-03, HI-LEX-C49-LEAVE-04, HI-LEX-C49-LEAVE-05] -->

@@ -65,11 +65,13 @@ The first of five words for the hours after work.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-01, HI-LEX-C69-GOING-04, HI-LEX-C69-GOING-05, HI-LEX-C68-ORIGIN-01, HI-LEX-C69-GOING-01] -->
 
 [PAUSE 1s]
-- [YOU RECALL: say *ṭikaṭ*, then read **जाना** and say what it means]
+- [YOU RECALL: say *ṭikaṭ*]
+- [YOU READ: **जाना**, then say what it means]
 - [YOU HEAR: *khel*, with the breath on the first sound]
 - [YOU SAY: *khel*]
 - [YOU CONTRAST: *khel* said with the puff, and the same shape said without it]
-- [YOU RECALL: say *desh*, then read **गाड़ी**]
+- [YOU RECALL: say *desh*]
+- [YOU READ: **गाड़ी**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C70-LEISURE-01] -->

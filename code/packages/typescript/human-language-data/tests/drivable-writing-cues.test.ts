@@ -64,6 +64,13 @@
 // imperative in prose, and a `[YOU RECALL: …]` cue whose content asks for
 // writing ("[YOU RECALL: write **ば** — **R1**]"). The second is a cue, but
 // RECALL is a spoken action, so the narration reads it out with no deferral.
+//
+// Two more checks at the end of this file read cues for the page rather than
+// the pen: pointing at a sign (inside a recall), and reading printed script
+// (inside any cue the narration speaks unhedged — RECALL, RETURN TO, SAY,
+// RUN, …). Both demand exactly zero in drivable lessons, with no ledger,
+// because every such cue was fixed in the change that added (or widened) the
+// check.
 
 import { type Dirent, existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -77,8 +84,10 @@ import {
   narratedProseSpans,
   opensChainedOrFrontedWriting,
   pointingRecallCues,
+  readingSpokenCues,
   recallCueAsksForWriting,
   recallCueAsksToPoint,
+  spokenCueAsksToReadScript,
   withoutHtmlComments,
   writingRecallCues,
 } from "./drivable-writing-imperatives.js";
@@ -406,6 +415,158 @@ describe("recallCueAsksToPoint stays linear", () => {
 });
 
 // ---------------------------------------------------------------------------
+// Reading printed script, inside any spoken cue
+// ---------------------------------------------------------------------------
+//
+// The positives are corpus cues as they were before the reading moved out
+// into a `[YOU READ: …]` cue, one per shape the fixes met — recalls, the
+// Tamil RETURN TO reviews, the Gujarati SAY prompts, the Urdu RUN — plus the
+// step links and objects a security review named as gaps; the controls are
+// corpus cues that say "read" and ask nobody to look (SAY material above
+// all), and the fixed forms.
+
+describe("readingSpokenCues: what fires", () => {
+  it.each([
+    ["a recall that is only a reading", "- [YOU RECALL: read **दाँत**]"],
+    ["a reading after a spoken step", "- [YOU RECALL: say *dūdh*, then read **आँख**]"],
+    ["a reading before a spoken step", "- [YOU RECALL: read **बच्चा**, then say *yahā̃*]"],
+    ["a reading with its meaning to say", "- [YOU RECALL: say *ghās*, then read **कुआँ** and say what it means]"],
+    ["two readings around a spoken step", "- [YOU RECALL: read **ತಿನ್ನು**, then say *nōḍu*, then read **ಗೊತ್ತು**]"],
+    ["a spaced reading", "- [YOU RECALL: read **ऋ** — **R1**, one lesson back]"],
+    ["a reading off the page", "- [YOU RECALL: read **さようなら** off the page — **R4**, eighty lessons back]"],
+    ["a sign named by a noun", "- [YOU RECALL: read the sign **ೇ**, and say what it does to a letter — **R3**]"],
+    ["a two-word noun phrase", "- [YOU RECALL: read the form label **आवडती कृती** and say why it ends in **-ती**]"],
+    ["something printed", "- [YOU RECALL: read a printed ticket and say the figure on it aloud — **R3**]"],
+    ["a reading after a semicolon", "[YOU RECALL: say *tīn*; read **त**]"],
+    ["a reading after and", "[YOU RECALL: say *do* and then read **द**]"],
+    ["reading aloud", "[YOU RECALL: say *ek*, then read aloud **एक**]"],
+    ["a capital at the start", "[YOU RECALL: Read **ऋ** — **R1**]"],
+    [
+      "a cue wrapped across two source lines",
+      "- [YOU RECALL: read **மற்றது**, then ask *vilai evvaḷavu?*, then say both forms of the\n  quotation line]",
+    ],
+    // Spoken verbs other than RECALL: the narration reads them all unhedged.
+    [
+      "a review that opens with a reading",
+      "- [YOU RETURN TO: read **இன்று**, say *tuṭaippam* and say *kūrai* — three distances back — then join two of them with -உம்]",
+    ],
+    [
+      "a review with a reading in the middle",
+      "- [YOU RETURN TO: say *aṟuvaṭai*, read **பாலும்** and say *ēṉeṉṟāl* — three distances back — then say when one of them happens]",
+    ],
+    [
+      "a review that ends its items with a reading",
+      "- [YOU RETURN TO: say *mūḍu*, say *āṉāl* and read **எப்போது** — three distances back — then set two of them against each other, one and the other]",
+    ],
+    ["a say prompt with a reading after it", "- [YOU SAY: **છ** on its own, then read **છે** — same shape, different job]"],
+    ["a say prompt with a reading after a dash", "- [YOU SAY: *chha, sāt* — then read **સાત** sign by sign]"],
+    [
+      "a run that ends off the script",
+      "- [YOU RUN: both voices once from the romanization, then read the closing\n  line off the script alone]",
+    ],
+    ["a say drill reading digits", "- [YOU SAY: **এক**, then read **১**, **১০**, **১৩**]"],
+    ["a say step reading a stem", "- [YOU SAY: strip **-ना** from **बोलना**, then read the stem **बोल** (*bol-*)]"],
+    ["an answer with a reading after it", "[YOU ANSWER: *hā̃*, then read **हाँ**]"],
+    // Step links and objects the first pass missed.
+    ["a reading after an em dash", "[YOU SAY: *ek* — read **एक**]"],
+    ["a reading after a colon", "[YOU SAY: *ek*: read **एक**]"],
+    ["a reading after now", "[YOU RECALL: say *ek*, now read **एक**]"],
+    ["a colon after the verb", "[YOU RECALL: say *ek*, then read: **एक**]"],
+    ["read it, then a colon", "[YOU RECALL: say *ek*, then read it: **एक**]"],
+    ["read it aloud, then a colon", "[YOU RECALL: say *ek*, then read it aloud: **एक**]"],
+    ["a three-word noun phrase", "[YOU RECALL: read the very long sign **ೇ**]"],
+    ["a four-word noun phrase", "[YOU RECALL: read the very long shop sign **ೇ**]"],
+    ["a noun phrase closed by a colon", "[YOU RECALL: read the sign: **ೇ**]"],
+  ])("%s", (_label, markdown) => {
+    expect(readingSpokenCues(markdown)).toHaveLength(1);
+  });
+});
+
+describe("readingSpokenCues: what does not fire", () => {
+  it.each([
+    ["the fixed form of a reading after a spoken step", "- [YOU RECALL: say *dīyā*]\n- [YOU READ: **कान**]"],
+    ["the fixed form of a spaced reading", "- [YOU READ: **ऋ** — **R1**, one lesson back]"],
+    ["the fixed form with its meaning to say", "- [YOU RECALL: say *ghās*]\n- [YOU READ: **कुआँ**, then say what it means]"],
+    [
+      "the fixed form of a review that opened with a reading",
+      "- [YOU READ: **இன்று**]\n- [YOU RETURN TO: say *tuṭaippam* and say *kūrai* — three distances back — then join two of them with -உம்]",
+    ],
+    [
+      "the fixed form of a review with a reading in the middle",
+      "- [YOU RETURN TO: say *aṟuvaṭai*]\n- [YOU READ: **பாலும்**]\n" +
+        "- [YOU RETURN TO: say *ēṉeṉṟāl* — three distances back — then say when one of them happens]",
+    ],
+    [
+      "the fixed form of a review that ended its items with a reading",
+      "- [YOU RETURN TO: say *mūḍu*, then say *āṉāl* — three distances back]\n- [YOU READ: **எப்போது**]\n" +
+        "- [YOU RETURN TO: set two of them against each other, one and the other]",
+    ],
+    ["the fixed form of a say prompt", "- [YOU SAY: *chha, sāt*]\n- [YOU READ: **સાત** sign by sign]"],
+    [
+      "the fixed form of the run",
+      "- [YOU RUN: both voices once from the romanization]\n- [YOU READ: the closing line off the script alone]",
+    ],
+    ["the word for read, as a gloss", "[YOU RECALL: say the Japanese for to read, then the Japanese for to write, then say *hanasu* again]"],
+    ["a gloss later in the chain", "[YOU RECALL: say the Marwadi for to stay, then the Marwadi for to read, then say *jāṇṇo* again]"],
+    ["material being recalled", "[YOU RECALL: say the line of your message that means *I read Marathi*]"],
+    ["a meaning, recalled by ear", "[YOU RECALL: read *reception* on a sign — **R1**, one lesson back]"],
+    ["two meanings, recalled by ear", "[YOU RECALL: read *open*, then *not yet open*, and say which one lets you in]"],
+    ["reading out what was heard", "[YOU RECALL: read out the number you heard, then say it again]"],
+    ["a phrase that stops before the script", "[YOU RECALL: read the whole line, then say **हाँ**]"],
+    ["what the learner has read", "[YOU RECALL: say the first word you read in **देवनागरी**]"],
+    ["a verb that ends in read", "[YOU RECALL: say *sūī*, then thread **धागा** through it]"],
+    ["a quotation being recalled", '[YOU RECALL: say "then read **किताब**" once more]'],
+    ["the READ cue itself", "[YOU READ: **किताब**, then say it without looking]"],
+    ["another manual cue", "[YOU LOOK: at **क**, then read **ख**]"],
+    // SAY and ANSWER material: what is spoken, not what is asked.
+    ["a gloss after a dash", "[YOU SAY: **khândan** — to read]"],
+    ["a quotation glossed after a dash", "[YOU SAY: \"legō\" — I read, hard g]"],
+    ["a sentence glossed after a dash", "[YOU SAY: \"nēnu telugu caduvutānu\" — I read Telugu]"],
+    ["a pronunciation after read it", "[YOU SAY: read it — AH-weh]"],
+    ["read between two dashes", "[YOU SAY: \"pôṛā\" — read — then \"āmi poṛi,\" flapping the ড়]"],
+    ["read it, glossing a sentence", "[YOU SAY: *maiṁ paṛhtā hūṁ*, then *maiṁ samajhtā hūṁ* — read it, then get it]"],
+    ["a direction to read in", "[YOU SAY: read right to left — \"ism\"]"],
+    ["a gloss with a colon", "[YOU SAY: the Japanese for to read: *yomu*]"],
+    ["an answer that says I read", "[YOU ANSWER: *hā̃*, I read **हिंदी**]"],
+    ["read it, then a word to say", "[YOU SAY: read it, then say **हाँ**]"],
+    ["five plain words: past the bound", "[YOU RECALL: read the very long and winding sign **ೇ**]"],
+  ])("%s", (_label, markdown) => {
+    expect(readingSpokenCues(markdown)).toEqual([]);
+  });
+});
+
+describe("spokenCueAsksToReadScript stays linear", () => {
+  // About 50,000 characters each; only the answers are asserted, because
+  // timing bounds flake on a loaded runner.
+  it.each([
+    ["a long run of spaces before the verb", `say it${" ".repeat(50_000)}then read **क**`, true],
+    ["a long run of spaces with no verb", `say it${" ".repeat(50_000)}x`, false],
+    ["a long run of spaces after the verb", `read${" ".repeat(50_000)}**क**`, true],
+    ["many links with no verb", `say ${"it, and then ".repeat(4_000)}stop`, false],
+    ["many links, the last one reading", `say ${"it, and then ".repeat(4_000)}read **क**`, true],
+    ["many readings of nothing printed", `${"then read the whole line ".repeat(2_000)}`, false],
+    ["many readings of meanings", `${"then read *a word* ".repeat(2_500)}`, false],
+    ["many articles before a far script", `read ${"the ".repeat(12_500)}**क**`, false],
+    ["many unclosed quotation openers", `say ${"“".repeat(50_000)} and read **क**`, true],
+    ["a quotation that hides every link", `say “${"and read **क** ".repeat(4_000)}” now`, false],
+    ["many stars", `read ${"*".repeat(50_000)}`, true],
+    ["many em-dash links with no verb", `say ${"it — ".repeat(10_000)}stop`, false],
+    ["many em-dash links, the last one reading", `say ${"it — ".repeat(10_000)}read **क**`, true],
+    ["many colon links reading nothing", `${"say it: read ".repeat(4_000)}`, false],
+    ["many now links, the last one reading", `say ${"it, now ".repeat(6_000)}read **क**`, true],
+    ["many colons after the verb", `read${":".repeat(50_000)} **क**`, false],
+    ["many particles before the script", `read ${"it ".repeat(16_000)}**क**`, false],
+    ["a noun phrase far longer than the bound", `read the ${"very ".repeat(10_000)}long sign **क**`, false],
+    ["many four-word phrases reaching nothing", `${"then read the very long sign ".repeat(1_500)}`, false],
+    ["many read it: before a meaning", `${"then read it: *a* ".repeat(2_500)}`, false],
+    ["many dashes after the verb", `read ${"— ".repeat(25_000)}**क**`, false],
+  ])("%s", (_label, content, expected) => {
+    expect(content.length).toBeGreaterThan(40_000);
+    expect(spokenCueAsksToReadScript(content)).toBe(expected);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // The corpus
 // ---------------------------------------------------------------------------
 
@@ -570,5 +731,44 @@ describe("drivable lessons carry no recall cue that points at the page", () => {
       }
     }
     expect(problems, problems.join("\n")).toEqual([]);
+  });
+});
+
+describe("drivable lessons carry no spoken cue that asks to read script", () => {
+  it("no drivable lesson asks a driver to read the page inside a spoken cue", () => {
+    // No ledger: every such cue was split into its spoken steps and a READ
+    // cue when the check arrived (recalls first, then RETURN TO, SAY and RUN
+    // when it was widened to every spoken verb), so the corpus answer is
+    // exactly zero.
+    const problems: string[] = [];
+    for (const lesson of lessons) {
+      const id = String(lesson.frontmatter.id);
+      if (!drivableIds.has(id)) continue;
+      for (const cue of readingSpokenCues(lessonMarkdown(lesson))) {
+        problems.push(
+          `${id}: a drivable spoken cue asks the listener to read printed script. Move the ` +
+            `reading into its own [YOU READ: …] cue, which the narration defers, and keep ` +
+            `the spoken steps in their own cue verb, in the authored order:\n       ${cue.slice(0, 160)}`,
+        );
+      }
+    }
+    expect(problems, problems.join("\n")).toEqual([]);
+  });
+
+  it("the reading check still fires on the real corpus, where reading is legitimate", () => {
+    // Anti-vacuity, as for the writing check: a detector that matched nothing
+    // would also report zero above. The lessons that are NOT drivable keep
+    // their reading cues (their narration already opens with the
+    // hands-and-eyes notice), so the detector must keep finding them there.
+    let reading = 0;
+    for (const lesson of lessons) {
+      if (drivableIds.has(String(lesson.frontmatter.id))) continue;
+      if (readingSpokenCues(lessonMarkdown(lesson)).length > 0) reading += 1;
+    }
+    // A floor set well below the count measured when this was written
+    // (66 non-drivable lessons for recalls alone, 67 once every spoken verb was
+    // read), and high enough that a detector which lost most of its matches
+    // fails here rather than passing quietly.
+    expect(reading, "non-drivable lessons with a reading cue").toBeGreaterThan(40);
   });
 });

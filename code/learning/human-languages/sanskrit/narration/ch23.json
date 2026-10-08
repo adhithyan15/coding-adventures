@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "The Four Oldest Kinship Words",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:2244ded355dcdb6d",
+  "sourceHash": "fnv1a64:5656f10562d4ecea",
   "lessons": [
     {
       "id": "SA-C23-father",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cad9e14ddc2c40f8",
+      "sourceHash": "fnv1a64:08c4d72f6a41dc90",
       "notice": null,
       "blocks": [
         {
@@ -116,11 +116,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say nṛtyati, then read शृणोति",
+              "instruction": "say nṛtyati",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *nṛtyati*, then read **शृणोति**]"
+              "source": "[YOU RECALL: say *nṛtyati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "शृणोति",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **शृणोति**]"
             }
           ]
         },
@@ -156,7 +165,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:694cea4d410115d0",
+      "sourceHash": "fnv1a64:ec7f30f26b837984",
       "notice": null,
       "blocks": [
         {
@@ -242,12 +251,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "हसति",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **हसति**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read हसति, then say nayati",
+              "instruction": "say nayati",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **हसति**, then say *nayati*]"
+              "source": "[YOU RECALL: say *nayati*]"
             }
           ]
         },
@@ -283,7 +301,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:128c72acc7032ab1",
+      "sourceHash": "fnv1a64:b24eeb5de2b6b34b",
       "notice": null,
       "blocks": [
         {
@@ -370,11 +388,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say tiṣṭhati, then read क्रीडति",
+              "instruction": "say tiṣṭhati",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *tiṣṭhati*, then read **क्रीडति**]"
+              "source": "[YOU RECALL: say *tiṣṭhati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "क्रीडति",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **क्रीडति**]"
             }
           ]
         },
@@ -410,7 +437,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8fecdb6fc21f8483",
+      "sourceHash": "fnv1a64:d91b03bb116d0fbd",
       "notice": null,
       "blocks": [
         {
@@ -496,12 +523,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "स्मरति",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **स्मरति**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read स्मरति, then say dahati",
+              "instruction": "say dahati",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **स्मरति**, then say *dahati*]"
+              "source": "[YOU RECALL: say *dahati*]"
             }
           ]
         },

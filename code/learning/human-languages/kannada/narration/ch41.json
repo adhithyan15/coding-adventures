@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Pointing, and Asking",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:6035609f35745ae5",
+  "sourceHash": "fnv1a64:c9300896c15f386b",
   "lessons": [
     {
       "id": "KA-C41-this",
@@ -130,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a947498f7516f575",
+      "sourceHash": "fnv1a64:ea241086ed05b7e3",
       "notice": null,
       "blocks": [
         {
@@ -200,12 +200,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಕಿವಿ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಕಿವಿ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಕಿವಿ**]"
+              "source": "[YOU READ: **ಕಿವಿ**]"
             }
           ]
         },
@@ -352,7 +352,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02ea1500cbb3dad0",
+      "sourceHash": "fnv1a64:e23cfd525049ed1c",
       "notice": null,
       "blocks": [
         {
@@ -422,12 +422,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಬಾಯಿ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಬಾಯಿ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಬಾಯಿ**]"
+              "source": "[YOU READ: **ಬಾಯಿ**]"
             }
           ]
         },
@@ -574,7 +574,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:73d908ab0499301d",
+      "sourceHash": "fnv1a64:ef2db673d1f5a4e5",
       "notice": null,
       "blocks": [
         {
@@ -644,12 +644,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಚಹಾ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಚಹಾ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಚಹಾ**]"
+              "source": "[YOU READ: **ಚಹಾ**]"
             }
           ]
         },

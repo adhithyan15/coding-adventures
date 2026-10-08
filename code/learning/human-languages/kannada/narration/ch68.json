@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "Not That, and Neither",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3c4af26f413ccc5b",
+  "sourceHash": "fnv1a64:e32b353f1e66fe70",
   "lessons": [
     {
       "id": "KA-S135-letter-a",
@@ -413,7 +413,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8807e99f8c139982",
+      "sourceHash": "fnv1a64:2b64be6dd6ff3ab0",
       "notice": null,
       "blocks": [
         {
@@ -534,12 +534,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಭತ್ತ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಭತ್ತ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಭತ್ತ**]"
+              "source": "[YOU READ: **ಭತ್ತ**]"
             }
           ]
         },
@@ -737,7 +737,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a2838dea70fee5ea",
+      "sourceHash": "fnv1a64:2d936fac7ebf7972",
       "notice": null,
       "blocks": [
         {
@@ -849,12 +849,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಸುಗ್ಗಿ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಸುಗ್ಗಿ**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read ಸುಗ್ಗಿ, then say mattu",
+              "instruction": "say mattu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಸುಗ್ಗಿ**, then say *mattu*]"
+              "source": "[YOU RECALL: say *mattu*]"
             }
           ]
         },

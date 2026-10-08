@@ -60,7 +60,8 @@ What a river puts down at its edge.
 - [YOU SAY: *sikatā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *śilā*, then *sikatā*]
-- [YOU RECALL: read **मन्दम्**, then say *abhinandanam*]
+- [YOU READ: **मन्दम्**]
+- [YOU RECALL: say *abhinandanam*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C38-EARTH-02, SA-LEX-C38-EARTH-03, SA-LEX-C38-EARTH-04] -->

@@ -58,7 +58,7 @@ Four, and this one reaches back down to the doorstep.
 - [YOU SAY: *cukki*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *cukki*, then *raṅgōli*, and say how the two meet on the ground]
-- [YOU RECALL: read **ಆಶೀರ್ವಾದ**]
+- [YOU READ: **ಆಶೀರ್ವಾದ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C53-SKY-01, KA-LEX-C53-SKY-02, KA-LEX-C53-SKY-03, KA-LEX-C53-SKY-04] -->

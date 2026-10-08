@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 71,
-  "sourceHash": "fnv1a64:c86ff787e964f73c",
+  "sourceHash": "fnv1a64:50a267046056e9b2",
   "lessonIds": [
     "TA-C71-rise",
     "TA-C71-sleep",
@@ -14,7 +14,7 @@
   "drivablePrefix": 0,
   "text": "tamil/narration/ch71.txt",
   "json": "tamil/narration/ch71.json",
-  "textHash": "fnv1a64:adaaa1ec24c725a1",
-  "jsonHash": "fnv1a64:150421b658f217ec",
+  "textHash": "fnv1a64:147cb38d69d61f3b",
+  "jsonHash": "fnv1a64:c4f47ff1b09bc5b8",
   "findings": []
 }

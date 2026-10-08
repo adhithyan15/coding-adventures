@@ -68,7 +68,9 @@ collective came later, and came borrowed.
 - [YOU SAY: the six named people, then the borrowed group word — "appa,
   amma, aṇṇa, tamma, akka, tangi … kuṭumba"]
 - [YOU SAY: "nanage kannaḍa iṣṭa" — once more, no verb in it]
-- [YOU RECALL: say *iru*, then read **ಹೋಗು**, then say *bā / baru*]
+- [YOU RECALL: say *iru*]
+- [YOU READ: **ಹೋಗು**]
+- [YOU RECALL: say *bā / baru*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C35-KUTUMBA-01, KA-ETYMON-C35-KUTUMBA-02, KA-LEX-C34-ISHTA-01, KA-GRAMMAR-C34-ISHTA-02, KA-ETYMON-C34-ISHTA-03, KA-ETYMON-C12-KUTUMBA-01, KA-ETYMON-C12-KUTUMBA-02] -->

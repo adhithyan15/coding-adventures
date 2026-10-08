@@ -58,7 +58,8 @@ Four: the biggest and the smallest so far.
 - [YOU SAY: *cīma*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *cīma*, then *gēde*, and say which one is easier to miss]
-- [YOU RECALL: read **వద్దు**, then say *burada*]
+- [YOU READ: **వద్దు**]
+- [YOU RECALL: say *burada*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C60-ANIMAL-01, TE-LEX-C60-ANIMAL-02, TE-LEX-C60-ANIMAL-03, TE-LEX-C60-ANIMAL-04] -->

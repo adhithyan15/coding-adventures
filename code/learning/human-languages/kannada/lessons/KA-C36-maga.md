@@ -62,7 +62,7 @@ Tamil keeps more of the shape: **மகன்** (*makaṉ*), "son."
 - [YOU SAY: "ivanu nanna maga" — he is my son]
 - [YOU SAY: the near pair — "magu … maga"]
 - [YOU SAY: Kannada's worn form, then Tamil's fuller one — "maga … makaṉ"]
-- [YOU RECALL: read **ಅರ್ಥಮಾಡಿಕೊ**]
+- [YOU READ: **ಅರ್ಥಮಾಡಿಕೊ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C36-MAGA-01, KA-ETYMON-C36-MAGA-02, KA-LEX-C36-MAGU-01, KA-ETYMON-C36-MAGU-02] -->

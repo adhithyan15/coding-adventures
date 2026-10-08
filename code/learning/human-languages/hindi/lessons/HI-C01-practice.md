@@ -58,7 +58,7 @@ vs. the everyday word for the same thing.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-PRACTICE-01, HI-CONCEPT-C01-NAMASTE-01, HI-CONCEPT-C01-NAMASKAR-01, HI-CONCEPT-C01-DHANYAVAD-01, HI-CONCEPT-C01-SHUKRIYA-01, HI-CONCEPT-C01-ALVIDA-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: read all five aloud, left to right]
+- [YOU SAY: all five words from memory — the two hellos, the two thanks, and the farewell]
 - [YOU SAY: greet someone (*namaste*), thank them formally (*dhanyavād*) then
   casually (*shukriyā*), and take a weighty leave (*alvidā*)]
 - [YOU SAY: for each of the five, Sanskrit or Perso-Arabic?]

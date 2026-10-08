@@ -56,7 +56,7 @@ what lets *l* and *k* sit together with no vowel between them.
 - [YOU SAY: "nālku"]
 - [YOU LOOK: at ನಾಲ್ಕು and find the ್ that joins ಲ to ಕ]
 - [YOU SAY: the count so far — "ondu, eraḍu, mūru, nālku"]
-- [YOU RECALL: read **-ಗೆ**]
+- [YOU READ: **-ಗೆ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C07-NAALKU-01, KA-SCRIPT-RECOG-03] -->

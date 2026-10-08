@@ -60,7 +60,8 @@ Leaves on the plant, and leaves in the pot.
 - [YOU SAY: *śākam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *navanītam*, then *śākam*]
-- [YOU RECALL: read **सिकता**, then say *śunakaḥ*]
+- [YOU READ: **सिकता**]
+- [YOU RECALL: say *śunakaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C40-FOOD-02, SA-LEX-C40-FOOD-03, SA-LEX-C40-FOOD-04] -->

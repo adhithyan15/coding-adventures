@@ -85,7 +85,8 @@ and paid for the lost consonant with a longer vowel.
 <!-- hl-activity: {"id":"GU-C39-saat-ordinal","kind":"text","assesses":["GU-LEX-SAAT","GU-GRAMMAR-ORDINAL-MU"],"prompt":"Say the seventh, without having been taught the word.","answer":"saatmun — saat plus the ending -mun","accepted":["સાતમું","saatmun","sātmũ"],"feedback":{"correct":"Built, not memorised. That is the whole point of this chapter.","incorrect":"Take the number and put the ordinal ending behind it."},"response_seconds":20} -->
 
 [PAUSE 1s]
-- [YOU SAY: *chha, sāt* — then read **સાત** sign by sign]
+- [YOU SAY: *chha, sāt*]
+- [YOU READ: **સાત** sign by sign]
 - [YOU SAY: *saptá, satta, sāt* — the cluster thinning, the vowel lengthening]
 - [YOU SAY: *bījũ*, then *sātmũ* — received, then built]
 

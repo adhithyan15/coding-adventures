@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Face Words",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:f0e9f2df213b4580",
+  "sourceHash": "fnv1a64:66e758c31cd57f83",
   "lessons": [
     {
       "id": "ML-C37-kannu",
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e9da88a4dcc35c9",
+      "sourceHash": "fnv1a64:f67d6e7e6cee40df",
       "notice": null,
       "blocks": [
         {
@@ -250,12 +250,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ചോദിക്കുക",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ചോദിക്കുക",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ചോദിക്കുക**]"
+              "source": "[YOU READ: **ചോദിക്കുക**]"
             }
           ]
         },
@@ -427,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a27b939bbfe7906",
+      "sourceHash": "fnv1a64:b78d73642b180e32",
       "notice": null,
       "blocks": [
         {
@@ -526,12 +526,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read കുടുംബം",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "കുടുംബം",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **കുടുംബം**]"
+              "source": "[YOU READ: **കുടുംബം**]"
             }
           ]
         },

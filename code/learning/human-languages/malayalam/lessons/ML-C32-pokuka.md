@@ -94,7 +94,7 @@ can never be dropped, since it is now the only thing telling you who went.
 - [YOU LOOK: at the three on the page — **പോകുന്നു**, **പോയി**, **പോകും**]
 - [YOU SAY: the pair that shares one sound-law — "pattŭ … hattu", "pō … hōgu"]
 - [YOU SAY: four people, one verb — "ñān, nī, avan, avar … pōkunnu"]
-- [YOU RECALL: read **ദിവസം**]
+- [YOU READ: **ദിവസം**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C32-UNDU-02, ML-CONCEPT-C32-POKUKA-01, ML-CONCEPT-C32-POKUKA-02] -->

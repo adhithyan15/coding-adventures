@@ -59,7 +59,8 @@ The fifth of five. That is the way out of the village.
 - [YOU SAY: *khet*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *khet*, *gā̃v*, *saṛak*, *bāzār*, *dukān* — walk it in order]
-- [YOU RECALL: say *bakrī*, then read **आसमान**]
+- [YOU RECALL: say *bakrī*]
+- [YOU READ: **आसमान**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C56-ROAD-01, HI-LEX-C56-ROAD-02, HI-LEX-C56-ROAD-03, HI-LEX-C56-ROAD-04, HI-LEX-C56-ROAD-05] -->

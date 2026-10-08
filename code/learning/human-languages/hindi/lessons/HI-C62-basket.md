@@ -59,7 +59,8 @@ Three.
 - [YOU SAY: *ṭokrī*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ṭokrī*, then *sabzī* in it]
-- [YOU RECALL: say *murgī*, then read **गिलास**]
+- [YOU RECALL: say *murgī*]
+- [YOU READ: **गिलास**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C62-HANDS-01, HI-LEX-C62-HANDS-02, HI-LEX-C62-HANDS-03] -->

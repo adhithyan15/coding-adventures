@@ -58,7 +58,8 @@ Two: what you feel and what you do.
 - [YOU SAY: *maryāda*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *maryāda*, then *gauravaṁ*, and say which one somebody can watch you doing]
-- [YOU RECALL: read **నిద్ర**, then say *mātramē*]
+- [YOU READ: **నిద్ర**]
+- [YOU RECALL: say *mātramē*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C64-JOIN-05, TE-LEX-C65-MANNERS-01, TE-LEX-C65-MANNERS-02] -->

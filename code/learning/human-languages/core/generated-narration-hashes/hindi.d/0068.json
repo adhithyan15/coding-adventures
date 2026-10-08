@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 68,
-  "sourceHash": "fnv1a64:e6ca65a8470b2b05",
+  "sourceHash": "fnv1a64:66591156236f5394",
   "lessonIds": [
     "HI-C68-aur",
     "HI-C68-ya",
@@ -12,7 +12,7 @@
   "drivablePrefix": 0,
   "text": "hindi/narration/ch68.txt",
   "json": "hindi/narration/ch68.json",
-  "textHash": "fnv1a64:b6f2bbae65030564",
-  "jsonHash": "fnv1a64:e3fb7f01f71db676",
+  "textHash": "fnv1a64:7bde0400b7d4dd43",
+  "jsonHash": "fnv1a64:874ca758034fc09b",
   "findings": []
 }

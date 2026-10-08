@@ -56,7 +56,8 @@ The first of five more pieces of you.
 - [YOU SAY: *kaḻuttu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *peṭṭi*, then *kaḻuttu*, and hold the ழ in the middle]
-- [YOU RECALL: say *nadi*, then read **பாய்**]
+- [YOU RECALL: say *nadi*]
+- [YOU READ: **பாய்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C54-HOUSE-04, TA-LEX-C54-HOUSE-05, TA-LEX-C55-BODY-01] -->

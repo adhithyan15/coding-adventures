@@ -75,7 +75,8 @@ forms of everything.
 - [YOU SAY: *āṉāl*, then *āṉā*]
 - [YOU SAY: *ēṉeṉṟāl*, then *ēṉṉā*]
 - [YOU LISTEN: for the piece that is dropped each time — a closing consonant]
-- [YOU RECALL: read **மற்றது**, then ask *vilai evvaḷavu?*, then say both forms of *but*]
+- [YOU READ: **மற்றது**]
+- [YOU RECALL: ask *vilai evvaḷavu?*, then say both forms of *but*]
 - [YOU RETURN TO: say *alladu* and *-um pōdu* — two distances back — then say which of the two Tamils each one belongs to]
 
 ## Wrap-up Recall

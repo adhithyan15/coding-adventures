@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "And, Or, But",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e6ca65a8470b2b05",
+  "sourceHash": "fnv1a64:66591156236f5394",
   "lessons": [
     {
       "id": "HI-C68-aur",
@@ -195,7 +195,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5693af8dd1f512d8",
+      "sourceHash": "fnv1a64:0ebe53567801e4f8",
       "notice": null,
       "blocks": [
         {
@@ -286,12 +286,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "अनाज",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **अनाज**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read अनाज, then say ghās",
+              "instruction": "say ghās",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **अनाज**, then say *ghās*]"
+              "source": "[YOU RECALL: say *ghās*]"
             },
             {
               "kind": "activity",

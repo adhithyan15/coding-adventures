@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Take Leave",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:16c16f38baa57c17",
+  "sourceHash": "fnv1a64:c094e95700e2353f",
   "lessons": [
     {
       "id": "UR-C05-khuda",
@@ -858,7 +858,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b355637d88bff41",
+      "sourceHash": "fnv1a64:a3bc426a6f965d87",
       "notice": null,
       "blocks": [
         {
@@ -923,11 +923,20 @@
             {
               "kind": "prompt",
               "action": "RUN",
-              "instruction": "both voices once from the romanization, then read the closing line off the script alone",
+              "instruction": "both voices once from the romanization",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RUN: both voices once from the romanization, then read the closing line off the script alone]"
+              "source": "[YOU RUN: both voices once from the romanization]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the closing line off the script alone",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the closing line off the script alone]"
             }
           ]
         },

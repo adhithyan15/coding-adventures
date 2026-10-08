@@ -60,7 +60,8 @@ Five creatures: one in milk, one across the sky, one in the river, one at the do
 - [YOU SAY: *sarpaḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *dhenuḥ* and *sarpaḥ* together]
-- [YOU RECALL: say *āśīrvādaḥ*, then read **मृत्तिका**]
+- [YOU RECALL: say *āśīrvādaḥ*]
+- [YOU READ: **मृत्तिका**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C39-ANIMAL-01, SA-LEX-C39-ANIMAL-02, SA-LEX-C39-ANIMAL-03, SA-LEX-C39-ANIMAL-04, SA-LEX-C39-ANIMAL-05] -->

@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "Where You Come From",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:040a43a287cece91",
+  "sourceHash": "fnv1a64:e8036989254566ee",
   "lessons": [
     {
       "id": "HI-C68-country",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89b19844091058b3",
+      "sourceHash": "fnv1a64:a587204937838883",
       "notice": null,
       "blocks": [
         {
@@ -87,11 +87,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ghās, then read कुआँ and say what it means",
+              "instruction": "say ghās",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ghās*, then read **कुआँ** and say what it means]"
+              "source": "[YOU RECALL: say *ghās*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "कुआँ, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **कुआँ**, then say what it means]"
             },
             {
               "kind": "prompt",
@@ -132,11 +141,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say kyoṁ, then read कब",
+              "instruction": "say kyoṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *kyoṁ*, then read **कब**]"
+              "source": "[YOU RECALL: say *kyoṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "कब",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **कब**]"
             }
           ]
         },
@@ -172,7 +190,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2abe5b7bb028c356",
+      "sourceHash": "fnv1a64:44a81e544906ba8e",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +266,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read कुआँ, then say it without looking",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "कुआँ, then say it without looking",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **कुआँ**, then say it without looking]"
+              "source": "[YOU READ: **कुआँ**, then say it without looking]"
             },
             {
               "kind": "prompt",

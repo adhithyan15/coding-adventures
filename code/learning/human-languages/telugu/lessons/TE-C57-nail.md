@@ -58,7 +58,8 @@ Four.
 - [YOU SAY: *gōru*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *gōru*, then *vēlu*, and say which one grows out of the other]
-- [YOU RECALL: read **గ్రామం**, then say *ginne*]
+- [YOU READ: **గ్రామం**]
+- [YOU RECALL: say *ginne*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C57-BODY-01, TE-LEX-C57-BODY-02, TE-LEX-C57-BODY-03, TE-LEX-C57-BODY-04] -->

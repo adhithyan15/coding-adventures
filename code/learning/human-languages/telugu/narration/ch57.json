@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "More of the Body",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e5e1cd4e5d8356f0",
+  "sourceHash": "fnv1a64:c0f9578bd5b071f3",
   "lessons": [
     {
       "id": "TE-C57-neck",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b37363c3fdec6da",
+      "sourceHash": "fnv1a64:ea4210493a2724e2",
       "notice": null,
       "blocks": [
         {
@@ -114,11 +114,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say nadi, then read చాప and say what it means",
+              "instruction": "say nadi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *nadi*, then read **చాప** and say what it means]"
+              "source": "[YOU RECALL: say *nadi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "చాప, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **చాప**, then say what it means]"
             }
           ]
         },
@@ -154,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45873060cc7ae557",
+      "sourceHash": "fnv1a64:307080ad5ab452b7",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +257,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "చెరువు",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **చెరువు**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read చెరువు, then say buṭṭa",
+              "instruction": "say buṭṭa",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **చెరువు**, then say *buṭṭa*]"
+              "source": "[YOU RECALL: say *buṭṭa*]"
             }
           ]
         },
@@ -289,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:24be8b35de22f6f6",
+      "sourceHash": "fnv1a64:5baf648abdf84d88",
       "notice": null,
       "blocks": [
         {
@@ -384,11 +402,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say guṭṭa, then read కత్తి and say what it means",
+              "instruction": "say guṭṭa",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *guṭṭa*, then read **కత్తి** and say what it means]"
+              "source": "[YOU RECALL: say *guṭṭa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "కత్తి, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **కత్తి**, then say what it means]"
             }
           ]
         },
@@ -424,7 +451,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:57e7038055f053bd",
+      "sourceHash": "fnv1a64:b2a41c0a62c154f7",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +545,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "గ్రామం",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **గ్రామం**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read గ్రామం, then say ginne",
+              "instruction": "say ginne",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **గ్రామం**, then say *ginne*]"
+              "source": "[YOU RECALL: say *ginne*]"
             }
           ]
         },
@@ -559,7 +595,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b206fbe546b67ed2",
+      "sourceHash": "fnv1a64:7492c2f3d329b50a",
       "notice": null,
       "blocks": [
         {
@@ -654,11 +690,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say bāṭa, then read పెట్టె and say what it means",
+              "instruction": "say bāṭa",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *bāṭa*, then read **పెట్టె** and say what it means]"
+              "source": "[YOU RECALL: say *bāṭa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "పెట్టె, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **పెట్టె**, then say what it means]"
             }
           ]
         },

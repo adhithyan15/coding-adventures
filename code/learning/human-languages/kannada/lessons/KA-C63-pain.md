@@ -56,7 +56,7 @@ Four.
 - [YOU SAY: *nōvu*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nōvu*, then *tale nōvu*, then *hoṭṭe nōvu*, and say where it hurts]
-- [YOU RECALL: read **ಬೆಲ್ಲ**]
+- [YOU READ: **ಬೆಲ್ಲ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C63-HEALTH-01, KA-LEX-C63-HEALTH-02, KA-LEX-C63-HEALTH-03, KA-LEX-C63-HEALTH-04] -->

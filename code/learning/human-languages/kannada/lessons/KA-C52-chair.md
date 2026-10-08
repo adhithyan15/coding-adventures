@@ -56,7 +56,7 @@ Two: a door and a chair.
 - [YOU SAY: *kurci*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kuḷitukō*, then *kurci* — the command, then the thing it needs]
-- [YOU RECALL: read **ನಾಡಿದ್ದು**]
+- [YOU READ: **ನಾಡಿದ್ದು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C51-COURTESY-05, KA-LEX-C52-WELCOME-01, KA-LEX-C52-WELCOME-02] -->

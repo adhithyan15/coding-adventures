@@ -60,7 +60,8 @@ The thing the parasol makes, told apart from the parasol.
 - [YOU SAY: *chāyā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *prakāśaḥ*, then *chāyā*]
-- [YOU RECALL: read **हरितः**, then say *māsaḥ*]
+- [YOU READ: **हरितः**]
+- [YOU RECALL: say *māsaḥ*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C46-LIGHT-02, SA-LEX-C46-LIGHT-03, SA-LEX-C46-LIGHT-04] -->

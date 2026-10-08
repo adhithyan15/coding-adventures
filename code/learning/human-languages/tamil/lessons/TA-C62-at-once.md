@@ -56,7 +56,8 @@ Four, and the fourth pushes harder than the third.
 - [YOU SAY: *uṭaṉē*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *sīkkiram*, then *uṭaṉē*, and say which one leaves you no room]
-- [YOU RECALL: read **துடைப்பம்**, then say *kāyccal*]
+- [YOU READ: **துடைப்பம்**]
+- [YOU RECALL: say *kāyccal*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C62-JOIN-01, TA-LEX-C62-JOIN-02, TA-LEX-C62-JOIN-03, TA-LEX-C62-JOIN-04] -->

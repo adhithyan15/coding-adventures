@@ -61,8 +61,11 @@ Three feelings, and one of them is an apology.
 - [YOU SAY: *varuttam*]
 - [YOU SAY: *tavaṟu*, then *varuttam* — the mistake, then the feeling about it]
 - [YOU SAY: *maṉṉikkavum*, then *varuttam*, and say which is the formal one]
-- [YOU RECALL: say *payam*, then read **பயம்**, then say *varuttam*]
-- [YOU RECALL: say *suvar*, then read **ஓடு**]
+- [YOU RECALL: say *payam*]
+- [YOU READ: **பயம்**]
+- [YOU RECALL: say *varuttam*]
+- [YOU RECALL: say *suvar*]
+- [YOU READ: **ஓடு**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C72-FEEL-02, TA-SCRIPT-READ-PAYAM-01, TA-LEX-C72-FEEL-03] -->

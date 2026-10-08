@@ -68,7 +68,8 @@ week.
 - [YOU SAY: the different one — "Bhānuvāra," Sunday]
 - [YOU SAY: the contrast — Hindi says Ravivāra (Ravi), Kannada says Bhānuvāra
   (Bhānu) — two different Sanskrit sun-names]
-- [YOU RECALL: say *ēḷu*, then read **ಎಂಟು**]
+- [YOU RECALL: say *ēḷu*]
+- [YOU READ: **ಎಂಟು**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C09-KSHAMISI-01, KA-ETYMON-C09-KSHAMISI-02, KA-PRAGMATICS-C09-KSHAMISI-03, KA-LEX-C10-VAARA-01] -->

@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 76,
-  "sourceHash": "fnv1a64:8e43dea92a776dcd",
+  "sourceHash": "fnv1a64:67af99e48185c87b",
   "lessonIds": [
     "TA-C76-but",
     "TA-C76-or",
@@ -12,7 +12,7 @@
   "drivablePrefix": 1,
   "text": "tamil/narration/ch76.txt",
   "json": "tamil/narration/ch76.json",
-  "textHash": "fnv1a64:695cefb62e4052ee",
-  "jsonHash": "fnv1a64:6875cc1296999ff6",
+  "textHash": "fnv1a64:ec72adcee83297d1",
+  "jsonHash": "fnv1a64:821986989a3ecb4e",
   "findings": []
 }

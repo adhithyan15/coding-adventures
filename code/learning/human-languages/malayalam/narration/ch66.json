@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "Out in the Paddy",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fec624fcf8594d6f",
+  "sourceHash": "fnv1a64:9b22de4329409d0a",
   "lessons": [
     {
       "id": "ML-C66-paddy",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df0c200e4f2091ee",
+      "sourceHash": "fnv1a64:5db83538c918112a",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ഉടനെ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ഉടനെ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ഉടനെ**]"
+              "source": "[YOU READ: **ഉടനെ**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:398717625bd11dc7",
+      "sourceHash": "fnv1a64:629c408a5999d01b",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,30 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "മാത്രം",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **മാത്രം**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RECALL",
-              "instruction": "read മാത്രം, then say sammataṁ, then read മര്യാദ",
+              "instruction": "say sammataṁ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **മാത്രം**, then say *sammataṁ*, then read **മര്യാദ**]"
+              "source": "[YOU RECALL: say *sammataṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "മര്യാദ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **മര്യാദ**]"
             }
           ]
         },
@@ -559,7 +577,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ecb189c2ed1f292",
+      "sourceHash": "fnv1a64:850e94e187e84e30",
       "notice": null,
       "blocks": [
         {
@@ -654,11 +672,29 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say ennāl, then read അപേക്ഷ, then say anuvādaṁ",
+              "instruction": "say ennāl",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *ennāl*, then read **അപേക്ഷ**, then say *anuvādaṁ*]"
+              "source": "[YOU RECALL: say *ennāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "അപേക്ഷ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **അപേക്ഷ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RECALL",
+              "instruction": "say anuvādaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RECALL: say *anuvādaṁ*]"
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 54,
-  "sourceHash": "fnv1a64:54fe29af8cf9d4a4",
+  "sourceHash": "fnv1a64:6a14975daef5a4aa",
   "lessonIds": [
     "HI-C54-cow",
     "HI-C54-horse",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch54.txt",
   "json": "hindi/narration/ch54.json",
-  "textHash": "fnv1a64:9fddfcf4e3b4c9c6",
-  "jsonHash": "fnv1a64:2f16bcbb74dd747c",
+  "textHash": "fnv1a64:a774394b8854ea9e",
+  "jsonHash": "fnv1a64:70e41ee9745eeb2e",
   "findings": []
 }

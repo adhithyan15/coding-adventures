@@ -56,7 +56,8 @@ Five things a house sets out: something to sit on, to carry in, to cut with, to 
 - [YOU SAY: *peṭṭi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order — *pāy*, *kūṭai*, *katti*, *kiṇṇam*, *peṭṭi*]
-- [YOU RECALL: say *vitai*, then read **கிராமம்**]
+- [YOU RECALL: say *vitai*]
+- [YOU READ: **கிராமம்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C54-HOUSE-01, TA-LEX-C54-HOUSE-02, TA-LEX-C54-HOUSE-03, TA-LEX-C54-HOUSE-04, TA-LEX-C54-HOUSE-05] -->

@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 51,
-  "sourceHash": "fnv1a64:54dd755b01896d09",
+  "sourceHash": "fnv1a64:4c15399c8b995dd1",
   "lessonIds": [
     "SA-C51-husband",
     "SA-C51-wife",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch51.txt",
   "json": "sanskrit/narration/ch51.json",
-  "textHash": "fnv1a64:f7e075810e971a25",
-  "jsonHash": "fnv1a64:2756ca4312c7f5c9",
+  "textHash": "fnv1a64:64185485895ccd1a",
+  "jsonHash": "fnv1a64:e0329b39b569377d",
   "findings": []
 }

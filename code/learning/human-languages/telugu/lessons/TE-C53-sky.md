@@ -58,7 +58,8 @@ The space that the rest of this chapter hangs in.
 - [YOU SAY: *ākāśaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ākāśaṁ*, then *namaskāraṁ*, as you would greet somebody outdoors]
-- [YOU RECALL: say *kṛtajñata*, then read **తలుపు** and say what it means]
+- [YOU RECALL: say *kṛtajñata*]
+- [YOU READ: **తలుపు**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C52-WELCOME-04, TE-LEX-C52-WELCOME-05, TE-LEX-C53-SKY-01] -->

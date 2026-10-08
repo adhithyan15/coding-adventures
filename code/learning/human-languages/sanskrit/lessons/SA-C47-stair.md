@@ -60,7 +60,8 @@ The way up, added to the wall and the window.
 - [YOU SAY: *sopānam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *vātāyanam*, then *sopānam*]
-- [YOU RECALL: say *sāyam*, then read **प्रकाशः**]
+- [YOU RECALL: say *sāyam*]
+- [YOU READ: **प्रकाशः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C47-DWELL-01, SA-LEX-C47-DWELL-02, SA-LEX-C47-DWELL-03] -->

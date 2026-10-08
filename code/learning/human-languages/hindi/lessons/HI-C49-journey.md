@@ -59,7 +59,8 @@ Three: right now, the far day, a journey.
 - [YOU SAY: *safar*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *safar*, then *parsoṁ*, then *abhī*, back down the run]
-- [YOU RECALL: say *kisān*, then read **ज़रूर**]
+- [YOU RECALL: say *kisān*]
+- [YOU READ: **ज़रूर**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C49-LEAVE-01, HI-LEX-C49-LEAVE-02, HI-LEX-C49-LEAVE-03] -->

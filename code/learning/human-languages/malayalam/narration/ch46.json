@@ -4,7 +4,7 @@
   "chapter": 46,
   "title": "Things You Ask For",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:69323b1d22e9a2ec",
+  "sourceHash": "fnv1a64:53b53b0671da03bf",
   "lessons": [
     {
       "id": "ML-C46-fruit",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b64c31ba863142e6",
+      "sourceHash": "fnv1a64:f9a3b99ab4ab880e",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read തരൂ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "തരൂ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **തരൂ**]"
+              "source": "[YOU READ: **തരൂ**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c8a2bdef34aa710",
+      "sourceHash": "fnv1a64:cebfbfa0f935a586",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read കേൾക്കൂ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "കേൾക്കൂ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **കേൾക്കൂ**]"
+              "source": "[YOU READ: **കേൾക്കൂ**]"
             }
           ]
         },

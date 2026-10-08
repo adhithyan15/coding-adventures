@@ -58,7 +58,8 @@ One. The place the rest of this chapter happens in.
 - [YOU SAY: *aṅgaḍi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *aṅgaḍi*, then *grāmaṁ*, and say which one sits inside the other]
-- [YOU RECALL: say *eluka*, then read **మామ** and say what it means]
+- [YOU RECALL: say *eluka*]
+- [YOU READ: **మామ**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C71-KIN-04, TE-LEX-C71-KIN-05, TE-LEX-C72-MARKET-01] -->

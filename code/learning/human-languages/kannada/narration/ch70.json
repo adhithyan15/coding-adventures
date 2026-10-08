@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Saying So, and Saying Why",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:511b1ef02e3b8acb",
+  "sourceHash": "fnv1a64:135bc612f52e62dd",
   "lessons": [
     {
       "id": "KA-C70-say",
@@ -551,7 +551,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c53f0e9ee726e07",
+      "sourceHash": "fnv1a64:c240be7a240e74f7",
       "notice": null,
       "blocks": [
         {
@@ -692,11 +692,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say gottilla, then read ನನಗೂ ಗೊತ್ತಿಲ್ಲ",
+              "instruction": "say gottilla",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *gottilla*, then read **ನನಗೂ ಗೊತ್ತಿಲ್ಲ**]"
+              "source": "[YOU RECALL: say *gottilla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ನನಗೂ ಗೊತ್ತಿಲ್ಲ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ನನಗೂ ಗೊತ್ತಿಲ್ಲ**]"
             }
           ]
         },

@@ -63,8 +63,8 @@ is new to say, only new to see.
 
 - [YOU CHOOSE: meeting begins → **salām**]
 - [YOU CHOOSE: interaction ends → **khudā hāfiz**]
-- [YOU RUN: both voices once from the romanization, then read the closing
-  line off the script alone]
+- [YOU RUN: both voices once from the romanization]
+- [YOU READ: the closing line off the script alone]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-DIALOGUE-WELLBEING, UR-LEX-KHUDA-HAFIZ, UR-SCRIPT-KHUDA-HAFIZ-SPACED, UR-PRAGMATICS-STANDARD-FAREWELL, UR-DIALOGUE-TAKE-LEAVE] -->

@@ -59,7 +59,8 @@ Two words for water now, and a reason to prefer one over the other.
 - [YOU SAY: *jalam*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *pānīyam*, then *jalam*, and say which one you would ask for at a table]
-- [YOU RECALL: say *śṛṇoti*, then read **पिता**]
+- [YOU RECALL: say *śṛṇoti*]
+- [YOU READ: **पिता**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-SON, SA-LEX-DAUGHTER, SA-LEX-C24-ASK-01] -->

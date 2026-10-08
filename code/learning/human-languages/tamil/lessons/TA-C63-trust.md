@@ -56,7 +56,8 @@ Four.
 - [YOU SAY: *nambikkai*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nambikkai*, then *viruntāḷi*, and say who is given which]
-- [YOU RECALL: read **காய்ச்சல்**, then say *uṭaṉē*]
+- [YOU READ: **காய்ச்சல்**]
+- [YOU RECALL: say *uṭaṉē*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C63-MANNERS-01, TA-LEX-C63-MANNERS-02, TA-LEX-C63-MANNERS-03, TA-LEX-C63-MANNERS-04] -->

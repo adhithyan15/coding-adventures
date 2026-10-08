@@ -59,7 +59,8 @@ The first of five more body words.
 - [YOU SAY: *bāl*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bāl*, then *sābun*, so the washing and the washed sit together]
-- [YOU RECALL: say *beṭā*, then read **फल**]
+- [YOU RECALL: say *beṭā*]
+- [YOU READ: **फल**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C45-ASK-04, HI-LEX-C45-ASK-05, HI-LEX-C46-BODY-01] -->

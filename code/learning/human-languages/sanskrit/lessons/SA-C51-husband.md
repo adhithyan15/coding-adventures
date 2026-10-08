@@ -60,7 +60,8 @@ One end of a household, named.
 - [YOU SAY: *patiḥ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ślokaḥ*, then *patiḥ*]
-- [YOU RECALL: say *tarhi*, then read **शब्दः**]
+- [YOU RECALL: say *tarhi*]
+- [YOU READ: **शब्दः**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C50-SOUND-04, SA-LEX-C50-SOUND-05, SA-LEX-C51-KIN-01] -->

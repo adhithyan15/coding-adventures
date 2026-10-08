@@ -59,7 +59,8 @@ Two, and both of them are about when.
 - [YOU SAY: *parsoṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *parsoṁ*, then *abhī*, the far day beside this very moment]
-- [YOU RECALL: say *chātra*, then read **बस**]
+- [YOU RECALL: say *chātra*]
+- [YOU READ: **बस**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C48-REPLY-05, HI-LEX-C49-LEAVE-01, HI-LEX-C49-LEAVE-02] -->

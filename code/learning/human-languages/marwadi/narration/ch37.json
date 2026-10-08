@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Eleven to Fifteen",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:59c63988b68fec2a",
+  "sourceHash": "fnv1a64:96ff8f26bbd8c6f3",
   "lessons": [
     {
       "id": "MW-W37-i",
@@ -1310,7 +1310,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0fa1a2b9110ff60e",
+      "sourceHash": "fnv1a64:acaf15193ebdd4da",
       "notice": null,
       "blocks": [
         {
@@ -1344,12 +1344,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read a printed ticket and say the figure on it aloud — R3",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "a printed ticket, then say the figure on it aloud — R3",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read a printed ticket and say the figure on it aloud — **R3**]"
+              "source": "[YOU READ: a printed ticket, then say the figure on it aloud — **R3**]"
             }
           ]
         },

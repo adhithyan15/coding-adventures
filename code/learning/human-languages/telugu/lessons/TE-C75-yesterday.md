@@ -57,7 +57,8 @@ Three days: నిన్న, ఇవాళ, రేపు.
 - [YOU SAY: *ninna*, once more]
 - [YOU SAY: say the three days in order: *ninna*, *ivāḷa*, *rēpu*]
 - [YOU RECALL: say *vātāvaraṇam*, then say *ninna*]
-- [YOU RECALL: read **పులుపు**, then say *kānī*]
+- [YOU READ: **పులుపు**]
+- [YOU RECALL: say *kānī*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-GRAMMAR-C74-LINK-05, TE-LEX-C75-WHEN-01, TE-LEX-C75-WHEN-02, TE-ETYMON-C20-VATAVARANAM-01, TE-GRAMMAR-C20-VATAVARANAM-02] -->

@@ -59,7 +59,8 @@ The first of five things a field holds.
 - [YOU SAY: *bīj*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *bīj*, then *khet*, and say which one goes into the other]
-- [YOU RECALL: say *ab*, then read **मेहरबानी**]
+- [YOU RECALL: say *ab*]
+- [YOU READ: **मेहरबानी**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C65-GRACE-04, HI-LEX-C65-GRACE-05, HI-LEX-C66-FIELD-01] -->

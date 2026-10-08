@@ -56,7 +56,8 @@ The first of five made things.
 - [YOU SAY: *ūsi*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *ūsi*, then *tuṇi*, and say which one repairs the other]
-- [YOU RECALL: say *pasu*, then read **தயிர்**]
+- [YOU RECALL: say *pasu*]
+- [YOU READ: **தயிர்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C59-KITCHEN-04, TA-LEX-C59-KITCHEN-05, TA-LEX-C60-MADE-01] -->

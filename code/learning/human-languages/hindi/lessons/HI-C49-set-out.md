@@ -59,7 +59,8 @@ Four, and this one is something you do.
 - [YOU SAY: *nikalnā*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nikalnā*, then *safar*, the leaving and the road it opens]
-- [YOU RECALL: read **मेहमान**, then say *śāyad*]
+- [YOU READ: **मेहमान**]
+- [YOU RECALL: say *śāyad*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C49-LEAVE-01, HI-LEX-C49-LEAVE-02, HI-LEX-C49-LEAVE-03, HI-LEX-C49-LEAVE-04] -->

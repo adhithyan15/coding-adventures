@@ -57,7 +57,8 @@ The first of five answers that are neither అవును nor లేదు.
 - [YOU SAY: *nijaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *nijaṁ*, then *nijamā?*, and say which one asks]
-- [YOU RECALL: say *kālu*, then read **గురువు** and say what it means]
+- [YOU RECALL: say *kālu*]
+- [YOU READ: **గురువు**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C48-ROLE-04, TE-LEX-C48-ROLE-05, TE-LEX-C49-REPLY-01] -->

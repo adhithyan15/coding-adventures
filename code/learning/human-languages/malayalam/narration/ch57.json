@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "Five More of the Body",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6d252340b1e2cb12",
+  "sourceHash": "fnv1a64:5156f9a502933d3e",
   "lessons": [
     {
       "id": "ML-C57-neck",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f165a9813f788f91",
+      "sourceHash": "fnv1a64:1958a6f105507e6d",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read പാറ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "പാറ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **പാറ**]"
+              "source": "[YOU READ: **പാറ**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:043e7fb833b6d99b",
+      "sourceHash": "fnv1a64:92a24f8f51ac230b",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read വഴി",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "വഴി",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **വഴി**]"
+              "source": "[YOU READ: **വഴി**]"
             }
           ]
         },

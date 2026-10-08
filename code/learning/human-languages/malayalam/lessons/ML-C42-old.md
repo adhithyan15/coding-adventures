@@ -54,7 +54,8 @@ adjective you will ever meet here.
 [PAUSE 1s]
 - [YOU SAY: "പഴയ" three times, pointing at something different each time]
 - [YOU SAY: it once with a word you already know after it]
-- [YOU RECALL: say *atŭ*, then read **ഇവിടെ**]
+- [YOU RECALL: say *atŭ*]
+- [YOU READ: **ഇവിടെ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-05] -->

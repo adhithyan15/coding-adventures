@@ -58,7 +58,8 @@ Five: గొడ్డలి, రంపం, పార, సుత్తి, కర
 - [YOU SAY: *karra*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then *dayacēsi* and the one you would borrow first]
-- [YOU RECALL: say *kiṭikī*, then read **కబురు** and say what it means]
+- [YOU RECALL: say *kiṭikī*]
+- [YOU READ: **కబురు**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C69-TOOL-01, TE-LEX-C69-TOOL-02, TE-LEX-C69-TOOL-03, TE-LEX-C69-TOOL-04, TE-LEX-C69-TOOL-05] -->

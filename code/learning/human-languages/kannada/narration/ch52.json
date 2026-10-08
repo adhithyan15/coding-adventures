@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Welcoming a Guest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a48961a12bc9330f",
+  "sourceHash": "fnv1a64:c9f3c74b55df5dc9",
   "lessons": [
     {
       "id": "KA-C52-door",
@@ -150,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a4cf3eec0a30786",
+      "sourceHash": "fnv1a64:7e9811306df59874",
       "notice": null,
       "blocks": [
         {
@@ -240,12 +240,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ನಾಡಿದ್ದು",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ನಾಡಿದ್ದು",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ನಾಡಿದ್ದು**]"
+              "source": "[YOU READ: **ನಾಡಿದ್ದು**]"
             }
           ]
         },
@@ -412,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:daecaf3ce887b07e",
+      "sourceHash": "fnv1a64:dc5c7fda06e99e52",
       "notice": null,
       "blocks": [
         {
@@ -502,12 +502,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಹೊರಡು",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಹೊರಡು",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಹೊರಡು**]"
+              "source": "[YOU READ: **ಹೊರಡು**]"
             }
           ]
         },

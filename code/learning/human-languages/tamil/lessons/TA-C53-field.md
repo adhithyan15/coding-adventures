@@ -56,7 +56,8 @@ Three: high ground, and now the flat wet ground under it.
 - [YOU SAY: *vayal*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *malai*, then *vayal*, the high ground and the flat]
-- [YOU RECALL: say *nilā*, then read **தளிர்**]
+- [YOU RECALL: say *nilā*]
+- [YOU READ: **தளிர்**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C53-LAND-01, TA-LEX-C53-LAND-02, TA-LEX-C53-LAND-03] -->

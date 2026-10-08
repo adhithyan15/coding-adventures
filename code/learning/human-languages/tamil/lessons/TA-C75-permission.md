@@ -69,8 +69,11 @@ A doorway you can stand in and be let through.
 - [YOU SAY: *nāṉ uḷḷē varalāmā?*]
 - [YOU GRANT: *ām, varalām*]
 - [YOU GRANT AGAIN: *sari*]
-- [YOU RECALL: answer *sariyā?*, then read **சரியா**, then ask *varalāmā?*]
-- [YOU RETURN TO: read **பாலும்**, say *vali* and say *viḷaiyāḍu* — three distances back — then ask about one of them with -ஆ]
+- [YOU RECALL: answer *sariyā?*]
+- [YOU READ: **சரியா**]
+- [YOU RECALL: ask *varalāmā?*]
+- [YOU READ: **பாலும்**]
+- [YOU RETURN TO: say *vali* and say *viḷaiyāḍu* — three distances back — then ask about one of them with -ஆ]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-C75-POLAR-01, TA-PRAGMATICS-C75-ANSWER-02, TA-SCRIPT-READ-SARIYAA-01, TA-PRAGMATICS-C75-PERMISSION-03, TA-SCRIPT-READ-PAALUM-01, TA-LEX-C61-FEEL-05, TA-LEX-C71-DAY-05] -->

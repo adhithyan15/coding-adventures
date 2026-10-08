@@ -58,7 +58,7 @@ Four.
 - [YOU SAY: *kākka*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *kākka*, then *kōḻi*, and say which of the two is kept and which turns up]
-- [YOU RECALL: read **വേണ്ട**]
+- [YOU READ: **വേണ്ട**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C60-ANIMAL-01, ML-LEX-C60-ANIMAL-02, ML-LEX-C60-ANIMAL-03, ML-LEX-C60-ANIMAL-04] -->

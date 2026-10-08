@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 38,
-  "sourceHash": "fnv1a64:fd2ab82202325ab1",
+  "sourceHash": "fnv1a64:362004e0008d3de6",
   "lessonIds": [
     "SA-C38-fire",
     "SA-C38-ash",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch38.txt",
   "json": "sanskrit/narration/ch38.json",
-  "textHash": "fnv1a64:12ebf995f2244458",
-  "jsonHash": "fnv1a64:1beb29ed96e45a15",
+  "textHash": "fnv1a64:cd005b9587a2d361",
+  "jsonHash": "fnv1a64:18bf9eb25a43a6d1",
   "findings": []
 }

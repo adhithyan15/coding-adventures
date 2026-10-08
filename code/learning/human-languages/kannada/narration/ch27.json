@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a85412291be99326",
+  "sourceHash": "fnv1a64:795e47747d730e76",
   "lessons": [
     {
       "id": "KA-C27-sanje",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:39adcf6b6c6fe71f",
+      "sourceHash": "fnv1a64:51f430ebf25c30d9",
       "notice": null,
       "blocks": [
         {
@@ -102,11 +102,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "say hasiru haḷadi, then read ದಿನ",
+              "instruction": "say hasiru haḷadi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: say *hasiru haḷadi*, then read **ದಿನ**]"
+              "source": "[YOU RECALL: say *hasiru haḷadi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ದಿನ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ದಿನ**]"
             }
           ]
         },

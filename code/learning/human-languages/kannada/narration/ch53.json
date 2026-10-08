@@ -4,7 +4,7 @@
   "chapter": 53,
   "title": "The Sky",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:79fec3a818018a53",
+  "sourceHash": "fnv1a64:3455441898d1bbdc",
   "lessons": [
     {
       "id": "KA-C53-sky",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c464e3bb7b4db0ec",
+      "sourceHash": "fnv1a64:62bb10564b57933e",
       "notice": null,
       "blocks": [
         {
@@ -248,12 +248,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಉಪಕಾರ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಉಪಕಾರ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಉಪಕಾರ**]"
+              "source": "[YOU READ: **ಉಪಕಾರ**]"
             }
           ]
         },
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d1c2892e458a86b",
+      "sourceHash": "fnv1a64:d3a1e546e336ff3f",
       "notice": null,
       "blocks": [
         {
@@ -518,12 +518,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "read ಆಶೀರ್ವಾದ",
-              "spoken": true,
+              "action": "READ",
+              "instruction": "ಆಶೀರ್ವಾದ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: read **ಆಶೀರ್ವಾದ**]"
+              "source": "[YOU READ: **ಆಶೀರ್ವಾದ**]"
             }
           ]
         },

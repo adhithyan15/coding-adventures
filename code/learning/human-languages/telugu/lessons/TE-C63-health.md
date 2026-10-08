@@ -58,7 +58,8 @@ Five: ఆకలి, నిద్ర, దగ్గు, రోగం, ఆరోగ
 - [YOU SAY: *ārōgyaṁ*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: all five in order, then ask *mī ārōgyaṁ elā undi?*]
-- [YOU RECALL: say *mirapa*, then read **అద్దం** and say what it means]
+- [YOU RECALL: say *mirapa*]
+- [YOU READ: **అద్దం**, then say what it means]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C63-HEALTH-01, TE-LEX-C63-HEALTH-02, TE-LEX-C63-HEALTH-03, TE-LEX-C63-HEALTH-04, TE-LEX-C63-HEALTH-05] -->

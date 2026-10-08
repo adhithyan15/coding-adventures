@@ -58,7 +58,8 @@ The word the rest of this chapter is built on.
 - [YOU SAY: *vaṇḍi*]
 - [YOU SAY: it once more, curling the tongue back for the ண]
 - [YOU RECALL: say *vāṅgu*, then say *pai*, then say *vaṇḍi*]
-- [YOU RECALL: say *saṭṭai*, then read **கடை**]
+- [YOU RECALL: say *saṭṭai*]
+- [YOU READ: **கடை**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C68-SHOP-04, TA-LEX-C68-SHOP-05, TA-LEX-C69-GOING-01] -->

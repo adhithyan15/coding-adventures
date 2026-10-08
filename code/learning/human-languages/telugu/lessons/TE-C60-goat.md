@@ -58,7 +58,8 @@ Two: one for milk, one for anything.
 - [YOU SAY: *mēka*]
 - [YOU SAY: it once more, slowly]
 - [YOU SAY: *mēka*, then *gēde*, and say which one wants the చెరువు]
-- [YOU RECALL: read **ఎక్కువ**, then say *mañcu*]
+- [YOU READ: **ఎక్కువ**]
+- [YOU RECALL: say *mañcu*]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C59-WEATHER-05, TE-LEX-C60-ANIMAL-01, TE-LEX-C60-ANIMAL-02] -->

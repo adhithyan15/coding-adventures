@@ -64,7 +64,7 @@ A देश and the name of one: भारत एक देश है.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C68-ORIGIN-01, HI-LEX-C68-ORIGIN-02, HI-SOUND-QUESTION-RISE-01, HI-JOIN-TAG-NA-01, HI-LEX-C66-FIELD-05, HI-FORM-NAME-NO-MODEL-01] -->
 
 [PAUSE 1s]
-- [YOU RECALL: read **कुआँ**, then say it without looking]
+- [YOU READ: **कुआँ**, then say it without looking]
 - [YOU SAY: *Bhārat*]
 - [YOU SAY: *Bhārat ek desh hai*]
 - [YOU SAY: the same sentence twice — flat, then with the end lifted — and then *Bhārat ek desh hai nā?*]
