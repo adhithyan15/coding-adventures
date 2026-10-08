@@ -265,13 +265,20 @@ directives retain their rooted location. The next fresh selection rotates to
 LANG82's prepared, separate, explicitly partial 5.004_56 and 5.004_57
 historical token/grammar pairs.
 
+PR #17047 delivered those distinct, explicitly partial, own-archive-backed
+Perl 5.004_56 and 5.004_57 token/grammar pairs and merged as
+`c71d515562ff10fa34fe5817889689f24ae1b88e` after exact-head CI,
+CodeQL, and books checks passed. The 776-row inventory now has 102 partial
+pairs and 674 pending, without a full-syntax or exhaustive-release claim.
+The next fresh selection is the prepared bounded 5.004_58 historical pair.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG82 Perl release grammars (selected):** add separate, explicitly
-   partial 5.004_56 and 5.004_57 token/grammar pairs, each backed by its own
-   historical archive and bounded decimal-scanner evidence.
+1. **LANG82 Perl release grammars (selected):** add a separate, explicitly
+   partial 5.004_58 token/grammar pair backed by its own historical archive
+   and bounded decimal-scanner evidence.
 2. **LANG82 continued:** continue distinct source-backed partial pairs. Keep
    5.004_01-t1 pending until its own source is found; do not imply complete
    syntax or an exhaustive release inventory.
