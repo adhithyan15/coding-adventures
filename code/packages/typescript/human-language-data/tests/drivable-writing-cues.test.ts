@@ -390,6 +390,10 @@ function ledgerEntries(): Dirent[] {
 function loadDebt(): Map<string, string[]> {
   const debt = new Map<string, string[]>();
   for (const entry of ledgerEntries()) {
+    // Read only what the well-formed test below accepts: a regular file named
+    // `<track>.json`. Anything else (a symlink, a stray file) is that test's
+    // failure to report, not something to open and parse here.
+    if (!entry.isFile() || !/^[a-z]+\.json$/.test(entry.name)) continue;
     const track = entry.name.replace(/\.json$/, "");
     debt.set(track, JSON.parse(readFileSync(join(DEBT_DIRECTORY, entry.name), "utf8")) as string[]);
   }
@@ -424,8 +428,11 @@ describe("drivable lessons carry no bare writing imperative", () => {
       if (bareWritingImperatives(markdown).length > 0) prose += 1;
       if (writingRecallCues(markdown).length > 0) recall += 1;
     }
-    expect(prose, "pen lessons with a prose writing instruction").toBeGreaterThan(50);
-    expect(recall, "pen lessons with a writing recall cue").toBeGreaterThan(5);
+    // Floors set well below the counts measured when this was written (1,218
+    // and 35 of 2,467 non-drivable lessons), but high enough that a detector
+    // which lost most of its matches fails here rather than passing quietly.
+    expect(prose, "pen lessons with a prose writing instruction").toBeGreaterThan(1000);
+    expect(recall, "pen lessons with a writing recall cue").toBeGreaterThan(25);
   });
 
   it("the #12070 lessons are still drivable, and clean", () => {

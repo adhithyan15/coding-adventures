@@ -484,11 +484,15 @@ const INSTRUCTION_CUE_ACTIONS: ReadonlySet<string> = new Set(["RECALL"]);
  * Does the content of a recall cue (the Markdown after its colon) ask for
  * writing? See the table above for the three shapes and the controls.
  *
- * Linear for the same reasons as the prose tests: whitespace runs are
- * collapsed in one pass, quotations are blanked with the opener-excluding
- * patterns of `withoutQuotations`, and each regex is applied once. The
- * content of a real cue is also bounded — `closingBracket` gives up after
- * `MAX_CUE_LENGTH` characters — but nothing here relies on that.
+ * Whitespace runs are collapsed in one pass and quotations are blanked with
+ * the opener-excluding patterns of `withoutQuotations`. One step is NOT
+ * linear on its own: `BARE_WRITING_IMPERATIVE` carries the prose test's
+ * `NOT_A_MENTION` lookahead, which scans to the end of the sentence from every
+ * candidate, so a sentence of N writing verbs with no stop costs O(N²) (the
+ * prose path, `bareWritingImperatives`, has the same shape). What keeps it
+ * cheap here is the cue bound: `closingBracket` gives up after
+ * `MAX_CUE_LENGTH` (4,096) characters, so no cue content is longer than that,
+ * and a maximal adversarial cue costs well under a millisecond.
  */
 export function recallCueAsksForWriting(content: string): boolean {
   const text = content.replace(/\s+/g, " ").trim();
