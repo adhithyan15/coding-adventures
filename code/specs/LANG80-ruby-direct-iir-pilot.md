@@ -74,3 +74,5 @@ exactly one positional expression and a literal `puts` callee. Multiple
 arguments, keyword arguments, splats, blocks, other methods, and unsupported
 expression forms still fail before VM execution. The resulting IIR must call
 the existing `rb_puts_int` builtin; Ruby is only a conformance oracle.
+Directly supplied ASTs must also carry a name-like callee token with a matching
+effective grammar type; a string or number token spelling `puts` is not a call.

@@ -49,7 +49,7 @@ pub fn compile_ast(ast: &GrammarASTNode, module_name: &str) -> Result<IIRModule,
         let expression = match call.rule_name.as_str() {
             "method_call"
                 if call.children.len() == 4
-                    && token_value(&call.children[0]) == Some("puts")
+                    && is_puts_callee(&call.children[0])
                     && token_value(&call.children[1]) == Some("(")
                     && token_value(&call.children[3]) == Some(")") =>
             {
@@ -62,7 +62,7 @@ pub fn compile_ast(ast: &GrammarASTNode, module_name: &str) -> Result<IIRModule,
                 let [callee, ASTNodeOrToken::Node(expression)] = call.children.as_slice() else {
                     return Err("native Ruby pilot requires puts one expression".into());
                 };
-                if token_value(callee) != Some("puts") || expression.rule_name != "expression" {
+                if !is_puts_callee(callee) || expression.rule_name != "expression" {
                     return Err("native Ruby pilot requires puts one expression".into());
                 }
                 expression
@@ -202,6 +202,15 @@ fn token_value(child: &ASTNodeOrToken) -> Option<&str> {
         ASTNodeOrToken::Token(token) => Some(&token.value),
         ASTNodeOrToken::Node(_) => None,
     }
+}
+
+fn is_puts_callee(child: &ASTNodeOrToken) -> bool {
+    let ASTNodeOrToken::Token(token) = child else {
+        return false;
+    };
+    token.value == "puts"
+        && matches!(token.type_, TokenType::Name | TokenType::Keyword)
+        && matches!(token.effective_type_name(), "NAME" | "KEYWORD")
 }
 
 fn only_node<'a>(parent: &'a GrammarASTNode, rule: &str) -> Result<&'a GrammarASTNode, String> {
@@ -421,6 +430,38 @@ mod tests {
         assert_eq!(builtin_calls, 2, "division and puts both execute in IIR");
         for source in ["puts 1, 2", "print 1", "puts 010", "puts 1 / 0"] {
             assert!(run_source(source).is_err(), "{source}");
+        }
+    }
+
+    #[test]
+    fn direct_ast_rejects_a_forged_puts_callee() {
+        for source in ["puts 1", "puts(1)"] {
+            let mut parser = try_create_ruby_parser(source).unwrap();
+            let mut ast = parser.parse().unwrap();
+            let ASTNodeOrToken::Node(statement) = &mut ast.children[0] else {
+                panic!("expected statement");
+            };
+            let ASTNodeOrToken::Node(call) = &mut statement.children[0] else {
+                panic!("expected call");
+            };
+            let ASTNodeOrToken::Token(callee) = &mut call.children[0] else {
+                panic!("expected callee");
+            };
+            callee.type_ = TokenType::String;
+            assert!(compile_ast(&ast, "forged").is_err(), "{source}");
+
+            let ASTNodeOrToken::Node(statement) = &mut ast.children[0] else {
+                unreachable!();
+            };
+            let ASTNodeOrToken::Node(call) = &mut statement.children[0] else {
+                unreachable!();
+            };
+            let ASTNodeOrToken::Token(callee) = &mut call.children[0] else {
+                unreachable!();
+            };
+            callee.type_ = TokenType::Name;
+            callee.type_name = Some("STRING".into());
+            assert!(compile_ast(&ast, "forged").is_err(), "{source}");
         }
     }
 

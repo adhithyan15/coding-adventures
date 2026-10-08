@@ -4,6 +4,8 @@
 
 - Accept one-argument bare `puts expression` calls through the existing Ruby
   parser tree and direct IIR lowering, with the same integer bounds as `puts(...)`.
+- Reject forged direct-AST `puts` callees with non-name token classifications
+  in both supported call forms.
 - Use the fallible Ruby parser constructor so malformed lexical input is
   returned as a compiler error.
 - Reject numeric-looking strings and legacy leading-zero octal literals in the
