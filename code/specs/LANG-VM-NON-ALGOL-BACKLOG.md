@@ -353,18 +353,29 @@ skips after a decisive logical result. Full C `#if` and stringize/paste remain
 open. The next selection rotates to LANG82's separate, own-archive-backed
 partial Perl 5.004_63 pair.
 
+PR #17114 delivered that distinct, own-archive-backed partial 5.004_63
+token/grammar pair and merged as `aa14be5f12ced92fffa0b9a5cfd4b4a234492213`
+after exact-head CI, CodeQL, and books checks passed. The 776-row inventory
+now has 108 explicitly partial pairs and 668 pending. Neither complete syntax
+nor an exhaustive public-release inventory is claimed. The next selection
+rotates to LANG79's bounded two-argument Python float `print` stage.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG82 continued (selected):** add a distinct, own-archive-backed partial
-   5.004_63 token/grammar pair. Keep 5.004_01-t1 pending until its own source
-   is found; do not imply complete syntax or an exhaustive release inventory.
-2. **LANG80 Ruby:** the zero-argument parenthesized stage is complete; broader
+1. **LANG79 Python (selected):** lower exactly two positional float arguments
+   from the Python 3.12 grammar AST to IIR and print them on Rust vm-core with
+   one separating space. Keep unsupported call forms and source/AST limits
+   explicit; host Python remains a conformance oracle only.
+2. **LANG82 continued:** source-audit the next distinct Perl release pair.
+   Keep 5.004_01-t1 pending until its own source is found; do not imply
+   complete syntax or an exhaustive release inventory.
+3. **LANG80 Ruby:** the zero-argument parenthesized stage is complete; broader
    native frontend semantics remain open, with host Ruby only as an oracle.
-3. **LANG78 JavaScript:** the zero-argument stage is complete; broader native
+4. **LANG78 JavaScript:** the zero-argument stage is complete; broader native
    frontend semantics remain open, with Node only as a conformance oracle.
-4. **PREP01 C:** the bounded logical short-circuit stage is complete. Full C
+5. **PREP01 C:** the bounded logical short-circuit stage is complete. Full C
    `#if` and stringize/paste remain open.
 
 The following run records the first VM-067 selection.
