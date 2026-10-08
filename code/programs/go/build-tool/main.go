@@ -192,6 +192,7 @@ const sourceCollectionFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/s
 const graphFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/graph-"
 const diffSelectionFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/diff-selection-"
 const resolutionFixtureCasePrefix = "code/specs/fixtures/build-tool-v1/cases/resolution-"
+const hashingCacheFixtureCasePrefix = "code/specs/fixtures/build-tool-v1/cases/hashing-cache-"
 
 const closureProvenanceSpecPath = "code/specs/CV02-checked-bounded-provenance-graphs.md"
 const closureProvenanceConsumer = "rust/programs/closurec"
@@ -318,10 +319,48 @@ var resolutionNativeFixtureCases = map[string]string{
 	"ocaml-field-aware": "G",
 }
 
+// Native hashing-cache readers have a smaller relation than the neutral
+// corpus. C#/F# glob all cases, Lua explicitly replays all cases, and other
+// fronts assert only their named cache states or digest slices. A newly added
+// flat case has no assumed reader: it must be classified before CI can plan.
+var hashingCacheNativeFixtureReaders = map[rune]struct{ name, language string }{
+	'C': {"dotnet/programs/build-tool-csharp", "csharp"},
+	'F': {"dotnet/programs/build-tool-fsharp", "fsharp"},
+	'L': {"lua/programs/build-tool", "lua"},
+	'G': {"go/programs/build-tool", "go"},
+	'P': {"perl/programs/build-tool", "perl"},
+	'Y': {"python/programs/build-tool", "python"},
+	'B': {"ruby/programs/build-tool", "ruby"},
+	'S': {"swift/programs/build-tool", "swift"},
+	'T': {"typescript/programs/build-tool", "typescript"},
+}
+
+var hashingCacheNativeFixtureCases = map[string]string{
+	"corrupt":                           "CFLYT",
+	"dependency-change-after":           "CFL",
+	"dependency-order-before":           "CFL",
+	"failed-prior-record":               "CFL",
+	"hit":                               "CFLY",
+	"local-boundary-union":              "CFL",
+	"missing":                           "CFLGPYBS",
+	"shared-input-conduit-after":        "CFL",
+	"shared-input-conduit-before":       "CFL",
+	"shared-input-sha256-native-after":  "CFL",
+	"shared-input-sha256-native-before": "CFL",
+}
+
 // A raw Git path is already slash-separated. Do not clean it: normalizing a
 // nested or backslash lookalike would incorrectly broaden the CI selection.
 func resolutionFixtureCase(changed string) string {
 	name, ok := strings.CutPrefix(changed, resolutionFixtureCasePrefix)
+	if !ok || !strings.HasSuffix(name, ".json") || len(name) <= len(".json") || strings.ContainsAny(name, "/\\") {
+		return ""
+	}
+	return strings.TrimSuffix(name, ".json")
+}
+
+func hashingCacheFixtureCase(changed string) string {
+	name, ok := strings.CutPrefix(changed, hashingCacheFixtureCasePrefix)
 	if !ok || !strings.HasSuffix(name, ".json") || len(name) <= len(".json") || strings.ContainsAny(name, "/\\") {
 		return ""
 	}
@@ -476,13 +515,22 @@ func changedPackageRootsForPlatformAndLanguage(
 			resolutionCases[caseName] = true
 		}
 	}
+	hashingCacheCases := map[string]bool{}
+	for _, path := range changedFiles {
+		if caseName := hashingCacheFixtureCase(path); caseName != "" {
+			if _, known := hashingCacheNativeFixtureCases[caseName]; !known {
+				return nil, fmt.Errorf("hashing-cache fixture case %q has no classified native readers", caseName)
+			}
+			hashingCacheCases[caseName] = true
+		}
+	}
 	sourceFixtureFamilies := map[string]bool{}
 	for _, path := range changedFiles {
 		if family := sourceCollectionFixtureFamily(path); family != "" {
 			sourceFixtureFamilies[family] = true
 		}
 	}
-	if !discoveryFixtureChanged && !ciGateFixtureChanged && !toolchainFixtureChanged && !graphDiffFixtureChanged && len(resolutionCases) == 0 && len(sourceFixtureFamilies) == 0 {
+	if !discoveryFixtureChanged && !ciGateFixtureChanged && !toolchainFixtureChanged && !graphDiffFixtureChanged && len(resolutionCases) == 0 && len(hashingCacheCases) == 0 && len(sourceFixtureFamilies) == 0 {
 		return changed, nil
 	}
 
@@ -544,6 +592,18 @@ func changedPackageRootsForPlatformAndLanguage(
 			}
 			if !available[consumer.name] {
 				return nil, fmt.Errorf("resolution fixture %q consumer %q is missing from discovered packages", caseName, consumer.name)
+			}
+			changed[consumer.name] = true
+		}
+	}
+	for caseName := range hashingCacheCases {
+		for _, code := range hashingCacheNativeFixtureCases[caseName] {
+			consumer := hashingCacheNativeFixtureReaders[code]
+			if language != "all" && consumer.language != language {
+				continue
+			}
+			if !available[consumer.name] {
+				return nil, fmt.Errorf("hashing-cache fixture %q consumer %q is missing from discovered packages", caseName, consumer.name)
 			}
 			changed[consumer.name] = true
 		}
