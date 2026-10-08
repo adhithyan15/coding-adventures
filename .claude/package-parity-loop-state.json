@@ -11,15 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 17104,
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-08T11:16:49Z",
-    "pr_number": 17097,
+    "observed_at": "2026-10-08T11:54:18Z",
+    "pr_number": 17104,
     "status": "merged",
-    "notes": "PR #17097 completed seven successful and 25 skipped terminal checks without conflict. Guarded auto-merge completed as 6a97d0c290c80f0570dd3635a727abf85b88980b and was verified on fetched origin/main; it was not manually merged. No parity PR remains open."
+    "notes": "PR #17104 completed all terminal acceptable CI and CodeQL checks without conflict. Guarded squash auto-merge completed as 44919f4a28c3665871280a71807d2ffb6718b957 and was verified on fetched origin/main; it was not manually merged. No parity PR remains open."
   },
   "last_inventory": {
-    "revision": "6a97d0c290c80f0570dd3635a727abf85b88980b",
+    "revision": "44919f4a28c3665871280a71807d2ffb6718b957",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1497,
@@ -1380,11 +1380,13 @@
     {
       "id": "build-tool-ruby-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 20-case process-free graph and diff-selection contract in the Ruby build tool",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-ruby-glob-matcher-complexity-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
       "branch": "codex/parity-ruby-diff-selection-20261008",
       "pr_number": 17104,
       "opened_at": "2026-10-08T11:38:55Z",
+      "merged_at": "2026-10-08T11:54:18Z",
+      "merge_commit": "44919f4a28c3665871280a71807d2ffb6718b957",
       "progress_notes": "Ready-for-review PR #17104 adds the Ruby process-free graph/diff core with all eight graph and twelve diff-selection neutral cases, shared-input fanout, verified boundary digest, exact BUILD fronts, and the 50-million Unicode-scalar pre-match ceiling. Final rebased-head Ruby suite passes 386 tests/1,024 assertions with four platform skips and 92.62% line coverage; touched Ruby lint, syntax, registry sync, BUILD validation, schema-3 zero-collision inventory, diff check, and read-only security review pass. Legacy Git/execution adapter migration is explicitly out of scope.",
       "notes": "Selected after #17097 merged and exact-main collision-checked inventory/owner refresh. All seven prerequisites are merged; no live open PR overlaps Ruby build-tool source/tests or neutral graph/diff fixtures. Complete and dynamically consume the eight-graph and twelve-diff process-free contract, including shared-input multi-consumer selection, through production code, reusing the separately hardened shared Ruby matcher and preserving stable empty failures. Keep execution authority outside this process-free slice."
     },
@@ -13624,7 +13626,9 @@
       "notes": "Audit confirmed all twelve existing lanes use midpoint-to-chord flatness and unbounded recursion. Five bounded child owners now claim C#/F#, Python/Ruby/Perl, Go/Rust, Haskell/Swift, and TypeScript/Elixir/Lua. Do not claim this umbrella merged until every lane has tested coverage or a reviewed exception."
     },
     {
-      "id": "geometry-affine2d-bezier2d-neutral-fixture-extension", "title": "Add dynamic G2D01/G2D02 neutral fixtures", "status": "pending", "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-bezier2d-flattening-termination-contract"], "branch": null, "pr_number": null,
+      "id": "geometry-affine2d-bezier2d-neutral-fixture-extension", "title": "Add dynamic G2D01/G2D02 neutral fixtures", "status": "in-progress", "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-bezier2d-flattening-termination-contract"], "branch": "codex/parity-geometry2d-neutral-fixtures-20261008", "pr_number": null,
+      "selection_revision": "44919f4a28c3665871280a71807d2ffb6718b957",
+      "selection_notes": "Selected after #17104 auto-merged and an exact-main schema-3 collision-checked refresh. Both prerequisites are merged. A read-only leverage pass ranks this neutral G2D01/G2D02 fixture extension first because it unlocks six missing Java/Kotlin/Dart Affine2D and Bezier2D slots, with three Arc2D slots downstream. The Ruby boundary reverse-diff/digest adoption is now independently ready and ranks second. No live open PR overlaps geometry2d fixtures/specs or parity state/roadmap. OCaml milestone review found no new unowned gap; existing pending owners retain its native build-tool and denominator gates.",
       "notes": "Extend the corrected G2D01/G2D02 neutral contract with affine composition/inversion and Bezier evaluation, derivative, split, and bounds cases before Java/Kotlin/Dart fixture-consumed parity. Keep existing-lane flattening repairs separately owned."
     },
     {
