@@ -1,0 +1,217 @@
+{
+  "version": 1,
+  "language": "punjabi",
+  "chapter": 167,
+  "title": "Return to Believing and Changing",
+  "drivablePrefix": 2,
+  "sourceHash": "fnv1a64:3c72a2caf12eaf22",
+  "lessons": [
+    {
+      "id": "PA-R167-believe-again",
+      "sequence": 9060,
+      "title": "An old word for believing",
+      "headword": "ਮੰਨਣਾ",
+      "romanization": "mannṇā",
+      "gloss": "to believe, to agree, recalled after a long gap",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3ed733d201e882c6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear one familiar meaning, pause, and retrieve its Punjabi word before the model. This is a gentle return, not a new word or a scored mock."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to believe, to agree."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਮੰਨਣਾ (mannṇā)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear ਮੰਨਣਾ (mannṇā)."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall to believe, to agree. Then hear the English cue again."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ਮੰਨਣਾ (mannṇā) before the model. Only this old word is needed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One last cue: to believe, to agree."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਮੰਨਣਾ (mannṇā). Listen and retry once if it does not come back."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-R167-change-again",
+      "sequence": 9070,
+      "title": "An old word for changing",
+      "headword": "ਬਦਲਣਾ",
+      "romanization": "badalṇā",
+      "gloss": "to change, then a gentle mix of two familiar actions",
+      "script": "gurmukhi",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:eee4b855fc057ad9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": -1,
+          "type": "unknown",
+          "title": "",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "First retrieve to change alone. Then hear two familiar actions in a small shuffled mix. Pause before each model. This is not a scored mock."
+            }
+          ]
+        },
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to change."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall ਬਦਲਣਾ (badalṇā)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Pause after each familiar meaning, then hear its model:"
+            },
+            {
+              "kind": "speech",
+              "text": "to change —."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਬਦਲਣਾ (badalṇā)."
+            },
+            {
+              "kind": "speech",
+              "text": "to believe, to agree —."
+            },
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "ਮੰਨਣਾ (mannṇā)."
+            },
+            {
+              "kind": "speech",
+              "text": "Only the order of these old words has changed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear to believe, to agree, then to change. Pause after each cue and recall its Punjabi word before the model: ਮੰਨਣਾ (mannṇā), ਬਦਲਣਾ (badalṇā). Revisit only the old word you missed."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

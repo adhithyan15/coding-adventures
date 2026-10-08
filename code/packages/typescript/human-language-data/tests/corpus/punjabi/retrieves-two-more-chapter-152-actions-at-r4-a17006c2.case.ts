@@ -41,4 +41,10 @@ it("retrieves two more familiar Chapter 152 actions at R4 without A1 mock credit
   expect([...previousPairs].filter((pair) => !currentPairs.has(pair)).sort()).toEqual(
     atoms.map((atom) => `R4|${atom}`).sort(),
   );
+  // These two later moving-boundary date-form pairs belong to #17041, after #17023.
+  expect([...currentPairs].filter((pair) => !previousPairs.has(pair)).sort()).toEqual([
+    "R4|PA-FORM-DATE-A-01",
+    "R4|PA-FORM-DATE-B-01",
+  ]);
+  expect(after.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 515, R4: 577 });
 });
