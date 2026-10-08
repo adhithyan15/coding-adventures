@@ -200,6 +200,12 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     if has_marker("FLOOD") {
         flood(&mut control)?;
     }
+    if has_marker("ORPHAN") {
+        // Leave a process behind that holds this host's stdout, and record
+        // its pid. The host then runs on and stops normally.
+        let orphan = std::process::Command::new("sleep").arg("30").spawn()?;
+        std::fs::write("ORPHAN_PID", orphan.id().to_string())?;
+    }
     control.receive_terminate()?;
     if has_marker("IGNORE_TERMINATE") {
         thread::sleep(Duration::from_secs(10));

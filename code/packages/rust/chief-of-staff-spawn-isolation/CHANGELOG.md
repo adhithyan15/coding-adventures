@@ -4,6 +4,13 @@
 
 ### Added
 
+- `kill_session(&Child)`: `SIGKILL` to an isolated child's process group.
+  An isolated child leads its own session, so this ends whatever it left
+  behind as well (D18S S-K5; #13980 P2.6b). On Windows it does nothing.
+  A test checks that a grandchild holding the child's stdout dies with it.
+
+### Added
+
 - `isolate(&mut Command)`: descriptor isolation for D18 agent spawns (D18S
   S-I2, S-I3; #13980 P2.2).
   - stderr goes to `/dev/null`.

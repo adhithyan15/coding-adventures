@@ -336,10 +336,16 @@ impl OwnedInstance {
     }
 
     fn finish_exit(&mut self, status: ExitStatus) {
-        self.child.take();
+        // Whatever the host left behind dies with it (review round 8, L1
+        // and L3): a descendant holding its stdout would keep the reader
+        // from end-of-file, and one holding its stdin would keep the writer
+        // blocked.
+        if let Some(child) = self.child.take() {
+            let _ = chief_of_staff_spawn_isolation::kill_session(&child);
+        }
         self.stdin.take();
         if let Some(reader) = self.reader.take() {
-            let _ = reader.join();
+            join_bounded(reader);
         }
         self.control.take();
         self.pending_data_plane_request = None;
@@ -357,6 +363,9 @@ impl OwnedInstance {
             {
                 Some(status) => status,
                 None => {
+                    // The whole session, then the child itself (a no-op if
+                    // the group kill already reached it).
+                    let _ = chief_of_staff_spawn_isolation::kill_session(child);
                     child
                         .kill()
                         .map_err(|_| ProcessSupervisorError::ProcessIo)?;
@@ -410,8 +419,12 @@ impl OwnedInstance {
                 // moved ahead of the drain, so it waits no longer than before.  A failure found here reaps through
                 // `hard_kill_and_reap`, which sees the exit status and
                 // finishes the exit itself.
+                if let Some(child) = self.child.as_ref() {
+                    // Descendants first, so the reader sees end-of-file.
+                    let _ = chief_of_staff_spawn_isolation::kill_session(child);
+                }
                 if let Some(reader) = self.reader.take() {
-                    let _ = reader.join();
+                    join_bounded(reader);
                 }
                 // Uncapped: the reader is joined, so the queue is final, and
                 // bounded by the reader channel's capacity.
@@ -679,7 +692,19 @@ impl ProcessHostSupervisor {
                 return Err(ProcessSupervisorError::Spawn);
             }
         };
-        let mut stdin = BufWriter::new(child_stdin);
+        // From the first byte, the host's stdin is written by its own thread
+        // (review round 8, L2): a host that sends its hello and then stops
+        // reading cannot block the supervisor in startup either. A frame it
+        // never reads just leaves the startup or readiness timeout to fire.
+        let stdin = match RecordWriter::start(BufWriter::new(child_stdin)) {
+            Ok(stdin) => stdin,
+            Err(error) => {
+                let _ = chief_of_staff_spawn_isolation::kill_session(&child);
+                let _ = child.kill();
+                let _ = child.wait();
+                return Err(error);
+            }
+        };
         let (sender, records) = mpsc::sync_channel(MAX_PENDING_RECORDS);
         let clock = Arc::clone(&self.clock);
         let reader = thread::spawn(move || {
@@ -707,7 +732,7 @@ impl ProcessHostSupervisor {
         });
 
         let startup = (|| {
-            write_record(&mut stdin, offer.as_bytes())?;
+            stdin.send(offer.as_bytes().to_vec())?;
             let hello = match records.recv_timeout(self.config.bootstrap_timeout) {
                 Ok(ReaderEvent::Record { bytes, .. }) => ClientHello::from_bytes(&bytes)
                     .map_err(|_| ProcessSupervisorError::Bootstrap)?,
@@ -727,11 +752,11 @@ impl ProcessHostSupervisor {
             let trust = control
                 .provide_package_trust(package_trust)
                 .map_err(|_| ProcessSupervisorError::Control)?;
-            write_record(&mut stdin, &trust)?;
+            stdin.send(trust)?;
             let bindings = control
                 .provide_launch_bindings(launch_bindings)
                 .map_err(|_| ProcessSupervisorError::Control)?;
-            write_record(&mut stdin, &bindings)?;
+            stdin.send(bindings)?;
             Ok(control)
         })();
 
@@ -740,7 +765,7 @@ impl ProcessHostSupervisor {
                 registration: registration.clone(),
                 package_hash: *registration.package_hash(),
                 child: Some(child),
-                stdin: Some(RecordWriter::start(stdin)?),
+                stdin: Some(stdin),
                 reader: Some(reader),
                 records,
                 channel_id: ChannelId(control.session_id().as_bytes()),
@@ -755,9 +780,10 @@ impl ProcessHostSupervisor {
             }),
             Err(error) => {
                 drop(stdin);
+                let _ = chief_of_staff_spawn_isolation::kill_session(&child);
                 let _ = child.kill();
                 let _ = child.wait();
-                let _ = reader.join();
+                join_bounded(reader);
                 Err(error)
             }
         }
@@ -1151,6 +1177,23 @@ fn validate_runtime_bindings(
         (AgentPackageRuntime::Skill, Some(_)) | (AgentPackageRuntime::Deno, None) => Ok(()),
         _ => Err(ProcessSupervisorError::LaunchBindings),
     }
+}
+
+/// How long the supervisor waits for a host's reader thread to finish once
+/// the host is gone. The session kill normally ends it at once; if
+/// something still holds the pipe, the thread is left to finish on its own
+/// rather than hold the supervisor (review round 8, L1).
+const READER_JOIN_DEADLINE: Duration = Duration::from_secs(2);
+
+fn join_bounded(reader: JoinHandle<()>) {
+    let deadline = Instant::now() + READER_JOIN_DEADLINE;
+    while !reader.is_finished() {
+        if Instant::now() >= deadline {
+            return;
+        }
+        thread::sleep(Duration::from_millis(5));
+    }
+    let _ = reader.join();
 }
 
 /// Most records one `refresh` handles for a host; the rest wait for the

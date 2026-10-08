@@ -25,6 +25,19 @@
   - Frame length is checked at queue time.
   - Tests: a child that never reads fails within 9 sends and under 5 s;
     out-of-bound frames are refused.
+- **What a host leaves behind dies with it** (review round 8).
+  - Ending a host now kills its whole session (`kill_session`, from
+    `chief-of-staff-spawn-isolation`). Its exit is settled the same way.
+    Before this, a descendant holding its stdout kept the reader, and with it
+    the supervisor's thread, blocked until the descendant exited. One
+    holding its stdin leaked a writer thread.
+  - Joining the reader is bounded at 2 s.
+  - Startup frames (offer, trust, bindings) also go through the host's
+    writer thread, so a host that stops reading during startup cannot
+    block the supervisor either.
+  - Test: the test host's new `ORPHAN` mode leaves a `sleep` holding its
+    stdout. Stopping the host returns promptly, and the `sleep` is dead.
+    Mutation-checked: without the session kill, it fails.
 
 - **Descriptor isolation at the production agent spawn** (D18S S-I2, S-I3;
   #13980 P2.2). `spawn_verified` now calls

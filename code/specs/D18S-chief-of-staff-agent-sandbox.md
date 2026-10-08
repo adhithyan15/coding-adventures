@@ -1507,7 +1507,11 @@ through S-I3 before two weeks are spent on Windows.
        - responses go to the host through a writer thread with a queue of 8
          frames. A host that stops reading its stdin fills the queue, and
          the next send ends it, rather than blocking the supervisor.
-         Ending it breaks the pipe, which frees the writer.
+         Ending it breaks the pipe, which frees the writer. Startup frames
+         use the same writer.
+       - ending a host kills its whole session (`killpg`): it leads its own
+         session (S-I3's `setsid`), so whatever it left behind dies with
+         it. Joining its reader is bounded too.
      - Length bounds already exist on every frame and field, and are
        unchanged.
    - **P2.6c, beneath-resolution (S-K5).** The `openat2(RESOLVE_BENEATH |

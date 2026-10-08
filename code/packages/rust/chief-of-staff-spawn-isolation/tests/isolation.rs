@@ -122,3 +122,32 @@ fn a_terminal_on_a_standard_descriptor_refuses_the_spawn() {
         .expect_err("a terminal on stdin must refuse the spawn");
     assert_eq!(error.kind(), std::io::ErrorKind::PermissionDenied);
 }
+
+#[test]
+fn kill_session_ends_what_the_child_left_behind() {
+    // The child starts a grandchild that holds the child's stdout, then
+    // exits. Killing the session ends the grandchild too, so the pipe
+    // reaches end-of-file at once instead of when the grandchild exits.
+    use std::io::Read;
+    let mut command = Command::new("/bin/sh");
+    command
+        .args(["-c", "sleep 30 & echo started"])
+        .stdin(Stdio::null())
+        .stdout(Stdio::piped());
+    isolate(&mut command);
+    let mut child = command.spawn().unwrap();
+    let mut stdout = child.stdout.take().unwrap();
+    let mut first = [0u8; 8];
+    stdout.read_exact(&mut first).unwrap();
+    assert_eq!(&first, b"started\n");
+    // The shell has exited; the sleep still holds the pipe.
+    child.wait().unwrap();
+    let started = std::time::Instant::now();
+    chief_of_staff_spawn_isolation::kill_session(&child).unwrap();
+    let mut rest = Vec::new();
+    stdout.read_to_end(&mut rest).unwrap();
+    assert!(
+        started.elapsed() < std::time::Duration::from_secs(5),
+        "the grandchild kept the pipe open"
+    );
+}

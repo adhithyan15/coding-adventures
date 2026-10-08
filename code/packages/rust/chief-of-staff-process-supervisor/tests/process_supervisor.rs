@@ -140,6 +140,7 @@ fn package_digest(path: &Path) -> [u8; 32] {
         "EXIT_BEFORE_READY",
         "FLOOD",
         "IGNORE_TERMINATE",
+        "ORPHAN",
         "NO_HEARTBEAT",
         "OVERSIZED_BOOTSTRAP",
         "REPORT_DESCRIPTORS",
@@ -628,6 +629,56 @@ fn a_host_over_its_request_budget_is_refused_not_dispatched() {
         15
     );
     supervisor.stop(registration.host_name()).unwrap();
+}
+
+#[cfg(target_os = "linux")]
+#[test]
+fn what_a_host_leaves_behind_dies_with_it() {
+    // Review round 8, L1: a descendant holding the host's stdout used to
+    // keep the reader from end-of-file, and with it the supervisor's thread,
+    // until the descendant exited. The host's whole session is now killed.
+    let package = TestPackage::new("orphan", Some("ORPHAN"));
+    let registration = package.registration("orphan-host");
+    let mut supervisor = new_supervisor(
+        Arc::new(keyring()),
+        Arc::new(generate_identity_keypair()),
+        Duration::from_secs(2),
+        Duration::from_secs(2),
+    );
+    supervisor.start(&registration).unwrap();
+    let pid_file = package.path.join("ORPHAN_PID");
+    let deadline = Instant::now() + Duration::from_secs(5);
+    while !pid_file.exists() {
+        supervisor.inspect(&registration).unwrap();
+        assert!(
+            Instant::now() < deadline,
+            "the host never started its orphan"
+        );
+        thread::sleep(Duration::from_millis(10));
+    }
+    let started = Instant::now();
+    supervisor.stop(registration.host_name()).unwrap();
+    let exited = await_phase(
+        &mut supervisor,
+        &registration,
+        SupervisorPhase::Exited { exit_code: Some(0) },
+    );
+    assert_eq!(exited.process_id(), None);
+    assert!(started.elapsed() < Duration::from_secs(10), "the stop hung");
+    let pid = fs::read_to_string(&pid_file).unwrap();
+    // A killed but unreaped orphan is a zombie; either way it is not running.
+    let state = fs::read_to_string(format!("/proc/{}/stat", pid.trim()))
+        .ok()
+        .and_then(|stat| {
+            stat.rsplit(')')
+                .next()
+                .map(|rest| rest.trim().chars().next())
+        })
+        .flatten();
+    assert!(
+        matches!(state, None | Some('Z') | Some('X')),
+        "the orphan {pid} is still running: {state:?}"
+    );
 }
 
 #[test]
