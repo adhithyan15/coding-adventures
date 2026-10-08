@@ -48,15 +48,23 @@ pub fn compile_ast(ast: &GrammarASTNode, module_name: &str) -> Result<IIRModule,
         };
         let expression = match call.rule_name.as_str() {
             "method_call"
+                if call.children.len() == 3
+                    && is_puts_callee(&call.children[0])
+                    && is_parenthesis(&call.children[1], true)
+                    && is_parenthesis(&call.children[2], false) =>
+            {
+                None
+            }
+            "method_call"
                 if call.children.len() == 4
                     && is_puts_callee(&call.children[0])
-                    && token_value(&call.children[1]) == Some("(")
-                    && token_value(&call.children[3]) == Some(")") =>
+                    && is_parenthesis(&call.children[1], true)
+                    && is_parenthesis(&call.children[3], false) =>
             {
                 let ASTNodeOrToken::Node(argument) = &call.children[2] else {
                     return Err("unsupported Ruby puts argument".into());
                 };
-                only_node(argument, "expression")?
+                Some(only_node(argument, "expression")?)
             }
             "method_call_no_paren" => {
                 let [callee, ASTNodeOrToken::Node(expression)] = call.children.as_slice() else {
@@ -65,17 +73,26 @@ pub fn compile_ast(ast: &GrammarASTNode, module_name: &str) -> Result<IIRModule,
                 if !is_puts_callee(callee) || expression.rule_name != "expression" {
                     return Err("native Ruby pilot requires puts one expression".into());
                 }
-                expression
+                Some(expression)
             }
             _ => return Err("native Ruby pilot requires puts one expression".into()),
         };
-        let compiled = compiler.compile_expression(expression)?;
-        compiler.emit(
-            "call_builtin",
-            None,
-            vec![Operand::Var("rb_puts_int".into()), compiled.operand],
-            "void",
-        );
+        if let Some(expression) = expression {
+            let compiled = compiler.compile_expression(expression)?;
+            compiler.emit(
+                "call_builtin",
+                None,
+                vec![Operand::Var("rb_puts_int".into()), compiled.operand],
+                "void",
+            );
+        } else {
+            compiler.emit(
+                "call_builtin",
+                None,
+                vec![Operand::Var("rb_puts_empty".into())],
+                "void",
+            );
+        }
     }
     compiler.emit("ret_void", None, vec![], "void");
     let mut module = IIRModule::new(module_name, "ruby");
@@ -128,6 +145,24 @@ pub fn run_source(source: &str) -> Result<String, String> {
             return Err(VMError::Custom("Ruby output limit exceeded".into()));
         }
         sink.push_str(&rendered);
+        sink.push('\n');
+        Ok(Value::Null)
+    });
+    let captured_empty = Arc::clone(&output);
+    vm.builtins_mut().register("rb_puts_empty", move |args| {
+        if !args.is_empty() {
+            return Err(VMError::Custom("rb_puts_empty expects no arguments".into()));
+        }
+        let mut sink = captured_empty
+            .lock()
+            .map_err(|_| VMError::Custom("Ruby output lock poisoned".into()))?;
+        if sink
+            .len()
+            .checked_add(1)
+            .is_none_or(|size| size > MAX_OUTPUT_BYTES)
+        {
+            return Err(VMError::Custom("Ruby output limit exceeded".into()));
+        }
         sink.push('\n');
         Ok(Value::Null)
     });
@@ -211,6 +246,21 @@ fn is_puts_callee(child: &ASTNodeOrToken) -> bool {
     token.value == "puts"
         && matches!(token.type_, TokenType::Name | TokenType::Keyword)
         && matches!(token.effective_type_name(), "NAME" | "KEYWORD")
+}
+
+fn is_parenthesis(child: &ASTNodeOrToken, left: bool) -> bool {
+    let ASTNodeOrToken::Token(token) = child else {
+        return false;
+    };
+    if left {
+        token.value == "("
+            && token.type_ == TokenType::LParen
+            && token.effective_type_name() == "LPAREN"
+    } else {
+        token.value == ")"
+            && token.type_ == TokenType::RParen
+            && token.effective_type_name() == "RPAREN"
+    }
 }
 
 fn only_node<'a>(parent: &'a GrammarASTNode, rule: &str) -> Result<&'a GrammarASTNode, String> {
@@ -489,7 +539,7 @@ mod tests {
 
     #[test]
     fn direct_ast_rejects_a_forged_puts_callee() {
-        for source in ["puts 1", "puts(1)"] {
+        for source in ["puts 1", "puts(1)", "puts()"] {
             let mut parser = try_create_ruby_parser(source).unwrap();
             let mut ast = parser.parse().unwrap();
             let ASTNodeOrToken::Node(statement) = &mut ast.children[0] else {

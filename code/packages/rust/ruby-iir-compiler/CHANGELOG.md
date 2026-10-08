@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Lower an exact zero-argument `puts()` grammar call directly to a bounded
+  Rust VM builtin that emits one newline; validate direct-AST delimiters by
+  token kind and effective grammar type on both parenthesized call forms.
+
 - Accept one-argument bare `puts expression` calls through the existing Ruby
   parser tree and direct IIR lowering, with the same integer bounds as `puts(...)`.
 - Reject forged direct-AST `puts` callees with non-name token classifications
