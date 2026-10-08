@@ -299,6 +299,9 @@ class CIGateRegistryTests(unittest.TestCase):
             "python3 -m unittest discover -s code/scripts/tests -p 'test_bezier2d_flattening_conformance.py'",
         )
         lines = step.split("        run: |\n", 1)[1].splitlines()
+        self.assertNotRegex(
+            "\n".join(lines), r"(?m)^\s*(?:if|case|while|until)\b"
+        )
         for command in commands:
             with self.subTest(command=command):
                 self.assertEqual(lines.count(f"          {command}"), 1)
