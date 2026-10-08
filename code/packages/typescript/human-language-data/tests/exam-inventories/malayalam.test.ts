@@ -139,7 +139,9 @@ describe("the committed Malayalam A1 inventory", () => {
     // 1683 -> 1684: the timed A1 paper adds no model answer or headword in
     // Malayalam, so it proves the final writing stage without changing either
     // direct script-owner count.
-    expect(lessons).toHaveLength(1684);
+    // 1684 -> 1685: the connected A2 composition likewise gives instructions
+    // without a Malayalam model, preserving all 69 direct script owners.
+    expect(lessons).toHaveLength(1685);
     expect(shown.size).toBe(69);
     expect([...shown].filter((glyph) => directlyOwned.has(glyph))).toHaveLength(69);
     expect(open).toEqual([]);

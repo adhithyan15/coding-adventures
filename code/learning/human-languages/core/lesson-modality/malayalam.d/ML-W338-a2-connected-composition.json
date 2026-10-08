@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "ML-W338-a2-connected-composition",
+    "language": "malayalam",
+    "chapter": 338,
+    "sequence": 16070,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-type",
+      "writing-block"
+    ],
+    "coreModality": "pen",
+    "coreReasons": [
+      "writing-type"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:5542fcd5d659f9e0",
+    "detachableSegments": [
+      "Writing — connected composition"
+    ],
+    "delivery": "script"
+  },
+  "findings": []
+}

@@ -1,0 +1,10 @@
+{
+  "id": "ML-EXT-338-CONNECTED-A2",
+  "stage": "A2",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can plan and write a connected 70–90 word Malayalam message about a familiar day for a named reader and purpose.",
+  "prerequisites": [
+    "ML-EXT-337-JOLI337"
+  ]
+}
