@@ -242,6 +242,34 @@ language filters seed only applicable readers; a missing applicable root or
 unknown valid case MUST fail before a partial plan is emitted. Linux, macOS,
 and Windows plans MUST expose the selected affected roots and toolchain flags.
 
+The eleven flat `code/specs/fixtures/build-tool-v1/cases/hashing-cache-*.json`
+cases have this exact native reader relation. C and F are the distinct
+`dotnet/programs/build-tool-csharp` and `dotnet/programs/build-tool-fsharp`
+fronts; L, G, P, Y, B, S, and T denote the Lua, Go, Perl, Python, Ruby,
+Swift, and TypeScript `<language>/programs/build-tool` fronts.
+
+| Case stem after `hashing-cache-` | Direct readers |
+| --- | --- |
+| `corrupt` | C, F, L, Y, T |
+| `hit` | C, F, L, Y |
+| `missing` | C, F, L, G, P, Y, B, S |
+| `dependency-change-after`, `dependency-order-before`, `failed-prior-record`, `local-boundary-union` | C, F, L |
+| `shared-input-conduit-after`, `shared-input-conduit-before`, `shared-input-sha256-native-after`, `shared-input-sha256-native-before` | C, F, L |
+
+C#/F# enumerate the entire checked glob; Lua lists all eleven; Python
+constructs its three state names dynamically. The relation MUST track those
+test-source references, including dynamic readers, and the checked corpus
+roster. New valid flat cases MUST fail closed until classified, not silently
+fall back to the neutral gate alone. Added, modified, deleted, and renamed
+paths (including the deleted source) participate, but nested, backslash,
+case-varied, and backup lookalikes do not. The selector MUST keep ordinary
+changed package roots, honor an explicit language filter, and seed only
+applicable native readers on Linux, macOS, and Windows without forcing a
+full build. Missing applicable roots or unknown cases MUST fail before a
+partial plan is emitted. C and F share the `dotnet` toolchain, while each
+remains a separately selected native test front. Some readers assert digest
+slices rather than the full neutral cache-decision result.
+
 ## Evaluation
 
 A gate is **required** when ANY of the following holds:

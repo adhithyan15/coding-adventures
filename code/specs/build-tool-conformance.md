@@ -1653,6 +1653,22 @@ dependency-only invalidation, failed-record miss, and shared-input consumers.
 The prior record remains inert data; this child does not read a cache file,
 activate CLI hashing, or claim native snapshot authority.
 
+Fixture-only CI selection is a separate obligation from hashing behavior. A
+changed flat `code/specs/fixtures/build-tool-v1/cases/hashing-cache-*.json`
+path MUST schedule every existing native build-tool test front that directly
+reads that exact case, as well as the neutral fixture gate. The selector MUST
+not infer that all readers consume all cases: C#, F#, and Lua read all eleven;
+Python reads `missing`, `hit`, and `corrupt`; Go, Perl, Ruby, and Swift read
+`missing`; TypeScript reads `corrupt`. Other case/front pairs MUST not be
+selected by this fixture rule. A new flat hashing-cache case without an
+explicitly classified native reader relation MUST fail before producing a
+partial build plan. Nested paths, backslash spellings, case variants, and
+non-JSON lookalikes are not the checked flat family. Language filtering and
+platform planning MUST preserve this exact relation; a missing applicable
+native BUILD root is an error, not an omission. This scheduling evidence does
+not imply each front asserts the complete neutral cache-decision oracle: some
+native tests intentionally exercise only digest slices.
+
 Toolchain detection v1 treats extra-CI declarations as inert BUILD metadata.
 Each package supplies a required generic `BUILD` string plus optional
 `BUILD_windows`, `BUILD_mac`, `BUILD_linux`, and `BUILD_mac_and_linux` strings.

@@ -16691,7 +16691,7 @@ Parallel audits registered newly discovered work before the next selection:
 | Intel 8008 simulator and gate level | `intel8008-simulator-neutral-lifecycle-conformance` → `intel8008-simulator-ten-lane-parity`; `intel8008-gatelevel-neutral-state-conformance` → `intel8008-gatelevel-ten-lane-parity` | Both 5/15; 07f bounded full-state simulator precedes 07f2 differential gate-level work, with same-lane simulator and arithmetic prerequisites. |
 | ARM1 simulator and gate level | `arm1-simulator-07e-neutral-full-state-conformance` → `arm1-simulator-seven-lane-parity`; `arm1-gatelevel-07e2-neutral-differential-conformance` → `arm1-gatelevel-seven-lane-parity` | Both 8/15; 599-vector full-state reference precedes gate-backed differential and same-lane simulator/arithmetic ports. |
 | Branch predictor | `branch-predictor-d02-neutral-conformance` → `branch-predictor-seven-lane-parity` | 8/15; reconcile D02 logical clock language with existing clock-free state-machine/directed-graph manifests. |
-| Mermaid Swimlane parser | `mermaid-swimlane-quoted-label-parser-neutral-conformance` | DG04 quoted Unicode labels affect Rust parser semantics, not the already owned layout hierarchy; freeze exact IR before considering portable parser lanes. |
+| Mermaid Swimlane parser | `mermaid-swimlane-quoted-label-parser-neutral-conformance` → `mermaid-swimlane-entity-label-parser-neutral-conformance` | DG04 quoted Unicode labels and their interaction with entity decoding precede remaining entity-label behavior. Open #17038 already owns unquoted lane/node/pipe-edge entity baselines; the later child should classify inline edges and malformed/unknown or broader numeric entities without duplicating those cases. Neither parser owner overlaps the layout hierarchy. |
 
 Correct the pending validation-fixture selector's inventory to 22 checked
 flat cases: 14 have scoped direct native readers and eight remain
@@ -16738,6 +16738,54 @@ reader-count wording is corrected. Java/Kotlin/Dart Point2D, Haskell CT01,
 compiler-IR, Intel 8008, and ARM1 remain separately ranked package work;
 Point2D has the strongest immediately ready package dependency chain, while
 the Go build-tool oracle still has security and execution-corpus blockers.
+
+### Post-#17028 merged-main refresh
+
+PR #17028 passed 29 successful, seven skipped, and one neutral terminal
+checks without failure or conflict, then merged through guarded auto-merge as
+`e71e05f3b8394a3d87f0032bc541f4f2d7d48141`. Fetched `origin/main` contains
+that commit. The exact-tree schema-3 report remains collision-free: 15
+established lanes, 1,497 implementation identities, 4,767 occupied slots,
+1,539 all-reported identities, zero unknown buckets, and zero canonical
+collisions. No package root was added or removed since `d2837f66`; OCaml's
+five roots remain emerging and outside the established denominator.
+
+Read-only audits registered two newly unowned families before the next
+selection. Five flat build-tool `plan-*` cases exist, but only
+`plan-replace-existing` (Python) and `plan-portable-package-path`
+(TypeScript) have verified direct native readers. The other three plan cases
+and all three `sharding-*` cases remain neutral-only. The pending
+`build-tool-plan-fixture-native-ci-selection` owner must use an exact case map
+and fail closed on new unclassified flat cases; existing atomic-overwrite
+owners concern implementation, not fixture-only CI scheduling.
+
+FP01 `fp-arithmetic` has roots in Elixir, Go, Lua, Perl, Python, Ruby, Rust,
+and TypeScript, but lacks C#, Dart, F#, Haskell, Java, Kotlin, and Swift roots.
+Elixir's module is a skeleton and Perl's package exposes only a partial FP32
+front, so eight roots must not be reported as eight conformant implementations.
+Register `fp01-bit-vectors-v1` first for a closed, independently derived
+FP32/FP16/BF16 bit-word oracle, then `haskell-fp-arithmetic-core`, separate
+C#/F#/Swift and arithmetic-gated Dart/Java/Kotlin classifications, and
+Elixir/Perl completeness owners. Haskell's
+logic-gates and arithmetic foundations are already present; a clock-driven
+pipeline is a separate optional sibling-API concern, not part of FP01's
+required public core. Dart/Java/Kotlin FP01 ports depend on their separately
+owned same-lane arithmetic ports. No open PR owns FP01. The existing Mermaid
+Swimlane parser owner absorbs #17026 marker-vector review and open #17038
+entity-label semantics without duplicate owners or overlapping selection.
+
+The dependency/leverage pass selects exactly
+`build-tool-hashing-cache-fixture-native-ci-selection` next: its four
+prerequisites are merged and eleven flat cases have direct readers across
+nine native fronts, but fixture-only changes do not schedule them. Freeze a
+case-specific map, not a blanket nine-front fanout: C#/F#/Lua read all eleven,
+Python reads missing/hit/corrupt, Go/Perl/Ruby/Swift read missing, and
+TypeScript reads corrupt. This bounded CI gap precedes the more heterogeneous
+validation selector (14 native-read of 22 cases), then the two-reader plan
+selector. Point2D Java/Kotlin/Dart remains the strongest ready package DAG
+but is a larger three-lane port. OCaml promotion still depends on its
+scaffold, full build-tool front, adapter, three-platform CI, and capability
+gates; the present core-only packages do not promote its denominator.
 
 ## Autonomous Loop Protocol
 

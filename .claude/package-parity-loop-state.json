@@ -11,21 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 17028,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/17028",
-    "branch": "codex/parity-resolution-fixture-ci-20261008",
-    "implementation_revision": "7f125c656d7a87fb07bdf01a8761d49cd2e87121",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-08T04:21:17Z",
+    "observed_at": "2026-10-08T04:56:57Z",
     "pr_number": 17028,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #17028 opened after focused and full Go tests, vet/build/coverage, eight additional native reader suites plus Lua, neutral corpus/schema, 5,305-package BUILD plan, parity/lessons/diff checks, and independent security review. GitHub reports MERGEABLE with initial CI and CodeQL checks pending; no auto-merge until every required final-head check is terminal acceptable and conflict-free. Previous PR #17013 merged through guarded auto-merge as a5d44bd45dcb37980d4c2717bd0b4f4af97c48b1."
+    "status": "merged",
+    "notes": "PR #17028 passed 29 successful, seven skipped, and one neutral terminal checks without failure or conflict. Guarded auto-merge completed as e71e05f3b8394a3d87f0032bc541f4f2d7d48141, verified on fetched origin/main; it was not manually merged."
   },
   "last_inventory": {
-    "revision": "a8c62232a3e5dd6d405db62c2cf8d61ac6e3310a",
+    "revision": "e71e05f3b8394a3d87f0032bc541f4f2d7d48141",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1497,
@@ -13629,8 +13623,8 @@
       "notes": "Selected after #16989 merged and all newly discovered owners were registered. Twenty exact flat source-collection cases have direct native readers in twelve build-tool fronts, including an Elixir local-case reader found during independent source review; fixture-only diffs seed only the neutral gate. Map seven local cases to twelve fronts, nine repository cases to C#/F#/Swift, and four shared-input cases to C#/F#; verify dynamic and explicit reader drift, three-platform/single-language selection, rename source, and missing-root atomicity. Do not change production collectors or claim every reader replays every case."
     },
     {
-      "id": "build-tool-hashing-cache-fixture-native-ci-selection", "title": "Gate native hashing-cache fixture readers", "status": "pending", "depends_on": ["build-tool-pure-domain-corpus", "build-tool-neutral-dependency-hashing-adversarial-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": null, "pr_number": null,
-      "notes": "Eleven checked hashing-cache cases have direct test references in nine distinct native build-tool fronts; fixture-only diffs do not select those BUILD roots. Use exact family matching and per-reader evidence; some fronts replay only a subset. Separate from existing Lua/Perl hashing-cache implementation owners."
+      "id": "build-tool-hashing-cache-fixture-native-ci-selection", "title": "Gate native hashing-cache fixture readers", "status": "in-progress", "depends_on": ["build-tool-pure-domain-corpus", "build-tool-neutral-dependency-hashing-adversarial-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-hashing-cache-fixture-ci-20261008", "pr_number": null,
+      "notes": "Selected after #17028 merged and newly discovered work was registered. Eleven checked hashing-cache cases have direct native readers in nine build-tool fronts: C#/F#/Lua all cases, Python missing/hit/corrupt, Go/Perl/Ruby/Swift missing, and TypeScript corrupt. Fixture-only diffs do not select those BUILD roots. Use a closed exact case-to-reader map, independent source-reference drift evidence, neutral fallback, and three-platform/language/rename/missing-root tests; some fronts assert only digest slices rather than replaying the full oracle. Separate from Lua/Perl hashing-cache implementation owners."
     },
     {
       "id": "build-tool-validation-fixture-native-ci-selection", "title": "Gate native validation fixture readers", "status": "pending", "depends_on": ["build-tool-validation-oracle-corpus", "build-tool-tracked-artifact-validation-corpus", "build-tool-orphan-crate-validation-corpus", "build-tool-orphan-package-root-validation-corpus-and-go-adoption", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": null, "pr_number": null,
@@ -13681,7 +13675,7 @@
       "notes": "New Rust-only canonical chief-of-staff-net-fetch root arrived on main def09f02. D18V specifies signed-manifest HTTPS/TLS authorization and vault lease redemption; the capability manifest declares net:dns and net:connect. This is a credential-bearing host operation, not a portable package lane target. Exclude from parity delivery pending a separate native-security review."
     },
     {
-      "id": "build-tool-resolution-fixture-native-ci-selection", "title": "Gate native resolution fixture readers", "status": "pr-open", "depends_on": ["build-tool-fixtures", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-resolution-fixture-ci-20261008", "pr_number": 17028,
+      "id": "build-tool-resolution-fixture-native-ci-selection", "title": "Gate native resolution fixture readers", "status": "merged", "depends_on": ["build-tool-fixtures", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-resolution-fixture-ci-20261008", "pr_number": 17028,
       "notes": "Twenty-six flat resolution cases have direct but heterogeneous native readers in Go/Haskell/Lua/Perl/Python/Ruby/Rust/Swift/TypeScript. Haskell constructs some field-aware case names dynamically; freeze an exact per-case/subfamily reader map and source-reference drift check before fixture-only CI selection. Keep neutral fallback and test three platforms, language filtering, missing-root atomicity, rename source, plans, and toolchains. Rank after graph/diff, ahead of hashing-cache subject to mapping complexity."
     },
     {
@@ -13738,7 +13732,39 @@
     },
     {
       "id": "mermaid-swimlane-quoted-label-parser-neutral-conformance", "title": "Classify DG04 Swimlane quoted-label parser semantics", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
-      "notes": "Existing Rust-only Mermaid parser gained quoted Unicode Swimlane labels on main #17001; the hierarchy-layout owner explicitly excludes parsing. Freeze quoted/escaped Unicode, label normalization, malformed quote rejection, node-shape ambiguity, and exact semantic IR against pinned DG04/corpus before deciding applicable portable parser lanes. Routing, typography, Metal, and full Mermaid compatibility are separate."
+      "notes": "Existing Rust-only Mermaid parser gained quoted Unicode Swimlane labels on main #17001; the hierarchy-layout owner explicitly excludes parsing. Freeze quoted/escaped Unicode, label normalization, malformed quote rejection, node-shape ambiguity, and exact semantic IR against pinned DG04/corpus before deciding applicable portable parser lanes. Review #17026 point/circle/cross/bidirectional marker vectors and open #17038 entity-label semantics within this owner rather than creating duplicates; wait for #17038 to settle before selecting overlapping parser work. Routing, typography, Metal, and full Mermaid compatibility are separate."
+    },
+    {
+      "id": "mermaid-swimlane-entity-label-parser-neutral-conformance", "title": "Classify remaining DG04 Swimlane entity-label semantics", "status": "pending", "depends_on": ["mermaid-swimlane-quoted-label-parser-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "Open #17038 already covers unquoted lane &amp;, bracket node &nbsp;, and pipe edge &#32;&check; plus a visual fixture. After it settles, audit inline-edge entity decoding, malformed/unknown and broader numeric entities, and exact semantic IR against DG04 and neutral fixtures; do not repeat those three baseline cases or expand the quoted-label owner beyond its quoted/entity interaction."
+    },
+    {
+      "id": "build-tool-plan-fixture-native-ci-selection", "title": "Gate exact native plan fixture readers", "status": "pending", "depends_on": ["build-tool-fixtures", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": null, "pr_number": null,
+      "notes": "Five checked flat plan cases exist. Python directly reads plan-replace-existing and TypeScript directly reads plan-portable-package-path; plan-affected-empty, plan-affected-null, and plan-future-version currently have neutral-runner coverage only. No production Go plan-family selector exists. Freeze an exact per-case reader map, keep the three neutral-only cases out of blanket native fanout, and fail closed on an unclassified flat case. Three sharding cases are separately neutral-only pending verified native readers. Rank below the hashing-cache and validation fixture selectors. Existing plan atomic-overwrite owners govern implementation, not fixture-only CI selection."
+    },
+    {
+      "id": "fp01-bit-vectors-v1", "title": "Freeze language-neutral FP01 bit-vector conformance", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "FP01 fp-arithmetic has eight package roots but no existing neutral bit-vector owner; Elixir is a skeleton and Perl is FP32-only, so root presence is not complete conformance. Define a closed, versioned FP32/FP16/BF16 hex-word corpus with independent IEEE-754 oracle, round-to-nearest-even, signed zero, subnormal boundaries, overflow/underflow, cancellation, and single-round FMA. Assert exact non-NaN bits; classify NaN without inventing a payload or unordered-comparison policy. Keep JSON decimal floats and host-endian byte ambiguity out."
+    },
+    {
+      "id": "haskell-fp-arithmetic-core", "title": "Port FP01 arithmetic core to Haskell", "status": "pending", "depends_on": ["fp01-bit-vectors-v1"], "branch": null, "pr_number": null,
+      "notes": "Haskell lacks fp-arithmetic but has same-lane logic-gates and arithmetic prerequisites. Implement FP01 formats, encoding, classification, add/sub/mul/FMA, neg/abs, compare, and conversion with checked MSB-first bit vectors; consume neutral fixtures, use strict Cabal/BUILD validation and measured >=95% coverage, and declare empty host capabilities. Clock-driven pipeline is a separate optional sibling-API parity slice, not required by FP01's public core contract."
+    },
+    {
+      "id": "fp01-csharp-fsharp-swift-core-parity", "title": "Classify C#, F#, and Swift FP01 core ports", "status": "pending", "depends_on": ["fp01-bit-vectors-v1"], "branch": null, "pr_number": null,
+      "notes": "C#, F#, and Swift lack fp-arithmetic roots despite existing same-lane logic-gates and arithmetic foundations. Split into bounded lane children after neutral bit vectors; do not treat the three-lane classification as one implementation PR or require clock without a separate pipeline contract. Haskell has its own ready core owner."
+    },
+    {
+      "id": "fp01-dart-java-kotlin-core-parity", "title": "Classify arithmetic-gated Dart, Java, and Kotlin FP01 ports", "status": "pending", "depends_on": ["fp01-bit-vectors-v1", "arithmetic-dart-lane-parity", "arithmetic-java-lane-parity", "arithmetic-kotlin-lane-parity"], "branch": null, "pr_number": null,
+      "notes": "Dart, Java, and Kotlin lack fp-arithmetic and currently also lack their same-lane arithmetic foundation. Implement each lane only after its corresponding pending arithmetic owner and the neutral FP01 vectors; split per lane rather than bundling all three or requiring a clock-driven pipeline in the FP01 core."
+    },
+    {
+      "id": "fp01-elixir-core-completeness", "title": "Replace Elixir FP01 skeleton with tested arithmetic core", "status": "pending", "depends_on": ["fp01-bit-vectors-v1"], "branch": null, "pr_number": null,
+      "notes": "The Elixir fp_arithmetic package root exists but its module is an empty skeleton; package presence must not count as FP01 behavior. Implement and validate the neutral FP32/FP16/BF16 core before marking this lane conformant."
+    },
+    {
+      "id": "fp01-perl-format-completeness", "title": "Complete Perl FP01 FP16 and BF16 arithmetic", "status": "pending", "depends_on": ["fp01-bit-vectors-v1"], "branch": null, "pr_number": null,
+      "notes": "The Perl fp-arithmetic root currently exposes only FP32 encode/decode/add/mul; classify the missing FP16/BF16 and remaining FP01 core operations against neutral bit vectors. Preserve existing behavior and avoid claiming root presence equals full format parity."
     }
   ]
 }
