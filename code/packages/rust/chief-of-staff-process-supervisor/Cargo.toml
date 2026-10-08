@@ -6,6 +6,7 @@ description = "Verified OS-process supervision for D18 Chief hosts"
 license = "MIT"
 
 [dependencies]
+chief-of-staff-spawn-isolation = { path = "../chief-of-staff-spawn-isolation" }
 chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
 chief-of-staff-host-control-protocol = { path = "../chief-of-staff-host-control-protocol" }
 chief-of-staff-host-data-plane = { path = "../chief-of-staff-host-data-plane" }
@@ -23,6 +24,9 @@ serde_json = "1"
 [dev-dependencies]
 coding_adventures_ed25519 = { path = "../ed25519" }
 coding_adventures_sha256 = { path = "../sha256" }
+
+[target.'cfg(unix)'.dev-dependencies]
+libc = "0.2"
 
 [[bin]]
 name = "process-supervisor-test-child"
