@@ -33,6 +33,9 @@ style TaskApp {
     min-width : 0 ;
     gap : 14 ;
   }
+  part content-scroll {
+    flex-grow : 1 ;
+  }
   part content {
     gap : 14 ;
     padding-top : 8 ;
@@ -842,12 +845,19 @@ style TaskApp {
     elevation  : raised ;
   }
   part task-row {
-    gap : 10 ;
-    align : center-vertical ;
+    gap : 8 ;
     padding-top : 12 ;
     padding-right : 14 ;
     padding-bottom : 12 ;
     padding-left : 14 ;
+  }
+  part task-identity {
+    gap : 10 ;
+    align : center-vertical ;
+  }
+  part task-actions {
+    gap : 8 ;
+    align : center-vertical ;
   }
   part edit-form {
     gap : 8 ;
@@ -923,7 +933,7 @@ style TaskApp {
     }
   }
   part task-name {
-    width : 100% ;
+    flex-grow : 1 ;
     background : "transparent" ;
     color : "#f1ebe1" ;
     font-size : 14 ;

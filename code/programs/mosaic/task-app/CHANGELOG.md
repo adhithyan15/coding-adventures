@@ -7,6 +7,15 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.1` accumulate here until the next version is
 cut.
 
+### Fixed — Flutter compact controls remain reachable at 800 x 600 (#16949)
+
+The view switcher and task action controls now scroll horizontally when the
+window is narrow, while task identity and secondary actions reflow onto separate
+rows. The main content keeps a bounded vertical scroll area, and Flutter
+acceptance now requires zero layout exceptions for fresh and restored 800 x 600
+sessions. Compose keeps horizontal-only viewports intrinsically tall, so those
+new viewports do not starve the storage summary or later content controls.
+
 ### Fixed — the Flutter topbar fits the declared desktop window (#13465)
 
 The project title and summary now occupy their own topbar line, with progress,
