@@ -365,14 +365,29 @@ phi_y1 = trig.atan2( ry * cos_r, rx * sin_r)
 phi_y2 = phi_y1 + π
 ```
 
-For each candidate angle $\phi$, convert to parameter $t$:
+Angles are periodic. The raw quotient `(phi - start_angle) / sweep_angle` is
+**not** a membership test: it can discard an extremum after a $2\pi$ wrap,
+or when the sweep is negative. For each candidate use directed, nonnegative
+modulo $2\pi$:
 
 ```
-t = (phi - start_angle) / sweep_angle
+if sweep_angle > 0:
+    distance = positive_mod(phi - start_angle, 2π)
+    included = distance <= sweep_angle
+elif sweep_angle < 0:
+    distance = positive_mod(start_angle - phi, 2π)
+    included = distance <= -sweep_angle
+else:
+    included = false  // the arc is its start point only
 ```
 
-Keep only $t \in [0,1]$. Evaluate the arc at those $t$ values plus $t=0$ and
-$t=1$. Take the component-wise min and max.
+For an included candidate, evaluate the ellipse at `phi` directly. Always
+include the two endpoints; for zero sweep they coincide and the bounds are a
+point rect. For a full turn every extremum is included. Take component-wise
+minima/maxima and return `[min_x, min_y, max_x-min_x, max_y-min_y]`. This is
+analytic, not a fixed-step sample: sampling 100 parameters can still miss an
+off-grid maximum. `geometry2d-v1` pins both positive and negative wrapped
+examples where that sample underbounds x.
 
 ### Arc-to-Cubic-Bezier Approximation
 
@@ -388,13 +403,24 @@ rendering primitive set to just bezier segments.
 each segment with a single cubic bezier.
 
 ```
-n_segments = ceil(|sweep_angle| / (π/2))
+require finite center, rx, ry, start_angle, sweep_angle, x_rotation
+require finite derived points and tangents
+require 0 <= |sweep_angle| <= 2π  // reject before ceil or allocation
+n_segments = max(1, ceil(|sweep_angle| / (π/2)))
+require 1 <= n_segments <= 4
 seg_sweep = sweep_angle / n_segments
 
 for i in 0..n_segments:
     seg_start = start_angle + i * seg_sweep
     emit approximate_segment(center, rx, ry, x_rotation, seg_start, seg_sweep)
 ```
+
+The same finite and one-turn preconditions apply to center-form bounding and
+evaluation. A direct `CenterArc` with an over-turn or non-finite sweep must
+fail explicitly, not clamp silently, loop through multiple turns, or allocate
+from an unbounded segment count. Endpoint-form conversion already clamps its
+derived sweep to one turn. A zero-sweep center arc emits one degenerate cubic
+with all four points at its start; a full turn emits exactly four segments.
 
 For each 90°-or-less segment, the four cubic bezier control points are:
 
@@ -682,6 +708,16 @@ where all four control points coincide.
     positive magnitude. Assert center presence and finite parameters at
     tiny exact boundaries; floating-point center precision at that scale is
     not an endpoint-location oracle.
+
+23. **Wrapped center-form extrema**: consume both `center-arc-bounds` corpus
+    records, one positive and one negative sweep crossing the $2\pi$ seam.
+    Compare all four bounds with the pinned absolute tolerance. Do not use
+    a sampled rectangle as the expected oracle.
+
+24. **Bounded center-form segments**: consume `center-arc-cubics` records for
+    zero sweep (one degenerate cubic), full turn (four cubics), and over-turn
+    rejection. Native tests must additionally reject non-finite input before
+    angle arithmetic or allocation; JSON cannot carry NaN or infinity.
 
 Coverage threshold: ≥ 95% lines.
 
