@@ -317,16 +317,22 @@ and duplicate `else`. It merged as
 CodeQL, and books checks passed. The next selection rotates to LANG78's
 bounded zero-argument JavaScript `console.log()` frontend stage.
 
+PR #17091 delivered that bounded zero-argument JavaScript `console.log()`
+stage and merged as `7f470adc60058921439ddfee8cf9b6582931fe08`
+after exact-head CI, CodeQL, and books checks passed. Its typed AST lowers
+directly to InterpreterIR and Rust vm-core; Node remains an oracle. The next
+selection rotates to LANG82's separate, explicitly partial Perl 5.004_61
+pair.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG78 JavaScript (selected):** lower an exact zero-argument
-   `console.log()` call from its typed AST to InterpreterIR and run it on Rust
-   vm-core, with Node only as a conformance oracle.
-2. **LANG82 continued:** continue distinct source-backed partial pairs. Keep
-   5.004_01-t1 pending until its own source is found; do not imply complete
-   syntax or an exhaustive release inventory.
+1. **LANG82 continued (selected):** add a distinct, own-archive-backed partial
+   5.004_61 token/grammar pair. Keep 5.004_01-t1 pending until its own source
+   is found; do not imply complete syntax or an exhaustive release inventory.
+2. **LANG78 JavaScript:** the zero-argument stage is complete; broader native
+   frontend semantics remain open, with Node only as a conformance oracle.
 3. **PREP01 C:** continue the bounded conditional ladder. Full C `#if` and
    stringize/paste remain open.
 
