@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 16989,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16989",
+    "branch": "codex/parity-toolchain-fixture-ci-20261007",
+    "implementation_revision": "119262645b4be58a3d4a8cb9de9bf6f5278a11fb",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-07T23:59:43Z",
-    "pr_number": 16981,
-    "status": "merged",
-    "notes": "PR #16981 completed 29 successful, seven skipped, and one neutral final-head checks with no failure. GitHub reported MERGEABLE/CLEAN; guarded squash auto-merge merged it as 26e5792ae7ba88fe1918c55ce4a4bf3c41a2fa2f without a plain manual merge. The post-merge collision-checked inventory is unchanged; no new package identity or unowned gap appeared."
+    "observed_at": "2026-10-08T00:28:51Z",
+    "pr_number": 16989,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #16989 opened after final-head Go package/race/vet/build, 5,304-package BUILD-plan, neutral-corpus, lessons, parity, diff, and independent SHIP security validation. GitHub reports MERGEABLE with initial checks pending; do not enable auto-merge until every final-head check is terminal acceptable and no conflict remains. Prior PR #16981 merged through guarded auto-merge as 26e5792ae7ba88fe1918c55ce4a4bf3c41a2fa2f."
   },
   "last_inventory": {
     "revision": "8efe4884ea5a828b81807fea84b959e50330c172",
@@ -13517,7 +13523,7 @@
       "notes": "Seven Brainfuck/Nib/AOT families each 9/15 and 42 structural slots absent in C#/Dart/F#/Java/Kotlin/Swift. Separate BF02 IR producer from Nib frontend, then split per dependency and lane before ports; no native-runtime scope."
     },
     {
-      "id": "build-tool-toolchain-detection-fixture-native-ci-selection", "title": "Gate native toolchain-detection fixture readers", "status": "in-progress", "depends_on": ["build-tool-ci-gate-fixture-native-ci-selection", "build-tool-extra-ci-toolchain-declaration-corpus"], "branch": "codex/parity-toolchain-fixture-ci-20261007", "pr_number": null,
+      "id": "build-tool-toolchain-detection-fixture-native-ci-selection", "title": "Gate native toolchain-detection fixture readers", "status": "pr-open", "depends_on": ["build-tool-ci-gate-fixture-native-ci-selection", "build-tool-extra-ci-toolchain-declaration-corpus"], "branch": "codex/parity-toolchain-fixture-ci-20261007", "pr_number": 16989,
       "notes": "Selected after #16981 merged and an unchanged, collision-free 15-lane inventory. Twelve native direct readers of the toolchain-detection corpus need exact flat-family, three-platform, single-language, and missing-root CI selection without broad specs fanout. A fixture-only change currently reaches neutral validation but not those native test fronts. Rebased conflict-free onto origin/main 8efe4884ea5a828b81807fea84b959e50330c172 after confirming zero overlap with 39 intervening main paths; the refreshed inventory still has 1,496 identities, 4,766 slots, zero collisions, and zero unknown buckets."
     },
     {
