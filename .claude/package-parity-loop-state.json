@@ -11,21 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 17013,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/17013",
-    "branch": "codex/parity-graph-diff-fixture-ci-20261008",
-    "implementation_revision": "3082fffc9265af50f46aa67b248072d42954c881",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-08T02:43:20Z",
+    "observed_at": "2026-10-08T03:39:31Z",
     "pr_number": 17013,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #17013 opened after Go full package/race/vet/build, eleven-reader local validation with explicit Perl full-suite caveat, 5,305-package BUILD plan, neutral corpus, lessons, collision-free parity, diff, and independent security review. GitHub reports MERGEABLE with initial checks queued; do not enable auto-merge until every final-head check is terminal acceptable and no conflict remains. Prior PR #17000 merged via guarded auto-merge as 523c29ad136f9eb0f0191235ee6d2243bdbe0f68."
+    "status": "merged",
+    "notes": "Final-head PR #17013 completed 29 successful, seven skipped, and one neutral checks with no failures. GitHub reported MERGEABLE/CLEAN; guarded squash auto-merge merged it as a5d44bd45dcb37980d4c2717bd0b4f4af97c48b1. No manual merge was performed."
   },
   "last_inventory": {
-    "revision": "523c29ad136f9eb0f0191235ee6d2243bdbe0f68",
+    "revision": "a8c62232a3e5dd6d405db62c2cf8d61ac6e3310a",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1497,
@@ -13527,7 +13521,7 @@
       "notes": "Selected after #16981 merged and an unchanged, collision-free 15-lane inventory. Twelve native direct readers of the toolchain-detection corpus need exact flat-family, three-platform, single-language, and missing-root CI selection without broad specs fanout. A fixture-only change currently reaches neutral validation but not those native test fronts. Rebased conflict-free onto origin/main 8efe4884ea5a828b81807fea84b959e50330c172 after confirming zero overlap with 39 intervening main paths; the refreshed inventory still has 1,496 identities, 4,766 slots, zero collisions, and zero unknown buckets."
     },
     {
-      "id": "build-tool-graph-diff-fixture-native-ci-selection", "title": "Gate native graph/diff fixture readers", "status": "pr-open", "depends_on": ["build-tool-ci-gate-fixture-native-ci-selection", "build-tool-neutral-graph-diff-corpus-completion"], "branch": "codex/parity-graph-diff-fixture-ci-20261008", "pr_number": 17013,
+      "id": "build-tool-graph-diff-fixture-native-ci-selection", "title": "Gate native graph/diff fixture readers", "status": "merged", "depends_on": ["build-tool-ci-gate-fixture-native-ci-selection", "build-tool-neutral-graph-diff-corpus-completion"], "branch": "codex/parity-graph-diff-fixture-ci-20261008", "pr_number": 17013,
       "notes": "Selected after #17000 merged and the 1,272-item collision-checked backlog refresh. Eight graph and twelve diff-selection flat cases have eleven direct native test roots: C#/F#/Java/Kotlin/Dart/OCaml/Go/Haskell/Perl/Python/Swift. Java/Kotlin/Dart/OCaml enumerate by domain and exact IDs, not literal flat names; OCaml remains emerging. Freeze exact raw-path selection, three-platform/single-language plans, missing-root atomicity, rename source, toolchains, and dynamic/explicit reader drift. Do not claim core-only lanes have a complete build-tool front door or adapter."
     },
     {
@@ -13545,6 +13539,14 @@
     {
       "id": "bytecode-compiler-seven-lane-parity", "title": "Classify seven missing bytecode-compiler lanes", "status": "pending", "depends_on": ["bytecode-compiler-neutral-conformance"], "branch": null, "pr_number": null,
       "notes": "C#/Dart/F#/Haskell/Java/Kotlin/Swift absent; split by lane."
+    },
+    {
+      "id": "jvm-simulator-04e-neutral-execution-classification", "title": "Freeze 04e JVM simulator execution subset and adapter boundary", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "JVM simulator is 8/15 and lacks a distinct execution owner. Spec 04e calls for classfile, decoder, runtime, and simulator layers, but current Rust/Go/TypeScript raw-bytecode fronts and Python disassembled-method front diverge. Freeze a host-free bounded opcode/lifecycle/state/error fixture, raw-bytecode versus disassembled adapters, and any real classfile composition separately; do not conflate generic stack VM or classfile byte parsing with JVM execution."
+    },
+    {
+      "id": "jvm-simulator-seven-lane-parity", "title": "Classify seven missing 04e JVM simulator lanes", "status": "pending", "depends_on": ["jvm-simulator-04e-neutral-execution-classification", "jvm-class-file-neutral-byte-conformance"], "branch": null, "pr_number": null,
+      "notes": "C#/Dart/F#/Haskell/Java/Kotlin/Swift have no JVM simulator package. Split by lane after reconciling the neutral execution subset and the distinct classfile-byte foundation; existing eight lanes also need fixture reconciliation before claiming full 04e parity."
     },
     {
       "id": "virtual-machine-six-lane-parity", "title": "Classify six missing stack-VM lanes", "status": "pending", "depends_on": ["virtual-machine-language-neutral-conformance"], "branch": null, "pr_number": null,
@@ -13626,7 +13628,7 @@
     },
     {
       "id": "build-tool-validation-fixture-native-ci-selection", "title": "Gate native validation fixture readers", "status": "pending", "depends_on": ["build-tool-validation-oracle-corpus", "build-tool-tracked-artifact-validation-corpus", "build-tool-orphan-crate-validation-corpus", "build-tool-orphan-package-root-validation-corpus-and-go-adoption", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": null, "pr_number": null,
-      "notes": "The flat validation family has 22 cases, but direct native readers cover only scoped subfamilies: four orphan-package-root cases in Go, four orphan-crate/exemption and five tracked-artifact cases in ten other fronts, plus one Lua Windows sibling case in Go. Eight one-off cases have no verified native reader; avoid blanket validation-* fanout."
+      "notes": "The flat validation family has 22 cases, but direct native readers cover only scoped subfamilies: four orphan-package-root cases in Go, four orphan-crate/exemption and five tracked-artifact cases in eleven non-Go fronts, plus one Lua Windows sibling case in Go. Fourteen cases have native readers; eight one-off cases have no verified native reader. Perl composes filenames dynamically; avoid blanket validation-* fanout."
     },
     {
       "id": "actor-d19-portable-core-neutral-conformance", "title": "Freeze D19 actor portable core and host-adapter boundary", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,

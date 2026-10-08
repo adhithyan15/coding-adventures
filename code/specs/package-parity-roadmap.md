@@ -16640,7 +16640,7 @@ before the next selection. These are backlog records, not completed ports:
 | --- | --- | --- |
 | Source-collection fixture CI | `build-tool-source-collection-fixture-native-ci-selection` | Twenty flat cases have twelve native reader fronts, including Elixir's local-case test; use the 7 local / 9 repository / 4 shared-input reader maps, not a blanket all-front fanout. All selector prerequisites are merged. |
 | Hashing-cache fixture CI | `build-tool-hashing-cache-fixture-native-ci-selection` | Eleven cases have nine native reader fronts; distinguish fixture-only scheduling from existing Lua/Perl evaluator owners. |
-| Validation fixture CI | `build-tool-validation-fixture-native-ci-selection` | Select only native-read subfamilies and two Go one-offs; nine other one-off cases remain neutral-only until readers exist. |
+| Validation fixture CI | `build-tool-validation-fixture-native-ci-selection` | Select only 14 native-read cases, including five Go-only cases; eight other one-off cases remain neutral-only until readers exist. |
 | D19 actor | `actor-d19-portable-core-neutral-conformance` → `actor-d19-seven-lane-parity` | Eight of fifteen lanes exist; isolate deterministic mailbox/round-robin core from clock, ID, and persistence adapters. |
 | Generic IR optimizer | `ir-optimizer-neutral-ir-to-ir-conformance` → `ir-optimizer-nine-lane-parity` | Six lanes exist; reconcile identity, NOP-only, and multipass behavior after the compiler-IR contract. |
 | Intel 4004 IR validator | `intel-4004-ir-validator-neutral-hardware-conformance` → `intel-4004-ir-validator-ten-lane-parity` | Five lanes exist; freeze pure hardware checks separately from assembler/simulator and same-lane compiler-IR prerequisites. |
@@ -16704,6 +16704,40 @@ clean branch, before the more heterogeneous resolution and hashing selectors.
 This fixture gate does not promote any core-only build-tool lane to a complete
 CLI/adapter. The dependency-ready Intel 8008 and ARM1 neutral simulator
 contracts remain separate future implementation slices.
+
+### Post-#17013 merged-main refresh
+
+PR #17013 merged through guarded auto-merge as
+`a5d44bd45dcb37980d4c2717bd0b4f4af97c48b1` after 29 successful,
+seven skipped, and one neutral terminal checks with no failure or conflict.
+The collision-checked schema-3 inventory at `a8c62232a3e5dd6d405db62c2cf8d61ac6e3310a`
+still has 15 established lanes, 1,497 implementation identities, 4,767
+occupied slots, 1,539 all-reported identities, and zero collisions or unknown
+language buckets. OCaml's five package roots remain outside the denominator.
+
+Independent all-lane review found one previously unowned portable identity:
+`jvm-simulator` is present in eight lanes and missing C#, Dart, F#, Haskell,
+Java, Kotlin, and Swift. The existing JVM class-file owner covers byte parsing,
+not simulator execution. Register
+`jvm-simulator-04e-neutral-execution-classification` before
+`jvm-simulator-seven-lane-parity`; the first must reconcile raw-bytecode and
+disassembled-method fronts, bounds, host-injected behavior, and 04e's
+classfile/decoder/runtime layering. No lane is counted complete from a generic
+stack VM or class-file parser alone. The separately blocked OCaml archive-mirror
+and authority reviews remain outside portable delivery.
+
+The dependency-ready next CI-selection slice is
+`build-tool-resolution-fixture-native-ci-selection`: 26 flat cases have nine
+heterogeneous direct native readers. Freeze a closed case-to-reader table,
+including Haskell's dynamically constructed Gradle/.NET names, and fail closed
+on a newly added but unclassified flat case. Do not blanket all nine roots for
+every case. After that, the eleven-case hashing-cache family has nine native
+reader roots; validation has 22 cases, 14 native-read and eight neutral-only,
+across eleven non-Go fronts plus Go one-offs. The validation ledger's stale
+reader-count wording is corrected. Java/Kotlin/Dart Point2D, Haskell CT01,
+compiler-IR, Intel 8008, and ARM1 remain separately ranked package work;
+Point2D has the strongest immediately ready package dependency chain, while
+the Go build-tool oracle still has security and execution-corpus blockers.
 
 ## Autonomous Loop Protocol
 
