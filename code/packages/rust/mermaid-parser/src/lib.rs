@@ -6534,6 +6534,11 @@ fn parse_swimlane_node(
     let suffix = value[id_end..].trim();
     let (label, shape) = if suffix.is_empty() {
         (id.to_string(), DiagramShape::RoundedRect)
+    } else if suffix.starts_with("(((") && suffix.ends_with(")))") {
+        (
+            suffix[3..suffix.len() - 3].to_string(),
+            DiagramShape::DoubleCircle,
+        )
     } else if suffix.starts_with("((") && suffix.ends_with("))") {
         (
             suffix[2..suffix.len() - 2].to_string(),
@@ -6556,6 +6561,11 @@ fn parse_swimlane_node(
         )
     } else if suffix.starts_with('[') && suffix.ends_with(']') {
         (suffix[1..suffix.len() - 1].to_string(), DiagramShape::Rect)
+    } else if suffix.starts_with("{{") && suffix.ends_with("}}") {
+        (
+            suffix[2..suffix.len() - 2].to_string(),
+            DiagramShape::Hexagon,
+        )
     } else if suffix.starts_with('{') && suffix.ends_with('}') {
         (
             suffix[1..suffix.len() - 1].to_string(),

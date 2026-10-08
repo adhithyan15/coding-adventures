@@ -6,6 +6,7 @@
     "parallel-branch-and-join",
     "flowchart-style-edge-label",
     "multiline-edge-continuation",
-    "subprocess-and-database-shapes"
+    "subprocess-and-database-shapes",
+    "hexagon-and-double-circle-shapes"
   ]
 }
