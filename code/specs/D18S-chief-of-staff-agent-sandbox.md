@@ -905,8 +905,8 @@ is not a boundary; that is the S-B1 error this spec exists to prevent.
 ### S-P1 — every capability maps to a primitive with an honest coverage label
 
 `capability-os-sandbox` lowers manifests into per-platform plans labelled
-`direct`, `brokered`, `launch_time`, or `advisory`. Those labels are
-load-bearing and are never rounded up.
+`direct`, `brokered`, `launch_time`, or `unsupported`. (`advisory` exists to
+be refused: S-P2.) Those labels are load-bearing and are never rounded up.
 
 | Platform | Primitives | Privilege | Floor |
 |---|---|---|---|
@@ -916,6 +916,14 @@ load-bearing and are never rounded up.
 | **Linux, privileged mode only** | `mount_namespace`, `cgroup_bpf.sock_addr` | `CAP_BPF`/`CAP_NET_ADMIN`, cgroup delegation | — |
 | **macOS** | `seatbelt.profile`, `posix_spawn.file_actions`, env allowlist | none | 10.5+ |
 | **Windows** | AppContainer ACL and network capability, `restricted_token`, `job_object`, `process_mitigation.dll_policy`, `handle_inheritance` | none for AppContainer | 8+ |
+
+The table lists the primitives each platform **has**, not the labels the
+lowering uses. Since P2.1, `direct` is used only for exact-path filesystem
+rules (`landlock.path_beneath`, Seatbelt literals, AppContainer ACLs,
+`cap_rights`, `unveil`). Every network and process grant is brokered. `ffi`
+is unsupported on every platform. No lowering uses the privileged Linux row.
+A measured promotion to `direct` under S-I6 may use the other primitives
+later, subject to the conditions below.
 
 **Required seccomp filter shape.** "Deny `socket`" is not a filter design.
 
@@ -997,11 +1005,14 @@ failure. `advisory` describes a primitive that narrows a class of behavior
 without constraining the exact target: a useful defence, not an enforcement
 claim.
 
-The current lowering violates this — `lower_openbsd` maps `Category::Net` and
-`Category::Proc` to `pledge`/`Advisory`, and `lower_linux` emits `Advisory` for
-wildcard `fs` and for `time`. OpenBSD is implemented first in the build order
-and is where the lowering is most advisory, so this rule is a precondition of
-step 3, not a later cleanup.
+Before P2.1 the lowering violated this:
+- `lower_openbsd` mapped `Category::Net` and `Category::Proc` to
+  `pledge`/`Advisory`;
+- `lower_linux` emitted `Advisory` for wildcard `fs` and for `time`.
+
+OpenBSD is implemented first in the build order and was where the lowering
+was most advisory, so this rule had to hold before step 3. P2.1 removed every
+such lowering (build step 1).
 
 ### S-P3 — a platform may not silently degrade
 
@@ -1122,6 +1133,69 @@ through S-I3 before two weeks are spent on Windows.
    policy term and the `Unsupported` coverage variant; assert no `Advisory`
    rule survives lowering. Platform independent, and every later step is
    unsound without it.
+   **Status (P2.1):** done in `capability-os-sandbox`.
+   - `SandboxPlan.base` is a `BasePolicy` built from the OS alone. It lists
+     the primitives the deny-all base installs, and records
+     `principal_model` and `broker_topology`.
+   - `SandboxCoverage::Unsupported` exists.
+   - No lowering produces `Advisory` any more, and no lowering rounds up to
+     `Direct`. `Direct` is kept for a kernel primitive that names the exact
+     declared target. Lowering applies these rules on every OS, before any
+     platform table:
+     - `ffi:*` is `Unsupported`, because native code runs in the agent's
+       address space and nothing can broker it (S-K6, S-I6).
+     - All `proc:*` grants are brokered. No primitive names a program or a
+       PID, so the supervisor spawns (`spawn_verified`) and the agent never
+       execs.
+     - All `net:*` grants are brokered. No unprivileged primitive scopes a
+       socket or a lookup to one host.
+     - A wildcard or glob target is brokered.
+     - Time grants are brokered too.
+   - What stays `Direct` is exact-path filesystem rules: Landlock, Seatbelt
+     literals, AppContainer ACLs, Capsicum and unveil. The Linux applier must
+     probe the Landlock ABI and refuse the launch when the kernel cannot
+     express a rule (S-P3).
+   - `SandboxPlan::launch_preconditions` re-derives the plan rather than
+     trusting its public fields:
+     - the base must equal `BasePolicy::for_os`;
+     - each rule must equal its capability's lowering for the plan's OS;
+     - the coverage verdict comes from that re-derived rule.
+
+     It refuses an advisory or unsupported rule, a missing or altered base,
+     a per-supervisor broker, and the portable target, which has no kernel
+     boundary. `run_with_kernel_sandbox` checks it before anything is
+     installed. `Ok` means the plan is launchable as written, not that it
+     is enforced (S-P4).
+   - A filesystem target is `Direct` only when it is one normalised absolute
+     path. A directory is a wildcard in disguise: Landlock, `unveil`,
+     Capsicum and inheritable ACEs grant the whole subtree. So `/`, a
+     trailing `/`, relative paths, `~`, `.` or `..` components, empty
+     components and control characters are all brokered. The check knows
+     the OS: a `/` path is exact only on the Unix families, and a drive path
+     only on Windows. On Windows, a component ending in a dot or space, or
+     containing `:`, is also brokered, because Windows renames the first
+     and treats the second as a stream. Reserved device names (`NUL`,
+     `CON`, `COM1.txt` and so on) still pass this syntactic check. The
+     Windows applier (step 8) refuses them along with the directory check
+     it makes at launch.
+   - The never-grantable check (S-I6) is not in this model:
+     - For a brokered `fs:*`, the broker does it before opening anything
+       (S-K5, broker hardening, step 6).
+     - For a `Direct` grant, the applier does it at launch. The applier also
+       refuses a `Direct` target that resolves to a directory (steps 3, 4,
+       7, 8).
+   - **The base is modelled, not yet installed.**
+     - The one existing applier (macOS Seatbelt) still writes an
+       `(allow default)` profile. Steps 3, 4, 7 and 8 make each applier
+       install its base. Until then, the summary reports
+       `base_installed: false`.
+     - The base lists are the S-I1 deny classes. They do not yet name every
+       term an applier will need, such as `/proc`, `/sys` and `/dev` being
+       unreachable, an argument-filtered `AF_UNIX` denial, RLIMITs, Landlock
+       v6 scope restrictions and Windows LPAC. Each platform step adds its
+       own.
+     - The principal model and the broker topology are fixed for each OS for
+       now. They become inputs when a deployment can choose them.
 2. **Descriptor isolation and the channel contract** (S-I2, S-I3):
    `O_CLOEXEC` at every open site, `close_range` in the child, no-tty check.
 3. **OpenBSD `pledge`/`unveil`; FreeBSD Capsicum** (Tier B). Days, not weeks.
