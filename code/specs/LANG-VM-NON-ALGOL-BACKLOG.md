@@ -257,17 +257,24 @@ pairs and 676 pending; neither full historical syntax nor exhaustive public
 release coverage is claimed. The next fresh selection rotates to the prepared
 generic PREP01 macro undefinition stage and its bounded C `#undef` spelling.
 
+PR #17040 delivered that bounded generic macro-undefinition stage and its
+exact one-identifier C `#undef` spelling, and merged as
+`f4af18b9b45803189c10c9fa3acb41a9f65b2bdd` after exact-head CI,
+CodeQL, and books checks passed. Skipped groups remain inert, and malformed
+directives retain their rooted location. The next fresh selection rotates to
+LANG82's prepared, separate, explicitly partial 5.004_56 and 5.004_57
+historical token/grammar pairs.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **PREP01 generic macro undefinition (selected):** add dialect-owned
-   `#undef` classification and generic removal of the current macro by raw
-   name. Keep skipped conditional groups inert and malformed C operands
-   explicitly rejected with the rooted directive location.
-2. **LANG82 continued:** continue distinct source-backed partial
-   pairs. Keep 5.004_01-t1 pending until its own source is found; do not imply
-   complete syntax or an exhaustive release inventory.
+1. **LANG82 Perl release grammars (selected):** add separate, explicitly
+   partial 5.004_56 and 5.004_57 token/grammar pairs, each backed by its own
+   historical archive and bounded decimal-scanner evidence.
+2. **LANG82 continued:** continue distinct source-backed partial pairs. Keep
+   5.004_01-t1 pending until its own source is found; do not imply complete
+   syntax or an exhaustive release inventory.
 3. **PREP01 C:** continue the bounded conditional ladder. Full C `#if`,
    stringize/paste, and default frontend routing remain open.
 4. **LANG78 JavaScript:** the completed output repair leaves the broader

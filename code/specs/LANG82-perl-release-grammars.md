@@ -383,3 +383,23 @@ plain-decimal examples, including 250 digits, and reject 251 digits,
 leading-zero forms, adjacent decrement, carriage returns, and other unsupported
 input in the partial grammar. Keep its own distinct files and pending releases
 pending; do not claim full historical Perl syntax.
+
+Add separate, explicitly partial `5.004_56` and `5.004_57` token/grammar
+pairs, each grounded in its own historical source archive:
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_56.tar.gz`
+(SHA-256 `72bc8c0944c85eb372e3d071d4e4f61eee3efe7f5c4146b7b3602ea904051b4a`)
+and `https://mirrors.develooper.com/perl/historical-perl/perl-5.004_57.tar.gz`
+(SHA-256 `86a35b731294a6ba7d161af68074a7be7fdfc9815a1ccad457fa7519eda60dcb`).
+Between 5.004_55 and 5.004_56, `perly.y` changes only the
+BEGIN/END/INIT subname action; `toke.c` changes word-handling parameter
+spelling, the `sort` word path, and debugger error initialization. Between
+5.004_56 and 5.004_57, `perly.y` is byte-identical and `toke.c` changes
+environment, PerlIO, and filter handling. Both releases retain the same
+`scan_num` body and source-backed 250-digit decimal bound as 5.004_55. None
+of those source changes widens the standalone plain-decimal arithmetic
+`print` subset represented by the partial files. Accept 250 digits; reject
+251, leading-zero forms, adjacent decrement, carriage returns, and other
+unsupported input in the partial grammar. As for 5.004_55, excluding CR
+from this subset makes no claim about platform-wide historical rejection
+behavior. Keep separate files, leave later releases pending, and do not
+claim complete historical syntax.

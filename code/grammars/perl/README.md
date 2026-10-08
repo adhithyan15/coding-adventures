@@ -377,6 +377,20 @@ Current pairs:
   Other tokenizer changes lie outside the plain-decimal `print` subset.
   `WIN32CHEAT` changes carriage-return handling, so this subset excludes CR
   without claiming platform-wide historical rejection parity.
+- `perl5.004_56.*` is a separate **partial** development-release pair checked
+  against its own [5.004_56 historical source archive] (SHA-256
+  `72bc8c0944c85eb372e3d071d4e4f61eee3efe7f5c4146b7b3602ea904051b4a`).
+  Its `perly.y` adjusts the BEGIN/END/INIT subname action; `toke.c` changes
+  word handling, `sort`, and debugger initialization outside the bounded
+  plain-decimal `print` subset. Its numeric scanner retains the tested
+  250-digit bound; CR remains outside the partial accepted subset.
+- `perl5.004_57.*` is a separate **partial** development-release pair checked
+  against its own [5.004_57 historical source archive] (SHA-256
+  `86a35b731294a6ba7d161af68074a7be7fdfc9815a1ccad457fa7519eda60dcb`).
+  Its `perly.y` matches 5.004_56 byte for byte; `toke.c` changes environment,
+  PerlIO, and filter handling outside the same bounded subset. The numeric
+  scanner and 250-digit bound remain unchanged. Neither pair claims full
+  historical syntax or platform-wide carriage-return rejection parity.
 - `perl5.004_01_02.*` is a separate **partial** pair checked against the
   [historical 5.004_01_02 source archive] (SHA-256
   `185dc7317b340d4ca018f966993bb155bcc834c914fd26e579225d49c01e2a93`).
@@ -505,6 +519,8 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [5.004_53 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_53.tar.gz
 [5.004_54 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_54.tar.gz
 [5.004_55 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_55.tar.gz
+[5.004_56 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_56.tar.gz
+[5.004_57 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_57.tar.gz
 [`perl-5.004_05` source tag]: https://github.com/Perl/perl5/tree/perl-5.004_05
 [`perl-5.004_03` source tag]: https://github.com/Perl/perl5/tree/perl-5.004_03
 [historical 5.004_01-t2 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01-t2.tar.gz
