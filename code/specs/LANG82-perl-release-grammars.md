@@ -431,3 +431,15 @@ decimal bound and reject 251 digits, leading-zero forms, adjacent decrement,
 carriage returns, and unsupported input in the partial grammar. Keep its
 files distinct, leave later releases pending, and make no full-syntax or
 platform-wide rejection claim.
+
+Add a separate, explicitly partial `5.004_60` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_60.tar.gz`
+source archive, SHA-256
+`912091e555a293955797efc07709116860850655bbe294f137f5cb99e5d372ca`.
+Its `perly.y` and `toke.c` are byte-identical to `5.004_59`; this source
+comparison supports the same bounded standalone plain-decimal arithmetic
+`print` subset and its 250-digit numeric limit. Keep an independent file pair
+for this release. Accept 250 digits; reject 251 digits, leading-zero forms,
+adjacent decrement, carriage returns, and other unsupported input in the
+partial grammar. Leave later releases pending and make no full-syntax,
+exhaustive-inventory, or platform-wide rejection claim.
