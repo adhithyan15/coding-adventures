@@ -12,20 +12,20 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 17060,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/17060",
-    "branch": "codex/parity-validation-fixture-ci-20261008",
-    "implementation_revision": "aa0c879b0744d944ae862d4f3653766ceced72c8",
+    "number": 17076,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/17076",
+    "branch": "codex/parity-plan-fixture-ci-20261008",
+    "implementation_revision": "0f9b702131f0bc9ff74aa4470bbacc71be8c8e77",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-08T07:28:52Z",
-    "pr_number": 17060,
+    "observed_at": "2026-10-08T09:05:31Z",
+    "pr_number": 17076,
     "status": "checks-pending",
-    "notes": "Ready-for-review PR #17060 opened from the tested clean parity worktree after #17042 was verified merged. Initial GitHub checks are queued and mergeability is MERGEABLE; auto-merge remains disabled until every final-head required check is terminal acceptable and conflict-free. No other parity PR is open."
+    "notes": "Ready-for-review PR #17076 opened from the tested clean parity worktree after #17060 was verified merged. Initial GitHub checks are queued and mergeability is MERGEABLE; auto-merge remains disabled until every final-head required check is terminal acceptable and conflict-free. No other parity PR is open."
   },
   "last_inventory": {
-    "revision": "57ff56c81c0b683dad83858e974ea09e918c63e1",
+    "revision": "16a8c24016e1d17f71dd115180ca3429b89b8280",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1497,
@@ -13638,7 +13638,7 @@
       "notes": "Selected after #17028 merged and newly discovered work was registered. Eleven checked hashing-cache cases have direct native readers in nine build-tool fronts: C#/F#/Lua all cases, Python missing/hit/corrupt, Go/Perl/Ruby/Swift missing, and TypeScript corrupt. Fixture-only diffs do not select those BUILD roots. Use a closed exact case-to-reader map, independent source-reference drift evidence, neutral fallback, and three-platform/language/rename/missing-root tests; some fronts assert only digest slices rather than replaying the full oracle. Separate from Lua/Perl hashing-cache implementation owners."
     },
     {
-      "id": "build-tool-validation-fixture-native-ci-selection", "title": "Gate native validation fixture readers", "status": "pr-open", "depends_on": ["build-tool-validation-oracle-corpus", "build-tool-tracked-artifact-validation-corpus", "build-tool-orphan-crate-validation-corpus", "build-tool-orphan-package-root-validation-corpus-and-go-adoption", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-validation-fixture-ci-20261008", "pr_number": 17060,
+      "id": "build-tool-validation-fixture-native-ci-selection", "title": "Gate native validation fixture readers", "status": "merged", "depends_on": ["build-tool-validation-oracle-corpus", "build-tool-tracked-artifact-validation-corpus", "build-tool-orphan-crate-validation-corpus", "build-tool-orphan-package-root-validation-corpus-and-go-adoption", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-validation-fixture-ci-20261008", "pr_number": 17060,
       "notes": "Selected from collision-checked bedf869390 main after #17042 merged; all five prerequisites are merged and no active parity PR or direct open-PR overlap remains. The flat validation family has 22 cases, but direct native readers cover only scoped subfamilies: four orphan-package-root cases in Go, four orphan-crate/exemption and five tracked-artifact cases in eleven non-Go fronts, plus one Lua Windows sibling case in Go. Fourteen cases have native readers; eight one-off cases have no verified native reader. Perl composes filenames dynamically; avoid blanket validation-* fanout."
     },
     {
@@ -13750,8 +13750,8 @@
       "notes": "Merged #17038 covers unquoted lane &amp;, bracket node &nbsp;, and pipe edge &#32;&check; plus a visual fixture; merged #17049 adds metadata title/accTitle/accDescr named/numeric entity baselines. After the quoted-label neutral owner closes, audit residual inline-edge entity decoding, malformed/unknown and broader numeric entities, and exact semantic IR against DG04 and neutral fixtures; do not repeat landed baselines or expand the quoted-label owner beyond its quoted/entity interaction."
     },
     {
-      "id": "build-tool-plan-fixture-native-ci-selection", "title": "Gate exact native plan fixture readers", "status": "pending", "depends_on": ["build-tool-fixtures", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": null, "pr_number": null,
-      "notes": "Five checked flat plan cases exist. Python directly reads plan-replace-existing and TypeScript directly reads plan-portable-package-path; plan-affected-empty, plan-affected-null, and plan-future-version currently have neutral-runner coverage only. No production Go plan-family selector exists. Freeze an exact per-case reader map, keep the three neutral-only cases out of blanket native fanout, and fail closed on an unclassified flat case. Three sharding cases are separately neutral-only pending verified native readers. Rank below the hashing-cache and validation fixture selectors. Existing plan atomic-overwrite owners govern implementation, not fixture-only CI selection."
+      "id": "build-tool-plan-fixture-native-ci-selection", "title": "Gate exact native plan fixture readers", "status": "pr-open", "depends_on": ["build-tool-fixtures", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-plan-fixture-ci-20261008", "pr_number": 17076,
+      "notes": "Selected after #17060 merged and newly discovered Swimlane parser gaps were registered. Five checked flat plan cases exist. Python directly reads plan-replace-existing and TypeScript directly reads plan-portable-package-path; plan-affected-empty, plan-affected-null, and plan-future-version currently have neutral-runner coverage only. Exact per-case CI selection and fail-closed unknown cases are now in ready-for-review PR #17076. A security review identified Git quotePath escaping of non-ASCII fixture names; this PR also preserves NUL-delimited raw Git paths so the selector cannot silently bypass them. Three sharding cases remain separately neutral-only pending verified native readers. Existing plan atomic-overwrite owners govern implementation, not fixture-only CI selection."
     },
     {
       "id": "fp01-bit-vectors-v1", "title": "Freeze language-neutral FP01 bit-vector conformance", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
@@ -13776,6 +13776,14 @@
     {
       "id": "fp01-perl-format-completeness", "title": "Complete Perl FP01 FP16 and BF16 arithmetic", "status": "pending", "depends_on": ["fp01-bit-vectors-v1"], "branch": null, "pr_number": null,
       "notes": "The Perl fp-arithmetic root currently exposes only FP32 encode/decode/add/mul; classify the missing FP16/BF16 and remaining FP01 core operations against neutral bit vectors. Preserve existing behavior and avoid claiming root presence equals full format parity."
+    },
+    {
+      "id": "mermaid-swimlane-class-terminator-parser-neutral-conformance", "title": "Reconcile DG04 Swimlane class terminators with the pinned upstream syntax", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Newly discovered after #17060: merged #17059 adds named/default class resolution atop #17054 inline styles, but CLASS_LINE rejects a terminal semicolon and classDef declarations retain semicolons in color and stroke-width values. Pinned upstream Swimlane docs use both forms. Freeze a minimal grammar, semantic-IR, and visual fixture for semicolon-terminated class and classDef lines before broadening class syntax. This is parser-only, not a new layout/paint model, and does not duplicate the quoted/entity-label owners."
+    },
+    {
+      "id": "mermaid-swimlane-class-decorator-parser-neutral-conformance", "title": "Classify DG04 Swimlane class decorators", "status": "pending", "depends_on": ["mermaid-swimlane-class-terminator-parser-neutral-conformance"], "branch": null, "pr_number": null,
+      "notes": "After the terminator baseline, classify :::class on a Swimlane node or edge endpoint against pinned upstream flow.jison styledVertex syntax. DG04 currently excludes decorators and the node parser does not accept them; reuse #17059 class resolution and #17054 style IR/layout/paint projection. Add grammar, semantic, and pinned visual fixtures without claiming full Mermaid or platform-renderer parity."
     }
   ]
 }

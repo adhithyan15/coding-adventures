@@ -46,6 +46,15 @@ lookalikes; renamed/deleted source paths, ordinary package edits, three
 platforms, and single-language plans retain exact selection. The
 [CI-gate registry](../../../specs/ci-gate-registry.md) pins the relation.
 
+Changes to a flat shared `plan-*.json` case similarly schedule only its
+direct native reader. Python reads `replace-existing`, TypeScript reads
+`portable-package-path`, and the other three checked cases are neutral-only.
+An unclassified flat case fails before planning; exact raw-path matching,
+language filters, and missing-root checks keep the affected plan bounded.
+The change detector uses NUL-delimited Git paths, preserving non-ASCII names
+without quote-path escaping before fixture classification.
+The [CI-gate registry](../../../specs/ci-gate-registry.md) pins this relation.
+
 ## Portable source hashing
 
 Extension and declared-source collection share the language-neutral v1 rules.

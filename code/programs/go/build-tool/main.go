@@ -194,6 +194,7 @@ const diffSelectionFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/diff
 const resolutionFixtureCasePrefix = "code/specs/fixtures/build-tool-v1/cases/resolution-"
 const hashingCacheFixtureCasePrefix = "code/specs/fixtures/build-tool-v1/cases/hashing-cache-"
 const validationFixtureCasePrefix = "code/specs/fixtures/build-tool-v1/cases/validation-"
+const planFixtureCasePrefix = "code/specs/fixtures/build-tool-v1/cases/plan-"
 
 const closureProvenanceSpecPath = "code/specs/CV02-checked-bounded-provenance-graphs.md"
 const closureProvenanceConsumer = "rust/programs/closurec"
@@ -382,6 +383,18 @@ var validationNativeFixtureCases = map[string]string{
 	"tracked-artifacts-unicode-boundaries": "CFEHLPYBRST",
 }
 
+// Only direct native plan readers are scheduled by a plan fixture edit.
+// Empty relations are neutral-only cases, not missing classifications.
+var planNativeFixtureReaders = map[rune]struct{ name, language string }{
+	'Y': {"python/programs/build-tool", "python"},
+	'T': {"typescript/programs/build-tool", "typescript"},
+}
+
+var planNativeFixtureCases = map[string]string{
+	"affected-empty": "", "affected-null": "", "future-version": "",
+	"portable-package-path": "T", "replace-existing": "Y",
+}
+
 // A raw Git path is already slash-separated. Do not clean it: normalizing a
 // nested or backslash lookalike would incorrectly broaden the CI selection.
 func resolutionFixtureCase(changed string) string {
@@ -402,6 +415,14 @@ func hashingCacheFixtureCase(changed string) string {
 
 func validationFixtureCase(changed string) string {
 	name, ok := strings.CutPrefix(changed, validationFixtureCasePrefix)
+	if !ok || !strings.HasSuffix(name, ".json") || len(name) <= len(".json") || strings.ContainsAny(name, "/\\") {
+		return ""
+	}
+	return strings.TrimSuffix(name, ".json")
+}
+
+func planFixtureCase(changed string) string {
+	name, ok := strings.CutPrefix(changed, planFixtureCasePrefix)
 	if !ok || !strings.HasSuffix(name, ".json") || len(name) <= len(".json") || strings.ContainsAny(name, "/\\") {
 		return ""
 	}
@@ -574,13 +595,22 @@ func changedPackageRootsForPlatformAndLanguage(
 			validationCases[caseName] = true
 		}
 	}
+	planCases := map[string]bool{}
+	for _, path := range changedFiles {
+		if caseName := planFixtureCase(path); caseName != "" {
+			if _, known := planNativeFixtureCases[caseName]; !known {
+				return nil, fmt.Errorf("plan fixture case %q has no classified native readers", caseName)
+			}
+			planCases[caseName] = true
+		}
+	}
 	sourceFixtureFamilies := map[string]bool{}
 	for _, path := range changedFiles {
 		if family := sourceCollectionFixtureFamily(path); family != "" {
 			sourceFixtureFamilies[family] = true
 		}
 	}
-	if !discoveryFixtureChanged && !ciGateFixtureChanged && !toolchainFixtureChanged && !graphDiffFixtureChanged && len(resolutionCases) == 0 && len(hashingCacheCases) == 0 && len(validationCases) == 0 && len(sourceFixtureFamilies) == 0 {
+	if !discoveryFixtureChanged && !ciGateFixtureChanged && !toolchainFixtureChanged && !graphDiffFixtureChanged && len(resolutionCases) == 0 && len(hashingCacheCases) == 0 && len(validationCases) == 0 && len(planCases) == 0 && len(sourceFixtureFamilies) == 0 {
 		return changed, nil
 	}
 
@@ -666,6 +696,18 @@ func changedPackageRootsForPlatformAndLanguage(
 			}
 			if !available[consumer.name] {
 				return nil, fmt.Errorf("validation fixture %q consumer %q is missing from discovered packages", caseName, consumer.name)
+			}
+			changed[consumer.name] = true
+		}
+	}
+	for caseName := range planCases {
+		for _, code := range planNativeFixtureCases[caseName] {
+			consumer := planNativeFixtureReaders[code]
+			if language != "all" && consumer.language != language {
+				continue
+			}
+			if !available[consumer.name] {
+				return nil, fmt.Errorf("plan fixture %q consumer %q is missing from discovered packages", caseName, consumer.name)
 			}
 			changed[consumer.name] = true
 		}

@@ -1396,6 +1396,23 @@ platform recipes explicitly.
 Cross-language compatibility is proven only when one implementation's emitted
 plan is consumed by another implementation under the fixture matrix.
 
+Fixture-only CI selection for the five checked flat
+`code/specs/fixtures/build-tool-v1/cases/plan-*.json` cases MUST keep the
+neutral fixture gate and schedule only direct native plan readers: Python
+for `plan-replace-existing` and TypeScript for
+`plan-portable-package-path`. `plan-affected-empty`, `plan-affected-null`,
+and `plan-future-version` are currently neutral-only. A new valid flat plan
+case MUST fail closed until its native-reader relation is classified. Raw
+Git paths, including both sides of renames, MUST be matched without OS
+normalization or Git quote-path decoding. The change detector MUST preserve
+raw path bytes through an unambiguous delimiter, including non-ASCII names;
+nested, backslash-spelled, case-varied, and backup lookalikes
+do not belong to this family. Ordinary changed roots remain selected, and
+explicit language filtering, missing applicable BUILD roots, and Linux,
+macOS, and Windows plan/toolchain checks follow the exact-reader relation.
+This scheduling contract neither changes plan semantics nor promotes a
+library-only reader to a complete cross-language front door.
+
 ### 8. Sharding
 
 Final parity requires the behavior in `build-plan-sharding.md`:

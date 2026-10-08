@@ -296,6 +296,28 @@ fail before planning. Linux, macOS, and Windows plans MUST expose unforced
 affected roots and toolchain flags; C/F share `dotnet` but remain separate
 fronts. Neutral-only cases still run the shared fixture gate.
 
+The five flat `code/specs/fixtures/build-tool-v1/cases/plan-*.json` cases
+have this closed direct native plan-reader relation. Y denotes
+`python/programs/build-tool`; T denotes `typescript/programs/build-tool`.
+
+| Case stem after `plan-` | Direct readers |
+| --- | --- |
+| `replace-existing` | Y |
+| `portable-package-path` | T |
+| `affected-empty`, `affected-null`, `future-version` | neutral gate only |
+
+The relation MUST match the checked five-case corpus and native test-source
+references; the neutral conformance runner is not a native BUILD reader. A
+new valid flat case is unknown and MUST fail before a partial plan is emitted.
+Added, modified, deleted, and renamed paths (including the deleted source)
+participate. Nested paths, backslash spellings, empty stems, case variants,
+backup files, and sibling fixture domains do not. Ordinary changed package
+roots unite with direct readers without forcing a full build. An explicit
+language filter selects only applicable readers; a missing applicable BUILD
+root fails atomically. Linux, macOS, and Windows plans MUST expose the
+unforced affected roots and Python/TypeScript toolchain flags. The three
+neutral-only cases still run the shared fixture gate.
+
 ## Evaluation
 
 A gate is **required** when ANY of the following holds:
