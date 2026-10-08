@@ -6298,6 +6298,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             continue;
         }
         if let Some(value) = line.strip_prefix("classDef ") {
+            let value = value.strip_suffix(';').unwrap_or(value).trim_end();
             let Some((name, declarations)) = value.trim().split_once(char::is_whitespace) else {
                 return Err(swimlane_error(line_number, "Swimlane classDef requires a name and declarations"));
             };
@@ -6305,6 +6306,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             continue;
         }
         if let Some(value) = line.strip_prefix("class ") {
+            let value = value.strip_suffix(';').unwrap_or(value).trim_end();
             let Some((node_ids, classes)) = value.trim().split_once(char::is_whitespace) else {
                 return Err(swimlane_error(line_number, "Swimlane class requires nodes and a class name"));
             };

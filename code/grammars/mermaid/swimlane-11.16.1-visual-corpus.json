@@ -19,6 +19,7 @@
     "metadata-entities",
     "inline-node-styles",
     "named-node-classes",
+    "semicolon-class-statements",
     "node-class-decorators"
   ]
 }
