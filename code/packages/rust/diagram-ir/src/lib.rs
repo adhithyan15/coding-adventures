@@ -36,6 +36,7 @@ pub enum DiagramShape {
     TextBlock,
     SmallCircle,
     FramedCircle,
+    ForkJoin,
     Cloud,
     Bang,
     Stadium,
