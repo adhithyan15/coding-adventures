@@ -2001,6 +2001,30 @@ through S-I3 before two weeks are spent on Windows.
           `[hosts.broker]`).
      4. **P2.6d-4:** non-channel requests (completions and tools) are
         served on a worker thread, off the refresh path.
+
+        **How.** Each host gets one dispatch worker when a dispatcher is
+        configured. A request the budget admits, and that is not a channel
+        operation for a broker, is handed to that worker; the supervisor's
+        thread goes straight back to the other hosts. The worker calls the
+        dispatcher and answers through the shared host link, exactly as a
+        broker's relay does (2b): encrypting and queueing under one lock,
+        so frames still reach the host in sequence order.
+        - One outstanding request per host is all the control protocol
+          allows, so the worker's queue holds one.
+        - A request with the worker is not offered to the manual adapter
+          API, as for one with the broker.
+        - If the worker cannot answer (the host stopped reading, or the
+          dispatcher returned a response that does not answer the
+          request), it records the fault on the link; the next refresh
+          ends the host with that error, as the synchronous path did.
+        - The host's end drops the worker's queue. A dispatch already
+          running finishes on its own (it is bounded by the dispatcher's
+          own timeouts) and then finds the link closed.
+
+        **Status: done.** A host waiting on a slow dispatch no longer
+        holds the supervisor: another host's requests and heartbeats are
+        served meanwhile (tested with a dispatcher that blocks until
+        released).
 7. **macOS Seatbelt** (Tier A).
 8. **Windows AppContainer** (Tier A). The expensive one; schedule accordingly.
 9. **Wire into `spawn_verified`.** Deno becomes one supported runtime rather
