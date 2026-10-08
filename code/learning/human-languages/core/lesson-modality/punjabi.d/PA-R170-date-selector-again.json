@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "PA-R170-date-selector-again",
+    "language": "punjabi",
+    "chapter": 170,
+    "sequence": 9130,
+    "modality": "pen",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:817909dd319ba936",
+    "authored": "pen",
+    "authoredReason": "The learner must inspect printed Gurmukhi selector marks and match them to date cards; this task is not drivable.",
+    "overridden": true
+  },
+  "findings": []
+}

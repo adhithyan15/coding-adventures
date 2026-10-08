@@ -193,5 +193,7 @@ it("pins Punjabi's complete pre-A1 writing runway", () => {
     // copying, not another scored or timed A1 writing claim.
     "guided-copy",
     "guided-copy",
+    // Chapter 170 returns the taught selector map with the two-card bank visible.
+    "guided-copy",
   ]);
 });
