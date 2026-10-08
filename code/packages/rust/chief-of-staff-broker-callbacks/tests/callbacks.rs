@@ -372,6 +372,29 @@ fn a_message_published_through_callbacks_is_received_through_callbacks() {
 }
 
 #[test]
+fn a_channel_nobody_wrote_to_reads_as_empty() {
+    let world = World::new();
+    let server = world.server(&world.sink);
+    let mut in_flight = InFlight::for_request(&receive_request(REPORTS, 10)).unwrap();
+    assert_eq!(
+        ok(serve(
+            &server,
+            &mut in_flight,
+            Callback::ReadReceiverPage {
+                channel_id: channel(REPORTS),
+                definition_digest: digest(),
+                limit: 10,
+            }
+        )),
+        CallbackReply::ReceiverPage {
+            first_unread: 0,
+            messages: Vec::new(),
+            grants: Vec::new(),
+        }
+    );
+}
+
+#[test]
 fn storage_holds_no_plaintext() {
     let world = World::new();
     publish(&world, b"the porch light code is 4421");

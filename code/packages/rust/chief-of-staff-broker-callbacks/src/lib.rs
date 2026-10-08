@@ -344,6 +344,7 @@ impl<'a> CallbackServer<'a> {
                 self.read_page(&store, agent, usize::from(limit))
             }
             Callback::Acknowledge { sequence, .. } => {
+                store.initialize().map_err(store_refusal)?;
                 let first_unread = store
                     .acknowledge(agent.as_bytes(), Sequence(sequence))
                     .map_err(store_refusal)?;
@@ -439,6 +440,9 @@ impl<'a> CallbackServer<'a> {
         agent: &AgentId,
         limit: usize,
     ) -> Result<CallbackReply, Refusal> {
+        // As a receiver's endpoint does today: a channel nobody has written
+        // to yet reads as empty, not as missing.
+        store.initialize().map_err(store_refusal)?;
         let first_unread = store
             .receiver_cursor(agent.as_bytes())
             .map_err(store_refusal)?;
