@@ -244,6 +244,8 @@ nonnegative and bounded; signed and overridden forms remain gated.
 Built-in `cos` over a direct built-in `sign` result may also remain inside
 `sqrt`: its input is restricted to `-1`, `0`, or `1`, so the cosine is
 nonnegative. Non-sign-rooted, exponential, and overridden forms remain gated.
+Unary `+` and `-` may wrap that direct `sign` result without changing the
+`[-1, 1]` bound; additive and other computed wrappers remain gated.
 Built-in `sin`, `cos`, and `arctan` may map a bounded sign-rooted result before
 `entier`, including nested combinations; domain-sensitive or unbounded
 standard functions and non-sign-rooted runtime operands remain conservative.
