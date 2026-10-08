@@ -8,6 +8,24 @@
       "action": "call",
       "target": "libc tcgetattr, setsid, close_range, open, getdents64 and fcntl in the forked child before exec; getrlimit in the parent",
       "justification": "Refuses a terminal on the agent's standard descriptors, leaves the supervisor's session, and makes every inherited descriptor above 2 close-on-exec between fork and exec (D18S S-I2, S-I3); std's Command offers no portable way to do any of these."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "libc fcntl(F_DUPFD_CLOEXEC), dup2, _exit and the raw execveat syscall (Linux), for isolate_and_exec",
+      "justification": "Places exactly the broker's key descriptors at 3..3+n and executes the verified descriptor itself (D18S S-K1, S-I3); std cannot exec a descriptor."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "the broker binary named by configuration",
+      "justification": "VerifiedExecutable hashes the binary through its own descriptor before every launch, so what runs is what was pinned."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "the digest-verified broker binary, by descriptor",
+      "justification": "isolate_and_exec runs execveat on the verified descriptor; no path is ever executed."
     }
   ],
   "justification": "Spawn-time descriptor isolation for D18 agent processes. The one unsafe pre_exec hook lives here so the supervisor crates can keep forbid(unsafe_code)."
