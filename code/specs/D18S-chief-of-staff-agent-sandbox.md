@@ -1254,6 +1254,64 @@ through S-I3 before two weeks are spent on Windows.
    the most advisory in the tree.
 4. **Linux `seccomp` + Landlock** (Tier A): arch check, io_uring denial,
    allowlist filter, ABI-negotiated Landlock. Covers CI and most deployment.
+   **Status (P2.4):** the applier exists, in `chief-of-staff-linux-sandbox`,
+   for compiled agents. It is not yet wired into `spawn_verified`: that is
+   step 9, and it needs the shim (step 5) for interpreted runtimes.
+
+   *Where it runs.* It is a `pre_exec` hook installed after
+   `chief-of-staff-spawn-isolation`'s, so it runs in the forked child, while
+   that child is still single-threaded (S-I4b). Nothing of the agent's runs
+   before the boundary is in place. Compiled agents get deny-all at `exec`
+   (S-I4c). The child takes these steps in order, and any failure refuses
+   the spawn (S-P3):
+   1. `prctl(PR_SET_NO_NEW_PRIVS)`.
+   2. `landlock_restrict_self`, with a ruleset built in the parent.
+   3. `seccomp(SECCOMP_SET_MODE_FILTER)`, with a program built in the parent.
+
+   *Landlock.*
+   - The ABI is read with `LANDLOCK_CREATE_RULESET_VERSION`, and the ruleset
+     handles every filesystem right that ABI knows.
+   - From ABI 4 it also handles TCP bind and connect. From ABI 6 it adds
+     abstract-unix and signal scoping. Neither gets a rule, so both deny.
+   - Landlock unavailable is a launch failure. A plan with a `Direct`
+     filesystem grant needs ABI 3 or later (`FS_TRUNCATE`), per S-P1.
+   - The only rules are these:
+
+     | Path | Access |
+     |---|---|
+     | the agent executable and its ELF interpreter | read and execute |
+     | the shared-library directories (`/lib`, `/lib64`, `/usr/lib`, `/usr/lib64`) and `/etc/ld.so.cache` | read only |
+     | `/dev/null` | read and write |
+     | `/dev/urandom` | read |
+     | each `Direct` read or write grant in the plan, an exact existing file | read, or write and truncate, as granted |
+
+   - So `/proc`, `/sys`, `/dev` and every other path are unreachable (S-I1).
+   - A `Direct` create or delete grant is refused: Landlock can only express
+     it as rights over the whole parent directory.
+
+   *seccomp.*
+   - The program starts with the arch check: x86_64 and aarch64 are built,
+     and any other architecture is refused when the filter is built. x86_64
+     also refuses x32 syscall numbers.
+   - It is an allowlist of syscall numbers, with `SECCOMP_RET_KILL_PROCESS` as
+     the default (S-P1). The list covers what a compiled program needs:
+     memory, signals, futexes, time, reading and writing its descriptors,
+     opening files (which Landlock then decides), and exiting.
+   - Argument filters:
+     - `clone` only with `CLONE_THREAD`, so threads are allowed but processes
+       are not;
+     - `clone3` returns `ENOSYS`, so libc falls back to `clone`;
+     - `ioctl` never with `TIOCSTI` or `TIOCLINUX`;
+     - `prctl` only to get or set a thread name.
+   - Absent from the list, and so a kill: everything S-I1 names. That
+     includes `io_uring_*`, `ptrace`, `socket` and `socketpair`, `kill`, SysV
+     and POSIX IPC, `bpf`, `mount`, `unshare` and the `pidfd` family.
+
+   *What it does not do.*
+   - The S-P4 launch-time probes are the shim's (step 5).
+   - Here, the full negative coverage runs in CI as the probe tests: each
+     denied class kills the probe with `SIGSYS`, and each Landlock denial
+     returns `EACCES`.
 5. **The shim** (S-I4, S-P4): single-thread precondition, env deny-list,
    `close_range`, negative self-test. Required before any interpreted agent
    gets true deny-all.
