@@ -63,3 +63,14 @@ The item count is enforced before adding children to the traversal queue.
 
 This is an interpreter pilot. Bindings, objects, blocks, exceptions, the full
 integer tower, float literals, and JIT execution remain later work.
+
+## Follow-on bounded call form: `puts expression`
+
+Ruby also permits a one-argument `puts` call without parentheses. The native
+frontend may accept `puts 1 + 2` and `puts -7 / 2` through the existing
+`method_call_no_paren` parser rule, using the same expression lowering and
+integer bounds as the parenthesized form. Each accepted statement must have
+exactly one positional expression and a literal `puts` callee. Multiple
+arguments, keyword arguments, splats, blocks, other methods, and unsupported
+expression forms still fail before VM execution. The resulting IIR must call
+the existing `rb_puts_int` builtin; Ruby is only a conformance oracle.
