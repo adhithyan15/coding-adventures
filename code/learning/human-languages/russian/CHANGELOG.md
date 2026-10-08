@@ -30,6 +30,11 @@ terminal checkpoint after the runway; this is that checkpoint.
 - **session-map.md:** S5 now names the checkpoint after the spoken recap, and
   the schedule check says the writing runway is desk work that the checkpoint
   needs done first.
+- **Review follow-up:** the Script block names **и** on its own line as a
+  quiet false friend, so the four loud ones (в р с н) stay a clean set; the
+  dictation's cover step now hides the letter list *and* the key, so no model
+  or romanization stays in view while writing from sound; and "repair one
+  letter, then stop" is a `[YOU WRITE: …]` cue rather than bare prose.
 
 ## Fixed — drivable lesson prose stops asking a driver to read or handle cards
 

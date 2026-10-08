@@ -599,7 +599,7 @@ From the heard cue privet alone, write the known Russian word for informal hi.
 Lesson 17 of 17.
 Chapter 1 checkpoint — say it, know the letters, write it.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — ten letters, three kinds and Writing — from sound alone until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — ten letters, three kinds and Writing — from sound alone until you have stopped, and I will say so again when we reach them.
 
 Warm-up.
 [pause 2 seconds]
@@ -622,13 +622,14 @@ Guided Practice.
 [pause 8 seconds for the answer]
 
 Script — ten letters, three kinds.
-False friends: в р с н look like Latin B, P, C, H and say v, r, s, n; и looks like a reversed N and says ee.
+False friends: в р с н look like Latin B, P, C, H and say v, r, s, n.
+A quiet false friend: и looks like a reversed N and says ee.
 New shapes: б (a flag on top) says b; д (two feet below the line) says d.
 Honest letters: п е т say p, ye, t.
 [once you have stopped driving — read: the ten letters aloud by their sounds — в р с н и б д п е т]
 
 Writing — from sound alone.
-[once you have stopped driving — cover: the key below, so no model and no romanization stays in view]
+[once you have stopped driving — cover: the letter list above and the key below, so no model and no romanization stays in view]
 [your turn — hear: v, r, s, n, ee — b, d — p, ye, t]
 [pause 8 seconds for the answer]
 [once you have stopped driving — write: one Cyrillic letter for each sound, ten in all]
@@ -636,7 +637,8 @@ Writing — from sound alone.
 [pause 8 seconds for the answer]
 [once you have stopped driving — write: both words]
 [once you have stopped driving — check: against the key — в р с н и, б д, п е т, привет (privét), нет (nyet)]
-The usual slip is the Latin hand taking over: r for р, n for н, i for и. Repair one letter, then stop.
+The usual slip is the Latin hand taking over: r for р, n for н, i for и.
+[once you have stopped driving — write: one repaired letter, then stop]
 [question — say your answer, then pause 15 seconds]
 From the heard cue nyet alone, write the Russian word for no.
 

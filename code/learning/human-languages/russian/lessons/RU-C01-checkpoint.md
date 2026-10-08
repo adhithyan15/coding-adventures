@@ -67,7 +67,8 @@ the register so far.
 <!-- hl-knowledge: introduces=[]; assesses=[RU-SCRIPT-V-01, RU-SCRIPT-R-01, RU-SCRIPT-S-01, RU-SCRIPT-N-01, RU-SCRIPT-B-01, RU-SCRIPT-D-01, RU-SCRIPT-P-01, RU-SCRIPT-I-01, RU-SCRIPT-E-01, RU-SCRIPT-T-01] -->
 
 - **False friends**: **в р с н** look like Latin *B, P, C, H* and say **v, r,
-  s, n**; **и** looks like a reversed *N* and says **ee**.
+  s, n**.
+- **A quiet false friend**: **и** looks like a reversed *N* and says **ee**.
 - **New shapes**: **б** (a flag on top) says **b**; **д** (two feet below the
   line) says **d**.
 - **Honest letters**: **п е т** say **p, ye, t**.
@@ -79,7 +80,7 @@ the register so far.
 <!-- hl-writing-stage: dictation-transcription -->
 <!-- hl-activity: {"id":"RU-C01-checkpoint-net","kind":"text","assesses":["RU-LEX-NET","RU-SCRIPT-N-01","RU-SCRIPT-E-01","RU-SCRIPT-T-01"],"prompt":"From the heard cue nyet alone, write the Russian word for no.","answer":"нет","accepted":[],"feedback":{"correct":"нет — н, е, т, three known letters retrieved from sound.","incorrect":"The word is нет. The usual slip is a Latin n where н belongs: н has a middle bar, like a Latin H."},"response_seconds":15} -->
 
-[YOU COVER: the key below, so no model and no romanization stays in view]
+[YOU COVER: the letter list above and the key below, so no model and no romanization stays in view]
 
 [YOU HEAR: *v, r, s, n, ee* — *b, d* — *p, ye, t*]
 
@@ -92,7 +93,9 @@ the register so far.
 [YOU CHECK: against the key — **в р с н и**, **б д**, **п е т**, **привет**, **нет**]
 
 The usual slip is the Latin hand taking over: *r* for **р**, *n* for **н**,
-*i* for **и**. Repair one letter, then stop.
+*i* for **и**.
+
+[YOU WRITE: one repaired letter, then stop]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[RU-DIALOGUE-COURTESY-01, RU-PRAGMATICS-GREETING-REGISTER, RU-LEX-SPASIBO, RU-LEX-POZHALUYSTA, RU-SCRIPT-V-01, RU-SCRIPT-R-01, RU-SCRIPT-S-01, RU-SCRIPT-N-01, RU-SCRIPT-B-01, RU-SCRIPT-D-01] -->
