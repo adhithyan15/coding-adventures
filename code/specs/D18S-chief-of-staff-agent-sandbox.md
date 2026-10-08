@@ -601,7 +601,24 @@ positions, `reject_agent_identity_keys` and `reject_declared_identity_keys` over
 undescribed ones. All three match key **names**. None inspects a value, so
 `{"arguments": "agent:peer-7"}` passes every check.
 
-This is an accepted risk, not an oversight, on two measurements.
+**Declared names are ASCII (P1.16).** Matching by name is only as good as the
+name. A schema property `аgent_id`, with a Cyrillic `а`, normalizes to a string
+the vocabulary has never seen. It would register on an agent surface, and
+because its position is declared, the value walk would never look at it.
+
+So two gates apply:
+
+1. **Validation.** `ToolDefinition::validate` refuses any schema property or
+   `required` name that is not ASCII. Every registration path validates.
+2. **The agent-surface walk.** `tools_naming_another_agent` treats a
+   non-ASCII declared name as naming an agent. It does not rely on the first
+   gate having run.
+
+Both gates use the same predicate as the undescribed-position walk: anything
+non-ASCII. No shipped definition uses a non-ASCII key.
+
+Matching names but not values is an accepted risk, not an oversight, on two
+measurements.
 
 **There are no instances.** Every agent identity that enters from caller-supplied
 data is read from a field addressed **by name**, across every
