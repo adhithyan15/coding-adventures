@@ -329,6 +329,10 @@ impl<'a> ChannelStore<'a> {
     /// - the originator signature verifies under `originator_public_key`;
     /// - a retry after the message write finds exactly these bytes stored.
     ///
+    /// `originator_public_key` must come from the channel definition's
+    /// originator, never from the message or from whoever submits it.
+    /// Otherwise the signature check proves nothing.
+    ///
     /// It cannot check that the ciphertext decrypts: only the AEAD tag can,
     /// under the channel key. A correctly signed message with a bad body
     /// stops every receiver at it (D18S P2.6d records this).
