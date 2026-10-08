@@ -201,20 +201,24 @@ CodeQL, and books checks passed. The next fresh selection rotates to LANG78's
 prepared JavaScript console-output error repair. Full C `#if`, stringize/paste,
 and default frontend routing remain open.
 
+PR #16999 delivered that JavaScript output repair and merged as
+`52c76f458477d758098824393ed11665f509303f` after exact-head CI,
+CodeQL, and books checks passed. The next fresh selection rotates to LANG82's
+prepared 5.004_05 maintenance pairs. Full C `#if`, stringize/paste, and
+default frontend routing remain open.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG78 JavaScript (selected):** retain completed `console.log` output
-   when a later native VM instruction fails, then emit that output before the
-   CLI diagnostic. Keep the direct source/AST-to-IIR path on Rust `vm-core`;
-   Node remains an effect-order conformance oracle.
-2. **LANG82 Perl release grammars:** continue separate source-backed partial
-   files, with six 5.004_05 maintenance pairs prepared locally. Keep
+1. **LANG82 Perl release grammars (selected):** add six separate source-backed
+   partial 5.004_05 maintenance pairs. Keep
    5.004_01-t1 pending until its own source is found; do not imply complete
    syntax or an exhaustive release inventory.
-3. **PREP01 C:** continue the bounded `#if` expression ladder. Full C `#if`,
+2. **PREP01 C:** continue the bounded `#if` expression ladder. Full C `#if`,
    stringize/paste, and default frontend routing remain open.
+3. **LANG78 JavaScript:** the completed output repair leaves the broader
+   source/AST-to-IIR frontend subset open; Node remains a conformance oracle.
 
 The following run records the first VM-067 selection.
 
