@@ -306,14 +306,21 @@ another host's lease, a destination outside the record) becomes
 `credential_refused`. Which of these it was is not reported, so the model
 learns nothing about leases it does not hold.
 
-**V-D5a: only DNS and the socket are replaceable.** The daemon holds the
-network edge as an `Arc<dyn Fetcher>`. `run` and `compose_host_data_plane`
-pass `NetFetch::production()`. `compose_host_data_plane_with_fetcher` accepts
-any `Fetcher`, and the P1.5 end-to-end test passes a `NetFetch` over a fake
-resolver and transport. Authorization, the address check, redemption and
-masking live inside `NetFetch`, so that test exercises all of them. A
-`Fetcher` that is not a `NetFetch` would bypass them, so production never
-constructs one.
+**V-D5a: only DNS and the TLS transport are replaceable.** The daemon holds
+the network edge as an `Arc<dyn Fetcher>`. `Fetcher` is sealed, so `NetFetch`
+is its only implementation. A `Fetcher` that skipped authorization or the
+address check would be a way to spend a lease anywhere, and sealing makes that
+impossible to write.
+
+- `run` and `compose_host_data_plane` pass `NetFetch::production()`.
+- `compose_host_data_plane_with_fetcher` takes a `NetFetch<R, T>`, meaning a
+  caller-chosen `Resolver` and `Transport`. The P1.5 end-to-end test passes
+  fakes for both.
+
+Authorization, the public-address check, redemption, encoding and masking
+live inside `NetFetch`, so that test exercises all of them. TLS certificate
+and server-name verification belong to `TlsTransport`, so that test does not
+cover them. `tls-platform`'s own tests cover them instead.
 
 **V-D6: failures are tool results, not transport failures.** A refused or
 failed `net.fetch` returns `is_error: true` with output `{ kind, message,

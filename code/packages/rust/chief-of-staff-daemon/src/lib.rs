@@ -34,8 +34,7 @@ use chief_of_staff_host_data_plane::{
     ModelToolDispatcher, UnavailableHostDataPlaneService,
 };
 use chief_of_staff_host_runtime::PackageKeyring;
-pub use chief_of_staff_net_fetch::Fetcher;
-use chief_of_staff_net_fetch::NetFetch;
+use chief_of_staff_net_fetch::{Fetcher, NetFetch, Resolver, Transport};
 use chief_of_staff_orchestrator_core::OrchestratorCore;
 use chief_of_staff_process_supervisor::{
     DurableHostLaunchBindings, HostProgram, MonotonicClock, ProcessSupervisorConfig,
@@ -944,31 +943,30 @@ pub fn compose_host_data_plane(
     backend: Arc<dyn StorageBackend>,
     clock: Arc<dyn MonotonicClock>,
 ) -> Result<Arc<dyn HostDataPlaneDispatcher>, ChiefDaemonError> {
-    compose_host_data_plane_with_fetcher(
-        config,
-        home,
-        backend,
-        clock,
-        Arc::new(NetFetch::production()),
-    )
+    compose_host_data_plane_with_fetcher(config, home, backend, clock, NetFetch::production())
 }
 
-/// [`compose_host_data_plane`] with the `net.fetch` network edge supplied.
+/// [`compose_host_data_plane`] with the `net.fetch` resolver and transport
+/// supplied.
 ///
-/// Everything else is the production composition. That includes the
-/// `net.fetch` pipeline itself: authorization against the signed manifest,
-/// the public-address check, lease redemption and echo masking all run inside
-/// whatever [`Fetcher`] is passed. A `NetFetch` over a fake resolver and
-/// transport is therefore the real operation with only DNS and the socket
-/// replaced. That is how an end-to-end test drives a reference agent without
-/// reaching the internet.
-pub fn compose_host_data_plane_with_fetcher(
+/// Everything else is the production composition, and that includes the
+/// `net.fetch` pipeline itself. The argument is a `NetFetch`, not an arbitrary
+/// fetcher, so authorization against the signed manifest, the public-address
+/// check, lease redemption and echo masking all still run. Only DNS and the TLS
+/// transport are replaced. That is how an end-to-end test drives a reference
+/// agent without reaching the internet.
+pub fn compose_host_data_plane_with_fetcher<R, T>(
     config: &ChiefConfig,
     home: &Path,
     backend: Arc<dyn StorageBackend>,
     clock: Arc<dyn MonotonicClock>,
-    fetcher: Arc<dyn Fetcher>,
-) -> Result<Arc<dyn HostDataPlaneDispatcher>, ChiefDaemonError> {
+    fetch: NetFetch<R, T>,
+) -> Result<Arc<dyn HostDataPlaneDispatcher>, ChiefDaemonError>
+where
+    R: Resolver + 'static,
+    T: Transport + 'static,
+{
+    let fetcher: Arc<dyn Fetcher> = Arc::new(fetch);
     let needs_controller = !config.data_plane().ollama_models().is_empty()
         || !config.data_plane().smart_home_tool_grants().is_empty();
     let controller = if needs_controller {

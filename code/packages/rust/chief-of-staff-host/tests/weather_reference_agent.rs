@@ -21,7 +21,7 @@
 //!                    │                                          │
 //!                    ▼                                          │
 //!   NetFetch: authorize ─ resolve ─ public check ─ request ─ decode
-//!                    │          (only DNS and the socket are fakes) ◀┘
+//!                    │      (only DNS and the TLS transport are fakes) ◀┘
 //!                    ▼
 //!   tool result ──▶ model ──▶ final text ──▶ weather-reports channel
 //! ```
@@ -36,7 +36,9 @@
 //!   `api.weather.gov` response. Everything around them is real: the URL is
 //!   authorized against the signed manifest, the address passes the public
 //!   check, the request is built by the production encoder, and the response
-//!   is bounded, filtered and decoded by the production decoder.
+//!   is bounded, filtered and decoded by the production decoder. What the
+//!   fake transport does skip is TLS: certificate and server-name
+//!   verification are `tls-platform`'s, and its own tests cover them.
 //!
 //! #142 asks for "weather in Tokyo". The National Weather Service covers only
 //! the United States, so the reference agent answers for Seattle.
@@ -494,7 +496,7 @@ ollama_models = [
         &home.0,
         Arc::clone(&backend),
         Arc::clone(&clock),
-        Arc::new(NetFetch::new(PublicResolver, wire.clone())),
+        NetFetch::new(PublicResolver, wire.clone()),
     )
     .unwrap();
 

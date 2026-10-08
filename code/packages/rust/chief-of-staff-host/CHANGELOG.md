@@ -11,8 +11,8 @@
   - It sends "Seattle" on a sealed channel, and the host asks a scripted
     Ollama model.
   - The model calls `net.fetch`. The production daemon data plane offers the
-    tool from the signed manifest and executes it, with only DNS and the
-    socket faked.
+    tool from the signed manifest and executes it, with only DNS and the TLS
+    transport faked.
   - The answer arrives on the report channel. The test also checks the exact
     request on the wire, and that headers off the allowlist never reach the
     model.

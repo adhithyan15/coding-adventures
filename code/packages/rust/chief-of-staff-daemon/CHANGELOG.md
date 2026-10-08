@@ -3,8 +3,9 @@
 ## Unreleased
 
 - New `compose_host_data_plane_with_fetcher`. It is the production composition
-  with the `net.fetch` network edge supplied as an `Arc<dyn Fetcher>`.
-  `compose_host_data_plane` calls it with `NetFetch::production()`. The agent
+  with the `net.fetch` resolver and transport supplied as a `NetFetch<R, T>`,
+  so the whole pipeline still runs. `compose_host_data_plane` calls it with
+  `NetFetch::production()`. The agent
   tool source is no longer generic over a resolver and transport. This is the
   seam the P1.5 weather reference agent's end-to-end test uses.
 - **P1.4c: the daemon now serves `net.fetch` and `vault.request_lease`** (D18V
