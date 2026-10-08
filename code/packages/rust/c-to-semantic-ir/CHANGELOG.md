@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — PREP01 bounded negated C comparisons
+
+- Accept one `!(left comparison right)` logical clause using the existing
+  decimal and undefined-identifier rules. Keep nested, arithmetic, and longer
+  mixed forms explicit errors, including through the rooted C file input.
+
 ## Unreleased — PREP01 bounded C #if parentheses
 
 - Accept one outer parenthesis pair around a single operand, negated operand,
