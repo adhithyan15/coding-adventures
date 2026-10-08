@@ -1,9 +1,12 @@
 import { describe, expect, it } from "vitest";
+import { MANUAL_CUE_ACTIONS } from "@coding-adventures/human-language-data/src/narration.ts";
 import {
   BLOCK_GAP_SECONDS,
   DEFAULT_RESPONSE_SECONDS,
   type NarrationLesson,
+  type NarrationSegment,
   buildVoiceScript,
+  isHandsOnCue,
   respondCount,
   scriptSilence,
 } from "../src/voicescript.ts";
@@ -170,6 +173,143 @@ describe("building a spoken script", () => {
   });
 });
 
+// Hands and eyes are not a voice. These pin the rule from the module header:
+// a cue the generator marked `spoken: false` is SAID as a deferral — in the
+// narration's own words — never asked, and is queued for the end of the lesson.
+describe("hands-on cues, the way narration treats them", () => {
+  /** A prompt segment exactly as narration-cli writes one into the JSON. */
+  function cue(action: string, instruction: string, spoken?: boolean): NarrationSegment {
+    return {
+      kind: "prompt",
+      action,
+      instruction,
+      ...(spoken === undefined ? {} : { spoken }),
+      responseSeconds: 8,
+    };
+  }
+
+  it("defers a WRITE cue: says it, leaves no answer gap, queues it", () => {
+    const steps = buildVoiceScript(
+      lesson([{ segments: [cue("WRITE", "hola, twice", false)] }]),
+    );
+    expect(steps).toEqual([
+      { kind: "speak", text: "Once you have stopped driving — write: hola, twice." },
+      { kind: "wait", seconds: BLOCK_GAP_SECONDS },
+      {
+        kind: "speak",
+        text: "Saved for when you have stopped driving, one thing. Write: hola, twice.",
+      },
+    ]);
+    // The whole point: nothing here asks a driver to do anything now.
+    expect(respondCount(steps)).toBe(0);
+    // Only the gap before the recap is silence — the eight seconds a WRITE
+    // used to get as a "response" are gone.
+    expect(scriptSilence(steps)).toBe(BLOCK_GAP_SECONDS);
+  });
+
+  it("still asks for a SAY cue, with its answer gap, and queues nothing", () => {
+    const steps = buildVoiceScript(lesson([{ segments: [cue("SAY", "hola", true)] }]));
+    expect(steps).toEqual([{ kind: "respond", instruction: "hola", seconds: 8 }]);
+  });
+
+  it("keeps the order of a block that mixes the two, and recaps every deferral once", () => {
+    const steps = buildVoiceScript(
+      lesson(
+        [
+          {
+            title: "Guided Practice",
+            segments: [
+              cue("SAY", "ja", true),
+              cue("TRACE", "జ three times", false),
+              { kind: "speech", text: "Good." },
+              cue("WRITE", "the whole word.", false),
+            ],
+          },
+        ],
+        "జ — ja",
+      ),
+    );
+    expect(steps.map((s) => (s.kind === "speak" ? s.text : s.kind))).toEqual([
+      "జ — ja",
+      "wait",
+      "Guided Practice",
+      "respond",
+      "Once you have stopped driving — trace: జ three times.",
+      "Good.",
+      // An author's own full stop is kept, not doubled.
+      "Once you have stopped driving — write: the whole word.",
+      "wait",
+      "Saved for when you have stopped driving, 2 things. Trace: జ three times. Write: the whole word.",
+    ]);
+  });
+
+  it("speaks a qualifier with its verb, joined the way the narration joins it", () => {
+    const steps = buildVoiceScript(
+      lesson([{ segments: [{ ...cue("WRITE", "cansado", false), qualifier: "(m.)" }] }]),
+    );
+    expect(steps[0]).toEqual({
+      kind: "speak",
+      text: "Once you have stopped driving — write (m.): cansado.",
+    });
+  });
+
+  it("defers a multi-word action when any of its words needs a hand", () => {
+    // No `spoken` flag, so the module asks the generator's set itself.
+    expect(isHandsOnCue(cue("WRITE OUT", "the alphabet"))).toBe(true);
+    expect(isHandsOnCue(cue("trace over", "the dotted line"))).toBe(true);
+    expect(isHandsOnCue(cue("RETURN TO", "the opener"))).toBe(false);
+    expect(isHandsOnCue(cue("READ ALOUD", "the line"))).toBe(
+      MANUAL_CUE_ACTIONS.has("READ") || MANUAL_CUE_ACTIONS.has("ALOUD"),
+    );
+    const steps = buildVoiceScript(
+      lesson([{ segments: [cue("WRITE OUT", "the alphabet"), cue("RETURN TO", "the opener")] }]),
+    );
+    expect(steps[0]).toEqual({
+      kind: "speak",
+      text: "Once you have stopped driving — write out: the alphabet.",
+    });
+    expect(steps[1]).toEqual({ kind: "respond", instruction: "the opener", seconds: 8 });
+  });
+
+  it("follows the generator's set, so a verb added there is deferred here too", () => {
+    // Iterating the imported set rather than a list written in this test is
+    // the point: when human-language-data grows MANUAL_CUE_ACTIONS, this test
+    // covers the new verbs without being touched.
+    expect(MANUAL_CUE_ACTIONS.size).toBeGreaterThan(0);
+    for (const action of MANUAL_CUE_ACTIONS) {
+      expect(isHandsOnCue(cue(action, "it"))).toBe(true);
+    }
+    expect(isHandsOnCue(cue("SAY", "it"))).toBe(false);
+    // A prompt with no verb at all is a plain spoken prompt, as before.
+    expect(isHandsOnCue({ kind: "prompt", instruction: "Say it." })).toBe(false);
+  });
+
+  it("trusts the generator's verdict over its own reading of the verb", () => {
+    // The flag is what the narration plain text was rendered from, so voice
+    // mode and the narration can never disagree about the same cue.
+    expect(isHandsOnCue(cue("WRITE", "it", true))).toBe(false);
+    expect(isHandsOnCue(cue("SAY", "it", false))).toBe(true);
+  });
+
+  it("opens with the lesson's notice, straight after the title", () => {
+    const text = "Before we start: this one needs your hands, so it is not a driving lesson.";
+    const steps = buildVoiceScript({
+      id: "L",
+      title: "س — seen",
+      notice: { text },
+      blocks: [{ segments: [{ kind: "speech", text: "Hello." }] }],
+    });
+    expect(steps.slice(0, 2)).toEqual([
+      { kind: "speak", text: "س — seen" },
+      { kind: "speak", text },
+    ]);
+    // A drivable lesson has `notice: null`, and says nothing extra.
+    expect(
+      buildVoiceScript({ id: "L", title: "hola", notice: null, blocks: [] }),
+    ).toEqual([{ kind: "speak", text: "hola" }]);
+  });
+});
+
 describe("what a script costs", () => {
   it("adds up every second the learner is not being spoken to", () => {
     const steps = buildVoiceScript(
@@ -220,5 +360,53 @@ describe("against the real narration", () => {
     expect(respondCount(first)).toBeGreaterThan(0);
     // And it fits inside the authored five-minute budget with room to speak.
     expect(scriptSilence(first)).toBeLessThan(180);
+  });
+});
+
+describe("hands-on cues in the real narration", () => {
+  it("never leaves an answer gap after an Arabic chapter-one WRITE or TRACE", async () => {
+    // Arabic chapter one teaches letter shapes, so it has real `spoken: false`
+    // cues beside ordinary SAY cues — the mix this change is about.
+    const chapter = (await import(
+      "../../../../learning/human-languages/arabic/narration/ch01.json"
+    )) as unknown as { default: { lessons: NarrationLesson[] } };
+    let manualSeen = 0;
+    for (const source of chapter.default.lessons) {
+      const segments = source.blocks.flatMap((block) => block.segments);
+      const manual = segments.filter((s) => s.kind === "prompt" && s.spoken === false);
+      const asked = new Set(
+        segments
+          .filter((s) => (s.kind === "prompt" && s.spoken !== false) || s.kind === "activity")
+          .map((s) => (s.instruction ?? s.prompt ?? "").trim()),
+      );
+      const steps = buildVoiceScript(source);
+      for (const segment of manual) {
+        manualSeen += 1;
+        const instruction = (segment.instruction ?? "").trim();
+        // Said as a deferral…
+        expect(
+          steps.some(
+            (s) =>
+              s.kind === "speak" &&
+              s.text.startsWith("Once you have stopped driving — ") &&
+              s.text.includes(instruction),
+          ),
+        ).toBe(true);
+        // …and never asked, unless a spoken cue happens to share its words.
+        if (!asked.has(instruction)) {
+          expect(steps.some((s) => s.kind === "respond" && s.instruction === instruction)).toBe(
+            false,
+          );
+        }
+      }
+      if (manual.length > 0) {
+        const last = steps[steps.length - 1];
+        expect(last?.kind === "speak" && last.text.startsWith("Saved for when")).toBe(true);
+      }
+      if (source.notice?.text) {
+        expect(steps[1]).toEqual({ kind: "speak", text: source.notice.text });
+      }
+    }
+    expect(manualSeen).toBeGreaterThan(0);
   });
 });
