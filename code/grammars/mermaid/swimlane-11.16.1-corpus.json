@@ -73,6 +73,10 @@
     {
       "name": "named-node-classes",
       "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  review[Review]\n  done[Done]\nend\nclass request,review accent\nclassDef default fill:#f8fafc,stroke:#64748b\nclassDef accent fill:#dbeafe,stroke:#1d4ed8,color:#172554,stroke-width:3px\nstyle review fill:#dcfce7,stroke:#166534\nrequest --> review --> done"
+    },
+    {
+      "name": "node-class-decorators",
+      "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]:::accent\nend\nsubgraph Support\n  review[Review]\n  done[Done]\nend\nrequest --> review:::active --> done:::complete\nclassDef accent fill:#dbeafe,stroke:#1d4ed8,color:#172554\nclassDef active fill:#fef3c7,stroke:#b45309,color:#78350f\nclassDef complete fill:#dcfce7,stroke:#166534,color:#14532d"
     }
   ]
 }

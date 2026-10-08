@@ -6339,16 +6339,28 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         }
     }
     for (node_ids, classes, line) in pending_classes {
+        for class in &classes {
+            if !class_styles.contains_key(class) {
+                return Err(swimlane_error(line, format!("Swimlane class references unknown class {class:?}")));
+            }
+        }
         for node_id in node_ids {
             let node = diagram.nodes.iter_mut().find(|node| node.id == node_id).ok_or_else(|| {
                 swimlane_error(line, format!("Swimlane class references unknown node {node_id:?}"))
             })?;
             for class in &classes {
-                let style = class_styles.get(class).ok_or_else(|| {
-                    swimlane_error(line, format!("Swimlane class references unknown class {class:?}"))
-                })?;
-                merge_state_style(&mut node.style, style);
+                if !node.classes.contains(class) {
+                    node.classes.push(class.clone());
+                }
             }
+        }
+    }
+    for node in &mut diagram.nodes {
+        for class in node.classes.clone() {
+            let style = class_styles.get(&class).ok_or_else(|| {
+                swimlane_error(1, format!("Swimlane decorator references unknown class {class:?}"))
+            })?;
+            merge_state_style(&mut node.style, style);
         }
     }
     for (node_id, style, line) in pending_styles {
@@ -6633,7 +6645,7 @@ fn parse_swimlane_node(
     line: usize,
     lane_id: Option<String>,
 ) -> Result<SwimlaneNode, ParseError> {
-    let value = value.trim();
+    let (value, classes) = split_swimlane_class_decorators(value.trim());
     let id_end = value
         .find(|character: char| !character.is_ascii_alphanumeric() && character != '_')
         .unwrap_or(value.len());
@@ -6729,8 +6741,25 @@ fn parse_swimlane_node(
         label,
         lane_id,
         shape,
+        classes,
         style: DiagramStyle::default(),
     })
+}
+
+fn split_swimlane_class_decorators(value: &str) -> (&str, Vec<String>) {
+    let mut source = value;
+    let mut classes = Vec::new();
+    while let Some((head, class)) = source.rsplit_once(":::") {
+        if class.is_empty() || !class.chars().all(|character| {
+            character.is_ascii_alphanumeric() || matches!(character, '_' | '-')
+        }) {
+            break;
+        }
+        classes.push(class.to_string());
+        source = head;
+    }
+    classes.reverse();
+    (source.trim_end(), classes)
 }
 
 fn normalize_swimlane_label(value: &str) -> String {
@@ -6757,6 +6786,11 @@ fn upsert_swimlane_node(diagram: &mut SwimlaneDiagram, node: SwimlaneNode, lane:
         }
         if existing.lane_id.is_none() {
             existing.lane_id = node.lane_id;
+        }
+        for class in &node.classes {
+            if !existing.classes.contains(class) {
+                existing.classes.push(class.clone());
+            }
         }
     } else {
         diagram.nodes.push(node.clone());

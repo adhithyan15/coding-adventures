@@ -212,6 +212,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                 id: node.id.clone(),
                 label: node.label.clone(),
                 shape: node.shape.clone(),
+                classes: node.classes.clone(),
                 style: node.style.clone(),
                 x: node_x,
                 y: node_y,
@@ -650,8 +651,8 @@ mod tests {
                 SwimlaneLane { id: "store".into(), label: "Store".into(), node_ids: vec!["ship".into()] },
             ],
             nodes: vec![
-                SwimlaneNode { id: "choose".into(), label: "Choose".into(), lane_id: Some("buyer".into()), shape: DiagramShape::Rect, style: Default::default() },
-                SwimlaneNode { id: "ship".into(), label: "Ship".into(), lane_id: Some("store".into()), shape: DiagramShape::RoundedRect, style: Default::default() },
+                SwimlaneNode { id: "choose".into(), label: "Choose".into(), lane_id: Some("buyer".into()), shape: DiagramShape::Rect, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "ship".into(), label: "Ship".into(), lane_id: Some("store".into()), shape: DiagramShape::RoundedRect, classes: Vec::new(), style: Default::default() },
             ],
             edges: vec![SwimlaneEdge {
                 from: "choose".into(), to: "ship".into(), label: None,
@@ -679,7 +680,7 @@ mod tests {
             lanes: vec![SwimlaneLane { id: "lane".into(), label: "Lane".into(), node_ids: vec!["long".into()] }],
             nodes: vec![SwimlaneNode { id: "long".into(),
                 label: "A substantially longer process description".into(),
-                lane_id: Some("lane".into()), shape: DiagramShape::Rect, style: Default::default() }],
+                lane_id: Some("lane".into()), shape: DiagramShape::Rect, classes: Vec::new(), style: Default::default() }],
             edges: vec![],
         };
         let layout = layout_swimlane(&diagram);
