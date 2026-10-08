@@ -265,7 +265,7 @@ unrestricted operands and `entier` or inner-function overrides remain gated.
 Built-in `sin` and `arctan` preserve the direct sign-rooted unit range before
 cosine, including nested combinations; unrestricted operands and overrides
 remain gated.
-Built-in `ln` may map one built-in exponential over a nonnegative unit-bounded
+Built-in `ln` may map one built-in exponential over a signed unit-bounded
 sign-rooted range before cosine; unrestricted operands, nested exponentials,
 and overrides remain gated.
 Built-in `exp` may map a unary-negated nonnegative unit-bounded sign-rooted
