@@ -3976,6 +3976,55 @@ impl Compiler {
                 }
             }
         }
+        if matches!(node.rule_name.as_str(), "expr_mul" | "term") {
+            let sequence = pieces(node);
+            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
+                let mut sign_operand = None;
+                let mut sign_index = None;
+                let mut saw_division = false;
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return None;
+                        };
+                        if let Some(operand) = self.builtin_direct_sign_operand(operand) {
+                            if sign_operand.replace(operand).is_some() {
+                                return None;
+                            }
+                            sign_index = Some(index);
+                        } else {
+                            let mut dependencies = HashSet::new();
+                            collect_expression_dependency_names(
+                                operand,
+                                "",
+                                &mut dependencies,
+                            );
+                            let is_unit = self
+                                .static_integer_scalar_value(operand)
+                                .is_some_and(|value| value.unsigned_abs() == 1)
+                                || self
+                                    .static_real_arithmetic_value(operand)
+                                    .is_some_and(|value| value.abs() == 1.0);
+                            if !dependencies.is_empty() || !is_unit {
+                                return None;
+                            }
+                        }
+                    } else {
+                        let Piece::Op(op) = piece else {
+                            return None;
+                        };
+                        match op.as_str() {
+                            "*" => {}
+                            "/" => saw_division = true,
+                            _ => return None,
+                        }
+                    }
+                }
+                if sign_operand.is_some() && (!saw_division || sign_index == Some(0)) {
+                    return sign_operand;
+                }
+            }
+        }
         if node.rule_name != "proc_call" {
             let children = direct_nodes(node);
             if direct_tokens(node).is_empty() && children.len() == 1 {
@@ -13703,12 +13752,12 @@ mod tests {
     #[test]
     fn al4_sqrt_cos_signed_sign_widening_rejects_unproven_operands() {
         for source in [
-            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(-(sign(pick()) * 1)))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(-abs(sign(pick()))))); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(-exp(sign(pick()))))); output(result) end",
             "begin real procedure pick; pick := -2.25; integer procedure sign(x); value x; real x; sign := 0; real result; result := entier(sqrt(cos(-sign(pick())))); output(result) end",
         ] {
             let err = compile_source(source, "test").expect_err(
-                "multiplicative, exponential, and overridden signed-sign cosine mappings under sqrt must remain conservative",
+                "normalized, exponential, and overridden signed-sign cosine mappings under sqrt must remain conservative",
             );
             assert!(
                 format!("{err:?}").contains("cannot print a real value"),
@@ -13746,6 +13795,44 @@ mod tests {
         ] {
             let err = compile_source(source, "test").expect_err(
                 "nonzero, repeated-sign, and overridden additive cosine mappings under sqrt must remain conservative",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "{source:?} failed with an unexpected diagnostic: {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_sqrt_cos_multiplicative_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(sqrt(cos(sign(pick()) * (-1)))); output(x) end",
+            "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier(sqrt(sqrt(cos((0 + sign(pick())) * (-1) / 1)))))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "sqrt preserves cosine over a unit-scaled bounded sign result for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_sqrt_cos_multiplicative_sign_widening_rejects_unproven_operands() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(sign(pick()) * 2))); output(result) end",
+            "begin real procedure pick; pick := -2.25; integer unit; real result; unit := 1; result := entier(sqrt(cos(sign(pick()) * unit))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(1 / sign(pick())))); output(result) end",
+            "begin real procedure pick; pick := -2.25; integer procedure sign(x); value x; real x; sign := 0; real result; result := entier(sqrt(cos(sign(pick()) * 1))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "non-unit, dynamic, denominator-position, and overridden multiplicative cosine mappings under sqrt must remain conservative",
             );
             assert!(
                 format!("{err:?}").contains("cannot print a real value"),
