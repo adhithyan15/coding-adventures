@@ -235,6 +235,7 @@ mod tests {
                     | "5.004_61"
                     | "5.004_62"
                     | "5.004_63"
+                    | "5.004_64"
                     | "5.38.2"
                     | "5.44.0"
                     | "5.45.3"
@@ -319,6 +320,7 @@ mod tests {
                     | "5.004_61"
                     | "5.004_62"
                     | "5.004_63"
+                    | "5.004_64"
             ) {
                 let carriage_return = GrammarLexer::new("print(1);\r", &token_grammar).tokenize();
                 assert!(
@@ -389,6 +391,7 @@ mod tests {
                     | "5.004_61"
                     | "5.004_62"
                     | "5.004_63"
+                    | "5.004_64"
             ) {
                 let unknown = GrammarLexer::new("print(1);\u{0001}", &token_grammar).tokenize();
                 assert!(
@@ -449,6 +452,7 @@ mod tests {
                     | "5.004_61"
                     | "5.004_62"
                     | "5.004_63"
+                    | "5.004_64"
             ) {
                 let accepted = format!("print({});", "9".repeat(250));
                 let tokens = GrammarLexer::new(&accepted, &token_grammar)
@@ -574,6 +578,17 @@ mod tests {
             .any(|row| row.starts_with("5.004_63,") && row.ends_with(",partial")));
         assert!(directory.join("perl5.004_63.tokens").is_file());
         assert!(directory.join("perl5.004_63.grammar").is_file());
+    }
+
+    #[test]
+    fn perl_5_004_64_has_its_own_partial_pair() {
+        let directory = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../grammars/perl");
+        let inventory = std::fs::read_to_string(directory.join("releases.csv")).unwrap();
+        assert!(inventory
+            .lines()
+            .any(|row| row.starts_with("5.004_64,") && row.ends_with(",partial")));
+        assert!(directory.join("perl5.004_64.tokens").is_file());
+        assert!(directory.join("perl5.004_64.grammar").is_file());
     }
 
     #[test]

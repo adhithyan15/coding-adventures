@@ -360,17 +360,22 @@ now has 108 explicitly partial pairs and 668 pending. Neither complete syntax
 nor an exhaustive public-release inventory is claimed. The next selection
 rotates to LANG79's bounded two-argument Python float `print` stage.
 
+PR #17115 delivered that bounded two-argument Python float `print` stage and
+merged as `4ef8956b4c1337144cf31e4eca999ccb700338b8` after exact-head CI,
+CodeQL, and books checks passed. The next selection rotates to LANG82's
+separate, own-archive-backed partial Perl 5.004_64 pair.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG79 Python (selected):** lower exactly two positional float arguments
-   from the Python 3.12 grammar AST to IIR and print them on Rust vm-core with
-   one separating space. Keep unsupported call forms and source/AST limits
-   explicit; host Python remains a conformance oracle only.
-2. **LANG82 continued:** source-audit the next distinct Perl release pair.
+1. **LANG82 continued (selected):** add the separate, explicitly partial
+   Perl 5.004_64 token/grammar pair from its own historical source archive.
    Keep 5.004_01-t1 pending until its own source is found; do not imply
    complete syntax or an exhaustive release inventory.
+2. **LANG79 Python:** the two-argument float `print` stage is complete;
+   broader native frontend semantics remain open, with host Python only as
+   a conformance oracle.
 3. **LANG80 Ruby:** the zero-argument parenthesized stage is complete; broader
    native frontend semantics remain open, with host Ruby only as an oracle.
 4. **LANG78 JavaScript:** the zero-argument stage is complete; broader native

@@ -485,3 +485,17 @@ retain only the source-backed, bounded standalone plain-decimal arithmetic
 other unsupported input in the partial grammar. Leave later releases pending
 and make no full-syntax, exhaustive-inventory, or platform-wide rejection
 claim.
+
+Add a separate, explicitly partial `5.004_64` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_64.tar.gz`
+source archive, SHA-256
+`aae74c445d5035a9af3e6146ca16e07220e50c89c8569b83e4c7ad3080a78df5`.
+Relative to `5.004_63`, `perly.y` and `keywords.h` are byte-identical.
+`toke.c` changes only the error text for a bad qualified name, outside this
+subset; its `scan_num` function and everything after it are byte-identical.
+Keep an independent file pair for this release and retain only the
+source-backed, bounded standalone plain-decimal arithmetic `print` subset
+with its 250-digit numeric limit. Accept 250 digits; reject 251 digits,
+leading-zero forms, adjacent decrement, carriage returns, and other
+unsupported input in the partial grammar. Leave later releases pending and
+make no full-syntax, exhaustive-inventory, or platform-wide rejection claim.
