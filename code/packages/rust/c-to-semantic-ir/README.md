@@ -58,6 +58,9 @@ identifier after macro expansion or `defined()` preparation. It preserves
 the earlier negated-comparison form and rejects nested, arithmetic, and
 longer mixed expressions.
 Stringize and paste in macro bodies also fail explicitly.
+`#undef NAME` removes the current object-like or function-like macro by its
+unexpanded name. It is inert in a skipped conditional group; malformed
+operands fail with the directive location on the rooted file-input path.
 
 The pathless `compile_source` API below still uses the legacy C source parser
 path and does not run the generic preprocessor.

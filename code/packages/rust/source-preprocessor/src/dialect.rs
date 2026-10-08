@@ -54,6 +54,8 @@ pub enum Directive {
     /// touches the name with no space, and a language that spells its
     /// directives differently may not use that rule at all.
     Define { name: String, params: Option<Vec<String>>, body: Vec<Token> },
+    /// Remove a macro definition by its raw name. An absent name is a no-op.
+    Undef(String),
     /// A directive the dialect recognised but wants ignored (a no-op line).
     Ignore,
 }

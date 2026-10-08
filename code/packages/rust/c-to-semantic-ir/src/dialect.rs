@@ -336,6 +336,12 @@ impl Dialect for CDialect {
         let result = match name.value.as_str() {
             "include" => include(operands),
             "define" => define(operands),
+            "undef" => match operands {
+                [operand] if identifier(&operand.value) => {
+                    Ok(Directive::Undef(operand.value.clone()))
+                }
+                _ => Err(directive_error("undef", "requires exactly one identifier")),
+            },
             "if" if !operands.is_empty() => Ok(Directive::If(operands.to_vec())),
             "if" => Err(directive_error("if", "requires an expression")),
             "ifdef" | "ifndef" => {
@@ -497,6 +503,7 @@ mod tests {
             }
             other => panic!("unexpected directive: {other:?}"),
         }
+        assert_eq!(directive("#undef F"), Directive::Undef("F".to_string()));
     }
 
     #[test]
@@ -518,6 +525,10 @@ mod tests {
             "#include <stdio.h>",
             "#define F(x,x) x",
             "#define F(x,)",
+            "#undef",
+            "#undef 7",
+            "#undef F extra",
+            "#undef F(x)",
             "#ifdef",
             "#else extra",
             "#unknown",
@@ -562,6 +573,19 @@ mod tests {
             .iter()
             .map(|token| token.value.as_str())
             .collect();
+        assert_eq!(values, ["int", "x", "=", "7", ";"]);
+        assert_eq!(result.map.len(), result.tokens.len());
+    }
+
+    #[test]
+    fn c_undef_removes_the_raw_name_and_a_function_macro() {
+        let source = "#define RAW KEEP\n#define KEEP 7\n#define F(x) x\n#undef RAW\n#undef F\n#if defined(RAW) || defined(F)\nint x = 0;\n#else\nint x = KEEP;\n#endif\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        let values: Vec<_> = result.tokens.iter().map(|token| token.value.as_str()).collect();
         assert_eq!(values, ["int", "x", "=", "7", ";"]);
         assert_eq!(result.map.len(), result.tokens.len());
     }

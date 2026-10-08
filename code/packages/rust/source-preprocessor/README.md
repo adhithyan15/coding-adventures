@@ -104,6 +104,11 @@ recursive cases rather than looping. Stringize and paste stay routed through the
 nevertheless having a full macro facility, which is a stronger genericity result
 than a dialect that quietly needed them.
 
+`Directive::Undef(name)` removes the current definition of a raw name, whether
+object-like or function-like. Removing an absent name has no effect; a directive
+inside a skipped conditional group leaves the table unchanged. The C dialect
+supplies the `#undef` syntax while this engine owns the table mutation.
+
 Controlling expressions are macro-expanded before `Dialect::eval_condition`
 sees them, so `@if LED_PORT == 1` takes the true branch after
 `@define LED_PORT 1`. A name that *survives* expansion is genuinely undefined
