@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- The `vault put` end-to-end test now loads the record through the daemon's
+  own startup loader, `load_chief_vault_runtime`, instead of re-creating it.
+  A new test shows that one corrupt record stops that load entirely (D18V
+  V-D1). `--allow-agent` names a registration host name, which is the
+  identity the daemon leases under (V-D3).
 - `vault put` writes the destinations from `--destination` into the sealed
   record. The end-to-end test now redeems through `consume_for` and shows an
   unprovisioned destination being refused.

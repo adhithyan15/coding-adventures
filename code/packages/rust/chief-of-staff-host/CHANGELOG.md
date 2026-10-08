@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- The production-composition test writes the developer public key its
+  config names. Composing a model-tool surface now loads the keyring, because
+  the daemon's agent tool source verifies each host's package before offering
+  `net.fetch` or `vault.request_lease`.
 - Extend the production subprocess gate through a real Ollama-selected
   `smart_home.list_devices` call, signed-host authorization, central durable D23
   audit commit, result replay, and Home Assistant-compatible entity/audit

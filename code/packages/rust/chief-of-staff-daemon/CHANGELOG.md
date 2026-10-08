@@ -2,6 +2,36 @@
 
 ## Unreleased
 
+- **P1.4c: the daemon now serves `net.fetch` and `vault.request_lease`** (D18V
+  "Daemon composition"). They come from a second model-tool source,
+  `agent_tools::AgentModelTools`, composed beside smart home. Unlike smart
+  home, it gives each host a different surface:
+  - **Surface (V-D2).** It is derived from the host's own package, which is
+    verified against the daemon keyring and pinned to the registration's
+    `package_hash`. The manifest's tier may not exceed the signing key's
+    ceiling. Every tool goes through the host runtime's `check_registration`
+    (allowed tools, tier, tool capabilities). `net.fetch` also needs a
+    `net:connect` capability. `vault.request_lease` also needs a vault and a
+    `vault_access` mode of `leased` or `both`. Surfaces are cached under host
+    name, package path and package hash, so editing a package after it is
+    registered cannot widen it.
+  - **Identity (V-D3).** Every call runs as the registration's host name.
+  - **Leases (V-D4).** The manifest's `vault_access` narrows a lease request
+    (which secrets, and the longest TTL) before the vault's own policy sees
+    it.
+  - **Credentials (V-D5).** They are redeemed through `consume_for`, so a lease
+    is bound to the host it was issued to and the secret to its provisioned
+    destinations. Every refusal reads `credential_refused`.
+  - **Errors (V-D6).** Failures are tool results carrying
+    `details.reason`, not transport failures.
+- **Startup loads the vault (V-D1).** New `load_chief_vault_runtime` opens the
+  vault and registers every sealed record, all or nothing. A corrupt record
+  stops startup with the new `ChiefDaemonError::ChiefVaultLoad`. `run` loads
+  it before anything serves. `compose_host_data_plane` loads the keyring and
+  the vault the same way.
+- `required_capabilities.json` declares the new `net:dns` and `net:connect`
+  egress, both limited to targets named by verified manifests.
+
 - Add `open_chief_vault`. It returns `None` when `[vault] kek_path` is absent.
   Otherwise it reads the owner-only KEK and unseals the vault storage root,
   initializing it on first use. This is the single way to open the Chief

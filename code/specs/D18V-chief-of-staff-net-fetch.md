@@ -22,8 +22,8 @@ tool to a model on its own would advertise a capability that can only fail.
 
 `net.fetch` is that approved host operation. It is also useful without the
 vault: an agent whose signed manifest declares `api.weather.gov:443` can fetch
-the forecast with no credential at all, which is the Tier 0 weather reference
-agent (#142).
+the forecast with no credential at all. That is the weather reference agent
+(#142), which declares Tier 1 because `net.fetch` requires it (see Privilege).
 
 ```text
 model ── vault.request_lease{secret_name} ──▶ daemon ──▶ { vault_ref }
@@ -234,11 +234,84 @@ the diagram run first. A refused URL never consumes a lease.
 
 ## Privilege
 
-A D18D definition carries one tier, and `net.fetch` declares Tier 1, the
-tier for the credentialed case. As VLT06 records for `privilege_tier`, **the
-daemon's model-tool path does not enforce tiers today** (#13980: "tier
-ceiling … inert in production"). This is stated here so the declared tier is
-not mistaken for a control.
+A D18D definition carries one tier. `net.fetch` declares Tier 1, and
+`vault.request_lease` declares Tier 2. The daemon's agent tool source (V-D2)
+enforces both: it registers a tool for a host only through the host runtime's
+`check_registration`, which refuses a tool whose tier is above the manifest's
+`privilege_tier`. A network-reading agent therefore declares at least Tier 1,
+and one that also leases credentials declares Tier 2.
+
+This is enforced only for the tools this source offers. The smart-home
+model-tool source does not check tiers, and VLT06 still records that tier
+ceiling as inert there (#13980).
+
+## Daemon composition (P1.4c)
+
+**V-D1: the vault loads at startup and fails closed.** When `[vault] kek_path`
+is configured, the daemon opens the vault (`open_chief_vault`) and registers
+every sealed record into one `ChiefVaultRuntime` (`ChiefSecretStore::
+register_all`) before it serves anything. A bad KEK, an unreadable store or one
+corrupt record stops startup. The daemon does not run with part of its vault.
+Without `kek_path` there is no vault, and `vault.request_lease` is never
+offered.
+
+**V-D2: each host's surface comes from its verified package.** For a binding,
+the daemon:
+
+1. verifies the registered package path against the daemon keyring
+   (`verify_agent_package`);
+2. requires the package digest to equal the registration's `package_hash`;
+3. parses the signed `manifest.json`, refuses it when its `privilege_tier` is
+   above the signing key's `maximum_tier` (as the host runtime does at spawn),
+   and derives a `HostProfile` from it;
+4. offers a tool only if the profile's `check_registration` accepts it. That
+   means the tool is in `allowed_tools`, its tier is within `privilege_tier`,
+   and its `required_capabilities` are all in `tool_capabilities`.
+
+Tool-specific conditions apply on top:
+
+- `net.fetch` also needs a `net:connect` capability (V-A3).
+- `vault.request_lease` also needs a configured vault, and a manifest
+  `vault_access` whose `mode` is `leased` or `both`.
+
+If any step fails, this source offers that binding nothing, and executing
+one of its tools is `Unauthorized`. Other sources, such as smart home, do their
+own authorization and are not affected: this source can only add tools to a
+surface, so failing closed here means adding none. The supervisor refuses to
+spawn a package that fails these checks, so a failure here means the package
+changed on disk after registration.
+
+The result is cached under the host name, package path and package hash, at
+most 256 entries. A cached entry was computed from bytes whose digest is that
+hash, so editing the package on disk cannot change it. Re-registering a host
+under a new hash creates a new entry.
+
+**V-D3: identity is the registration's host name.** Every call runs with
+`agent_id` set to `registration.host_name()`, the identity the smart-home
+source also uses. Leases are recorded against it (VLT06 P8), so
+`chief-of-staff vault put --agent` names host names. The model cannot supply
+or override this identity.
+
+**V-D4: the manifest's `vault_access` narrows a lease request.** Before the
+vault sees a lease request, the source requires `secret_name` to be in
+`vault_access.secrets`, and `ttl_ms` to be at most `max_lease_ttl` seconds.
+The sealed record's own policy is still checked afterwards. Both must allow a
+lease: the signed manifest says what the agent asked to be able to use, and
+the record says what the owner granted.
+
+**V-D5: redemption goes through `consume_for`.** The `CredentialSource` that
+`net.fetch` receives calls `ChiefVaultRuntime::consume_for(vault_ref,
+host_name, destination)`. Every refusal (an unknown or expired reference,
+another host's lease, a destination outside the record) becomes
+`credential_refused`. Which of these it was is not reported, so the model
+learns nothing about leases it does not hold.
+
+**V-D6: failures are tool results, not transport failures.** A refused or
+failed `net.fetch` returns `is_error: true` with output `{ kind, message,
+details }`. `kind` is the D18D error kind, `message` is fixed text, and
+`details.reason` is the V-Output kind. The model can tell `unauthorized` from
+`timeout` and act on it, and nothing in the result carries request or
+response data.
 
 ## Audit
 
@@ -246,6 +319,11 @@ Every call produces a payload-free D18D journal entry: tool id, host, URL
 host, method, status or error kind, whether a credential was used, and
 duration. It never includes the path or query, headers, bodies, or the
 secret. Query strings often carry identifiers.
+
+**Not implemented yet.** The daemon's model-tool path has no D18D journal sink
+for any source, smart home included, and P1.4c does not add one. Until it
+exists, `net.fetch` calls are not audited. The backlog tracks this as P4.22
+on #13980.
 
 ## What this does not do
 
