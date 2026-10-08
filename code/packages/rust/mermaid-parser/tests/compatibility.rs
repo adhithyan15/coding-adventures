@@ -1692,6 +1692,19 @@ fn swimlane_click_links_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_callback_actions_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nclick request call openRequest(request, priority) \"Open request\"\nrequest --> done",
+    ).expect("Swimlane callback actions should parse");
+
+    assert_eq!(diagram.callbacks.len(), 1);
+    assert_eq!(diagram.callbacks[0].node_id, "request");
+    assert_eq!(diagram.callbacks[0].name, "openRequest");
+    assert_eq!(diagram.callbacks[0].arguments.as_deref(), Some("request, priority"));
+    assert_eq!(diagram.callbacks[0].tooltip.as_deref(), Some("Open request"));
+}
+
+#[test]
 fn swimlane_flowchart_endpoint_markers_lower_to_semantic_ir() {
     use diagram_ir::EdgeMarker;
 

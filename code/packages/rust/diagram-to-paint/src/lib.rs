@@ -1136,6 +1136,22 @@ where
             );
         }
     }
+    for callback in &diagram.callbacks {
+        let prefix = format!("swimlane.node.{}.callback", callback.node_id);
+        metadata.insert(format!("{prefix}.name"), callback.name.clone());
+        if let Some(arguments) = &callback.arguments {
+            metadata.insert(format!("{prefix}.arguments"), arguments.clone());
+        }
+        if let Some(tooltip) = &callback.tooltip {
+            metadata.insert(format!("{prefix}.tooltip"), tooltip.clone());
+        }
+        if let Some(node) = diagram.nodes.iter().find(|node| node.id == callback.node_id) {
+            metadata.insert(
+                format!("{prefix}.bounds"),
+                format!("{},{},{},{}", node.x, node.y, node.width, node.height),
+            );
+        }
+    }
     PaintScene {
         width: diagram.width,
         height: diagram.height,
