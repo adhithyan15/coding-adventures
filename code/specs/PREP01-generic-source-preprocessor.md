@@ -741,6 +741,17 @@ parentheses around logical chains or arithmetic/shift/bitwise clauses,
 unmatched delimiters, and mixed forms such as `!(1)` or `(1) == 1`.
 Validate every clause even when a logical result is already determined, and
 retain the directive location on errors through the rooted C frontend.
+The next bounded stage accepts exactly `!(left comparison right)` as one
+logical clause, where the comparison is one of the six already supported
+two-operand comparisons and each operand keeps the existing decimal or
+undefined-identifier policy. The result is the logical negation of that
+comparison. Logical `&&` and `||` still combine clauses with their existing
+precedence, and all clauses remain syntax-checked even when an earlier value
+determines the result. Reject `!(operand)`, nested parentheses, a negated
+arithmetic/shift/bitwise clause, extra trailing operators, and a negated
+logical chain. The rooted C path must retain the directive location for
+these rejections. Test true and false comparisons, macro expansion,
+undefined identifiers, logical combination, and those unsupported shapes.
 *Acceptance:* a C program using `#define` (object- and function-like), `#if`/
 `#ifdef`/`#else`/`#endif` and a real project-local `#include` compiles through
 `c-to-semantic-ir` and executes with the expected result — the first C program
