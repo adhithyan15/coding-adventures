@@ -1363,6 +1363,9 @@ backend immediately) come before the enabler-dependent items.
   Built-in `entier` may also normalize that nonnegative unit range before
   cosine; unrestricted operands and `entier` or inner-function overrides remain
   conservative.
+  Built-in `sin` and `arctan` preserve the direct sign-rooted unit range before
+  cosine, including nested combinations; unrestricted operands and overrides
+  remain conservative.
   Built-in `sin`, `cos`, and `arctan` may map a bounded sign-rooted result
   before `entier`, including nested combinations; domain-sensitive or
   unbounded standard functions and non-sign-rooted runtime operands remain

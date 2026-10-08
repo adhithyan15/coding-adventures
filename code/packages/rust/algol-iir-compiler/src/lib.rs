@@ -4056,7 +4056,7 @@ impl Compiler {
         }
         match target_name.as_str() {
             "sign" => Some(actuals[0]),
-            "abs" => self.builtin_direct_sign_operand(actuals[0]),
+            "abs" | "sin" | "arctan" => self.builtin_direct_sign_operand(actuals[0]),
             "sqrt" | "entier" => self.builtin_nonnegative_unit_sign_operand(actuals[0]),
             _ => None,
         }
@@ -13802,12 +13802,12 @@ mod tests {
     #[test]
     fn al4_sqrt_cos_signed_sign_widening_rejects_unproven_operands() {
         for source in [
-            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(-sin(abs(sign(pick())))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(-ln(exp(abs(sign(pick()))))))); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(-exp(sign(pick()))))); output(result) end",
             "begin real procedure pick; pick := -2.25; integer procedure sign(x); value x; real x; sign := 0; real result; result := entier(sqrt(cos(-sign(pick())))); output(result) end",
         ] {
             let err = compile_source(source, "test").expect_err(
-                "trigonometric, exponential, and overridden signed-sign cosine mappings under sqrt must remain conservative",
+                "logarithmic, exponential, and overridden signed-sign cosine mappings under sqrt must remain conservative",
             );
             assert!(
                 format!("{err:?}").contains("cannot print a real value"),
@@ -14035,6 +14035,44 @@ mod tests {
         ] {
             let err = compile_source(source, "test").expect_err(
                 "unbounded and overridden entier-normalized cosine mappings under sqrt must remain conservative",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "{source:?} failed with an unexpected diagnostic: {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_sqrt_cos_unit_trig_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(sqrt(cos(sin(abs(sign(pick())))))); output(x) end",
+            "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier(sqrt(cos(arctan(sin(-sign(pick())))))))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "sqrt preserves cosine over a unit-preserving trigonometric sign result for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_sqrt_cos_unit_trig_sign_widening_rejects_unproven_operands() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(sin(pick())))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real procedure sin(x); value x; real x; sin := 0.0; real result; result := entier(sqrt(cos(sin(abs(sign(pick())))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real procedure arctan(x); value x; real x; arctan := 0.0; real result; result := entier(sqrt(cos(arctan(sin(abs(sign(pick()))))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; integer procedure sign(x); value x; real x; sign := 0; real result; result := entier(sqrt(cos(sin(abs(sign(pick())))))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "unbounded and overridden unit-trigonometric cosine mappings under sqrt must remain conservative",
             );
             assert!(
                 format!("{err:?}").contains("cannot print a real value"),
