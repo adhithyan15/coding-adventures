@@ -6,6 +6,14 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- Bounded native CI selection for the eight flat `graph-*.json` and twelve
+  `diff-selection-*.json` conformance cases. Exact path matching schedules
+  eleven direct build-tool readers on Linux, macOS, and Windows before
+  affected closure, with language filtering, fail-closed missing roots,
+  rename-source coverage, emitted-plan assertions, and reader-drift detection.
+  This does not force a full build or promote process-free domain cores into
+  full build-tool adapters.
+
 - Bounded native CI selection for the twenty flat `source-collection-*.json`
   cases. Seven package-local cases schedule twelve direct build-tool test
   fronts, nine repository cases schedule C#/F#/Swift, and four shared-input
