@@ -11,12 +11,12 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 17143,
   "last_ci_action": {
-    "observed_at": "2026-10-08T15:02:10Z",
-    "pr_number": 17136,
-    "status": "merged",
-    "notes": "PR #17136 completed eight successful and 24 skipped terminal checks with no failure or conflict. Guarded squash auto-merge completed as 780fd6bb73e1e5727157d067dcd88d76c6f97e82 on fetched origin/main; it was not manually merged. No parity PR remains open."
+    "observed_at": "2026-10-08T15:23:13Z",
+    "pr_number": 17143,
+    "status": "pending",
+    "notes": "Ready-for-review Go Arc2D center-form PR #17143 is open. GitHub reports MERGEABLE but initial CI and CodeQL checks are in progress; do not enable auto-merge before all required checks are terminal and acceptable."
   },
   "last_inventory": {
     "revision": "780fd6bb73e1e5727157d067dcd88d76c6f97e82",
@@ -12171,14 +12171,16 @@
     {
       "id": "geometry-arc2d-go-center-form-spec-reconciliation",
       "title": "Reconcile Go G2D03 center-form extrema and quadrant segmentation",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-arc2d-center-form-bounds-and-sweep-neutral-contract"],
       "branch": "codex/parity-arc2d-go-center-20261008",
-      "pr_number": null,
+      "pr_number": 17143,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/17143",
       "selected_at": "2026-10-08T15:05:19Z",
       "selection_revision": "780fd6bb73e1e5727157d067dcd88d76c6f97e82",
       "selection_notes": "Selected only after #17136 actually merged, the exact-main collision inventory and the newly discovered native-security singleton review were registered. The merged neutral center contract exposes concrete Go analytic-bound, full-turn-segmentation and fail-stop gaps, and fixing Go center form directly unlocks its separate endpoint API. A focused Go-only slice is smaller and higher dependency leverage than the broader existing-lane umbrella or OCaml status-doc repair. No active parity PR or Go Arc2D path overlap exists.",
-      "notes": "Consume all four center-arc-bounds and three center-arc-cubics neutral records dynamically, replacing Go BboxArc 100-point sampling (three off-grid fixture misses of about 4-5e-5 versus 1e-12) and full-turn five-segment overcount with analytic directed-modulo extrema and ceil(abs(sweep)/(pi/2)). Enforce finite positive radii, finite derived points, and one-turn fail-stop before allocation in direct CenterArc methods. Current Go package tests/vet pass but statement coverage is 87.4%, below the >=95% target. Review a source-compatible explicit failure API because BboxArc/ToCubicBeziers currently return no error. Keep SVG endpoint convenience/fallback and its strict thresholds as a separate downstream owner."
+      "validation_notes": "Ready-for-review PR #17143 opened from clean rebased head 71bd89c891d640a7500179c06b162d3124c6e765. Go package tests and race test, vet, and all three dependency-module test/vet suites pass; statement coverage is 96.8%. All seven neutral center records are consumed dynamically; 23-case geometry validator and 11 tests pass. Schema-3 parity report has zero collisions and 10 report tests pass. Go build-tool plan evaluated 45 Starlark BUILD files and 5,319 packages with orphan checks OK (38 existing pending exemptions), showing four affected packages. Diff check and read-only security review of exact final head pass. Initial PR checks are pending.",
+      "notes": "Go center-form bounds now use directed-modulo analytic rotated extrema; a full turn emits four cubics, zero sweep emits one degenerate cubic, and direct center-form APIs reject non-finite/invalid values with recoverable sentinel panics before allocation. Existing Go return signatures are preserved and documented in G2D03. SVG endpoint convenience/fallback and strict thresholds remain a separate downstream owner."
     },
     {
       "id": "geometry-arc2d-existing-center-form-conformance",
