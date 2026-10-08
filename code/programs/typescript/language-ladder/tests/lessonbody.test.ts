@@ -20,6 +20,17 @@ describe("lessonSections", () => {
     ]);
   });
 
+  it("strips links and images in linear time, even when brackets never close", () => {
+    // Answers only: a timing bound would flake on a loaded runner. These inputs
+    // took about two seconds each before the bracket classes excluded their
+    // own openers.
+    const text = (markdown: string) => lessonSections(`## S\n${markdown}`)[0]?.blocks[0];
+    expect(text("Say [salâm](u) and ![a cup](f.svg).")).toEqual({ kind: "text", text: "Say salâm and a cup." });
+    for (const flood of ["[".repeat(50_000), "![".repeat(25_000), "[a](".repeat(12_500), "![a](".repeat(10_000)]) {
+      expect(text(`x ${flood}`)?.kind).toBe("text");
+    }
+  });
+
   it("keeps block-boundary knowledge metadata out of learner copy", () => {
     expect(lessonSections(`# Title
 

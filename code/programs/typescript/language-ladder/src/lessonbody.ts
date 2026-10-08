@@ -28,10 +28,17 @@ export type LessonViewBlock =
   | { kind: "text"; text: string }
   | { kind: "image"; alt: string; source: string };
 
+// Each bracket class also excludes its own opener: link text stops at the next
+// "[" and a target stops at the next "(". Without that, a paragraph of unclosed
+// "[" (or of "[a](" with no ")") made every opener scan to the end of the text,
+// O(n²) -- about two seconds on 50,000 characters. With it, each character is
+// scanned from at most one opener, so the pass is linear. The cost is that a
+// nested "[" inside link text, or a "(" inside a target, leaves that link
+// unstripped; no lesson writes either.
 function plainInline(markdown: string): string {
   return markdown
-    .replace(/!\[([^\]]*)\]\([^)]*\)/g, "$1")
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+    .replace(/!\[([^\][]*)\]\([^()]*\)/g, "$1")
+    .replace(/\[([^\][]+)\]\([^()]*\)/g, "$1")
     .replace(/[*_`]/g, "")
     .replace(/^>\s?/, "")
     .trim();
