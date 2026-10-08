@@ -989,11 +989,12 @@ where
                     stroke_dash_offset: None,
                 })
             }
-            DiagramShape::Cloud | DiagramShape::Bang | DiagramShape::Hourglass => {
+            DiagramShape::Cloud | DiagramShape::Bang | DiagramShape::Hourglass | DiagramShape::Triangle => {
                 let commands = match node.shape {
                     DiagramShape::Cloud => cloud_path_commands(node.x, node.y, node.width, node.height),
                     DiagramShape::Bang => polygon_path_commands(&bang_polygon_points(node.x, node.y, node.width, node.height)),
-                    _ => polygon_path_commands(&hourglass_polygon_points(node.x, node.y, node.width, node.height)),
+                    DiagramShape::Hourglass => polygon_path_commands(&hourglass_polygon_points(node.x, node.y, node.width, node.height)),
+                    _ => polygon_path_commands(&triangle_polygon_points(node.x, node.y, node.width, node.height)),
                 };
                 PaintInstruction::Path(PaintPath {
                     base: PaintBase::default(), commands, fill: Some(fill.clone()), fill_rule: None,
@@ -1777,6 +1778,10 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
             let points = hourglass_polygon_points(node.x, node.y, node.width, node.height);
             polygon_node_instruction(node, &points)
         }
+        DiagramShape::Triangle => {
+            let points = triangle_polygon_points(node.x, node.y, node.width, node.height);
+            polygon_node_instruction(node, &points)
+        }
         DiagramShape::Cloud => {
             PaintInstruction::Path(PaintPath {
                 base: PaintBase::default(),
@@ -2060,6 +2065,14 @@ fn hourglass_polygon_points(x: f64, y: f64, width: f64, height: f64) -> Vec<(f64
         (x + width, y + height),
         (x, y + height),
         (x + width * 0.42, y + height / 2.0),
+    ]
+}
+
+fn triangle_polygon_points(x: f64, y: f64, width: f64, height: f64) -> Vec<(f64, f64)> {
+    vec![
+        (x + width / 2.0, y),
+        (x + width, y + height),
+        (x, y + height),
     ]
 }
 
