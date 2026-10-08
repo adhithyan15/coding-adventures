@@ -42,5 +42,6 @@ Keep every model closed and one blank line ready.
 <!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-YA-01, MR-SCRIPT-LLA-01, MR-SCRIPT-VA-01] -->
 <!-- hl-activity: {"id":"MR-R18-script-d-r4-check","kind":"text","assesses":["MR-SCRIPT-YA-01","MR-SCRIPT-LLA-01","MR-SCRIPT-VA-01"],"prompt":"Write ya, lla, and va at long distance.","answer":"य ळ व","accepted":[],"feedback":{"correct":"All twelve doorway signs now have long-distance evidence.","incorrect":"Repair only the missed sign."},"response_seconds":26} -->
 
-From spoken names only, write *ya*, curled-back *ḷa*, and *va*. Compare once:
-**य ळ व**.
+[YOU WRITE: *ya*, curled-back *ḷa*, and *va*, from spoken names only]
+
+Compare once: **य ळ व**.

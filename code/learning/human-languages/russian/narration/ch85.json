@@ -4,7 +4,7 @@
   "chapter": 85,
   "title": "Second, Weekend, Date, Century, Often",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:536846fb1fd1765a",
+  "sourceHash": "fnv1a64:9d44dc4a621ed503",
   "lessons": [
     {
       "id": "RU-C85-second",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b6f54f85e2c7b77",
+      "sourceHash": "fnv1a64:5739680fca021f07",
       "notice": null,
       "blocks": [
         {
@@ -291,7 +291,16 @@
             },
             {
               "kind": "speech",
-              "text": "A date needs an ordinal: say первый, второй, третий, and write the first as a sign writes it, 1-й."
+              "text": "A date needs an ordinal: say первый, второй, третий."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the first as a sign writes it, 1-й",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the first as a sign writes it, *1-й*]"
             }
           ]
         },
