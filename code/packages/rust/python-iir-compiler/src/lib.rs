@@ -135,6 +135,7 @@ pub fn run_source(source: &str) -> Result<String, PythonRunError> {
     })?;
     let output = Arc::new(Mutex::new(String::new()));
     let captured = Arc::clone(&output);
+    let captured_empty = Arc::clone(&output);
     let mut vm = VMCore::new();
     vm.max_instructions = Some(100_000);
     vm.builtins_mut().register("py_float_div", |args| {
@@ -147,6 +148,21 @@ pub fn run_source(source: &str) -> Result<String, PythonRunError> {
             ));
         }
         Ok(Value::Float(*left / *right))
+    });
+    vm.builtins_mut().register("py_print_empty", move |args| {
+        if !args.is_empty() {
+            return Err(VMError::Custom(
+                "py_print_empty expects no arguments".into(),
+            ));
+        }
+        let mut sink = captured_empty
+            .lock()
+            .map_err(|_| VMError::Custom("Python output lock poisoned".into()))?;
+        if sink.len() >= 1_000_000 {
+            return Err(VMError::Custom("Python output limit exceeded".into()));
+        }
+        sink.push('\n');
+        Ok(Value::Null)
     });
     vm.builtins_mut().register("py_print_float", move |args| {
         let [Value::Float(number)] = args else {
@@ -229,16 +245,27 @@ impl Compiler {
         let assign = only_node(small, "assign_stmt")?;
         let expression_list = only_node(assign, "expression_list")?;
         let expression = only_node(expression_list, "expression")?;
-        if let Some(argument) = print_argument(expression)? {
-            let value = self.compile_number(argument)?;
-            self.emit(
-                "call_builtin",
-                None,
-                vec![Operand::Var("py_print_float".into()), value],
-                "void",
-            );
-        } else {
-            self.compile_number(expression)?;
+        match print_argument(expression)? {
+            Some(PrintCall::Empty) => {
+                self.emit(
+                    "call_builtin",
+                    None,
+                    vec![Operand::Var("py_print_empty".into())],
+                    "void",
+                );
+            }
+            Some(PrintCall::One(argument)) => {
+                let value = self.compile_number(argument)?;
+                self.emit(
+                    "call_builtin",
+                    None,
+                    vec![Operand::Var("py_print_float".into()), value],
+                    "void",
+                );
+            }
+            None => {
+                self.compile_number(expression)?;
+            }
         }
         Ok(())
     }
@@ -375,7 +402,12 @@ fn only_node<'a>(node: &'a GrammarASTNode, rule: &str) -> Result<&'a GrammarASTN
     Ok(inner)
 }
 
-fn print_argument(expression: &GrammarASTNode) -> Result<Option<&GrammarASTNode>, String> {
+enum PrintCall<'a> {
+    Empty,
+    One(&'a GrammarASTNode),
+}
+
+fn print_argument(expression: &GrammarASTNode) -> Result<Option<PrintCall<'_>>, String> {
     let mut node = expression;
     while node.rule_name != "primary" {
         let Ok(inner) = only_child(node) else {
@@ -393,16 +425,20 @@ fn print_argument(expression: &GrammarASTNode) -> Result<Option<&GrammarASTNode>
     if callee.value != "print" || suffix.rule_name != "suffix" {
         return Ok(None);
     }
-    let [ASTNodeOrToken::Token(open), ASTNodeOrToken::Node(args), ASTNodeOrToken::Token(close)] =
-        suffix.children.as_slice()
-    else {
-        return Err("native Python print requires exactly one argument".into());
-    };
-    if open.value != "(" || close.value != ")" {
-        return Err("native Python print requires a call".into());
+    match suffix.children.as_slice() {
+        [ASTNodeOrToken::Token(open), ASTNodeOrToken::Token(close)]
+            if open.value == "(" && close.value == ")" =>
+        {
+            Ok(Some(PrintCall::Empty))
+        }
+        [ASTNodeOrToken::Token(open), ASTNodeOrToken::Node(args), ASTNodeOrToken::Token(close)]
+            if open.value == "(" && close.value == ")" =>
+        {
+            let argument = only_node(args, "argument")?;
+            Ok(Some(PrintCall::One(only_node(argument, "expression")?)))
+        }
+        _ => Err("native Python print requires zero or one expression argument".into()),
     }
-    let argument = only_node(args, "argument")?;
-    Ok(Some(only_node(argument, "expression")?))
 }
 
 #[cfg(test)]
@@ -422,12 +458,21 @@ mod tests {
     }
 
     #[test]
+    fn empty_print_writes_one_newline_and_preserves_earlier_output() {
+        assert_eq!(run_source("print()\nprint(1.0)\n").unwrap(), "\n1.0\n");
+        let error = run_source("print()\nprint(1.0 / 0.0)\n").unwrap_err();
+        assert_eq!(error.output, "\n");
+        assert!(error.message.contains("ZeroDivisionError"));
+    }
+
+    #[test]
     fn unsupported_python_semantics_are_rejected() {
         for source in [
             "print(1 + 2)\n",
             "print(1.0 // 2.0)\n",
             "x = 1.0\n",
             "print(1.0, 2.0)\n",
+            "other()\n",
         ] {
             assert!(compile_source(source, "negative").is_err(), "{source}");
         }
