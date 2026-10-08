@@ -7,6 +7,7 @@
     "flowchart-style-edge-label",
     "multiline-edge-continuation",
     "subprocess-and-database-shapes",
-    "hexagon-and-double-circle-shapes"
+    "hexagon-and-double-circle-shapes",
+    "input-output-and-asymmetric-shapes"
   ]
 }
