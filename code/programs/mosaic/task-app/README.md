@@ -93,6 +93,12 @@ secondary actions scroll horizontally, task identity and actions occupy separate
 rows, and the main content remains vertically scrollable. The fresh and restored
 lifecycle runs both require zero layout exceptions at that size (#16949).
 
+The same native contract ratchets the remaining style debt per backend and per
+property. Fresh `native-complete` reports currently contain 77 XAML, 144 SwiftUI,
+89 Compose, 163 Qt, and 197 Flutter drops; any new property or increase above
+those measured maxima fails CI. These inventories are explicit debt on the path
+to #12022's zero-drop gate, not a claim of visual completeness (#16995).
+
 Those gates all assert the **semantics tree**, not appearance, and they can all
 pass while the app is unreadable — see #14798 for the first actual render and
 what it showed. `TaskAppScreenshots` in the same conformance directory writes

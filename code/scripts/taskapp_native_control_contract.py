@@ -110,7 +110,6 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "white-space": 1,
     },
     "qt": {
-        "align": 22,
         "border-bottom-color": 3,
         "border-bottom-style": 3,
         "border-bottom-width": 3,
@@ -141,7 +140,6 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "font": 1,
         "font-size": 2,
         "font-weight": 2,
-        "height": 2,
         "left": 6,
         "letter-spacing": 12,
         "margin-bottom": 1,
@@ -153,10 +151,9 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "text-transform": 11,
         "top": 6,
         "transform": 2,
-        "width": 25,
+        "width": 18,
     },
     "flutter": {
-        "align": 22,
         "background": 10,
         "border-bottom-style": 3,
         "border-color": 1,
@@ -196,7 +193,7 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "top": 6,
         "transform": 2,
         "white-space": 1,
-        "width": 33,
+        "width": 23,
     },
 }
 

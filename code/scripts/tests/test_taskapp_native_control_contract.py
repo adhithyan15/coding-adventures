@@ -88,8 +88,8 @@ def test_style_drop_baseline_totals_match_measured_main() -> None:
         "xaml": 77,
         "swiftui": 144,
         "compose": 89,
-        "qt": 194,
-        "flutter": 229,
+        "qt": 163,
+        "flutter": 197,
     }
 
 
@@ -114,6 +114,31 @@ def test_style_drop_ratchet_rejects_new_and_increased_properties() -> None:
     assert any(
         "style drop 'width' increased from at most 8 to 9" in error for error in errors
     )
+
+
+@pytest.mark.parametrize(
+    ("backend", "primitive", "count", "message"),
+    [
+        ("qt", "align", 1, "unbaselined style drop 'align'"),
+        ("qt", "height", 1, "unbaselined style drop 'height'"),
+        ("qt", "width", 19, "style drop 'width' increased from at most 18 to 19"),
+        ("flutter", "align", 1, "unbaselined style drop 'align'"),
+        (
+            "flutter",
+            "width",
+            24,
+            "style drop 'width' increased from at most 23 to 24",
+        ),
+    ],
+)
+def test_post_layout_ratchet_rejects_qt_and_flutter_regressions(
+    backend: str, primitive: str, count: int, message: str
+) -> None:
+    report = {"styleDegradations": [_style_entry(backend, primitive)] * count}
+
+    errors = validate_style_degradations(backend, report, "report.json")
+
+    assert any(message in error for error in errors)
 
 
 @pytest.mark.parametrize(
