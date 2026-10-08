@@ -239,6 +239,8 @@ Additional built-in `sqrt` calls may wrap that nonnegative unit result while
 preserving the same bound.
 Built-in `entier` may also remain inside `sqrt` when its operand is already
 nonnegative and bounded; signed, unrestricted, and overridden forms remain gated.
+Built-in `sign` may likewise remain inside `sqrt` when its operand is already
+nonnegative and bounded; signed and overridden forms remain gated.
 Built-in `sin`, `cos`, and `arctan` may map a bounded sign-rooted result before
 `entier`, including nested combinations; domain-sensitive or unbounded
 standard functions and non-sign-rooted runtime operands remain conservative.
