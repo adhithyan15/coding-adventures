@@ -1,0 +1,19 @@
+{
+  "chapter": 168,
+  "title": "Return to the Date Line",
+  "label": "ch:pa-date-form-r4",
+  "canDo": "I can retrieve three already-taught pieces of a fictional Punjabi date form after a long gap, one at a time, without claiming scored A1 writing or complete mock credit.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-R168-date-format-again",
+    "kind": "recognition",
+    "summary": "Recall the date label, two taught month positions, and the printed day/month/year order without introducing new Punjabi.",
+    "assesses": [
+      "PA-FORM-LABEL-DATE-01",
+      "PA-FORM-DATE-MONTH-MAP-01",
+      "PA-FORM-DATE-FORMAT-01"
+    ]
+  }
+}

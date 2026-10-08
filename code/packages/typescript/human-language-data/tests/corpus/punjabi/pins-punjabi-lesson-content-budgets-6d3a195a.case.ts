@@ -103,7 +103,9 @@ it("pins Punjabi lesson-content budgets", () =>
     // No new idiom, sense, or culture claim.
     // 903 -> 905: two short Chapter 167 returns for familiar action words.
     // No new idiom, sense, or culture claim.
-    lessons: 905,
+    // 905 -> 908: three short Chapter 168 date-form returns, each reusing one
+    // taught atom with no new idiom, sense, or culture claim.
+    lessons: 908,
     idioms: 6,
     senses: 3,
     cultureClaims: 9,

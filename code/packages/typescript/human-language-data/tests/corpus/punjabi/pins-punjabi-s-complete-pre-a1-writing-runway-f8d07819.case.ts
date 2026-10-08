@@ -184,5 +184,10 @@ it("pins Punjabi's complete pre-A1 writing runway", () => {
     "guided-copy",
     "timed-assessment-production",
     "controlled-composition",
+    // Chapter 168 uses three unscored guided copies to retrieve old date-form
+    // pieces after a long interval; none claims a fresh timed A1 writing pass.
+    "guided-copy",
+    "guided-copy",
+    "guided-copy",
   ]);
 });
