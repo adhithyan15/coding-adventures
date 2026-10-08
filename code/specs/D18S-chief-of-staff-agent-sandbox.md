@@ -1458,6 +1458,42 @@ through S-I3 before two weeks are spent on Windows.
 
      Both are step 9.
 6. **Broker hardening** (S-K5) and principal separation (S-I5, S-I7).
+   **Status (P2.6):** the broker today is not a process. One dispatcher in
+   the daemon serves every agent's data-plane requests, and it holds every
+   agent's channel keys. That is the per-supervisor broker S-K7 calls
+   inadmissible. So S-I5's confidentiality claim stays void, as this section
+   says, until P2.6d lands. Step 6 is split into four increments, each one
+   verifiable on its own:
+   - **P2.6a, core dumps (S-I5).** Done. `chief-of-staff-process-hardening`
+     makes the daemon refuse to start unless it suppressed its own core
+     dumps:
+     - every Unix sets `RLIMIT_CORE` to zero, soft and hard, so it cannot
+       be raised again;
+     - Linux also sets `PR_SET_DUMPABLE=0`, which also stops a same-UID
+       process from ptracing the daemon or reading `/proc/<pid>/mem`;
+     - macOS also uses `ptrace(PT_DENY_ATTACH)`;
+     - each setting that has a getter is read back to check it.
+       `PT_DENY_ATTACH` has none.
+
+     Some measures are still missing, and the report the function returns
+     lists them:
+     - Windows' process DACL, which is step 8;
+     - on macOS, the Hardened Runtime without `get-task-allow`. That signing
+       setting, not `PT_DENY_ATTACH`, is what stops `task_for_pid` memory
+       reads.
+
+     Agents become dumpable again, because `exec` resets dumpability for
+     the new image. Every child does inherit the zero core limit.
+   - **P2.6b, per-agent rate limits (S-K5).** A token bucket per host at the
+     supervisor's dispatch point. Over-limit requests get a data-plane
+     failure; they do not end the agent.
+   - **P2.6c, beneath-resolution (S-K5).** The `openat2(RESOLVE_BENEATH |
+     RESOLVE_NO_SYMLINKS | RESOLVE_NO_MAGICLINKS)` primitive, plus the
+     startup proof that the broker's roots are disjoint from S-I6's
+     never-grantable set. Brokered `fs:*` operations attach to it.
+   - **P2.6d, one contained broker per agent (S-K7).** The dispatcher moves
+     out of the daemon into one process per agent. Each holds only that
+     agent's channel keys and runs under its own sandbox plan.
 7. **macOS Seatbelt** (Tier A).
 8. **Windows AppContainer** (Tier A). The expensive one; schedule accordingly.
 9. **Wire into `spawn_verified`.** Deno becomes one supported runtime rather

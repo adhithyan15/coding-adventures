@@ -1,0 +1,16 @@
+[package]
+name = "chief-of-staff-process-hardening"
+version = "0.1.0"
+edition = "2021"
+description = "D18S S-I5: the Chief of Staff daemon suppresses its own core dumps and debugger attach before it holds any key"
+license = "MIT"
+
+[dependencies]
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[[bin]]
+name = "process-hardening-probe"
+path = "src/bin/process_hardening_probe.rs"
+test = false

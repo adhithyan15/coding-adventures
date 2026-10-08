@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **The daemon suppresses its own core dumps before it starts** (D18S S-I5;
+  #13980 P2.6a). The daemon holds every agent's channel keys. `main` now
+  calls `chief_of_staff_process_hardening::suppress_core_dumps` before
+  anything else, and refuses to start if that fails:
+  - `RLIMIT_CORE` is set to zero, soft and hard;
+  - on Linux, `PR_SET_DUMPABLE` is set to 0;
+  - on macOS, `PT_DENY_ATTACH` is set.
+
+  The smoke test reads the running daemon's `/proc/<pid>/limits`, and, when
+  not run as root, the ownership of `/proc/<pid>/mem`.
 - **Every vault the daemon opens is now anchored** (VLT01 F11; #13980
   P1.20c). The six smart-home pairing vaults (Hue, ONVIF, Axis, ZoneMinder,
   Reolink, Synology) share the Chief vault's storage root, but they used to

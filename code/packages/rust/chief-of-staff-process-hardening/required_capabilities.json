@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/chief-of-staff-process-hardening",
+  "capabilities": [
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "libc setrlimit, getrlimit and prctl(PR_SET_DUMPABLE, PR_GET_DUMPABLE) on Linux; ptrace(PT_DENY_ATTACH) on macOS",
+      "justification": "Suppresses the daemon's own core dumps and debugger attach before it holds channel keys or the vault (D18S S-I5); std has no API for either."
+    }
+  ],
+  "justification": "Process hardening for the D18 Chief daemon, kept in its own crate so the daemon can keep forbid(unsafe_code)."
+}
