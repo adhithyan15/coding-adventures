@@ -33,8 +33,8 @@ reviews_of: [ML-C74-aan, ML-C74-purpose, ML-C74-kazhiyum]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C74-AAN-01] -->
 
-[PAUSE 3s] Close the lessons before this one. Take *to read*, *to go* and *to
-see* out of the dictionary and swap their endings.
+[PAUSE 3s] Leave the lessons before this one closed. Take *to read*, *to go* and
+*to see* out of the dictionary and swap their endings.
 
 ## Grammar Lens: the swap, and what it buys
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C74-AAN-01, ML-GRAMMAR-C74-PURPOSE-01, ML-LEX-C74-KAZHIYUM-01] -->

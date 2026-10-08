@@ -35,12 +35,12 @@ reviews_of: [FA-C01-salam, FA-C01-mamnoon, FA-C01-bale, FA-C01-na, FA-W00-alef-g
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-SALAM-01] -->
 
-Keep every model visible. Say **سلام** once to greet and once to answer.
+Every model stays in view. Say **سلام** once to greet and once to answer.
 
 ## The exchange
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-SALAM-01, FA-SCRIPT-RTL-01] -->
 
-Read each Persian line from right to left:
+[YOU READ: each Persian line from right to left]
 
 - A: **سلام** — *salâm*
 - B: **سلام** — *salâm*
@@ -61,6 +61,7 @@ the greeting and the page direction, not decoding every letter.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-SALAM-01, FA-ETYMON-SALAM-SLM-02, FA-SCRIPT-RTL-01, FA-SCRIPT-ALEF-01] -->
 
-Greet once without help. Then compare your **ا** with the model. No hidden-word
-spelling and no second letter: the chapter closes with one usable exchange and
-one supported stroke.
+Greet once without help. [YOU CHECK: your **ا** against the model]
+
+No hidden-word spelling and no second letter: the chapter closes with one usable
+exchange and one supported stroke.

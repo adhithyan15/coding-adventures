@@ -4,7 +4,7 @@
   "chapter": 180,
   "title": "Synthesis --- The Gift and the Motive",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:17c3dff5eab7d6cb",
+  "sourceHash": "fnv1a64:f4e5b2c991ab6e75",
   "lessons": [
     {
       "id": "ES-C51-sintesis-regalo-motivo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b4484667598180a",
+      "sourceHash": "fnv1a64:ee838ef28d246a88",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read this twice, changing only one word."
+              "text": "Say this twice, changing only one word."
             },
             {
               "kind": "speech",

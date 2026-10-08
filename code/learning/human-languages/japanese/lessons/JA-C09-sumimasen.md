@@ -34,7 +34,7 @@ reviews_of: [JA-C08-sayounara]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SAYOUNARA, JA-PERFORMANCE-SAYOUNARA-FOUR-SKILL-01] -->
 
-[PAUSE 25s] Hear the farewell in your mind, say it, and read **さようなら**.
+[PAUSE 25s] Hear the farewell in your mind, and say it. [YOU READ: **さようなら**]
 [YOU WRITE: **さようなら** once]
 
 Now imagine that the other person has spoken and you missed it. Do not guess;

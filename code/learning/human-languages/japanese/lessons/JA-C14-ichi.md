@@ -54,7 +54,9 @@ Both signs are yours: **い + ち**.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ICHI, JA-LEX-ICHIDO, JA-SCRIPT-I-01, JA-SCRIPT-CHI-01] -->
 
-Read **い | ち**. [YOU WRITE: one copy of **いち**; then hide it and write it from the meaning]
+[YOU READ: **い | ち**]
+
+[YOU WRITE: one copy of **いち**; then hide it and write it from the meaning]
 
 Then say
 **いちど** and name the part of it that is the number.

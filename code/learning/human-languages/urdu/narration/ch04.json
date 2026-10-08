@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "How Are You?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c91a0fd1c72e8550",
+  "sourceHash": "fnv1a64:043c37d3def3ab76",
   "lessons": [
     {
       "id": "UR-C04-kaise-kaisi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:95ede26f4ac7a140",
+      "sourceHash": "fnv1a64:c025f11464b197ac",
       "notice": null,
       "blocks": [
         {
@@ -60,7 +60,16 @@
             },
             {
               "kind": "speech",
-              "text": "Both begin ک (kāf) k + ی carrying the ai sound. At the left edge, کیسے ends in broad ے e, while کیسی ends in ی long ī. Read the whole word before isolating the final shape."
+              "text": "Both begin ک (kāf) k + ی carrying the ai sound. At the left edge, کیسے ends in broad ے e, while کیسی ends in ی long ī."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the whole word before isolating the final shape",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the whole word before isolating the final shape]"
             }
           ]
         },

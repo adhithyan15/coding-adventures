@@ -4,7 +4,7 @@
   "chapter": 62,
   "title": "Things People Make",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d898908b9a124607",
+  "sourceHash": "fnv1a64:c44f060f90e025db",
   "lessons": [
     {
       "id": "KA-C62-thread",
@@ -543,7 +543,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:edcd95bbb2cba072",
+      "sourceHash": "fnv1a64:87447080004b6438",
       "notice": null,
       "blocks": [
         {
@@ -578,7 +578,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read it carefully. ಕೊಡೆ (koḍe) and the ಕೊಡು you already know start with the same two letters, and they are separate items — one is a thing, the other is what you do with it, and joining them would be inventing a story. Kannada gives you plenty of real ones; this is not one."
+              "text": "Say it carefully. ಕೊಡೆ (koḍe) and the ಕೊಡು you already know start with the same two letters, and they are separate items — one is a thing, the other is what you do with it, and joining them would be inventing a story. Kannada gives you plenty of real ones; this is not one."
             },
             {
               "kind": "speech",

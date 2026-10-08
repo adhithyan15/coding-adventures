@@ -33,8 +33,8 @@ reviews_of: [ML-C80-uuru, ML-C80-keralam, ML-C80-malayali]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C55-GROUND-03, ML-LEX-C80-ORIGIN-01] -->
 
-[PAUSE 3s] Close the lessons before this one. Say the floating word for a home
-region, and then say the word that pins its small end down.
+[PAUSE 3s] Leave the lessons before this one closed. Say the floating word for a
+home region, and then say the word that pins its small end down.
 
 ## Grammar Lens: a scale, and a person on it
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C80-ORIGIN-01, ML-LEX-C80-ORIGIN-02, ML-LEX-C80-ORIGIN-03, ML-LEX-C80-ORIGIN-04] -->

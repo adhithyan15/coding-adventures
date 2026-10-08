@@ -4,7 +4,7 @@
   "chapter": 135,
   "title": "Hospital and Bank: Bi, Gu, Ge and Gi",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0d7bf64cfcb11621",
+  "sourceHash": "fnv1a64:e09d16ba878c3dfa",
   "lessons": [
     {
       "id": "JA-C135-byouin",
@@ -1754,7 +1754,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1235ad01be37db9",
+      "sourceHash": "fnv1a64:1ff69b828eabaa55",
       "notice": null,
       "blocks": [
         {
@@ -1823,7 +1823,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read each one aloud and say what it means."
+              "text": "For each one below, say what it means."
             },
             {
               "kind": "prompt",

@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 27,
-  "sourceHash": "fnv1a64:a43cf99e33442a2e",
+  "sourceHash": "fnv1a64:10b7b74e0cf5268a",
   "lessonIds": [
     "ZH-W27-sui",
     "ZH-C27-sui",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "chinese/narration/ch27.txt",
   "json": "chinese/narration/ch27.json",
-  "textHash": "fnv1a64:5714d75c48fcb144",
-  "jsonHash": "fnv1a64:9c45178d103e87d1",
+  "textHash": "fnv1a64:0f7b729769280e1b",
+  "jsonHash": "fnv1a64:2165cfa06f577cf7",
   "findings": []
 }

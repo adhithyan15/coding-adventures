@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Ask and Answer Names",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:dee219254fa79b53",
+  "sourceHash": "fnv1a64:bb2c72a51e1a4b49",
   "lessons": [
     {
       "id": "FA-C03-shoma-to",
@@ -262,7 +262,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3aea9dc955afe90",
+      "sourceHash": "fnv1a64:e31c1386ee97767a",
       "notice": null,
       "blocks": [
         {
@@ -292,8 +292,17 @@
               "text": "چیست — chist — what is?"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "from the right — چ ch, ی long i, س s, ت t",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: from the right — **چ** *ch*, **ی** long *i*, **س** *s*, **ت** *t*]"
+            },
+            {
               "kind": "speech",
-              "text": "Read from the right: چ ch, ی long i, س s, ت t. چ is one of Persian's four additions to the Arabic alphabet: it uses the same base shape as ج, with three dots below. Meet only this joined form now."
+              "text": "چ is one of Persian's four additions to the Arabic alphabet: it uses the same base shape as ج, with three dots below. Meet only this joined form now."
             }
           ]
         },

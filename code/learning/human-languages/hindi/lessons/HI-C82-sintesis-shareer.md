@@ -59,7 +59,9 @@ information.
 ## Reading
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C82-BODY-01, HI-LEX-C82-BODY-02, HI-LEX-C82-BODY-03, HI-LEX-C82-BODY-04] -->
 
-Read aloud. Every word has been taught:
+[YOU READ: the lines below aloud]
+
+Every word has been taught:
 
 > वह लंबी है। वह पतली है।
 > वह लंबा है। वह मोटा है। वह नाटा है।

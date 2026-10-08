@@ -48,8 +48,8 @@ on a verb. The answer is those two words stuck together.
 > — *maiṁ kal nahīṁ ā saktā kyoṁki maiṁ kām kartā hūṁ.* —
 > **I can't come tomorrow because I work.**
 
-Read the word: **क्योंकि** is **क्यों** + **कि**, *why-that*. Nothing is hidden
-in it. Hindi answers *why* by saying *why-that* and then a whole ordinary
+Take the word apart: **क्योंकि** is **क्यों** + **कि**, *why-that*. Nothing is
+hidden in it. Hindi answers *why* by saying *why-that* and then a whole ordinary
 sentence, verb last, exactly as after plain **कि**.
 
 The order is fixed and it is the useful way round: **the claim first, the reason

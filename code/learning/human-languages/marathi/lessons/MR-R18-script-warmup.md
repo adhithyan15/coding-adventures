@@ -36,13 +36,15 @@ reviews_of: [MR-W03-dhanyavad-write]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Close every earlier model and listen before picking up the pencil.
+[YOU COVER: every earlier model]
+
+Listen before picking up the pencil.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-DHANYAVAD-01, MR-SCRIPT-DHANYAVAD-WRITE-01] -->
 <!-- hl-activity: {"id":"MR-R18-script-warmup-check","kind":"text","assesses":["MR-LEX-DHANYAVAD-01","MR-SCRIPT-DHANYAVAD-WRITE-01"],"prompt":"Hear dhanyavad; give its meaning and write it in Devanagari.","answer":"thank you; धन्यवाद","accepted":[],"feedback":{"correct":"Meaning and independent writing are still connected.","incorrect":"Repair only meaning or spelling, whichever was missed."},"response_seconds":24} -->
 
-Hear *dhanyavād*. Say its meaning, read **धन्यवाद**, then cover the model.
+Hear *dhanyavād*. Say its meaning. [YOU READ: **धन्यवाद**, then cover the model]
 [YOU WRITE: **धन्यवाद** once]
 
 This reconnects meaning and script without adding anything new.

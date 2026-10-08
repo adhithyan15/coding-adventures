@@ -37,7 +37,7 @@ reviews_of: [TE-C03-elaa, TE-C03-miiru-elaa-unnaaru, TE-C03-nenu, TE-C03-baagaa,
 ## The exchange
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C03-BAAGAA-01, TE-LEX-C03-ELAA-01, TE-LEX-C03-MIIRU-ELAA-UNNAARU-01, TE-LEX-C03-NENU-01] -->
 
-Read the whole cycle off the page first — Telugu, then the sound, then the sense:
+[YOU READ: the whole cycle off the page first — Telugu, then the sound, then the sense]
 
 | Telugu | | English |
 |---|---|---|

@@ -4,7 +4,7 @@
   "chapter": 460,
   "title": "La herramienta",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3aab2f58482522e2",
+  "sourceHash": "fnv1a64:9c4671891e013c38",
   "lessons": [
     {
       "id": "ES-C460-herramienta",
@@ -515,7 +515,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b0b767a04b9110c",
+      "sourceHash": "fnv1a64:2961a89f0b69c688",
       "notice": null,
       "blocks": [
         {
@@ -531,7 +531,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all three: the tool, to apply for, the wait."
+              "text": "Leave the lessons before this one closed. Say all three: the tool, to apply for, the wait."
             }
           ]
         },
@@ -664,7 +664,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1096dbd7c8fcdcd9",
+      "sourceHash": "fnv1a64:a9bc226799211005",
       "notice": null,
       "blocks": [
         {
@@ -691,7 +691,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "A notice in a neighbourhood centre. Read it, then answer."
+              "text": "A notice in a neighbourhood centre."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it, then answer]"
             },
             {
               "kind": "speech",
@@ -776,7 +785,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now your turn, out loud and then in writing. Four lines for a tool library: say what is lent and for how long, say how to apply, say there is a waiting list, and then ask a neighbour informally for the same thing."
+              "text": "Now your turn, out loud. Four lines for a tool library: say what is lent and for how long, say how to apply, say there is a waiting list, and then ask a neighbour informally for the same thing."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same four lines",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same four lines]"
             },
             {
               "kind": "speech",

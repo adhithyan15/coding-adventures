@@ -4,7 +4,7 @@
   "chapter": 454,
   "title": "La vía cortada",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:25a63b590fde8a45",
+  "sourceHash": "fnv1a64:1b09d992a5eb6f87",
   "lessons": [
     {
       "id": "ES-C454-obra",
@@ -694,7 +694,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a23266a05e3abb30",
+      "sourceHash": "fnv1a64:2c489fa7abfb35c8",
       "notice": null,
       "blocks": [
         {
@@ -710,7 +710,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all four: the works, the track, the accident, the service."
+              "text": "Leave the lessons before this one closed. Say all four: the works, the track, the accident, the service."
             }
           ]
         },
@@ -848,7 +848,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a484d0625408922f",
+      "sourceHash": "fnv1a64:86030315f6b0605f",
       "notice": null,
       "blocks": [
         {
@@ -875,7 +875,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Two notices on the same morning. Read both, then answer."
+              "text": "Two notices on the same morning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "both, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: both, then answer]"
             },
             {
               "kind": "speech",
@@ -960,7 +969,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now your turn, out loud and then in writing. Four lines: say the street is closed for works, say until when, say there has been an accident on the track, and say a bus service is replacing the train."
+              "text": "Now your turn, out loud. Four lines: say the street is closed for works, say until when, say there has been an accident on the track, and say a bus service is replacing the train."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same four lines",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same four lines]"
             },
             {
               "kind": "speech",

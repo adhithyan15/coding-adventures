@@ -50,7 +50,8 @@ Then recall the seven-label four-skill payoff.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-NANI-01, MW-SCRIPT-NANA-01, MW-LEX-NANA-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Cover **नानी** and wait five seconds.
+[YOU COVER: **नानी**, then wait five seconds]
+
 [YOU WRITE: the word, and circle only the final **ी**]
 
 ## Wrap-up Recall

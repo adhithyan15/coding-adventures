@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 95,
-  "sourceHash": "fnv1a64:37046902c0d11db0",
+  "sourceHash": "fnv1a64:0414bb5ac8402a08",
   "lessonIds": [
     "JA-C95-kanou",
     "JA-C95-tokui",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "japanese/narration/ch95.txt",
   "json": "japanese/narration/ch95.json",
-  "textHash": "fnv1a64:fa3ad0c185cce55c",
-  "jsonHash": "fnv1a64:9c9292bd13aec556",
+  "textHash": "fnv1a64:d9b2e1b39c31eb3f",
+  "jsonHash": "fnv1a64:7361e7fe33d5ebf2",
   "findings": []
 }

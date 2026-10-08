@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Build the Residence Label and Values",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:45cb810db4b8b39a",
+  "sourceHash": "fnv1a64:edc85393a83d5a7d",
   "lessons": [
     {
       "id": "PA-W04-ra",
@@ -559,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27eedf23837fc20d",
+      "sourceHash": "fnv1a64:b4e50ee37adbb74b",
       "notice": null,
       "blocks": [
         {
@@ -575,7 +575,16 @@
             },
             {
               "kind": "speech",
-              "text": "No new language. Keep this oral: listen, speak, then type only a record of what you already said."
+              "text": "No new language. Keep this oral: listen, then speak."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "then only a typed record of what you already said",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: then only a typed record of what you already said]"
             }
           ]
         },

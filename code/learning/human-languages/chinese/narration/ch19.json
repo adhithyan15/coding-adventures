@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Asking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6891ec404837bb2e",
+  "sourceHash": "fnv1a64:a9d1caaa08ee8735",
   "lessons": [
     {
       "id": "ZH-C19-hear-ma",
@@ -413,7 +413,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8993ce726106294f",
+      "sourceHash": "fnv1a64:c2b3ca521aa450f9",
       "notice": null,
       "blocks": [
         {
@@ -456,8 +456,22 @@
               "text": "吗 — ma — the question particle."
             },
             {
-              "kind": "speech",
-              "text": "Hide the pinyin. Read 吗 (ma), give it no tone at all, and say what it does rather than what it means."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the pinyin",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the pinyin]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "吗 (ma), give it no tone at all, then say what it does rather than what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 吗, give it no tone at all, then say what it does rather than what it means]"
             }
           ]
         },
@@ -648,7 +662,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:462ff6071d952647",
+      "sourceHash": "fnv1a64:d6c5b49b4c14a481",
       "notice": null,
       "blocks": [
         {
@@ -691,8 +705,17 @@
               "text": "你好吗 — nǐ hǎo ma — how are you?"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the three known shapes from left to right — 你, 好, and the new 吗 (ma) on the end",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the three known shapes from left to right — 你, 好, and the new 吗 on the end]"
+            },
+            {
               "kind": "speech",
-              "text": "Read the three known shapes from left to right: 你, 好, and the new 吗 (ma) on the end. Every one of them is a character you have already written."
+              "text": "Every one of them is a character you have already written."
             },
             {
               "kind": "speech",
@@ -1286,7 +1309,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db18943db44f85af",
+      "sourceHash": "fnv1a64:2efda24ddc3bce33",
       "notice": null,
       "blocks": [
         {
@@ -1322,7 +1345,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the three meanings in mixed order. Say each Mandarin answer and read its unpointed card. Decide which of the two question patterns it uses — the light syllable on the end, or the word denied in the middle."
+              "text": "Hear the three meanings in mixed order. Say each Mandarin answer."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "its unpointed card",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: its unpointed card]"
+            },
+            {
+              "kind": "speech",
+              "text": "Decide which of the two question patterns it uses — the light syllable on the end, or the word denied in the middle."
             },
             {
               "kind": "prompt",
@@ -1383,7 +1419,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00b9271ce3be16fe",
+      "sourceHash": "fnv1a64:1c0cb785e13ce1b8",
       "notice": null,
       "blocks": [
         {
@@ -1399,7 +1435,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say the light syllable that turns a statement into a question, and say where it goes. Then read 看书 and 看见 aloud."
+              "text": "Say the light syllable that turns a statement into a question, and say where it goes."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "看书 and 看见 aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **看书** and **看见** aloud]"
             }
           ]
         },
@@ -1476,7 +1521,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05ef71a57a0dc0a7",
+      "sourceHash": "fnv1a64:2efd168d77227c7d",
       "notice": null,
       "blocks": [
         {
@@ -1511,8 +1556,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read the three cards cold. No pinyin is printed on any of them. For each one, say it aloud and then give the English."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the three cards cold — no pinyin is printed on any of them — and for each one, say it aloud, then give the English",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the three cards cold — no pinyin is printed on any of them — and for each one, say it aloud, then give the English]"
             },
             {
               "kind": "speech",
@@ -1567,7 +1617,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87d70ddc8090acb8",
+      "sourceHash": "fnv1a64:89d6efe467796e58",
       "notice": null,
       "blocks": [
         {
@@ -1626,7 +1676,16 @@
             },
             {
               "kind": "speech",
-              "text": "Reading. Read four unpointed cards cold and give their meanings."
+              "text": "Reading."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "four unpointed cards cold, then give their meanings",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: four unpointed cards cold, then give their meanings]"
             },
             {
               "kind": "speech",

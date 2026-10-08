@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 447,
-  "sourceHash": "fnv1a64:ba18b48352db0701",
+  "sourceHash": "fnv1a64:bbe68aa30a7330cb",
   "lessonIds": [
     "ES-C447-analisis",
     "ES-C447-comentar",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "spanish/narration/ch447.txt",
   "json": "spanish/narration/ch447.json",
-  "textHash": "fnv1a64:89233d03c39ff6a4",
-  "jsonHash": "fnv1a64:3dd3066da01fa3e1",
+  "textHash": "fnv1a64:2526ea4ce757601c",
+  "jsonHash": "fnv1a64:df699f1e15eb22eb",
   "findings": []
 }

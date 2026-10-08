@@ -40,7 +40,11 @@ reviews_of: [FR-C141-organiser]
 ## You'll want to know: l'horaire
 <!-- hl-knowledge: introduces=[FR-LEX-C142-LIRE142-01]; assesses=[] -->
 
-**l'horaire** — "opening hours, a timetable". Read the door: **Horaire : lundi – vendredi, 9 h – 18 h.** Open on weekdays from nine to six: not on **samedi**.
+**l'horaire** — "opening hours, a timetable".
+
+[YOU READ: the door — **Horaire : lundi – vendredi, 9 h – 18 h.**]
+
+Open on weekdays from nine to six: not on **samedi**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

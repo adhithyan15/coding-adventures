@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 160,
-  "sourceHash": "fnv1a64:d2496fa44d60b8c4",
+  "sourceHash": "fnv1a64:8259da785169ec5e",
   "lessonIds": [
     "TA-C160-kala-attavanai",
     "TA-C160-arivippu",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "tamil/narration/ch160.txt",
   "json": "tamil/narration/ch160.json",
-  "textHash": "fnv1a64:bffd75d2618bb760",
-  "jsonHash": "fnv1a64:e6b5889e2099842e",
+  "textHash": "fnv1a64:d033698f6a8f2bfc",
+  "jsonHash": "fnv1a64:b94a438ec45a1d26",
   "findings": []
 }

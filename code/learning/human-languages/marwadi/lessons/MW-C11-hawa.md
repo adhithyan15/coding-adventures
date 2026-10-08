@@ -49,7 +49,8 @@ reviews_of: [MW-C11-hear-hawa, MW-C10-paisa, MW-C10-ghar]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-HAWA-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, and wait five seconds. [YOU WRITE: **हवा**]
+[YOU COVER: the model after one look, then wait five seconds]
+[YOU WRITE: **हवा**]
 
 No new sign has been added.
 

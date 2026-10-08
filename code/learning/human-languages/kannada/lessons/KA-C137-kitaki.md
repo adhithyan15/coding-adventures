@@ -38,7 +38,7 @@ reviews_of: [KA-C137-meju]
 
 [PAUSE 2s] Before the new one: say the Kannada for an eyebrow, then the Kannada for a table.
 
-[PAUSE 3s] Read aloud as one run: **ಮರ ಅಲ್ಲಿ ಇದೆ. ನದಿ ಅಲ್ಲಿ ಇದೆ.**
+[PAUSE 3s] [YOU READ: **ಮರ ಅಲ್ಲಿ ಇದೆ. ನದಿ ಅಲ್ಲಿ ಇದೆ.** aloud as one run]
 
 ## You'll want to know: ಕಿಟಕಿ
 <!-- hl-knowledge: introduces=[KA-LEX-C137-THINGS137-02]; assesses=[] -->

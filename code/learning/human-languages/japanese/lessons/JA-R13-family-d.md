@@ -41,9 +41,8 @@ Say **つま** once without looking back.
 
 [PAUSE 35s] [YOU WRITE: **コ**, then add distant **ー** after it]
 
-State that the bar holds the vowel for one more beat. Then hear and read
-**つま・おっと**.
-[YOU WRITE: **つま・おっと**, with a clear size contrast]
+State that the bar holds the vowel for one more beat. Then hear **つま・おっと**.
+[YOU READ: **つま・おっと**] [YOU WRITE: **つま・おっと**, with a clear size contrast]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-TSUMA, JA-LEX-OTTO] -->

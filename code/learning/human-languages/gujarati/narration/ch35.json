@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "The Word for Not, and the Word for Sorry",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:39287906208ecdbd",
+  "sourceHash": "fnv1a64:19e7a7451de20afd",
   "lessons": [
     {
       "id": "GU-C31-nathi",
@@ -397,7 +397,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f91140210a74924",
+      "sourceHash": "fnv1a64:54a5c82f75211298",
       "notice": null,
       "blocks": [
         {
@@ -444,8 +444,17 @@
               "text": "માફ is the forgiveness itself, and કરો is do — the polite form you already use for asking. Gujarati does not have a verb \"to apologise\"; it asks the other person to do the forgiving."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the first word, માફ, slowly",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the first word, **માફ**, slowly]"
+            },
+            {
               "kind": "speech",
-              "text": "Read the first word slowly. મ and the ા stroke you have had for a long time; ફ (pha) you learned in the last lesson. Three signs, and only one of them was new."
+              "text": "મ and the ા stroke you have had for a long time; ફ (pha) you learned in the last lesson. Three signs, and only one of them was new."
             },
             {
               "kind": "speech",

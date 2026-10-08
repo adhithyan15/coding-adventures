@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Time --- Day, Night, and When Things Happen",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:bca8cf5a924f4f8a",
+  "sourceHash": "fnv1a64:ff36084a8c2eca29",
   "lessons": [
     {
       "id": "SA-C17-day",
@@ -1041,7 +1041,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c46b23f33a8fd683",
+      "sourceHash": "fnv1a64:a50c621a7f2cbfe3",
       "notice": null,
       "blocks": [
         {
@@ -1068,7 +1068,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Three of this chapter's words — अद्य (adya), ह्यः (hyaḥ), सदा (sadā) — are not nouns at all. Look for an -am or -aḥ or -iḥ on them and you will not find one. They attach to a sentence, say when, and keep the same shape wherever they land."
+              "text": "Three of this chapter's words — अद्य (adya), ह्यः (hyaḥ), सदा (sadā) — are not nouns at all. Listen for an -am or -aḥ or -iḥ on them and you will not find one. They attach to a sentence, say when, and keep the same shape wherever they land."
             },
             {
               "kind": "speech",

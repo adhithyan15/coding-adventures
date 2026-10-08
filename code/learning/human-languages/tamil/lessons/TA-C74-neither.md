@@ -33,7 +33,7 @@ reviews_of: [TA-W29-read-paalum]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-C74-JOIN-02, TA-SCRIPT-READ-PAALUM-01] -->
 
-[PAUSE 2s] Say *nāṉum*. Then read **பாலும்** aloud.
+[PAUSE 2s] Say *nāṉum*. [YOU READ: **பாலும்** aloud]
 
 ## Grammar lens: the list stays, the end changes
 <!-- hl-knowledge: introduces=[TA-GRAMMAR-C74-JOIN-03]; assesses=[] -->

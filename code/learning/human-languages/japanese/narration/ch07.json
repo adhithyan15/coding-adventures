@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "The Doorway Exchange",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1709bf41c0955699",
+  "sourceHash": "fnv1a64:cb43e27e3fd0db7d",
   "lessons": [
     {
       "id": "JA-C01-practice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0eef038bd29d2817",
+      "sourceHash": "fnv1a64:89016e4634b9d687",
       "notice": null,
       "blocks": [
         {
@@ -73,7 +73,16 @@
             },
             {
               "kind": "speech",
-              "text": "Read: run both voices from Japanese only, with the romanization covered."
+              "text": "Reading:"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "both voices from Japanese only, with the romanization covered",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: both voices from Japanese only, with the romanization covered]"
             },
             {
               "kind": "prompt",

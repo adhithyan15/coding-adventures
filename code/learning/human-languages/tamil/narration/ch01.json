@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9fd1a8ede2136cdd",
+  "sourceHash": "fnv1a64:7fd339dee9b38976",
   "lessons": [
     {
       "id": "TA-C01-vanakkam",
@@ -1259,7 +1259,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8d2147bc70dd082",
+      "sourceHash": "fnv1a64:69dbf0ce5c30b88a",
       "notice": null,
       "blocks": [
         {
@@ -1306,7 +1306,7 @@
             },
             {
               "kind": "speech",
-              "text": "These are five spoken words, so the recap gives you the sound and nothing to decode. One shape is the exception, because it is the one your hand has already met: வணக்கம் (vaṇakkam), whose opening வ you copied. Keep that model visible when you copy it again below."
+              "text": "These are five spoken words, so the recap gives you the sound and nothing to decode. One shape is the exception, because it is the one your hand has already met: வணக்கம் (vaṇakkam), whose opening வ you copied. The copy below keeps that model in view."
             },
             {
               "kind": "speech",
@@ -1382,7 +1382,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say all five words aloud. Which one works both to meet someone and to part from them? (வணக்கம் (vaṇakkam).) Compare your one copied வ with the model. Repair one curve if you want, then stop."
+              "text": "Say all five words aloud. Which one works both to meet someone and to part from them? (வணக்கம் (vaṇakkam).)"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "your one copied வ (va) against the model — repair one curve if you want, then stop",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: your one copied **வ** against the model — repair one curve if you want, then stop]"
             },
             {
               "kind": "speech",

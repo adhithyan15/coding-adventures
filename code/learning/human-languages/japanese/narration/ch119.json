@@ -4,7 +4,7 @@
   "chapter": 119,
   "title": "Florist, Fishmonger, Greengrocer, Barber, Butcher",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9062aa1284fcae03",
+  "sourceHash": "fnv1a64:f4f7e77912850a06",
   "lessons": [
     {
       "id": "JA-C119-hanaya",
@@ -160,7 +160,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aaf9ecf6f0d8d87d",
+      "sourceHash": "fnv1a64:06f68d248a723e65",
       "notice": null,
       "blocks": [
         {
@@ -185,8 +185,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read this without stopping: すこし わかりました. (I understood a little.)"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "this without stopping — すこし わかりました (I understood a little.)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: this without stopping — **すこし わかりました** (I understood a little.)]"
             }
           ]
         },

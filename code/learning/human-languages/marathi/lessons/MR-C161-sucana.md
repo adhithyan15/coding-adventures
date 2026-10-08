@@ -41,7 +41,11 @@ reviews_of: [MR-C161-velapatrak]
 ## You'll want to know: सूचना
 <!-- hl-knowledge: introduces=[MR-LEX-C161-VACH161-02]; assesses=[] -->
 
-**सूचना** — *sūcanā* — "a notice, an instruction". Read the notice: **दुकान रविवारी बंद.** The shop is closed on Sundays, so come on another day.
+**सूचना** — *sūcanā* — "a notice, an instruction".
+
+[YOU READ: the notice — **दुकान रविवारी बंद.**]
+
+The shop is closed on Sundays, so come on another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

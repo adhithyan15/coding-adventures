@@ -42,7 +42,7 @@ whole.
 ## The exchange
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C02-PRACTICE-01]; assesses=[] -->
 
-Read right to left:
+[YOU READ: the lines below right to left]
 
 | Arabic | English |
 |---|---|

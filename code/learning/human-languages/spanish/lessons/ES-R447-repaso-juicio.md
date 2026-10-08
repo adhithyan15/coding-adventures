@@ -32,8 +32,8 @@ reviews_of: [ES-C447-analisis, ES-C447-comentar, ES-C447-urgencia, ES-C447-torpe
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C447-JUICIO-01, ES-LEX-C447-JUICIO-02, ES-LEX-C447-JUICIO-03, ES-LEX-C447-JUICIO-04] -->
 
-[PAUSE 3s] Close the lessons before this one. Say all four: *the test*, *to
-mention*, *the emergency*, *clumsy*.
+[PAUSE 3s] Leave the lessons before this one closed. Say all four: *the test*,
+*to mention*, *the emergency*, *clumsy*.
 
 ## Grammar Lens: what a root tells you, and what it does not
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C447-JUICIO-01, ES-LEX-C447-JUICIO-03, ES-LEX-C447-JUICIO-04] -->

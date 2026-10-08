@@ -38,8 +38,8 @@ reviews_of: [ZH-C14-xiao, ZH-C14-xiaoxue, ZH-C14-xiaoxuesheng, ZH-C13-daxue, ZH-
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XIAO-01, ZH-LEX-XIAOXUE-01, ZH-LEX-XIAOXUESHENG-01, ZH-LEX-DAXUE-01, ZH-LEX-DAXUESHENG-01] -->
 
-Hear **small**, **primary school**, and **primary-school student** in mixed order.
-Say and read each. [YOU WRITE: each one]
+Hear **small**, **primary school**, and **primary-school student** in mixed
+order. Say each. [YOU READ: each] [YOU WRITE: each one]
 
 Then contrast 大学 with 小学 and 大学生 with 小学生. Repair only the missed item.
 

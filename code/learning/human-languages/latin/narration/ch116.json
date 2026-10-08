@@ -4,7 +4,7 @@
   "chapter": 116,
   "title": "Building, Prison, Main hall of a house, Corner, Street",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e73aa9698cfbdca9",
+  "sourceHash": "fnv1a64:ce43babf6413363c",
   "lessons": [
     {
       "id": "LA-C116-aedificium",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f388cefdaced341",
+      "sourceHash": "fnv1a64:302a1bac4ada4c35",
       "notice": null,
       "blocks": [
         {
@@ -536,8 +536,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read the two lines you would say at a door: Salvē! Ubi est porta?"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the two lines you would say at a door — Salvē! Ubi est porta?",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the two lines you would say at a door — *Salvē! Ubi est porta?*]"
             }
           ]
         },

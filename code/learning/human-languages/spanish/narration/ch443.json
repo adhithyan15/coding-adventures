@@ -4,7 +4,7 @@
   "chapter": 443,
   "title": "El Animo",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6ecbea53eb0e39cd",
+  "sourceHash": "fnv1a64:6006b93d0cf5d098",
   "lessons": [
     {
       "id": "ES-C443-doler",
@@ -854,7 +854,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dafc89980f32ea8d",
+      "sourceHash": "fnv1a64:16c11b5031ae938d",
       "notice": null,
       "blocks": [
         {
@@ -870,7 +870,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all five: to hurt, to interest, to come closer, to concentrate, to regret."
+              "text": "Leave the lessons before this one closed. Say all five: to hurt, to interest, to come closer, to concentrate, to regret."
             }
           ]
         },
@@ -994,7 +994,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d441dad04908c96f",
+      "sourceHash": "fnv1a64:dbf56c340fc71d0f",
       "notice": null,
       "blocks": [
         {
@@ -1020,8 +1020,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read both, then answer."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "both, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: both, then answer]"
             },
             {
               "kind": "speech",
@@ -1106,7 +1111,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now your turn, out loud and then in writing. Five sentences about a week before something difficult: say the date is getting close, say what hurts, say you cannot concentrate, say what you regret, and say what still interests you."
+              "text": "Now your turn, out loud. Five sentences about a week before something difficult: say the date is getting close, say what hurts, say you cannot concentrate, say what you regret, and say what still interests you."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same five sentences",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same five sentences]"
             },
             {
               "kind": "speech",

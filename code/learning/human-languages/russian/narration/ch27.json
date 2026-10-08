@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Reading — Six Words, Six Lines, and a First Passage",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1e60e5758b3d3e06",
+  "sourceHash": "fnv1a64:3b5a7b3e464e1372",
   "lessons": [
     {
       "id": "RU-C27-words",
@@ -212,7 +212,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f448ffd52146c230",
+      "sourceHash": "fnv1a64:d47677a5ef29d908",
       "notice": null,
       "blocks": [
         {
@@ -258,8 +258,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six notices down once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six notices down once, without stopping]"
             },
             {
               "kind": "pause",
@@ -268,8 +273,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "them again, and notice the list turns over halfway",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: them again, and notice the list turns over halfway]"
+            },
+            {
               "kind": "speech",
-              "text": "Again — and notice the list turns over halfway. The first three open a conversation. The last three rescue one."
+              "text": "The first three open a conversation. The last three rescue one."
             }
           ]
         },

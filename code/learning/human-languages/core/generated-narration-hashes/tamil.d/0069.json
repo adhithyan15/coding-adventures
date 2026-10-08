@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 69,
-  "sourceHash": "fnv1a64:ebb0cb0b54838148",
+  "sourceHash": "fnv1a64:6446d1e45d4c8d1a",
   "lessonIds": [
     "TA-C69-vehicle",
     "TA-C69-bus",
@@ -14,7 +14,7 @@
   "drivablePrefix": 2,
   "text": "tamil/narration/ch69.txt",
   "json": "tamil/narration/ch69.json",
-  "textHash": "fnv1a64:3adce9c8ca40e863",
-  "jsonHash": "fnv1a64:8b3852e3ce9c9005",
+  "textHash": "fnv1a64:63f1c552e825c27d",
+  "jsonHash": "fnv1a64:375081f4bb2bfa5d",
   "findings": []
 }

@@ -49,7 +49,7 @@ One learned sign is the complete everyday word.
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ME-EYE, JA-SCRIPT-ME-01] -->
 
 1. Hear *me*; say what it names — an eye.
-2. See **め**; say the meaning.
+2. [YOU READ: **め**, then say the meaning]
 3. [YOU WRITE: the one-sign word, with the model hidden]
 
 ## Wrap-up Recall

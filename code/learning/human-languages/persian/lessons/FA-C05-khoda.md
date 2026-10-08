@@ -45,9 +45,10 @@ the final social move: ending that interaction.
 
 > **خدا** — *khodâ* — **God**
 
-Read from right to left: **خ** *kh* + **د** *d* + **ا** long *â*. The short *o*
-is learned with the word rather than written as a separate letter. Keep the
-back-of-the-mouth **kh** gentle; clarity matters more than force.
+[YOU READ: from right to left — **خ** *kh* + **د** *d* + **ا** long *â*]
+
+The short *o* is learned with the word rather than written as a separate letter.
+Keep the back-of-the-mouth **kh** gentle; clarity matters more than force.
 
 ## The word, taken apart — an inherited Persian layer
 <!-- hl-knowledge: introduces=[FA-ETYMON-KHODA]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "italian",
   "chapter": 34,
-  "sourceHash": "fnv1a64:9926c86c5104bd17",
+  "sourceHash": "fnv1a64:1a36c748ad398e79",
   "lessonIds": [
     "IT-C34-mio-tuo-suo",
     "IT-C34-nostro-vostro",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "italian/narration/ch34.txt",
   "json": "italian/narration/ch34.json",
-  "textHash": "fnv1a64:45b73af84e53f433",
-  "jsonHash": "fnv1a64:fab89287a59975be",
+  "textHash": "fnv1a64:24277ea1a63446e4",
+  "jsonHash": "fnv1a64:d5377d39131b8664",
   "findings": []
 }

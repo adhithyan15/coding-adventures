@@ -33,8 +33,8 @@ reviews_of: [ML-C71-avan-aval, ML-C71-avar, ML-C71-njangal-naam, ML-C41-that, ML
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-NJAAN-01, ML-LEX-C41-DEIXIS-02] -->
 
-[PAUSE 3s] Close the three lessons before this one. Say the word for *I*, and
-the word for *that one*, with nothing in front of you.
+[PAUSE 3s] Leave the three lessons before this one closed. Say the word for *I*,
+and the word for *that one*, with nothing in front of you.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C71-AVAN-AVAL-01, ML-LEX-C71-AVAR-01, ML-LEX-C71-NJANGAL-NAAM-01] -->

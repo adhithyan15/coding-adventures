@@ -52,7 +52,8 @@ the end is the **।** you have written since Chapter 9.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BARGAIN-REQUEST-01, MW-SCRIPT-VIRAMA-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Read the line once and cover it for ten seconds.
+[YOU READ: the line once, then cover it for ten seconds]
+
 [YOU WRITE: all three words — then open the model and check two marks first, the dot under **ड़** and the vowel-killer inside **सस्तो**, and repair only the word that changed]
 
 ## Wrap-up Recall

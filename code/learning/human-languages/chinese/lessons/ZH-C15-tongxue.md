@@ -34,14 +34,16 @@ reviews_of: [ZH-C15-hear-tongxue, ZH-W15-tong, ZH-C13-xue]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-TONG-01, ZH-SCRIPT-XUE-01] -->
 
-[PAUSE 10s] Read 同, then 学.
+[PAUSE 10s] [YOU READ: 同, then 学]
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ZH-ORTHO-TONGXUE-01]; assesses=[ZH-LEX-TONGXUE-01] -->
 
 > **同学** — *tóngxué* — **classmate; schoolmate**
 
-Read the pair without pinyin. Both syllables rise.
+[YOU READ: the pair without pinyin]
+
+Both syllables rise.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-TONGXUE-01, ZH-LEX-TONGXUE-01, ZH-SCRIPT-TONG-01, ZH-SCRIPT-XUE-01] -->

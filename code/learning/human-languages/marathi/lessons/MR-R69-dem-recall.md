@@ -36,7 +36,8 @@ reviews_of: [MR-C69-ha, MR-C69-to, MR-C69-dem-system]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-HA-HI-HE, MR-LEX-TO-TI-TE] -->
 
-[PAUSE 3s] Close the lessons before this one. [YOU WRITE: the grid from memory — two rows, three columns]
+[PAUSE 3s] Leave the lessons before this one closed.
+[YOU WRITE: the grid from memory — two rows, three columns]
 
 ## Grammar Lens: four letters, six words
 <!-- hl-knowledge: introduces=[]; assesses=[MR-LEX-HA-HI-HE, MR-LEX-TO-TI-TE, MR-GRAMMAR-DEM-TWO-WAY, MR-GRAMMAR-DEM-PRENOMINAL] -->

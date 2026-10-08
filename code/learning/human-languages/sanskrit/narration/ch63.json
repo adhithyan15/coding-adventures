@@ -4,7 +4,7 @@
   "chapter": 63,
   "title": "The Endings Before It",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e8f9d5dc25e0c482",
+  "sourceHash": "fnv1a64:e302570f2f6d607d",
   "lessons": [
     {
       "id": "SA-C63-sixth",
@@ -794,7 +794,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84cf6fc9e389dcf8",
+      "sourceHash": "fnv1a64:a6c95792e04e81dc",
       "notice": null,
       "blocks": [
         {
@@ -861,7 +861,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look for एक in it. There is none — not a letter of it."
+              "text": "Listen for एक in it. There is none — not a letter of it."
             }
           ]
         },
@@ -880,7 +880,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read it in three pieces."
+              "text": "Take it in three pieces."
             },
             {
               "kind": "speech",

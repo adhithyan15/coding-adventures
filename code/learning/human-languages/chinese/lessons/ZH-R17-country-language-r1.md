@@ -41,8 +41,9 @@ Then say **Chinese language**. [YOU WRITE: the same word, without a model]
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZHONGWEN-01, ZH-ORTHO-ZHONGWEN-01, ZH-LEX-ZHONGGUO-01, ZH-ORTHO-ZHONGGUO-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Hear **Chinese language** and **China** in mixed order. Say each answer and read
-its unpointed card. [YOU WRITE: each one — keep 中 and retrieve the correct ending]
+Hear **Chinese language** and **China** in mixed order. Say each answer.
+[YOU READ: its unpointed card]
+[YOU WRITE: each one — keep 中 and retrieve the correct ending]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZHONGWEN-01, ZH-LEX-ZHONGGUO-01] -->

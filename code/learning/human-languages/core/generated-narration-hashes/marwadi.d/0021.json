@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 21,
-  "sourceHash": "fnv1a64:84f63bd0bd7646b6",
+  "sourceHash": "fnv1a64:eaf30af8c345a988",
   "lessonIds": [
     "MW-C16-hear-bas",
     "MW-C16-bas",
@@ -17,7 +17,7 @@
   "drivablePrefix": 9,
   "text": "marwadi/narration/ch21.txt",
   "json": "marwadi/narration/ch21.json",
-  "textHash": "fnv1a64:e76f0702089554d7",
-  "jsonHash": "fnv1a64:c47f0aeb623f8bc3",
+  "textHash": "fnv1a64:8f8ef695a5789612",
+  "jsonHash": "fnv1a64:eb37f7c252b14d1a",
   "findings": []
 }

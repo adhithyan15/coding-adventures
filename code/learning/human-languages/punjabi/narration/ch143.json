@@ -4,7 +4,7 @@
   "chapter": 143,
   "title": "Dry, Dirty, Sour, Bitter, Sharp",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:f670556e1b3bc7f4",
+  "sourceHash": "fnv1a64:f246d0879ea80532",
   "lessons": [
     {
       "id": "PA-C143-sukka",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50fd853a89bf1194",
+      "sourceHash": "fnv1a64:84b1243fb9119ee4",
       "notice": null,
       "blocks": [
         {
@@ -44,8 +44,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read on without stopping: ਮਨਨ ਮੇਰਾ ਦੋਸਤ ਹੈ। ਉਹ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹੈ।."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਮਨਨ ਮੇਰਾ ਦੋਸਤ ਹੈ। ਉਹ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹੈ। without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਮਨਨ ਮੇਰਾ ਦੋਸਤ ਹੈ। ਉਹ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹੈ।** without stopping]"
             }
           ]
         },

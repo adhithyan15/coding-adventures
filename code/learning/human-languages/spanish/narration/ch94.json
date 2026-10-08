@@ -4,7 +4,7 @@
   "chapter": 94,
   "title": "Les --- And What the Second System Costs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fd9268fb3e0540bb",
+  "sourceHash": "fnv1a64:fbc3e67885bd9bcc",
   "lessons": [
     {
       "id": "ES-C46-les",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a14f18e333aaac2b",
+      "sourceHash": "fnv1a64:632bbdfa5fed4be3",
       "notice": null,
       "blocks": [
         {
@@ -91,7 +91,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look down the two columns. Four of the six rows are identical. Me, te, nos and os do not change at all — the same word does both jobs, and Spanish never asks you to choose."
+              "text": "Compare the two columns. Four of the six rows are identical. Me, te, nos and os do not change at all — the same word does both jobs, and Spanish never asks you to choose."
             },
             {
               "kind": "speech",

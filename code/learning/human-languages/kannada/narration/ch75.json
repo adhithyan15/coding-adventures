@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "All the Way Up, and On a Sign",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:98f502cb2c11cc84",
+  "sourceHash": "fnv1a64:ed4dd36e2326932b",
   "lessons": [
     {
       "id": "KA-C75-sixth",
@@ -1053,7 +1053,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d776c3a68afad379",
+      "sourceHash": "fnv1a64:9fe8aaa40d1c0f93",
       "notice": null,
       "blocks": [
         {
@@ -1197,8 +1197,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "೧ನೇ (modalanē) aloud (Modalanē — not \"one-nē\")",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **೧ನೇ** aloud (*Modalanē* — not \"one-nē\")]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ೧ನೇ (modalanē) aloud. (Modalanē — not \"one-nē\".) What is written on the sign, the whole word or its tail? (Its tail, after the digit.)"
+              "text": "What is written on the sign, the whole word or its tail? (Its tail, after the digit.)"
             }
           ]
         }

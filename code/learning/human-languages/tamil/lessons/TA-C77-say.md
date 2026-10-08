@@ -33,7 +33,9 @@ reviews_of: [TA-C76-choice]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-AANAAL-01, TA-PRAGMATICS-C76-CHOICE-03] -->
 
-[PAUSE 2s] Read **ஆனால்**. Then offer somebody milk or tea.
+[PAUSE 2s] [YOU READ: **ஆனால்**]
+
+Then offer somebody milk or tea.
 
 ## You'll want to know: சொல்
 <!-- hl-knowledge: introduces=[TA-LEX-C77-SAY-01]; assesses=[] -->

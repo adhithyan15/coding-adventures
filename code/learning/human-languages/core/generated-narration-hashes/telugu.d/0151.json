@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 151,
-  "sourceHash": "fnv1a64:07393923844f1bf8",
+  "sourceHash": "fnv1a64:d1bff158b0cfe923",
   "lessonIds": [
     "TE-C151-chhaya",
     "TE-S172-letter-chha",
@@ -11,7 +11,7 @@
   "drivablePrefix": 1,
   "text": "telugu/narration/ch151.txt",
   "json": "telugu/narration/ch151.json",
-  "textHash": "fnv1a64:5d0b27d5b821deee",
-  "jsonHash": "fnv1a64:18797c912e7379ec",
+  "textHash": "fnv1a64:a05af9d9c3cd3fd2",
+  "jsonHash": "fnv1a64:c1b95b26910f2811",
   "findings": []
 }

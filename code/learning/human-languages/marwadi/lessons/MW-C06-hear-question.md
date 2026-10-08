@@ -39,8 +39,8 @@ reviews_of: [MW-C05-practice]
 
 [PAUSE 12s] [YOU WRITE: **पाणी**]
 
-Ask the name question once, and answer it once. Recall that *kāĩ* asks **what**,
-then put the page out of sight. The next question has a different social job.
+Ask the name question once, and answer it once. Recall that *kāĩ* asks **what**.
+[YOU COVER: the page] The next question has a different social job.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-AAP-01, MW-LEX-KAISO-01, MW-QUESTION-WELLBEING-HEARD-01]; assesses=[] -->

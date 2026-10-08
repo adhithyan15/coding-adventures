@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 462,
-  "sourceHash": "fnv1a64:4716a6eb74cf0c0f",
+  "sourceHash": "fnv1a64:474dca28a3547bce",
   "lessonIds": [
     "ES-C462-reducir",
     "ES-C462-decidirse",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "spanish/narration/ch462.txt",
   "json": "spanish/narration/ch462.json",
-  "textHash": "fnv1a64:6555bbd0d31056dc",
-  "jsonHash": "fnv1a64:e91cdb7d8d22a525",
+  "textHash": "fnv1a64:bb093e77045a8d6b",
+  "jsonHash": "fnv1a64:291028deb67ebf28",
   "findings": []
 }

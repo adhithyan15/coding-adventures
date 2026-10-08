@@ -35,8 +35,8 @@ reviews_of: [AR-C42-words, AR-C42-lines, AR-C01-marhaba, AR-C41-ya, AR-C38-aw, A
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[AR-SKILL-READ-LINES, AR-C01-MARHABA-05] -->
 
-[PAUSE 2s] Six words, then six lines. Now read one encounter from its first
-peace to its last.
+[PAUSE 2s] Six words, then six lines. Now one encounter, from its first peace to
+its last.
 
 [PAUSE 2s] Every form has appeared before. The only new thing is holding all of
 them together without a romanized line underneath.
@@ -58,11 +58,13 @@ them together without a romanized line underneath.
 > شكرًا.
 > مع السلامة.
 
-[PAUSE 4s] Read the whole encounter once. Do not stop to translate a word; let
-each turn answer the turn before it.
+[PAUSE 4s]
+[YOU READ: the whole encounter once; do not stop to translate a word — let each turn answer the turn before it]
 
-[PAUSE 4s] Read it again. This time notice the hinge: **شاي أو حليب؟** One
-choice becomes two tiny questions, then a clear answer.
+[PAUSE 4s]
+[YOU READ: it again, and this time notice the hinge — **شاي أو حليب؟**]
+
+One choice becomes two tiny questions, then a clear answer.
 
 ## The passage, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[AR-SKILL-CONNECTED-READING, AR-FUNC-C38-HASANAN-01, AR-CONCEPT-SHUKRAN-21] -->

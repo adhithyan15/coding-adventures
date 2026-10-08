@@ -51,8 +51,8 @@ These English cues add no new Punjabi statement to memorise.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C146-QUAL146-01, PA-LEX-C146-QUAL146-02, PA-LEX-C146-QUAL146-03, PA-LEX-C146-QUAL146-04, PA-LEX-C146-QUAL146-05] -->
 
-Cover the earlier answers. [PAUSE 4s each] Say one old Punjabi word for each:
-**false**, **ripe**, **stale**, **true**, **unripe**.
+[YOU COVER: the earlier answers] [PAUSE 4s each] Say one old Punjabi word for
+each: **false**, **ripe**, **stale**, **true**, **unripe**.
 
 Check in that same order: **ਝੂਠਾ**, **ਪੱਕਾ**, **ਬੇਹਾ**, **ਸੱਚਾ**,
 **ਕੱਚਾ**. Reopen only a missed earlier quality word. These five distant

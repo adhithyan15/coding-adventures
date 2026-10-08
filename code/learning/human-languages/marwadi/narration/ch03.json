@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Haan Sa: A Respectful Yes, Sign by Sign",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:91af327455d53c92",
+  "sourceHash": "fnv1a64:af3a6bc71a60d72f",
   "lessons": [
     {
       "id": "MW-W03-ha",
@@ -371,7 +371,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d9c9e81024bde9d1",
+      "sourceHash": "fnv1a64:ec02332d64405625",
       "notice": null,
       "blocks": [
         {
@@ -426,7 +426,16 @@
             },
             {
               "kind": "speech",
-              "text": "Read: choose हां सा (hā(n) sā) from आभार, हां सा (hā(n) sā), राम."
+              "text": "Reading:"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "आभार, हां सा (hā(n) sā), राम, then choose हां सा (hā(n) sā)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **आभार · हां सा · राम**, then choose **हां सा**]"
             },
             {
               "kind": "prompt",
@@ -445,8 +454,17 @@
           "title": "Wrap-up recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the page",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the page]"
+            },
+            {
               "kind": "speech",
-              "text": "Close the page. Say हां सा (hā(n) sā)."
+              "text": "Say हां सा (hā(n) sā)."
             },
             {
               "kind": "prompt",
@@ -495,7 +513,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e381e197ddfed05c",
+      "sourceHash": "fnv1a64:144a2a4d8693b74c",
       "notice": null,
       "blocks": [
         {
@@ -539,7 +557,16 @@
             },
             {
               "kind": "speech",
-              "text": "Read: cover the English and explain हां सा (hā(n) sā)."
+              "text": "Reading:"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the English, then explain हां सा (hā(n) sā)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the English, then explain **हां सा**]"
             },
             {
               "kind": "prompt",

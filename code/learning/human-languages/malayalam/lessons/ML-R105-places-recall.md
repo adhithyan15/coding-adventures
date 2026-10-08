@@ -33,7 +33,7 @@ reviews_of: [ML-C105-raajyam, ML-C105-nagaram, ML-C105-thalasthaanam, ML-C80-uur
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C105-COUNTRY-01, ML-LEX-C105-CITY-01, ML-LEX-C105-CAPITAL-01] -->
 
-[PAUSE 3s] Close the lessons before this one. Say *country*, *city* and
+[PAUSE 3s] Leave the lessons before this one closed. Say *country*, *city* and
 *capital*.
 
 ## Grammar Lens: a scale, and one word that is not on it

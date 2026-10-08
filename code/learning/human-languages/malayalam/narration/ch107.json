@@ -4,7 +4,7 @@
   "chapter": 107,
   "title": "Medicine and Keeping Well",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:1961901334aee256",
+  "sourceHash": "fnv1a64:2a705f5fa119b4aa",
   "lessons": [
     {
       "id": "ML-C107-marunnu",
@@ -141,7 +141,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cb0aa1cb64c3e60b",
+      "sourceHash": "fnv1a64:fa3202d13b6416c9",
       "notice": null,
       "blocks": [
         {
@@ -239,7 +239,7 @@
             },
             {
               "kind": "speech",
-              "text": "It is the machine നമസ്കാരം showed you on day one: the chandrakkala strips the first consonant's inherent a, and the next consonant sets in behind it. There സ് met ക; here ത് meets സ. Read ചി-കി-ത്-സ slowly, then at speed."
+              "text": "It is the machine നമസ്കാരം showed you on day one: the chandrakkala strips the first consonant's inherent a, and the next consonant sets in behind it. There സ് met ക; here ത് meets സ. Say ചി-കി-ത്-സ slowly, then at speed."
             }
           ]
         },
@@ -576,7 +576,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cea321a1d66a3b99",
+      "sourceHash": "fnv1a64:91be3243a8fb8b79",
       "notice": null,
       "blocks": [
         {
@@ -592,7 +592,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say medicine, treatment and cleanliness."
+              "text": "Leave the lessons before this one closed. Say medicine, treatment and cleanliness."
             }
           ]
         },

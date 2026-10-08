@@ -43,7 +43,7 @@ Then say rain. [YOU WRITE: the word for rain]
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-CHURMA-01, MW-SCRIPT-CHURMA-01, MW-LEX-CHAAY-01, MW-SCRIPT-CHAAY-01] -->
 
-Hear both words in both orders, give each meaning, and read two cards.
+Hear both words in both orders and give each meaning. [YOU READ: two cards]
 [YOU WRITE: both from sound]
 
 ## Wrap-up Recall

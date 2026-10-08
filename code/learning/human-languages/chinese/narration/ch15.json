@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "A wider school map",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:627af77e413331cb",
+  "sourceHash": "fnv1a64:7d97dc92ae9f2d30",
   "lessons": [
     {
       "id": "ZH-C15-hear-zhong",
@@ -199,7 +199,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8bf4ff230008e6d",
+      "sourceHash": "fnv1a64:cccbd213b5307a25",
       "notice": null,
       "blocks": [
         {
@@ -238,8 +238,13 @@
               "text": "中 — zhōng — middle; centre."
             },
             {
-              "kind": "speech",
-              "text": "Read the character without pinyin, then hold its first tone level."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the character without pinyin, then hold its first tone level",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the character without pinyin, then hold its first tone level]"
             }
           ]
         },
@@ -479,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f42db7a24857afaa",
+      "sourceHash": "fnv1a64:9d3902e93756bd6e",
       "notice": null,
       "blocks": [
         {
@@ -506,7 +511,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear middle and middle school in mixed order. Say each and read its card."
+              "text": "Hear middle and middle school in mixed order. Say each."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "its card",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: its card]"
             },
             {
               "kind": "prompt",
@@ -649,7 +663,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d94ba680e4dee68",
+      "sourceHash": "fnv1a64:0853fa4ec5dbe40c",
       "notice": null,
       "blocks": [
         {
@@ -684,8 +698,13 @@
               "text": "中学生 — zhōngxuésheng — middle-school student."
             },
             {
-              "kind": "speech",
-              "text": "Read all three characters once without pinyin."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all three characters once without pinyin",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all three characters once without pinyin]"
             }
           ]
         },
@@ -933,7 +952,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f8a16d26c47abe3",
+      "sourceHash": "fnv1a64:696b2062d640c62b",
       "notice": null,
       "blocks": [
         {
@@ -948,8 +967,13 @@
               "source": "[PAUSE 10s]"
             },
             {
-              "kind": "speech",
-              "text": "Read 同 (tóng), then 学."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "同 (tóng), then 学",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 同, then 学]"
             }
           ]
         },
@@ -963,8 +987,17 @@
               "text": "同学 — tóngxué — classmate; schoolmate."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the pair without pinyin",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the pair without pinyin]"
+            },
+            {
               "kind": "speech",
-              "text": "Read the pair without pinyin. Both syllables rise."
+              "text": "Both syllables rise."
             }
           ]
         },
@@ -1028,7 +1061,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:419b9b606ea8689a",
+      "sourceHash": "fnv1a64:fe99e8a2c7f1db0c",
       "notice": null,
       "blocks": [
         {
@@ -1060,7 +1093,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear middle school, middle-school student, and classmate in mixed order. Say and read each."
+              "text": "Hear middle school, middle-school student, and classmate in mixed order. Say each."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each]"
             },
             {
               "kind": "prompt",
@@ -1302,7 +1344,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4934ed698503554c",
+      "sourceHash": "fnv1a64:7a672eb430e689ec",
       "notice": null,
       "blocks": [
         {
@@ -1326,8 +1368,13 @@
               "source": "[YOU WRITE: 中 and 同]"
             },
             {
-              "kind": "speech",
-              "text": "Then read 学."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "学",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 学]"
             }
           ]
         },
@@ -1338,7 +1385,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Shuffle four meaning cards: middle school, middle-school student, classmate, go to school. Say and read each."
+              "text": "Take four meanings in a shuffled order: middle school, middle-school student, classmate, go to school. Say each."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each]"
             },
             {
               "kind": "prompt",
@@ -1403,7 +1459,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0e7acf1e794da04",
+      "sourceHash": "fnv1a64:fc501dbc94bc43f2",
       "notice": null,
       "blocks": [
         {
@@ -1434,8 +1490,31 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Build two three-item rows without a model: primary / middle / university; then primary-school / middle-school / university students. Read both rows aloud. Add 同学 (tóngxué) and 上学 (shàngxué) from meaning cards."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "two three-item rows without a model — primary / middle / university; then primary-school / middle-school / university students",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: two three-item rows without a model — primary / middle / university; then primary-school / middle-school / university students]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "both rows aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: both rows aloud]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "同学 (tóngxué) and 上学 (shàngxué) onto the rows, from their English meanings",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **同学** and **上学** onto the rows, from their English meanings]"
             }
           ]
         },
@@ -1486,7 +1565,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2acb90c23645d40",
+      "sourceHash": "fnv1a64:cfa49bf97b0cb36c",
       "notice": null,
       "blocks": [
         {
@@ -1522,11 +1601,20 @@
             },
             {
               "kind": "speech",
-              "text": "Speaking: produce all four from meaning cards, with tones audible."
+              "text": "Speaking: produce all four from their English meanings, with tones audible."
             },
             {
               "kind": "speech",
-              "text": "Reading: read all four character cards without pinyin."
+              "text": "Reading:"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all four character cards without pinyin",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all four character cards without pinyin]"
             },
             {
               "kind": "speech",

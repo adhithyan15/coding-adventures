@@ -4,7 +4,7 @@
   "chapter": 109,
   "title": "Bridge, Park, Temple, Library, Bank",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9f31d0ea4d9a3e57",
+  "sourceHash": "fnv1a64:1c202400b08d6e4b",
   "lessons": [
     {
       "id": "KA-C109-setuve",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:26d6a32f678bf198",
+      "sourceHash": "fnv1a64:07c2f32ba2978096",
       "notice": null,
       "blocks": [
         {
@@ -537,7 +537,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say the ordinals past eight: ಒಂಬತ್ತನೆಯ, ಹತ್ತನೆಯ, ಹನ್ನೊಂದನೆಯ. Then the spoken ಮೊದಲನೇ, and read the sign form ೧ನೇ."
+              "text": "Say the ordinals past eight: ಒಂಬತ್ತನೆಯ, ಹತ್ತನೆಯ, ಹನ್ನೊಂದನೆಯ. Then the spoken ಮೊದಲನೇ."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the sign form ೧ನೇ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the sign form **೧ನೇ**]"
             }
           ]
         },

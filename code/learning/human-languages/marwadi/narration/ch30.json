@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Bring It Over: The Food Counter's Own Word",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:27dbf9afe13537bf",
+  "sourceHash": "fnv1a64:dd96ce1f0ac50404",
   "lessons": [
     {
       "id": "MW-C25-hear-lavo",
@@ -305,7 +305,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3eff19a78ff17abb",
+      "sourceHash": "fnv1a64:00b9d3f32bb6a383",
       "notice": null,
       "blocks": [
         {
@@ -364,8 +364,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read the line once and cover it for ten seconds."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the line once, then cover it for ten seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the line once, then cover it for ten seconds]"
             },
             {
               "kind": "prompt",
@@ -422,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce0a5a6bd4c5a27e",
+      "sourceHash": "fnv1a64:14c4c35ab85655c4",
       "notice": null,
       "blocks": [
         {
@@ -458,7 +463,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Five asking words are now in play. Hear them shuffled and give each meaning. Read five cards: दिखावो, करो, लो, दो, लावो (lāvo)."
+              "text": "Five asking words are now in play. Hear them shuffled and give each meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "five cards — दिखावो, करो, लो, दो, लावो (lāvo)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: five cards — **दिखावो**, **करो**, **लो**, **दो**, **लावो**]"
             },
             {
               "kind": "prompt",
@@ -521,7 +535,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c113e4d6e11e48b2",
+      "sourceHash": "fnv1a64:b88ceda8596d917a",
       "notice": null,
       "blocks": [
         {
@@ -568,8 +582,13 @@
               "text": "Produce all five from their jobs alone, without the sounds."
             },
             {
-              "kind": "speech",
-              "text": "Read five cards and match each to one line you already know."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "five cards, then match each to one line you already know",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: five cards, then match each to one line you already know]"
             },
             {
               "kind": "prompt",

@@ -68,7 +68,7 @@ slots, and not one of them changes shape.
 
 **Speak.** Answer, then hand it back with 你呢.
 
-**Read.** 你是学生吗 — 对 — 你呢
+[YOU READ: 你是学生吗 — 对 — 你呢]
 
 [YOU WRITE: 呢 — 口 first; 对 — 又 first, dot last]
 

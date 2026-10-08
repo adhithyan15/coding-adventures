@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "Reading — Words, Lines, and a First Encounter",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:1049eca4d945941c",
+  "sourceHash": "fnv1a64:f6e75a39646cb5f2",
   "lessons": [
     {
       "id": "AR-C42-words",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d77f9119b1aa251e",
+      "sourceHash": "fnv1a64:9d85d33e1e2720b8",
       "notice": null,
       "blocks": [
         {
@@ -65,8 +65,13 @@
               "source": "[PAUSE 4s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, right to left, without translating."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six words down once, right to left, without translating",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six words down once, right to left, without translating]"
             },
             {
               "kind": "pause",
@@ -75,8 +80,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "them again",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: them again]"
+            },
+            {
               "kind": "speech",
-              "text": "Read again. The first and third words stretch an ا into a long sound, while شكرًا and حسنًا share the little ـًا ending."
+              "text": "The first and third words stretch an ا into a long sound, while شكرًا and حسنًا share the little ـًا ending."
             }
           ]
         },
@@ -197,7 +211,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c608507e60bbc77",
+      "sourceHash": "fnv1a64:26eccc32b1f86cb3",
       "notice": null,
       "blocks": [
         {
@@ -223,7 +237,16 @@
             },
             {
               "kind": "speech",
-              "text": "You have said every line. Read the Arabic first; let meaning arrive before any romanization does."
+              "text": "You have said every line."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the Arabic first; let meaning arrive before any romanization does",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the Arabic first; let meaning arrive before any romanization does]"
             }
           ]
         },
@@ -243,8 +266,13 @@
               "source": "[PAUSE 4s]"
             },
             {
-              "kind": "speech",
-              "text": "Read all six lines once without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all six lines once without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all six lines once without stopping]"
             },
             {
               "kind": "pause",
@@ -253,8 +281,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "them again",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: them again]"
+            },
+            {
               "kind": "speech",
-              "text": "Read again. The question mark tells you where a voice asks; the full stop tells you where it answers. Arabic puts its question mark the other way round — ؟ — because the line itself runs the other way."
+              "text": "The question mark tells you where a voice asks; the full stop tells you where it answers. Arabic puts its question mark the other way round — ؟ — because the line itself runs the other way."
             }
           ]
         },
@@ -375,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1df1a2fc2cff1db1",
+      "sourceHash": "fnv1a64:3d38b8e72bd8e831",
       "notice": null,
       "blocks": [
         {
@@ -391,7 +428,7 @@
             },
             {
               "kind": "speech",
-              "text": "Six words, then six lines. Now read one encounter from its first peace to its last."
+              "text": "Six words, then six lines. Now one encounter, from its first peace to its last."
             },
             {
               "kind": "pause",
@@ -421,8 +458,13 @@
               "source": "[PAUSE 4s]"
             },
             {
-              "kind": "speech",
-              "text": "Read the whole encounter once. Do not stop to translate a word; let each turn answer the turn before it."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the whole encounter once; do not stop to translate a word — let each turn answer the turn before it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the whole encounter once; do not stop to translate a word — let each turn answer the turn before it]"
             },
             {
               "kind": "pause",
@@ -431,8 +473,17 @@
               "source": "[PAUSE 4s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it again, and this time notice the hinge — شاي أو حليب؟",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it again, and this time notice the hinge — **شاي أو حليب؟**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read it again. This time notice the hinge: شاي أو حليب؟ One choice becomes two tiny questions, then a clear answer."
+              "text": "One choice becomes two tiny questions, then a clear answer."
             }
           ]
         },

@@ -45,7 +45,7 @@ reviews_of: [JA-C137-ippai, JA-W137-pa, JA-C137-shinpai, JA-C137-enpitsu, JA-W13
 ## Guided Practice — read the seven words
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-IPPAI, JA-SCRIPT-PA-01, JA-LEX-C137-SHINPAI, JA-LEX-ANCHOR-ENPITSU, JA-SCRIPT-PI-01, JA-LEX-C137-IPPIKI, JA-LEX-ANCHOR-KIPPU, JA-SCRIPT-PU-01, JA-LEX-C137-TENPURA, JA-LEX-ANCHOR-PERAPERA, JA-SCRIPT-PE-01] -->
 
-[PAUSE 2s each] Read each one aloud and say what it means.
+[PAUSE 2s each] For each one below, say what it means.
 
 - [YOU READ: **いっぱい** — full; a lot]
 - [YOU READ: **しんぱい** — worry]

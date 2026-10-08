@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Give your name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:eb0ccf413091b9f6",
+  "sourceHash": "fnv1a64:eb66e4f530ec13d2",
   "lessons": [
     {
       "id": "UR-C02-mera-naam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30c8da2e4547e041",
+      "sourceHash": "fnv1a64:fddbc321ff131b8b",
       "notice": null,
       "blocks": [
         {
@@ -45,8 +45,13 @@
           "title": "The exchange",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read the line right to left, but keep its spoken order:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the line right to left, but keep its spoken order",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the line right to left, but keep its spoken order]"
             },
             {
               "kind": "speech",

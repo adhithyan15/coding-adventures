@@ -38,7 +38,8 @@ reviews_of: [SA-C66-health]
 
 [PAUSE 2s] Before the new one: say the Sanskrit for an illness, then the Sanskrit for health.
 
-[PAUSE 1s] Read a few lines aloud as a passage, not as a list: let each line lead into the next.
+[PAUSE 1s]
+[YOU READ: a few lines aloud as a passage, not as a list — let each line lead into the next]
 
 ## You'll want to know: निद्रा
 <!-- hl-knowledge: introduces=[SA-LEX-C67-NEEDS-01]; assesses=[] -->

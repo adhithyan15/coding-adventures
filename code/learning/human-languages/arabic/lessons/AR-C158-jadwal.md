@@ -41,7 +41,11 @@ reviews_of: [AR-C157-nawa]
 ## You'll want to know: جدول
 <!-- hl-knowledge: introduces=[AR-LEX-C158-QIRAA158-01]; assesses=[] -->
 
-**جدول** — *jadwal* — "a timetable, a table". Read the board: **موعد الحافلة: الساعة الثامنة صباحا** — *mawʿid al-ḥāfila: as-sāʿa ath-thāmina ṣabāḥan* — "Bus time: 8 a.m." Be there before eight.
+**جدول** — *jadwal* — "a timetable, a table".
+
+[YOU READ: the board — **موعد الحافلة: الساعة الثامنة صباحا** — *mawʿid al-ḥāfila: as-sāʿa ath-thāmina ṣabāḥan* — "Bus time: 8 a.m."]
+
+Be there before eight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

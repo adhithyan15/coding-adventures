@@ -4,7 +4,7 @@
   "chapter": 139,
   "title": "Opening Hours, a Notice, the Rent, a Receipt, an Appointment",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:dfd3776cfe6b1960",
+  "sourceHash": "fnv1a64:4f61b7f95a59e068",
   "lessons": [
     {
       "id": "IT-C139-lorario",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd1f763759ec7cd1",
+      "sourceHash": "fnv1a64:cce8bfc9e45517c1",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "l'orario — \"opening hours, a timetable\". Read the door: Orario: lunedì – venerdì, 9 – 18. Open on weekdays from nine to six: not on sabato."
+              "text": "l'orario — \"opening hours, a timetable\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the door — Orario: lunedì – venerdì, 9 – 18.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the door — **Orario: lunedì – venerdì, 9 – 18.**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Open on weekdays from nine to six: not on sabato."
             }
           ]
         },
@@ -142,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be7d3e77cf7fa8d8",
+      "sourceHash": "fnv1a64:d530058a3067c604",
       "notice": null,
       "blocks": [
         {
@@ -169,7 +182,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "l'avviso — \"a notice\". Read the notice: Oggi il negozio è chiuso. The shop is closed today, so come back another day."
+              "text": "l'avviso — \"a notice\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the notice — Oggi il negozio è chiuso.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the notice — **Oggi il negozio è chiuso.**]"
+            },
+            {
+              "kind": "speech",
+              "text": "The shop is closed today, so come back another day."
             }
           ]
         },
@@ -265,7 +291,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e8ff4b936dbd68c",
+      "sourceHash": "fnv1a64:f1a3df2b46265aa2",
       "notice": null,
       "blocks": [
         {
@@ -292,7 +318,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "l'affitto — \"the rent\". Read the advert: Camera libera. Affitto: 400 al mese. A room is free, at 400 a month."
+              "text": "l'affitto — \"the rent\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the advert — Camera libera. Affitto: 400 al mese.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the advert — **Camera libera. Affitto: 400 al mese.**]"
+            },
+            {
+              "kind": "speech",
+              "text": "A room is free, at 400 a month."
             }
           ]
         },
@@ -388,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84c8180b6e077f0e",
+      "sourceHash": "fnv1a64:eaa86b156df91468",
       "notice": null,
       "blocks": [
         {
@@ -415,7 +454,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "la ricevuta — \"a receipt\". Read the receipt: Ricevuta: affitto, 400. The rent is paid: keep it."
+              "text": "la ricevuta — \"a receipt\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the receipt — Ricevuta: affitto, 400.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the receipt — **Ricevuta: affitto, 400.**]"
+            },
+            {
+              "kind": "speech",
+              "text": "The rent is paid: keep it."
             }
           ]
         },
@@ -511,7 +563,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:569fa63931605470",
+      "sourceHash": "fnv1a64:0c83fab64148a962",
       "notice": null,
       "blocks": [
         {
@@ -538,7 +590,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "l'appuntamento — \"an appointment\". Read the message: Appuntamento: lunedì, ore 10. Your appointment is on Monday at ten: be there before ten."
+              "text": "l'appuntamento — \"an appointment\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the message — Appuntamento: lunedì, ore 10.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the message — **Appuntamento: lunedì, ore 10.**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Your appointment is on Monday at ten: be there before ten."
             }
           ]
         },

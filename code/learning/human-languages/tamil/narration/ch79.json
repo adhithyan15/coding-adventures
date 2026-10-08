@@ -4,7 +4,7 @@
   "chapter": 79,
   "title": "When",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7d3c3d35f12acf0d",
+  "sourceHash": "fnv1a64:a5232ae49b2bdbf2",
   "lessons": [
     {
       "id": "TA-C79-when-question",
@@ -528,7 +528,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f05241001689f12c",
+      "sourceHash": "fnv1a64:d03da049ac1b3448",
       "notice": null,
       "blocks": [
         {
@@ -543,8 +543,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "எப்போது (eppōdu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **எப்போது**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read எப்போது (eppōdu). Then say then, at that time."
+              "text": "Then say then, at that time."
             }
           ]
         },

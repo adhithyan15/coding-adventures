@@ -38,7 +38,8 @@ reviews_of: [MR-C128-rugnalay]
 
 [PAUSE 2s] Before the new one: say the Marathi for an airport, then the Marathi for a hospital.
 
-[PAUSE 3s] Read the three signs aloud as one line: **उद्यान, रुग्णालय, विमानतळ**.
+[PAUSE 3s]
+[YOU READ: the three signs aloud as one line — **उद्यान, रुग्णालय, विमानतळ**]
 
 ## You'll want to know: ग्रंथालय
 <!-- hl-knowledge: introduces=[MR-LEX-C129-LOC129-01]; assesses=[] -->

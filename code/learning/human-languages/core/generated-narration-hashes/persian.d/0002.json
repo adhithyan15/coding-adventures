@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 2,
-  "sourceHash": "fnv1a64:bbcd6155ac118e2a",
+  "sourceHash": "fnv1a64:46f5cbf37c0d1fe8",
   "lessonIds": [
     "FA-C02-esm-e-man"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "persian/narration/ch02.txt",
   "json": "persian/narration/ch02.json",
-  "textHash": "fnv1a64:7ec4ca87d5f990d6",
-  "jsonHash": "fnv1a64:1631a71577eeae74",
+  "textHash": "fnv1a64:8222ee6b7b1f2ce6",
+  "jsonHash": "fnv1a64:382b32387f32aa88",
   "findings": []
 }

@@ -33,8 +33,8 @@ reviews_of: [ML-C92-bhakshanam, ML-C92-hottal, ML-C92-bill]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C92-FOOD-01, ML-LEX-C92-EATERY-01] -->
 
-[PAUSE 3s] Close the lessons before this one. Say *food*, then say the place
-that serves it.
+[PAUSE 3s] Leave the lessons before this one closed. Say *food*, then say the
+place that serves it.
 
 ## The exchange — the shape of a meal out
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C92-EATERY-01, ML-LEX-C92-FOOD-01, ML-LEX-C92-BILL-01, ML-CONCEPT-C91-PRICE-QUESTION-01, ML-CONCEPT-C05-POSTPOSITION-IL-01] -->

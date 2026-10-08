@@ -4,7 +4,7 @@
   "chapter": 72,
   "title": "The Thing Said",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:afbd4ea6e1e7e2b9",
+  "sourceHash": "fnv1a64:fbccfb2b719a2bcd",
   "lessons": [
     {
       "id": "ML-C72-ennu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e546fe4ef92ccd98",
+      "sourceHash": "fnv1a64:fbeeba451a632a36",
       "notice": null,
       "blocks": [
         {
@@ -93,7 +93,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read the three rows in that order and you have the sentence. The quoted part comes first and the saying comes last, which is the opposite of English and the same order Malayalam uses everywhere else — the verb at the end."
+              "text": "Take the three rows in that order and you have the sentence. The quoted part comes first and the saying comes last, which is the opposite of English and the same order Malayalam uses everywhere else — the verb at the end."
             },
             {
               "kind": "speech",
@@ -331,7 +331,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5663f98cf7751ff3",
+      "sourceHash": "fnv1a64:45f29437c9e60517",
       "notice": null,
       "blocks": [
         {
@@ -347,7 +347,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say I say in Malayalam, and say which three places in this book used that verb before anybody taught it."
+              "text": "Leave the lessons before this one closed. Say I say in Malayalam, and say which three places in this book used that verb before anybody taught it."
             }
           ]
         },

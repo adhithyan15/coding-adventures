@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 134,
-  "sourceHash": "fnv1a64:d1886b5c55e4c16a",
+  "sourceHash": "fnv1a64:bfe937d163818320",
   "lessonIds": [
     "AR-C134-daw",
     "AR-C134-zill",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch134.txt",
   "json": "arabic/narration/ch134.json",
-  "textHash": "fnv1a64:b3236a7df1902581",
-  "jsonHash": "fnv1a64:65ece71590e8d372",
+  "textHash": "fnv1a64:e4d2ae2be2b192a5",
+  "jsonHash": "fnv1a64:30f0ca704b39d259",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 130,
-  "sourceHash": "fnv1a64:4dbe7c854bbfcdea",
+  "sourceHash": "fnv1a64:895c46429da5a032",
   "lessonIds": [
     "FA-C130-salem",
     "FA-C130-dorosht",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch130.txt",
   "json": "persian/narration/ch130.json",
-  "textHash": "fnv1a64:64c9e3e1f6f7a150",
-  "jsonHash": "fnv1a64:a17b9e56d65f675b",
+  "textHash": "fnv1a64:b89e268b0582c348",
+  "jsonHash": "fnv1a64:8069516623c2d606",
   "findings": []
 }

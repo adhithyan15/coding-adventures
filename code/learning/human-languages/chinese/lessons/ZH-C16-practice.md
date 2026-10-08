@@ -42,13 +42,13 @@ Keep the four checks separate. Repair one missed skill, not the whole set.
 <!-- hl-writing-stage: dictation-transcription -->
 
 1. **Listening:** hear the three words in mixed order and choose each meaning.
-2. **Speaking:** produce all three from meaning cards, with tones audible.
-3. **Reading:** read **字, 汉语, 汉字** cold and give each meaning.
+2. **Speaking:** produce all three from their English meanings, with tones audible.
+3. **Reading:** [YOU READ: **字, 汉语, 汉字** cold, then give each meaning]
 4. **Writing:** hear **Chinese character** and **Chinese language**.
    [YOU WRITE: both without a model]
 
-Pass each skill separately. Check the 字 or 语 ending only after both written
-words are complete.
+Pass each skill separately.
+[YOU CHECK: the 字 or 语 ending only after both written words are complete]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-PERFORMANCE-LANGUAGE-IDENTITY-THREE-FOUR-SKILL-01] -->

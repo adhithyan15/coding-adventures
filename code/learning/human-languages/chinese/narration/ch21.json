@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Ten Words, Ninety-Nine Numbers",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:c603408dcfe2aa50",
+  "sourceHash": "fnv1a64:1ae8802e1c1172b0",
   "lessons": [
     {
       "id": "ZH-C21-shiyi",
@@ -731,7 +731,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d9ea663138d75b7",
+      "sourceHash": "fnv1a64:97c099e1072a64ad",
       "notice": null,
       "blocks": [
         {
@@ -769,8 +769,13 @@
               "text": "Say yìbǎi, and say what happens to 一 in front of it."
             },
             {
-              "kind": "speech",
-              "text": "Read 8, 15, 30, 99 and 100 off a page and say each aloud."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "8, 15, 30, 99 and 100 off a page, then say each aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **8**, **15**, **30**, **99** and **100** off a page, then say each aloud]"
             },
             {
               "kind": "prompt",
@@ -841,7 +846,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8909d921ce4b6be",
+      "sourceHash": "fnv1a64:fdf66ee9840e24da",
       "notice": null,
       "blocks": [
         {
@@ -915,8 +920,13 @@
               "text": "Build six numbers between eleven and ninety-nine from the ten words."
             },
             {
-              "kind": "speech",
-              "text": "Read a price in digits and say it aloud in words."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "a price in digits, then say it aloud in words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: a price in digits, then say it aloud in words]"
             },
             {
               "kind": "speech",

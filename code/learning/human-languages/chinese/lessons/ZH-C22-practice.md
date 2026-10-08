@@ -68,7 +68,7 @@ is a join between two things the book had already given you and never let meet.
 
 **Speak.** Say what you are, and ask the same question back with 吗.
 
-**Read.** 我是中国人 — 你是中国人吗
+[YOU READ: 我是中国人 — 你是中国人吗]
 
 [YOU WRITE: 中国人 — every stroke of it is one you have written before]
 

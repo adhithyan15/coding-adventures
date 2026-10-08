@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 18,
-  "sourceHash": "fnv1a64:45cb810db4b8b39a",
+  "sourceHash": "fnv1a64:edc85393a83d5a7d",
   "lessonIds": [
     "PA-W04-ra",
     "PA-W04-independent-i",
@@ -15,7 +15,7 @@
   "drivablePrefix": 0,
   "text": "punjabi/narration/ch18.txt",
   "json": "punjabi/narration/ch18.json",
-  "textHash": "fnv1a64:b8f8842b4604a65d",
-  "jsonHash": "fnv1a64:e730c885f00536fc",
+  "textHash": "fnv1a64:1e98e20da228714b",
+  "jsonHash": "fnv1a64:689bf0a2a4b0806b",
   "findings": []
 }

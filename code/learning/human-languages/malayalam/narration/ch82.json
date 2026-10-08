@@ -4,7 +4,7 @@
   "chapter": 82,
   "title": "Opening A Conversation",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:70011962911e78d8",
+  "sourceHash": "fnv1a64:8f21bb9213352c70",
   "lessons": [
     {
       "id": "ML-C82-chettaa",
@@ -479,7 +479,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa442b8c80731185",
+      "sourceHash": "fnv1a64:e18754364f9c2a2f",
       "notice": null,
       "blocks": [
         {
@@ -495,7 +495,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Call out to a man you do not know, then to a woman you do not know."
+              "text": "Leave the lessons before this one closed. Call out to a man you do not know, then to a woman you do not know."
             }
           ]
         },

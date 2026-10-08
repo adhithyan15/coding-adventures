@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 84,
-  "sourceHash": "fnv1a64:e85f6f9bd0cc76aa",
+  "sourceHash": "fnv1a64:12e32e9ee20fae68",
   "lessonIds": [
     "TA-C84-words",
     "TA-C84-lines",
@@ -15,7 +15,7 @@
   "drivablePrefix": 3,
   "text": "tamil/narration/ch84.txt",
   "json": "tamil/narration/ch84.json",
-  "textHash": "fnv1a64:306eb90db38b2262",
-  "jsonHash": "fnv1a64:89c319e95028a872",
+  "textHash": "fnv1a64:81ae52dc0cc86b7a",
+  "jsonHash": "fnv1a64:671db4e5f68d1bd3",
   "findings": []
 }

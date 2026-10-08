@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Saying and Seeing",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b801e7640e9436c0",
+  "sourceHash": "fnv1a64:ac8e8bbdbe8f9043",
   "lessons": [
     {
       "id": "AR-C29-qala",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:396e669ee87451cc",
+      "sourceHash": "fnv1a64:182855c8350c36ca",
       "notice": null,
       "blocks": [
         {
@@ -57,8 +57,17 @@
               "text": "ا (alif) and ل (lām) are yours already."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "قال (qāla) right to left — qāf, long ā, lām",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **قال** right to left — *qāf*, long *ā*, *lām*]"
+            },
+            {
               "kind": "speech",
-              "text": "Read قال (qāla) right to left: qāf, long ā, lām. Be honest about the sound: in most everyday spoken Arabic ق is not said that way at all — in Cairo and Damascus it becomes a glottal stop, and across much of the Gulf a hard g. The uvular version is the formal one."
+              "text": "Be honest about the sound: in most everyday spoken Arabic ق is not said that way at all — in Cairo and Damascus it becomes a glottal stop, and across much of the Gulf a hard g. The uvular version is the formal one."
             }
           ]
         },

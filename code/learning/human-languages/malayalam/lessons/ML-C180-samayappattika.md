@@ -41,7 +41,11 @@ reviews_of: [ML-C179-pratikshikkuka]
 ## You'll want to know: സമയപ്പട്ടിക
 <!-- hl-knowledge: introduces=[ML-LEX-C180-VAYANA180-01]; assesses=[] -->
 
-**സമയപ്പട്ടിക** — *samayappaṭṭika* — "a timetable". Read the board: **ബസ്: രാവിലെ എട്ട് മണി** — *basŭ: rāvile eṭṭŭ maṇi* — "Bus: 8 a.m." The bus leaves at eight, so be there before eight.
+**സമയപ്പട്ടിക** — *samayappaṭṭika* — "a timetable".
+
+[YOU READ: the board — **ബസ്: രാവിലെ എട്ട് മണി** — *basŭ: rāvile eṭṭŭ maṇi* — "Bus: 8 a.m."]
+
+The bus leaves at eight, so be there before eight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

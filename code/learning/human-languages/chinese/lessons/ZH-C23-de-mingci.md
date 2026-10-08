@@ -56,7 +56,7 @@ that clause describes the noun that follows.
 > **看书的学生** — the student **who reads books**
 > **我看的书** *wǒ kàn de shū* — the book **I read**
 
-**Read the Mandarin order against the English.** English says *the person who
+**Set the Mandarin order against the English.** English says *the person who
 reads books*: noun first, description trailing after it. Mandarin says
 *reads-books 的 person*: **description first, noun last, always.**
 

@@ -4,7 +4,7 @@
   "chapter": 80,
   "title": "Where You Are From",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:c2c3a65cb165c978",
+  "sourceHash": "fnv1a64:fa2c86db8962df09",
   "lessons": [
     {
       "id": "ML-C80-uuru",
@@ -504,7 +504,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bbe06891a87b6293",
+      "sourceHash": "fnv1a64:c9f1c9e99d31307b",
       "notice": null,
       "blocks": [
         {
@@ -520,7 +520,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say the floating word for a home region, and then say the word that pins its small end down."
+              "text": "Leave the lessons before this one closed. Say the floating word for a home region, and then say the word that pins its small end down."
             }
           ]
         },

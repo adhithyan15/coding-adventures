@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "Reading — Words, Lines, and a First Passage",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:b9a4d25e28f8090a",
+  "sourceHash": "fnv1a64:793e5152f189db54",
   "lessons": [
     {
       "id": "LA-C58-labels",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b5dcd2bff51e1914",
+      "sourceHash": "fnv1a64:cd73670b90b4424e",
       "notice": null,
       "blocks": [
         {
@@ -65,8 +65,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down the list once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "down the list once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: down the list once, without stopping]"
             },
             {
               "kind": "pause",
@@ -75,8 +80,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Again, and notice that five of the six end in -us, -a or -er, and that you know what that ending means."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the list again, and notice that five of the six end in -us, -a or -er, and that you know what that ending means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the list again, and notice that five of the six end in **-us**, **-a** or **-er**, and that you know what that ending means]"
             }
           ]
         },
@@ -204,7 +214,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5dfe829f195afdd5",
+      "sourceHash": "fnv1a64:7bbd9dfa51e65543",
       "notice": null,
       "blocks": [
         {
@@ -250,8 +260,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six lines down once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six lines down once, without stopping]"
             },
             {
               "kind": "pause",
@@ -260,8 +275,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Again — and notice that two of the six are a single word, and that both of them are things you say to somebody."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "them again, and notice that two of the six are a single word, and that both of them are things you say to somebody",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: them again, and notice that two of the six are a single word, and that both of them are things you say to somebody]"
             }
           ]
         },
@@ -391,7 +411,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1e6371e84df1fe7",
+      "sourceHash": "fnv1a64:d4d3259f5b09e59f",
       "notice": null,
       "blocks": [
         {
@@ -437,8 +457,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read it once without stopping. Do not translate as you go — let the sentences arrive."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage once without stopping; do not translate as you go — let the sentences arrive",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]"
             },
             {
               "kind": "pause",
@@ -447,8 +472,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Now read it again, and look at where est falls."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it again, and notice where est falls",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it again, and notice where **est** falls]"
             }
           ]
         },

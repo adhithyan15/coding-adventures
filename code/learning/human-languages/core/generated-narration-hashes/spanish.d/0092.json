@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 92,
-  "sourceHash": "fnv1a64:3a2810dd0d64ab32",
+  "sourceHash": "fnv1a64:c007f088f03d5d0f",
   "lessonIds": [
     "ES-C45-sintesis-sin-repetir"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch92.txt",
   "json": "spanish/narration/ch92.json",
-  "textHash": "fnv1a64:100b0bb65e7a55cb",
-  "jsonHash": "fnv1a64:3d123af7001c0b1b",
+  "textHash": "fnv1a64:05e8045273427a89",
+  "jsonHash": "fnv1a64:2e9dd106c6661fff",
   "findings": []
 }

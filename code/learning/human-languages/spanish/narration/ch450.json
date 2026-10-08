@@ -4,7 +4,7 @@
   "chapter": 450,
   "title": "El césped y el patio",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:2c5a570e73fa01cd",
+  "sourceHash": "fnv1a64:b897d3f76a866c34",
   "lessons": [
     {
       "id": "ES-C450-patio",
@@ -830,7 +830,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27a9e358b2d98763",
+      "sourceHash": "fnv1a64:76accb56b6129171",
       "notice": null,
       "blocks": [
         {
@@ -846,7 +846,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all five: the courtyard, grass, the stone, the lawn, the training session."
+              "text": "Leave the lessons before this one closed. Say all five: the courtyard, grass, the stone, the lawn, the training session."
             }
           ]
         },
@@ -979,7 +979,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a40bb66622b27d69",
+      "sourceHash": "fnv1a64:372dccb7df7429a5",
       "notice": null,
       "blocks": [
         {
@@ -1006,7 +1006,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "A notice on the gate of the sports centre. Read it, then answer."
+              "text": "A notice on the gate of the sports centre."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it, then answer]"
             },
             {
               "kind": "speech",
@@ -1095,7 +1104,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now your turn, out loud and then in writing. Four lines for a gate notice: say the pitch is closed, say where training moves to, ask people to keep off the grass at the side, and say there are stones on the path."
+              "text": "Now your turn, out loud. Four lines for a gate notice: say the pitch is closed, say where training moves to, ask people to keep off the grass at the side, and say there are stones on the path."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same four lines",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same four lines]"
             },
             {
               "kind": "speech",

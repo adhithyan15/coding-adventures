@@ -38,7 +38,7 @@ read uses both, and it never once says *you*.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C442-GESTION-01, ES-LEX-C442-GESTION-03, ES-LEX-C442-GESTION-05] -->
 
-Read it once straight through, then answer.
+[YOU READ: it once straight through, then answer]
 
 **en la web de la administración**
 
@@ -72,9 +72,11 @@ exactly the same grammar. One register, three settings.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C442-GESTION-01, ES-LEX-C442-GESTION-02, ES-LEX-C442-GESTION-03, ES-LEX-C442-GESTION-04, ES-LEX-C442-GESTION-05] -->
 
-[PAUSE 3s] Now your turn, out loud and then in writing. Five sentences: say you
-want to make an appointment, say what the screen asked for, say what papers you
-took, say the meeting was moved, and say your parcel has not come.
+[PAUSE 3s] Now your turn, out loud. Five sentences: say you want to make an
+appointment, say what the screen asked for, say what papers you took, say the
+meeting was moved, and say your parcel has not come.
+
+[YOU WRITE: the same five sentences]
 
 Then say the first one again the way the website would say it, with no *you* in
 it at all.

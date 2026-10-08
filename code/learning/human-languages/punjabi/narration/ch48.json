@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "Second Pass --- What Was Met Once",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:1d55681371248dad",
+  "sourceHash": "fnv1a64:b7b86e0c149f051a",
   "lessons": [
     {
       "id": "PA-R48-forms-name-and-language",
@@ -247,7 +247,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:efecf64a53eab365",
+      "sourceHash": "fnv1a64:aab7945ec87ed7cd",
       "notice": null,
       "blocks": [
         {
@@ -327,7 +327,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read across rather than down and the ladder stops being about forms at all. It is about what is in the room when you produce something: a page that shows you the answer, a page that showed you and stopped, and a page that never did."
+              "text": "Take it across rather than down and the ladder stops being about forms at all. It is about what is in the room when you produce something: a page that shows you the answer, a page that showed you and stopped, and a page that never did."
             },
             {
               "kind": "speech",

@@ -37,7 +37,8 @@ reviews_of: [LA-C119-area]
 
 [PAUSE 2s] Before the new one: say the Latin for a tomb, then the Latin for an open space.
 
-[PAUSE 3s] Read the three signs aloud, the way a traveller reads them: *theātrum*, *balneum*, *forum*.
+[PAUSE 3s]
+[YOU READ: the three signs aloud, the way a traveller reads them — *theātrum*, *balneum*, *forum*]
 
 ## You'll want to know: mīliārium, mīliāriī
 <!-- hl-knowledge: introduces=[LA-LEX-C119-LOC119-02]; assesses=[] -->

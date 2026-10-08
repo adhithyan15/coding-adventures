@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 140,
-  "sourceHash": "fnv1a64:1a056bf4f56e2f34",
+  "sourceHash": "fnv1a64:0330a0e4a6ee1aab",
   "lessonIds": [
     "SA-C140-sucana",
     "SA-C140-samayasarani",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "sanskrit/narration/ch140.txt",
   "json": "sanskrit/narration/ch140.json",
-  "textHash": "fnv1a64:0a35d7cea15f8b28",
-  "jsonHash": "fnv1a64:2073046e407db1d2",
+  "textHash": "fnv1a64:ba2fd2599df62f69",
+  "jsonHash": "fnv1a64:ed1a0afa4299f02f",
   "findings": []
 }

@@ -41,7 +41,7 @@ reviews_of: [ZH-C13-hear-xue, ZH-W13-xue]
 
 > **学** — *xué* — **study; learn**
 
-Read it without pinyin, then give the syllable a clear rise.
+[YOU READ: it without pinyin, then give the syllable a clear rise]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XUE-01, ZH-SCRIPT-XUE-01] -->

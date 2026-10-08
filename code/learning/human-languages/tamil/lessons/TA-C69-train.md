@@ -33,7 +33,7 @@ reviews_of: [TA-W25-read-vandi]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-VANDI-01] -->
 
-[PAUSE 2s] Before the new one: read **வண்டி**, and say what it means.
+[PAUSE 2s] Before the new one: [YOU READ: **வண்டி**, then say what it means]
 
 ## You'll want to know: ரயில்
 <!-- hl-knowledge: introduces=[TA-LEX-C69-GOING-03]; assesses=[] -->

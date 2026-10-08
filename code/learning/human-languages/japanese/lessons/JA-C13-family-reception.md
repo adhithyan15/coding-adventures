@@ -46,7 +46,9 @@ Use sound only. Score listening before revealing any written word.
 <!-- hl-knowledge: introduces=[]; assesses=[JA-PERFORMANCE-FAMILY-RECEPTION-01, JA-LEX-CHICHI, JA-LEX-HAHA, JA-LEX-ANI, JA-LEX-ANE, JA-LEX-OTOUTO, JA-LEX-IMOUTO, JA-LEX-OTTO, JA-LEX-TSUMA, JA-LEX-KODOMO] -->
 <!-- hl-activity: {"id":"JA-C13-family-reception-reading","kind":"text","assesses":["JA-PERFORMANCE-FAMILY-RECEPTION-01","JA-LEX-CHICHI","JA-LEX-HAHA","JA-LEX-ANI","JA-LEX-ANE","JA-LEX-OTOUTO","JA-LEX-IMOUTO","JA-LEX-OTTO","JA-LEX-TSUMA","JA-LEX-KODOMO"],"prompt":"Read あね・おとうと・つま・ちち・いもうと. Type their meanings in order.","answer":"my elder sister; my younger brother; my wife; my father; my younger sister","accepted":[],"feedback":{"correct":"All five written forms were understood.","incorrect":"Score reading alone; do not carry points from listening."},"response_seconds":35} -->
 
-Read without romanization. A failed section is repeated on its own.
+[YOU READ: the family words without romanization]
+
+A failed section is repeated on its own.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-PERFORMANCE-FAMILY-RECEPTION-01] -->

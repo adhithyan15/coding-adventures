@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Eleven to Fifteen",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:96ff8f26bbd8c6f3",
+  "sourceHash": "fnv1a64:8b6736d440e77def",
   "lessons": [
     {
       "id": "MW-W37-i",
@@ -1310,7 +1310,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:acaf15193ebdd4da",
+      "sourceHash": "fnv1a64:bcafcf95e2427694",
       "notice": null,
       "blocks": [
         {
@@ -1367,8 +1367,13 @@
               "text": "Hear the five named singly and out of order; say each back."
             },
             {
-              "kind": "speech",
-              "text": "Read the five printed and say each aloud."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the five printed, then say each aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the five printed, then say each aloud]"
             },
             {
               "kind": "prompt",

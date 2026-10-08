@@ -4,7 +4,7 @@
   "chapter": 425,
   "title": "The Letters Themselves",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:eb28e64360a73601",
+  "sourceHash": "fnv1a64:0c3dd3bbef39b05c",
   "lessons": [
     {
       "id": "ES-C425-abecedario",
@@ -1050,7 +1050,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d8b5688837ec803",
+      "sourceHash": "fnv1a64:c6ef12ae7e4a1a03",
       "notice": null,
       "blocks": [
         {
@@ -1100,8 +1100,13 @@
           "title": "Reading",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read this exchange aloud:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "this exchange aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: this exchange aloud]"
             },
             {
               "kind": "speech",

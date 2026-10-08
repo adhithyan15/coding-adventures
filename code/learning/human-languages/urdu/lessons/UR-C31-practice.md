@@ -42,11 +42,11 @@ line.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[UR-PERFORMANCE-DIGITS-READ]; assesses=[UR-SCRIPT-DIGIT-ZERO, UR-SCRIPT-DIGIT-ONE, UR-SCRIPT-DIGIT-TWO, UR-SCRIPT-DIGIT-THREE, UR-SCRIPT-DIGIT-FOUR, UR-SCRIPT-DIGIT-FIVE, UR-SCRIPT-DIGIT-SIX, UR-SCRIPT-DIGIT-SEVEN, UR-SCRIPT-DIGIT-EIGHT, UR-SCRIPT-DIGIT-NINE, UR-LEX-BEES, UR-LEX-SAU, UR-LEX-DAS, UR-GRAMMAR-TEENS-IRREGULAR] -->
 
-1. Read all ten signs shuffled and say each as an Urdu word.
-2. Read **۱۰**, **۲۰** and **۱۰۰** and say each — *das*, *bīs*, *sau*.
+1. [YOU READ: all ten signs shuffled, then say each as an Urdu word]
+2. [YOU READ: **۱۰**, **۲۰** and **۱۰۰**, then say each — *das*, *bīs*, *sau*]
 3. Hear ten amounts named. [YOU WRITE: each in Urdu figures]
 4. [YOU WRITE: the ten signs from dictation, out of order, checking **۴**, **۵** and **۶** against the models rather than against memory]
-5. Read a seven-figure telephone number aloud, one digit at a time.
+5. [YOU READ: a seven-figure telephone number aloud, one digit at a time]
 
 An A1 examiner asks for an age, a price and a telephone number. All three are
 now reachable. What is not: **۱۱** to **۱۹**, whose words are nine irregular

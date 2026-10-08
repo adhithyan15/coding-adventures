@@ -4,7 +4,7 @@
   "chapter": 129,
   "title": "Library, Restaurant, Post, Building, Bathroom",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:505caa22f21ff019",
+  "sourceHash": "fnv1a64:1e45c24e34f57554",
   "lessons": [
     {
       "id": "MR-C129-granthalay",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c50e013f03535262",
+      "sourceHash": "fnv1a64:fcc176f768e0f14c",
       "notice": null,
       "blocks": [
         {
@@ -44,8 +44,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read the three signs aloud as one line: उद्यान, रुग्णालय, विमानतळ."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the three signs aloud as one line — उद्यान, रुग्णालय, विमानतळ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the three signs aloud as one line — **उद्यान, रुग्णालय, विमानतळ**]"
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Nine Family Words Through One New Kana",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:aebed6b85717cde6",
+  "sourceHash": "fnv1a64:ad8c39890c723a11",
   "lessons": [
     {
       "id": "JA-W13-tsu",
@@ -214,7 +214,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7931352a4fd15e64",
+      "sourceHash": "fnv1a64:2af39a62651058ea",
       "notice": null,
       "blocks": [
         {
@@ -254,8 +254,13 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read ち | ち."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ち | ち",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ち | ち**]"
             },
             {
               "kind": "prompt",
@@ -311,7 +316,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40f5da8bcd06d36e",
+      "sourceHash": "fnv1a64:51c3f0ba2c6cd896",
       "notice": null,
       "blocks": [
         {
@@ -360,8 +365,13 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read は | は."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "は | は",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **は | は**]"
             },
             {
               "kind": "prompt",
@@ -417,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8bb2c847d59f1c50",
+      "sourceHash": "fnv1a64:979a8911a836615a",
       "notice": null,
       "blocks": [
         {
@@ -448,8 +458,13 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read あ | に."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "あ | に",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **あ | に**]"
             },
             {
               "kind": "prompt",
@@ -505,7 +520,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b683d948cf09103f",
+      "sourceHash": "fnv1a64:aac0ff161186bedf",
       "notice": null,
       "blocks": [
         {
@@ -525,8 +540,17 @@
           "title": "You'll Want to Know — hear and say",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the distant block ございます once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the distant block **ございます** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Read the distant block ございます once. Hear a-ne, say it, then contrast a-ni, my elder brother."
+              "text": "Hear a-ne, say it, then contrast a-ni, my elder brother."
             }
           ]
         },
@@ -536,8 +560,13 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read あ | ね."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "あ | ね",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **あ | ね**]"
             },
             {
               "kind": "prompt",
@@ -593,7 +622,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6d6b81501da8189",
+      "sourceHash": "fnv1a64:0b987497f855caa9",
       "notice": null,
       "blocks": [
         {
@@ -633,8 +662,13 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read お | と | う | と."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "お | と | う | と",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **お | と | う | と**]"
             },
             {
               "kind": "prompt",
@@ -690,7 +724,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4df6e02de2191627",
+      "sourceHash": "fnv1a64:ffddb4537d488eb7",
       "notice": null,
       "blocks": [
         {
@@ -730,8 +764,13 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read い | も | う | と."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "い | も | う | と",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **い | も | う | と**]"
             },
             {
               "kind": "prompt",
@@ -787,7 +826,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80a23198d95bf620",
+      "sourceHash": "fnv1a64:f324fee1c8c9dc14",
       "notice": null,
       "blocks": [
         {
@@ -827,8 +866,13 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read お | っ | と."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "お | っ | と",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **お | っ | と**]"
             },
             {
               "kind": "prompt",
@@ -884,7 +928,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c6dc6265de5733f",
+      "sourceHash": "fnv1a64:17497f2ccc045431",
       "notice": null,
       "blocks": [
         {
@@ -924,8 +968,13 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read つ (tsu) | ま."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "つ (tsu) | ま",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **つ | ま**]"
             },
             {
               "kind": "prompt",
@@ -981,7 +1030,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4678d572374a99c4",
+      "sourceHash": "fnv1a64:14e737c8004a1e04",
       "notice": null,
       "blocks": [
         {
@@ -1021,8 +1070,13 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read こ | ど | も."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "こ | ど | も",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **こ | ど | も**]"
             },
             {
               "kind": "prompt",
@@ -1078,7 +1132,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aedde6319344f298",
+      "sourceHash": "fnv1a64:4891743ca2fe9ad6",
       "notice": null,
       "blocks": [
         {
@@ -1114,7 +1168,16 @@
             },
             {
               "kind": "speech",
-              "text": "Hear otooto and say “younger brother.” Read こども (kodomo)."
+              "text": "Hear otooto and say “younger brother.”"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "こども (kodomo)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **こども**]"
             },
             {
               "kind": "prompt",
@@ -1172,7 +1235,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aaa508784cce2192",
+      "sourceHash": "fnv1a64:2dbc8bf2e443fac6",
       "notice": null,
       "blocks": [
         {
@@ -1198,8 +1261,26 @@
               "source": "[PAUSE 45s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "distant 日本語 as nihongo",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: distant **日本語** as *nihongo*]"
+            },
+            {
               "kind": "speech",
-              "text": "Read distant 日本語 as nihongo and recall that borrowed kanji can carry word-specific readings. Then hear “younger sister,” say いもうと (imooto), and read ちち (chichi)・はは (haha)."
+              "text": "Recall that borrowed kanji can carry word-specific readings. Then hear “younger sister” and say いもうと (imooto)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ちち (chichi)・はは (haha)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ちち・はは**]"
             },
             {
               "kind": "prompt",
@@ -1258,7 +1339,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2325cd8d58ca4ab1",
+      "sourceHash": "fnv1a64:566b27ab18bb4b4d",
       "notice": null,
       "blocks": [
         {
@@ -1294,7 +1375,16 @@
             },
             {
               "kind": "speech",
-              "text": "Hear otto and mark its held beat. Read あに・あね (ane) and say each meaning."
+              "text": "Hear otto and mark its held beat."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "あに・あね (ane), then say each meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **あに・あね**, then say each meaning]"
             },
             {
               "kind": "prompt",
@@ -1353,7 +1443,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba70fa6e5dd09365",
+      "sourceHash": "fnv1a64:5aef003f49b20ae9",
       "notice": null,
       "blocks": [
         {
@@ -1389,7 +1479,16 @@
             },
             {
               "kind": "speech",
-              "text": "State that the bar holds the vowel for one more beat. Then hear and read つま・おっと (tsuma, otto)."
+              "text": "State that the bar holds the vowel for one more beat. Then hear つま・おっと (tsuma, otto)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "つま・おっと (tsuma, otto)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **つま・おっと**]"
             },
             {
               "kind": "prompt",
@@ -1447,7 +1546,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28da1923388db49c",
+      "sourceHash": "fnv1a64:dc38851b25749642",
       "notice": null,
       "blocks": [
         {
@@ -1503,8 +1602,17 @@
           "title": "Guided Practice — reading",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the family words without romanization",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the family words without romanization]"
+            },
+            {
               "kind": "speech",
-              "text": "Read without romanization. A failed section is repeated on its own."
+              "text": "A failed section is repeated on its own."
             },
             {
               "kind": "activity",

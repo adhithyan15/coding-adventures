@@ -45,8 +45,8 @@ reviews_of: [UR-C17-yih, UR-C08-puchhna]
 
 > **کام** — *kām* — **work**
 
-Now do something you could not do with any word before this one. **Read it off
-the page.** From the right: **ک**, **ا**, **م**.
+Now do something you could not do with any word before this one.
+[YOU READ: it off the page — from the right, **ک**, **ا**, **م**]
 
 Every letter in it is already yours, so this word arrives readable on the day
 you meet it. That is what the seven letters were for.

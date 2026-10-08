@@ -4,7 +4,7 @@
   "chapter": 171,
   "title": "Sunset, Every day, Usually, Rarely, Constantly",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:93f3486ce619c12e",
+  "sourceHash": "fnv1a64:547d7004b2cfd887",
   "lessons": [
     {
       "id": "TE-C171-suryastamayam",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a5377c7089db1913",
+      "sourceHash": "fnv1a64:f7b61ac859d2225b",
       "notice": null,
       "blocks": [
         {
@@ -538,7 +538,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "నిరంతరం — nirantaraṁ — \"constantly, continuously\". Read two words again: ఛాయ (chāya, shade) is written with ఛ, and ఝరి (jhari, a stream) with ఝ."
+              "text": "నిరంతరం — nirantaraṁ — \"constantly, continuously\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "two words again — ఛాయ (chāya, shade) is written with ఛ, and ఝరి (jhari, a stream) with ఝ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: two words again — **ఛాయ** (*chāya*, shade) is written with ఛ, and **ఝరి** (*jhari*, a stream) with ఝ]"
             }
           ]
         },

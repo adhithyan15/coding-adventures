@@ -41,7 +41,11 @@ reviews_of: [SA-C140-vijnapanam]
 ## You'll want to know: देयकम्
 <!-- hl-knowledge: introduces=[SA-LEX-C140-READ140-04]; assesses=[] -->
 
-**देयकम्** — *deyakam* — "a bill (to pay)". Read the bill at the restaurant: **भोजनालयः — देयकम् — शतम्।** A hundred to pay before you go.
+**देयकम्** — *deyakam* — "a bill (to pay)".
+
+[YOU READ: the bill at the restaurant — **भोजनालयः — देयकम् — शतम्।**]
+
+A hundred to pay before you go.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

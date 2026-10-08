@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Mother, Father, Brother, Daughter",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:e537a298c4873bf6",
+  "sourceHash": "fnv1a64:270bec3722572db9",
   "lessons": [
     {
       "id": "FA-C10-madar",
@@ -453,7 +453,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:200e3c16b4d3fea5",
+      "sourceHash": "fnv1a64:bd68d574386f67ed",
       "notice": null,
       "blocks": [
         {
@@ -469,7 +469,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say برادر (barâdar). Then read اسمِ من... است once more, from the right edge — the very first sentence this track ever built, and the pattern this lesson reuses to close a family."
+              "text": "Say برادر (barâdar)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "اسمِ من... است once more, from the right edge — the very first sentence this track ever built, and the pattern this lesson reuses to close a family",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **اسمِ من ... است** once more, from the right edge — the very first sentence this track ever built, and the pattern this lesson reuses to close a family]"
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 101,
   "title": "Two Words Where English Has One",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:019c114775c16d99",
+  "sourceHash": "fnv1a64:a2abf5a1b50f88ab",
   "lessons": [
     {
       "id": "HI-C93-ke-saath",
@@ -1414,7 +1414,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a3ebd2166d5421c",
+      "sourceHash": "fnv1a64:1765ec5d20fbfcf4",
       "notice": null,
       "blocks": [
         {
@@ -1467,7 +1467,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Find the landmark — the noun before के — then read the word after it, because that word alone carries the relation."
+              "text": "Find the landmark — the noun before के — then take the word after it, because that word alone carries the relation."
             },
             {
               "kind": "speech",

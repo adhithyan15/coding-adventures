@@ -40,7 +40,11 @@ reviews_of: [PT-C137-o-anuncio]
 ## You'll want to know: a fatura
 <!-- hl-knowledge: introduces=[PT-LEX-C137-LER137-05]; assesses=[] -->
 
-**a fatura** — "a bill, an invoice". Read the bill: **Fatura: renda, 400 euros. Pagar até segunda-feira.** Pay it by Monday. Older Portuguese texts write it **factura**.
+**a fatura** — "a bill, an invoice".
+
+[YOU READ: the bill — **Fatura: renda, 400 euros. Pagar até segunda-feira.**]
+
+Pay it by Monday. Older Portuguese texts write it **factura**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

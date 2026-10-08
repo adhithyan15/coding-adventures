@@ -49,7 +49,8 @@ reviews_of: [MW-C16-hear-bas]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BAS-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, and wait five seconds. [YOU WRITE: **बस**]
+[YOU COVER: the model after one look, then wait five seconds]
+[YOU WRITE: **बस**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAS-01, MW-SCRIPT-BAS-01] -->

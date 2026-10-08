@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 4,
-  "sourceHash": "fnv1a64:c1bbd7cc9468ad3f",
+  "sourceHash": "fnv1a64:5c9a50f6f7c334a5",
   "lessonIds": [
     "FA-C04-hal",
     "FA-C04-chetor",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "persian/narration/ch04.txt",
   "json": "persian/narration/ch04.json",
-  "textHash": "fnv1a64:161762423e37edde",
-  "jsonHash": "fnv1a64:df1686fd143d1dbe",
+  "textHash": "fnv1a64:a85725e39c2aa684",
+  "jsonHash": "fnv1a64:ccbfaefcc8f5cd3f",
   "findings": []
 }

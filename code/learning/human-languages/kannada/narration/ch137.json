@@ -4,7 +4,7 @@
   "chapter": 137,
   "title": "Table, Window, Mirror, Television, Computer",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:29529646ad0f2d68",
+  "sourceHash": "fnv1a64:5113e8ee8cb70e75",
   "lessons": [
     {
       "id": "KA-C137-meju",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86ce55ec0f559c41",
+      "sourceHash": "fnv1a64:3929f62c9b193b55",
       "notice": null,
       "blocks": [
         {
@@ -167,8 +167,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read aloud as one run: ಮರ ಅಲ್ಲಿ ಇದೆ. ನದಿ ಅಲ್ಲಿ ಇದೆ."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ಮರ ಅಲ್ಲಿ ಇದೆ. ನದಿ ಅಲ್ಲಿ ಇದೆ. aloud as one run",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ಮರ ಅಲ್ಲಿ ಇದೆ. ನದಿ ಅಲ್ಲಿ ಇದೆ.** aloud as one run]"
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "The Letter in the Way",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ec85a5ef8fa105f3",
+  "sourceHash": "fnv1a64:70b3464ea33dd443",
   "lessons": [
     {
       "id": "BN-W05-tta",
@@ -369,7 +369,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c48c44a90987571",
+      "sourceHash": "fnv1a64:f21aa6bc4eb35933",
       "notice": null,
       "blocks": [
         {
@@ -385,7 +385,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say the shirt. Then read এক."
+              "text": "Say the shirt."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "এক",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **এক**]"
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 158,
   "title": "A Timetable, a Sign, the Rent, an Advert, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:0460da18bd410f71",
+  "sourceHash": "fnv1a64:10d3cb09f145821f",
   "lessons": [
     {
       "id": "AR-C158-jadwal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:033f55b474b7fd90",
+      "sourceHash": "fnv1a64:ca7a5c08eb1961da",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "جدول — jadwal — \"a timetable, a table\". Read the board: موعد الحافلة: الساعة الثامنة صباحا — mawʿid al-ḥāfila: as-sāʿa ath-thāmina ṣabāḥan — \"Bus time: 8 a.m.\" Be there before eight."
+              "text": "جدول — jadwal — \"a timetable, a table\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the board — موعد الحافلة: الساعة الثامنة صباحا — mawʿid al-ḥāfila: as-sāʿa ath-thāmina ṣabāḥan — \"Bus time: 8 a.m.\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the board — **موعد الحافلة: الساعة الثامنة صباحا** — *mawʿid al-ḥāfila: as-sāʿa ath-thāmina ṣabāḥan* — \"Bus time: 8 a.m.\"]"
+            },
+            {
+              "kind": "speech",
+              "text": "Be there before eight."
             }
           ]
         },
@@ -142,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4371b0e16d5dd1ef",
+      "sourceHash": "fnv1a64:3108c030cf5ec527",
       "notice": null,
       "blocks": [
         {
@@ -169,7 +182,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "لافتة — lāfita — \"a sign, a placard\". Read the sign: مغلق يوم الجمعة — mughlaq yawm al-jumʿa — \"Closed on Friday.\" Come on another day."
+              "text": "لافتة — lāfita — \"a sign, a placard\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the sign — مغلق يوم الجمعة — mughlaq yawm al-jumʿa — \"Closed on Friday.\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the sign — **مغلق يوم الجمعة** — *mughlaq yawm al-jumʿa* — \"Closed on Friday.\"]"
+            },
+            {
+              "kind": "speech",
+              "text": "Come on another day."
             }
           ]
         },
@@ -388,7 +414,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be64ff95477cc289",
+      "sourceHash": "fnv1a64:87dcefd2e35cb823",
       "notice": null,
       "blocks": [
         {
@@ -415,7 +441,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "إعلان — iʿlān — \"an advert, an announcement\". Read the advert: شقة للإيجار — shaqqa li-l-ījār — \"Flat for rent.\""
+              "text": "إعلان — iʿlān — \"an advert, an announcement\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the advert — شقة للإيجار — shaqqa li-l-ījār — \"Flat for rent.\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the advert — **شقة للإيجار** — *shaqqa li-l-ījār* — \"Flat for rent.\"]"
             }
           ]
         },

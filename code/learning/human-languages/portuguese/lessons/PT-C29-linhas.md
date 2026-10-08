@@ -50,17 +50,17 @@ reviews_of: [PT-C29-palavras, PT-C01-bom-dia, PT-C04-adeus]
 > Sim.
 > Adeus!
 
-[PAUSE 3s] Read down once, without stopping.
+[PAUSE 3s] [YOU READ: the six lines down once, without stopping]
 
-[PAUSE 3s] Again — and notice that **Bom dia** and **Boa noite** differ by one
-letter, and that the letter is doing grammar.
+[PAUSE 3s]
+[YOU READ: them again, and notice that **Bom dia** and **Boa noite** differ by one letter, and that the letter is doing grammar]
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[PT-SKILL-READ-LINES] -->
 
 [PAUSE 2s] **Bom** and **Boa** are the same word agreeing with **dia** and
-**noite**. Read the two lines together and the agreement is visible without
-anybody naming it.
+**noite**. Say the two lines together and the agreement is plain without anybody
+naming it.
 
 [PAUSE 2s] **Obrigado** is the strange one. It means *obliged*, and it is a
 participle, so it agrees with the person SAYING it, not the person thanked. A

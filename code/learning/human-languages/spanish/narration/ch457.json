@@ -4,7 +4,7 @@
   "chapter": 457,
   "title": "La farmacia de guardia",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6ebfd1167c1b4294",
+  "sourceHash": "fnv1a64:cc5f782ef8c35623",
   "lessons": [
     {
       "id": "ES-C457-medicamento",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:127dd5db32cae069",
+      "sourceHash": "fnv1a64:bceb2e01478d317f",
       "notice": null,
       "blocks": [
         {
@@ -527,7 +527,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all three: the medicine, to order in, the duty rota."
+              "text": "Leave the lessons before this one closed. Say all three: the medicine, to order in, the duty rota."
             }
           ]
         },
@@ -657,7 +657,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74f69e643214fbf5",
+      "sourceHash": "fnv1a64:7b76c042efd60b5f",
       "notice": null,
       "blocks": [
         {
@@ -684,7 +684,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "A notice taped inside the glass, and the pharmacist's reply. Read both, then answer."
+              "text": "A notice taped inside the glass, and the pharmacist's reply."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "both, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: both, then answer]"
             },
             {
               "kind": "speech",
@@ -769,7 +778,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now your turn, out loud and then in writing. Four lines at a chemist's counter: ask for a medicine, hear that it has run out, ask them to order it in, and ask when it will be there. Then say where the duty chemist is."
+              "text": "Now your turn, out loud. Four lines at a chemist's counter: ask for a medicine, hear that it has run out, ask them to order it in, and ask when it will be there. Then say where the duty chemist is."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same four lines",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same four lines]"
             },
             {
               "kind": "speech",

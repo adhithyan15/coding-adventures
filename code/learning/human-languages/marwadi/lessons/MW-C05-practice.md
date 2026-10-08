@@ -56,7 +56,7 @@ possessive or copula, and that variation is not an error.
 
 1. **Listen:** hear one of the two lines and identify question or answer.
 2. **Speak:** hear the question and answer with a chosen name, without notes.
-3. **Read:** match the printed question to the printed answer.
+3. **Reading:** [YOU READ: the printed question, then match it to the printed answer]
 4. [YOU WRITE: the question with no model, ten seconds after hearing it]
 
 Score each line separately. Speaking cannot cover a missing word in writing;

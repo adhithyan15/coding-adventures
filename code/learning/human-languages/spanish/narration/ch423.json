@@ -4,7 +4,7 @@
   "chapter": 423,
   "title": "Character, Not Mood",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:dc33d5a3c52823c1",
+  "sourceHash": "fnv1a64:630c97ea6b4a6276",
   "lessons": [
     {
       "id": "ES-C423-antipatico",
@@ -1393,7 +1393,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:816d8ac4450818e3",
+      "sourceHash": "fnv1a64:2a03d041ac65411b",
       "notice": null,
       "blocks": [
         {
@@ -1452,8 +1452,17 @@
           "title": "Reading",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the lines below aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the lines below aloud]"
+            },
+            {
               "kind": "speech",
-              "text": "Read aloud. Every word has been taught:"
+              "text": "Every word has been taught:"
             },
             {
               "kind": "speech",

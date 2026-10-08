@@ -4,7 +4,7 @@
   "chapter": 421,
   "title": "The Actor and the Actress",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:3a995cdb8f9b0ef2",
+  "sourceHash": "fnv1a64:75082f26f2a84750",
   "lessons": [
     {
       "id": "ES-C421-actor",
@@ -412,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:478ea4d922e4c68d",
+      "sourceHash": "fnv1a64:85ed38c9bc2a780b",
       "notice": null,
       "blocks": [
         {
@@ -428,7 +428,7 @@
             },
             {
               "kind": "speech",
-              "text": "Name the two people from the last two lessons, with their articles, before reading further."
+              "text": "Name the two people from the last two lessons, with their articles, before going further."
             }
           ]
         },
@@ -474,8 +474,17 @@
           "title": "Reading",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "this aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: this aloud]"
+            },
+            {
               "kind": "speech",
-              "text": "Read this aloud. Every word in it has appeared before:"
+              "text": "Every word in it has appeared before:"
             },
             {
               "kind": "speech",

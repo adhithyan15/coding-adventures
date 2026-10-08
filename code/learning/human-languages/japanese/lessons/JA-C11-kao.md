@@ -49,7 +49,7 @@ Give **か** and **お** one mora each: *ka-o*.
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KAO, JA-SCRIPT-KA-01, JA-SCRIPT-O-01] -->
 
 1. Hear two beats, *ka-o*; say what it names — the face.
-2. Read **か | お**.
+2. [YOU READ: **か | お**]
 3. [YOU WRITE: the two signs, with the word hidden]
 
 ## Wrap-up Recall

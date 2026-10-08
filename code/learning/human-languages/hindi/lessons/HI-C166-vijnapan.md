@@ -41,7 +41,11 @@ reviews_of: [HI-C166-samay]
 ## You'll want to know: विज्ञापन
 <!-- hl-knowledge: introduces=[HI-LEX-C166-READ166-04]; assesses=[] -->
 
-**विज्ञापन** — *vijñāpan* — "an advertisement". Read the advert: **कमरा ख़ाली है। पानी और बिजली।** (*kamrā khālī hai. pānī aur bijlī.*) A room is free, with water and electricity.
+**विज्ञापन** — *vijñāpan* — "an advertisement".
+
+[YOU READ: the advert — **कमरा ख़ाली है। पानी और बिजली।** (*kamrā khālī hai. pānī aur bijlī.*)]
+
+A room is free, with water and electricity.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

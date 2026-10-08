@@ -49,7 +49,7 @@ reviews_of: [JA-C141-raishuu, JA-C141-raigetsu, JA-C141-rainen, JA-C141-tsumori,
 - [YOU SAY: next week, next month, next year, a plan, probably]
 - [YOU READ: **ちゅうい**, **きんえん**, **うけつけ**, **えいぎょうちゅう**, **じゅんびちゅう** — and say what each sign asks of you]
 
-Then read this notice on a clinic door, and say what you do:
+[YOU READ: this notice on a clinic door, then say what you do]
 
 > **じゅんびちゅう**
 >

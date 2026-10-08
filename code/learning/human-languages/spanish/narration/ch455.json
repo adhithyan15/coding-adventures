@@ -4,7 +4,7 @@
   "chapter": 455,
   "title": "La habitación",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:0b1cb1e5229678f2",
+  "sourceHash": "fnv1a64:a20a2fbcb6865cbb",
   "lessons": [
     {
       "id": "ES-C455-pintar",
@@ -878,7 +878,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d5d98500b65d351e",
+      "sourceHash": "fnv1a64:ab7b43d106986904",
       "notice": null,
       "blocks": [
         {
@@ -894,7 +894,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all five: to paint, the bedroom, light, to hang out, to put in."
+              "text": "Leave the lessons before this one closed. Say all five: to paint, the bedroom, light, to hang out, to put in."
             }
           ]
         },
@@ -1032,7 +1032,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7a30f68a7152503",
+      "sourceHash": "fnv1a64:019448bb87a01067",
       "notice": null,
       "blocks": [
         {
@@ -1059,7 +1059,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "A message between two people sharing a flat. Read it, then answer."
+              "text": "A message between two people sharing a flat."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it, then answer]"
             },
             {
               "kind": "speech",
@@ -1132,7 +1141,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now your turn, out loud and then in writing. Four lines to a flatmate: say you have painted the bedroom a light colour, ask them to put the boxes in the storeroom, ask them to hang the washing out, and say why."
+              "text": "Now your turn, out loud. Four lines to a flatmate: say you have painted the bedroom a light colour, ask them to put the boxes in the storeroom, ask them to hang the washing out, and say why."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same four lines",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same four lines]"
             },
             {
               "kind": "speech",

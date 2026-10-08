@@ -33,8 +33,8 @@ reviews_of: [ML-C58-venam, ML-C76-veno]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C58-WANT-01, ML-LEX-C58-ANSWER-04] -->
 
-[PAUSE 3s] Close the lessons before this one. Say *wanted* and *not wanted*,
-and hear how much of the two words is the same.
+[PAUSE 3s] Leave the lessons before this one closed. Say *wanted* and *not
+wanted*, and hear how much of the two words is the same.
 
 ## Grammar Lens: one root, a whole exchange
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C76-VENO-01, ML-LEX-C58-WANT-01, ML-LEX-C58-ANSWER-04, ML-CONCEPT-C39-CHAAYA-01] -->

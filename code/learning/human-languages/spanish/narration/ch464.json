@@ -4,7 +4,7 @@
   "chapter": 464,
   "title": "La cita perdida",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:f159f0fd23faad01",
+  "sourceHash": "fnv1a64:0cad6eec7d53c4ee",
   "lessons": [
     {
       "id": "ES-C464-recordar",
@@ -515,7 +515,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c23dfe03fa67a318",
+      "sourceHash": "fnv1a64:11ea96d661c336b0",
       "notice": null,
       "blocks": [
         {
@@ -531,7 +531,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all three: to remember, the dentist, to let down."
+              "text": "Leave the lessons before this one closed. Say all three: to remember, the dentist, to let down."
             }
           ]
         },
@@ -660,7 +660,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3ca5cb276658914",
+      "sourceHash": "fnv1a64:7ba10142d2d3fc4e",
       "notice": null,
       "blocks": [
         {
@@ -687,7 +687,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Two messages, a day apart. Read both, then answer."
+              "text": "Two messages, a day apart."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "both, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: both, then answer]"
             },
             {
               "kind": "speech",
@@ -772,7 +781,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now your turn, out loud and then in writing. Four lines: as the clinic, remind somebody of a dental appointment and say how to cancel; then as the patient, apologise for missing it, say what let you down, and ask for another."
+              "text": "Now your turn, out loud. Four lines: as the clinic, remind somebody of a dental appointment and say how to cancel; then as the patient, apologise for missing it, say what let you down, and ask for another."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same four lines",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same four lines]"
             },
             {
               "kind": "speech",

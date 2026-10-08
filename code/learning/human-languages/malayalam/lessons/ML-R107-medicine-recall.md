@@ -33,8 +33,8 @@ reviews_of: [ML-C107-marunnu, ML-C107-chikitsa, ML-C107-vrtthi, ML-C107-before-a
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C107-MEDICINE-01, ML-LEX-C107-TREATMENT-01, ML-LEX-C107-CLEAN-01] -->
 
-[PAUSE 3s] Close the lessons before this one. Say *medicine*, *treatment* and
-*cleanliness*.
+[PAUSE 3s] Leave the lessons before this one closed. Say *medicine*, *treatment*
+and *cleanliness*.
 
 ## Grammar Lens: one native word among three
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C107-MEDICINE-01, ML-LEX-C107-TREATMENT-01, ML-LEX-C107-CLEAN-01] -->

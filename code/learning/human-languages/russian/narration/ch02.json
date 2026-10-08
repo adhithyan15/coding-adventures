@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:7e9d83f0ac2854c4",
+  "sourceHash": "fnv1a64:e935185b15ed50cd",
   "lessons": [
     {
       "id": "RU-C02-ya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08ce67b1314e3ac5",
+      "sourceHash": "fnv1a64:7792cfcc1b9dc47d",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,16 @@
             },
             {
               "kind": "speech",
-              "text": "It is a new letter — the writing track has taught в, р, с, н, б, д, п, и, е and т, and hasn't reached я (ya). Read it here; you'll draw it when the track gets there."
+              "text": "It is a new letter — the writing track has taught в, р, с, н, б, д, п, и, е and т, and hasn't reached я (ya)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it here — you'll draw it when the track gets there",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it here — you'll draw it when the track gets there]"
             },
             {
               "kind": "speech",
@@ -924,7 +933,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22181c22399bcd4e",
+      "sourceHash": "fnv1a64:2ebe632b4ce9b662",
       "notice": null,
       "blocks": [
         {
@@ -967,7 +976,16 @@
             },
             {
               "kind": "speech",
-              "text": "Both ч (ch) and я (ya) are letters the writing track hasn't reached. Read them; you'll draw them later."
+              "text": "Both ч (ch) and я (ya) are letters the writing track hasn't reached."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "them now — you'll draw them later",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: them now — you'll draw them later]"
             }
           ]
         },

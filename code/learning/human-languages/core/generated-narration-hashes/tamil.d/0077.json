@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 77,
-  "sourceHash": "fnv1a64:6d5cf6fa3bc22615",
+  "sourceHash": "fnv1a64:0741f71eb6cbc5ea",
   "lessonIds": [
     "TA-C77-say",
     "TA-C77-quotative",
@@ -12,7 +12,7 @@
   "drivablePrefix": 2,
   "text": "tamil/narration/ch77.txt",
   "json": "tamil/narration/ch77.json",
-  "textHash": "fnv1a64:a4e29e78f46efd01",
-  "jsonHash": "fnv1a64:ff75f0531dff2d50",
+  "textHash": "fnv1a64:84b8a29952550a3f",
+  "jsonHash": "fnv1a64:8924848e065c81ae",
   "findings": []
 }

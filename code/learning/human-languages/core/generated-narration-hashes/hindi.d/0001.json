@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 1,
-  "sourceHash": "fnv1a64:e299040b8f35a82c",
+  "sourceHash": "fnv1a64:94dd0cb7b396a5f4",
   "lessonIds": [
     "HI-C01-namaste",
     "HI-C01-namaskar",
@@ -18,7 +18,7 @@
   "drivablePrefix": 0,
   "text": "hindi/narration/ch01.txt",
   "json": "hindi/narration/ch01.json",
-  "textHash": "fnv1a64:9b612d237274e4c8",
-  "jsonHash": "fnv1a64:f527c41976c11e4d",
+  "textHash": "fnv1a64:2a761b842977f1be",
+  "jsonHash": "fnv1a64:c80d73750951ddf1",
   "findings": []
 }

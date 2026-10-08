@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:bf342831fbc24c90",
+  "sourceHash": "fnv1a64:3c7845cd0e69c294",
   "lessons": [
     {
       "id": "KA-C01-namaskara",
@@ -1282,7 +1282,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e4193c9a4c26b2b7",
+      "sourceHash": "fnv1a64:011dba8b98ed84dd",
       "notice": null,
       "blocks": [
         {
@@ -1308,8 +1308,17 @@
           "title": "Guided Practice: Read them back",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the three written in Kannada, sounding each out left to right before checking",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the three written in Kannada, sounding each out left to right before checking]"
+            },
+            {
               "kind": "speech",
-              "text": "Sound out the three written in Kannada, left to right, before checking. The other two stay in romanization until their letters arrive in later chapters:"
+              "text": "The other two stay in romanization until their letters arrive in later chapters:"
             },
             {
               "kind": "table",
@@ -1392,8 +1401,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all five words aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all five words aloud]"
+            },
+            {
               "kind": "speech",
-              "text": "Read all five words aloud. Which two are Sanskrit loans, and which three are native Dravidian? (Loans: namaskāra, dhanyavāda. Native: haudu, illa, sari.) Which one means \"okay / correct\"? (sari.)"
+              "text": "Which two are Sanskrit loans, and which three are native Dravidian? (Loans: namaskāra, dhanyavāda. Native: haudu, illa, sari.) Which one means \"okay / correct\"? (sari.)"
             },
             {
               "kind": "speech",

@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 146,
-  "sourceHash": "fnv1a64:4ea5d152ea4ed125",
+  "sourceHash": "fnv1a64:26c7ee87030efb13",
   "lessonIds": [
     "UR-C146-taim-tebal",
     "UR-C146-notis",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "urdu/narration/ch146.txt",
   "json": "urdu/narration/ch146.json",
-  "textHash": "fnv1a64:867ba2f5a6a07cbf",
-  "jsonHash": "fnv1a64:9980a02f754eca06",
+  "textHash": "fnv1a64:6058ebad03d851db",
+  "jsonHash": "fnv1a64:6eda78ad97d9e155",
   "findings": []
 }

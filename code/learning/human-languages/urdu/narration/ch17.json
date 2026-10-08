@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "The Sentence Learns to End",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:3c925f8068afe3a8",
+  "sourceHash": "fnv1a64:c85aa2ea74158afe",
   "lessons": [
     {
       "id": "UR-C17-yih",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee9e2e42e4fe4292",
+      "sourceHash": "fnv1a64:3110b94ae57983e2",
       "notice": null,
       "blocks": [
         {
@@ -34,8 +34,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Read these off the page, naming the letters from the right before you say each word:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "these off the page, naming the letters from the right before you say each word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: these off the page, naming the letters from the right before you say each word]"
             },
             {
               "kind": "speech",
@@ -216,7 +221,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6965e4ece8b1013a",
+      "sourceHash": "fnv1a64:4d361e0fa11cbd64",
       "notice": null,
       "blocks": [
         {
@@ -247,7 +252,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now do something you could not do with any word before this one. Read it off the page. From the right: ک, ا, م."
+              "text": "Now do something you could not do with any word before this one."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it off the page — from the right, ک, ا, م",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it off the page — from the right, **ک**, **ا**, **م**]"
             },
             {
               "kind": "speech",
@@ -404,7 +418,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40773021b1c84144",
+      "sourceHash": "fnv1a64:f87ae6e06d0c3454",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +473,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Put the question words you have met beside the new one and read down the right edge:"
+              "text": "Put the question words you have met beside the new one."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "down the right edge",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: down the right edge]"
             },
             {
               "kind": "speech",
@@ -804,7 +827,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1931ae37d2ae027",
+      "sourceHash": "fnv1a64:8959b585b31161e5",
       "notice": null,
       "blocks": [
         {
@@ -856,8 +879,17 @@
               "text": "یہ میری ماں ہے۔ — yih merī māṅ hai. — \"This is my mother.\""
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "that sentence off the page",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: that sentence off the page]"
+            },
+            {
               "kind": "speech",
-              "text": "Read that sentence off the page. Every letter in it is one you can form except the last of ماں (māṅ), which arrives shortly — and you can hear exactly where it goes, because it is the nasal hum you have been putting on the end of maiṅ and hūṅ all along."
+              "text": "Every letter in it is one you can form except the last of ماں (māṅ), which arrives shortly — and you can hear exactly where it goes, because it is the nasal hum you have been putting on the end of maiṅ and hūṅ all along."
             }
           ]
         },

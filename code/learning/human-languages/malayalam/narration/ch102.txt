@@ -18,7 +18,7 @@ Nothing about the ending is new. You built this exact landing when you met your 
 
 Why it's said this way.
 That first case ending was glossed to and for, and English will not accept either one here: to two o'clock is not a thing anybody says. English reaches for a third word, at.
-That is a fact about English, not about the ending. Malayalam has not switched cases on you — the suffix on മണിക്ക് is letter for letter the one you put on ജോലി. What has changed is the English word you need to translate it, and English has three of them where Malayalam has one ending. When you meet this ending on an hour, read it at.
+That is a fact about English, not about the ending. Malayalam has not switched cases on you — the suffix on മണിക്ക് is letter for letter the one you put on ജോലി. What has changed is the English word you need to translate it, and English has three of them where Malayalam has one ending. When you meet this ending on an hour, it means at.
 
 Grammar Lens: the slot at the front.
 രണ്ട് മണിക്ക് ഞാൻ പോകും. — raṇṭŭ maṇikkŭ ñān pōkuṁ — "At two o'clock I will go."
@@ -51,7 +51,7 @@ Say the day-name for Monday. Then say at two o'clock.
 You'll want to know.
 The day-name lesson laid all seven of them out in a table and left them there. You have read തിങ്കളാഴ്ച and never once used it. Use it now:
 തിങ്കളാഴ്ച ഞാൻ പോകും. — tiṅkaḷāḻca ñān pōkuṁ — "On Monday I will go."
-Read that sentence twice and look for the ending. There is none. The day-name went into the when-slot exactly as it stands in that table, with nothing added to the front of it and nothing added to the back.
+Say that sentence twice and listen for the ending. There is none. The day-name went into the when-slot exactly as it stands in that table, with nothing added to the front of it and nothing added to the back.
 
 Grammar Lens: two words, one slot, one ending between them.
 Put the last lesson's sentence beside this one and the difference is the whole point of the chapter:
@@ -96,7 +96,7 @@ The first asks somebody to name the hour. The second asks at which hour a thing 
 
 Grammar Lens: which word wears the ending.
 എത്ര never changes. Every time you have used it, it has stood in front of a bare noun — എത്ര ദൂരം (etra dūraṁ, how far), എത്ര രൂപ (etra rūpa, how many rupees).
-Put a hand over the question word in those two and what is left is a distance and a rupee, standing bare. Do it to എത്ര മണിക്ക് (etra maṇikkŭ) and what is left is an hour with an ending on it. The ending is the one thing here the question word did not bring.
+Take the question word out of those two and what is left is a distance and a rupee, standing bare. Do it to എത്ര മണിക്ക് (etra maṇikkŭ) and what is left is an hour with an ending on it. The ending is the one thing here the question word did not bring.
 
 Why it's said this way.
 The answer comes back wearing the same ending:
@@ -165,7 +165,7 @@ Lesson 5 of 5.
 
 Warm-up.
 [pause 3 seconds]
-Close the lessons before this one. Say on Monday, at two o'clock, and at what time?
+Leave the lessons before this one closed. Say on Monday, at two o'clock, and at what time?
 
 Grammar Lens: one of them takes an ending.
 Two answers to the same question, and only one of them is dressed:

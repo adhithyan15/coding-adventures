@@ -47,7 +47,7 @@ reviews_of: [MW-C37-pandara, MW-C37-chauda, MW-C37-tera, MW-C37-baara, MW-C37-ig
 Five words, shuffled, with the chapter no longer giving the answer away.
 
 1. Hear the five named singly and out of order; say each back.
-2. Read the five printed and say each aloud.
+2. [YOU READ: the five printed, then say each aloud]
 3. [YOU WRITE: three of them from dictation, the choice named only as you write]
 4. Say the four that end **-रा** and the one that does not, and say what its last
    letter is instead.

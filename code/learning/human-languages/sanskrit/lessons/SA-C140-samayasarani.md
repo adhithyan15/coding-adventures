@@ -41,7 +41,11 @@ reviews_of: [SA-C140-sucana]
 ## You'll want to know: समयसारणी
 <!-- hl-knowledge: introduces=[SA-LEX-C140-READ140-02]; assesses=[] -->
 
-**समयसारणी** — *samayasāraṇī* — "a timetable". Read the timetable at the station: **धूमयानम् — प्रातः दश।** The train leaves at ten in the morning: be at the **स्थानकम्** before ten.
+**समयसारणी** — *samayasāraṇī* — "a timetable".
+
+[YOU READ: the timetable at the station — **धूमयानम् — प्रातः दश।**]
+
+The train leaves at ten in the morning: be at the **स्थानकम्** before ten.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

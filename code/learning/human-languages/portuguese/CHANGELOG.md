@@ -1,5 +1,30 @@
 # Changelog
 
+## Fixed — drivable lesson prose stops asking a driver to read or handle cards
+
+Narration reads bare prose aloud as written, so a prose instruction to read
+printed script, handle cards or cover the page reached a driver unhedged (issue
+#12070, tenth pass): "Hear, picture the part, say, and read **おなか**." was
+narrated word for word. Each such step now moves into a cue the narration
+defers (`[YOU READ: …]`, `[YOU COVER: …]`, `[YOU CHECK: …]`, `[YOU FIND: …]`,
+`[YOU WRITE: …]`: "once you have stopped driving — …"), in the authored order,
+or is said for the ear and voice where the step was not about the page. Prose
+that followed a new cue in the same paragraph now has a paragraph of its own.
+The new prose check in human-language-data demands zero such spans in drivable
+lessons. Every edited lesson stays `drivable: true` (only its
+`core/lesson-modality` source hash changes).
+
+- **Count:** 10 drivable lessons; 13 `[YOU READ: …]` cues and 1 ear-and-voice
+  rewrite.
+- Warm-ups PT-C112-aula and PT-C113-palavra, notices PT-C137-a-fatura,
+  PT-C137-o-anuncio, PT-C137-o-aviso, PT-C137-o-horario, PT-C28-indicador's
+  "Read *o 3.º andar* aloud", and the PT-C29 reading lessons (with "Again — …")
+  become READ cues.
+- PT-C29-linhas "Read the two lines together and the agreement is visible" →
+  "Say the two lines together and the agreement is plain".
+- Left alone: "Read the panel in a Lisbon lift now — **1.º**, **2.º**, **3.º**
+  — and you are reading this chapter" (a real-world scene, not a step).
+
 ## Fixed — drivable lessons stop asking a driver to gesture
 
 A spoken cue is read to a driver as an ordinary turn, and so is bare prose.

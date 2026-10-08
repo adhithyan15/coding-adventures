@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Synthesis --- Reading What You Were Never Taught",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:74d6278b675cf0a5",
+  "sourceHash": "fnv1a64:523d13ff3f77b17b",
   "lessons": [
     {
       "id": "ES-C56-sintesis-leer",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3cccf0e58239ef54",
+      "sourceHash": "fnv1a64:cfd3547bd05c6fd6",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,16 @@
             },
             {
               "kind": "speech",
-              "text": "You are about to read a sentence with four words in it that this book has never shown you. Read it before you read the explanation."
+              "text": "You are about to read a sentence with four words in it that this book has never shown you."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it before you read the explanation",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it before you read the explanation]"
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 19,
-  "sourceHash": "fnv1a64:c95a4b0cf6589563",
+  "sourceHash": "fnv1a64:5e56cb770d87c4fa",
   "lessonIds": [
     "JA-C19-words",
     "JA-C19-greetings",
@@ -11,7 +11,7 @@
   "drivablePrefix": 0,
   "text": "japanese/narration/ch19.txt",
   "json": "japanese/narration/ch19.json",
-  "textHash": "fnv1a64:f606eb94b63ccb5d",
-  "jsonHash": "fnv1a64:d97855178ea59023",
+  "textHash": "fnv1a64:0ac1482e0d0f824e",
+  "jsonHash": "fnv1a64:b50a9b17fc852ac2",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 14,
-  "sourceHash": "fnv1a64:45e00de82b056b18",
+  "sourceHash": "fnv1a64:2589db49671ab542",
   "lessonIds": [
     "GE-C09-juli",
     "GE-C09-august",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "german/narration/ch14.txt",
   "json": "german/narration/ch14.json",
-  "textHash": "fnv1a64:e926e077313981d0",
-  "jsonHash": "fnv1a64:d612660b80160c51",
+  "textHash": "fnv1a64:0718d0b21b122382",
+  "jsonHash": "fnv1a64:939eef08ee51d04d",
   "findings": []
 }

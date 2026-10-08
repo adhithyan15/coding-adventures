@@ -40,8 +40,8 @@ reviews_of: [ZH-R15-school-map-1, ZH-R15-school-map-2, ZH-R15-school-map-3, ZH-R
 <!-- hl-writing-stage: dictation-transcription -->
 
 1. **Listening:** hear the four words in mixed order and choose each meaning.
-2. **Speaking:** produce all four from meaning cards, with tones audible.
-3. **Reading:** read all four character cards without pinyin.
+2. **Speaking:** produce all four from their English meanings, with tones audible.
+3. **Reading:** [YOU READ: all four character cards without pinyin]
 4. **Writing:** hear all four. [YOU WRITE: all four without a model]
 
 Pass each skill separately. Repair and retry only the failed skill.

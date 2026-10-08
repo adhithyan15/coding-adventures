@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "The Months: Gods and Beginnings",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:53f3fcca6e16693f",
+  "sourceHash": "fnv1a64:327dd8c313760df1",
   "lessons": [
     {
       "id": "FR-C09-janvier",
@@ -794,7 +794,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b72de2101be5855",
+      "sourceHash": "fnv1a64:4f5f1abc912620c1",
       "notice": null,
       "blocks": [
         {
@@ -826,8 +826,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down the left, then cover the right and read back:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "down the left, then cover the right and read back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: down the left, then cover the right and read back]"
             },
             {
               "kind": "table",

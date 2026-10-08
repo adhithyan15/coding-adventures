@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 433,
-  "sourceHash": "fnv1a64:042431835812bbda",
+  "sourceHash": "fnv1a64:c3e7cb61341e19d0",
   "lessonIds": [
     "ES-C433-portal",
     "ES-C433-portera",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "spanish/narration/ch433.txt",
   "json": "spanish/narration/ch433.json",
-  "textHash": "fnv1a64:3ff1ba7b7a497533",
-  "jsonHash": "fnv1a64:4eece4dad7d0895c",
+  "textHash": "fnv1a64:667ac90037efc65e",
+  "jsonHash": "fnv1a64:524fca3548539155",
   "findings": []
 }

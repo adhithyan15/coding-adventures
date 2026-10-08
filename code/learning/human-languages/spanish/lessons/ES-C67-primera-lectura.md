@@ -49,10 +49,10 @@ it is new.
 > Ahora está cansada. Va a dormir.
 > Mañana habla español con su estudiante.
 
-[PAUSE 3s] Read it once without stopping. Do not translate as you go — let the
-sentences arrive.
+[PAUSE 3s]
+[YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]
 
-[PAUSE 3s] Now read it again, and notice how little work it took.
+[PAUSE 3s] [YOU READ: it again, and notice how little work it took]
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PERO, ES-LEX-BASTANTE, ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE] -->

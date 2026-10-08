@@ -32,8 +32,8 @@ reviews_of: [ES-C458-plazo, ES-C458-entregar, ES-C458-admitir]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C458-PLAZO-01, ES-LEX-C458-PLAZO-02, ES-LEX-C458-PLAZO-03] -->
 
-[PAUSE 3s] Close the lessons before this one. Say all three: *the deadline*,
-*to hand in*, *to let in*.
+[PAUSE 3s] Leave the lessons before this one closed. Say all three: *the
+deadline*, *to hand in*, *to let in*.
 
 ## Grammar Lens: the three of them are one sentence
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C458-PLAZO-01, ES-LEX-C458-PLAZO-02, ES-LEX-C458-PLAZO-03] -->

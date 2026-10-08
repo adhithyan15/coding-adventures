@@ -47,7 +47,9 @@ Hear *ha-ha*, say it once, then contrast *chichi*.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HAHA, JA-SCRIPT-HA-01] -->
 
-Read **は | は**. [YOU WRITE: one copy of **はは**; then hide it and write it once from the meaning]
+[YOU READ: **は | は**]
+
+[YOU WRITE: one copy of **はは**; then hide it and write it once from the meaning]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HAHA] -->

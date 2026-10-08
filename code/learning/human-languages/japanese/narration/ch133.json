@@ -4,7 +4,7 @@
   "chapter": 133,
   "title": "The Last Four Hiragana: Ki, Ke, Nu and He",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1736607708699a2d",
+  "sourceHash": "fnv1a64:0bbbc9614afbe89b",
   "lessons": [
     {
       "id": "JA-C133-eki",
@@ -1789,7 +1789,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dbfc264655f655cd",
+      "sourceHash": "fnv1a64:1f73caea3d039cd9",
       "notice": null,
       "blocks": [
         {
@@ -1849,7 +1849,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read each one aloud and say what it means."
+              "text": "For each one below, say what it means."
             },
             {
               "kind": "prompt",

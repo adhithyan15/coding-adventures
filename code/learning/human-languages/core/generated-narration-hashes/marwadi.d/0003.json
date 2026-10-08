@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 3,
-  "sourceHash": "fnv1a64:91af327455d53c92",
+  "sourceHash": "fnv1a64:af3a6bc71a60d72f",
   "lessonIds": [
     "MW-W03-ha",
     "MW-W03-anusvara",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "marwadi/narration/ch03.txt",
   "json": "marwadi/narration/ch03.json",
-  "textHash": "fnv1a64:46a9ffe724e5ec55",
-  "jsonHash": "fnv1a64:5bc67f1d15a714aa",
+  "textHash": "fnv1a64:c2e0398e4ad872c7",
+  "jsonHash": "fnv1a64:815d3cc787e4c0cd",
   "findings": []
 }

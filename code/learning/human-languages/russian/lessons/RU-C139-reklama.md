@@ -41,7 +41,11 @@ reviews_of: [RU-C139-raspisaniye]
 ## You'll want to know: реклама
 <!-- hl-knowledge: introduces=[RU-LEX-C139-CHT139-02]; assesses=[] -->
 
-**реклама** (*rekláma*) — "an advert". Read the advert: **Новый магазин. Закрыт по воскресеньям.** A new shop, closed on Sundays, so go on another day.
+**реклама** (*rekláma*) — "an advert".
+
+[YOU READ: the advert — **Новый магазин. Закрыт по воскресеньям.**]
+
+A new shop, closed on Sundays, so go on another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

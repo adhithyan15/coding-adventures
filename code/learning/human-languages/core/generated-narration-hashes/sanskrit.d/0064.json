@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 64,
-  "sourceHash": "fnv1a64:dea8834342889f78",
+  "sourceHash": "fnv1a64:8a67964173da105b",
   "lessonIds": [
     "SA-C64-words",
     "SA-C64-lines",
@@ -11,7 +11,7 @@
   "drivablePrefix": 0,
   "text": "sanskrit/narration/ch64.txt",
   "json": "sanskrit/narration/ch64.json",
-  "textHash": "fnv1a64:cd42fe30840cbf40",
-  "jsonHash": "fnv1a64:df1202eeb9f54c3a",
+  "textHash": "fnv1a64:a52e49d21a2425c9",
+  "jsonHash": "fnv1a64:3ddfd73dbe54928e",
   "findings": []
 }

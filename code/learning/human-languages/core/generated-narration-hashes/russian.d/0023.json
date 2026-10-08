@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 23,
-  "sourceHash": "fnv1a64:64cb5ba435dff59b",
+  "sourceHash": "fnv1a64:ce22fc8dd6d3b6b8",
   "lessonIds": [
     "RU-C23-dva",
     "RU-C23-tri",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "russian/narration/ch23.txt",
   "json": "russian/narration/ch23.json",
-  "textHash": "fnv1a64:16543e893e59db7f",
-  "jsonHash": "fnv1a64:06ca416cd3a982cf",
+  "textHash": "fnv1a64:6ac6c9df08d0d52b",
+  "jsonHash": "fnv1a64:8d11ae07d10ff8e6",
   "findings": []
 }

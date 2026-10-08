@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Xihuan — What You Like",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f56a257c7c4e1a68",
+  "sourceHash": "fnv1a64:fdd5b315a084d8bc",
   "lessons": [
     {
       "id": "ZH-W28-xi",
@@ -592,7 +592,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8adb4a9fe2010ec4",
+      "sourceHash": "fnv1a64:b1e1bc66040930ca",
       "notice": null,
       "blocks": [
         {
@@ -672,7 +672,7 @@
             },
             {
               "kind": "speech",
-              "text": "Now look at where 什么 is. It is at the END, in exactly the slot the answer would occupy:"
+              "text": "Now notice where 什么 is. It is at the END, in exactly the slot the answer would occupy:"
             },
             {
               "kind": "speech",
@@ -766,7 +766,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d4cddb87f7b3b2a",
+      "sourceHash": "fnv1a64:6bdd8db50d74f12e",
       "notice": null,
       "blocks": [
         {
@@ -865,8 +865,13 @@
               "text": "Speak. Say what you like; ask what the other person likes; hand it back with 你呢."
             },
             {
-              "kind": "speech",
-              "text": "Read. 我喜欢看书 (wǒ xǐhuan kàn shū) — 你喜欢什么 (nǐ xǐhuan shénme)."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "我喜欢看书 (wǒ xǐhuan kàn shū) — 你喜欢什么 (nǐ xǐhuan shénme)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 我喜欢看书 — 你喜欢什么]"
             },
             {
               "kind": "prompt",

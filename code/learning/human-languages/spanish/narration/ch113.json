@@ -4,7 +4,7 @@
   "chapter": 113,
   "title": "Tenia and Tuve --- When the Tense Changes the Meaning",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c1eef30dac4f1402",
+  "sourceHash": "fnv1a64:22a469bb604eee73",
   "lessons": [
     {
       "id": "ES-C48-tenia-tuve",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e658aba551d7076f",
+      "sourceHash": "fnv1a64:4064000d4fef296b",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read those twice. The second one is not \"I had a house, viewed as finished.\" It is a different verb in English altogether."
+              "text": "Say those twice. The second one is not \"I had a house, viewed as finished.\" It is a different verb in English altogether."
             },
             {
               "kind": "speech",

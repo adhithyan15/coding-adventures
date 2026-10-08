@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "At the Shop",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:319779dda7d078a9",
+  "sourceHash": "fnv1a64:ab56c6569117f462",
   "lessons": [
     {
       "id": "TA-C68-shop",
@@ -473,7 +473,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e177308b0fcce79f",
+      "sourceHash": "fnv1a64:9e64967eb985c605",
       "notice": null,
       "blocks": [
         {
@@ -489,7 +489,16 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: read கடை (kaḍai), and say what it means."
+              "text": "Before the new one:"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "கடை (kaḍai), then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **கடை**, then say what it means]"
             }
           ]
         },

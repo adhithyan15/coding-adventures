@@ -4,7 +4,7 @@
   "chapter": 113,
   "title": "Well, Mud, Dust, Thunder, Rainbow",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5d458851e9e9d329",
+  "sourceHash": "fnv1a64:7c6527f049f39e64",
   "lessons": [
     {
       "id": "BN-C113-kuyo",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:73c7677e9bb49dc6",
+      "sourceHash": "fnv1a64:49f89c137866e8ee",
       "notice": null,
       "blocks": [
         {
@@ -290,8 +290,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read on sight: নমস্কার। ধন্যবাদ। হ্যাঁ।."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "নমস্কার। ধন্যবাদ। হ্যাঁ। on sight",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **নমস্কার। ধন্যবাদ। হ্যাঁ।** on sight]"
             }
           ]
         },

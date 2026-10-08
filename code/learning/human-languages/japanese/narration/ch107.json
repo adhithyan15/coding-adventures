@@ -4,7 +4,7 @@
   "chapter": 107,
   "title": "Mud, Dust, Foam, Dew, Slope",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ab691cd6f4f9768f",
+  "sourceHash": "fnv1a64:c2d27e6d221a7e2b",
   "lessons": [
     {
       "id": "JA-C107-doro",
@@ -301,7 +301,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0c4dbfe9ecf1a99",
+      "sourceHash": "fnv1a64:5388ec75baf0de8b",
       "notice": null,
       "blocks": [
         {
@@ -326,8 +326,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read each word whole: みみ, くち, かお."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each word whole — みみ, くち, かお",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each word whole — **みみ**, **くち**, **かお**]"
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Maternal Grandparents and Husband: One New Sign",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:57fbef239c733e78",
+  "sourceHash": "fnv1a64:891f78e0c55060d8",
   "lessons": [
     {
       "id": "MW-C09-hear-nana",
@@ -116,7 +116,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:29219139a602d36f",
+      "sourceHash": "fnv1a64:1ce5b7a383909043",
       "notice": null,
       "blocks": [
         {
@@ -162,8 +162,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look for five seconds and cover the word."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the word after a five-second look",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the word after a five-second look]"
             },
             {
               "kind": "prompt",
@@ -318,7 +323,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06e1b7dbca7e1fff",
+      "sourceHash": "fnv1a64:1c9ecce088a9d9c7",
       "notice": null,
       "blocks": [
         {
@@ -364,8 +369,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Cover नानी (nānī) and wait five seconds."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "नानी (nānī), then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: **नानी**, then wait five seconds]"
             },
             {
               "kind": "prompt",
@@ -608,7 +618,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:adea1da3d586753a",
+      "sourceHash": "fnv1a64:03741d198b2cff5c",
       "notice": null,
       "blocks": [
         {
@@ -654,8 +664,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, and wait five seconds."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
             },
             {
               "kind": "prompt",
@@ -713,7 +728,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:af7a9a2d31d116e9",
+      "sourceHash": "fnv1a64:0880110049a8c855",
       "notice": null,
       "blocks": [
         {
@@ -760,12 +775,22 @@
               "text": "Produce each from a meaning cue."
             },
             {
-              "kind": "speech",
-              "text": "Read नाना — नानी — पति (nānā — nānī — pati)."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "नाना — नानी — पति (nānā — nānī — pati)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **नाना — नानी — पति**]"
             },
             {
-              "kind": "speech",
-              "text": "Cover the line."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the line",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the line]"
             },
             {
               "kind": "prompt",

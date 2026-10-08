@@ -51,7 +51,7 @@ word **son**.
 
 [YOU WRITE: one copy of **儿子**, while saying *ér-zi*]
 
-Then read it once without pinyin.
+[YOU READ: it once without pinyin]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ERZI-01] -->

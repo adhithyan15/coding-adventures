@@ -36,7 +36,7 @@ reviews_of: [MR-R09-script-d-r3]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Keep every model closed and one blank line ready.
+[YOU COVER: every model, and keep one blank line ready]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-YA-01, MR-SCRIPT-LLA-01, MR-SCRIPT-VA-01] -->
@@ -44,4 +44,4 @@ Keep every model closed and one blank line ready.
 
 [YOU WRITE: *ya*, curled-back *ḷa*, and *va*, from spoken names only]
 
-Compare once: **य ळ व**.
+[YOU CHECK: your answer once against **य ळ व**]

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 68,
-  "sourceHash": "fnv1a64:2ef6ececde5e29d8",
+  "sourceHash": "fnv1a64:3d5537375b3e7ea4",
   "lessonIds": [
     "MR-C68-shubh-sakal",
     "MR-C68-shubh-dupar",
@@ -12,7 +12,7 @@
   "drivablePrefix": 1,
   "text": "marathi/narration/ch68.txt",
   "json": "marathi/narration/ch68.json",
-  "textHash": "fnv1a64:3944013da06695e3",
-  "jsonHash": "fnv1a64:77bda70a618b2c0d",
+  "textHash": "fnv1a64:b14e922217128f20",
+  "jsonHash": "fnv1a64:2ff8140259fac8c0",
   "findings": []
 }

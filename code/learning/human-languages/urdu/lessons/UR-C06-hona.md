@@ -47,10 +47,10 @@ something larger. Here is the whole verb it was broken off.
 
 > **ہونا** — *honā* — **to be**
 
-Read from the right edge: **ہ** *h*, then **و** carrying *o*, then **ن** *n*,
-then **ا** long *ā*. Every one of those four shapes has already turned up in a
-word you have met. There is nothing new to decode here, which is rare, and
-worth enjoying.
+[YOU READ: from the right edge — **ہ** *h*, then **و** carrying *o*, then **ن** *n*, then **ا** long *ā*]
+
+Every one of those four shapes has already turned up in a word you have met.
+There is nothing new to decode here, which is rare, and worth enjoying.
 
 ## Grammar Lens: the ending that names every verb
 <!-- hl-knowledge: introduces=[UR-GRAMMAR-NA-INFINITIVE]; assesses=[] -->

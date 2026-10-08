@@ -38,7 +38,7 @@ in the same line.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C453-LIMPIEZA-01, ES-LEX-C453-LIMPIEZA-03, ES-LEX-C453-LIMPIEZA-02] -->
 
-A sheet taped inside the entrance hall. Read it, then answer.
+A sheet taped inside the entrance hall. [YOU READ: it, then answer]
 
 > **TURNOS DE LIMPIEZA — ESCALERA B**
 
@@ -74,9 +74,11 @@ that lets a sentence say what happens without naming who.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C453-LIMPIEZA-01, ES-LEX-C453-LIMPIEZA-02, ES-LEX-C453-LIMPIEZA-03, ES-LEX-C453-LIMPIEZA-04] -->
 
-[PAUSE 3s] Now your turn, out loud and then in writing. Four lines for a
-stairwell notice: say the cleaning is on a rota, say whose week it is, say the
-boiler installation is not included, and tell people to check the sheet first.
+[PAUSE 3s] Now your turn, out loud. Four lines for a stairwell notice: say the
+cleaning is on a rota, say whose week it is, say the boiler installation is not
+included, and tell people to check the sheet first.
+
+[YOU WRITE: the same four lines]
 
 Then check yourself: did *rotativa* agree with *la limpieza*, and did you use
 the *ustedes* command?

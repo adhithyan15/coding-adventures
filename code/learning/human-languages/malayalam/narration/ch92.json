@@ -4,7 +4,7 @@
   "chapter": 92,
   "title": "Eating Out",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3ad0e6eb0f2c7e80",
+  "sourceHash": "fnv1a64:0dc2af81ffef8aa0",
   "lessons": [
     {
       "id": "ML-C92-bhakshanam",
@@ -149,7 +149,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f2ddfc27a3ef459",
+      "sourceHash": "fnv1a64:0909559bb6257c31",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read it aloud and you will hear an English word inside it. Do not trust it."
+              "text": "Say it aloud and you will hear an English word inside it. Do not trust it."
             },
             {
               "kind": "speech",
@@ -427,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45619b3feb51357c",
+      "sourceHash": "fnv1a64:1a9cea7f55d32294",
       "notice": null,
       "blocks": [
         {
@@ -443,7 +443,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say food, then say the place that serves it."
+              "text": "Leave the lessons before this one closed. Say food, then say the place that serves it."
             }
           ]
         },

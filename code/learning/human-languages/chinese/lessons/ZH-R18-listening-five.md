@@ -38,8 +38,8 @@ reviews_of: [ZH-R18-looking-three-r2, ZH-R18-book-reading-r1]
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-KAN-01, ZH-LEX-KANJIAN-01, ZH-LEX-HAOKAN-01, ZH-LEX-SHU-01, ZH-LEX-KANSHU-01] -->
 
-Keep the page covered. Hear all five Mandarin forms in mixed order and give
-each meaning. Then reverse the cards and say all five Mandarin forms. Score
+Keep the page covered. Hear all five Mandarin forms in mixed order and give each
+meaning. Then reverse the direction and say all five Mandarin forms. Score
 listening and speaking separately out of five.
 
 ## Wrap-up Recall

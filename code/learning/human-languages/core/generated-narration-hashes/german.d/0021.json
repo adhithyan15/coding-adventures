@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 21,
-  "sourceHash": "fnv1a64:77a7470fba9a5f21",
+  "sourceHash": "fnv1a64:87ab6238fec6f09b",
   "lessonIds": [
     "GE-C13-rot",
     "GE-C13-rot-ruber",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "german/narration/ch21.txt",
   "json": "german/narration/ch21.json",
-  "textHash": "fnv1a64:311d84205bcbdc6a",
-  "jsonHash": "fnv1a64:89f07de55d714e73",
+  "textHash": "fnv1a64:d26cbd53ef327498",
+  "jsonHash": "fnv1a64:8bb158bc0852450d",
   "findings": []
 }

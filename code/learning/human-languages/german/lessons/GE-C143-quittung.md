@@ -40,7 +40,11 @@ reviews_of: [GE-C143-oeffnungszeiten]
 ## You'll want to know: die Quittung
 <!-- hl-knowledge: introduces=[GE-LEX-C143-READ143-05]; assesses=[] -->
 
-**die Quittung** — "a receipt". Read the receipt: **Quittung: Miete, 400 Euro.** The rent is paid: keep it.
+**die Quittung** — "a receipt".
+
+[YOU READ: the receipt — **Quittung: Miete, 400 Euro.**]
+
+The rent is paid: keep it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

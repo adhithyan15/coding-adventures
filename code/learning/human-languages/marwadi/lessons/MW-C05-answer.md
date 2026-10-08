@@ -54,14 +54,16 @@ attempt because every sign is already yours.
 
 1. hear the line and say the name the speaker gives
 2. say the line once with *rām*
-3. read the four groups without romanization
+3. [YOU READ: the four groups without romanization]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PHRASE-MY-NAME-IS-01, MW-SCRIPT-MHARO-01, MW-SCRIPT-NAAM-01, MW-SCRIPT-RAAM-01, MW-SCRIPT-HAI-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 <!-- hl-activity: {"id":"MW-C05-answer-dictation","kind":"text","assesses":["MW-PHRASE-MY-NAME-IS-01","MW-SCRIPT-MHARO-01","MW-SCRIPT-NAAM-01","MW-SCRIPT-RAAM-01","MW-SCRIPT-HAI-01"],"prompt":"From the heard cue mhāro nām rām hai alone, write the complete Marwadi statement.","answer":"म्हारो नाम राम है।","accepted":["म्हारो नाम राम है"],"feedback":{"correct":"Right: म्हारो नाम राम है।","incorrect":"Repair one group at a time: म्हारो | नाम | राम | है."},"response_seconds":25} -->
 
-Cover every written model. Hear the line once.
+[YOU COVER: every written model]
+
+Hear the line once.
 [YOU WRITE: the line — then uncover the model and repair one group, not the whole sentence]
 
 Sources: [Ek Bharat Shreshtha Bharat language report](https://www.rgmcet.edu.in/assets/img/documents/Campus%20Life/Other%20Reports.pdf) and [Rajasthan Sahitya Akademi, *Jāgtī Jot*, November 2007](https://rsad.artandculture.rajasthan.gov.in/content/dam/doitassets/art-and-culture/Rajasthani-Bhasha-Sahitya-Avm-Sanskriti-Academy-Bikaner/pdf/JJ_All_Pdf/JJ_36_08_08_November_to_November_2007.pdf).

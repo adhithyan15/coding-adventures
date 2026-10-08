@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "One small step into school",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9c1bf575a511ce6f",
+  "sourceHash": "fnv1a64:6bdcc73da39f2531",
   "lessons": [
     {
       "id": "ZH-C14-hear-xiao",
@@ -198,7 +198,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2926a3361bc0d24a",
+      "sourceHash": "fnv1a64:b59d9c398d8e361e",
       "notice": null,
       "blocks": [
         {
@@ -237,8 +237,13 @@
               "text": "小 — xiǎo — small; little."
             },
             {
-              "kind": "speech",
-              "text": "Read the character without pinyin, then say it with a low third tone."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the character without pinyin, then say it with a low third tone",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the character without pinyin, then say it with a low third tone]"
             }
           ]
         },
@@ -657,7 +662,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23786c81ee089f86",
+      "sourceHash": "fnv1a64:9f9869a53ac81272",
       "notice": null,
       "blocks": [
         {
@@ -689,7 +694,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear small, primary school, and primary-school student in mixed order. Say and read each."
+              "text": "Hear small, primary school, and primary-school student in mixed order. Say each."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each]"
             },
             {
               "kind": "prompt",
@@ -753,7 +767,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:832afa8950b1acec",
+      "sourceHash": "fnv1a64:6331f4add6669e20",
       "notice": null,
       "blocks": [
         {
@@ -789,11 +803,20 @@
             },
             {
               "kind": "speech",
-              "text": "Speaking: produce all three from meaning cards, with tones audible."
+              "text": "Speaking: produce all three from their English meanings, with tones audible."
             },
             {
               "kind": "speech",
-              "text": "Reading: read all three character cards without pinyin."
+              "text": "Reading:"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all three character cards without pinyin",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all three character cards without pinyin]"
             },
             {
               "kind": "speech",

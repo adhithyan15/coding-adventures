@@ -38,7 +38,8 @@ reviews_of: [JA-C71-mei]
 
 [PAUSE 2s] Before the new one: say the Japanese for a nephew, then the Japanese for a niece.
 
-[PAUSE 1s] Read this without stopping: **もういちど、おねがいします**. (Once more, please.)
+[PAUSE 1s]
+[YOU READ: this without stopping — **もういちど、おねがいします** (Once more, please.)]
 
 ## You'll want to know: ごご
 <!-- hl-knowledge: introduces=[JA-LEX-C72-TIME72-01]; assesses=[] -->

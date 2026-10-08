@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 33,
-  "sourceHash": "fnv1a64:3690c1f5ddef11d6",
+  "sourceHash": "fnv1a64:894492a2246d149f",
   "lessonIds": [
     "MW-C33-hear-chha",
     "MW-C33-chha",
@@ -21,7 +21,7 @@
   "drivablePrefix": 3,
   "text": "marwadi/narration/ch33.txt",
   "json": "marwadi/narration/ch33.json",
-  "textHash": "fnv1a64:3a0284df14b18389",
-  "jsonHash": "fnv1a64:d5a19ed2933e9f17",
+  "textHash": "fnv1a64:e262012b6ef6c34b",
+  "jsonHash": "fnv1a64:dac031cf8c932b3e",
   "findings": []
 }

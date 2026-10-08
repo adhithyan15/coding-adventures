@@ -37,7 +37,8 @@ reviews_of: [IT-C113-classe]
 
 [PAUSE 2s] Before the new one: say the Italian for a till, then the Italian for a class.
 
-[PAUSE 3s] Read *il cinema, il teatro, lo stadio* aloud as one line, without stopping between the words.
+[PAUSE 3s]
+[YOU READ: *il cinema, il teatro, lo stadio* aloud as one line, without stopping between the words]
 
 ## You'll want to know: la lezione
 <!-- hl-knowledge: introduces=[IT-LEX-C114-SCUOLA114-01]; assesses=[] -->

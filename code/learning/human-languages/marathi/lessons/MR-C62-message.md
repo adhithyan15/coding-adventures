@@ -52,10 +52,12 @@ you.
 > मी मराठी वाचतो.
 > धन्यवाद.
 
-[PAUSE 3s] Read it through once, without stopping.
+[PAUSE 3s] [YOU READ: the message through once, without stopping]
 
-[PAUSE 3s] Again — and notice you did not assemble it line by line the second
-time. You took it in.
+[PAUSE 3s]
+[YOU READ: it again, and notice you did not assemble it line by line the second time]
+
+You took it in.
 
 ## You'll want to know: the same sentences, the other way round
 <!-- hl-knowledge: introduces=[]; assesses=[MR-SKILL-READ-MESSAGE] -->

@@ -4,7 +4,7 @@
   "chapter": 96,
   "title": "Easy and Difficult",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:8f79628858fd8ea5",
+  "sourceHash": "fnv1a64:a927e99b68117299",
   "lessons": [
     {
       "id": "ML-C96-eluppam",
@@ -335,7 +335,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89cd9d24011e50a8",
+      "sourceHash": "fnv1a64:14557dec2a795572",
       "notice": null,
       "blocks": [
         {
@@ -351,7 +351,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say this is easy, then say the opposite."
+              "text": "Leave the lessons before this one closed. Say this is easy, then say the opposite."
             }
           ]
         },

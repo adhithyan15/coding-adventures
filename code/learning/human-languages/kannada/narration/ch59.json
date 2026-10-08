@@ -4,7 +4,7 @@
   "chapter": 59,
   "title": "Weather and Ground",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:916e2e4cc1587f77",
+  "sourceHash": "fnv1a64:c8bd30eb43792ed8",
   "lessons": [
     {
       "id": "KA-C59-wind",
@@ -289,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54e585a8cedb7ca4",
+      "sourceHash": "fnv1a64:aa8b7c61018dbb30",
       "notice": null,
       "blocks": [
         {
@@ -320,7 +320,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read it slowly and you will see ಮರ standing at the front of it. Do not trust that. The tree-word and the sand-word are separate items that happen to begin alike, and a learner who joins them has invented an etymology. Kannada has plenty of real ones; this is not one, and knowing when to stop is part of the skill."
+              "text": "Say it slowly and you will hear ಮರ standing at the front of it. Do not trust that. The tree-word and the sand-word are separate items that happen to begin alike, and a learner who joins them has invented an etymology. Kannada has plenty of real ones; this is not one, and knowing when to stop is part of the skill."
             },
             {
               "kind": "speech",

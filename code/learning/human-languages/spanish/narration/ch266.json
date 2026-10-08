@@ -4,7 +4,7 @@
   "chapter": 266,
   "title": "Review --- Four Last Pieces, and the Thread",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:200342da474de0b5",
+  "sourceHash": "fnv1a64:8bef9eec63ba4df1",
   "lessons": [
     {
       "id": "ES-C67-repaso-a1",
@@ -480,7 +480,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d900f0fe671993a",
+      "sourceHash": "fnv1a64:ca6eaee6007d9670",
       "notice": null,
       "blocks": [
         {
@@ -526,8 +526,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read it once without stopping. Do not translate as you go — let the sentences arrive."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage once without stopping; do not translate as you go — let the sentences arrive",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]"
             },
             {
               "kind": "pause",
@@ -536,8 +541,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Now read it again, and notice how little work it took."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it again, and notice how little work it took",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it again, and notice how little work it took]"
             }
           ]
         },
@@ -714,7 +724,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a1e3c61e501f4157",
+      "sourceHash": "fnv1a64:9b0f8cac95224383",
       "notice": null,
       "blocks": [
         {
@@ -760,8 +770,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Once through, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it once through, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it once through, without stopping]"
             },
             {
               "kind": "pause",
@@ -770,8 +785,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it again, and this time notice that you did not have to work out who Está refers to",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it again, and this time notice that you did not have to work out who *Está* refers to]"
+            },
+            {
               "kind": "speech",
-              "text": "Again — and this time notice that you did not have to work out who Está refers to. Spanish left the name out and you kept it anyway."
+              "text": "Spanish left the name out and you kept it anyway."
             }
           ]
         },
@@ -919,7 +943,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1dfffac998c87247",
+      "sourceHash": "fnv1a64:a571c591853d770b",
       "notice": null,
       "blocks": [
         {
@@ -955,8 +979,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Once through, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it once through, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it once through, without stopping]"
             },
             {
               "kind": "pause",
@@ -966,7 +995,7 @@
             },
             {
               "kind": "speech",
-              "text": "Now answer this before you read it again: how many people are in it?"
+              "text": "Now answer this before going through it again: how many people are in it?"
             }
           ]
         },

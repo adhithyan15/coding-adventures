@@ -33,8 +33,8 @@ reviews_of: [ML-C90-participle, ML-C90-clause-in-front, ML-C90-past-participle]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C90-PARTICIPLE-01, ML-GRAMMAR-C90-PAST-PARTICIPLE-01] -->
 
-[PAUSE 3s] Close the lessons before this one. Say *he goes*, then turn it into
-*that goes*. Do the same with *he came*.
+[PAUSE 3s] Leave the lessons before this one closed. Say *he goes*, then turn it
+into *that goes*. Do the same with *he came*.
 
 ## Grammar Lens: one vowel sign, and a whole construction
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C90-PARTICIPLE-01, ML-GRAMMAR-C90-PAST-PARTICIPLE-01, ML-CONCEPT-C36-KUTTI-01, ML-LEX-C48-ROLE-01] -->

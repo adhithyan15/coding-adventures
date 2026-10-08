@@ -44,7 +44,7 @@ reviews_of: [RU-C23-dva, RU-C17-odin]
 > **три** — *tri* — **three**
 
 Three letters, and every one of them is a Cyrillic shape this book taught long
-ago. Say it and read it at the same time: **т-р-и**.
+ago. [YOU READ: **т-р-и** as you say it]
 
 ## The word, taken apart — three, tres, tri
 <!-- hl-knowledge: introduces=[RU-ETYMON-TRI-TREYES]; assesses=[RU-LEX-TRI-01, RU-LEX-DVA-01] -->

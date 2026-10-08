@@ -51,7 +51,7 @@ writing it.
 ## Reading
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTH-C425-01, ES-ORTH-C425-02, ES-ORTH-C425-04] -->
 
-Read this exchange aloud:
+[YOU READ: this exchange aloud]
 
 > — ¿Cómo se escribe su apellido?
 > — Vázquez. Uve, a con tilde, zeta, cu, u, e, zeta.

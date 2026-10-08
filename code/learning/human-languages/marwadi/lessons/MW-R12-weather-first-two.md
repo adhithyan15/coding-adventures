@@ -41,7 +41,7 @@ reviews_of: [MW-C12-mausam, MW-C12-garmi, MW-W12-au-matra, MW-W12-ga, MW-C11-baa
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAUSAM-01, MW-SCRIPT-MAUSAM-01, MW-LEX-GARMI-01, MW-SCRIPT-GARMI-01] -->
 
-Hear the two words in mixed order, give each meaning, and read both cards.
+Hear the two words in mixed order and give each meaning. [YOU READ: both cards]
 [YOU WRITE: both from sound]
 
 ## Wrap-up Recall

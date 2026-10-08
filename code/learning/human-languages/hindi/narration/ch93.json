@@ -4,7 +4,7 @@
   "chapter": 93,
   "title": "Telling Somebody To Do Something",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:2e9f65c9ebc92984",
+  "sourceHash": "fnv1a64:d34f0bc43098c940",
   "lessons": [
     {
       "id": "HI-C85-bolo",
@@ -844,7 +844,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ea8597f5d8b305a",
+      "sourceHash": "fnv1a64:bc26d7098c02796a",
       "notice": null,
       "blocks": [
         {
@@ -897,8 +897,17 @@
           "title": "Reading",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "these aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: these aloud]"
+            },
+            {
               "kind": "speech",
-              "text": "Read these aloud. Every word has been taught:"
+              "text": "Every word has been taught:"
             },
             {
               "kind": "speech",

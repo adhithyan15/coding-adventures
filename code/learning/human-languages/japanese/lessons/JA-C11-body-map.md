@@ -36,8 +36,7 @@ reviews_of: [JA-C11-te-hand, JA-C11-mimi, JA-C11-kuchi, JA-C11-ashi, JA-C11-hana
 
 [PAUSE 25s] [YOU WRITE: **っ, て, た, だ**]
 
-Read **ゆっくり**, **いって**,
-**わかりました**, and **ください** once; the old repair exposure is now closed.
+[YOU READ: **ゆっくり**, **いって**, **わかりました**, and **ください** once — the old repair exposure is now closed]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-PERFORMANCE-BODY-SEVEN-01]; assesses=[] -->
@@ -52,7 +51,7 @@ its own lesson, and every sign was already earned.
 
 1. **Listen:** say the English for the named body part.
 2. **Speak:** name any three without reading.
-3. **Read:** read all seven from left to right.
+3. **Reading:** [YOU READ: all seven from left to right]
 4. [YOU WRITE: any three of the seven, from memory]
 
 ## Wrap-up Recall

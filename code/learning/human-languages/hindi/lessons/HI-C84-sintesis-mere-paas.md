@@ -57,7 +57,9 @@ copula, and it is agreeing with *kitāb*.
 ## Reading
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C84-POSS-05, HI-LEX-C84-POSS-04, HI-LEX-C84-POSS-01, HI-LEX-C84-POSS-02] -->
 
-Read aloud. Every word has been taught:
+[YOU READ: the lines below aloud]
+
+Every word has been taught:
 
 > — आपके पास क्या है?
 > — मेरे पास एक किताब है।

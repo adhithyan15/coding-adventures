@@ -4,7 +4,7 @@
   "chapter": 148,
   "title": "To hide, To fall, To teach, To lift, To jump",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6f273d9d9c740413",
+  "sourceHash": "fnv1a64:c5d1da046731be13",
   "lessons": [
     {
       "id": "PA-C148-lukna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:24ff38d185a32203",
+      "sourceHash": "fnv1a64:9d4a702706d319ef",
       "notice": null,
       "blocks": [
         {
@@ -44,8 +44,17 @@
               "source": "[PAUSE 1s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the form line once — ਕੰਮ: ਨੌਕਰੀ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the form line once — **ਕੰਮ: ਨੌਕਰੀ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read the form line once: ਕੰਮ: ਨੌਕਰੀ. What does this person do? (A job, naukarī.)"
+              "text": "What does this person do? (A job, naukarī.)"
             }
           ]
         },

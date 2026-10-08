@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "When the Calendar Stopped Naming",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:45e00de82b056b18",
+  "sourceHash": "fnv1a64:2589db49671ab542",
   "lessons": [
     {
       "id": "GE-C09-juli",
@@ -885,7 +885,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7bd5fa8029cb0901",
+      "sourceHash": "fnv1a64:030cf35f468d0791",
       "notice": null,
       "blocks": [
         {
@@ -928,7 +928,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read across each row and hear that nothing rhymes. German counts in one language and dates in another, and never reconciled the two — because there was never any occasion to."
+              "text": "Go across each row and hear that nothing rhymes. German counts in one language and dates in another, and never reconciled the two — because there was never any occasion to."
             }
           ]
         },

@@ -40,7 +40,11 @@ reviews_of: [LA-C164-pretium]
 ## You'll want to know: vēnālis, vēnāle
 <!-- hl-knowledge: introduces=[LA-LEX-C164-LEG164-04]; assesses=[] -->
 
-**vēnālis, vēnāle** — "for sale". Read the sign: **Domus vēnālis.** — "House for sale." It comes from **vēnum**, "sale", like **vendō**, "to sell".
+**vēnālis, vēnāle** — "for sale".
+
+[YOU READ: the sign — **Domus vēnālis.** — "House for sale."]
+
+It comes from **vēnum**, "sale", like **vendō**, "to sell".
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

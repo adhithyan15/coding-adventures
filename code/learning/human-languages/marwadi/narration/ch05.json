@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Mharo Naam: Give One Name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b77253bd604b456d",
+  "sourceHash": "fnv1a64:a8d76f62c25619c7",
   "lessons": [
     {
       "id": "MW-C05-hear-mharo",
@@ -331,7 +331,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33cc798e4b0692b6",
+      "sourceHash": "fnv1a64:6e7f16bb31c288e6",
       "notice": null,
       "blocks": [
         {
@@ -381,8 +381,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look for five seconds, cover म्हारो (mhāro), and wait five seconds."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "म्हारो (mhāro) after a five-second look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: **म्हारो** after a five-second look, then wait five seconds]"
             },
             {
               "kind": "prompt",
@@ -401,8 +406,13 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read your repaired word once without romanization."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "your repaired word once without romanization",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: your repaired word once without romanization]"
             },
             {
               "kind": "speech",
@@ -445,7 +455,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34dafb89b598c5c2",
+      "sourceHash": "fnv1a64:682a8a926eed823e",
       "notice": null,
       "blocks": [
         {
@@ -461,7 +471,38 @@
             },
             {
               "kind": "speech",
-              "text": "Hear राम-राम सा and answer it. Retrieve पाणी once by ear, voice, eye, and writing. Then hear mhāro, say my, and read म्हारो once."
+              "text": "Hear राम-राम सा and answer it. Retrieve पाणी once by ear and voice."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "पाणी",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **पाणी**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "पाणी once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **पाणी** once]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then hear mhāro and say my."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "म्हारो (mhāro) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **म्हारो** once]"
             }
           ]
         },
@@ -638,7 +679,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59124d4767f0bfc2",
+      "sourceHash": "fnv1a64:41fe1a2e6f0c778c",
       "notice": null,
       "blocks": [
         {
@@ -697,8 +738,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look for five seconds, cover नाम (nām), and wait five seconds."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "नाम (nām) after a five-second look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: **नाम** after a five-second look, then wait five seconds]"
             },
             {
               "kind": "prompt",
@@ -717,8 +763,13 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read म्हारो (mhāro) नाम (nām) and say my name."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "म्हारो (mhāro) नाम (nām), then say my name",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **म्हारो नाम**, then say **my name**]"
             },
             {
               "kind": "activity",
@@ -757,7 +808,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:360563ed6eb0d6d1",
+      "sourceHash": "fnv1a64:76926560078cf53f",
       "notice": null,
       "blocks": [
         {
@@ -772,8 +823,13 @@
               "source": "[PAUSE 12s]"
             },
             {
-              "kind": "speech",
-              "text": "Read आभार once."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "आभार once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **आभार** once]"
             },
             {
               "kind": "prompt",
@@ -967,7 +1023,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45f4d06ab7e0124a",
+      "sourceHash": "fnv1a64:39def2e141c6bd0c",
       "notice": null,
       "blocks": [
         {
@@ -1016,8 +1072,13 @@
               "text": "say the line once with rām."
             },
             {
-              "kind": "speech",
-              "text": "read the four groups without romanization."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the four groups without romanization",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the four groups without romanization]"
             }
           ]
         },
@@ -1027,8 +1088,17 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "every written model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: every written model]"
+            },
+            {
               "kind": "speech",
-              "text": "Cover every written model. Hear the line once."
+              "text": "Hear the line once."
             },
             {
               "kind": "prompt",

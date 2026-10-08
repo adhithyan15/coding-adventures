@@ -49,7 +49,8 @@ call out to a woman. Here you are learning the word for reading and building.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NU-01, ZH-SCRIPT-NU-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Read **女** and cover it. [YOU WRITE: the character, from the meaning cue **female**]
+[YOU READ: **女**, then cover it]
+[YOU WRITE: the character, from the meaning cue **female**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NU-01] -->

@@ -40,9 +40,10 @@ order. Then say **read a book**. [YOU WRITE: **中学**]
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NIHAOMA-01, ZH-ORTHO-NIHAOMA-01, ZH-LEX-SHIMA-01, ZH-ORTHO-SHIMA-01, ZH-LEX-HAOBUHAO-01, ZH-GRAMMAR-V-NOT-V-01, ZH-GRAMMAR-MA-QUESTION-01, ZH-SCRIPT-MA-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Hear the three meanings in mixed order. Say each Mandarin answer and read its
-unpointed card. Decide which of the two question patterns it uses — the light
-syllable on the end, or the word denied in the middle. [YOU WRITE: each one]
+Hear the three meanings in mixed order. Say each Mandarin answer.
+[YOU READ: its unpointed card] Decide which of the two question patterns it uses
+— the light syllable on the end, or the word denied in the middle.
+[YOU WRITE: each one]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NIHAOMA-01, ZH-LEX-SHIMA-01, ZH-LEX-HAOBUHAO-01, ZH-GRAMMAR-V-NOT-V-01] -->

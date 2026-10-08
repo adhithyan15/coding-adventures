@@ -41,7 +41,11 @@ reviews_of: [HI-C167-kiraya]
 ## You'll want to know: तारीख़
 <!-- hl-knowledge: introduces=[HI-LEX-C167-READ167-02]; assesses=[] -->
 
-**तारीख़** — *tārīkh* — "a date". Read the note: **तारीख़ पाँच, सुबह नौ बजे।** (*tārīkh pā̃c, subah nau baje.*) The fifth, at nine in the morning.
+**तारीख़** — *tārīkh* — "a date".
+
+[YOU READ: the note — **तारीख़ पाँच, सुबह नौ बजे।** (*tārīkh pā̃c, subah nau baje.*)]
+
+The fifth, at nine in the morning.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

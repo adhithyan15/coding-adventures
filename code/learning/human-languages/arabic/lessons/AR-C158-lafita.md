@@ -41,7 +41,11 @@ reviews_of: [AR-C158-jadwal]
 ## You'll want to know: لافتة
 <!-- hl-knowledge: introduces=[AR-LEX-C158-QIRAA158-02]; assesses=[] -->
 
-**لافتة** — *lāfita* — "a sign, a placard". Read the sign: **مغلق يوم الجمعة** — *mughlaq yawm al-jumʿa* — "Closed on Friday." Come on another day.
+**لافتة** — *lāfita* — "a sign, a placard".
+
+[YOU READ: the sign — **مغلق يوم الجمعة** — *mughlaq yawm al-jumʿa* — "Closed on Friday."]
+
+Come on another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -44,7 +44,7 @@ reviews_of: [MW-W01-ra, MW-W01-aa-matra, MW-W01-raam, MW-W01-sa, MW-W01-saa, MW-
 >
 > B: **राम-राम सा, राम-राम।**
 
-Run both voices once. Then cover B and answer A aloud. Switch roles.
+Run both voices once. [YOU COVER: B, then answer A aloud] Switch roles.
 
 ## Guided Practice — four-skill checkpoint
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-RAAM-RAAM-SAA, MW-REGISTER-SAA, MW-DIALOGUE-GREETING-01] -->
@@ -52,7 +52,7 @@ Run both voices once. Then cover B and answer A aloud. Switch roles.
 1. **Listen:** ask someone or a screen reader to say *rām-rām sā* without
    showing the text; identify it as a greeting.
 2. **Speak:** give the greeting without reading.
-3. **Read:** read **राम-राम सा** without romanization.
+3. **Reading:** [YOU READ: **राम-राम सा** without romanization]
 4. [YOU WRITE: **राम-राम सा** from memory, after fifteen seconds with the book closed — check the repeated word, hyphen, space, and final **सा**]
 
 Writing counts only if the model was hidden. Copying was the ramp; this is recall.

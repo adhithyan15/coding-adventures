@@ -4,7 +4,7 @@
   "chapter": 115,
   "title": "Synthesis --- A Small Story",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:97f8ffd22321bbaa",
+  "sourceHash": "fnv1a64:a6847dac063895f6",
   "lessons": [
     {
       "id": "ES-C48-sintesis-una-historia",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5287b2e454eaaa19",
+      "sourceHash": "fnv1a64:21f968c833d50fe5",
       "notice": null,
       "blocks": [
         {
@@ -54,11 +54,11 @@
             },
             {
               "kind": "speech",
-              "text": "Now read only the imperfects: estudiaba, tenía. Those two sentences tell you what things were like — the situation, with no edges, going on for as long as it needed to."
+              "text": "Now take only the imperfects: estudiaba, tenía. Those two sentences tell you what things were like — the situation, with no edges, going on for as long as it needed to."
             },
             {
               "kind": "speech",
-              "text": "Now read only the preterites: tuve, hablé. Those tell you what happened — two events, each with edges, in order."
+              "text": "Now take only the preterites: tuve, hablé. Those tell you what happened — two events, each with edges, in order."
             },
             {
               "kind": "speech",

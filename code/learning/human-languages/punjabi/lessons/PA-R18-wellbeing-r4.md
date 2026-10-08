@@ -37,7 +37,8 @@ reviews_of: [PA-C03-kivein, PA-C03-tusi-kivein-ho, PA-C03-main, PA-C03-thik, PA-
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-KIVEIN-03, PA-PHRASE-HOW-ARE-YOU-03, PA-PHRASE-I-AM-FINE-03, PA-PHRASE-NO-PROBLEM-03] -->
 
-[PAUSE 3s] No new language. Keep this oral: listen, speak, then type only a record of what you already said.
+[PAUSE 3s] No new language. Keep this oral: listen, then speak.
+[YOU WRITE: then only a typed record of what you already said]
 
 ## The exchange
 <!-- hl-knowledge: introduces=[]; assesses=[PA-GRAMMAR-TUSI-HO-03, PA-ETYMON-QUESTION-K-03, PA-ETYMON-FIRST-PERSON-M-03, PA-ETYMON-NEGATIVE-NE-03, PA-GRAMMAR-MAIN-HAAN-03, PA-LEX-MAIN-03, PA-LEX-THIK-03, PA-PHRASE-HOW-ARE-YOU-03, PA-PHRASE-I-AM-FINE-03, PA-PHRASE-NO-PROBLEM-03, PA-LEX-KIVEIN-03] -->

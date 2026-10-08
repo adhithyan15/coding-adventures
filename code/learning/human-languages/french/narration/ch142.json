@@ -4,7 +4,7 @@
   "chapter": 142,
   "title": "Opening Hours, a Notice, the Rent, an Advert, a Bill",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:7e28105316445474",
+  "sourceHash": "fnv1a64:9b5da0c123ab7bfa",
   "lessons": [
     {
       "id": "FR-C142-lhoraire",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da37301f88839ea2",
+      "sourceHash": "fnv1a64:48f2a6c3cb337822",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "l'horaire — \"opening hours, a timetable\". Read the door: Horaire: lundi – vendredi, 9 h – 18 h. Open on weekdays from nine to six: not on samedi."
+              "text": "l'horaire — \"opening hours, a timetable\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the door — Horaire: lundi – vendredi, 9 h – 18 h.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the door — **Horaire : lundi – vendredi, 9 h – 18 h.**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Open on weekdays from nine to six: not on samedi."
             }
           ]
         },
@@ -142,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:94d5666a66e30382",
+      "sourceHash": "fnv1a64:eaaba2ba49d199dc",
       "notice": null,
       "blocks": [
         {
@@ -169,7 +182,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "l'avis — \"a notice, an opinion\". Read the notice: Avis: le magasin est fermé aujourd'hui. The shop is closed today, so come back another day."
+              "text": "l'avis — \"a notice, an opinion\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the notice — Avis: le magasin est fermé aujourd'hui.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the notice — **Avis : le magasin est fermé aujourd'hui.**]"
+            },
+            {
+              "kind": "speech",
+              "text": "The shop is closed today, so come back another day."
             }
           ]
         },
@@ -388,7 +414,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40efe3fc9847ddee",
+      "sourceHash": "fnv1a64:d0490b3f41b16ca2",
       "notice": null,
       "blocks": [
         {
@@ -415,7 +441,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "l'annonce — \"an advert, an announcement\". Read the advert: Chambre libre. Loyer: 400 euros. A room is free, at 400 a month."
+              "text": "l'annonce — \"an advert, an announcement\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the advert — Chambre libre. Loyer: 400 euros.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the advert — **Chambre libre. Loyer : 400 euros.**]"
+            },
+            {
+              "kind": "speech",
+              "text": "A room is free, at 400 a month."
             }
           ]
         },
@@ -511,7 +550,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72e7faef9a87cec8",
+      "sourceHash": "fnv1a64:7d8b12c34cb42c50",
       "notice": null,
       "blocks": [
         {
@@ -538,7 +577,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "la facture — \"a bill, an invoice\". Read the bill: Facture: loyer, 400 euros. À payer avant lundi. Pay it before Monday."
+              "text": "la facture — \"a bill, an invoice\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the bill — Facture: loyer, 400 euros. À payer avant lundi.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the bill — **Facture : loyer, 400 euros. À payer avant lundi.**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Pay it before Monday."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 22,
-  "sourceHash": "fnv1a64:e4f3821f4fb6ea18",
+  "sourceHash": "fnv1a64:5b30af86aab7d5f8",
   "lessonIds": [
     "MR-R18-script-warmup",
     "MR-R18-script-a-r4",
@@ -17,7 +17,7 @@
   "drivablePrefix": 9,
   "text": "marathi/narration/ch22.txt",
   "json": "marathi/narration/ch22.json",
-  "textHash": "fnv1a64:9530aa47930a42e5",
-  "jsonHash": "fnv1a64:562375f9fff150a6",
+  "textHash": "fnv1a64:8490ca057b49e186",
+  "jsonHash": "fnv1a64:dd23b9faeeff7414",
   "findings": []
 }

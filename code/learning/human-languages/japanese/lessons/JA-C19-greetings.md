@@ -53,10 +53,12 @@ that order is reversed.
 > さようなら
 > すみません
 
-[PAUSE 3s] Read down once, without stopping.
+[PAUSE 3s] [YOU READ: the six greetings down once, without stopping]
 
-[PAUSE 3s] Again — and notice that the two longest are the two you say most
-often. Length is not difficulty here; familiarity is.
+[PAUSE 3s]
+[YOU READ: them again, and notice that the two longest are the two you say most often]
+
+Length is not difficulty here; familiarity is.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HAI, JA-LEX-IIE, JA-LEX-SUMIMASEN] -->

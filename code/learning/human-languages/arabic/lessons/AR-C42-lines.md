@@ -38,8 +38,8 @@ reviews_of: [AR-C42-words, AR-C01-as-salamu-alaykum, AR-C02-maa-ismuka, AR-C02-i
 [PAUSE 2s] The last lesson gave you words standing alone. Now the words join
 other words, in the same way that the letters inside them join one another.
 
-[PAUSE 2s] You have said every line. Read the Arabic first; let meaning arrive
-before any romanization does.
+[PAUSE 2s] You have said every line.
+[YOU READ: the Arabic first; let meaning arrive before any romanization does]
 
 ## Reading
 <!-- hl-knowledge: introduces=[AR-SKILL-READ-LINES]; assesses=[AR-CONCEPT-C02-MAA-ISMUKA-01, AR-CONCEPT-C02-ISMII-01, AR-LEX-C38-AW-01] -->
@@ -51,11 +51,13 @@ before any romanization does.
 > شاي أو حليب؟
 > شاي.
 
-[PAUSE 4s] Read all six lines once without stopping.
+[PAUSE 4s] [YOU READ: all six lines once without stopping]
 
-[PAUSE 3s] Read again. The question mark tells you where a voice asks; the
-full stop tells you where it answers. Arabic puts its question mark the other
-way round — **؟** — because the line itself runs the other way.
+[PAUSE 3s] [YOU READ: them again]
+
+The question mark tells you where a voice asks; the full stop tells you where it
+answers. Arabic puts its question mark the other way round — **؟** — because the
+line itself runs the other way.
 
 ## The sentence, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C33-SHAY-01, AR-CONCEPT-C33-HALIB-01, AR-SKILL-READ-LINES] -->

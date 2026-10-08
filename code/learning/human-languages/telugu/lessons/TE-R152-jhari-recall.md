@@ -45,9 +45,10 @@ it. (**ఝరి**.)
 
 <!-- hl-activity: {"id":"TE-R152-jhari-recall-write","kind":"text","assesses":["TE-LEX-C152-STREAM-01","TE-SCRIPT-RECOG-173"],"prompt":"From the picture cue of a stream, write the whole Telugu word, circle its first base letter, and give the meaning.","answer":"ఝరి — a stream; first letter ఝ","accepted":["ఝరి, stream, ఝ","jhari, stream, jha","ఝరి, mountain stream, ఝ"],"feedback":{"correct":"ఝరి means a stream, and ఝ is its first base letter.","incorrect":"Write ఝరి for the stream, then circle its first base letter ఝ."},"response_seconds":20} -->
 
-Look once at **ఝరి**, then cover it. [YOU WRITE: the whole word from memory, with only the picture of a stream as your cue]
+[YOU READ: **ఝరి** once] [YOU COVER: it]
+[YOU WRITE: the whole word from memory, with only the picture of a stream as your cue]
 
-Now uncover the model and check both the whole word and its first base letter.
+[YOU CHECK: the uncovered model — both the whole word and its first base letter]
 [YOU WRITE: a circle round **ఝ** — then check its three rounded bowls, upper flourish, and separate downward stem, keeping the five pen-down runs distinct]
 
 - [YOU WRITE: **ఝరి** once from the picture cue]

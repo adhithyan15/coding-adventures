@@ -43,7 +43,7 @@ reviews_of: [FA-C17-dah, FA-C17-noh, FA-C17-hasht, FA-C17-haft, FA-C17-shesh, FA
 
 1. Hear all ten named singly and out of order, and say each.
 2. Count backwards from **dah** to **yek**.
-3. Read the ten printed shuffled and say each.
+3. [YOU READ: the ten printed shuffled, then say each]
 4. [YOU WRITE: **سه** and **نه**, the two whose letters the script chapter gave you]
 5. Say the English cousin of each of the ten. Every one has one.
 

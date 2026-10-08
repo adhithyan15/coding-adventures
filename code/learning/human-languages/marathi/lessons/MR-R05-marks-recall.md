@@ -36,7 +36,7 @@ reviews_of: [MR-W05-i-matra, MR-W05-u-matra, MR-W05-uu-matra, MR-W05-ru-matra, M
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Close the chapter. Nothing here needs the page: every answer is a name and a place.
+Leave the chapter closed. Nothing here needs the page: every answer is a name and a place.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-I-MATRA-01, MR-SCRIPT-U-MATRA-01, MR-SCRIPT-UU-MATRA-01, MR-SCRIPT-RU-MATRA-01, MR-SCRIPT-CANDRABINDU-01, MR-SCRIPT-A-INDEPENDENT-01] -->

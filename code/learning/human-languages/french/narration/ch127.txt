@@ -67,7 +67,8 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the French for a rubber, then the French for homework.
 [pause 3 seconds]
-Read La leçon est à neuf heures, dans la classe douze aloud as one line. Then answer from it: at what time is the lesson? (À neuf heures.)
+[once you have stopped driving — read: La leçon est à neuf heures, dans la classe douze aloud as one line]
+Then answer from it: at what time is the lesson? (À neuf heures.)
 
 You'll want to know: la réponse.
 la réponse — "an answer".

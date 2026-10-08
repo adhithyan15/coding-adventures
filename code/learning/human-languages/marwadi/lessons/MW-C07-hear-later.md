@@ -37,8 +37,8 @@ reviews_of: [MW-C06-practice, MW-C01-raam-raam-saa]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-DIALOGUE-WELLBEING-01, MW-ANSWER-WELLBEING-HEARD-01, MW-LEX-HOON-01, MW-LEX-THIK-01, MW-LEX-RAAM-RAAM-SAA] -->
 
-[PAUSE 15s] Ask how someone is, answer *hū̃ ṭhīk hū̃*, then say **राम राम सा** once.
-Close the text before the new parting line begins.
+[PAUSE 15s] Ask how someone is, answer *hū̃ ṭhīk hū̃*, then say **राम राम सा**
+once. [YOU COVER: the text before the new parting line begins]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-PACHHE-01, MW-LEX-MILSOO-01, MW-FAREWELL-LATER-HEARD-01]; assesses=[] -->

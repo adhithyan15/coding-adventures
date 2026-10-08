@@ -36,7 +36,8 @@ reviews_of: [JA-C12-atama, JA-W01-hai-read, JA-W05-hon-kanji, JA-W05-gen-compone
 
 [PAUSE 55s] [YOU WRITE: **あたま**]
 
-Read **はい**.
+[YOU READ: **はい**]
+
 [YOU WRITE: **本**, then sketch the speech component, then **ゆ**, and finish with **かお**]
 
 ## You'll want to know
@@ -49,7 +50,8 @@ Two known signs, two morae.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KAMI-HAIR] -->
 
-Hear, picture the part, say, and read **かみ**. [YOU WRITE: **かみ** from memory]
+Hear, picture the part, and say **かみ**. [YOU READ: **かみ**]
+[YOU WRITE: **かみ** from memory]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KAMI-HAIR] -->

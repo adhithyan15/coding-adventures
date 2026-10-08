@@ -9,7 +9,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Bengali for round, then the Bengali for purple.
 [pause 1 second]
-Read without stopping: আমি ভাত আর দুধ খাই। চা বা জল।.
+[once you have stopped driving — read: আমি ভাত আর দুধ খাই। চা বা জল। without stopping]
 
 You'll want to know: গোলাপি.
 গোলাপি — golāpi — "pink".

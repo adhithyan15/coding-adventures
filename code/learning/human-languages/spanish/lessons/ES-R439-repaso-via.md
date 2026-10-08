@@ -32,8 +32,8 @@ reviews_of: [ES-C439-anden, ES-C439-trasladar, ES-C439-cerrado, ES-C439-cortar, 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C439-VIA-01, ES-LEX-C439-VIA-02, ES-LEX-C439-VIA-03, ES-LEX-C439-VIA-04, ES-LEX-C439-VIA-05] -->
 
-[PAUSE 3s] Close the lessons before this one. Say all five: *the platform*,
-*to move something across*, *closed*, *to cut*, *to throw away*.
+[PAUSE 3s] Leave the lessons before this one closed. Say all five: *the
+platform*, *to move something across*, *closed*, *to cut*, *to throw away*.
 
 ## Grammar Lens: three signs that stop you, and they are not the same
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C439-VIA-03, ES-LEX-C439-VIA-04, ES-LEX-C439-VIA-02] -->

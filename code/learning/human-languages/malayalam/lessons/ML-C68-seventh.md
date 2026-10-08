@@ -54,9 +54,10 @@ curled back.
 One honest warning about the page. This word begins with **ഏ**, the independent
 long **ē**, and that is a letter this book has taught you to *recognise* but not
 yet to *write* — no stroke order for it has been sourced, so none is offered.
-Read it; do not copy it yet. That is why this lesson is headed by its
-romanization rather than by the Malayalam word, the way the counting lessons
-were.
+[YOU READ: it — do not copy it yet]
+
+That is why this lesson is headed by its romanization rather than by the
+Malayalam word, the way the counting lessons were.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C68-ORDINAL-02, ML-LEX-C68-ORDINAL-01] -->

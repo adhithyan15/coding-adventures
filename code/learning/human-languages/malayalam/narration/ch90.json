@@ -4,7 +4,7 @@
   "chapter": 90,
   "title": "A Clause In Front",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:03beb2754c4bfcb9",
+  "sourceHash": "fnv1a64:30466b277d224e94",
   "lessons": [
     {
       "id": "ML-C90-participle",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f182420742de0788",
+      "sourceHash": "fnv1a64:0de14e11ef59c1d6",
       "notice": null,
       "blocks": [
         {
@@ -75,7 +75,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read that against നല്ല കുട്ടി, a good child. The two are built the same way. A quality stands in front of the thing it describes; so does a verb, once it has dropped that vowel sign. Malayalam does not need a new arrangement to let a verb describe a noun — it reuses the one you have had since the adjective chapter."
+              "text": "Set that against നല്ല കുട്ടി, a good child. The two are built the same way. A quality stands in front of the thing it describes; so does a verb, once it has dropped that vowel sign. Malayalam does not need a new arrangement to let a verb describe a noun — it reuses the one you have had since the adjective chapter."
             },
             {
               "kind": "speech",
@@ -491,7 +491,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5abedac906e42822",
+      "sourceHash": "fnv1a64:9448f665e8c6a746",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say he goes, then turn it into that goes. Do the same with he came."
+              "text": "Leave the lessons before this one closed. Say he goes, then turn it into that goes. Do the same with he came."
             }
           ]
         },

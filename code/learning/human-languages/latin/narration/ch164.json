@@ -4,7 +4,7 @@
   "chapter": 164,
   "title": "A Notice, an Inscription, a Price, For Sale, Goods",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:ab9bd43681539d67",
+  "sourceHash": "fnv1a64:79a0e09457d72b10",
   "lessons": [
     {
       "id": "LA-C164-titulus",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:30f785c2a2539716",
+      "sourceHash": "fnv1a64:31f7b44a65abf464",
       "notice": null,
       "blocks": [
         {
@@ -169,7 +169,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "īnscrīptiō, īnscrīptiōnis — \"an inscription\". Read the stone: SPQR is Senātus Populusque Rōmānus, \"the Senate and People of Rome\". It is in + scrībō: writing cut into something."
+              "text": "īnscrīptiō, īnscrīptiōnis — \"an inscription\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the stone — SPQR is Senātus Populusque Rōmānus, \"the Senate and People of Rome\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the stone — **SPQR** is **Senātus Populusque Rōmānus**, \"the Senate and People of Rome\"]"
+            },
+            {
+              "kind": "speech",
+              "text": "It is in + scrībō: writing cut into something."
             }
           ]
         },
@@ -388,7 +401,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c2de0ef7dee65d8",
+      "sourceHash": "fnv1a64:b1b2279de6f44ef6",
       "notice": null,
       "blocks": [
         {
@@ -415,7 +428,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "vēnālis, vēnāle — \"for sale\". Read the sign: Domus vēnālis. — \"House for sale.\" It comes from vēnum, \"sale\", like vendō, \"to sell\"."
+              "text": "vēnālis, vēnāle — \"for sale\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the sign — Domus vēnālis. — \"House for sale.\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the sign — **Domus vēnālis.** — \"House for sale.\"]"
+            },
+            {
+              "kind": "speech",
+              "text": "It comes from vēnum, \"sale\", like vendō, \"to sell\"."
             }
           ]
         },

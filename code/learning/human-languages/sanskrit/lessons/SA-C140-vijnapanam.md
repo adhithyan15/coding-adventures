@@ -41,7 +41,11 @@ reviews_of: [SA-C140-samayasarani]
 ## You'll want to know: विज्ञापनम्
 <!-- hl-knowledge: introduces=[SA-LEX-C140-READ140-03]; assesses=[] -->
 
-**विज्ञापनम्** — *vijñāpanam* — "an advert". Read the advert: **प्रकोष्ठः रिक्तः। मूल्यम् — मासे सहस्रम्।** A room is empty, at a thousand a month.
+**विज्ञापनम्** — *vijñāpanam* — "an advert".
+
+[YOU READ: the advert — **प्रकोष्ठः रिक्तः। मूल्यम् — मासे सहस्रम्।**]
+
+A room is empty, at a thousand a month.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

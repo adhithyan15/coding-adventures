@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 13,
-  "sourceHash": "fnv1a64:aebed6b85717cde6",
+  "sourceHash": "fnv1a64:ad8c39890c723a11",
   "lessonIds": [
     "JA-W13-tsu",
     "JA-R13-tsu-contrast",
@@ -25,7 +25,7 @@
   "drivablePrefix": 0,
   "text": "japanese/narration/ch13.txt",
   "json": "japanese/narration/ch13.json",
-  "textHash": "fnv1a64:704750128612c0e4",
-  "jsonHash": "fnv1a64:6cb35530e9f272eb",
+  "textHash": "fnv1a64:aabbe7b20e3671f9",
+  "jsonHash": "fnv1a64:5e7606321fc126f7",
   "findings": []
 }

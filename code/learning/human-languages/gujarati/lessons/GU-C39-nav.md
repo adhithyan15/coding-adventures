@@ -60,9 +60,9 @@ Two consonants, no attached sign at all: **ન** carrying its inherent *a*, then
 Wiktionary hands **નવ** down from Sauraseni Prakrit *nava*, and that from
 Sanskrit *náva*.
 
-Read that line twice. Nothing happened. Sanskrit *n*, Gujarati **ન**; Sanskrit
-*v*, Gujarati **વ**; only the last vowel fell away, which is what happens to
-every Gujarati word.
+Go over that line twice. Nothing happened. Sanskrit *n*, Gujarati **ન**;
+Sanskrit *v*, Gujarati **વ**; only the last vowel fell away, which is what
+happens to every Gujarati word.
 
 Now look back over the chapter:
 

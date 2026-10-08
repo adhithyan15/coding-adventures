@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e299040b8f35a82c",
+  "sourceHash": "fnv1a64:94dd0cb7b396a5f4",
   "lessons": [
     {
       "id": "HI-C01-namaste",
@@ -1532,7 +1532,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8e78da629aceb35",
+      "sourceHash": "fnv1a64:714f3ea21f384235",
       "notice": null,
       "blocks": [
         {
@@ -1548,7 +1548,16 @@
             },
             {
               "kind": "speech",
-              "text": "No new words or letters. Read each aloud, then recall its meaning and which of Hindi's two heritages it comes from."
+              "text": "No new words or letters."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each aloud, then recall its meaning and which of Hindi's two heritages it comes from",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each aloud, then recall its meaning and which of Hindi's two heritages it comes from]"
             }
           ]
         },

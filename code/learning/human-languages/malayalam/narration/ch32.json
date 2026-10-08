@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:dd6ecc21bfc8d153",
+  "sourceHash": "fnv1a64:1b4cebea81c87e33",
   "lessons": [
     {
       "id": "ML-C32-undu",
@@ -196,7 +196,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a1e51d4ae16b9450",
+      "sourceHash": "fnv1a64:504bcfd5a0215bea",
       "notice": null,
       "blocks": [
         {
@@ -375,7 +375,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I will go.\" (Ñān pōkuṁ) — and find it written: ഞാൻ പോകും. How many words are in this verb's whole Malayalam present tense? (One — pōkunnu, for every person.) Is Kannada's hōgu a different root from pō? (No — the same old p softened to h.) Next: the one place a Malayalam verb can still surprise you."
+              "text": "Say \"I will go.\" (Ñān pōkuṁ)."
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "it written — ഞാൻ പോകും",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: it written — **ഞാൻ പോകും**]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many words are in this verb's whole Malayalam present tense? (One — pōkunnu, for every person.) Is Kannada's hōgu a different root from pō? (No — the same old p softened to h.) Next: the one place a Malayalam verb can still surprise you."
             }
           ]
         }

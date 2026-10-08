@@ -4,7 +4,7 @@
   "chapter": 447,
   "title": "Juzgar",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:ba18b48352db0701",
+  "sourceHash": "fnv1a64:bbe68aa30a7330cb",
   "lessons": [
     {
       "id": "ES-C447-analisis",
@@ -664,7 +664,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:22eba17268af57ce",
+      "sourceHash": "fnv1a64:9119dee3f66d9a6c",
       "notice": null,
       "blocks": [
         {
@@ -680,7 +680,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all four: the test, to mention, the emergency, clumsy."
+              "text": "Leave the lessons before this one closed. Say all four: the test, to mention, the emergency, clumsy."
             }
           ]
         },
@@ -808,7 +808,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8c901900de48d0d",
+      "sourceHash": "fnv1a64:0cd0d0e934e57399",
       "notice": null,
       "blocks": [
         {
@@ -834,8 +834,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read both, then answer."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "both, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: both, then answer]"
             },
             {
               "kind": "speech",
@@ -924,7 +929,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now your turn, out loud and then in writing. Four sentences from a waiting room: say where you are, say it is not serious, say what test they have done, and say somebody mentioned they might come."
+              "text": "Now your turn, out loud. Four sentences from a waiting room: say where you are, say it is not serious, say what test they have done, and say somebody mentioned they might come."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same four sentences",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same four sentences]"
             },
             {
               "kind": "speech",

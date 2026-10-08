@@ -41,7 +41,11 @@ reviews_of: [RU-C139-reklama]
 ## You'll want to know: вход
 <!-- hl-knowledge: introduces=[RU-LEX-C139-CHT139-03]; assesses=[] -->
 
-**вход** (*vkhod*) — "an entrance". Read the sign over a door: **ВХОД** — you go in here. **Вход свободный** means entry is free.
+**вход** (*vkhod*) — "an entrance".
+
+[YOU READ: the sign over a door — **ВХОД**, you go in here]
+
+**Вход свободный** means entry is free.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

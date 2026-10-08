@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 69,
-  "sourceHash": "fnv1a64:51ca1edf26dd2905",
+  "sourceHash": "fnv1a64:233fa875f004fe29",
   "lessonIds": [
     "MR-C69-ha",
     "MR-C69-to",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "marathi/narration/ch69.txt",
   "json": "marathi/narration/ch69.json",
-  "textHash": "fnv1a64:7474d13a05a6fe09",
-  "jsonHash": "fnv1a64:a3435c0001bd8b60",
+  "textHash": "fnv1a64:8521ad97e939af98",
+  "jsonHash": "fnv1a64:d659a0201f75af0a",
   "findings": []
 }

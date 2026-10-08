@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "Reading — Instructions, a Form, and a First Paragraph",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:1a0ee2293de4448a",
+  "sourceHash": "fnv1a64:2936544d1c7b999f",
   "lessons": [
     {
       "id": "FR-C45-instructions",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:128a13b99b9bd34f",
+      "sourceHash": "fnv1a64:19cabcc848955fb7",
       "notice": null,
       "blocks": [
         {
@@ -65,8 +65,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down the list once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "down the list once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: down the list once, without stopping]"
             },
             {
               "kind": "pause",
@@ -75,8 +80,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the list again, and notice that three of them end in an exclamation mark and three do not",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the list again, and notice that three of them end in an exclamation mark and three do not]"
+            },
+            {
               "kind": "speech",
-              "text": "Again, and notice that three of them end in an exclamation mark and three do not. French puts a space before it, which English does not."
+              "text": "French puts a space before it, which English does not."
             }
           ]
         },
@@ -206,7 +220,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b25f3336c5b0d718",
+      "sourceHash": "fnv1a64:ca891c8c68d1f974",
       "notice": null,
       "blocks": [
         {
@@ -252,8 +266,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six lines down once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six lines down once, without stopping]"
             },
             {
               "kind": "pause",
@@ -262,8 +281,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "them again, and notice the colon",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: them again, and notice the colon]"
+            },
+            {
               "kind": "speech",
-              "text": "Again — and notice the colon. French puts a space before that too, and the space is the clearest signal on the page that a label has ended."
+              "text": "French puts a space before that too, and the space is the clearest signal on the page that a label has ended."
             }
           ]
         },
@@ -393,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6bd1d511fa2bef85",
+      "sourceHash": "fnv1a64:2d05391477dcbb97",
       "notice": null,
       "blocks": [
         {
@@ -439,8 +467,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read it once without stopping. Do not translate as you go — let the sentences arrive."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage once without stopping; do not translate as you go — let the sentences arrive",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]"
             },
             {
               "kind": "pause",
@@ -449,8 +482,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Now read it again, and notice how little work it took."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it again, and notice how little work it took",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it again, and notice how little work it took]"
             }
           ]
         },

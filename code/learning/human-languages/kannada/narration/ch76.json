@@ -4,7 +4,7 @@
   "chapter": 76,
   "title": "Reading — Words, Lines, and a First Passage",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:9913132cee2c9ecc",
+  "sourceHash": "fnv1a64:a01059b9b42e27be",
   "lessons": [
     {
       "id": "KA-C76-words",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72e0701ad04e9adb",
+      "sourceHash": "fnv1a64:0af3405709a9eee5",
       "notice": null,
       "blocks": [
         {
@@ -65,8 +65,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down the list once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "down the list once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: down the list once, without stopping]"
             },
             {
               "kind": "pause",
@@ -75,8 +80,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Again — and notice how few straight lines there are."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the list again, and notice how few straight lines there are",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the list again, and notice how few straight lines there are]"
             }
           ]
         },
@@ -205,7 +215,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3fcb8cc3f0505609",
+      "sourceHash": "fnv1a64:d4d38b62e6ee093f",
       "notice": null,
       "blocks": [
         {
@@ -251,8 +261,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six lines down once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six lines down once, without stopping]"
             },
             {
               "kind": "pause",
@@ -261,8 +276,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Again — and count how many different verbs there are."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "them again, and count how many different verbs there are",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: them again, and count how many different verbs there are]"
             }
           ]
         },
@@ -391,7 +411,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5d4c4c757fea2547",
+      "sourceHash": "fnv1a64:c669891462f4cc9f",
       "notice": null,
       "blocks": [
         {
@@ -437,8 +457,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read it once without stopping. Do not translate as you go — let the sentences arrive."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage once without stopping; do not translate as you go — let the sentences arrive",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]"
             },
             {
               "kind": "pause",
@@ -447,8 +472,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Now read it again, and watch ಇಲ್ಲಿ and ಅಲ್ಲಿ take turns."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it again, and watch ಇಲ್ಲಿ and ಅಲ್ಲಿ take turns",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it again, and watch **ಇಲ್ಲಿ** and **ಅಲ್ಲಿ** take turns]"
             }
           ]
         },

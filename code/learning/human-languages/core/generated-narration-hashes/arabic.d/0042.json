@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 42,
-  "sourceHash": "fnv1a64:1049eca4d945941c",
+  "sourceHash": "fnv1a64:f6e75a39646cb5f2",
   "lessonIds": [
     "AR-C42-words",
     "AR-C42-lines",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "arabic/narration/ch42.txt",
   "json": "arabic/narration/ch42.json",
-  "textHash": "fnv1a64:ca6764d13eb588c2",
-  "jsonHash": "fnv1a64:ab17ac66983229da",
+  "textHash": "fnv1a64:c431b5331e58b127",
+  "jsonHash": "fnv1a64:3bfaf5b5aae7959e",
   "findings": []
 }

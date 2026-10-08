@@ -69,7 +69,7 @@ is yours:
 
 **Speak.** Say what you like; ask what the other person likes; hand it back with 你呢.
 
-**Read.** 我喜欢看书 — 你喜欢什么
+[YOU READ: 我喜欢看书 — 你喜欢什么]
 
 [YOU WRITE: 喜 — four bands, twelve strokes; 欢 — 又, then 欠]
 

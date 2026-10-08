@@ -51,10 +51,10 @@ paradigm, and each of them left cousins in languages you can check:
 | **bin, bist** | \**bʰuH-* — "to grow, become" | English **be**; Latin *fuī* |
 | **war, waren** | \**wes-* — "to dwell, remain" | English **was, were** |
 
-Read the middle row again. *\*bʰuH-* did not mean "to be" at all. It meant "to
-grow" — and the reason English says *be* and German says *bin* is that a verb
-about growing got promoted into a verb about existing, in both languages, before
-either of them existed.
+Go over the middle row again. *\*bʰuH-* did not mean "to be" at all. It meant
+"to grow" — and the reason English says *be* and German says *bin* is that a
+verb about growing got promoted into a verb about existing, in both languages,
+before either of them existed.
 
 The bottom row is the same story with a different verb: *\*wes-* meant "to
 dwell, to remain." Staying somewhere became having been.

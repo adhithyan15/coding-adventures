@@ -127,7 +127,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Tamil for a bucket, then the Tamil for a pen.
 [pause 3 seconds]
-Read the lines aloud as one run: வணக்கம். இது என் வீடு. அம்மா இங்கே.
+[once you have stopped driving — read: the lines aloud as one run — வணக்கம். இது என் வீடு. அம்மா இங்கே.]
 
 You'll want to know: காகிதம்.
 காகிதம் — kāgitam — "paper".

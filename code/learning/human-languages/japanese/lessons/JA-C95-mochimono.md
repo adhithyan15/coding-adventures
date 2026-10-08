@@ -38,7 +38,7 @@ reviews_of: [JA-C95-nigate]
 
 [PAUSE 2s] Before the new one: say the Japanese for good at, then the Japanese for poor at.
 
-[PAUSE 1s] Read on sight:
+[PAUSE 1s] [YOU READ: these on sight]
 
 - **こんにちは**
 - **ありがとう**

@@ -4,7 +4,7 @@
   "chapter": 452,
   "title": "El reparto",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:5fc20ab21df0af4e",
+  "sourceHash": "fnv1a64:c003a78450c7f938",
   "lessons": [
     {
       "id": "ES-C452-almacen",
@@ -666,7 +666,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e083aeddecbb545",
+      "sourceHash": "fnv1a64:f863ca7588ad3717",
       "notice": null,
       "blocks": [
         {
@@ -682,7 +682,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all four: the warehouse, the route, the tracking, comfortable."
+              "text": "Leave the lessons before this one closed. Say all four: the warehouse, the route, the tracking, comfortable."
             }
           ]
         },
@@ -819,7 +819,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64ecbec09e845fcf",
+      "sourceHash": "fnv1a64:19df011f0328f5bf",
       "notice": null,
       "blocks": [
         {
@@ -846,7 +846,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "A card through the letterbox. Read it, then answer."
+              "text": "A card through the letterbox."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it, then answer]"
             },
             {
               "kind": "speech",
@@ -935,7 +944,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now your turn, out loud and then in writing. Four lines for a delivery card: say nobody was in, say the parcel goes back to the warehouse, give a tracking number to check, and offer a time that suits them."
+              "text": "Now your turn, out loud. Four lines for a delivery card: say nobody was in, say the parcel goes back to the warehouse, give a tracking number to check, and offer a time that suits them."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same four lines",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same four lines]"
             },
             {
               "kind": "speech",

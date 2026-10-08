@@ -41,7 +41,11 @@ reviews_of: [RU-C138-nadeyatsya]
 ## You'll want to know: расписание
 <!-- hl-knowledge: introduces=[RU-LEX-C139-CHT139-01]; assesses=[] -->
 
-**расписание** (*raspisániye*) — "a timetable". Read the board: **Автобус: 8:00.** The bus leaves at eight, so be there before eight.
+**расписание** (*raspisániye*) — "a timetable".
+
+[YOU READ: the board — **Автобус: 8:00.**]
+
+The bus leaves at eight, so be there before eight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

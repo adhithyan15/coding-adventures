@@ -4,7 +4,7 @@
   "chapter": 132,
   "title": "This and That: So, Re and Ru",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:064416cdd1a13dfe",
+  "sourceHash": "fnv1a64:1ccb2afbe299e613",
   "lessons": [
     {
       "id": "JA-C132-soko",
@@ -1346,7 +1346,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:23539fdb9a2949ba",
+      "sourceHash": "fnv1a64:a9045657927870d6",
       "notice": null,
       "blocks": [
         {
@@ -1406,7 +1406,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read each one aloud and say what it means."
+              "text": "For each one below, say what it means."
             },
             {
               "kind": "prompt",

@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 44,
-  "sourceHash": "fnv1a64:817037d4868e3955",
+  "sourceHash": "fnv1a64:21f120829d49dc55",
   "lessonIds": [
     "GU-C44-words",
     "GU-C44-lines",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "gujarati/narration/ch44.txt",
   "json": "gujarati/narration/ch44.json",
-  "textHash": "fnv1a64:8e5ba963ef87469e",
-  "jsonHash": "fnv1a64:e24da4b7ddd252c7",
+  "textHash": "fnv1a64:a47efee994f9ab41",
+  "jsonHash": "fnv1a64:f2e9e387d26b50af",
   "findings": []
 }

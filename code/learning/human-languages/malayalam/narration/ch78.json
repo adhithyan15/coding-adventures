@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "Whose It Is",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7b360bd2a584d78a",
+  "sourceHash": "fnv1a64:569a4fd3257c84f4",
   "lessons": [
     {
       "id": "ML-C78-nre",
@@ -331,7 +331,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa10f3d0ae3ee8a5",
+      "sourceHash": "fnv1a64:270f92f7070fbf7b",
       "notice": null,
       "blocks": [
         {
@@ -347,7 +347,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say my, and then say what its last piece does when you put it on somebody else."
+              "text": "Leave the lessons before this one closed. Say my, and then say what its last piece does when you put it on somebody else."
             }
           ]
         },

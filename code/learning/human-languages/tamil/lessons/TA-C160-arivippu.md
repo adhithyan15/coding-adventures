@@ -41,7 +41,11 @@ reviews_of: [TA-C160-kala-attavanai]
 ## You'll want to know: அறிவிப்பு
 <!-- hl-knowledge: introduces=[TA-LEX-C160-PATI160-02]; assesses=[] -->
 
-**அறிவிப்பு** — *aṟivippu* — "a notice, an announcement". Read the notice: **ஞாயிறுதோறும் கடை விடுமுறை** — *ñāyiṟutōṟum kaṭai viṭumuṟai* — "Shop closed every Sunday." Come on another day.
+**அறிவிப்பு** — *aṟivippu* — "a notice, an announcement".
+
+[YOU READ: the notice — **ஞாயிறுதோறும் கடை விடுமுறை** — *ñāyiṟutōṟum kaṭai viṭumuṟai* — "Shop closed every Sunday."]
+
+Come on another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

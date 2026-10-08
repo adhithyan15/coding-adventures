@@ -40,8 +40,8 @@ reviews_of: [ZH-R14-primary-three, ZH-C13-practice]
 <!-- hl-writing-stage: dictation-transcription -->
 
 1. **Listening:** hear the three forms in mixed order and choose each meaning.
-2. **Speaking:** produce all three from meaning cards, with tones audible.
-3. **Reading:** read all three character cards without pinyin.
+2. **Speaking:** produce all three from their English meanings, with tones audible.
+3. **Reading:** [YOU READ: all three character cards without pinyin]
 4. **Writing:** hear all three. [YOU WRITE: all three without a model]
 
 Pass each skill separately. Repair and retry only the failed skill.

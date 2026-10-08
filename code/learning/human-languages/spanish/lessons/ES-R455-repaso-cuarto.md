@@ -32,8 +32,8 @@ reviews_of: [ES-C455-pintar, ES-C455-dormitorio, ES-C455-claro, ES-C455-tender, 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C455-CUARTO-01, ES-LEX-C455-CUARTO-02, ES-LEX-C455-CUARTO-03, ES-LEX-C455-CUARTO-04, ES-LEX-C455-CUARTO-05] -->
 
-[PAUSE 3s] Close the lessons before this one. Say all five: *to paint*, *the
-bedroom*, *light*, *to hang out*, *to put in*.
+[PAUSE 3s] Leave the lessons before this one closed. Say all five: *to paint*,
+*the bedroom*, *light*, *to hang out*, *to put in*.
 
 ## Grammar Lens: the fourth phrase to give up a word
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C455-CUARTO-03, ES-LEX-C455-CUARTO-04] -->

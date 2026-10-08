@@ -36,8 +36,8 @@ reviews_of: [MW-C05-hear-tharo, MW-W05-tha, MW-C05-mharo]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-THARO-01, MW-SCRIPT-THA-01, MW-SCRIPT-MHARO-01] -->
 
-[PAUSE 8s] Say *thāro* and its meaning. Read **म्हारो** and give the
-opposite direction: my.
+[PAUSE 8s] Say *thāro* and its meaning.
+[YOU READ: **म्हारो**, then give the opposite direction — my]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-SCRIPT-THARO-01]; assesses=[MW-LEX-THARO-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-RA-01, MW-SCRIPT-O-MATRA-01] -->
@@ -50,11 +50,12 @@ Only **थ** was new. The rest comes from **राम** and **म्हारो
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-THARO-01, MW-LEX-THARO-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look for five seconds, cover **थारो**, and wait five seconds.
+[YOU COVER: **थारो** after a five-second look, then wait five seconds]
+
 [YOU WRITE: the word — then uncover it and compare **थ**, **ा**, and **रो** separately]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-THARO-01, MW-LEX-THARO-01, MW-SCRIPT-MHARO-01, MW-LEX-MHARO-01] -->
 <!-- hl-activity: {"id":"MW-C05-tharo-contrast","kind":"text","assesses":["MW-SCRIPT-THARO-01","MW-LEX-THARO-01","MW-SCRIPT-MHARO-01","MW-LEX-MHARO-01"],"prompt":"Write the pair for my and your in that order.","answer":"म्हारो — my; थारो — your","accepted":["म्हारो थारो"],"feedback":{"correct":"Right: म्हारो points to me; थारो points to you.","incorrect":"Begin my with म्ह; begin your with थ: म्हारो, थारो."},"response_seconds":15} -->
 
-Read the two words once without romanization.
+[YOU READ: the two words once without romanization]

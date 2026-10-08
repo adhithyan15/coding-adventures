@@ -245,7 +245,7 @@ Warm-up.
 You have five time words. This is where they go.
 
 You'll want to know: कालशब्दाः.
-Three of this chapter's words — अद्य (adya), ह्यः (hyaḥ), सदा (sadā) — are not nouns at all. Look for an -am or -aḥ or -iḥ on them and you will not find one. They attach to a sentence, say when, and keep the same shape wherever they land.
+Three of this chapter's words — अद्य (adya), ह्यः (hyaḥ), सदा (sadā) — are not nouns at all. Listen for an -am or -aḥ or -iḥ on them and you will not find one. They attach to a sentence, say when, and keep the same shape wherever they land.
 Sanskrit lets them stand almost anywhere. सदा (sadā) पठति and पठति सदा (sadā) both say "he always reads," and neither is more correct than the other. You have been given a lot of attention to endings, and this is the payoff: they are carrying the work that word order carries in English.
 The two that are nouns, दिनम् (dinam) and रात्रिः (rātriḥ), behave like any other noun, and take adjectives in front of them the way गृहम् does.
 

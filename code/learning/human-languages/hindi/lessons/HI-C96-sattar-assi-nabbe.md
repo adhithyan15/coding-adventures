@@ -57,9 +57,9 @@ dropped it.
 | आठ | अस्सी |
 | नौ | नब्बे |
 
-Read that table down the left and you are counting seven, eight, nine — which
-you have done since early on. Read it down the right and you are counting
-seventy, eighty, ninety.
+Go down the left of that table and you are counting seven, eight, nine — which
+you have done since early on. Go down the right and you are counting seventy,
+eighty, ninety.
 
 **The opening consonant survives in all three**, and that is the whole of the
 help on offer. Beyond the first sound, each word has been worn into its own

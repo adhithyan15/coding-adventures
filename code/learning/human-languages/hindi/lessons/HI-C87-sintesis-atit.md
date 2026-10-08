@@ -36,7 +36,7 @@ reviews_of: [HI-C87-repaso-atit, HI-C87-par, HI-C87-the]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C87-POST-01, HI-LEX-C40-DEIXIS-06] -->
 
-[PAUSE 2s] Read this and say what it means before reading on.
+[PAUSE 2s] [YOU READ: this and say what it means before going on]
 
 > मैं घर पर हूँ।
 

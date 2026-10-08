@@ -43,7 +43,7 @@ careful sentence for your own name.
 ## The exchange
 <!-- hl-knowledge: introduces=[FA-LEX-ESM-E-MAN-AST, FA-SCRIPT-ESM-MAN-AST]; assesses=[] -->
 
-Read the phrase from right to left, but say its words in this order:
+[YOU READ: the phrase from right to left, but say its words in this order]
 
 > **اسمِ من ... است** — *esm-e man ... ast*
 

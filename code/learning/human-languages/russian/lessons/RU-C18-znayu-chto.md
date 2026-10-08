@@ -55,9 +55,10 @@ earns its place:
 - **я не знаю, что ты говоришь** — *ya ne znáyu, shto ty gavarísh* — I do not
   know **what** you are saying.
 
-Read those two English translations again. The Russian word is **the same word
+Go back over those two English translations. The Russian word is **the same word
 both times**, and English needs *that* in the first and *what* in the second.
-Russian makes no such split, which is one distinction fewer for you to get wrong.
+Russian makes no such split, which is one distinction fewer for you to get
+wrong.
 
 The second sentence is the useful one. Until now this book could say *я не знаю*
 and stop — a flat shrug. With **что** you can say what it is you do not know,

@@ -38,7 +38,7 @@ one of them off the other.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C450-SUELO-04, ES-LEX-C450-SUELO-05, ES-LEX-C450-SUELO-01] -->
 
-A notice on the gate of the sports centre. Read it, then answer.
+A notice on the gate of the sports centre. [YOU READ: it, then answer]
 
 > **AVISO**
 
@@ -75,9 +75,11 @@ one particular person who had already done it once.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C450-SUELO-01, ES-LEX-C450-SUELO-02, ES-LEX-C450-SUELO-03, ES-LEX-C450-SUELO-04, ES-LEX-C450-SUELO-05] -->
 
-[PAUSE 3s] Now your turn, out loud and then in writing. Four lines for a gate
-notice: say the pitch is closed, say where training moves to, ask people to
-keep off the grass at the side, and say there are stones on the path.
+[PAUSE 3s] Now your turn, out loud. Four lines for a gate notice: say the pitch
+is closed, say where training moves to, ask people to keep off the grass at the
+side, and say there are stones on the path.
+
+[YOU WRITE: the same four lines]
 
 Then check yourself: did *césped* go to the playing surface and *hierba* to
 the plant, and did you use the *ustedes* form?

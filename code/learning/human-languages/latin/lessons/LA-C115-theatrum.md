@@ -37,7 +37,8 @@ reviews_of: [LA-C115-illuc]
 
 [PAUSE 2s] Before the new one: say the Latin for to here, then the Latin for to there.
 
-[PAUSE 3s] Read the exchange aloud as one run: *Salvē! Quid agis? Bene. Valē!*
+[PAUSE 3s]
+[YOU READ: the exchange aloud as one run — *Salvē! Quid agis? Bene. Valē!*]
 
 ## You'll want to know: theātrum, theātrī
 <!-- hl-knowledge: introduces=[LA-LEX-C115-LOC115-03]; assesses=[] -->

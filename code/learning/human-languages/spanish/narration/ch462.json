@@ -4,7 +4,7 @@
   "chapter": 462,
   "title": "La reunión",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4716a6eb74cf0c0f",
+  "sourceHash": "fnv1a64:474dca28a3547bce",
   "lessons": [
     {
       "id": "ES-C462-reducir",
@@ -527,7 +527,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc4bf898215de205",
+      "sourceHash": "fnv1a64:280916ebd08f4499",
       "notice": null,
       "blocks": [
         {
@@ -543,7 +543,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all three: to cut back, to make your mind up, the boss."
+              "text": "Leave the lessons before this one closed. Say all three: to cut back, to make your mind up, the boss."
             }
           ]
         },
@@ -675,7 +675,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5cd7eb54abc8a75a",
+      "sourceHash": "fnv1a64:5a2c0b4dbff6e6f2",
       "notice": null,
       "blocks": [
         {
@@ -702,7 +702,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "An internal message, and one reply. Read both, then answer."
+              "text": "An internal message, and one reply."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "both, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: both, then answer]"
             },
             {
               "kind": "speech",
@@ -787,7 +796,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now your turn, out loud and then in writing. Four lines: as a boss, say spending has to be cut and ask for suggestions by Friday; then as the reply, say you are torn between two options and will answer tomorrow."
+              "text": "Now your turn, out loud. Four lines: as a boss, say spending has to be cut and ask for suggestions by Friday; then as the reply, say you are torn between two options and will answer tomorrow."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same four lines",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same four lines]"
             },
             {
               "kind": "speech",

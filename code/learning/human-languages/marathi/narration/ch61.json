@@ -4,7 +4,7 @@
   "chapter": 61,
   "title": "The Rest Are Built",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:ddcb7d2e756c879d",
+  "sourceHash": "fnv1a64:c3c62a80a5d7d028",
   "lessons": [
     {
       "id": "MR-C61-sahava",
@@ -998,7 +998,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a84da037a96b2470",
+      "sourceHash": "fnv1a64:3f7dc5ba5af70264",
       "notice": null,
       "blocks": [
         {
@@ -1128,7 +1128,16 @@
             },
             {
               "kind": "speech",
-              "text": "There is a way to check that split without taking this book's word for it. Open Molesworth's Dictionary, Marathi and English — the 1857 one this chapter has been citing — and look up all ten:"
+              "text": "There is a way to check that split without taking this book's word for it."
+            },
+            {
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "Molesworth's Dictionary, Marathi and English — the 1857 one this chapter has been citing — for all ten",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: Molesworth's *Dictionary, Marathi and English* — the 1857 one this chapter has been citing — for all ten]"
             },
             {
               "kind": "table",

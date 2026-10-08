@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Le — Finished, and Changed",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:601a653f42dd6579",
+  "sourceHash": "fnv1a64:7c1b25af45700785",
   "lessons": [
     {
       "id": "ZH-W25-le",
@@ -746,7 +746,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b3b8a72409a1a5a5",
+      "sourceHash": "fnv1a64:886e2d9aa58b8d05",
       "notice": null,
       "blocks": [
         {
@@ -854,8 +854,13 @@
               "text": "Speak. Say you have read the book; then say you have become a student."
             },
             {
-              "kind": "speech",
-              "text": "Read. 我看了书 (wǒ kàn le shū) — 有人了 — 你看了吗."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "我看了书 (wǒ kàn le shū) — 有人了 — 你看了吗",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 我看了书 — 有人了 — 你看了吗]"
             },
             {
               "kind": "prompt",

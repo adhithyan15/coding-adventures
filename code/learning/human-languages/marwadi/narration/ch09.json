@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Pachhe Milsu: See You Later",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8109e8c39f81d2b8",
+  "sourceHash": "fnv1a64:fcabcf038c6048d9",
   "lessons": [
     {
       "id": "MW-C07-hear-later",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d1318c2f0b1f520",
+      "sourceHash": "fnv1a64:be7c8ec7d1739c14",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,16 @@
             },
             {
               "kind": "speech",
-              "text": "Ask how someone is, answer hū̃ ṭhīk hū̃, then say राम राम सा once. Close the text before the new parting line begins."
+              "text": "Ask how someone is, answer hū̃ ṭhīk hū̃, then say राम राम सा once."
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the text before the new parting line begins",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the text before the new parting line begins]"
             }
           ]
         },
@@ -646,7 +655,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:75f00e0a100a4ea6",
+      "sourceHash": "fnv1a64:e45407fd3ed2bdf4",
       "notice": null,
       "blocks": [
         {
@@ -705,7 +714,16 @@
             },
             {
               "kind": "speech",
-              "text": "Read: match both printed lines to their meanings."
+              "text": "Reading:"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "both printed lines, then match them to their meanings",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: both printed lines, then match them to their meanings]"
             },
             {
               "kind": "prompt",

@@ -4,7 +4,7 @@
   "chapter": 106,
   "title": "Before and After",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:457f9e6604e3dfe0",
+  "sourceHash": "fnv1a64:49adf6e26fbe8cd5",
   "lessons": [
     {
       "id": "ML-C106-munpu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4c6922dcb4cf8bc",
+      "sourceHash": "fnv1a64:5e9ffbd8f7623fd6",
       "notice": null,
       "blocks": [
         {
@@ -58,7 +58,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read the two phrases right to left and they come out as English: before — two o'clock. Keep രണ്ട് മണി together as one piece."
+              "text": "Take the two phrases right to left and they come out as English: before — two o'clock. Keep രണ്ട് മണി together as one piece."
             }
           ]
         },
@@ -449,7 +449,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a9205b3a3ca2cd2b",
+      "sourceHash": "fnv1a64:b967d352827cf309",
       "notice": null,
       "blocks": [
         {
@@ -465,7 +465,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say before and after."
+              "text": "Leave the lessons before this one closed. Say before and after."
             }
           ]
         },

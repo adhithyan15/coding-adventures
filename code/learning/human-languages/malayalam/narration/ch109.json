@@ -4,7 +4,7 @@
   "chapter": 109,
   "title": "Neither This Nor That",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:971cf27a8f0a6256",
+  "sourceHash": "fnv1a64:8ebdb65a40f2b42d",
   "lessons": [
     {
       "id": "ML-C109-neither-here",
@@ -321,7 +321,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c6da54af621c5b4",
+      "sourceHash": "fnv1a64:bdb147e52656ac74",
       "notice": null,
       "blocks": [
         {
@@ -337,7 +337,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say neither tea nor coffee, then neither a teacher nor a doctor."
+              "text": "Leave the lessons before this one closed. Say neither tea nor coffee, then neither a teacher nor a doctor."
             }
           ]
         },

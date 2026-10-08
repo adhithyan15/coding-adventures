@@ -50,7 +50,7 @@ without adding another shape.
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-TE-HAND, JA-SCRIPT-TE-01] -->
 
 1. Hear *te*; say what it names — a hand.
-2. See **て**; say “hand.”
+2. [YOU READ: **て**, then say “hand.”]
 3. [YOU WRITE: its one sign, with the word hidden]
 
 ## Wrap-up Recall

@@ -38,7 +38,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Marathi for an eraser, then the Marathi for a school bag.
 [pause 3 seconds]
-Read the message aloud as one run: मी बरा आहे. उद्या भेटू.
+[once you have stopped driving — read: the message aloud as one run — मी बरा आहे. उद्या भेटू.]
 
 You'll want to know: परीक्षा.
 परीक्षा — parīkṣā — "an exam".

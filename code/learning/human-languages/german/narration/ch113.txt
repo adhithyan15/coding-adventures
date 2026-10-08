@@ -9,7 +9,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the German for a fridge, then the German for a cooker.
 [pause 3 seconds]
-Read the two sentences aloud, as one run: Das Hotel ist gegenüber. Das Kino ist hinten.
+[once you have stopped driving — read: the two sentences aloud, as one run — Das Hotel ist gegenüber. Das Kino ist hinten.]
 
 You'll want to know: die Dusche.
 die Dusche — "a shower".

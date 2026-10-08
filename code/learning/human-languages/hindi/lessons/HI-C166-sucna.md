@@ -41,7 +41,11 @@ reviews_of: [HI-C165-ginna]
 ## You'll want to know: सूचना
 <!-- hl-knowledge: introduces=[HI-LEX-C166-READ166-01]; assesses=[] -->
 
-**सूचना** — *sūcnā* — "a notice, information". Read the notice on the door: **आज दुकान बंद है।** (*āj dukān band hai.*) The shop is closed today, so come back *kal*.
+**सूचना** — *sūcnā* — "a notice, information".
+
+[YOU READ: the notice on the door — **आज दुकान बंद है।** (*āj dukān band hai.*)]
+
+The shop is closed today, so come back *kal*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

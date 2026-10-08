@@ -1,5 +1,37 @@
 # Changelog
 
+## Fixed — drivable lesson prose stops asking a driver to read or handle cards
+
+Narration reads bare prose aloud as written, so a prose instruction to read
+printed script, handle cards or cover the page reached a driver unhedged (issue
+#12070, tenth pass): "Hear, picture the part, say, and read **おなか**." was
+narrated word for word. Each such step now moves into a cue the narration
+defers (`[YOU READ: …]`, `[YOU COVER: …]`, `[YOU CHECK: …]`, `[YOU FIND: …]`,
+`[YOU WRITE: …]`: "once you have stopped driving — …"), in the authored order,
+or is said for the ear and voice where the step was not about the page. Prose
+that followed a new cue in the same paragraph now has a paragraph of its own.
+The new prose check in human-language-data demands zero such spans in drivable
+lessons. Every edited lesson stays `drivable: true` (only its
+`core/lesson-modality` source hash changes).
+
+- **Count:** 26 drivable lessons; 27 `[YOU READ: …]` and 2 `[YOU CHECK: …]`
+  cues, and 3 ear-and-voice rewrites.
+- Letter-by-letter readings ("Read from right to left: **ح** *h* + **ا** long
+  *â* + **ل** *l*.", "Read from the right.", "Read **ح ا ف ظ** from right to
+  left.") and the right-edge rereadings (FA-C10-dokhtar, FA-C11-cheshm) become
+  READ cues, the explanation after each in its own paragraph (FA-C01..C06).
+- Digit and reading steps (FA-C16..C21, FA-C114, FA-C130) and the FA-C139
+  notices become READ cues; FA-C18-practice "Then check each against a printed
+  list" and FA-C01-practice "Then compare your **ا** with the model" → CHECK
+  cues.
+- FA-C01-practice "Keep every model visible" → "Every model stays in view";
+  FA-C14-khahar "Read it **kh-â-har**" → "Say it …"; FA-C13-khorshid "Look up,
+  and this lesson names what is in it" (eyes off the road) → "Picture the sky,
+  and …".
+- Left alone: the descriptive "From the right: **ف** *f*, …" (no instruction),
+  "read simply as English *z*" / "How is its final **ه** read?" (how a letter
+  is read), "Look at what is **not** there" (the idiom).
+
 ## Fixed — drivable lessons stop telling a driver to write
 
 The modality manifest marks 5 lessons in this track `drivable: true`, but

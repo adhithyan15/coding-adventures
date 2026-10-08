@@ -42,7 +42,7 @@ reviews_of: [MW-C15-kapda, MW-C15-mahango, MW-W15-nukta]
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-KAPDA-01, MW-SCRIPT-KAPDA-01, MW-LEX-MAHANGO-01, MW-SCRIPT-MAHANGO-01] -->
 
-Hear both words in both orders, give each meaning, and read two cards.
+Hear both words in both orders and give each meaning. [YOU READ: two cards]
 [YOU WRITE: both from sound]
 
 ## Wrap-up Recall

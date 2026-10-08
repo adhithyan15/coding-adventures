@@ -22,7 +22,7 @@ Grammar Lens: where it sits.
 the sentence said, എനിക്ക് മലയാളം അറിയാം.
 the marker, എന്ന് (ennŭ).
 who says it, ഞാൻ പറയുന്നു.
-Read the three rows in that order and you have the sentence. The quoted part comes first and the saying comes last, which is the opposite of English and the same order Malayalam uses everywhere else — the verb at the end.
+Take the three rows in that order and you have the sentence. The quoted part comes first and the saying comes last, which is the opposite of English and the same order Malayalam uses everywhere else — the verb at the end.
 You have seen this shape before without the marker: എന്നാൽ (ennāl), the word for but, begins with the same എന്ന. They are relatives, and meeting one helps you notice the other on a page.
 
 Guided Practice.
@@ -82,7 +82,7 @@ Lesson 3 of 3.
 
 Warm-up.
 [pause 3 seconds]
-Close the lessons before this one. Say I say in Malayalam, and say which three places in this book used that verb before anybody taught it.
+Leave the lessons before this one closed. Say I say in Malayalam, and say which three places in this book used that verb before anybody taught it.
 
 Grammar Lens: three pieces, in this order.
 [a table of 3 rows, read aloud]

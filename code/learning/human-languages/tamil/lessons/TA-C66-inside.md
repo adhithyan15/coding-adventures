@@ -33,7 +33,7 @@ reviews_of: [TA-C66-down, TA-W22-read-mele]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C66-WHICHWAY-02, TA-SCRIPT-READ-MELE-01] -->
 
-[PAUSE 2s] Read **மேலே** off the page, and then say its opposite.
+[PAUSE 2s] [YOU READ: **மேலே** off the page, then say its opposite]
 
 ## You'll want to know: உள்ளே
 <!-- hl-knowledge: introduces=[TA-LEX-C66-WHICHWAY-03]; assesses=[] -->

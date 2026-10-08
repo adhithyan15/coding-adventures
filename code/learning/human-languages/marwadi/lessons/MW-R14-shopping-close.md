@@ -44,8 +44,8 @@ Then ask and answer the known name and wellbeing exchanges.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DUKAN-01, MW-SCRIPT-DUKAN-01, MW-LEX-VASTU-01, MW-SCRIPT-VASTU-01, MW-LEX-BHAAV-01, MW-SCRIPT-BHAAV-01, MW-LEX-SASTA-01, MW-SCRIPT-SASTA-01, MW-LEX-SAMAAN-01, MW-SCRIPT-SAMAAN-01] -->
 
-Without a model, hear two words, say two from meaning cues, and read the fifth.
-[YOU WRITE: all five, in a fresh mixed order]
+Without a model, hear two words and say two from meaning cues.
+[YOU READ: the fifth] [YOU WRITE: all five, in a fresh mixed order]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-SHOPPING-FIVE-FOUR-SKILL-01, MW-SCRIPT-DUKAN-01, MW-SCRIPT-VASTU-01, MW-SCRIPT-BHAAV-01, MW-SCRIPT-SASTA-01, MW-SCRIPT-SAMAAN-01] -->

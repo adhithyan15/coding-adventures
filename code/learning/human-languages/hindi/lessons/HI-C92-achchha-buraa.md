@@ -63,7 +63,7 @@ So *he is good* and *he speaks well* use the same word in Hindi, and an English
 speaker's instinct to reach for a second form is the thing to unlearn.
 
 **अच्छा** is also where you can now read the letter **छ**, which arrived a
-moment ago in the alphabet. Find it in the middle of the word.
+moment ago in the alphabet. [YOU FIND: it in the middle of the word]
 
 ## Grammar Lens: it still agrees
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C92-DEG-02, HI-CONCEPT-C05-BOLTAHUN-01] -->

@@ -4,7 +4,7 @@
   "chapter": 110,
   "title": "Reaching Somebody",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d289916dfc3c8118",
+  "sourceHash": "fnv1a64:837729af01513039",
   "lessons": [
     {
       "id": "ML-S148-letter-pha",
@@ -328,7 +328,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53e0d94cffd7efec",
+      "sourceHash": "fnv1a64:bf51999044f4a776",
       "notice": null,
       "blocks": [
         {
@@ -343,8 +343,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Read and say the word for a telephone: ഫോൺ (phōṇ)."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the word for a telephone, ഫോൺ (phōṇ), then say it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the word for a telephone, **ഫോൺ**, then say it]"
             },
             {
               "kind": "pause",
@@ -397,7 +402,7 @@
             },
             {
               "kind": "speech",
-              "text": "Cover the first character of അകത്ത് and what is left looks exactly like കത്ത് (kattŭ). The two words are not related, and the resemblance is worth meeting once so it cannot mislead you later."
+              "text": "Take the first character off അകത്ത് and what is left looks exactly like കത്ത് (kattŭ). The two words are not related, and the resemblance is worth meeting once so it cannot mislead you later."
             },
             {
               "kind": "speech",
@@ -756,7 +761,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3c59367f827e9c2",
+      "sourceHash": "fnv1a64:0127e82c5473546c",
       "notice": null,
       "blocks": [
         {
@@ -772,7 +777,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say telephone, letter and the post."
+              "text": "Leave the lessons before this one closed. Say telephone, letter and the post."
             }
           ]
         },

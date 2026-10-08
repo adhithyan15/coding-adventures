@@ -38,7 +38,9 @@ reviews_of: [PA-C147-kamzor]
 
 [PAUSE 2s] Before the new one: say the Punjabi for strong, then the Punjabi for weak.
 
-[PAUSE 1s] Read the form line once: **ਕੰਮ: ਨੌਕਰੀ**. What does this person do? (A job, *naukarī*.)
+[PAUSE 1s] [YOU READ: the form line once — **ਕੰਮ: ਨੌਕਰੀ**]
+
+What does this person do? (A job, *naukarī*.)
 
 ## You'll want to know: ਲੁਕਣਾ
 <!-- hl-knowledge: introduces=[PA-LEX-C148-ACT148-01]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Numbers One to Five",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:3e7a9eb7cd3ce634",
+  "sourceHash": "fnv1a64:d8f7a0a2695ae348",
   "lessons": [
     {
       "id": "MR-R09-script-a-r3",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ddcf06852d458804",
+      "sourceHash": "fnv1a64:617741ec5e5d7c04",
       "notice": null,
       "blocks": [
         {
@@ -28,8 +28,13 @@
           "title": "Warm-up",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Close the earlier script pages and keep one blank line ready."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the earlier script pages, and keep one blank line ready",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the earlier script pages, and keep one blank line ready]"
             }
           ]
         },
@@ -39,8 +44,13 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Cover the answer."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the answer]"
             },
             {
               "kind": "prompt",
@@ -52,8 +62,17 @@
               "source": "[YOU WRITE: *dhanyavād*, then the two-dot breath sign, independent long *ā*, and breathy *bha* from their spoken names]"
             },
             {
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "your answer against धन्यवाद; ः आ भ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: your answer against **धन्यवाद; ः आ भ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Compare: धन्यवाद; ः आ भ. Stop after one retrieval and one repair."
+              "text": "Stop after one retrieval and one repair."
             },
             {
               "kind": "activity",
@@ -92,7 +111,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5827f14dbc2b1cdb",
+      "sourceHash": "fnv1a64:06ba7fd7e7bfb209",
       "notice": null,
       "blocks": [
         {
@@ -101,8 +120,13 @@
           "title": "Warm-up",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Close the earlier script pages and keep one blank line ready."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the earlier script pages, and keep one blank line ready",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the earlier script pages, and keep one blank line ready]"
             }
           ]
         },
@@ -112,8 +136,13 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Cover the answer."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the answer]"
             },
             {
               "kind": "prompt",
@@ -164,7 +193,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c99bc0231ac7b5d",
+      "sourceHash": "fnv1a64:f9b8ef34754b4b4d",
       "notice": null,
       "blocks": [
         {
@@ -173,8 +202,13 @@
           "title": "Warm-up",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Close the earlier script pages and keep one blank line ready."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the earlier script pages, and keep one blank line ready",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the earlier script pages, and keep one blank line ready]"
             }
           ]
         },
@@ -184,8 +218,13 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Cover the answer."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the answer]"
             },
             {
               "kind": "prompt",
@@ -236,7 +275,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eafd11b66e5d6306",
+      "sourceHash": "fnv1a64:79c69f2aa2ed37fc",
       "notice": null,
       "blocks": [
         {
@@ -245,8 +284,13 @@
           "title": "Warm-up",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Close the earlier script pages and keep one blank line ready."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the earlier script pages, and keep one blank line ready",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the earlier script pages, and keep one blank line ready]"
             }
           ]
         },
@@ -256,8 +300,13 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Cover the answer."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the answer]"
             },
             {
               "kind": "prompt",

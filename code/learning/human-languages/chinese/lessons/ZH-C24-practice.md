@@ -69,7 +69,7 @@ And the same nine strokes give:
 
 **Speak.** Say what you have; then count three of something.
 
-**Read.** 我有一个名字 — 有人 — 三个学生
+[YOU READ: 我有一个名字 — 有人 — 三个学生]
 
 [YOU WRITE: 有 — bar, long fall, 月; 个 — 人, then a line]
 

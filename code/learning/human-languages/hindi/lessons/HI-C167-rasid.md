@@ -41,7 +41,11 @@ reviews_of: [HI-C167-manzil]
 ## You'll want to know: रसीद
 <!-- hl-knowledge: introduces=[HI-LEX-C167-READ167-05]; assesses=[] -->
 
-**रसीद** — *rasīd* — "a receipt". Read the receipt: **रसीद: किराया पाँच सौ रुपये, तारीख़ पाँच।** (*rasīd: kirāyā pā̃c sau rupaye, tārīkh pā̃c.*) Five hundred rupees of rent, paid on the fifth: keep it.
+**रसीद** — *rasīd* — "a receipt".
+
+[YOU READ: the receipt — **रसीद: किराया पाँच सौ रुपये, तारीख़ पाँच।** (*rasīd: kirāyā pā̃c sau rupaye, tārīkh pā̃c.*)]
+
+Five hundred rupees of rent, paid on the fifth: keep it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

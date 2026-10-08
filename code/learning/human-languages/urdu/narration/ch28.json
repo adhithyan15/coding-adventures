@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "One to Five, By the Road Urdu Did Not Borrow",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:f8db5623f15ed569",
+  "sourceHash": "fnv1a64:405573fd496ab6ef",
   "lessons": [
     {
       "id": "UR-C28-ek",
@@ -671,7 +671,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f458a197223fd1c",
+      "sourceHash": "fnv1a64:12b8b3348b0d3ea4",
       "notice": null,
       "blocks": [
         {
@@ -709,8 +709,13 @@
               "text": "Count backwards from pānch to ek."
             },
             {
-              "kind": "speech",
-              "text": "Read the five printed shuffled — پانچ (pānch)، ایک (ek)، چار (chār)، تین (tīn)، دو (do) — and say each."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the five printed shuffled — پانچ (pānch)، ایک (ek)، چار (chār)، تین (tīn)، دو (do) — then say each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the five printed shuffled — **پانچ، ایک، چار، تین، دو** — then say each]"
             },
             {
               "kind": "prompt",

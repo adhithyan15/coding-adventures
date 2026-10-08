@@ -51,10 +51,13 @@ romanized line to catch you. Let the Arabic carry its own sound.
 > لا
 > حسنًا
 
-[PAUSE 4s] Read down once, right to left, without translating.
+[PAUSE 4s]
+[YOU READ: the six words down once, right to left, without translating]
 
-[PAUSE 3s] Read again. The first and third words stretch an **ا** into a long
-sound, while **شكرًا** and **حسنًا** share the little **ـًا** ending.
+[PAUSE 3s] [YOU READ: them again]
+
+The first and third words stretch an **ا** into a long sound, while **شكرًا**
+and **حسنًا** share the little **ـًا** ending.
 
 ## The script, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[AR-FUNC-C38-HASANAN-01, AR-SKILL-READ-WORDS] -->

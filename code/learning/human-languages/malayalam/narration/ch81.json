@@ -4,7 +4,7 @@
   "chapter": 81,
   "title": "How Far Away",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:92d97fd3716fc015",
+  "sourceHash": "fnv1a64:7fc3cccf53101771",
   "lessons": [
     {
       "id": "ML-C81-aduthu",
@@ -471,7 +471,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cef9818965fd377b",
+      "sourceHash": "fnv1a64:d5e79093a6cb9c29",
       "notice": null,
       "blocks": [
         {
@@ -487,7 +487,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say near, then say far."
+              "text": "Leave the lessons before this one closed. Say near, then say far."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 152,
   "title": "A Word for a Stream — Then Its First Letter",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f6254b1326618958",
+  "sourceHash": "fnv1a64:cbfd734c373cede6",
   "lessons": [
     {
       "id": "TE-C152-jhari",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5aae676ebf8086d8",
+      "sourceHash": "fnv1a64:6a152a3a4fdd0816",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,20 @@
             },
             {
               "kind": "speech",
-              "text": "What did వాఙ్మయం name? (\"Literature.\") Now find the familiar రి at the end of today's word: ర carries the short ి sign. Picture a narrow stream moving down a hillside. This lesson gives that stream a name before it asks you to study the uncommon first letter."
+              "text": "What did వాఙ్మయం name? (\"Literature.\")"
+            },
+            {
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "the familiar రి at the end of today's word — ర carries the short ి sign",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: the familiar **రి** at the end of today's word — **ర** carries the short **ి** sign]"
+            },
+            {
+              "kind": "speech",
+              "text": "Picture a narrow stream moving down a hillside. This lesson gives that stream a name before it asks you to study the uncommon first letter."
             }
           ]
         },
@@ -50,7 +63,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it in two gentle pieces: jha, ri. Read the word as ఝ-రి. The first sound is a breathy jh; the second piece is the familiar రి."
+              "text": "Say it in two gentle pieces: jha, ri. Say the word as ఝ-రి. The first sound is a breathy jh; the second piece is the familiar రి."
             },
             {
               "kind": "speech",
@@ -354,7 +367,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:173e442c14e8f6b0",
+      "sourceHash": "fnv1a64:f14eb8c994d2e5dc",
       "notice": null,
       "blocks": [
         {
@@ -380,8 +393,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look once at ఝరి (jhari), then cover it."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ఝరి (jhari) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ఝరి** once]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: it]"
             },
             {
               "kind": "prompt",
@@ -393,8 +420,13 @@
               "source": "[YOU WRITE: the whole word from memory, with only the picture of a stream as your cue]"
             },
             {
-              "kind": "speech",
-              "text": "Now uncover the model and check both the whole word and its first base letter."
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "the uncovered model — both the whole word and its first base letter",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: the uncovered model — both the whole word and its first base letter]"
             },
             {
               "kind": "prompt",

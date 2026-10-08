@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 15,
-  "sourceHash": "fnv1a64:b00ac5feb7e09c00",
+  "sourceHash": "fnv1a64:568a8003dd1c90e7",
   "lessonIds": [
     "JA-C15-nana",
     "JA-C15-hachi",
@@ -16,7 +16,7 @@
   "drivablePrefix": 1,
   "text": "japanese/narration/ch15.txt",
   "json": "japanese/narration/ch15.json",
-  "textHash": "fnv1a64:c8083a434569daf8",
-  "jsonHash": "fnv1a64:dad561dc5e087d03",
+  "textHash": "fnv1a64:9012efd13ca759fa",
+  "jsonHash": "fnv1a64:105d9ef97b022fb6",
   "findings": []
 }

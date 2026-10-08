@@ -4,7 +4,7 @@
   "chapter": 167,
   "title": "Rent, a Date, a Number, a Floor, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:d2d769d0393554cd",
+  "sourceHash": "fnv1a64:114c7cbf0e9f3a9a",
   "lessons": [
     {
       "id": "HI-C167-kiraya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5cf67b825d61fd30",
+      "sourceHash": "fnv1a64:4a1c01add9d69ab8",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "किराया — kirāyā — \"rent, a fare\". Read the advert: कमरा ख़ाली है। किराया: पाँच सौ रुपये। (kamrā khālī hai. kirāyā: pā̃c sau rupaye.) The rent is five hundred rupees."
+              "text": "किराया — kirāyā — \"rent, a fare\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the advert — कमरा ख़ाली है। किराया: पाँच सौ रुपये। (kamrā khālī hai. kirāyā: pā̃c sau rupaye.)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the advert — **कमरा ख़ाली है। किराया: पाँच सौ रुपये।** (*kamrā khālī hai. kirāyā: pā̃c sau rupaye.*)]"
+            },
+            {
+              "kind": "speech",
+              "text": "The rent is five hundred rupees."
             }
           ]
         },
@@ -142,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8aea1f5dfdcd16ef",
+      "sourceHash": "fnv1a64:dad53f418502d17f",
       "notice": null,
       "blocks": [
         {
@@ -169,7 +182,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "तारीख़ — tārīkh — \"a date\". Read the note: तारीख़ पाँच, सुबह नौ बजे। (tārīkh pā̃c, subah nau baje.) The fifth, at nine in the morning."
+              "text": "तारीख़ — tārīkh — \"a date\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the note — तारीख़ पाँच, सुबह नौ बजे। (tārīkh pā̃c, subah nau baje.)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the note — **तारीख़ पाँच, सुबह नौ बजे।** (*tārīkh pā̃c, subah nau baje.*)]"
+            },
+            {
+              "kind": "speech",
+              "text": "The fifth, at nine in the morning."
             }
           ]
         },
@@ -265,7 +291,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c10721933f43ebc4",
+      "sourceHash": "fnv1a64:42fba59d32fa7b30",
       "notice": null,
       "blocks": [
         {
@@ -292,7 +318,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "नंबर — nambar — \"a number\". Read the sign: कमरा नंबर बीस। (kamrā nambar bīs.) Room twenty."
+              "text": "नंबर — nambar — \"a number\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the sign — कमरा नंबर बीस। (kamrā nambar bīs.)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the sign — **कमरा नंबर बीस।** (*kamrā nambar bīs.*)]"
+            },
+            {
+              "kind": "speech",
+              "text": "Room twenty."
             }
           ]
         },
@@ -388,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06df04c69875cd77",
+      "sourceHash": "fnv1a64:f2d5706804523dbd",
       "notice": null,
       "blocks": [
         {
@@ -415,7 +454,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मंज़िल — manzil — \"a floor, a storey\". Read the sign: कमरा नंबर बीस, दूसरी मंज़िल। (kamrā nambar bīs, dūsrī manzil.) Room twenty is on the second floor: go up."
+              "text": "मंज़िल — manzil — \"a floor, a storey\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the sign — कमरा नंबर बीस, दूसरी मंज़िल। (kamrā nambar bīs, dūsrī manzil.)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the sign — **कमरा नंबर बीस, दूसरी मंज़िल।** (*kamrā nambar bīs, dūsrī manzil.*)]"
+            },
+            {
+              "kind": "speech",
+              "text": "Room twenty is on the second floor: go up."
             }
           ]
         },
@@ -511,7 +563,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:501e67bf30edfd9f",
+      "sourceHash": "fnv1a64:153fd24d5b354d45",
       "notice": null,
       "blocks": [
         {
@@ -538,7 +590,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "रसीद — rasīd — \"a receipt\". Read the receipt: रसीद: किराया पाँच सौ रुपये, तारीख़ पाँच। (rasīd: kirāyā pā̃c sau rupaye, tārīkh pā̃c.) Five hundred rupees of rent, paid on the fifth: keep it."
+              "text": "रसीद — rasīd — \"a receipt\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the receipt — रसीद: किराया पाँच सौ रुपये, तारीख़ पाँच। (rasīd: kirāyā pā̃c sau rupaye, tārīkh pā̃c.)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the receipt — **रसीद: किराया पाँच सौ रुपये, तारीख़ पाँच।** (*rasīd: kirāyā pā̃c sau rupaye, tārīkh pā̃c.*)]"
+            },
+            {
+              "kind": "speech",
+              "text": "Five hundred rupees of rent, paid on the fifth: keep it."
             }
           ]
         },

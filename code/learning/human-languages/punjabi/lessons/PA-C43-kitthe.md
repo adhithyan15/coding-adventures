@@ -50,8 +50,7 @@ has already given you.
 
 > **ਕਿੱਥੇ** — *kitthe* — **where**
 
-Read it in pieces: **ਕ**, the **ਿ** sihari before it, the **ੱ** addak that
-doubles the next sound, then **ਥ** — new one lesson ago — and the **ੇ** laav.
+[YOU READ: it in pieces — **ਕ**, the **ਿ** sihari before it, the **ੱ** addak that doubles the next sound, then **ਥ** (new one lesson ago), and the **ੇ** laav]
 
 The addak is doing real work. It doubles the **ਥ**, which is why the word is
 *kit-the* and not *ki-the*. Leave it off and the word loses its middle.

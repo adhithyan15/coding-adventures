@@ -66,11 +66,11 @@ go. The endings will keep the objects visible.
 > — Ita. Valē!
 > — Valē!
 
-[PAUSE 4s] Read once for the route: names, wellbeing, school, work, reason,
-farewell.
+[PAUSE 4s]
+[YOU READ: it once for the route — names, wellbeing, school, work, reason, farewell]
 
-[PAUSE 3s] Read again and find the two things handled: **librum** and
-**epistulam**.
+[PAUSE 3s]
+[YOU READ: it again and find the two things handled — **librum** and **epistulam**]
 
 ## Grammar Lens: a dialogue is a chain of answers
 <!-- hl-knowledge: introduces=[]; assesses=[LA-SKILL-C59-SOCIAL-READING-04, LA-LEX-CRAS-TE-VIDEBO-01] -->

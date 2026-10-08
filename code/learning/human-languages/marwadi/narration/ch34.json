@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Twenty, A Hundred, And A Price With A Figure In It",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9b733a673fb47f5c",
+  "sourceHash": "fnv1a64:9e4f09d020d31f80",
   "lessons": [
     {
       "id": "MW-C34-hear-bees",
@@ -951,7 +951,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7bcca7d55eefdc3d",
+      "sourceHash": "fnv1a64:76c993089b800c6b",
       "notice": null,
       "blocks": [
         {
@@ -1008,7 +1008,16 @@
             },
             {
               "kind": "speech",
-              "text": "Reading. Read six printed exchanges and say, for each, what the seller asked and what the buyer offered."
+              "text": "Reading."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "six printed exchanges, then say, for each, what the seller asked and what the buyer offered",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: six printed exchanges, then say, for each, what the seller asked and what the buyer offered]"
             },
             {
               "kind": "speech",

@@ -4,7 +4,7 @@
   "chapter": 90,
   "title": "Midday, Evening, In the early morning, Dawn, Day after tomorrow",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b62a423eb320ca12",
+  "sourceHash": "fnv1a64:bf67f87a8ef627a6",
   "lessons": [
     {
       "id": "MW-C90-dopar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59513f48719b2d75",
+      "sourceHash": "fnv1a64:81a86e687d31a4b7",
       "notice": null,
       "blocks": [
         {
@@ -44,8 +44,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read without stopping: ये कपड़ा दिखावो। ये कितणे कू है?"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ये कपड़ा दिखावो। ये कितणे कू है? without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ये कपड़ा दिखावो। ये कितणे कू है?** without stopping]"
             }
           ]
         },

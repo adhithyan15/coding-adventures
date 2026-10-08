@@ -37,7 +37,10 @@ reviews_of: [FR-C127-devoirs]
 
 [PAUSE 2s] Before the new one: say the French for a rubber, then the French for homework.
 
-[PAUSE 3s] Read *La leçon est à neuf heures, dans la classe douze* aloud as one line. Then answer from it: at what time is the lesson? (**À neuf heures.**)
+[PAUSE 3s]
+[YOU READ: *La leçon est à neuf heures, dans la classe douze* aloud as one line]
+
+Then answer from it: at what time is the lesson? (**À neuf heures.**)
 
 ## You'll want to know: la réponse
 <!-- hl-knowledge: introduces=[FR-LEX-C127-ECOLE79-03]; assesses=[] -->

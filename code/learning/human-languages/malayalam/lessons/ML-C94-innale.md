@@ -43,7 +43,7 @@ most.
 
 > **ഇന്നലെ ഞാൻ പോയി.** — *innale ñān pōyi* — "**Yesterday** I went."
 
-Put the two words side by side and read the fronts:
+Put the two words side by side and compare the fronts:
 
 | | |
 |---|---|

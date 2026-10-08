@@ -4,7 +4,7 @@
   "chapter": 131,
   "title": "Tea, Please: Small Ya, Small Yo and Wo",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3860c8e7e0872234",
+  "sourceHash": "fnv1a64:15ea245c5c5cb7d7",
   "lessons": [
     {
       "id": "JA-C131-ocha",
@@ -1361,7 +1361,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c89fce837ca7f4ae",
+      "sourceHash": "fnv1a64:594097242ba85f44",
       "notice": null,
       "blocks": [
         {
@@ -1421,7 +1421,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read each one aloud, count its beats, and say what it means."
+              "text": "For each one below, count its beats and say what it means."
             },
             {
               "kind": "prompt",

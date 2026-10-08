@@ -47,9 +47,10 @@ Every piece below has been a separate chapter. Here they are as one day.
 > *Al **mediodía** el cielo está **amarillo**.*
 > *A **medianoche**, todavía **llueve**.*
 
-[PAUSE 3s] Read it again and count what it took: a day name, a month, a season,
-an hour, the minutes, a weather verb with nothing in front of it, two halves of
-the day, and a colour. Nine chapters, four lines.
+[PAUSE 3s]
+[YOU READ: it again and count what it took — a day name, a month, a season, an hour, the minutes, a weather verb with nothing in front of it, two halves of the day, and a colour]
+
+Nine chapters, four lines.
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ES-CULTURE-ROMAN-MONTH-NAMES, ES-LEX-MONTHS-01] -->

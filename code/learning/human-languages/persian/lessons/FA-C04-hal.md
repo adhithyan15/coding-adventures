@@ -45,9 +45,11 @@ question. The next move asks about the other person's present state.
 
 > **حال** — *hâl* — **state, condition**
 
-Read from right to left: **ح** *h* + **ا** long *â* + **ل** *l*. The first letter
-is a breathier *h* than English normally uses; a clear ordinary *h* is a safe
-beginner approximation. Keep the whole written word attached to its meaning.
+[YOU READ: from right to left — **ح** *h* + **ا** long *â* + **ل** *l*]
+
+The first letter is a breathier *h* than English normally uses; a clear ordinary
+*h* is a safe beginner approximation. Keep the whole written word attached to
+its meaning.
 
 ## The word, taken apart — Arabic history in Persian grammar
 <!-- hl-knowledge: introduces=[FA-ETYMON-HAL]; assesses=[] -->

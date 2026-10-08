@@ -32,8 +32,8 @@ reviews_of: [ES-C452-almacen, ES-C452-ruta, ES-C452-seguimiento, ES-C452-comodo]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C452-REPARTO-01, ES-LEX-C452-REPARTO-02, ES-LEX-C452-REPARTO-03, ES-LEX-C452-REPARTO-04] -->
 
-[PAUSE 3s] Close the lessons before this one. Say all four: *the warehouse*,
-*the route*, *the tracking*, *comfortable*.
+[PAUSE 3s] Leave the lessons before this one closed. Say all four: *the
+warehouse*, *the route*, *the tracking*, *comfortable*.
 
 ## Grammar Lens: three accents, three different jobs
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C452-REPARTO-01, ES-LEX-C452-REPARTO-04] -->

@@ -41,7 +41,11 @@ reviews_of: [KA-C157-velapatti]
 ## You'll want to know: ಸೂಚನೆ
 <!-- hl-knowledge: introduces=[KA-LEX-C157-ODU157-02]; assesses=[] -->
 
-**ಸೂಚನೆ** — *sūcane* — "a notice, an instruction". Read the notice: **ಇಂದು ಅಂಗಡಿ ಮುಚ್ಚಿದೆ** — *indu aṅgaḍi muccide* — "The shop is closed today." Come back on another day.
+**ಸೂಚನೆ** — *sūcane* — "a notice, an instruction".
+
+[YOU READ: the notice — **ಇಂದು ಅಂಗಡಿ ಮುಚ್ಚಿದೆ** — *indu aṅgaḍi muccide* — "The shop is closed today."]
+
+Come back on another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

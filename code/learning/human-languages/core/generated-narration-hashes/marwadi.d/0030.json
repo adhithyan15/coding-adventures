@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 30,
-  "sourceHash": "fnv1a64:27dbf9afe13537bf",
+  "sourceHash": "fnv1a64:dd96ce1f0ac50404",
   "lessonIds": [
     "MW-C25-hear-lavo",
     "MW-C25-lavo",
@@ -15,7 +15,7 @@
   "drivablePrefix": 1,
   "text": "marwadi/narration/ch30.txt",
   "json": "marwadi/narration/ch30.json",
-  "textHash": "fnv1a64:8741f69957af921b",
-  "jsonHash": "fnv1a64:8927d4b6ed248849",
+  "textHash": "fnv1a64:cbaad0ac783c3d43",
+  "jsonHash": "fnv1a64:3522983d4e7d5442",
   "findings": []
 }

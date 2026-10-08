@@ -47,7 +47,9 @@ vowel into the held beat.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-OTTO, JA-SCRIPT-O-01, JA-SCRIPT-SMALL-TSU-01, JA-SCRIPT-TO-01] -->
 
-Read **お | っ | と**. [YOU WRITE: one copy of **おっと**; then hide it and write it once]
+[YOU READ: **お | っ | と**]
+
+[YOU WRITE: one copy of **おっと**; then hide it and write it once]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-OTTO] -->

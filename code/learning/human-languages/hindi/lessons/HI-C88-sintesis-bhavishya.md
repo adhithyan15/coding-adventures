@@ -36,7 +36,7 @@ reviews_of: [HI-C88-repaso-bhavishya, HI-C88-aaunga, HI-C88-baje]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C88-FUT-02, HI-LEX-C88-TIME-01] -->
 
-[PAUSE 2s] Read this out loud before reading on.
+[PAUSE 2s] [YOU READ: this out loud before going on]
 
 > मैं पाँच बजे आऊँगा।
 

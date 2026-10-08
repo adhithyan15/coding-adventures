@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Reading — Words, Greetings, and the Cues You Have Only Heard",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c95a4b0cf6589563",
+  "sourceHash": "fnv1a64:5e56cb770d87c4fa",
   "lessons": [
     {
       "id": "JA-C19-words",
@@ -211,7 +211,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c78e3420d894721",
+      "sourceHash": "fnv1a64:609bd109852b186f",
       "notice": null,
       "blocks": [
         {
@@ -257,8 +257,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six greetings down once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six greetings down once, without stopping]"
             },
             {
               "kind": "pause",
@@ -267,8 +272,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "them again, and notice that the two longest are the two you say most often",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: them again, and notice that the two longest are the two you say most often]"
+            },
+            {
               "kind": "speech",
-              "text": "Again — and notice that the two longest are the two you say most often. Length is not difficulty here; familiarity is."
+              "text": "Length is not difficulty here; familiarity is."
             }
           ]
         },
@@ -398,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b77ebaf680fcfe54",
+      "sourceHash": "fnv1a64:286a169c7279af64",
       "notice": null,
       "blocks": [
         {
@@ -444,8 +458,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping. The list gets longer as it goes; let it."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the list down once, without stopping; it gets longer as it goes — let it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the list down once, without stopping; it gets longer as it goes — let it]"
             },
             {
               "kind": "pause",
@@ -454,8 +473,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Again — and notice that the last two are the only ones with a comma in them, and that the comma falls exactly where you pause when you say it."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the list again, and notice that the last two are the only ones with a comma in them, and that the comma falls exactly where you pause when you say it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the list again, and notice that the last two are the only ones with a comma in them, and that the comma falls exactly where you pause when you say it]"
             }
           ]
         },

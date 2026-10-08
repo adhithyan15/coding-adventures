@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 457,
-  "sourceHash": "fnv1a64:6ebfd1167c1b4294",
+  "sourceHash": "fnv1a64:cc5f782ef8c35623",
   "lessonIds": [
     "ES-C457-medicamento",
     "ES-C457-encargar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch457.txt",
   "json": "spanish/narration/ch457.json",
-  "textHash": "fnv1a64:c5db9927561877c3",
-  "jsonHash": "fnv1a64:0e606c2446787d71",
+  "textHash": "fnv1a64:618bde95239b364c",
+  "jsonHash": "fnv1a64:7f1be594f0bb6d14",
   "findings": []
 }

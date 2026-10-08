@@ -47,7 +47,9 @@ occupying two beats.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-OTOUTO, JA-SCRIPT-O-01, JA-SCRIPT-TO-01, JA-SCRIPT-U-01] -->
 
-Read **お | と | う | と**. [YOU WRITE: one copy of **おとうと**; then hide it and write it once]
+[YOU READ: **お | と | う | と**]
+
+[YOU WRITE: one copy of **おとうと**; then hide it and write it once]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-OTOUTO] -->

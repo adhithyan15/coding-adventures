@@ -36,7 +36,7 @@ reviews_of: [JA-C10-mou-sukoshi, JA-C10-yukkuri, JA-C10-itte-kudasai, JA-C09-sum
 
 [PAUSE 30s] [YOU WRITE: **せ, お, ね, し, ゆ**]
 
-Read *sumimasen* and *onegaishimasu*. Retrieve the repetition request, then the
+Say *sumimasen* and *onegaishimasu*. Retrieve the repetition request, then the
 three new spoken pieces *mō sukoshi*, *yukkuri*, and *itte kudasai*.
 
 ## You'll want to know
@@ -55,7 +55,7 @@ writable. The second and third remain sound-first exposure where their small
 
 1. **Listen:** choose repetition or slower speech from the request you hear.
 2. **Speak:** *sumimasen* + the slower request.
-3. **Read:** independently retrieve only **もうすこし**. [YOU WRITE: **もうすこし**]
+3. **Reading:** [YOU READ: only **もうすこし**, retrieving it independently] [YOU WRITE: **もうすこし**]
 4. **Close:** after the repeated line, say *wakarimashita*.
 
 ## Wrap-up Recall

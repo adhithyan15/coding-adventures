@@ -57,7 +57,7 @@ Every sign is yours: **ひ** and **ふ** came two chapters ago, **と**, **た**
 ## Grammar Lens — the seam, one more time
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HITORI-FUTARI, JA-LEX-HITOTSU, JA-LEX-FUTATSU, JA-GRAMMAR-KUN-IN-THE-COUNT] -->
 
-Read the four words together and the exception stops looking like one:
+Take the four words together and the exception stops looking like one:
 
 | number | native count | with the people counter |
 |---|---|---|

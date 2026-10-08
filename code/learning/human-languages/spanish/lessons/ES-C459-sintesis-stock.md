@@ -38,7 +38,7 @@ excuse breaking the other.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C459-STOCK-01, ES-LEX-C459-STOCK-02, ES-LEX-C459-STOCK-03] -->
 
-A sheet taped to a shop door. Read it, then answer.
+A sheet taped to a shop door. [YOU READ: it, then answer]
 
 > **CERRADO POR INVENTARIO**
 
@@ -71,9 +71,11 @@ reader takes it in from the pavement without reading the rest.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C459-STOCK-01, ES-LEX-C459-STOCK-02, ES-LEX-C459-STOCK-03] -->
 
-[PAUSE 3s] Now your turn, out loud and then in writing. Four lines for a shop
-door: say you are closed for stocktaking, say when you reopen, say the usual
-hours come back tomorrow, and say which section stays open.
+[PAUSE 3s] Now your turn, out loud. Four lines for a shop door: say you are
+closed for stocktaking, say when you reopen, say the usual hours come back
+tomorrow, and say which section stays open.
+
+[YOU WRITE: the same four lines]
 
 Then check yourself: did you use the *cerrado por* frame with no article, and
 did the adjective agree with *la sección* rather than with *deportes*?

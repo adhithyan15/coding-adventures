@@ -47,7 +47,9 @@ even morae.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KODOMO, JA-SCRIPT-KO-01, JA-SCRIPT-DO-01, JA-SCRIPT-MO-01] -->
 
-Read **こ | ど | も**. [YOU WRITE: one copy of **こども**; then hide it and write it once]
+[YOU READ: **こ | ど | も**]
+
+[YOU WRITE: one copy of **こども**; then hide it and write it once]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KODOMO] -->

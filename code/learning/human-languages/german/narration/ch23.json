@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "The Wrapped Participle",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:1a8c94cb64fa7cc3",
+  "sourceHash": "fnv1a64:c368e85704e64621",
   "lessons": [
     {
       "id": "GE-C15-sagen",
@@ -1012,7 +1012,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ecbc9122fe526b8b",
+      "sourceHash": "fnv1a64:ce43d2720d3b1f09",
       "notice": null,
       "blocks": [
         {
@@ -1053,8 +1053,26 @@
               ]
             },
             {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the right-hand side, and rebuild it from the left",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the right-hand side, and rebuild it from the left]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the left, and work backwards",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the left, and work backwards]"
+            },
+            {
               "kind": "speech",
-              "text": "Cover the right-hand side and rebuild it from the left. Then cover the left and work backwards: given gemacht, what was the infinitive? The recipe runs both ways, which is what makes it worth having."
+              "text": "Given gemacht, what was the infinitive? The recipe runs both ways, which is what makes it worth having."
             }
           ]
         },

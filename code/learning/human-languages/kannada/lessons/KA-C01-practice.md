@@ -39,8 +39,9 @@ it feel easy.
 ## Guided Practice: Read them back
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C01-NAMASKARA-01, KA-LEX-C01-DHANYAVADA-01, KA-LEX-C01-HAUDU-01, KA-LEX-C01-ILLA-01, KA-LEX-C01-SARI-01] -->
 
-Sound out the three written in Kannada, left to right, before checking. The
-other two stay in romanization until their letters arrive in later chapters:
+[YOU READ: the three written in Kannada, sounding each out left to right before checking]
+
+The other two stay in romanization until their letters arrive in later chapters:
 
 | Read | Meaning | Native or borrowed |
 |---|---|---|
@@ -77,8 +78,10 @@ now, repeating the greeting is enough when you part.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-ETYMON-C01-NAMASKARA-02, KA-ETYMON-C01-DHANYAVADA-02, KA-GRAMMAR-C01-ILLA-02, KA-LEX-C01-SARI-01] -->
 
-[PAUSE 3s] Read all five words aloud. Which two are Sanskrit loans, and which
-three are native Dravidian? (Loans: *namaskāra*, *dhanyavāda*. Native: *haudu*,
-*illa*, *sari*.) Which one means "okay / correct"? (*sari*.)
+[PAUSE 3s] [YOU READ: all five words aloud]
+
+Which two are Sanskrit loans, and which three are native Dravidian? (Loans:
+*namaskāra*, *dhanyavāda*. Native: *haudu*, *illa*, *sari*.) Which one means
+"okay / correct"? (*sari*.)
 
 Next chapter starts introducing yourself, one short possession form at a time.

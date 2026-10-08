@@ -47,18 +47,19 @@ Say *kāĩ* and its meaning. [YOU WRITE: **क** and independent **ई**]
 
 > **क** + **ा** + **ं** + **ई** → **कांई** — *kāĩ* — what
 
-No shape is new. Read the whole word smoothly; the dot lightly nasalizes the
-long middle rather than creating an extra beat.
+No shape is new.
+[YOU READ: the whole word smoothly — the dot lightly nasalizes the long middle rather than creating an extra beat]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-KAIN-01, MW-LEX-KAIN-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look for five seconds, cover **कांई**, and wait five seconds.
+[YOU COVER: **कांई** after a five-second look, then wait five seconds]
+
 [YOU WRITE: the word — then uncover it and compare **क**, **ा**, **ं**, and **ई** separately]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-KAIN-01, MW-LEX-KAIN-01] -->
 <!-- hl-activity: {"id":"MW-C05-kain-delayed","kind":"text","assesses":["MW-SCRIPT-KAIN-01","MW-LEX-KAIN-01"],"prompt":"After hiding the model, write kāĩ and give its meaning.","answer":"कांई — what","accepted":["कांई","kāĩ — what"],"feedback":{"correct":"Right: कांई asks what.","incorrect":"Build क + ा + ं + ई: कांई."},"response_seconds":15} -->
 
-Read **थारो नाम कांई है?** once without romanization.
+[YOU READ: **थारो नाम कांई है?** once without romanization]

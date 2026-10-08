@@ -4,7 +4,7 @@
   "chapter": 217,
   "title": "Synthesis --- Carrying a Conversation",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4c23e828b45f5065",
+  "sourceHash": "fnv1a64:3463809ab8d42387",
   "lessons": [
     {
       "id": "ES-C57-sintesis-reportar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a874d09bbaaee0a",
+      "sourceHash": "fnv1a64:65c650cd0899a482",
       "notice": null,
       "blocks": [
         {
@@ -188,7 +188,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read your three sentences back and name what is not in them. (No question marks — and not one verb left in the present.)"
+              "text": "Say your three sentences back and name what is not in them. (No question marks — and not one verb left in the present.)"
             },
             {
               "kind": "pause",

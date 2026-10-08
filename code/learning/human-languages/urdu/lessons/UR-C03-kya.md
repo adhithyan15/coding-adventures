@@ -45,10 +45,10 @@ add the question word.
 
 > **کیا** — *kyā* — **what**
 
-Read right to left: **ک** *k*, **ی** supplying the *y* glide here, then **ا**
-long *ā*. The same **ی** carried long *ī* in *jī* and *nahī̃* — words you say
-but cannot spell yet. Its job
-depends on the word; here the learned shape is *kyā*.
+[YOU READ: right to left — **ک** *k*, **ی** supplying the *y* glide here, then **ا** long *ā*]
+
+The same **ی** carried long *ī* in *jī* and *nahī̃* — words you say but cannot
+spell yet. Its job depends on the word; here the learned shape is *kyā*.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[UR-ETYMON-KYA-QUESTION-FAMILY]; assesses=[] -->

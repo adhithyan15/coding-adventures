@@ -4,7 +4,7 @@
   "chapter": 147,
   "title": "A Timetable, a Notice, the Rent, an Advert, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:67ea008af03d9191",
+  "sourceHash": "fnv1a64:abedf05dd0ca338e",
   "lessons": [
     {
       "id": "BN-C147-taimtebil",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7055e0ac5cf66450",
+      "sourceHash": "fnv1a64:bd7c696a5bc29338",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "টাইমটেবিল — ṭāimṭebil — \"a timetable\". Read the board: বাস ছাড়ার সময়: সকাল আটটা — bās chhāṛār sômôy: sôkāl āṭṭā — \"Bus departure time: 8 a.m.\" The bus leaves at eight, so be there before eight."
+              "text": "টাইমটেবিল — ṭāimṭebil — \"a timetable\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the board — বাস ছাড়ার সময়: সকাল আটটা — bās chhāṛār sômôy: sôkāl āṭṭā — \"Bus departure time: 8 a.m.\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the board — **বাস ছাড়ার সময়: সকাল আটটা** — *bās chhāṛār sômôy: sôkāl āṭṭā* — \"Bus departure time: 8 a.m.\"]"
+            },
+            {
+              "kind": "speech",
+              "text": "The bus leaves at eight, so be there before eight."
             }
           ]
         },
@@ -142,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b5126bc123d9b3e",
+      "sourceHash": "fnv1a64:b8381a96d023aba8",
       "notice": null,
       "blocks": [
         {
@@ -169,7 +182,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "নোটিশ — noṭish — \"a notice\". Read the notice: প্রতি রবিবার দোকান বন্ধ — prôti rôbibār dokān bôndhô — \"Shop closed every Sunday.\" Come on another day."
+              "text": "নোটিশ — noṭish — \"a notice\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the notice — প্রতি রবিবার দোকান বন্ধ — prôti rôbibār dokān bôndhô — \"Shop closed every Sunday.\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the notice — **প্রতি রবিবার দোকান বন্ধ** — *prôti rôbibār dokān bôndhô* — \"Shop closed every Sunday.\"]"
+            },
+            {
+              "kind": "speech",
+              "text": "Come on another day."
             }
           ]
         },
@@ -388,7 +414,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:20b7d688961cb886",
+      "sourceHash": "fnv1a64:2895c259f1523dbc",
       "notice": null,
       "blocks": [
         {
@@ -415,7 +441,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "বিজ্ঞাপন — bigyāpôn — \"an advert\". Read the advert: বাড়ি ভাড়া দেওয়া হবে — bāṛi bhāṛā deoyā hôbe — \"House to let.\" A house is available to rent."
+              "text": "বিজ্ঞাপন — bigyāpôn — \"an advert\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the advert — বাড়ি ভাড়া দেওয়া হবে — bāṛi bhāṛā deoyā hôbe — \"House to let.\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the advert — **বাড়ি ভাড়া দেওয়া হবে** — *bāṛi bhāṛā deoyā hôbe* — \"House to let.\"]"
+            },
+            {
+              "kind": "speech",
+              "text": "A house is available to rent."
             }
           ]
         },

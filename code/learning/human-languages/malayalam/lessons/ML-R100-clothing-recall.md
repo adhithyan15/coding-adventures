@@ -33,7 +33,7 @@ reviews_of: [ML-C100-mundu, ML-C100-saari, ML-C100-cheruppu, ML-C100-thoppi]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C100-MUNDU-01, ML-LEX-C100-SARI-01, ML-LEX-C100-SANDAL-01, ML-LEX-C100-CAP-01] -->
 
-[PAUSE 3s] Close the lessons before this one. Say *a mundu*, *a sari*, *a
+[PAUSE 3s] Leave the lessons before this one closed. Say *a mundu*, *a sari*, *a
 sandal*, *a cap*.
 
 ## Grammar Lens: two endings, and an adjective that never moves

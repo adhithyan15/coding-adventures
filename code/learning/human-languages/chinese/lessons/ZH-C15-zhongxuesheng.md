@@ -41,7 +41,7 @@ reviews_of: [ZH-C15-hear-zhongxuesheng, ZH-C15-zhongxue, ZH-C13-xuesheng]
 
 > **中学生** — *zhōngxuésheng* — **middle-school student**
 
-Read all three characters once without pinyin.
+[YOU READ: all three characters once without pinyin]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-ZHONGXUESHENG-01, ZH-LEX-ZHONGXUESHENG-01, ZH-SCRIPT-ZHONG-01, ZH-SCRIPT-XUE-01, ZH-SCRIPT-SHENG-01] -->

@@ -4,7 +4,7 @@
   "chapter": 140,
   "title": "A Notice, a Timetable, an Advert, a Bill, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:1a056bf4f56e2f34",
+  "sourceHash": "fnv1a64:0330a0e4a6ee1aab",
   "lessons": [
     {
       "id": "SA-C140-sucana",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96382e8d9d4f1e1f",
+      "sourceHash": "fnv1a64:fd1e52f8f33f2543",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "सूचना — sūcanā — \"a notice\". Read the notice on the shop door: अद्य विश्रामः। — \"today, rest\". The shop is closed today, so come back श्वः."
+              "text": "सूचना — sūcanā — \"a notice\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the notice on the shop door — अद्य विश्रामः। — \"today, rest\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the notice on the shop door — **अद्य विश्रामः।** — \"today, rest\"]"
+            },
+            {
+              "kind": "speech",
+              "text": "The shop is closed today, so come back श्वः."
             }
           ]
         },
@@ -142,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31eefe8f6c86fc5c",
+      "sourceHash": "fnv1a64:60c8a1278587e742",
       "notice": null,
       "blocks": [
         {
@@ -169,7 +182,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "समयसारणी — samayasāraṇī — \"a timetable\". Read the timetable at the station: धूमयानम् — प्रातः दश। The train leaves at ten in the morning: be at the स्थानकम् before ten."
+              "text": "समयसारणी — samayasāraṇī — \"a timetable\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the timetable at the station — धूमयानम् — प्रातः दश।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the timetable at the station — **धूमयानम् — प्रातः दश।**]"
+            },
+            {
+              "kind": "speech",
+              "text": "The train leaves at ten in the morning: be at the स्थानकम् before ten."
             }
           ]
         },
@@ -265,7 +291,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c3d55acf2eefdc0",
+      "sourceHash": "fnv1a64:ca8b8058e43791fa",
       "notice": null,
       "blocks": [
         {
@@ -292,7 +318,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "विज्ञापनम् — vijñāpanam — \"an advert\". Read the advert: प्रकोष्ठः रिक्तः। मूल्यम् — मासे सहस्रम्। A room is empty, at a thousand a month."
+              "text": "विज्ञापनम् — vijñāpanam — \"an advert\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the advert — प्रकोष्ठः रिक्तः। मूल्यम् — मासे सहस्रम्।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the advert — **प्रकोष्ठः रिक्तः। मूल्यम् — मासे सहस्रम्।**]"
+            },
+            {
+              "kind": "speech",
+              "text": "A room is empty, at a thousand a month."
             }
           ]
         },
@@ -388,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:24c33cce0d11445c",
+      "sourceHash": "fnv1a64:9aad2392d996ba02",
       "notice": null,
       "blocks": [
         {
@@ -415,7 +454,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "देयकम् — deyakam — \"a bill (to pay)\". Read the bill at the restaurant: भोजनालयः — देयकम् — शतम्। A hundred to pay before you go."
+              "text": "देयकम् — deyakam — \"a bill (to pay)\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the bill at the restaurant — भोजनालयः — देयकम् (deyakam) — शतम्।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the bill at the restaurant — **भोजनालयः — देयकम् — शतम्।**]"
+            },
+            {
+              "kind": "speech",
+              "text": "A hundred to pay before you go."
             }
           ]
         },
@@ -511,7 +563,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b2937e4d8381985f",
+      "sourceHash": "fnv1a64:77ffbe421bbffa45",
       "notice": null,
       "blocks": [
         {
@@ -538,7 +590,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "प्राप्तिपत्रम् — prāptipatram — \"a receipt\". Read the receipt: प्रकोष्ठः — मूल्यम् — सहस्रम्। The thousand for the room is paid: keep it."
+              "text": "प्राप्तिपत्रम् — prāptipatram — \"a receipt\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the receipt — प्रकोष्ठः — मूल्यम् — सहस्रम्।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the receipt — **प्रकोष्ठः — मूल्यम् — सहस्रम्।**]"
+            },
+            {
+              "kind": "speech",
+              "text": "The thousand for the room is paid: keep it."
             }
           ]
         },

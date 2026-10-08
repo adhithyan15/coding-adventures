@@ -4,7 +4,7 @@
   "chapter": 442,
   "title": "La Gestion",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f9ca33f7bc6ae5fd",
+  "sourceHash": "fnv1a64:2f036502ed9013c1",
   "lessons": [
     {
       "id": "ES-C442-administracion",
@@ -833,7 +833,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b98f34fb50616632",
+      "sourceHash": "fnv1a64:32f062ce2b168466",
       "notice": null,
       "blocks": [
         {
@@ -849,7 +849,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all five: officialdom, the shipment, to arrange an appointment, the meeting, the screen."
+              "text": "Leave the lessons before this one closed. Say all five: officialdom, the shipment, to arrange an appointment, the meeting, the screen."
             }
           ]
         },
@@ -973,7 +973,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b8c438873bba402",
+      "sourceHash": "fnv1a64:c4e79b6b3b68dd34",
       "notice": null,
       "blocks": [
         {
@@ -999,8 +999,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read it once straight through, then answer."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it once straight through, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it once straight through, then answer]"
             },
             {
               "kind": "speech",
@@ -1081,7 +1086,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now your turn, out loud and then in writing. Five sentences: say you want to make an appointment, say what the screen asked for, say what papers you took, say the meeting was moved, and say your parcel has not come."
+              "text": "Now your turn, out loud. Five sentences: say you want to make an appointment, say what the screen asked for, say what papers you took, say the meeting was moved, and say your parcel has not come."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same five sentences",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same five sentences]"
             },
             {
               "kind": "speech",

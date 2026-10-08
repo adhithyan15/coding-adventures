@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9ef16bff3772e4ac",
+  "sourceHash": "fnv1a64:c0b9bc5592bd0723",
   "lessons": [
     {
       "id": "TE-S142-digit-3",
@@ -1647,7 +1647,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dacb7766d93c23c5",
+      "sourceHash": "fnv1a64:4f3ee0d6f357dd29",
       "notice": null,
       "blocks": [
         {
@@ -1673,8 +1673,13 @@
           "title": "The exchange",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read the whole cycle off the page first — Telugu, then the sound, then the sense:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the whole cycle off the page first — Telugu, then the sound, then the sense",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the whole cycle off the page first — Telugu, then the sound, then the sense]"
             },
             {
               "kind": "table",

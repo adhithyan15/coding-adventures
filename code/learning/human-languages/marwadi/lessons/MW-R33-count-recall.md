@@ -47,8 +47,7 @@ Two runs of five are still two runs until they are mixed.
 
 1. Hear ten numbers named singly, drawn from across the whole set, and say each.
 2. Count backwards from ten to one.
-3. Read **आठ**, **तीन**, **दस**, **छ**, **एक**, **नो** printed in that order
-   and say each.
+3. [YOU READ: **आठ**, **तीन**, **दस**, **छ**, **एक**, **नो** printed in that order, then say each]
 4. [YOU WRITE: **सात**, **पांच**, **नो**, **दो**, **दस** from dictation]
 
 Then say which pairs share a sign: two and nine, seven and ten, four and five.

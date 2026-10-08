@@ -38,7 +38,9 @@ reviews_of: [AR-C99-qissa]
 
 [PAUSE 2s] Before the new one: say the Arabic for a language, then the Arabic for a story.
 
-[PAUSE 1s] Read **ال** and say what it means. (*Al-*, "the" — the *al-* hiding in *algebra* and *alcohol*.)
+[PAUSE 1s] [YOU READ: **ال**, then say what it means]
+
+(*Al-*, "the" — the *al-* hiding in *algebra* and *alcohol*.)
 
 ## You'll want to know: مصعد
 <!-- hl-knowledge: introduces=[AR-LEX-C100-LOC100-01]; assesses=[] -->

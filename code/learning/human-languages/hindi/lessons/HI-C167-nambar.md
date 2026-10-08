@@ -41,7 +41,11 @@ reviews_of: [HI-C167-tarikh]
 ## You'll want to know: नंबर
 <!-- hl-knowledge: introduces=[HI-LEX-C167-READ167-03]; assesses=[] -->
 
-**नंबर** — *nambar* — "a number". Read the sign: **कमरा नंबर बीस।** (*kamrā nambar bīs.*) Room twenty.
+**नंबर** — *nambar* — "a number".
+
+[YOU READ: the sign — **कमरा नंबर बीस।** (*kamrā nambar bīs.*)]
+
+Room twenty.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

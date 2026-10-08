@@ -125,7 +125,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Punjabi for December, then the Punjabi for Chet.
 [pause 1 second]
-Read these two lines without stopping: ਮੇਰਾ ਨਾਂ ਅਮਨ ਹੈ। ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ।.
+[once you have stopped driving — read: these two lines without stopping — ਮੇਰਾ ਨਾਂ ਅਮਨ ਹੈ। ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ।]
 
 You'll want to know: ਵਿਸਾਖ.
 ਵਿਸਾਖ — visākh — "Visakh, the month of Vaisakhi".

@@ -44,15 +44,17 @@ reviews_of: [MW-C24-hear-pay, MW-C10-paisa, MW-C24-lo, MW-W07-e-matra, MW-W05-ai
 
 > **पैसा | ले | लो।**
 
-The same **ल** stands twice in a row, once with **े** and once with **ो**. Read
-the pair slowly and watch only the mark: it is the mark, not the letter, that
-tells the two words apart.
+The same **ल** stands twice in a row, once with **े** and once with **ो**.
+[YOU READ: the pair slowly and watch only the mark]
+
+It is the mark, not the letter, that tells the two words apart.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PAY-01, MW-SCRIPT-E-MATRA-01, MW-SCRIPT-O-MATRA-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Read the line once and cover it for ten seconds.
+[YOU READ: the line once, then cover it for ten seconds]
+
 [YOU WRITE: all three words — then open the model and check the two marks on the two **ल** before anything else]
 
 ## Wrap-up Recall

@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 100,
-  "sourceHash": "fnv1a64:e2e27b4443b20437",
+  "sourceHash": "fnv1a64:0f749f8c170799c4",
   "lessonIds": [
     "AR-C100-misad",
     "AR-C100-mamarr",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "arabic/narration/ch100.txt",
   "json": "arabic/narration/ch100.json",
-  "textHash": "fnv1a64:b4daad76bf8f2134",
-  "jsonHash": "fnv1a64:5f32947ebcc9b6bd",
+  "textHash": "fnv1a64:65db44374e5b4d2c",
+  "jsonHash": "fnv1a64:71d3e5c7ac84765c",
   "findings": []
 }

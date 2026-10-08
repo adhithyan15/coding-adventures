@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "A First Three-Place Map",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2d472c76a6fe0435",
+  "sourceHash": "fnv1a64:3c6ad133d6dbdf91",
   "lessons": [
     {
       "id": "GU-C20-hear-bajar",
@@ -393,7 +393,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0e7879d1b827780",
+      "sourceHash": "fnv1a64:98e78cbccabee5ec",
       "notice": null,
       "blocks": [
         {
@@ -414,7 +414,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Sort three heard cards: bajār, ghar, mandir. Say only mandir from its meaning cue."
+              "text": "Sort three heard words: bajār, ghar, mandir. Say only mandir from its meaning cue."
             }
           ]
         },

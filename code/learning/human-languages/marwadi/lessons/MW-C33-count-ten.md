@@ -46,7 +46,7 @@ Four skills, scored separately.
 1. **Listening.** Hear ten numbers named singly and out of order.
    [YOU WRITE: each in figures of your own language]
 2. **Speaking.** Count one to ten, then ten to one, with no model.
-3. **Reading.** Read all ten printed in Devanagari, shuffled, and say each.
+3. **Reading.** [YOU READ: all ten printed in Devanagari, shuffled, then say each]
 4. **Writing.** [YOU WRITE: all ten from dictation, shuffled, with no model in view]
 
 Pass each one separately.

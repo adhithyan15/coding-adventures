@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Looking and reading",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2451da07237b61af",
+  "sourceHash": "fnv1a64:1bb5c44950f899e2",
   "lessons": [
     {
       "id": "ZH-C18-hear-kan",
@@ -589,7 +589,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b53fe36305a8e16d",
+      "sourceHash": "fnv1a64:e3592a71e8a245b9",
       "notice": null,
       "blocks": [
         {
@@ -637,8 +637,17 @@
               "text": "看见 — kànjiàn — see; catch sight of."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the two known shapes from left to right",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the two known shapes from left to right]"
+            },
+            {
               "kind": "speech",
-              "text": "Read the two known shapes from left to right. 看 (kàn) supplies looking; 见 marks the perceived result."
+              "text": "看 (kàn) supplies looking; 见 marks the perceived result."
             }
           ]
         },
@@ -890,7 +899,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:58275322dfa19498",
+      "sourceHash": "fnv1a64:f7e2d1e4b61bc9a2",
       "notice": null,
       "blocks": [
         {
@@ -917,7 +926,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the three meanings in mixed order. Say each Mandarin answer and read its unpointed card."
+              "text": "Hear the three meanings in mixed order. Say each Mandarin answer."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "its unpointed card",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: its unpointed card]"
             },
             {
               "kind": "prompt",
@@ -1358,7 +1376,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f0bcb5029743f33",
+      "sourceHash": "fnv1a64:60159203a1435b7b",
       "notice": null,
       "blocks": [
         {
@@ -1388,8 +1406,22 @@
               "text": "书 — shū — book."
             },
             {
-              "kind": "speech",
-              "text": "Hide the pinyin. Read 书 (shū), hold the level first tone, then give its meaning."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the pinyin",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the pinyin]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "书 (shū), hold the level first tone, then give its meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 书, hold the level first tone, then give its meaning]"
             }
           ]
         },
@@ -1639,7 +1671,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:582967263a1b0eb4",
+      "sourceHash": "fnv1a64:bf845d70ae2f9192",
       "notice": null,
       "blocks": [
         {
@@ -1655,7 +1687,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say read a book in Mandarin, then put that card away."
+              "text": "Say read a book in Mandarin, then set that word aside."
             }
           ]
         },
@@ -1674,8 +1706,13 @@
               "source": "[YOU WRITE: without looking back, **look**, **see**, and **good-looking** from mixed meaning cards]"
             },
             {
-              "kind": "speech",
-              "text": "Read each answer aloud only after all three are complete."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each answer aloud only after all three are complete",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each answer aloud only after all three are complete]"
             }
           ]
         },
@@ -1726,7 +1763,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d223c4c2cf6d76f",
+      "sourceHash": "fnv1a64:a48d9f75b98404a5",
       "notice": null,
       "blocks": [
         {
@@ -1753,7 +1790,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the two meanings in mixed order. Say each answer and read its unpointed card."
+              "text": "Hear the two meanings in mixed order. Say each answer."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "its unpointed card",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: its unpointed card]"
             },
             {
               "kind": "prompt",
@@ -1816,7 +1862,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc6a0627adb973aa",
+      "sourceHash": "fnv1a64:567624be895a0ad2",
       "notice": null,
       "blocks": [
         {
@@ -1843,7 +1889,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep the page covered. Hear all five Mandarin forms in mixed order and give each meaning. Then reverse the cards and say all five Mandarin forms. Score listening and speaking separately out of five."
+              "text": "Keep the page covered. Hear all five Mandarin forms in mixed order and give each meaning. Then reverse the direction and say all five Mandarin forms. Score listening and speaking separately out of five."
             }
           ]
         },
@@ -1893,7 +1939,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02112ecd97e67cb3",
+      "sourceHash": "fnv1a64:8030bec925c4f745",
       "notice": null,
       "blocks": [
         {
@@ -1908,8 +1954,13 @@
               "source": "[PAUSE 8s]"
             },
             {
-              "kind": "speech",
-              "text": "Read 看 (kàn) and 书 (shū) without saying their pinyin first."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "看 (kàn) and 书 (shū) without saying their pinyin first",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **看** and **书** without saying their pinyin first]"
             }
           ]
         },
@@ -1919,8 +1970,17 @@
           "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "five unpointed cards in a shuffled order — 好看 (hǎokàn), 书, 看见 (kànjiàn), 看书 (kànshū), 看 — each cold, then give its meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: five unpointed cards in a shuffled order — **好看, 书, 看见, 看书, 看** — each cold, then give its meaning]"
+            },
+            {
               "kind": "speech",
-              "text": "Shuffle five unpointed cards: 好看 (hǎokàn), 书, 看见 (kànjiàn), 看书 (kànshū), 看. Read each cold and give its meaning. Score one point per form before any pinyin help."
+              "text": "Score one point per form before any pinyin help."
             }
           ]
         },

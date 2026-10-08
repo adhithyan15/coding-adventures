@@ -59,6 +59,6 @@ Hear *dādā* or *dādī*. [YOU WRITE: the matching word without a model, then c
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DADI-01, MW-SCRIPT-DADI-01, MW-LEX-DADA-01] -->
 <!-- hl-activity: {"id":"MW-C08-dadi-grandparent-pair","kind":"text","assesses":["MW-LEX-DADI-01","MW-SCRIPT-DADI-01","MW-LEX-DADA-01"],"prompt":"Write paternal grandfather and paternal grandmother, in that order.","answer":"दादा — दादी","accepted":["दादा दादी","दादा, दादी"],"feedback":{"correct":"Right: दादा ends in ा; दादी ends in ी.","incorrect":"Repair only the last vowel: दादा; दादी."},"response_seconds":20} -->
 
-Read **दादा — दादी** once, then stop.
+[YOU READ: **दादा — दादी** once, then stop]
 
 Source: [Marwari Pathshala, Lesson 4](https://www.marwaripathshala.com/marwari-lesson-4-english).

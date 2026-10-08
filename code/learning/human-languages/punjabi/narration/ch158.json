@@ -4,7 +4,7 @@
   "chapter": 158,
   "title": "Recall Familiar Quality Words at a Distance",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:71764a27d7699fee",
+  "sourceHash": "fnv1a64:ce77701dda4624ed",
   "lessons": [
     {
       "id": "PA-R158-food-quality-recall",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0734540fa432dafa",
+      "sourceHash": "fnv1a64:4e301d5f2bd30226",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say the old word for stale. (ਬੇਹਾ, behā.) Cover the answer before the next cue."
+              "text": "Say the old word for stale. (ਬੇਹਾ, behā.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the answer before the next cue",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the answer before the next cue]"
             }
           ]
         },
@@ -113,8 +122,13 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Cover the three answers."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the three answers",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the three answers]"
             },
             {
               "kind": "pause",
@@ -143,7 +157,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:68207270605280fe",
+      "sourceHash": "fnv1a64:75492262ff3b765e",
       "notice": null,
       "blocks": [
         {
@@ -211,8 +225,13 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Cover the earlier answers."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the earlier answers",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the earlier answers]"
             },
             {
               "kind": "pause",

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 217,
-  "sourceHash": "fnv1a64:4c23e828b45f5065",
+  "sourceHash": "fnv1a64:3463809ab8d42387",
   "lessonIds": [
     "ES-C57-sintesis-reportar"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch217.txt",
   "json": "spanish/narration/ch217.json",
-  "textHash": "fnv1a64:27dcd1c3f9c95451",
-  "jsonHash": "fnv1a64:5584f1495e0bcf61",
+  "textHash": "fnv1a64:adc192f2308047bc",
+  "jsonHash": "fnv1a64:e4103c6127116d28",
   "findings": []
 }

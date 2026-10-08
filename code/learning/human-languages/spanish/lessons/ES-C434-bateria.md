@@ -33,7 +33,7 @@ reviews_of: [ES-C432-tuberia]
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C432-CASA-04, ES-LEX-C434-MAQ-03] -->
 
 [PAUSE 2s] Say *la tubería*. You learned that **-ería** collects. Here is a word
-that ends the same way. Guess what it collects, then read on.
+that ends the same way. Guess what it collects, then go on.
 
 ## You'll want to know: la batería
 <!-- hl-knowledge: introduces=[ES-LEX-C434-MAQ-04]; assesses=[] -->

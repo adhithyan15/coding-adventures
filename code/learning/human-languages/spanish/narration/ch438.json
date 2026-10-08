@@ -4,7 +4,7 @@
   "chapter": 438,
   "title": "El Cuerpo Y El Descanso",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:dde5d312f8af0a18",
+  "sourceHash": "fnv1a64:7319624dd5bafd53",
   "lessons": [
     {
       "id": "ES-C438-polideportivo",
@@ -788,7 +788,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0f3fd75e96c60b4",
+      "sourceHash": "fnv1a64:a6f42d2ec7dcc6ce",
       "notice": null,
       "blocks": [
         {
@@ -804,7 +804,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all five: the sports centre, swimming, to twist your ankle, to rest, to laugh."
+              "text": "Leave the lessons before this one closed. Say all five: the sports centre, swimming, to twist your ankle, to rest, to laugh."
             }
           ]
         },
@@ -928,7 +928,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e198a1706d83c0f",
+      "sourceHash": "fnv1a64:901c9b52dc8717e1",
       "notice": null,
       "blocks": [
         {
@@ -954,8 +954,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read the notice once straight through, then answer."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the notice once straight through, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the notice once straight through, then answer]"
             },
             {
               "kind": "speech",
@@ -1032,7 +1037,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now your turn, out loud and then in writing. Four sentences: where you went, what you were doing there, what you twisted, and what you have to do now. End it the way the message above ends it."
+              "text": "Now your turn, out loud. Four sentences: where you went, what you were doing there, what you twisted, and what you have to do now. End it the way the message above ends it."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same four sentences",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same four sentences]"
             },
             {
               "kind": "speech",

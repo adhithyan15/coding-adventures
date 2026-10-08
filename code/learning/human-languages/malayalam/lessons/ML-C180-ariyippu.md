@@ -41,7 +41,11 @@ reviews_of: [ML-C180-samayappattika]
 ## You'll want to know: അറിയിപ്പ്
 <!-- hl-knowledge: introduces=[ML-LEX-C180-VAYANA180-02]; assesses=[] -->
 
-**അറിയിപ്പ്** — *aṟiyippŭ* — "a notice, an announcement". Read the notice: **ഇന്ന് കട അടച്ചിരിക്കുന്നു** — *innŭ kaṭa aṭaccirikkunnu* — "The shop is closed today." Come back on another day.
+**അറിയിപ്പ്** — *aṟiyippŭ* — "a notice, an announcement".
+
+[YOU READ: the notice — **ഇന്ന് കട അടച്ചിരിക്കുന്നു** — *innŭ kaṭa aṭaccirikkunnu* — "The shop is closed today."]
+
+Come back on another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

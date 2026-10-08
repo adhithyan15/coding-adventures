@@ -40,7 +40,11 @@ reviews_of: [GE-C143-anzeige]
 ## You'll want to know: der Termin
 <!-- hl-knowledge: introduces=[GE-LEX-C143-READ143-03]; assesses=[] -->
 
-**der Termin** — "an appointment". Read the message: **Ihr Termin: Montag, zehn Uhr.** Your appointment is on Monday at ten: be there before ten.
+**der Termin** — "an appointment".
+
+[YOU READ: the message — **Ihr Termin: Montag, zehn Uhr.**]
+
+Your appointment is on Monday at ten: be there before ten.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

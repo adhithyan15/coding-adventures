@@ -49,9 +49,9 @@ reviews_of: [MW-W35-digits-zero-one-two, MW-C23-hear-ghano, MW-C34-price-number]
 The three signs from the last lesson already spell three amounts this book
 knows.
 
-1. Read **१**, **२** and **१०** aloud as *ek*, *do* and *das*.
+1. [YOU READ: **१**, **२** and **१०** aloud as *ek*, *do* and *das*]
 2. [YOU WRITE: each of the three in words, underneath its figure]
-3. Cover the figures. [YOU WRITE: the figures again, from the words]
+3. [YOU COVER: the figures] [YOU WRITE: the figures again, from the words]
 4. Hear *das*. [YOU POINT: **१०** rather than **दस**]
 
 Reading a figure and reading a word are two different skills, and a stall gives

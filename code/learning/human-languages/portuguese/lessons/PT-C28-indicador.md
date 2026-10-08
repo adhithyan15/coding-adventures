@@ -86,4 +86,4 @@ say.
 
 [PAUSE 3s] What is the raised letter in **1.ª**? (**The last letter of *primeira*** — the
 tail of the word.) Why are there two shapes? (**Because it agrees**, like the
-word it stands for.) Read *o 3.º andar* aloud. (***O terceiro andar***.)
+word it stands for.) [YOU READ: *o 3.º andar* aloud (***O terceiro andar***)]

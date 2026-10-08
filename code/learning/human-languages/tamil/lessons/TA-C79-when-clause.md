@@ -33,7 +33,9 @@ reviews_of: [TA-W34-read-eppothu]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C79-WHEN-02, TA-SCRIPT-READ-EPPOTHU-01] -->
 
-[PAUSE 2s] Read **எப்போது**. Then say *then, at that time*.
+[PAUSE 2s] [YOU READ: **எப்போது**]
+
+Then say *then, at that time*.
 
 ## Grammar lens: the time-word does the joining
 <!-- hl-knowledge: introduces=[TA-GRAMMAR-C79-WHEN-03]; assesses=[] -->

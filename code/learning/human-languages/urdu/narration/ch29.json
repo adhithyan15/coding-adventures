@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Six to Ten, and the Change That Happened Next Door",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:0836a2b74d1496e1",
+  "sourceHash": "fnv1a64:0847f9616da4730b",
   "lessons": [
     {
       "id": "UR-C29-chhe",
@@ -674,7 +674,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d3d65688ca79021",
+      "sourceHash": "fnv1a64:c4b09c17870b17d1",
       "notice": null,
       "blocks": [
         {
@@ -712,8 +712,13 @@
               "text": "Hear all ten named singly and out of order, and say each."
             },
             {
-              "kind": "speech",
-              "text": "Read the ten printed shuffled and say each."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the ten printed shuffled, then say each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the ten printed shuffled, then say each]"
             },
             {
               "kind": "prompt",

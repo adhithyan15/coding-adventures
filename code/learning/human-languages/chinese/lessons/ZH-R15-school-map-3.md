@@ -35,13 +35,14 @@ reviews_of: [ZH-R15-school-map-1, ZH-R15-school-map-2, ZH-C15-shangxue]
 
 [PAUSE 12s] [YOU WRITE: 中 and 同]
 
-Then read 学.
+[YOU READ: 学]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-ZHONGXUE-01, ZH-ORTHO-ZHONGXUESHENG-01, ZH-ORTHO-TONGXUE-01, ZH-ORTHO-SHANGXUE-01, ZH-LEX-ZHONG-01, ZH-LEX-ZHONGXUE-01, ZH-LEX-ZHONGXUESHENG-01, ZH-LEX-TONGXUE-01, ZH-LEX-SHANGXUE-01, ZH-SCRIPT-ZHONG-01, ZH-SCRIPT-TONG-01, ZH-SCRIPT-SHANG, ZH-SCRIPT-XUE-01, ZH-SCRIPT-SHENG-01] -->
 
-Shuffle four meaning cards: **middle school**, **middle-school student**,
-**classmate**, **go to school**. Say and read each. [YOU WRITE: each one]
+Take four meanings in a shuffled order: **middle school**, **middle-school
+student**, **classmate**, **go to school**. Say each. [YOU READ: each]
+[YOU WRITE: each one]
 
 Sort them as place, person, relationship, or action.
 

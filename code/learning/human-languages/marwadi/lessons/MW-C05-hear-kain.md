@@ -36,11 +36,12 @@ reviews_of: [MW-C05-tharo, MW-C05-hear-naam]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-THARO-01, MW-SCRIPT-THARO-01, MW-LEX-NAAM-01, MW-PERFORMANCE-HAAN-SAA-FOUR-SKILL-01, MW-SCRIPT-AI-MATRA-01] -->
 
-[PAUSE 25s] Retrieve **हां सा** once by ear, voice, eye, and writing.
-[YOU POINT: **ै** in **है**]
+[PAUSE 25s] Retrieve **हां सा** once by ear and voice. [YOU READ: **हां सा**]
+[YOU WRITE: **हां सा** once] [YOU POINT: **ै** in **है**]
 
-Then read **थारो**, hear *thāro nām*, and
-give its meaning: **your name**.
+[YOU READ: **थारो**]
+
+Then hear *thāro nām*, and give its meaning: **your name**.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-KAIN-01]; assesses=[] -->

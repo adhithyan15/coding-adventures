@@ -4,7 +4,7 @@
   "chapter": 152,
   "title": "Synthesis --- Saying Something About Your Own Life",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:5a9e92d2903f480d",
+  "sourceHash": "fnv1a64:dd13fdd4cc996c15",
   "lessons": [
     {
       "id": "ES-C40-sintesis-describir",
@@ -447,7 +447,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c54733c6606e6f5d",
+      "sourceHash": "fnv1a64:1a2ac16a03283fbb",
       "notice": null,
       "blocks": [
         {
@@ -487,8 +487,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it again and count what it took — a day name, a month, a season, an hour, the minutes, a weather verb with nothing in front of it, two halves of the day, and a colour",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it again and count what it took — a day name, a month, a season, an hour, the minutes, a weather verb with nothing in front of it, two halves of the day, and a colour]"
+            },
+            {
               "kind": "speech",
-              "text": "Read it again and count what it took: a day name, a month, a season, an hour, the minutes, a weather verb with nothing in front of it, two halves of the day, and a colour. Nine chapters, four lines."
+              "text": "Nine chapters, four lines."
             }
           ]
         },

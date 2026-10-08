@@ -32,8 +32,8 @@ reviews_of: [ES-C457-medicamento, ES-C457-encargar, ES-C457-guardia]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C457-GUARDIA-01, ES-LEX-C457-GUARDIA-02, ES-LEX-C457-GUARDIA-03] -->
 
-[PAUSE 3s] Close the lessons before this one. Say all three: *the medicine*,
-*to order in*, *the duty rota*.
+[PAUSE 3s] Leave the lessons before this one closed. Say all three: *the
+medicine*, *to order in*, *the duty rota*.
 
 ## Grammar Lens: the article doing the work
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C457-GUARDIA-03] -->

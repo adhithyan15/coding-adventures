@@ -4,7 +4,7 @@
   "chapter": 448,
   "title": "La mudanza",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:71c973dcc546457d",
+  "sourceHash": "fnv1a64:ed915ab4a3194e8f",
   "lessons": [
     {
       "id": "ES-C448-mudarse",
@@ -673,7 +673,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c69a9b6e21231171",
+      "sourceHash": "fnv1a64:666002500302b35f",
       "notice": null,
       "blocks": [
         {
@@ -761,7 +761,7 @@
             },
             {
               "kind": "speech",
-              "text": "Keep the pair from the lesson before this one in view. Roto is ruptus, bursting. Estropeado is turpis, shameful. Spanish named the two kinds of failure after two different pictures, and the pictures still sort them."
+              "text": "Keep the pair from the lesson before this one in mind. Roto is ruptus, bursting. Estropeado is turpis, shameful. Spanish named the two kinds of failure after two different pictures, and the pictures still sort them."
             }
           ]
         },
@@ -837,7 +837,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bdc383103531f76b",
+      "sourceHash": "fnv1a64:ca80566ffcf7f555",
       "notice": null,
       "blocks": [
         {
@@ -853,7 +853,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all five: to move house, the move, hard, out of order, in pieces."
+              "text": "Leave the lessons before this one closed. Say all five: to move house, the move, hard, out of order, in pieces."
             }
           ]
         },

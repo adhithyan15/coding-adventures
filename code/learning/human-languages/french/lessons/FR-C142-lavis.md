@@ -40,7 +40,11 @@ reviews_of: [FR-C142-lhoraire]
 ## You'll want to know: l'avis
 <!-- hl-knowledge: introduces=[FR-LEX-C142-LIRE142-02]; assesses=[] -->
 
-**l'avis** — "a notice, an opinion". Read the notice: **Avis : le magasin est fermé aujourd'hui.** The shop is closed today, so come back another day.
+**l'avis** — "a notice, an opinion".
+
+[YOU READ: the notice — **Avis : le magasin est fermé aujourd'hui.**]
+
+The shop is closed today, so come back another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

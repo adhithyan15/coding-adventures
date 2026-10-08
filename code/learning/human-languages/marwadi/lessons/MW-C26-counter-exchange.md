@@ -48,7 +48,7 @@ Five turns, and the only thing that changes between counters is the noun.
    shopping noun, once with a transport noun.
 2. Produce the whole exchange from meaning cues at a food stall, using the
    ordering line in place of the first turn.
-3. Read all five printed turns and say who speaks each.
+3. [YOU READ: all five printed turns, then say who speaks each]
 4. [YOU WRITE: the whole exchange from dictation, without a model]
 
 Pass each skill separately. This is one function taught once and reused over

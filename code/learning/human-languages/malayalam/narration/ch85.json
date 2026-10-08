@@ -4,7 +4,7 @@
   "chapter": 85,
   "title": "Held Sounds",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a598e0f6ff252623",
+  "sourceHash": "fnv1a64:338b6649d551ba3d",
   "lessons": [
     {
       "id": "ML-C85-kudikkuka",
@@ -493,7 +493,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c19dfdb916dce24a",
+      "sourceHash": "fnv1a64:0d87e3a96a5cb994",
       "notice": null,
       "blocks": [
         {
@@ -509,7 +509,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say to drink, and name something in this book you could drink."
+              "text": "Leave the lessons before this one closed. Say to drink, and name something in this book you could drink."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "All the Way Up, and First in Time",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:9e87d91161ca4f14",
+  "sourceHash": "fnv1a64:044cc95000f93320",
   "lessons": [
     {
       "id": "ML-C68-sixth",
@@ -166,7 +166,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc1f426dd2f5068d",
+      "sourceHash": "fnv1a64:ea0e435d64ed0a35",
       "notice": null,
       "blocks": [
         {
@@ -237,7 +237,20 @@
             },
             {
               "kind": "speech",
-              "text": "One honest warning about the page. This word begins with ഏ, the independent long ē, and that is a letter this book has taught you to recognise but not yet to write — no stroke order for it has been sourced, so none is offered. Read it; do not copy it yet. That is why this lesson is headed by its romanization rather than by the Malayalam word, the way the counting lessons were."
+              "text": "One honest warning about the page. This word begins with ഏ, the independent long ē, and that is a letter this book has taught you to recognise but not yet to write — no stroke order for it has been sourced, so none is offered."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it — do not copy it yet",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it — do not copy it yet]"
+            },
+            {
+              "kind": "speech",
+              "text": "That is why this lesson is headed by its romanization rather than by the Malayalam word, the way the counting lessons were."
             }
           ]
         },

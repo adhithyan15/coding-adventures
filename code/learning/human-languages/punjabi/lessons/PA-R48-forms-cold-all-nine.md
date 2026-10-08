@@ -51,9 +51,10 @@ reviews_of: [PA-W02-name-supported, PA-W02-name-delayed, PA-W02-name-no-model, P
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-NAME-NO-MODEL-01, PA-FORM-LANGUAGE-NO-MODEL-01, PA-FORM-RESIDENCE-NO-MODEL-01] -->
 
-Read across rather than down and the ladder stops being about forms at all. It is
-about **what is in the room when you produce something**: a page that shows you
-the answer, a page that showed you and stopped, and a page that never did.
+Take it across rather than down and the ladder stops being about forms at all.
+It is about **what is in the room when you produce something**: a page that
+shows you the answer, a page that showed you and stopped, and a page that never
+did.
 
 Three fields multiplied by three rungs is nine separate things you can now do,
 and the only three that count as writing evidence are the bottom row. The other

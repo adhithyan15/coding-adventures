@@ -38,7 +38,7 @@ contains both.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C434-MAQ-03, ES-LEX-C434-MAQ-01, ES-LEX-C432-CASA-01, ES-LEX-C431-PEDIDO-05] -->
 
-Read it once, as though hearing it on the telephone, then answer.
+[YOU READ: it once, as though hearing it on the telephone, then answer]
 
 > Buenas tardes, llamo del **taller**. Su **lavadora** ya está reparada: era
 > una **pieza** pequeña, así que no le vamos a **cobrar** la mano de obra.

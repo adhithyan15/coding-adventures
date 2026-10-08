@@ -52,10 +52,12 @@ coming the other way.
 > ۲۰
 > ۱۰۰
 
-[PAUSE 3s] Read across each line once, without stopping.
+[PAUSE 3s] [YOU READ: across each line once, without stopping]
 
-[PAUSE 3s] Again — and this time read the last three as amounts rather than as
-signs. Ten. Twenty. A hundred.
+[PAUSE 3s]
+[YOU READ: them again, and this time take the last three as amounts rather than as signs]
+
+Ten. Twenty. A hundred.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[FA-SKILL-CONNECTED-READING] -->

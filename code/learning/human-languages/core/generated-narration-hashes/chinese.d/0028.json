@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 28,
-  "sourceHash": "fnv1a64:f56a257c7c4e1a68",
+  "sourceHash": "fnv1a64:fdd5b315a084d8bc",
   "lessonIds": [
     "ZH-W28-xi",
     "ZH-W28-huan",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "chinese/narration/ch28.txt",
   "json": "chinese/narration/ch28.json",
-  "textHash": "fnv1a64:a1cf31aca639aa47",
-  "jsonHash": "fnv1a64:30e2d6b21afcef99",
+  "textHash": "fnv1a64:b2baf08acf7fe71f",
+  "jsonHash": "fnv1a64:355864c2b00f3d8b",
   "findings": []
 }

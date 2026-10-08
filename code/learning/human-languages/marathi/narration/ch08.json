@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Two Sibilants, One Liquid, and Three Standalone Vowels",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0fed520fc7ddf564",
+  "sourceHash": "fnv1a64:9564761ab52ca919",
   "lessons": [
     {
       "id": "MR-C08-ulat",
@@ -1109,7 +1109,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:765d71e3391afd02",
+      "sourceHash": "fnv1a64:3c3113627887228c",
       "notice": null,
       "blocks": [
         {
@@ -1119,7 +1119,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Four chapters ago the page was still full of shapes nobody had taught you. Close every model and find out what stayed."
+              "text": "Four chapters ago the page was still full of shapes nobody had taught you."
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "every model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: every model]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now find out what stayed."
             }
           ]
         },

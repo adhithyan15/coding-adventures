@@ -34,7 +34,9 @@ reviews_of: [JA-C09-yoku, JA-C09-sumimasen, JA-W09-ku]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-YOKU, JA-LEX-SUMIMASEN, JA-SCRIPT-KU-01] -->
 
-[PAUSE 12s] Read **よく**, then open a repair with *sumimasen*.
+[PAUSE 12s] [YOU READ: **よく**]
+
+Then open a repair with *sumimasen*.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-WAKARIMASEN]; assesses=[] -->

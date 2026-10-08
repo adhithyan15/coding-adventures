@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "Why, and Because",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:516a405470650ee8",
+  "sourceHash": "fnv1a64:0a950d211799ee27",
   "lessons": [
     {
       "id": "TA-C78-why",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb2b7befff63ff9b",
+      "sourceHash": "fnv1a64:c538fec0c90b3e91",
       "notice": null,
       "blocks": [
         {
@@ -34,8 +34,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சொல்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சொல்**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read சொல். Then say: I think this is a good house."
+              "text": "Then say: I think this is a good house."
             }
           ]
         },
@@ -578,7 +587,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0a14e2339910283",
+      "sourceHash": "fnv1a64:673362c41b0ee36f",
       "notice": null,
       "blocks": [
         {
@@ -593,8 +602,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஏன் (ēṉ)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஏன்**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ஏன் (ēṉ). Then say because."
+              "text": "Then say because."
             }
           ]
         },
@@ -761,7 +779,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a4604bf8cd85fd1e",
+      "sourceHash": "fnv1a64:ebd2fa57aadddde8",
       "notice": null,
       "blocks": [
         {
@@ -776,8 +794,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஏன் (ēṉ)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஏன்**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ஏன் (ēṉ). Then say: I am thirsty, so I want tea."
+              "text": "Then say: I am thirsty, so I want tea."
             }
           ]
         },

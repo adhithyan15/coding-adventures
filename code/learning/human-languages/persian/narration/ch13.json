@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Sky, Sun, Moon, Star, Rain",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:fd0c2b50ddd95fbe",
+  "sourceHash": "fnv1a64:10fd4d67660de93f",
   "lessons": [
     {
       "id": "FA-C13-aseman",
@@ -164,7 +164,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a00ce677b9cb7946",
+      "sourceHash": "fnv1a64:2ccc028253293b6a",
       "notice": null,
       "blocks": [
         {
@@ -180,7 +180,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say آسمان (âsemân), and the root sense it once carried. Look up, and this lesson names what is in it."
+              "text": "Say آسمان (âsemân), and the root sense it once carried. Picture the sky, and this lesson names what is in it."
             }
           ]
         },

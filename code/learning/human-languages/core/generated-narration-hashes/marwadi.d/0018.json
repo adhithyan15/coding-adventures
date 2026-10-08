@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 18,
-  "sourceHash": "fnv1a64:bde05cd2dfe65125",
+  "sourceHash": "fnv1a64:0d253eb04c93b0d5",
   "lessonIds": [
     "MW-C13-hear-dukan",
     "MW-W13-u-matra",
@@ -18,7 +18,7 @@
   "drivablePrefix": 1,
   "text": "marwadi/narration/ch18.txt",
   "json": "marwadi/narration/ch18.json",
-  "textHash": "fnv1a64:d4e9f197f97b9b40",
-  "jsonHash": "fnv1a64:f7c6728aeab2dc9a",
+  "textHash": "fnv1a64:33fe8529fa7725b0",
+  "jsonHash": "fnv1a64:97578d068511cbd9",
   "findings": []
 }

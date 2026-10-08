@@ -4,7 +4,7 @@
   "chapter": 115,
   "title": "To here, To there, Theatre, Bath, Military camp",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:82cf2f5279ab01d2",
+  "sourceHash": "fnv1a64:cbc51d41fe0c0993",
   "lessons": [
     {
       "id": "LA-C115-huc",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a5a48062b96c787",
+      "sourceHash": "fnv1a64:60f9da4a260dea99",
       "notice": null,
       "blocks": [
         {
@@ -290,8 +290,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read the exchange aloud as one run: Salvē! Quid agis? Bene. Valē!"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the exchange aloud as one run — Salvē! Quid agis? Bene. Valē!",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the exchange aloud as one run — *Salvē! Quid agis? Bene. Valē!*]"
             }
           ]
         },

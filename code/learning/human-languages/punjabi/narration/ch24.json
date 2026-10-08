@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Old Action Families at R4",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:99adbd8feb99fcfb",
+  "sourceHash": "fnv1a64:f170b726b6206a25",
   "lessons": [
     {
       "id": "PA-R24-know-think-r4",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:041638737fa14e06",
+      "sourceHash": "fnv1a64:debb9c9fa2e15ade",
       "notice": null,
       "blocks": [
         {
@@ -45,8 +45,17 @@
           "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਜਾਣਨਾ, ਸੋਚਣਾ once, then give the meanings aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਜਾਣਨਾ · ਸੋਚਣਾ** once, then give the meanings aloud]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ਜਾਣਨਾ, ਸੋਚਣਾ once, then give the meanings aloud. This is recognition and speech retrieval. It awards no independent Gurmukhi writing evidence."
+              "text": "This is recognition and speech retrieval. It awards no independent Gurmukhi writing evidence."
             },
             {
               "kind": "activity",
@@ -246,7 +255,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e3808732790d4f5",
+      "sourceHash": "fnv1a64:1f78bea6d84ac33f",
       "notice": null,
       "blocks": [
         {
@@ -276,8 +285,17 @@
               "text": "Three remembered histories."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਲਿਖਣਾ, ਲੈਣਾ, ਪੁੱਛਣਾ once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਲਿਖਣਾ · ਲੈਣਾ · ਪੁੱਛਣਾ** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ਲਿਖਣਾ, ਲੈਣਾ, ਪੁੱਛਣਾ once. The visible words support recognition; this lesson does not ask for or award independent Gurmukhi writing."
+              "text": "The visible words support recognition; this lesson does not ask for or award independent Gurmukhi writing."
             },
             {
               "kind": "activity",
@@ -353,7 +371,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c09e6a057b28c5d7",
+      "sourceHash": "fnv1a64:517784d5eadf5c7b",
       "notice": null,
       "blocks": [
         {
@@ -383,8 +401,17 @@
               "text": "Liking keeps the liker in the dative."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਮਦਦ ਕਰਨਾ, ਮੈਨੂੰ ਪੰਜਾਬੀ ਪਸੰਦ ਹੈ once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਮਦਦ ਕਰਨਾ · ਮੈਨੂੰ ਪੰਜਾਬੀ ਪਸੰਦ ਹੈ** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ਮਦਦ ਕਰਨਾ, ਮੈਨੂੰ ਪੰਜਾਬੀ ਪਸੰਦ ਹੈ once. Romanization records speech retrieval only and earns no Gurmukhi writing credit."
+              "text": "Romanization records speech retrieval only and earns no Gurmukhi writing credit."
             },
             {
               "kind": "activity",

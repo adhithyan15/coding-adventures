@@ -47,7 +47,7 @@ reviews_of: [SA-C63-second, SA-C62-fifth, SA-C58-mahyam, SA-C44-dark]
 
 **प्रथमः** (*prathamaḥ*) — "first".
 
-Look for **एक** in it. There is none — not a letter of it.
+Listen for **एक** in it. There is none — not a letter of it.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C63-ORDINAL-07, SA-GRAMMAR-C62-ORDINAL-MA-02, SA-GRAMMAR-C63-ORDINAL-TIYA-05] -->
@@ -56,7 +56,7 @@ Macdonell prints this one with a note the other nine do not get:
 
 > **pra-thamá** [= pra-tama, spv. *foremost*]
 
-Read it in three pieces.
+Take it in three pieces.
 
 **प्र** (*pra*) is "forward, in front". **-तम** is the ending that makes a superlative — the *most* of something. And *spv.* is Macdonell's abbreviation for exactly that.
 

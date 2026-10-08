@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Ask and Answer Names",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:6a7c0216e3dd545e",
+  "sourceHash": "fnv1a64:fc2cdd246607d5a0",
   "lessons": [
     {
       "id": "UR-C03-aap-tum-tu",
@@ -262,7 +262,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7aa6c5012a68c1b8",
+      "sourceHash": "fnv1a64:001ef4d28f02e98a",
       "notice": null,
       "blocks": [
         {
@@ -292,8 +292,17 @@
               "text": "کیا — kyā — what."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "right to left — ک k, ی supplying the y glide here, then ا long ā",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: right to left — **ک** *k*, **ی** supplying the *y* glide here, then **ا** long *ā*]"
+            },
+            {
               "kind": "speech",
-              "text": "Read right to left: ک k, ی supplying the y glide here, then ا long ā. The same ی carried long ī in jī and nahī̃ — words you say but cannot spell yet. Its job depends on the word; here the learned shape is kyā."
+              "text": "The same ی carried long ī in jī and nahī̃ — words you say but cannot spell yet. Its job depends on the word; here the learned shape is kyā."
             }
           ]
         },

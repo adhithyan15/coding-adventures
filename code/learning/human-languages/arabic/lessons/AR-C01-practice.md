@@ -41,7 +41,7 @@ day of Arabic greetings and their fixed replies.
 ## You'll want to know — Read them back
 <!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02, AR-SCRIPT-WRITE-SALAM-03, AR-C01-MARHABA-05, AR-SCRIPT-RA-HA-06, AR-SCRIPT-BA-FAMILY-07, AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-FULL-GREETING-13] -->
 
-Sound each out **right to left** before checking:
+[YOU READ: each, sounding it out **right to left** before checking]
 
 | Read | | Meaning |
 |---|---|---|
@@ -83,9 +83,10 @@ half the alphabet — never as a chart to memorize.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01, AR-SCRIPT-SIN-LAM-02, AR-SCRIPT-WRITE-SALAM-03, AR-C01-MARHABA-05, AR-SCRIPT-RA-HA-06, AR-SCRIPT-BA-FAMILY-07, AR-C01-FULL-GREETING-11, AR-SCRIPT-AYN-YA-12, AR-SCRIPT-WRITE-FULL-GREETING-13] -->
 
-[PAUSE 3s] Read all six greetings aloud, right to left. Name the two "engines"
-that build them. (The three-consonant *root*, and the attached *al-* with
-sun/moon assimilation.)
+[PAUSE 3s] [YOU READ: all six greetings aloud, right to left]
+
+Name the two "engines" that build them. (The three-consonant *root*, and the
+attached *al-* with sun/moon assimilation.)
 
 Next chapter: introducing yourself — *ismī…* ("my name is…") — and how Arabic
 marks "you" by **gender** (*anta* to a man, *anti* to a woman), a different axis

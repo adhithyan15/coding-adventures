@@ -10,7 +10,7 @@ Warm-up.
 Greet once, then answer yes and no. The next line gives you one reliable Urdu sentence for your own name.
 
 The exchange.
-Read the line right to left, but keep its spoken order:
+[once you have stopped driving — read: the line right to left, but keep its spoken order]
 میرا | نام |... | ہے — merā nām... hai.
 میرا merā = my.
 نام nām = name.

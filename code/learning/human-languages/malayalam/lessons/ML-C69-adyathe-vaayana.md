@@ -68,10 +68,10 @@ reviews_of: [ML-C69-words, ML-C69-lines, ML-C64-but, ML-C15-vellam-ari, ML-C21-n
 > ഇപ്പോൾ ഇവിടെ വലിയ മാല ഉണ്ട്.
 > ഇപ്പോൾ ഇവിടെ നോക്കൂ.
 
-[PAUSE 3s] Read it once without stopping. Do not translate as you go — let the
-lines arrive.
+[PAUSE 3s]
+[YOU READ: the passage once without stopping; do not translate as you go — let the lines arrive]
 
-[PAUSE 3s] Now read it again, and watch **ആണ്** and **ഉണ്ട്** take turns.
+[PAUSE 3s] [YOU READ: it again, and watch **ആണ്** and **ഉണ്ട്** take turns]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C52-WELCOME-03, ML-LEX-C53-SKY-01, ML-LEX-LOOK, ML-SKILL-CONNECTED-READING] -->

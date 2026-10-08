@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 3,
-  "sourceHash": "fnv1a64:9ef16bff3772e4ac",
+  "sourceHash": "fnv1a64:c0b9bc5592bd0723",
   "lessonIds": [
     "TE-S142-digit-3",
     "TE-C03-elaa",
@@ -20,7 +20,7 @@
   "drivablePrefix": 0,
   "text": "telugu/narration/ch03.txt",
   "json": "telugu/narration/ch03.json",
-  "textHash": "fnv1a64:706ecbfe2b34858d",
-  "jsonHash": "fnv1a64:6bdf7ddd55cd7b1b",
+  "textHash": "fnv1a64:b380eea8c041c14f",
+  "jsonHash": "fnv1a64:f327bd72d0a9aea4",
   "findings": []
 }

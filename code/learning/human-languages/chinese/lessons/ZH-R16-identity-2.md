@@ -40,8 +40,8 @@ reviews_of: [ZH-R16-identity-1, ZH-C16-hanyu]
 <!-- hl-writing-stage: dictation-transcription -->
 
 Hear **written character**, **Chinese character**, and **Chinese language** in a
-mixed order. Say and read each answer. [YOU WRITE: each answer — for the two 汉
-compounds, listen for the ending before choosing 字 or 语]
+mixed order. Say each answer. [YOU READ: each answer]
+[YOU WRITE: each answer — for the two 汉 compounds, listen for the ending before choosing 字 or 语]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-HANZI-01, ZH-LEX-HANYU-01] -->

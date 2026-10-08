@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 120,
-  "sourceHash": "fnv1a64:8f9622e6983afb98",
+  "sourceHash": "fnv1a64:1d0eead2039f96fe",
   "lessonIds": [
     "MW-C120-supro",
     "MW-C120-chalni",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "marwadi/narration/ch120.txt",
   "json": "marwadi/narration/ch120.json",
-  "textHash": "fnv1a64:c39bfc26f180d7bb",
-  "jsonHash": "fnv1a64:0c0ed0497ec1ca72",
+  "textHash": "fnv1a64:318a2ca9d98e83fb",
+  "jsonHash": "fnv1a64:bea5bb52ea2ac16b",
   "findings": []
 }

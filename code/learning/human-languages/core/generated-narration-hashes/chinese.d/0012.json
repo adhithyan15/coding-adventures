@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 12,
-  "sourceHash": "fnv1a64:b657c63bf156c8f6",
+  "sourceHash": "fnv1a64:f592bbdf2e7d0e27",
   "lessonIds": [
     "ZH-C12-ren",
     "ZH-C12-nu",
@@ -22,7 +22,7 @@
   "drivablePrefix": 3,
   "text": "chinese/narration/ch12.txt",
   "json": "chinese/narration/ch12.json",
-  "textHash": "fnv1a64:f066e3a85a0d8ebd",
-  "jsonHash": "fnv1a64:69f6a450bfdc1a40",
+  "textHash": "fnv1a64:97736b43f293d0f0",
+  "jsonHash": "fnv1a64:8d12ff6d93d7481c",
   "findings": []
 }

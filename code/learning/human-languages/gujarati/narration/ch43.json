@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "Past Five, and the Balance Turns Over",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:10c9f2d4fcb89483",
+  "sourceHash": "fnv1a64:945f4acbc0c5c83d",
   "lessons": [
     {
       "id": "GU-C39-chha",
@@ -802,7 +802,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9010927fd0f12d25",
+      "sourceHash": "fnv1a64:5504d0dfe3bb1a2b",
       "notice": null,
       "blocks": [
         {
@@ -864,7 +864,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read that line twice. Nothing happened. Sanskrit n, Gujarati ન; Sanskrit v, Gujarati વ; only the last vowel fell away, which is what happens to every Gujarati word."
+              "text": "Go over that line twice. Nothing happened. Sanskrit n, Gujarati ન; Sanskrit v, Gujarati વ; only the last vowel fell away, which is what happens to every Gujarati word."
             },
             {
               "kind": "speech",

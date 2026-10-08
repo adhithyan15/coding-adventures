@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Reading — Words, Lines, and a First Passage",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:dc4c52ccdd6d188f",
+  "sourceHash": "fnv1a64:16b5a644e78ab027",
   "lessons": [
     {
       "id": "PT-C29-palavras",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d25c747bb33f1363",
+      "sourceHash": "fnv1a64:3749e1e4cb9bc3af",
       "notice": null,
       "blocks": [
         {
@@ -65,8 +65,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down the list once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "down the list once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: down the list once, without stopping]"
             },
             {
               "kind": "pause",
@@ -75,8 +80,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the list again, and this time say the article you would put in front of each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the list again, and this time say the article you would put in front of each one]"
+            },
+            {
               "kind": "speech",
-              "text": "Again — and this time say the article you would put in front of each one. A água. O pão."
+              "text": "A água. O pão."
             }
           ]
         },
@@ -205,7 +219,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0223b8e252ddf375",
+      "sourceHash": "fnv1a64:e4b2d59ebfea3553",
       "notice": null,
       "blocks": [
         {
@@ -251,8 +265,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six lines down once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six lines down once, without stopping]"
             },
             {
               "kind": "pause",
@@ -261,8 +280,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Again — and notice that Bom dia and Boa noite differ by one letter, and that the letter is doing grammar."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "them again, and notice that Bom dia and Boa noite differ by one letter, and that the letter is doing grammar",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: them again, and notice that **Bom dia** and **Boa noite** differ by one letter, and that the letter is doing grammar]"
             }
           ]
         },
@@ -279,7 +303,7 @@
             },
             {
               "kind": "speech",
-              "text": "Bom and Boa are the same word agreeing with dia and noite. Read the two lines together and the agreement is visible without anybody naming it."
+              "text": "Bom and Boa are the same word agreeing with dia and noite. Say the two lines together and the agreement is plain without anybody naming it."
             },
             {
               "kind": "pause",
@@ -391,7 +415,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a375ff825d0c89d9",
+      "sourceHash": "fnv1a64:a64044867041cd0f",
       "notice": null,
       "blocks": [
         {
@@ -437,8 +461,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read it once without stopping. Do not translate as you go — let the sentences arrive."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage once without stopping; do not translate as you go — let the sentences arrive",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]"
             },
             {
               "kind": "pause",
@@ -447,8 +476,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Now read it again, and count the joining words."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it again, and count the joining words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it again, and count the joining words]"
             }
           ]
         },

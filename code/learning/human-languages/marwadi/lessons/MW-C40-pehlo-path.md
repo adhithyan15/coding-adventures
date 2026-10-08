@@ -52,10 +52,13 @@ reviews_of: [MW-C40-signs, MW-C40-notices, MW-C37-pandara, MW-C34-bees]
 > ठीक। पैसा ले लो।
 > पाछे मिलसू।
 
-[PAUSE 3s] Read it through once without stopping. Do not translate as you go.
+[PAUSE 3s]
+[YOU READ: the passage through once without stopping; do not translate as you go]
 
-[PAUSE 3s] Now again, and watch the number move: बीस, दस, पंदरा. That is the
-whole negotiation, and it is carried by three words you learned as counting.
+[PAUSE 3s] [YOU READ: it again, and watch the number move — बीस, दस, पंदरा]
+
+That is the whole negotiation, and it is carried by three words you learned as
+counting.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PANDARA-01, MW-SCRIPT-KONI-01, MW-SKILL-READ-NOTICE] -->

@@ -4,7 +4,7 @@
   "chapter": 160,
   "title": "A Timetable, a Notice, the Rent, an Advert, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:d2496fa44d60b8c4",
+  "sourceHash": "fnv1a64:8259da785169ec5e",
   "lessons": [
     {
       "id": "TA-C160-kala-attavanai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bcafc39341ddd170",
+      "sourceHash": "fnv1a64:9011e4c71ba774a2",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "கால அட்டவணை — kāla aṭṭavaṇai — \"a timetable\". Read the board: பேருந்து புறப்படும் நேரம்: காலை எட்டு மணி — pēruntu puṟappaṭum nēram: kālai eṭṭu maṇi — \"Bus departure time: 8 a.m.\" The bus leaves at eight, so be there before eight."
+              "text": "கால அட்டவணை — kāla aṭṭavaṇai — \"a timetable\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the board — பேருந்து புறப்படும் நேரம்: காலை எட்டு மணி — pēruntu puṟappaṭum nēram: kālai eṭṭu maṇi — \"Bus departure time: 8 a.m.\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the board — **பேருந்து புறப்படும் நேரம்: காலை எட்டு மணி** — *pēruntu puṟappaṭum nēram: kālai eṭṭu maṇi* — \"Bus departure time: 8 a.m.\"]"
+            },
+            {
+              "kind": "speech",
+              "text": "The bus leaves at eight, so be there before eight."
             }
           ]
         },
@@ -142,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6297d863c5299b07",
+      "sourceHash": "fnv1a64:404ed15a8f6c8339",
       "notice": null,
       "blocks": [
         {
@@ -169,7 +182,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "அறிவிப்பு — aṟivippu — \"a notice, an announcement\". Read the notice: ஞாயிறுதோறும் கடை விடுமுறை — ñāyiṟutōṟum kaṭai viṭumuṟai — \"Shop closed every Sunday.\" Come on another day."
+              "text": "அறிவிப்பு — aṟivippu — \"a notice, an announcement\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the notice — ஞாயிறுதோறும் கடை விடுமுறை — ñāyiṟutōṟum kaṭai viṭumuṟai — \"Shop closed every Sunday.\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the notice — **ஞாயிறுதோறும் கடை விடுமுறை** — *ñāyiṟutōṟum kaṭai viṭumuṟai* — \"Shop closed every Sunday.\"]"
+            },
+            {
+              "kind": "speech",
+              "text": "Come on another day."
             }
           ]
         },
@@ -388,7 +414,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08eb7c0fdee5e47a",
+      "sourceHash": "fnv1a64:c8cd57ae0dd82f4a",
       "notice": null,
       "blocks": [
         {
@@ -415,7 +441,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "விளம்பரம் — viḷamparam — \"an advert\". Read the advert: வீடு வாடகைக்கு விடப்படும் — vīṭu vāṭakaikku viṭappaṭum — \"House to let.\" A house is available to rent."
+              "text": "விளம்பரம் — viḷamparam — \"an advert\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the advert — வீடு வாடகைக்கு விடப்படும் — vīṭu vāṭakaikku viṭappaṭum — \"House to let.\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the advert — **வீடு வாடகைக்கு விடப்படும்** — *vīṭu vāṭakaikku viṭappaṭum* — \"House to let.\"]"
+            },
+            {
+              "kind": "speech",
+              "text": "A house is available to rent."
             }
           ]
         },

@@ -36,7 +36,9 @@ reviews_of: [MW-C05-mharo, MW-C05-naam]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MHARO-01, MW-LEX-NAAM-01, MW-SCRIPT-AABHAAR-01] -->
 
-[PAUSE 12s] Read **आभार** once. [YOU WRITE: **आभार** once]
+[PAUSE 12s] [YOU READ: **आभार** once]
+
+[YOU WRITE: **आभार** once]
 
 Hear *mhāro* and *nām* in either order, then give each meaning.
 

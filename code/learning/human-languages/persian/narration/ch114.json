@@ -4,7 +4,7 @@
   "chapter": 114,
   "title": "Ruler, Board, Class, Exam, Teacher",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d306a547d3ae0ca9",
+  "sourceHash": "fnv1a64:02cbc2ca74d86553",
   "lessons": [
     {
       "id": "FA-C114-khatkesh",
@@ -265,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e199d4a458c0429e",
+      "sourceHash": "fnv1a64:f43ac4c0efe11b36",
       "notice": null,
       "blocks": [
         {
@@ -290,8 +290,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read aloud as one run: سلام. بله. ممنون. نان. ماه."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "سلام. بله. ممنون. نان. ماه. aloud as one run",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **سلام. بله. ممنون. نان. ماه.** aloud as one run]"
             }
           ]
         },

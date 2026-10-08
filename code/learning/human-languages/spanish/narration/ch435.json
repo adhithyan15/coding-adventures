@@ -4,7 +4,7 @@
   "chapter": 435,
   "title": "Los Papeles Del Trabajo",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:c255020790c27a23",
+  "sourceHash": "fnv1a64:99df5eb4918ad0b4",
   "lessons": [
     {
       "id": "ES-C435-curriculum",
@@ -738,7 +738,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e702de15bd516c5",
+      "sourceHash": "fnv1a64:2d449bf200731eff",
       "notice": null,
       "blocks": [
         {
@@ -754,7 +754,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say the CV, the paperwork and retired."
+              "text": "Leave the lessons before this one closed. Say the CV, the paperwork and retired."
             }
           ]
         },
@@ -884,7 +884,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9801927e9604271e",
+      "sourceHash": "fnv1a64:9aac27326fa36606",
       "notice": null,
       "blocks": [
         {
@@ -910,8 +910,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read it once straight through, then answer."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it once straight through, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it once straight through, then answer]"
             },
             {
               "kind": "speech",

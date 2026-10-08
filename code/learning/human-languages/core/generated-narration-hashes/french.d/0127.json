@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 127,
-  "sourceHash": "fnv1a64:833e4bdc640d109f",
+  "sourceHash": "fnv1a64:77f135ac8aa7e465",
   "lessonIds": [
     "FR-C127-gomme",
     "FR-C127-devoirs",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "french/narration/ch127.txt",
   "json": "french/narration/ch127.json",
-  "textHash": "fnv1a64:62f21039167e4050",
-  "jsonHash": "fnv1a64:b0a12e802e20622b",
+  "textHash": "fnv1a64:3b140c66dff062ce",
+  "jsonHash": "fnv1a64:15bf9a7f8bb97ced",
   "findings": []
 }

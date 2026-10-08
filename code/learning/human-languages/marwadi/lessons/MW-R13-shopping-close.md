@@ -47,8 +47,9 @@ skills.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DUKAN-01, MW-SCRIPT-DUKAN-01, MW-LEX-VASTU-01, MW-SCRIPT-VASTU-01, MW-LEX-BHAAV-01, MW-SCRIPT-BHAAV-01] -->
 
-Without a model, hear one word, say its meaning, and read the other two in mixed
-order. [YOU WRITE: all three from meaning cues]
+Without a model, hear one word and say its meaning.
+[YOU READ: the other two in mixed order]
+[YOU WRITE: all three from meaning cues]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-SHOPPING-THREE-FOUR-SKILL-01, MW-SCRIPT-DUKAN-01, MW-SCRIPT-VASTU-01, MW-SCRIPT-BHAAV-01] -->

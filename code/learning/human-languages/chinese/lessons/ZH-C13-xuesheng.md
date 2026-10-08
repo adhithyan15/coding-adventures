@@ -43,7 +43,9 @@ Say **study**, then **student**.
 
 > **学生** — *xuésheng* — **student**
 
-Read the two-character word without pinyin. Keep the second syllable light.
+[YOU READ: the two-character word without pinyin]
+
+Keep the second syllable light.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XUESHENG-01] -->

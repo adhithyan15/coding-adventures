@@ -41,7 +41,11 @@ reviews_of: [FA-C139-jadval-e-zamani]
 ## You'll want to know: تابلو
 <!-- hl-knowledge: introduces=[FA-LEX-C139-KHANDAN139-02]; assesses=[] -->
 
-**تابلو** — *tâblo* — "a sign, a board". Read the sign: **پنجشنبه بسته است** — *panjshanbe baste ast* — "Closed on Thursday." Come on another day.
+**تابلو** — *tâblo* — "a sign, a board".
+
+[YOU READ: the sign — **پنجشنبه بسته است** — *panjshanbe baste ast* — "Closed on Thursday."]
+
+Come on another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

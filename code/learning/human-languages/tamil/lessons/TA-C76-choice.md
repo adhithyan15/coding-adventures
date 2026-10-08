@@ -33,7 +33,9 @@ reviews_of: [TA-W31-read-aanaal]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C76-JOIN-02, TA-SCRIPT-READ-AANAAL-01] -->
 
-[PAUSE 2s] Read **ஆனால்**. Then say *or*.
+[PAUSE 2s] [YOU READ: **ஆனால்**]
+
+Then say *or*.
 
 ## You'll want to know: two questions, one offer
 <!-- hl-knowledge: introduces=[TA-PRAGMATICS-C76-CHOICE-03]; assesses=[] -->

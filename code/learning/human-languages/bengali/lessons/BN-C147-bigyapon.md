@@ -41,7 +41,11 @@ reviews_of: [BN-C147-bhara]
 ## You'll want to know: বিজ্ঞাপন
 <!-- hl-knowledge: introduces=[BN-LEX-C147-PORA147-04]; assesses=[] -->
 
-**বিজ্ঞাপন** — *bigyāpôn* — "an advert". Read the advert: **বাড়ি ভাড়া দেওয়া হবে** — *bāṛi bhāṛā deoyā hôbe* — "House to let." A house is available to rent.
+**বিজ্ঞাপন** — *bigyāpôn* — "an advert".
+
+[YOU READ: the advert — **বাড়ি ভাড়া দেওয়া হবে** — *bāṛi bhāṛā deoyā hôbe* — "House to let."]
+
+A house is available to rent.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

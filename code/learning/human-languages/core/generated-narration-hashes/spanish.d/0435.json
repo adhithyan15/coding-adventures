@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 435,
-  "sourceHash": "fnv1a64:c255020790c27a23",
+  "sourceHash": "fnv1a64:99df5eb4918ad0b4",
   "lessonIds": [
     "ES-C435-curriculum",
     "ES-C435-documentacion",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "spanish/narration/ch435.txt",
   "json": "spanish/narration/ch435.json",
-  "textHash": "fnv1a64:b0cd6a944d9ddb94",
-  "jsonHash": "fnv1a64:b457b36792d1ab42",
+  "textHash": "fnv1a64:4f3f1c96e971797b",
+  "jsonHash": "fnv1a64:30e7ed4ecadb0425",
   "findings": []
 }

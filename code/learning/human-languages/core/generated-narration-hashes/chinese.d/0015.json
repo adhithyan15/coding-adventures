@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 15,
-  "sourceHash": "fnv1a64:627af77e413331cb",
+  "sourceHash": "fnv1a64:7d97dc92ae9f2d30",
   "lessonIds": [
     "ZH-C15-hear-zhong",
     "ZH-W15-zhong",
@@ -25,7 +25,7 @@
   "drivablePrefix": 1,
   "text": "chinese/narration/ch15.txt",
   "json": "chinese/narration/ch15.json",
-  "textHash": "fnv1a64:8059e65f46321030",
-  "jsonHash": "fnv1a64:f43289bd3c22715a",
+  "textHash": "fnv1a64:17a766307ca1924a",
+  "jsonHash": "fnv1a64:291fe5eb0c99f2d2",
   "findings": []
 }

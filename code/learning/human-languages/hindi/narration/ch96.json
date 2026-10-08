@@ -4,7 +4,7 @@
   "chapter": 96,
   "title": "The Future, And The Two Letters It Needed",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:a00ec53348bdb335",
+  "sourceHash": "fnv1a64:cf1eca6d9ab74351",
   "lessons": [
     {
       "id": "HI-C88-karunga",
@@ -196,7 +196,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a834f2ec766af452",
+      "sourceHash": "fnv1a64:f747a20570e4b5bc",
       "notice": null,
       "blocks": [
         {
@@ -265,8 +265,13 @@
           "title": "Grammar Lens: the letter arrives where it was promised",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Find ऊ inside the word:"
+              "kind": "prompt",
+              "action": "FIND",
+              "instruction": "ऊ inside the word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU FIND: **ऊ** inside the word]"
             },
             {
               "kind": "speech",
@@ -1261,7 +1266,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:72308eddf11039ab",
+      "sourceHash": "fnv1a64:86cafcac0c462ec1",
       "notice": null,
       "blocks": [
         {
@@ -1276,8 +1281,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Read this out loud before reading on."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "this out loud before going on",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: this out loud before going on]"
             },
             {
               "kind": "speech",

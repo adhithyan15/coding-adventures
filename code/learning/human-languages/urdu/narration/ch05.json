@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Take Leave",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c094e95700e2353f",
+  "sourceHash": "fnv1a64:08873975e7c8560f",
   "lessons": [
     {
       "id": "UR-C05-khuda",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fd100592ff26aa70",
+      "sourceHash": "fnv1a64:7e37cee775927ef4",
       "notice": null,
       "blocks": [
         {
@@ -49,8 +49,17 @@
               "text": "خدا — khudā — God."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "from right to left — خ kh + د d + ا long ā",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: from right to left — **خ** *kh* + **د** *d* + **ا** long *ā*]"
+            },
+            {
               "kind": "speech",
-              "text": "Read from right to left: خ kh + د d + ا long ā. The short u is learned with the word and is normally unwritten. Let kh come from farther back than English h, but keep the sound relaxed."
+              "text": "The short u is learned with the word and is normally unwritten. Let kh come from farther back than English h, but keep the sound relaxed."
             }
           ]
         },
@@ -290,7 +299,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31f0ab268fb9ae19",
+      "sourceHash": "fnv1a64:8f172c464439d8ef",
       "notice": null,
       "blocks": [
         {
@@ -320,8 +329,17 @@
               "text": "حافظ — hāfiz — guardian, protector."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ح ا ف ظ from right to left",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ح ا ف ظ** from right to left]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ح ا ف ظ from right to left. ا carries long ā. Final ظ is pronounced z in this Urdu word. The short i is heard in hāfiz but is normally not written as a separate letter."
+              "text": "ا carries long ā. Final ظ is pronounced z in this Urdu word. The short i is heard in hāfiz but is normally not written as a separate letter."
             }
           ]
         },
@@ -421,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4288d07312a318f5",
+      "sourceHash": "fnv1a64:51d3dd45e1cf8aa3",
       "notice": null,
       "blocks": [
         {
@@ -452,7 +470,20 @@
             },
             {
               "kind": "speech",
-              "text": "Urdu keeps a visible space between the two words. Read خدا first, then حافظ, and preserve that space in the complete spelling خدا حافظ (khudā hāfiz). Say the whole expression smoothly."
+              "text": "Urdu keeps a visible space between the two words."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "خدا first, then حافظ, and preserve that space in the complete spelling خدا حافظ (khudā hāfiz)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **خدا** first, then **حافظ**, and preserve that space in the complete spelling **خدا حافظ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the whole expression smoothly."
             }
           ]
         },

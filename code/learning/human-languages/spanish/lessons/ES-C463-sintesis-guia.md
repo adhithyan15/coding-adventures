@@ -38,7 +38,7 @@ the other.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C463-GUIA-01, ES-LEX-C463-GUIA-02, ES-LEX-C463-GUIA-03] -->
 
-A message to a walking group. Read it, then answer.
+A message to a walking group. [YOU READ: it, then answer]
 
 > Hola a todos. La excursión del sábado la **organiza** el centro cívico.
 >
@@ -73,9 +73,11 @@ object almost always, and leaving the *le* out would sound incomplete.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C463-GUIA-01, ES-LEX-C463-GUIA-02, ES-LEX-C463-GUIA-03] -->
 
-[PAUSE 3s] Now your turn, out loud and then in writing. Four lines to a group:
-say who is organising the outing, say a guide is coming, give the time, and ask
-whether an early start matters to anyone.
+[PAUSE 3s] Now your turn, out loud. Four lines to a group: say who is organising
+the outing, say a guide is coming, give the time, and ask whether an early start
+matters to anyone.
+
+[YOU WRITE: the same four lines]
 
 Then check yourself: did *importar* agree with the thing rather than the
 person, and did you keep the *le*?

@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 116,
-  "sourceHash": "fnv1a64:e73aa9698cfbdca9",
+  "sourceHash": "fnv1a64:ce43babf6413363c",
   "lessonIds": [
     "LA-C116-aedificium",
     "LA-C116-carcer",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "latin/narration/ch116.txt",
   "json": "latin/narration/ch116.json",
-  "textHash": "fnv1a64:baaf26528d8c84b5",
-  "jsonHash": "fnv1a64:79d08eae32acf908",
+  "textHash": "fnv1a64:88b334266abe56a1",
+  "jsonHash": "fnv1a64:4945380d8f42318a",
   "findings": []
 }

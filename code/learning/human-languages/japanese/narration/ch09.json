@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "One More Time, Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7c7cc45011bae67c",
+  "sourceHash": "fnv1a64:ad45707c6cc3f1a0",
   "lessons": [
     {
       "id": "JA-C09-sumimasen",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63f3b94d93c960c1",
+      "sourceHash": "fnv1a64:7819147ffe52c255",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,16 @@
             },
             {
               "kind": "speech",
-              "text": "Hear the farewell in your mind, say it, and read さようなら."
+              "text": "Hear the farewell in your mind, and say it."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "さようなら",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **さようなら**]"
             },
             {
               "kind": "prompt",
@@ -658,7 +667,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17db2713d923bb2c",
+      "sourceHash": "fnv1a64:4c1fea1d36fd94d2",
       "notice": null,
       "blocks": [
         {
@@ -673,8 +682,17 @@
               "source": "[PAUSE 12s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "よく (yoku)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **よく**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read よく (yoku), then open a repair with sumimasen."
+              "text": "Then open a repair with sumimasen."
             }
           ]
         },
@@ -1140,7 +1158,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d1b684c5d19c69c6",
+      "sourceHash": "fnv1a64:26b2a1597681711a",
       "notice": null,
       "blocks": [
         {
@@ -1220,8 +1238,13 @@
               "source": "[YOU WRITE: **いちど** from the three morae]"
             },
             {
-              "kind": "speech",
-              "text": "Read もういちど, keeping the two beats in もう (mō)."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "もういちど, keeping the two beats in もう (mō)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **もういちど**, keeping the two beats in **もう**]"
             }
           ]
         },
@@ -1273,7 +1296,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b825cf2ab899fbc",
+      "sourceHash": "fnv1a64:53e2562065e01380",
       "notice": null,
       "blocks": [
         {
@@ -1288,8 +1311,17 @@
               "source": "[PAUSE 15s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "いちど (ichido)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **いちど**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read いちど (ichido). Say sumimasen, yoku wakarimasen."
+              "text": "Say sumimasen, yoku wakarimasen."
             },
             {
               "kind": "prompt",
@@ -1404,7 +1436,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f4a5b3992b1f99f",
+      "sourceHash": "fnv1a64:a98ee536db2752f9",
       "notice": null,
       "blocks": [
         {
@@ -1463,7 +1495,16 @@
             },
             {
               "kind": "speech",
-              "text": "Read: independently read もういちど; use the printed support for the rest."
+              "text": "Reading:"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "もういちど independently; use the printed support for the rest",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **もういちど** independently; use the printed support for the rest]"
             },
             {
               "kind": "prompt",

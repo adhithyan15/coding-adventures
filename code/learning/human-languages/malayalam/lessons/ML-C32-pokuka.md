@@ -99,7 +99,9 @@ can never be dropped, since it is now the only thing telling you who went.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C32-UNDU-02, ML-CONCEPT-C32-POKUKA-01, ML-CONCEPT-C32-POKUKA-02] -->
 
-[PAUSE 3s] Say "I will go." (*Ñān pōkuṁ*) — and find it written: **ഞാൻ പോകും**.
-How many words are in this verb's whole Malayalam present tense? (**One** — *pōkunnu*, for every person.) Is
-Kannada's *hōgu* a different root from *pō*? (**No** — the same old *p* softened
-to *h*.) Next: the one place a Malayalam verb can still surprise you.
+[PAUSE 3s] Say "I will go." (*Ñān pōkuṁ*) [YOU FIND: it written — **ഞാൻ പോകും**]
+
+How many words are in this verb's whole Malayalam present tense? (**One** —
+*pōkunnu*, for every person.) Is Kannada's *hōgu* a different root from *pō*?
+(**No** — the same old *p* softened to *h*.) Next: the one place a Malayalam
+verb can still surprise you.

@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 8,
-  "sourceHash": "fnv1a64:5caa7b539b4cab66",
+  "sourceHash": "fnv1a64:dd4e9ef1c5e9bb49",
   "lessonIds": [
     "JA-C08-hear-sayounara",
     "JA-W08-yo",
@@ -14,7 +14,7 @@
   "drivablePrefix": 1,
   "text": "japanese/narration/ch08.txt",
   "json": "japanese/narration/ch08.json",
-  "textHash": "fnv1a64:099bd16c37c94c10",
-  "jsonHash": "fnv1a64:fbb941d1cb1e2baa",
+  "textHash": "fnv1a64:92d6e2c500ded729",
+  "jsonHash": "fnv1a64:8941d9f1e896ae7d",
   "findings": []
 }

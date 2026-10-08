@@ -33,8 +33,8 @@ reviews_of: [ML-C102-manikku, ML-C102-azhcha, ML-C102-ethra-manikku, ML-C102-day
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C102-BARE-DAY-01, ML-GRAMMAR-C102-HOUR-DATIVE-01, ML-PHRASE-C102-WHAT-TIME-01] -->
 
-[PAUSE 3s] Close the lessons before this one. Say *on Monday*, *at two o'clock*,
-and *at what time?*
+[PAUSE 3s] Leave the lessons before this one closed. Say *on Monday*, *at two
+o'clock*, and *at what time?*
 
 ## Grammar Lens: one of them takes an ending
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C102-BARE-DAY-01, ML-GRAMMAR-C102-HOUR-DATIVE-01, ML-CONCEPT-C18-MANI-01, ML-CONCEPT-C10-AZHCHA-01] -->

@@ -51,7 +51,7 @@ Then recall the three-word shopping payoff.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-GAADI-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, and wait five seconds.
+[YOU COVER: the model after one look, then wait five seconds]
 [YOU WRITE: **गाड़ी** — keep the dot below **ड** and the long-ī mark after it]
 
 ## Wrap-up Recall

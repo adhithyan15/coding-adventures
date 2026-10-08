@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 59,
-  "sourceHash": "fnv1a64:1095156eb678d6a7",
+  "sourceHash": "fnv1a64:208a57b137442505",
   "lessonIds": [
     "LA-C59-a-objects",
     "LA-C59-m-objects",
@@ -13,7 +13,7 @@
   "drivablePrefix": 1,
   "text": "latin/narration/ch59.txt",
   "json": "latin/narration/ch59.json",
-  "textHash": "fnv1a64:1d9f4134e8af7a60",
-  "jsonHash": "fnv1a64:4be67ccc655cd3d2",
+  "textHash": "fnv1a64:c40a5513328f6c5e",
+  "jsonHash": "fnv1a64:215b4a5e22e7b477",
   "findings": []
 }

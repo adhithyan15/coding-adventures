@@ -33,7 +33,9 @@ reviews_of: [TA-W33-read-een]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C78-WHY-02, TA-SCRIPT-READ-EEN-01] -->
 
-[PAUSE 2s] Read **ஏன்**. Then say *because*.
+[PAUSE 2s] [YOU READ: **ஏன்**]
+
+Then say *because*.
 
 ## You'll want to know: அதனால்
 <!-- hl-knowledge: introduces=[TA-LEX-C78-WHY-03]; assesses=[] -->

@@ -41,9 +41,9 @@ reviews_of: [SA-C17-always]
 ## You'll want to know: कालशब्दाः
 <!-- hl-knowledge: introduces=[SA-GRAMMAR-C17-TIME-WORDS]; assesses=[] -->
 
-Three of this chapter's words — अद्य, ह्यः, सदा — are not nouns at all. Look for
-an *-am* or *-aḥ* or *-iḥ* on them and you will not find one. They attach to a
-sentence, say *when*, and keep the same shape wherever they land.
+Three of this chapter's words — अद्य, ह्यः, सदा — are not nouns at all. Listen
+for an *-am* or *-aḥ* or *-iḥ* on them and you will not find one. They attach to
+a sentence, say *when*, and keep the same shape wherever they land.
 
 Sanskrit lets them stand almost anywhere. सदा पठति and पठति सदा both say "he
 always reads," and neither is more correct than the other. You have been given a

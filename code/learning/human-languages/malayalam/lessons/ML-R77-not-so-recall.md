@@ -33,8 +33,8 @@ reviews_of: [ML-C77-alla, ML-C77-alle]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-ILLA-01, ML-LEX-C77-ALLA-01] -->
 
-[PAUSE 3s] Close the lessons before this one. Say both negatives, and say which
-question each one answers.
+[PAUSE 3s] Leave the lessons before this one closed. Say both negatives, and say
+which question each one answers.
 
 ## Grammar Lens: one English word, two Malayalam ones
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C77-NEGATION-SPLIT-01, ML-LEX-ILLA-01, ML-LEX-C77-ALLA-01, ML-LEX-AANU-01] -->

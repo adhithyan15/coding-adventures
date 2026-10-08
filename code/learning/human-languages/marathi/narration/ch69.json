@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "This One and That One",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:51ca1edf26dd2905",
+  "sourceHash": "fnv1a64:233fa875f004fe29",
   "lessons": [
     {
       "id": "MR-C69-ha",
@@ -516,7 +516,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cb2d88ee8bd567c7",
+      "sourceHash": "fnv1a64:800860c92ce6be4f",
       "notice": null,
       "blocks": [
         {
@@ -532,7 +532,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one."
+              "text": "Leave the lessons before this one closed."
             },
             {
               "kind": "prompt",

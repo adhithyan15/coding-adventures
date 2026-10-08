@@ -4,7 +4,7 @@
   "chapter": 72,
   "title": "How It Feels",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:98ad6209fef467e9",
+  "sourceHash": "fnv1a64:77a4c1f988616519",
   "lessons": [
     {
       "id": "TA-C72-anger",
@@ -463,7 +463,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3019b69012c65546",
+      "sourceHash": "fnv1a64:4bba5f2a9f02b7e8",
       "notice": null,
       "blocks": [
         {
@@ -479,7 +479,16 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: read பயம் (payam), and say what it means."
+              "text": "Before the new one:"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "பயம் (payam), then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பயம்**, then say what it means]"
             }
           ]
         },

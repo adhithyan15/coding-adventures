@@ -38,7 +38,7 @@ warns about the second.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C461-DONAR-01, ES-LEX-C461-DONAR-02, ES-LEX-C461-DONAR-03] -->
 
-A poster in a stairwell. Read it, then answer.
+A poster in a stairwell. [YOU READ: it, then answer]
 
 > **RECOGIDA DE JUGUETES**
 
@@ -76,9 +76,11 @@ sentence, both verbs, each right for its own reason.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C461-DONAR-01, ES-LEX-C461-DONAR-02, ES-LEX-C461-DONAR-03] -->
 
-[PAUSE 3s] Now your turn, out loud and then in writing. Four lines for a
-collection poster: say what can be donated and until when, say what will be
-turned away and why, and say where to hand it in.
+[PAUSE 3s] Now your turn, out loud. Four lines for a collection poster: say what
+can be donated and until when, say what will be turned away and why, and say
+where to hand it in.
+
+[YOU WRITE: the same four lines]
 
 Then check yourself: did you use the subjunctive for the things that might turn
 up, and *ser* against *estar* for the two reasons?

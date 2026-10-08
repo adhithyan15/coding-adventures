@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "Which Way",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:1e3795876a0cee99",
+  "sourceHash": "fnv1a64:7ae22eb3dfa44383",
   "lessons": [
     {
       "id": "TA-C66-up",
@@ -454,7 +454,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:912185bdcd7455d6",
+      "sourceHash": "fnv1a64:c19ffd6a3c3f87ee",
       "notice": null,
       "blocks": [
         {
@@ -469,8 +469,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Read மேலே (mēlē) off the page, and then say its opposite."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "மேலே (mēlē) off the page, then say its opposite",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மேலே** off the page, then say its opposite]"
             }
           ]
         },

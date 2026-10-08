@@ -37,7 +37,7 @@ reviews_of: [MW-C02-aabhaar, MW-C03-haan-saa, MW-C03-practice]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-AABHAAR-01, MW-LEX-HAAN-01, MW-RESPONSE-HAAN-SAA-POLITE-01, MW-PERFORMANCE-HAAN-SAA-FOUR-SKILL-01] -->
 
 [PAUSE 15s] Give the Chapter 3 four-skill response once: hear *hā(n) sā* and
-identify a respectful yes; say it; read **हां सा**; then cover it.
+identify a respectful yes; say it. [YOU READ: **हां सा**, then cover it]
 [YOU WRITE: the phrase]
 
 Say *ābhār* for formal thanks. Now set writing aside: today's new word begins
@@ -62,6 +62,8 @@ cup it names. Change the order and do it again. Then say *pāṇī* while imagin
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PAANI-01] -->
 <!-- hl-activity: {"id":"MW-C04-hear-paani-meaning","kind":"text","assesses":["MW-LEX-PAANI-01"],"prompt":"You hear pāṇī with no written cue. What does it mean?","answer":"water","accepted":["drinking water"],"feedback":{"correct":"Right: pāṇī means water.","incorrect":"The sound pāṇī names water."},"response_seconds":8} -->
 
-Close the page. Say *pāṇī* once, then give its meaning.
+[YOU COVER: the page]
+
+Say *pāṇī* once, then give its meaning.
 
 Source: [SIL International, *Marwari–English Dictionary* (2015)](https://nepal.sil.org/resources/archives/63768).

@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Five",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:d8e266796458f7f0",
+  "sourceHash": "fnv1a64:57e674620174dfb0",
   "lessons": [
     {
       "id": "HI-C06-numbers-1-5",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:898f4877335f6c4b",
+      "sourceHash": "fnv1a64:827a5e806ab0c34b",
       "notice": null,
       "blocks": [
         {
@@ -67,7 +67,16 @@
             },
             {
               "kind": "speech",
-              "text": "Plenty here you haven't been taught to draw yet — ए, च, द, प, the ी and ो mātrās, and the ँ. Read them now; you'll draw them when the writing track reaches them."
+              "text": "Plenty here you haven't been taught to draw yet — ए, च, द, प, the ी and ो mātrās, and the ँ."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "them now — you'll draw them when the writing track reaches them",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: them now — you'll draw them when the writing track reaches them]"
             },
             {
               "kind": "speech",

@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 7,
-  "sourceHash": "fnv1a64:ce150889fb604d6c",
+  "sourceHash": "fnv1a64:7f58e59ffb0f4866",
   "lessonIds": [
     "KA-C07-ondu",
     "KA-C07-eradu",
@@ -20,7 +20,7 @@
   "drivablePrefix": 3,
   "text": "kannada/narration/ch07.txt",
   "json": "kannada/narration/ch07.json",
-  "textHash": "fnv1a64:a0fa971c75951675",
-  "jsonHash": "fnv1a64:a073214f44bea128",
+  "textHash": "fnv1a64:2f0cafb39f35c3cb",
+  "jsonHash": "fnv1a64:99665dec2974e902",
   "findings": []
 }

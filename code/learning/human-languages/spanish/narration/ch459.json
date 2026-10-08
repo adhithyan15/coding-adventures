@@ -4,7 +4,7 @@
   "chapter": 459,
   "title": "El inventario",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:568d5beb2cb3abeb",
+  "sourceHash": "fnv1a64:cf855ad5f7922408",
   "lessons": [
     {
       "id": "ES-C459-seccion",
@@ -684,7 +684,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6d041f593bcb388",
+      "sourceHash": "fnv1a64:4e761b030530f510",
       "notice": null,
       "blocks": [
         {
@@ -711,7 +711,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "A sheet taped to a shop door. Read it, then answer."
+              "text": "A sheet taped to a shop door."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it, then answer]"
             },
             {
               "kind": "speech",
@@ -796,7 +805,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now your turn, out loud and then in writing. Four lines for a shop door: say you are closed for stocktaking, say when you reopen, say the usual hours come back tomorrow, and say which section stays open."
+              "text": "Now your turn, out loud. Four lines for a shop door: say you are closed for stocktaking, say when you reopen, say the usual hours come back tomorrow, and say which section stays open."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same four lines",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same four lines]"
             },
             {
               "kind": "speech",

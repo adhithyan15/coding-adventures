@@ -33,7 +33,8 @@ reviews_of: [TA-W23-read-sattai]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-SATTAI-01] -->
 
-[PAUSE 2s] Before the new one: read **சட்டை** once, then say what it means.
+[PAUSE 2s] Before the new one:
+[YOU READ: **சட்டை** once, then say what it means]
 
 ## You'll want to know: புடவை
 <!-- hl-knowledge: introduces=[TA-LEX-C67-WEAR-03]; assesses=[] -->

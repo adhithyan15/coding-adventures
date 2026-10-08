@@ -38,7 +38,8 @@ reviews_of: [KA-C118-kannadaka]
 
 [PAUSE 2s] Before the new one: say the Kannada for a towel, then the Kannada for glasses.
 
-[PAUSE 2s] Read the digits aloud: **೨**, **೪**, **೫**, **೬**, **೭**, **೮**, **೯**, **೦**.
+[PAUSE 2s]
+[YOU READ: the digits aloud — **೨**, **೪**, **೫**, **೬**, **೭**, **೮**, **೯**, **೦**]
 
 ## You'll want to know: ಗಡಿಯಾರ
 <!-- hl-knowledge: introduces=[KA-LEX-C118-THINGS118-02]; assesses=[] -->

@@ -44,8 +44,9 @@ Then complete the earlier four-skill see-you-later response once.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BHAI-01, MW-LEX-BAHAN-01, MW-LEX-DADA-01, MW-LEX-PARIVAAR-01] -->
 
-Place four cards under the correct cues: **भाई**, **बहन**, **दादा**, and
-**परिवार**. Read each card and turn it over.
+[YOU READ: four cards, placing each under its cue — **भाई**, **बहन**, **दादा**, and **परिवार**]
+
+[YOU READ: each card again, then turn it over]
 [YOU WRITE: only the one named aloud]
 
 ## Wrap-up Recall

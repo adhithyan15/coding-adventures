@@ -43,8 +43,9 @@ Then name the four weather-payoff skills you just passed.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-HAWA-01, MW-SCRIPT-HAWA-01, MW-LEX-BAADAL-01, MW-SCRIPT-BAADAL-01, MW-LEX-BARSAAT-01, MW-SCRIPT-BARSAAT-01] -->
 
-Without a model, hear one word, say its meaning, and read the other two in mixed
-order. [YOU WRITE: all three from meaning cues]
+Without a model, hear one word and say its meaning.
+[YOU READ: the other two in mixed order]
+[YOU WRITE: all three from meaning cues]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-WEATHER-THREE-FOUR-SKILL-01, MW-SCRIPT-HAWA-01, MW-SCRIPT-BAADAL-01, MW-SCRIPT-BARSAAT-01] -->

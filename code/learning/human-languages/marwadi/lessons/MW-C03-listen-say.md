@@ -51,11 +51,13 @@ say **हां सा** as the answer to a question you accept.
 
 1. **Listen:** identify *hā(n) sā* without seeing it.
 2. **Speak:** answer yes respectfully without reading.
-3. **Read:** choose **हां सा** from **आभार · हां सा · राम**.
+3. **Reading:** [YOU READ: **आभार · हां सा · राम**, then choose **हां सा**]
 4. [YOU WRITE: only **हां**, with all models covered]
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-HAAN-01, MW-LEX-HAAN-01, MW-RESPONSE-HAAN-SAA-POLITE-01] -->
 <!-- hl-activity: {"id":"MW-C03-listen-say-choice","kind":"text","assesses":["MW-LEX-HAAN-01","MW-RESPONSE-HAAN-SAA-POLITE-01"],"prompt":"You hear hā(n) sā. What social move did the speaker make?","answer":"They answered yes respectfully.","accepted":["respectful yes","yes politely","yes"],"feedback":{"correct":"Right: हां सा is a respectful affirmative answer.","incorrect":"It is the polite affirmative: a respectful yes."},"response_seconds":10} -->
 
-Close the page. Say **हां सा**. [YOU WRITE: **हां** from memory]
+[YOU COVER: the page]
+
+Say **हां सा**. [YOU WRITE: **हां** from memory]

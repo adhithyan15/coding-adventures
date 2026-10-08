@@ -4,7 +4,7 @@
   "chapter": 156,
   "title": "A Timetable, a Notice, the Rent, an Advert, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:cd1f3c5f477be8af",
+  "sourceHash": "fnv1a64:0f2fa6c59c72937d",
   "lessons": [
     {
       "id": "TE-C156-kalapattika",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:900e491bb11ad3d8",
+      "sourceHash": "fnv1a64:006ad6169d2763ae",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "కాలపట్టిక — kālapaṭṭika — \"a timetable\". Read the board: బస్సు: ఉదయం ఎనిమిది గంటలు — bassu: udayaṁ enimidi gaṇṭalu — \"Bus: 8 a.m.\" The bus leaves at eight, so be there before eight."
+              "text": "కాలపట్టిక — kālapaṭṭika — \"a timetable\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the board — బస్సు: ఉదయం ఎనిమిది గంటలు — bassu: udayaṁ enimidi gaṇṭalu — \"Bus: 8 a.m.\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the board — **బస్సు: ఉదయం ఎనిమిది గంటలు** — *bassu: udayaṁ enimidi gaṇṭalu* — \"Bus: 8 a.m.\"]"
+            },
+            {
+              "kind": "speech",
+              "text": "The bus leaves at eight, so be there before eight."
             }
           ]
         },
@@ -142,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f116f70dba807ef",
+      "sourceHash": "fnv1a64:add05e44a57a90b5",
       "notice": null,
       "blocks": [
         {
@@ -169,7 +182,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "సూచన — sūcana — \"an instruction, a note (on a sign)\". Read the notice: ఇవాళ దుకాణం మూసి ఉంది — ivāḷa dukāṇaṁ mūsi undi — \"The shop is closed today.\" Come back on another day."
+              "text": "సూచన — sūcana — \"an instruction, a note (on a sign)\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the notice — ఇవాళ దుకాణం మూసి ఉంది — ivāḷa dukāṇaṁ mūsi undi — \"The shop is closed today.\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the notice — **ఇవాళ దుకాణం మూసి ఉంది** — *ivāḷa dukāṇaṁ mūsi undi* — \"The shop is closed today.\"]"
+            },
+            {
+              "kind": "speech",
+              "text": "Come back on another day."
             }
           ]
         },
@@ -388,7 +414,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f30a4b7c3edc60f7",
+      "sourceHash": "fnv1a64:38851a4ab1f455bf",
       "notice": null,
       "blocks": [
         {
@@ -415,7 +441,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ప్రకటన — prakaṭana — \"an advertisement, an announcement\". Read the advert: ఇల్లు అద్దెకు ఉంది — illu addeku undi — \"House for rent.\""
+              "text": "ప్రకటన — prakaṭana — \"an advertisement, an announcement\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the advert — ఇల్లు అద్దెకు ఉంది — illu addeku undi — \"House for rent.\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the advert — **ఇల్లు అద్దెకు ఉంది** — *illu addeku undi* — \"House for rent.\"]"
             }
           ]
         },
@@ -511,7 +546,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cf1c5e143bef9f33",
+      "sourceHash": "fnv1a64:2a1a68809c1c325f",
       "notice": null,
       "blocks": [
         {
@@ -538,7 +573,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "రసీదు — rasīdu — \"a receipt\". Ask for it when you pay: రసీదు ఇస్తారా? — rasīdu istārā? — \"Could you give me the receipt?\" Read two words again: ఛాయ (chāya, shade) is written with ఛ, and ఝరి (jhari, a stream) with ఝ."
+              "text": "రసీదు — rasīdu — \"a receipt\". Ask for it when you pay: రసీదు ఇస్తారా? — rasīdu istārā? — \"Could you give me the receipt?\""
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "two words again — ఛాయ (chāya, shade) is written with ఛ, and ఝరి (jhari, a stream) with ఝ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: two words again — **ఛాయ** (*chāya*, shade) is written with ఛ, and **ఝరి** (*jhari*, a stream) with ఝ]"
             }
           ]
         },

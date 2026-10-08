@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 434,
-  "sourceHash": "fnv1a64:13ff0583c0607bdf",
+  "sourceHash": "fnv1a64:8417f416cac37b3c",
   "lessonIds": [
     "ES-C434-taller",
     "ES-C434-maquina",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "spanish/narration/ch434.txt",
   "json": "spanish/narration/ch434.json",
-  "textHash": "fnv1a64:a3e8b26c6b0cd911",
-  "jsonHash": "fnv1a64:58831f33f427bdf7",
+  "textHash": "fnv1a64:efce4e83b04c8ecc",
+  "jsonHash": "fnv1a64:e6870273a16bc8e9",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 95,
   "title": "Open, Closed, In, Out",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:168540cee9479b92",
+  "sourceHash": "fnv1a64:07ff1f06e4501c52",
   "lessons": [
     {
       "id": "ML-C95-thurakkuka",
@@ -315,7 +315,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce6f96c241e14e15",
+      "sourceHash": "fnv1a64:de30fff3ca419cef",
       "notice": null,
       "blocks": [
         {
@@ -370,7 +370,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read the ends and not the fronts. The two words end the same way as each other, and what differs is only the front — where the whole meaning sits. One opens onto a room, the other onto a street."
+              "text": "Compare the ends and not the fronts. The two words end the same way as each other, and what differs is only the front — where the whole meaning sits. One opens onto a room, the other onto a street."
             },
             {
               "kind": "speech",
@@ -459,7 +459,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e1d54153f275de6c",
+      "sourceHash": "fnv1a64:079b863dda7492c2",
       "notice": null,
       "blocks": [
         {
@@ -475,7 +475,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say to open and to close, then ask somebody to do each."
+              "text": "Leave the lessons before this one closed. Say to open and to close, then ask somebody to do each."
             }
           ]
         },

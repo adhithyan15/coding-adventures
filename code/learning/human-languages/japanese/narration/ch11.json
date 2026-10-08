@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Seven Body Words, No New Guessing",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:45ebbcaa2b365887",
+  "sourceHash": "fnv1a64:01f165e71ead1fbb",
   "lessons": [
     {
       "id": "JA-W11-small-tsu",
@@ -471,7 +471,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46759d9240516eb7",
+      "sourceHash": "fnv1a64:d4d602bb21bf35b3",
       "notice": null,
       "blocks": [
         {
@@ -525,8 +525,13 @@
               "text": "Hear te; say what it names — a hand."
             },
             {
-              "kind": "speech",
-              "text": "See て (te); say “hand.”"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "て (te), then say “hand.”",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **て**, then say “hand.”]"
             },
             {
               "kind": "prompt",
@@ -587,7 +592,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9d6ad82c9682c55",
+      "sourceHash": "fnv1a64:b516028737abf717",
       "notice": null,
       "blocks": [
         {
@@ -641,8 +646,13 @@
               "text": "Hear mimi; say what it names — an ear."
             },
             {
-              "kind": "speech",
-              "text": "Read み | み aloud."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "み | み aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **み | み** aloud]"
             },
             {
               "kind": "prompt",
@@ -703,7 +713,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dccc2fdc6ced71b1",
+      "sourceHash": "fnv1a64:ce914ddb6d693a17",
       "notice": null,
       "blocks": [
         {
@@ -757,8 +767,13 @@
               "text": "Hear kuchi; say what it names — the mouth."
             },
             {
-              "kind": "speech",
-              "text": "Read 口 (kuchi), then its reading く | ち."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "口 (kuchi), then its reading く | ち",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **口**, then its reading **く | ち**]"
             },
             {
               "kind": "prompt",
@@ -820,7 +835,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31ae2319436048dc",
+      "sourceHash": "fnv1a64:896c6de29e4fb27c",
       "notice": null,
       "blocks": [
         {
@@ -874,8 +889,13 @@
               "text": "Hear ashi; say what it names — a foot or leg."
             },
             {
-              "kind": "speech",
-              "text": "Read あ | し."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "あ | し",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **あ | し**]"
             },
             {
               "kind": "prompt",
@@ -936,7 +956,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e8dcaf7ebe9905c4",
+      "sourceHash": "fnv1a64:da3d128c373cf65a",
       "notice": null,
       "blocks": [
         {
@@ -976,7 +996,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read は as ha inside this word. Its wa reading was tied to the topic marker job, not to every appearance of the sign."
+              "text": "Inside this word, は is ha. Its wa reading was tied to the topic marker job, not to every appearance of the sign."
             }
           ]
         },
@@ -990,8 +1010,13 @@
               "text": "Hear hana; say what it names — the nose."
             },
             {
-              "kind": "speech",
-              "text": "Read は | な as ha-na."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "は | な as ha-na",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **は | な** as *ha-na*]"
             },
             {
               "kind": "prompt",
@@ -1052,7 +1077,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82a7b0a3ae21a94a",
+      "sourceHash": "fnv1a64:a8edc1d90ab27306",
       "notice": null,
       "blocks": [
         {
@@ -1106,8 +1131,13 @@
               "text": "Hear two beats, ka-o; say what it names — the face."
             },
             {
-              "kind": "speech",
-              "text": "Read か | お."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "か | お",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **か | お**]"
             },
             {
               "kind": "prompt",
@@ -1168,7 +1198,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1efa0a090afa478d",
+      "sourceHash": "fnv1a64:4c613512048e5c1d",
       "notice": null,
       "blocks": [
         {
@@ -1222,8 +1252,13 @@
               "text": "Hear me; say what it names — an eye."
             },
             {
-              "kind": "speech",
-              "text": "See め; say the meaning."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "め, then say the meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **め**, then say the meaning]"
             },
             {
               "kind": "prompt",
@@ -1284,7 +1319,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0735c679e480170",
+      "sourceHash": "fnv1a64:777dbb16d7828ed0",
       "notice": null,
       "blocks": [
         {
@@ -1308,8 +1343,13 @@
               "source": "[YOU WRITE: **っ, て, た, だ**]"
             },
             {
-              "kind": "speech",
-              "text": "Read ゆっくり, いって, わかりました, and ください once; the old repair exposure is now closed."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ゆっくり, いって, わかりました, and ください once — the old repair exposure is now closed",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ゆっくり**, **いって**, **わかりました**, and **ください** once — the old repair exposure is now closed]"
             }
           ]
         },
@@ -1343,7 +1383,16 @@
             },
             {
               "kind": "speech",
-              "text": "Read: read all seven from left to right."
+              "text": "Reading:"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all seven from left to right",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all seven from left to right]"
             },
             {
               "kind": "prompt",

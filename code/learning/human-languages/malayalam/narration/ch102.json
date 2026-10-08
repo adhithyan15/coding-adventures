@@ -4,7 +4,7 @@
   "chapter": 102,
   "title": "Saying When",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:1978ad039912c8d1",
+  "sourceHash": "fnv1a64:58d0397b85b6fc81",
   "lessons": [
     {
       "id": "ML-C102-manikku",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:577a38948033e756",
+      "sourceHash": "fnv1a64:cb6fc18257973cfc",
       "notice": null,
       "blocks": [
         {
@@ -79,7 +79,7 @@
             },
             {
               "kind": "speech",
-              "text": "That is a fact about English, not about the ending. Malayalam has not switched cases on you — the suffix on മണിക്ക് is letter for letter the one you put on ജോലി. What has changed is the English word you need to translate it, and English has three of them where Malayalam has one ending. When you meet this ending on an hour, read it at."
+              "text": "That is a fact about English, not about the ending. Malayalam has not switched cases on you — the suffix on മണിക്ക് is letter for letter the one you put on ജോലി. What has changed is the English word you need to translate it, and English has three of them where Malayalam has one ending. When you meet this ending on an hour, it means at."
             }
           ]
         },
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ef9314c180180bb9",
+      "sourceHash": "fnv1a64:784588076c411e01",
       "notice": null,
       "blocks": [
         {
@@ -218,7 +218,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read that sentence twice and look for the ending. There is none. The day-name went into the when-slot exactly as it stands in that table, with nothing added to the front of it and nothing added to the back."
+              "text": "Say that sentence twice and listen for the ending. There is none. The day-name went into the when-slot exactly as it stands in that table, with nothing added to the front of it and nothing added to the back."
             }
           ]
         },
@@ -347,7 +347,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3018183d94279377",
+      "sourceHash": "fnv1a64:3b4136a4245a0657",
       "notice": null,
       "blocks": [
         {
@@ -407,7 +407,7 @@
             },
             {
               "kind": "speech",
-              "text": "Put a hand over the question word in those two and what is left is a distance and a rupee, standing bare. Do it to എത്ര മണിക്ക് (etra maṇikkŭ) and what is left is an hour with an ending on it. The ending is the one thing here the question word did not bring."
+              "text": "Take the question word out of those two and what is left is a distance and a rupee, standing bare. Do it to എത്ര മണിക്ക് (etra maṇikkŭ) and what is left is an hour with an ending on it. The ending is the one thing here the question word did not bring."
             }
           ]
         },
@@ -681,7 +681,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0ff4d2445cc45a75",
+      "sourceHash": "fnv1a64:11ec4f996dfcf9c9",
       "notice": null,
       "blocks": [
         {
@@ -697,7 +697,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say on Monday, at two o'clock, and at what time?"
+              "text": "Leave the lessons before this one closed. Say on Monday, at two o'clock, and at what time?"
             }
           ]
         },

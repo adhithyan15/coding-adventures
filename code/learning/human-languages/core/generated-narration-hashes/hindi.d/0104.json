@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 104,
-  "sourceHash": "fnv1a64:4934b907c7a41858",
+  "sourceHash": "fnv1a64:484fd0ad1553fd80",
   "lessonIds": [
     "HI-C96-tees-chaalees",
     "HI-C96-pachaas-saath",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "hindi/narration/ch104.txt",
   "json": "hindi/narration/ch104.json",
-  "textHash": "fnv1a64:3987e35708014c9c",
-  "jsonHash": "fnv1a64:4d4cd5458af3d825",
+  "textHash": "fnv1a64:ff580bb9dae7b4e4",
+  "jsonHash": "fnv1a64:f521db8e9c8810b9",
   "findings": []
 }

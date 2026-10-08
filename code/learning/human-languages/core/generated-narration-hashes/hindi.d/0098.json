@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 98,
-  "sourceHash": "fnv1a64:3911ba4398d9eba3",
+  "sourceHash": "fnv1a64:e23ff5637f606558",
   "lessonIds": [
     "HI-C90-se",
     "HI-C90-bas",
@@ -16,7 +16,7 @@
   "drivablePrefix": 6,
   "text": "hindi/narration/ch98.txt",
   "json": "hindi/narration/ch98.json",
-  "textHash": "fnv1a64:ba678370a4d17f19",
-  "jsonHash": "fnv1a64:14630a2a73c7b35a",
+  "textHash": "fnv1a64:4579f8f1ef25abe6",
+  "jsonHash": "fnv1a64:db87b22120ce8b56",
   "findings": []
 }

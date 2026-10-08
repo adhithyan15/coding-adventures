@@ -4,7 +4,7 @@
   "chapter": 130,
   "title": "Healthy, Coarse, Tiny, Little, Much",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4dbe7c854bbfcdea",
+  "sourceHash": "fnv1a64:895c46429da5a032",
   "lessons": [
     {
       "id": "FA-C130-salem",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b5ee68e244c54bce",
+      "sourceHash": "fnv1a64:23901fea8b1bf4d4",
       "notice": null,
       "blocks": [
         {
@@ -413,8 +413,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read the numbers aloud as one line: ۱۰ ۲۰ ۱۰۰."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the numbers aloud as one line — ۱۰ ۲۰ ۱۰۰",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the numbers aloud as one line — **۱۰ ۲۰ ۱۰۰**]"
             }
           ]
         },

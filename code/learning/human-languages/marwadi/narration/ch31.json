@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "One Exchange, Three Counters",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:54a2dd1a0b122cff",
+  "sourceHash": "fnv1a64:cdfdb6ed06e3d5e9",
   "lessons": [
     {
       "id": "MW-R26-shopping-counter",
@@ -403,7 +403,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3724bfc1c2eadbbd",
+      "sourceHash": "fnv1a64:182fb6b33d3d9217",
       "notice": null,
       "blocks": [
         {
@@ -450,8 +450,13 @@
               "text": "Produce the whole exchange from meaning cues at a food stall, using the ordering line in place of the first turn."
             },
             {
-              "kind": "speech",
-              "text": "Read all five printed turns and say who speaks each."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all five printed turns, then say who speaks each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all five printed turns, then say who speaks each]"
             },
             {
               "kind": "prompt",

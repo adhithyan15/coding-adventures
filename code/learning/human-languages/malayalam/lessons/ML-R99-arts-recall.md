@@ -33,8 +33,8 @@ reviews_of: [ML-C99-paattu, ML-C99-paaduka, ML-C99-nrttham, ML-C99-katha]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C99-SONG-01, ML-LEX-C99-SING-01, ML-LEX-C99-DANCE-01, ML-LEX-C99-STORY-01] -->
 
-[PAUSE 3s] Close the lessons before this one. Say *a song*, *to sing*, *dance*,
-*a story*.
+[PAUSE 3s] Leave the lessons before this one closed. Say *a song*, *to sing*,
+*dance*, *a story*.
 
 ## Grammar Lens: three endings, three different events
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C99-SONG-01, ML-LEX-C99-DANCE-01, ML-LEX-C99-STORY-01, ML-LEX-C98-CINEMA-01, ML-LEX-C98-GAME-01, ML-LEX-AANU-01, ML-GRAMMAR-C89-NOMINAL-01] -->

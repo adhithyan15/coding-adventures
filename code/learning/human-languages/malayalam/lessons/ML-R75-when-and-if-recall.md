@@ -33,7 +33,7 @@ reviews_of: [ML-C75-eppol, ML-C75-umbol, ML-C75-aal]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C75-EPPOL-01] -->
 
-[PAUSE 3s] Close the lessons before this one. Say the words for *now* and
+[PAUSE 3s] Leave the lessons before this one closed. Say the words for *now* and
 *then*, and then build the question word out of them without looking.
 
 ## Grammar Lens: one piece, three jobs

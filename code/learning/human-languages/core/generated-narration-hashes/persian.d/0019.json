@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 19,
-  "sourceHash": "fnv1a64:28bad79b88659a78",
+  "sourceHash": "fnv1a64:d4793b6e1f1a88ab",
   "lessonIds": [
     "FA-W19-digits-zero-one",
     "FA-W19-digits-two-three",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "persian/narration/ch19.txt",
   "json": "persian/narration/ch19.json",
-  "textHash": "fnv1a64:9f3264af8056b425",
-  "jsonHash": "fnv1a64:e96221335eab20cb",
+  "textHash": "fnv1a64:3d35e6f3694cb1b7",
+  "jsonHash": "fnv1a64:00c4521da1e6639d",
   "findings": []
 }

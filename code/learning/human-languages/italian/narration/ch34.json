@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Mine and Yours",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9926c86c5104bd17",
+  "sourceHash": "fnv1a64:1a36c748ad398e79",
   "lessons": [
     {
       "id": "IT-C34-mio-tuo-suo",
@@ -225,7 +225,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b276321ea3265f0",
+      "sourceHash": "fnv1a64:dd0609ca477e159a",
       "notice": null,
       "blocks": [
         {
@@ -323,7 +323,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Turn back to the very first lesson. Ciao was traced there to the Venetian greeting s-ciào vostro — \"[I am] your slave\", a servant's formula that wore down into the friendliest word in the language."
+              "text": "Think back to the very first lesson. Ciao was traced there to the Venetian greeting s-ciào vostro — \"[I am] your slave\", a servant's formula that wore down into the friendliest word in the language."
             },
             {
               "kind": "speech",

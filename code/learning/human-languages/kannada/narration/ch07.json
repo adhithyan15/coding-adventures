@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Counting One to Ten",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:ce150889fb604d6c",
+  "sourceHash": "fnv1a64:7f58e59ffb0f4866",
   "lessons": [
     {
       "id": "KA-C07-ondu",
@@ -568,7 +568,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe65ef3e7725b543",
+      "sourceHash": "fnv1a64:2bd619204be642ab",
       "notice": null,
       "blocks": [
         {
@@ -602,8 +602,17 @@
               "text": "Tamil says nāṉku. Kannada turned that middle ṉ into an l, and left everything else alone."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the word slowly — ನಾ (nā), ಲ್ (l, with your virama stripping the vowel away), ಕು (ku)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the word slowly — **ನಾ** (*nā*) · **ಲ್** (*l*, with your virama stripping the vowel away) · **ಕು** (*ku*)]"
+            },
+            {
               "kind": "speech",
-              "text": "Read the word slowly: ನಾ (nā), ಲ್ (l, with your virama stripping the vowel away), ಕು (ku). Four is where the virama earns its keep — it is what lets l and k sit together with no vowel between them."
+              "text": "Four is where the virama earns its keep — it is what lets l and k sit together with no vowel between them."
             }
           ]
         },

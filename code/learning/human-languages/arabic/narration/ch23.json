@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "You're Welcome",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5e2e60165a4ea7f0",
+  "sourceHash": "fnv1a64:ee5d5e2ab3fc5762",
   "lessons": [
     {
       "id": "AR-C23-afwan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:49aae7d8cb564dcf",
+      "sourceHash": "fnv1a64:ac57de021edbbff5",
       "notice": null,
       "blocks": [
         {
@@ -68,7 +68,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look closely at the spelling: عفوا ends in the same tanwīn fatḥ (\"-an\") you already met in شكرا (shukran) — the indefinite accusative ending. Neither word is a full sentence with its own verb; both are fixed, idiomatic accusative forms functioning as a complete conversational turn on their own. The grammar you learned once, for shukran, already explains ʿafwan too."
+              "text": "Notice the spelling: عفوا ends in the same tanwīn fatḥ (\"-an\") you already met in شكرا (shukran) — the indefinite accusative ending. Neither word is a full sentence with its own verb; both are fixed, idiomatic accusative forms functioning as a complete conversational turn on their own. The grammar you learned once, for shukran, already explains ʿafwan too."
             }
           ]
         },

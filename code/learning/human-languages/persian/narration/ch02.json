@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Give your name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bbcd6155ac118e2a",
+  "sourceHash": "fnv1a64:46f5cbf37c0d1fe8",
   "lessons": [
     {
       "id": "FA-C02-esm-e-man",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b87d876066b3e66a",
+      "sourceHash": "fnv1a64:0cbeedd85bc640f8",
       "notice": null,
       "blocks": [
         {
@@ -45,8 +45,13 @@
           "title": "The exchange",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read the phrase from right to left, but say its words in this order:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the phrase from right to left, but say its words in this order",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the phrase from right to left, but say its words in this order]"
             },
             {
               "kind": "speech",

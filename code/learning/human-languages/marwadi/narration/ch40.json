@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Reading — Signs, a Counter, and the Whole Bargain",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2bffa6bedcd3593b",
+  "sourceHash": "fnv1a64:e662535a74b198c4",
   "lessons": [
     {
       "id": "MW-C40-signs",
@@ -213,7 +213,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2acd4634488cbfdd",
+      "sourceHash": "fnv1a64:e20dbb43ab56ba29",
       "notice": null,
       "blocks": [
         {
@@ -259,8 +259,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six notices down once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six notices down once, without stopping]"
             },
             {
               "kind": "pause",
@@ -269,8 +274,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "them again, and this time hear whose line each one is",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: them again, and this time hear whose line each one is]"
+            },
+            {
               "kind": "speech",
-              "text": "Again — and this time hear whose line each one is. Three belong to you and three to the person behind the counter."
+              "text": "Three belong to you and three to the person behind the counter."
             }
           ]
         },
@@ -400,7 +414,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dfbba07a1679d922",
+      "sourceHash": "fnv1a64:7f113ea855f07d16",
       "notice": null,
       "blocks": [
         {
@@ -446,8 +460,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read it through once without stopping. Do not translate as you go."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage through once without stopping; do not translate as you go",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage through once without stopping; do not translate as you go]"
             },
             {
               "kind": "pause",
@@ -456,8 +475,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it again, and watch the number move — बीस, दस, पंदरा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it again, and watch the number move — बीस, दस, पंदरा]"
+            },
+            {
               "kind": "speech",
-              "text": "Now again, and watch the number move: बीस, दस, पंदरा. That is the whole negotiation, and it is carried by three words you learned as counting."
+              "text": "That is the whole negotiation, and it is carried by three words you learned as counting."
             }
           ]
         },

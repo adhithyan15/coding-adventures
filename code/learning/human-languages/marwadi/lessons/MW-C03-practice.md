@@ -44,7 +44,7 @@ Say **आभार** for formal thanks; say **हां सा** for a respectfu
 
 1. **Listen:** hear *hā(n) sā* and identify an affirmative answer, without text.
 2. **Speak:** hear “Will you come?” and answer yes respectfully, without notes.
-3. **Read:** cover the English and explain **हां सा**.
+3. **Reading:** [YOU COVER: the English, then explain **हां सा**]
 4. [YOU WRITE: the complete phrase, fifteen seconds after hearing *hā(n) sā*]
 
 Score each line separately. A missed line is the one to repeat; three stronger

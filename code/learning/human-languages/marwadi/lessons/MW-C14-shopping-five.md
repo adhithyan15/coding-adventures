@@ -44,7 +44,7 @@ reviews_of: [MW-R14-shopping-new-two, MW-C13-shopping-three, MW-C12-weather-six,
 
 1. Identify five heard words.
 2. Produce five words from meaning cues.
-3. Match five printed cards to meanings.
+3. [YOU READ: five printed cards and match them to meanings]
 4. [YOU WRITE: all five heard words without a model]
 
 Pass each skill separately; a strong word cannot compensate for a missed one.

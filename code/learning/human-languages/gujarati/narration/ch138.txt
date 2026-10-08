@@ -38,7 +38,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Gujarati for necessary, then the Gujarati for to jump.
 [pause 1 second]
-Read the line once, at speaking pace: મારું નામ મીરા છે।.
+[once you have stopped driving — read: the line once, at speaking pace — મારું નામ મીરા છે।]
 
 You'll want to know: તરવું.
 તરવું (tarvũ) — "to swim".

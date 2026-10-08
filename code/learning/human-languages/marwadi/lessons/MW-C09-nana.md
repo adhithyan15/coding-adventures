@@ -48,7 +48,9 @@ reviews_of: [MW-C09-hear-nana, MW-W05-na, MW-C08-dada]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-NANA-01, MW-SCRIPT-NANA-01, MW-LEX-DADA-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look for five seconds and cover the word. [YOU WRITE: the word]
+[YOU COVER: the word after a five-second look]
+
+[YOU WRITE: the word]
 
 Then label **दादा** and **नाना** orally without ranking either side of the
 family.

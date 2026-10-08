@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Reading — Six Words, Six Lines, and a Whole Meeting",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:817037d4868e3955",
+  "sourceHash": "fnv1a64:21f120829d49dc55",
   "lessons": [
     {
       "id": "GU-C44-words",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4d566f572861585",
+      "sourceHash": "fnv1a64:16e75c33df917713",
       "notice": null,
       "blocks": [
         {
@@ -65,8 +65,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down the list once. Do not build each one sign by sign — look at the whole word and let it arrive."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "down the list once; do not build each one sign by sign — take in the whole word and let it arrive",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: down the list once; do not build each one sign by sign — take in the whole word and let it arrive]"
             },
             {
               "kind": "pause",
@@ -75,8 +80,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the list again, and notice which came at once and which you had to assemble",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the list again, and notice which came at once and which you had to assemble]"
+            },
+            {
               "kind": "speech",
-              "text": "Again, and notice which came at once and which you had to assemble. Both are fine. The difference is what practice removes."
+              "text": "Both are fine. The difference is what practice removes."
             }
           ]
         },
@@ -205,7 +219,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:70570505cf9a3691",
+      "sourceHash": "fnv1a64:a12a871682afe6fd",
       "notice": null,
       "blocks": [
         {
@@ -251,8 +265,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six lines down once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six lines down once, without stopping]"
             },
             {
               "kind": "pause",
@@ -261,8 +280,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "them again, and this time notice that nobody said them first",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: them again, and this time notice that nobody said them first]"
+            },
+            {
               "kind": "speech",
-              "text": "Again — and this time notice that nobody said them first. Until now every one of these arrived in your ear before it arrived on the page."
+              "text": "Until now every one of these arrived in your ear before it arrived on the page."
             }
           ]
         },
@@ -392,7 +420,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0561fd8298893eda",
+      "sourceHash": "fnv1a64:d0cf10afbd151a5c",
       "notice": null,
       "blocks": [
         {
@@ -438,8 +466,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read it through once without stopping. Do not translate as you go — let the turns arrive."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the meeting through once without stopping; do not translate as you go — let the turns arrive",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the meeting through once without stopping; do not translate as you go — let the turns arrive]"
             },
             {
               "kind": "pause",
@@ -448,8 +481,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Now again, and count how many people are speaking."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it again, and count how many people are speaking",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it again, and count how many people are speaking]"
             }
           ]
         },

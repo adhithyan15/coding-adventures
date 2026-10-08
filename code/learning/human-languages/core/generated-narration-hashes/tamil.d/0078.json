@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 78,
-  "sourceHash": "fnv1a64:516a405470650ee8",
+  "sourceHash": "fnv1a64:0a950d211799ee27",
   "lessonIds": [
     "TA-C78-why",
     "TA-C78-because",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "tamil/narration/ch78.txt",
   "json": "tamil/narration/ch78.json",
-  "textHash": "fnv1a64:0d8f3807935724a5",
-  "jsonHash": "fnv1a64:d44bd76e72a0e87b",
+  "textHash": "fnv1a64:57b90f33670e23e7",
+  "jsonHash": "fnv1a64:94948b8df1bc7cce",
   "findings": []
 }

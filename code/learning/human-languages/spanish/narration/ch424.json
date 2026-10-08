@@ -4,7 +4,7 @@
   "chapter": 424,
   "title": "The Marks Themselves",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e8dcfa92a298e8f3",
+  "sourceHash": "fnv1a64:6707683acec9639c",
   "lessons": [
     {
       "id": "ES-C424-punto",
@@ -489,7 +489,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d119a3a64a5db65",
+      "sourceHash": "fnv1a64:23ea9a41623d6759",
       "notice": null,
       "blocks": [
         {
@@ -505,7 +505,7 @@
             },
             {
               "kind": "speech",
-              "text": "Every printed conversation you have read in this book opened its lines with a long horizontal mark. Name what it was doing there, before reading on."
+              "text": "Every printed conversation you have read in this book opened its lines with a long horizontal mark. Name what it was doing there, before going on."
             }
           ]
         },
@@ -1405,7 +1405,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d7548fefe4dbd70",
+      "sourceHash": "fnv1a64:7329919b1ea1cd3c",
       "notice": null,
       "blocks": [
         {
@@ -1431,8 +1431,17 @@
           "title": "Reading",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "this note and count the marks",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: this note and count the marks]"
+            },
+            {
               "kind": "speech",
-              "text": "Read this note and count the marks. Every word in it has been taught:"
+              "text": "Every word in it has been taught:"
             },
             {
               "kind": "speech",

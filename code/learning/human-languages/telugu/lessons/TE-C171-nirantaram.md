@@ -41,7 +41,8 @@ reviews_of: [TE-C171-aruduga]
 ## You'll want to know: నిరంతరం
 <!-- hl-knowledge: introduces=[TE-LEX-C171-SAMAYAM171-05]; assesses=[] -->
 
-**నిరంతరం** — *nirantaraṁ* — "constantly, continuously". Read two words again: **ఛాయ** (*chāya*, shade) is written with ఛ, and **ఝరి** (*jhari*, a stream) with ఝ.
+**నిరంతరం** — *nirantaraṁ* — "constantly, continuously".
+[YOU READ: two words again — **ఛాయ** (*chāya*, shade) is written with ఛ, and **ఝరి** (*jhari*, a stream) with ఝ]
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

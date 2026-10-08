@@ -4,7 +4,7 @@
   "chapter": 84,
   "title": "Reading — Words, Lines, and a First Passage",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:e85f6f9bd0cc76aa",
+  "sourceHash": "fnv1a64:12e32e9ee20fae68",
   "lessons": [
     {
       "id": "TA-C84-words",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3bc75c077a4dfc3",
+      "sourceHash": "fnv1a64:ababed0b58456e13",
       "notice": null,
       "blocks": [
         {
@@ -65,8 +65,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down the list once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "down the list once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: down the list once, without stopping]"
             },
             {
               "kind": "pause",
@@ -75,8 +80,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Again — and this time count the shapes in each word rather than the sounds."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the list again, and this time count the shapes in each word rather than the sounds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the list again, and this time count the shapes in each word rather than the sounds]"
             }
           ]
         },
@@ -205,7 +215,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:707cb057b1fbaf20",
+      "sourceHash": "fnv1a64:8a3743174df98a22",
       "notice": null,
       "blocks": [
         {
@@ -251,8 +261,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six lines down once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six lines down once, without stopping]"
             },
             {
               "kind": "pause",
@@ -261,8 +276,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Again — and look at where the question word sits in the fifth line."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "them again, and notice where the question word sits in the fifth line",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: them again, and notice where the question word sits in the fifth line]"
             }
           ]
         },
@@ -391,7 +411,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:314fe6a3147510c5",
+      "sourceHash": "fnv1a64:772493d214316233",
       "notice": null,
       "blocks": [
         {
@@ -437,8 +457,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read it once without stopping. Do not translate as you go — let the sentences arrive."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage once without stopping; do not translate as you go — let the sentences arrive",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]"
             },
             {
               "kind": "pause",
@@ -447,8 +472,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Now read it again, and notice which lines have no verb at all."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it again, and notice which lines have no verb at all",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it again, and notice which lines have no verb at all]"
             }
           ]
         },

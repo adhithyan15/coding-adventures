@@ -38,7 +38,7 @@ that phrase.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C435-PAPEL-03, ES-LEX-C435-PAPEL-04, ES-LEX-C435-PAPEL-01, ES-LEX-C435-PAPEL-02] -->
 
-Read it once straight through, then answer.
+[YOU READ: it once straight through, then answer]
 
 > **SE BUSCA DEPENDIENTE/A**
 > Tienda del centro. Imprescindible **experiencia previa** de al menos un año.

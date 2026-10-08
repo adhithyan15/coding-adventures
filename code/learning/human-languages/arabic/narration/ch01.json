@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:15ed1010282c3637",
+  "sourceHash": "fnv1a64:460d5850a6cea2ac",
   "lessons": [
     {
       "id": "AR-C01-salam",
@@ -2109,7 +2109,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54fa0f16ce0e3154",
+      "sourceHash": "fnv1a64:b1be4ee9ced3fd3e",
       "notice": null,
       "blocks": [
         {
@@ -2135,8 +2135,13 @@
           "title": "You'll want to know — Read them back",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Sound each out right to left before checking:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each, sounding it out right to left before checking",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each, sounding it out **right to left** before checking]"
             },
             {
               "kind": "table",
@@ -2247,8 +2252,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all six greetings aloud, right to left",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all six greetings aloud, right to left]"
+            },
+            {
               "kind": "speech",
-              "text": "Read all six greetings aloud, right to left. Name the two \"engines\" that build them. (The three-consonant root, and the attached al- with sun/moon assimilation.)"
+              "text": "Name the two \"engines\" that build them. (The three-consonant root, and the attached al- with sun/moon assimilation.)"
             },
             {
               "kind": "speech",

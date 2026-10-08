@@ -4,7 +4,7 @@
   "chapter": 85,
   "title": "Reading — Signs, Notices, and a First Paragraph",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ca796eb6c13697a6",
+  "sourceHash": "fnv1a64:7cb4dfa711c6529f",
   "lessons": [
     {
       "id": "HI-C78-signs",
@@ -231,7 +231,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:758a95e1444fdcfe",
+      "sourceHash": "fnv1a64:14425d8ae4e6ff82",
       "notice": null,
       "blocks": [
         {
@@ -277,8 +277,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six notices down once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six notices down once, without stopping]"
             },
             {
               "kind": "pause",
@@ -287,8 +292,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "them again, and this time notice you did not have to work out what was shut",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: them again, and this time notice you did not have to work out what was shut]"
+            },
+            {
               "kind": "speech",
-              "text": "Again — and this time notice you did not have to work out what was shut. The notice said so."
+              "text": "The notice said so."
             }
           ]
         },
@@ -457,7 +471,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87823c9cfa830a11",
+      "sourceHash": "fnv1a64:8807c2b2b0e3c745",
       "notice": null,
       "blocks": [
         {
@@ -503,8 +517,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read once without stopping. Let the sentences arrive without translation."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage once without stopping; let the sentences arrive without translation",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage once without stopping; let the sentences arrive without translation]"
             },
             {
               "kind": "pause",
@@ -513,8 +532,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Now read it again, and notice how little work it took."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "it again, and notice how little work it took",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: it again, and notice how little work it took]"
             }
           ]
         },

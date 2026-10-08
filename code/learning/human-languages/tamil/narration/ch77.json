@@ -4,7 +4,7 @@
   "chapter": 77,
   "title": "Saying, and Thinking",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6d5cf6fa3bc22615",
+  "sourceHash": "fnv1a64:0741f71eb6cbc5ea",
   "lessons": [
     {
       "id": "TA-C77-say",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1198560ecc5eaee2",
+      "sourceHash": "fnv1a64:50f4ecb208680100",
       "notice": null,
       "blocks": [
         {
@@ -34,8 +34,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஆனால்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஆனால்**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ஆனால். Then offer somebody milk or tea."
+              "text": "Then offer somebody milk or tea."
             }
           ]
         },
@@ -503,7 +512,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:288fa23957c6571d",
+      "sourceHash": "fnv1a64:b1eb8762de878ce5",
       "notice": null,
       "blocks": [
         {
@@ -518,8 +527,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சொல் (sol)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சொல்**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read சொல் (sol). Then say: 'Say \"okay\".'"
+              "text": "Then say: 'Say \"okay\".'"
             }
           ]
         },

@@ -45,7 +45,7 @@ reviews_of: [JA-C135-byouin, JA-W135-bi, JA-C135-doyoubi, JA-C135-iriguchi, JA-W
 ## Guided Practice — read the seven words
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-BYOUIN, JA-SCRIPT-BI-01, JA-LEX-C135-DOYOUBI, JA-LEX-ANCHOR-IRIGUCHI, JA-SCRIPT-GU-01, JA-LEX-C135-DEGUCHI, JA-LEX-ANCHOR-GETSUYOUBI, JA-SCRIPT-GE-01, JA-LEX-C135-GENKI, JA-LEX-ANCHOR-GINKOU, JA-SCRIPT-GI-01] -->
 
-[PAUSE 2s each] Read each one aloud and say what it means.
+[PAUSE 2s each] For each one below, say what it means.
 
 - [YOU READ: **びょういん** — a hospital]
 - [YOU READ: **どようび** — Saturday]

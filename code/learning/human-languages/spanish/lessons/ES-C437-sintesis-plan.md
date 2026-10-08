@@ -38,7 +38,7 @@ turns on both.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C437-PLAN-02, ES-LEX-C437-PLAN-03, ES-LEX-C437-PLAN-04, ES-LEX-C437-PLAN-05] -->
 
-Read it once straight through, then answer.
+[YOU READ: it once straight through, then answer]
 
 > Hola: al final no puedo el jueves, me **coincide** con el curso. Perdona, me
 > **equivoqué** de semana al apuntarlo. ¿**Cenamos** el viernes? Yo **tardo**

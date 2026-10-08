@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Reading — Words, Answers, and the Figures",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:147c624e47c26966",
+  "sourceHash": "fnv1a64:dafb0bccf3674b87",
   "lessons": [
     {
       "id": "FA-C21-words",
@@ -212,7 +212,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:777928a552373f72",
+      "sourceHash": "fnv1a64:f51fd1e68ef892de",
       "notice": null,
       "blocks": [
         {
@@ -258,8 +258,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six lines down once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six lines down once, without stopping]"
             },
             {
               "kind": "pause",
@@ -268,8 +273,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "them again, and notice the list changes halfway",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: them again, and notice the list changes halfway]"
+            },
+            {
               "kind": "speech",
-              "text": "Again — and notice the list changes halfway. The first four are things you say to a person. The last two are things you read off a door."
+              "text": "The first four are things you say to a person. The last two are things you read off a door."
             }
           ]
         },
@@ -398,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:15e5f93957d46b00",
+      "sourceHash": "fnv1a64:0fe246d61998182a",
       "notice": null,
       "blocks": [
         {
@@ -444,8 +458,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read across each line once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "across each line once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: across each line once, without stopping]"
             },
             {
               "kind": "pause",
@@ -454,8 +473,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "them again, and this time take the last three as amounts rather than as signs",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: them again, and this time take the last three as amounts rather than as signs]"
+            },
+            {
               "kind": "speech",
-              "text": "Again — and this time read the last three as amounts rather than as signs. Ten. Twenty. A hundred."
+              "text": "Ten. Twenty. A hundred."
             }
           ]
         },

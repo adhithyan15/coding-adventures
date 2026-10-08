@@ -39,7 +39,7 @@ reviews_of: [ES-C46-repaso-dos-sistemas, ES-C46-cual-pide]
 ## The exchange
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-WHICH-OBJECT, ES-GRAMMAR-DIRECT-OBJECT-LO, ES-GRAMMAR-INDIRECT-OBJECT-LE, ES-LEX-LIBRO, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-LEX-DECIR, ES-GRAMMAR-DECIR-PRESENT-SINGULAR] -->
 
-Read this aloud and watch the two sets take turns.
+[YOU READ: this aloud and watch the two sets take turns]
 
 > — *¿Tienes el libro?*
 > — *Sí, **lo** tengo.*

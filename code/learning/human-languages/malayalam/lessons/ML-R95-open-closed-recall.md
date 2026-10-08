@@ -33,8 +33,8 @@ reviews_of: [ML-C95-thurakkuka, ML-C95-adaykkuka, ML-C95-akathu-purathu]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C95-OPEN-01, ML-LEX-C95-CLOSE-01] -->
 
-[PAUSE 3s] Close the lessons before this one. Say *to open* and *to close*, then
-ask somebody to do each.
+[PAUSE 3s] Leave the lessons before this one closed. Say *to open* and *to
+close*, then ask somebody to do each.
 
 ## Grammar Lens: four words, and none of them needed a new rule
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C95-OPEN-01, ML-LEX-C95-CLOSE-01, ML-LEX-LISTEN, ML-LEX-C52-WELCOME-01] -->

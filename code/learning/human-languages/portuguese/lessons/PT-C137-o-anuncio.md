@@ -40,7 +40,11 @@ reviews_of: [PT-C137-a-renda]
 ## You'll want to know: o anúncio
 <!-- hl-knowledge: introduces=[PT-LEX-C137-LER137-04]; assesses=[] -->
 
-**o anúncio** — "an advert, an announcement". Read the advert: **Aluga-se quarto. Renda: 400 euros.** A room to let, at 400 a month.
+**o anúncio** — "an advert, an announcement".
+
+[YOU READ: the advert — **Aluga-se quarto. Renda: 400 euros.**]
+
+A room to let, at 400 a month.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

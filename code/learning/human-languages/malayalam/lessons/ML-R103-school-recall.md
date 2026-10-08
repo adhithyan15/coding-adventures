@@ -33,8 +33,8 @@ reviews_of: [ML-C103-pallikkoodam, ML-C103-paadam, ML-C103-pareeksha, ML-C103-ma
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C103-SCHOOL-01, ML-LEX-C103-LESSON-01, ML-LEX-C103-EXAM-01, ML-LEX-C103-MARKS-01] -->
 
-[PAUSE 3s] Close the lessons before this one. Say *school*, *lesson*, *exam* and
-*marks*.
+[PAUSE 3s] Leave the lessons before this one closed. Say *school*, *lesson*,
+*exam* and *marks*.
 
 ## Grammar Lens: four words, three different arrivals
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C103-SCHOOL-01, ML-LEX-C103-LESSON-01, ML-LEX-C103-MARKS-01] -->

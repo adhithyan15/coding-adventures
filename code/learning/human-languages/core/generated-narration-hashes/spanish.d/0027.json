@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 27,
-  "sourceHash": "fnv1a64:74d6278b675cf0a5",
+  "sourceHash": "fnv1a64:523d13ff3f77b17b",
   "lessonIds": [
     "ES-C56-sintesis-leer"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch27.txt",
   "json": "spanish/narration/ch27.json",
-  "textHash": "fnv1a64:efce43f84f29f8e1",
-  "jsonHash": "fnv1a64:5fc3342fa1098157",
+  "textHash": "fnv1a64:91c9b66f9c04cc6b",
+  "jsonHash": "fnv1a64:118903f0204ae928",
   "findings": []
 }
