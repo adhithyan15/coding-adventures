@@ -37,22 +37,25 @@
 //! of a leaked secret, or a delete. The storage directory must therefore be
 //! writable only by the owner; freshness binding is backlog item P1.20.
 //!
-//! ## The envelope, version 1
+//! ## The envelope, version 2
 //!
 //! All integers big-endian. Every byte is accounted for; nothing may follow
-//! the payload.
+//! the payload. Version 1 is the same without the destinations section; it
+//! still decodes, with no destinations (U-E9).
 //!
 //! ```text
 //!  offset  field            encoding                         bound
 //!  ──────  ───────────────  ───────────────────────────────  ────────────────
 //!   0      magic            "CHIEFSEC"                       exact
-//!   8      version          u8                               == 1
+//!   8      version          u8                               2 (or 1, read only)
 //!   9      privilege_tier   u8                               0..=3
 //!  10      allowed_mode     u8  0 Direct │ 1 Leased │ 2 Both  exact
 //!  11      rotated_at_ms    u64                              any
 //!  19      agents tag       u8  0 Any │ 1 Only               exact
 //!  20      (Only) count     u16                              1..=64
 //!   …      (Only) each id   u32 len ∥ UTF-8                  1..=256, ascending
+//!   …      (v2) dest count  u16                              0..=32
+//!   …      (v2) each dest   u32 len ∥ "host:port"            U-E8, ascending
 //!   …      payload          u32 len ∥ bytes                  1..=65 536
 //! ```
 //!
@@ -93,8 +96,19 @@ pub const NAMESPACE: &str = "chief-secrets";
 /// The eight bytes every version of the envelope starts with.
 pub const MAGIC: &[u8; 8] = b"CHIEFSEC";
 
-/// The only envelope version this crate reads or writes.
-pub const VERSION: u8 = 1;
+/// The envelope version this crate writes. It reads this one and
+/// [`VERSION_1`] (D18U "Versioning").
+pub const VERSION: u8 = 2;
+
+/// The original envelope: no destination list. Read, never written; it
+/// decodes with no destinations (U-E9).
+pub const VERSION_1: u8 = 1;
+
+/// Most destinations one secret may be provisioned for (U-E8).
+pub const MAX_DESTINATIONS: usize = 32;
+
+/// Longest destination: a 253-byte DNS name, `:`, and a 5-digit port.
+pub const MAX_DESTINATION_BYTES: usize = 253 + 1 + 5;
 
 /// Highest `privilege_tier` VLT06 defines.
 pub const MAX_PRIVILEGE_TIER: u8 = 3;
@@ -131,6 +145,8 @@ pub const MAX_RECORD_BYTES: usize = FIXED_HEADER_BYTES
     + 1
     + 2
     + MAX_ALLOWED_AGENTS * (4 + MAX_AGENT_ID_BYTES)
+    + 2
+    + MAX_DESTINATIONS * (4 + MAX_DESTINATION_BYTES)
     + 4
     + MAX_PAYLOAD_BYTES;
 
@@ -282,6 +298,62 @@ pub fn validate_policy(policy: &SecretPolicy) -> Result<(), RecordError> {
             validate_agent_id(agent).map_err(RecordError::InvalidPolicy)?;
         }
     }
+    if policy.allowed_destinations.len() > MAX_DESTINATIONS {
+        return Err(RecordError::InvalidPolicy("more than 32 destinations"));
+    }
+    for destination in &policy.allowed_destinations {
+        validate_destination(destination).map_err(RecordError::InvalidPolicy)?;
+    }
+    Ok(())
+}
+
+/// D18U U-E8: is this a canonical `host:port` a secret may be sent to?
+///
+/// | part | rule |
+/// |---|---|
+/// | host | 1–253 bytes; labels of `[a-z0-9-]`, 1–63 bytes, no leading or trailing `-`; no trailing dot |
+/// | host | not an IP literal — `net.fetch` refuses those, so one could never be used |
+/// | port | decimal 1–65 535, no leading zero |
+///
+/// Lowercase only, so one destination has exactly one spelling and the
+/// exact-match check at redemption cannot be dodged by case.
+pub fn validate_destination(destination: &str) -> Result<(), &'static str> {
+    let Some((host, port)) = destination.rsplit_once(':') else {
+        return Err("a destination must be host:port");
+    };
+    if host.is_empty() || host.len() > 253 {
+        return Err("a destination host must be 1-253 bytes");
+    }
+    for label in host.split('.') {
+        let bytes = label.as_bytes();
+        if bytes.is_empty() || bytes.len() > 63 {
+            return Err("a destination host label must be 1-63 bytes");
+        }
+        if bytes[0] == b'-' || bytes[bytes.len() - 1] == b'-' {
+            return Err("a destination host label must not start or end with '-'");
+        }
+        if !bytes
+            .iter()
+            .all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || *b == b'-')
+        {
+            return Err("a destination host may contain only a-z, 0-9, '-' and '.'");
+        }
+    }
+    if host.parse::<std::net::Ipv4Addr>().is_ok()
+        || host
+            .split('.')
+            .all(|label| label.bytes().all(|b| b.is_ascii_digit()))
+    {
+        return Err("a destination host must be a DNS name, not an IP address");
+    }
+    let valid_port = !port.is_empty()
+        && !port.starts_with('0')
+        && port.len() <= 5
+        && port.bytes().all(|b| b.is_ascii_digit())
+        && port.parse::<u32>().is_ok_and(|p| (1..=65_535).contains(&p));
+    if !valid_port {
+        return Err("a destination port must be 1-65535 without a leading zero");
+    }
     Ok(())
 }
 
@@ -347,6 +419,13 @@ pub fn encode_record(
             }
         }
     }
+    // validate_policy bounded the count at 32.
+    let destinations = u16::try_from(policy.allowed_destinations.len())
+        .map_err(|_| RecordError::InvalidPolicy("more than 32 destinations"))?;
+    out.extend_from_slice(&destinations.to_be_bytes());
+    for destination in &policy.allowed_destinations {
+        write_bytes(&mut out, destination.as_bytes());
+    }
     write_bytes(&mut out, payload);
     debug_assert!(out.len() <= MAX_RECORD_BYTES);
     Ok(out)
@@ -380,7 +459,7 @@ impl fmt::Debug for DecodedRecord {
     }
 }
 
-/// Decode a version-1 envelope. Total and closed: see rule U-E1.
+/// Decode a version-1 or version-2 envelope. Total and closed: see U-E1.
 pub fn decode_record(input: &[u8]) -> Result<DecodedRecord, RecordError> {
     if input.len() > MAX_RECORD_BYTES {
         return Err(RecordError::Malformed(
@@ -391,7 +470,8 @@ pub fn decode_record(input: &[u8]) -> Result<DecodedRecord, RecordError> {
     if r.take(MAGIC.len())? != MAGIC {
         return Err(RecordError::Malformed("wrong magic"));
     }
-    if r.byte()? != VERSION {
+    let version = r.byte()?;
+    if version != VERSION && version != VERSION_1 {
         return Err(RecordError::Malformed("unknown version"));
     }
     let privilege_tier = r.byte()?;
@@ -409,6 +489,13 @@ pub fn decode_record(input: &[u8]) -> Result<DecodedRecord, RecordError> {
         AGENTS_ANY => AllowedAgents::Any,
         AGENTS_ONLY => AllowedAgents::Only(read_agents(&mut r)?),
         _ => return Err(RecordError::Malformed("unknown allowed-agents tag")),
+    };
+    // U-E9: a version-1 record names no destinations, so it cannot be used
+    // with net.fetch until it is re-put. Absent never means anywhere.
+    let allowed_destinations = if version == VERSION {
+        read_destinations(&mut r)?
+    } else {
+        BTreeSet::new()
     };
 
     // The whole policy is now validated; only after that does a secret byte
@@ -430,9 +517,36 @@ pub fn decode_record(input: &[u8]) -> Result<DecodedRecord, RecordError> {
             allowed_agents,
             allowed_mode,
             rotated_at_ms,
+            allowed_destinations,
         },
         payload: LeasePayload::new(owned),
     })
+}
+
+fn read_destinations(r: &mut Reader<'_>) -> Result<BTreeSet<String>, RecordError> {
+    let count = usize::from(r.u16()?);
+    if count > MAX_DESTINATIONS {
+        return Err(RecordError::Malformed("more than 32 destinations"));
+    }
+    let mut destinations = BTreeSet::new();
+    let mut previous: Option<&str> = None;
+    for _ in 0..count {
+        let len = r.length()?;
+        if len > MAX_DESTINATION_BYTES {
+            return Err(RecordError::Malformed("a destination is too long"));
+        }
+        let destination = std::str::from_utf8(r.take(len)?)
+            .map_err(|_| RecordError::Malformed("a destination is not UTF-8"))?;
+        validate_destination(destination).map_err(RecordError::Malformed)?;
+        if previous.is_some_and(|p| p >= destination) {
+            return Err(RecordError::Malformed(
+                "destinations are not strictly ascending",
+            ));
+        }
+        previous = Some(destination);
+        destinations.insert(destination.to_string());
+    }
+    Ok(destinations)
 }
 
 fn read_agents(r: &mut Reader<'_>) -> Result<BTreeSet<String>, RecordError> {

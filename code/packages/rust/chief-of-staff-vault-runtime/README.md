@@ -38,6 +38,20 @@ secret really is open.
 | `allowed_mode` | `Direct`, `Leased`, or `Both` — a direct-only secret cannot be leased |
 | `allowed_agents` | `Any`, or `Only(set)` of attested agent identities |
 | `privilege_tier` | recorded only; **nothing reads it yet** |
+| `allowed_destinations` | the `host:port` pairs `consume_for` may release the secret for; empty means none |
+
+### Redeeming for a network request
+
+`consume_for(vault_ref, agent, destination)` is how `net.fetch` (D18V) spends a
+lease. It refuses, **without consuming**, unless:
+
+- the lease was issued to `agent`, because a leaked bearer reference must not
+  be redeemable by whoever reads it (VLT06 P8); and
+- `destination` is in the secret's `allowed_destinations`, because a key
+  minted for one API must not reach any other host the same agent may reach
+  (VLT06 P9).
+
+A refusal leaves the lease for its rightful holder.
 | `rotated_at_ms` | when the secret last changed |
 
 Mode matters more than it looks. Direct delivery exists so plaintext never

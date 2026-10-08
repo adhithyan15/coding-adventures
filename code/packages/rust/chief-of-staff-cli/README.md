@@ -28,7 +28,8 @@ that key is not configured.
 # Pipe the value in. It is never an argument, and a terminal is refused so a
 # typed secret is never echoed.
 pass show weather/api-key | chief-of-staff vault put weather-key \
-    --mode leased --tier 1 --allow-agent weather-host
+    --mode leased --tier 1 --allow-agent weather-host \
+    --destination api.weather.gov:443
 
 chief-of-staff vault list                 # names only, nothing decrypted
 chief-of-staff vault delete weather-key
@@ -36,6 +37,9 @@ chief-of-staff vault delete weather-key
 
 - **Every policy flag is required.** `--mode` and `--tier` have no default.
   You must give either `--allow-agent HOST` (repeatable) or `--any-agent`.
+- **Leasable secrets name their destinations.** `--mode leased` and `both`
+  need at least one `--destination HOST:PORT`. That is where `net.fetch` may
+  send the secret, and nowhere else.
 - **Agent names are host names.** `--allow-agent` takes the name the host was
   registered under, because that is the identity the daemon attests.
 - **One trailing newline is stripped.** Use `--raw` to keep the bytes exactly.

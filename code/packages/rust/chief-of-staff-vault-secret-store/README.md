@@ -66,6 +66,8 @@ let count = store.register_all(&runtime)?;
 | U-E7 | No error and no `Debug` output contains a payload or an agent id read from disk. |
 | U-L1 | Loading is all-or-nothing. A corrupt record stops the load and is named, never skipped. Paging follows the backend's cursor, so a short page does not end the listing. |
 | U-L2 | At most 1024 records are loaded. |
+| U-E8 | Destinations are canonical `host:port`: a DNS name, never an IP literal, strictly ascending, at most 32. |
+| U-E9 | Version 1 records decode with no destinations. Absent never means anywhere. |
 
 **The format does not protect against rollback.** Anyone who can write the
 storage directory can restore an older valid record, which undoes a narrowed
