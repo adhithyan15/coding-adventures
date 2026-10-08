@@ -193,6 +193,7 @@ pub struct GraphLink {
     pub node_id: String,
     pub url: String,
     pub tooltip: Option<String>,
+    pub target: Option<String>,
 }
 
 #[derive(Clone, Debug, PartialEq)]

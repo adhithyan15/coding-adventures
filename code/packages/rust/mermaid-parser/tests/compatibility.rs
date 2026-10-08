@@ -1680,13 +1680,14 @@ fn swimlane_node_class_decorators_reach_semantic_ir() {
 #[test]
 fn swimlane_click_links_reach_semantic_ir() {
     let diagram = parse_swimlane(
-        "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nclick request href \"https://example.com/request?a=1&amp;b=2\" \"Open \\\"request\\\"\"\nrequest --> done",
+        "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nclick request href \"https://example.com/request?a=1&amp;b=2\" \"Open \\\"request\\\"\" _blank\nrequest --> done",
     ).expect("Swimlane click links should parse");
 
     assert_eq!(diagram.links.len(), 1);
     assert_eq!(diagram.links[0].node_id, "request");
     assert_eq!(diagram.links[0].url, "https://example.com/request?a=1&b=2");
     assert_eq!(diagram.links[0].tooltip.as_deref(), Some("Open \"request\""));
+    assert_eq!(diagram.links[0].target.as_deref(), Some("_blank"));
     assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one[One]\nend\nclick missing \"https://example.com\"").is_err());
 }
 
