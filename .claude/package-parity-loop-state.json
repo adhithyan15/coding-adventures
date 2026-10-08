@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 17076,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/17076",
+    "branch": "codex/parity-plan-fixture-ci-20261008",
+    "implementation_revision": "0f9b702131f0bc9ff74aa4470bbacc71be8c8e77",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-08T08:22:10Z",
-    "pr_number": 17060,
-    "status": "merged",
-    "notes": "PR #17060 passed 29 successful, seven skipped, and one neutral terminal checks with no conflict. Guarded auto-merge completed as 16a8c24016e1d17f71dd115180ca3429b89b8280 and was verified on fetched origin/main; it was not manually merged. No parity PR remains open."
+    "observed_at": "2026-10-08T09:05:31Z",
+    "pr_number": 17076,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #17076 opened from the tested clean parity worktree after #17060 was verified merged. Initial GitHub checks are queued and mergeability is MERGEABLE; auto-merge remains disabled until every final-head required check is terminal acceptable and conflict-free. No other parity PR is open."
   },
   "last_inventory": {
     "revision": "16a8c24016e1d17f71dd115180ca3429b89b8280",
@@ -13744,8 +13750,8 @@
       "notes": "Merged #17038 covers unquoted lane &amp;, bracket node &nbsp;, and pipe edge &#32;&check; plus a visual fixture; merged #17049 adds metadata title/accTitle/accDescr named/numeric entity baselines. After the quoted-label neutral owner closes, audit residual inline-edge entity decoding, malformed/unknown and broader numeric entities, and exact semantic IR against DG04 and neutral fixtures; do not repeat landed baselines or expand the quoted-label owner beyond its quoted/entity interaction."
     },
     {
-      "id": "build-tool-plan-fixture-native-ci-selection", "title": "Gate exact native plan fixture readers", "status": "in-progress", "depends_on": ["build-tool-fixtures", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-plan-fixture-ci-20261008", "pr_number": null,
-      "notes": "Selected after #17060 merged and newly discovered Swimlane parser gaps were registered. Five checked flat plan cases exist. Python directly reads plan-replace-existing and TypeScript directly reads plan-portable-package-path; plan-affected-empty, plan-affected-null, and plan-future-version currently have neutral-runner coverage only. Freeze an exact per-case reader map, keep the three neutral-only cases out of blanket native fanout, and fail closed on an unclassified flat case. Three sharding cases are separately neutral-only pending verified native readers. Existing plan atomic-overwrite owners govern implementation, not fixture-only CI selection. This bounded Go CI selector is higher leverage and lower risk than the larger ready Point2D Java/Kotlin/Dart DAG; no parity PR is active."
+      "id": "build-tool-plan-fixture-native-ci-selection", "title": "Gate exact native plan fixture readers", "status": "pr-open", "depends_on": ["build-tool-fixtures", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-plan-fixture-ci-20261008", "pr_number": 17076,
+      "notes": "Selected after #17060 merged and newly discovered Swimlane parser gaps were registered. Five checked flat plan cases exist. Python directly reads plan-replace-existing and TypeScript directly reads plan-portable-package-path; plan-affected-empty, plan-affected-null, and plan-future-version currently have neutral-runner coverage only. Exact per-case CI selection and fail-closed unknown cases are now in ready-for-review PR #17076. A security review identified Git quotePath escaping of non-ASCII fixture names; this PR also preserves NUL-delimited raw Git paths so the selector cannot silently bypass them. Three sharding cases remain separately neutral-only pending verified native readers. Existing plan atomic-overwrite owners govern implementation, not fixture-only CI selection."
     },
     {
       "id": "fp01-bit-vectors-v1", "title": "Freeze language-neutral FP01 bit-vector conformance", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
