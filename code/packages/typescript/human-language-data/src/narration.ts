@@ -239,9 +239,17 @@ export const SPOKEN_CUE_ACTIONS: ReadonlySet<string> = new Set([
  * Before this was a function the narration looked only at the first word, which for
  * every action in today's corpus gives the same answer. Reading every word costs
  * nothing and means a hand-on verb later in a compound action is still heard.
+ *
+ * `parseDeliveryCue` always hands over upper-case words joined by one space, but this
+ * is exported, and a caller passing `"write"` or `"SAY\tWRITE"` must not be told
+ * "spoken" — that is the unsafe answer for a driver. So the action is upper-cased and
+ * split on any whitespace run first (one linear pass each).
  */
 export function isManualCueAction(action: string): boolean {
-  return action.split(" ").some((word) => MANUAL_CUE_ACTIONS.has(word));
+  return action
+    .toUpperCase()
+    .split(/\s+/)
+    .some((word) => MANUAL_CUE_ACTIONS.has(word));
 }
 
 /** A silence the lesson asked for. `perItem` marks `[PAUSE 1s each]` over a list. */

@@ -124,6 +124,16 @@ describe("the two cue-verb sets", () => {
     expect(parseNarrationCue("YOU SAY AND WRITE: x")).toMatchObject({ spoken: false });
   });
 
+  it("errs toward manual for an outside caller's lower case or odd spacing", () => {
+    // The parser never produces these, but the function is exported, and "spoken"
+    // is the unsafe wrong answer for a driver.
+    expect(isManualCueAction("write")).toBe(true);
+    expect(isManualCueAction("SAY\tWRITE")).toBe(true);
+    expect(isManualCueAction("  say   and  write ")).toBe(true);
+    expect(isManualCueAction("say why")).toBe(false);
+    expect(isManualCueAction(" ".repeat(200_000))).toBe(false);
+  });
+
   it("defer the hands-on cues that were read to a driver", () => {
     // The cues that prompted the guard, one per verb, as authored.
     for (const source of [
