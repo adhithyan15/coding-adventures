@@ -351,7 +351,9 @@ impl Dialect for CDialect {
         let allowed = match raw.type_ {
             TokenType::Name => identifier(&raw.value),
             TokenType::Number => {
-                !raw.value.is_empty() && raw.value.bytes().all(|byte| byte.is_ascii_digit())
+                !raw.value.is_empty()
+                    && (raw.value == "0" || !raw.value.starts_with('0'))
+                    && raw.value.bytes().all(|byte| byte.is_ascii_digit())
             }
             _ => false,
         };
@@ -603,6 +605,24 @@ mod tests {
     }
 
     #[test]
+    fn stringize_preserves_forwarded_argument_provenance() {
+        let source = "#define H WORD\n#define S(x) #x\n#define OUTER(x) S(x)\nOUTER(H)\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        assert_eq!(result.tokens[0].value, "\"WORD\"");
+        let mut names = Vec::new();
+        let mut cursor = result.map.locus(0).unwrap().expansion;
+        while let Some(id) = cursor {
+            names.push(result.map.expansion_site(id).unwrap().0);
+            cursor = result.map.expansion_parent(id);
+        }
+        assert_eq!(names, ["H", "S", "OUTER"]);
+    }
+
+    #[test]
     fn stringize_only_does_not_pre_expand_its_argument() {
         let source = "#define WORD expanded\n#define S(x) #x\nS(WORD)\n";
         let mut fs = MemoryFs::new();
@@ -623,6 +643,7 @@ mod tests {
             "#define S(x) #x\nS(\"hello\")\n",
             "#define S(x) #x\nS('a')\n",
             "#define S(x) #x\nS(0x10)\n",
+            "#define S(x) #x\nS(012)\n",
             "#define S(x) #x\nS(8u)\n",
             "#define S(x) #x\nS(WORD)\n",
         ] {

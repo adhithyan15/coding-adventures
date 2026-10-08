@@ -739,7 +739,9 @@ fn substitute_function_like(
                     token,
                     hide,
                     position: raw[0].position,
-                    expansion: Some(expansion),
+                    // attach_arguments already reparents any incoming macro
+                    // chain beneath this invocation. Keep that full chain.
+                    expansion: raw[0].expansion,
                 });
                 cursor += 2;
                 continue;

@@ -893,7 +893,9 @@ gets its separately pre-expanded form there. MacroOct and MacroNib keep their
 default unsupported hook and reject the operator. The C dialect rejects `#`
 outside that exact shape, rejects `##`, and rejects empty, multi-token,
 string-literal, character-literal, non-decimal, or malformed arguments in this
-stage. These are explicit subset limits, not claims about all C preprocessing.
+stage. Multi-digit leading-zero integer spellings are treated as C octal and
+rejected; the single token `0` is accepted. These are explicit subset limits,
+not claims about all C preprocessing.
 
 Before constructing the quoted token, the engine projects its maximum bytes
 from the bounded raw token spelling, checks token-spelling and aggregate
@@ -902,7 +904,8 @@ must be a C string literal with source and expansion provenance; a hook that
 returns an oversized or malformed result fails closed. Definition and
 invocation errors retain directive or call-site positions. Tests cover raw
 versus pre-expanded spelling, mixed raw/plain parameter use, literal and
-malformed operator rejection, non-C rejection, and tight byte and fuel bounds
-through the rooted C frontend and generic engine. Token paste and broader
+malformed operator rejection, non-C rejection, provenance, and tight byte
+bounds through the rooted C frontend and generic engine. The existing fuel
+budget also charges the new parameter scan. Token paste and broader
 stringizing, including whitespace collapse and escaping within literals,
 remain pending.
