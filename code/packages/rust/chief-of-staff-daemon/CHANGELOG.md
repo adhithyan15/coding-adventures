@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- New `compose_host_data_plane_with_fetcher`. It is the production composition
+  with the `net.fetch` network edge supplied as an `Arc<dyn Fetcher>`.
+  `compose_host_data_plane` calls it with `NetFetch::production()`. The agent
+  tool source is no longer generic over a resolver and transport. This is the
+  seam the P1.5 weather reference agent's end-to-end test uses.
 - **P1.4c: the daemon now serves `net.fetch` and `vault.request_lease`** (D18V
   "Daemon composition"). They come from a second model-tool source,
   `agent_tools::AgentModelTools`, composed beside smart home. Unlike smart

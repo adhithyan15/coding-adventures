@@ -34,6 +34,7 @@ use chief_of_staff_host_data_plane::{
     ModelToolDispatcher, UnavailableHostDataPlaneService,
 };
 use chief_of_staff_host_runtime::PackageKeyring;
+pub use chief_of_staff_net_fetch::Fetcher;
 use chief_of_staff_net_fetch::NetFetch;
 use chief_of_staff_orchestrator_core::OrchestratorCore;
 use chief_of_staff_process_supervisor::{
@@ -570,35 +571,42 @@ pub fn load_chief_vault_runtime(
     Ok(Some(Arc::new(runtime)))
 }
 
-/// What the agent tool source needs from startup: the package keyring that
-/// verifies each host's manifest, and the loaded vault, if any.
+/// What the agent tool source needs: the package keyring that verifies each
+/// host's manifest, the loaded vault (if any), and the network edge.
 #[derive(Clone)]
 struct AgentToolInputs {
     keyring: Arc<PackageKeyring>,
     vault: Option<Arc<ChiefVaultRuntime>>,
+    fetcher: Arc<dyn Fetcher>,
 }
 
-impl AgentToolInputs {
-    /// `given`, or both loaded the way [`run`] loads them.
-    ///
-    /// `None` is how the composition entry points that are not handed the
-    /// inputs ask for them. They are loaded only at the point a model-tool
-    /// surface is actually composed, so a data plane with no models touches
-    /// neither the keyring nor the vault.
+/// Where the composition gets its [`AgentToolInputs`].
+enum AgentToolSource {
+    /// [`run`] already loaded them at startup (D18V V-D1).
+    Loaded(AgentToolInputs),
+    /// Load the keyring and vault from config the way [`run`] does, but only at
+    /// the point a model-tool surface is actually composed. A data plane with no
+    /// models then touches neither. The network edge is given.
+    FromConfig(Arc<dyn Fetcher>),
+}
+
+impl AgentToolSource {
     fn resolve(
-        given: Option<Self>,
+        self,
         config: &ChiefConfig,
         home: &Path,
-    ) -> Result<Self, ChiefDaemonError> {
-        if let Some(given) = given {
-            return Ok(given);
+    ) -> Result<AgentToolInputs, ChiefDaemonError> {
+        match self {
+            Self::Loaded(inputs) => Ok(inputs),
+            Self::FromConfig(fetcher) => Ok(AgentToolInputs {
+                keyring: Arc::new(
+                    load_package_keyring(config.keyring(), home)
+                        .map_err(ChiefDaemonError::Keyring)?,
+                ),
+                vault: load_chief_vault_runtime(config, home)?,
+                fetcher,
+            }),
         }
-        Ok(Self {
-            keyring: Arc::new(
-                load_package_keyring(config.keyring(), home).map_err(ChiefDaemonError::Keyring)?,
-            ),
-            vault: load_chief_vault_runtime(config, home)?,
-        })
     }
 }
 
@@ -727,6 +735,7 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
     let agent_tools = AgentToolInputs {
         keyring: Arc::clone(&keyring),
         vault: load_chief_vault_runtime(&config, home)?,
+        fetcher: Arc::new(NetFetch::production()),
     };
     let credential =
         load_or_create_credential(&credential_path).map_err(ChiefDaemonError::Credential)?;
@@ -795,7 +804,7 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
         Arc::clone(&clock),
         smart_home_controller.clone(),
         Arc::clone(&unix_clock),
-        Some(agent_tools),
+        AgentToolSource::Loaded(agent_tools),
     )?;
     let smart_home_http = config
         .smart_home()
@@ -935,6 +944,31 @@ pub fn compose_host_data_plane(
     backend: Arc<dyn StorageBackend>,
     clock: Arc<dyn MonotonicClock>,
 ) -> Result<Arc<dyn HostDataPlaneDispatcher>, ChiefDaemonError> {
+    compose_host_data_plane_with_fetcher(
+        config,
+        home,
+        backend,
+        clock,
+        Arc::new(NetFetch::production()),
+    )
+}
+
+/// [`compose_host_data_plane`] with the `net.fetch` network edge supplied.
+///
+/// Everything else is the production composition. That includes the
+/// `net.fetch` pipeline itself: authorization against the signed manifest,
+/// the public-address check, lease redemption and echo masking all run inside
+/// whatever [`Fetcher`] is passed. A `NetFetch` over a fake resolver and
+/// transport is therefore the real operation with only DNS and the socket
+/// replaced. That is how an end-to-end test drives a reference agent without
+/// reaching the internet.
+pub fn compose_host_data_plane_with_fetcher(
+    config: &ChiefConfig,
+    home: &Path,
+    backend: Arc<dyn StorageBackend>,
+    clock: Arc<dyn MonotonicClock>,
+    fetcher: Arc<dyn Fetcher>,
+) -> Result<Arc<dyn HostDataPlaneDispatcher>, ChiefDaemonError> {
     let needs_controller = !config.data_plane().ollama_models().is_empty()
         || !config.data_plane().smart_home_tool_grants().is_empty();
     let controller = if needs_controller {
@@ -957,7 +991,7 @@ pub fn compose_host_data_plane(
         clock,
         controller,
         Arc::new(SystemUnixTimeClock),
-        None,
+        AgentToolSource::FromConfig(fetcher),
     )
 }
 
@@ -968,7 +1002,7 @@ fn compose_host_data_plane_with_controller(
     clock: Arc<dyn MonotonicClock>,
     controller: Option<SmartHomeControllerRuntime<FsStorageBackend>>,
     unix_clock: Arc<dyn UnixTimeClock>,
-    agent_tools: Option<AgentToolInputs>,
+    agent_tools: AgentToolSource,
 ) -> Result<Arc<dyn HostDataPlaneDispatcher>, ChiefDaemonError> {
     let metadata_source: Arc<dyn MessageMetadataSource> =
         Arc::new(SystemMessageMetadataSource::new(clock));
@@ -1015,7 +1049,7 @@ fn compose_data_plane_service(
         metadata_source,
         controller,
         Arc::new(SystemUnixTimeClock),
-        None,
+        AgentToolSource::FromConfig(Arc::new(NetFetch::production())),
     )
 }
 
@@ -1026,7 +1060,7 @@ fn compose_data_plane_service_with_controller(
     metadata_source: Arc<dyn MessageMetadataSource>,
     controller: Option<SmartHomeControllerRuntime<FsStorageBackend>>,
     unix_clock: Arc<dyn UnixTimeClock>,
-    agent_tools: Option<AgentToolInputs>,
+    agent_tools: AgentToolSource,
 ) -> Result<Arc<dyn HostDataPlaneService>, ChiefDaemonError> {
     if config.data_plane().channel_keys().is_empty()
         && config.data_plane().ollama_models().is_empty()
@@ -1061,7 +1095,7 @@ fn compose_data_plane_service_with_controller(
             metadata_source,
         )));
     }
-    let agent_tools = AgentToolInputs::resolve(agent_tools, config, home)?;
+    let agent_tools = agent_tools.resolve(config, home)?;
     let bridge = SmartHomeToolBridge::new(
         controller,
         SmartHomeAgentId::trusted("chief-daemon-model-tools"),
@@ -1084,7 +1118,7 @@ fn compose_data_plane_service_with_controller(
         Arc::new(agent_tools::AgentModelTools::new(
             agent_tools.keyring,
             agent_tools.vault,
-            NetFetch::production(),
+            agent_tools.fetcher,
             unix_clock,
         )),
     ];

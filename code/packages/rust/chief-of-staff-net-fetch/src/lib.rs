@@ -1232,6 +1232,37 @@ impl<R: Resolver, T: Transport> NetFetch<R, T> {
     }
 }
 
+/// One `net.fetch` execution, behind an object-safe face.
+///
+/// [`NetFetch`] is generic over its resolver and transport, which is right for
+/// the operation and awkward for a consumer that holds one in a long-lived
+/// composition: every type that stores it would inherit the two parameters.
+/// The daemon holds `Arc<dyn Fetcher>` instead. Production passes
+/// [`NetFetch::production`], and an end-to-end test passes a `NetFetch` over a
+/// fake resolver and transport, so authorization, address checks, credential
+/// redemption and masking all still run for real. Only DNS and the socket are
+/// replaced.
+pub trait Fetcher: Send + Sync {
+    /// See [`NetFetch::execute`].
+    fn fetch(
+        &self,
+        allowlist: &NetAllowlist,
+        request: &FetchRequest,
+        credentials: Option<&dyn CredentialSource>,
+    ) -> Result<FetchResponse, FetchError>;
+}
+
+impl<R: Resolver, T: Transport> Fetcher for NetFetch<R, T> {
+    fn fetch(
+        &self,
+        allowlist: &NetAllowlist,
+        request: &FetchRequest,
+        credentials: Option<&dyn CredentialSource>,
+    ) -> Result<FetchResponse, FetchError> {
+        self.execute(allowlist, request, credentials)
+    }
+}
+
 // ── The D18D definition ──────────────────────────────────────────────────────
 
 /// The `net.fetch` tool definition.

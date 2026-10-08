@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- New `Fetcher` trait, an object-safe face over `NetFetch::execute`, with a
+  blanket implementation for every `NetFetch<R, T>`. The daemon holds an
+  `Arc<dyn Fetcher>`, so its composition does not inherit the resolver and
+  transport type parameters. An end-to-end test can pass a `NetFetch` over a
+  fake resolver and transport, and the whole operation still runs.
+
 ## 0.1.0 — Unreleased
 
 - **New crate**: D18V `net.fetch`, the host-mediated HTTPS operation that a

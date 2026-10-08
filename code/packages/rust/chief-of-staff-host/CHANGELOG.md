@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- **P1.5: the weather reference agent** (#142, #13980). It lives at
+  `reference-agents/weather/SKILL.md`: one SKILL.md file and no code, Tier 1,
+  asking for `net.fetch` and the `api.weather.gov` network capabilities.
+  - The new end-to-end test `tests/weather_reference_agent.rs` signs it and
+    registers it, and the real process supervisor spawns the real host binary
+    from it.
+  - It sends "Seattle" on a sealed channel, and the host asks a scripted
+    Ollama model.
+  - The model calls `net.fetch`. The production daemon data plane offers the
+    tool from the signed manifest and executes it, with only DNS and the
+    socket faked.
+  - The answer arrives on the report channel. The test also checks the exact
+    request on the wire, and that headers off the allowlist never reach the
+    model.
 - The production-composition test writes the developer public key its
   config names. Composing a model-tool surface now loads the keyring, because
   the daemon's agent tool source verifies each host's package before offering
