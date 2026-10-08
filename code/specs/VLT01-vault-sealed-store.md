@@ -171,6 +171,137 @@ reserved namespace itself is filtered out defensively — a tampered
 registry that tries to trick rotation into rewrapping the manifest
 record must never succeed.
 
+### Freshness (rollback protection)
+
+The AEAD proves a record was written by a KEK holder. It does not prove the
+record is the **latest** one. Someone who can write the storage directory but
+holds no KEK can restore an older ciphertext file (from a backup, a snapshot or
+a sync folder's version history) and it still verifies. That undoes a
+narrowed policy, the rotation of a leaked secret, or a delete. Freshness
+closes that for individual files. It cannot close it for a whole consistent
+snapshot without an anchor outside the storage directory (F10).
+
+**F1: one sealed index per namespace.** Every external namespace that has
+been written since this format has a freshness index. It is stored at
+`("__vault__", "freshness/<namespace>")` with content type
+`application/vault-freshness-v1`. It is sealed like a record: a fresh DEK
+encrypts the body, and the active KEK wraps the DEK. The body AAD is
+`"vault-freshness-v1" || 0x00 || namespace`. The wrap AAD is the usual one
+for its reserved address. The plaintext is canonical binary:
+
+```text
+"VFRESH" | version u8 = 1 | epoch u64 BE | count u32 BE
+then `count` entries, keys strictly ascending by byte value:
+  key_len u16 BE | key bytes | generation u64 BE | state u8
+state: 1 = live, 2 = tombstone, 3 = legacy
+```
+
+There are at most 65 536 entries. Anything else, including trailing bytes,
+duplicate keys or an unknown state, is `Tamper`. The `epoch` increases by one
+on every index write. Nothing reads it yet; it is what F10 anchors.
+
+**F2: record format version 2 carries a generation.** A record written by
+this format has `vault_sealed_version: 2` and `generation: <u64 >= 1>` in its
+metadata. Its body AAD is
+`namespace || 0x00 || key || 0x00 || generation (u64 BE)`. The AAD check
+therefore makes the generation tamper-evident, even though the field sits
+in plaintext metadata. Version 1 records keep the version 1 AAD and have no
+generation.
+
+**F3: the acceptance rule on `get`.** Let `e` be the index entry for the key.
+
+| Index | Entry `e` | v1 record | v2 record, generation `g` |
+|---|---|---|---|
+| none | — | accept | `Tamper` |
+| present | live `n` | `Tamper` | accept if `g >= n` |
+| present | tombstone `n` | `Tamper` | accept if `g > n` |
+| present | legacy | accept | accept if `g >= 1` |
+| present | absent | `Tamper` | accept |
+
+- **Live `n` and `g >= n`.** A record newer than the index is accepted. Only a
+  KEK holder can write a v2 record, so `g > n` means a `put` whose index
+  update did not land, not an attack.
+- **Absent entry, v2 record: accepted** for the same reason.
+- **Absent entry, v1 record: refused**, because migration (F6) puts every v1
+  key in the index.
+- **No index, v2 record: refused.** A v2 record means an index once existed,
+  so a missing index means it was deleted.
+
+`list`, `list_page` and `summarize` do not decrypt, and do not consult the
+index.
+
+**F4: `put`.**
+
+1. If the namespace has no index, migrate it first (F6).
+2. Write the record as v2 with `g = n + 1`, where `n` is the entry's
+   generation. An absent entry counts as 0, and a legacy entry as 1. The
+   caller's `if_revision` and `if_absent` apply to this write.
+3. Set the entry to live `g`. This is a compare-and-swap on the index's
+   storage revision, retried up to 8 times. It never lowers a generation.
+
+Record first, then index: if the process crashes between them, the record is
+ahead of the index, which F3 accepts.
+
+**F5: `delete`.**
+
+1. If the namespace has no index, migrate it first (F6).
+2. Set the entry to a tombstone at `max(n, the record's generation)`.
+3. Delete the record.
+
+Tombstone first, then delete: if the process crashes between them, the
+remaining record has `g <= n` and F3 refuses it, so the delete holds. A later
+`put` writes `n + 1` and turns the tombstone back into a live entry.
+
+**F6: migration, crash-safe at every step.** The first `put` or `delete` to
+reach a namespace with no index migrates it:
+
+1. List every record in the namespace. If any is v2, stop with `Tamper`. The
+   index was lost after an earlier migration, and adopting whatever records
+   are present now would launder a rollback.
+2. Write the index with every key as `legacy`.
+3. Re-seal each v1 record as v2 with generation 1, using a CAS on its
+   revision.
+4. Rewrite the index with those keys as live 1.
+
+During migration, F3's legacy row accepts both the v1 file and its v2
+replacement. Before migration there is no newer value to roll back to, so
+this window admits nothing an attacker could use.
+
+**F7: rotation re-wraps the indexes.** `rotate_kek` re-wraps each
+namespace's index DEK along with its records. Generations and AADs do not
+change.
+
+**F8: one writer per index at a time.** In one process, a store serializes
+its index updates behind a lock. Across processes, the index CAS detects a
+concurrent update. The loser re-reads the index and retries, and gives up
+with `Storage(Conflict)` after 8 attempts.
+
+**F9: what this guarantees.** Each of these is reported as `Tamper` on
+`get`:
+
+- restoring an older generation of a record file;
+- resurrecting a deleted record;
+- putting a pre-migration v1 file back over a migrated record;
+- deleting the index of a migrated namespace.
+
+All of these are changes to individual files, which is what a sync conflict
+or a careless one-file restore produces. A Chief vault load (D18U) fails
+closed on any of them.
+
+**F10: what this does not guarantee.** Restoring the index **together with**
+its records, meaning a consistent earlier snapshot of the namespace, is not
+detected. That includes reverting a whole namespace to before its migration.
+Every file involved is a valid file the attacker already holds. Detecting it
+needs a monotonic value outside the attacker-writable directory, for example
+the index `epoch` mirrored to an owner-only file next to the KEK. That is
+backlog item P1.20b. Until it lands, the vault storage directory must still
+be writable only by the owner. Freshness narrows what a mistake in that
+requirement costs. It does not replace the requirement.
+
+Deleting files is always possible for someone with write access, and is a
+denial of service. Freshness makes it visible as `Tamper`, and cannot
+prevent it.
+
 ## Seal / unseal state machine
 
 ```text
@@ -385,6 +516,9 @@ Not guaranteed:
   the vault is unsealed, the KEK and any in-flight DEKs are exposed.
 - **Denial-of-service** — a malicious storage backend can delete or
   corrupt records; the sealed-store detects it but cannot recover.
+- **Whole-snapshot rollback** — restoring an earlier consistent snapshot of a
+  namespace, meaning its records together with its freshness index, is not
+  detected (F10). Rolling back a single record file is detected (F9).
 
 ## Rotation
 
@@ -438,6 +572,10 @@ At minimum, the test suite must cover:
 - `rotate_kek`: old password still works only until rotation completes;
   then new works, old fails
 - `rotate_kek` midway (simulated) → re-run finishes cleanly
+- freshness: an older generation, a resurrected delete, a v1 file over a
+  migrated record and a deleted index all read as `Tamper`. A record ahead of
+  its index is accepted. Migration is idempotent and refuses to adopt v2
+  records it finds without an index. Rotation re-wraps the indexes.
 - empty plaintext roundtrip
 - large plaintext roundtrip (e.g. 1 MiB)
 
