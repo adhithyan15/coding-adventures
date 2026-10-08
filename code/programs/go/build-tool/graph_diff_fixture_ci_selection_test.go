@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
+	"io/fs"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -75,7 +77,6 @@ func TestGraphDiffFixtureSelectsExactFlatFamilies(t *testing.T) {
 		graphDiffFixturePrefix + "graph-nested/empty.json",
 		graphDiffFixturePrefix + "graph-empty\\child.json",
 		"code/specs/fixtures/build-tool-v1/other/graph-empty.json",
-		graphDiffFixturePrefix + "source-collection-extension.json",
 	} {
 		got, err := changedPackageRootsForPlatform([]string{path}, packages, root, "linux")
 		if err != nil || len(got) != 0 {
@@ -291,6 +292,66 @@ func TestGraphDiffFixtureCheckedCorpusAndNativeReaders(t *testing.T) {
 				t.Errorf("native reader %s lacks %q", reader.path, marker)
 			}
 		}
+	}
+	// Discover roots independently of this test's expected list. A new
+	// fixture-reading front must extend the production relation; dynamic
+	// domain readers count even when they never spell a flat filename.
+	discovered := map[string]bool{}
+	err = filepath.WalkDir(filepath.Join(root, "code", "programs"), func(path string, entry fs.DirEntry, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		if entry.IsDir() {
+			switch entry.Name() {
+			case "node_modules", ".build", "target", "bin", "obj", "coverage", ".venv":
+				return filepath.SkipDir
+			}
+			return nil
+		}
+		switch filepath.Ext(entry.Name()) {
+		case ".go", ".cs", ".fs", ".java", ".kt", ".dart", ".ml", ".hs", ".t", ".py", ".swift":
+		default:
+			return nil
+		}
+		rel, err := filepath.Rel(root, path)
+		if err != nil {
+			return err
+		}
+		parts := strings.Split(filepath.ToSlash(rel), "/")
+		if len(parts) < 5 || parts[0] != "code" || parts[1] != "programs" || !strings.HasPrefix(parts[3], "build-tool") {
+			return nil
+		}
+		pathWithSlashes := "/" + filepath.ToSlash(rel) + "/"
+		isTest := strings.Contains(pathWithSlashes, "/tests/") || strings.Contains(pathWithSlashes, "/test/") ||
+			strings.Contains(pathWithSlashes, "/t/") || strings.Contains(entry.Name(), "Test") || strings.Contains(entry.Name(), "test")
+		if !isTest || entry.Name() == "graph_diff_fixture_ci_selection_test.go" {
+			return nil
+		}
+		info, err := entry.Info()
+		if err != nil {
+			return err
+		}
+		if info.Size() > 1<<20 {
+			return nil
+		}
+		data, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		hasGraph := bytes.Contains(data, []byte("graph-empty.json")) ||
+			bytes.Contains(data, []byte("graph-*.json")) || bytes.Contains(data, []byte("graph/empty"))
+		hasDiff := bytes.Contains(data, []byte("diff-selection-")) ||
+			bytes.Contains(data, []byte("diff-selection/")) || bytes.Contains(data, []byte("diff_selection"))
+		if hasGraph && hasDiff {
+			discovered[parts[2]+"/programs/"+parts[3]] = true
+		}
+		return nil
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got, want := sortedChangedRoots(discovered), graphDiffNames(); !reflect.DeepEqual(got, want) {
+		t.Fatalf("discovered native graph/diff readers = %v, selected roots = %v", got, want)
 	}
 }
 
