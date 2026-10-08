@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-08 — re-audited after Perl 5.004_58
+Status date: 2026-10-08 — re-audited after PREP01 pathless C
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -280,14 +280,21 @@ pairs and 673 pending, without a full-syntax or exhaustive-release claim.
 The next fresh selection rotates to the prepared bounded PREP01 pathless C
 frontend routing stage.
 
+PR #17056 delivered that bounded PREP01 pathless C routing stage and merged as
+`e0bcd08dcb3c264d7a49eb7f778806d494036c46` after its latest-head CI,
+CodeQL, and books checks passed. The pathless API preprocesses an in-memory
+primary file without host include resolution. Its three-way conformance harness
+keeps standard headers for the native C oracle and omits those exact leading
+oracle-only headers on the pathless frontend leg. The next fresh selection
+rotates to LANG82's prepared, separate, explicitly partial Perl 5.004_59 pair.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **PREP01 pathless C (selected):** route `compile_source` through the C
-   dialect and bounded generic preprocessor using only an in-memory primary
-   source. Reject every active include without host file access; retain the
-   rooted file API's declared-root behavior.
+1. **LANG82 historical 5.004_59 (selected):** land its separate, own-archive-
+   backed token/grammar pair for the bounded plain-decimal print subset. Keep
+   the pair explicitly partial and exclude CR from its accepted subset.
 2. **LANG82 continued:** continue distinct source-backed partial pairs. Keep
    5.004_01-t1 pending until its own source is found; do not imply complete
    syntax or an exhaustive release inventory.

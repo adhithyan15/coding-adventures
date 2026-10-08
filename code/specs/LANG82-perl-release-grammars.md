@@ -417,3 +417,17 @@ the 250-digit decimal bound. Accept 250 digits; reject 251, leading-zero forms,
 adjacent decrement, carriage returns, and other unsupported input in the
 partial grammar. Keep its files separate, leave later releases pending, and do
 not claim full historical syntax or platform-wide rejection parity.
+
+Add a separate, explicitly partial `5.004_59` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_59.tar.gz`
+source archive, SHA-256
+`76425638c9ca1502947e26728c4b9a3dd1982a538727629c5f5c4339757231cc`.
+Its `perly.y` is byte-identical to `5.004_58`. In `toke.c`, `sublex_push`
+replaces `push_scope()` with `ENTER`, and `sublex_done` replaces
+`pop_scope()` with `LEAVE`; the source from `scan_num` onward is byte-identical
+to `5.004_58`. Those sublexical scope changes do not widen the standalone
+plain-decimal arithmetic `print` subset. Retain the source-backed 250-digit
+decimal bound and reject 251 digits, leading-zero forms, adjacent decrement,
+carriage returns, and unsupported input in the partial grammar. Keep its
+files distinct, leave later releases pending, and make no full-syntax or
+platform-wide rejection claim.
