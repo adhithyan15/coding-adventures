@@ -123,7 +123,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "मह्यम् (mahyam), then say what it means",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **मह्यम्**, then say what it means]"
@@ -168,8 +168,10 @@
         "needs": [
           "your eyes, because the lesson points at something written down"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -279,7 +281,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "मह्यं फलं रोचते (rocate), then say what it means in ordinary English",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **मह्यं फलं रोचते**, then say what it means in ordinary English]"

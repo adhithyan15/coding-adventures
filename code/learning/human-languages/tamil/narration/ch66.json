@@ -379,7 +379,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "மே — then லே — then மேலே (mēlē)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **மே** — then **லே** — then **மேலே**]"
@@ -397,7 +397,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "மேலே (mēlē), then say the instruction you built from it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **மேலே**, then say the instruction you built from it]"
@@ -1126,7 +1126,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "மேலே (mēlē), then say the verb that goes after it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **மேலே**, then say the verb that goes after it]"

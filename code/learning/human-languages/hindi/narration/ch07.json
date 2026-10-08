@@ -424,7 +424,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find न (na) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find न in the ones that have it]"
@@ -446,7 +446,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find न (na) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find न once more]"
@@ -641,7 +641,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find क (ka) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find क in the ones that have it]"
@@ -663,7 +663,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find क (ka) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find क once more]"

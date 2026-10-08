@@ -83,7 +83,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "حال (hâl) from right to left",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **حال** from right to left]"
@@ -480,7 +480,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "خ + long-u و + final ب",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **خ** + long-*u* **و** + final **ب**]"

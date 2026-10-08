@@ -372,7 +372,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ச — then ட் — then டை",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ச** — then **ட்** — then **டை**]"
@@ -390,7 +390,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "சட்டை (saṭṭai), then say what it means",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **சட்டை**, then say what it means]"

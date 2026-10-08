@@ -223,7 +223,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "一 (yī) — say it, then say how many strokes it has",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 一 — say it, then say how many strokes it has]"
@@ -653,7 +653,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "一 (yī) 二 (èr) 三 (sān) — point at each and count its strokes",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 一 二 三 — point at each and count its strokes]"
@@ -807,7 +807,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "一 (yī) 二 (èr) 三 (sān) — say each as you point at it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 一 二 三 — say each as you point at it]"
@@ -1109,7 +1109,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "一 (yī) 二 (èr) 三 (sān) 四 (sì) — in order, then out of order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 一 二 三 四 — in order, then out of order]"
@@ -1260,7 +1260,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "一 (yī) 二 (èr) 三 (sān) 四 (sì) 五 (wǔ) — name each shape without saying the numbers yet",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 一 二 三 四 五 — name each shape without saying the numbers yet]"
@@ -1590,7 +1590,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "四 (sì) 一 (yī) 五 (wǔ) 二 (èr) 三 (sān) — cover the row above first",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 四 一 五 二 三 — cover the row above first]"

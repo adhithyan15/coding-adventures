@@ -18,7 +18,7 @@
   "drivablePrefix": 1,
   "text": "urdu/narration/ch04.txt",
   "json": "urdu/narration/ch04.json",
-  "textHash": "fnv1a64:fc9c17fe4fe191f8",
-  "jsonHash": "fnv1a64:b317b2d4194cf7ba",
+  "textHash": "fnv1a64:6f616d25c5bb8c15",
+  "jsonHash": "fnv1a64:fff4bc5c7b33c22d",
   "findings": []
 }

@@ -857,7 +857,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at the mark and the letter side by side, and count the arcs on each",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at the mark and the letter side by side, and count the arcs on each]"

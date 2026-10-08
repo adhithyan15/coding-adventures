@@ -115,7 +115,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "देशः (deśaḥ), then say what it means",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **देशः**, then say what it means]"
@@ -254,7 +254,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "महाभारतम्, and find the महा- you already know inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **महाभारतम्**, and find the **महा-** you already know inside it]"
@@ -397,7 +397,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "भारतीयः (bhāratīyaḥ), and find the ी and the य that build it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **भारतीयः**, and find the **ी** and the **य** that build it]"
@@ -555,7 +555,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "भारतात् (Bhāratāt), and name the ending that makes it \"from\"",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **भारतात्**, and name the ending that makes it \"from\"]"

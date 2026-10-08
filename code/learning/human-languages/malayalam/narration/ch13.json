@@ -247,7 +247,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ത (ta) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ത in the ones that have it]"
@@ -269,7 +269,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ത (ta) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ത once more]"
@@ -416,7 +416,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ട (ṭa) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ട in the ones that have it]"
@@ -438,7 +438,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ട (ṭa) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ട once more]"

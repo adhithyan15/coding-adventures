@@ -115,7 +115,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at خدا and point at د (dāl) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **خدا** and point at د inside it]"
@@ -142,7 +142,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "خدا aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **خدا** aloud once more]"
@@ -281,7 +281,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at پڑھنا and point at ڑ (ṛe) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **پڑھنا** and point at ڑ inside it]"
@@ -308,7 +308,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "پڑھنا aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **پڑھنا** aloud once more]"
@@ -451,7 +451,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ٹھیک and point at ھ (do-chashmī he) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ٹھیک** and point at ھ inside it]"
@@ -478,7 +478,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ٹھیک aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ٹھیک** aloud once more]"
@@ -621,7 +621,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at گرمی and point at گ (gāf) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **گرمی** and point at گ inside it]"
@@ -648,7 +648,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "گرمی aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **گرمی** aloud once more]"

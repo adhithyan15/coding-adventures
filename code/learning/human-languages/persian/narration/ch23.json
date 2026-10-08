@@ -115,7 +115,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at حال and point at ح (he-ye jimi) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **حال** and point at ح inside it]"
@@ -142,7 +142,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "حال aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **حال** aloud once more]"
@@ -269,7 +269,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at پنج and point at ج (jim) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **پنج** and point at ج inside it]"
@@ -296,7 +296,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "پنج aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **پنج** aloud once more]"
@@ -435,7 +435,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at خدا and point at خ (khe) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **خدا** and point at خ inside it]"
@@ -462,7 +462,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "خدا aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **خدا** aloud once more]"
@@ -609,7 +609,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at چیست and point at چ (che) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **چیست** and point at چ inside it]"
@@ -636,7 +636,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "چیست aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **چیست** aloud once more]"

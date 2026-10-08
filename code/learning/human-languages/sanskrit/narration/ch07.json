@@ -336,7 +336,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find च (ca) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find च in it]"
@@ -358,7 +358,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find च (ca) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find च once more]"
@@ -891,7 +891,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find क (ka) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find क in it]"
@@ -913,7 +913,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find क (ka) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find क once more]"
@@ -1410,7 +1410,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ख (kha) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ख in it]"
@@ -1432,7 +1432,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ख (kha) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ख once more]"

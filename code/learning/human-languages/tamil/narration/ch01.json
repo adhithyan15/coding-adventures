@@ -1362,7 +1362,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "வ (va) once beside the visible model, large and slowly",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: **வ** once beside the visible model, large and slowly]"

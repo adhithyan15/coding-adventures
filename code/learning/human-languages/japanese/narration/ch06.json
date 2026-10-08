@@ -247,7 +247,7 @@
               "kind": "prompt",
               "action": "TAP",
               "instruction": "ko — one; hold o — two",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU TAP: *ko* — one; hold *o* — two]"
@@ -256,7 +256,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "コー as kō, not ko",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: コー as **kō**, not *ko*]"

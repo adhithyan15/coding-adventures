@@ -123,7 +123,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "च (ca), and say where in the phrase it stands",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **च**, and say where in the phrase it stands]"
@@ -257,7 +257,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "पानीयं क्षीरं वा (vā), then say what it means",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **पानीयं क्षीरं वा**, then say what it means]"
@@ -302,8 +302,10 @@
         "needs": [
           "your eyes, because the lesson points at something written down"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -385,7 +387,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "किन्तु (kintu), and find the किम् inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **किन्तु**, and find the **किम्** inside it]"
@@ -540,7 +542,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "न अन्नं न पानीयम्, then say what it means",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **न अन्नं न पानीयम्**, then say what it means]"

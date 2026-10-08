@@ -158,7 +158,7 @@
               "kind": "prompt",
               "action": "COVER",
               "instruction": "write it again, and check the hook is there",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COVER: write it again, and check the hook is there]"

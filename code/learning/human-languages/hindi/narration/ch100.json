@@ -332,7 +332,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at अच्छा and put your finger on the letter छ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at अच्छा and put your finger on the letter **छ**]"

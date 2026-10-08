@@ -553,7 +553,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ञ (ña) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ञ in it]"
@@ -575,7 +575,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ञ (ña) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ञ once more]"

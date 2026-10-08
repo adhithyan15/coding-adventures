@@ -23,7 +23,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: kazoku, clapping three beats]
 [pause 8 seconds for the answer]
-[your turn — recall: point to the sign in かぞく (kazoku) that carries the two-stroke mark, and name the sign under it]
+[your turn — recall: say which sign in かぞく (kazoku) carries the two-stroke mark, and name the sign under it]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -124,7 +124,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: mizu, clapping two beats]
 [pause 8 seconds for the answer]
-[your turn — recall: point to the sign in みず (mizu) that carries the two-stroke mark, and name the sign under it]
+[your turn — recall: say which sign in みず (mizu) carries the two-stroke mark, and name the sign under it]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -227,7 +227,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: kaze, clapping two beats]
 [pause 8 seconds for the answer]
-[your turn — recall: point to the sign in かぜ (kaze) that carries the two-stroke mark, and name the sign under it]
+[your turn — recall: say which sign in かぜ (kaze) carries the two-stroke mark, and name the sign under it]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -287,16 +287,11 @@ Four recalls, then the review.
 Guided Practice — read the five words.
 [pause 2 seconds after each]
 Read each one aloud and say what it means.
-[your turn — read: かぞく (kazoku) — a family]
-[pause 8 seconds for the answer]
-[your turn — read: かぞえる (kazoeru) — to count]
-[pause 8 seconds for the answer]
-[your turn — read: みず (mizu) — water]
-[pause 8 seconds for the answer]
-[your turn — read: すずしい (suzushii) — cool]
-[pause 8 seconds for the answer]
-[your turn — read: かぜ (kaze) — a wind; a cold]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: かぞく (kazoku) — a family]
+[once you have stopped driving — read: かぞえる (kazoeru) — to count]
+[once you have stopped driving — read: みず (mizu) — water]
+[once you have stopped driving — read: すずしい (suzushii) — cool]
+[once you have stopped driving — read: かぜ (kaze) — a wind; a cold]
 Each of these words holds one of the three signs this chapter wrote. With them, the book writes every sign of the z row, ざ じ ず (zu) ぜ (ze) ぞ (zo).
 
 Guided Practice — write.

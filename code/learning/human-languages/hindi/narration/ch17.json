@@ -285,7 +285,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ल (la) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ल in the ones that have it]"
@@ -307,7 +307,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page and find ल (la) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page and find ल once more]"
@@ -480,7 +480,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this word and find the long hook under its first letter",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this word and find the long hook under its first letter]"

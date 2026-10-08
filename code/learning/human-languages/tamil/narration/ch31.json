@@ -250,9 +250,10 @@
         ],
         "waitUntilStopped": [
           "Script you'll notice: the ு sign",
-          "Script you'll notice: build the word"
+          "Script you'll notice: build the word",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: the ு sign and Script you'll notice: build the word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: the ு sign, Script you'll notice: build the word and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -357,7 +358,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ரு — then இருக்கிறீர்கள் (irukkiṟīrgaḷ)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ரு** — then **இருக்கிறீர்கள்**]"
@@ -366,7 +367,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "the whole question — நீங்கள் எப்படி இருக்கிறீர்கள் (irukkiṟīrgaḷ)?",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: the whole question — **நீங்கள் எப்படி இருக்கிறீர்கள்?**]"

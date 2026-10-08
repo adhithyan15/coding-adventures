@@ -252,7 +252,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two, and say which one has ఘ (gha) and which has గ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two, and say which one has ఘ and which has గ]"
@@ -274,7 +274,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ఘ (gha) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ఘ once more]"
@@ -419,7 +419,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at the month name below and find ఠ (ṭha) near its end",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at the month name below and find ఠ near its end]"
@@ -441,7 +441,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "ఠ twice without tracing, saying ṭha as you finish each one",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: ఠ twice without tracing, saying *ṭha* as you finish each one]"
@@ -561,7 +561,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words and name every character in them you have been taught",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words and name every character in them you have been taught]"
@@ -748,7 +748,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at the month name below and find ఫ (pha) at its front",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at the month name below and find ఫ at its front]"
@@ -889,7 +889,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words and name every character in them you have been taught",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words and name every character in them you have been taught]"

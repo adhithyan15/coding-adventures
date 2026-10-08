@@ -677,9 +677,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script: three pairs the eye has to separate"
+          "Script: three pairs the eye has to separate",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: three pairs the eye has to separate until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: three pairs the eye has to separate and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -741,7 +742,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ق, the letter qamīz opens with, and name the letter it is easiest to confuse with",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ق**, the letter *qamīz* opens with, and name the letter it is easiest to confuse with]"
@@ -750,7 +751,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at تا, the last two letters of jūtā, and say whether that t is the plain dental or the retroflex",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **تا**, the last two letters of *jūtā*, and say whether that *t* is the plain dental or the retroflex]"
@@ -759,7 +760,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at گرمی and name the letter that opens it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **گرمی** and name the letter that opens it]"
@@ -768,7 +769,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "the first-meeting page again, aloud, without the romanization",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: the first-meeting page again, aloud, without the romanization]"

@@ -119,7 +119,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at طعام and point at ط (ṭāʾ) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **طعام** and point at ط inside it]"
@@ -146,7 +146,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "طعام aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **طعام** aloud once more]"
@@ -289,7 +289,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at الظهر and point at ظ (ẓāʾ) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **الظهر** and point at ظ inside it]"
@@ -316,7 +316,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "الظهر aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **الظهر** aloud once more]"
@@ -455,7 +455,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ذهب and point at ذ (dhāl) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **ذهب** and point at ذ inside it]"
@@ -482,7 +482,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ذهب aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ذهب** aloud once more]"

@@ -517,7 +517,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "the final ه in ستاره (setâre) as -e, not as a consonant",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: the final **ه** in **ستاره** as *-e*, not as a consonant]"

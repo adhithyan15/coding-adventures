@@ -92,7 +92,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "the silent و in خواهر (khâhar), the same pattern خواندن taught",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: the silent **و** in **خواهر**, the same pattern **خواندن** taught]"
@@ -697,7 +697,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "حافظ — guardian, protector — the Arabic-rooted half of a farewell you have used since your very first complete exchange",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **حافظ** — guardian, protector — the Arabic-rooted half of a farewell you have used since your very first complete exchange]"
@@ -706,7 +706,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "joined خداحافظ, and recall what it leaves unsaid — no verb, just two halves fused into one wish",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: joined **خداحافظ**, and recall what it leaves unsaid — no verb, just two halves fused into one wish]"

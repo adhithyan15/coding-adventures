@@ -87,7 +87,7 @@
               "kind": "prompt",
               "action": "TEST",
               "instruction": "hand at the mouth — chār still, chhe breathed",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU TEST: hand at the mouth — **chār** still, **chhe** breathed]"

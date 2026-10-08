@@ -432,7 +432,7 @@
               "kind": "prompt",
               "action": "COVER AND WRITE",
               "instruction": "言 (gen) once",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COVER AND WRITE: 言 once]"
@@ -739,7 +739,7 @@
               "kind": "prompt",
               "action": "STACK",
               "instruction": "point below 五, where 口 (kuchi) will go",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU STACK: point below 五, where 口 will go]"
@@ -893,7 +893,7 @@
               "kind": "prompt",
               "action": "COVER AND BUILD",
               "instruction": "言 (gen) + 五 (go) + 口 (kuchi)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COVER AND BUILD: 言 + 五 + 口]"
@@ -902,7 +902,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "go — language",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **go** — language]"

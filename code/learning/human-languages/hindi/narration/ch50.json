@@ -844,7 +844,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this phrase and find ण (ṇa) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this phrase and find ण in it]"

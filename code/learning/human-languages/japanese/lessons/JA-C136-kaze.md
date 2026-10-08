@@ -60,7 +60,7 @@ the voicing mark, so *se* becomes *ze*. The next lesson writes it.
 [PAUSE 1s]
 - [YOU SAY: *kaze*]
 - [YOU SAY: *kaze*, clapping two beats]
-- [YOU RECALL: point to the sign in **かぜ** that carries the two-stroke mark, and name the sign under it]
+- [YOU RECALL: say which sign in **かぜ** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-KAZE] -->

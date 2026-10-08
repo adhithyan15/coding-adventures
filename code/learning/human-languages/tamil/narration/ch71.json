@@ -371,7 +371,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two, and say which is the letter and which is the sign",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two, and say which is the letter and which is the sign]"
@@ -393,7 +393,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "போ — and point at the sign of this same vowel inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **போ** — and point at the sign of this same vowel inside it]"
@@ -519,7 +519,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஓடு (ōḍu), and point at the letter you learned last lesson",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஓடு**, and point at the letter you learned last lesson]"

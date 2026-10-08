@@ -419,7 +419,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "சொ — then ல்",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **சொ** — then **ல்**]"
@@ -428,7 +428,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "சொல் (sol), then போ — two wrapping signs, one short and one long",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **சொல்**, then **போ** — two wrapping signs, one short and one long]"

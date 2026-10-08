@@ -253,7 +253,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these three, and find the two that carry ◌ై (ai)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these three, and find the two that carry ◌ై]"
@@ -275,7 +275,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ై (ai) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ై once more]"
@@ -422,7 +422,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two, and say which one has ఖ (kha) and which has క",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two, and say which one has ఖ and which has క]"
@@ -444,7 +444,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ఖ (kha) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ఖ once more]"

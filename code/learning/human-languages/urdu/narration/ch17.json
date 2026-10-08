@@ -116,7 +116,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "کان and ناک, naming their letters from the right",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: کان and ناک, naming their letters from the right]"
@@ -277,7 +277,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "کام (kām) — name the three letters from the right, then say it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: کام — name the three letters from the right, then say it]"
@@ -495,7 +495,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "کیا and کہاں (kahāṅ), naming their letters from the right",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: کیا and کہاں, naming their letters from the right]"
@@ -871,7 +871,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "یہ میری ماں ہے (yih merī māṅ hai)۔ — name the letters of each word, then say it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: یہ میری ماں ہے۔ — name the letters of each word, then say it]"

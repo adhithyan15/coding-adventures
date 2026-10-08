@@ -19,8 +19,7 @@ Now the part no earlier chapter of this book has had to say. Numbers run left to
 
 Guided Practice.
 [once you have stopped driving — write: ۰ — a dot; ۱ — a stroke]
-[your turn — read: ۱۰ — das, ten, left to right]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: ۱۰ — das, ten, left to right]
 
 Wrap-up Recall.
 Sources: Unicode Arabic chart; Omniglot, Numbers in Urdu.
@@ -43,8 +42,7 @@ Script — the shapes.
 
 Guided Practice.
 [once you have stopped driving — write: ۲, then ۳ beside it]
-[your turn — read: ۱۲, ۱۳, ۲۳, left to right]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: ۱۲, ۱۳, ۲۳, left to right]
 
 Wrap-up Recall.
 Sources: Unicode Arabic chart; Omniglot, Numbers in Urdu.
@@ -69,8 +67,7 @@ So a reader who picked the digits up from an Arabic book will misread a Pakistan
 
 Guided Practice.
 [once you have stopped driving — write: ۴, ۵, ۶, saying chār, pānch, chhe]
-[your turn — read: ۱۴, ۱۵, ۱۶, left to right]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: ۱۴, ۱۵, ۱۶, left to right]
 
 Wrap-up Recall.
 Sources: Unicode Arabic chart; Omniglot, Numbers in Urdu.

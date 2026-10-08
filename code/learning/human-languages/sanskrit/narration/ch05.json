@@ -307,7 +307,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find य (ya) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find य in it]"
@@ -329,7 +329,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find य (ya) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find य once more]"
@@ -732,7 +732,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ◌ृ (ṛ) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ◌ृ in it]"
@@ -754,7 +754,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ृ (ṛ) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ृ once more]"
@@ -1451,7 +1451,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find अ in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find अ in it]"
@@ -1473,7 +1473,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find अ once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find अ once more]"

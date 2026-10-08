@@ -238,7 +238,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find వ (va) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find వ in the ones that have it]"
@@ -260,7 +260,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find వ (va) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find వ once more]"

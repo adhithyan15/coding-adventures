@@ -543,7 +543,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find म (ma) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find म in the ones that have it]"
@@ -565,7 +565,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find म (ma) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find म once more]"
@@ -744,7 +744,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find र (ra) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find र in the ones that have it]"
@@ -766,7 +766,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find र (ra) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find र once more]"

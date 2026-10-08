@@ -380,7 +380,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "க — then டை — then கடை (kaḍai)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **க** — then **டை** — then **கடை**]"
@@ -398,7 +398,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "சட்டை, then கடை (kaḍai), and find the ending they share",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **சட்டை**, then **கடை**, and find the ending they share]"

@@ -607,7 +607,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -723,7 +723,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -843,7 +843,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -963,7 +963,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -1079,7 +1079,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -1203,7 +1203,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -1335,7 +1335,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"
@@ -1387,9 +1387,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script"
+          "Script",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -1465,7 +1466,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "keep નમસ્તે (namaste) visible and copy it once, piece by piece",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: keep નમસ્તે visible and copy it once, piece by piece]"
@@ -1474,7 +1475,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: every piece this chapter has given you so far, in order]"

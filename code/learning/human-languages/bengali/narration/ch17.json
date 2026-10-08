@@ -83,7 +83,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "চা (chā)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: চা]"
@@ -211,7 +211,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "জল (jôl)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: জল]"
@@ -220,7 +220,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "চা (chā) জল (jôl)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: চা জল]"
@@ -360,7 +360,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "চা (chā) জল (jôl) দুধ (dudh)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: চা জল দুধ]"
@@ -660,7 +660,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "পড়া (pôṛā)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: পড়া]"
@@ -678,7 +678,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "চা (chā)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: চা]"
@@ -687,7 +687,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "জল (jôl)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: জল]"

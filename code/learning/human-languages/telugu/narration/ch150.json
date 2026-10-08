@@ -102,7 +102,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "పుస్తకం, వాఙ్మయం (vāṅmayaṁ) — one book, then literature",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **పుస్తకం · వాఙ్మయం** — one book, then literature]"
@@ -111,7 +111,7 @@
               "kind": "prompt",
               "action": "FIND",
               "instruction": "the small ఙ్ immediately before మ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU FIND: the small **ఙ్** immediately before **మ**]"
@@ -270,7 +270,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "ఙ (ṅa) twice without tracing",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: **ఙ** twice without tracing]"
@@ -279,7 +279,7 @@
               "kind": "prompt",
               "action": "FIND",
               "instruction": "ఙ్ inside వాఙ్మయం (vāṅmayaṁ)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU FIND: **ఙ్** inside **వాఙ్మయం**]"

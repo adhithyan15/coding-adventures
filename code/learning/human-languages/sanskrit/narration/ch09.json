@@ -315,7 +315,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find त (ta) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find त in it]"
@@ -337,7 +337,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find त (ta) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find त once more]"
@@ -815,7 +815,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ◌ं (ṃ) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ◌ं in it]"
@@ -837,7 +837,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ं (ṃ) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ं once more]"

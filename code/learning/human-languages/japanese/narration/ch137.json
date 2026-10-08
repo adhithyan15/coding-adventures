@@ -4,7 +4,7 @@
   "chapter": 137,
   "title": "Pencil and Ticket: Pa, Pi, Pu and Pe",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bfb7d9483f7ed6b0",
+  "sourceHash": "fnv1a64:eaabf63cf422a991",
   "lessons": [
     {
       "id": "JA-C137-ippai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d7e72ac5e8cbb03",
+      "sourceHash": "fnv1a64:167c71a219d98397",
       "notice": null,
       "blocks": [
         {
@@ -113,11 +113,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in いっぱい (ippai) that carries the small circle, and name the sign under it",
+              "instruction": "say which sign in いっぱい (ippai) carries the small circle, and name the sign under it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **いっぱい** that carries the small circle, and name the sign under it]"
+              "source": "[YOU RECALL: say which sign in **いっぱい** carries the small circle, and name the sign under it]"
             }
           ]
         },
@@ -487,7 +487,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:411bb96788e6e561",
+      "sourceHash": "fnv1a64:9b85f6fed80bf9a3",
       "notice": null,
       "blocks": [
         {
@@ -590,11 +590,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in えんぴつ (enpitsu) that carries the small circle, and name the sign under it",
+              "instruction": "say which sign in えんぴつ (enpitsu) carries the small circle, and name the sign under it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **えんぴつ** that carries the small circle, and name the sign under it]"
+              "source": "[YOU RECALL: say which sign in **えんぴつ** carries the small circle, and name the sign under it]"
             }
           ]
         },
@@ -955,7 +955,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e64ebd1618a419fd",
+      "sourceHash": "fnv1a64:4b5d0d8b507c0d73",
       "notice": null,
       "blocks": [
         {
@@ -1058,11 +1058,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in きっぷ (kippu) that carries the small circle, and name the sign under it",
+              "instruction": "say which sign in きっぷ (kippu) carries the small circle, and name the sign under it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **きっぷ** that carries the small circle, and name the sign under it]"
+              "source": "[YOU RECALL: say which sign in **きっぷ** carries the small circle, and name the sign under it]"
             }
           ]
         },
@@ -1433,7 +1433,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e2633144d2f604a4",
+      "sourceHash": "fnv1a64:4ed3905ca7d1f7b8",
       "notice": null,
       "blocks": [
         {
@@ -1536,11 +1536,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in ぺらぺら (perapera) that carries the small circle, and name the sign under it",
+              "instruction": "say which sign in ぺらぺら (perapera) carries the small circle, and name the sign under it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **ぺらぺら** that carries the small circle, and name the sign under it]"
+              "source": "[YOU RECALL: say which sign in **ぺらぺら** carries the small circle, and name the sign under it]"
             }
           ]
         },
@@ -1815,7 +1815,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "いっぱい (ippai) — full; a lot",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **いっぱい** — full; a lot]"
@@ -1824,7 +1824,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "しんぱい (shinpai) — worry",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **しんぱい** — worry]"
@@ -1833,7 +1833,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "えんぴつ (enpitsu) — a pencil",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **えんぴつ** — a pencil]"
@@ -1842,7 +1842,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "いっぴき (ippiki) — one small animal",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **いっぴき** — one small animal]"
@@ -1851,7 +1851,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "きっぷ (kippu) — a ticket",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **きっぷ** — a ticket]"
@@ -1860,7 +1860,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "てんぷら (tenpura) — tempura",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **てんぷら** — tempura]"
@@ -1869,7 +1869,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ぺらぺら (perapera) — fluent",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ぺらぺら** — fluent]"

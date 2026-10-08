@@ -272,7 +272,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ళ (ḷa) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ళ in the ones that have it]"
@@ -294,7 +294,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ళ (ḷa) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ళ once more]"
@@ -441,7 +441,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two, and say which one has ఢ (ḍha) and which has డ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two, and say which one has ఢ and which has డ]"
@@ -463,7 +463,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ఢ (ḍha) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ఢ once more]"
@@ -583,7 +583,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at శుక్రవారం and శనివారం, and put a finger on the shared letter",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at శుక్రవారం and శనివారం, and put a finger on the shared letter]"

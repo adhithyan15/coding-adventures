@@ -4,7 +4,7 @@
   "chapter": 135,
   "title": "Hospital and Bank: Bi, Gu, Ge and Gi",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e12c4074f929a2b2",
+  "sourceHash": "fnv1a64:785b17d8510a5b51",
   "lessons": [
     {
       "id": "JA-C135-byouin",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89027edbd929afbc",
+      "sourceHash": "fnv1a64:b1a462169df325c8",
       "notice": null,
       "blocks": [
         {
@@ -117,11 +117,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in びょういん (byōin) that carries the two-stroke mark, and name the sign under it",
+              "instruction": "say which sign in びょういん (byōin) carries the two-stroke mark, and name the sign under it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **びょういん** that carries the two-stroke mark, and name the sign under it]"
+              "source": "[YOU RECALL: say which sign in **びょういん** carries the two-stroke mark, and name the sign under it]"
             }
           ]
         },
@@ -494,7 +494,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e7b494ffb9a54f0",
+      "sourceHash": "fnv1a64:a4b9d41002f74848",
       "notice": null,
       "blocks": [
         {
@@ -601,11 +601,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in いりぐち (iriguchi) that carries the two-stroke mark, and name the sign under it",
+              "instruction": "say which sign in いりぐち (iriguchi) carries the two-stroke mark, and name the sign under it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **いりぐち** that carries the two-stroke mark, and name the sign under it]"
+              "source": "[YOU RECALL: say which sign in **いりぐち** carries the two-stroke mark, and name the sign under it]"
             }
           ]
         },
@@ -966,7 +966,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:484524d046de27ff",
+      "sourceHash": "fnv1a64:5c903ee5a8c3c1c5",
       "notice": null,
       "blocks": [
         {
@@ -1069,11 +1069,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in げつようび (getsuyōbi) that carries the two-stroke mark, and name the sign under it",
+              "instruction": "say which sign in げつようび (getsuyōbi) carries the two-stroke mark, and name the sign under it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **げつようび** that carries the two-stroke mark, and name the sign under it]"
+              "source": "[YOU RECALL: say which sign in **げつようび** carries the two-stroke mark, and name the sign under it]"
             }
           ]
         },
@@ -1436,7 +1436,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e4e8bc4c8ea7f847",
+      "sourceHash": "fnv1a64:21649f546efcd5e5",
       "notice": null,
       "blocks": [
         {
@@ -1539,11 +1539,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "point to the sign in ぎんこう (ginkō) that carries the two-stroke mark, and name the sign under it",
+              "instruction": "say which sign in ぎんこう (ginkō) carries the two-stroke mark, and name the sign under it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: point to the sign in **ぎんこう** that carries the two-stroke mark, and name the sign under it]"
+              "source": "[YOU RECALL: say which sign in **ぎんこう** carries the two-stroke mark, and name the sign under it]"
             }
           ]
         },
@@ -1829,7 +1829,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "びょういん (byōin) — a hospital",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **びょういん** — a hospital]"
@@ -1838,7 +1838,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "どようび (doyōbi) — Saturday",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **どようび** — Saturday]"
@@ -1847,7 +1847,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "いりぐち (iriguchi) — an entrance",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **いりぐち** — an entrance]"
@@ -1856,7 +1856,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "でぐち (deguchi) — an exit",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **でぐち** — an exit]"
@@ -1865,7 +1865,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "げつようび (getsuyōbi) — Monday",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **げつようび** — Monday]"
@@ -1874,7 +1874,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "げんき (genki) — well, healthy",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **げんき** — well, healthy]"
@@ -1883,7 +1883,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ぎんこう (ginkō) — a bank",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ぎんこう** — a bank]"

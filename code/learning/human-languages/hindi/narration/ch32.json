@@ -305,7 +305,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ज and झ (jha) side by side, and say which one carries the puff",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ज and झ side by side, and say which one carries the puff]"
@@ -532,7 +532,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two words and find श (śa) in each one",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two words and find श in each one]"

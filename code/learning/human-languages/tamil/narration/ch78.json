@@ -467,7 +467,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஏ — then ன்",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஏ** — then **ன்**]"
@@ -476,7 +476,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஏன் (ēṉ), then எப்படி — long, then short",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஏன்**, then **எப்படி** — long, then short]"

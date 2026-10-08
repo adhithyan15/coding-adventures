@@ -294,9 +294,10 @@
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
+          "Warm-up",
           "Script — meet one form"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — meet one form until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Warm-up and Script — meet one form until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -308,7 +309,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "પ, then મ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **પ**, then **મ**]"
@@ -615,7 +616,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "માફ — name its three signs in order, then read the word.",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **માફ** — name its three signs in order, then read the word.]"

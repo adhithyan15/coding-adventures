@@ -865,7 +865,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "உ, and say whether it is a letter or a sign",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **உ**, and say whether it is a letter or a sign]"
@@ -874,7 +874,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ி, and say what it replaces",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ி**, and say what it replaces]"
@@ -883,7 +883,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஒ and ோ — the same vowel standing, then hanging",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஒ** and **ோ** — the same vowel standing, then hanging]"

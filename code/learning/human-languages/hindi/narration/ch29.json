@@ -282,7 +282,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at the mark and the letter side by side, and say what they share",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at the mark and the letter side by side, and say what they share]"

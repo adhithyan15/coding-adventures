@@ -271,7 +271,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at the two day names below and find శ (śa) at the front of each",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at the two day names below and find శ at the front of each]"
@@ -293,7 +293,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at సంతోషం and say which two of the three s letters are in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at సంతోషం and say which two of the three s letters are in it]"
@@ -440,7 +440,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ల (la) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ల in the ones that have it]"
@@ -462,7 +462,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ల (la) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ల once more]"
@@ -592,7 +592,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words and name the vowel letter each one begins with",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words and name the vowel letter each one begins with]"

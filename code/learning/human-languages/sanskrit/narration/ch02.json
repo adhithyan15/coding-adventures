@@ -337,7 +337,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ◌ः (ḥ) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ◌ः in it]"
@@ -359,7 +359,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ः (ḥ) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ः once more]"
@@ -756,7 +756,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find आ (ā) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find आ in it]"
@@ -778,7 +778,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find आ (ā) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find आ once more]"
@@ -1306,7 +1306,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find भ (bha) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find भ in it]"
@@ -1328,7 +1328,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find भ (bha) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find भ once more]"
@@ -1711,7 +1711,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ◌ि in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ◌ि in it]"
@@ -1733,7 +1733,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ि once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ि once more]"

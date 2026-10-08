@@ -60,7 +60,7 @@ is **は** with the voicing mark, and on an *h* sign the mark makes a *b*:
 [PAUSE 1s]
 - [YOU SAY: *kaban*]
 - [YOU SAY: *kaban*, clapping three beats]
-- [YOU RECALL: point to the sign in **かばん** that carries the two-stroke mark, and name the sign under it]
+- [YOU RECALL: say which sign in **かばん** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-KABAN] -->

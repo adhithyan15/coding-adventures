@@ -601,7 +601,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "કે and અને side by side, naming the shared stroke.",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **કે** and **અને** side by side, naming the shared stroke.]"

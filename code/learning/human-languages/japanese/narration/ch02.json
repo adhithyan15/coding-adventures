@@ -1015,7 +1015,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "こんにちは (konnichiwa) — sound each sign in turn; do not recall it whole",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **こんにちは** — sound each sign in turn; do not recall it whole]"

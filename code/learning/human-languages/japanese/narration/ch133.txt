@@ -22,7 +22,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: eki, clapping two beats]
 [pause 8 seconds for the answer]
-[your turn — recall: point to the sign in えき (eki) you can already write, and the one you cannot]
+[your turn — recall: name the sign in えき (eki) you can already write, and the one you cannot]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -126,7 +126,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: ike, clapping two beats]
 [pause 8 seconds for the answer]
-[your turn — recall: point to the sign in いけ (ike) you can already write, and the one you cannot]
+[your turn — recall: name the sign in いけ (ike) you can already write, and the one you cannot]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -229,7 +229,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: inu, clapping two beats]
 [pause 8 seconds for the answer]
-[your turn — recall: point to the sign in いぬ (inu) you cannot write yet, and say which sign it looks like]
+[your turn — recall: name the sign in いぬ (inu) you cannot write yet, and say which sign it looks like]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -329,7 +329,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: heya, pointing at the room you are in]
 [pause 8 seconds for the answer]
-[your turn — recall: point to the sign in へや (heya) you can already write, and the one you cannot]
+[your turn — recall: name the sign in へや (heya) you can already write, and the one you cannot]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -392,20 +392,13 @@ Then say a dog — R2, five lessons back.
 Guided Practice — read the seven words.
 [pause 2 seconds after each]
 Read each one aloud and say what it means.
-[your turn — read: えき (eki) — a station]
-[pause 8 seconds for the answer]
-[your turn — read: きのう (kinō) — yesterday]
-[pause 8 seconds for the answer]
-[your turn — read: いけ (ike) — a pond]
-[pause 8 seconds for the answer]
-[your turn — read: けさ (kesa) — this morning]
-[pause 8 seconds for the answer]
-[your turn — read: いぬ (inu) — a dog]
-[pause 8 seconds for the answer]
-[your turn — read: ぬの (nuno) — cloth]
-[pause 8 seconds for the answer]
-[your turn — read: へや (heya) — a room]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: えき (eki) — a station]
+[once you have stopped driving — read: きのう (kinō) — yesterday]
+[once you have stopped driving — read: いけ (ike) — a pond]
+[once you have stopped driving — read: けさ (kesa) — this morning]
+[once you have stopped driving — read: いぬ (inu) — a dog]
+[once you have stopped driving — read: ぬの (nuno) — cloth]
+[once you have stopped driving — read: へや (heya) — a room]
 Each of these words holds one of the four signs this chapter wrote. They were the last four basic hiragana the book had not yet written.
 
 Guided Practice — write.

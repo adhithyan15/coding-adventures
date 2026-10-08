@@ -1098,7 +1098,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ありがとう (arigatou) (arigatō) — name each sign before you say the word",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: ありがとう — name each sign before you say the word]"

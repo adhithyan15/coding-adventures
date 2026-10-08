@@ -662,7 +662,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ನಾಲ್ಕನೆಯ (nālkaneya) and find the ಲ್ಕ stack still in place",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ನಾಲ್ಕನೆಯ and find the ಲ್ಕ stack still in place]"

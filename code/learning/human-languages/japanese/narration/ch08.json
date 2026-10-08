@@ -194,7 +194,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "よ (yo), once beside the model",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: **よ**, once beside the model]"
@@ -268,9 +268,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script — one sign"
+          "Script — one sign",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one sign until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — one sign and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -314,7 +315,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "な (na), with the model visible",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: **な**, with the model visible]"
@@ -323,7 +324,7 @@
               "kind": "prompt",
               "action": "CHECK",
               "instruction": "compact left side; open right side",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU CHECK: compact left side; open right side]"

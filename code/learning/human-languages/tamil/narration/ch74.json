@@ -447,7 +447,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "பா — then லு — then ம்",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **பா** — then **லு** — then **ம்**]"
@@ -456,7 +456,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "பாலும் (pālum) தேநீரும்",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **பாலும் தேநீரும்**]"

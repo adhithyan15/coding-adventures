@@ -293,7 +293,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at क and at कृ, and say what the hook changed",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at क and at कृ, and say what the hook changed]"
@@ -494,7 +494,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find अ in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find अ in the ones that have it]"
@@ -516,7 +516,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find अ once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find अ once more]"
@@ -671,7 +671,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ◌े in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ◌े in the ones that have it]"
@@ -693,7 +693,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌े once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌े once more]"

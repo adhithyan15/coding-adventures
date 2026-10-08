@@ -31,9 +31,10 @@
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
-          "Script you'll notice: the full stop and the comma"
+          "Script you'll notice: the full stop and the comma",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script you'll notice: the full stop and the comma until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: the full stop and the comma and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -128,7 +129,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at the two lines above and find the mark that ends each one",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at the two lines above and find the mark that ends each one]"
@@ -150,7 +151,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this book and find a full stop on it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this book and find a full stop on it]"
@@ -366,9 +367,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script you'll notice: the colon, the brackets, the quotes and the dash"
+          "Script you'll notice: the colon, the brackets, the quotes and the dash",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script you'll notice: the colon, the brackets, the quotes and the dash until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: the colon, the brackets, the quotes and the dash and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -485,7 +487,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at any printed page and find two of the four",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at any printed page and find two of the four]"
@@ -531,9 +533,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script: the whole set, sorted by what it asks of you"
+          "Script: the whole set, sorted by what it asks of you",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script: the whole set, sorted by what it asks of you until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script: the whole set, sorted by what it asks of you and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -622,7 +625,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at the reading passage in the chapter before this one and name every mark in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at the reading passage in the chapter before this one and name every mark in it]"

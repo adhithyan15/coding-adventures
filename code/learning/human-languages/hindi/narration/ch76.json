@@ -367,7 +367,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "स्टेशन (sṭeshan), and find the ् that stacks the first two letters",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: स्टेशन, and find the ् that stacks the first two letters]"

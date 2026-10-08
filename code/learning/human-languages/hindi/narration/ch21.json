@@ -171,7 +171,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at च and छ (chha) side by side, and say which one carries the puff",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at च and छ side by side, and say which one carries the puff]"

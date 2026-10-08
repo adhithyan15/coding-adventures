@@ -109,7 +109,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "কেমন",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: কেমন]"
@@ -234,7 +234,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "আবার (ābār)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: আবার]"
@@ -243,7 +243,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "আবার (ābār) আমার",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: আবার আমার]"
@@ -391,7 +391,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "আবার (ābār)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: আবার]"
@@ -514,7 +514,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ভালো (bhālo)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: ভালো]"
@@ -523,7 +523,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "আবার (ābār) আমার",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: আবার আমার]"
@@ -677,7 +677,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ভালো (bhālo)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: ভালো]"
@@ -834,7 +834,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "লাগলো",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: লাগলো]"
@@ -843,7 +843,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ভালো (bhālo)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: ভালো]"

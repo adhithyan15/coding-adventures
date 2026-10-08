@@ -283,6 +283,8 @@ export {
 export {
   PROMPT_RESPONSE_SECONDS,
   MANUAL_CUE_ACTIONS,
+  SPOKEN_CUE_ACTIONS,
+  isManualCueAction,
   parseNarrationCue,
   splitNarrationCues,
   pairRomanization,

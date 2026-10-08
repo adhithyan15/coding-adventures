@@ -58,7 +58,7 @@ lesson writes it.
 [PAUSE 1s]
 - [YOU SAY: *inu*]
 - [YOU SAY: *inu*, clapping two beats]
-- [YOU RECALL: point to the sign in **いぬ** you cannot write yet, and say which sign it looks like]
+- [YOU RECALL: name the sign in **いぬ** you cannot write yet, and say which sign it looks like]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-INU] -->

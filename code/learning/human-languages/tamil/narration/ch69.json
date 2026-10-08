@@ -364,7 +364,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "வ — then ண் — then டி",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **வ** — then **ண்** — then **டி**]"
@@ -382,7 +382,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "சட்டை, then வண்டி (vaṇḍi) — the same dot, two different jobs",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **சட்டை**, then **வண்டி** — the same dot, two different jobs]"

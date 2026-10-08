@@ -426,9 +426,10 @@
         ],
         "waitUntilStopped": [
           "Script you'll notice: ஊ",
-          "Script you'll notice: build the word"
+          "Script you'll notice: build the word",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஊ and Script you'll notice: build the word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ஊ, Script you'll notice: build the word and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -520,7 +521,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ஊ — then ஊர் (ūr)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ஊ** — then **ஊர்**]"
@@ -547,7 +548,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "உணவு and ஊர் (ūr) together — the pair, side by side",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **உணவு** and **ஊர்** together — the pair, side by side]"

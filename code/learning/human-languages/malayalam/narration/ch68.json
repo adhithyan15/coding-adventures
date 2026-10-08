@@ -274,7 +274,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at ഏഴാം and find the ഴ",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at ഏഴാം and find the ഴ]"
@@ -417,7 +417,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at എട്ടാം (eṭṭāṁ) and find the doubled ട്ട still in place",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at എട്ടാം and find the doubled ട്ട still in place]"

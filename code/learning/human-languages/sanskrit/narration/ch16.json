@@ -411,7 +411,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ण (ṇa) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ण in it]"
@@ -433,7 +433,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ण (ṇa) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ण once more]"
@@ -866,7 +866,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ग (ga) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ग in it]"
@@ -888,7 +888,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ग (ga) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ग once more]"
@@ -1313,7 +1313,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ज (ja) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ज in it]"
@@ -1335,7 +1335,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ज (ja) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ज once more]"

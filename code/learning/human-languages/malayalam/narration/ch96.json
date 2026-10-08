@@ -157,7 +157,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at സുഖമാണ് and എളുപ്പമാണ്, and find the part that is the same",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **സുഖമാണ്** and **എളുപ്പമാണ്**, and find the part that is the same]"

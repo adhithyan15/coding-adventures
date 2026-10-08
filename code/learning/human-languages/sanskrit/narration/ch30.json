@@ -814,7 +814,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "इदानीम् — name the letter it opens on, and say why it is full-size rather than a small sign",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **इदानीम्** — name the letter it opens on, and say why it is full-size rather than a small sign]"

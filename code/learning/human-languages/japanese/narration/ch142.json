@@ -118,7 +118,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "くるまに ちゅうい (chūi) — and say what it asks you to do",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **くるまに ちゅうい** — and say what it asks you to do]"
@@ -276,7 +276,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ここで たばこを すわないで ください — and say what it asks",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ここで たばこを すわないで ください** — and say what it asks]"
@@ -442,7 +442,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "うけつけで なまえを かいて ください — and say what you do first",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **うけつけで なまえを かいて ください** — and say what you do first]"
@@ -603,7 +603,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "えいぎょうちゅう (eigyōchū) on a door — and say whether you can go in",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **えいぎょうちゅう** on a door — and say whether you can go in]"
@@ -770,7 +770,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "じゅんびちゅう (junbichū) on a door — and say what you do",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **じゅんびちゅう** on a door — and say what you do]"
@@ -1076,7 +1076,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ちゅうい (chūi), きんえん (kin'en), うけつけ (uketsuke), えいぎょうちゅう (eigyōchū), じゅんびちゅう (junbichū) — and say what each sign asks of you",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ちゅうい**, **きんえん**, **うけつけ**, **えいぎょうちゅう**, **じゅんびちゅう** — and say what each sign asks of you]"

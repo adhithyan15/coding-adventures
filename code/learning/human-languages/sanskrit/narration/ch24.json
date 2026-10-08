@@ -568,7 +568,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ओ (o) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ओ in it]"
@@ -590,7 +590,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ओ once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ओ once more]"
@@ -1010,7 +1010,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find फ (pha) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find फ in it]"
@@ -1032,7 +1032,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find फ (pha) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find फ once more]"

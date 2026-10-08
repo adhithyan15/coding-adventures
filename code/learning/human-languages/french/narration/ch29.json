@@ -510,7 +510,7 @@
               "kind": "prompt",
               "action": "READ ALOUD",
               "instruction": "\"le chien, le chat\"",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ ALOUD, gathering the words one by one: \"le chien, le chat\"]",

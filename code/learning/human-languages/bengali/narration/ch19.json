@@ -103,7 +103,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "পরিবার (pôribār)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: পরিবার]"
@@ -112,7 +112,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "চা",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: চা]"
@@ -244,7 +244,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ভাই (bhāi)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: ভাই]"
@@ -253,7 +253,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "পরিবার (pôribār) ভালো ভাই (bhāi)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: পরিবার ভালো ভাই]"

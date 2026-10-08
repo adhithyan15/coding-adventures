@@ -135,7 +135,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at இல்லை and point at இ inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **இல்லை** and point at இ inside it]"
@@ -162,7 +162,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "இல்லை aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **இல்லை** aloud once more]"
@@ -291,7 +291,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at இல்லை and point at ◌ை (ai) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **இல்லை** and point at ◌ை inside it]"
@@ -318,7 +318,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "இல்லை aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **இல்லை** aloud once more]"
@@ -445,7 +445,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at நமஸ்காரம் and point at ஸ (sa) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **நமஸ்காரம்** and point at ஸ inside it]"
@@ -472,7 +472,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "நமஸ்காரம் aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **நமஸ்காரம்** aloud once more]"

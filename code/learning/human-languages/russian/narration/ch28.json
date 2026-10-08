@@ -123,7 +123,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at я (ya) and point at я (ya) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **я** and point at я inside it]"
@@ -150,7 +150,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "я (ya) aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **я** aloud once more]"
@@ -264,7 +264,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "each word in the table aloud, and point at its letter",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: each word in the table aloud, and point at its letter]"

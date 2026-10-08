@@ -345,7 +345,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "each aloud as the full word",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: each aloud as the full word]"

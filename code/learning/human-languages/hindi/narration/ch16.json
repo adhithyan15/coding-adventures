@@ -257,7 +257,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ◌ु (u) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ◌ु in the ones that have it]"
@@ -279,7 +279,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page and find ◌ु (u) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page and find ◌ु once more]"
@@ -452,7 +452,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two words and find the dot above the line",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two words and find the dot above the line]"

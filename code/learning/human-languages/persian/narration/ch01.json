@@ -831,7 +831,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "ا (alef) once beside the visible model, top to bottom",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: **ا** once beside the visible model, top to bottom]"

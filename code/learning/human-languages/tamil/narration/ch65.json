@@ -319,9 +319,10 @@
         ],
         "waitUntilStopped": [
           "Script you'll notice: nothing new",
-          "Script you'll notice: the letter you can hear moving"
+          "Script you'll notice: the letter you can hear moving",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: nothing new and Script you'll notice: the letter you can hear moving until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: nothing new, Script you'll notice: the letter you can hear moving and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -400,7 +401,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "கு — then டி — then குடி (kuḍi)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **கு** — then **டி** — then **குடி**]"
@@ -859,7 +860,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "குடி (kuḍi) — the one word of the five you have spelled out",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **குடி** — the one word of the five you have spelled out]"
@@ -1074,7 +1075,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "குடி (kuḍi), then say what goes in front of it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **குடி**, then say what goes in front of it]"

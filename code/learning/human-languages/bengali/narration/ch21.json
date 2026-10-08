@@ -93,7 +93,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "চোখ (chokh)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: চোখ]"
@@ -235,7 +235,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "নাক (nāk)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: নাক]"
@@ -244,7 +244,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "চোখ (chokh) নাক (nāk)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: চোখ নাক]"
@@ -386,7 +386,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "মুখ (mukh)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: মুখ]"
@@ -395,7 +395,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ভালো",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: ভালো]"
@@ -548,7 +548,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "নাক (nāk)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: নাক]"
@@ -679,7 +679,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "হৃদয় (hridoy)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: হৃদয়]"
@@ -688,7 +688,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "চোখ (chokh) নাক (nāk) মুখ (mukh) হৃদয় (hridoy)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: চোখ নাক মুখ হৃদয়]"

@@ -1005,7 +1005,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "口 (kǒu) 日 (rì) 不 (bù) — name each one, then say what it means",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 口 日 不 — name each one, then say what it means]"

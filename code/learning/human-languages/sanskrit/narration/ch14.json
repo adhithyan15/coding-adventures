@@ -241,7 +241,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ट (ṭa) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ट in it]"
@@ -263,7 +263,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ट (ṭa) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ट once more]"
@@ -656,7 +656,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ल (la) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ल in it]"
@@ -678,7 +678,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ल (la) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ल once more]"
@@ -1029,7 +1029,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find ◌ो (o) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find ◌ो in it]"
@@ -1051,7 +1051,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ◌ो once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ◌ो once more]"
@@ -1461,7 +1461,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find थ (tha) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find थ in it]"
@@ -1483,7 +1483,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find थ (tha) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find थ once more]"

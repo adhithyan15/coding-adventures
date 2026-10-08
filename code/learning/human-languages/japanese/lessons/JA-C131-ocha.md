@@ -58,7 +58,7 @@ lesson takes that small sign and writes it on its own.
 [PAUSE 1s]
 - [YOU SAY: *ocha*]
 - [YOU SAY: *ocha*, clapping once per beat — two claps]
-- [YOU RECALL: point to the sign in **おちゃ** you can already write, and the one you cannot]
+- [YOU RECALL: name the sign in **おちゃ** you can already write, and the one you cannot]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-OCHA] -->

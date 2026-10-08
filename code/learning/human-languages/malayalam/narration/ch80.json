@@ -750,7 +750,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ഗ — name the letter, cold",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ഗ** — name the letter, cold]"

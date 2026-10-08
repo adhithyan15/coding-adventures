@@ -268,7 +268,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these words, and find ச (ca) in the ones that have it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these words, and find ச in the ones that have it]"
@@ -290,7 +290,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find ச (ca) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find ச once more]"

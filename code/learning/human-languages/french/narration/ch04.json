@@ -1448,7 +1448,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at a word with a hat and say the English word that kept the s",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at a word with a hat and say the English word that kept the *s*]"

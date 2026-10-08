@@ -514,7 +514,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "اسمِ من... است — the very first sentence this track built",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **اسمِ من ... است** — the very first sentence this track built]"
@@ -523,7 +523,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "شما against تو — the register this track built next",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **شما** against **تو** — the register this track built next]"
@@ -532,7 +532,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "حال شما چطور است؟ — the careful question that followed",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **حال شما چطور است؟** — the careful question that followed]"
@@ -568,7 +568,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "خداحافظ, and recall what it leaves unsaid — no verb, just the two halves an earlier lesson joined",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **خداحافظ**, and recall what it leaves unsaid — no verb, just the two halves an earlier lesson joined]"

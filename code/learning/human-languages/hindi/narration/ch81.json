@@ -97,7 +97,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "खुला (khulā), as though it were painted on a shutter",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **खुला** (*khulā*), as though it were painted on a shutter]"
@@ -255,7 +255,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "बंद (band), and check that it is not बंदर",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: बंद, and check that it is not बंदर]"
@@ -385,7 +385,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "प्रवेश (pravesh), and find the stacked प्र",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: प्रवेश, and find the stacked प्र]"

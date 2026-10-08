@@ -124,7 +124,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "देश (desh), then say what it means",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: देश, then say what it means]"

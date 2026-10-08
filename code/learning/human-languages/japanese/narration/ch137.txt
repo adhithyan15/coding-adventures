@@ -23,7 +23,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: ippai, clapping four beats]
 [pause 8 seconds for the answer]
-[your turn — recall: point to the sign in いっぱい (ippai) that carries the small circle, and name the sign under it]
+[your turn — recall: say which sign in いっぱい (ippai) carries the small circle, and name the sign under it]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -124,7 +124,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: enpitsu, clapping four beats]
 [pause 8 seconds for the answer]
-[your turn — recall: point to the sign in えんぴつ (enpitsu) that carries the small circle, and name the sign under it]
+[your turn — recall: say which sign in えんぴつ (enpitsu) carries the small circle, and name the sign under it]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -223,7 +223,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: kippu, clapping three beats]
 [pause 8 seconds for the answer]
-[your turn — recall: point to the sign in きっぷ (kippu) that carries the small circle, and name the sign under it]
+[your turn — recall: say which sign in きっぷ (kippu) carries the small circle, and name the sign under it]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -324,7 +324,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: perapera, clapping four beats]
 [pause 8 seconds for the answer]
-[your turn — recall: point to the sign in ぺらぺら (perapera) that carries the small circle, and name the sign under it]
+[your turn — recall: say which sign in ぺらぺら (perapera) carries the small circle, and name the sign under it]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -384,20 +384,13 @@ Four recalls, then the review.
 Guided Practice — read the seven words.
 [pause 2 seconds after each]
 Read each one aloud and say what it means.
-[your turn — read: いっぱい (ippai) — full; a lot]
-[pause 8 seconds for the answer]
-[your turn — read: しんぱい (shinpai) — worry]
-[pause 8 seconds for the answer]
-[your turn — read: えんぴつ (enpitsu) — a pencil]
-[pause 8 seconds for the answer]
-[your turn — read: いっぴき (ippiki) — one small animal]
-[pause 8 seconds for the answer]
-[your turn — read: きっぷ (kippu) — a ticket]
-[pause 8 seconds for the answer]
-[your turn — read: てんぷら (tenpura) — tempura]
-[pause 8 seconds for the answer]
-[your turn — read: ぺらぺら (perapera) — fluent]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: いっぱい (ippai) — full; a lot]
+[once you have stopped driving — read: しんぱい (shinpai) — worry]
+[once you have stopped driving — read: えんぴつ (enpitsu) — a pencil]
+[once you have stopped driving — read: いっぴき (ippiki) — one small animal]
+[once you have stopped driving — read: きっぷ (kippu) — a ticket]
+[once you have stopped driving — read: てんぷら (tenpura) — tempura]
+[once you have stopped driving — read: ぺらぺら (perapera) — fluent]
 Each of these words holds one of the four signs this chapter wrote. With them, and ぽ from chapter 18, the book writes every sign of the p row, ぱ (pa) ぴ (pi) ぷ (pu) ぺ (pe) ぽ.
 
 Guided Practice — write.

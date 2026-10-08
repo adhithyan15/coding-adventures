@@ -415,7 +415,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find इ in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find इ in it]"
@@ -437,7 +437,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find इ once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find इ once more]"

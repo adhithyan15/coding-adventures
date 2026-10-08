@@ -123,7 +123,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at پرسیدن and point at پ (pe) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **پرسیدن** and point at پ inside it]"
@@ -150,7 +150,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "پرسیدن aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **پرسیدن** aloud once more]"
@@ -285,7 +285,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at چیست and point at ی (ye) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **چیست** and point at ی inside it]"
@@ -312,7 +312,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "چیست aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **چیست** aloud once more]"
@@ -451,7 +451,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at فکر کردن and point at ک (kâf) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **فکر کردن** and point at ک inside it]"
@@ -478,7 +478,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "فکر کردن aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **فکر کردن** aloud once more]"
@@ -621,7 +621,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at گفتن and point at گ (gâf) inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at **گفتن** and point at گ inside it]"
@@ -648,7 +648,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "گفتن aloud once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **گفتن** aloud once more]"

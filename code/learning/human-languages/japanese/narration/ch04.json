@@ -825,7 +825,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ありがとうございます (arigatou gozaimasu) (arigatō gozaimasu) — name each of the ten signs, then say it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: ありがとうございます — name each of the ten signs, then say it]"

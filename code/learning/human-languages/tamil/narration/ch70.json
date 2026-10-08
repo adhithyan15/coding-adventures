@@ -369,7 +369,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "மே — then சை — then மேசை (mēsai)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **மே** — then **சை** — then **மேசை**]"
@@ -387,7 +387,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "மேலே, then மேசை (mēsai), and find the sign they share",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **மேலே**, then **மேசை**, and find the sign they share]"

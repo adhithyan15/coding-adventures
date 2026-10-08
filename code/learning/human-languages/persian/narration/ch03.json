@@ -334,7 +334,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "چیست (chist) from چ to ت",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **چیست** from **چ** to **ت**]"

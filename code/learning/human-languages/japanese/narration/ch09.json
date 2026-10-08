@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "One More Time, Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:af712f329f2c6aab",
+  "sourceHash": "fnv1a64:4d3f6e68c2354947",
   "lessons": [
     {
       "id": "JA-C09-sumimasen",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a983ed985856339",
+      "sourceHash": "fnv1a64:63f3b94d93c960c1",
       "notice": null,
       "blocks": [
         {
@@ -79,11 +79,11 @@
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "sumimasen becomes point to repair, not farewell",
+              "instruction": "sumimasen becomes choose repair, not farewell",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *sumimasen* → point to **repair**, not **farewell**]"
+              "source": "[YOU HEAR: *sumimasen* → choose **repair**, not **farewell**]"
             },
             {
               "kind": "prompt",
@@ -285,9 +285,10 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script — the shape"
+          "Script — the shape",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -331,7 +332,7 @@
               "kind": "prompt",
               "action": "COPY",
               "instruction": "め (me) once with the model visible",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU COPY: **め** once with the model visible]"
@@ -340,7 +341,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "point to み, then め and say mi, me",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: point to **み**, then **め** and say *mi, me*]"
@@ -349,7 +350,7 @@
               "kind": "prompt",
               "action": "FIND",
               "instruction": "circle め (me) inside すみません (sumimasen)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU FIND: circle **め** inside **すみません**]"

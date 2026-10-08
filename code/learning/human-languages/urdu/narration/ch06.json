@@ -111,7 +111,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ہونا (honā) from the right edge",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ہونا** from the right edge]"
@@ -308,7 +308,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ہیں — and say why it ends on a hum rather than an n",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: ہیں — and say why it ends on a hum rather than an n]"
@@ -614,7 +614,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "آنا (ānā), starting from alif madd",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **آنا**, starting from *alif madd*]"
@@ -817,7 +817,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "کیسے — and point at the small ye and the big ye in turn",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: کیسے — and point at the small ye and the big ye in turn]"

@@ -729,7 +729,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "स, and name the vowel inside it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **स**, and name the vowel inside it]"
@@ -848,7 +848,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "स, and name it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **स**, and name it]"

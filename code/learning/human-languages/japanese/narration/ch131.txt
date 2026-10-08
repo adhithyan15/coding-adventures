@@ -24,7 +24,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: ocha, clapping once per beat — two claps]
 [pause 8 seconds for the answer]
-[your turn — recall: point to the sign in おちゃ (ocha) you can already write, and the one you cannot]
+[your turn — recall: name the sign in おちゃ (ocha) you can already write, and the one you cannot]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -131,7 +131,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: chotto, clapping three beats — the middle clap is silent]
 [pause 8 seconds for the answer]
-[your turn — recall: point to the two small signs in ちょっと (chotto) and say which one holds and which one joins]
+[your turn — recall: name the two small signs in ちょっと (chotto) and say which one holds and which one joins]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -305,14 +305,10 @@ Then say a little — R2, five lessons back.
 Guided Practice — read the four words.
 [pause 2 seconds after each]
 Read each one aloud, clap its beats, and say what it means.
-[your turn — read: おちゃ (ocha) — two beats]
-[pause 8 seconds for the answer]
-[your turn — read: いしゃ (isha) — two beats]
-[pause 8 seconds for the answer]
-[your turn — read: ちょっと (chotto) — three beats]
-[pause 8 seconds for the answer]
-[your turn — read: としょかん (toshokan) — four beats]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: おちゃ (ocha) — two beats]
+[once you have stopped driving — read: いしゃ (isha) — two beats]
+[once you have stopped driving — read: ちょっと (chotto) — three beats]
+[once you have stopped driving — read: としょかん (toshokan) — four beats]
 Every small sign that joins forward folds two signs into one beat. The small っ is the only small sign here that takes a beat of its own.
 
 Guided Practice — write the request.

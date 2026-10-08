@@ -478,7 +478,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "再见 (zàijiàn) — give its literal reading before its translation",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: 再见 — give its literal reading before its translation]"

@@ -507,7 +507,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at these two, and say which one has థ (tha) and which has త",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at these two, and say which one has థ and which has త]"

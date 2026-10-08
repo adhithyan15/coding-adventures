@@ -25,8 +25,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: chūi]
 [pause 8 seconds for the answer]
-[your turn — read: くるまに ちゅうい (chūi) — and say what it asks you to do]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: くるまに ちゅうい (chūi) — and say what it asks you to do]
 [your turn — recall: say a car, then read watch out for cars aloud]
 [pause 8 seconds for the answer]
 
@@ -59,8 +58,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: kin'en]
 [pause 8 seconds for the answer]
-[your turn — read: ここで たばこを すわないで ください — and say what it asks]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: ここで たばこを すわないで ください — and say what it asks]
 [your turn — recall: read caution, then no smoking, as they appear on signs]
 [pause 8 seconds for the answer]
 
@@ -95,8 +93,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: uketsuke]
 [pause 8 seconds for the answer]
-[your turn — read: うけつけで なまえを かいて ください — and say what you do first]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: うけつけで なまえを かいて ください — and say what you do first]
 [your turn — recall: say a hospital, then where you go first inside it]
 [pause 8 seconds for the answer]
 
@@ -129,8 +126,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: eigyōchū]
 [pause 8 seconds for the answer]
-[your turn — read: えいぎょうちゅう (eigyōchū) on a door — and say whether you can go in]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: えいぎょうちゅう (eigyōchū) on a door — and say whether you can go in]
 [your turn — recall: read reception, then open]
 [pause 8 seconds for the answer]
 
@@ -165,8 +161,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: junbichū]
 [pause 8 seconds for the answer]
-[your turn — read: じゅんびちゅう (junbichū) on a door — and say what you do]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: じゅんびちゅう (junbichū) on a door — and say what you do]
 [your turn — recall: read open, then not yet open, and say which one lets you in]
 [pause 8 seconds for the answer]
 
@@ -229,8 +224,7 @@ Guided Practice.
 Say each one in Japanese.
 [your turn — say: next week, next month, next year, a plan, probably]
 [pause 8 seconds for the answer]
-[your turn — read: ちゅうい (chūi), きんえん (kin'en), うけつけ (uketsuke), えいぎょうちゅう (eigyōchū), じゅんびちゅう (junbichū) — and say what each sign asks of you]
-[pause 8 seconds for the answer]
+[once you have stopped driving — read: ちゅうい (chūi), きんえん (kin'en), うけつけ (uketsuke), えいぎょうちゅう (eigyōchū), じゅんびちゅう (junbichū) — and say what each sign asks of you]
 Then read this notice on a clinic door, and say what you do:
 じゅんびちゅう (junbichū) うけつけで なまえを かいて ください。 きんえん (kin'en).
 (It is not open yet; when it opens, write your name at reception; do not smoke.) Last, say one plan for next year with つもり.

@@ -56,7 +56,7 @@ not yet settled. Keep the practical job first.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SUMIMASEN] -->
 
-- [YOU HEAR: *sumimasen* → point to **repair**, not **farewell**]
+- [YOU HEAR: *sumimasen* → choose **repair**, not **farewell**]
 - [YOU SAY: *su | mi | ma | se | n*] [REPEAT x2]
 - [YOU CHOOSE: you missed a word → **すみません**]
 

@@ -101,7 +101,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "নাম (nām)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: নাম]"
@@ -110,7 +110,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "নাক",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: নাক]"
@@ -256,7 +256,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "নাম (nām)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: নাম]"
@@ -494,7 +494,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "নাম (nām)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: নাম]"
@@ -627,7 +627,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "নাম (nām)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: নাম]"
@@ -764,7 +764,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "নাম (nām)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: নাম]"
@@ -883,7 +883,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "তুমি (tumi)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: তুমি]"
@@ -1331,7 +1331,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "হ্যাঁ (hyã)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: হ্যাঁ]"
@@ -1340,7 +1340,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "না",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: না]"
@@ -1349,7 +1349,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "নাম (nām)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: নাম]"
@@ -1358,7 +1358,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "তুমি (tumi)",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: তুমি]"
@@ -1367,7 +1367,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "নমস্কার",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: নমস্কার]"

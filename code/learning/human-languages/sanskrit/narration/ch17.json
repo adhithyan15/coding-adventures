@@ -413,7 +413,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find श (śa) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find श in it]"
@@ -435,7 +435,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find श (śa) once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find श once more]"
@@ -858,7 +858,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "at this, and find छ (cha) in it",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: at this, and find छ in it]"
@@ -880,7 +880,7 @@
               "kind": "prompt",
               "action": "LOOK",
               "instruction": "back at any page of this chapter and find छ once more",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU LOOK: back at any page of this chapter and find छ once more]"

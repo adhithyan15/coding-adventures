@@ -132,7 +132,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "ک in کردن, then گ in گفتن — one bar apart",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **ک** in **کردن**, then **گ** in **گفتن** — one bar apart]"
@@ -344,7 +344,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "the ی inside فهمیدن (fahmidan), the letter you first met in چیست",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: the **ی** inside **فهمیدن**, the letter you first met in **چیست**]"
@@ -515,7 +515,7 @@
               "kind": "prompt",
               "action": "READ",
               "instruction": "خواندن (khândan), sounding the خ and skipping the و",
-              "spoken": true,
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: **خواندن**, sounding the **خ** and skipping the **و**]"
