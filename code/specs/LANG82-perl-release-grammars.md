@@ -355,3 +355,15 @@ none widens the bounded plain-decimal `print` arithmetic subset. The
 decimal scan bound. Accept 250 digits, reject 251, leading-zero forms,
 adjacent decrement, carriage returns, and unsupported characters. Keep
 release-specific files and do not claim complete Perl syntax.
+
+Add a separate, explicitly partial `5.004_54` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_54.tar.gz`
+source archive, SHA-256
+`77f8b07832e8e99f53d9c18be133d7d63e4417f4370a2bf25a82ca6102a84c8d`.
+Its `perly.y` changes an action function prototype. Most `toke.c` changes
+convert K&R signatures to ANSI prototypes; its thread-magical handling and
+interpolation changes are outside plain-decimal arithmetic `print`. The
+`scan_num` body remains byte-identical to `5.004_53`, including its 250-digit
+bound. Keep the separate pair partial, accepting 250 digits and rejecting
+251, leading-zero literals, adjacent decrement, carriage returns, and other
+unsupported syntax.
