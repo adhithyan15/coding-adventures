@@ -31,7 +31,10 @@ void main() {
       expect(Point.origin().distanceSquared(threeFour), 25);
       expect(Point.origin().distance(threeFour), closeTo(5, 1e-12));
       expect(Point.origin().lerp(const Point(10, 10), 0.5), const Point(5, 5));
-      expect(Point.origin().lerp(const Point(10, 10), -0.5), const Point(-5, -5));
+      expect(
+        Point.origin().lerp(const Point(10, 10), -0.5),
+        const Point(-5, -5),
+      );
       expect(right.perpendicular(), up);
       expect(right.perpendicular().perpendicular(), right.negate());
       expect(right.angle(), closeTo(0, 1e-10));
@@ -70,9 +73,13 @@ void main() {
   });
 
   test('consumes all four checked point-normalize fixtures only', () {
-    final corpus = jsonDecode(
-      File('../../../specs/fixtures/geometry2d-v1/cases.json').readAsStringSync(),
-    ) as Map<String, dynamic>;
+    final corpus =
+        jsonDecode(
+              File(
+                '../../../specs/fixtures/geometry2d-v1/cases.json',
+              ).readAsStringSync(),
+            )
+            as Map<String, dynamic>;
     expect(corpus['version'], 1);
     expect(corpus['absolute_tolerance'], 1e-12);
     final seen = <String>{};
@@ -83,7 +90,10 @@ void main() {
       expect(seen.add(id), isTrue, reason: 'duplicate fixture $id');
       final input = fixture['point'] as List<dynamic>;
       final expected = fixture['expected'] as List<dynamic>;
-      final actual = Point((input[0] as num).toDouble(), (input[1] as num).toDouble()).normalize();
+      final actual = Point(
+        (input[0] as num).toDouble(),
+        (input[1] as num).toDouble(),
+      ).normalize();
       final x = (expected[0] as num).toDouble();
       final y = (expected[1] as num).toDouble();
       switch (fixture['comparison']) {
