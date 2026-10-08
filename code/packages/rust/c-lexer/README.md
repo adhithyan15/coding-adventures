@@ -11,8 +11,9 @@ Implements the lexical part of
 ## API
 
 ```rust
-use coding_adventures_c_lexer::{tokenize_c, try_tokenize_c, create_c_lexer};
+use coding_adventures_c_lexer::{tokenize_c, try_tokenize_c, create_c_lexer, is_c_keyword};
 let tokens = tokenize_c("int32_t x = 5;");
+assert!(is_c_keyword("int32_t"));
 ```
 
 ## Subset notes

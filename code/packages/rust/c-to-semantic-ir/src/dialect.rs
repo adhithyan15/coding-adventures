@@ -4,7 +4,7 @@
 //! Its condition evaluator remains bounded. Single raw-token `#` stringize
 //! and identifier-prefix `##` paste subsets are supported.
 
-use coding_adventures_c_lexer::try_tokenize_c;
+use coding_adventures_c_lexer::{is_c_keyword, try_tokenize_c};
 use coding_adventures_source_preprocessor::{
     macros::MacroTable, Bounds, Dialect, Directive, FileId, IncludeRequest, PpError,
 };
@@ -375,15 +375,9 @@ impl Dialect for CDialect {
             return None;
         }
         let spelling = format!("{}{}", left.value, right.value);
-        // C keywords also match the identifier character pattern. Admit only
-        // spellings that the actual C lexer classifies as one NAME token.
-        let lexed = try_tokenize_c(&spelling).ok()?;
-        if !matches!(lexed.as_slice(), [name, eof]
-            if name.type_ == TokenType::Name
-                && name.effective_type_name() == "NAME"
-                && name.value == spelling
-                && eof.type_ == TokenType::Eof)
-        {
+        // Both operands are ASCII names, so their concatenation is a name
+        // unless the compiled C grammar classifies it as a keyword.
+        if is_c_keyword(&spelling) {
             return None;
         }
         let mut result = right.clone();

@@ -7,7 +7,8 @@
   retaining raw argument provenance and ordinary pre-expansion at other uses.
 - Reject unsupported paste shapes and arguments, including empty and
   multi-token arguments, and reject concatenations that the C lexer classifies
-  as keywords. Keep the output spelling bound.
+  as keywords through a cached grammar-derived lookup. Keep the output
+  spelling bound without rebuilding the lexer per paste.
 
 ## Unreleased — PREP01 bounded C stringize
 
