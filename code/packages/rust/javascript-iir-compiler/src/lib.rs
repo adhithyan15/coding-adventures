@@ -84,9 +84,14 @@ fn check_expression_budget(expr: &Expression, remaining: &mut usize) -> Result<(
                 pending.push((&binary.left, depth + 1));
             }
             Expression::CallExpression(call) => {
-                if let Some(argument) = call.arguments.first() {
+                for argument in call.arguments.iter().rev() {
                     pending.push((argument, depth + 1));
                 }
+                pending.push((&call.callee, depth + 1));
+            }
+            Expression::MemberExpression(member) => {
+                pending.push((&member.property, depth + 1));
+                pending.push((&member.object, depth + 1));
             }
             _ => {}
         }
@@ -335,6 +340,33 @@ mod tests {
         let error = run_source("console.log(7); console.log(1, 2, 3);").unwrap_err();
         assert!(error.output.is_empty());
         assert!(error.message.contains("requires"));
+    }
+
+    #[test]
+    fn direct_ast_budget_checks_the_second_console_argument() {
+        use coding_adventures_javascript_ast::expression::UnaryExpression;
+
+        let mut ast = parse_javascript_program("console.log(1, 2);", EsVersion::Es2020).unwrap();
+        let ProgramItem::Statement(Statement::Tagged(TaggedStatement::ExpressionStatement(stmt))) =
+            &mut ast.body[0]
+        else {
+            panic!("expected expression statement");
+        };
+        let Expression::CallExpression(call) = &mut stmt.expression else {
+            panic!("expected call expression");
+        };
+        let mut deep = call.arguments[1].clone();
+        for _ in 0..MAX_EXPRESSION_DEPTH {
+            deep = Expression::UnaryExpression(UnaryExpression {
+                cv: None,
+                operator: UnaryOperator::Negate,
+                prefix: true,
+                argument: Box::new(deep),
+            });
+        }
+        call.arguments[1] = deep;
+        let error = compile_ast(&ast, "forged-deep-second-argument").unwrap_err();
+        assert!(error.contains("depth limit"), "{error}");
     }
 
     #[test]
