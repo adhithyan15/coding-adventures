@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "PA-R169-date-b-again",
+    "language": "punjabi",
+    "chapter": 169,
+    "sequence": 9120,
+    "modality": "pen",
+    "derived": "sight",
+    "drivable": false,
+    "reasons": [
+      "sight-cue"
+    ],
+    "coreModality": "sight",
+    "coreReasons": [
+      "sight-cue"
+    ],
+    "coreDrivable": false,
+    "sourceHash": "fnv1a64:bfac2608d1dc2b3f",
+    "authored": "pen",
+    "authoredReason": "The learner must inspect and copy the printed Gurmukhi-digit date; this task is not drivable.",
+    "overridden": true
+  },
+  "findings": []
+}
