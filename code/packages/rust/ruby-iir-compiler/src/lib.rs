@@ -43,18 +43,32 @@ pub fn compile_ast(ast: &GrammarASTNode, module_name: &str) -> Result<IIRModule,
         let ASTNodeOrToken::Node(statement) = child else {
             return Err("unsupported Ruby program item".into());
         };
-        let call = only_node(statement, "method_call")?;
-        if call.children.len() != 4
-            || token_value(&call.children[0]) != Some("puts")
-            || token_value(&call.children[1]) != Some("(")
-            || token_value(&call.children[3]) != Some(")")
-        {
-            return Err("native Ruby pilot requires puts(one expression)".into());
-        }
-        let ASTNodeOrToken::Node(argument) = &call.children[2] else {
-            return Err("unsupported Ruby puts argument".into());
+        let [ASTNodeOrToken::Node(call)] = statement.children.as_slice() else {
+            return Err("unsupported Ruby statement shape".into());
         };
-        let expression = only_node(argument, "expression")?;
+        let expression = match call.rule_name.as_str() {
+            "method_call"
+                if call.children.len() == 4
+                    && token_value(&call.children[0]) == Some("puts")
+                    && token_value(&call.children[1]) == Some("(")
+                    && token_value(&call.children[3]) == Some(")") =>
+            {
+                let ASTNodeOrToken::Node(argument) = &call.children[2] else {
+                    return Err("unsupported Ruby puts argument".into());
+                };
+                only_node(argument, "expression")?
+            }
+            "method_call_no_paren" => {
+                let [callee, ASTNodeOrToken::Node(expression)] = call.children.as_slice() else {
+                    return Err("native Ruby pilot requires puts one expression".into());
+                };
+                if token_value(callee) != Some("puts") || expression.rule_name != "expression" {
+                    return Err("native Ruby pilot requires puts one expression".into());
+                }
+                expression
+            }
+            _ => return Err("native Ruby pilot requires puts one expression".into()),
+        };
         let compiled = compiler.compile_expression(expression)?;
         compiler.emit(
             "call_builtin",
@@ -393,6 +407,21 @@ mod tests {
         );
         assert_eq!(run_source("puts((1 + 2) * 3)").unwrap(), "9\n");
         assert_eq!(run_source("puts(7 / -2)").unwrap(), "-4\n");
+    }
+
+    #[test]
+    fn bare_puts_uses_the_same_integer_iir_path() {
+        assert_eq!(run_source("puts 1 + 2\nputs -7 / 2").unwrap(), "3\n-4\n");
+        let module = compile_source("puts 7 / 2", "bare").unwrap();
+        let builtin_calls = module.functions[0]
+            .instructions
+            .iter()
+            .filter(|instruction| instruction.op == "call_builtin")
+            .count();
+        assert_eq!(builtin_calls, 2, "division and puts both execute in IIR");
+        for source in ["puts 1, 2", "print 1", "puts 010", "puts 1 / 0"] {
+            assert!(run_source(source).is_err(), "{source}");
+        }
     }
 
     #[test]
