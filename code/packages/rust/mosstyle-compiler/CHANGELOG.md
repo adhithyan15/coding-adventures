@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 
+### Added — `PlatformValue`: mosstyle values are platform-neutral (X-4)
+
+- mosstyle describes every styling decision without platform vocabulary.
+  A value that starts with `{` is never CSS, and XAML reads it as a markup
+  extension. So a quoted `"{x:Bind Secret}"` or
+  `"{ThemeResource SystemAccentColor}"` in a `.msl` reached the generated
+  WinUI page as a live binding or resource lookup.
+- Such a value, after token resolution, in a base style or a state, is now
+  a compile error, `ErrorKind::PlatformValue`. Because it is checked after
+  token resolution, a manifest token palette cannot carry one either.
+- No `.msl` or manifest in the repo uses one. UI15 §8 rule 8 states the
+  principle.
+
 
 ### Fixed -- a style value could break out of its Lattice rule, and the comment saying it could not (#15222)
 

@@ -2169,7 +2169,9 @@ fn emit_visual_state_groups(groups: &[XamlVisualStateGroup], indent: usize) -> S
                 out,
                 "{pad4}    <Setter Target=\"{}\" Value=\"{}\"/>",
                 target,
-                escape_xaml_markup_attr(&state.value)
+                // A style value, so literal text (X-4); only the trigger
+                // above is markup the emitter built.
+                escape_xaml_attr(&state.value)
             )
             .unwrap();
             writeln!(out, "{pad4}</VisualState.Setters>").unwrap();
@@ -2483,9 +2485,10 @@ fn build_style_fragment_with_drops(
     let fragment = parts
         .into_iter()
         .map(|(key, value)| {
-            // Style values: `translate_xaml_value` passes markup
-            // extensions through on purpose, so they stay extensions.
-            let escaped = escape_xaml_markup_attr(&value);
+            // Style values are platform-neutral (X-4): never markup, so the
+            // literal escape applies, and a leading `{` could only ever be
+            // text.
+            let escaped = escape_xaml_attr(&value);
             format!("{key}=\"{escaped}\"")
         })
         .collect::<Vec<_>>()
@@ -2695,10 +2698,13 @@ fn has_unsupported_length_unit(value: &str) -> bool {
 fn translate_xaml_value(key: &str, raw: &str) -> Option<String> {
     let trimmed = raw.trim();
 
-    // Markup extensions (`{x:Bind …}`, `{Binding …}`, `{StaticResource …}`)
-    // pass through untouched — they are not literal values.
+    // A value starting with `{` would be a XAML markup extension
+    // (`{x:Bind …}`, `{ThemeResource …}`). mosstyle is platform-neutral and
+    // its compiler refuses such a value (`ErrorKind::PlatformValue`); this
+    // emitter never trusts that alone. The property is dropped and reported,
+    // never passed through as markup.
     if trimmed.starts_with('{') {
-        return Some(raw.to_string());
+        return None;
     }
 
     // Color setters: hand off to the X4 PascalCasing pass. It returns
@@ -2915,10 +2921,10 @@ fn normalize_xaml_color_value(s: &str) -> Option<String> {
     ) {
         return None;
     }
-    // `{x:Bind …}` / `{Binding …}` markup extensions or any string with
-    // braces — keep verbatim.  These aren't color literals.
+    // A leading `{` is XAML markup, never a colour: refused, as in
+    // `translate_xaml_value`. mosstyle values are platform-neutral.
     if trimmed.starts_with('{') {
-        return Some(s.to_string());
+        return None;
     }
     // Already PascalCased (or starts with an uppercase letter)?  Treat
     // as XAML-native and pass through.
@@ -22645,10 +22651,9 @@ mod tests {
         }
         assert_eq!(translate_xaml_value("Width", "Auto"), Some("Auto".into()));
         assert_eq!(translate_xaml_value("Width", "120px"), Some("120".into()));
-        assert_eq!(
-            translate_xaml_value("Width", "{Binding Size}"),
-            Some("{Binding Size}".into())
-        );
+        // Platform markup from a style is never passed through (X-4).
+        assert_eq!(translate_xaml_value("Width", "{Binding Size}"), None);
+        assert_eq!(translate_xaml_value("Background", "{ThemeResource SystemAccentColor}"), None);
     }
 
     /// An unrecognised/typo'd property name falls through to the generic
@@ -23927,24 +23932,21 @@ mod tests {
         }
     }
 
-    /// X5: a `{x:Bind …}` binding value must pass through unmangled —
-    /// it is never px-stripped or case-mangled.
+    /// X-4 (was X5): a style value is never XAML markup. A `{x:Bind …}`
+    /// value used to pass through verbatim; mosstyle is platform-neutral,
+    /// so such a value is refused upstream (`PlatformValue`), and the
+    /// emitter drops and reports it rather than emitting a live binding.
     #[test]
-    fn x5_binding_value_passes_through_unmangled() {
-        // FontSize is a length setter; a binding must not be px-touched.
-        assert_eq!(
-            translate_xaml_value("FontSize", "{x:Bind CellFontSize}"),
-            Some("{x:Bind CellFontSize}".to_string())
-        );
-        // TextAlignment binding must not be PascalCase-mangled.
-        assert_eq!(
-            translate_xaml_value("TextAlignment", "{x:Bind Align}"),
-            Some("{x:Bind Align}".to_string())
-        );
+    fn x5_binding_value_from_a_style_is_dropped_not_passed_through() {
+        assert_eq!(translate_xaml_value("FontSize", "{x:Bind CellFontSize}"), None);
+        assert_eq!(translate_xaml_value("TextAlignment", "{x:Bind Align}"), None);
+        let frag = build_style_fragment(&[StyleProp {
+            name: "font-size".to_string(),
+            value: "{x:Bind Secret}".to_string(),
+        }]);
+        assert!(!frag.contains("x:Bind"), "got:\n{frag}");
     }
 
-    /// X5 unit: `strip_px_units` preserves the Thickness separator
-    /// (comma vs space) while removing each `px`.
     #[test]
     fn x5_strip_px_units_preserves_thickness_shape() {
         assert_eq!(strip_px_units("12px"), "12");
