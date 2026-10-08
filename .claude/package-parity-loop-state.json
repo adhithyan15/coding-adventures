@@ -11,34 +11,29 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 17136,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/17136",
-    "branch": "codex/parity-arc2d-java-kotlin-dart-20261008",
-    "item_id": "geometry-arc2d-java-kotlin-dart-lane-parity"
-  },
+  "active_pr": 17143,
   "last_ci_action": {
-    "observed_at": "2026-10-08T14:38:40Z",
-    "pr_number": 17136,
-    "status": "pr-open",
-    "notes": "Ready-for-review PR #17136 opened after native Java/Kotlin/Dart tests, exact 100% line coverage, neutral fixtures, build plans, collision inventory, diff, and security review. GitHub checks are not yet considered terminal; keep this as the only active parity PR and do not manually merge."
+    "observed_at": "2026-10-08T15:23:13Z",
+    "pr_number": 17143,
+    "status": "pending",
+    "notes": "Ready-for-review Go Arc2D center-form PR #17143 is open. GitHub reports MERGEABLE but initial CI and CodeQL checks are in progress; do not enable auto-merge before all required checks are terminal and acceptable."
   },
   "last_inventory": {
-    "revision": "8b9dbfc487fea50e8c2d2ad22c9385a0b4e02452",
+    "revision": "780fd6bb73e1e5727157d067dcd88d76c6f97e82",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1498,
-    "implementation_package_slots": 4777,
-    "all_reported_identities": 1540,
+    "implementation_identities": 1499,
+    "implementation_package_slots": 4781,
+    "all_reported_identities": 1541,
     "high_consensus_packages": 178,
-    "high_consensus_missing_slots": 253,
+    "high_consensus_missing_slots": 250,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 181,
     "two_to_four_missing_slots": 2282,
-    "singleton_packages": 1016,
-    "singleton_missing_slots": 14224,
-    "rust_singletons": 817,
+    "singleton_packages": 1017,
+    "singleton_missing_slots": 14238,
+    "rust_singletons": 818,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -12143,6 +12138,16 @@
       "notes": "Rust-only chief-of-staff-spawn-isolation is a concrete host-security/native-runtime package, excluded from portable parity selection and the all-language denominator. Separately review its shared unsafe pre_exec descriptor/session/close-on-exec behavior, capability manifest and platform evidence, including the documented Windows explicit HANDLE_LIST gap (D18S step 8). Existing chief-process-supervisor, chief-agent-stdio-host, and chief-host-runtime native reviews cover consumers, not this factored shared crate. Do not create cross-language ports or select this item in the parity loop."
     },
     {
+      "id": "chief-linux-sandbox-native-authority-review",
+      "title": "Review the new Chief Linux sandbox native authority boundary",
+      "status": "pending",
+      "depends_on": ["chief-spawn-isolation-native-authority-review"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "The new Rust-only chief-of-staff-linux-sandbox root on exact post-#17136 main accounts for one new singleton identity. Its seccomp, Landlock, no-new-privileges and pre-exec host enforcement are concrete native/security behavior, not a portable package contract or all-language denominator gap. Record it for a separate authority and platform-evidence review; do not select it or invent cross-language ports in this parity loop."
+    },
+    {
       "id": "geometry-arc2d-center-form-bounds-and-sweep-neutral-contract",
       "title": "Freeze analytic wrapped Arc2D bounds and bounded center-form cubic sweeps",
       "status": "merged",
@@ -12166,11 +12171,16 @@
     {
       "id": "geometry-arc2d-go-center-form-spec-reconciliation",
       "title": "Reconcile Go G2D03 center-form extrema and quadrant segmentation",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-arc2d-center-form-bounds-and-sweep-neutral-contract"],
-      "branch": null,
-      "pr_number": null,
-      "notes": "Consume the separately owned neutral center-form contract, then replace Go BboxArc 100-point sampling and exact-quadrant oversegmentation with analytic extrema and ceil(abs(sweep)/(pi/2)); enforce the finite bounded direct-CenterArc contract. Keep endpoint convenience API as a separate downstream owner. Do not duplicate the neutral spec/fixture work here."
+      "branch": "codex/parity-arc2d-go-center-20261008",
+      "pr_number": 17143,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/17143",
+      "selected_at": "2026-10-08T15:05:19Z",
+      "selection_revision": "780fd6bb73e1e5727157d067dcd88d76c6f97e82",
+      "selection_notes": "Selected only after #17136 actually merged, the exact-main collision inventory and the newly discovered native-security singleton review were registered. The merged neutral center contract exposes concrete Go analytic-bound, full-turn-segmentation and fail-stop gaps, and fixing Go center form directly unlocks its separate endpoint API. A focused Go-only slice is smaller and higher dependency leverage than the broader existing-lane umbrella or OCaml status-doc repair. No active parity PR or Go Arc2D path overlap exists.",
+      "validation_notes": "Ready-for-review PR #17143 opened from clean rebased head 71bd89c891d640a7500179c06b162d3124c6e765. Go package tests and race test, vet, and all three dependency-module test/vet suites pass; statement coverage is 96.8%. All seven neutral center records are consumed dynamically; 23-case geometry validator and 11 tests pass. Schema-3 parity report has zero collisions and 10 report tests pass. Go build-tool plan evaluated 45 Starlark BUILD files and 5,319 packages with orphan checks OK (38 existing pending exemptions), showing four affected packages. Diff check and read-only security review of exact final head pass. Initial PR checks are pending.",
+      "notes": "Go center-form bounds now use directed-modulo analytic rotated extrema; a full turn emits four cubics, zero sweep emits one degenerate cubic, and direct center-form APIs reject non-finite/invalid values with recoverable sentinel panics before allocation. Existing Go return signatures are preserved and documented in G2D03. SVG endpoint convenience/fallback and strict thresholds remain a separate downstream owner."
     },
     {
       "id": "geometry-arc2d-existing-center-form-conformance",
@@ -12179,7 +12189,7 @@
       "depends_on": ["geometry-arc2d-center-form-bounds-and-sweep-neutral-contract", "geometry-2d-neutral-fixture-ci-scheduling"],
       "branch": null,
       "pr_number": null,
-      "notes": "Ten existing non-Go/non-Haskell Arc2D lanes sample 100 points and can underbound wrapped extrema; Haskell already uses modular analytic bounds but still needs finite one-turn cubic limits. Existing non-Go lanes also need exact-quadrant segment-count checks and no unbounded direct CenterArc allocation. Split by language/toolchain before implementation; consume the new neutral cases and run native plus downstream tests. Go remains owned by geometry-arc2d-go-center-form-spec-reconciliation."
+      "notes": "Post-#17136 audit confirms ten existing non-Go/non-Haskell Arc2D lanes sample 100 points and underbound wrapped/rotated extrema; Haskell already uses modular analytic bounds but still needs finite one-turn limits. All eleven direct CenterArc cubic paths lack finite/one-turn fail-stop; Perl additionally emits five segments on an exact full turn. Existing five dynamic readers consume only four SVG degeneracies, not seven new center records. Split by language/toolchain after the neutral fixture CI scheduling dependency; a focused C#/F# shared .NET slice is a candidate. Go remains owned separately."
     },
     {
       "id": "geometry-arc2d-go-endpoint-api-reconciliation",
@@ -12188,7 +12198,7 @@
       "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-arc2d-go-center-form-spec-reconciliation"],
       "branch": null,
       "pr_number": null,
-      "notes": "Go currently provides endpoint-to-center conversion but no SvgArc evaluate/bounds convenience API and exact endpoint/<1e-12 radius guards. Add the native equivalent of the neutral degenerate line fallback and ordered bounds; validate Go arc2d and downstream packages."
+      "notes": "Go currently provides endpoint-to-center conversion but no SvgArc evaluate/bounds convenience API. Its exact endpoint and <1e-12 radius guards drift from merged G2D03's strict abs(radius)<1e-10 and endpoint distance-squared<1e-20 (equality remains nondegenerate); its denominator guard also uses <1e-24. After the separate Go center-form owner, add neutral degenerate line fallback and ordered bounds, then validate Go arc2d and downstream packages."
     },
     {
       "id": "geometry-arc2d-ruby-perl-elixir-lua-swift-endpoint-api-reconciliation",
@@ -12223,14 +12233,18 @@
     {
       "id": "geometry-arc2d-java-kotlin-dart-lane-parity",
       "title": "Implement arc2d parity in Java, Kotlin, and Dart",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["geometry-affine2d-bezier2d-java-kotlin-dart-lane-parity", "geometry-arc2d-center-form-bounds-and-sweep-neutral-contract"],
       "branch": "codex/parity-arc2d-java-kotlin-dart-20261008",
       "pr_number": 17136,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/17136",
+      "merge_revision": "780fd6bb73e1e5727157d067dcd88d76c6f97e82",
+      "merged_at": "2026-10-08T15:02:10Z",
+      "merge_notes": "Eight successful and 24 skipped final-head checks were terminal and acceptable; GitHub reported MERGEABLE. Guarded squash auto-merge completed without manual merge and the exact merge commit was verified on fetched origin/main.",
       "selected_at": "2026-10-08T14:13:15Z",
       "selection_revision": "8b9dbfc487fea50e8c2d2ad22c9385a0b4e02452",
       "selection_notes": "Selected only after #17127 actually merged, exact-main collision inventory and newly discovered owner registrations. The merged Point2D/Bezier2D/Trig foundations and 23-case G2D03 neutral corpus make one dependency-shaped Java/Kotlin/Dart port ready, filling three high-consensus slots. No active parity PR or exact package-path overlap exists. Preserve the separate Go and existing-lane center-form conformance owners, and do not select native/security work.",
-      "notes": "PR #17136 delivers the G2D03 Java/Kotlin/Dart arc layer, all 11 neutral arc records per lane, local 100% line coverage and 95% gates, three live Go build-tool lane plans, and a degenerate-overflow security regression. CI and mergeability still require live verification; no manual merge."
+      "notes": "Merged PR #17136 delivers the G2D03 Java/Kotlin/Dart arc layer, all 11 neutral arc records per lane, local 100% line coverage and 95% gates, three live Go build-tool lane plans, and a degenerate-overflow security regression. Arc2D now occupies all 15 established lane slots structurally; behavioral repair owners in older lanes remain pending."
     },
     {
       "id": "gfm-fenced-block-ast-and-consumer-contract-repair",

@@ -424,6 +424,14 @@ from an unbounded segment count. Endpoint-form conversion already clamps its
 derived sweep to one turn. A zero-sweep center arc emits one degenerate cubic
 with all four points at its start; a full turn emits exactly four segments.
 
+In Go, the established `EvalArc`, `TangentArc`, `BboxArc`, and
+`ToCubicBeziers` signatures return values without an error channel. Preserve
+those signatures and fail explicitly with a documented, recoverable panic
+carrying `ErrInvalidCenterArc` for invalid/non-finite center-form inputs or
+derived output, and `ErrInvalidSweep` for a finite sweep outside one turn.
+Validate before converting a segment count to `int` or allocating. This
+Go-specific convention does not change the separate SVG endpoint API.
+
 For each 90°-or-less segment, the four cubic bezier control points are:
 
 ```

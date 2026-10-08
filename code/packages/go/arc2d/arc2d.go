@@ -8,6 +8,9 @@
 package arc2d
 
 import (
+	"errors"
+	"math"
+
 	"github.com/adhithyan15/coding-adventures/code/packages/go/bezier2d"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/point2d"
 	"github.com/adhithyan15/coding-adventures/code/packages/go/trig"
@@ -27,10 +30,48 @@ import (
 //   - SweepAngle: signed angular extent; positive = counter-clockwise
 //   - XRotation: rotation of the ellipse axes from the X axis (radians, CCW)
 type CenterArc struct {
-	Center                    point2d.Point
-	Rx, Ry                    float64
-	StartAngle, SweepAngle    float64
-	XRotation                 float64
+	Center                 point2d.Point
+	Rx, Ry                 float64
+	StartAngle, SweepAngle float64
+	XRotation              float64
+}
+
+// ErrInvalidCenterArc is the panic value for invalid or non-finite center-form
+// input or derived output. The existing value-returning API has no error slot.
+var ErrInvalidCenterArc = errors.New("arc2d: invalid center arc")
+
+// ErrInvalidSweep is the panic value for a finite sweep exceeding one turn.
+var ErrInvalidSweep = errors.New("arc2d: sweep exceeds one turn")
+
+func finite(values ...float64) bool {
+	for _, value := range values {
+		if math.IsNaN(value) || math.IsInf(value, 0) {
+			return false
+		}
+	}
+	return true
+}
+
+func validateCenterArc(a CenterArc) {
+	if !finite(a.Center.X, a.Center.Y, a.Rx, a.Ry, a.StartAngle, a.SweepAngle, a.XRotation) || a.Rx <= 0 || a.Ry <= 0 {
+		panic(ErrInvalidCenterArc)
+	}
+	if math.Abs(a.SweepAngle) > trig.TwoPI {
+		panic(ErrInvalidSweep)
+	}
+}
+
+func centerPoint(a CenterArc, angle float64) point2d.Point {
+	if !finite(angle) {
+		panic(ErrInvalidCenterArc)
+	}
+	cosR, sinR := trig.Cos(a.XRotation), trig.Sin(a.XRotation)
+	lx, ly := a.Rx*trig.Cos(angle), a.Ry*trig.Sin(angle)
+	x, y := a.Center.X+cosR*lx-sinR*ly, a.Center.Y+sinR*lx+cosR*ly
+	if !finite(x, y) {
+		panic(ErrInvalidCenterArc)
+	}
+	return point2d.NewPoint(x, y)
 }
 
 // EvalArc evaluates the arc at parameter t ∈ [0,1].
@@ -43,16 +84,11 @@ type CenterArc struct {
 // where θ = StartAngle + t * SweepAngle.
 // Then we rotate by XRotation and translate by Center.
 func EvalArc(a CenterArc, t float64) point2d.Point {
-	theta := a.StartAngle + t*a.SweepAngle
-	cosT, sinT := trig.Cos(theta), trig.Sin(theta)
-	// Local ellipse point before rotation
-	lx := a.Rx * cosT
-	ly := a.Ry * sinT
-	// Apply XRotation
-	cosR, sinR := trig.Cos(a.XRotation), trig.Sin(a.XRotation)
-	rx := cosR*lx - sinR*ly
-	ry := sinR*lx + cosR*ly
-	return point2d.NewPoint(a.Center.X+rx, a.Center.Y+ry)
+	validateCenterArc(a)
+	if !finite(t) {
+		panic(ErrInvalidCenterArc)
+	}
+	return centerPoint(a, a.StartAngle+t*a.SweepAngle)
 }
 
 // TangentArc returns the unnormalized tangent direction at parameter t ∈ [0,1].
@@ -62,28 +98,34 @@ func EvalArc(a CenterArc, t float64) point2d.Point {
 //	dx/dt = SweepAngle * (-Rx * sin(θ) * cosR - Ry * cos(θ) * sinR)
 //	dy/dt = SweepAngle * (-Rx * sin(θ) * sinR + Ry * cos(θ) * cosR)
 func TangentArc(a CenterArc, t float64) point2d.Point {
+	validateCenterArc(a)
+	if !finite(t) {
+		panic(ErrInvalidCenterArc)
+	}
 	theta := a.StartAngle + t*a.SweepAngle
+	if !finite(theta) {
+		panic(ErrInvalidCenterArc)
+	}
 	cosT, sinT := trig.Cos(theta), trig.Sin(theta)
 	cosR, sinR := trig.Cos(a.XRotation), trig.Sin(a.XRotation)
 	// d/dtheta of (cosR*Rx*cosT - sinR*Ry*sinT) = -cosR*Rx*sinT - sinR*Ry*cosT
 	dx := a.SweepAngle * (-cosR*a.Rx*sinT - sinR*a.Ry*cosT)
 	dy := a.SweepAngle * (-sinR*a.Rx*sinT + cosR*a.Ry*cosT)
+	if !finite(dx, dy) {
+		panic(ErrInvalidCenterArc)
+	}
 	return point2d.NewPoint(dx, dy)
 }
 
-// BboxArc returns a bounding box for the arc by sampling 100 points.
-//
-// An analytical approach requires solving for the extrema of x(t) and y(t)
-// (where we differentiate through the rotation matrix), which yields
-// transcendental equations that are hard to solve in closed form for arbitrary
-// XRotation. The 100-sample approximation is accurate to within 1% of Rx/Ry.
+// BboxArc returns the exact extrema-based axis-aligned bounds of a center arc.
+// Invalid inputs or non-finite derived bounds panic with ErrInvalidCenterArc;
+// a sweep exceeding one turn panics with ErrInvalidSweep.
 func BboxArc(a CenterArc) point2d.Rect {
-	p0 := EvalArc(a, 0)
+	validateCenterArc(a)
+	p0 := centerPoint(a, a.StartAngle)
 	minX, maxX := p0.X, p0.X
 	minY, maxY := p0.Y, p0.Y
-	const n = 100
-	for i := 1; i <= n; i++ {
-		p := EvalArc(a, float64(i)/n)
+	include := func(p point2d.Point) {
 		if p.X < minX {
 			minX = p.X
 		}
@@ -97,7 +139,31 @@ func BboxArc(a CenterArc) point2d.Rect {
 			maxY = p.Y
 		}
 	}
-	return point2d.NewRect(minX, minY, maxX-minX, maxY-minY)
+	include(centerPoint(a, a.StartAngle+a.SweepAngle))
+	if a.SweepAngle != 0 {
+		cosR, sinR := trig.Cos(a.XRotation), trig.Sin(a.XRotation)
+		xAngle := trig.Atan2(-a.Ry*sinR, a.Rx*cosR)
+		yAngle := trig.Atan2(a.Ry*cosR, a.Rx*sinR)
+		for _, candidate := range [...]float64{xAngle, xAngle + trig.PI, yAngle, yAngle + trig.PI} {
+			var distance float64
+			if a.SweepAngle > 0 {
+				distance = math.Mod(candidate-a.StartAngle, trig.TwoPI)
+			} else {
+				distance = math.Mod(a.StartAngle-candidate, trig.TwoPI)
+			}
+			if distance < 0 {
+				distance += trig.TwoPI
+			}
+			if distance <= math.Abs(a.SweepAngle)+1e-14 {
+				include(centerPoint(a, candidate))
+			}
+		}
+	}
+	width, height := maxX-minX, maxY-minY
+	if !finite(width, height) {
+		panic(ErrInvalidCenterArc)
+	}
+	return point2d.NewRect(minX, minY, width, height)
 }
 
 // ToCubicBeziers approximates the arc as a sequence of cubic Bezier curves.
@@ -110,9 +176,16 @@ func BboxArc(a CenterArc) point2d.Rect {
 // where sweep is the signed sweep angle of the segment. The control points
 // are placed at distance k * radius from the endpoints, in the tangent direction.
 func ToCubicBeziers(a CenterArc) []bezier2d.CubicBezier {
+	validateCenterArc(a)
 	// Determine number of segments: ceil(|sweep| / (π/2))
 	halfPi := trig.PI / 2
-	nSeg := int(absf(a.SweepAngle)/halfPi) + 1
+	nSeg := int(math.Ceil(math.Abs(a.SweepAngle) / halfPi))
+	if nSeg < 1 {
+		nSeg = 1
+	}
+	if nSeg > 4 {
+		panic(ErrInvalidSweep)
+	}
 	segSweep := a.SweepAngle / float64(nSeg)
 
 	cosR, sinR := trig.Cos(a.XRotation), trig.Sin(a.XRotation)
@@ -121,7 +194,11 @@ func ToCubicBeziers(a CenterArc) []bezier2d.CubicBezier {
 	localToWorld := func(lx, ly float64) point2d.Point {
 		rx := cosR*lx - sinR*ly
 		ry := sinR*lx + cosR*ly
-		return point2d.NewPoint(a.Center.X+rx, a.Center.Y+ry)
+		x, y := a.Center.X+rx, a.Center.Y+ry
+		if !finite(x, y) {
+			panic(ErrInvalidCenterArc)
+		}
+		return point2d.NewPoint(x, y)
 	}
 
 	curves := make([]bezier2d.CubicBezier, nSeg)
@@ -129,7 +206,7 @@ func ToCubicBeziers(a CenterArc) []bezier2d.CubicBezier {
 		t0 := a.StartAngle + float64(i)*segSweep
 		t1 := t0 + segSweep
 		// k = (4/3) * tan(segSweep / 4)
-		k := (4.0 / 3.0) * trig.Tan(segSweep / 4)
+		k := (4.0 / 3.0) * trig.Tan(segSweep/4)
 
 		cos0, sin0 := trig.Cos(t0), trig.Sin(t0)
 		cos1, sin1 := trig.Cos(t1), trig.Sin(t1)
