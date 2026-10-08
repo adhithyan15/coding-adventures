@@ -38,7 +38,7 @@ mod lower;
 pub use lower::{compile, CLowerError};
 
 use coding_adventures_source_preprocessor::{
-    preprocess, Bounds, Dialect, IncludeRequest, PpError, RootedFs, SourceFs,
+    preprocess, Bounds, Dialect, FileId, IncludeRequest, MemoryFs, PpError, RootedFs, SourceFs,
 };
 use std::path::PathBuf;
 
@@ -90,12 +90,42 @@ pub fn compile_preprocessed_file(
     compile(&tree, module_name)
 }
 
-/// Parse C `source` and lower it to a [`semantic_ir::Module`].
+/// An in-memory primary file whose includes always fail closed. `MemoryFs`
+/// alone would let `#include "<main>"` recursively include that primary file.
+struct PathlessFs(MemoryFs);
+
+impl SourceFs for PathlessFs {
+    fn resolve(&mut self, _request: &IncludeRequest) -> Result<FileId, PpError> {
+        Err(PpError::new("pathless C source cannot resolve an include"))
+    }
+
+    fn read(&mut self, file: FileId) -> Result<String, PpError> {
+        self.0.read(file)
+    }
+
+    fn name_of(&self, file: FileId) -> String {
+        self.0.name_of(file)
+    }
+}
+
+/// Preprocess pathless C `source` without host file access, then lower it to a
+/// [`semantic_ir::Module`]. Active includes require the rooted file API.
 pub fn compile_source(source: &str, module_name: &str) -> Result<semantic_ir::Module, CLowerError> {
-    let tree = coding_adventures_c_parser::try_parse_c(source).map_err(|msg| CLowerError {
-        message: format!("C parse error: {msg}"),
-        line: 0,
-        column: 0,
+    let bounds = Bounds::default();
+    if u64::try_from(source.len()).unwrap_or(u64::MAX) > bounds.total_source_bytes {
+        return Err(preprocess_error(PpError::new("C source exceeds the source-byte budget")));
+    }
+    let mut fs = PathlessFs(MemoryFs::new());
+    let file = fs.0.insert("<main>", source);
+    let dialect = dialect::CDialect::new(bounds);
+    let tokens = dialect.lex(source, file).map_err(preprocess_error)?;
+    let output = preprocess(tokens, file, &dialect, &mut fs, bounds).map_err(preprocess_error)?;
+    let tree = coding_adventures_c_parser::try_parse_c_tokens(output.tokens).map_err(|msg| {
+        CLowerError {
+            message: format!("C parse error: {msg}"),
+            line: 0,
+            column: 0,
+        }
     })?;
     compile(&tree, module_name)
 }
@@ -116,6 +146,33 @@ mod tests {
             .unwrap()
             .write_all(contents)
             .unwrap();
+    }
+
+    #[test]
+    fn pathless_c_source_uses_bounded_preprocessing() {
+        let module = compile_source(
+            "#define ANSWER 7\n#if defined(ANSWER)\nint chosen(void) { return ANSWER; }\n#else\nint chosen(void) { return 0; }\n#endif\n#undef ANSWER\n#if 0\n#include \"missing.h\"\n#endif\n#if defined(ANSWER)\nint removed(void) { return 0; }\n#else\nint removed(void) { return 9; }\n#endif\n",
+            "pathless_c",
+        )
+        .unwrap();
+        let text = semantic_ir::print_module(&module);
+        assert!(text.contains("(function chosen"), "{text}");
+        assert!(text.contains("(function removed"), "{text}");
+        assert!(text.contains("(block (int 7))"), "{text}");
+        assert!(text.contains("(block (int 9))"), "{text}");
+        assert!(!text.contains("(block (int 0))"), "{text}");
+        assert!(semantic_ir::validate(&module).is_ok());
+    }
+
+    #[test]
+    fn pathless_c_source_rejects_even_primary_name_include() {
+        let error = compile_source(
+            "#include \"<main>\"\nint main(void) { return 0; }\n",
+            "pathless_c",
+        )
+        .unwrap_err();
+        assert!(error.message.contains("include"), "{error:?}");
+        assert_eq!((error.line, error.column), (1, 1));
     }
 
     #[test]

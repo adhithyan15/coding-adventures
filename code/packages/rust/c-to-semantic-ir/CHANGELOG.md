@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — PREP01 pathless C preprocessing
+
+- Route `compile_source` through the bounded C dialect preprocessor and the
+  token-input parser, so pathless `#define`, `#undef`, and supported `#if`
+  forms reach lowering. Active includes fail closed without host file access,
+  including an include that names the in-memory primary source; skipped
+  includes remain inert. The rooted file-input API retains its include policy.
+
 ## Unreleased — PREP01 bounded C #undef
 
 - Recognize `#undef` with exactly one raw identifier and remove its current
