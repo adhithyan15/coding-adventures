@@ -167,9 +167,9 @@ Instead the engine keeps a **side table**, the design GCC's line maps and LLVM's
 
 **The expansion chain must be interned, not owned per token.** A `Locus` that
 owns its chain makes the map `O(tokens × expansion_depth)`, so with the §6
-macro-depth bound of 200 a token cap of N still admits 200N chain entries — any
+macro-depth bound of 128 a token cap of N still admits 128N chain entries — any
 operator who sets the token cap believing it bounds memory would under-count by
-up to 200×. The chain is therefore a shared immutable structure in a side
+up to 128×. The chain is therefore a shared immutable structure in a side
 arena: each entry is an expansion id naming its parent expansion id, exactly as
 LLVM's `SourceManager` does. That makes the map `O(tokens + expansions)`. This
 is normative, because §6's memory bounds depend on it.
@@ -358,7 +358,7 @@ grow the token count, and fan-out that is never a cycle.
 | **Total source bytes processed** | 256 MiB | Many small files rather than deep ones. |
 | **Maximum bytes per included file** | 16 MiB | Checked from the opened handle's metadata before reading. |
 | Path containment, regular-files-only, encoding | always on | See §5. Enforced in `RootedFs`. |
-| Macro expansion depth | 200 | Mutually recursive function-like macros. |
+| Macro expansion depth | 128 | Mutually recursive function-like macros; tightened from 200 after the bounded stringize frame exceeded a measured 1 MiB stack. |
 | **Total tokens produced** | 2 M | Expansion bombs. Counts every token the expander *creates* — emitted, consumed by `eval_condition`, or discarded. Counting only *emitted* tokens leaves a hole: `#define A0 1` / `A1 A0 A0` / … / `A40 A39 A39` inside `#if A40` produces 2⁴⁰ tokens that are consumed by the condition and never emitted, against a depth of only 40. The counter is shared across directive evaluation and body expansion and is never reset mid-translation-unit. |
 | **Maximum token spelling length** | 64 KiB | `stringize` and `paste` grow *bytes* while holding the token count flat, so a token counter is structurally blind to them. Nested pasting via an indirection layer yields identifier text exponential in source length from ~1 token. |
 | **Total bytes of synthesised token text** | 64 MiB | Same class, aggregate. Charged in `charge()` **before** each substitution is built, not after: a function-like body using its parameter N times, called with N argument tokens, produces N-squared tokens while the source costs 2N, so inspecting the finished vector charges honestly and far too late. Both byte bounds are also checked at the engine's `stringize`/`paste` call sites, not delegated to the dialect — a dialect's `paste` that allocates before returning is already past the bound. |

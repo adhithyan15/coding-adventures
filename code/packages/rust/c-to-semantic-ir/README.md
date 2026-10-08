@@ -19,8 +19,9 @@ second `#else` or `#elif` after `#else`.
 `compile_preprocessed_file` uses that token stream with declared include roots
 before parsing and lowering. Pathless `compile_source` uses the same bounded
 preprocessor with an in-memory primary source. Every active include fails
-closed because that API has no include roots. Full C `#if` expressions,
-stringize, and paste remain pending.
+closed because that API has no include roots. Full C `#if` expressions and
+token paste remain pending. Function-like macros can stringize one raw
+identifier or plain-decimal argument token; broader C stringizing is pending.
 
 ## API
 
@@ -63,7 +64,9 @@ One `!(operand)` clause is accepted for a plain-decimal literal or undefined
 identifier after macro expansion or `defined()` preparation. It preserves
 the earlier negated-comparison form and rejects nested, arithmetic, and
 longer mixed expressions.
-Stringize and paste in macro bodies also fail explicitly.
+The bounded `#parameter` form preserves one raw argument token's spelling even
+when the same parameter is pre-expanded at an ordinary use. Empty, multi-token,
+string, character, and non-decimal arguments fail explicitly. `##` fails.
 `#undef NAME` removes the current object-like or function-like macro by its
 unexpanded name. It is inert in a skipped conditional group; malformed
 operands fail with the directive location on the rooted file-input path.

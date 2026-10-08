@@ -52,7 +52,7 @@ use crate::diag::PpError;
 use crate::dialect::{Dialect, Directive};
 use crate::fs::SourceFs;
 use crate::hideset::HideSets;
-use crate::macros::{expand, MToken, MacroDef, MacroTable};
+use crate::macros::{expand_with_dialect, MToken, MacroDef, MacroTable};
 use crate::source_map::{FileId, Locus, Position, SourceMap};
 use lexer::token::Token;
 
@@ -194,7 +194,7 @@ pub fn preprocess(
                     let expanded = if macros.is_empty() {
                         input
                     } else {
-                        expand(input, &macros, &mut hides, &mut map, &bounds, &mut spend)?
+                        expand_with_dialect(input, &macros, &mut hides, &mut map, &bounds, &mut spend, dialect)?
                     };
                     emit(&expanded, &mut out, &mut map, &bounds)?;
                 }
@@ -350,7 +350,7 @@ fn evaluate_condition_if_active(
                 .into_iter()
                 .map(|token| MToken::bare(token, current_file))
                 .collect();
-            expand(input, macros, hides, map, bounds, spend)?
+            expand_with_dialect(input, macros, hides, map, bounds, spend, dialect)?
                 .into_iter()
                 .map(|m| m.token)
                 .collect::<Vec<_>>()

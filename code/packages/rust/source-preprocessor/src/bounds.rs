@@ -92,9 +92,10 @@ pub struct Bounds {
     /// **This bound assumes roughly 1 MiB of usable stack.** Measured: depth
     /// 100 overflows a 256 KiB thread and depth 200 overflows a 512 KiB one,
     /// so a frame costs at least ~2.6 KiB; budget ~5 KiB per level to be safe.
-    /// The default of 200 completes on a 1 MiB thread, and Rust's default
-    /// spawned thread gets 2 MiB, which leaves margin. A host on a smaller
-    /// stack must `tighten` this.
+    /// The default of 128 completes on a 1 MiB thread even after the bounded
+    /// stringize argument bookkeeping. The former 200-depth default did not:
+    /// the small-stack regression overflowed before returning a diagnostic.
+    /// A host on a smaller stack must `tighten` this.
     ///
     /// Tightening it costs only stack depth. It used to also collapse the work
     /// budget, because the round limit was derived from this field squared —
@@ -187,7 +188,7 @@ impl Default for Bounds {
             total_inclusions: 10_000,
             total_source_bytes: 256 * 1024 * 1024,
             bytes_per_file: 16 * 1024 * 1024,
-            macro_depth: 200,
+            macro_depth: 128,
             tokens_produced: 2_000_000,
             token_spelling_bytes: 64 * 1024,
             synthesised_text_bytes: 64 * 1024 * 1024,
