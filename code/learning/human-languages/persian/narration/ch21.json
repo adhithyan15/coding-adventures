@@ -17,16 +17,18 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
+        "reading-type",
         "sight-cue"
       ],
       "sourceHash": "fnv1a64:e6f11ce72585bea7",
       "notice": {
         "modality": "sight",
         "needs": [
+          "your eyes, to read the printed text yourself",
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, to read the printed text yourself and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
       },
       "blocks": [
         {
@@ -207,13 +209,22 @@
       "romanization": "bale, na, mamnūn, salām, avval, sevvom",
       "gloss": "six lines you would answer with — read rather than said, for the first time",
       "script": "perso-arabic",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
       "sourceHash": "fnv1a64:9958d0b6ce9aca86",
-      "notice": null,
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, to read the printed text yourself. You can listen to everything else now — leave the section called Reading until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -407,13 +418,22 @@
       "romanization": "sefr tâ noh, dah, bist, sad",
       "gloss": "the figures, read off a page — a price, a floor, a phone number",
       "script": "perso-arabic",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
       "sourceHash": "fnv1a64:0a693c33ef2236e4",
-      "notice": null,
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, to read the printed text yourself. You can listen to everything else now — leave the section called Reading until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,

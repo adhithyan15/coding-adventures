@@ -7,11 +7,11 @@
     "IT-C36-frasi",
     "IT-C36-prima-lettura"
   ],
-  "voiceLessons": 2,
-  "drivablePrefix": 2,
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
   "text": "italian/narration/ch36.txt",
   "json": "italian/narration/ch36.json",
-  "textHash": "fnv1a64:4b8c878c9023e130",
-  "jsonHash": "fnv1a64:aaa369ce665f0f62",
+  "textHash": "fnv1a64:a85907e1096f09ae",
+  "jsonHash": "fnv1a64:d9fbe363a004b38a",
   "findings": []
 }

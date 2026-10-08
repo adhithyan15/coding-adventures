@@ -17,16 +17,18 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
+        "reading-type",
         "sight-cue"
       ],
       "sourceHash": "fnv1a64:bef752a0b4df452b",
       "notice": {
         "modality": "sight",
         "needs": [
+          "your eyes, to read the printed text yourself",
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, to read the printed text yourself and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
       },
       "blocks": [
         {
@@ -207,13 +209,22 @@
       "romanization": "nāṁ: aman · umar: 25 · kamm: naukarī",
       "gloss": "somebody else's finished form - six labels with six values already in them",
       "script": "gurmukhi",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
       "sourceHash": "fnv1a64:d96d0c8744aff789",
-      "notice": null,
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, to read the printed text yourself. You can listen to everything else now — leave the section called Reading until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -398,13 +409,22 @@
       "romanization": "merā nāṁ aman hai. merā kamm naukarī hai.",
       "gloss": "the same six facts as sentences - seventy-two words of Punjabi in a row, and not one of them new",
       "script": "gurmukhi",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
       "sourceHash": "fnv1a64:884c28aa9c722897",
-      "notice": null,
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, to read the printed text yourself. You can listen to everything else now — leave the section called Reading until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,

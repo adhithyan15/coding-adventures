@@ -7,11 +7,11 @@
     "LA-C58-phrases",
     "LA-C58-prima-lectio"
   ],
-  "voiceLessons": 3,
-  "drivablePrefix": 3,
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
   "text": "latin/narration/ch58.txt",
   "json": "latin/narration/ch58.json",
-  "textHash": "fnv1a64:4b63790e6221c396",
-  "jsonHash": "fnv1a64:777c000a83571110",
+  "textHash": "fnv1a64:2805c00b99b5fc66",
+  "jsonHash": "fnv1a64:f6397ea18049e369",
   "findings": []
 }

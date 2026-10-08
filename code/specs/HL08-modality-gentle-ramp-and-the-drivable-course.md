@@ -104,9 +104,20 @@ its lessons'.
 Hand-annotating 1,096 lessons invites drift, so modality is computed:
 
 1. `type: writing` → `pen`;
-2. otherwise a `script` block, a sight cue, or a table wider than the configured
-   linearisable width → `sight`;
+2. otherwise `type: reading`, a `script` block, a sight cue, or a table wider than the
+   configured linearisable width → `sight`;
 3. otherwise → `voice`.
+
+> **Amended — reading lessons need sight.** `type: reading` was added to rule 2 after
+> the rule-2 detectors were found to pass 59 of the corpus's 74 reading lessons as
+> drivable (58 of them `voice` outright). A reading lesson is printed target-language
+> text — a connected passage, a run of signs or labels — and the instruction to read
+> it, and every word of that is speakable, so nothing that looks for *unspeakable*
+> content can see it. The reason code is `reading-type`. This reads the lesson
+> **type**, not `skills: [reading]`: the type describes what the lesson *is* (74
+> lessons), the skill what it *develops* (almost all of them), and the argument
+> against deriving modality from `skills` is unchanged. See
+> [Block-level modality](#block-level-modality-hl-c41) for why the core is `sight` too.
 
 An author may override with an explicit `modality:` in frontmatter, but an override
 that contradicts the derivation requires a `modality_reason:`. The validator reports
@@ -257,9 +268,19 @@ Rules, extending the three above rather than replacing them:
    is nothing separable to set aside.
 2. A `writing` **block** → the lesson's full modality is `pen`; the core is derived from
    the remaining blocks. This is the interspersed case.
-3. Sight cues and tables are attributed to the block they occur in. A cue inside a
+3. `type: reading` → `sight`, for **both** scales, by the same argument as rule 1: the
+   whole lesson is the reading. The warm-up primes the text, the text is the lesson,
+   and the follow-up asks about what was read, so no block is separable and a
+   hands-free renderer has nothing it could set aside and still deliver. It is `sight`
+   and not `pen` — the eye recognises, the hand forms nothing — so a reading lesson
+   that also carries a writing block is `pen` in full (rule 2) and `sight` at its core.
+   An authored `voice` override is honoured like any other, and like any other it
+   contradicts the derivation and so needs a `modality_reason:`; without one it is
+   reported as `modality-unexplained-override`. No reading lesson authors `modality:`
+   today.
+4. Sight cues and tables are attributed to the block they occur in. A cue inside a
    writing segment does not follow it out into the core; a cue in ordinary prose does.
-4. An authored `modality:` override speaks for the lesson as a whole and therefore
+5. An authored `modality:` override speaks for the lesson as a whole and therefore
    **caps** the core. The invariant that falls out — *the core is never stronger than
    the full modality* — is what lets a hands-free view trust `coreModality` alone.
 

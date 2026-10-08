@@ -566,6 +566,25 @@ describe("the spoken notice on a sight or pen lesson", () => {
     );
   });
 
+  it("tells a reading lesson why it needs eyes, and defers the passage", () => {
+    // Every word of a reading passage is speakable, so without the `reading-type`
+    // reason this notice would say "needs your eyes" and give no cause at all.
+    const narration = narrateLesson(
+      lesson({
+        type: "reading",
+        body:
+          "## Warm-up\n\nYou already know every word.\n\n" +
+          "## Reading\n\n> María vive en Madrid.\n\n[YOU READ: the passage once through]",
+      }),
+    );
+    expect(narration.modality).toBe("sight");
+    expect(narration.notice?.needs).toEqual(["your eyes, to read the printed text yourself"]);
+    expect(narration.notice?.waitUntilStopped).toEqual(["Reading"]);
+    expect(renderLessonNarrationText(narration)).toContain(
+      "[once you have stopped driving — read: the passage once through]",
+    );
+  });
+
   it("gives a drivable lesson no notice at all", () => {
     expect(narrateLesson(lesson({ body: "## Warm-up\n\nSay it." })).notice).toBeNull();
   });

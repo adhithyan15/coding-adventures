@@ -3,7 +3,7 @@
   "language": "gujarati",
   "chapter": 44,
   "title": "Reading — Six Words, Six Lines, and a Whole Meeting",
-  "drivablePrefix": 3,
+  "drivablePrefix": 0,
   "sourceHash": "fnv1a64:6dc0caa32f4ab0a3",
   "lessons": [
     {
@@ -14,13 +14,22 @@
       "romanization": "ghar · bajār · śāḷā · dukān · pāṇī · pustak",
       "gloss": "six words off a signboard — the first time the book asks you to read one rather than to write it",
       "script": "gujarati",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
       "sourceHash": "fnv1a64:16e75c33df917713",
-      "notice": null,
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, to read the printed text yourself. You can listen to everything else now — leave the section called Reading until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -214,13 +223,22 @@
       "romanization": "mārũ nām mīrā chhe. tame kem chho?",
       "gloss": "six lines you have said aloud for forty chapters, met this time on the page",
       "script": "gujarati",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
       "sourceHash": "fnv1a64:25f433c562aa294d",
-      "notice": null,
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, to read the printed text yourself. You can listen to everything else now — leave the section called Reading until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -415,13 +433,22 @@
       "romanization": "tame kem chho? hũ majāmā̃ chhũ.",
       "gloss": "the first passage — a whole meeting read straight through, thirty-five words and not one of them new",
       "script": "gujarati",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
       "sourceHash": "fnv1a64:87bba00fe5689096",
-      "notice": null,
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, to read the printed text yourself. You can listen to everything else now — leave the section called Reading until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,

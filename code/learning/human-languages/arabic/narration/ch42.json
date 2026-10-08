@@ -3,7 +3,7 @@
   "language": "arabic",
   "chapter": 42,
   "title": "Reading — Words, Lines, and a First Encounter",
-  "drivablePrefix": 3,
+  "drivablePrefix": 0,
   "sourceHash": "fnv1a64:1bce1477b2dfef71",
   "lessons": [
     {
@@ -14,13 +14,22 @@
       "romanization": "",
       "gloss": "six familiar Arabic words read cold, without a romanized line underneath",
       "script": "arabic",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
       "sourceHash": "fnv1a64:d3221b94f759476e",
-      "notice": null,
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, to read the printed text yourself. You can listen to everything else now — leave the section called Reading until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -206,13 +215,23 @@
       "romanization": "",
       "gloss": "six familiar lines read in Arabic script, from greeting through a simple choice",
       "script": "arabic",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
       "sourceHash": "fnv1a64:0e33d17df4297b73",
-      "notice": null,
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Warm-up",
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, to read the printed text yourself. You can listen to everything else now — leave the sections called Warm-up and Reading until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -407,13 +426,22 @@
       "romanization": "",
       "gloss": "the first connected Arabic encounter, read from greeting through a choice to farewell",
       "script": "arabic",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
       "sourceHash": "fnv1a64:434cdebb0c436015",
-      "notice": null,
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, to read the printed text yourself. You can listen to everything else now — leave the section called Reading until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,

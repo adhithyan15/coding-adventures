@@ -7,11 +7,11 @@
     "GE-C52-saetze",
     "GE-C52-erste-lesung"
   ],
-  "voiceLessons": 3,
-  "drivablePrefix": 3,
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
   "text": "german/narration/ch52.txt",
   "json": "german/narration/ch52.json",
-  "textHash": "fnv1a64:464ad6f38ff15237",
-  "jsonHash": "fnv1a64:cd943a513fc95f11",
+  "textHash": "fnv1a64:7f5559994029743d",
+  "jsonHash": "fnv1a64:5e1c743cb26ae2f2",
   "findings": []
 }

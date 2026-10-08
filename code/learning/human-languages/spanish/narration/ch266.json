@@ -3,7 +3,7 @@
   "language": "spanish",
   "chapter": 266,
   "title": "Review --- Four Last Pieces, and the Thread",
-  "drivablePrefix": 5,
+  "drivablePrefix": 2,
   "sourceHash": "fnv1a64:044cbb0ef6f5732d",
   "lessons": [
     {
@@ -475,13 +475,22 @@
       "romanization": "(reading)",
       "gloss": "the first paragraph — forty-seven words of Spanish in a row, and not one of them new",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
       "sourceHash": "fnv1a64:2d0462c541ab48da",
-      "notice": null,
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, to read the printed text yourself. You can listen to everything else now — leave the section called Reading until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -719,13 +728,22 @@
       "romanization": "(reading)",
       "gloss": "the second paragraph — a different person, a different day, and still nothing new",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
       "sourceHash": "fnv1a64:9cab990c1e8828f7",
-      "notice": null,
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, to read the printed text yourself. You can listen to everything else now — leave the section called Reading until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -938,13 +956,22 @@
       "romanization": "(reading)",
       "gloss": "the third paragraph — sixty-one words, two people, and the first time length stops being the point",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "reading-type"
       ],
       "sourceHash": "fnv1a64:2042e463147d3ed5",
-      "notice": null,
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, to read the printed text yourself"
+        ],
+        "waitUntilStopped": [
+          "Reading"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, to read the printed text yourself. You can listen to everything else now — leave the section called Reading until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,

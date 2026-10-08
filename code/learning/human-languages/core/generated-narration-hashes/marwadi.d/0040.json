@@ -7,11 +7,11 @@
     "MW-C40-notices",
     "MW-C40-pehlo-path"
   ],
-  "voiceLessons": 2,
+  "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "marwadi/narration/ch40.txt",
   "json": "marwadi/narration/ch40.json",
-  "textHash": "fnv1a64:20539e62faa8f02d",
-  "jsonHash": "fnv1a64:2b432eeeafdbca27",
+  "textHash": "fnv1a64:2616dfc0b66aad27",
+  "jsonHash": "fnv1a64:58066c00cdd94f01",
   "findings": []
 }

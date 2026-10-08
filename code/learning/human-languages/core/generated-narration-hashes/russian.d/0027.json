@@ -7,11 +7,11 @@
     "RU-C27-notices",
     "RU-C27-pervoe-chtenie"
   ],
-  "voiceLessons": 1,
+  "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "russian/narration/ch27.txt",
   "json": "russian/narration/ch27.json",
-  "textHash": "fnv1a64:c15a109950612a8c",
-  "jsonHash": "fnv1a64:b4dcdaf7c5d84d5e",
+  "textHash": "fnv1a64:81f587059fef3a0d",
+  "jsonHash": "fnv1a64:1bc15011e11a3546",
   "findings": []
 }

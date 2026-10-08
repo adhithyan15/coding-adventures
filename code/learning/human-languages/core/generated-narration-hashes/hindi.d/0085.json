@@ -9,11 +9,11 @@
     "HI-R85-devanagari-recall-a",
     "HI-R85-devanagari-recall-b"
   ],
-  "voiceLessons": 2,
+  "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "hindi/narration/ch85.txt",
   "json": "hindi/narration/ch85.json",
-  "textHash": "fnv1a64:5b80b67dfd62b95b",
-  "jsonHash": "fnv1a64:721775743e2d8970",
+  "textHash": "fnv1a64:db6820fcab7d4f45",
+  "jsonHash": "fnv1a64:330eafdf154ece2c",
   "findings": []
 }

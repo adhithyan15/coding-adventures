@@ -30,6 +30,7 @@
 // derivation below looks at the lesson's type and at its parsed body blocks:
 //
 //   1. `type: writing`                        -> pen   (an orthography drill)
+//   2. `type: reading`                        -> sight (printed text to read)
 //   2. a `script` block                       -> sight (letter shapes on the page)
 //   2. an ANCHORED sight cue in the prose     -> sight ("look at the chart above")
 //   2. a table wider than we can read aloud   -> sight (a paradigm grid)
@@ -41,6 +42,16 @@
 // etymology and "put a fact on the table" is an idiom. Both used to be counted, and
 // authors were rewriting correct prose to get out from under the detector. See
 // `SIGHT_CUE_RULES` for what each phrase has to clear before it counts.
+//
+// The first rule 2 looks like it contradicts everything above — it reads the word
+// `reading` and concludes "needs eyes", which is the very move this section warns
+// against. It does not, because it reads a different field. `skills: [reading]` is a
+// lesson's AMBITION, and almost every lesson in the corpus has it. `type: reading` is
+// the lesson's STRUCTURE: the whole lesson is target-language text printed on the
+// page and the instruction "read it". Seventy-four lessons carry that type, against
+// some twenty-nine thousand that list the skill, which is exactly the gap between
+// "will one day be able to read this" and "is reading this right now". See "Rule 2,
+// by type" in `deriveLessonModality` for the full argument.
 //
 // Measured over all 1,096 lessons that yields 51 `pen`, and among the rest the
 // single biggest obstacle is the **table**, not the script — which is a tractable
@@ -225,6 +236,7 @@ export interface ModalityOptions {
  */
 export type ModalityReasonCode =
   | "writing-type"
+  | "reading-type"
   | "writing-block"
   | "script-block"
   | "sight-cue"
@@ -910,8 +922,54 @@ export function deriveLessonModality(
   const hasWritingBlock = writingSegments.length > 0;
   if (hasWritingBlock) reasons.push("writing-block");
 
-  // Rule 2 — the three ways a lesson can need eyes. All three are evaluated even
-  // once one has fired, because the report is more useful when it names every cause.
+  // Rule 2, by type — a reading lesson teaches the EYE to read printed script, and
+  // so it needs sight exactly as a writing lesson needs a pen. It mirrors Rule 1: the
+  // lesson TYPE decides, and the body is not consulted.
+  //
+  // WHY THE TYPE, AND NOT THE `reading` SKILL. The header of this file spends a page
+  // explaining why `skills: [reading]` must never decide modality, and every word of
+  // that still holds: the skill is what a lesson DEVELOPS, and thousands of lessons
+  // that are perfectly learnable by ear develop it. `type: reading` is a different
+  // kind of fact. It is not an ambition but a description of the lesson's structure:
+  // the lesson IS printed target-language text plus the instruction to read it.
+  // Usually that is a connected passage under a `## Reading` heading; sometimes it is
+  // a run of shop signs, labels, or a seven-word body map. Either way the questions
+  // that follow are only answerable by someone who just looked. Strip away the eyes
+  // and nothing is left to teach: a narrator reading the text aloud turns a reading
+  // lesson into a listening lesson, which is a different lesson the course already
+  // has elsewhere.
+  //
+  // WHY THE STRUCTURAL RULES MISSED IT. The rest of Rule 2 only sees eyes when
+  // something on the page cannot be SPOKEN — a script block, a pointing cue, an
+  // unspeakable table. A reading passage is the opposite case: it is entirely
+  // speakable, which is precisely why it slipped through. Before this rule, fifty-nine
+  // of the seventy-four reading lessons had a `voice` core (fifty-eight of them
+  // `voice` outright), and the driving edition offered "read the passage once
+  // through, without stopping" to someone at the wheel. The demand is not in any one
+  // block the detectors can inspect; it is in what the lesson is FOR, and the only
+  // place that is written down is the type.
+  //
+  // WHY THE CORE IS SIGHT TOO. As with Rule 1, this is the lesson type, so the whole
+  // lesson is the reading. There is no aside a hands-free renderer could set down and
+  // still deliver the rest: the warm-up primes the text, the text is the lesson, and
+  // the follow-up asks about what was read. A detachable block is a promise that
+  // nothing downstream depends on it, and in a reading lesson everything does — so
+  // there is nothing separable, and `coreModality` is `sight` as well.
+  //
+  // `sight` and not `pen`: reading asks the eye to recognise, never the hand to form.
+  // A reading lesson that also carries a writing block still goes to `pen` by Rule 1b,
+  // since `pen` is the stronger requirement and implies `sight` anyway.
+  //
+  // An authored `modality:` override is still honoured, under the same rule every
+  // override follows below: a `voice` override contradicts this derivation, so it
+  // must carry a `modality_reason:` or {@link modalityFindings} reports it. Nothing
+  // re-advertises a reading lesson as drivable silently.
+  const isReading = lesson.realization.type === "reading";
+  if (isReading) reasons.push("reading-type");
+
+  // Rule 2, by structure — the three ways a lesson's BODY can need eyes. All three are
+  // evaluated even once one has fired (the type case included), because the report is
+  // more useful when it names every cause.
   const hasScriptBlock = lesson.blocks.some((block) => block.type === "script");
   if (hasScriptBlock) reasons.push("script-block");
   const cues = matchedSightCues(text, cueContext);
@@ -928,7 +986,7 @@ export function deriveLessonModality(
   const derived: Modality =
     isWriting || hasWritingBlock
       ? "pen"
-      : hasScriptBlock || cues.length > 0 || wideTable
+      : isReading || hasScriptBlock || cues.length > 0 || wideTable
         ? "sight"
         : "voice";
   // Rule 3 — nothing needed eyes or a hand, so it plays in the car.
@@ -938,6 +996,8 @@ export function deriveLessonModality(
   // over the blocks it would keep.
   const coreReasons: ModalityReasonCode[] = [];
   if (isWriting) coreReasons.push("writing-type");
+  // Rule 2 by type, for the core: the text is the lesson, so nothing is set aside.
+  if (isReading) coreReasons.push("reading-type");
   const coreText = lessonCoreText(lesson);
   const coreScriptBlock = lesson.blocks.some(
     (block) => block.type === "script" && !isDetachableBlock(block),
@@ -949,7 +1009,7 @@ export function deriveLessonModality(
   if (coreWideTable) coreReasons.push("wide-table");
   const coreDerived: Modality = isWriting
     ? "pen"
-    : coreScriptBlock || coreCues.length > 0 || coreWideTable
+    : isReading || coreScriptBlock || coreCues.length > 0 || coreWideTable
       ? "sight"
       : "voice";
   if (coreReasons.length === 0) coreReasons.push("no-visual-dependency");

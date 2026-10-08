@@ -7,11 +7,11 @@
     "ZH-C29-words",
     "ZH-C29-diyi-ke"
   ],
-  "voiceLessons": 2,
+  "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "chinese/narration/ch29.txt",
   "json": "chinese/narration/ch29.json",
-  "textHash": "fnv1a64:5b169bd538dca361",
-  "jsonHash": "fnv1a64:012147abf71bdfed",
+  "textHash": "fnv1a64:7d65a6990ea26ded",
+  "jsonHash": "fnv1a64:8d1f8f8b1940e925",
   "findings": []
 }

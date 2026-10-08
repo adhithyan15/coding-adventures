@@ -4,17 +4,17 @@
     "language": "urdu",
     "chapter": 33,
     "sequence": 1740,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "reading-type"
     ],
-    "coreModality": "voice",
+    "coreModality": "sight",
     "coreReasons": [
-      "no-visual-dependency"
+      "reading-type"
     ],
-    "coreDrivable": true,
+    "coreDrivable": false,
     "sourceHash": "fnv1a64:d7823656a9406d93"
   },
   "findings": []

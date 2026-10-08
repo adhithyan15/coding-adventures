@@ -554,9 +554,15 @@ drivable course an empty promise. The derivation reads lesson type and block
 structure instead:
 
 1. `type: writing` → `pen`;
-2. otherwise a `script` block, a sight cue, or a table wider than the configured
-   linearisable width → `sight`;
+2. otherwise `type: reading`, a `script` block, a sight cue, or a table wider than the
+   configured linearisable width → `sight`;
 3. otherwise → `voice`.
+
+`type: reading` is the one place the word *reading* decides anything, and it is the
+lesson **type**, not the skill: a reading lesson *is* printed text and the instruction
+to read it, so it needs eyes even though every word of it could be spoken aloud
+(reason code `reading-type`). Like `type: writing` it applies to the core too — the
+text is the whole lesson, so there is nothing a hands-free view could set aside.
 
 `maxLinearisableTableColumns` defaults to **3**, and modality does not decide that on
 its own — it asks the *same* lineariser the narration export uses (`speech.ts`), so

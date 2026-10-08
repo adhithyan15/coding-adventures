@@ -9,11 +9,11 @@
     "ES-C67-segunda-lectura",
     "ES-C67-tercera-lectura"
   ],
-  "voiceLessons": 5,
-  "drivablePrefix": 5,
+  "voiceLessons": 2,
+  "drivablePrefix": 2,
   "text": "spanish/narration/ch266.txt",
   "json": "spanish/narration/ch266.json",
-  "textHash": "fnv1a64:cfc79f5a71bc733d",
-  "jsonHash": "fnv1a64:fe45ede08771ecb4",
+  "textHash": "fnv1a64:6f234565d4732f27",
+  "jsonHash": "fnv1a64:375871af93538285",
   "findings": []
 }

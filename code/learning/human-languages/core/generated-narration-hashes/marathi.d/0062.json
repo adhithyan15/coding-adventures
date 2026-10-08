@@ -7,11 +7,11 @@
     "MR-C62-message",
     "MR-C62-pahila-paath"
   ],
-  "voiceLessons": 2,
+  "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "marathi/narration/ch62.txt",
   "json": "marathi/narration/ch62.json",
-  "textHash": "fnv1a64:30b2973c7a4c0e7c",
-  "jsonHash": "fnv1a64:0ce65699b2468ba2",
+  "textHash": "fnv1a64:76bba9cde0c2fb10",
+  "jsonHash": "fnv1a64:47da9f015d663e50",
   "findings": []
 }

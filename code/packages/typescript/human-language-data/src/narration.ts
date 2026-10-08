@@ -832,6 +832,10 @@ function noticeNeeds(entry: LessonModality, skipped: NarrationTableSkipped[]): s
   const needs: string[] = [];
   for (const reason of entry.reasons) {
     if (reason === "writing-type") needs.push("a pen and something to write on");
+    // A reading lesson's text is perfectly speakable, so nothing below fires for it and
+    // without this line the notice would say only "needs your eyes" and not why. The
+    // why is the point of the lesson: the learner is meant to do the reading.
+    if (reason === "reading-type") needs.push("your eyes, to read the printed text yourself");
     if (reason === "script-block") needs.push("your eyes, for letter shapes on the page");
     if (reason === "sight-cue") {
       needs.push("your eyes, because the lesson points at something written down");

@@ -24,11 +24,11 @@
     "JA-R12-body-01",
     "JA-C12-body-map-two"
   ],
-  "voiceLessons": 20,
-  "drivablePrefix": 20,
+  "voiceLessons": 19,
+  "drivablePrefix": 19,
   "text": "japanese/narration/ch12.txt",
   "json": "japanese/narration/ch12.json",
-  "textHash": "fnv1a64:81658bdc3605e039",
-  "jsonHash": "fnv1a64:492cf589550b6763",
+  "textHash": "fnv1a64:656a73ce06716030",
+  "jsonHash": "fnv1a64:814214dcbbc0294d",
   "findings": []
 }
