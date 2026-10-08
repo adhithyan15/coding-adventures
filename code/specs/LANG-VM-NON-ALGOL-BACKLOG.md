@@ -227,16 +227,22 @@ now has 97 partial pairs and 679 pending; neither full historical syntax nor
 exhaustive public-release coverage is claimed. The next fresh selection
 rotates to the prepared bounded PREP01 negated C operand clause.
 
+PR #17020 delivered that bounded negated-operand C `#if` slice and merged as
+`a8c62232a3e5dd6d405db62c2cf8d61ac6e3310a` after exact-head CI,
+CodeQL, and books checks passed. The next fresh selection rotates to LANG82's
+prepared source-backed Perl 5.004_53 and 5.004_54 partial pairs. Full C
+`#if`, stringize/paste, and default frontend routing remain open.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **PREP01 C (selected):** accept one negated parenthesized operand, keeping
-   nested and mixed expressions explicit errors. Full C `#if`,
+1. **LANG82 Perl release grammars (selected):** add distinct source-backed
+   partial 5.004_53 and 5.004_54 pairs. Keep 5.004_01-t1 pending until its
+   own source is found; do not imply complete syntax or an exhaustive release
+   inventory.
+2. **PREP01 C:** continue the bounded conditional ladder. Full C `#if`,
    stringize/paste, and default frontend routing remain open.
-2. **LANG82 Perl release grammars:** continue distinct source-backed partial
-   pairs. Keep 5.004_01-t1 pending until its own source is found; do not imply
-   complete syntax or an exhaustive release inventory.
 3. **LANG78 JavaScript:** the completed output repair leaves the broader
    source/AST-to-IIR frontend subset open; Node remains a conformance oracle.
 
