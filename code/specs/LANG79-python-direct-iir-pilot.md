@@ -78,3 +78,22 @@ actual parenthesis tokens; matching token text alone does not validate a
 caller-supplied AST. Apply the same check to the one-argument path.
 `print()\nprint(1.0)\n` must produce `\n1.0\n`; a completed empty print before
 a later float-division failure must remain in the typed run error's output.
+
+## Bounded follow-up: two positional float arguments
+
+Accept exactly `print(<float expression>, <float expression>)` in the Python
+3.12 grammar tree. Lower the two expressions from left to right to IIR, then
+call a Rust `vm-core` builtin once to append their displayed values separated
+by one space and followed by one newline. Use the existing float display
+range, output byte limit, source and AST limits, and typed partial-output error
+behavior. Host Python is a conformance oracle only; Semantic IR is not an
+execution stage.
+
+The call must contain two positional `argument` nodes separated by an actual
+comma token. The exact `print` callee and parenthesis token-kind checks remain
+mandatory for direct AST callers. Reject keyword or unpacking arguments,
+three or more arguments, and other expression forms explicitly. A failure
+while evaluating the second argument must not emit part of that call's line;
+earlier completed print calls remain visible. For example,
+`print(1.0 + 2.0, -0.0)` prints `3.0 -0.0\n`, and a later
+`print(2.0, 1.0 / 0.0)` retains only the earlier output.
