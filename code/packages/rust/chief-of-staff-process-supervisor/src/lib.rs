@@ -594,8 +594,12 @@ impl ProcessHostSupervisor {
             .current_dir(package.path())
             .env_clear()
             .stdin(Stdio::piped())
-            .stdout(Stdio::piped())
-            .stderr(Stdio::inherit());
+            .stdout(Stdio::piped());
+        // D18S S-I2, S-I3. fd 2 goes to /dev/null rather than the daemon's own
+        // stderr, which may be a terminal or the journal: an agent-to-
+        // supervisor byte channel the broker never sees. Nothing above fd 2
+        // is inherited, and a terminal on fd 0-2 refuses the spawn.
+        chief_of_staff_spawn_isolation::isolate(&mut command);
         let mut child = command.spawn().map_err(|_| ProcessSupervisorError::Spawn)?;
         let process_id = child.id();
         let started_at_ns = self.clock.now_ns();

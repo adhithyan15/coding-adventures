@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- The Deno agent spawn isolates the agent's descriptors (D18S S-I2, S-I3;
+  #13980 P2.2). stderr is `/dev/null`, where it used to be inherited.
+  On Unix, nothing above fd 2 is inherited, the agent gets its own session,
+  and a terminal on a standard descriptor refuses the spawn.
 - Mark `HostProfileRuntime`'s inner runtime as a V1 agent surface, so tool
   outputs are walked for peer identities as well as arguments. A
   `HostProfileRuntime` IS the agent surface -- that is what

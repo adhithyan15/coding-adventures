@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/chief-of-staff-spawn-isolation",
+  "capabilities": [
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "libc tcgetattr, setsid, close_range, open, getdents64 and fcntl in the forked child before exec; getrlimit in the parent",
+      "justification": "Refuses a terminal on the agent's standard descriptors, leaves the supervisor's session, and makes every inherited descriptor above 2 close-on-exec between fork and exec (D18S S-I2, S-I3); std's Command offers no portable way to do any of these."
+    }
+  ],
+  "justification": "Spawn-time descriptor isolation for D18 agent processes. The one unsafe pre_exec hook lives here so the supervisor crates can keep forbid(unsafe_code)."
+}

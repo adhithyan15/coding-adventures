@@ -999,11 +999,14 @@ impl ActiveHostToolRuntime {
             &package,
             StdioWorkerRestartPolicy::Never,
         )?;
-        let mut child = Command::new(&spec.command.program)
+        let mut command = Command::new(&spec.command.program);
+        command
             .args(&spec.command.args)
             .stdin(Stdio::piped())
-            .stdout(Stdio::piped())
-            .stderr(Stdio::inherit())
+            .stdout(Stdio::piped());
+        // D18S S-I2, S-I3: stderr to /dev/null, nothing above fd 2
+        // inherited, no terminal on the standard descriptors.
+        let mut child = chief_of_staff_spawn_isolation::isolate(&mut command)
             .spawn()
             .map_err(|error| self.process_io_error(format!("spawn Deno agent: {error}")))?;
 

@@ -38,6 +38,10 @@ struct TestPackage {
 
 impl TestPackage {
     fn new(label: &str, marker: Option<&str>) -> Self {
+        Self::with_marker(label, marker.map(|marker| (marker, b"1".as_slice())))
+    }
+
+    fn with_marker(label: &str, marker: Option<(&str, &[u8])>) -> Self {
         let path = std::env::temp_dir().join(format!(
             "chief-process-supervisor-{label}-{}-{}",
             std::process::id(),
@@ -54,8 +58,8 @@ impl TestPackage {
             b"console.log('fixture');\n",
         )
         .unwrap();
-        if let Some(marker) = marker {
-            fs::write(path.join(marker), b"1").unwrap();
+        if let Some((marker, content)) = marker {
+            fs::write(path.join(marker), content).unwrap();
         }
         fs::write(path.join("PUBKEY_ID"), TEST_KEY_ID).unwrap();
         let digest = package_digest(&path);
@@ -137,6 +141,7 @@ fn package_digest(path: &Path) -> [u8; 32] {
         "IGNORE_TERMINATE",
         "NO_HEARTBEAT",
         "OVERSIZED_BOOTSTRAP",
+        "REPORT_DESCRIPTORS",
         "SILENT_BOOTSTRAP",
         "WRONG_READY",
     ] {
@@ -803,4 +808,51 @@ fn unavailable_launch_bindings_fail_before_process_creation() {
         supervisor.inspect(&registration),
         Ok(SupervisorObservation::Absent)
     );
+}
+
+#[cfg(unix)]
+#[test]
+fn the_production_spawn_isolates_the_agents_descriptors() {
+    // D18S S-I2, S-I3, end to end through `spawn_verified`: a descriptor the
+    // supervisor holds without FD_CLOEXEC never reaches the agent, and the
+    // agent's fd 2 is /dev/null rather than the daemon's own stderr.
+    use std::os::fd::{AsRawFd, FromRawFd, OwnedFd};
+    let scratch = std::env::temp_dir().join(format!(
+        "chief-process-supervisor-descriptors-{}-{}",
+        std::process::id(),
+        SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos()
+    ));
+    fs::create_dir_all(&scratch).unwrap();
+    let held = fs::File::create(scratch.join("held")).unwrap();
+    // SAFETY: `dup` returns a new descriptor, never FD_CLOEXEC, or -1.
+    let leak = unsafe { libc::dup(held.as_raw_fd()) };
+    assert!(leak > 2);
+    // SAFETY: `leak` was just returned by `dup` and nothing else owns it.
+    let leak = unsafe { OwnedFd::from_raw_fd(leak) };
+    let report = scratch.join("report");
+    let marker = format!("{}\n{}", leak.as_raw_fd(), report.display());
+    let package = TestPackage::with_marker(
+        "descriptors",
+        Some(("REPORT_DESCRIPTORS", marker.as_bytes())),
+    );
+    let registration = package.registration("fixture-host");
+    let mut supervisor = new_supervisor(
+        Arc::new(keyring()),
+        Arc::new(generate_identity_keypair()),
+        Duration::from_secs(3),
+        Duration::from_secs(1),
+    );
+    supervisor.start(&registration).unwrap();
+    await_phase(&mut supervisor, &registration, SupervisorPhase::Running);
+    supervisor.stop(registration.host_name()).unwrap();
+
+    let report = fs::read_to_string(&report).unwrap();
+    assert!(report.contains("visible=true"), "{report}");
+    assert!(report.contains("leaked=false"), "{report}");
+    assert!(report.contains("stderr_null=true"), "{report}");
+    drop(leak);
+    let _ = fs::remove_dir_all(&scratch);
 }

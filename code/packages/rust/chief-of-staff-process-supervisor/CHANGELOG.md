@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- **Descriptor isolation at the production agent spawn** (D18S S-I2, S-I3;
+  #13980 P2.2). `spawn_verified` now calls
+  `chief_of_staff_spawn_isolation::isolate`:
+  - the agent's fd 2 is `/dev/null`, where it used to be the daemon's own
+    stderr (a terminal, or the journal);
+  - on Unix, nothing above fd 2 is inherited, the agent gets its own
+    session, and a terminal on fd 0-2 refuses the spawn. On Windows, only
+    stderr changes.
+
+  A new end-to-end test leaks a descriptor without `FD_CLOEXEC` in the
+  supervisor and checks from inside the agent that it did not arrive, and
+  that fd 2 is `/dev/null`.
+
 - Fix a race that masked a child exiting before `Ready` as a clean exit.  When
   `refresh` saw the child had exited, it settled on `Exited` without waiting
   for the stdout reader thread, so an end-of-stream failure the reader had not

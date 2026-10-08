@@ -96,6 +96,33 @@ fn exercise_data_plane(
     Ok(())
 }
 
+/// Report what this process was handed (D18S S-I2, S-I3). The marker holds
+/// the number of a descriptor the parent leaked on purpose, then the path to
+/// write the report to.
+#[cfg(unix)]
+fn report_descriptors() -> Result<(), Box<dyn std::error::Error>> {
+    use std::os::unix::fs::MetadataExt;
+    let marker = std::fs::read_to_string("REPORT_DESCRIPTORS")?;
+    let (fd, path) = marker.split_once('\n').ok_or("bad marker")?;
+    // `lstat` of the entry itself: it exists exactly while the fd is open.
+    // fd 0 is the positive control: if /dev/fd cannot be read at all, the
+    // report says so instead of reading as "not leaked".
+    let visible = std::fs::symlink_metadata("/dev/fd/0").is_ok();
+    let leaked = std::fs::symlink_metadata(format!("/dev/fd/{fd}")).is_ok();
+    let stderr_null =
+        std::fs::metadata("/dev/fd/2")?.rdev() == std::fs::metadata("/dev/null")?.rdev();
+    std::fs::write(
+        path,
+        format!("visible={visible}\nleaked={leaked}\nstderr_null={stderr_null}\n"),
+    )?;
+    Ok(())
+}
+
+#[cfg(not(unix))]
+fn report_descriptors() -> Result<(), Box<dyn std::error::Error>> {
+    Ok(())
+}
+
 fn run() -> Result<(), Box<dyn std::error::Error>> {
     if has_marker("SILENT_BOOTSTRAP") {
         thread::sleep(Duration::from_secs(10));
@@ -132,6 +159,9 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     };
     if arguments != ["--package-runtime", expected_runtime] {
         return Err("package runtime launch argument mismatch".into());
+    }
+    if has_marker("REPORT_DESCRIPTORS") {
+        report_descriptors()?;
     }
     if has_marker("EXIT_BEFORE_READY") {
         return Ok(());
