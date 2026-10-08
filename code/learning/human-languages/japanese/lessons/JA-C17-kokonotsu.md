@@ -59,7 +59,9 @@ no other word in the chapter has managed.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KOKONOTSU, JA-LEX-KOKO, JA-LEX-KU, JA-LEX-YATTSU, JA-LEX-HACHI] -->
 
-Write **ここのつ**. Say *hachi*, *ku*, then *yattsu*, *kokonotsu* — both counts, two numbers each.
+[YOU WRITE: **ここのつ**]
+
+Say *hachi*, *ku*, then *yattsu*, *kokonotsu* — both counts, two numbers each.
 Then say *ku* and *kokonotsu* again. Then say *koko* and *kokonotsu*
 and remind yourself that the second is not made of the first.
 

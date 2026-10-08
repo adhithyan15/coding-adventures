@@ -70,7 +70,9 @@ is what the last two chapters were for.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-JUU, JA-GRAMMAR-JUU-COMPOUND, JA-LEX-ROKU, JA-LEX-NANA, JA-LEX-HACHI, JA-LEX-KU] -->
 
-Write **じゅう**. Say the whole run, one to ten, without stopping. Then say
+[YOU WRITE: **じゅう**]
+
+Say the whole run, one to ten, without stopping. Then say
 *jūichi*, *nijū*, *sanjū*, and build one number of your own between twenty and
 ninety-nine.
 

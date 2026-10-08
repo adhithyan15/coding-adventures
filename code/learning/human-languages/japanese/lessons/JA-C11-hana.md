@@ -34,7 +34,9 @@ reviews_of: [JA-W01-ha, JA-W08-na, JA-C11-ashi]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-HA-01, JA-SCRIPT-NA-01, JA-LEX-ASHI] -->
 
-[PAUSE 12s] Write **は** and **な**. Retrieve **あし**.
+[PAUSE 12s] [YOU WRITE: **は** and **な**]
+
+Retrieve **あし**.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-HANA-NOSE]; assesses=[] -->
@@ -49,7 +51,7 @@ marker job, not to every appearance of the sign.
 
 1. Hear *hana*; point to the nose.
 2. Read **は | な** as *ha-na*.
-3. Hide it and write both signs.
+3. [YOU WRITE: both signs, with the word hidden]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HANA-NOSE] -->

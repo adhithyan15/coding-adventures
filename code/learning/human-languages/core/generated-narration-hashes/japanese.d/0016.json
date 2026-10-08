@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 16,
-  "sourceHash": "fnv1a64:22a436e5626947c9",
+  "sourceHash": "fnv1a64:6bb61223ab0a6503",
   "lessonIds": [
     "JA-W16-hi",
     "JA-C16-hitotsu",
@@ -16,7 +16,7 @@
   "drivablePrefix": 0,
   "text": "japanese/narration/ch16.txt",
   "json": "japanese/narration/ch16.json",
-  "textHash": "fnv1a64:b12a18dfa6ce9fed",
-  "jsonHash": "fnv1a64:a93de1949e019ae5",
+  "textHash": "fnv1a64:62b2b179d8025136",
+  "jsonHash": "fnv1a64:874b72b4d279259c",
   "findings": []
 }

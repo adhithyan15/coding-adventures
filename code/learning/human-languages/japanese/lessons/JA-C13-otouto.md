@@ -39,13 +39,15 @@ Retrieve **あね** once from its meaning.
 ## You'll Want to Know — hear it first
 <!-- hl-knowledge: introduces=[JA-LEX-OTOUTO]; assesses=[JA-LEX-ANE, JA-SCRIPT-KANJI-NICHI-01] -->
 
-Write distant **日** once. Hear *o-to-o-to*: o | to | o | to, with the long o
+[YOU WRITE: distant **日** once]
+
+Hear *o-to-o-to*: o | to | o | to, with the long o
 occupying two beats.
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-OTOUTO, JA-SCRIPT-O-01, JA-SCRIPT-TO-01, JA-SCRIPT-U-01] -->
 
-Read **お | と | う | と**. Copy **おとうと**, hide it, and write it once.
+Read **お | と | う | と**. [YOU WRITE: one copy of **おとうと**; then hide it and write it once]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-OTOUTO] -->

@@ -4,7 +4,7 @@
   "chapter": 136,
   "title": "Family and Water: Zo, Zu and Ze",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:025aa8d6d9439e08",
+  "sourceHash": "fnv1a64:3f4aa2133eb86edf",
   "lessons": [
     {
       "id": "JA-C136-kazoku",
@@ -1269,7 +1269,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c49b5216bad5f2d5",
+      "sourceHash": "fnv1a64:3e0a1dcd53a46569",
       "notice": null,
       "blocks": [
         {
@@ -1397,16 +1397,35 @@
           "title": "Guided Practice — write",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write そ ぞ (zo), す ず (zu) and せ ぜ (ze) in pairs."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "そ ぞ (zo), す ず (zu) and せ ぜ (ze), in pairs",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **そ ぞ**, **す ず** and **せ ぜ**, in pairs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "かぞく (kazoku) and かぞえる (kazoeru) from memory, and say which one is a verb",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **かぞく** and **かぞえる** from memory, and say which one is a verb]"
             },
             {
               "kind": "speech",
-              "text": "Write かぞく (kazoku) and かぞえる (kazoeru) from memory, and say which one is a verb."
+              "text": "Say kaze."
             },
             {
-              "kind": "speech",
-              "text": "Write かぜ, and say kaze."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "かぜ (kaze)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **かぜ**]"
             }
           ]
         },

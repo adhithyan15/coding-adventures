@@ -36,7 +36,9 @@ reviews_of: [JA-W132-so, JA-W03-to, JA-C131-ocha-o-kudasai, JA-C118-nawa, JA-C12
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-SO-01, JA-GRAMMAR-OBJECT-WO, JA-LEX-C118-THINGS118-01, JA-LEX-C129-QUAL129-04] -->
 
-[PAUSE 15s] Write **そ** — **R1**, one lesson back. Then ask for tea politely — **R2**, five lessons back.
+[PAUSE 15s] [YOU WRITE: **そ** — **R1**, one lesson back]
+
+Then ask for tea politely — **R2**, five lessons back.
 
 - [YOU RECALL: say *a rope of straw* — **R4**, eighty lessons back]
 - [YOU RECALL: say *shameless* — **R3**, twenty lessons back]

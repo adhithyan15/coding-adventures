@@ -34,7 +34,8 @@ reviews_of: [JA-W01-ko, JA-W06-ko-katakana, JA-W06-long-mark, JA-C10-koko, JA-C1
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KO-01, JA-SCRIPT-KATAKANA-KO-01, JA-SCRIPT-CHOUON, JA-LEX-KOKO, JA-LEX-KATA-SHOULDER, JA-LEX-ATAMA] -->
 
-[PAUSE 75s] Write hiragana **こ**, then katakana **コー** and hold the vowel.
+[PAUSE 75s] [YOU WRITE: hiragana **こ**, then katakana **コー** — the bar holds the vowel]
+
 Point here with **ここ**. Name shoulder, then retrieve head after the longer gap.
 
 ## Wrap-up Recall

@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "A Little More Slowly",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7bcb77ff93c3d224",
+  "sourceHash": "fnv1a64:4068ce1b36c30bb7",
   "lessons": [
     {
       "id": "JA-W10-se",
@@ -374,7 +374,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cb790edfcb9ac1d1",
+      "sourceHash": "fnv1a64:b6f355473d467c29",
       "notice": null,
       "blocks": [
         {
@@ -390,7 +390,16 @@
             },
             {
               "kind": "speech",
-              "text": "Ask for one repetition, then write known す, こ, and ね."
+              "text": "Ask for one repetition."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "known す, こ, and ね (ne)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: known **す**, **こ**, and **ね**]"
             }
           ]
         },
@@ -609,7 +618,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6f92189da5f38aa4",
+      "sourceHash": "fnv1a64:eab42c73e5ee11dc",
       "notice": null,
       "blocks": [
         {
@@ -625,7 +634,16 @@
             },
             {
               "kind": "speech",
-              "text": "Read すこし (sukoshi), then write known く, り, and し."
+              "text": "Read すこし (sukoshi)."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "known く, り, and し (shi)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: known **く**, **り**, and **し**]"
             }
           ]
         },
@@ -856,7 +874,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f515a833f0d4e37",
+      "sourceHash": "fnv1a64:567ba073681e5ef7",
       "notice": null,
       "blocks": [
         {
@@ -872,7 +890,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say yukkuri. Retrieve onegaishimasu, then write い, く, さ."
+              "text": "Say yukkuri. Retrieve onegaishimasu."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "い, く, さ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **い, く, さ**]"
             }
           ]
         },
@@ -974,7 +1001,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c2410108830f66ea",
+      "sourceHash": "fnv1a64:75546851958ec03e",
       "notice": null,
       "blocks": [
         {
@@ -990,7 +1017,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say itte kudasai, write ゆ (yu), then write もう and すこし (sukoshi) separately. Read both."
+              "text": "Say itte kudasai."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ゆ (yu), then もう and すこし (sukoshi) separately, and read both back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ゆ**, then **もう** and **すこし** separately, and read both back]"
             }
           ]
         },
@@ -1024,7 +1060,16 @@
             },
             {
               "kind": "speech",
-              "text": "Hear the phrase, wait ten seconds, and write it from memory."
+              "text": "Hear the phrase and wait ten seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "もうすこし (mō sukoshi) from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **もうすこし** from memory]"
             }
           ]
         },
@@ -1035,7 +1080,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Circle う, the second beat of mō."
+              "text": "Name the sign that carries the second beat of mō: う."
             },
             {
               "kind": "speech",
@@ -1076,7 +1121,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b22a98bdbfceef5c",
+      "sourceHash": "fnv1a64:8e1edd823e51c386",
       "notice": null,
       "blocks": [
         {
@@ -1092,7 +1137,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say “I do not understand,” then read もうすこし (mō sukoshi). Write み and し."
+              "text": "Say “I do not understand,” then read もうすこし (mō sukoshi)."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "み and し (shi)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **み** and **し**]"
             }
           ]
         },
@@ -1194,7 +1248,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2fe1f85c60d89d19",
+      "sourceHash": "fnv1a64:a71bb94fc6d4d347",
       "notice": null,
       "blocks": [
         {
@@ -1209,8 +1263,17 @@
               "source": "[PAUSE 12s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "こ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **こ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write こ, say wakarimashita, then retrieve sumimasen."
+              "text": "Say wakarimashita, then retrieve sumimasen."
             }
           ]
         },
@@ -1244,7 +1307,16 @@
             },
             {
               "kind": "speech",
-              "text": "Hear ko-ko, wait ten seconds, and write both signs."
+              "text": "Hear ko-ko and wait ten seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both signs",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both signs]"
             }
           ]
         },
@@ -1296,7 +1368,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d3edf7c32640ac2",
+      "sourceHash": "fnv1a64:dac7588ab7a8dab4",
       "notice": null,
       "blocks": [
         {
@@ -1311,8 +1383,17 @@
               "source": "[PAUSE 30s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "せ (se), お (o), ね (ne), し (shi), ゆ (yu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **せ, お, ね, し, ゆ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write せ, お, ね, し, ゆ. Read sumimasen and onegaishimasu. Retrieve the repetition request, then the three new spoken pieces mō sukoshi, yukkuri, and itte kudasai."
+              "text": "Read sumimasen and onegaishimasu. Retrieve the repetition request, then the three new spoken pieces mō sukoshi, yukkuri, and itte kudasai."
             }
           ]
         },
@@ -1346,7 +1427,16 @@
             },
             {
               "kind": "speech",
-              "text": "Read/write: independently retrieve only もうすこし (mō sukoshi)."
+              "text": "Read: independently retrieve only もうすこし (mō sukoshi)."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "もうすこし (mō sukoshi)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **もうすこし**]"
             },
             {
               "kind": "speech",

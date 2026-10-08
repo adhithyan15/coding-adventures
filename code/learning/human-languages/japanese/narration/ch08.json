@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "One Goodbye, Sign by Sign",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:bd93a1ad38841025",
+  "sourceHash": "fnv1a64:438a7505c1d9718d",
   "lessons": [
     {
       "id": "JA-C08-hear-sayounara",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe8f2516981477bf",
+      "sourceHash": "fnv1a64:f866ca785d34586d",
       "notice": null,
       "blocks": [
         {
@@ -34,8 +34,17 @@
               "source": "[PAUSE 10s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "katakana コ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: katakana **コ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write katakana コ, give the daytime greeting, then run one doorway exchange aloud. Close the text before the new expression begins."
+              "text": "Give the daytime greeting, then run one doorway exchange aloud. Close the text before the new expression begins."
             }
           ]
         },
@@ -600,7 +609,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c45ebbecebac9936",
+      "sourceHash": "fnv1a64:12da069f9c86a8f8",
       "notice": null,
       "blocks": [
         {
@@ -615,8 +624,17 @@
               "source": "[PAUSE 12s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "す",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **す**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write す, then give the daytime greeting and plain thanks. Those two social jobs are already secure. The new third job is leaving."
+              "text": "Then give the daytime greeting and plain thanks. Those two social jobs are already secure. The new third job is leaving."
             }
           ]
         },
@@ -653,8 +671,13 @@
               "text": "Read: cover the romanization and read さようなら (sayōnara) sign by sign."
             },
             {
-              "kind": "speech",
-              "text": "Write: hear the word, wait ten seconds, and write all five signs."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all five signs from dictation — hear the word, then wait ten seconds before you start",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all five signs from dictation — hear the word, then wait ten seconds before you start]"
             },
             {
               "kind": "speech",

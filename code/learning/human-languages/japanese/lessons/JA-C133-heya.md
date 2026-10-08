@@ -37,7 +37,8 @@ reviews_of: [JA-C133-nuno, JA-W17-ya, JA-W18-ho, JA-W133-ke, JA-W131-wo]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C133-NUNO, JA-SCRIPT-KE-01, JA-SCRIPT-WO-01] -->
 
-[PAUSE 15s] Say *cloth* — **R1**, one lesson back. Then write **け** — **R2**, five lessons back.
+[PAUSE 15s] Say *cloth* — **R1**, one lesson back.
+[YOU WRITE: **け** — **R2**, five lessons back]
 
 - [YOU RECALL: write **を** — **R3**, twenty lessons back]
 

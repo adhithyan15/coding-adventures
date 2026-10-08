@@ -34,8 +34,8 @@ reviews_of: [JA-C09-mou, JA-C10-sukoshi, JA-W09-mo, JA-W03-u, JA-W03-su, JA-W01-
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-MOU, JA-LEX-SUKOSHI, JA-SCRIPT-MO-01, JA-SCRIPT-U-01, JA-SCRIPT-SU-01, JA-SCRIPT-KO-01, JA-SCRIPT-SHI-01, JA-LEX-ITTE-KUDASAI, JA-SCRIPT-YU-01] -->
 
-[PAUSE 28s] Say *itte kudasai*, write **ゆ**, then write **もう** and **すこし**
-separately. Read both.
+[PAUSE 28s] Say *itte kudasai*.
+[YOU WRITE: **ゆ**, then **もう** and **すこし** separately, and read both back]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-MOU-SUKOSHI]; assesses=[] -->
@@ -50,12 +50,12 @@ No new grammar is hiding here. **もう** points beyond the present amount;
 
 1. Read **もう | すこし**.
 2. Say *mō sukoshi*, keeping the extra beat in **もう**.
-3. Hear the phrase, wait ten seconds, and write it from memory.
+3. Hear the phrase and wait ten seconds. [YOU WRITE: **もうすこし** from memory]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-MOU-SUKOSHI] -->
 <!-- hl-activity: {"id":"JA-C10-mou-sukoshi-write","kind":"text","assesses":["JA-LEX-MOU-SUKOSHI"],"prompt":"From sound alone, write a little more in hiragana.","answer":"もうすこし","accepted":["もうすこし。"],"feedback":{"correct":"Right: もうすこし joins two fully earned words.","incorrect":"Build it as もう + すこし."},"response_seconds":15} -->
 
-Circle **う**, the second beat of *mō*.
+Name the sign that carries the second beat of *mō*: **う**.
 
 Source: [Japan Foundation Irodori Starter lesson 2](https://www.irodori.jpf.go.jp/assets/data/starter/pdf/X_L02.pdf), pp. 1–3.

@@ -34,7 +34,9 @@ reviews_of: [JA-C12-ha-tooth, JA-C01-iie, JA-C01-nihongo, JA-C10-wakarimashita]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HA-TOOTH, JA-LEX-IIE, JA-SCRIPT-MORA-LENGTH, JA-LEX-NIHONGO, JA-SCRIPT-KANJI-READINGS, JA-LEX-WAKARIMASHITA] -->
 
-[PAUSE 60s] Write **は**. Say **いいえ** with its full vowel length. Read
+[PAUSE 60s] [YOU WRITE: **は**]
+
+Say **いいえ** with its full vowel length. Read
 **日本語** with its learned readings, then close with *wakarimashita*.
 
 ## You'll want to know
@@ -47,7 +49,7 @@ Two known signs, two even morae.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KATA-SHOULDER] -->
 
-Hear, point, say, read, then write **かた**.
+Hear, point, say, and read **かた**. [YOU WRITE: **かた**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KATA-SHOULDER] -->

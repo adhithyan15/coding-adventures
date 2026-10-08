@@ -34,8 +34,10 @@ reviews_of: [JA-W01-konnichiwa-read, JA-W08-sayounara-read, JA-C08-sayounara, JA
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KONNICHIWA-READ-01, JA-SCRIPT-SAYOUNARA-READ-01, JA-PERFORMANCE-SAYOUNARA-FOUR-SKILL-01, JA-SCRIPT-DA-01, JA-LEX-KOSHI] -->
 
-[PAUSE 85s] Read **こんにちは**. Hear, say, read, and write **さようなら**.
-Write **だ**, then retrieve **こし** without looking back.
+[PAUSE 85s] Read **こんにちは**. Hear, say, and read **さようなら**.
+[YOU WRITE: **さようなら**, then **だ**]
+
+Retrieve **こし** without looking back.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KONNICHIWA-READ-01, JA-SCRIPT-SAYOUNARA-READ-01, JA-PERFORMANCE-SAYOUNARA-FOUR-SKILL-01, JA-SCRIPT-DA-01, JA-LEX-KOSHI] -->

@@ -34,8 +34,12 @@ reviews_of: [JA-W03-a, JA-W09-do, JA-C09-mou, JA-C11-mimi, JA-C12-senaka]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-A-01, JA-SCRIPT-DO-01, JA-LEX-MOU, JA-LEX-MIMI, JA-LEX-SENAKA] -->
 
-[PAUSE 70s] Write **あ** and **ど**. Say *mō* on two morae. Write **みみ**, then
-retrieve **せなか** after five lessons.
+[PAUSE 70s] [YOU WRITE: **あ** and **ど**]
+
+Say *mō* on two morae.
+[YOU WRITE: **みみ**]
+
+Then retrieve **せなか** after five lessons.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-A-01, JA-SCRIPT-DO-01, JA-LEX-MOU, JA-LEX-MIMI, JA-LEX-SENAKA] -->

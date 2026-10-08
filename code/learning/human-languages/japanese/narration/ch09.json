@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "One More Time, Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e1ebd0bdb2253958",
+  "sourceHash": "fnv1a64:af712f329f2c6aab",
   "lessons": [
     {
       "id": "JA-C09-sumimasen",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f2bf3f61c416e01",
+      "sourceHash": "fnv1a64:5a983ed985856339",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,20 @@
             },
             {
               "kind": "speech",
-              "text": "Hear the farewell in your mind, say it, read さようなら, and write it once. Now imagine that the other person has spoken and you missed it. Do not guess; open a repair."
+              "text": "Hear the farewell in your mind, say it, and read さようなら."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "さようなら once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **さようなら** once]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now imagine that the other person has spoken and you missed it. Do not guess; open a repair."
             }
           ]
         },
@@ -874,7 +887,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34d85874d9796e60",
+      "sourceHash": "fnv1a64:675841903f070bea",
       "notice": null,
       "blocks": [
         {
@@ -890,7 +903,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say sumimasen, yoku wakarimasen. Write め (me) and ど (do) once."
+              "text": "Say sumimasen, yoku wakarimasen."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "め (me) and ど (do), once each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **め** and **ど**, once each]"
             }
           ]
         },
@@ -1108,7 +1130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be3ef95ded5d9cf8",
+      "sourceHash": "fnv1a64:d1b684c5d19c69c6",
       "notice": null,
       "blocks": [
         {
@@ -1123,8 +1145,26 @@
               "source": "[PAUSE 15s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "い, ち, and と, then add the dakuten to と",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **い**, **ち**, and **と**, then add the dakuten to **と**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write い, ち, and と. Add the dakuten to と and read the result do. Write め (me) once as a review pulse."
+              "text": "Say the result: do."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "め (me) once, as a review pulse",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **め** once, as a review pulse]"
             }
           ]
         },
@@ -1161,8 +1201,13 @@
               "text": "Hear i | chi | do without looking."
             },
             {
-              "kind": "speech",
-              "text": "Write いちど (ichido) from the three morae."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "いちど (ichido) from the three morae",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **いちど** from the three morae]"
             },
             {
               "kind": "speech",
@@ -1177,7 +1222,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Circle the dakuten. It changes the final mora, not the first two."
+              "text": "Say which mora carries the dakuten: the last one, do. It changes the final mora, not the first two."
             },
             {
               "kind": "speech",
@@ -1218,7 +1263,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b32c46eab181e07e",
+      "sourceHash": "fnv1a64:0b825cf2ab899fbc",
       "notice": null,
       "blocks": [
         {
@@ -1234,7 +1279,16 @@
             },
             {
               "kind": "speech",
-              "text": "Read いちど (ichido). Say sumimasen, yoku wakarimasen. Write く."
+              "text": "Read いちど (ichido). Say sumimasen, yoku wakarimasen."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "く (ku)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **く**]"
             }
           ]
         },
@@ -1340,7 +1394,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f71d53d907086f9",
+      "sourceHash": "fnv1a64:7f4a5b3992b1f99f",
       "notice": null,
       "blocks": [
         {
@@ -1355,8 +1409,17 @@
               "source": "[PAUSE 25s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "み (mi), め (me), く (ku), ど (do), も (mo)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **み, め, く, ど, も**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write み, め (me), く, ど, も (mo). Say sumimasen, yoku wakarimasen. Then retrieve mō, ichido, and onegaishimasu separately."
+              "text": "Say sumimasen, yoku wakarimasen. Then retrieve mō, ichido, and onegaishimasu separately."
             }
           ]
         },
@@ -1393,8 +1456,13 @@
               "text": "Read: independently read もういちど; use the printed support for the rest."
             },
             {
-              "kind": "speech",
-              "text": "Write: from dictation, write only the independently earned block もういちど."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "もういちど from dictation — only this independently earned block",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **もういちど** from dictation — only this independently earned block]"
             }
           ]
         },

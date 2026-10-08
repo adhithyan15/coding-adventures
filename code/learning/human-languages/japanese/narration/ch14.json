@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Five Numbers, No New Signs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:2585cab6fd2c9a99",
+  "sourceHash": "fnv1a64:530e6187928ee82c",
   "lessons": [
     {
       "id": "JA-C14-ichi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f615e8d7747fb45e",
+      "sourceHash": "fnv1a64:7439557a52be668c",
       "notice": null,
       "blocks": [
         {
@@ -83,7 +83,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read い | ち. Copy いち (ichi), hide it, and write it from the meaning. Then say いちど and point to the part of it that is the number."
+              "text": "Read い | ち."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of いち (ichi); then hide it and write it from the meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **いち**; then hide it and write it from the meaning]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then say いちど and point to the part of it that is the number."
             }
           ]
         },
@@ -137,7 +150,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79d5afeb1495aa38",
+      "sourceHash": "fnv1a64:2e2bfcdd2ed9f07e",
       "notice": null,
       "blocks": [
         {
@@ -185,8 +198,17 @@
               "text": "五 (ご) — go — five."
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "五 (go) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **五** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Write 五 once. Chapter five taught you those four strokes, gave you the sound go, said on the page that the sign means five on its own, and then asked you for nothing but the sound, because it was only there to cue the go inside 語."
+              "text": "Chapter five taught you those four strokes, gave you the sound go, said on the page that the sign means five on its own, and then asked you for nothing but the sound, because it was only there to cue the go inside 語."
             },
             {
               "kind": "speech",
@@ -204,8 +226,17 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "五 (go) from memory — top, down, middle and turn, long bottom — then its reading ご",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **五** from memory — top, down, middle and turn, long bottom — then its reading **ご**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write 五 from memory: top, down, middle and turn, long bottom. Then write its reading ご and say go. Say いち (ichi), then 五 — the two numbers you owned before this chapter opened."
+              "text": "Say go. Say いち (ichi), then 五 — the two numbers you owned before this chapter opened."
             }
           ]
         },
@@ -259,7 +290,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e7287d9679490a5",
+      "sourceHash": "fnv1a64:63dadff23a935a25",
       "notice": null,
       "blocks": [
         {
@@ -332,7 +363,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read に. Write it, hide it, write it again from the meaning. Then say ichi — ni and hold both at one beat each."
+              "text": "Read に (ni)."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "に; then hide it and write it again from the meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **に**; then hide it and write it again from the meaning]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then say ichi — ni and hold both at one beat each."
             }
           ]
         },
@@ -387,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8acc03c7d88d52f5",
+      "sourceHash": "fnv1a64:0c5eaec0ea891317",
       "notice": null,
       "blocks": [
         {
@@ -469,7 +513,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read さ | ん as two beats. Write さん, hide it, write it again. Then say ichi, ni, san three times without slowing at ん."
+              "text": "Read さ | ん as two beats."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "さん (san); then hide it and write it again",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **さん**; then hide it and write it again]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then say ichi, ni, san three times without slowing at ん."
             }
           ]
         },
@@ -523,7 +580,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28ad4b72ee0fd7e1",
+      "sourceHash": "fnv1a64:b900aeb3f30c835b",
       "notice": null,
       "blocks": [
         {
@@ -637,8 +694,17 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "よん (yon) and し",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **よん** and **し**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write よん and し. Say the run in order: ichi, ni, san, yon, go. Then say it once with し in place of よん and hear how much closer shi sits to ichi."
+              "text": "Say the run in order: ichi, ni, san, yon, go. Then say it once with し in place of よん and hear how much closer shi sits to ichi."
             }
           ]
         },

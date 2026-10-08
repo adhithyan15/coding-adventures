@@ -34,7 +34,9 @@ reviews_of: [JA-W03-ka, JA-W10-o, JA-C11-hana]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KA-01, JA-SCRIPT-O-01, JA-LEX-HANA-NOSE] -->
 
-[PAUSE 12s] Write **か** and **お**. Retrieve **はな** — nose.
+[PAUSE 12s] [YOU WRITE: **か** and **お**]
+
+Retrieve **はな** — nose.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-KAO]; assesses=[] -->
@@ -48,7 +50,7 @@ Give **か** and **お** one mora each: *ka-o*.
 
 1. Hear two beats, *ka-o*; point to the face.
 2. Read **か | お**.
-3. Hide it and write the two signs.
+3. [YOU WRITE: the two signs, with the word hidden]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KAO] -->

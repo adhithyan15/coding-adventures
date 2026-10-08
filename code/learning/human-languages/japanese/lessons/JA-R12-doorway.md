@@ -34,9 +34,12 @@ reviews_of: [JA-W01-chi, JA-C01-practice, JA-C08-hear-sayounara, JA-W11-te, JA-C
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-CHI-01, JA-DIALOGUE-DOORWAY, JA-LEX-SAYOUNARA, JA-SCRIPT-TE-01, JA-LEX-SENAKA, JA-LEX-HA-TOOTH] -->
 
-[PAUSE 80s] Write **ち**. Run the old doorway exchange and end with
-**さようなら**. Write **て**. Retrieve **せなか**, then **は** after five
-lessons.
+[PAUSE 80s] [YOU WRITE: **ち**]
+
+Run the old doorway exchange and end with **さようなら**.
+[YOU WRITE: **て**]
+
+Retrieve **せなか**, then **は** after five lessons.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-CHI-01, JA-DIALOGUE-DOORWAY, JA-LEX-SAYOUNARA, JA-SCRIPT-TE-01, JA-LEX-SENAKA, JA-LEX-HA-TOOTH] -->

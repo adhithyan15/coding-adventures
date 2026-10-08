@@ -34,7 +34,10 @@ reviews_of: [JA-W03-u, JA-C11-me-eye]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-U-01, JA-LEX-ME-EYE] -->
 
-[PAUSE 25s] Write **う**, then hear, say, read, and write **め**.
+[PAUSE 25s] [YOU WRITE: **う**]
+
+Then hear, say, and read **め**.
+[YOU WRITE: **め**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-U-01, JA-LEX-ME-EYE] -->

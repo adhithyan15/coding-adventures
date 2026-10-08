@@ -34,8 +34,10 @@ reviews_of: [JA-C12-onaka, JA-W01-ni, JA-C01-koohii, JA-W11-small-tsu]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ONAKA, JA-SCRIPT-NI-01, JA-LEX-KOOHII, JA-SCRIPT-KATAKANA-LOANWORDS, JA-SCRIPT-SMALL-TSU-01] -->
 
-[PAUSE 55s] Write **おなか** and **に**. Read **コーヒー** as a katakana loan,
-then write small **っ**.
+[PAUSE 55s] [YOU WRITE: **おなか** and **に**]
+
+Read **コーヒー** as a katakana loan.
+[YOU WRITE: small **っ**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-SENAKA]; assesses=[] -->
@@ -47,7 +49,7 @@ Only the opening changes from **おなか**.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SENAKA] -->
 
-Hear, point, say, read, then write **せなか**.
+Hear, point, say, and read **せなか**. [YOU WRITE: **せなか**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SENAKA] -->

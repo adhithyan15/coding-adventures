@@ -34,7 +34,9 @@ reviews_of: [JA-W03-a, JA-W10-shi, JA-C11-kuchi]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-A-01, JA-SCRIPT-SHI-01, JA-LEX-KUCHI] -->
 
-[PAUSE 12s] Write **あ** and **し**. Retrieve **くち** — mouth.
+[PAUSE 12s] [YOU WRITE: **あ** and **し**]
+
+Retrieve **くち** — mouth.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-ASHI]; assesses=[] -->
@@ -49,7 +51,7 @@ same.
 
 1. Hear *ashi*; touch a foot or leg.
 2. Read **あ | し**.
-3. Hide it and write both known signs.
+3. [YOU WRITE: both known signs, with the word hidden]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ASHI] -->

@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "The Two Signs the Rest of the Run Cost",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7df2bece0b8959e4",
+  "sourceHash": "fnv1a64:2f5043bfab4cd534",
   "lessons": [
     {
       "id": "JA-C15-nana",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e451060ec1126345",
+      "sourceHash": "fnv1a64:f2cb6b771bee2d09",
       "notice": null,
       "blocks": [
         {
@@ -128,8 +128,17 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "なな (nana)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **なな**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write なな. Say what you have: ichi, ni, san, yon, go … nana. Leave the hole where six is; you will hear it."
+              "text": "Say what you have: ichi, ni, san, yon, go … nana. Leave the hole where six is; you will hear it."
             }
           ]
         },
@@ -321,7 +330,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e9be00ff7587e83",
+      "sourceHash": "fnv1a64:1eedb86438296ad1",
       "notice": null,
       "blocks": [
         {
@@ -427,8 +436,17 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "く (ku)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **く**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write く. Say what you hold: ichi, ni, san, yon, go … nana, hachi, ku. Two numbers are missing and you can hear both gaps."
+              "text": "Say what you hold: ichi, ni, san, yon, go … nana, hachi, ku. Two numbers are missing and you can hear both gaps."
             }
           ]
         },
@@ -630,7 +648,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b92c1da694bea12e",
+      "sourceHash": "fnv1a64:190f122ac67e90fe",
       "notice": null,
       "blocks": [
         {
@@ -722,7 +740,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read ろ | く. Write ろく, hide it, write it again from the meaning. Then say roku, nana, hachi, ku four times, without stopping."
+              "text": "Read ろ (ro) | く (ku)."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ろく (roku); then hide it and write it again from the meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ろく**; then hide it and write it again from the meaning]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then say roku, nana, hachi, ku four times, without stopping."
             }
           ]
         },
@@ -943,7 +974,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3b3b687108d9ac4",
+      "sourceHash": "fnv1a64:8251b4a4a9681df8",
       "notice": null,
       "blocks": [
         {
@@ -1044,8 +1075,17 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "じゅう (jū)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **じゅう**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write じゅう. Say the whole run, one to ten, without stopping. Then say jūichi, nijū, sanjū, and build one number of your own between twenty and ninety-nine."
+              "text": "Say the whole run, one to ten, without stopping. Then say jūichi, nijū, sanjū, and build one number of your own between twenty and ninety-nine."
             }
           ]
         },

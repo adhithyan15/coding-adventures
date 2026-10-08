@@ -82,7 +82,9 @@ it; until then, say the four plain ones.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HON, JA-LEX-KAMI-HAIR, JA-LEX-ASHI, JA-LEX-YON, JA-LEX-NANA] -->
 
-Write **ほん**. Say *nihon, yonhon, gohon, nanahon* — the four that leave the
+[YOU WRITE: **ほん**]
+
+Say *nihon, yonhon, gohon, nanahon* — the four that leave the
 counter alone. Then say **あし にほん**.
 
 ## Wrap-up Recall

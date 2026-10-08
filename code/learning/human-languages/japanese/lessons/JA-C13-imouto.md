@@ -39,12 +39,14 @@ Say **おとうと** once and keep its four even morae.
 ## You'll Want to Know — hear and contrast
 <!-- hl-knowledge: introduces=[JA-LEX-IMOUTO]; assesses=[JA-LEX-OTOUTO, JA-LEX-CHICHI, JA-SCRIPT-KANJI-HON-01] -->
 
-Write distant **本** once. Hear *i-mo-o-to*, say it, then contrast *o-to-o-to*.
+[YOU WRITE: distant **本** once]
+
+Hear *i-mo-o-to*, say it, then contrast *o-to-o-to*.
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-IMOUTO, JA-SCRIPT-I-01, JA-SCRIPT-MO-01, JA-SCRIPT-U-01, JA-SCRIPT-TO-01] -->
 
-Read **い | も | う | と**. Copy **いもうと**, hide it, and write it once.
+Read **い | も | う | と**. [YOU WRITE: one copy of **いもうと**; then hide it and write it once]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-IMOUTO] -->

@@ -62,9 +62,9 @@ them, the book writes every sign of the *g* row, **が ぎ ぐ げ ご**, and of
 ## Guided Practice — write
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-BI-01, JA-SCRIPT-GU-01, JA-SCRIPT-GE-01, JA-SCRIPT-GI-01, JA-LEX-C135-DOYOUBI, JA-LEX-ANCHOR-GETSUYOUBI, JA-LEX-ANCHOR-GINKOU] -->
 
-1. Write **ひ び**, **く ぐ**, **け げ** and **き ぎ** in pairs.
-2. Write **どようび** and **げつようび** from memory, and say which day comes first in the week.
-3. Write **ぎんこう**, and say *ginkō*.
+1. [YOU WRITE: **ひ び**, **く ぐ**, **け げ** and **き ぎ**, in pairs]
+2. [YOU WRITE: **どようび** and **げつようび** from memory, and say which day comes first in the week]
+3. Say *ginkō*. [YOU WRITE: **ぎんこう**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-GI-01, JA-LEX-ANCHOR-GINKOU, JA-LEX-C135-GENKI] -->

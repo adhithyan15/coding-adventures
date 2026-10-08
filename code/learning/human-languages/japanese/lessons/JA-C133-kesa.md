@@ -36,7 +36,9 @@ reviews_of: [JA-W133-ke, JA-W03-sa, JA-C133-eki, JA-C133-kinou, JA-C131-chotto, 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KE-01, JA-LEX-ANCHOR-EKI, JA-LEX-C120-QUAL120-03, JA-LEX-ANCHOR-CHOTTO] -->
 
-[PAUSE 15s] Write **け** — **R1**, one lesson back. Then say *a station* — **R2**, five lessons back.
+[PAUSE 15s] [YOU WRITE: **け** — **R1**, one lesson back]
+
+Then say *a station* — **R2**, five lessons back.
 
 - [YOU RECALL: say *free time* — **R4**, eighty lessons back]
 - [YOU RECALL: say *a little* — **R3**, twenty lessons back]

@@ -62,9 +62,9 @@ them, and **ぽ** from chapter 18, the book writes every sign of the *p* row,
 ## Guided Practice — write
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-PA-01, JA-SCRIPT-PI-01, JA-SCRIPT-PU-01, JA-SCRIPT-PE-01, JA-LEX-ANCHOR-ENPITSU, JA-LEX-ANCHOR-KIPPU, JA-LEX-ANCHOR-PERAPERA] -->
 
-1. Write **は ぱ**, **ひ ぴ**, **ふ ぷ** and **へ ぺ** in pairs.
-2. Write **えんぴつ** and **きっぷ** from memory, and say which one you show on a train.
-3. Write **ぺらぺら**, and say *perapera*.
+1. [YOU WRITE: **は ぱ**, **ひ ぴ**, **ふ ぷ** and **へ ぺ**, in pairs]
+2. [YOU WRITE: **えんぴつ** and **きっぷ** from memory, and say which one you show on a train]
+3. Say *perapera*. [YOU WRITE: **ぺらぺら**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-PE-01, JA-LEX-ANCHOR-PERAPERA, JA-LEX-C137-TENPURA] -->

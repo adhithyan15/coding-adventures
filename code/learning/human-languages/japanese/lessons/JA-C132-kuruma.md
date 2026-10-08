@@ -37,7 +37,8 @@ reviews_of: [JA-C132-sore, JA-W09-ku, JA-W03-ma, JA-W15-ro, JA-W132-so, JA-C118-
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C132-SORE, JA-SCRIPT-SO-01, JA-LEX-C118-THINGS118-05, JA-LEX-C130-QUAL130-03] -->
 
-[PAUSE 15s] Say *that*, a thing near the listener — **R1**, one lesson back. Then write **そ** — **R2**, five lessons back.
+[PAUSE 15s] Say *that*, a thing near the listener — **R1**, one lesson back.
+[YOU WRITE: **そ** — **R2**, five lessons back]
 
 - [YOU RECALL: say *a bookshop* — **R4**, eighty lessons back]
 - [YOU RECALL: say *bright red* — **R3**, twenty lessons back]

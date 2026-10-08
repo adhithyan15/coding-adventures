@@ -4,7 +4,7 @@
   "chapter": 133,
   "title": "The Last Four Hiragana: Ki, Ke, Nu and He",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2a797dc60ac9ea5c",
+  "sourceHash": "fnv1a64:801cb61e48104965",
   "lessons": [
     {
       "id": "JA-C133-eki",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:28990bbf010b9410",
+      "sourceHash": "fnv1a64:dc40182c727f06c4",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,16 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new word: write え and say it. Then write れ — R2, five lessons back."
+              "text": "Before the new word, say e."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "え; then れ — R2, five lessons back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **え**; then **れ** — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
@@ -339,7 +348,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:facdefe875b7b594",
+      "sourceHash": "fnv1a64:4ea57541763ffa08",
       "notice": null,
       "blocks": [
         {
@@ -354,8 +363,17 @@
               "source": "[PAUSE 15s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "き (ki) — R1, one lesson back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **き** — **R1**, one lesson back]"
+            },
+            {
               "kind": "speech",
-              "text": "Write き (ki) — R1, one lesson back. Then say a car — R2, five lessons back."
+              "text": "Then say a car — R2, five lessons back."
             },
             {
               "kind": "prompt",
@@ -483,7 +501,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:100a5a28fff5e78d",
+      "sourceHash": "fnv1a64:ea288169928c8a25",
       "notice": null,
       "blocks": [
         {
@@ -499,7 +517,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say yesterday — R1, one lesson back. Then write る — R2, five lessons back."
+              "text": "Say yesterday — R1, one lesson back."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "る — R2, five lessons back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **る** — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
@@ -811,7 +838,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e6def77b0b609fa8",
+      "sourceHash": "fnv1a64:2d8db17c6c8e6d0c",
       "notice": null,
       "blocks": [
         {
@@ -826,8 +853,17 @@
               "source": "[PAUSE 15s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "け (ke) — R1, one lesson back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **け** — **R1**, one lesson back]"
+            },
+            {
               "kind": "speech",
-              "text": "Write け (ke) — R1, one lesson back. Then say a station — R2, five lessons back."
+              "text": "Then say a station — R2, five lessons back."
             },
             {
               "kind": "prompt",
@@ -954,7 +990,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a298b467ca9a6057",
+      "sourceHash": "fnv1a64:ba29543cf619d7ff",
       "notice": null,
       "blocks": [
         {
@@ -970,7 +1006,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say this morning — R1, one lesson back. Then write き (ki) — R2, five lessons back."
+              "text": "Say this morning — R1, one lesson back."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "き (ki) — R2, five lessons back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **き** — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
@@ -1286,7 +1331,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32166f79cb8e011e",
+      "sourceHash": "fnv1a64:a0aa2c499829e328",
       "notice": null,
       "blocks": [
         {
@@ -1301,8 +1346,17 @@
               "source": "[PAUSE 15s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ぬ (nu) — R1, one lesson back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ぬ** — **R1**, one lesson back]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ぬ (nu) — R1, one lesson back. Then say a pond — R2, five lessons back."
+              "text": "Then say a pond — R2, five lessons back."
             },
             {
               "kind": "prompt",
@@ -1420,7 +1474,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:93db1ec2bbd8422c",
+      "sourceHash": "fnv1a64:1fb7c16de490b498",
       "notice": null,
       "blocks": [
         {
@@ -1436,7 +1490,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say cloth — R1, one lesson back. Then write け (ke) — R2, five lessons back."
+              "text": "Say cloth — R1, one lesson back."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "け (ke) — R2, five lessons back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **け** — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
@@ -1726,7 +1789,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c35a119fbca1d85",
+      "sourceHash": "fnv1a64:dbfc264655f655cd",
       "notice": null,
       "blocks": [
         {
@@ -1741,8 +1804,17 @@
               "source": "[PAUSE 15s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "へ (he) — R1, one lesson back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **へ** — **R1**, one lesson back]"
+            },
+            {
               "kind": "speech",
-              "text": "Write へ — R1, one lesson back. Then say a dog — R2, five lessons back."
+              "text": "Then say a dog — R2, five lessons back."
             },
             {
               "kind": "prompt",
@@ -1854,16 +1926,35 @@
           "title": "Guided Practice — write",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write き (ki), け (ke), ぬ (nu) and へ (he) once each."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "き (ki), け (ke), ぬ (nu) and へ (he) once each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **き**, **け**, **ぬ** and **へ** once each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "きのう (kinō) and けさ (kesa) from memory, and say which one is earlier",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **きのう** and **けさ** from memory, and say which one is earlier]"
             },
             {
               "kind": "speech",
-              "text": "Write きのう (kinō) and けさ (kesa) from memory, and say which one is earlier."
+              "text": "Say heya."
             },
             {
-              "kind": "speech",
-              "text": "Write へや, and say heya."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "へや (heya)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **へや**]"
             }
           ]
         },

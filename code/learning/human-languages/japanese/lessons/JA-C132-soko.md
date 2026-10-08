@@ -37,7 +37,8 @@ reviews_of: [JA-W01-ko, JA-C10-koko, JA-W131-small-yo, JA-C117-kamoshika, JA-C12
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KO-01, JA-LEX-KOKO, JA-SCRIPT-SMALL-YO-01, JA-LEX-C117-THINGS117-04, JA-LEX-C129-QUAL129-02] -->
 
-[PAUSE 15s] Before the new word: write **こ** and say *koko*, here. Then write **ょ** — **R2**, five lessons back.
+[PAUSE 15s] Before the new word, say *koko*, here.
+[YOU WRITE: **こ**; then **ょ** — **R2**, five lessons back]
 
 - [YOU RECALL: say *a Japanese serow* — **R4**, eighty lessons back]
 - [YOU RECALL: say *persistent* — **R3**, twenty lessons back]

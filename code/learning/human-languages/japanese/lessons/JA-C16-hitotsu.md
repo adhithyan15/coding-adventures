@@ -64,7 +64,9 @@ counter category*. Hold that. It will be the whole of the next chapter.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HITOTSU, JA-LEX-ICHI, JA-SCRIPT-HI-01] -->
 
-Write **ひとつ**. Say *ichi*, then *hitotsu*, and hear that they share nothing —
+[YOU WRITE: **ひとつ**]
+
+Say *ichi*, then *hitotsu*, and hear that they share nothing —
 not a beat, not a sound.
 
 ## Wrap-up Recall

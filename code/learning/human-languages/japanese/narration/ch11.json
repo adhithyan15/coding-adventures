@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Seven Body Words, No New Guessing",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b08876cc36cf3f63",
+  "sourceHash": "fnv1a64:d78aba586a48c920",
   "lessons": [
     {
       "id": "JA-W11-small-tsu",
@@ -471,7 +471,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9587ff0cdfcf4b43",
+      "sourceHash": "fnv1a64:65147885681a9509",
       "notice": null,
       "blocks": [
         {
@@ -486,8 +486,17 @@
               "source": "[PAUSE 25s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "て (te) and だ (da)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **て** and **だ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write て and だ (da). Point here and say koko, then ask for the line a little more slowly."
+              "text": "Point here and say koko, then ask for the line a little more slowly."
             }
           ]
         },
@@ -520,8 +529,13 @@
               "text": "See て (te); say “hand.”"
             },
             {
-              "kind": "speech",
-              "text": "Hide the word and write its one sign."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "its one sign, with the word hidden",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: its one sign, with the word hidden]"
             }
           ]
         },
@@ -573,7 +587,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59c9751fbff9420b",
+      "sourceHash": "fnv1a64:7ecd2290e9cb7791",
       "notice": null,
       "blocks": [
         {
@@ -588,8 +602,17 @@
               "source": "[PAUSE 10s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "み once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **み** once]"
+            },
+            {
               "kind": "speech",
-              "text": "Write み once, then retrieve て — hand."
+              "text": "Then retrieve て (te) — hand."
             }
           ]
         },
@@ -622,8 +645,13 @@
               "text": "Read み | み aloud."
             },
             {
-              "kind": "speech",
-              "text": "Hide it and write the repeated sign twice."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the repeated sign twice, with the word hidden",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the repeated sign twice, with the word hidden]"
             }
           ]
         },
@@ -675,7 +703,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0c43f5d4f377f15",
+      "sourceHash": "fnv1a64:07f7b670ae87c8bb",
       "notice": null,
       "blocks": [
         {
@@ -690,8 +718,17 @@
               "source": "[PAUSE 12s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "く and ち separately",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **く** and **ち** separately]"
+            },
+            {
               "kind": "speech",
-              "text": "Write く and ち separately. Retrieve みみ (mimi)."
+              "text": "Retrieve みみ (mimi)."
             }
           ]
         },
@@ -724,8 +761,13 @@
               "text": "Read 口 (kuchi), then its reading く | ち."
             },
             {
-              "kind": "speech",
-              "text": "Hide it and write 口 (kuchi), then the two signs in order."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "口 (kuchi), then the two signs in order, with the word hidden",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **口**, then the two signs in order, with the word hidden]"
             }
           ]
         },
@@ -778,7 +820,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf6a68ce72e674a6",
+      "sourceHash": "fnv1a64:e4a395350c2047bc",
       "notice": null,
       "blocks": [
         {
@@ -793,8 +835,17 @@
               "source": "[PAUSE 12s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "あ and し",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **あ** and **し**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write あ and し. Retrieve くち — mouth."
+              "text": "Retrieve くち — mouth."
             }
           ]
         },
@@ -827,8 +878,13 @@
               "text": "Read あ | し."
             },
             {
-              "kind": "speech",
-              "text": "Hide it and write both known signs."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both known signs, with the word hidden",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both known signs, with the word hidden]"
             }
           ]
         },
@@ -880,7 +936,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:733e698c1f9a37b4",
+      "sourceHash": "fnv1a64:af1b63141eefd54a",
       "notice": null,
       "blocks": [
         {
@@ -895,8 +951,17 @@
               "source": "[PAUSE 12s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "は and な",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **は** and **な**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write は and な. Retrieve あし (ashi)."
+              "text": "Retrieve あし (ashi)."
             }
           ]
         },
@@ -929,8 +994,13 @@
               "text": "Read は | な as ha-na."
             },
             {
-              "kind": "speech",
-              "text": "Hide it and write both signs."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both signs, with the word hidden",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both signs, with the word hidden]"
             }
           ]
         },
@@ -982,7 +1052,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:094965451bf946a4",
+      "sourceHash": "fnv1a64:7d77d04053f3f4be",
       "notice": null,
       "blocks": [
         {
@@ -997,8 +1067,17 @@
               "source": "[PAUSE 12s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "か and お",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **か** and **お**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write か and お. Retrieve はな (hana) — nose."
+              "text": "Retrieve はな (hana) — nose."
             }
           ]
         },
@@ -1031,8 +1110,13 @@
               "text": "Read か | お."
             },
             {
-              "kind": "speech",
-              "text": "Hide it and write the two signs."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the two signs, with the word hidden",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the two signs, with the word hidden]"
             }
           ]
         },
@@ -1084,7 +1168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0370f691f349711",
+      "sourceHash": "fnv1a64:f96739007a614b53",
       "notice": null,
       "blocks": [
         {
@@ -1099,8 +1183,17 @@
               "source": "[PAUSE 12s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "め (me)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **め**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write め (me). Retrieve かお (kao) and みみ (mimi)."
+              "text": "Retrieve かお (kao) and みみ (mimi)."
             }
           ]
         },
@@ -1133,8 +1226,13 @@
               "text": "See め; say the meaning."
             },
             {
-              "kind": "speech",
-              "text": "Hide it and write the one-sign word."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the one-sign word, with the model hidden",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the one-sign word, with the model hidden]"
             }
           ]
         },
@@ -1186,7 +1284,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ebbd9d7427a67484",
+      "sourceHash": "fnv1a64:8f25cd1a54197f56",
       "notice": null,
       "blocks": [
         {
@@ -1201,8 +1299,17 @@
               "source": "[PAUSE 25s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "っ (small tsu), て (te), た (ta), だ (da)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **っ, て, た, だ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write っ (small tsu), て, た (ta), だ (da). Read ゆっくり, いって, わかりました, and ください once; the old repair exposure is now closed."
+              "text": "Read ゆっくり, いって, わかりました, and ください once; the old repair exposure is now closed."
             }
           ]
         },
@@ -1239,8 +1346,13 @@
               "text": "Read: read all seven from left to right."
             },
             {
-              "kind": "speech",
-              "text": "Write: choose any three and write them from memory."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "any three of the seven, from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: any three of the seven, from memory]"
             }
           ]
         },

@@ -34,7 +34,8 @@ reviews_of: [JA-C09-wakarimasen, JA-C09-sumimasen, JA-W09-me]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-WAKARIMASEN, JA-LEX-SUMIMASEN, JA-SCRIPT-ME-01, JA-SCRIPT-DO-01] -->
 
-[PAUSE 18s] Say *sumimasen, yoku wakarimasen*. Write **め** and **ど** once.
+[PAUSE 18s] Say *sumimasen, yoku wakarimasen*.
+[YOU WRITE: **め** and **ど**, once each]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-MOU]; assesses=[] -->

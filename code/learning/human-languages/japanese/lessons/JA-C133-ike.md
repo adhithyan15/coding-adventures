@@ -37,7 +37,8 @@ reviews_of: [JA-C133-kinou, JA-W01-i, JA-W132-ru, JA-W131-small-ya, JA-C120-kata
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C133-KINOU, JA-SCRIPT-RU-01, JA-LEX-C120-QUAL120-01, JA-SCRIPT-SMALL-YA-01] -->
 
-[PAUSE 15s] Say *yesterday* — **R1**, one lesson back. Then write **る** — **R2**, five lessons back.
+[PAUSE 15s] Say *yesterday* — **R1**, one lesson back.
+[YOU WRITE: **る** — **R2**, five lessons back]
 
 - [YOU RECALL: say *hard* — **R4**, eighty lessons back]
 - [YOU RECALL: write **ゃ**, small, in **おちゃ** — **R3**, twenty lessons back]

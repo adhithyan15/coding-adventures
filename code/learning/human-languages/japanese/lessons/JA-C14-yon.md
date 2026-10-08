@@ -74,7 +74,9 @@ opens here.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-YON, JA-GRAMMAR-KUN-IN-THE-COUNT, JA-LEX-SAN, JA-LEX-NI, JA-LEX-ICHI, JA-LEX-GO] -->
 
-Write **よん** and **し**. Say the run in order: *ichi, ni, san, yon, go*. Then
+[YOU WRITE: **よん** and **し**]
+
+Say the run in order: *ichi, ni, san, yon, go*. Then
 say it once with **し** in place of **よん** and hear how much closer *shi* sits
 to *ichi*.
 

@@ -37,7 +37,8 @@ reviews_of: [JA-C132-soto, JA-W01-ko, JA-C10-koko, JA-W131-wo, JA-C118-hashigo, 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C132-SOTO, JA-SCRIPT-WO-01, JA-LEX-C118-THINGS118-02, JA-LEX-C129-QUAL129-05] -->
 
-[PAUSE 15s] Say *outside* — **R1**, one lesson back. Then write **を** — **R2**, five lessons back.
+[PAUSE 15s] Say *outside* — **R1**, one lesson back.
+[YOU WRITE: **を** — **R2**, five lessons back]
 
 - [YOU RECALL: say *a ladder* — **R4**, eighty lessons back]
 - [YOU RECALL: say *reliable* — **R3**, twenty lessons back]

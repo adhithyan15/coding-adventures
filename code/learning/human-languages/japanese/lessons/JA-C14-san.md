@@ -56,7 +56,9 @@ Say *ichi — ni — san*. Four numbers, four lessons, no new signs.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SAN, JA-LEX-NI, JA-LEX-ICHI, JA-SCRIPT-N-01] -->
 
-Read **さ | ん** as two beats. Write **さん**, hide it, write it again. Then say
+Read **さ | ん** as two beats. [YOU WRITE: **さん**; then hide it and write it again]
+
+Then say
 *ichi, ni, san* three times without slowing at **ん**.
 
 ## Wrap-up Recall

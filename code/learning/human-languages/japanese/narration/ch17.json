@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "The Other Five, and Where the Count Stops",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:dd12a50cef3fdd73",
+  "sourceHash": "fnv1a64:458803fab22c7005",
   "lessons": [
     {
       "id": "JA-W17-mu",
@@ -168,7 +168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:43a80088df691f5b",
+      "sourceHash": "fnv1a64:703a924592de9263",
       "notice": null,
       "blocks": [
         {
@@ -240,8 +240,17 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "むっつ (muttsu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **むっつ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write むっつ. Say roku and muttsu: same number, two words, no shared sound. Then run the count so far: hitotsu, futatsu, mittsu, yottsu, itsutsu, muttsu."
+              "text": "Say roku and muttsu: same number, two words, no shared sound. Then run the count so far: hitotsu, futatsu, mittsu, yottsu, itsutsu, muttsu."
             }
           ]
         },
@@ -295,7 +304,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e860332b3cd5ac80",
+      "sourceHash": "fnv1a64:6f7428952caaa910",
       "notice": null,
       "blocks": [
         {
@@ -364,7 +373,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "なな is the native word, and the borrowed count uses it — the same move you saw at four with よん. Write the two rows out and the pattern is exact:"
+              "text": "なな is the native word, and the borrowed count uses it — the same move you saw at four with よん. Set the two rows side by side and the pattern is exact:"
             },
             {
               "kind": "table",
@@ -393,8 +402,17 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ななつ (nanatsu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ななつ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ななつ. Say nana, then nanatsu: the same word, once as a number and once as a count of things."
+              "text": "Say nana, then nanatsu: the same word, once as a number and once as a count of things."
             }
           ]
         },
@@ -599,7 +617,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cbeb5069bf28618d",
+      "sourceHash": "fnv1a64:fc2678a10959579d",
       "notice": null,
       "blocks": [
         {
@@ -675,8 +693,17 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "やっつ (yattsu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **やっつ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write やっつ. Say hachi, then yattsu. Then run the eight in order without stopping."
+              "text": "Say hachi, then yattsu. Then run the eight in order without stopping."
             }
           ]
         },
@@ -879,7 +906,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6516d001926c0715",
+      "sourceHash": "fnv1a64:8a49947426125add",
       "notice": null,
       "blocks": [
         {
@@ -955,8 +982,17 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ここのつ (kokonotsu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ここのつ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ここのつ. Say hachi, ku, then yattsu, kokonotsu — both counts, two numbers each. Then say ku and kokonotsu again. Then say koko and kokonotsu and remind yourself that the second is not made of the first."
+              "text": "Say hachi, ku, then yattsu, kokonotsu — both counts, two numbers each. Then say ku and kokonotsu again. Then say koko and kokonotsu and remind yourself that the second is not made of the first."
             }
           ]
         },
@@ -1010,7 +1046,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e0d4b1488052950",
+      "sourceHash": "fnv1a64:049387b80e695156",
       "notice": null,
       "blocks": [
         {
@@ -1086,8 +1122,17 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "とお (tō)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **とお**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write とお. Say juu, then tō: same number, and only one of them can be built on. Then say kokonotsu, tō and stop."
+              "text": "Say juu, then tō: same number, and only one of them can be built on. Then say kokonotsu, tō and stop."
             }
           ]
         },
