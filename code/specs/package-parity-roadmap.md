@@ -17021,6 +17021,30 @@ repository-boundary digest adoption is independently ready and ranks second;
 its existing graph/diff reader should not be reimplemented. No active parity
 PR or package-path overlap remained after #17109 merged.
 
+## Post-#17117 inventory and Arc2D contract
+
+PR #17117 passed eight required checks (24 skipped), was enabled for squash
+auto-merge, and merged as `dd0f1b255108a7d8de7d1d7137ce0e74b909c565`.
+The fetched-main schema-3 inventory at `17d883c68bc59c4e51c5cebb94fdadec97aa2924`
+has 15 established lanes, 1,498 implementation identities, 4,777 occupied
+slots, 1,540 all-reported identities, 178 high-consensus identities with 253
+missing slots, zero canonical collisions, and zero unknown buckets. Six slots
+were filled by Java/Kotlin/Dart Affine2D and Bezier2D. The additional Rust-only
+`chief-of-staff-spawn-isolation` identity is concrete host-security process
+authority (descriptor isolation and native pre-exec hooks), not a portable
+package; it is classified outside the all-language denominator.
+
+The next dependency-shaped owner is a neutral G2D03 Arc2D center-form contract
+and fixture extension. Current sampled bounds can miss an off-grid extremum,
+particularly across wrapped and negative sweeps; a large finite sweep can
+produce an unbounded cubic list. Freeze directed modulo-angle inclusion,
+zero-sweep bounds, finite sweeps of at most one turn, and one-to-four cubic
+segments with an independent oracle before porting Arc2D into Java, Kotlin,
+and Dart. The pre-existing Go center-form owner retains Go-specific fixes and
+depends on this contract; sampled existing lanes have a separate conformance
+owner. Ruby repository-boundary digest adoption and C#/F# Bezier flattening
+repair remain independently owned and rank next after the geometry chain.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
