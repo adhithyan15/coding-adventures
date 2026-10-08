@@ -51,7 +51,7 @@ day, month, and year.
 
 With B visible, copy **੨੫**, then **੦੨**, then **੨੦੨੫**, placing one slash
 between each pair of boxes. Compare your line with **੨੫/੦੨/੨੦੨੫**. If a
-box differs, repair just that box before moving on.
+box differs, repair only that box before moving on.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-FORM-DATE-B-01] -->

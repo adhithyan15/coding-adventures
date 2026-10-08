@@ -4,7 +4,7 @@
   "chapter": 169,
   "title": "Return to Two Fictional Dates",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5c5c2699a3608f0a",
+  "sourceHash": "fnv1a64:a4d8cc11d79d46bc",
   "lessons": [
     {
       "id": "PA-R169-date-a-again",
@@ -88,7 +88,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:bfac2608d1dc2b3f",
+      "sourceHash": "fnv1a64:de3881e261d2e9fb",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -127,7 +127,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "With B visible, copy ੨੫, then ੦੨, then ੨੦੨੫, placing one slash between each pair of boxes. Compare your line with ੨੫/੦੨/੨੦੨੫ (fictional February date B). If a box differs, repair just that box before moving on."
+              "text": "With B visible, copy ੨੫, then ੦੨, then ੨੦੨੫, placing one slash between each pair of boxes. Compare your line with ੨੫/੦੨/੨੦੨੫ (fictional February date B). If a box differs, repair only that box before moving on."
             }
           ]
         },
