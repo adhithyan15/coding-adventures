@@ -19,6 +19,9 @@ P2.6d-2a). It holds no channel key itself.
   and `PinnedBindingResolver` accepts the result only if it names the same
   pipeline and agent the broker was launched for. A rewired host's old
   broker cannot act as the new agent.
+- **The relay never blocks on the broker.** Writes go through a writer
+  thread it only queues to. A broker that stops reading cannot hold the
+  relay; it stops answering, and the deadline ends it.
 - **Anything wrong ends the broker:** a violating callback, a missed
   deadline, a response that does not answer its request, a broken or
   out-of-order frame, an exit, or a host that is gone.

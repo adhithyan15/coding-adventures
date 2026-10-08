@@ -328,6 +328,7 @@ struct BrokerIo {
 }
 
 impl BrokerIo {
+    #[cfg_attr(not(target_os = "linux"), allow(dead_code))]
     /// Close the broker's stdin and wait, bounded, for its reader. Call
     /// after the broker is killed: its stdout then closes, and the reader
     /// ends.
@@ -336,6 +337,56 @@ impl BrokerIo {
         drop(self.frames);
         if let Some(reader) = self.reader.take() {
             let _ = join_bounded(reader);
+        }
+    }
+}
+
+/// Frames to the broker, written by a thread of their own.
+///
+/// The relay never writes to the broker directly: a broker that stops
+/// reading its stdin would otherwise block the relay in that write, where
+/// no deadline runs. Through this writer, the relay only queues. A broker
+/// that stops reading fills the queue and stops answering, which the
+/// deadline catches. A failed write closes the queue, which the relay sees.
+struct FrameWriter {
+    frames: Option<SyncSender<Vec<u8>>>,
+    thread: Option<JoinHandle<()>>,
+}
+
+impl FrameWriter {
+    fn start(mut sink: Box<dyn std::io::Write + Send>) -> std::io::Result<Self> {
+        // Two: an honest broker reads each frame before it answers, so at
+        // most one is ever waiting.
+        let (frames, queued) = mpsc::sync_channel::<Vec<u8>>(2);
+        let thread = std::thread::Builder::new()
+            .name("broker-stdin".into())
+            .spawn(move || {
+                while let Ok(body) = queued.recv() {
+                    if write_frame(&mut sink, &body).is_err() {
+                        return;
+                    }
+                }
+            })?;
+        Ok(Self {
+            frames: Some(frames),
+            thread: Some(thread),
+        })
+    }
+
+    /// Queue `body`, without waiting. `false` if the queue is full or the
+    /// writer has stopped.
+    fn send(&self, body: Vec<u8>) -> bool {
+        self.frames
+            .as_ref()
+            .is_some_and(|frames| frames.try_send(body).is_ok())
+    }
+
+    /// Stop the writer. A write still blocked ends when the broker is
+    /// killed and its stdin breaks; the join is bounded.
+    fn close(mut self) {
+        self.frames = None;
+        if let Some(thread) = self.thread.take() {
+            let _ = join_bounded(thread);
         }
     }
 }
@@ -588,6 +639,13 @@ impl BrokerRelay {
     /// Stop the relay and join it, bounded. Kill the broker first: a relay
     /// waiting on a live broker's output only ends when that output closes.
     /// Returns whether the thread joined.
+    ///
+    /// The relay commits on the broker's behalf, so until it has joined, a
+    /// commit may still be in progress. Do not abandon the agent's pending
+    /// reservations, or launch its next broker, unless this returned
+    /// `true`. (If that is missed, nothing is corrupted: the store's
+    /// compare-and-swap lets exactly one of the commit and the abandon win.
+    /// But the rule keeps "at most one live broker per agent" exact.)
     pub fn stop(mut self) -> bool {
         self.commands = None;
         self.thread.take().is_none_or(join_bounded)
@@ -644,12 +702,35 @@ fn spawn_relay(
         .name("broker-relay".into())
         .spawn(move || {
             let server = CallbackServer::new(&*backend, &*metadata, &*resolver);
-            let mut io = io;
-            let mut sink = sink;
-            let end = relay_loop(&server, &mut io, &requests, sink.as_mut(), config);
-            io.close();
+            let BrokerIo {
+                stdin,
+                frames,
+                reader,
+            } = io;
+            let (end, writer) = match FrameWriter::start(stdin) {
+                Ok(writer) => {
+                    let mut sink = sink;
+                    let end =
+                        relay_loop(&server, &writer, &frames, &requests, sink.as_mut(), config);
+                    (end, Some(writer))
+                }
+                Err(_) => (Some(RelayEnd::Write), None),
+            };
+            // Refuse further requests before reporting, so that once the
+            // end is visible, relay() says Gone. Then report, before any
+            // slow cleanup: the supervisor kills the broker on the report,
+            // and that is what unblocks a writer stuck on a broker that
+            // stopped reading.
+            drop(requests);
             if let Some(end) = end {
                 let _ = report.send(end);
+            }
+            if let Some(writer) = writer {
+                writer.close();
+            }
+            drop(frames);
+            if let Some(reader) = reader {
+                let _ = join_bounded(reader);
             }
         })?;
     Ok(BrokerRelay {
@@ -663,7 +744,8 @@ fn spawn_relay(
 /// broker (`Some`).
 fn relay_loop(
     server: &CallbackServer<'_>,
-    io: &mut BrokerIo,
+    writer: &FrameWriter,
+    frames: &Frames,
     requests: &Receiver<DataPlaneRequest>,
     sink: &mut dyn ResponseSink,
     config: RelayConfig,
@@ -676,13 +758,13 @@ fn relay_loop(
         let Ok(body) = encode_to_broker(&ToBroker::Request(request.clone())) else {
             return Some(RelayEnd::Protocol);
         };
-        if write_frame(&mut io.stdin, &body).is_err() {
+        if !writer.send(body) {
             return Some(RelayEnd::Write);
         }
         let mut remaining = config.deadline;
         let response = loop {
             let waited = Instant::now();
-            let frame = match io.frames.recv_timeout(remaining) {
+            let frame = match frames.recv_timeout(remaining) {
                 Ok(Ok(frame)) => frame,
                 Ok(Err(_)) => return Some(RelayEnd::Protocol),
                 Err(RecvTimeoutError::Timeout) => return Some(RelayEnd::Deadline),
@@ -706,7 +788,7 @@ fn relay_loop(
                     }) else {
                         return Some(RelayEnd::Protocol);
                     };
-                    if write_frame(&mut io.stdin, &body).is_err() {
+                    if !writer.send(body) {
                         return Some(RelayEnd::Write);
                     }
                 }

@@ -14,3 +14,6 @@
   - `PinnedBindingResolver`, `ResponseSink`, `RelayEnd`.
 - Off Linux, `VerifiedExecutable` is an empty type, so no broker can be
   launched.
+- The relay queues writes to a writer thread rather than writing itself,
+  so a broker that stops reading is caught by the deadline. It reports its
+  end before any slow cleanup.

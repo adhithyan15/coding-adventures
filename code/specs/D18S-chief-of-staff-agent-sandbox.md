@@ -1863,7 +1863,23 @@ through S-I3 before two weeks are spent on Windows.
             a broker-time deadline that excludes time spent in callbacks,
             and a binding resolver *pinned* to the launch identity. A
             rewired host is not served as a different agent by the old
-            broker.
+            broker. The relay only queues writes to the broker, to a
+            writer thread, so a broker that stops reading is caught by
+            the deadline rather than holding the relay.
+          - Residuals, recorded:
+            - The `Ready` check cannot see a wrong *channel master key*:
+              it has no public half. A broker with a wrong one publishes
+              messages that receivers cannot open, a denial of service
+              against its own channel. Follow-up: a key-check value (an
+              HMAC of the key) stored in the definition and reported in
+              `Ready`.
+            - Between `verify()` and `execveat`, the binary can be
+              rewritten in place only by root or by the daemon's own
+              user. That user can already read every key file, so this
+              gains them nothing. Follow-up, if wanted: execute a sealed
+              `memfd` copy of the verified bytes. The hash covers the
+              broker binary only; its interpreter and shared libraries are
+              the system's.
 
         **2b, supervisor wiring, behind `[hosts.broker]`.**
         - The broker launches before its host. The host's end ends the

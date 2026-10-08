@@ -406,3 +406,23 @@ fn only_one_request_waits_behind_the_one_in_flight() {
     rig.relay.relay(publish(2)).unwrap();
     assert_eq!(rig.relay.relay(publish(3)), Err(RelayRefused::Busy));
 }
+
+#[test]
+fn a_broker_that_stops_reading_cannot_stall_the_relay() {
+    // A request larger than the pipe's buffer, to a broker that never reads
+    // it. The write cannot complete, but the relay only queued it, so the
+    // deadline still runs and ends it.
+    let rig = new_rig(Duration::from_millis(300), Duration::ZERO, false);
+    rig.relay
+        .relay(DataPlaneRequest::Publish {
+            id: RequestId::new(1).unwrap(),
+            channel_id: uuid_v7(REPORTS),
+            content_type: "application/octet-stream".to_owned(),
+            payload: vec![0; 256 * 1024],
+        })
+        .unwrap();
+    assert_eq!(ended(&rig.relay), RelayEnd::Deadline);
+    // The broker side is still holding its end, unread: the writer thread
+    // is stuck in its write, and the relay ended anyway.
+    drop(rig.broker);
+}
