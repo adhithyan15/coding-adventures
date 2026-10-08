@@ -752,6 +752,18 @@ arithmetic/shift/bitwise clause, extra trailing operators, and a negated
 logical chain. The rooted C path must retain the directive location for
 these rejections. Test true and false comparisons, macro expansion,
 undefined identifiers, logical combination, and those unsupported shapes.
+The following bounded stage also accepts exactly `!(operand)` as one
+logical clause, with one expanded plain-decimal literal or undefined
+identifier inside the parentheses. Its value is true exactly when that
+operand is zero. The existing decimal-only literal policy remains in force;
+leading-zero, negative, and other unsupported operand shapes still fail.
+Logical `&&` and `||` retain their existing precedence and validate every
+clause. The earlier `!(left comparison right)` form stays accepted. Reject
+nested parentheses, `!(!operand)`, arithmetic inside the parentheses,
+trailing operators, and negated logical chains.
+Keep rooted C directive error locations for rejected forms. Tests cover true
+and false operands, macros and undefined identifiers, logical combination,
+and explicit rejection of the longer shapes.
 *Acceptance:* a C program using `#define` (object- and function-like), `#if`/
 `#ifdef`/`#else`/`#endif` and a real project-local `#include` compiles through
 `c-to-semantic-ir` and executes with the expected result — the first C program
