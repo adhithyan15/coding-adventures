@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-08 — re-audited after bounded Ruby bare `puts` calls
+Status date: 2026-10-08 — re-audited after Perl 5.004_58
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -272,18 +272,27 @@ CodeQL, and books checks passed. The 776-row inventory now has 102 partial
 pairs and 674 pending, without a full-syntax or exhaustive-release claim.
 The next fresh selection is the prepared bounded 5.004_58 historical pair.
 
+PR #17053 delivered that separate, explicitly partial, own-archive-backed
+Perl 5.004_58 token/grammar pair and merged as
+`57ff56c81c0b683dad83858e974ea09e918c63e1` after exact-head CI,
+CodeQL, and books checks passed. The 776-row inventory now has 103 partial
+pairs and 673 pending, without a full-syntax or exhaustive-release claim.
+The next fresh selection rotates to the prepared bounded PREP01 pathless C
+frontend routing stage.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG82 Perl release grammars (selected):** add a separate, explicitly
-   partial 5.004_58 token/grammar pair backed by its own historical archive
-   and bounded decimal-scanner evidence.
+1. **PREP01 pathless C (selected):** route `compile_source` through the C
+   dialect and bounded generic preprocessor using only an in-memory primary
+   source. Reject every active include without host file access; retain the
+   rooted file API's declared-root behavior.
 2. **LANG82 continued:** continue distinct source-backed partial pairs. Keep
    5.004_01-t1 pending until its own source is found; do not imply complete
    syntax or an exhaustive release inventory.
-3. **PREP01 C:** continue the bounded conditional ladder. Full C `#if`,
-   stringize/paste, and default frontend routing remain open.
+3. **PREP01 C:** continue the bounded conditional ladder. Full C `#if` and
+   stringize/paste remain open.
 4. **LANG78 JavaScript:** the completed output repair leaves the broader
    source/AST-to-IIR frontend subset open; Node remains a conformance oracle.
 
