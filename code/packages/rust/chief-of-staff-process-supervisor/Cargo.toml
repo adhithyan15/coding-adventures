@@ -7,6 +7,9 @@ license = "MIT"
 
 [dependencies]
 chief-of-staff-spawn-isolation = { path = "../chief-of-staff-spawn-isolation" }
+chief-of-staff-broker-callbacks = { path = "../chief-of-staff-broker-callbacks" }
+chief-of-staff-broker-launcher = { path = "../chief-of-staff-broker-launcher" }
+chief-of-staff-channel-endpoints = { path = "../chief-of-staff-channel-endpoints" }
 chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
 chief-of-staff-host-control-protocol = { path = "../chief-of-staff-host-control-protocol" }
 chief-of-staff-host-data-plane = { path = "../chief-of-staff-host-data-plane" }
