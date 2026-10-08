@@ -1580,6 +1580,15 @@ fn swimlane_hourglass_and_collate_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_triangle_and_extract_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Extract\n  first@{ shape: tri, label: \"First\" }\n  second@{ shape: extract, label: \"Second\" }\n  third@{ shape: triangle, label: \"Third\" }\nend\nfirst --> second --> third",
+    ).expect("Swimlane triangle aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::Triangle));
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",

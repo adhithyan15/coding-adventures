@@ -43,6 +43,10 @@
       "source": "swimlane-beta LR\nsubgraph Merge\n  collect@{ shape: collate, label: \"Collect\" }\nend\nsubgraph Output\n  combine@{ shape: hourglass, label: \"Combine\" }\nend\ncollect --> combine"
     },
     {
+      "name": "triangle-extract-shape",
+      "source": "swimlane-beta LR\nsubgraph Extract\n  first@{ shape: tri, label: \"First\" }\nend\nsubgraph Output\n  second@{ shape: extract, label: \"Second\" }\nend\nfirst --> second"
+    },
+    {
       "name": "input-output-and-asymmetric-shapes",
       "source": "swimlane-beta LR\nsubgraph Intake\n  input[/Receive payload/]\nend\nsubgraph Review\n  flag>Manual review]\nend\ninput --> flag"
     },
