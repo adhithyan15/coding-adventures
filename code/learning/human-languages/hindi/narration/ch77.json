@@ -4,7 +4,7 @@
   "chapter": 77,
   "title": "After the Work Is Done",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:49936cc228523971",
+  "sourceHash": "fnv1a64:2325a89c0031f5e4",
   "lessons": [
     {
       "id": "HI-C70-game",
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:26c0b62a6096bc87",
+      "sourceHash": "fnv1a64:858d26fe94d9448f",
       "notice": null,
       "blocks": [
         {
@@ -179,7 +179,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say khel, then write खेल: ख, then े above it, then ल."
+              "text": "Say khel."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "खेल (khel) — ख, then े above it, then ल",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **खेल** — ख, then े above it, then ल]"
             }
           ]
         },

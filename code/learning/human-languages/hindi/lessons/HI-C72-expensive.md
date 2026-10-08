@@ -36,8 +36,9 @@ reviews_of: [HI-C72-price]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C72-COST-03] -->
 
-[PAUSE 2s] Write **दाम** from memory: द, then ा, then म. Then say the question
-you built with it.
+[PAUSE 2s] [YOU WRITE: **दाम** from memory — द, then ा, then म]
+
+Then say the question you built with it.
 
 ## You'll want to know: महँगा
 <!-- hl-knowledge: introduces=[HI-LEX-C72-COST-04]; assesses=[] -->

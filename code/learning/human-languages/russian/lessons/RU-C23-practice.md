@@ -45,7 +45,7 @@ reviews_of: [RU-C23-pyat, RU-C23-chetyre, RU-C23-tri, RU-C23-dva, RU-C22-skolko]
 2. Count backwards from **пять** to **один**.
 3. Read the five printed shuffled — **пять, один, четыре, три, два** — and say
    each.
-4. Write all five from dictation. No new Cyrillic letter appears in any of them.
+4. [YOU WRITE: all five from dictation — no new Cyrillic letter appears in any of them]
 5. Hear **сколько?** and answer it with each of the five in turn.
 
 Then say the English cousin of each: **one, two, three, four, five**. All five

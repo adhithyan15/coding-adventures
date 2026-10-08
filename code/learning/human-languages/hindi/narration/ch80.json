@@ -4,7 +4,7 @@
   "chapter": 80,
   "title": "The Eating House",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:55798bd2b76cd145",
+  "sourceHash": "fnv1a64:c2db7db79301280b",
   "lessons": [
     {
       "id": "HI-C73-eating-house",
@@ -167,7 +167,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45f2d8c8c9d1ba73",
+      "sourceHash": "fnv1a64:e2854addd8a4701b",
       "notice": null,
       "blocks": [
         {
@@ -183,7 +183,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say hoṭal, then write होटल: ह with ो above it, then ट, then ल."
+              "text": "Say hoṭal."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "होटल (hoṭal) — ह with ो above it, then ट, then ल",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **होटल** — ह with ो above it, then ट, then ल]"
             }
           ]
         },
@@ -441,7 +450,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b6a82187518e31f",
+      "sourceHash": "fnv1a64:c8b837f881649d59",
       "notice": null,
       "blocks": [
         {
@@ -456,8 +465,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Write बिल (bil) from memory, remembering that the ि goes down before the ल it is heard after."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "बिल (bil) from memory, remembering that the ि goes down before the ल it is heard after",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **बिल** from memory, remembering that the ि goes down before the ल it is heard after]"
             }
           ]
         },

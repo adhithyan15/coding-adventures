@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Six to Ten, and the Change That Happened Next Door",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:1ea4f84188725dc8",
+  "sourceHash": "fnv1a64:f65c9ab2b78f7d28",
   "lessons": [
     {
       "id": "UR-C29-chhe",
@@ -674,7 +674,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5dff5635b8eedd1d",
+      "sourceHash": "fnv1a64:6d3d65688ca79021",
       "notice": null,
       "blocks": [
         {
@@ -716,8 +716,13 @@
               "text": "Read the ten printed shuffled and say each."
             },
             {
-              "kind": "speech",
-              "text": "Write all ten from dictation. The tranche has added no new letter: every sign in all ten words was already on the page."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all ten from dictation — the tranche has added no new letter; every sign in all ten words was already on the page",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all ten from dictation — the tranche has added **no new letter**; every sign in all ten words was already on the page]"
             },
             {
               "kind": "speech",

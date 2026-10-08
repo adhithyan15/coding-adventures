@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Asking a Yes-or-No Question",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5a367f991782cbaa",
+  "sourceHash": "fnv1a64:bb61e02ef3f59b3c",
   "lessons": [
     {
       "id": "MR-C33-kaa-polar",
@@ -304,7 +304,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:73f866d37fd52190",
+      "sourceHash": "fnv1a64:e0ecb1cb5659a592",
       "notice": null,
       "blocks": [
         {
@@ -320,7 +320,16 @@
             },
             {
               "kind": "speech",
-              "text": "A question in Marathi is a statement with का on the end and one mark on the page. Say one, then write it — and write नमस्कार! underneath, so the two end marks stand side by side."
+              "text": "A question in Marathi is a statement with का on the end and one mark on the page. Say one."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the question you said, and नमस्कार! underneath it, so the two end marks stand side by side",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the question you said, and **नमस्कार!** underneath it, so the two end marks stand side by side]"
             }
           ]
         },

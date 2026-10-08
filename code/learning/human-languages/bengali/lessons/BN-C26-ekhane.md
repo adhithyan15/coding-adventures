@@ -34,7 +34,9 @@ reviews_of: [BN-W05-tha, BN-C21-ei, BN-C16-nei, BN-C10-cha]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[BN-SCRIPT-THA-01, BN-LEX-C21-EI-01] -->
 
-[PAUSE 2s] Write **থ**. Then say **this shirt**.
+[PAUSE 2s] [YOU WRITE: **থ**]
+
+Then say **this shirt**.
 
 ## You'll want to know: এখানে
 <!-- hl-knowledge: introduces=[BN-LEX-C26-EKHANE-01]; assesses=[BN-LEX-C21-EI-01, BN-LEX-C10-CHA-01] -->

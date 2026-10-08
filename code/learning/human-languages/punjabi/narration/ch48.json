@@ -4,7 +4,7 @@
   "chapter": 48,
   "title": "Second Pass --- What Was Met Once",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:b16ac77497d53200",
+  "sourceHash": "fnv1a64:1d55681371248dad",
   "lessons": [
     {
       "id": "PA-R48-forms-name-and-language",
@@ -247,7 +247,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a126622025e59f1",
+      "sourceHash": "fnv1a64:efecf64a53eab365",
       "notice": null,
       "blocks": [
         {
@@ -263,7 +263,16 @@
             },
             {
               "kind": "speech",
-              "text": "Two fields, no model, nothing on the page but a label and a blank. Write both before reading on."
+              "text": "Two fields, no model, nothing on the page but a label and a blank."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both fields before reading on",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both fields before reading on]"
             }
           ]
         },

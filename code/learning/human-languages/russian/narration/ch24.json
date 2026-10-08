@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Six to Ten, and the Pairs That Shaped Each Other",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:03d6dc6b127541e0",
+  "sourceHash": "fnv1a64:528f40c9efe5978a",
   "lessons": [
     {
       "id": "RU-C24-shest",
@@ -661,7 +661,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e3a53ff2db1c03b",
+      "sourceHash": "fnv1a64:b04d00fc530e3c07",
       "notice": null,
       "blocks": [
         {
@@ -699,8 +699,13 @@
               "text": "Read the ten printed shuffled and say each."
             },
             {
-              "kind": "speech",
-              "text": "Write all ten from dictation. Not one new Cyrillic letter appears in any of them — this whole slice adds no sign to the alphabet."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all ten from dictation — not one new Cyrillic letter appears in any of them; this whole slice adds no sign to the alphabet",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all ten from dictation — not one new Cyrillic letter appears in any of them; this whole slice adds no sign to the alphabet]"
             },
             {
               "kind": "speech",

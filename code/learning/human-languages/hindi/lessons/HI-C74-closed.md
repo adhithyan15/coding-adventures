@@ -36,7 +36,7 @@ reviews_of: [HI-C74-open, HI-C73-drink]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-01] -->
 
-[PAUSE 2s] Say *khulā*, then write **खुला**: ख with ु beneath it, then ल, then ा.
+[PAUSE 2s] Say *khulā*. [YOU WRITE: **खुला** — ख with ु beneath it, then ल, then ा]
 
 ## You'll want to know: बंद
 <!-- hl-knowledge: introduces=[HI-LEX-C74-SIGNS-02]; assesses=[] -->

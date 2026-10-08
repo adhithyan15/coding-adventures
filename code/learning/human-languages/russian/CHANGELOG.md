@@ -1,5 +1,29 @@
 # Changelog — Russian track
 
+## Fixed — drivable lessons stop telling a driver to write
+
+The modality manifest marks 5 lessons in this track `drivable: true`, but
+each still asked for writing in bare prose ("Write…", "Draw…", "…, then write…").
+Narration reads bare prose unhedged, so the audio edition told a driver to
+write (issue #12070). Each writing task is now a `[YOU WRITE: …]` cue: the
+narration defers it ("[once you have stopped driving — write: …]") and the
+book prints it as "*Write it:* …". The cue does not create a writing block,
+so every lesson stays drivable.
+
+- **Lessons:** RU-C23-practice, RU-C24-practice, RU-C25-practice,
+  RU-C26-practice, RU-R26-close.
+- Dictation steps ("4. Write all five from dictation. No new Cyrillic
+  letter…") fold their remark into the cue, so the numbered item stays one
+  item.
+- RU-R26-close: step 3 ("…build three more, and write **1-й** and **2-е**")
+  also asked for writing through an "and write" clause; the writing half is a
+  cue now.
+- The lessons leave `tests/drivable-writing-debt/` in human-language-data;
+  this track has no debt left, so its ledger file is deleted.
+- Regenerated: the affected book chapters, narration (`.json` and `.txt`),
+  their generated book and narration hashes, and each lesson's
+  `core/lesson-modality` owner (source hash only; all still `drivable: true`).
+
 ## Fixed — chapter 1's payoff names the atoms its recap assesses
 
 Chapter 1 was migrated to schema v2 (#12078), but `chapters.d/0001.json` kept

@@ -4,7 +4,7 @@
   "chapter": 437,
   "title": "Decidir, Coincidir, Equivocarse",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:59c5aeea7276b939",
+  "sourceHash": "fnv1a64:78d0bd1f159a902d",
   "lessons": [
     {
       "id": "ES-C437-decidir",
@@ -880,7 +880,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60ec3022c84698ae",
+      "sourceHash": "fnv1a64:9be87566bbb80690",
       "notice": null,
       "blocks": [
         {
@@ -955,7 +955,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Now write the reply. Say aloud:"
+              "text": "Now compose the reply. Say aloud:"
             },
             {
               "kind": "pause",

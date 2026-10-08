@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "One to Five, and an Answer to Skolko",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b3cc82d1cfa4a096",
+  "sourceHash": "fnv1a64:64cb5ba435dff59b",
   "lessons": [
     {
       "id": "RU-C23-dva",
@@ -537,7 +537,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37229f62c69f6374",
+      "sourceHash": "fnv1a64:20e1485262276042",
       "notice": null,
       "blocks": [
         {
@@ -575,8 +575,13 @@
               "text": "Read the five printed shuffled — пять (pyat), один, четыре (chetýre), три (tri), два (dva) — and say each."
             },
             {
-              "kind": "speech",
-              "text": "Write all five from dictation. No new Cyrillic letter appears in any of them."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all five from dictation — no new Cyrillic letter appears in any of them",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all five from dictation — no new Cyrillic letter appears in any of them]"
             },
             {
               "kind": "speech",

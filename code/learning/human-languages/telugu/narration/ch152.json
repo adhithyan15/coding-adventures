@@ -4,7 +4,7 @@
   "chapter": 152,
   "title": "A Word for a Stream — Then Its First Letter",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:34cddee1d929ee7c",
+  "sourceHash": "fnv1a64:f6254b1326618958",
   "lessons": [
     {
       "id": "TE-C152-jhari",
@@ -354,7 +354,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b9f7dab7daa2cdf2",
+      "sourceHash": "fnv1a64:173e442c14e8f6b0",
       "notice": null,
       "blocks": [
         {
@@ -381,11 +381,29 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look once at ఝరి (jhari), then cover it. Use only the picture of a stream as your cue and write the whole word from memory."
+              "text": "Look once at ఝరి (jhari), then cover it."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the whole word from memory, with only the picture of a stream as your cue",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the whole word from memory, with only the picture of a stream as your cue]"
             },
             {
               "kind": "speech",
-              "text": "Now uncover the model and check both the whole word and its first base letter. Circle ఝ (jha). Check its three rounded bowls, upper flourish, and separate downward stem; keep the five pen-down runs distinct."
+              "text": "Now uncover the model and check both the whole word and its first base letter."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "a circle round ఝ (jha) — then check its three rounded bowls, upper flourish, and separate downward stem, keeping the five pen-down runs distinct",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: a circle round **ఝ** — then check its three rounded bowls, upper flourish, and separate downward stem, keeping the five pen-down runs distinct]"
             },
             {
               "kind": "prompt",
@@ -449,8 +467,17 @@
               "source": "[PAUSE 15s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "without looking back, the Telugu word for “a stream,” then a circle round its first base letter",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: without looking back, the Telugu word for “a stream,” then a circle round its first base letter]"
+            },
+            {
               "kind": "speech",
-              "text": "Without looking back, write the Telugu word for “a stream,” then circle its first base letter. (ఝరి (jhari); circle ఝ.)"
+              "text": "(ఝరి (jhari); the circle goes round ఝ.)"
             }
           ]
         }

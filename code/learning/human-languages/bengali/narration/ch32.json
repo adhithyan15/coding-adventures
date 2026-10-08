@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Pointing at Things",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:aa582bde5e86f70c",
+  "sourceHash": "fnv1a64:640e25cedea453dd",
   "lessons": [
     {
       "id": "BN-C21-ei",
@@ -186,7 +186,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25f13b884a055d48",
+      "sourceHash": "fnv1a64:f814a9f30e280936",
       "notice": null,
       "blocks": [
         {
@@ -202,7 +202,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say this shirt. Then write ও."
+              "text": "Say this shirt."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ও",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ও**]"
             }
           ]
         },

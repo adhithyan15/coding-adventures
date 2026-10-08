@@ -36,8 +36,7 @@ reviews_of: [HI-C73-bill]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C73-EATING-03] -->
 
-[PAUSE 2s] Write **बिल** from memory, remembering that the ि goes down before
-the ल it is heard after.
+[PAUSE 2s] [YOU WRITE: **बिल** from memory, remembering that the ि goes down before the ल it is heard after]
 
 ## You'll want to know: वेटर
 <!-- hl-knowledge: introduces=[HI-LEX-C73-EATING-04]; assesses=[] -->

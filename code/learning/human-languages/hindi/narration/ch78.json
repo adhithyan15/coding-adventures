@@ -4,7 +4,7 @@
   "chapter": 78,
   "title": "Today, and How Much",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:0670def2b77b123a",
+  "sourceHash": "fnv1a64:728f5b0aacb56461",
   "lessons": [
     {
       "id": "HI-C71-today",
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca261f8353476368",
+      "sourceHash": "fnv1a64:e7316e3005571f2c",
       "notice": null,
       "blocks": [
         {
@@ -179,7 +179,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say āj, then write आज. Two letters, no matras: आ, then ज."
+              "text": "Say āj."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "आज (āj)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **आज**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two letters, no matras: आ, then ज."
             }
           ]
         },

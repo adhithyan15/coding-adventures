@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "One to Five, and the Words English Already Says",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:8fa370d70f3fc0a6",
+  "sourceHash": "fnv1a64:8293cdac8a509b6b",
   "lessons": [
     {
       "id": "FA-C16-yek",
@@ -715,7 +715,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6cbc8a35aaca88b7",
+      "sourceHash": "fnv1a64:51d284d2e8081dd7",
       "notice": null,
       "blocks": [
         {
@@ -757,8 +757,13 @@
               "text": "Read the five printed shuffled — پنج (panj)، یک (yek)، چهار (chahâr)، سه (se)، دو (do) — and say each."
             },
             {
-              "kind": "speech",
-              "text": "Write سه, the one of the five whose letters are already yours."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "سه, the one of the five whose letters are already yours",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **سه**, the one of the five whose letters are already yours]"
             },
             {
               "kind": "speech",

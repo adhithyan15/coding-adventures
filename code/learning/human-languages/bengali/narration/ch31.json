@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "The Letter in the Way",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8a746e3f78778b4a",
+  "sourceHash": "fnv1a64:ec85a5ef8fa105f3",
   "lessons": [
     {
       "id": "BN-W05-tta",
@@ -197,7 +197,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3a03e1cb826c0cb",
+      "sourceHash": "fnv1a64:640a33f041a17fb3",
       "notice": null,
       "blocks": [
         {
@@ -212,8 +212,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the letter from the lesson before, then the same letter with the mātrā",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the letter from the lesson before, then the same letter with the mātrā]"
+            },
+            {
               "kind": "speech",
-              "text": "Write the letter from the lesson before, then write it with the mātrā. Then say জামা."
+              "text": "Then say জামা."
             }
           ]
         },

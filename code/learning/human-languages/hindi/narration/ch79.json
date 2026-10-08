@@ -4,7 +4,7 @@
   "chapter": 79,
   "title": "What It Costs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:878afb368ef192d2",
+  "sourceHash": "fnv1a64:73e26ffe2514d4eb",
   "lessons": [
     {
       "id": "HI-C72-money",
@@ -163,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:59a8fea120198203",
+      "sourceHash": "fnv1a64:d15e6d816184eb2b",
       "notice": null,
       "blocks": [
         {
@@ -179,7 +179,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say paisā, then write पैसा: प with ै above it, then स, then ा."
+              "text": "Say paisā."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "पैसा (paisā) — प with ै above it, then स, then ा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **पैसा** — प with ै above it, then स, then ा]"
             }
           ]
         },
@@ -454,7 +463,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9287b087ce9efc14",
+      "sourceHash": "fnv1a64:1d86d1e34818eeb6",
       "notice": null,
       "blocks": [
         {
@@ -469,8 +478,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "दाम (dām) from memory — द, then ा, then म",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **दाम** from memory — द, then ा, then म]"
+            },
+            {
               "kind": "speech",
-              "text": "Write दाम (dām) from memory: द, then ा, then म. Then say the question you built with it."
+              "text": "Then say the question you built with it."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "The Ten Persian Digits",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e57985cf10aeb573",
+  "sourceHash": "fnv1a64:28bad79b88659a78",
   "lessons": [
     {
       "id": "FA-W19-digits-zero-one",
@@ -517,7 +517,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:96eec003f19d58f0",
+      "sourceHash": "fnv1a64:63e2e1102228de6c",
       "notice": null,
       "blocks": [
         {
@@ -552,11 +552,25 @@
             },
             {
               "kind": "speech",
-              "text": "Hear ten amounts named and write each in Persian figures."
+              "text": "Hear ten amounts named."
             },
             {
-              "kind": "speech",
-              "text": "Write the ten signs from dictation, out of order, and check ۴, ۵ and ۶ against the models rather than against memory."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "each in Persian figures",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: each in Persian figures]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the ten signs from dictation, out of order, and check ۴, ۵ and ۶ against the models rather than against memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the ten signs from dictation, out of order, and check **۴**, **۵** and **۶** against the models rather than against memory]"
             },
             {
               "kind": "speech",

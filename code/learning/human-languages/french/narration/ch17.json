@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "To Have, and How Old You Are",
   "drivablePrefix": 14,
-  "sourceHash": "fnv1a64:eac321a7e38e4dd2",
+  "sourceHash": "fnv1a64:566b5bdb639cee44",
   "lessons": [
     {
       "id": "FR-C14-jai",
@@ -413,7 +413,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d768d2cd827bfe2",
+      "sourceHash": "fnv1a64:2c52bc65a835dd90",
       "notice": null,
       "blocks": [
         {
@@ -513,8 +513,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the three singular forms",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the three singular forms]"
+            },
+            {
               "kind": "speech",
-              "text": "Write the three singular forms. (ai, as, a.) How many distinct sounds are there? (Effectively one — a bare vowel.) Why can French not drop its subject pronouns the way Spanish can? (Because the endings are silent — the pronoun is the only thing left that says who.) Next: the plural, where the endings come back to life."
+              "text": "(ai, as, a.) How many distinct sounds are there? (Effectively one — a bare vowel.) Why can French not drop its subject pronouns the way Spanish can? (Because the endings are silent — the pronoun is the only thing left that says who.) Next: the plural, where the endings come back to life."
             }
           ]
         }

@@ -36,7 +36,7 @@ reviews_of: [HI-C73-eating-house, HI-C72-buy]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C73-EATING-01] -->
 
-[PAUSE 2s] Say *hoṭal*, then write **होटल**: ह with ो above it, then ट, then ल.
+[PAUSE 2s] Say *hoṭal*. [YOU WRITE: **होटल** — ह with ो above it, then ट, then ल]
 
 ## You'll want to know: नाश्ता
 <!-- hl-knowledge: introduces=[HI-LEX-C73-EATING-02]; assesses=[] -->

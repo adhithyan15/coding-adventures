@@ -44,7 +44,9 @@ time. Now say the place they meet — and notice that you cannot yet.
 
 **स्कूल** (*skūl*) — "school". Masculine.
 
-Write it: स + ् + क gives the conjunct **स्क**, then ू above the ल... no: the
+[YOU WRITE: **स्कूल** once]
+
+स + ् + क gives the conjunct **स्क**, then ू above the ल... no: the
 ू belongs to क, so it is **स्कू** and then **ल**. Three pieces, one of them a
 conjunct you have seen before.
 

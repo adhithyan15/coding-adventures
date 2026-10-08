@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "The Ten Urdu Digits",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3777302df9c62c80",
+  "sourceHash": "fnv1a64:a15d4348db4d1db5",
   "lessons": [
     {
       "id": "UR-W31-digits-zero-one",
@@ -517,7 +517,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df56d6c8e20a794b",
+      "sourceHash": "fnv1a64:87df1a9f071275cf",
       "notice": null,
       "blocks": [
         {
@@ -552,11 +552,25 @@
             },
             {
               "kind": "speech",
-              "text": "Hear ten amounts named and write each in Urdu figures."
+              "text": "Hear ten amounts named."
             },
             {
-              "kind": "speech",
-              "text": "Write the ten signs from dictation, out of order, checking ۴, ۵ and ۶ against the models rather than against memory."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "each in Urdu figures",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: each in Urdu figures]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the ten signs from dictation, out of order, checking ۴, ۵ and ۶ against the models rather than against memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the ten signs from dictation, out of order, checking **۴**, **۵** and **۶** against the models rather than against memory]"
             },
             {
               "kind": "speech",

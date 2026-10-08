@@ -36,7 +36,7 @@ reviews_of: [HI-C74-entrance, HI-C49-set-out]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C74-SIGNS-03] -->
 
-[PAUSE 2s] Write **प्रवेश** from memory, starting with the stacked प्र.
+[PAUSE 2s] [YOU WRITE: **प्रवेश** from memory, starting with the stacked प्र]
 
 ## You'll want to know: निकास
 <!-- hl-knowledge: introduces=[HI-LEX-C74-SIGNS-04]; assesses=[HI-LEX-C49-LEAVE-04] -->

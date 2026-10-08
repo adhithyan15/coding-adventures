@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "When, and If",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:fa97eb547d808634",
+  "sourceHash": "fnv1a64:a6fc0b1069cb9e01",
   "lessons": [
     {
       "id": "ML-C75-eppol",
@@ -183,7 +183,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4acf77871568df2a",
+      "sourceHash": "fnv1a64:79787722b91fcffa",
       "notice": null,
       "blocks": [
         {
@@ -228,8 +228,13 @@
           "title": "The word, taken apart",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write the future you already know, then put പോൾ after it:"
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the future you already know, then പോൾ after it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the future you already know, then **പോൾ** after it]"
             },
             {
               "kind": "table",

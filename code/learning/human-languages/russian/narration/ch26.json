@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Which One: the Ordinals, Said and Written",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:7ffd64b45e40f3a5",
+  "sourceHash": "fnv1a64:1b0aec3001c6784a",
   "lessons": [
     {
       "id": "RU-C26-pervyy",
@@ -406,7 +406,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00b7350b979b7789",
+      "sourceHash": "fnv1a64:ed86f136f99dcff1",
       "notice": null,
       "blocks": [
         {
@@ -440,8 +440,13 @@
               "text": "Build, do not recall: fourth, fifth, tenth, twentieth."
             },
             {
-              "kind": "speech",
-              "text": "Write 1-й (pérvyy), 2-е, 3-й and read each aloud as a full word."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "1-й (pérvyy), 2-е, 3-й, and read each aloud as a full word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **1-й**, **2-е**, **3-й**, and read each aloud as a full word]"
             },
             {
               "kind": "speech",
@@ -499,7 +504,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16215fed67505d26",
+      "sourceHash": "fnv1a64:56855d2ac861d41e",
       "notice": null,
       "blocks": [
         {
@@ -533,12 +538,26 @@
               "text": "Count aloud one to ten, then say двадцать and сто."
             },
             {
-              "kind": "speech",
-              "text": "Write all twelve from dictation, shuffled."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all twelve from dictation, shuffled",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all twelve from dictation, shuffled]"
             },
             {
               "kind": "speech",
-              "text": "Say the first three ordinals, build three more, and write 1-й (pérvyy) and 2-е."
+              "text": "Say the first three ordinals and build three more."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "1-й (pérvyy) and 2-е",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **1-й** and **2-е**]"
             },
             {
               "kind": "speech",

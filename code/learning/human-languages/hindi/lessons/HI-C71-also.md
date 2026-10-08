@@ -36,7 +36,9 @@ reviews_of: [HI-C71-today, HI-C70-rest]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C71-TODAY-01] -->
 
-[PAUSE 2s] Say *āj*, then write **आज**. Two letters, no matras: आ, then ज.
+[PAUSE 2s] Say *āj*. [YOU WRITE: **आज**]
+
+Two letters, no matras: आ, then ज.
 
 ## You'll want to know: भी
 <!-- hl-knowledge: introduces=[HI-LEX-C71-TODAY-02]; assesses=[] -->

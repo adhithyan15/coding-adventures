@@ -36,8 +36,10 @@ reviews_of: [HI-C68-country, HI-C74-question-rise, HI-C74-na-tag, HI-C66-well, H
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C68-ORIGIN-01] -->
 
-[PAUSE 2s] Say *desh*, then write **देश** from memory. Three letters and one
-matra: द, then े on top of it, then श. You have been taught all three.
+[PAUSE 2s] Say *desh*. [YOU WRITE: **देश** from memory]
+
+Three letters and one matra: द, then े on top of it, then श. You have been
+taught all three.
 
 ## You'll want to know: भारत
 <!-- hl-knowledge: introduces=[HI-LEX-C68-ORIGIN-02]; assesses=[] -->
