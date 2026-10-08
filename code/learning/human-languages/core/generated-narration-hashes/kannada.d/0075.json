@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 75,
-  "sourceHash": "fnv1a64:ed4dd36e2326932b",
+  "sourceHash": "fnv1a64:6cdd7e2279a4bb4b",
   "lessonIds": [
     "KA-C75-sixth",
     "KA-C75-seventh",
@@ -16,7 +16,7 @@
   "drivablePrefix": 8,
   "text": "kannada/narration/ch75.txt",
   "json": "kannada/narration/ch75.json",
-  "textHash": "fnv1a64:cd44a171dac258f8",
-  "jsonHash": "fnv1a64:a0d03d1bc81e9448",
+  "textHash": "fnv1a64:eb2af9827fc91a7a",
+  "jsonHash": "fnv1a64:9dbf444a79d7ac3d",
   "findings": []
 }

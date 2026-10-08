@@ -4,7 +4,7 @@
   "chapter": 59,
   "title": "Reading — Objects, Places, and a Day",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:208a57b137442505",
+  "sourceHash": "fnv1a64:1934a42f000548b2",
   "lessons": [
     {
       "id": "LA-C59-a-objects",
@@ -439,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:867b9a0e95473a0e",
+      "sourceHash": "fnv1a64:658a366b3ce25c3c",
       "notice": null,
       "blocks": [
         {
@@ -460,11 +460,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it after a tiny word — ad scholam",
+              "instruction": "scholam after a tiny word — ad scholam",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it after a tiny word — **ad scholam**]"
+              "source": "[YOU READ: **scholam** after a tiny word — **ad scholam**]"
             },
             {
               "kind": "pause",
@@ -648,7 +648,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:61e86c6137bd9a26",
+      "sourceHash": "fnv1a64:e0b35738227b3a9e",
       "notice": null,
       "blocks": [
         {
@@ -696,11 +696,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it once for the route — names, wellbeing, school, work, reason, farewell",
+              "instruction": "the dialogue once for the route — names, wellbeing, school, work, reason, farewell",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it once for the route — names, wellbeing, school, work, reason, farewell]"
+              "source": "[YOU READ: the dialogue once for the route — names, wellbeing, school, work, reason, farewell]"
             },
             {
               "kind": "pause",
@@ -711,11 +711,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it again and find the two things handled — librum and epistulam",
+              "instruction": "the dialogue again for the two things handled — librum, epistulam",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it again and find the two things handled — **librum** and **epistulam**]"
+              "source": "[YOU READ: the dialogue again for the two things handled — **librum**, **epistulam**]"
             }
           ]
         },
@@ -830,7 +830,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ece91492bc5be23",
+      "sourceHash": "fnv1a64:36fb9997de9300a7",
       "notice": null,
       "blocks": [
         {
@@ -878,11 +878,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it once for time — morning, first hour, sixth hour, after midday, evening, night, tomorrow",
+              "instruction": "the account once for time — morning, first hour, sixth hour, after midday, evening, night, tomorrow",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it once for time — morning, first hour, sixth hour, after midday, evening, night, tomorrow]"
+              "source": "[YOU READ: the account once for time — morning, first hour, sixth hour, after midday, evening, night, tomorrow]"
             },
             {
               "kind": "pause",
@@ -893,11 +893,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it again for the route — home, toward school, in school, homeward",
+              "instruction": "the account again for the route — home, toward school, in school, homeward",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it again for the route — home, toward school, in school, homeward]"
+              "source": "[YOU READ: the account again for the route — home, toward school, in school, homeward]"
             }
           ]
         },

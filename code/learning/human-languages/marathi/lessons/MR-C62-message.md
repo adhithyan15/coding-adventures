@@ -55,7 +55,7 @@ you.
 [PAUSE 3s] [YOU READ: the message through once, without stopping]
 
 [PAUSE 3s]
-[YOU READ: it again, and notice you did not assemble it line by line the second time]
+[YOU READ: the message again, and notice you did not assemble it line by line the second time]
 
 You took it in.
 

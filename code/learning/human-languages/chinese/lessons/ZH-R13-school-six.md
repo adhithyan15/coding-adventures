@@ -40,6 +40,7 @@ reviews_of: [ZH-C13-da, ZH-C13-dajia, ZH-C13-xue, ZH-C13-xuesheng, ZH-C13-daxue,
 
 Hear the six words in shuffled order and say each meaning. Then say each word
 from its English meaning. [YOU READ: each character card]
+
 [YOU WRITE: only the missed items]
 
 Repair one word at a time.

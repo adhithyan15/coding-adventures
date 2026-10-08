@@ -43,9 +43,10 @@ reviews_of: [SA-C140-vijnapanam]
 
 **देयकम्** — *deyakam* — "a bill (to pay)".
 
-[YOU READ: the bill at the restaurant — **भोजनालयः — देयकम् — शतम्।**]
+[YOU READ: the bill at the restaurant]
 
-A hundred to pay before you go.
+The bill at the restaurant says **भोजनालयः — देयकम् — शतम्।** A hundred to pay
+before you go.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

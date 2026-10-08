@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 85,
-  "sourceHash": "fnv1a64:7cb4dfa711c6529f",
+  "sourceHash": "fnv1a64:122f83b5ca7e7189",
   "lessonIds": [
     "HI-C78-signs",
     "HI-C78-notices",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "hindi/narration/ch85.txt",
   "json": "hindi/narration/ch85.json",
-  "textHash": "fnv1a64:5c8466a6aa0f1406",
-  "jsonHash": "fnv1a64:ee4cecd06462e651",
+  "textHash": "fnv1a64:5b80b67dfd62b95b",
+  "jsonHash": "fnv1a64:721775743e2d8970",
   "findings": []
 }

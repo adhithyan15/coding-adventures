@@ -56,7 +56,7 @@ Nom: Marie Âge: vingt ans Lundi: le travail Mardi: un livre Une heure Dix minut
 [pause 3 seconds]
 [once you have stopped driving — read: the six lines down once, without stopping]
 [pause 3 seconds]
-[once you have stopped driving — read: them again, and notice the colon]
+[once you have stopped driving — read: the six lines again, and notice the colon]
 French puts a space before that too, and the space is the clearest signal on the page that a label has ended.
 
 Why it's said this way.
@@ -96,7 +96,7 @@ Bonjour! Je m'appelle Marie. J'habite à Paris. J'ai un frère et une sœur. Je 
 [pause 3 seconds]
 [once you have stopped driving — read: the passage once without stopping; do not translate as you go — let the sentences arrive]
 [pause 3 seconds]
-[once you have stopped driving — read: it again, and notice how little work it took]
+[once you have stopped driving — read: the passage again, and notice how little work it took]
 
 Why it's said this way.
 [pause 2 seconds]

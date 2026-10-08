@@ -4,7 +4,7 @@
   "chapter": 99,
   "title": "The Noun, And The Ending That Means Two Things",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:188e1175e7e31752",
+  "sourceHash": "fnv1a64:419f6e3836f496bf",
   "lessons": [
     {
       "id": "HI-C91-bacche-plural",
@@ -1421,7 +1421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c96c2cabb4408e0",
+      "sourceHash": "fnv1a64:a85f1b40637abe12",
       "notice": null,
       "blocks": [
         {
@@ -1438,11 +1438,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "this and say how many languages, before going on",
+              "instruction": "the line and say how many languages, before going on",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: this and say how many languages, before going on]"
+              "source": "[YOU READ: the line and say how many languages, before going on]"
             },
             {
               "kind": "speech",

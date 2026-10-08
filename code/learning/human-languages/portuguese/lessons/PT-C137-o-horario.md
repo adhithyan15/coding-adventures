@@ -42,9 +42,10 @@ reviews_of: [PT-C136-organizar]
 
 **o horário** — "opening hours, a timetable".
 
-[YOU READ: the door — **Horário: segunda a sexta, 9h–18h.**]
+[YOU READ: the door]
 
-Open on weekdays from nine to six: not on **sábado**.
+The door says **Horário: segunda a sexta, 9h–18h.** Open on weekdays from nine
+to six: not on **sábado**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

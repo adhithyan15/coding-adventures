@@ -33,3 +33,17 @@ lessons. Every edited lesson stays `drivable: true` (only its
   idiom for *consider*), "Both were taught once and read once" (a memory of
   reading), "Take the whole book's nouns and say each one near and far" (a
   spoken drill).
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - The notice lessons (BN-C147-bigyapon, BN-C147-notish, BN-C147-taimtebil)
+    keep the notice in narrated prose and defer only the look: "[YOU READ: the
+    advert]" then "The advert says **…**". The first pass had put the whole
+    notice inside the deferred cue, so a listener heard the comment on a notice
+    without the notice; that superseded form is the one described above.
+  - A spoken premise, gloss or answer that the first pass had moved inside a
+    deferred cue is said in prose again, and the cue keeps only the look
+    (BN-C27-ditiyo): "[YOU READ: the spelling and the romanization again]" then
+    "They disagree: written **দ্ব**-, said *di*-.".
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (BN-C40-lines,
+    BN-C40-prothom-path): "[YOU READ: the six lines again, …]", "[YOU READ: the
+    passage again and find the three joining words]".

@@ -42,7 +42,9 @@ reviews_of: [ZH-C16-practice, ZH-R16-identity-2, ZH-C17-zhongwen, ZH-W11-qing]
 <!-- hl-writing-stage: dictation-transcription -->
 
 Hear **Chinese character** and **Chinese language** in mixed order. Say each.
-[YOU READ: its unpointed card] [YOU WRITE: each one]
+[YOU READ: each Mandarin form without pinyin]
+
+[YOU WRITE: each one]
 
 Listen for the ending before choosing 字 or 语.
 

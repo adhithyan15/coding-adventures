@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 450,
-  "sourceHash": "fnv1a64:b897d3f76a866c34",
+  "sourceHash": "fnv1a64:f40bfc9b8e065dce",
   "lessonIds": [
     "ES-C450-patio",
     "ES-C450-hierba",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "spanish/narration/ch450.txt",
   "json": "spanish/narration/ch450.json",
-  "textHash": "fnv1a64:f914180d916599b4",
-  "jsonHash": "fnv1a64:8f9e5972275de621",
+  "textHash": "fnv1a64:dc60f5595e4eac5e",
+  "jsonHash": "fnv1a64:848e95a8fe4656fc",
   "findings": []
 }

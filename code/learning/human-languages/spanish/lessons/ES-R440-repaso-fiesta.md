@@ -32,8 +32,8 @@ reviews_of: [ES-C440-boda, ES-C440-cumpleanos, ES-C440-celebrar, ES-C440-disfrut
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C440-FIESTA-01, ES-LEX-C440-FIESTA-02, ES-LEX-C440-FIESTA-03, ES-LEX-C440-FIESTA-04, ES-LEX-C440-FIESTA-05] -->
 
-[PAUSE 3s] Leave the lessons before this one closed. Say all five: *the
-wedding*, *the birthday*, *to celebrate*, *to enjoy*, *the mood*.
+[PAUSE 3s] From memory alone, say all five: *the wedding*, *the birthday*, *to
+celebrate*, *to enjoy*, *the mood*.
 
 ## Grammar Lens: three ways a word hides its pieces
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C440-FIESTA-01, ES-LEX-C440-FIESTA-02, ES-LEX-C440-FIESTA-04] -->

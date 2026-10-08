@@ -43,9 +43,10 @@ reviews_of: [TA-C160-kala-attavanai]
 
 **அறிவிப்பு** — *aṟivippu* — "a notice, an announcement".
 
-[YOU READ: the notice — **ஞாயிறுதோறும் கடை விடுமுறை** — *ñāyiṟutōṟum kaṭai viṭumuṟai* — "Shop closed every Sunday."]
+[YOU READ: the notice]
 
-Come on another day.
+The notice says **ஞாயிறுதோறும் கடை விடுமுறை** — *ñāyiṟutōṟum kaṭai viṭumuṟai* —
+"Shop closed every Sunday." Come on another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

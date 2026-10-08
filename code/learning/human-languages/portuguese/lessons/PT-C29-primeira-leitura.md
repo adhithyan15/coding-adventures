@@ -59,7 +59,7 @@ reviews_of: [PT-C29-palavras, PT-C29-linhas, PT-C27-primeiro]
 [PAUSE 3s]
 [YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]
 
-[PAUSE 3s] [YOU READ: it again, and count the joining words]
+[PAUSE 3s] [YOU READ: the passage again, and count the joining words]
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[PT-SKILL-CONNECTED-READING] -->

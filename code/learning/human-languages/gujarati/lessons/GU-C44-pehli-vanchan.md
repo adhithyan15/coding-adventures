@@ -58,7 +58,7 @@ reviews_of: [GU-C44-words, GU-C44-lines, GU-C11-bhai, GU-C31-samajto-nathi]
 [PAUSE 3s]
 [YOU READ: the meeting through once without stopping; do not translate as you go — let the turns arrive]
 
-[PAUSE 3s] [YOU READ: it again, and count how many people are speaking]
+[PAUSE 3s] [YOU READ: the meeting again, and count how many people are speaking]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-GHAR-01, GU-NEG-SAMAJTO-NATHI-01] -->

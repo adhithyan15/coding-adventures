@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Character or language?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:24a7c2a52aea0bba",
+  "sourceHash": "fnv1a64:7faad9a223b96f7d",
   "lessons": [
     {
       "id": "ZH-C16-hear-zi",
@@ -721,7 +721,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aec0762e10b0ab1d",
+      "sourceHash": "fnv1a64:26413a2663afd09d",
       "notice": null,
       "blocks": [
         {
@@ -762,11 +762,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "its unpointed card",
+              "instruction": "each Mandarin form without pinyin",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: its unpointed card]"
+              "source": "[YOU READ: each Mandarin form without pinyin]"
             },
             {
               "kind": "prompt",
@@ -1102,7 +1102,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc109e926259bb15",
+      "sourceHash": "fnv1a64:4ef0b6afb36f8581",
       "notice": null,
       "blocks": [
         {
@@ -1130,11 +1130,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "this first, before the explanation",
+              "instruction": "汉语 (hànyǔ) first, before the explanation",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: this first, before the explanation]"
+              "source": "[YOU READ: **汉语** first, before the explanation]"
             },
             {
               "kind": "speech",
@@ -1218,7 +1218,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a2ca258dd7427399",
+      "sourceHash": "fnv1a64:2d8c64d09354b96d",
       "notice": null,
       "blocks": [
         {
@@ -1322,7 +1322,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56bf22651eea3e2f",
+      "sourceHash": "fnv1a64:fa230f320f8ddc51",
       "notice": null,
       "blocks": [
         {
@@ -1370,10 +1370,6 @@
             {
               "kind": "speech",
               "text": "Speaking: produce all three from their English meanings, with tones audible."
-            },
-            {
-              "kind": "speech",
-              "text": "Reading:"
             },
             {
               "kind": "prompt",

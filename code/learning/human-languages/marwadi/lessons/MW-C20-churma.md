@@ -53,6 +53,7 @@ the long **ा** used since the first greeting.
 <!-- hl-writing-stage: delayed-copy -->
 
 [YOU COVER: the model after one look, then wait five seconds]
+
 [YOU WRITE: **चूरमा** — check that the **ू** hangs below **च** and not below **र**]
 
 ## Wrap-up Recall

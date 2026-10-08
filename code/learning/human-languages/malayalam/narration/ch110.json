@@ -4,7 +4,7 @@
   "chapter": 110,
   "title": "Reaching Somebody",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:837729af01513039",
+  "sourceHash": "fnv1a64:b4cf7cacc1c9d35b",
   "lessons": [
     {
       "id": "ML-S148-letter-pha",
@@ -761,7 +761,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0127e82c5473546c",
+      "sourceHash": "fnv1a64:c50acc202e4bc36c",
       "notice": null,
       "blocks": [
         {
@@ -777,7 +777,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say telephone, letter and the post."
+              "text": "From memory alone, say telephone, letter and the post."
             }
           ]
         },

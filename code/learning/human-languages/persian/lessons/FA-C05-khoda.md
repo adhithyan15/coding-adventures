@@ -45,7 +45,8 @@ the final social move: ending that interaction.
 
 > **خدا** — *khodâ* — **God**
 
-[YOU READ: from right to left — **خ** *kh* + **د** *d* + **ا** long *â*]
+From right to left: **خ** *kh* + **د** *d* + **ا** long *â*.
+[YOU READ: the word from right to left]
 
 The short *o* is learned with the word rather than written as a separate letter.
 Keep the back-of-the-mouth **kh** gentle; clarity matters more than force.

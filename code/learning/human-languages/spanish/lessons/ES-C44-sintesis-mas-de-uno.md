@@ -59,7 +59,7 @@ verb endings. Here, for once, it says less.
 ## The exchange
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE, ES-GRAMMAR-DEFINITE-PLURAL-FEMININE, ES-GRAMMAR-BARE-PLURAL-NOUN, ES-LEX-COMIDA, ES-LEX-CASA, ES-GRAMMAR-HACER-PRESENT-SINGULAR] -->
 
-[YOU READ: this aloud and watch the two plurals doing different jobs]
+[YOU READ: the exchange aloud and watch the two plurals doing different jobs]
 
 > — *¿Tienes libros?*
 > — *Sí, tengo libros.*

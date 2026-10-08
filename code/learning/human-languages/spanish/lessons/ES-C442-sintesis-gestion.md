@@ -38,7 +38,7 @@ read uses both, and it never once says *you*.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C442-GESTION-01, ES-LEX-C442-GESTION-03, ES-LEX-C442-GESTION-05] -->
 
-[YOU READ: it once straight through, then answer]
+[YOU READ: the page once straight through, then answer]
 
 **en la web de la administración**
 

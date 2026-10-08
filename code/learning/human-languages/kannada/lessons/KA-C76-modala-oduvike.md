@@ -58,7 +58,8 @@ reviews_of: [KA-C76-words, KA-C76-lines, KA-C67-and, KA-C54-root]
 [PAUSE 3s]
 [YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]
 
-[PAUSE 3s] [YOU READ: it again, and watch **ಇಲ್ಲಿ** and **ಅಲ್ಲಿ** take turns]
+[PAUSE 3s]
+[YOU READ: the passage again, and watch **ಇಲ್ಲಿ** and **ಅಲ್ಲಿ** take turns]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C54-TREE-04, KA-LEX-C42-ADJ-01, KA-SKILL-CONNECTED-READING] -->

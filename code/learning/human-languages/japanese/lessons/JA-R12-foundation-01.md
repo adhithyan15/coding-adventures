@@ -39,6 +39,7 @@ reviews_of: [JA-W01-i, JA-C01-gozaimasu, JA-W10-shi]
 
 Hear and say the first seven-word body map.
 [YOU READ: the first seven-word body map]
+
 [YOU WRITE: the first seven-word body map]
 
 Finish by isolating **あし**.

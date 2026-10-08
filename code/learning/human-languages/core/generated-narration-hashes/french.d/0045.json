@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 45,
-  "sourceHash": "fnv1a64:2936544d1c7b999f",
+  "sourceHash": "fnv1a64:f11bd3abb31e0f04",
   "lessonIds": [
     "FR-C45-instructions",
     "FR-C45-details",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "french/narration/ch45.txt",
   "json": "french/narration/ch45.json",
-  "textHash": "fnv1a64:b1cdfb5bdfc54227",
-  "jsonHash": "fnv1a64:9699d8230debea93",
+  "textHash": "fnv1a64:eab085db7e832a1b",
+  "jsonHash": "fnv1a64:efd0a66a49175fe2",
   "findings": []
 }

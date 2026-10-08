@@ -42,9 +42,9 @@ reviews_of: [GE-C143-oeffnungszeiten]
 
 **die Quittung** — "a receipt".
 
-[YOU READ: the receipt — **Quittung: Miete, 400 Euro.**]
+[YOU READ: the receipt]
 
-The rent is paid: keep it.
+The receipt says **Quittung: Miete, 400 Euro.** The rent is paid: keep it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -43,7 +43,9 @@ reviews_of: [MW-C10-bajar, MW-C10-ghar, MW-C10-mandir, MW-C09-patni, MW-C09-bach
 <!-- hl-knowledge: introduces=[MW-PERFORMANCE-PLACES-THREE-FOUR-SKILL-01]; assesses=[MW-LEX-BAJAR-01, MW-SCRIPT-BAJAR-01, MW-LEX-GHAR-01, MW-SCRIPT-GHAR-01, MW-LEX-MANDIR-01, MW-SCRIPT-MANDIR-01, MW-SCRIPT-JA-01, MW-SCRIPT-GHA-01] -->
 
 Hear and identify all three places, and say each from a cue.
-[YOU READ: the three cards, then cover them] [YOU WRITE: all three]
+[YOU READ: the three cards, then cover them]
+
+[YOU WRITE: all three]
 
 Score each skill separately.
 

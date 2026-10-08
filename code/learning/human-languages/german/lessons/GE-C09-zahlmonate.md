@@ -47,7 +47,7 @@ reviews_of: [GE-C09-dezember, GE-C09-september, GE-C09-juli]
 | *November* | *novem* | *neun* |
 | *Dezember* | *decem* | *zehn* |
 
-Go across each row and hear that nothing rhymes. German counts in one language
+Say each row through and hear that nothing rhymes. German counts in one language
 and dates in another, and never reconciled the two — because there was never any
 occasion to.
 

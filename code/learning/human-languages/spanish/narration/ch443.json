@@ -4,7 +4,7 @@
   "chapter": 443,
   "title": "El Animo",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6006b93d0cf5d098",
+  "sourceHash": "fnv1a64:ccf3639543518b31",
   "lessons": [
     {
       "id": "ES-C443-doler",
@@ -854,7 +854,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16c11b5031ae938d",
+      "sourceHash": "fnv1a64:e0717d4945fa191f",
       "notice": null,
       "blocks": [
         {
@@ -870,7 +870,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say all five: to hurt, to interest, to come closer, to concentrate, to regret."
+              "text": "From memory alone, say all five: to hurt, to interest, to come closer, to concentrate, to regret."
             }
           ]
         },

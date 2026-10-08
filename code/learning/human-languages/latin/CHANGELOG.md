@@ -25,6 +25,18 @@ lessons. Every edited lesson stays `drivable: true` (only its
 - Left alone: "Read from the endings rather than from position"
   (interpretation), "Sort these three without looking" (a spoken sort), "Trace
   *nox* back" (etymology), the practice heading "… then read the Latin".
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - The notice lessons (LA-C164-inscriptio, LA-C164-venalis) keep the notice in
+    narrated prose and defer only the look: "[YOU READ: the stone]" then "The
+    stone says **SPQR**, which is …". The first pass had put the whole notice
+    inside the deferred cue, so a listener heard the comment on a notice without
+    the notice; that superseded form is the one described above.
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (LA-C58-phrases,
+    LA-C58-prima-lectio, LA-C59-dies-meus, LA-C59-place,
+    LA-C59-social-exchange): "[YOU READ: the account once for time — …]", "[YOU
+    READ: the dialogue again for the two things handled …]", "[YOU READ:
+    **scholam** after a tiny word — **ad scholam**]".
 
 ## Fixed — the four-line composition no longer prints a strip
 

@@ -37,7 +37,9 @@ reviews_of: [JA-C01-practice, JA-C01-konnichiwa]
 [PAUSE 10s] [YOU WRITE: katakana **コ**]
 
 Give the daytime greeting, then run one doorway exchange aloud.
-[YOU COVER: the text before the new expression begins]
+[YOU COVER: the text]
+
+Then the new expression begins.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-SAYOUNARA, JA-SAYOUNARA-HEARD-01]; assesses=[] -->

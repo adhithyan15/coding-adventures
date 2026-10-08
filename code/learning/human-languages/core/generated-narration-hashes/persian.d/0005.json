@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 5,
-  "sourceHash": "fnv1a64:a9b5b1092c7009dc",
+  "sourceHash": "fnv1a64:5dbca3cfc29a8d15",
   "lessonIds": [
     "FA-C05-khoda",
     "FA-C05-hafez",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "persian/narration/ch05.txt",
   "json": "persian/narration/ch05.json",
-  "textHash": "fnv1a64:a867c3567cb971ae",
-  "jsonHash": "fnv1a64:b31e60ff11b88c77",
+  "textHash": "fnv1a64:2359263f7ce226cf",
+  "jsonHash": "fnv1a64:30994cee1768f04e",
   "findings": []
 }

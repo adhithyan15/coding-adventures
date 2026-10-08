@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Looking and reading",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1bb5c44950f899e2",
+  "sourceHash": "fnv1a64:954471e725d2dac0",
   "lessons": [
     {
       "id": "ZH-C18-hear-kan",
@@ -899,7 +899,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f7e2d1e4b61bc9a2",
+      "sourceHash": "fnv1a64:fea83f3d8f694b80",
       "notice": null,
       "blocks": [
         {
@@ -931,11 +931,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "its unpointed card",
+              "instruction": "each Mandarin form without pinyin",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: its unpointed card]"
+              "source": "[YOU READ: each Mandarin form without pinyin]"
             },
             {
               "kind": "prompt",
@@ -947,8 +947,13 @@
               "source": "[YOU WRITE: each one]"
             },
             {
-              "kind": "speech",
-              "text": "Check the neighbour of 看 (kàn) before deciding the whole meaning."
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "the neighbour of 看 (kàn) before deciding the whole meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: the neighbour of 看 before deciding the whole meaning]"
             }
           ]
         },
@@ -1376,7 +1381,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:60159203a1435b7b",
+      "sourceHash": "fnv1a64:d1cc0acee0f9c757",
       "notice": null,
       "blocks": [
         {
@@ -1763,7 +1768,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a48d9f75b98404a5",
+      "sourceHash": "fnv1a64:f8f129b5daa15fa3",
       "notice": null,
       "blocks": [
         {
@@ -1795,11 +1800,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "its unpointed card",
+              "instruction": "each Mandarin form without pinyin",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: its unpointed card]"
+              "source": "[YOU READ: each Mandarin form without pinyin]"
             },
             {
               "kind": "prompt",
@@ -1811,8 +1816,13 @@
               "source": "[YOU WRITE: each one]"
             },
             {
-              "kind": "speech",
-              "text": "Check whether 看 (kàn) is present before deciding noun or activity."
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "whether 看 (kàn) is present before deciding noun or activity",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: whether 看 is present before deciding noun or activity]"
             }
           ]
         },

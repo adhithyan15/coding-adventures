@@ -53,6 +53,7 @@ The same **घ** that opens **घर** and **घोड़ो**, carrying the lon
 <!-- hl-writing-stage: delayed-copy -->
 
 [YOU COVER: the model after one look, then wait five seconds]
+
 [YOU WRITE: **घी** — keep the **ी** stroke tall enough to reach the headline]
 
 ## Wrap-up Recall

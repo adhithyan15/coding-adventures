@@ -49,6 +49,7 @@ reviews_of: [MW-C15-hear-kapda, MW-W15-nukta]
 <!-- hl-writing-stage: delayed-copy -->
 
 [YOU COVER: the model after one look, then wait five seconds]
+
 [YOU WRITE: **कपड़ा** — check the dot below **ड**]
 
 ## Wrap-up Recall

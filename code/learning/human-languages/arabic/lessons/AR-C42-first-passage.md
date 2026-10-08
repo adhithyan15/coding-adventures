@@ -61,10 +61,10 @@ them together without a romanized line underneath.
 [PAUSE 4s]
 [YOU READ: the whole encounter once; do not stop to translate a word — let each turn answer the turn before it]
 
-[PAUSE 4s]
-[YOU READ: it again, and this time notice the hinge — **شاي أو حليب؟**]
+[PAUSE 4s] [YOU READ: the encounter again for the hinge]
 
-One choice becomes two tiny questions, then a clear answer.
+The hinge is **شاي أو حليب؟** One choice becomes two tiny questions, then a
+clear answer.
 
 ## The passage, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[AR-SKILL-CONNECTED-READING, AR-FUNC-C38-HASANAN-01, AR-CONCEPT-SHUKRAN-21] -->

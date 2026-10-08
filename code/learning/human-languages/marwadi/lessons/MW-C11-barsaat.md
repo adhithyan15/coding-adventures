@@ -50,6 +50,7 @@ reviews_of: [MW-C11-hear-barsaat, MW-C11-hawa, MW-C10-travel-five, MW-W05-tha]
 <!-- hl-writing-stage: delayed-copy -->
 
 [YOU COVER: the model after one look, then wait five seconds]
+
 [YOU WRITE: **बरसात** — check that **ा** sits only in the final chunk]
 
 ## Wrap-up Recall

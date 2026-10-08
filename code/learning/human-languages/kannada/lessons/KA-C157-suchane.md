@@ -43,9 +43,10 @@ reviews_of: [KA-C157-velapatti]
 
 **ಸೂಚನೆ** — *sūcane* — "a notice, an instruction".
 
-[YOU READ: the notice — **ಇಂದು ಅಂಗಡಿ ಮುಚ್ಚಿದೆ** — *indu aṅgaḍi muccide* — "The shop is closed today."]
+[YOU READ: the notice]
 
-Come back on another day.
+The notice says **ಇಂದು ಅಂಗಡಿ ಮುಚ್ಚಿದೆ** — *indu aṅgaḍi muccide* — "The shop is
+closed today." Come back on another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

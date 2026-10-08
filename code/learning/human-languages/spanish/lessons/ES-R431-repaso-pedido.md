@@ -32,8 +32,7 @@ reviews_of: [ES-C431-pedido, ES-C431-devolver, ES-C431-retraso, ES-C431-proveedo
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C431-PEDIDO-01, ES-LEX-C431-PEDIDO-02, ES-LEX-C431-PEDIDO-03] -->
 
-[PAUSE 3s] Leave the lessons before this one closed. Say *the order*, *to give
-back* and *the delay*.
+[PAUSE 3s] From memory alone, say *the order*, *to give back* and *the delay*.
 
 ## Grammar Lens: three of the five were built, not learned
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C431-PEDIDO-01, ES-LEX-C431-PEDIDO-04, ES-LEX-C431-PEDIDO-02] -->

@@ -32,8 +32,7 @@ reviews_of: [ES-C435-curriculum, ES-C435-documentacion, ES-C435-experiencia, ES-
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C435-PAPEL-01, ES-LEX-C435-PAPEL-02, ES-LEX-C435-PAPEL-05] -->
 
-[PAUSE 3s] Leave the lessons before this one closed. Say *the CV*, *the
-paperwork* and *retired*.
+[PAUSE 3s] From memory alone, say *the CV*, *the paperwork* and *retired*.
 
 ## Grammar Lens: the endings that read themselves
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C435-PAPEL-02, ES-LEX-C435-PAPEL-03, ES-LEX-C435-PAPEL-05] -->

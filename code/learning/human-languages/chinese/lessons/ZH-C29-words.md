@@ -55,7 +55,7 @@ are six words that are not each a character.
 [PAUSE 3s] [YOU READ: the six words down once, without stopping]
 
 [PAUSE 3s]
-[YOU READ: them again, and this time notice there is nothing between the characters]
+[YOU READ: the six words again, and this time notice there is nothing between the characters]
 
 No space tells you where one word ends.
 

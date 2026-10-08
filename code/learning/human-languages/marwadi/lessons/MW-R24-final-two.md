@@ -42,8 +42,8 @@ reviews_of: [MW-C24-do, MW-C24-aakhri, MW-C24-final-price, MW-C24-lo, MW-C22-tot
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DO-01, MW-SCRIPT-DO-01, MW-LEX-AAKHRI-01, MW-SCRIPT-AAKHRI-01, MW-LEX-LO-01, MW-SCRIPT-LO-01, MW-LEX-FINAL-PRICE-01, MW-SCRIPT-FINAL-PRICE-01] -->
 
-Hear each word out of its line and give its meaning.
-[YOU READ: three cards — **दो**, **लो**, **आखरी**]
+Hear each word out of its line and give its meaning. The three cards say **दो**,
+**लो**, **आखरी**. [YOU READ: the three cards]
 
 [YOU WRITE: all three from sound]
 

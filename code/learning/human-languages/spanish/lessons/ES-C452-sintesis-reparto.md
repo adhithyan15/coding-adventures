@@ -38,7 +38,7 @@ you to one using the other.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C452-REPARTO-01, ES-LEX-C452-REPARTO-03, ES-LEX-C452-REPARTO-04] -->
 
-A card through the letterbox. [YOU READ: it, then answer]
+A card through the letterbox. [YOU READ: the card, then answer]
 
 > **AVISO DE ENTREGA**
 

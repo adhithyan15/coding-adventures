@@ -52,6 +52,7 @@ Say sister, then recall **्** and **त**.
 <!-- hl-writing-stage: delayed-copy -->
 
 [YOU COVER: the model after one look, then wait five seconds]
+
 [YOU WRITE: **सस्ता** — check the middle consonant join and final long **ा**]
 
 ## Wrap-up Recall

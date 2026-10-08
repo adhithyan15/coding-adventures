@@ -40,7 +40,7 @@ reviews_of: [ZH-C06-zaijian, ZH-C05-practice, ZH-C01-nihao]
 <!-- hl-knowledge: introduces=[ZH-DIALOGUE-PART]; assesses=[ZH-LEX-ZAIJIAN, ZH-LEX-BUSHI, ZH-LEX-SHI, ZH-TONE-SANDHI-BU] -->
 
 Everything below is a character you have written yourself.
-[YOU READ: it straight through]
+[YOU READ: the exchange straight through]
 
 > **A:** 你好
 >

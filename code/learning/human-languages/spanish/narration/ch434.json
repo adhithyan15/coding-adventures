@@ -4,7 +4,7 @@
   "chapter": 434,
   "title": "El Taller Y La Máquina",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:8417f416cac37b3c",
+  "sourceHash": "fnv1a64:4c2598c548c42446",
   "lessons": [
     {
       "id": "ES-C434-taller",
@@ -718,7 +718,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:573bc56a875c4921",
+      "sourceHash": "fnv1a64:6b420c9c452d7161",
       "notice": null,
       "blocks": [
         {
@@ -734,7 +734,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say the workshop, the machine and the charger."
+              "text": "From memory alone, say the workshop, the machine and the charger."
             }
           ]
         },
@@ -862,7 +862,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:08833a1043a971a7",
+      "sourceHash": "fnv1a64:7b5bb2aeb9c79283",
       "notice": null,
       "blocks": [
         {
@@ -890,11 +890,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it once, as though hearing it on the telephone, then answer",
+              "instruction": "the message once, as though hearing it on the telephone, then answer",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it once, as though hearing it on the telephone, then answer]"
+              "source": "[YOU READ: the message once, as though hearing it on the telephone, then answer]"
             },
             {
               "kind": "speech",

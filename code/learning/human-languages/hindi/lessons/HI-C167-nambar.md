@@ -43,9 +43,9 @@ reviews_of: [HI-C167-tarikh]
 
 **नंबर** — *nambar* — "a number".
 
-[YOU READ: the sign — **कमरा नंबर बीस।** (*kamrā nambar bīs.*)]
+[YOU READ: the sign]
 
-Room twenty.
+The sign says **कमरा नंबर बीस।** (*kamrā nambar bīs.*) Room twenty.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

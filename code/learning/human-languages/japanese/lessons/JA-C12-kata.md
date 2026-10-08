@@ -51,7 +51,9 @@ Two known signs, two even morae.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KATA-SHOULDER] -->
 
-Hear, picture the part, and say **かた**. [YOU READ: **かた**] [YOU WRITE: **かた**]
+Hear, picture the part, and say **かた**. [YOU READ: **かた**]
+
+[YOU WRITE: **かた**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KATA-SHOULDER] -->

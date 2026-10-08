@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Six To Ten",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:894492a2246d149f",
+  "sourceHash": "fnv1a64:acacea28ec63c6ba",
   "lessons": [
     {
       "id": "MW-C33-hear-chha",
@@ -1138,7 +1138,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:290c0faee1a04151",
+      "sourceHash": "fnv1a64:ae374227cfb84627",
       "notice": null,
       "blocks": [
         {
@@ -1192,10 +1192,6 @@
             {
               "kind": "speech",
               "text": "Speaking. Count one to ten, then ten to one, with no model."
-            },
-            {
-              "kind": "speech",
-              "text": "Reading."
             },
             {
               "kind": "prompt",

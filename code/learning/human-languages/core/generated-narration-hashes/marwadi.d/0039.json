@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 39,
-  "sourceHash": "fnv1a64:7c74173dbd364369",
+  "sourceHash": "fnv1a64:d43dffdd12d92d68",
   "lessonIds": [
     "MW-C39-hear-koni",
     "MW-C39-koni",
@@ -14,7 +14,7 @@
   "drivablePrefix": 1,
   "text": "marwadi/narration/ch39.txt",
   "json": "marwadi/narration/ch39.json",
-  "textHash": "fnv1a64:a61c3880fa394093",
-  "jsonHash": "fnv1a64:5791c5ae813ee12d",
+  "textHash": "fnv1a64:80be43139e0c041d",
+  "jsonHash": "fnv1a64:f889b105f583fa1c",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 136,
   "title": "Family and Water: Zo, Zu and Ze",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:780998704f2fc228",
+  "sourceHash": "fnv1a64:b5bf5525efde7c4a",
   "lessons": [
     {
       "id": "JA-C136-kazoku",
@@ -1269,7 +1269,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b6919ebfc6f580f",
+      "sourceHash": "fnv1a64:7b34d33e71a613cf",
       "notice": null,
       "blocks": [
         {
@@ -1337,8 +1337,13 @@
               "source": "[PAUSE 2s each]"
             },
             {
-              "kind": "speech",
-              "text": "For each one below, say what it means."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one below aloud, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one below aloud, then say what it means]"
             },
             {
               "kind": "prompt",

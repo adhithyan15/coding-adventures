@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Twenty, a Hundred, and the Nine Words That Are Not Here",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:ea70273784e7f776",
+  "sourceHash": "fnv1a64:4760d18afb7ce0ca",
   "lessons": [
     {
       "id": "UR-C30-bees",
@@ -286,7 +286,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:85ae97db2c4a7606",
+      "sourceHash": "fnv1a64:44fd65d067f9c536",
       "notice": null,
       "blocks": [
         {
@@ -331,10 +331,6 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU WRITE: each amount in figures of your own language]"
-            },
-            {
-              "kind": "speech",
-              "text": "Reading."
             },
             {
               "kind": "prompt",

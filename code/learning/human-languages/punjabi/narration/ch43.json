@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "Who, When, Where, How Many",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0d6d0076e1a27ed3",
+  "sourceHash": "fnv1a64:5c3553a7a46872e8",
   "lessons": [
     {
       "id": "PA-C43-kaun",
@@ -438,7 +438,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:05dfa49ed4b78435",
+      "sourceHash": "fnv1a64:df9c6c193f78cc1f",
       "notice": null,
       "blocks": [
         {
@@ -504,13 +504,17 @@
               "text": "ਕਿੱਥੇ — kitthe — where."
             },
             {
+              "kind": "speech",
+              "text": "In pieces: ਕ, the ਿ sihari before it, the ੱ addak that doubles the next sound, then ਥ — new one lesson ago — and the ੇ laav."
+            },
+            {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it in pieces — ਕ, the ਿ sihari before it, the ੱ addak that doubles the next sound, then ਥ (new one lesson ago), and the ੇ laav",
+              "instruction": "the word in pieces",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it in pieces — **ਕ**, the **ਿ** sihari before it, the **ੱ** addak that doubles the next sound, then **ਥ** (new one lesson ago), and the **ੇ** laav]"
+              "source": "[YOU READ: the word in pieces]"
             },
             {
               "kind": "speech",

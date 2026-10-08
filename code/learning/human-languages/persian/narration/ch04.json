@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "How Are You?",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:5c9a50f6f7c334a5",
+  "sourceHash": "fnv1a64:55f7abb7906300db",
   "lessons": [
     {
       "id": "FA-C04-hal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:73eb3ab923f364e1",
+      "sourceHash": "fnv1a64:d67d9707791d3e7d",
       "notice": null,
       "blocks": [
         {
@@ -49,13 +49,17 @@
               "text": "حال — hâl — state, condition."
             },
             {
+              "kind": "speech",
+              "text": "From right to left: ح h + ا long â + ل l."
+            },
+            {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "from right to left — ح h + ا long â + ل l",
+              "instruction": "the word from right to left",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: from right to left — **ح** *h* + **ا** long *â* + **ل** *l*]"
+              "source": "[YOU READ: the word from right to left]"
             },
             {
               "kind": "speech",

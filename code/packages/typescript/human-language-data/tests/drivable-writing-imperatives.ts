@@ -1064,9 +1064,24 @@ export function gestureSpokenCues(markdown: string): string[] {
 // prose spans in 391 drivable lessons (Marwadi 120, Japanese 53, Chinese 48,
 // Tamil 28, and the rest in every other track but Spanish), each of which this
 // change rewrote; afterwards, on none. In lessons that are not drivable it
-// fires on 739 spans in 603 lessons, and a sample of them is all real reading,
+// fires on 740 spans in 603 lessons, and a sample of them is all real reading,
 // card and look-cover-write work, which those lessons' narration already
 // hedges with its hands-and-eyes notice.
+//
+// A review follow-up widened three things, each still a closed literal: " or "
+// is a step link ("turn the page or cover every Arabic model"), "cover up"
+// covers, and a bare "cover" may end its step with " and wait", " and write"
+// or " and say" as well as ", and " ("Look, cover and wait"). Over the
+// pre-fix corpus that changed nothing in drivable lessons (still 418 spans) and
+// added one span elsewhere (AR-W00-full-greeting-recall, a real
+// turn-the-page-or-cover step).
+//
+// Two widenings were measured and left out, because they were not precise:
+// a bare "read," in a chain ("hear, say, read, and write") is as often a list
+// of the skills a lesson teaches, heading included, as a step; and "cover,
+// then" also matches a stroke the Chinese writing lessons call "cover" ("top
+// slant, cover, then the middle"). Those, like the rest of this list, were
+// inventoried by hand instead.
 //
 // Deliberately out of scope, because no closed vocabulary separates them from
 // description: an object that is a passage rather than script ("Read it once
@@ -1083,7 +1098,7 @@ export function gestureSpokenCues(markdown: string): string[] {
 // words. `PRINTED_CARD` is fixed literals. So a span of N characters costs O(N).
 
 /** Where a step starts in prose: a sentence start, or a step link. No em dash: in prose it opens a gloss. */
-const PROSE_LINK = String.raw`(?:^|[.!?;:]["”’)*]{0,3} |, (?:and )?|; | and | then )(?:\*\*)?(?:then |now |and |also |first )?`;
+const PROSE_LINK = String.raw`(?:^|[.!?;:]["”’)*]{0,3} |, (?:and |or )?|; | and | or | then )(?:\*\*)?(?:then |now |and |also |first )?`;
 
 const PROSE_READING_STEP = new RegExp(`${PROSE_LINK}read(?=[ :.]|\\*\\*)`, "gi");
 
@@ -1098,6 +1113,9 @@ const PRINTED_CARD = /\b(?:meaning|character|printed|unpointed) cards?\b/i;
 
 /** Covering the page: "Look, cover, and wait", "Hide the pinyin", "Cover it". The object is judged by `coversThePage`. */
 const COVER_STEP = new RegExp(`${PROSE_LINK}(?:cover|uncover|hide)(?=[ ,.])`, "gi");
+
+/** What may follow a bare "cover" that ends its step: "Look, cover, and wait", "Look, cover and wait". */
+const BARE_STEP_ENDS: readonly string[] = [", and ", " and wait", " and write", " and say", "."];
 
 /** What a hand covers on the page, after a determiner and at most three plain words. */
 const PAGE_NOUNS: ReadonlySet<string> = new Set([
@@ -1119,8 +1137,9 @@ const PAGE_NOUNS: ReadonlySet<string> = new Set([
  *   " both; French makes you"      no   "both" alone is not on the page
  */
 function coversThePage(ahead: string): boolean {
-  if (ahead.startsWith(", and ") || ahead.startsWith(".")) return true;
+  if (BARE_STEP_ENDS.some((end) => ahead.startsWith(end))) return true;
   const words = ahead.trim().split(" ");
+  if ((words[0] ?? "").toLowerCase() === "up") words.shift();
   const first = (words[0] ?? "").toLowerCase().replace(/[,.;:]$/, "");
   if (first === "it" || first === "them" || first === "everything" || first.startsWith("**")) return true;
   if (!PROSE_DETERMINERS.has(first) && first !== "every" && first !== "your") return false;

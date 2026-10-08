@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Reading — Words, Lines, and a First Passage",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:574a96f1c8e30c5e",
+  "sourceHash": "fnv1a64:d6f2a23fba55372a",
   "lessons": [
     {
       "id": "IT-C36-parole",
@@ -215,7 +215,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64c833f9c324245c",
+      "sourceHash": "fnv1a64:6bd277460fbcc49c",
       "notice": null,
       "blocks": [
         {
@@ -278,11 +278,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "them again, and notice the list gets longer as it goes, from one word to three",
+              "instruction": "the six lines again, and notice the list gets longer as it goes, from one word to three",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: them again, and notice the list gets longer as it goes, from one word to three]"
+              "source": "[YOU READ: the six lines again, and notice the list gets longer as it goes, from one word to three]"
             }
           ]
         },

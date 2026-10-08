@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "Reading — Instructions, a Form, and a First Paragraph",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:2936544d1c7b999f",
+  "sourceHash": "fnv1a64:f11bd3abb31e0f04",
   "lessons": [
     {
       "id": "FR-C45-instructions",
@@ -220,7 +220,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca891c8c68d1f974",
+      "sourceHash": "fnv1a64:d5be0ba6908dac54",
       "notice": null,
       "blocks": [
         {
@@ -283,11 +283,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "them again, and notice the colon",
+              "instruction": "the six lines again, and notice the colon",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: them again, and notice the colon]"
+              "source": "[YOU READ: the six lines again, and notice the colon]"
             },
             {
               "kind": "speech",
@@ -421,7 +421,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d05391477dcbb97",
+      "sourceHash": "fnv1a64:4c107215e0188c8b",
       "notice": null,
       "blocks": [
         {
@@ -484,11 +484,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it again, and notice how little work it took",
+              "instruction": "the passage again, and notice how little work it took",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it again, and notice how little work it took]"
+              "source": "[YOU READ: the passage again, and notice how little work it took]"
             }
           ]
         },

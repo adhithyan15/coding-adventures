@@ -47,7 +47,8 @@ reviews_of: [JA-W17-no, JA-C15-ku, JA-C10-koko]
 
 Four beats, four signs, and only **の** is new — you bought it last lesson.
 
-[YOU READ: the first two signs on their own — **ここ**, the word for *here* you have had since chapter ten]
+The first two signs of **ここのつ** spell **ここ**, the word for *here* you have had
+since chapter ten. [YOU READ: the first two signs on their own]
 
 **They are the same two signs, and it means nothing.** *kokono-* is simply the
 native word for nine; it is not built on *here* and there is no story joining

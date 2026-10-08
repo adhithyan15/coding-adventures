@@ -43,6 +43,7 @@ reviews_of: [MW-C19-roti, MW-C19-baati, MW-W19-tta, MW-C17-riksha, MW-C10-travel
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-ROTI-01, MW-SCRIPT-ROTI-01, MW-LEX-BAATI-01, MW-SCRIPT-BAATI-01] -->
 
 Hear both words in both orders and give each meaning. [YOU READ: two cards]
+
 [YOU WRITE: both from sound]
 
 ## Wrap-up Recall

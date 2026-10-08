@@ -50,6 +50,7 @@ reviews_of: [MW-C10-hear-haath, MW-W03-ha, MW-W05-tha, MW-C10-ghar]
 <!-- hl-writing-stage: delayed-copy -->
 
 [YOU COVER: the model after one look, then wait five seconds]
+
 [YOU WRITE: the word]
 
 ## Wrap-up Recall

@@ -4,7 +4,7 @@
   "chapter": 64,
   "title": "Reading — Words, Lines, and a First Passage",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8a67964173da105b",
+  "sourceHash": "fnv1a64:5f625dc579ec9050",
   "lessons": [
     {
       "id": "SA-C64-words",
@@ -434,7 +434,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37a5ccdd4f0537ac",
+      "sourceHash": "fnv1a64:f0499c7814064384",
       "notice": null,
       "blocks": [
         {
@@ -497,11 +497,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it again, and watch where अत्र turns into तत्र",
+              "instruction": "the passage again, and watch where अत्र turns into तत्र",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it again, and watch where **अत्र** turns into **तत्र**]"
+              "source": "[YOU READ: the passage again, and watch where **अत्र** turns into **तत्र**]"
             }
           ]
         },

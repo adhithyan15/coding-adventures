@@ -38,7 +38,7 @@ one of them off the other.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C450-SUELO-04, ES-LEX-C450-SUELO-05, ES-LEX-C450-SUELO-01] -->
 
-A notice on the gate of the sports centre. [YOU READ: it, then answer]
+A notice on the gate of the sports centre. [YOU READ: the notice, then answer]
 
 > **AVISO**
 

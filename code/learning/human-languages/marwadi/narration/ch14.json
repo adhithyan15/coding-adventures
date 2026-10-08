@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Three Useful Places: Two New Signs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9d60cfcd11b0e704",
+  "sourceHash": "fnv1a64:950bf79516fad99e",
   "lessons": [
     {
       "id": "MW-C10-hear-bajar",
@@ -195,7 +195,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:006b8444ed8e4e54",
+      "sourceHash": "fnv1a64:7b830854788424d0",
       "notice": null,
       "blocks": [
         {
@@ -495,7 +495,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41522c6723fc6497",
+      "sourceHash": "fnv1a64:4bd4038b7ba9257b",
       "notice": null,
       "blocks": [
         {
@@ -696,7 +696,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b794f1e21043a94",
+      "sourceHash": "fnv1a64:ae92552dca280358",
       "notice": null,
       "blocks": [
         {
@@ -806,7 +806,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7bc9951c289239b4",
+      "sourceHash": "fnv1a64:dc2f367cc9e263c2",
       "notice": null,
       "blocks": [
         {

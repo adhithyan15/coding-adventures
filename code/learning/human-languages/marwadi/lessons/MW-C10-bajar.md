@@ -50,6 +50,7 @@ payoff. [YOU WRITE: **ब**, **ज**, **ा**, and **र**]
 <!-- hl-writing-stage: delayed-copy -->
 
 [YOU COVER: the model after one look, then wait five seconds]
+
 [YOU WRITE: the word — check both long-vowel marks]
 
 ## Wrap-up Recall

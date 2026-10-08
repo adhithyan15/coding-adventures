@@ -28,3 +28,18 @@ lessons. Every edited lesson stays `drivable: true` (only its
   alveolar n" (a preview of the next lesson), "read the full one nearly always"
   (advice), "Why is its **ட** read as a soft *ḍ*?" (how a letter is read),
   "Keep your pencil down".
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - TA-C66..C73 (eight lessons): the first pass put the spoken warm-up inside
+    the reading cue; the step is spoken again, "Before the new one, say what
+    **வண்டி** means. [YOU READ: **வண்டி**]" (TA-C71-run keeps its answer "(\"To
+    run\".)" spoken before the cue).
+  - The notice lessons (TA-C160-arivippu, TA-C160-kala-attavanai,
+    TA-C160-vilamparam) keep the notice in narrated prose and defer only the
+    look: "[YOU READ: the notice]" then "The notice says **…** — …". The first
+    pass had put the whole notice inside the deferred cue, so a listener heard
+    the comment on a notice without the notice; that superseded form is the one
+    described above.
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (TA-C84-lines,
+    TA-C84-mudhal-vaasippu): "[YOU READ: the six lines again, …]", "[YOU READ:
+    the passage again, and notice which lines have no verb at all]".

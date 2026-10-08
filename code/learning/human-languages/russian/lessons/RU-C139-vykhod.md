@@ -43,9 +43,10 @@ reviews_of: [RU-C139-vkhod]
 
 **выход** (*výkhod*) — "an exit".
 
-[YOU READ: the sign — **ВЫХОД**, the way out]
+[YOU READ: the sign]
 
-It is **вы-**, "out", with the same **ход** as **вход**.
+The sign says **ВЫХОД**: the way out. It is **вы-**, "out", with the same
+**ход** as **вход**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

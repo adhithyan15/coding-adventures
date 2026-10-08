@@ -53,7 +53,7 @@ somebody writes down.
 
 [PAUSE 3s] [YOU READ: the six lines down once, without stopping]
 
-[PAUSE 3s] [YOU READ: them again, and notice the colon]
+[PAUSE 3s] [YOU READ: the six lines again, and notice the colon]
 
 French puts a space before that too, and the space is the clearest signal on the
 page that a label has ended.

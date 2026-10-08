@@ -4,7 +4,7 @@
   "chapter": 76,
   "title": "Asking For It",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:029400bfd0d1bc2a",
+  "sourceHash": "fnv1a64:4a169bbd461c93aa",
   "lessons": [
     {
       "id": "ML-C76-veno",
@@ -174,7 +174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:597c2cff5bca835d",
+      "sourceHash": "fnv1a64:288dd277fb877a23",
       "notice": null,
       "blocks": [
         {
@@ -190,7 +190,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say wanted and not wanted, and hear how much of the two words is the same."
+              "text": "From memory alone, say wanted and not wanted, and hear how much of the two words is the same."
             }
           ]
         },

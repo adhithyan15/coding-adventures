@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Five Verbs at the Core",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a58bf8e2b4220952",
+  "sourceHash": "fnv1a64:fbe76e6108503088",
   "lessons": [
     {
       "id": "UR-C06-hona",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6f0c2d262286c60",
+      "sourceHash": "fnv1a64:c0d2a9932fe87148",
       "notice": null,
       "blocks": [
         {
@@ -49,13 +49,17 @@
               "text": "ہونا — honā — to be."
             },
             {
+              "kind": "speech",
+              "text": "From the right edge: ہ h, then و carrying o, then ن n, then ا long ā."
+            },
+            {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "from the right edge — ہ h, then و carrying o, then ن n, then ا long ā",
+              "instruction": "the word from the right edge",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: from the right edge — **ہ** *h*, then **و** carrying *o*, then **ن** *n*, then **ا** long *ā*]"
+              "source": "[YOU READ: the word from the right edge]"
             },
             {
               "kind": "speech",

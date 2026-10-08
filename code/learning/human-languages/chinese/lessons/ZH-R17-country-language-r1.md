@@ -42,7 +42,8 @@ Then say **Chinese language**. [YOU WRITE: the same word, without a model]
 <!-- hl-writing-stage: dictation-transcription -->
 
 Hear **Chinese language** and **China** in mixed order. Say each answer.
-[YOU READ: its unpointed card]
+[YOU READ: each Mandarin form without pinyin]
+
 [YOU WRITE: each one — keep 中 and retrieve the correct ending]
 
 ## Wrap-up Recall

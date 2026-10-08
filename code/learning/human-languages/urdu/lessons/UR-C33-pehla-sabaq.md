@@ -60,7 +60,7 @@ already write.
 [PAUSE 3s]
 [YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]
 
-[PAUSE 3s] [YOU READ: it again, and notice how little work it took]
+[PAUSE 3s] [YOU READ: the passage again, and notice how little work it took]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[UR-GRAMMAR-MEIN-POST, UR-LEX-AUR, UR-LEX-PURANA] -->

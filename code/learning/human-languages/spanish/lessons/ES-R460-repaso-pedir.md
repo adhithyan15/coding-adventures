@@ -32,8 +32,8 @@ reviews_of: [ES-C460-herramienta, ES-C460-solicitar, ES-C460-espera]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C460-PEDIR-01, ES-LEX-C460-PEDIR-02, ES-LEX-C460-PEDIR-03] -->
 
-[PAUSE 3s] Leave the lessons before this one closed. Say all three: *the tool*,
-*to apply for*, *the wait*.
+[PAUSE 3s] From memory alone, say all three: *the tool*, *to apply for*, *the
+wait*.
 
 ## Grammar Lens: five ways to a noun, now complete
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C460-PEDIR-02, ES-LEX-C460-PEDIR-03] -->

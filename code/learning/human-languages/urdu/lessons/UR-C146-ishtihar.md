@@ -43,9 +43,10 @@ reviews_of: [UR-C146-kiraya]
 
 **اشتہار** — *ishtihār* — "an advert".
 
-[YOU READ: the advert — **کمرہ کرائے کے لیے خالی ہے۔** — *kamrā kirāe ke liye khālī hai* — "Room to let."]
+[YOU READ: the advert]
 
-A room is available to rent.
+The advert says **کمرہ کرائے کے لیے خالی ہے۔** — *kamrā kirāe ke liye khālī hai*
+— "Room to let." A room is available to rent.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

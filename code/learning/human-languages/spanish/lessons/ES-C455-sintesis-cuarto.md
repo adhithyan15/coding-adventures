@@ -38,7 +38,8 @@ same line, and one of them is not about colour.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C455-CUARTO-01, ES-LEX-C455-CUARTO-02, ES-LEX-C455-CUARTO-05] -->
 
-A message between two people sharing a flat. [YOU READ: it, then answer]
+A message between two people sharing a flat.
+[YOU READ: the message, then answer]
 
 > Oye, mañana viene mi hermana.
 >

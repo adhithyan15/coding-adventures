@@ -50,6 +50,7 @@ call out to a woman. Here you are learning the word for reading and building.
 <!-- hl-writing-stage: delayed-copy -->
 
 [YOU READ: **女**, then cover it]
+
 [YOU WRITE: the character, from the meaning cue **female**]
 
 ## Wrap-up Recall

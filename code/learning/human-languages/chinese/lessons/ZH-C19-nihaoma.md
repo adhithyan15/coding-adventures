@@ -43,9 +43,10 @@ Say what the 好 is doing in **好看**.
 
 > **你好吗** — *nǐ hǎo ma* — **how are you?**
 
-[YOU READ: the three known shapes from left to right — 你, 好, and the new 吗 on the end]
+[YOU READ: the three known shapes from left to right]
 
-Every one of them is a character you have already written.
+They are 你, 好, and the new 吗 on the end. Every one of them is a character you
+have already written.
 
 That is the whole of what 吗 buys you. The book has been able to write 你好 since
 its first page and has never once been able to ask anything. One character, six

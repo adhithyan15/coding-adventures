@@ -42,9 +42,10 @@ reviews_of: [IT-C139-lavviso]
 
 **l'affitto** — "the rent".
 
-[YOU READ: the advert — **Camera libera. Affitto: 400 al mese.**]
+[YOU READ: the advert]
 
-A room is free, at 400 a month.
+The advert says **Camera libera. Affitto: 400 al mese.** A room is free, at 400
+a month.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

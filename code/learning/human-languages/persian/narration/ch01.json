@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings and responses",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1892e30cfae4cdb5",
+  "sourceHash": "fnv1a64:0895cb6249412fe2",
   "lessons": [
     {
       "id": "FA-C01-salam",
@@ -759,7 +759,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a541b2ba879b4e6c",
+      "sourceHash": "fnv1a64:576e03b49b930086",
       "notice": null,
       "blocks": [
         {
@@ -769,7 +769,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Every model stays in view. Say سلام (salâm) once to greet and once to answer."
+              "text": "Say سلام (salâm) once to greet and once to answer."
             }
           ]
         },

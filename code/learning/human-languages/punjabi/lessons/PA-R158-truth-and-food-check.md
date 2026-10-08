@@ -38,8 +38,8 @@ more known words and then mixes them with the first review's three food descript
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C146-QUAL146-04, PA-LEX-C146-QUAL146-05] -->
 
-[PAUSE 4s each] Say the word for **true**, then **false or lying**.
-Check: **ਸੱਚਾ** (*saccā*), then **ਝੂਠਾ** (*jhūṭhā*).
+[PAUSE 4s each] Say the word for **true**, then **false or lying**. Hear the
+answers: **ਸੱਚਾ** (*saccā*), then **ਝੂਠਾ** (*jhūṭhā*).
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C146-QUAL146-04, PA-LEX-C146-QUAL146-05] -->
@@ -51,9 +51,11 @@ These English cues add no new Punjabi statement to memorise.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C146-QUAL146-01, PA-LEX-C146-QUAL146-02, PA-LEX-C146-QUAL146-03, PA-LEX-C146-QUAL146-04, PA-LEX-C146-QUAL146-05] -->
 
-[YOU COVER: the earlier answers] [PAUSE 4s each] Say one old Punjabi word for
-each: **false**, **ripe**, **stale**, **true**, **unripe**.
+[YOU COVER: the earlier answers]
 
-Check in that same order: **ਝੂਠਾ**, **ਪੱਕਾ**, **ਬੇਹਾ**, **ਸੱਚਾ**,
-**ਕੱਚਾ**. Reopen only a missed earlier quality word. These five distant
+[PAUSE 4s each] Say one old Punjabi word for each: **false**, **ripe**,
+**stale**, **true**, **unripe**.
+
+Hear the answers in that same order: **ਝੂਠਾ**, **ਪੱਕਾ**, **ਬੇਹਾ**, **ਸੱਚਾ**,
+**ਕੱਚਾ**. Revisit only a missed earlier quality word. These five distant
 retrievals do not turn the earlier short writing drills into an A1 mock.

@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 161,
-  "sourceHash": "fnv1a64:0d7ad4aecaccf4ea",
+  "sourceHash": "fnv1a64:7afa32e37bf19e6b",
   "lessonIds": [
     "MR-C161-velapatrak",
     "MR-C161-sucana",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marathi/narration/ch161.txt",
   "json": "marathi/narration/ch161.json",
-  "textHash": "fnv1a64:15f39c93eeb9527b",
-  "jsonHash": "fnv1a64:2bcaece809f52ef5",
+  "textHash": "fnv1a64:cbbb3d7d63b791d8",
+  "jsonHash": "fnv1a64:bba64a6e1e3fcd8d",
   "findings": []
 }

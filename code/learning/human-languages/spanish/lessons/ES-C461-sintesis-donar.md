@@ -38,7 +38,7 @@ warns about the second.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C461-DONAR-01, ES-LEX-C461-DONAR-02, ES-LEX-C461-DONAR-03] -->
 
-A poster in a stairwell. [YOU READ: it, then answer]
+A poster in a stairwell. [YOU READ: the poster, then answer]
 
 > **RECOGIDA DE JUGUETES**
 

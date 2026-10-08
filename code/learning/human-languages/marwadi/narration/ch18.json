@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Shop, Item, and Price: One New Vowel Mark",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0d253eb04c93b0d5",
+  "sourceHash": "fnv1a64:8180acffa22cdea9",
   "lessons": [
     {
       "id": "MW-C13-hear-dukan",
@@ -206,7 +206,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:98c8b7ddac268662",
+      "sourceHash": "fnv1a64:ae7fbdee77a1e296",
       "notice": null,
       "blocks": [
         {
@@ -411,7 +411,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9580faca5ef4e834",
+      "sourceHash": "fnv1a64:a7cfab5b9bda3c84",
       "notice": null,
       "blocks": [
         {
@@ -636,7 +636,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35cae982e2509a9b",
+      "sourceHash": "fnv1a64:fd3c3eb37e6c2aaf",
       "notice": null,
       "blocks": [
         {
@@ -750,7 +750,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f306a260ae148e7",
+      "sourceHash": "fnv1a64:705f040f3fd5628d",
       "notice": null,
       "blocks": [
         {
@@ -981,7 +981,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:332d1b0ebd4b0241",
+      "sourceHash": "fnv1a64:a866cc43fbab3ce1",
       "notice": null,
       "blocks": [
         {

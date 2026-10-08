@@ -4,7 +4,7 @@
   "chapter": 102,
   "title": "Saying When",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:58d0397b85b6fc81",
+  "sourceHash": "fnv1a64:46a6c5cda68de9b6",
   "lessons": [
     {
       "id": "ML-C102-manikku",
@@ -681,7 +681,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:11ec4f996dfcf9c9",
+      "sourceHash": "fnv1a64:948e22663a504233",
       "notice": null,
       "blocks": [
         {
@@ -697,7 +697,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say on Monday, at two o'clock, and at what time?"
+              "text": "From memory alone, say on Monday, at two o'clock, and at what time?"
             }
           ]
         },

@@ -56,7 +56,7 @@ everybody, which is why **-iye** is worth more to a reader than **-o**.
 ## Reading
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C85-IMP-04, HI-LEX-C85-IMP-02, HI-LEX-C85-IMP-01] -->
 
-[YOU READ: these aloud]
+[YOU READ: the three notices aloud]
 
 Every word has been taught:
 

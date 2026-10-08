@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "Getting There",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6446d1e45d4c8d1a",
+  "sourceHash": "fnv1a64:c64a2efaf8551993",
   "lessons": [
     {
       "id": "TA-C69-vehicle",
@@ -448,7 +448,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:34e092fd1925ac45",
+      "sourceHash": "fnv1a64:ed6eb431457e201d",
       "notice": null,
       "blocks": [
         {
@@ -464,16 +464,16 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one:"
+              "text": "Before the new one, say what வண்டி (vaṇḍi) means."
             },
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "வண்டி (vaṇḍi), then say what it means",
+              "instruction": "வண்டி (vaṇḍi)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: **வண்டி**, then say what it means]"
+              "source": "[YOU READ: **வண்டி**]"
             }
           ]
         },

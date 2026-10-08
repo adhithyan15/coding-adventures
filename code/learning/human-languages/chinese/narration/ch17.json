@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Language or country?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7bdfaa23764b9c1d",
+  "sourceHash": "fnv1a64:001a9f94e4fbfd0c",
   "lessons": [
     {
       "id": "ZH-C17-hear-zhongwen",
@@ -398,7 +398,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:710ea6c10cd1c167",
+      "sourceHash": "fnv1a64:a9a651e35261693d",
       "notice": null,
       "blocks": [
         {
@@ -428,11 +428,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it aloud, then give its meaning",
+              "instruction": "that word aloud, then give its meaning",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it aloud, then give its meaning]"
+              "source": "[YOU READ: that word aloud, then give its meaning]"
             },
             {
               "kind": "speech",
@@ -448,11 +448,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "this first, before the explanation",
+              "instruction": "中文 (zhōngwén) first, before the explanation",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: this first, before the explanation]"
+              "source": "[YOU READ: **中文** first, before the explanation]"
             },
             {
               "kind": "speech",
@@ -528,7 +528,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf3a175979e9989c",
+      "sourceHash": "fnv1a64:d5dc94d633ffdd8c",
       "notice": null,
       "blocks": [
         {
@@ -574,11 +574,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "its unpointed card",
+              "instruction": "each Mandarin form without pinyin",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: its unpointed card]"
+              "source": "[YOU READ: each Mandarin form without pinyin]"
             },
             {
               "kind": "prompt",
@@ -1021,7 +1021,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:917a72e046b2d5ea",
+      "sourceHash": "fnv1a64:f8d5087c0007683e",
       "notice": null,
       "blocks": [
         {
@@ -1049,11 +1049,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "this first, before the explanation",
+              "instruction": "中国 (zhōngguó) first, before the explanation",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: this first, before the explanation]"
+              "source": "[YOU READ: **中国** first, before the explanation]"
             },
             {
               "kind": "speech",
@@ -1128,7 +1128,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:03ab4ea3213e1b55",
+      "sourceHash": "fnv1a64:7802d0f2768eee69",
       "notice": null,
       "blocks": [
         {
@@ -1178,11 +1178,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "its unpointed card",
+              "instruction": "each Mandarin form without pinyin",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: its unpointed card]"
+              "source": "[YOU READ: each Mandarin form without pinyin]"
             },
             {
               "kind": "prompt",

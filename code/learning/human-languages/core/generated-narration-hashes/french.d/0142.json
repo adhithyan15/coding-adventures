@@ -1,7 +1,7 @@
 {
   "language": "french",
   "chapter": 142,
-  "sourceHash": "fnv1a64:9b5da0c123ab7bfa",
+  "sourceHash": "fnv1a64:7f58dce4c065b4f5",
   "lessonIds": [
     "FR-C142-lhoraire",
     "FR-C142-lavis",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "french/narration/ch142.txt",
   "json": "french/narration/ch142.json",
-  "textHash": "fnv1a64:92194db9b3ea7d0d",
-  "jsonHash": "fnv1a64:b01e0fcb5f097b09",
+  "textHash": "fnv1a64:64eab91b7eae2596",
+  "jsonHash": "fnv1a64:993c75df5405d413",
   "findings": []
 }

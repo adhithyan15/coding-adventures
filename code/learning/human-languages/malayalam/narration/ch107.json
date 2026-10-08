@@ -4,7 +4,7 @@
   "chapter": 107,
   "title": "Medicine and Keeping Well",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2a705f5fa119b4aa",
+  "sourceHash": "fnv1a64:efc9a00d6e8417a0",
   "lessons": [
     {
       "id": "ML-C107-marunnu",
@@ -576,7 +576,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:91be3243a8fb8b79",
+      "sourceHash": "fnv1a64:93b0ed8a87008a8d",
       "notice": null,
       "blocks": [
         {
@@ -592,7 +592,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say medicine, treatment and cleanliness."
+              "text": "From memory alone, say medicine, treatment and cleanliness."
             }
           ]
         },

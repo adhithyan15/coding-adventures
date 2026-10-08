@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Give your name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:46f5cbf37c0d1fe8",
+  "sourceHash": "fnv1a64:69f404d81567fb6a",
   "lessons": [
     {
       "id": "FA-C02-esm-e-man",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0cbeedd85bc640f8",
+      "sourceHash": "fnv1a64:db80a476ec9de17c",
       "notice": null,
       "blocks": [
         {
@@ -47,11 +47,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the phrase from right to left, but say its words in this order",
+              "instruction": "the phrase from right to left",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the phrase from right to left, but say its words in this order]"
+              "source": "[YOU READ: the phrase from right to left]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say its words in this order:"
             },
             {
               "kind": "speech",

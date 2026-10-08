@@ -34,3 +34,21 @@ lessons. Every edited lesson stays `drivable: true` (only its
   them into two classes before you say anything" (a spoken sort), "Listen
   before picking up the pencil" (a time, not a step). MR-R66 and MR-R67 are not
   drivable and keep their wording.
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - "Leave the lessons before this one closed." (MR-R68, MR-R69, the form
+    described above) → MR-R68 "From memory alone, say the one word this chapter
+    taught, …"; MR-R69 drops it in front of "[YOU WRITE: the grid from memory —
+    …]". MR-R05 "Leave the chapter closed." is dropped: the next sentence,
+    "Nothing here needs the page", carries it.
+  - The notice lessons (MR-C161-jahirat, MR-C161-sucana, MR-C161-velapatrak)
+    keep the notice in narrated prose and defer only the look: "[YOU READ: the
+    advert]" then "The advert says **…** — …". The first pass had put the whole
+    notice inside the deferred cue, so a listener heard the comment on a notice
+    without the notice; that superseded form is the one described above.
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (MR-C62-message,
+    MR-C62-pahila-paath): "[YOU READ: the passage once without stopping; …]",
+    "[YOU READ: the message again, …]".
+  - A new cue followed by prose or by another cue in the same paragraph now ends
+    its paragraph, so the book no longer runs "*Cover:* the page The next
+    question …" together (MR-R09-script-a..d-r3, MR-R18-script-warmup).

@@ -43,7 +43,9 @@ reviews_of: [AR-C158-ijar]
 
 **إعلان** — *iʿlān* — "an advert, an announcement".
 
-[YOU READ: the advert — **شقة للإيجار** — *shaqqa li-l-ījār* — "Flat for rent."]
+[YOU READ: the advert]
+
+The advert says **شقة للإيجار** — *shaqqa li-l-ījār* — "Flat for rent."
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

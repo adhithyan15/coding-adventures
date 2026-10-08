@@ -43,9 +43,11 @@ reviews_of: [BN-C146-asha-kora]
 
 **টাইমটেবিল** — *ṭāimṭebil* — "a timetable".
 
-[YOU READ: the board — **বাস ছাড়ার সময়: সকাল আটটা** — *bās chhāṛār sômôy: sôkāl āṭṭā* — "Bus departure time: 8 a.m."]
+[YOU READ: the board]
 
-The bus leaves at eight, so be there before eight.
+The board says **বাস ছাড়ার সময়: সকাল আটটা** — *bās chhāṛār sômôy: sôkāl āṭṭā*
+— "Bus departure time: 8 a.m." The bus leaves at eight, so be there before
+eight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

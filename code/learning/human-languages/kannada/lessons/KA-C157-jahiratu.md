@@ -43,7 +43,9 @@ reviews_of: [KA-C157-badige]
 
 **ಜಾಹೀರಾತು** — *jāhīrātu* — "an advertisement".
 
-[YOU READ: the advert — **ಮನೆ ಬಾಡಿಗೆಗೆ ಇದೆ** — *mane bāḍigege ide* — "House for rent."]
+[YOU READ: the advert]
+
+The advert says **ಮನೆ ಬಾಡಿಗೆಗೆ ಇದೆ** — *mane bāḍigege ide* — "House for rent."
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

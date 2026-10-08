@@ -49,6 +49,7 @@ reviews_of: [MW-C17-hear-riksha, MW-W17-sha]
 <!-- hl-writing-stage: delayed-copy -->
 
 [YOU COVER: the model after one look, then wait five seconds]
+
 [YOU WRITE: **रिक्शा** — check that **ि** appears before **र** but is read after it, and that **्** joins **क** to **श**]
 
 ## Wrap-up Recall

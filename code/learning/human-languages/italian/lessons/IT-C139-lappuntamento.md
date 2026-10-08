@@ -42,9 +42,10 @@ reviews_of: [IT-C139-la-ricevuta]
 
 **l'appuntamento** — "an appointment".
 
-[YOU READ: the message — **Appuntamento: lunedì, ore 10.**]
+[YOU READ: the message]
 
-Your appointment is on Monday at ten: be there before ten.
+The message says **Appuntamento: lunedì, ore 10.** Your appointment is on Monday
+at ten: be there before ten.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

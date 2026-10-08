@@ -41,7 +41,7 @@ reviews_of: [ZH-C12-hear-jia, ZH-W12-jia]
 
 > **家** — *jiā* — **home; family**
 
-[YOU READ: it once without pinyin]
+[YOU READ: **家** once without pinyin]
 
 The high line over *ā* records first tone; the character records no tone mark at
 all.

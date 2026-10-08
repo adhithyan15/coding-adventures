@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Bus, Vehicle, and Cart: No New Signs",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:eaf30af8c345a988",
+  "sourceHash": "fnv1a64:a9d7078ac1313f0c",
   "lessons": [
     {
       "id": "MW-C16-hear-bas",
@@ -98,7 +98,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3bb3c450e3cd018a",
+      "sourceHash": "fnv1a64:50164b8892119456",
       "notice": null,
       "blocks": [
         {
@@ -298,7 +298,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:02095e6ef865754f",
+      "sourceHash": "fnv1a64:820dddf386456d6f",
       "notice": null,
       "blocks": [
         {
@@ -503,7 +503,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df41dc96c35c46b6",
+      "sourceHash": "fnv1a64:63fc66518af0e00a",
       "notice": null,
       "blocks": [
         {
@@ -614,7 +614,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a6c48f42550027fa",
+      "sourceHash": "fnv1a64:70fe93a16c53fb92",
       "notice": null,
       "blocks": [
         {
@@ -829,7 +829,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e9ccd9446959dd7",
+      "sourceHash": "fnv1a64:a794a6002512d857",
       "notice": null,
       "blocks": [
         {

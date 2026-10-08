@@ -33,7 +33,7 @@ reviews_of: [ML-C81-aduthu, ML-C81-akale, ML-C81-dooram]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C81-DISTANCE-01, ML-LEX-C81-DISTANCE-02] -->
 
-[PAUSE 3s] Leave the lessons before this one closed. Say *near*, then say *far*.
+[PAUSE 3s] From memory alone, say *near*, then say *far*.
 
 ## Grammar Lens: pointing and measuring are different jobs
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-03, ML-LEX-C41-DEIXIS-04, ML-LEX-C81-DISTANCE-01, ML-LEX-C81-DISTANCE-02, ML-LEX-C81-DISTANCE-03] -->

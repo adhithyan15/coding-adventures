@@ -4,7 +4,7 @@
   "chapter": 71,
   "title": "The People in the Sentence",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3f7f7ad40fa2853b",
+  "sourceHash": "fnv1a64:11bd8077daea6249",
   "lessons": [
     {
       "id": "ML-C71-avan-aval",
@@ -509,7 +509,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e88b09adc9c4bf58",
+      "sourceHash": "fnv1a64:42ec8bf1d9ef0754",
       "notice": null,
       "blocks": [
         {
@@ -525,7 +525,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the three lessons before this one closed. Say the word for I, and the word for that one, with nothing in front of you."
+              "text": "Say the word for I, and the word for that one, with nothing in front of you."
             }
           ]
         },

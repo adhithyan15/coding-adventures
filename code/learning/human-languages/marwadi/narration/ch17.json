@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Weather, Heat, and Cold: Three New Signs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f1e2df370b84189f",
+  "sourceHash": "fnv1a64:89f553284a6515d9",
   "lessons": [
     {
       "id": "MW-C12-hear-mausam",
@@ -204,7 +204,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3df4471f0a60063a",
+      "sourceHash": "fnv1a64:fb2a4b3d0de4abda",
       "notice": null,
       "blocks": [
         {
@@ -517,7 +517,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a361c8605322385",
+      "sourceHash": "fnv1a64:d810445d2f90efb5",
       "notice": null,
       "blocks": [
         {
@@ -628,7 +628,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f9b6e7ab7be89ded",
+      "sourceHash": "fnv1a64:8eabe90ea70ada91",
       "notice": null,
       "blocks": [
         {
@@ -936,7 +936,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c1b356eec83a77c",
+      "sourceHash": "fnv1a64:6a25a281c707a018",
       "notice": null,
       "blocks": [
         {
@@ -1047,7 +1047,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b70c04ef86889c54",
+      "sourceHash": "fnv1a64:4e0b20bc81f26756",
       "notice": null,
       "blocks": [
         {

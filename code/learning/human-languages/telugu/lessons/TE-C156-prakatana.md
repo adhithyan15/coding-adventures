@@ -43,7 +43,9 @@ reviews_of: [TE-C156-adde]
 
 **ప్రకటన** — *prakaṭana* — "an advertisement, an announcement".
 
-[YOU READ: the advert — **ఇల్లు అద్దెకు ఉంది** — *illu addeku undi* — "House for rent."]
+[YOU READ: the advert]
+
+The advert says **ఇల్లు అద్దెకు ఉంది** — *illu addeku undi* — "House for rent."
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

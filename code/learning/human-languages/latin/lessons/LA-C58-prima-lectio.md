@@ -59,7 +59,7 @@ reviews_of: [LA-C58-labels, LA-C58-phrases, LA-C52-quia, LA-C55-primus]
 [PAUSE 3s]
 [YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]
 
-[PAUSE 3s] [YOU READ: it again, and notice where **est** falls]
+[PAUSE 3s] [YOU READ: the passage again, and notice where **est** falls]
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C52-ASK-03, LA-SKILL-CONNECTED-READING] -->

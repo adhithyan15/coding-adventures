@@ -42,9 +42,10 @@ reviews_of: [PT-C137-a-renda]
 
 **o anúncio** — "an advert, an announcement".
 
-[YOU READ: the advert — **Aluga-se quarto. Renda: 400 euros.**]
+[YOU READ: the advert]
 
-A room to let, at 400 a month.
+The advert says **Aluga-se quarto. Renda: 400 euros.** A room to let, at 400 a
+month.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

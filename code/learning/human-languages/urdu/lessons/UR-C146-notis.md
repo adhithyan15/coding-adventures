@@ -43,7 +43,10 @@ reviews_of: [UR-C146-taim-tebal]
 
 **نوٹس** — *noṭis* — "a notice".
 
-[YOU READ: the notice — **دکان ہر اتوار کو بند رہتی ہے۔** — *dukān har itvār ko band rahtī hai*]
+[YOU READ: the notice]
+
+The notice says **دکان ہر اتوار کو بند رہتی ہے۔** — *dukān har itvār ko band
+rahtī hai*.
 
 — The shop is closed on Sundays, so come on another day.
 

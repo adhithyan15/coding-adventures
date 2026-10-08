@@ -43,9 +43,10 @@ reviews_of: [BN-C147-taimtebil]
 
 **নোটিশ** — *noṭish* — "a notice".
 
-[YOU READ: the notice — **প্রতি রবিবার দোকান বন্ধ** — *prôti rôbibār dokān bôndhô* — "Shop closed every Sunday."]
+[YOU READ: the notice]
 
-Come on another day.
+The notice says **প্রতি রবিবার দোকান বন্ধ** — *prôti rôbibār dokān bôndhô* —
+"Shop closed every Sunday." Come on another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

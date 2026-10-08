@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Pachhe Milsu: See You Later",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fcabcf038c6048d9",
+  "sourceHash": "fnv1a64:232346f84978adcd",
   "lessons": [
     {
       "id": "MW-C07-hear-later",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be7c8ec7d1739c14",
+      "sourceHash": "fnv1a64:1c7a71eaf9a06ca4",
       "notice": null,
       "blocks": [
         {
@@ -40,11 +40,15 @@
             {
               "kind": "prompt",
               "action": "COVER",
-              "instruction": "the text before the new parting line begins",
+              "instruction": "the text",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU COVER: the text before the new parting line begins]"
+              "source": "[YOU COVER: the text]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then the new parting line begins."
             }
           ]
         },
@@ -655,7 +659,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e45407fd3ed2bdf4",
+      "sourceHash": "fnv1a64:50323dc128b109ce",
       "notice": null,
       "blocks": [
         {
@@ -711,10 +715,6 @@
             {
               "kind": "speech",
               "text": "Speak: answer a later-meeting cue with pāchhe milsū."
-            },
-            {
-              "kind": "speech",
-              "text": "Reading:"
             },
             {
               "kind": "prompt",

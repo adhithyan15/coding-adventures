@@ -74,7 +74,7 @@ a street sign, a floor number, a bus route and a date are all written this way.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[KA-GRAMMAR-C75-ORDINAL-09, KA-LEX-C75-ORDINAL-08] -->
 
-[PAUSE 3s] [YOU READ: **೧ನೇ** aloud (*Modalanē* — not "one-nē")]
+[PAUSE 3s] [YOU READ: **೧ನೇ** aloud]
 
-What is written on the sign, the whole word or its tail? (**Its tail**, after
-the digit.)
+It is *Modalanē* — not "one-nē". What is written on the sign, the whole word or
+its tail? (**Its tail**, after the digit.)

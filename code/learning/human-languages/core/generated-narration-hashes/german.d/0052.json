@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 52,
-  "sourceHash": "fnv1a64:d7358594ff47d6aa",
+  "sourceHash": "fnv1a64:c49dc157ff8145ff",
   "lessonIds": [
     "GE-C52-words",
     "GE-C52-saetze",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "german/narration/ch52.txt",
   "json": "german/narration/ch52.json",
-  "textHash": "fnv1a64:1b58d7ae855f63b5",
-  "jsonHash": "fnv1a64:e9caf842fc3152c2",
+  "textHash": "fnv1a64:464ad6f38ff15237",
+  "jsonHash": "fnv1a64:cd943a513fc95f11",
   "findings": []
 }

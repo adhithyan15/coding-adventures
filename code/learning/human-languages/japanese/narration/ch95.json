@@ -4,7 +4,7 @@
   "chapter": 95,
   "title": "Possible, Good at, Poor at, Belongings, Rich person",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0414bb5ac8402a08",
+  "sourceHash": "fnv1a64:ad6859e3c7f510f1",
   "lessons": [
     {
       "id": "JA-C95-kanou",
@@ -442,7 +442,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f0bf3c91182d0668",
+      "sourceHash": "fnv1a64:3c926b92fe897b50",
       "notice": null,
       "blocks": [
         {
@@ -469,11 +469,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "these on sight",
+              "instruction": "the three greetings on sight",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: these on sight]"
+              "source": "[YOU READ: the three greetings on sight]"
             },
             {
               "kind": "speech",

@@ -4,7 +4,7 @@
   "chapter": 92,
   "title": "Eating Out",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0dc2af81ffef8aa0",
+  "sourceHash": "fnv1a64:3d3e0ce033be822b",
   "lessons": [
     {
       "id": "ML-C92-bhakshanam",
@@ -427,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a9cea7f55d32294",
+      "sourceHash": "fnv1a64:237d18378b7d6938",
       "notice": null,
       "blocks": [
         {
@@ -443,7 +443,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say food, then say the place that serves it."
+              "text": "From memory alone, say food, then say the place that serves it."
             }
           ]
         },

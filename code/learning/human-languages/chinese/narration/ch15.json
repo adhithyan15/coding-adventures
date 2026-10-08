@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "A wider school map",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7d97dc92ae9f2d30",
+  "sourceHash": "fnv1a64:5e6cb6a6d9a444c4",
   "lessons": [
     {
       "id": "ZH-C15-hear-zhong",
@@ -484,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d3902e93756bd6e",
+      "sourceHash": "fnv1a64:72f02a9613ddb64e",
       "notice": null,
       "blocks": [
         {
@@ -516,11 +516,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "its card",
+              "instruction": "each Mandarin form",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: its card]"
+              "source": "[YOU READ: each Mandarin form]"
             },
             {
               "kind": "prompt",
@@ -1061,7 +1061,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe99e8a2c7f1db0c",
+      "sourceHash": "fnv1a64:ea52c348ee284110",
       "notice": null,
       "blocks": [
         {
@@ -1098,11 +1098,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "each",
+              "instruction": "each Mandarin form",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: each]"
+              "source": "[YOU READ: each Mandarin form]"
             },
             {
               "kind": "prompt",
@@ -1344,7 +1344,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a672eb430e689ec",
+      "sourceHash": "fnv1a64:ce7ce43d99232bb4",
       "notice": null,
       "blocks": [
         {
@@ -1385,16 +1385,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Take four meanings in a shuffled order: middle school, middle-school student, classmate, go to school. Say each."
+              "text": "Hear four meanings in mixed order: middle school, middle-school student, classmate, go to school. Say each."
             },
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "each",
+              "instruction": "each Mandarin form",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: each]"
+              "source": "[YOU READ: each Mandarin form]"
             },
             {
               "kind": "prompt",
@@ -1565,7 +1565,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfa49bf97b0cb36c",
+      "sourceHash": "fnv1a64:5106ae0624e6d7c4",
       "notice": null,
       "blocks": [
         {
@@ -1602,10 +1602,6 @@
             {
               "kind": "speech",
               "text": "Speaking: produce all four from their English meanings, with tones audible."
-            },
-            {
-              "kind": "speech",
-              "text": "Reading:"
             },
             {
               "kind": "prompt",

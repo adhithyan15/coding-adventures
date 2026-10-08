@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Bread and Rolls: One New Consonant",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:17111dd481aacd16",
+  "sourceHash": "fnv1a64:699c468422e7e55c",
   "lessons": [
     {
       "id": "MW-C19-hear-roti",
@@ -201,7 +201,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:377162c58e58bd6c",
+      "sourceHash": "fnv1a64:b71b487e45bd6b70",
       "notice": null,
       "blocks": [
         {
@@ -404,7 +404,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0618596db77f75dd",
+      "sourceHash": "fnv1a64:e44ef98ab20f7e3d",
       "notice": null,
       "blocks": [
         {
@@ -518,7 +518,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d3a5dc900a4a765",
+      "sourceHash": "fnv1a64:c9c0470f2b8a8c21",
       "notice": null,
       "blocks": [
         {

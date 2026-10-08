@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 4,
-  "sourceHash": "fnv1a64:19ab3ee41e73ff76",
+  "sourceHash": "fnv1a64:453ce116577eb3af",
   "lessonIds": [
     "MW-C04-hear-paani",
     "MW-W04-pa",
@@ -14,7 +14,7 @@
   "drivablePrefix": 1,
   "text": "marwadi/narration/ch04.txt",
   "json": "marwadi/narration/ch04.json",
-  "textHash": "fnv1a64:658daa8d528d9276",
-  "jsonHash": "fnv1a64:c0af60beb8a308fe",
+  "textHash": "fnv1a64:dcb4956c2a461e28",
+  "jsonHash": "fnv1a64:38f3118935ea90ed",
   "findings": []
 }

@@ -33,8 +33,8 @@ reviews_of: [ML-C85-kudikkuka, ML-C85-gemination, ML-C85-stress]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C85-DRINK-01, ML-CONCEPT-C39-CHAAYA-01] -->
 
-[PAUSE 3s] Leave the lessons before this one closed. Say *to drink*, and name
-something in this book you could drink.
+[PAUSE 3s] From memory alone, say *to drink*, and name something in this book
+you could drink.
 
 ## Grammar Lens: one held sound, one whole meaning
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C85-GEMINATION-01, ML-LEX-C85-DRINK-01, ML-CONCEPT-C36-KUTTI-01] -->

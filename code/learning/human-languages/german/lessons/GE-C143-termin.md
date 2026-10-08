@@ -42,9 +42,10 @@ reviews_of: [GE-C143-anzeige]
 
 **der Termin** — "an appointment".
 
-[YOU READ: the message — **Ihr Termin: Montag, zehn Uhr.**]
+[YOU READ: the message]
 
-Your appointment is on Monday at ten: be there before ten.
+The message says **Ihr Termin: Montag, zehn Uhr.** Your appointment is on Monday
+at ten: be there before ten.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

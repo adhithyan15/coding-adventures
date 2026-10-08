@@ -1,7 +1,7 @@
 {
   "language": "german",
   "chapter": 143,
-  "sourceHash": "fnv1a64:5ebe071f734c577b",
+  "sourceHash": "fnv1a64:f20aa8fbb6243daf",
   "lessonIds": [
     "GE-C143-miete",
     "GE-C143-anzeige",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "german/narration/ch143.txt",
   "json": "german/narration/ch143.json",
-  "textHash": "fnv1a64:109ed676a3e5d7a3",
-  "jsonHash": "fnv1a64:1ce3e1e52d31d4dc",
+  "textHash": "fnv1a64:b656038a0e79fa0a",
+  "jsonHash": "fnv1a64:2ee185a33759be4c",
   "findings": []
 }

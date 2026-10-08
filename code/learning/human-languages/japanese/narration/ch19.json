@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Reading — Words, Greetings, and the Cues You Have Only Heard",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5e56cb770d87c4fa",
+  "sourceHash": "fnv1a64:155a57541fdb0913",
   "lessons": [
     {
       "id": "JA-C19-words",
@@ -211,7 +211,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:609bd109852b186f",
+      "sourceHash": "fnv1a64:b6a28af99361fd2b",
       "notice": null,
       "blocks": [
         {
@@ -274,11 +274,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "them again, and notice that the two longest are the two you say most often",
+              "instruction": "the six greetings again, and notice that the two longest are the two you say most often",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: them again, and notice that the two longest are the two you say most often]"
+              "source": "[YOU READ: the six greetings again, and notice that the two longest are the two you say most often]"
             },
             {
               "kind": "speech",

@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "Reading — Labels, a Form, and the Same Facts as Sentences",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:cf6c2f56d871d72c",
+  "sourceHash": "fnv1a64:06e22c86bf686dc1",
   "lessons": [
     {
       "id": "PA-C45-labels",
@@ -403,7 +403,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eb0e0550b1268257",
+      "sourceHash": "fnv1a64:884c28aa9c722897",
       "notice": null,
       "blocks": [
         {
@@ -466,11 +466,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it again, and notice how little work it took",
+              "instruction": "the passage again, and notice how little work it took",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it again, and notice how little work it took]"
+              "source": "[YOU READ: the passage again, and notice how little work it took]"
             }
           ]
         },

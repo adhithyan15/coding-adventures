@@ -53,7 +53,7 @@ reviews_of: [IT-C36-parole, IT-C33-questo-e, IT-C35-non-so]
 [PAUSE 3s] [YOU READ: the six lines down once, without stopping]
 
 [PAUSE 3s]
-[YOU READ: them again, and notice the list gets longer as it goes, from one word to three]
+[YOU READ: the six lines again, and notice the list gets longer as it goes, from one word to three]
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[IT-PRAGMATIC-NON-SO-02, IT-SKILL-READ-LINES] -->

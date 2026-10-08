@@ -4,7 +4,7 @@
   "chapter": 152,
   "title": "A Word for a Stream — Then Its First Letter",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:cbfd734c373cede6",
+  "sourceHash": "fnv1a64:0af39188181ed8e6",
   "lessons": [
     {
       "id": "TE-C152-jhari",
@@ -367,7 +367,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f14eb8c994d2e5dc",
+      "sourceHash": "fnv1a64:d679df4917fe69fc",
       "notice": null,
       "blocks": [
         {
@@ -404,11 +404,11 @@
             {
               "kind": "prompt",
               "action": "COVER",
-              "instruction": "it",
+              "instruction": "the word",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU COVER: it]"
+              "source": "[YOU COVER: the word]"
             },
             {
               "kind": "prompt",

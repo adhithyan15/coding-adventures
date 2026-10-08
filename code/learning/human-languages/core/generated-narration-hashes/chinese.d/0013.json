@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 13,
-  "sourceHash": "fnv1a64:8635f08502522974",
+  "sourceHash": "fnv1a64:de9e8d46857990e4",
   "lessonIds": [
     "ZH-C13-hear-da",
     "ZH-W13-da",
@@ -25,7 +25,7 @@
   "drivablePrefix": 1,
   "text": "chinese/narration/ch13.txt",
   "json": "chinese/narration/ch13.json",
-  "textHash": "fnv1a64:670e15dea6f92fe4",
-  "jsonHash": "fnv1a64:fb8b7f89c8e859ec",
+  "textHash": "fnv1a64:b033c50a396ac703",
+  "jsonHash": "fnv1a64:828e580ec77d8457",
   "findings": []
 }

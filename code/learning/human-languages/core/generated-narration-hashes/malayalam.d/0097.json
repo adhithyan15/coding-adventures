@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 97,
-  "sourceHash": "fnv1a64:9deb3244fd4a322b",
+  "sourceHash": "fnv1a64:c87925cc8259f8b3",
   "lessonIds": [
     "ML-C97-sundaram",
     "ML-C97-bhangi",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "malayalam/narration/ch97.txt",
   "json": "malayalam/narration/ch97.json",
-  "textHash": "fnv1a64:fbcd7f86ccea388b",
-  "jsonHash": "fnv1a64:9795b29a463d8667",
+  "textHash": "fnv1a64:6eaf0df3e307ad69",
+  "jsonHash": "fnv1a64:d5b894dc2a709969",
   "findings": []
 }

@@ -52,6 +52,7 @@ Then recall **ब**, **ा**, **द**, and **ल**.
 <!-- hl-writing-stage: delayed-copy -->
 
 [YOU COVER: the model after one look, then wait five seconds]
+
 [YOU WRITE: the two chunks — check that only the first syllable carries **ा**]
 
 ## Wrap-up Recall

@@ -4,7 +4,7 @@
   "chapter": 108,
   "title": "The Marks on the Page, Your First Question, and Timed Writing",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ec8ccc6bff30ff8b",
+  "sourceHash": "fnv1a64:eda762f5a90d6617",
   "lessons": [
     {
       "id": "ML-W108-full-stop",
@@ -1058,7 +1058,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2003dd38aafe7cc3",
+      "sourceHash": "fnv1a64:fb27bf8ffc101a6d",
       "notice": null,
       "blocks": [
         {
@@ -1074,7 +1074,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Name the mark that ends a sentence, the one that ends a question, and the one that separates."
+              "text": "From memory alone, name the mark that ends a sentence, the one that ends a question, and the one that separates."
             }
           ]
         },

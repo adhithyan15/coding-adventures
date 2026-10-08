@@ -31,3 +31,17 @@ lessons. Every edited lesson stays `drivable: true` (only its
 - Left alone: "look closer, and it's the same word" (TE-C13 — figurative),
   "heard from elders and read at the top of letters", "you have now read it
   doing so" (description).
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - TE-C06-second-pass-greetings drops "Leave the book closed on everything so
+    far." (the form described above): "From memory: …" follows it.
+  - The notice lessons (TE-C156-kalapattika, TE-C156-prakatana, TE-C156-sucana)
+    keep the notice in narrated prose and defer only the look: "[YOU READ: the
+    notice]" then "The notice says **…** — …". The first pass had put the whole
+    notice inside the deferred cue, so a listener heard the comment on a notice
+    without the notice; that superseded form is the one described above.
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (TE-C83-lines,
+    TE-C83-modati-chadavu, TE-R151-chhaya-recall, TE-R152-jhari-recall): "[YOU
+    READ: the six lines again, …]"; TE-R151, TE-R152 "[YOU READ: **ఛాయ** once]
+    [YOU COVER: it]" → "[YOU READ: **ఛాయ** once]", "[YOU COVER: the word]", each
+    in its own paragraph.

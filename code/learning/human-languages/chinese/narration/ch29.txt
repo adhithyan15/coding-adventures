@@ -57,7 +57,7 @@ Reading.
 [pause 3 seconds]
 [once you have stopped driving — read: the six words down once, without stopping]
 [pause 3 seconds]
-[once you have stopped driving — read: them again, and this time notice there is nothing between the characters]
+[once you have stopped driving — read: the six words again, and this time notice there is nothing between the characters]
 No space tells you where one word ends.
 
 You'll want to know.
@@ -97,7 +97,7 @@ Reading.
 [pause 3 seconds]
 [once you have stopped driving — read: the passage through once without stopping; do not translate as you go]
 [pause 3 seconds]
-[once you have stopped driving — read: it again, and this time notice that the passage turns at line six]
+[once you have stopped driving — read: the passage again, and this time notice that the passage turns at line six]
 The first five are about the writer. The last five are addressed to you.
 
 You'll want to know.

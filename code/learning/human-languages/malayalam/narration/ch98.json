@@ -4,7 +4,7 @@
   "chapter": 98,
   "title": "Games and Films",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b900a548da655bfb",
+  "sourceHash": "fnv1a64:36cf2538edcf7536",
   "lessons": [
     {
       "id": "ML-C98-kali",
@@ -482,7 +482,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ac633fa96e4be72",
+      "sourceHash": "fnv1a64:ec75cb7b9fa7de8a",
       "notice": null,
       "blocks": [
         {
@@ -498,7 +498,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say a game, then to play, then a film."
+              "text": "From memory alone, say a game, then to play, then a film."
             }
           ]
         },

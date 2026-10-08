@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Numbers One to Five",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:57e674620174dfb0",
+  "sourceHash": "fnv1a64:3e5487a8e2090e6c",
   "lessons": [
     {
       "id": "HI-C06-numbers-1-5",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:827a5e806ab0c34b",
+      "sourceHash": "fnv1a64:e4d00dd97f8ea3af",
       "notice": null,
       "blocks": [
         {
@@ -72,11 +72,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "them now — you'll draw them when the writing track reaches them",
+              "instruction": "these letters",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: them now — you'll draw them when the writing track reaches them]"
+              "source": "[YOU READ: these letters]"
+            },
+            {
+              "kind": "speech",
+              "text": "You'll draw them when the writing track reaches them."
             },
             {
               "kind": "speech",

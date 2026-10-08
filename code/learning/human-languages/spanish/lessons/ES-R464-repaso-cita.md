@@ -32,8 +32,8 @@ reviews_of: [ES-C464-recordar, ES-C464-dentista, ES-C464-fallar]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C464-CITA-01, ES-LEX-C464-CITA-02, ES-LEX-C464-CITA-03] -->
 
-[PAUSE 3s] Leave the lessons before this one closed. Say all three: *to
-remember*, *the dentist*, *to let down*.
+[PAUSE 3s] From memory alone, say all three: *to remember*, *the dentist*, *to
+let down*.
 
 ## Grammar Lens: two bodies and a lie
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C464-CITA-01, ES-LEX-C464-CITA-02, ES-LEX-C464-CITA-03] -->

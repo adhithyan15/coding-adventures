@@ -4,7 +4,7 @@
   "chapter": 94,
   "title": "Yesterday, Today, Tomorrow",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:569e23c871c565ae",
+  "sourceHash": "fnv1a64:fe5c9484ce4a703d",
   "lessons": [
     {
       "id": "ML-C94-innu",
@@ -455,7 +455,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b18f4df05c763704",
+      "sourceHash": "fnv1a64:9b685e53c5294c04",
       "notice": null,
       "blocks": [
         {
@@ -471,7 +471,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Name the day you are standing in, and the one behind it."
+              "text": "From memory alone, name the day you are standing in, and the one behind it."
             }
           ]
         },

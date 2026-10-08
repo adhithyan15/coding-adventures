@@ -4,7 +4,7 @@
   "chapter": 96,
   "title": "The Future, And The Two Letters It Needed",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:cf1eca6d9ab74351",
+  "sourceHash": "fnv1a64:e87855841977db89",
   "lessons": [
     {
       "id": "HI-C88-karunga",
@@ -1266,7 +1266,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86cafcac0c462ec1",
+      "sourceHash": "fnv1a64:b22ca381644150d5",
       "notice": null,
       "blocks": [
         {
@@ -1283,11 +1283,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "this out loud before going on",
+              "instruction": "the sentence out loud before going on",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: this out loud before going on]"
+              "source": "[YOU READ: the sentence out loud before going on]"
             },
             {
               "kind": "speech",

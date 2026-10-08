@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 3,
-  "sourceHash": "fnv1a64:fc2cdd246607d5a0",
+  "sourceHash": "fnv1a64:dac6dbaadaa8b77c",
   "lessonIds": [
     "UR-C03-aap-tum-tu",
     "UR-C03-aap-tum-tu-more",
@@ -16,7 +16,7 @@
   "drivablePrefix": 3,
   "text": "urdu/narration/ch03.txt",
   "json": "urdu/narration/ch03.json",
-  "textHash": "fnv1a64:6d5e4fae592d1bdb",
-  "jsonHash": "fnv1a64:0419a467a4abf1ab",
+  "textHash": "fnv1a64:caa78a0dcd88ec68",
+  "jsonHash": "fnv1a64:4d10411360736f88",
   "findings": []
 }

@@ -38,7 +38,7 @@ those two words exist for.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C432-CASA-04, ES-LEX-C432-CASA-02, ES-LEX-AGUA-01] -->
 
-[YOU READ: it once straight through, then answer]
+[YOU READ: the notice once straight through, then answer]
 
 > **AVISO A LOS VECINOS**
 > El martes cortaremos el **agua** entre las nueve y las dos para reparar una

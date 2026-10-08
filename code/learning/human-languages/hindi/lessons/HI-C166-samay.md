@@ -43,9 +43,11 @@ reviews_of: [HI-C166-sandesh]
 
 **समय** — *samay* — "time, opening hours".
 
-[YOU READ: the opening times — **दुकान सुबह नौ बजे से शाम छह बजे तक।** (*dukān subah nau baje se śām chah baje tak.*)]
+[YOU READ: the opening times]
 
-Nine in the morning until six in the evening: go before six.
+The opening times say **दुकान सुबह नौ बजे से शाम छह बजे तक।** (*dukān subah nau
+baje se śām chah baje tak.*) Nine in the morning until six in the evening: go
+before six.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -43,9 +43,10 @@ reviews_of: [HI-C167-kiraya]
 
 **तारीख़** — *tārīkh* — "a date".
 
-[YOU READ: the note — **तारीख़ पाँच, सुबह नौ बजे।** (*tārīkh pā̃c, subah nau baje.*)]
+[YOU READ: the note]
 
-The fifth, at nine in the morning.
+The note says **तारीख़ पाँच, सुबह नौ बजे।** (*tārīkh pā̃c, subah nau baje.*) The
+fifth, at nine in the morning.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

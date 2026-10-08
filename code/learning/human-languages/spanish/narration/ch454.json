@@ -4,7 +4,7 @@
   "chapter": 454,
   "title": "La vía cortada",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:1b09d992a5eb6f87",
+  "sourceHash": "fnv1a64:2a16b34377bd1093",
   "lessons": [
     {
       "id": "ES-C454-obra",
@@ -694,7 +694,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c489fa7abfb35c8",
+      "sourceHash": "fnv1a64:934dac1cb640e4ba",
       "notice": null,
       "blocks": [
         {
@@ -710,7 +710,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say all four: the works, the track, the accident, the service."
+              "text": "From memory alone, say all four: the works, the track, the accident, the service."
             }
           ]
         },

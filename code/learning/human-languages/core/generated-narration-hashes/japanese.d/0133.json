@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 133,
-  "sourceHash": "fnv1a64:0bbbc9614afbe89b",
+  "sourceHash": "fnv1a64:eb02f8950e57be05",
   "lessonIds": [
     "JA-C133-eki",
     "JA-W133-ki",
@@ -20,7 +20,7 @@
   "drivablePrefix": 1,
   "text": "japanese/narration/ch133.txt",
   "json": "japanese/narration/ch133.json",
-  "textHash": "fnv1a64:72d05762f7f9837e",
-  "jsonHash": "fnv1a64:563456cb6f48a29d",
+  "textHash": "fnv1a64:8ffb8a3fda247d63",
+  "jsonHash": "fnv1a64:151a66a20cd7603d",
   "findings": []
 }

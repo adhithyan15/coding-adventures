@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Reading — Six Words, Six Lines, and a First Passage",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3b5a7b3e464e1372",
+  "sourceHash": "fnv1a64:64ca9a0a171748e5",
   "lessons": [
     {
       "id": "RU-C27-words",
@@ -212,7 +212,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d47677a5ef29d908",
+      "sourceHash": "fnv1a64:fbb19dfd5ce08dd0",
       "notice": null,
       "blocks": [
         {
@@ -275,11 +275,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "them again, and notice the list turns over halfway",
+              "instruction": "the six notices again, and notice the list turns over halfway",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: them again, and notice the list turns over halfway]"
+              "source": "[YOU READ: the six notices again, and notice the list turns over halfway]"
             },
             {
               "kind": "speech",

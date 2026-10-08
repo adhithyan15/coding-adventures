@@ -43,9 +43,10 @@ reviews_of: [RU-C139-reklama]
 
 **вход** (*vkhod*) — "an entrance".
 
-[YOU READ: the sign over a door — **ВХОД**, you go in here]
+[YOU READ: the sign over a door]
 
-**Вход свободный** means entry is free.
+The sign over a door says **ВХОД**: you go in here. **Вход свободный** means
+entry is free.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

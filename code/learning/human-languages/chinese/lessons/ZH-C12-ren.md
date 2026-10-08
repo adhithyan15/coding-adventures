@@ -54,7 +54,10 @@ word; the character itself does not grow a plural ending.
 <!-- hl-writing-stage: delayed-copy -->
 
 Say **person** in Mandarin. [YOU READ: **人**]
-[YOU COVER: it, and wait five seconds] [YOU WRITE: the character]
+
+[YOU COVER: **人**, then wait five seconds]
+
+[YOU WRITE: the character]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-REN-01] -->

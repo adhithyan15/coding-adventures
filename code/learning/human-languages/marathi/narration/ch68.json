@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "Three Greetings, One Word",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3d5537375b3e7ea4",
+  "sourceHash": "fnv1a64:5c68af7310cf4b0c",
   "lessons": [
     {
       "id": "MR-C68-shubh-sakal",
@@ -539,7 +539,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d2610060ca1f431",
+      "sourceHash": "fnv1a64:e33582d3bef81715",
       "notice": null,
       "blocks": [
         {
@@ -555,7 +555,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say the one word this chapter taught, and then say what it means on its own."
+              "text": "From memory alone, say the one word this chapter taught, and then say what it means on its own."
             }
           ]
         },

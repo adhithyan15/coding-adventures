@@ -55,8 +55,9 @@ writable. The second and third remain sound-first exposure where their small
 
 1. **Listen:** choose repetition or slower speech from the request you hear.
 2. **Speak:** *sumimasen* + the slower request.
-3. **Reading:** [YOU READ: only **もうすこし**, retrieving it independently] [YOU WRITE: **もうすこし**]
-4. **Close:** after the repeated line, say *wakarimashita*.
+3. [YOU READ: only **もうすこし**, retrieving it independently]
+4. [YOU WRITE: **もうすこし**]
+5. **Close:** after the repeated line, say *wakarimashita*.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SLOWER-PLEASE] -->

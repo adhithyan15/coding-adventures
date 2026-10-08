@@ -50,6 +50,7 @@ reviews_of: [MW-C13-hear-dukan, MW-W13-u-matra, MW-C10-bajar, MW-C11-barsaat, MW
 <!-- hl-writing-stage: delayed-copy -->
 
 [YOU COVER: the model after one look, then wait five seconds]
+
 [YOU WRITE: **दुकान** — check short **ु** below the first sign and long **ा** in the second chunk]
 
 ## Wrap-up Recall

@@ -4,7 +4,7 @@
   "chapter": 436,
   "title": "Gente Y Trato",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:0e4dd0a83fba0295",
+  "sourceHash": "fnv1a64:9278a93e2e78cf2d",
   "lessons": [
     {
       "id": "ES-C436-companero",
@@ -744,7 +744,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:41fc23abef100854",
+      "sourceHash": "fnv1a64:ab9c779f4ffbddec",
       "notice": null,
       "blocks": [
         {
@@ -760,7 +760,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say the colleague, to lend and to collect."
+              "text": "From memory alone, say the colleague, to lend and to collect."
             }
           ]
         },
@@ -889,7 +889,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d897aa17f4bccfdd",
+      "sourceHash": "fnv1a64:af9e7794b5f05359",
       "notice": null,
       "blocks": [
         {
@@ -917,11 +917,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it once straight through, then answer",
+              "instruction": "the notice once straight through, then answer",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it once straight through, then answer]"
+              "source": "[YOU READ: the notice once straight through, then answer]"
             },
             {
               "kind": "speech",

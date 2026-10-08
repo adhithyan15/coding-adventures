@@ -38,7 +38,7 @@ against the other in a single line.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C458-PLAZO-01, ES-LEX-C458-PLAZO-02, ES-LEX-C458-PLAZO-03] -->
 
-A notice on a noticeboard. [YOU READ: it, then answer]
+A notice on a noticeboard. [YOU READ: the notice, then answer]
 
 > **CURSOS DE NATACIÓN — INSCRIPCIÓN**
 

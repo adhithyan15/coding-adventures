@@ -4,7 +4,7 @@
   "chapter": 464,
   "title": "La cita perdida",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0cad6eec7d53c4ee",
+  "sourceHash": "fnv1a64:f7792f218781e9c7",
   "lessons": [
     {
       "id": "ES-C464-recordar",
@@ -515,7 +515,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:11ea96d661c336b0",
+      "sourceHash": "fnv1a64:1ee898d7262d574a",
       "notice": null,
       "blocks": [
         {
@@ -531,7 +531,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say all three: to remember, the dentist, to let down."
+              "text": "From memory alone, say all three: to remember, the dentist, to let down."
             }
           ]
         },

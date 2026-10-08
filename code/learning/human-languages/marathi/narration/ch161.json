@@ -4,7 +4,7 @@
   "chapter": 161,
   "title": "A Timetable, a Notice, the Rent, an Advert, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:0d7ad4aecaccf4ea",
+  "sourceHash": "fnv1a64:7afa32e37bf19e6b",
   "lessons": [
     {
       "id": "MR-C161-velapatrak",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a47554a89cb1c293",
+      "sourceHash": "fnv1a64:378559d5d8f40be7",
       "notice": null,
       "blocks": [
         {
@@ -51,15 +51,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the board — बस: सकाळी आठ वाजता.",
+              "instruction": "the board",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the board — **बस: सकाळी आठ वाजता.**]"
+              "source": "[YOU READ: the board]"
             },
             {
               "kind": "speech",
-              "text": "The bus leaves at eight in the morning, so be there before eight."
+              "text": "The board says बस: सकाळी आठ वाजता. The bus leaves at eight in the morning, so be there before eight."
             }
           ]
         },
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f0a6e5fbfbb492c8",
+      "sourceHash": "fnv1a64:207b61ee649865c0",
       "notice": null,
       "blocks": [
         {
@@ -187,15 +187,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the notice — दुकान रविवारी बंद.",
+              "instruction": "the notice",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the notice — **दुकान रविवारी बंद.**]"
+              "source": "[YOU READ: the notice]"
             },
             {
               "kind": "speech",
-              "text": "The shop is closed on Sundays, so come on another day."
+              "text": "The notice says दुकान रविवारी बंद. The shop is closed on Sundays, so come on another day."
             }
           ]
         },
@@ -414,7 +414,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ee0ca5a4d629e785",
+      "sourceHash": "fnv1a64:471cb98ba6fcc2d9",
       "notice": null,
       "blocks": [
         {
@@ -446,15 +446,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the advert — खोली भाड्याने देणे आहे. — \"Room to let.\"",
+              "instruction": "the advert",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the advert — **खोली भाड्याने देणे आहे.** — \"Room to let.\"]"
+              "source": "[YOU READ: the advert]"
             },
             {
               "kind": "speech",
-              "text": "A room is free to rent."
+              "text": "The advert says खोली भाड्याने देणे आहे. — \"Room to let.\" A room is free to rent."
             }
           ]
         },

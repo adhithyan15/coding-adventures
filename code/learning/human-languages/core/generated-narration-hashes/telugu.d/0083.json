@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 83,
-  "sourceHash": "fnv1a64:fb8365d3fa600e73",
+  "sourceHash": "fnv1a64:e56ab4ea8029fdac",
   "lessonIds": [
     "TE-C83-words",
     "TE-C83-lines",
@@ -11,7 +11,7 @@
   "drivablePrefix": 0,
   "text": "telugu/narration/ch83.txt",
   "json": "telugu/narration/ch83.json",
-  "textHash": "fnv1a64:5879e240670c74f1",
-  "jsonHash": "fnv1a64:a0910f2dce63f271",
+  "textHash": "fnv1a64:8be997e2b75e5275",
+  "jsonHash": "fnv1a64:d1a5e22e561cdb29",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Cheap and Goods: No New Signs",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:2a7f85bc99d3f68a",
+  "sourceHash": "fnv1a64:8407a92f6a862995",
   "lessons": [
     {
       "id": "MW-C14-hear-sasta",
@@ -113,7 +113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:39d588c476596745",
+      "sourceHash": "fnv1a64:0ec58f8f4d17eb75",
       "notice": null,
       "blocks": [
         {
@@ -331,7 +331,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dcb2491f968d9dc2",
+      "sourceHash": "fnv1a64:2d99362c8d34fcc6",
       "notice": null,
       "blocks": [
         {
@@ -455,7 +455,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f37a52dd2859015",
+      "sourceHash": "fnv1a64:72218f1c20d08451",
       "notice": null,
       "blocks": [
         {
@@ -678,7 +678,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad5d88938350b843",
+      "sourceHash": "fnv1a64:10daa51099953119",
       "notice": null,
       "blocks": [
         {

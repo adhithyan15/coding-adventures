@@ -4,7 +4,7 @@
   "chapter": 143,
   "title": "The Rent, an Advert, an Appointment, Opening Hours, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:5ebe071f734c577b",
+  "sourceHash": "fnv1a64:f20aa8fbb6243daf",
   "lessons": [
     {
       "id": "GE-C143-miete",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f70b51c02a3690e",
+      "sourceHash": "fnv1a64:6d00df9cb6cb5110",
       "notice": null,
       "blocks": [
         {
@@ -174,15 +174,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the advert — Zimmer frei. Miete: 400 Euro im Monat.",
+              "instruction": "the advert",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the advert — **Zimmer frei. Miete: 400 Euro im Monat.**]"
+              "source": "[YOU READ: the advert]"
             },
             {
               "kind": "speech",
-              "text": "A room is free, at 400 euros a month."
+              "text": "The advert says Zimmer frei. Miete: 400 Euro im Monat. A room is free, at 400 euros a month."
             }
           ]
         },
@@ -278,7 +278,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3314a8cb1fab809",
+      "sourceHash": "fnv1a64:58ffcd1947d256bd",
       "notice": null,
       "blocks": [
         {
@@ -310,15 +310,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the message — Ihr Termin: Montag, zehn Uhr.",
+              "instruction": "the message",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the message — **Ihr Termin: Montag, zehn Uhr.**]"
+              "source": "[YOU READ: the message]"
             },
             {
               "kind": "speech",
-              "text": "Your appointment is on Monday at ten: be there before ten."
+              "text": "The message says Ihr Termin: Montag, zehn Uhr. Your appointment is on Monday at ten: be there before ten."
             }
           ]
         },
@@ -414,7 +414,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ddfc3b6a22811be1",
+      "sourceHash": "fnv1a64:a2e00cfab69ddf29",
       "notice": null,
       "blocks": [
         {
@@ -446,15 +446,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the door — Montag bis Freitag, neun bis achtzehn Uhr.",
+              "instruction": "the door",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the door — **Montag bis Freitag, neun bis achtzehn Uhr.**]"
+              "source": "[YOU READ: the door]"
             },
             {
               "kind": "speech",
-              "text": "Open on weekdays from nine to six: not on Saturday."
+              "text": "The door says Montag bis Freitag, neun bis achtzehn Uhr. Open on weekdays from nine to six: not on Saturday."
             }
           ]
         },
@@ -550,7 +550,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f503574bad58f0e0",
+      "sourceHash": "fnv1a64:123435f5f92bbf4c",
       "notice": null,
       "blocks": [
         {
@@ -582,15 +582,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the receipt — Quittung: Miete, 400 Euro.",
+              "instruction": "the receipt",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the receipt — **Quittung: Miete, 400 Euro.**]"
+              "source": "[YOU READ: the receipt]"
             },
             {
               "kind": "speech",
-              "text": "The rent is paid: keep it."
+              "text": "The receipt says Quittung: Miete, 400 Euro. The rent is paid: keep it."
             }
           ]
         },

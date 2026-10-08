@@ -43,9 +43,10 @@ reviews_of: [MR-C161-velapatrak]
 
 **सूचना** — *sūcanā* — "a notice, an instruction".
 
-[YOU READ: the notice — **दुकान रविवारी बंद.**]
+[YOU READ: the notice]
 
-The shop is closed on Sundays, so come on another day.
+The notice says **दुकान रविवारी बंद.** The shop is closed on Sundays, so come on
+another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

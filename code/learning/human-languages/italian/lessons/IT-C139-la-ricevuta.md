@@ -42,9 +42,9 @@ reviews_of: [IT-C139-laffitto]
 
 **la ricevuta** — "a receipt".
 
-[YOU READ: the receipt — **Ricevuta: affitto, 400.**]
+[YOU READ: the receipt]
 
-The rent is paid: keep it.
+The receipt says **Ricevuta: affitto, 400.** The rent is paid: keep it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -42,9 +42,10 @@ reviews_of: [GE-C143-miete]
 
 **die Anzeige** — "an advert".
 
-[YOU READ: the advert — **Zimmer frei. Miete: 400 Euro im Monat.**]
+[YOU READ: the advert]
 
-A room is free, at 400 euros a month.
+The advert says **Zimmer frei. Miete: 400 Euro im Monat.** A room is free, at
+400 euros a month.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

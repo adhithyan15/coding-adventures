@@ -37,7 +37,10 @@ reviews_of: [MW-C05-tharo, MW-C05-hear-naam]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-THARO-01, MW-SCRIPT-THARO-01, MW-LEX-NAAM-01, MW-PERFORMANCE-HAAN-SAA-FOUR-SKILL-01, MW-SCRIPT-AI-MATRA-01] -->
 
 [PAUSE 25s] Retrieve **हां सा** once by ear and voice. [YOU READ: **हां सा**]
-[YOU WRITE: **हां सा** once] [YOU POINT: **ै** in **है**]
+
+[YOU WRITE: **हां सा** once]
+
+[YOU POINT: **ै** in **है**]
 
 [YOU READ: **थारो**]
 

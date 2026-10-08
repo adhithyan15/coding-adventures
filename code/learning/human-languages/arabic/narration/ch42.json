@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "Reading — Words, Lines, and a First Encounter",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:f6e75a39646cb5f2",
+  "sourceHash": "fnv1a64:1bce1477b2dfef71",
   "lessons": [
     {
       "id": "AR-C42-words",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d85d33e1e2720b8",
+      "sourceHash": "fnv1a64:d3221b94f759476e",
       "notice": null,
       "blocks": [
         {
@@ -82,11 +82,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "them again",
+              "instruction": "the six words again",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: them again]"
+              "source": "[YOU READ: the six words again]"
             },
             {
               "kind": "speech",
@@ -211,7 +211,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:26eccc32b1f86cb3",
+      "sourceHash": "fnv1a64:0e33d17df4297b73",
       "notice": null,
       "blocks": [
         {
@@ -283,11 +283,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "them again",
+              "instruction": "the six lines again",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: them again]"
+              "source": "[YOU READ: the six lines again]"
             },
             {
               "kind": "speech",
@@ -412,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3d38b8e72bd8e831",
+      "sourceHash": "fnv1a64:434cdebb0c436015",
       "notice": null,
       "blocks": [
         {
@@ -475,15 +475,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it again, and this time notice the hinge — شاي أو حليب؟",
+              "instruction": "the encounter again for the hinge",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it again, and this time notice the hinge — **شاي أو حليب؟**]"
+              "source": "[YOU READ: the encounter again for the hinge]"
             },
             {
               "kind": "speech",
-              "text": "One choice becomes two tiny questions, then a clear answer."
+              "text": "The hinge is شاي أو حليب؟ One choice becomes two tiny questions, then a clear answer."
             }
           ]
         },

@@ -33,8 +33,7 @@ reviews_of: [ML-C98-kali, ML-C98-kalikkuka, ML-C98-sinima]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C98-GAME-01, ML-LEX-C98-PLAY-01, ML-LEX-C98-CINEMA-01] -->
 
-[PAUSE 3s] Leave the lessons before this one closed. Say *a game*, then *to
-play*, then *a film*.
+[PAUSE 3s] From memory alone, say *a game*, then *to play*, then *a film*.
 
 ## Grammar Lens: the vowel at the end chooses
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C98-GAME-01, ML-LEX-C98-CINEMA-01, ML-LEX-C60-ANIMAL-01, ML-LEX-C97-BEAUTY-01, ML-LEX-AANU-01, ML-LEX-ENTU-01, ML-SKILL-READ-WORDS, ML-GRAMMAR-C89-NOMINAL-01] -->

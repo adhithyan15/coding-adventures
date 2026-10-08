@@ -29,3 +29,19 @@ lessons. Every edited lesson stays `drivable: true` (only its
   after the pause, so a driver checks by ear), "Keep the two meanings separate
   before looking at the script" (a time, not a step), "Look for *ṭhāk* in a
   dictionary and it will not be there" (a narrative conditional).
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - A spoken premise, gloss or answer that the first pass had moved inside a
+    deferred cue is said in prose again, and the cue keeps only the look
+    (PA-C43-kitthe, PA-C148-lukna): "In pieces: **ਕ**, the **ਿ** sihari before
+    it, … [YOU READ: the word in pieces]"; "The form line says **ਕੰਮ: ਨੌਕਰੀ**.
+    [YOU READ: the form line once]".
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (PA-C45-pehla-paath):
+    "[YOU READ: the passage again, and notice how little work it took]".
+  - PA-R158-food-quality-recall "Check only after all three: **ਕੱਚਾ**, …" →
+    "Only after all three, hear the answers: **ਕੱਚਾ**, **ਬੇਹਾ**, **ਪੱਕਾ**.";
+    PA-R158-truth-and-food-check "Check: **ਸੱਚਾ** …" and "Check in that same
+    order: …" → "Hear the answers: …" and "Hear the answers in that same order:
+    …", "Reopen" → "Revisit". Both "[YOU COVER: …] [PAUSE 4s each] Say …"
+    openings give the spoken step its own paragraph. The corpus pin on "does not
+    award independent Gurmukhi writing evidence" is untouched.

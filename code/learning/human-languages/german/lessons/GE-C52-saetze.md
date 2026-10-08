@@ -53,7 +53,7 @@ reviews_of: [GE-C52-words, GE-C38-koennen, GE-C36-das-ist]
 [PAUSE 3s] [YOU READ: the six lines down once, without stopping]
 
 [PAUSE 3s]
-[YOU READ: them again, and this time notice where the second verb sits in the first three]
+[YOU READ: the six lines again, and this time notice where the second verb sits in the first three]
 
 ## Grammar Lens: the bracket, from the outside
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-MOECHTEN-01, GE-LEX-MUESSEN-01, GE-SKILL-READ-SENTENCES] -->

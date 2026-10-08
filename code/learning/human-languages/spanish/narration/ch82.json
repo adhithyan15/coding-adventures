@@ -4,7 +4,7 @@
   "chapter": 82,
   "title": "Synthesis --- More Than One",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e2291c1f348cd00f",
+  "sourceHash": "fnv1a64:21b2b8c647229afc",
   "lessons": [
     {
       "id": "ES-C44-sintesis-mas-de-uno",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe73852b1ef7302a",
+      "sourceHash": "fnv1a64:9ef5538caff7f002",
       "notice": null,
       "blocks": [
         {
@@ -74,11 +74,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "this aloud and watch the two plurals doing different jobs",
+              "instruction": "the exchange aloud and watch the two plurals doing different jobs",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: this aloud and watch the two plurals doing different jobs]"
+              "source": "[YOU READ: the exchange aloud and watch the two plurals doing different jobs]"
             },
             {
               "kind": "speech",

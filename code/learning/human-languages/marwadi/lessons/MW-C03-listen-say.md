@@ -51,7 +51,7 @@ say **हां सा** as the answer to a question you accept.
 
 1. **Listen:** identify *hā(n) sā* without seeing it.
 2. **Speak:** answer yes respectfully without reading.
-3. **Reading:** [YOU READ: **आभार · हां सा · राम**, then choose **हां सा**]
+3. [YOU READ: **आभार · हां सा · राम**, then choose **हां सा**]
 4. [YOU WRITE: only **हां**, with all models covered]
 
 ## Wrap-up recall

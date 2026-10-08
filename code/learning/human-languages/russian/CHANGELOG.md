@@ -24,6 +24,20 @@ lessons. Every edited lesson stays `drivable: true` (only its
   way out" inside it).
 - RU-C18-znayu-chto "Read those two English translations again" → "Go back over
   those two English translations".
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - The notice lessons (RU-C139-raspisaniye, RU-C139-reklama, RU-C139-vkhod,
+    RU-C139-vykhod) keep the notice in narrated prose and defer only the look:
+    "[YOU READ: the sign over a door]" then "The sign over a door says **ВХОД**:
+    you go in here." (the gloss "You go in here." was inside the cue). The first
+    pass had put the whole notice inside the deferred cue, so a listener heard
+    the comment on a notice without the notice; that superseded form is the one
+    described above.
+  - RU-C02-ochen-priyatno "[YOU READ: them now — you'll draw them later]" →
+    "[YOU READ: both letters]" and "You'll draw them later." in prose; RU-C02-ya
+    the same with "[YOU READ: **я** here]".
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (RU-C27-notices): "[YOU
+    READ: the six notices again, and notice the list turns over halfway]".
 
 ## Fixed — RU-C85-date's warm-up stops telling a driver to write
 

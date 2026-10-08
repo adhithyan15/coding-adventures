@@ -4,7 +4,7 @@
   "chapter": 93,
   "title": "Telling Somebody To Do Something",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:d34f0bc43098c940",
+  "sourceHash": "fnv1a64:b78eb84b8f928a56",
   "lessons": [
     {
       "id": "HI-C85-bolo",
@@ -844,7 +844,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc26d7098c02796a",
+      "sourceHash": "fnv1a64:6c43c9c7168077b6",
       "notice": null,
       "blocks": [
         {
@@ -899,11 +899,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "these aloud",
+              "instruction": "the three notices aloud",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: these aloud]"
+              "source": "[YOU READ: the three notices aloud]"
             },
             {
               "kind": "speech",

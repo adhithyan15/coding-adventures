@@ -4,7 +4,7 @@
   "chapter": 457,
   "title": "La farmacia de guardia",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:cc5f782ef8c35623",
+  "sourceHash": "fnv1a64:33763c0eab2b2e50",
   "lessons": [
     {
       "id": "ES-C457-medicamento",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bceb2e01478d317f",
+      "sourceHash": "fnv1a64:edcae8ed8234e2a9",
       "notice": null,
       "blocks": [
         {
@@ -527,7 +527,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say all three: the medicine, to order in, the duty rota."
+              "text": "From memory alone, say all three: the medicine, to order in, the duty rota."
             }
           ]
         },

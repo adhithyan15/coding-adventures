@@ -52,7 +52,8 @@ reviews_of: [KA-C76-words, KA-C41-this, KA-C41-here]
 
 [PAUSE 3s] [YOU READ: the six lines down once, without stopping]
 
-[PAUSE 3s] [YOU READ: them again, and count how many different verbs there are]
+[PAUSE 3s]
+[YOU READ: the six lines again, and count how many different verbs there are]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-04, KA-LEX-C49-REPLY-01, KA-LEX-C50-LEAVE-01] -->

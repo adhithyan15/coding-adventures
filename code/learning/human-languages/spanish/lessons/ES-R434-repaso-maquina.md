@@ -32,8 +32,8 @@ reviews_of: [ES-C434-taller, ES-C434-maquina, ES-C434-pieza, ES-C434-bateria, ES
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C434-MAQ-01, ES-LEX-C434-MAQ-02, ES-LEX-C434-MAQ-05] -->
 
-[PAUSE 3s] Leave the lessons before this one closed. Say *the workshop*, *the
-machine* and *the charger*.
+[PAUSE 3s] From memory alone, say *the workshop*, *the machine* and *the
+charger*.
 
 ## Grammar Lens: the guess, and the one that failed
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C434-MAQ-04, ES-LEX-C434-MAQ-05, ES-LEX-C432-CASA-04] -->

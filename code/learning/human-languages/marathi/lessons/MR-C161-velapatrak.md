@@ -43,9 +43,10 @@ reviews_of: [MR-C160-akhne]
 
 **वेळापत्रक** — *veḷāpatrak* — "a timetable".
 
-[YOU READ: the board — **बस: सकाळी आठ वाजता.**]
+[YOU READ: the board]
 
-The bus leaves at eight in the morning, so be there before eight.
+The board says **बस: सकाळी आठ वाजता.** The bus leaves at eight in the morning,
+so be there before eight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

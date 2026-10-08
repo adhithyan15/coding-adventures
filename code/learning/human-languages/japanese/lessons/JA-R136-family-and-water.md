@@ -45,7 +45,7 @@ reviews_of: [JA-C136-kazoku, JA-W136-zo, JA-C136-kazoeru, JA-C136-mizu, JA-W136-
 ## Guided Practice — read the five words
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-KAZOKU, JA-SCRIPT-ZO-01, JA-LEX-C136-KAZOERU, JA-LEX-ANCHOR-MIZU, JA-SCRIPT-ZU-01, JA-LEX-C136-SUZUSHII, JA-LEX-ANCHOR-KAZE, JA-SCRIPT-ZE-01] -->
 
-[PAUSE 2s each] For each one below, say what it means.
+[PAUSE 2s each] [YOU READ: each one below aloud, then say what it means]
 
 - [YOU READ: **かぞく** — a family]
 - [YOU READ: **かぞえる** — to count]

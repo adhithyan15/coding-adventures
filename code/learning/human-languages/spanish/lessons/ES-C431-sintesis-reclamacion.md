@@ -38,7 +38,7 @@ you do, say *el pedido* and *el retraso* once each.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C431-PEDIDO-01, ES-LEX-C431-PEDIDO-03, ES-LEX-C431-PEDIDO-04, ES-LEX-C431-PEDIDO-05] -->
 
-[YOU READ: it once without stopping, then answer]
+[YOU READ: the notice once without stopping, then answer]
 
 > Estimado cliente: su **pedido** número 3182 sufrirá un **retraso** de tres
 > días por un problema con nuestro **proveedor**. No se le **cobrará** el envío.

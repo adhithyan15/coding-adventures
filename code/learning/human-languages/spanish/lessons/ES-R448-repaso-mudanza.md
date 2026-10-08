@@ -32,8 +32,8 @@ reviews_of: [ES-C448-mudarse, ES-C448-mudanza, ES-C448-duro, ES-C448-estropear, 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C448-MUDA-01, ES-LEX-C448-MUDA-02, ES-LEX-C448-MUDA-03, ES-LEX-C448-MUDA-04, ES-LEX-C448-MUDA-05] -->
 
-[PAUSE 3s] Leave the lessons before this one closed. Say all five: *to move
-house*, *the move*, *hard*, *out of order*, *in pieces*.
+[PAUSE 3s] From memory alone, say all five: *to move house*, *the move*, *hard*,
+*out of order*, *in pieces*.
 
 ## Grammar Lens: two words for broken, one question
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C448-MUDA-04, ES-LEX-C448-MUDA-05] -->

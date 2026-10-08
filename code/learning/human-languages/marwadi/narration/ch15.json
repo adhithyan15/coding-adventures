@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Hand and Money: No New Signs",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:329f4dd068e6abff",
+  "sourceHash": "fnv1a64:107a40bc2e5923a6",
   "lessons": [
     {
       "id": "MW-C10-hear-haath",
@@ -98,7 +98,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:46371230d6230a56",
+      "sourceHash": "fnv1a64:e48ac5b9837ff7c6",
       "notice": null,
       "blocks": [
         {
@@ -300,7 +300,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fde6e453acf5c219",
+      "sourceHash": "fnv1a64:8ada3f6234443221",
       "notice": null,
       "blocks": [
         {
@@ -410,7 +410,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:13a432d2af451ecd",
+      "sourceHash": "fnv1a64:69918bef4f786849",
       "notice": null,
       "blocks": [
         {

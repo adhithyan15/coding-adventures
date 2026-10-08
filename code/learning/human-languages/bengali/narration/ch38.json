@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Which One in the Line",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:3502c39f11863f6c",
+  "sourceHash": "fnv1a64:2983440919a0516e",
   "lessons": [
     {
       "id": "BN-C27-ditiyo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7eaa7a68327e87b",
+      "sourceHash": "fnv1a64:5d320c718c4ca083",
       "notice": null,
       "blocks": [
         {
@@ -86,15 +86,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the spelling and the romanization again, because they disagree — written দ্ব-, said di-",
+              "instruction": "the spelling and the romanization again",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the spelling and the romanization again, because they disagree — written **দ্ব**-, said *di*-]"
+              "source": "[YOU READ: the spelling and the romanization again]"
             },
             {
               "kind": "speech",
-              "text": "The cluster is on the page and gone from the mouth."
+              "text": "They disagree: written দ্ব-, said di-. The cluster is on the page and gone from the mouth."
             }
           ]
         },

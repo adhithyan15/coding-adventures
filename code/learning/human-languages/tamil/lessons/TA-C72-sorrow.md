@@ -33,7 +33,7 @@ reviews_of: [TA-W27-read-payam]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-PAYAM-01] -->
 
-[PAUSE 2s] Before the new one: [YOU READ: **பயம்**, then say what it means]
+[PAUSE 2s] Before the new one, say what **பயம்** means. [YOU READ: **பயம்**]
 
 ## You'll want to know: வருத்தம்
 <!-- hl-knowledge: introduces=[TA-LEX-C72-FEEL-03]; assesses=[] -->

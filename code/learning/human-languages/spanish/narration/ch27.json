@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Synthesis --- Reading What You Were Never Taught",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:523d13ff3f77b17b",
+  "sourceHash": "fnv1a64:e4a453e4067788a3",
   "lessons": [
     {
       "id": "ES-C56-sintesis-leer",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfd3547bd05c6fd6",
+      "sourceHash": "fnv1a64:bf3b6311a35ffde2",
       "notice": null,
       "blocks": [
         {
@@ -40,11 +40,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it before you read the explanation",
+              "instruction": "the sentence before the explanation",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it before you read the explanation]"
+              "source": "[YOU READ: the sentence before the explanation]"
             }
           ]
         },

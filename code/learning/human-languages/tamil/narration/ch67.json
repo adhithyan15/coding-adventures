@@ -4,7 +4,7 @@
   "chapter": 67,
   "title": "What You Wear",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:26e9e3b73c6bc64d",
+  "sourceHash": "fnv1a64:b72db622cfde2548",
   "lessons": [
     {
       "id": "TA-C67-shirt",
@@ -447,7 +447,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3e5310e491a2ac9",
+      "sourceHash": "fnv1a64:c85b3cf97edcc4ab",
       "notice": null,
       "blocks": [
         {
@@ -463,16 +463,16 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one:"
+              "text": "Before the new one, say what சட்டை (saṭṭai) means."
             },
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "சட்டை (saṭṭai) once, then say what it means",
+              "instruction": "சட்டை (saṭṭai) once",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: **சட்டை** once, then say what it means]"
+              "source": "[YOU READ: **சட்டை** once]"
             }
           ]
         },

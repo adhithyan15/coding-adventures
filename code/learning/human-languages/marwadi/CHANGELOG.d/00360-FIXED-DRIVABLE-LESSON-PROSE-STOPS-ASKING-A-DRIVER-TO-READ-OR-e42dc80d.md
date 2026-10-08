@@ -41,3 +41,32 @@ lessons. Every edited lesson stays `drivable: true` (only its
   steps), "Look back at what the hand had to learn" (the idiom), "read the
   other when a page prints it" (advice for later), "Read in order, these six
   are …" (description).
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - MW-C06-hear-question "[YOU COVER: the page] The next question has a
+    different social job." and MW-C01-practice "[YOU COVER: B, then answer A
+    aloud] Switch roles." → "[YOU COVER: the page]" / "Run both voices once.
+    [YOU COVER: B]", each followed by its prose in a paragraph of its own ("Then
+    answer A aloud. Switch roles."). MW-C07-hear-later "[YOU COVER: the text
+    before the new parting line begins]" → "[YOU COVER: the text]" and "Then the
+    new parting line begins."
+  - A new cue followed by prose or by another cue in the same paragraph now ends
+    its paragraph, so the book no longer runs "*Cover:* the page The next
+    question …" together (63 lessons: the 31 look-cover-write lessons
+    MW-C09..C21, whose "[YOU COVER: the model after one look, then wait five
+    seconds]" ran into its WRITE cue, and the MW-R08..R20 reviews;
+    MW-C35-read-ten-ticket and MW-R09-maternal-three split a two-cue list item
+    into two numbered items).
+  - A spoken premise, gloss or answer that the first pass had moved inside a
+    deferred cue is said in prose again, and the cue keeps only the look
+    (MW-C40-pehlo-path, MW-R24-final-two, MW-R25-bring-two): "[YOU READ: the
+    passage again, and watch the number move]" then "It moves बीस, दस, पंदरा.".
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (MW-C08-family-seven,
+    MW-C40-notices): "[YOU COVER: the line before the scored pass]", "[YOU READ:
+    the six notices again, …]".
+  - Four-skill items drop the "**Reading:**" label in front of a READ cue, which
+    the book printed as "Reading: *Read it:* …" (MW-C01..C09 practice items,
+    MW-C32, MW-C33, MW-C34, MW-C39, MW-R08, MW-R39; 16 lessons).
+  - MW-C35-ticket-four "3. **Reading.** Given a stall with six labelled goods,
+    say which is dearest and which is cheapest." → "3. [YOU READ: the labels on
+    a stall of six goods, then say which is dearest and which is cheapest]".

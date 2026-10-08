@@ -58,7 +58,7 @@ being female, while *la actriz* is feminine for exactly that reason.
 ## Reading
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C421-ARTS-01, ES-LEX-C421-ARTS-02, ES-LEX-C420-ARTS-01, ES-LEX-PELICULA] -->
 
-[YOU READ: this aloud]
+[YOU READ: the scene aloud]
 
 Every word in it has appeared before:
 

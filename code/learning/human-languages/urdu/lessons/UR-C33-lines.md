@@ -54,7 +54,7 @@ reviews_of: [UR-C33-words, UR-C01-salam, UR-C03-aap-ka-naam-kya-hai]
 [PAUSE 3s] [YOU READ: the six lines down once, without stopping]
 
 [PAUSE 3s]
-[YOU READ: them again, and this time hear that these are not six separate lines]
+[YOU READ: the six lines again, and this time hear that these are not six separate lines]
 
 They are the opening of a meeting, in the order it happens.
 

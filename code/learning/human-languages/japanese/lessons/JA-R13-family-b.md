@@ -42,7 +42,9 @@ Say **いもうと** once without looking back.
 [PAUSE 45s] [YOU READ: distant **日本語** as *nihongo*]
 
 Recall that borrowed kanji can carry word-specific readings. Then hear “younger
-sister” and say **いもうと**. [YOU READ: **ちち・はは**] [YOU WRITE: all three]
+sister” and say **いもうと**. [YOU READ: **ちち・はは**]
+
+[YOU WRITE: all three]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-IMOUTO, JA-LEX-CHICHI, JA-LEX-HAHA] -->

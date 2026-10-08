@@ -40,8 +40,8 @@ Before the new one: say the German for to plan, then the German for the rent.
 
 You'll want to know: die Anzeige.
 die Anzeige — "an advert".
-[once you have stopped driving — read: the advert — Zimmer frei. Miete: 400 Euro im Monat.]
-A room is free, at 400 euros a month.
+[once you have stopped driving — read: the advert]
+The advert says Zimmer frei. Miete: 400 Euro im Monat. A room is free, at 400 euros a month.
 
 What you've built.
 One more word for this chapter.
@@ -71,8 +71,8 @@ Before the new one: say the German for the rent, then the German for an advert.
 
 You'll want to know: der Termin.
 der Termin — "an appointment".
-[once you have stopped driving — read: the message — Ihr Termin: Montag, zehn Uhr.]
-Your appointment is on Monday at ten: be there before ten.
+[once you have stopped driving — read: the message]
+The message says Ihr Termin: Montag, zehn Uhr. Your appointment is on Monday at ten: be there before ten.
 
 What you've built.
 One more word for this chapter.
@@ -102,8 +102,8 @@ Before the new one: say the German for an advert, then the German for an appoint
 
 You'll want to know: die Öffnungszeiten.
 die Öffnungszeiten — "opening hours".
-[once you have stopped driving — read: the door — Montag bis Freitag, neun bis achtzehn Uhr.]
-Open on weekdays from nine to six: not on Saturday.
+[once you have stopped driving — read: the door]
+The door says Montag bis Freitag, neun bis achtzehn Uhr. Open on weekdays from nine to six: not on Saturday.
 
 What you've built.
 One more word for this chapter.
@@ -133,8 +133,8 @@ Before the new one: say the German for an appointment, then the German for openi
 
 You'll want to know: die Quittung.
 die Quittung — "a receipt".
-[once you have stopped driving — read: the receipt — Quittung: Miete, 400 Euro.]
-The rent is paid: keep it.
+[once you have stopped driving — read: the receipt]
+The receipt says Quittung: Miete, 400 Euro. The rent is paid: keep it.
 
 What you've built.
 One more word for this chapter.

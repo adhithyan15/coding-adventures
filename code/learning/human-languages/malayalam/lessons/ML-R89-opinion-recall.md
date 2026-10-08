@@ -33,8 +33,7 @@ reviews_of: [ML-C89-nallathu, ML-C89-mosham, ML-C89-opinion]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C89-NOMINAL-01, ML-LEX-C89-EVAL-01] -->
 
-[PAUSE 3s] Leave the lessons before this one closed. Say *a good one*, then say
-*bad*.
+[PAUSE 3s] From memory alone, say *a good one*, then say *bad*.
 
 ## Grammar Lens: a quality standing on its own
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C89-NOMINAL-01, ML-LEX-C42-ADJ-03, ML-LEX-C42-ADJ-01, ML-LEX-C41-DEIXIS-02] -->

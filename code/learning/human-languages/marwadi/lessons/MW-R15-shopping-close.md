@@ -44,7 +44,9 @@ reviews_of: [MW-C15-shopping-seven, MW-C15-kapda, MW-C15-mahango, MW-W15-nukta]
 <!-- hl-writing-stage: dictation-transcription -->
 
 With every model hidden, retrieve the seven meanings by ear and say them from
-meaning cues. [YOU READ: a shuffled set] [YOU WRITE: all seven from dictation]
+meaning cues. [YOU READ: a shuffled set]
+
+[YOU WRITE: all seven from dictation]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-SHOPPING-SEVEN-FOUR-SKILL-01] -->

@@ -42,9 +42,10 @@ reviews_of: [FR-C142-lhoraire]
 
 **l'avis** — "a notice, an opinion".
 
-[YOU READ: the notice — **Avis : le magasin est fermé aujourd'hui.**]
+[YOU READ: the notice]
 
-The shop is closed today, so come back another day.
+The notice says **Avis : le magasin est fermé aujourd'hui.** The shop is closed
+today, so come back another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -42,9 +42,10 @@ reviews_of: [FR-C141-organiser]
 
 **l'horaire** — "opening hours, a timetable".
 
-[YOU READ: the door — **Horaire : lundi – vendredi, 9 h – 18 h.**]
+[YOU READ: the door]
 
-Open on weekdays from nine to six: not on **samedi**.
+The door says **Horaire : lundi – vendredi, 9 h – 18 h.** Open on weekdays from
+nine to six: not on **samedi**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

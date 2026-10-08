@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Reading — Signs, a Counter, and the Whole Bargain",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e662535a74b198c4",
+  "sourceHash": "fnv1a64:0021e5dc0b4fc4f1",
   "lessons": [
     {
       "id": "MW-C40-signs",
@@ -213,7 +213,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e20dbb43ab56ba29",
+      "sourceHash": "fnv1a64:ef3a6b79b85683c9",
       "notice": null,
       "blocks": [
         {
@@ -276,11 +276,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "them again, and this time hear whose line each one is",
+              "instruction": "the six notices again, and this time hear whose line each one is",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: them again, and this time hear whose line each one is]"
+              "source": "[YOU READ: the six notices again, and this time hear whose line each one is]"
             },
             {
               "kind": "speech",
@@ -414,7 +414,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f113ea855f07d16",
+      "sourceHash": "fnv1a64:2499325f96e2ccb0",
       "notice": null,
       "blocks": [
         {
@@ -477,15 +477,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it again, and watch the number move — बीस, दस, पंदरा",
+              "instruction": "the passage again, and watch the number move",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it again, and watch the number move — बीस, दस, पंदरा]"
+              "source": "[YOU READ: the passage again, and watch the number move]"
             },
             {
               "kind": "speech",
-              "text": "That is the whole negotiation, and it is carried by three words you learned as counting."
+              "text": "It moves बीस, दस, पंदरा. That is the whole negotiation, and it is carried by three words you learned as counting."
             }
           ]
         },

@@ -42,6 +42,7 @@ reviews_of: [MW-C17-riksha, MW-C17-ghodo, MW-W17-sha, MW-W15-nukta]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-RIKSHA-01, MW-SCRIPT-RIKSHA-01, MW-LEX-GHODO-01, MW-SCRIPT-GHODO-01] -->
 
 Hear both words in both orders and give each meaning. [YOU READ: two cards]
+
 [YOU WRITE: both from sound]
 
 ## Wrap-up Recall

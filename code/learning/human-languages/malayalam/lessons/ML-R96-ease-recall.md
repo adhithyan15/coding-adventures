@@ -33,8 +33,7 @@ reviews_of: [ML-C96-eluppam, ML-C96-prayaasam, ML-C83-keralathil, ML-C70-um, ML-
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C96-EASY-01, ML-LEX-C96-DIFFICULT-01] -->
 
-[PAUSE 3s] Leave the lessons before this one closed. Say *this is easy*, then
-say the opposite.
+[PAUSE 3s] From memory alone, say *this is easy*, then say the opposite.
 
 ## Grammar Lens: the welding was already yours
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C96-EASY-01, ML-LEX-C96-DIFFICULT-01, ML-CONCEPT-C02-COPULA-01, ML-LEX-SUKHAM-01, ML-LEX-C89-EVAL-01, ML-LEX-AANU-01, ML-GRAMMAR-C83-OBLIQUE-AM-01, ML-CONCEPT-C70-UM-01, ML-LEX-SAARAMILLA-01, ML-GRAMMAR-C93-ANGAL-01] -->

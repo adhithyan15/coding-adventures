@@ -52,9 +52,10 @@ other side of the same door sign. **じゅんび** is preparation, and
 On a real sign this word is usually printed in kanji, which this book has
 not reached yet; the reading is the same.
 
-[YOU READ: it and act on it — the door says **じゅんびちゅう**, so the shop is not open yet]
+[YOU READ: the door sign and act on it]
 
-Wait, or come back later.
+The door says **じゅんびちゅう**, so the shop is not open yet. Wait, or come back
+later.
 
 > **いまは じゅんびちゅうです。** — *ima wa junbichū desu* — "We are getting
 > ready now; not open yet."

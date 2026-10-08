@@ -40,9 +40,11 @@ reviews_of: [ZH-C18-shu, ZH-C18-kanshu]
 <!-- hl-writing-stage: dictation-transcription -->
 
 Hear the two meanings in mixed order. Say each answer.
-[YOU READ: its unpointed card] [YOU WRITE: each one]
+[YOU READ: each Mandarin form without pinyin]
 
-Check whether 看 is present before deciding noun or activity.
+[YOU WRITE: each one]
+
+[YOU CHECK: whether 看 is present before deciding noun or activity]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-SHU-01, ZH-LEX-KANSHU-01] -->

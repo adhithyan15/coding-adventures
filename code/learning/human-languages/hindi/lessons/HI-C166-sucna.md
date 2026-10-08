@@ -43,9 +43,10 @@ reviews_of: [HI-C165-ginna]
 
 **सूचना** — *sūcnā* — "a notice, information".
 
-[YOU READ: the notice on the door — **आज दुकान बंद है।** (*āj dukān band hai.*)]
+[YOU READ: the notice on the door]
 
-The shop is closed today, so come back *kal*.
+The notice on the door says **आज दुकान बंद है।** (*āj dukān band hai.*) The shop
+is closed today, so come back *kal*.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

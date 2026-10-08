@@ -4,7 +4,7 @@
   "chapter": 437,
   "title": "Decidir, Coincidir, Equivocarse",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:6a9799e3b549e573",
+  "sourceHash": "fnv1a64:d3f73ec5deeaea73",
   "lessons": [
     {
       "id": "ES-C437-decidir",
@@ -735,7 +735,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:75fc9f2ebf775454",
+      "sourceHash": "fnv1a64:4c9de242d8700fce",
       "notice": null,
       "blocks": [
         {
@@ -751,7 +751,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say all five: to decide, to clash, to get it wrong, to take time, to have dinner."
+              "text": "From memory alone, say all five: to decide, to clash, to get it wrong, to take time, to have dinner."
             }
           ]
         },
@@ -880,7 +880,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f705fac499801ee8",
+      "sourceHash": "fnv1a64:12f821af2edab48a",
       "notice": null,
       "blocks": [
         {
@@ -908,11 +908,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it once straight through, then answer",
+              "instruction": "the message once straight through, then answer",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it once straight through, then answer]"
+              "source": "[YOU READ: the message once straight through, then answer]"
             },
             {
               "kind": "speech",

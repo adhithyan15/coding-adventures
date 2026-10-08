@@ -46,7 +46,7 @@ Four skills, scored separately.
 1. **Listening.** Hear five numbers named singly and out of order.
    [YOU WRITE: which was said each time, in figures of your own language]
 2. **Speaking.** Count one to five, then five to one, without a model.
-3. **Reading.** [YOU READ: the five printed in Devanagari, shuffled, then say each]
+3. [YOU READ: the five printed in Devanagari, shuffled, then say each]
 4. **Writing.** [YOU WRITE: all five from dictation, shuffled, with no model in view]
 
 Pass each one separately. A learner who can recite forwards and fails the

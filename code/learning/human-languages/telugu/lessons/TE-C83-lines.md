@@ -52,7 +52,8 @@ reviews_of: [TE-C83-words, TE-C41-this, TE-C41-here]
 
 [PAUSE 3s] [YOU READ: the six lines down once, without stopping]
 
-[PAUSE 3s] [YOU READ: them again, and search the first four lines for the verb]
+[PAUSE 3s]
+[YOU READ: the six lines again, and search the first four lines for the verb]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C76-JUDGE-04, TE-LEX-C75-WHEN-01, TE-SKILL-READ-LINES] -->

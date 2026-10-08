@@ -55,7 +55,7 @@ Reading.
 [pause 3 seconds]
 [once you have stopped driving — read: the six lines down once, without stopping]
 [pause 3 seconds]
-[once you have stopped driving — read: them again, and count how many different verbs there are]
+[once you have stopped driving — read: the six lines again, and count how many different verbs there are]
 
 You'll want to know.
 [pause 2 seconds]
@@ -94,7 +94,7 @@ Reading.
 [pause 3 seconds]
 [once you have stopped driving — read: the passage once without stopping; do not translate as you go — let the sentences arrive]
 [pause 3 seconds]
-[once you have stopped driving — read: it again, and watch ಇಲ್ಲಿ and ಅಲ್ಲಿ take turns]
+[once you have stopped driving — read: the passage again, and watch ಇಲ್ಲಿ and ಅಲ್ಲಿ take turns]
 
 You'll want to know.
 [pause 2 seconds]

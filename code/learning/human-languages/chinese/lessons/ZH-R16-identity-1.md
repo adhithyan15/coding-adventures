@@ -40,7 +40,9 @@ reviews_of: [ZH-C16-zi, ZH-C16-hanzi]
 <!-- hl-writing-stage: dictation-transcription -->
 
 Hear **written character** and **Chinese character** in mixed order. Say each
-answer. [YOU READ: its unpointed card] [YOU WRITE: each one without a model]
+answer. [YOU READ: each Mandarin form without pinyin]
+
+[YOU WRITE: each one without a model]
 
 Repair only the missed item.
 

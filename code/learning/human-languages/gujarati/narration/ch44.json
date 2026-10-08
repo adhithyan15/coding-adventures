@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Reading — Six Words, Six Lines, and a Whole Meeting",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:21f120829d49dc55",
+  "sourceHash": "fnv1a64:6dc0caa32f4ab0a3",
   "lessons": [
     {
       "id": "GU-C44-words",
@@ -219,7 +219,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a12a871682afe6fd",
+      "sourceHash": "fnv1a64:25f433c562aa294d",
       "notice": null,
       "blocks": [
         {
@@ -282,11 +282,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "them again, and this time notice that nobody said them first",
+              "instruction": "the six lines again, and this time notice that nobody said them first",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: them again, and this time notice that nobody said them first]"
+              "source": "[YOU READ: the six lines again, and this time notice that nobody said them first]"
             },
             {
               "kind": "speech",
@@ -420,7 +420,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d0cf10afbd151a5c",
+      "sourceHash": "fnv1a64:87bba00fe5689096",
       "notice": null,
       "blocks": [
         {
@@ -483,11 +483,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it again, and count how many people are speaking",
+              "instruction": "the meeting again, and count how many people are speaking",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it again, and count how many people are speaking]"
+              "source": "[YOU READ: the meeting again, and count how many people are speaking]"
             }
           ]
         },

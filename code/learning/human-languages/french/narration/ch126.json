@@ -4,7 +4,7 @@
   "chapter": 126,
   "title": "Class, Lesson, Exam, Word, Board",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:58138e9e10edb7ff",
+  "sourceHash": "fnv1a64:1d1386f7d03c4f71",
   "lessons": [
     {
       "id": "FR-C126-classe",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:834ebd5daa94ea9a",
+      "sourceHash": "fnv1a64:dc830825a93b9d0a",
       "notice": null,
       "blocks": [
         {

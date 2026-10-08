@@ -45,6 +45,7 @@ Listen before picking up the pencil.
 <!-- hl-activity: {"id":"MR-R18-script-warmup-check","kind":"text","assesses":["MR-LEX-DHANYAVAD-01","MR-SCRIPT-DHANYAVAD-WRITE-01"],"prompt":"Hear dhanyavad; give its meaning and write it in Devanagari.","answer":"thank you; धन्यवाद","accepted":[],"feedback":{"correct":"Meaning and independent writing are still connected.","incorrect":"Repair only meaning or spelling, whichever was missed."},"response_seconds":24} -->
 
 Hear *dhanyavād*. Say its meaning. [YOU READ: **धन्यवाद**, then cover the model]
+
 [YOU WRITE: **धन्यवाद** once]
 
 This reconnects meaning and script without adding anything new.

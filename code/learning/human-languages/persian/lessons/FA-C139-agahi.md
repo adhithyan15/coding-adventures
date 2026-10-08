@@ -43,7 +43,9 @@ reviews_of: [FA-C139-ejare]
 
 **آگهی** — *âgahi* — "an advert, a notice".
 
-[YOU READ: the advert — **خانه برای اجاره** — *khâne barâye ejâre* — "House for rent."]
+[YOU READ: the advert]
+
+The advert says **خانه برای اجاره** — *khâne barâye ejâre* — "House for rent."
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

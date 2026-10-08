@@ -43,9 +43,10 @@ reviews_of: [AR-C157-nawa]
 
 **جدول** — *jadwal* — "a timetable, a table".
 
-[YOU READ: the board — **موعد الحافلة: الساعة الثامنة صباحا** — *mawʿid al-ḥāfila: as-sāʿa ath-thāmina ṣabāḥan* — "Bus time: 8 a.m."]
+[YOU READ: the board]
 
-Be there before eight.
+The board says **موعد الحافلة: الساعة الثامنة صباحا** — *mawʿid al-ḥāfila:
+as-sāʿa ath-thāmina ṣabāḥan* — "Bus time: 8 a.m." Be there before eight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 460,
   "title": "La herramienta",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9c4671891e013c38",
+  "sourceHash": "fnv1a64:17fa4698b1353856",
   "lessons": [
     {
       "id": "ES-C460-herramienta",
@@ -515,7 +515,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2961a89f0b69c688",
+      "sourceHash": "fnv1a64:528b60c8ded0489c",
       "notice": null,
       "blocks": [
         {
@@ -531,7 +531,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say all three: the tool, to apply for, the wait."
+              "text": "From memory alone, say all three: the tool, to apply for, the wait."
             }
           ]
         },
@@ -664,7 +664,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a9bc226799211005",
+      "sourceHash": "fnv1a64:95d2760ede4eb215",
       "notice": null,
       "blocks": [
         {
@@ -696,11 +696,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it, then answer",
+              "instruction": "the notice, then answer",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it, then answer]"
+              "source": "[YOU READ: the notice, then answer]"
             },
             {
               "kind": "speech",

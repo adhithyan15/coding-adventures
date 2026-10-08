@@ -53,7 +53,7 @@ reviews_of: [PT-C29-palavras, PT-C01-bom-dia, PT-C04-adeus]
 [PAUSE 3s] [YOU READ: the six lines down once, without stopping]
 
 [PAUSE 3s]
-[YOU READ: them again, and notice that **Bom dia** and **Boa noite** differ by one letter, and that the letter is doing grammar]
+[YOU READ: the six lines again, and notice that **Bom dia** and **Boa noite** differ by one letter, and that the letter is doing grammar]
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[PT-SKILL-READ-LINES] -->

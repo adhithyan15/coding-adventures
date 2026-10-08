@@ -54,7 +54,9 @@ moment** and leaves the rest understood — the same economy as *меня зов
 left out "my" and "name."
 
 Both **ч** (*ch*) and **я** are letters the writing track hasn't reached.
-[YOU READ: them now — you'll draw them later]
+[YOU READ: both letters]
+
+You'll draw them later.
 
 ## приятно, taken apart — and its cousin "friend"
 <!-- hl-knowledge: introduces=[RU-ETYMON-PRIYATNO-FRIEND]; assesses=[RU-LEX-OCHEN-PRIYATNO] -->

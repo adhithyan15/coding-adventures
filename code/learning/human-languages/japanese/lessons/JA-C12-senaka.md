@@ -51,6 +51,7 @@ Only the opening changes from **おなか**.
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SENAKA] -->
 
 Hear, picture the part, and say **せなか**. [YOU READ: **せなか**]
+
 [YOU WRITE: **せなか**]
 
 ## Wrap-up Recall

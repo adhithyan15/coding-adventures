@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "People under one roof",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:f592bbdf2e7d0e27",
+  "sourceHash": "fnv1a64:bcf3c1521b169f23",
   "lessons": [
     {
       "id": "ZH-C12-ren",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:81053f4458ebecb4",
+      "sourceHash": "fnv1a64:b8211621017edbf2",
       "notice": null,
       "blocks": [
         {
@@ -97,11 +97,11 @@
             {
               "kind": "prompt",
               "action": "COVER",
-              "instruction": "it, and wait five seconds",
+              "instruction": "人 (rén), then wait five seconds",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU COVER: it, and wait five seconds]"
+              "source": "[YOU COVER: **人**, then wait five seconds]"
             },
             {
               "kind": "prompt",
@@ -158,7 +158,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:04e4f2c62f5a9f3a",
+      "sourceHash": "fnv1a64:088763b25582e02e",
       "notice": null,
       "blocks": [
         {
@@ -451,7 +451,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25128d59dd16aec0",
+      "sourceHash": "fnv1a64:7c46e9a5b56ba364",
       "notice": null,
       "blocks": [
         {
@@ -512,11 +512,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it once without pinyin",
+              "instruction": "儿子 (érzi) once without pinyin",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it once without pinyin]"
+              "source": "[YOU READ: **儿子** once without pinyin]"
             }
           ]
         },
@@ -928,7 +928,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f02288c5d2f5664",
+      "sourceHash": "fnv1a64:656011a7a8d96410",
       "notice": null,
       "blocks": [
         {
@@ -969,11 +969,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it once without pinyin",
+              "instruction": "家 (jiā) once without pinyin",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it once without pinyin]"
+              "source": "[YOU READ: **家** once without pinyin]"
             },
             {
               "kind": "speech",
@@ -1219,7 +1219,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:129178e69de90803",
+      "sourceHash": "fnv1a64:d140c33be209fb47",
       "notice": null,
       "blocks": [
         {
@@ -1328,7 +1328,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f199ab894f5a1cc2",
+      "sourceHash": "fnv1a64:a488a2237ea2c156",
       "notice": null,
       "blocks": [
         {
@@ -1369,10 +1369,6 @@
             {
               "kind": "speech",
               "text": "Speaking: produce all six from their English meanings, with tones audible."
-            },
-            {
-              "kind": "speech",
-              "text": "Reading:"
             },
             {
               "kind": "prompt",

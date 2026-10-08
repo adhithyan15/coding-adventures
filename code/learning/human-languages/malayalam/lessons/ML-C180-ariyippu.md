@@ -43,9 +43,10 @@ reviews_of: [ML-C180-samayappattika]
 
 **അറിയിപ്പ്** — *aṟiyippŭ* — "a notice, an announcement".
 
-[YOU READ: the notice — **ഇന്ന് കട അടച്ചിരിക്കുന്നു** — *innŭ kaṭa aṭaccirikkunnu* — "The shop is closed today."]
+[YOU READ: the notice]
 
-Come back on another day.
+The notice says **ഇന്ന് കട അടച്ചിരിക്കുന്നു** — *innŭ kaṭa aṭaccirikkunnu* —
+"The shop is closed today." Come back on another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

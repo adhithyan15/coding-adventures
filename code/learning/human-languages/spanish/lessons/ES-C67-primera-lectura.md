@@ -52,7 +52,7 @@ it is new.
 [PAUSE 3s]
 [YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]
 
-[PAUSE 3s] [YOU READ: it again, and notice how little work it took]
+[PAUSE 3s] [YOU READ: the passage again, and notice how little work it took]
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PERO, ES-LEX-BASTANTE, ES-GRAMMAR-NEAR-FUTURE-IR-A-INFINITIVE] -->

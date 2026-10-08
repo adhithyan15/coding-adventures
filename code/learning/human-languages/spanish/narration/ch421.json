@@ -4,7 +4,7 @@
   "chapter": 421,
   "title": "The Actor and the Actress",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:75082f26f2a84750",
+  "sourceHash": "fnv1a64:4a2bb0496c424224",
   "lessons": [
     {
       "id": "ES-C421-actor",
@@ -412,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:85ed38c9bc2a780b",
+      "sourceHash": "fnv1a64:f362ff9292632cb5",
       "notice": null,
       "blocks": [
         {
@@ -476,11 +476,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "this aloud",
+              "instruction": "the scene aloud",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: this aloud]"
+              "source": "[YOU READ: the scene aloud]"
             },
             {
               "kind": "speech",

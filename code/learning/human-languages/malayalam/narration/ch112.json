@@ -4,7 +4,7 @@
   "chapter": 112,
   "title": "Where to Go",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:e03a404e0bf34273",
+  "sourceHash": "fnv1a64:a4ecfa59fb483e58",
   "lessons": [
     {
       "id": "ML-C112-bank",
@@ -401,7 +401,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5bc2657cdbe79df4",
+      "sourceHash": "fnv1a64:d1fe5d8221eeb71c",
       "notice": null,
       "blocks": [
         {
@@ -417,7 +417,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say a bank, the police and a hospital."
+              "text": "From memory alone, say a bank, the police and a hospital."
             }
           ]
         },

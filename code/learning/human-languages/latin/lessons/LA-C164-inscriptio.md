@@ -42,9 +42,10 @@ reviews_of: [LA-C164-titulus]
 
 **īnscrīptiō, īnscrīptiōnis** — "an inscription".
 
-[YOU READ: the stone — **SPQR** is **Senātus Populusque Rōmānus**, "the Senate and People of Rome"]
+[YOU READ: the stone]
 
-It is **in** + **scrībō**: writing cut into something.
+The stone says **SPQR**, which is **Senātus Populusque Rōmānus**, "the Senate
+and People of Rome". It is **in** + **scrībō**: writing cut into something.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

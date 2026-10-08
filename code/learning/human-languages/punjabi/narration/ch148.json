@@ -4,7 +4,7 @@
   "chapter": 148,
   "title": "To hide, To fall, To teach, To lift, To jump",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c5d1da046731be13",
+  "sourceHash": "fnv1a64:90df72e28cba5d30",
   "lessons": [
     {
       "id": "PA-C148-lukna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d4a702706d319ef",
+      "sourceHash": "fnv1a64:a60c052864100403",
       "notice": null,
       "blocks": [
         {
@@ -44,13 +44,17 @@
               "source": "[PAUSE 1s]"
             },
             {
+              "kind": "speech",
+              "text": "The form line says ਕੰਮ: ਨੌਕਰੀ."
+            },
+            {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the form line once — ਕੰਮ: ਨੌਕਰੀ",
+              "instruction": "the form line once",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the form line once — **ਕੰਮ: ਨੌਕਰੀ**]"
+              "source": "[YOU READ: the form line once]"
             },
             {
               "kind": "speech",

@@ -38,7 +38,7 @@ in the same line.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C453-LIMPIEZA-01, ES-LEX-C453-LIMPIEZA-03, ES-LEX-C453-LIMPIEZA-02] -->
 
-A sheet taped inside the entrance hall. [YOU READ: it, then answer]
+A sheet taped inside the entrance hall. [YOU READ: the sheet, then answer]
 
 > **TURNOS DE LIMPIEZA — ESCALERA B**
 

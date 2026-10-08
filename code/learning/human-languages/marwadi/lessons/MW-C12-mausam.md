@@ -50,6 +50,7 @@ reviews_of: [MW-C12-hear-mausam, MW-W12-au-matra, MW-C11-hawa, MW-C11-baadal, MW
 <!-- hl-writing-stage: delayed-copy -->
 
 [YOU COVER: the model after one look, then wait five seconds]
+
 [YOU WRITE: **मौसम** — check the first-syllable vowel mark]
 
 ## Wrap-up Recall

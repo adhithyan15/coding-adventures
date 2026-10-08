@@ -40,8 +40,9 @@ reviews_of: [ZH-R15-school-map-1, ZH-R15-school-map-2, ZH-C15-shangxue]
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-ZHONGXUE-01, ZH-ORTHO-ZHONGXUESHENG-01, ZH-ORTHO-TONGXUE-01, ZH-ORTHO-SHANGXUE-01, ZH-LEX-ZHONG-01, ZH-LEX-ZHONGXUE-01, ZH-LEX-ZHONGXUESHENG-01, ZH-LEX-TONGXUE-01, ZH-LEX-SHANGXUE-01, ZH-SCRIPT-ZHONG-01, ZH-SCRIPT-TONG-01, ZH-SCRIPT-SHANG, ZH-SCRIPT-XUE-01, ZH-SCRIPT-SHENG-01] -->
 
-Take four meanings in a shuffled order: **middle school**, **middle-school
-student**, **classmate**, **go to school**. Say each. [YOU READ: each]
+Hear four meanings in mixed order: **middle school**, **middle-school student**,
+**classmate**, **go to school**. Say each. [YOU READ: each Mandarin form]
+
 [YOU WRITE: each one]
 
 Sort them as place, person, relationship, or action.

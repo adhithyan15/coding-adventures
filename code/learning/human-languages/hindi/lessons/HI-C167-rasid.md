@@ -43,9 +43,11 @@ reviews_of: [HI-C167-manzil]
 
 **रसीद** — *rasīd* — "a receipt".
 
-[YOU READ: the receipt — **रसीद: किराया पाँच सौ रुपये, तारीख़ पाँच।** (*rasīd: kirāyā pā̃c sau rupaye, tārīkh pā̃c.*)]
+[YOU READ: the receipt]
 
-Five hundred rupees of rent, paid on the fifth: keep it.
+The receipt says **रसीद: किराया पाँच सौ रुपये, तारीख़ पाँच।** (*rasīd: kirāyā
+pā̃c sau rupaye, tārīkh pā̃c.*) Five hundred rupees of rent, paid on the fifth:
+keep it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

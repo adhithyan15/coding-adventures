@@ -54,6 +54,7 @@ than as the only one anybody uses.
 <!-- hl-writing-stage: delayed-copy -->
 
 [YOU COVER: the model after one look, then wait five seconds]
+
 [YOU WRITE: **सबजी** — check that **ब** keeps its own short vowel and carries no vowel-killer]
 
 ## Wrap-up Recall

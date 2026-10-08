@@ -51,6 +51,7 @@ Three units, all of them met before: **द**, the long **ा**, and **ल**.
 <!-- hl-writing-stage: delayed-copy -->
 
 [YOU COVER: the model after one look, then wait five seconds]
+
 [YOU WRITE: **दाल** — check that the **ा** sits after **द** and not after **ल**]
 
 ## Wrap-up Recall

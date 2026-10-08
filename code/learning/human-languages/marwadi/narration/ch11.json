@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Grandparents and Family: Two New Signs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:611553642c4ea4c9",
+  "sourceHash": "fnv1a64:a03b2698e35c5415",
   "lessons": [
     {
       "id": "MW-C08-hear-dada",
@@ -871,7 +871,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dea4bcd9ab712d4c",
+      "sourceHash": "fnv1a64:77c2cd07650da61e",
       "notice": null,
       "blocks": [
         {
@@ -912,10 +912,6 @@
             {
               "kind": "speech",
               "text": "Speak: say the word from one relation cue."
-            },
-            {
-              "kind": "speech",
-              "text": "Reading:"
             },
             {
               "kind": "prompt",
@@ -988,7 +984,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7245c24a68dcc29e",
+      "sourceHash": "fnv1a64:6a8e78c5ce00a706",
       "notice": null,
       "blocks": [
         {
@@ -1107,7 +1103,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21e04eeedae9b339",
+      "sourceHash": "fnv1a64:2cf7c961f3284193",
       "notice": null,
       "blocks": [
         {
@@ -1133,11 +1129,11 @@
             {
               "kind": "prompt",
               "action": "COVER",
-              "instruction": "it before the scored pass",
+              "instruction": "the line before the scored pass",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU COVER: it before the scored pass]"
+              "source": "[YOU COVER: the line before the scored pass]"
             }
           ]
         },
@@ -1168,10 +1164,6 @@
             {
               "kind": "speech",
               "text": "Speak: produce four different labels from relation cues."
-            },
-            {
-              "kind": "speech",
-              "text": "Reading:"
             },
             {
               "kind": "prompt",

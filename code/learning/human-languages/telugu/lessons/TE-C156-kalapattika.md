@@ -43,9 +43,10 @@ reviews_of: [TE-C155-edurucudu]
 
 **కాలపట్టిక** — *kālapaṭṭika* — "a timetable".
 
-[YOU READ: the board — **బస్సు: ఉదయం ఎనిమిది గంటలు** — *bassu: udayaṁ enimidi gaṇṭalu* — "Bus: 8 a.m."]
+[YOU READ: the board]
 
-The bus leaves at eight, so be there before eight.
+The board says **బస్సు: ఉదయం ఎనిమిది గంటలు** — *bassu: udayaṁ enimidi gaṇṭalu* —
+"Bus: 8 a.m." The bus leaves at eight, so be there before eight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

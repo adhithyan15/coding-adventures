@@ -4,7 +4,7 @@
   "chapter": 72,
   "title": "The Thing Said",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:fbccfb2b719a2bcd",
+  "sourceHash": "fnv1a64:85c7afdacd174ab6",
   "lessons": [
     {
       "id": "ML-C72-ennu",
@@ -331,7 +331,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45f29437c9e60517",
+      "sourceHash": "fnv1a64:9933e9a31dab7b71",
       "notice": null,
       "blocks": [
         {
@@ -347,7 +347,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say I say in Malayalam, and say which three places in this book used that verb before anybody taught it."
+              "text": "From memory alone, say I say in Malayalam, and say which three places in this book used that verb before anybody taught it."
             }
           ]
         },

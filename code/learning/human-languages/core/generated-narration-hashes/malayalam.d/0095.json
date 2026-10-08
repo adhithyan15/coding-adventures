@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 95,
-  "sourceHash": "fnv1a64:07ff1f06e4501c52",
+  "sourceHash": "fnv1a64:8bcce799dee96735",
   "lessonIds": [
     "ML-C95-thurakkuka",
     "ML-C95-adaykkuka",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "malayalam/narration/ch95.txt",
   "json": "malayalam/narration/ch95.json",
-  "textHash": "fnv1a64:ea7f20aa11cf8721",
-  "jsonHash": "fnv1a64:2b0e5e0376f02f6f",
+  "textHash": "fnv1a64:b285f0790637b4a5",
+  "jsonHash": "fnv1a64:e2714ed384f3760b",
   "findings": []
 }

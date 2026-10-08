@@ -51,6 +51,7 @@ Two known signs, two morae.
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KAMI-HAIR] -->
 
 Hear, picture the part, and say **かみ**. [YOU READ: **かみ**]
+
 [YOU WRITE: **かみ** from memory]
 
 ## Wrap-up Recall

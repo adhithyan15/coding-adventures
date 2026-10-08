@@ -53,7 +53,7 @@ other words, in the same way that the letters inside them join one another.
 
 [PAUSE 4s] [YOU READ: all six lines once without stopping]
 
-[PAUSE 3s] [YOU READ: them again]
+[PAUSE 3s] [YOU READ: the six lines again]
 
 The question mark tells you where a voice asks; the full stop tells you where it
 answers. Arabic puts its question mark the other way round — **؟** — because the

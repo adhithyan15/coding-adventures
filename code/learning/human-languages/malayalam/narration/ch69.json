@@ -4,7 +4,7 @@
   "chapter": 69,
   "title": "Reading — Words, Lines, and a First Passage",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:974c7e3194184b8d",
+  "sourceHash": "fnv1a64:8fc526403767ff21",
   "lessons": [
     {
       "id": "ML-C69-words",
@@ -441,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:889095cbdb694d0a",
+      "sourceHash": "fnv1a64:b269d24ae82bc0f2",
       "notice": null,
       "blocks": [
         {
@@ -504,11 +504,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it again, and watch ആണ് and ഉണ്ട് take turns",
+              "instruction": "the passage again, and watch ആണ് and ഉണ്ട് take turns",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it again, and watch **ആണ്** and **ഉണ്ട്** take turns]"
+              "source": "[YOU READ: the passage again, and watch **ആണ്** and **ഉണ്ട്** take turns]"
             }
           ]
         },

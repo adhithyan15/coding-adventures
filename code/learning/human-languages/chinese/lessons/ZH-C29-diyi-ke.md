@@ -59,7 +59,7 @@ reviews_of: [ZH-C29-characters, ZH-C29-words, ZH-C26-ne, ZH-C26-dui]
 [YOU READ: the passage through once without stopping; do not translate as you go]
 
 [PAUSE 3s]
-[YOU READ: it again, and this time notice that the passage turns at line six]
+[YOU READ: the passage again, and this time notice that the passage turns at line six]
 
 The first five are about the writer. The last five are addressed to you.
 

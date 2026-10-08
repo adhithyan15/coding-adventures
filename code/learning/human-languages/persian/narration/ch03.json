@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Ask and Answer Names",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:bb2c72a51e1a4b49",
+  "sourceHash": "fnv1a64:523130c19f60daa2",
   "lessons": [
     {
       "id": "FA-C03-shoma-to",
@@ -262,7 +262,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e31c1386ee97767a",
+      "sourceHash": "fnv1a64:830259c795d20186",
       "notice": null,
       "blocks": [
         {
@@ -292,13 +292,17 @@
               "text": "چیست — chist — what is?"
             },
             {
+              "kind": "speech",
+              "text": "From the right: چ ch, ی long i, س s, ت t."
+            },
+            {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "from the right — چ ch, ی long i, س s, ت t",
+              "instruction": "the word from the right",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: from the right — **چ** *ch*, **ی** long *i*, **س** *s*, **ت** *t*]"
+              "source": "[YOU READ: the word from the right]"
             },
             {
               "kind": "speech",

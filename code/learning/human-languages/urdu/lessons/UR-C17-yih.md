@@ -38,7 +38,7 @@ reviews_of: [UR-C16-practice, UR-C10-kaan, UR-C10-naak]
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-SEVEN-READ-01] -->
 
 [PAUSE 2s]
-[YOU READ: these off the page, naming the letters from the right before you say each word]
+[YOU READ: the two words off the page, naming the letters from the right before you say each word]
 
 > کان
 >

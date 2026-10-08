@@ -49,6 +49,7 @@ reviews_of: [MW-C16-hear-thela, MW-C16-gaadi]
 <!-- hl-writing-stage: delayed-copy -->
 
 [YOU COVER: the model after one look, then wait five seconds]
+
 [YOU WRITE: **ठेला**]
 
 ## Wrap-up Recall

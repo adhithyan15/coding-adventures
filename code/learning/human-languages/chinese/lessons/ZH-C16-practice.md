@@ -43,7 +43,7 @@ Keep the four checks separate. Repair one missed skill, not the whole set.
 
 1. **Listening:** hear the three words in mixed order and choose each meaning.
 2. **Speaking:** produce all three from their English meanings, with tones audible.
-3. **Reading:** [YOU READ: **字, 汉语, 汉字** cold, then give each meaning]
+3. [YOU READ: **字, 汉语, 汉字** cold, then give each meaning]
 4. **Writing:** hear **Chinese character** and **Chinese language**.
    [YOU WRITE: both without a model]
 

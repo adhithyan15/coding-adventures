@@ -42,9 +42,10 @@ reviews_of: [GE-C143-termin]
 
 **die Öffnungszeiten** — "opening hours".
 
-[YOU READ: the door — **Montag bis Freitag, neun bis achtzehn Uhr.**]
+[YOU READ: the door]
 
-Open on weekdays from nine to six: not on Saturday.
+The door says **Montag bis Freitag, neun bis achtzehn Uhr.** Open on weekdays
+from nine to six: not on Saturday.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

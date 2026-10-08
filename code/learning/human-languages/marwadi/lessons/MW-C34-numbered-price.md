@@ -48,7 +48,7 @@ Three turns, scored in four skills.
    with different figures. [YOU WRITE: each amount]
 2. **Speaking.** Ask the price, hear a figure, and answer with a counter-offer
    that names a lower one.
-3. **Reading.** [YOU READ: six printed exchanges, then say, for each, what the seller asked and what the buyer offered]
+3. [YOU READ: six printed exchanges, then say, for each, what the seller asked and what the buyer offered]
 4. **Writing.** [YOU WRITE: a whole three-turn exchange from dictation, with no model]
 
 Pass each separately.

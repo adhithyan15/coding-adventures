@@ -56,9 +56,9 @@ is new.
 > फिर मैं घर आता हूँ। रात में मैं किताब पढ़ता हूँ।
 
 [PAUSE 3s]
-[YOU READ: the passage once without stopping; let the sentences arrive without translation]
+[YOU READ: the passage once, without stopping or translating]
 
-[PAUSE 3s] [YOU READ: it again, and notice how little work it took]
+[PAUSE 3s] [YOU READ: the passage again, and notice how little work it took]
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C39-DOST-01, HI-CONCEPT-C37-KITAAB-01] -->

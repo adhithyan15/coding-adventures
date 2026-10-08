@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 438,
-  "sourceHash": "fnv1a64:7319624dd5bafd53",
+  "sourceHash": "fnv1a64:22f191b008c5ec6d",
   "lessonIds": [
     "ES-C438-polideportivo",
     "ES-C438-natacion",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "spanish/narration/ch438.txt",
   "json": "spanish/narration/ch438.json",
-  "textHash": "fnv1a64:0be05515011d6148",
-  "jsonHash": "fnv1a64:4238390d9b5a132a",
+  "textHash": "fnv1a64:ede4312b54a32992",
+  "jsonHash": "fnv1a64:0955ae2f5625bbf9",
   "findings": []
 }

@@ -54,7 +54,7 @@ reviews_of: [GU-C44-words, GU-C02-maarun-naam-chhe, GU-C03-tame-kem-chho]
 [PAUSE 3s] [YOU READ: the six lines down once, without stopping]
 
 [PAUSE 3s]
-[YOU READ: them again, and this time notice that nobody said them first]
+[YOU READ: the six lines again, and this time notice that nobody said them first]
 
 Until now every one of these arrived in your ear before it arrived on the page.
 

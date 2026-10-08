@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Counting To Five, And The One New Sign",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b9328b85911161d3",
+  "sourceHash": "fnv1a64:c387fbb23e37f471",
   "lessons": [
     {
       "id": "MW-W32-e",
@@ -1196,7 +1196,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:16659f7316df0fb1",
+      "sourceHash": "fnv1a64:46f77bbe677e0ee9",
       "notice": null,
       "blocks": [
         {
@@ -1250,10 +1250,6 @@
             {
               "kind": "speech",
               "text": "Speaking. Count one to five, then five to one, without a model."
-            },
-            {
-              "kind": "speech",
-              "text": "Reading."
             },
             {
               "kind": "prompt",

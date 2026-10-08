@@ -4,7 +4,7 @@
   "chapter": 76,
   "title": "Reading — Words, Lines, and a First Passage",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:a01059b9b42e27be",
+  "sourceHash": "fnv1a64:5104d267b325e8dd",
   "lessons": [
     {
       "id": "KA-C76-words",
@@ -215,7 +215,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d4d38b62e6ee093f",
+      "sourceHash": "fnv1a64:37111fb19c95fee7",
       "notice": null,
       "blocks": [
         {
@@ -278,11 +278,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "them again, and count how many different verbs there are",
+              "instruction": "the six lines again, and count how many different verbs there are",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: them again, and count how many different verbs there are]"
+              "source": "[YOU READ: the six lines again, and count how many different verbs there are]"
             }
           ]
         },
@@ -411,7 +411,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c669891462f4cc9f",
+      "sourceHash": "fnv1a64:5cbf405e4e4d4f57",
       "notice": null,
       "blocks": [
         {
@@ -474,11 +474,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it again, and watch ಇಲ್ಲಿ and ಅಲ್ಲಿ take turns",
+              "instruction": "the passage again, and watch ಇಲ್ಲಿ and ಅಲ್ಲಿ take turns",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it again, and watch **ಇಲ್ಲಿ** and **ಅಲ್ಲಿ** take turns]"
+              "source": "[YOU READ: the passage again, and watch **ಇಲ್ಲಿ** and **ಅಲ್ಲಿ** take turns]"
             }
           ]
         },

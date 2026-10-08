@@ -42,9 +42,10 @@ reviews_of: [IT-C139-lorario]
 
 **l'avviso** — "a notice".
 
-[YOU READ: the notice — **Oggi il negozio è chiuso.**]
+[YOU READ: the notice]
 
-The shop is closed today, so come back another day.
+The notice says **Oggi il negozio è chiuso.** The shop is closed today, so come
+back another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

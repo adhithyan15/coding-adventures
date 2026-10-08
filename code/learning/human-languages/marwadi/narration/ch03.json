@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Haan Sa: A Respectful Yes, Sign by Sign",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:af3a6bc71a60d72f",
+  "sourceHash": "fnv1a64:ff9c742acb3afcca",
   "lessons": [
     {
       "id": "MW-W03-ha",
@@ -371,7 +371,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec02332d64405625",
+      "sourceHash": "fnv1a64:408392a92adaba8b",
       "notice": null,
       "blocks": [
         {
@@ -423,10 +423,6 @@
             {
               "kind": "speech",
               "text": "Speak: answer yes respectfully without reading."
-            },
-            {
-              "kind": "speech",
-              "text": "Reading:"
             },
             {
               "kind": "prompt",

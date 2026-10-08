@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 19,
-  "sourceHash": "fnv1a64:a9d1caaa08ee8735",
+  "sourceHash": "fnv1a64:8cce2a6b20a0bb39",
   "lessonIds": [
     "ZH-C19-hear-ma",
     "ZH-W19-ma-observe",
@@ -25,7 +25,7 @@
   "drivablePrefix": 1,
   "text": "chinese/narration/ch19.txt",
   "json": "chinese/narration/ch19.json",
-  "textHash": "fnv1a64:0768c2ac56d2d298",
-  "jsonHash": "fnv1a64:05ad0710f186a64a",
+  "textHash": "fnv1a64:511e64265be97294",
+  "jsonHash": "fnv1a64:81caadb947da8f8b",
   "findings": []
 }

@@ -43,9 +43,10 @@ reviews_of: [FA-C139-jadval-e-zamani]
 
 **تابلو** — *tâblo* — "a sign, a board".
 
-[YOU READ: the sign — **پنجشنبه بسته است** — *panjshanbe baste ast* — "Closed on Thursday."]
+[YOU READ: the sign]
 
-Come on another day.
+The sign says **پنجشنبه بسته است** — *panjshanbe baste ast* — "Closed on
+Thursday." Come on another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

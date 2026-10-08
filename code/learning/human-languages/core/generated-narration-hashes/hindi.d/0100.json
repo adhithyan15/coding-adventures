@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 100,
-  "sourceHash": "fnv1a64:277af0442434869b",
+  "sourceHash": "fnv1a64:b4f9672be47504c2",
   "lessonIds": [
     "HI-C92-thoda",
     "HI-C92-achchha-buraa",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "hindi/narration/ch100.txt",
   "json": "hindi/narration/ch100.json",
-  "textHash": "fnv1a64:9c516f4a556c3513",
-  "jsonHash": "fnv1a64:d2688afa30901242",
+  "textHash": "fnv1a64:36d25c1934e440ce",
+  "jsonHash": "fnv1a64:44ad47d6b22bd181",
   "findings": []
 }

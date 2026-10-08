@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Wife and Child: One New Sign",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:25d332a040148220",
+  "sourceHash": "fnv1a64:64159c1884230088",
   "lessons": [
     {
       "id": "MW-C09-hear-patni",
@@ -503,7 +503,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78ad3142567cffda",
+      "sourceHash": "fnv1a64:ff14a0475c2da79e",
       "notice": null,
       "blocks": [
         {
@@ -614,7 +614,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3876dce4116f9625",
+      "sourceHash": "fnv1a64:f2f3829986022679",
       "notice": null,
       "blocks": [
         {
@@ -646,10 +646,6 @@
             {
               "kind": "speech",
               "text": "Speak: produce six different labels from relationship cues."
-            },
-            {
-              "kind": "speech",
-              "text": "Reading:"
             },
             {
               "kind": "prompt",

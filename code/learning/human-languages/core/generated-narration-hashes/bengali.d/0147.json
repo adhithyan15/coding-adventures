@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 147,
-  "sourceHash": "fnv1a64:abedf05dd0ca338e",
+  "sourceHash": "fnv1a64:26035a0019cb59e9",
   "lessonIds": [
     "BN-C147-taimtebil",
     "BN-C147-notish",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "bengali/narration/ch147.txt",
   "json": "bengali/narration/ch147.json",
-  "textHash": "fnv1a64:028231e9311b7e51",
-  "jsonHash": "fnv1a64:f7b8db7921ed5fee",
+  "textHash": "fnv1a64:cc2eaa42f9a37528",
+  "jsonHash": "fnv1a64:8a7c2203a2359618",
   "findings": []
 }

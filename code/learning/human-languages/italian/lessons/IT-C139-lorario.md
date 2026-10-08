@@ -42,9 +42,10 @@ reviews_of: [IT-C138-organizzare]
 
 **l'orario** — "opening hours, a timetable".
 
-[YOU READ: the door — **Orario: lunedì – venerdì, 9 – 18.**]
+[YOU READ: the door]
 
-Open on weekdays from nine to six: not on **sabato**.
+The door says **Orario: lunedì – venerdì, 9 – 18.** Open on weekdays from nine
+to six: not on **sabato**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

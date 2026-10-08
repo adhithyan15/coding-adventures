@@ -42,3 +42,22 @@ lessons. Every edited lesson stays `drivable: true` (only its
   siblings (the idiom), "**Read to the end of it.**" (advice for a long verb
   met on a page), "Keep your pencil down". Nine `ML-R` recall lessons that are
   not drivable keep "Close the lessons before this one".
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - "Leave the lessons before this one closed. Say …" (the form described above)
+    → "From memory alone, say …" in 31 of the 34 ML-R recall lessons; ML-R70,
+    ML-R71 and ML-R75, whose next sentence already says "with nothing in front
+    of you" or "without looking", drop the sentence.
+  - The notice lessons (ML-C180-ariyippu, ML-C180-parasyam,
+    ML-C180-samayappattika) keep the notice in narrated prose and defer only the
+    look: "[YOU READ: the notice]" then "The notice says **…** — …". The first
+    pass had put the whole notice inside the deferred cue, so a listener heard
+    the comment on a notice without the notice; that superseded form is the one
+    described above.
+  - ML-C68-seventh "[YOU READ: it — do not copy it yet]" → "[YOU READ: the
+    letter]" and "Do not copy it yet." in prose; ML-C32-pokuka "[YOU FIND: it
+    written — **ഞാൻ പോകും**]" → "Written, it is **ഞാൻ പോകും**. [YOU FIND: **ഞാൻ
+    പോകും**]"; ML-C69-adyathe-vaayana "[YOU READ: the passage again, …]".
+  - Correction: ML-C102-ethra-manikku's "read it **at**" → "it means **at**"
+    (listed above) is a same-length rewording, not a one-word trim; the first
+    pass's commit message said it had been trimmed by a word to fit the duration
+    budget, which was wrong.

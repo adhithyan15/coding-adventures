@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Take the Money: Closing the Bargain",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6e413640fd53c3cc",
+  "sourceHash": "fnv1a64:f4947680482bd0de",
   "lessons": [
     {
       "id": "MW-C24-hear-lo",
@@ -1127,7 +1127,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:267fa2c37920eba7",
+      "sourceHash": "fnv1a64:dd6832fa6bbb59eb",
       "notice": null,
       "blocks": [
         {
@@ -1163,16 +1163,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear each word out of its line and give its meaning."
+              "text": "Hear each word out of its line and give its meaning. The three cards say दो (do), लो (lo), आखरी (ākhrī)."
             },
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "three cards — दो (do), लो (lo), आखरी (ākhrī)",
+              "instruction": "the three cards",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: three cards — **दो**, **लो**, **आखरी**]"
+              "source": "[YOU READ: the three cards]"
             },
             {
               "kind": "prompt",

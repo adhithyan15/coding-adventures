@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Saying and Seeing",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:ac8e8bbdbe8f9043",
+  "sourceHash": "fnv1a64:1d7b76f0c8941742",
   "lessons": [
     {
       "id": "AR-C29-qala",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:182855c8350c36ca",
+      "sourceHash": "fnv1a64:a3142c5fdfba9ff4",
       "notice": null,
       "blocks": [
         {
@@ -57,13 +57,17 @@
               "text": "ا (alif) and ل (lām) are yours already."
             },
             {
+              "kind": "speech",
+              "text": "قال (qāla) runs right to left: qāf, long ā, lām."
+            },
+            {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "قال (qāla) right to left — qāf, long ā, lām",
+              "instruction": "قال (qāla) right to left",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: **قال** right to left — *qāf*, long *ā*, *lām*]"
+              "source": "[YOU READ: **قال** right to left]"
             },
             {
               "kind": "speech",

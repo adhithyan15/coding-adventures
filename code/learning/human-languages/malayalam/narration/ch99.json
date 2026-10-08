@@ -4,7 +4,7 @@
   "chapter": 99,
   "title": "Songs and Stories",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2b072bd3e83c8d47",
+  "sourceHash": "fnv1a64:2fd6b3f285080fd7",
   "lessons": [
     {
       "id": "ML-C99-paattu",
@@ -564,7 +564,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ddb08b06b15cea5",
+      "sourceHash": "fnv1a64:bc65c25b1bfb0b95",
       "notice": null,
       "blocks": [
         {
@@ -580,7 +580,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say a song, to sing, dance, a story."
+              "text": "From memory alone, say a song, to sing, dance, a story."
             }
           ]
         },

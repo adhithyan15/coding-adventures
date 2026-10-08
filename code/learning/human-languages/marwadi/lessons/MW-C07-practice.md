@@ -57,7 +57,7 @@ source-attested choices it taught.
 
 1. **Listen:** hear one line and identify common farewell or see-you-later.
 2. **Speak:** answer a later-meeting cue with *pāchhe milsū*.
-3. **Reading:** [YOU READ: both printed lines, then match them to their meanings]
+3. [YOU READ: both printed lines, then match them to their meanings]
 4. [YOU WRITE: the line without a model, ten seconds after hearing *pāchhe milsū*]
 
 Score all four separately. A spoken line does not replace missing writing.

@@ -35,6 +35,19 @@ lessons. Every edited lesson stays `drivable: true` (only its
 - Left alone: "Read the German for its meaning rather than its parts"
   (interpretation), "Look what happens when you line the languages up" (the
   idiom), "so do not read them off the page" (a request not to look).
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - The notice lessons (GE-C143-anzeige, GE-C143-oeffnungszeiten,
+    GE-C143-quittung, GE-C143-termin) keep the notice in narrated prose and
+    defer only the look: "[YOU READ: the advert]" then "The advert says **…** —
+    …". The first pass had put the whole notice inside the deferred cue, so a
+    listener heard the comment on a notice without the notice; that superseded
+    form is the one described above.
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (GE-C52-erste-lesung,
+    GE-C52-saetze): "[YOU READ: the passage again, and find the one line where
+    the verb is last]", "[YOU READ: the six lines again, …]".
+  - GE-C09-zahlmonate "Go across each row and hear that nothing rhymes." → "Say
+    each row through and hear that nothing rhymes."
 
 ## Fixed — a drivable lesson stops asking a driver to hand something over
 

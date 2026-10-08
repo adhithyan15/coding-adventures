@@ -49,6 +49,7 @@ reviews_of: [MW-C17-hear-ghodo, MW-C16-gaadi]
 <!-- hl-writing-stage: delayed-copy -->
 
 [YOU COVER: the model after one look, then wait five seconds]
+
 [YOU WRITE: **घोड़ो** — check both long-o marks and the dot below **ड**]
 
 ## Wrap-up Recall

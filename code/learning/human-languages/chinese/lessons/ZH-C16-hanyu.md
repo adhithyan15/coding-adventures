@@ -39,7 +39,7 @@ reviews_of: [ZH-C16-hear-hanyu, ZH-W16-yu-delayed, ZH-C16-hanzi]
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ZH-ORTHO-HANYU-01]; assesses=[ZH-SCRIPT-HAN-01, ZH-SCRIPT-YU-01] -->
 
-[YOU READ: this first, before the explanation]
+[YOU READ: **汉语** first, before the explanation]
 
 > **汉语**
 

@@ -33,8 +33,8 @@ reviews_of: [ML-W108-full-stop, ML-W108-comma, ML-W108-question-mark, ML-W108-qu
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-PUNCT-FULL-STOP-01, ML-PUNCT-COMMA-01, ML-PUNCT-QUESTION-01] -->
 
-[PAUSE 3s] Leave the lessons before this one closed. Name the mark that ends a
-sentence, the one that ends a question, and the one that separates.
+[PAUSE 3s] From memory alone, name the mark that ends a sentence, the one that
+ends a question, and the one that separates.
 
 ## Grammar Lens: what was already doing the job
 <!-- hl-knowledge: introduces=[]; assesses=[ML-PUNCT-COMMA-01, ML-PUNCT-QUESTION-01, ML-PUNCT-QUOTATION-01, ML-GRAMMAR-C72-ENNU-01] -->

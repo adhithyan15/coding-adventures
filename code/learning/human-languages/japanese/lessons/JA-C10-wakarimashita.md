@@ -35,6 +35,7 @@ reviews_of: [JA-C09-wakarimasen, JA-C10-mou-sukoshi, JA-W09-mi, JA-W10-shi]
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-WAKARIMASEN, JA-LEX-MOU-SUKOSHI, JA-SCRIPT-MI-01, JA-SCRIPT-SHI-01] -->
 
 [PAUSE 15s] Say “I do not understand.” [YOU READ: **もうすこし**]
+
 [YOU WRITE: **み** and **し**]
 
 ## You'll want to know

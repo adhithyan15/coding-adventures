@@ -32,8 +32,8 @@ reviews_of: [ES-C456-ensalada, ES-C456-cargo, ES-C456-aceptar, ES-C456-coste, ES
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C456-CUENTA-01, ES-LEX-C456-CUENTA-02, ES-LEX-C456-CUENTA-03, ES-LEX-C456-CUENTA-04, ES-LEX-C456-CUENTA-05] -->
 
-[PAUSE 3s] Leave the lessons before this one closed. Say all five: *the salad*,
-*the charge*, *to accept*, *the cost*, *the agency*.
+[PAUSE 3s] From memory alone, say all five: *the salad*, *the charge*, *to
+accept*, *the cost*, *the agency*.
 
 ## Grammar Lens: three words for money on a page
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C456-CUENTA-02, ES-LEX-C456-CUENTA-04] -->

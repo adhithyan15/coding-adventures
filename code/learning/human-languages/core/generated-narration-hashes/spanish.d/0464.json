@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 464,
-  "sourceHash": "fnv1a64:0cad6eec7d53c4ee",
+  "sourceHash": "fnv1a64:f7792f218781e9c7",
   "lessonIds": [
     "ES-C464-recordar",
     "ES-C464-dentista",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch464.txt",
   "json": "spanish/narration/ch464.json",
-  "textHash": "fnv1a64:167cd8e8f0eba2b8",
-  "jsonHash": "fnv1a64:9dd1a2331347c3f2",
+  "textHash": "fnv1a64:e2a8ef6870fb3050",
+  "jsonHash": "fnv1a64:1511b4129dcf4192",
   "findings": []
 }

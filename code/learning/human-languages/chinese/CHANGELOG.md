@@ -58,6 +58,35 @@ lessons. Every edited lesson stays `drivable: true` (only its
 - Left alone: "Keep the character covered" / "Keep the page covered" (a state,
   not a step), "Look at what is NOT there" (the idiom), the glosses *read a
   book*, and ZH-C27-practice (not drivable).
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - A spoken premise, gloss or answer that the first pass had moved inside a
+    deferred cue is said in prose again, and the cue keeps only the look
+    (ZH-C19-nihaoma): "They are 你, 好, and the new 吗 on the end.".
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (ZH-C06, ZH-C12-erzi,
+    ZH-C12-jia, ZH-C12-ren, ZH-C13-xue, ZH-C16-hanyu, ZH-C17-zhongguo,
+    ZH-C17-zhongwen, ZH-C22-zhongguoren, ZH-C29-diyi-ke, ZH-C29-words): "[YOU
+    READ: **儿子** once without pinyin]", "[YOU READ: **汉语** first, before the
+    explanation]", "[YOU COVER: **人**, then wait five seconds]" (was "Cover: it,
+    and wait five seconds").
+  - The spaced reviews ZH-R14..R19 read "[YOU READ: each Mandarin form]" (R14,
+    R15) or "[YOU READ: each Mandarin form without pinyin]" (R16-1, R17, R18,
+    R19) where the first pass left "[YOU READ: each]" and "[YOU READ: its
+    unpointed card]", whose *its* had no referent for a listener.
+    ZH-R15-school-map-3 "Take four meanings in a shuffled order: …" → "Hear four
+    meanings in mixed order: … Say each. [YOU READ: each Mandarin form]". ZH-R19
+    "[YOU READ: its unpointed card] Decide which …" gives the decision its own
+    paragraph.
+  - ZH-R18-book-reading-r1 "Check whether 看 is present before deciding noun or
+    activity." and ZH-R18-looking-three-r1 "Check the neighbour of 看 …" become
+    `[YOU CHECK: …]` cues: both check the characters the learner just wrote.
+  - Four-skill items drop the "**Reading:**" label in front of a READ cue, which
+    the book printed as "Reading: *Read it:* …" (ZH-C12..C16-practice,
+    ZH-C19-practice).
+  - A new cue followed by prose or by another cue in the same paragraph now ends
+    its paragraph, so the book no longer runs "*Cover:* the page The next
+    question …" together (ZH-C12-nu, ZH-C12-ren, ZH-C18-shu, ZH-C19-ma,
+    ZH-R12..R19, 17 lessons).
 
 ## Fixed — drivable lessons stop asking a driver to gesture
 

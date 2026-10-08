@@ -32,6 +32,20 @@ lessons. Every edited lesson stays `drivable: true` (only its
   vowel", "Read it as a sum", "Read that as Latin", "Read them as a **shape**"
   (interpretation — how to take a form — which a listener can do), and "Look at
   what is holding it together" (the idiom).
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - The notice lessons (FR-C142-la-facture, FR-C142-lannonce, FR-C142-lavis,
+    FR-C142-lhoraire) keep the notice in narrated prose and defer only the look:
+    "[YOU READ: the bill]" then "The bill says **…** — …". The first pass had
+    put the whole notice inside the deferred cue, so a listener heard the
+    comment on a notice without the notice; that superseded form is the one
+    described above.
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (FR-C45-details,
+    FR-C45-premiere-lecture): "[YOU READ: the six lines again, and notice the
+    colon]", "[YOU READ: the passage again, …]".
+  - A new cue followed by prose or by another cue in the same paragraph now ends
+    its paragraph, so the book no longer runs "*Cover:* the page The next
+    question …" together (FR-C126-lecon).
 
 ## Fixed — drivable lessons stop telling a driver to write
 

@@ -46,7 +46,8 @@ Recall the earlier four-label payoff before extending the map.
 1. Hear and identify all three labels.
 2. Produce each from a meaning cue.
 3. [YOU READ: **नाना — नानी — पति**]
-4. [YOU COVER: the line] [YOU WRITE: all three]
+4. [YOU COVER: the line]
+5. [YOU WRITE: all three]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-NANA-01, MW-LEX-NANI-01, MW-LEX-PATI-01, MW-PERFORMANCE-FAMILY-TEN-FOUR-SKILL-01] -->

@@ -37,6 +37,7 @@ reviews_of: [MW-C02-aabhaar, MW-C03-haan-saa, MW-C04-hear-paani, MW-W04-pa, MW-W
 
 [PAUSE 20s] Give the older respectful yes in four quick steps: hear it and name
 its meaning; say it. [YOU READ: **हां सा**, then cover it]
+
 [YOU WRITE: the phrase]
 
 Now say the three meanings in English as you hear *ābhār*, *hā(n) sā*, and
@@ -47,7 +48,7 @@ Now say the three meanings in English as you hear *ābhār*, *hā(n) sā*, and
 
 1. **Listen:** hear *pāṇī* and identify water, without text.
 2. **Speak:** imagine a glass of water and say *pāṇī*, without notes.
-3. **Reading:** [YOU READ: **आभार · हां · पाणी**, choose **पाणी**, then give its meaning]
+3. [YOU READ: **आभार · हां · पाणी**, choose **पाणी**, then give its meaning]
 4. [YOU WRITE: **पाणी** with no model, fifteen seconds after hearing *pāṇī*]
 
 Score each line separately. Repeat only the missed line; strong speaking does

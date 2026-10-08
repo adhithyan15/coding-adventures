@@ -41,8 +41,11 @@ order. Then say **read a book**. [YOU WRITE: **中学**]
 <!-- hl-writing-stage: dictation-transcription -->
 
 Hear the three meanings in mixed order. Say each Mandarin answer.
-[YOU READ: its unpointed card] Decide which of the two question patterns it uses
-— the light syllable on the end, or the word denied in the middle.
+[YOU READ: each Mandarin form without pinyin]
+
+Decide which of the two question patterns each one uses — the light syllable on
+the end, or the word denied in the middle.
+
 [YOU WRITE: each one]
 
 ## Wrap-up Recall

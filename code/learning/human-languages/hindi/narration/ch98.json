@@ -4,7 +4,7 @@
   "chapter": 98,
   "title": "A Day, In The Order It Happens",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:e23ff5637f606558",
+  "sourceHash": "fnv1a64:00a9a30a3d52160a",
   "lessons": [
     {
       "id": "HI-C90-se",
@@ -1235,7 +1235,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:94525318837db5dc",
+      "sourceHash": "fnv1a64:54f1d8852306b99c",
       "notice": null,
       "blocks": [
         {
@@ -1271,11 +1271,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it twice — once for meaning, once listening for how the joints do the work",
+              "instruction": "the four sentences twice — once for meaning, once listening for how the joints do the work",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it twice — once for meaning, once listening for how the joints do the work]"
+              "source": "[YOU READ: the four sentences twice — once for meaning, once listening for how the joints do the work]"
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Ram-Ram Sa: A Greeting the Hand Can Make",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6715ef457c4516ab",
+  "sourceHash": "fnv1a64:f913fa69cb1643ec",
   "lessons": [
     {
       "id": "MW-W01-ra",
@@ -752,7 +752,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40e334a9433ed604",
+      "sourceHash": "fnv1a64:aa16190fa04297e4",
       "notice": null,
       "blocks": [
         {
@@ -793,15 +793,15 @@
             {
               "kind": "prompt",
               "action": "COVER",
-              "instruction": "B, then answer A aloud",
+              "instruction": "B",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU COVER: B, then answer A aloud]"
+              "source": "[YOU COVER: B]"
             },
             {
               "kind": "speech",
-              "text": "Switch roles."
+              "text": "Then answer A aloud. Switch roles."
             }
           ]
         },
@@ -817,10 +817,6 @@
             {
               "kind": "speech",
               "text": "Speak: give the greeting without reading."
-            },
-            {
-              "kind": "speech",
-              "text": "Reading:"
             },
             {
               "kind": "prompt",

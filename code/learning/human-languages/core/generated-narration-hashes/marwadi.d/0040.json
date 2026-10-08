@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 40,
-  "sourceHash": "fnv1a64:e662535a74b198c4",
+  "sourceHash": "fnv1a64:0021e5dc0b4fc4f1",
   "lessonIds": [
     "MW-C40-signs",
     "MW-C40-notices",
@@ -11,7 +11,7 @@
   "drivablePrefix": 0,
   "text": "marwadi/narration/ch40.txt",
   "json": "marwadi/narration/ch40.json",
-  "textHash": "fnv1a64:13f3f6ba96fa240e",
-  "jsonHash": "fnv1a64:21691875306157cd",
+  "textHash": "fnv1a64:20539e62faa8f02d",
+  "jsonHash": "fnv1a64:2b432eeeafdbca27",
   "findings": []
 }

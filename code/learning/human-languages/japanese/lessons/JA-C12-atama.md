@@ -51,6 +51,7 @@ Every sign is earned. Keep three even morae.
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ATAMA] -->
 
 Hear, picture the part, and say **あたま**. [YOU READ: **あたま**]
+
 [YOU WRITE: **あたま**, with the word hidden]
 
 ## Wrap-up Recall

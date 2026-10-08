@@ -4,7 +4,7 @@
   "chapter": 97,
   "title": "Synthesis --- The Thing and the Person",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4b85e7eba8a5e84e",
+  "sourceHash": "fnv1a64:9cf71a2d0a18e4d0",
   "lessons": [
     {
       "id": "ES-C46-sintesis-dar-y-decir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4eed82c49164140a",
+      "sourceHash": "fnv1a64:b3e60c0bac141f42",
       "notice": null,
       "blocks": [
         {
@@ -47,11 +47,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "this aloud and watch the two sets take turns",
+              "instruction": "the exchange aloud and watch the two sets take turns",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: this aloud and watch the two sets take turns]"
+              "source": "[YOU READ: the exchange aloud and watch the two sets take turns]"
             },
             {
               "kind": "speech",

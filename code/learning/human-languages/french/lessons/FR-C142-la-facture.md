@@ -42,9 +42,10 @@ reviews_of: [FR-C142-lannonce]
 
 **la facture** — "a bill, an invoice".
 
-[YOU READ: the bill — **Facture : loyer, 400 euros. À payer avant lundi.**]
+[YOU READ: the bill]
 
-Pay it before Monday.
+The bill says **Facture : loyer, 400 euros. À payer avant lundi.** Pay it before
+Monday.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

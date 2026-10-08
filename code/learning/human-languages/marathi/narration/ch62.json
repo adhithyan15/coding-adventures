@@ -4,7 +4,7 @@
   "chapter": 62,
   "title": "Reading — Labels, a Message, and a First Paragraph",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:90cc56bb3ef5d444",
+  "sourceHash": "fnv1a64:9e9685d17c9daa13",
   "lessons": [
     {
       "id": "MR-C62-labels",
@@ -212,7 +212,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:00381ee94dd72cf3",
+      "sourceHash": "fnv1a64:3c5369a2ea0d9859",
       "notice": null,
       "blocks": [
         {
@@ -275,11 +275,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it again, and notice you did not assemble it line by line the second time",
+              "instruction": "the message again, and notice you did not assemble it line by line the second time",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it again, and notice you did not assemble it line by line the second time]"
+              "source": "[YOU READ: the message again, and notice you did not assemble it line by line the second time]"
             },
             {
               "kind": "speech",
@@ -411,7 +411,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c316a8b8eac917f4",
+      "sourceHash": "fnv1a64:2c7815968ea74f7c",
       "notice": null,
       "blocks": [
         {
@@ -459,11 +459,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it once without stopping; do not translate as you go — let the sentences arrive",
+              "instruction": "the passage once without stopping; do not translate — let the sentences arrive",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it once without stopping; do not translate as you go — let the sentences arrive]"
+              "source": "[YOU READ: the passage once without stopping; do not translate — let the sentences arrive]"
             },
             {
               "kind": "pause",
@@ -474,11 +474,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it again, and notice how little work it took",
+              "instruction": "the passage again, and notice how little work it took",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it again, and notice how little work it took]"
+              "source": "[YOU READ: the passage again, and notice how little work it took]"
             }
           ]
         },

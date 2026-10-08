@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Rickshaw and Horse: One New Consonant",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b6e1eb14464e8fe2",
+  "sourceHash": "fnv1a64:b34586be593eafaa",
   "lessons": [
     {
       "id": "MW-C17-hear-riksha",
@@ -210,7 +210,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53014f9858edcdfe",
+      "sourceHash": "fnv1a64:5226ed1b4fc65f9e",
       "notice": null,
       "blocks": [
         {
@@ -409,7 +409,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ce336b90cad4b25",
+      "sourceHash": "fnv1a64:75fbebabe50c55f1",
       "notice": null,
       "blocks": [
         {
@@ -519,7 +519,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:92a3590075ba6fc5",
+      "sourceHash": "fnv1a64:d2b47140aabcaff5",
       "notice": null,
       "blocks": [
         {

@@ -738,6 +738,11 @@ describe("readingOrCardProse: what fires", () => {
     ["covering one side", "Cover the right-hand side and rebuild it from the left."],
     ["covering a word after a look", "Look for five seconds, cover **कांई**, and wait five seconds."],
     ["a span wrapped across two source lines", "Then take six\nmeaning cards, say each word."],
+    // Review follow-up: the links and bare steps the first pass missed.
+    ["covering after an or", "Say *as-salāmu ʿalaykum* once. Then turn the page or cover every Arabic model."],
+    ["reading after an or", "Say it once more, or read **किताब** aloud."],
+    ["look, cover and wait, without the serial comma", "Look, cover and wait five seconds."],
+    ["covering up the romanization", "Cover up the romanization and say it again."],
   ])("%s", (_label, markdown) => {
     expect(readingOrCardProse(markdown)).toHaveLength(1);
   });
@@ -748,10 +753,10 @@ describe("readingOrCardProse: what does not fire", () => {
     // The rewrites.
     ["the rewrite of a chain", "Hear, picture the part, and say **おなか**. [YOU READ: **おなか**] [YOU WRITE: **おなか**]"],
     ["the rewrite of a reading", "[PAUSE 15s] [YOU READ: **いちど**]\n\nSay *sumimasen, yoku wakarimasen*."],
-    ["the rewrite of character cards", "3. **Reading:** [YOU READ: the six character cards without pinyin]"],
+    ["the rewrite of character cards", "3. [YOU READ: the six character cards without pinyin]"],
     ["the rewrite of meaning cards", "Then, from six English meanings, say each word. [YOU READ: the six character cards]"],
     ["the rewrite of look, cover, and wait", "[YOU COVER: the model after one look, then wait five seconds]"],
-    ["the rewrite of closing the lessons", "Leave the lessons before this one closed. Say *near*, then say *far*."],
+    ["the rewrite of closing the lessons", "From memory alone, say *near*, then say *far*."],
     ["the rewrite of producing from cards", "2. **Speaking:** produce all six from their English meanings, with tones audible."],
     // Interpretation, description, glosses and advice.
     ["reading literally", "**Il est deux heures.** Read it literally and it says *\"it is two **hours**.\"*"],
@@ -767,13 +772,16 @@ describe("readingOrCardProse: what does not fire", () => {
     ["a heading", "# (dejar una llave) — read it, then do what it says"],
     ["a card as vocabulary", "Before the new one: say the Bengali for an identity card, then the Bengali for a longing."],
     ["a card in a scene", "The office has been **trasladada**. Name what the card hanging on it says."],
-    ["a card through the letterbox", "A card through the letterbox. [YOU READ: it, then answer]"],
+    ["a card through the letterbox", "A card through the letterbox. [YOU READ: the card, then answer]"],
     ["cover as a meaning", "English lets *sit* cover both; French makes you choose."],
     ["cover as a gloss", "*Cubre la olla* — cover the pot."],
     ["hiding a pattern", "Learning them apart would teach the same single fact twice and hide the pattern that makes it easy."],
     ["a page kept covered", "Keep the page covered. Hear the five Mandarin words in mixed order."],
     ["a pencil kept down", "Keep your pencil down: the next five meanings and sounds come before their shapes."],
     ["a quotation being said", 'Say "then read **किताब**" once more.'],
+    ["a choice that is not a step", "Ask whether they would rather hear it or say it."],
+    ["a skill list with a bare read", "# Practice — hear, say, read, and write water"],
+    ["a stroke called cover", "2. **尔** — top slant, cover, then the middle and its hook"],
   ])("%s", (_label, markdown) => {
     expect(readingOrCardProse(markdown)).toEqual([]);
   });
@@ -798,6 +806,9 @@ describe("proseAsksToReadOrHandleCards stays linear", () => {
     ["many unclosed quotation openers", `say ${"“".repeat(50_000)} and read **क**`, true],
     ["a quotation that hides every step", `say “${"and read **क** ".repeat(4_000)}” now`, false],
     ["many stars after read", `read ${"*".repeat(50_000)}`, true],
+    ["many ors with no verb", `say ${"it or ".repeat(8_000)}stop`, false],
+    ["many covers up of nothing on the page", `${"or cover up the pattern ".repeat(2_000)}`, false],
+    ["many bare covers before a chained step", `${"or cover and ".repeat(4_000)}wait.`, true],
     ["many full stops", `${". ".repeat(25_000)}read`, false],
     ["many bold labels with no script", `${"**Read.** x ".repeat(4_000)}`, false],
   ])("%s", (_label, content, expected) => {
@@ -1083,7 +1094,7 @@ describe("drivable lessons carry no prose that asks to read the page or handle c
       if (readingOrCardProse(lessonMarkdown(lesson)).length > 0) prose += 1;
     }
     // A floor set below the count measured when this was written (603
-    // non-drivable lessons), and high enough that a detector which lost most
+    // non-drivable lessons, 740 spans), and high enough that a detector which lost most
     // of its matches fails here rather than passing quietly.
     expect(prose, "non-drivable lessons with prose that reads the page").toBeGreaterThan(400);
   });

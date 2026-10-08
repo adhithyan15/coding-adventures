@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Reading — Six Words, Six Lines, and a First Paragraph",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0a6bc105cbe596c9",
+  "sourceHash": "fnv1a64:ea0ee8fabe7aea7a",
   "lessons": [
     {
       "id": "UR-C33-words",
@@ -211,7 +211,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b048fd5c44df735",
+      "sourceHash": "fnv1a64:97827526866459d5",
       "notice": null,
       "blocks": [
         {
@@ -274,11 +274,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "them again, and this time hear that these are not six separate lines",
+              "instruction": "the six lines again, and this time hear that these are not six separate lines",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: them again, and this time hear that these are not six separate lines]"
+              "source": "[YOU READ: the six lines again, and this time hear that these are not six separate lines]"
             },
             {
               "kind": "speech",
@@ -410,7 +410,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:13c797ee4da5576b",
+      "sourceHash": "fnv1a64:d7823656a9406d93",
       "notice": null,
       "blocks": [
         {
@@ -473,11 +473,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it again, and notice how little work it took",
+              "instruction": "the passage again, and notice how little work it took",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it again, and notice how little work it took]"
+              "source": "[YOU READ: the passage again, and notice how little work it took]"
             }
           ]
         },

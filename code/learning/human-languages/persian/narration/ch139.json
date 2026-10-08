@@ -4,7 +4,7 @@
   "chapter": 139,
   "title": "A Timetable, a Sign, the Rent, an Advert, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:afe1164fc7701f0b",
+  "sourceHash": "fnv1a64:1e926609345a52ea",
   "lessons": [
     {
       "id": "FA-C139-jadval-e-zamani",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3399444a6959886c",
+      "sourceHash": "fnv1a64:b49e75fff36030cc",
       "notice": null,
       "blocks": [
         {
@@ -51,15 +51,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the board — اتوبوس: هشت صبح — otobus: hasht-e sobh — \"Bus: 8 a.m.\"",
+              "instruction": "the board",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the board — **اتوبوس: هشت صبح** — *otobus: hasht-e sobh* — \"Bus: 8 a.m.\"]"
+              "source": "[YOU READ: the board]"
             },
             {
               "kind": "speech",
-              "text": "The bus leaves at eight, so be there before eight."
+              "text": "The board says اتوبوس: هشت صبح — otobus: hasht-e sobh — \"Bus: 8 a.m.\" The bus leaves at eight, so be there before eight."
             }
           ]
         },
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1a9e4e23ac2f8ce",
+      "sourceHash": "fnv1a64:1e6d1bf9efc85b34",
       "notice": null,
       "blocks": [
         {
@@ -187,15 +187,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the sign — پنجشنبه بسته است — panjshanbe baste ast — \"Closed on Thursday.\"",
+              "instruction": "the sign",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the sign — **پنجشنبه بسته است** — *panjshanbe baste ast* — \"Closed on Thursday.\"]"
+              "source": "[YOU READ: the sign]"
             },
             {
               "kind": "speech",
-              "text": "Come on another day."
+              "text": "The sign says پنجشنبه بسته است — panjshanbe baste ast — \"Closed on Thursday.\" Come on another day."
             }
           ]
         },
@@ -414,7 +414,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9ca462fcd1cc52df",
+      "sourceHash": "fnv1a64:a45771cd969d2db1",
       "notice": null,
       "blocks": [
         {
@@ -446,11 +446,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the advert — خانه برای اجاره — khâne barâye ejâre — \"House for rent.\"",
+              "instruction": "the advert",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the advert — **خانه برای اجاره** — *khâne barâye ejâre* — \"House for rent.\"]"
+              "source": "[YOU READ: the advert]"
+            },
+            {
+              "kind": "speech",
+              "text": "The advert says خانه برای اجاره — khâne barâye ejâre — \"House for rent.\""
             }
           ]
         },

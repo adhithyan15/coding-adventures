@@ -33,8 +33,8 @@ reviews_of: [ML-C109-neither-here, ML-C109-neither-so, ML-C70-um, ML-C77-alla]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C109-NEITHER-01, ML-GRAMMAR-C109-NEITHER-02] -->
 
-[PAUSE 3s] Leave the lessons before this one closed. Say *neither tea nor
-coffee*, then *neither a teacher nor a doctor*.
+[PAUSE 3s] From memory alone, say *neither tea nor coffee*, then *neither a
+teacher nor a doctor*.
 
 ## Grammar Lens: one joining, two endings
 <!-- hl-knowledge: introduces=[]; assesses=[ML-GRAMMAR-C109-NEITHER-01, ML-GRAMMAR-C109-NEITHER-02, ML-CONCEPT-C70-UM-01] -->

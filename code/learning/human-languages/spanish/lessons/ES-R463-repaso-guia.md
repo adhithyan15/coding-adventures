@@ -32,8 +32,8 @@ reviews_of: [ES-C463-organizar, ES-C463-guia, ES-C463-importar]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C463-GUIA-01, ES-LEX-C463-GUIA-02, ES-LEX-C463-GUIA-03] -->
 
-[PAUSE 3s] Leave the lessons before this one closed. Say all three: *to
-organise*, *the guide*, *to matter*.
+[PAUSE 3s] From memory alone, say all three: *to organise*, *the guide*, *to
+matter*.
 
 ## Grammar Lens: the verbs where the thing is the subject
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C463-GUIA-03] -->

@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 71,
-  "sourceHash": "fnv1a64:3f7f7ad40fa2853b",
+  "sourceHash": "fnv1a64:11bd8077daea6249",
   "lessonIds": [
     "ML-C71-avan-aval",
     "ML-C71-avar",
@@ -12,7 +12,7 @@
   "drivablePrefix": 0,
   "text": "malayalam/narration/ch71.txt",
   "json": "malayalam/narration/ch71.json",
-  "textHash": "fnv1a64:78d0a17a38192ffb",
-  "jsonHash": "fnv1a64:2efc099d7483f001",
+  "textHash": "fnv1a64:1924943f2a51ed09",
+  "jsonHash": "fnv1a64:c93aab15f16287c4",
   "findings": []
 }

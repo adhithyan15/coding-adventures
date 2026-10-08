@@ -57,7 +57,7 @@ Reading.
 [pause 3 seconds]
 [once you have stopped driving — read: the six notices down once, without stopping]
 [pause 3 seconds]
-[once you have stopped driving — read: them again, and this time hear whose line each one is]
+[once you have stopped driving — read: the six notices again, and this time hear whose line each one is]
 Three belong to you and three to the person behind the counter.
 
 You'll want to know.
@@ -97,8 +97,8 @@ Reading.
 [pause 3 seconds]
 [once you have stopped driving — read: the passage through once without stopping; do not translate as you go]
 [pause 3 seconds]
-[once you have stopped driving — read: it again, and watch the number move — बीस, दस, पंदरा]
-That is the whole negotiation, and it is carried by three words you learned as counting.
+[once you have stopped driving — read: the passage again, and watch the number move]
+It moves बीस, दस, पंदरा. That is the whole negotiation, and it is carried by three words you learned as counting.
 
 You'll want to know.
 [pause 2 seconds]

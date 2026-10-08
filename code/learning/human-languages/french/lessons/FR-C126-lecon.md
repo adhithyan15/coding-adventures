@@ -38,6 +38,7 @@ reviews_of: [FR-C126-classe]
 [PAUSE 2s] Before the new one: say the French for a till, then the French for a class; a classroom.
 
 [PAUSE 3s] [YOU READ: the instruction and do it — *Dites « la classe ».*]
+
 [YOU READ: *le stylo, le cahier, le crayon* aloud as one line, without stopping between the words]
 
 ## You'll want to know: la leçon

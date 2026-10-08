@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Ask and Answer Names",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:fc2cdd246607d5a0",
+  "sourceHash": "fnv1a64:dac6dbaadaa8b77c",
   "lessons": [
     {
       "id": "UR-C03-aap-tum-tu",
@@ -262,7 +262,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:001ef4d28f02e98a",
+      "sourceHash": "fnv1a64:9f48f7790de981b0",
       "notice": null,
       "blocks": [
         {
@@ -292,13 +292,17 @@
               "text": "کیا — kyā — what."
             },
             {
+              "kind": "speech",
+              "text": "Right to left: ک k, ی supplying the y glide here, then ا long ā."
+            },
+            {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "right to left — ک k, ی supplying the y glide here, then ا long ā",
+              "instruction": "the word right to left",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: right to left — **ک** *k*, **ی** supplying the *y* glide here, then **ا** long *ā*]"
+              "source": "[YOU READ: the word right to left]"
             },
             {
               "kind": "speech",

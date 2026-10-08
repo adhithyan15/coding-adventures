@@ -47,7 +47,7 @@ reviews_of: [SA-C63-second, SA-C62-fifth, SA-C58-mahyam, SA-C44-dark]
 
 **प्रथमः** (*prathamaḥ*) — "first".
 
-Listen for **एक** in it. There is none — not a letter of it.
+Listen for *eka* in *prathamaḥ*. There is none — not a sound of it.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C63-ORDINAL-07, SA-GRAMMAR-C62-ORDINAL-MA-02, SA-GRAMMAR-C63-ORDINAL-TIYA-05] -->

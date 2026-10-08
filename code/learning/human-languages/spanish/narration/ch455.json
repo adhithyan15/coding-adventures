@@ -4,7 +4,7 @@
   "chapter": 455,
   "title": "La habitación",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:a20a2fbcb6865cbb",
+  "sourceHash": "fnv1a64:40758dd7ba9e685c",
   "lessons": [
     {
       "id": "ES-C455-pintar",
@@ -878,7 +878,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab7b43d106986904",
+      "sourceHash": "fnv1a64:bba97315dc95a964",
       "notice": null,
       "blocks": [
         {
@@ -894,7 +894,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say all five: to paint, the bedroom, light, to hang out, to put in."
+              "text": "From memory alone, say all five: to paint, the bedroom, light, to hang out, to put in."
             }
           ]
         },
@@ -1032,7 +1032,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:019448bb87a01067",
+      "sourceHash": "fnv1a64:c1ce869704c1e21f",
       "notice": null,
       "blocks": [
         {
@@ -1064,11 +1064,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it, then answer",
+              "instruction": "the message, then answer",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it, then answer]"
+              "source": "[YOU READ: the message, then answer]"
             },
             {
               "kind": "speech",

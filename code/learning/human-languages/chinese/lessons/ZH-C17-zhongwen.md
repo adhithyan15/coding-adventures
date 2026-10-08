@@ -37,14 +37,14 @@ reviews_of: [ZH-C17-hear-zhongwen, ZH-W17-wen-delayed, ZH-C15-zhong, ZH-C10-prac
 [PAUSE 25s] Run the two-line 谢谢 / 不谢 exchange. Then take one Chapter 15 school
 word by its English meaning and hear its Mandarin word. [YOU WRITE: that word]
 
-[YOU READ: it aloud, then give its meaning]
+[YOU READ: that word aloud, then give its meaning]
 
 Finally say **Chinese language** as *zhōngwén*.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ZH-ORTHO-ZHONGWEN-01]; assesses=[ZH-SCRIPT-ZHONG-01, ZH-SCRIPT-WEN-01] -->
 
-[YOU READ: this first, before the explanation]
+[YOU READ: **中文** first, before the explanation]
 
 > **中文**
 

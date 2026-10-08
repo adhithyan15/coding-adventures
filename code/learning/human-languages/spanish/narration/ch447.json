@@ -4,7 +4,7 @@
   "chapter": 447,
   "title": "Juzgar",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:bbe68aa30a7330cb",
+  "sourceHash": "fnv1a64:ba0490158eaec2b0",
   "lessons": [
     {
       "id": "ES-C447-analisis",
@@ -664,7 +664,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9119dee3f66d9a6c",
+      "sourceHash": "fnv1a64:a25dc7aed2c44dd6",
       "notice": null,
       "blocks": [
         {
@@ -680,7 +680,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say all four: the test, to mention, the emergency, clumsy."
+              "text": "From memory alone, say all four: the test, to mention, the emergency, clumsy."
             }
           ]
         },

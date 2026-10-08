@@ -40,9 +40,11 @@ reviews_of: [ZH-C18-kan, ZH-C18-kanjian, ZH-C18-haokan]
 <!-- hl-writing-stage: dictation-transcription -->
 
 Hear the three meanings in mixed order. Say each Mandarin answer.
-[YOU READ: its unpointed card] [YOU WRITE: each one]
+[YOU READ: each Mandarin form without pinyin]
 
-Check the neighbour of 看 before deciding the whole meaning.
+[YOU WRITE: each one]
+
+[YOU CHECK: the neighbour of 看 before deciding the whole meaning]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-KAN-01, ZH-LEX-KANJIAN-01, ZH-LEX-HAOKAN-01] -->

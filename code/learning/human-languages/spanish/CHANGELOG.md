@@ -50,6 +50,27 @@ lessons. Every edited lesson stays `drivable: true` (only its
   street), "Open the Academy's dictionary at *euro* and find two entries" (a
   narrative conditional — the next paragraph gives them), "Then check yourself:
   did you …" (a spoken check), "Fill in the line out loud".
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - "Leave the lessons before this one closed. Say all five: …" (the form
+    described above, 29 drivable ES-R431..R464 reviews) → "From memory alone,
+    say all five: …".
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (24 lessons): the
+    ES-C450..C463 synthesis lessons name the document their opening sentence
+    describes, "A notice on the gate of the sports centre. [YOU READ: the
+    notice, then answer]" (card, sheet, message, poster), where the first pass
+    left "[YOU READ: it, then answer]"; ES-C431..C442 "[YOU READ: the notice
+    once straight through, then answer]" (advert, message, page); ES-C67 "[YOU
+    READ: the passage once through, …]"; ES-C44, ES-C46 "[YOU READ: the exchange
+    aloud and watch …]"; ES-C421 "[YOU READ: the scene aloud]"; ES-C56 "[YOU
+    READ: the sentence before the explanation]".
+  - A spoken premise, gloss or answer that the first pass had moved inside a
+    deferred cue is said in prose again, and the cue keeps only the look
+    (ES-C40-repaso-un-sabado-de-octubre): "[YOU READ: the passage again and
+    count what it took]" then "It took a day name, a month, a season, …".
+  - ES-C391-euro "Open the Academy's dictionary at *euro* and find two entries,
+    not one" → "The Academy's dictionary has two entries at *euro*, not one"
+    (description).
 
 ## Fixed — drivable lessons stop asking a driver to gesture
 

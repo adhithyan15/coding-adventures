@@ -4,7 +4,7 @@
   "chapter": 90,
   "title": "A Clause In Front",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:30466b277d224e94",
+  "sourceHash": "fnv1a64:3a22d44959106ac3",
   "lessons": [
     {
       "id": "ML-C90-participle",
@@ -491,7 +491,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9448f665e8c6a746",
+      "sourceHash": "fnv1a64:d610974520325700",
       "notice": null,
       "blocks": [
         {
@@ -507,7 +507,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say he goes, then turn it into that goes. Do the same with he came."
+              "text": "From memory alone, say he goes, then turn it into that goes. Do the same with he came."
             }
           ]
         },

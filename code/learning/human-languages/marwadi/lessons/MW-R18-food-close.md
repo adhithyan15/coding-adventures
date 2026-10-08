@@ -44,6 +44,7 @@ reviews_of: [MW-C18-food-three, MW-C18-daal, MW-C18-ghee, MW-C18-sabji, MW-C16-t
 
 With every model hidden, identify and say **दाल**, **घी**, and **सबजी** in a
 shuffled order. [YOU READ: all three, shuffled]
+
 [YOU WRITE: all three, in a shuffled order]
 
 ## Wrap-up Recall

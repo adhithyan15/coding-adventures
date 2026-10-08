@@ -54,7 +54,7 @@ romanized line to catch you. Let the Arabic carry its own sound.
 [PAUSE 4s]
 [YOU READ: the six words down once, right to left, without translating]
 
-[PAUSE 3s] [YOU READ: them again]
+[PAUSE 3s] [YOU READ: the six words again]
 
 The first and third words stretch an **ا** into a long sound, while **شكرًا**
 and **حسنًا** share the little **ـًا** ending.

@@ -4,7 +4,7 @@
   "chapter": 97,
   "title": "Beautiful, and Not",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:9deb3244fd4a322b",
+  "sourceHash": "fnv1a64:c87925cc8259f8b3",
   "lessons": [
     {
       "id": "ML-C97-sundaram",
@@ -475,7 +475,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:071b83bf320eca12",
+      "sourceHash": "fnv1a64:2a590548f0a6df36",
       "notice": null,
       "blocks": [
         {
@@ -491,7 +491,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say this is beautiful, then deny it."
+              "text": "From memory alone, say this is beautiful, then deny it."
             }
           ]
         },

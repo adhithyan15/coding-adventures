@@ -38,7 +38,7 @@ excuse breaking the other.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C459-STOCK-01, ES-LEX-C459-STOCK-02, ES-LEX-C459-STOCK-03] -->
 
-A sheet taped to a shop door. [YOU READ: it, then answer]
+A sheet taped to a shop door. [YOU READ: the sheet, then answer]
 
 > **CERRADO POR INVENTARIO**
 

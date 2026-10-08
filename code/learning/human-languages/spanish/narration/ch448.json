@@ -4,7 +4,7 @@
   "chapter": 448,
   "title": "La mudanza",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:ed915ab4a3194e8f",
+  "sourceHash": "fnv1a64:4567ddc048c80983",
   "lessons": [
     {
       "id": "ES-C448-mudarse",
@@ -837,7 +837,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca80566ffcf7f555",
+      "sourceHash": "fnv1a64:cd7143aa98e4d0c1",
       "notice": null,
       "blocks": [
         {
@@ -853,7 +853,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say all five: to move house, the move, hard, out of order, in pieces."
+              "text": "From memory alone, say all five: to move house, the move, hard, out of order, in pieces."
             }
           ]
         },

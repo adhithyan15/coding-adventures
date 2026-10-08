@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Wind, Cloud, and Rain: No New Signs",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:7c7a49fe1be733f3",
+  "sourceHash": "fnv1a64:5b12c8f27885482b",
   "lessons": [
     {
       "id": "MW-C11-hear-hawa",
@@ -107,7 +107,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b94509af5bc6b522",
+      "sourceHash": "fnv1a64:c3ffe95ca1801eae",
       "notice": null,
       "blocks": [
         {
@@ -314,7 +314,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e41a9df9fa5095bf",
+      "sourceHash": "fnv1a64:82da8a4cdd9596e3",
       "notice": null,
       "blocks": [
         {
@@ -530,7 +530,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4142efe063dace0f",
+      "sourceHash": "fnv1a64:f2988221ac35cedb",
       "notice": null,
       "blocks": [
         {
@@ -641,7 +641,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc11eb985cc0ee5a",
+      "sourceHash": "fnv1a64:2b04a4c8aaf41f5c",
       "notice": null,
       "blocks": [
         {
@@ -863,7 +863,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:01fd02cb4582e5db",
+      "sourceHash": "fnv1a64:4ea9e2e066bf3497",
       "notice": null,
       "blocks": [
         {

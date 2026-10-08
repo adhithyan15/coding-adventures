@@ -4,7 +4,7 @@
   "chapter": 139,
   "title": "A Timetable, an Advert, an Entrance, an Exit, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:ca34f5926a22d143",
+  "sourceHash": "fnv1a64:807496254df92061",
   "lessons": [
     {
       "id": "RU-C139-raspisaniye",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f6c231c6e7b16455",
+      "sourceHash": "fnv1a64:b3f3a621cab7b747",
       "notice": null,
       "blocks": [
         {
@@ -51,15 +51,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the board — Автобус: 8:00.",
+              "instruction": "the board",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the board — **Автобус: 8:00.**]"
+              "source": "[YOU READ: the board]"
             },
             {
               "kind": "speech",
-              "text": "The bus leaves at eight, so be there before eight."
+              "text": "The board says Автобус: 8:00. The bus leaves at eight, so be there before eight."
             }
           ]
         },
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3b00442d084c3e4",
+      "sourceHash": "fnv1a64:84403eb0912f5cda",
       "notice": null,
       "blocks": [
         {
@@ -187,15 +187,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the advert — Новый магазин. Закрыт по воскресеньям.",
+              "instruction": "the advert",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the advert — **Новый магазин. Закрыт по воскресеньям.**]"
+              "source": "[YOU READ: the advert]"
             },
             {
               "kind": "speech",
-              "text": "A new shop, closed on Sundays, so go on another day."
+              "text": "The advert says Новый магазин. Закрыт по воскресеньям. A new shop, closed on Sundays, so go on another day."
             }
           ]
         },
@@ -291,7 +291,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:554a39faa245b870",
+      "sourceHash": "fnv1a64:2833b5b306cce45e",
       "notice": null,
       "blocks": [
         {
@@ -323,15 +323,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the sign over a door — ВХОД, you go in here",
+              "instruction": "the sign over a door",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the sign over a door — **ВХОД**, you go in here]"
+              "source": "[YOU READ: the sign over a door]"
             },
             {
               "kind": "speech",
-              "text": "Вход свободный means entry is free."
+              "text": "The sign over a door says ВХОД: you go in here. Вход свободный means entry is free."
             }
           ]
         },
@@ -427,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9924e2bc7e655895",
+      "sourceHash": "fnv1a64:799e5874c550e665",
       "notice": null,
       "blocks": [
         {
@@ -459,15 +459,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the sign — ВЫХОД, the way out",
+              "instruction": "the sign",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the sign — **ВЫХОД**, the way out]"
+              "source": "[YOU READ: the sign]"
             },
             {
               "kind": "speech",
-              "text": "It is вы-, \"out\", with the same ход as вход (vkhod)."
+              "text": "The sign says ВЫХОД: the way out. It is вы-, \"out\", with the same ход as вход (vkhod)."
             }
           ]
         },

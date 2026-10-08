@@ -53,7 +53,8 @@ something to stand on.
 
 [PAUSE 3s] [YOU READ: the six notices down once, without stopping]
 
-[PAUSE 3s] [YOU READ: them again, and this time hear whose line each one is]
+[PAUSE 3s]
+[YOU READ: the six notices again, and this time hear whose line each one is]
 
 Three belong to you and three to the person behind the counter.
 

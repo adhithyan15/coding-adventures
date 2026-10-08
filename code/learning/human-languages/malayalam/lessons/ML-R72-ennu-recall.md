@@ -33,8 +33,8 @@ reviews_of: [ML-C50-parayuka, ML-C72-ennu, ML-C72-ennu-more]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C50-PARAYUKA-01] -->
 
-[PAUSE 3s] Leave the lessons before this one closed. Say *I say* in Malayalam,
-and say which three places in this book used that verb before anybody taught it.
+[PAUSE 3s] From memory alone, say *I say* in Malayalam, and say which three
+places in this book used that verb before anybody taught it.
 
 ## Grammar Lens: three pieces, in this order
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C50-PARAYUKA-01, ML-GRAMMAR-C72-ENNU-01, ML-GRAMMAR-C72-ENNU-VERBS-01] -->

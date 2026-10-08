@@ -42,9 +42,10 @@ reviews_of: [PT-C137-o-horario]
 
 **o aviso** — "a notice, a warning".
 
-[YOU READ: the notice — **Aviso: loja fechada ao sábado.**]
+[YOU READ: the notice]
 
-The shop is closed on Saturdays, so come on another day.
+The notice says **Aviso: loja fechada ao sábado.** The shop is closed on
+Saturdays, so come on another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

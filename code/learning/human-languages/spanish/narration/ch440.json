@@ -4,7 +4,7 @@
   "chapter": 440,
   "title": "La Fiesta Y El Año",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:95a108cec2b6870f",
+  "sourceHash": "fnv1a64:217a90ccef3dd677",
   "lessons": [
     {
       "id": "ES-C440-boda",
@@ -826,7 +826,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e2bfbbad02a576c5",
+      "sourceHash": "fnv1a64:d34dee02c59c659f",
       "notice": null,
       "blocks": [
         {
@@ -842,7 +842,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say all five: the wedding, the birthday, to celebrate, to enjoy, the mood."
+              "text": "From memory alone, say all five: the wedding, the birthday, to celebrate, to enjoy, the mood."
             }
           ]
         },

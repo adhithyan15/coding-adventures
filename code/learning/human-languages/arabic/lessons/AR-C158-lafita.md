@@ -43,9 +43,10 @@ reviews_of: [AR-C158-jadwal]
 
 **لافتة** — *lāfita* — "a sign, a placard".
 
-[YOU READ: the sign — **مغلق يوم الجمعة** — *mughlaq yawm al-jumʿa* — "Closed on Friday."]
+[YOU READ: the sign]
 
-Come on another day.
+The sign says **مغلق يوم الجمعة** — *mughlaq yawm al-jumʿa* — "Closed on
+Friday." Come on another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

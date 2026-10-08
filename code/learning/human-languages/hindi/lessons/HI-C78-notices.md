@@ -55,7 +55,7 @@ something to stand on.
 [PAUSE 3s] [YOU READ: the six notices down once, without stopping]
 
 [PAUSE 3s]
-[YOU READ: them again, and this time notice you did not have to work out what was shut]
+[YOU READ: the six notices again, and this time notice you did not have to work out what was shut]
 
 The notice said so.
 

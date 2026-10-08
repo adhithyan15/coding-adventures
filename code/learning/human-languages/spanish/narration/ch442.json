@@ -4,7 +4,7 @@
   "chapter": 442,
   "title": "La Gestion",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2f036502ed9013c1",
+  "sourceHash": "fnv1a64:a22c272da6429b41",
   "lessons": [
     {
       "id": "ES-C442-administracion",
@@ -833,7 +833,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32f062ce2b168466",
+      "sourceHash": "fnv1a64:1db7c8219efd82da",
       "notice": null,
       "blocks": [
         {
@@ -849,7 +849,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say all five: officialdom, the shipment, to arrange an appointment, the meeting, the screen."
+              "text": "From memory alone, say all five: officialdom, the shipment, to arrange an appointment, the meeting, the screen."
             }
           ]
         },
@@ -973,7 +973,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4e79b6b3b68dd34",
+      "sourceHash": "fnv1a64:9c52e1ae9f34e4be",
       "notice": null,
       "blocks": [
         {
@@ -1001,11 +1001,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it once straight through, then answer",
+              "instruction": "the page once straight through, then answer",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it once straight through, then answer]"
+              "source": "[YOU READ: the page once straight through, then answer]"
             },
             {
               "kind": "speech",

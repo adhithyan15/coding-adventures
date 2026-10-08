@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Thik Hoon: Answer in Two New Signs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f4ad9a17e1c94d1f",
+  "sourceHash": "fnv1a64:8f64fb52b3bb78e1",
   "lessons": [
     {
       "id": "MW-C06-hear-answer",
@@ -450,7 +450,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:77c4d74714177594",
+      "sourceHash": "fnv1a64:57f336bd10249058",
       "notice": null,
       "blocks": [
         {
@@ -497,10 +497,6 @@
             {
               "kind": "speech",
               "text": "Speak: hear the question and answer without notes."
-            },
-            {
-              "kind": "speech",
-              "text": "Reading:"
             },
             {
               "kind": "prompt",

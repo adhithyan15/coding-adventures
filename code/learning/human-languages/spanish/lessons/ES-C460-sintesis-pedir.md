@@ -38,7 +38,7 @@ for the things and one for the paperwork.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C460-PEDIR-01, ES-LEX-C460-PEDIR-02, ES-LEX-C460-PEDIR-03] -->
 
-A notice in a neighbourhood centre. [YOU READ: it, then answer]
+A notice in a neighbourhood centre. [YOU READ: the notice, then answer]
 
 > **PRÉSTAMO DE HERRAMIENTAS**
 

@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Reading — Words, Lines, a First Passage, and Timed Writing",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ef49e54c44cec6b3",
+  "sourceHash": "fnv1a64:5f1a6875f7d47a6a",
   "lessons": [
     {
       "id": "BN-C40-words",
@@ -212,7 +212,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e67984feb92a663",
+      "sourceHash": "fnv1a64:dd3de6dfae1f8c13",
       "notice": null,
       "blocks": [
         {
@@ -275,11 +275,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "them again, and notice the mark at the end of each line",
+              "instruction": "the six lines again, and notice the mark at the end of each line",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: them again, and notice the mark at the end of each line]"
+              "source": "[YOU READ: the six lines again, and notice the mark at the end of each line]"
             },
             {
               "kind": "speech",
@@ -412,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89906aea2759daa1",
+      "sourceHash": "fnv1a64:000c2c364d96dfa7",
       "notice": null,
       "blocks": [
         {
@@ -475,11 +475,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it again and find the three joining words",
+              "instruction": "the passage again and find the three joining words",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it again and find the three joining words]"
+              "source": "[YOU READ: the passage again and find the three joining words]"
             }
           ]
         },

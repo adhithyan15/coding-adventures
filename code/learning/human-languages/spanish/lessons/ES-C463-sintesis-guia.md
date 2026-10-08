@@ -38,7 +38,7 @@ the other.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C463-GUIA-01, ES-LEX-C463-GUIA-02, ES-LEX-C463-GUIA-03] -->
 
-A message to a walking group. [YOU READ: it, then answer]
+A message to a walking group. [YOU READ: the message, then answer]
 
 > Hola a todos. La excursión del sábado la **organiza** el centro cívico.
 >

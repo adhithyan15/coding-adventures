@@ -54,7 +54,8 @@ you would say.
 
 [PAUSE 3s] [YOU READ: the six notices down once, without stopping]
 
-[PAUSE 3s] [YOU READ: them again, and notice the list turns over halfway]
+[PAUSE 3s]
+[YOU READ: the six notices again, and notice the list turns over halfway]
 
 The first three open a conversation. The last three rescue one.
 

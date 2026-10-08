@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "One small step into school",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6bdcc73da39f2531",
+  "sourceHash": "fnv1a64:16f88c94a7ef0c49",
   "lessons": [
     {
       "id": "ZH-C14-hear-xiao",
@@ -662,7 +662,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f9869a53ac81272",
+      "sourceHash": "fnv1a64:7308e05b770d8804",
       "notice": null,
       "blocks": [
         {
@@ -699,11 +699,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "each",
+              "instruction": "each Mandarin form",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: each]"
+              "source": "[YOU READ: each Mandarin form]"
             },
             {
               "kind": "prompt",
@@ -767,7 +767,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6331f4add6669e20",
+      "sourceHash": "fnv1a64:d1c3eb84aa67c332",
       "notice": null,
       "blocks": [
         {
@@ -804,10 +804,6 @@
             {
               "kind": "speech",
               "text": "Speaking: produce all three from their English meanings, with tones audible."
-            },
-            {
-              "kind": "speech",
-              "text": "Reading:"
             },
             {
               "kind": "prompt",

@@ -4,7 +4,7 @@
   "chapter": 458,
   "title": "El plazo",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:42d8dfdd71a8cd8b",
+  "sourceHash": "fnv1a64:ecf33c518b4ea9fc",
   "lessons": [
     {
       "id": "ES-C458-plazo",
@@ -532,7 +532,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bfbab235de35efda",
+      "sourceHash": "fnv1a64:d0f2c561aff2da3c",
       "notice": null,
       "blocks": [
         {
@@ -548,7 +548,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say all three: the deadline, to hand in, to let in."
+              "text": "From memory alone, say all three: the deadline, to hand in, to let in."
             }
           ]
         },
@@ -676,7 +676,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a4f881bd0206fa7",
+      "sourceHash": "fnv1a64:66ca507b9b15d703",
       "notice": null,
       "blocks": [
         {
@@ -708,11 +708,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it, then answer",
+              "instruction": "the notice, then answer",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it, then answer]"
+              "source": "[YOU READ: the notice, then answer]"
             },
             {
               "kind": "speech",

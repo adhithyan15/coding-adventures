@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "The Sentence Learns to End",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:c85aa2ea74158afe",
+  "sourceHash": "fnv1a64:1604ec5a19d2d2fe",
   "lessons": [
     {
       "id": "UR-C17-yih",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3110b94ae57983e2",
+      "sourceHash": "fnv1a64:145aa5879a73742a",
       "notice": null,
       "blocks": [
         {
@@ -36,11 +36,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "these off the page, naming the letters from the right before you say each word",
+              "instruction": "the two words off the page, naming the letters from the right before you say each word",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: these off the page, naming the letters from the right before you say each word]"
+              "source": "[YOU READ: the two words off the page, naming the letters from the right before you say each word]"
             },
             {
               "kind": "speech",
@@ -221,7 +221,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d361e0fa11cbd64",
+      "sourceHash": "fnv1a64:fe6b7c88e3348a0c",
       "notice": null,
       "blocks": [
         {
@@ -257,15 +257,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it off the page — from the right, ک, ا, م",
+              "instruction": "the word off the page",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it off the page — from the right, **ک**, **ا**, **م**]"
+              "source": "[YOU READ: the word off the page]"
             },
             {
               "kind": "speech",
-              "text": "Every letter in it is already yours, so this word arrives readable on the day you meet it. That is what the seven letters were for."
+              "text": "From the right: ک, ا, م. Every letter in it is already yours, so this word arrives readable on the day you meet it. That is what the seven letters were for."
             },
             {
               "kind": "speech",

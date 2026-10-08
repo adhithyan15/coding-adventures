@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 27,
-  "sourceHash": "fnv1a64:3b5a7b3e464e1372",
+  "sourceHash": "fnv1a64:64ca9a0a171748e5",
   "lessonIds": [
     "RU-C27-words",
     "RU-C27-notices",
@@ -11,7 +11,7 @@
   "drivablePrefix": 0,
   "text": "russian/narration/ch27.txt",
   "json": "russian/narration/ch27.json",
-  "textHash": "fnv1a64:3a5c3051246bf202",
-  "jsonHash": "fnv1a64:3b7d19187a405d70",
+  "textHash": "fnv1a64:c15a109950612a8c",
+  "jsonHash": "fnv1a64:b4dcdaf7c5d84d5e",
   "findings": []
 }

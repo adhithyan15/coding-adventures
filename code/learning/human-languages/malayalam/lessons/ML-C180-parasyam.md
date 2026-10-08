@@ -43,7 +43,9 @@ reviews_of: [ML-C180-vataka]
 
 **പരസ്യം** — *parasyaṁ* — "an advertisement".
 
-[YOU READ: the advert — **വീട് വാടകയ്ക്ക്** — *vīṭŭ vāṭakaykkŭ* — "House for rent."]
+[YOU READ: the advert]
+
+The advert says **വീട് വാടകയ്ക്ക്** — *vīṭŭ vāṭakaykkŭ* — "House for rent."
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

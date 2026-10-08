@@ -67,10 +67,10 @@ go. The endings will keep the objects visible.
 > — Valē!
 
 [PAUSE 4s]
-[YOU READ: it once for the route — names, wellbeing, school, work, reason, farewell]
+[YOU READ: the dialogue once for the route — names, wellbeing, school, work, reason, farewell]
 
 [PAUSE 3s]
-[YOU READ: it again and find the two things handled — **librum** and **epistulam**]
+[YOU READ: the dialogue again for the two things handled — **librum**, **epistulam**]
 
 ## Grammar Lens: a dialogue is a chain of answers
 <!-- hl-knowledge: introduces=[]; assesses=[LA-SKILL-C59-SOCIAL-READING-04, LA-LEX-CRAS-TE-VIDEBO-01] -->

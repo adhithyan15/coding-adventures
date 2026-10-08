@@ -43,9 +43,10 @@ reviews_of: [ML-C179-pratikshikkuka]
 
 **സമയപ്പട്ടിക** — *samayappaṭṭika* — "a timetable".
 
-[YOU READ: the board — **ബസ്: രാവിലെ എട്ട് മണി** — *basŭ: rāvile eṭṭŭ maṇi* — "Bus: 8 a.m."]
+[YOU READ: the board]
 
-The bus leaves at eight, so be there before eight.
+The board says **ബസ്: രാവിലെ എട്ട് മണി** — *basŭ: rāvile eṭṭŭ maṇi* — "Bus: 8
+a.m." The bus leaves at eight, so be there before eight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Four Family Words: Meaning First, One New Sign",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:85a0dd75a7504c1b",
+  "sourceHash": "fnv1a64:2f551b5adec17b8b",
   "lessons": [
     {
       "id": "MW-C08-hear-maa",
@@ -1039,7 +1039,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fffb64eef7de2c12",
+      "sourceHash": "fnv1a64:e44a5fa8cc05c136",
       "notice": null,
       "blocks": [
         {
@@ -1104,10 +1104,6 @@
             {
               "kind": "speech",
               "text": "Speak: produce two different labels from meanings."
-            },
-            {
-              "kind": "speech",
-              "text": "Reading:"
             },
             {
               "kind": "prompt",

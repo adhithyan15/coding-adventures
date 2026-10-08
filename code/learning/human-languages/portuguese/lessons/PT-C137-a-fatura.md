@@ -42,9 +42,10 @@ reviews_of: [PT-C137-o-anuncio]
 
 **a fatura** — "a bill, an invoice".
 
-[YOU READ: the bill — **Fatura: renda, 400 euros. Pagar até segunda-feira.**]
+[YOU READ: the bill]
 
-Pay it by Monday. Older Portuguese texts write it **factura**.
+The bill says **Fatura: renda, 400 euros. Pagar até segunda-feira.** Pay it by
+Monday. Older Portuguese texts write it **factura**.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -38,7 +38,8 @@ reviews_of: [MW-R08-family-foundation, MW-R08-family-map]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAA-01, MW-LEX-BAAP-01, MW-LEX-BHAI-01, MW-LEX-BAHAN-01, MW-LEX-DADA-01, MW-LEX-DADI-01, MW-LEX-PARIVAAR-01] -->
 
 [PAUSE 20s] [YOU READ: the seven-word line once]
-[YOU COVER: it before the scored pass]
+
+[YOU COVER: the line before the scored pass]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-PERFORMANCE-FAMILY-SEVEN-FOUR-SKILL-01]; assesses=[MW-SCRIPT-MAA-01, MW-SCRIPT-BAAP-01, MW-SCRIPT-BHAI-01, MW-SCRIPT-BAHAN-01, MW-SCRIPT-DADA-01, MW-SCRIPT-DADI-01, MW-SCRIPT-PARIVAAR-01, MW-SCRIPT-BA-01, MW-SCRIPT-DA-01, MW-SCRIPT-VA-01, MW-PERFORMANCE-FAMILY-FOUR-FOUR-SKILL-01] -->
@@ -53,7 +54,7 @@ family structure. Regional and household choices remain valid when documented.
 
 1. **Listen:** identify four randomly heard labels.
 2. **Speak:** produce four different labels from relation cues.
-3. **Reading:** [YOU READ: all seven printed words and match them to meanings]
+3. [YOU READ: all seven printed words and match them to meanings]
 4. [YOU WRITE: three heard labels without a model]
 
 Score all four skills separately. A perfect spoken map does not replace missing

@@ -24,6 +24,17 @@ lessons. Every edited lesson stays `drivable: true` (only its
   "Say the two lines together and the agreement is plain".
 - Left alone: "Read the panel in a Lisbon lift now — **1.º**, **2.º**, **3.º**
   — and you are reading this chapter" (a real-world scene, not a step).
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - The notice lessons (PT-C137-a-fatura, PT-C137-o-anuncio, PT-C137-o-aviso,
+    PT-C137-o-horario) keep the notice in narrated prose and defer only the
+    look: "[YOU READ: the bill]" then "The bill says **…** — …". The first pass
+    had put the whole notice inside the deferred cue, so a listener heard the
+    comment on a notice without the notice; that superseded form is the one
+    described above.
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (PT-C29-linhas,
+    PT-C29-primeira-leitura): "[YOU READ: the six lines again, …]", "[YOU READ:
+    the passage again, and count the joining words]".
 
 ## Fixed — drivable lessons stop asking a driver to gesture
 

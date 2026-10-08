@@ -57,7 +57,7 @@ Reading.
 [pause 3 seconds]
 [once you have stopped driving — read: the six lines down once, without stopping]
 [pause 3 seconds]
-[once you have stopped driving — read: them again, and notice the list changes halfway]
+[once you have stopped driving — read: the six lines again, and notice the list changes halfway]
 The first four are things you say to a person. The last two are things you read off a door.
 
 You'll want to know.
@@ -97,7 +97,7 @@ Reading.
 [pause 3 seconds]
 [once you have stopped driving — read: across each line once, without stopping]
 [pause 3 seconds]
-[once you have stopped driving — read: them again, and this time take the last three as amounts rather than as signs]
+[once you have stopped driving — read: the lines again, and this time take the last three as amounts rather than as signs]
 Ten. Twenty. A hundred.
 
 You'll want to know.

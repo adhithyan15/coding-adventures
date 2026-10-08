@@ -35,7 +35,7 @@ reviews_of: [ES-C56-repaso-amigos]
 <!-- hl-knowledge: introduces=[]; assesses=[ES-FRIEND-CION-TION] -->
 
 [PAUSE 2s] You are about to read a sentence with four words in it that this book
-has never shown you. [YOU READ: it before you read the explanation]
+has never shown you. [YOU READ: the sentence before the explanation]
 
 ## The exchange
 <!-- hl-knowledge: introduces=[]; assesses=[ES-FRIEND-CION-TION, ES-FRIEND-DAD-TY, ES-FRIEND-MENTE-LY, ES-LEX-ESPANOL] -->

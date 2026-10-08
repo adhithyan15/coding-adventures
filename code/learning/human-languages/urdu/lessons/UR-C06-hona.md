@@ -47,7 +47,8 @@ something larger. Here is the whole verb it was broken off.
 
 > **ہونا** — *honā* — **to be**
 
-[YOU READ: from the right edge — **ہ** *h*, then **و** carrying *o*, then **ن** *n*, then **ا** long *ā*]
+From the right edge: **ہ** *h*, then **و** carrying *o*, then **ن** *n*, then
+**ا** long *ā*. [YOU READ: the word from the right edge]
 
 Every one of those four shapes has already turned up in a word you have met.
 There is nothing new to decode here, which is rare, and worth enjoying.

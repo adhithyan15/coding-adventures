@@ -52,7 +52,10 @@ Three groups, one for each beat you already hear. **ि** is written before
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-DIKHAVO-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-[YOU READ: the three groups once] [YOU COVER: the word, then wait five seconds]
+[YOU READ: the three groups once]
+
+[YOU COVER: the word, then wait five seconds]
+
 [YOU WRITE: the word — check the **ि** stands to the left of **द** and that **ख** carries **ा**]
 
 ## Wrap-up Recall

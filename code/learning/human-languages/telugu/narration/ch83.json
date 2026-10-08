@@ -4,7 +4,7 @@
   "chapter": 83,
   "title": "Reading — Words, Lines, and a First Passage",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fb8365d3fa600e73",
+  "sourceHash": "fnv1a64:e56ab4ea8029fdac",
   "lessons": [
     {
       "id": "TE-C83-words",
@@ -212,7 +212,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad856d04e94754d2",
+      "sourceHash": "fnv1a64:cf32a8c438322092",
       "notice": null,
       "blocks": [
         {
@@ -275,11 +275,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "them again, and search the first four lines for the verb",
+              "instruction": "the six lines again, and search the first four lines for the verb",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: them again, and search the first four lines for the verb]"
+              "source": "[YOU READ: the six lines again, and search the first four lines for the verb]"
             }
           ]
         },
@@ -408,7 +408,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a2ff67bb909068b",
+      "sourceHash": "fnv1a64:929fcdb3c7fe9411",
       "notice": null,
       "blocks": [
         {
@@ -471,11 +471,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it again, and notice that every line is about the same place",
+              "instruction": "the passage again, and notice that every line is about the same place",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it again, and notice that every line is about the same place]"
+              "source": "[YOU READ: the passage again, and notice that every line is about the same place]"
             }
           ]
         },

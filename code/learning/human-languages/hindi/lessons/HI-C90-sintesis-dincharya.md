@@ -46,7 +46,7 @@ chapter. That is the first line of what follows.
 > आती हूँ। घर पर मैं हिंदी बोलती हूँ।
 
 Four sentences, and **every word in them is one you have been taught**.
-[YOU READ: it twice — once for meaning, once listening for how the joints do the work]
+[YOU READ: the four sentences twice — once for meaning, once listening for how the joints do the work]
 
 ## Grammar Lens: what is holding it together
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C90-ROUT-05, HI-LEX-C90-ROUT-06, HI-LEX-C90-ROUT-01] -->

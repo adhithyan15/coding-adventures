@@ -33,8 +33,8 @@ reviews_of: [ML-C94-innu, ML-C94-innale, ML-C94-three-days]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C94-TODAY-01, ML-LEX-C94-YESTERDAY-01] -->
 
-[PAUSE 3s] Leave the lessons before this one closed. Name the day you are
-standing in, and the one behind it.
+[PAUSE 3s] From memory alone, name the day you are standing in, and the one
+behind it.
 
 ## Grammar Lens: the three lines
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C94-THREE-DAYS-01, ML-CONCEPT-C32-POKUKA-02, ML-LEX-NJAAN-01] -->

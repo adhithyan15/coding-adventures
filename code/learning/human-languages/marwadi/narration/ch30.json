@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Bring It Over: The Food Counter's Own Word",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:dd96ce1f0ac50404",
+  "sourceHash": "fnv1a64:a91316967ba43d43",
   "lessons": [
     {
       "id": "MW-C25-hear-lavo",
@@ -427,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14c4c35ab85655c4",
+      "sourceHash": "fnv1a64:de1dcb5b07c1a97e",
       "notice": null,
       "blocks": [
         {
@@ -463,16 +463,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Five asking words are now in play. Hear them shuffled and give each meaning."
+              "text": "Five asking words are now in play. Hear them shuffled and give each meaning. The five cards say दिखावो, करो, लो, दो, लावो (lāvo)."
             },
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "five cards — दिखावो, करो, लो, दो, लावो (lāvo)",
+              "instruction": "the five cards",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: five cards — **दिखावो**, **करो**, **लो**, **दो**, **लावो**]"
+              "source": "[YOU READ: the five cards]"
             },
             {
               "kind": "prompt",

@@ -43,9 +43,10 @@ reviews_of: [UR-C145-tai-karna]
 
 **ٹائم ٹیبل** — *ṭāim ṭebal* — "a timetable".
 
-[YOU READ: the board — **بس: آٹھ بجے** — *bas: āṭh baje* — "Bus: eight o'clock."]
+[YOU READ: the board]
 
-The bus leaves at eight, so be there before eight.
+The board says **بس: آٹھ بجے** — *bas: āṭh baje* — "Bus: eight o'clock." The bus
+leaves at eight, so be there before eight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

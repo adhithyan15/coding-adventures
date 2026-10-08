@@ -4,7 +4,7 @@
   "chapter": 438,
   "title": "El Cuerpo Y El Descanso",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:7319624dd5bafd53",
+  "sourceHash": "fnv1a64:22f191b008c5ec6d",
   "lessons": [
     {
       "id": "ES-C438-polideportivo",
@@ -788,7 +788,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a6f42d2ec7dcc6ce",
+      "sourceHash": "fnv1a64:976699710520ed88",
       "notice": null,
       "blocks": [
         {
@@ -804,7 +804,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say all five: the sports centre, swimming, to twist your ankle, to rest, to laugh."
+              "text": "From memory alone, say all five: the sports centre, swimming, to twist your ankle, to rest, to laugh."
             }
           ]
         },

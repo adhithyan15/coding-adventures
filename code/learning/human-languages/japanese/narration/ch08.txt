@@ -9,7 +9,8 @@ Warm-up.
 [pause 10 seconds]
 [once you have stopped driving — write: katakana コ]
 Give the daytime greeting, then run one doorway exchange aloud.
-[once you have stopped driving — cover: the text before the new expression begins]
+[once you have stopped driving — cover: the text]
+Then the new expression begins.
 
 You'll want to know.
 sa-yō-na-ra — goodbye, at a parting.

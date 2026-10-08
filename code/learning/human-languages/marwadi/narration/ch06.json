@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Tharo Naam: Ask One Name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:31fa804ec6ec30b7",
+  "sourceHash": "fnv1a64:4b299d70f654cf3c",
   "lessons": [
     {
       "id": "MW-C05-hear-tharo",
@@ -347,7 +347,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0384da2a7f80da69",
+      "sourceHash": "fnv1a64:4831d170267f19fd",
       "notice": null,
       "blocks": [
         {
@@ -841,7 +841,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e7b31603d71f384",
+      "sourceHash": "fnv1a64:407eaa32ef752392",
       "notice": null,
       "blocks": [
         {
@@ -897,10 +897,6 @@
             {
               "kind": "speech",
               "text": "Speak: hear the question and answer with a chosen name, without notes."
-            },
-            {
-              "kind": "speech",
-              "text": "Reading:"
             },
             {
               "kind": "prompt",

@@ -32,8 +32,8 @@ reviews_of: [ES-C441-contrato, ES-C441-firmar, ES-C441-fijo, ES-C441-factura, ES
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C441-TRATO-01, ES-LEX-C441-TRATO-02, ES-LEX-C441-TRATO-03, ES-LEX-C441-TRATO-04, ES-LEX-C441-TRATO-05] -->
 
-[PAUSE 3s] Leave the lessons before this one closed. Say all five: *the
-contract*, *to sign*, *permanent*, *the invoice*, *the loan*.
+[PAUSE 3s] From memory alone, say all five: *the contract*, *to sign*,
+*permanent*, *the invoice*, *the loan*.
 
 ## Grammar Lens: paperwork is a set of physical acts
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C441-TRATO-01, ES-LEX-C441-TRATO-02, ES-LEX-C441-TRATO-03] -->

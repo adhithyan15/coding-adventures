@@ -43,9 +43,10 @@ reviews_of: [BN-C147-bhara]
 
 **বিজ্ঞাপন** — *bigyāpôn* — "an advert".
 
-[YOU READ: the advert — **বাড়ি ভাড়া দেওয়া হবে** — *bāṛi bhāṛā deoyā hôbe* — "House to let."]
+[YOU READ: the advert]
 
-A house is available to rent.
+The advert says **বাড়ি ভাড়া দেওয়া হবে** — *bāṛi bhāṛā deoyā hôbe* — "House to
+let." A house is available to rent.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

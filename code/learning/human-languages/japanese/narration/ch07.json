@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "The Doorway Exchange",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:cb43e27e3fd0db7d",
+  "sourceHash": "fnv1a64:0eacfee5d7101caa",
   "lessons": [
     {
       "id": "JA-C01-practice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89016e4634b9d687",
+      "sourceHash": "fnv1a64:cbe01b97a018697b",
       "notice": null,
       "blocks": [
         {
@@ -70,10 +70,6 @@
             {
               "kind": "speech",
               "text": "Speak: take B's part while the other lines are read aloud."
-            },
-            {
-              "kind": "speech",
-              "text": "Reading:"
             },
             {
               "kind": "prompt",

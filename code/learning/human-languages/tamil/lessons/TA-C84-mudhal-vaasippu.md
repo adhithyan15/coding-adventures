@@ -59,7 +59,8 @@ reviews_of: [TA-C84-words, TA-C84-lines, TA-C41-big, TA-C81-two-tamils]
 [PAUSE 3s]
 [YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]
 
-[PAUSE 3s] [YOU READ: it again, and notice which lines have no verb at all]
+[PAUSE 3s]
+[YOU READ: the passage again, and notice which lines have no verb at all]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C40-DEIXIS-04, TA-PRAGMATICS-C81-REG-01, TA-SKILL-CONNECTED-READING] -->

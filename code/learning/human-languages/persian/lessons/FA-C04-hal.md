@@ -45,7 +45,8 @@ question. The next move asks about the other person's present state.
 
 > **حال** — *hâl* — **state, condition**
 
-[YOU READ: from right to left — **ح** *h* + **ا** long *â* + **ل** *l*]
+From right to left: **ح** *h* + **ا** long *â* + **ل** *l*.
+[YOU READ: the word from right to left]
 
 The first letter is a breathier *h* than English normally uses; a clear ordinary
 *h* is a safe beginner approximation. Keep the whole written word attached to

@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "One More Time, Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ad45707c6cc3f1a0",
+  "sourceHash": "fnv1a64:684919e7ea95e245",
   "lessons": [
     {
       "id": "JA-C09-sumimasen",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7819147ffe52c255",
+      "sourceHash": "fnv1a64:6ec15c02506d98ed",
       "notice": null,
       "blocks": [
         {
@@ -1436,7 +1436,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a98ee536db2752f9",
+      "sourceHash": "fnv1a64:14166d1a1caba301",
       "notice": null,
       "blocks": [
         {
@@ -1492,10 +1492,6 @@
             {
               "kind": "speech",
               "text": "Speak: say the opener, then the request, with a small pause."
-            },
-            {
-              "kind": "speech",
-              "text": "Reading:"
             },
             {
               "kind": "prompt",

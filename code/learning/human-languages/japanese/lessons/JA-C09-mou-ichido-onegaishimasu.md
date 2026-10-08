@@ -56,7 +56,7 @@ until its own longer script runway is complete.
 
 1. **Listen:** distinguish *sumimasen* from *mō ichido, onegaishimasu*.
 2. **Speak:** say the opener, then the request, with a small pause.
-3. **Reading:** [YOU READ: **もういちど** independently; use the printed support for the rest]
+3. [YOU READ: **もういちど** independently; use the printed support for the rest]
 4. [YOU WRITE: **もういちど** from dictation — only this independently earned block]
 
 ## Wrap-up Recall

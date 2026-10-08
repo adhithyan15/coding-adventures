@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "The Doorway Signs at Long Distance",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:5b30af86aab7d5f8",
+  "sourceHash": "fnv1a64:27de535c4de3e461",
   "lessons": [
     {
       "id": "MR-R18-script-warmup",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90043011abe8b61a",
+      "sourceHash": "fnv1a64:1525004a526a50f6",
       "notice": null,
       "blocks": [
         {

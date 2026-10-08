@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 6,
-  "sourceHash": "fnv1a64:b12e7282273aba57",
+  "sourceHash": "fnv1a64:46b7c74028c22f0a",
   "lessonIds": [
     "TE-S149-digit-0",
     "TE-C06-dative-ku",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "telugu/narration/ch06.txt",
   "json": "telugu/narration/ch06.json",
-  "textHash": "fnv1a64:cf3f002945851501",
-  "jsonHash": "fnv1a64:58abeb9032da468f",
+  "textHash": "fnv1a64:fdf53b2f319cfddf",
+  "jsonHash": "fnv1a64:4cfe351181871b52",
   "findings": []
 }

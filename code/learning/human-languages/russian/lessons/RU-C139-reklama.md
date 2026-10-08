@@ -43,9 +43,10 @@ reviews_of: [RU-C139-raspisaniye]
 
 **реклама** (*rekláma*) — "an advert".
 
-[YOU READ: the advert — **Новый магазин. Закрыт по воскресеньям.**]
+[YOU READ: the advert]
 
-A new shop, closed on Sundays, so go on another day.
+The advert says **Новый магазин. Закрыт по воскресеньям.** A new shop, closed on
+Sundays, so go on another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

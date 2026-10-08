@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:e935185b15ed50cd",
+  "sourceHash": "fnv1a64:142f661f377bcbc6",
   "lessons": [
     {
       "id": "RU-C02-ya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7792cfcc1b9dc47d",
+      "sourceHash": "fnv1a64:17fb19580c2b04ed",
       "notice": null,
       "blocks": [
         {
@@ -59,15 +59,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it here — you'll draw it when the track gets there",
+              "instruction": "я (ya) here",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it here — you'll draw it when the track gets there]"
+              "source": "[YOU READ: **я** here]"
             },
             {
               "kind": "speech",
-              "text": "And be careful with its shape. я (ya) looks like a mirrored Latin R and has nothing to do with R. (It descends from ѧ, the \"little yus\" — not from R at all.)"
+              "text": "You'll draw it when the track gets there. And be careful with its shape. я (ya) looks like a mirrored Latin R and has nothing to do with R. (It descends from ѧ, the \"little yus\" — not from R at all.)"
             },
             {
               "kind": "speech",
@@ -933,7 +933,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ebe632b4ce9b662",
+      "sourceHash": "fnv1a64:603b54f24593a7de",
       "notice": null,
       "blocks": [
         {
@@ -981,11 +981,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "them now — you'll draw them later",
+              "instruction": "both letters",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: them now — you'll draw them later]"
+              "source": "[YOU READ: both letters]"
+            },
+            {
+              "kind": "speech",
+              "text": "You'll draw them later."
             }
           ]
         },

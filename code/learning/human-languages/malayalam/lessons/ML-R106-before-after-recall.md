@@ -33,7 +33,7 @@ reviews_of: [ML-C106-munpu, ML-C106-shesham, ML-C106-ordering, ML-C06-dative-ikk
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C106-BEFORE-01, ML-LEX-C106-AFTER-01] -->
 
-[PAUSE 3s] Leave the lessons before this one closed. Say *before* and *after*.
+[PAUSE 3s] From memory alone, say *before* and *after*.
 
 ## Grammar Lens: both of them lean, and neither of them attaches
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C106-BEFORE-01, ML-LEX-C106-AFTER-01, ML-GRAMMAR-C102-HOUR-DATIVE-01, ML-CONCEPT-C40-OON-01] -->

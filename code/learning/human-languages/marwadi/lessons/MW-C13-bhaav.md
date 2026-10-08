@@ -50,6 +50,7 @@ reviews_of: [MW-C13-hear-bhaav, MW-C13-vastu, MW-C13-dukan, MW-C08-baap, MW-C11-
 <!-- hl-writing-stage: delayed-copy -->
 
 [YOU COVER: the model after one look, then wait five seconds]
+
 [YOU WRITE: **भाव** — keep **ा** after **भ**]
 
 Hold the long vowel in speech.

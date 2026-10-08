@@ -4,7 +4,7 @@
   "chapter": 58,
   "title": "Reading — Words, Lines, and a First Passage",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:793e5152f189db54",
+  "sourceHash": "fnv1a64:32da32ae105fd1cd",
   "lessons": [
     {
       "id": "LA-C58-labels",
@@ -214,7 +214,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7bbd9dfa51e65543",
+      "sourceHash": "fnv1a64:196dd17e82f2c751",
       "notice": null,
       "blocks": [
         {
@@ -277,11 +277,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "them again, and notice that two of the six are a single word, and that both of them are things you say to somebody",
+              "instruction": "the six lines again, and notice that two of the six are a single word, and that both of them are things you say to somebody",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: them again, and notice that two of the six are a single word, and that both of them are things you say to somebody]"
+              "source": "[YOU READ: the six lines again, and notice that two of the six are a single word, and that both of them are things you say to somebody]"
             }
           ]
         },
@@ -411,7 +411,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d4d3259f5b09e59f",
+      "sourceHash": "fnv1a64:477d96610cb15e67",
       "notice": null,
       "blocks": [
         {
@@ -474,11 +474,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it again, and notice where est falls",
+              "instruction": "the passage again, and notice where est falls",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it again, and notice where **est** falls]"
+              "source": "[YOU READ: the passage again, and notice where **est** falls]"
             }
           ]
         },

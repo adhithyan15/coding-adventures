@@ -52,7 +52,8 @@ reviews_of: [BN-C40-words, BN-C01-nomoshkar, BN-C13-doya-kore]
 
 [PAUSE 3s] [YOU READ: the six lines down once, without stopping]
 
-[PAUSE 3s] [YOU READ: them again, and notice the mark at the end of each line]
+[PAUSE 3s]
+[YOU READ: the six lines again, and notice the mark at the end of each line]
 
 It is not a full stop but a **দাঁড়ি**, a single upright stroke.
 

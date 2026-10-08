@@ -4,7 +4,7 @@
   "chapter": 63,
   "title": "The Endings Before It",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e302570f2f6d607d",
+  "sourceHash": "fnv1a64:681cad5a2f66a572",
   "lessons": [
     {
       "id": "SA-C63-sixth",
@@ -794,7 +794,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a6c95792e04e81dc",
+      "sourceHash": "fnv1a64:4712b68b0b15ef28",
       "notice": null,
       "blocks": [
         {
@@ -861,7 +861,7 @@
             },
             {
               "kind": "speech",
-              "text": "Listen for एक in it. There is none — not a letter of it."
+              "text": "Listen for eka in prathamaḥ. There is none — not a sound of it."
             }
           ]
         },

@@ -59,7 +59,7 @@ reviews_of: [FR-C45-instructions, FR-C45-details, FR-C36-et, FR-C36-mais]
 [PAUSE 3s]
 [YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]
 
-[PAUSE 3s] [YOU READ: it again, and notice how little work it took]
+[PAUSE 3s] [YOU READ: the passage again, and notice how little work it took]
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[FR-LEX-MAIS-03, FR-LEX-BEAUCOUP-01, FR-LEX-TRES-03] -->

@@ -43,9 +43,10 @@ reviews_of: [KA-C156-nirikshisu]
 
 **ವೇಳಾಪಟ್ಟಿ** — *vēḷāpaṭṭi* — "a timetable".
 
-[YOU READ: the board — **ಬಸ್: ಬೆಳಿಗ್ಗೆ ೮** — *bas: beḷigge eṇṭu* — "Bus: 8 a.m."]
+[YOU READ: the board]
 
-The bus leaves at eight, so be there before eight.
+The board says **ಬಸ್: ಬೆಳಿಗ್ಗೆ ೮** — *bas: beḷigge eṇṭu* — "Bus: 8 a.m." The bus
+leaves at eight, so be there before eight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -35,7 +35,7 @@ reviews_of: [FA-C01-salam, FA-C01-mamnoon, FA-C01-bale, FA-C01-na, FA-W00-alef-g
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-SALAM-01] -->
 
-Every model stays in view. Say **سلام** once to greet and once to answer.
+Say **سلام** once to greet and once to answer.
 
 ## The exchange
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-SALAM-01, FA-SCRIPT-RTL-01] -->

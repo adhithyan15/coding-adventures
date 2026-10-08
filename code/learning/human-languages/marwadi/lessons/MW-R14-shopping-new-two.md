@@ -45,6 +45,7 @@ Then say paternal grandfather and cold.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-SASTA-01, MW-SCRIPT-SASTA-01, MW-LEX-SAMAAN-01, MW-SCRIPT-SAMAAN-01] -->
 
 Hear the two words in both orders and give each meaning. [YOU READ: two cards]
+
 [YOU WRITE: both from sound]
 
 ## Wrap-up Recall

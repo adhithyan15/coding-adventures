@@ -43,9 +43,10 @@ reviews_of: [SA-C140-sucana]
 
 **समयसारणी** — *samayasāraṇī* — "a timetable".
 
-[YOU READ: the timetable at the station — **धूमयानम् — प्रातः दश।**]
+[YOU READ: the timetable at the station]
 
-The train leaves at ten in the morning: be at the **स्थानकम्** before ten.
+The timetable at the station says **धूमयानम् — प्रातः दश।** The train leaves at
+ten in the morning: be at the **स्थानकम्** before ten.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

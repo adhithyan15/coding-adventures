@@ -41,7 +41,9 @@ Recall its Chinese-derived bridge.
 [YOU WRITE: **もうすこし**]
 
 Then hear and say the first seven body words.
-[YOU READ: the first seven body words] [YOU WRITE: the first seven body words]
+[YOU READ: the first seven body words]
+
+[YOU WRITE: the first seven body words]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-HA-TOOTH]; assesses=[] -->
@@ -53,7 +55,9 @@ One sign is the complete word.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HA-TOOTH] -->
 
-Hear, picture the part, and say **は**. [YOU READ: **は**] [YOU WRITE: **は**]
+Hear, picture the part, and say **は**. [YOU READ: **は**]
+
+[YOU WRITE: **は**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HA-TOOTH] -->

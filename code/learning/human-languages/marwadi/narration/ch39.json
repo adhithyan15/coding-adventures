@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Saying No",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7c74173dbd364369",
+  "sourceHash": "fnv1a64:d43dffdd12d92d68",
   "lessons": [
     {
       "id": "MW-C39-hear-koni",
@@ -393,7 +393,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7575230054f6fb7",
+      "sourceHash": "fnv1a64:cd05cfd22cbda0ef",
       "notice": null,
       "blocks": [
         {
@@ -471,10 +471,6 @@
             {
               "kind": "speech",
               "text": "Speak. Run the exchange twice, once refusing and once agreeing, so the two branches sit side by side."
-            },
-            {
-              "kind": "speech",
-              "text": "Reading."
             },
             {
               "kind": "prompt",
@@ -694,7 +690,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62341b98e59b9680",
+      "sourceHash": "fnv1a64:934f7a5949203930",
       "notice": null,
       "blocks": [
         {
@@ -763,10 +759,6 @@
             {
               "kind": "speech",
               "text": "Speak. Run the three turns with your own number in the first line."
-            },
-            {
-              "kind": "speech",
-              "text": "Reading."
             },
             {
               "kind": "prompt",

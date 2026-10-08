@@ -51,6 +51,7 @@ cold, heat, and weather.
 <!-- hl-writing-stage: delayed-copy -->
 
 [YOU COVER: the model after one look, then wait five seconds]
+
 [YOU WRITE: **ठंडी** — check the nasal mark and keep **ड** distinct from **द**]
 
 ## Wrap-up Recall

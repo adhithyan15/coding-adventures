@@ -4,7 +4,7 @@
   "chapter": 91,
   "title": "What It Costs",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:04369dd129452de7",
+  "sourceHash": "fnv1a64:64c26468c5e59a60",
   "lessons": [
     {
       "id": "ML-C91-kada",
@@ -580,7 +580,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:123abca40df68d2c",
+      "sourceHash": "fnv1a64:ac4bd57f463a4568",
       "notice": null,
       "blocks": [
         {
@@ -596,7 +596,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say shop, price and money."
+              "text": "From memory alone, say shop, price and money."
             }
           ]
         },

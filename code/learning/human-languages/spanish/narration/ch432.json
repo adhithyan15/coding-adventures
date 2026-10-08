@@ -4,7 +4,7 @@
   "chapter": 432,
   "title": "La Casa Por Dentro",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:be538f24a7b50470",
+  "sourceHash": "fnv1a64:66686b2b4dce6fb8",
   "lessons": [
     {
       "id": "ES-C432-lavadora",
@@ -711,7 +711,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ace0499ddab68424",
+      "sourceHash": "fnv1a64:7265ff367b837c12",
       "notice": null,
       "blocks": [
         {
@@ -727,7 +727,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say the washing machine, the meter and the sofa."
+              "text": "From memory alone, say the washing machine, the meter and the sofa."
             }
           ]
         },
@@ -858,7 +858,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:983820159480c9ee",
+      "sourceHash": "fnv1a64:8bfac32cf098c4c2",
       "notice": null,
       "blocks": [
         {
@@ -886,11 +886,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it once straight through, then answer",
+              "instruction": "the notice once straight through, then answer",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it once straight through, then answer]"
+              "source": "[YOU READ: the notice once straight through, then answer]"
             },
             {
               "kind": "speech",

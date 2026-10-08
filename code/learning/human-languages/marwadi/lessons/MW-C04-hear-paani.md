@@ -38,6 +38,7 @@ reviews_of: [MW-C02-aabhaar, MW-C03-haan-saa, MW-C03-practice]
 
 [PAUSE 15s] Give the Chapter 3 four-skill response once: hear *hā(n) sā* and
 identify a respectful yes; say it. [YOU READ: **हां सा**, then cover it]
+
 [YOU WRITE: the phrase]
 
 Say *ābhār* for formal thanks. Now set writing aside: today's new word begins

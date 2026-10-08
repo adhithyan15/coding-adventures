@@ -55,7 +55,7 @@ Ciao! Grazie! Arrivederci! Non so. Che buono! Questo è Marco.
 [pause 3 seconds]
 [once you have stopped driving — read: the six lines down once, without stopping]
 [pause 3 seconds]
-[once you have stopped driving — read: them again, and notice the list gets longer as it goes, from one word to three]
+[once you have stopped driving — read: the six lines again, and notice the list gets longer as it goes, from one word to three]
 
 Why it's said this way.
 [pause 2 seconds]

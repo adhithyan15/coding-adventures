@@ -43,9 +43,10 @@ reviews_of: [RU-C138-nadeyatsya]
 
 **расписание** (*raspisániye*) — "a timetable".
 
-[YOU READ: the board — **Автобус: 8:00.**]
+[YOU READ: the board]
 
-The bus leaves at eight, so be there before eight.
+The board says **Автобус: 8:00.** The bus leaves at eight, so be there before
+eight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

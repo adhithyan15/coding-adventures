@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 40,
-  "sourceHash": "fnv1a64:ef49e54c44cec6b3",
+  "sourceHash": "fnv1a64:5f1a6875f7d47a6a",
   "lessonIds": [
     "BN-C40-words",
     "BN-C40-lines",
@@ -12,7 +12,7 @@
   "drivablePrefix": 0,
   "text": "bengali/narration/ch40.txt",
   "json": "bengali/narration/ch40.json",
-  "textHash": "fnv1a64:a5c10c6d07c31fc1",
-  "jsonHash": "fnv1a64:5fd4a289d9399ba9",
+  "textHash": "fnv1a64:5cc5c060b956bb71",
+  "jsonHash": "fnv1a64:29e14e00f0a8bde2",
   "findings": []
 }

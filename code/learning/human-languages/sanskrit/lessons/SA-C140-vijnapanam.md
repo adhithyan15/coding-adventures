@@ -43,9 +43,10 @@ reviews_of: [SA-C140-samayasarani]
 
 **विज्ञापनम्** — *vijñāpanam* — "an advert".
 
-[YOU READ: the advert — **प्रकोष्ठः रिक्तः। मूल्यम् — मासे सहस्रम्।**]
+[YOU READ: the advert]
 
-A room is empty, at a thousand a month.
+The advert says **प्रकोष्ठः रिक्तः। मूल्यम् — मासे सहस्रम्।** A room is empty,
+at a thousand a month.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

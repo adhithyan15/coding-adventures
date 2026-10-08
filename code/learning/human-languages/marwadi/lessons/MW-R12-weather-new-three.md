@@ -43,7 +43,9 @@ reviews_of: [MW-C12-mausam, MW-C12-garmi, MW-C12-thandi, MW-W12-au-matra, MW-W12
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAUSAM-01, MW-SCRIPT-MAUSAM-01, MW-LEX-GARMI-01, MW-SCRIPT-GARMI-01, MW-LEX-THANDI-01, MW-SCRIPT-THANDI-01] -->
 
 Hear the three words in mixed order and give each meaning.
-[YOU READ: three cards] [YOU WRITE: all three from sound]
+[YOU READ: three cards]
+
+[YOU WRITE: all three from sound]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAUSAM-01, MW-LEX-GARMI-01, MW-LEX-THANDI-01] -->

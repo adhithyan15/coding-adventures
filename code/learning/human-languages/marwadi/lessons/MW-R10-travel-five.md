@@ -44,7 +44,9 @@ Then recall the three-place payoff.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAJAR-01, MW-SCRIPT-BAJAR-01, MW-LEX-GHAR-01, MW-SCRIPT-GHAR-01, MW-LEX-MANDIR-01, MW-SCRIPT-MANDIR-01, MW-LEX-HAATH-01, MW-SCRIPT-HAATH-01, MW-LEX-PAISA-01, MW-SCRIPT-PAISA-01] -->
 
 Hear all five in mixed order, and say each from meaning.
-[YOU READ: the five cards] [YOU WRITE: the two named aloud]
+[YOU READ: the five cards]
+
+[YOU WRITE: the two named aloud]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAJAR-01, MW-LEX-GHAR-01, MW-LEX-MANDIR-01, MW-LEX-HAATH-01, MW-LEX-PAISA-01] -->

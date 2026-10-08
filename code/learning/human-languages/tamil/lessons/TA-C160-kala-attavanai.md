@@ -43,9 +43,11 @@ reviews_of: [TA-C159-etirpar]
 
 **கால அட்டவணை** — *kāla aṭṭavaṇai* — "a timetable".
 
-[YOU READ: the board — **பேருந்து புறப்படும் நேரம்: காலை எட்டு மணி** — *pēruntu puṟappaṭum nēram: kālai eṭṭu maṇi* — "Bus departure time: 8 a.m."]
+[YOU READ: the board]
 
-The bus leaves at eight, so be there before eight.
+The board says **பேருந்து புறப்படும் நேரம்: காலை எட்டு மணி** — *pēruntu
+puṟappaṭum nēram: kālai eṭṭu maṇi* — "Bus departure time: 8 a.m." The bus leaves
+at eight, so be there before eight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

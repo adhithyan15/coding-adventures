@@ -32,8 +32,8 @@ reviews_of: [ES-C445-jubilarse, ES-C445-responsabilidad, ES-C445-exigente, ES-C4
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C445-PUESTO-01, ES-LEX-C445-PUESTO-02, ES-LEX-C445-PUESTO-03, ES-LEX-C445-PUESTO-04, ES-LEX-C445-PUESTO-05] -->
 
-[PAUSE 3s] Leave the lessons before this one closed. Say all five: *to retire*,
-*responsibility*, *demanding*, *to teach*, *to repeat*.
+[PAUSE 3s] From memory alone, say all five: *to retire*, *responsibility*,
+*demanding*, *to teach*, *to repeat*.
 
 ## Grammar Lens: a root you own predicts how a new word behaves
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C445-PUESTO-02, ES-LEX-C445-PUESTO-05, ES-LEX-C445-PUESTO-03] -->

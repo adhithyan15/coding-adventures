@@ -4,7 +4,7 @@
   "chapter": 445,
   "title": "El Puesto",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:e7d609894e3f45f4",
+  "sourceHash": "fnv1a64:35410e91ce843f33",
   "lessons": [
     {
       "id": "ES-C445-jubilarse",
@@ -822,7 +822,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1971772616fb97f",
+      "sourceHash": "fnv1a64:531aff9252c36495",
       "notice": null,
       "blocks": [
         {
@@ -838,7 +838,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say all five: to retire, responsibility, demanding, to teach, to repeat."
+              "text": "From memory alone, say all five: to retire, responsibility, demanding, to teach, to repeat."
             }
           ]
         },

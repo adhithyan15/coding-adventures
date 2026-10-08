@@ -4,7 +4,7 @@
   "chapter": 156,
   "title": "A Timetable, a Notice, the Rent, an Advert, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:0f2fa6c59c72937d",
+  "sourceHash": "fnv1a64:9414ed4d3123b0f8",
   "lessons": [
     {
       "id": "TE-C156-kalapattika",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:006ad6169d2763ae",
+      "sourceHash": "fnv1a64:31fec5c88332c880",
       "notice": null,
       "blocks": [
         {
@@ -51,15 +51,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the board — బస్సు: ఉదయం ఎనిమిది గంటలు — bassu: udayaṁ enimidi gaṇṭalu — \"Bus: 8 a.m.\"",
+              "instruction": "the board",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the board — **బస్సు: ఉదయం ఎనిమిది గంటలు** — *bassu: udayaṁ enimidi gaṇṭalu* — \"Bus: 8 a.m.\"]"
+              "source": "[YOU READ: the board]"
             },
             {
               "kind": "speech",
-              "text": "The bus leaves at eight, so be there before eight."
+              "text": "The board says బస్సు: ఉదయం ఎనిమిది గంటలు — bassu: udayaṁ enimidi gaṇṭalu — \"Bus: 8 a.m.\" The bus leaves at eight, so be there before eight."
             }
           ]
         },
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:add05e44a57a90b5",
+      "sourceHash": "fnv1a64:5106296a60e2489f",
       "notice": null,
       "blocks": [
         {
@@ -187,15 +187,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the notice — ఇవాళ దుకాణం మూసి ఉంది — ivāḷa dukāṇaṁ mūsi undi — \"The shop is closed today.\"",
+              "instruction": "the notice",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the notice — **ఇవాళ దుకాణం మూసి ఉంది** — *ivāḷa dukāṇaṁ mūsi undi* — \"The shop is closed today.\"]"
+              "source": "[YOU READ: the notice]"
             },
             {
               "kind": "speech",
-              "text": "Come back on another day."
+              "text": "The notice says ఇవాళ దుకాణం మూసి ఉంది — ivāḷa dukāṇaṁ mūsi undi — \"The shop is closed today.\" Come back on another day."
             }
           ]
         },
@@ -414,7 +414,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38851a4ab1f455bf",
+      "sourceHash": "fnv1a64:e7a32995caa569e7",
       "notice": null,
       "blocks": [
         {
@@ -446,11 +446,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the advert — ఇల్లు అద్దెకు ఉంది — illu addeku undi — \"House for rent.\"",
+              "instruction": "the advert",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the advert — **ఇల్లు అద్దెకు ఉంది** — *illu addeku undi* — \"House for rent.\"]"
+              "source": "[YOU READ: the advert]"
+            },
+            {
+              "kind": "speech",
+              "text": "The advert says ఇల్లు అద్దెకు ఉంది — illu addeku undi — \"House for rent.\""
             }
           ]
         },

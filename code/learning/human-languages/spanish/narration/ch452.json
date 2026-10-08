@@ -4,7 +4,7 @@
   "chapter": 452,
   "title": "El reparto",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:c003a78450c7f938",
+  "sourceHash": "fnv1a64:e81b501841a2af27",
   "lessons": [
     {
       "id": "ES-C452-almacen",
@@ -666,7 +666,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f863ca7588ad3717",
+      "sourceHash": "fnv1a64:b9436ba6bb53e463",
       "notice": null,
       "blocks": [
         {
@@ -682,7 +682,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say all four: the warehouse, the route, the tracking, comfortable."
+              "text": "From memory alone, say all four: the warehouse, the route, the tracking, comfortable."
             }
           ]
         },
@@ -819,7 +819,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19df011f0328f5bf",
+      "sourceHash": "fnv1a64:78fff8cab1f45d3f",
       "notice": null,
       "blocks": [
         {
@@ -851,11 +851,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it, then answer",
+              "instruction": "the card, then answer",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it, then answer]"
+              "source": "[YOU READ: the card, then answer]"
             },
             {
               "kind": "speech",

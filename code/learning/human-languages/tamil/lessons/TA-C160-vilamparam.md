@@ -43,9 +43,10 @@ reviews_of: [TA-C160-vatakai]
 
 **விளம்பரம்** — *viḷamparam* — "an advert".
 
-[YOU READ: the advert — **வீடு வாடகைக்கு விடப்படும்** — *vīṭu vāṭakaikku viṭappaṭum* — "House to let."]
+[YOU READ: the advert]
 
-A house is available to rent.
+The advert says **வீடு வாடகைக்கு விடப்படும்** — *vīṭu vāṭakaikku viṭappaṭum* —
+"House to let." A house is available to rent.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

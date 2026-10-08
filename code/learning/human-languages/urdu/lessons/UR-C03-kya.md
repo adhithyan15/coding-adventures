@@ -45,7 +45,8 @@ add the question word.
 
 > **کیا** — *kyā* — **what**
 
-[YOU READ: right to left — **ک** *k*, **ی** supplying the *y* glide here, then **ا** long *ā*]
+Right to left: **ک** *k*, **ی** supplying the *y* glide here, then **ا** long
+*ā*. [YOU READ: the word right to left]
 
 The same **ی** carried long *ī* in *jī* and *nahī̃* — words you say but cannot
 spell yet. Its job depends on the word; here the learned shape is *kyā*.

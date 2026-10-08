@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "From study to university student",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8635f08502522974",
+  "sourceHash": "fnv1a64:de9e8d46857990e4",
   "lessons": [
     {
       "id": "ZH-C13-hear-da",
@@ -675,7 +675,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:045b7067b985c9a6",
+      "sourceHash": "fnv1a64:b81788c6a54a0ed4",
       "notice": null,
       "blocks": [
         {
@@ -716,11 +716,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it without pinyin, then give the syllable a clear rise",
+              "instruction": "学 (xué) without pinyin, then give the syllable a clear rise",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it without pinyin, then give the syllable a clear rise]"
+              "source": "[YOU READ: **学** without pinyin, then give the syllable a clear rise]"
             }
           ]
         },
@@ -1430,7 +1430,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b2fb9ff604edbdfe",
+      "sourceHash": "fnv1a64:72b1738390cc870a",
       "notice": null,
       "blocks": [
         {
@@ -1535,7 +1535,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1af82394069315d3",
+      "sourceHash": "fnv1a64:06a4a4a97e7848bf",
       "notice": null,
       "blocks": [
         {
@@ -1572,10 +1572,6 @@
             {
               "kind": "speech",
               "text": "Speaking: produce all six from their English meanings, with tones audible."
-            },
-            {
-              "kind": "speech",
-              "text": "Reading:"
             },
             {
               "kind": "prompt",

@@ -39,7 +39,9 @@ reviews_of: [ZH-C15-zhong, ZH-C15-zhongxue]
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-ZHONGXUE-01, ZH-LEX-ZHONG-01, ZH-LEX-ZHONGXUE-01, ZH-SCRIPT-ZHONG-01, ZH-SCRIPT-XUE-01] -->
 
 Hear **middle** and **middle school** in mixed order. Say each.
-[YOU READ: its card] [YOU WRITE: each one, once]
+[YOU READ: each Mandarin form]
+
+[YOU WRITE: each one, once]
 
 Repair only the missed item.
 

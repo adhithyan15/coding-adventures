@@ -51,6 +51,7 @@ Then say mother. [YOU WRITE: short **ु** and the familiar vowel-off mark **्
 <!-- hl-writing-stage: delayed-copy -->
 
 [YOU COVER: the model after one look, then wait five seconds]
+
 [YOU WRITE: **वस्तु** — check the middle consonant join and the final short **ु**]
 
 ## Wrap-up Recall

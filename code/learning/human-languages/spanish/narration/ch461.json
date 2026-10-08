@@ -4,7 +4,7 @@
   "chapter": 461,
   "title": "El donativo",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:dece0fa66f7400ae",
+  "sourceHash": "fnv1a64:a47b7da1749c2a16",
   "lessons": [
     {
       "id": "ES-C461-donar",
@@ -512,7 +512,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:723751f10a76823c",
+      "sourceHash": "fnv1a64:4f0eb9c51f7817da",
       "notice": null,
       "blocks": [
         {
@@ -528,7 +528,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say all three: to donate, dangerous, to turn down."
+              "text": "From memory alone, say all three: to donate, dangerous, to turn down."
             }
           ]
         },
@@ -656,7 +656,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e178fd8a532ace2d",
+      "sourceHash": "fnv1a64:d639794636b43e41",
       "notice": null,
       "blocks": [
         {
@@ -688,11 +688,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it, then answer",
+              "instruction": "the poster, then answer",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it, then answer]"
+              "source": "[YOU READ: the poster, then answer]"
             },
             {
               "kind": "speech",

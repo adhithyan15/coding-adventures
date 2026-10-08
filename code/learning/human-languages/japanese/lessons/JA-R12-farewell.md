@@ -36,7 +36,9 @@ reviews_of: [JA-W01-konnichiwa-read, JA-W08-sayounara-read, JA-C08-sayounara, JA
 
 [PAUSE 85s] [YOU READ: **こんにちは**]
 
-Hear and say **さようなら**. [YOU READ: **さようなら**] [YOU WRITE: **さようなら**, then **だ**]
+Hear and say **さようなら**. [YOU READ: **さようなら**]
+
+[YOU WRITE: **さようなら**, then **だ**]
 
 Retrieve **こし** without looking back.
 

@@ -53,7 +53,7 @@ The four labels name relationships; they do not prescribe one family structure.
 
 1. **Listen:** identify all four heard labels.
 2. **Speak:** produce two different labels from meanings.
-3. **Reading:** [YOU READ: all four printed words and match them]
+3. [YOU READ: all four printed words and match them]
 4. [YOU WRITE: two heard labels without a model]
 
 Score each skill separately.

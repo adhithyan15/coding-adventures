@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Reading — Characters, Words, and a First Passage",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8375ba7471d18802",
+  "sourceHash": "fnv1a64:6d29627feecdf3c9",
   "lessons": [
     {
       "id": "ZH-C29-characters",
@@ -212,7 +212,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dfc6fe16d67e71fc",
+      "sourceHash": "fnv1a64:727d0e07cde23d12",
       "notice": null,
       "blocks": [
         {
@@ -275,11 +275,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "them again, and this time notice there is nothing between the characters",
+              "instruction": "the six words again, and this time notice there is nothing between the characters",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: them again, and this time notice there is nothing between the characters]"
+              "source": "[YOU READ: the six words again, and this time notice there is nothing between the characters]"
             },
             {
               "kind": "speech",
@@ -412,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:754709b25dad9f89",
+      "sourceHash": "fnv1a64:cc1b4464543d831f",
       "notice": null,
       "blocks": [
         {
@@ -475,11 +475,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it again, and this time notice that the passage turns at line six",
+              "instruction": "the passage again, and this time notice that the passage turns at line six",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it again, and this time notice that the passage turns at line six]"
+              "source": "[YOU READ: the passage again, and this time notice that the passage turns at line six]"
             },
             {
               "kind": "speech",

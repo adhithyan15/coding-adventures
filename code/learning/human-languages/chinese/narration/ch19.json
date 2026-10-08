@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Asking",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a9d1caaa08ee8735",
+  "sourceHash": "fnv1a64:8cce2a6b20a0bb39",
   "lessons": [
     {
       "id": "ZH-C19-hear-ma",
@@ -413,7 +413,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c2b3ca521aa450f9",
+      "sourceHash": "fnv1a64:fb30154414475b15",
       "notice": null,
       "blocks": [
         {
@@ -662,7 +662,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6c5b49b4c14a481",
+      "sourceHash": "fnv1a64:ff8bf5058c118cf7",
       "notice": null,
       "blocks": [
         {
@@ -707,15 +707,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the three known shapes from left to right — 你, 好, and the new 吗 (ma) on the end",
+              "instruction": "the three known shapes from left to right",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the three known shapes from left to right — 你, 好, and the new 吗 on the end]"
+              "source": "[YOU READ: the three known shapes from left to right]"
             },
             {
               "kind": "speech",
-              "text": "Every one of them is a character you have already written."
+              "text": "They are 你, 好, and the new 吗 (ma) on the end. Every one of them is a character you have already written."
             },
             {
               "kind": "speech",
@@ -1309,7 +1309,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2efda24ddc3bce33",
+      "sourceHash": "fnv1a64:24450220109a2d4b",
       "notice": null,
       "blocks": [
         {
@@ -1350,15 +1350,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "its unpointed card",
+              "instruction": "each Mandarin form without pinyin",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: its unpointed card]"
+              "source": "[YOU READ: each Mandarin form without pinyin]"
             },
             {
               "kind": "speech",
-              "text": "Decide which of the two question patterns it uses — the light syllable on the end, or the word denied in the middle."
+              "text": "Decide which of the two question patterns each one uses — the light syllable on the end, or the word denied in the middle."
             },
             {
               "kind": "prompt",
@@ -1617,7 +1617,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89d6efe467796e58",
+      "sourceHash": "fnv1a64:55d03bf7ce421eea",
       "notice": null,
       "blocks": [
         {
@@ -1673,10 +1673,6 @@
             {
               "kind": "speech",
               "text": "Speaking. Be given the English and say the Mandarin, tones and all."
-            },
-            {
-              "kind": "speech",
-              "text": "Reading."
             },
             {
               "kind": "prompt",

@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "One Goodbye, Sign by Sign",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:dd4e9ef1c5e9bb49",
+  "sourceHash": "fnv1a64:d06a49f208c1b504",
   "lessons": [
     {
       "id": "JA-C08-hear-sayounara",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14053244409e3e8d",
+      "sourceHash": "fnv1a64:78abcb868633133d",
       "notice": null,
       "blocks": [
         {
@@ -49,11 +49,15 @@
             {
               "kind": "prompt",
               "action": "COVER",
-              "instruction": "the text before the new expression begins",
+              "instruction": "the text",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU COVER: the text before the new expression begins]"
+              "source": "[YOU COVER: the text]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then the new expression begins."
             }
           ]
         },

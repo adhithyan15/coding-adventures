@@ -4,7 +4,7 @@
   "chapter": 453,
   "title": "El turno",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:3af8c2f53ea0e515",
+  "sourceHash": "fnv1a64:8306dc4a2bb50962",
   "lessons": [
     {
       "id": "ES-C453-limpieza",
@@ -850,7 +850,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ffc7c2861e148389",
+      "sourceHash": "fnv1a64:05386bf42ab2c10f",
       "notice": null,
       "blocks": [
         {
@@ -882,11 +882,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it, then answer",
+              "instruction": "the sheet, then answer",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it, then answer]"
+              "source": "[YOU READ: the sheet, then answer]"
             },
             {
               "kind": "speech",

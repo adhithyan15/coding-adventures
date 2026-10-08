@@ -50,6 +50,7 @@ reviews_of: [MW-C16-hear-bas]
 <!-- hl-writing-stage: delayed-copy -->
 
 [YOU COVER: the model after one look, then wait five seconds]
+
 [YOU WRITE: **बस**]
 
 ## Wrap-up Recall

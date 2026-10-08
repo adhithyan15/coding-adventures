@@ -55,7 +55,7 @@ Reading.
 [pause 3 seconds]
 [once you have stopped driving — read: the six lines down once, without stopping]
 [pause 3 seconds]
-[once you have stopped driving — read: them again, and notice where the question word sits in the fifth line]
+[once you have stopped driving — read: the six lines again, and notice where the question word sits in the fifth line]
 
 You'll want to know.
 [pause 2 seconds]
@@ -94,7 +94,7 @@ Reading.
 [pause 3 seconds]
 [once you have stopped driving — read: the passage once without stopping; do not translate as you go — let the sentences arrive]
 [pause 3 seconds]
-[once you have stopped driving — read: it again, and notice which lines have no verb at all]
+[once you have stopped driving — read: the passage again, and notice which lines have no verb at all]
 
 You'll want to know.
 [pause 2 seconds]

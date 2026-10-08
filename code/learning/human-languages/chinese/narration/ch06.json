@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "See You Again",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0c334eed78a4a8d4",
+  "sourceHash": "fnv1a64:6760201714550272",
   "lessons": [
     {
       "id": "ZH-W06-zai",
@@ -536,7 +536,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac4cccbc07fd3ffc",
+      "sourceHash": "fnv1a64:f89a0ad7bd638004",
       "notice": null,
       "blocks": [
         {
@@ -568,11 +568,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it straight through",
+              "instruction": "the exchange straight through",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it straight through]"
+              "source": "[YOU READ: the exchange straight through]"
             },
             {
               "kind": "speech",

@@ -4,7 +4,7 @@
   "chapter": 95,
   "title": "Open, Closed, In, Out",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:07ff1f06e4501c52",
+  "sourceHash": "fnv1a64:8bcce799dee96735",
   "lessons": [
     {
       "id": "ML-C95-thurakkuka",
@@ -459,7 +459,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:079b863dda7492c2",
+      "sourceHash": "fnv1a64:f691afa615a6c4ac",
       "notice": null,
       "blocks": [
         {
@@ -475,7 +475,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say to open and to close, then ask somebody to do each."
+              "text": "From memory alone, say to open and to close, then ask somebody to do each."
             }
           ]
         },

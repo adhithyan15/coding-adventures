@@ -56,7 +56,7 @@ Olá! Bom dia. Boa noite. Obrigado. Sim. Adeus!
 [pause 3 seconds]
 [once you have stopped driving — read: the six lines down once, without stopping]
 [pause 3 seconds]
-[once you have stopped driving — read: them again, and notice that Bom dia and Boa noite differ by one letter, and that the letter is doing grammar]
+[once you have stopped driving — read: the six lines again, and notice that Bom dia and Boa noite differ by one letter, and that the letter is doing grammar]
 
 Why it's said this way.
 [pause 2 seconds]
@@ -95,7 +95,7 @@ Olá! Bom dia. Eu tenho um livro. O livro é muito bom. Eu leio e falo. Tenho um
 [pause 3 seconds]
 [once you have stopped driving — read: the passage once without stopping; do not translate as you go — let the sentences arrive]
 [pause 3 seconds]
-[once you have stopped driving — read: it again, and count the joining words]
+[once you have stopped driving — read: the passage again, and count the joining words]
 
 Why it's said this way.
 [pause 2 seconds]

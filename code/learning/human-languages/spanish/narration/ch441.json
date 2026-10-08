@@ -4,7 +4,7 @@
   "chapter": 441,
   "title": "El Contrato",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:7d58e87d353ca3f7",
+  "sourceHash": "fnv1a64:dadb7c7e90de94f0",
   "lessons": [
     {
       "id": "ES-C441-contrato",
@@ -795,7 +795,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4698822994d6dc5f",
+      "sourceHash": "fnv1a64:5b5bcbed858620f1",
       "notice": null,
       "blocks": [
         {
@@ -811,7 +811,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say all five: the contract, to sign, permanent, the invoice, the loan."
+              "text": "From memory alone, say all five: the contract, to sign, permanent, the invoice, the loan."
             }
           ]
         },

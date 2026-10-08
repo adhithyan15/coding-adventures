@@ -52,7 +52,8 @@ One new letter, and it is a sound English does not have.
   top of the throat — heavier and darker than English *k*.
 - **ا** (*alif*) and **ل** (*lām*) are yours already.
 
-[YOU READ: **قال** right to left — *qāf*, long *ā*, *lām*]
+**قال** runs right to left: *qāf*, long *ā*, *lām*.
+[YOU READ: **قال** right to left]
 
 Be honest about the sound: in most everyday spoken Arabic **ق** is not said that
 way at all — in Cairo and Damascus it becomes a glottal stop, and across much of

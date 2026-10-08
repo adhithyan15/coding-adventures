@@ -4,7 +4,7 @@
   "chapter": 439,
   "title": "Andenes Y Cierres",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:4b7814a6ec856957",
+  "sourceHash": "fnv1a64:5da34a4b0cd9092d",
   "lessons": [
     {
       "id": "ES-C439-anden",
@@ -781,7 +781,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c60372d55d4f28e7",
+      "sourceHash": "fnv1a64:b1f27aaec6ace275",
       "notice": null,
       "blocks": [
         {
@@ -797,7 +797,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say all five: the platform, to move something across, closed, to cut, to throw away."
+              "text": "From memory alone, say all five: the platform, to move something across, closed, to cut, to throw away."
             }
           ]
         },

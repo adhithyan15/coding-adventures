@@ -53,6 +53,7 @@ only the opening syllable differs.
 <!-- hl-writing-stage: delayed-copy -->
 
 [YOU COVER: the model after one look, then wait five seconds]
+
 [YOU WRITE: **बाटी**, then **रोटी** beneath it — check that only the first syllable changed]
 
 ## Wrap-up Recall

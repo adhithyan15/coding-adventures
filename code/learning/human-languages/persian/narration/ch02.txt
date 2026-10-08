@@ -10,7 +10,8 @@ Warm-up.
 Greet once, then answer yes and no. The next line gives you one careful sentence for your own name.
 
 The exchange.
-[once you have stopped driving — read: the phrase from right to left, but say its words in this order]
+[once you have stopped driving — read: the phrase from right to left]
+Say its words in this order:
 اسمِ من... است — esm-e man... ast.
 اسم esm = name. You already recognize ا, س, and م.
 The small spoken -e after esm links “name” to its owner. This linker is called ezafe. It is often not written in ordinary text.

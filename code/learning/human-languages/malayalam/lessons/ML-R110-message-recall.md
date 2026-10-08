@@ -33,8 +33,7 @@ reviews_of: [ML-C110-phon, ML-C110-kattu, ML-C110-thapaal, ML-C110-imeyil]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C110-PHONE-01, ML-LEX-C110-LETTER-01, ML-LEX-C110-POST-01] -->
 
-[PAUSE 3s] Leave the lessons before this one closed. Say *telephone*, *letter*
-and *the post*.
+[PAUSE 3s] From memory alone, say *telephone*, *letter* and *the post*.
 
 ## Grammar Lens: two ways of reaching somebody, a century apart
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C110-LETTER-01, ML-LEX-C110-POST-01, ML-LEX-C110-EMAIL-01, ML-LEX-C110-INTERNET-01] -->

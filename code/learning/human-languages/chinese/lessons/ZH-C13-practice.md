@@ -41,7 +41,7 @@ reviews_of: [ZH-R13-school-six, ZH-C12-practice, ZH-C08-practice]
 
 1. **Listening:** hear six words in mixed order and choose every meaning.
 2. **Speaking:** produce all six from their English meanings, with tones audible.
-3. **Reading:** [YOU READ: all six character cards without pinyin]
+3. [YOU READ: all six character cards without pinyin]
 4. **Writing:** hear all six. [YOU WRITE: all six without a model]
 
 Pass each skill separately. Repair and retry only the failed skill. This is a

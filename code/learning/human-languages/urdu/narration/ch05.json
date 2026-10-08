@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Take Leave",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:08873975e7c8560f",
+  "sourceHash": "fnv1a64:b57389b3369292c5",
   "lessons": [
     {
       "id": "UR-C05-khuda",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e37cee775927ef4",
+      "sourceHash": "fnv1a64:b3cd2032fc8dcb48",
       "notice": null,
       "blocks": [
         {
@@ -49,13 +49,17 @@
               "text": "خدا — khudā — God."
             },
             {
+              "kind": "speech",
+              "text": "From right to left: خ kh + د d + ا long ā."
+            },
+            {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "from right to left — خ kh + د d + ا long ā",
+              "instruction": "the word from right to left",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: from right to left — **خ** *kh* + **د** *d* + **ا** long *ā*]"
+              "source": "[YOU READ: the word from right to left]"
             },
             {
               "kind": "speech",

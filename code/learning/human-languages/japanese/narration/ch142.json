@@ -4,7 +4,7 @@
   "chapter": 142,
   "title": "Notices: Caution, No Smoking, Reception, Open",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:cde4438d14f32dc1",
+  "sourceHash": "fnv1a64:83b92b6246b1339d",
   "lessons": [
     {
       "id": "JA-C142-chuui",
@@ -508,7 +508,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2ef0624d30132884",
+      "sourceHash": "fnv1a64:e6cf80982edc4d8e",
       "notice": null,
       "blocks": [
         {
@@ -576,11 +576,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it and act on it — the door says えいぎょうちゅう (eigyōchū), so you can go in",
+              "instruction": "the door sign and act on it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it and act on it — the door says **えいぎょうちゅう**, so you can go in]"
+              "source": "[YOU READ: the door sign and act on it]"
+            },
+            {
+              "kind": "speech",
+              "text": "The door says えいぎょうちゅう (eigyōchū), so you can go in."
             }
           ]
         },
@@ -676,7 +680,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7fd1353fa7536dc1",
+      "sourceHash": "fnv1a64:b3b361d8f9347abb",
       "notice": null,
       "blocks": [
         {
@@ -744,15 +748,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it and act on it — the door says じゅんびちゅう (junbichū), so the shop is not open yet",
+              "instruction": "the door sign and act on it",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it and act on it — the door says **じゅんびちゅう**, so the shop is not open yet]"
+              "source": "[YOU READ: the door sign and act on it]"
             },
             {
               "kind": "speech",
-              "text": "Wait, or come back later."
+              "text": "The door says じゅんびちゅう (junbichū), so the shop is not open yet. Wait, or come back later."
             },
             {
               "kind": "speech",

@@ -4,7 +4,7 @@
   "chapter": 450,
   "title": "El césped y el patio",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:b897d3f76a866c34",
+  "sourceHash": "fnv1a64:f40bfc9b8e065dce",
   "lessons": [
     {
       "id": "ES-C450-patio",
@@ -830,7 +830,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76accb56b6129171",
+      "sourceHash": "fnv1a64:51b53836a09952b9",
       "notice": null,
       "blocks": [
         {
@@ -846,7 +846,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say all five: the courtyard, grass, the stone, the lawn, the training session."
+              "text": "From memory alone, say all five: the courtyard, grass, the stone, the lawn, the training session."
             }
           ]
         },
@@ -979,7 +979,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:372dccb7df7429a5",
+      "sourceHash": "fnv1a64:e300a83f3018067d",
       "notice": null,
       "blocks": [
         {
@@ -1011,11 +1011,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it, then answer",
+              "instruction": "the notice, then answer",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it, then answer]"
+              "source": "[YOU READ: the notice, then answer]"
             },
             {
               "kind": "speech",

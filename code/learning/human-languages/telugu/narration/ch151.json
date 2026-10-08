@@ -4,7 +4,7 @@
   "chapter": 151,
   "title": "A Word for Shade — Then Its First Letter",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d1bff158b0cfe923",
+  "sourceHash": "fnv1a64:c20b2b12feec4951",
   "lessons": [
     {
       "id": "TE-C151-chhaya",
@@ -357,7 +357,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2cdd535b3bda0a55",
+      "sourceHash": "fnv1a64:f20fb977de6b476d",
       "notice": null,
       "blocks": [
         {
@@ -394,11 +394,11 @@
             {
               "kind": "prompt",
               "action": "COVER",
-              "instruction": "it",
+              "instruction": "the word",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU COVER: it]"
+              "source": "[YOU COVER: the word]"
             },
             {
               "kind": "prompt",

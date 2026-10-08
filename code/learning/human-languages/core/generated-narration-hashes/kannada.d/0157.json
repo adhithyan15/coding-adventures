@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 157,
-  "sourceHash": "fnv1a64:e796abef349bf81e",
+  "sourceHash": "fnv1a64:5cd94dec1cf0cb8f",
   "lessonIds": [
     "KA-C157-velapatti",
     "KA-C157-suchane",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "kannada/narration/ch157.txt",
   "json": "kannada/narration/ch157.json",
-  "textHash": "fnv1a64:3595a121eea20139",
-  "jsonHash": "fnv1a64:d7f35a86710f7f40",
+  "textHash": "fnv1a64:3a266b6a85d2fe96",
+  "jsonHash": "fnv1a64:b2ab842c424bc174",
   "findings": []
 }

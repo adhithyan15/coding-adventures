@@ -16,7 +16,7 @@ Reading.
 [pause 4 seconds]
 [once you have stopped driving — read: the six words down once, right to left, without translating]
 [pause 3 seconds]
-[once you have stopped driving — read: them again]
+[once you have stopped driving — read: the six words again]
 The first and third words stretch an ا into a long sound, while شكرًا and حسنًا share the little ـًا ending.
 
 The script, taken apart.
@@ -55,7 +55,7 @@ Reading.
 [pause 4 seconds]
 [once you have stopped driving — read: all six lines once without stopping]
 [pause 3 seconds]
-[once you have stopped driving — read: them again]
+[once you have stopped driving — read: the six lines again]
 The question mark tells you where a voice asks; the full stop tells you where it answers. Arabic puts its question mark the other way round — ؟ — because the line itself runs the other way.
 
 The sentence, taken apart.
@@ -93,8 +93,8 @@ Reading.
 [pause 4 seconds]
 [once you have stopped driving — read: the whole encounter once; do not stop to translate a word — let each turn answer the turn before it]
 [pause 4 seconds]
-[once you have stopped driving — read: it again, and this time notice the hinge — شاي أو حليب؟]
-One choice becomes two tiny questions, then a clear answer.
+[once you have stopped driving — read: the encounter again for the hinge]
+The hinge is شاي أو حليب؟ One choice becomes two tiny questions, then a clear answer.
 
 The passage, taken apart.
 [pause 2 seconds]

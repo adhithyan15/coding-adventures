@@ -42,6 +42,7 @@ reviews_of: [ZH-C18-hear-shu, ZH-W18-shu-delayed]
 > **书** — *shū* — **book**
 
 [YOU COVER: the pinyin]
+
 [YOU READ: 书, hold the level first tone, then give its meaning]
 
 ## Guided Practice

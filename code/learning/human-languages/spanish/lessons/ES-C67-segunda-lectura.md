@@ -49,10 +49,10 @@ brother, on a different day.
 > Luego va a salir, porque quiere ver a su padre.
 > Por la noche los dos comen en casa.
 
-[PAUSE 3s] [YOU READ: it once through, without stopping]
+[PAUSE 3s] [YOU READ: the passage once through, without stopping]
 
 [PAUSE 3s]
-[YOU READ: it again, and this time notice that you did not have to work out who *Está* refers to]
+[YOU READ: the passage again, and this time notice that you did not have to work out who *Está* refers to]
 
 Spanish left the name out and you kept it anyway.
 

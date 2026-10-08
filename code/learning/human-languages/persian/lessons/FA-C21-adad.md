@@ -55,7 +55,7 @@ coming the other way.
 [PAUSE 3s] [YOU READ: across each line once, without stopping]
 
 [PAUSE 3s]
-[YOU READ: them again, and this time take the last three as amounts rather than as signs]
+[YOU READ: the lines again, and this time take the last three as amounts rather than as signs]
 
 Ten. Twenty. A hundred.
 

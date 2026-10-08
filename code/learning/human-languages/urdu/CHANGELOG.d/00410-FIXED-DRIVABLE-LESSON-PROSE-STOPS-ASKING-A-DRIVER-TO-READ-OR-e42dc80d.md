@@ -23,3 +23,19 @@ lessons. Every edited lesson stays `drivable: true` (only its
 - UR-C09-bahan "Read on for why." → "The reason comes next."
 - Left alone: "Look at what happened to the noun", "Look hard at the plural"
   (the idiom), "a word you hold by ear, not yet by eye" (description).
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - The notice lessons (UR-C146-ishtihar, UR-C146-notis, UR-C146-taim-tebal)
+    keep the notice in narrated prose and defer only the look: "[YOU READ: the
+    advert]" then "The advert says **…** — …". The first pass had put the whole
+    notice inside the deferred cue, so a listener heard the comment on a notice
+    without the notice; that superseded form is the one described above.
+  - A spoken premise, gloss or answer that the first pass had moved inside a
+    deferred cue is said in prose again, and the cue keeps only the look
+    (UR-C03-kya, UR-C05-khuda, UR-C06-hona, UR-C17-kaam): "Right to left: **ک**
+    *k*, **ی** …, then **ا** long *ā*. [YOU READ: the word right to left]".
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (UR-C17-yih, UR-C33-lines,
+    UR-C33-pehla-sabaq): "[YOU READ: the two words off the page, …]", "[YOU
+    READ: the six lines again, …]".
+  - Four-skill items drop the "**Reading:**" label in front of a READ cue, which
+    the book printed as "Reading: *Read it:* …" (UR-C30-practice).

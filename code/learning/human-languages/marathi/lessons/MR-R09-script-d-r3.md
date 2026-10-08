@@ -43,6 +43,7 @@ reviews_of: [MR-C01-practice]
 <!-- hl-activity: {"id":"MR-R09-script-d-r3-check","kind":"text","assesses":["MR-SCRIPT-YA-01","MR-SCRIPT-LLA-01","MR-SCRIPT-VA-01"],"prompt":"Write ya, lla, and va after a durable gap.","answer":"य ळ व","accepted":[],"feedback":{"correct":"All three survived at durable distance.","incorrect":"Repair only the missed sign."},"response_seconds":28} -->
 
 [YOU COVER: the answer]
+
 [YOU WRITE: *ya*, Marathi curled-back *ḷa*, and *va* from sound]
 
 Then compare: **य ळ व**. Stop after one retrieval and one repair.

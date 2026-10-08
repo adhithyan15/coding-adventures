@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 158,
-  "sourceHash": "fnv1a64:10d3cb09f145821f",
+  "sourceHash": "fnv1a64:67210b8c091a0eb4",
   "lessonIds": [
     "AR-C158-jadwal",
     "AR-C158-lafita",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "arabic/narration/ch158.txt",
   "json": "arabic/narration/ch158.json",
-  "textHash": "fnv1a64:c9d40ae4e88f368d",
-  "jsonHash": "fnv1a64:841ffa2771437542",
+  "textHash": "fnv1a64:531104caacb221e1",
+  "jsonHash": "fnv1a64:46e8650f7ca87751",
   "findings": []
 }

@@ -43,9 +43,10 @@ reviews_of: [MR-C161-bhade]
 
 **जाहिरात** — *jāhirāt* — "an advert".
 
-[YOU READ: the advert — **खोली भाड्याने देणे आहे.** — "Room to let."]
+[YOU READ: the advert]
 
-A room is free to rent.
+The advert says **खोली भाड्याने देणे आहे.** — "Room to let." A room is free to
+rent.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

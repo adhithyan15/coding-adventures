@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "A Little More Slowly",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ef0e7acfac2deb9a",
+  "sourceHash": "fnv1a64:6db14c1054ab048c",
   "lessons": [
     {
       "id": "JA-W10-se",
@@ -1131,7 +1131,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6fe204c8646ce0c8",
+      "sourceHash": "fnv1a64:430be68f9983dab0",
       "notice": null,
       "blocks": [
         {
@@ -1392,7 +1392,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b18a2a41aeefe108",
+      "sourceHash": "fnv1a64:23654cd405797724",
       "notice": null,
       "blocks": [
         {
@@ -1448,10 +1448,6 @@
             {
               "kind": "speech",
               "text": "Speak: sumimasen + the slower request."
-            },
-            {
-              "kind": "speech",
-              "text": "Reading:"
             },
             {
               "kind": "prompt",

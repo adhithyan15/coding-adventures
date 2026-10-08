@@ -43,9 +43,10 @@ reviews_of: [SA-C140-deyakam]
 
 **प्राप्तिपत्रम्** — *prāptipatram* — "a receipt".
 
-[YOU READ: the receipt — **प्रकोष्ठः — मूल्यम् — सहस्रम्।**]
+[YOU READ: the receipt]
 
-The thousand for the room is paid: keep it.
+The receipt says **प्रकोष्ठः — मूल्यम् — सहस्रम्।** The thousand for the room is
+paid: keep it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

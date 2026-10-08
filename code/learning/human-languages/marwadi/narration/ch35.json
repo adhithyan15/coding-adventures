@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "The Ten Digit Signs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6882fe6ba174a541",
+  "sourceHash": "fnv1a64:78e4f671c8384526",
   "lessons": [
     {
       "id": "MW-W35-digits-zero-one-two",
@@ -126,7 +126,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:09aa6d232f818f62",
+      "sourceHash": "fnv1a64:fbd01eab2cb8bc08",
       "notice": null,
       "blocks": [
         {
@@ -1009,7 +1009,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a94a53cc2f05b5f",
+      "sourceHash": "fnv1a64:3230ccf9d6150833",
       "notice": null,
       "blocks": [
         {
@@ -1065,8 +1065,13 @@
               "source": "[YOU READ: twelve printed tickets aloud as Marwadi words, including every one of **४**, **५**, **७** and **८**]"
             },
             {
-              "kind": "speech",
-              "text": "Reading. Given a stall with six labelled goods, say which is dearest and which is cheapest."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the labels on a stall of six goods, then say which is dearest and which is cheapest",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the labels on a stall of six goods, then say which is dearest and which is cheapest]"
             },
             {
               "kind": "speech",

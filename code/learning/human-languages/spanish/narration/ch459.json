@@ -4,7 +4,7 @@
   "chapter": 459,
   "title": "El inventario",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:cf855ad5f7922408",
+  "sourceHash": "fnv1a64:dd08648d65010f91",
   "lessons": [
     {
       "id": "ES-C459-seccion",
@@ -684,7 +684,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e761b030530f510",
+      "sourceHash": "fnv1a64:bf1739fef365c88e",
       "notice": null,
       "blocks": [
         {
@@ -716,11 +716,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it, then answer",
+              "instruction": "the sheet, then answer",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it, then answer]"
+              "source": "[YOU READ: the sheet, then answer]"
             },
             {
               "kind": "speech",

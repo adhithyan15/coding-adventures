@@ -4,7 +4,7 @@
   "chapter": 100,
   "title": "How Much, How Well, How Big",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:277af0442434869b",
+  "sourceHash": "fnv1a64:b4f9672be47504c2",
   "lessons": [
     {
       "id": "HI-C92-thoda",
@@ -195,7 +195,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:94ff071cb8523863",
+      "sourceHash": "fnv1a64:575363bea01ab861",
       "notice": null,
       "blocks": [
         {
@@ -258,16 +258,16 @@
             },
             {
               "kind": "speech",
-              "text": "अच्छा is also where you can now read the letter छ, which arrived a moment ago in the alphabet."
+              "text": "अच्छा is also where you can now read the letter छ, which arrived a moment ago in the alphabet. It sits in the middle of the word."
             },
             {
               "kind": "prompt",
               "action": "FIND",
-              "instruction": "it in the middle of the word",
+              "instruction": "छ in अच्छा",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU FIND: it in the middle of the word]"
+              "source": "[YOU FIND: **छ** in **अच्छा**]"
             }
           ]
         },

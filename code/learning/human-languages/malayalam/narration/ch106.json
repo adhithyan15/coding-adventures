@@ -4,7 +4,7 @@
   "chapter": 106,
   "title": "Before and After",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:49adf6e26fbe8cd5",
+  "sourceHash": "fnv1a64:be87b7ba566552a3",
   "lessons": [
     {
       "id": "ML-C106-munpu",
@@ -449,7 +449,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b967d352827cf309",
+      "sourceHash": "fnv1a64:4a9e4e74e4a483c3",
       "notice": null,
       "blocks": [
         {
@@ -465,7 +465,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say before and after."
+              "text": "From memory alone, say before and after."
             }
           ]
         },

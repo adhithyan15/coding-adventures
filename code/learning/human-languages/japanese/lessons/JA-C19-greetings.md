@@ -56,7 +56,7 @@ that order is reversed.
 [PAUSE 3s] [YOU READ: the six greetings down once, without stopping]
 
 [PAUSE 3s]
-[YOU READ: them again, and notice that the two longest are the two you say most often]
+[YOU READ: the six greetings again, and notice that the two longest are the two you say most often]
 
 Length is not difficulty here; familiarity is.
 

@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Reading — Nouns, Sentences, and a First Paragraph",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:d7358594ff47d6aa",
+  "sourceHash": "fnv1a64:c49dc157ff8145ff",
   "lessons": [
     {
       "id": "GE-C52-words",
@@ -218,7 +218,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21a5d31809f82817",
+      "sourceHash": "fnv1a64:ef325a16f69af937",
       "notice": null,
       "blocks": [
         {
@@ -281,11 +281,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "them again, and this time notice where the second verb sits in the first three",
+              "instruction": "the six lines again, and this time notice where the second verb sits in the first three",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: them again, and this time notice where the second verb sits in the first three]"
+              "source": "[YOU READ: the six lines again, and this time notice where the second verb sits in the first three]"
             }
           ]
         },
@@ -414,7 +414,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff259c2b9cb9f377",
+      "sourceHash": "fnv1a64:8a7293be5c98d80f",
       "notice": null,
       "blocks": [
         {
@@ -477,11 +477,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it again, and find the one line where the verb is last",
+              "instruction": "the passage again, and find the one line where the verb is last",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it again, and find the one line where the verb is last]"
+              "source": "[YOU READ: the passage again, and find the one line where the verb is last]"
             }
           ]
         },

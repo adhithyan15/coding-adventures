@@ -43,9 +43,10 @@ reviews_of: [FA-C138-omidvar-budan]
 
 **جدول زمانی** — *jadval-e zamâni* — "a timetable".
 
-[YOU READ: the board — **اتوبوس: هشت صبح** — *otobus: hasht-e sobh* — "Bus: 8 a.m."]
+[YOU READ: the board]
 
-The bus leaves at eight, so be there before eight.
+The board says **اتوبوس: هشت صبح** — *otobus: hasht-e sobh* — "Bus: 8 a.m." The
+bus leaves at eight, so be there before eight.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

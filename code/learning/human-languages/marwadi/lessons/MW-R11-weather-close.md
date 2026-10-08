@@ -45,6 +45,7 @@ Then name the four weather-payoff skills you just passed.
 
 Without a model, hear one word and say its meaning.
 [YOU READ: the other two in mixed order]
+
 [YOU WRITE: all three from meaning cues]
 
 ## Wrap-up Recall

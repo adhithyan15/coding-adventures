@@ -50,6 +50,7 @@ Keep three morae.
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ONAKA] -->
 
 Hear, picture the part, and say **おなか**. [YOU READ: **おなか**]
+
 [YOU WRITE: **おなか**]
 
 ## Wrap-up Recall

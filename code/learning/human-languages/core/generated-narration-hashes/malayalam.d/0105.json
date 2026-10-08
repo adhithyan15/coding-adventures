@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 105,
-  "sourceHash": "fnv1a64:a34c021bb81f416b",
+  "sourceHash": "fnv1a64:6bf71430880ea250",
   "lessonIds": [
     "ML-C105-raajyam",
     "ML-C105-nagaram",
@@ -12,7 +12,7 @@
   "drivablePrefix": 4,
   "text": "malayalam/narration/ch105.txt",
   "json": "malayalam/narration/ch105.json",
-  "textHash": "fnv1a64:a7cb45720fa0bd6f",
-  "jsonHash": "fnv1a64:8b559e6e192b5006",
+  "textHash": "fnv1a64:2da1532bb1970677",
+  "jsonHash": "fnv1a64:113b58fe11351ecd",
   "findings": []
 }

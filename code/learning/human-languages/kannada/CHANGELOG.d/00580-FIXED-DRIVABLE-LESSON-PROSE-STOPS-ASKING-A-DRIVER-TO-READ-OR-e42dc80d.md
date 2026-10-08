@@ -28,3 +28,18 @@ lessons. Every edited lesson stays `drivable: true` (only its
 - Left alone: "Read literally it says …" and "Read it in Kannada order: …"
   (interpretation), "Look at what changed" (the idiom), "When a word will not
   stay in the ear, ask for it on paper" (advice for a real conversation).
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - The notice lessons (KA-C157-jahiratu, KA-C157-suchane, KA-C157-velapatti)
+    keep the notice in narrated prose and defer only the look: "[YOU READ: the
+    advert]" then "The advert says **…** — …". The first pass had put the whole
+    notice inside the deferred cue, so a listener heard the comment on a notice
+    without the notice; that superseded form is the one described above.
+  - A spoken premise, gloss or answer that the first pass had moved inside a
+    deferred cue is said in prose again, and the cue keeps only the look
+    (KA-C07-naalku, KA-C75-on-a-sign): "The word breaks into **ನಾ** (*nā*) ·
+    **ಲ್** · **ಕು** (*ku*). [YOU READ: the word slowly]"; KA-C75 "[YOU READ:
+    **೧ನೇ** aloud]" then "It is *Modalanē* — not \"one-nē\".".
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (KA-C76-lines,
+    KA-C76-modala-oduvike): "[YOU READ: the six lines again, …]", "[YOU READ:
+    the passage again, and watch **ಇಲ್ಲಿ** and **ಅಲ್ಲಿ** take turns]".

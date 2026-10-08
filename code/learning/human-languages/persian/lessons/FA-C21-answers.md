@@ -55,7 +55,7 @@ speaking.
 
 [PAUSE 3s] [YOU READ: the six lines down once, without stopping]
 
-[PAUSE 3s] [YOU READ: them again, and notice the list changes halfway]
+[PAUSE 3s] [YOU READ: the six lines again, and notice the list changes halfway]
 
 The first four are things you say to a person. The last two are things you read
 off a door.

@@ -33,8 +33,8 @@ reviews_of: [ML-C82-chettaa, ML-C82-chechi-address, ML-C82-greeting-register]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C82-ADDRESS-01, ML-LEX-C82-ADDRESS-02] -->
 
-[PAUSE 3s] Leave the lessons before this one closed. Call out to a man you do
-not know, then to a woman you do not know.
+[PAUSE 3s] From memory alone, call out to a man you do not know, then to a woman
+you do not know.
 
 ## Grammar Lens: two things a stranger needs
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C82-ADDRESS-01, ML-LEX-C82-ADDRESS-02, ML-CONCEPT-C82-VOCATIVE-01, ML-CONCEPT-C12-KUDUMBAM-01, ML-CONCEPT-C12-KUDUMBAM-02] -->

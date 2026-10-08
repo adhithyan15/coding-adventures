@@ -4,7 +4,7 @@
   "chapter": 160,
   "title": "A Timetable, a Notice, the Rent, an Advert, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:8259da785169ec5e",
+  "sourceHash": "fnv1a64:1f91a84118816435",
   "lessons": [
     {
       "id": "TA-C160-kala-attavanai",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9011e4c71ba774a2",
+      "sourceHash": "fnv1a64:9fe01f4a5ddb52c0",
       "notice": null,
       "blocks": [
         {
@@ -51,15 +51,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the board — பேருந்து புறப்படும் நேரம்: காலை எட்டு மணி — pēruntu puṟappaṭum nēram: kālai eṭṭu maṇi — \"Bus departure time: 8 a.m.\"",
+              "instruction": "the board",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the board — **பேருந்து புறப்படும் நேரம்: காலை எட்டு மணி** — *pēruntu puṟappaṭum nēram: kālai eṭṭu maṇi* — \"Bus departure time: 8 a.m.\"]"
+              "source": "[YOU READ: the board]"
             },
             {
               "kind": "speech",
-              "text": "The bus leaves at eight, so be there before eight."
+              "text": "The board says பேருந்து புறப்படும் நேரம்: காலை எட்டு மணி — pēruntu puṟappaṭum nēram: kālai eṭṭu maṇi — \"Bus departure time: 8 a.m.\" The bus leaves at eight, so be there before eight."
             }
           ]
         },
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:404ed15a8f6c8339",
+      "sourceHash": "fnv1a64:3910cc7fce723f93",
       "notice": null,
       "blocks": [
         {
@@ -187,15 +187,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the notice — ஞாயிறுதோறும் கடை விடுமுறை — ñāyiṟutōṟum kaṭai viṭumuṟai — \"Shop closed every Sunday.\"",
+              "instruction": "the notice",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the notice — **ஞாயிறுதோறும் கடை விடுமுறை** — *ñāyiṟutōṟum kaṭai viṭumuṟai* — \"Shop closed every Sunday.\"]"
+              "source": "[YOU READ: the notice]"
             },
             {
               "kind": "speech",
-              "text": "Come on another day."
+              "text": "The notice says ஞாயிறுதோறும் கடை விடுமுறை — ñāyiṟutōṟum kaṭai viṭumuṟai — \"Shop closed every Sunday.\" Come on another day."
             }
           ]
         },
@@ -414,7 +414,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8cd57ae0dd82f4a",
+      "sourceHash": "fnv1a64:3f5d3bf7887902cc",
       "notice": null,
       "blocks": [
         {
@@ -446,15 +446,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the advert — வீடு வாடகைக்கு விடப்படும் — vīṭu vāṭakaikku viṭappaṭum — \"House to let.\"",
+              "instruction": "the advert",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the advert — **வீடு வாடகைக்கு விடப்படும்** — *vīṭu vāṭakaikku viṭappaṭum* — \"House to let.\"]"
+              "source": "[YOU READ: the advert]"
             },
             {
               "kind": "speech",
-              "text": "A house is available to rent."
+              "text": "The advert says வீடு வாடகைக்கு விடப்படும் — vīṭu vāṭakaikku viṭappaṭum — \"House to let.\" A house is available to rent."
             }
           ]
         },

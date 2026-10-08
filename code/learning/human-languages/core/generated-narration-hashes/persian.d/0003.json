@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 3,
-  "sourceHash": "fnv1a64:bb2c72a51e1a4b49",
+  "sourceHash": "fnv1a64:523130c19f60daa2",
   "lessonIds": [
     "FA-C03-shoma-to",
     "FA-C03-shoma-to-more",
@@ -14,7 +14,7 @@
   "drivablePrefix": 3,
   "text": "persian/narration/ch03.txt",
   "json": "persian/narration/ch03.json",
-  "textHash": "fnv1a64:730fdb2aac6b90a7",
-  "jsonHash": "fnv1a64:ad8716a61e6dc943",
+  "textHash": "fnv1a64:d89b83a3f60668c7",
+  "jsonHash": "fnv1a64:a7a238859f3c999d",
   "findings": []
 }

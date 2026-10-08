@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "First Food Words: No New Signs",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:eeca1e35653ad1ef",
+  "sourceHash": "fnv1a64:2e377f4840f59394",
   "lessons": [
     {
       "id": "MW-C18-hear-daal",
@@ -99,7 +99,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88de9e1a2f5a66e2",
+      "sourceHash": "fnv1a64:30dfdde8e88edda6",
       "notice": null,
       "blocks": [
         {
@@ -302,7 +302,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6f8417391841aaf9",
+      "sourceHash": "fnv1a64:8789ea80ca73e905",
       "notice": null,
       "blocks": [
         {
@@ -493,7 +493,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc04f70daacdae94",
+      "sourceHash": "fnv1a64:be3ae693181bbbc4",
       "notice": null,
       "blocks": [
         {
@@ -607,7 +607,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e7f04c58e46ac33",
+      "sourceHash": "fnv1a64:27243786386e8b4f",
       "notice": null,
       "blocks": [
         {
@@ -822,7 +822,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd0abf42089cb0a6",
+      "sourceHash": "fnv1a64:0c91ff33ed06dcae",
       "notice": null,
       "blocks": [
         {

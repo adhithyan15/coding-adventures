@@ -48,7 +48,7 @@ notice.
 > Ahora es tarde, pero están bien.
 > Mañana es domingo, y María no trabaja.
 
-[PAUSE 3s] [YOU READ: it once through, without stopping]
+[PAUSE 3s] [YOU READ: the passage once through, without stopping]
 
 [PAUSE 3s] Now answer this before going through it again: how many people are in
 it?

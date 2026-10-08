@@ -58,7 +58,7 @@ room.
 [YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]
 
 [PAUSE 3s]
-[YOU READ: it again, and notice that every line is about the same place]
+[YOU READ: the passage again, and notice that every line is about the same place]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C81-ORDINAL-02, TE-SKILL-CONNECTED-READING] -->

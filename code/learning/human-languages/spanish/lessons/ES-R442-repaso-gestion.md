@@ -32,9 +32,8 @@ reviews_of: [ES-C442-administracion, ES-C442-envio, ES-C442-concertar, ES-C442-r
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C442-GESTION-01, ES-LEX-C442-GESTION-02, ES-LEX-C442-GESTION-03, ES-LEX-C442-GESTION-04, ES-LEX-C442-GESTION-05] -->
 
-[PAUSE 3s] Leave the lessons before this one closed. Say all five:
-*officialdom*, *the shipment*, *to arrange an appointment*, *the meeting*, *the
-screen*.
+[PAUSE 3s] From memory alone, say all five: *officialdom*, *the shipment*, *to
+arrange an appointment*, *the meeting*, *the screen*.
 
 ## Grammar Lens: two routes into a word, and when each one runs out
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C442-GESTION-01, ES-LEX-C442-GESTION-04, ES-LEX-C442-GESTION-05] -->

@@ -4,7 +4,7 @@
   "chapter": 89,
   "title": "What You Think Of It",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:4cba95fef2e57d9f",
+  "sourceHash": "fnv1a64:43727761491c6fe2",
   "lessons": [
     {
       "id": "ML-C89-nallathu",
@@ -457,7 +457,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e537707a8562229",
+      "sourceHash": "fnv1a64:b1325771c670170d",
       "notice": null,
       "blocks": [
         {
@@ -473,7 +473,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say a good one, then say bad."
+              "text": "From memory alone, say a good one, then say bad."
             }
           ]
         },

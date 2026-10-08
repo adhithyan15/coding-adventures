@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Reading — Words, Lines, and a First Passage",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:16b5a644e78ab027",
+  "sourceHash": "fnv1a64:c38d2daf9c0c3a34",
   "lessons": [
     {
       "id": "PT-C29-palavras",
@@ -219,7 +219,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e4b2d59ebfea3553",
+      "sourceHash": "fnv1a64:e3b5e95272f12165",
       "notice": null,
       "blocks": [
         {
@@ -282,11 +282,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "them again, and notice that Bom dia and Boa noite differ by one letter, and that the letter is doing grammar",
+              "instruction": "the six lines again, and notice that Bom dia and Boa noite differ by one letter, and that the letter is doing grammar",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: them again, and notice that **Bom dia** and **Boa noite** differ by one letter, and that the letter is doing grammar]"
+              "source": "[YOU READ: the six lines again, and notice that **Bom dia** and **Boa noite** differ by one letter, and that the letter is doing grammar]"
             }
           ]
         },
@@ -415,7 +415,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a64044867041cd0f",
+      "sourceHash": "fnv1a64:197626aa746fc80f",
       "notice": null,
       "blocks": [
         {
@@ -478,11 +478,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it again, and count the joining words",
+              "instruction": "the passage again, and count the joining words",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it again, and count the joining words]"
+              "source": "[YOU READ: the passage again, and count the joining words]"
             }
           ]
         },

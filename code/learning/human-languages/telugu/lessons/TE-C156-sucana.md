@@ -43,9 +43,10 @@ reviews_of: [TE-C156-kalapattika]
 
 **సూచన** — *sūcana* — "an instruction, a note (on a sign)".
 
-[YOU READ: the notice — **ఇవాళ దుకాణం మూసి ఉంది** — *ivāḷa dukāṇaṁ mūsi undi* — "The shop is closed today."]
+[YOU READ: the notice]
 
-Come back on another day.
+The notice says **ఇవాళ దుకాణం మూసి ఉంది** — *ivāḷa dukāṇaṁ mūsi undi* — "The
+shop is closed today." Come back on another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

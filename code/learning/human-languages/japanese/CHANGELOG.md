@@ -50,6 +50,34 @@ lessons. Every edited lesson stays `drivable: true` (only its
   with care" (JA-C142-chuui — advice for the street), "Read once off a page, it
   becomes something you can reach for" (description), "**五** is **five**, read
   *go*" (a gloss), "Keep listening and reading scores separate".
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - JA-C17-kokonotsu keeps its premise spoken: "The first two signs of **ここのつ**
+    spell **ここ**, the word for *here* you have had since chapter ten. [YOU READ:
+    the first two signs on their own]". The door notices JA-C142-eigyouchuu and
+    JA-C142-junbichuu say what the door says in prose ("The door says
+    **じゅんびちゅう**, so the shop is not open yet.") after "[YOU READ: the door sign
+    and act on it]".
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (JA-C19-greetings,
+    JA-C72-gogo, JA-C95-mochimono, JA-C119-sakanaya): "[YOU READ: the six
+    greetings again, …]", "[YOU READ: the request without stopping — …]", "[YOU
+    READ: the three greetings on sight]".
+  - JA-R131..R137: the first pass's "[PAUSE 2s each] For each one below, say
+    what it means." dropped the reading the step was for → "[PAUSE 2s each] [YOU
+    READ: each one below aloud, then say what it means]" (JA-R131: "…, count its
+    beats, then say what it means").
+  - JA-C08-hear-sayounara "[YOU COVER: the text before the new expression
+    begins]" → "[YOU COVER: the text]" and, in prose, "Then the new expression
+    begins."
+  - Four-skill items drop the "**Reading:**" label in front of a READ cue, which
+    the book printed as "Reading: *Read it:* …" (JA-C01-practice,
+    JA-C09-mou-ichido-onegaishimasu, JA-C10-slower-please, JA-C11-body-map).
+    JA-C10-slower-please's item "[YOU READ: …] [YOU WRITE: …]" becomes two
+    numbered items.
+  - A new cue followed by prose or by another cue in the same paragraph now ends
+    its paragraph, so the book no longer runs "*Cover:* the page The next
+    question …" together (JA-C09-sumimasen, JA-C10-wakarimashita, the JA-C12
+    body words, JA-R12, JA-R13; 17 lessons).
 
 ## Fixed — drivable lessons stop asking a driver to gesture
 

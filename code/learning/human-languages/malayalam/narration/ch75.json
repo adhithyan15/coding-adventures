@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "When, and If",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:86de99eeb8759f32",
+  "sourceHash": "fnv1a64:72307dd123e8ea2e",
   "lessons": [
     {
       "id": "ML-C75-eppol",
@@ -582,7 +582,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fde051260b9f62ce",
+      "sourceHash": "fnv1a64:34adc3315e439efa",
       "notice": null,
       "blocks": [
         {
@@ -598,7 +598,7 @@
             },
             {
               "kind": "speech",
-              "text": "Leave the lessons before this one closed. Say the words for now and then, and then build the question word out of them without looking."
+              "text": "Say the words for now and then, and then build the question word out of them without looking."
             }
           ]
         },

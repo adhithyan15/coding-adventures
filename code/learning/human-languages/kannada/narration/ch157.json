@@ -4,7 +4,7 @@
   "chapter": 157,
   "title": "A Timetable, a Notice, the Rent, an Advert, a Receipt",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:e796abef349bf81e",
+  "sourceHash": "fnv1a64:5cd94dec1cf0cb8f",
   "lessons": [
     {
       "id": "KA-C157-velapatti",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33f6c35ee864d345",
+      "sourceHash": "fnv1a64:f600c5097009566f",
       "notice": null,
       "blocks": [
         {
@@ -51,15 +51,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the board — ಬಸ್: ಬೆಳಿಗ್ಗೆ ೮ — bas: beḷigge eṇṭu — \"Bus: 8 a.m.\"",
+              "instruction": "the board",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the board — **ಬಸ್: ಬೆಳಿಗ್ಗೆ ೮** — *bas: beḷigge eṇṭu* — \"Bus: 8 a.m.\"]"
+              "source": "[YOU READ: the board]"
             },
             {
               "kind": "speech",
-              "text": "The bus leaves at eight, so be there before eight."
+              "text": "The board says ಬಸ್: ಬೆಳಿಗ್ಗೆ ೮ — bas: beḷigge eṇṭu — \"Bus: 8 a.m.\" The bus leaves at eight, so be there before eight."
             }
           ]
         },
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8c8e3962638a673",
+      "sourceHash": "fnv1a64:122a88d68e2e5f59",
       "notice": null,
       "blocks": [
         {
@@ -187,15 +187,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the notice — ಇಂದು ಅಂಗಡಿ ಮುಚ್ಚಿದೆ — indu aṅgaḍi muccide — \"The shop is closed today.\"",
+              "instruction": "the notice",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the notice — **ಇಂದು ಅಂಗಡಿ ಮುಚ್ಚಿದೆ** — *indu aṅgaḍi muccide* — \"The shop is closed today.\"]"
+              "source": "[YOU READ: the notice]"
             },
             {
               "kind": "speech",
-              "text": "Come back on another day."
+              "text": "The notice says ಇಂದು ಅಂಗಡಿ ಮುಚ್ಚಿದೆ — indu aṅgaḍi muccide — \"The shop is closed today.\" Come back on another day."
             }
           ]
         },
@@ -414,7 +414,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a8e3334df9c41474",
+      "sourceHash": "fnv1a64:94d9ca117414bc52",
       "notice": null,
       "blocks": [
         {
@@ -446,11 +446,15 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the advert — ಮನೆ ಬಾಡಿಗೆಗೆ ಇದೆ — mane bāḍigege ide — \"House for rent.\"",
+              "instruction": "the advert",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the advert — **ಮನೆ ಬಾಡಿಗೆಗೆ ಇದೆ** — *mane bāḍigege ide* — \"House for rent.\"]"
+              "source": "[YOU READ: the advert]"
+            },
+            {
+              "kind": "speech",
+              "text": "The advert says ಮನೆ ಬಾಡಿಗೆಗೆ ಇದೆ — mane bāḍigege ide — \"House for rent.\""
             }
           ]
         },

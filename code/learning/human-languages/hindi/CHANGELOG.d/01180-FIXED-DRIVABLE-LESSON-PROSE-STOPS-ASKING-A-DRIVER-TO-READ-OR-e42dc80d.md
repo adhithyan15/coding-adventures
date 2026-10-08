@@ -35,3 +35,21 @@ lessons. Every edited lesson stays `drivable: true` (only its
   parsing strategy, audible), "Look at what that gives you" (the idiom), and
   the answer "(**No** — read them now and draw them when their stroke lessons
   arrive.)".
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - The notice lessons (HI-C166 and HI-C167, ten lessons) keep the notice in
+    narrated prose and defer only the look: "[YOU READ: the sign]" then "The
+    sign says **कमरा नंबर बीस।** (*kamrā nambar bīs.*) Room twenty.";
+    HI-C166-samay "The opening times say …". The first pass had put the whole
+    notice inside the deferred cue, so a listener heard the comment on a notice
+    without the notice; that superseded form is the one described above.
+  - HI-C06-numbers-1-5 "[YOU READ: them now — you'll draw them when the writing
+    track reaches them]" → "[YOU READ: these letters]" and, in prose, "You'll
+    draw them when the writing track reaches them." (no "now" inside a deferred
+    cue).
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (HI-C78-notices,
+    HI-C78-pehla-paath, HI-C85, HI-C87, HI-C88, HI-C90, HI-C91 synthesis
+    lessons, HI-C92-achchha-buraa): "[YOU READ: the six notices again, …]",
+    "[YOU READ: the sentence and say what it means before going on]"; HI-C92
+    says in prose that **छ** sits in the middle of the word, then "[YOU FIND:
+    **छ** in **अच्छा**]".

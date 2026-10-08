@@ -45,7 +45,8 @@ do to the letter under it?
 Tamil says *nāṉku*. Kannada turned that middle **ṉ** into an **l**, and left
 everything else alone.
 
-[YOU READ: the word slowly — **ನಾ** (*nā*) · **ಲ್** (*l*, with your virama stripping the vowel away) · **ಕು** (*ku*)]
+The word breaks into **ನಾ** (*nā*) · **ಲ್** (*l*, with your virama stripping the
+vowel away) · **ಕು** (*ku*). [YOU READ: the word slowly]
 
 Four is where the virama earns its keep — it is what lets *l* and *k* sit
 together with no vowel between them.

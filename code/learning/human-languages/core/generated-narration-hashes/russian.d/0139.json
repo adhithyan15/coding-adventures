@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 139,
-  "sourceHash": "fnv1a64:ca34f5926a22d143",
+  "sourceHash": "fnv1a64:807496254df92061",
   "lessonIds": [
     "RU-C139-raspisaniye",
     "RU-C139-reklama",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "russian/narration/ch139.txt",
   "json": "russian/narration/ch139.json",
-  "textHash": "fnv1a64:b679299854b743ab",
-  "jsonHash": "fnv1a64:4b8d43e409f194fb",
+  "textHash": "fnv1a64:1d961a0a3c3f28e4",
+  "jsonHash": "fnv1a64:b530f4921972fe9e",
   "findings": []
 }

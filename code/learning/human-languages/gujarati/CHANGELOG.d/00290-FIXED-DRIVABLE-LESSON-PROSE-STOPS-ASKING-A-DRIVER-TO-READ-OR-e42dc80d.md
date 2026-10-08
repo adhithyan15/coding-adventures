@@ -29,3 +29,8 @@ lessons. Every edited lesson stays `drivable: true` (only its
 - Left alone: "Do not read the Gujarati shape yet" (a request not to look),
   "Keep **તે** on the page" (keep it in mind), "Now look back over the chapter"
   (a review).
+- **Review follow-up** (same change, second commit). The first pass's rewrites lost some of what a listener needs and broke some of what the book prints; this track's share of the fixes:
+  - Cues that opened with *it*, *them*, *this* or *these* name their object, so
+    the book no longer prints "*Read it:* them again" (GU-C44-lines,
+    GU-C44-pehli-vanchan): "[YOU READ: the six lines again, …]", "[YOU READ: the
+    meeting again, and count how many people are speaking]".

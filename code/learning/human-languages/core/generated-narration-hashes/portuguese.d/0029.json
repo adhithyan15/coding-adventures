@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
   "chapter": 29,
-  "sourceHash": "fnv1a64:16b5a644e78ab027",
+  "sourceHash": "fnv1a64:c38d2daf9c0c3a34",
   "lessonIds": [
     "PT-C29-palavras",
     "PT-C29-linhas",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "portuguese/narration/ch29.txt",
   "json": "portuguese/narration/ch29.json",
-  "textHash": "fnv1a64:e5b111ea8d63c285",
-  "jsonHash": "fnv1a64:b52f6750e80e850b",
+  "textHash": "fnv1a64:cd6a0c956d047953",
+  "jsonHash": "fnv1a64:493b68e4e913048c",
   "findings": []
 }

@@ -49,6 +49,7 @@ skills.
 
 Without a model, hear one word and say its meaning.
 [YOU READ: the other two in mixed order]
+
 [YOU WRITE: all three from meaning cues]
 
 ## Wrap-up Recall

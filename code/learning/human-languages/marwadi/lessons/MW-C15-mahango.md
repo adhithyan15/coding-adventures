@@ -50,6 +50,7 @@ reviews_of: [MW-C15-hear-mahango, MW-C14-sasta]
 <!-- hl-writing-stage: delayed-copy -->
 
 [YOU COVER: the model after one look, then wait five seconds]
+
 [YOU WRITE: **महंगो** — check **ं** above and **ो** around the final **ग**]
 
 ## Wrap-up Recall

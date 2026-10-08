@@ -40,6 +40,7 @@ reviews_of: [ZH-C12-ren, ZH-C12-nu, ZH-C12-erzi, ZH-C12-nuer, ZH-C12-jia, ZH-C12
 
 Hear the six words in a shuffled order and say each meaning. Then, from six
 English meanings, say each word. [YOU READ: the six character cards]
+
 [YOU WRITE: only the two you missed]
 
 Repair one item at a time.

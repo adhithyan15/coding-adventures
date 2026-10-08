@@ -4,7 +4,7 @@
   "chapter": 84,
   "title": "Reading — Words, Lines, and a First Passage",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:12e32e9ee20fae68",
+  "sourceHash": "fnv1a64:6ac5265dd2ea2fd8",
   "lessons": [
     {
       "id": "TA-C84-words",
@@ -215,7 +215,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a3743174df98a22",
+      "sourceHash": "fnv1a64:08d39104ab351b90",
       "notice": null,
       "blocks": [
         {
@@ -278,11 +278,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "them again, and notice where the question word sits in the fifth line",
+              "instruction": "the six lines again, and notice where the question word sits in the fifth line",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: them again, and notice where the question word sits in the fifth line]"
+              "source": "[YOU READ: the six lines again, and notice where the question word sits in the fifth line]"
             }
           ]
         },
@@ -411,7 +411,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:772493d214316233",
+      "sourceHash": "fnv1a64:366f519b65191513",
       "notice": null,
       "blocks": [
         {
@@ -474,11 +474,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "it again, and notice which lines have no verb at all",
+              "instruction": "the passage again, and notice which lines have no verb at all",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: it again, and notice which lines have no verb at all]"
+              "source": "[YOU READ: the passage again, and notice which lines have no verb at all]"
             }
           ]
         },

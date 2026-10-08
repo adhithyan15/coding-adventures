@@ -4,7 +4,7 @@
   "chapter": 73,
   "title": "Today, Yesterday, and the Year",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6bf85fc0cbb09417",
+  "sourceHash": "fnv1a64:4ace48f0165eb207",
   "lessons": [
     {
       "id": "TA-C73-today",
@@ -463,7 +463,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c65b53692a190fc",
+      "sourceHash": "fnv1a64:1c273dd730fe40a0",
       "notice": null,
       "blocks": [
         {
@@ -479,16 +479,16 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one:"
+              "text": "Before the new one, say what இன்று (iṉṟu) means."
             },
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "இன்று (iṉṟu), then say what it means",
+              "instruction": "இன்று (iṉṟu)",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: **இன்று**, then say what it means]"
+              "source": "[YOU READ: **இன்று**]"
             }
           ]
         },

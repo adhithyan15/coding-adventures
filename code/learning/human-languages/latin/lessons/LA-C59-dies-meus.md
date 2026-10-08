@@ -58,10 +58,10 @@ know every form.
 > ad scholam veniō. Crās magistrum et amīcum meum videō.
 
 [PAUSE 4s]
-[YOU READ: it once for time — morning, first hour, sixth hour, after midday, evening, night, tomorrow]
+[YOU READ: the account once for time — morning, first hour, sixth hour, after midday, evening, night, tomorrow]
 
 [PAUSE 3s]
-[YOU READ: it again for the route — home, toward school, in school, homeward]
+[YOU READ: the account again for the route — home, toward school, in school, homeward]
 
 ## Grammar Lens: the account has two maps
 <!-- hl-knowledge: introduces=[]; assesses=[LA-SKILL-C59-ACCOUNT-READING-05, LA-GRAMMAR-C59-OBJECT-A-01, LA-GRAMMAR-C59-OBJECT-M-02] -->

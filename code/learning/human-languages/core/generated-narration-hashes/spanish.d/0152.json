@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 152,
-  "sourceHash": "fnv1a64:dd13fdd4cc996c15",
+  "sourceHash": "fnv1a64:afee8de04003bab2",
   "lessonIds": [
     "ES-C40-sintesis-describir",
     "ES-C40-repaso-palabras-con-historia",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "spanish/narration/ch152.txt",
   "json": "spanish/narration/ch152.json",
-  "textHash": "fnv1a64:842432a094d5c15c",
-  "jsonHash": "fnv1a64:6e7e5f5b00ed2783",
+  "textHash": "fnv1a64:847530af93ab47cc",
+  "jsonHash": "fnv1a64:bfaaad7f35d8e2ab",
   "findings": []
 }

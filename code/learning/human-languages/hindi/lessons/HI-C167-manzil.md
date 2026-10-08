@@ -43,9 +43,10 @@ reviews_of: [HI-C167-nambar]
 
 **मंज़िल** — *manzil* — "a floor, a storey".
 
-[YOU READ: the sign — **कमरा नंबर बीस, दूसरी मंज़िल।** (*kamrā nambar bīs, dūsrī manzil.*)]
+[YOU READ: the sign]
 
-Room twenty is on the second floor: go up.
+The sign says **कमरा नंबर बीस, दूसरी मंज़िल।** (*kamrā nambar bīs, dūsrī
+manzil.*) Room twenty is on the second floor: go up.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

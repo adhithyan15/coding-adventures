@@ -43,9 +43,10 @@ reviews_of: [HI-C166-sucna]
 
 **संदेश** — *sandeś* — "a message".
 
-[YOU READ: the message — **कल सुबह दस बजे दफ़्तर।** (*kal subah das baje daftar.*)]
+[YOU READ: the message]
 
-The office, tomorrow at ten in the morning: be there at ten.
+The message says **कल सुबह दस बजे दफ़्तर।** (*kal subah das baje daftar.*) The
+office, tomorrow at ten in the morning: be there at ten.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

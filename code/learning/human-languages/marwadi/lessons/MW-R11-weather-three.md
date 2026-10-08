@@ -44,7 +44,9 @@ Then say wife.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-HAWA-01, MW-SCRIPT-HAWA-01, MW-LEX-BAADAL-01, MW-SCRIPT-BAADAL-01, MW-LEX-BARSAAT-01, MW-SCRIPT-BARSAAT-01] -->
 
 Hear the three words in mixed order and say each from its meaning.
-[YOU READ: three printed cards and match them] [YOU WRITE: all three from sound]
+[YOU READ: three printed cards and match them]
+
+[YOU WRITE: all three from sound]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-HAWA-01, MW-LEX-BAADAL-01, MW-LEX-BARSAAT-01] -->
