@@ -6,6 +6,14 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- Case-exact native CI selection for the five checked `plan-*.json` fixtures.
+  `replace-existing` schedules the Python build-tool tests and
+  `portable-package-path` schedules TypeScript; the other three cases have
+  neutral-only readers. Unknown flat cases fail closed. Raw-path and
+  three-platform matching, language filters, missing roots, rename sources,
+  emitted plans, and direct-reader drift are covered without forcing a full
+  build or changing plan execution behavior.
+
 - Case-exact native CI selection for the twenty-two checked
   `validation-*.json` fixtures. Nine orphan-crate/tracked-artifact cases
   select eleven non-Go validator fronts, five package-root/Lua-Windows cases
