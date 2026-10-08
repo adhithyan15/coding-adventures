@@ -13,6 +13,7 @@
     "hourglass-collate-shape",
     "triangle-extract-shape",
     "flipped-triangle-manual-file-shape",
+    "notched-rectangle-card-shape",
     "input-output-and-asymmetric-shapes",
     "sloped-flowchart-shapes",
     "quoted-unicode-node-labels",

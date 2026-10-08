@@ -990,13 +990,14 @@ where
                 })
             }
             DiagramShape::Cloud | DiagramShape::Bang | DiagramShape::Hourglass
-            | DiagramShape::Triangle | DiagramShape::InvertedTriangle => {
+            | DiagramShape::Triangle | DiagramShape::InvertedTriangle | DiagramShape::NotchedRect => {
                 let commands = match node.shape {
                     DiagramShape::Cloud => cloud_path_commands(node.x, node.y, node.width, node.height),
                     DiagramShape::Bang => polygon_path_commands(&bang_polygon_points(node.x, node.y, node.width, node.height)),
                     DiagramShape::Hourglass => polygon_path_commands(&hourglass_polygon_points(node.x, node.y, node.width, node.height)),
                     DiagramShape::Triangle => polygon_path_commands(&triangle_polygon_points(node.x, node.y, node.width, node.height)),
-                    _ => polygon_path_commands(&inverted_triangle_polygon_points(node.x, node.y, node.width, node.height)),
+                    DiagramShape::InvertedTriangle => polygon_path_commands(&inverted_triangle_polygon_points(node.x, node.y, node.width, node.height)),
+                    _ => polygon_path_commands(&notched_rect_polygon_points(node.x, node.y, node.width, node.height)),
                 };
                 PaintInstruction::Path(PaintPath {
                     base: PaintBase::default(), commands, fill: Some(fill.clone()), fill_rule: None,
@@ -1788,6 +1789,10 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
             let points = inverted_triangle_polygon_points(node.x, node.y, node.width, node.height);
             polygon_node_instruction(node, &points)
         }
+        DiagramShape::NotchedRect => {
+            let points = notched_rect_polygon_points(node.x, node.y, node.width, node.height);
+            polygon_node_instruction(node, &points)
+        }
         DiagramShape::Cloud => {
             PaintInstruction::Path(PaintPath {
                 base: PaintBase::default(),
@@ -2087,6 +2092,17 @@ fn inverted_triangle_polygon_points(x: f64, y: f64, width: f64, height: f64) -> 
         (x, y),
         (x + width, y),
         (x + width / 2.0, y + height),
+    ]
+}
+
+fn notched_rect_polygon_points(x: f64, y: f64, width: f64, height: f64) -> Vec<(f64, f64)> {
+    let notch = width.min(height) * 0.24;
+    vec![
+        (x + notch, y),
+        (x + width, y),
+        (x + width, y + height),
+        (x, y + height),
+        (x, y + notch),
     ]
 }
 

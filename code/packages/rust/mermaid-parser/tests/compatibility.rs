@@ -1598,6 +1598,15 @@ fn swimlane_flipped_triangle_and_manual_file_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_notched_rectangle_and_card_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Cards\n  first@{ shape: notch-rect, label: \"First\" }\n  second@{ shape: card, label: \"Second\" }\n  third@{ shape: notched-rectangle, label: \"Third\" }\nend\nfirst --> second --> third",
+    ).expect("Swimlane notched-rectangle aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::NotchedRect));
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",
