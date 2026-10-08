@@ -15,6 +15,10 @@
 //!   socket | unix      socket(AF_INET) / socket(AF_UNIX)
 //!   fork               a new process (clone without CLONE_THREAD)
 //!   io_uring | ptrace | kill | tiocsti | mount | bpf | seccomp | sendmsg
+//!   descriptors        each open descriptor above 2, as "n:inode", with
+//!                      whether it is close-on-exec (it must not be)
+//!   undumpable         prctl(PR_SET_DUMPABLE, 0), then report PR_GET_DUMPABLE
+//!   dumpable           prctl(PR_SET_DUMPABLE, 1): only ever a kill confined
 //! ```
 //!
 //! Under the sandbox, each denied syscall class kills the process with
@@ -34,6 +38,38 @@ fn main() {
         Err(error) => println!("errno={}", error.raw_os_error().unwrap_or(0)),
     };
     match args.first().map(String::as_str) {
+        Some("descriptors") => {
+            // fcntl, not /proc/self/fd: Landlock leaves /proc unopenable.
+            let mut open = Vec::new();
+            for fd in 3..1024 {
+                let flags = unsafe { libc::fcntl(fd, libc::F_GETFD) };
+                if flags < 0 {
+                    continue;
+                }
+                let mut stat: libc::stat = unsafe { std::mem::zeroed() };
+                let inode = if unsafe { libc::fstat(fd, &mut stat) } == 0 {
+                    stat.st_ino
+                } else {
+                    0
+                };
+                let cloexec = flags & libc::FD_CLOEXEC != 0;
+                open.push(format!(
+                    "{fd}:{inode}{}",
+                    if cloexec { ":cloexec" } else { "" }
+                ));
+            }
+            println!("descriptors={}", open.join(","));
+        }
+        Some("undumpable") => {
+            let set = unsafe { libc::prctl(libc::PR_SET_DUMPABLE, 0, 0, 0, 0) };
+            let now = unsafe { libc::prctl(libc::PR_GET_DUMPABLE, 0, 0, 0, 0) };
+            println!("set={set} dumpable={now}");
+        }
+        Some("dumpable") => {
+            // Harmless when it succeeds: the probe was dumpable already.
+            let set = unsafe { libc::prctl(libc::PR_SET_DUMPABLE, 1, 0, 0, 0) };
+            println!("set={set}");
+        }
         Some("hello") => {
             println!("hello");
             let joined = std::thread::spawn(|| 2 + 2).join().unwrap();

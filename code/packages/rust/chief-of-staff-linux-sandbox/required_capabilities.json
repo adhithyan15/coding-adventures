@@ -12,8 +12,8 @@
     {
       "category": "ffi",
       "action": "call",
-      "target": "libc syscall landlock_create_ruleset, landlock_add_rule, openat2, open, fstat, read, fcntl, socketpair, recvmsg, poll and the seccomp notification ioctls in the parent; prctl, open, getdents64, fcntl, landlock_restrict_self, seccomp, sendmsg, readlinkat, close and execveat in the forked child before exec",
-      "justification": "Builds a Landlock ruleset and a seccomp-BPF program for an agent, and installs both, with no_new_privs, between fork and exec (D18S build step 4). Neither has a safe std API."
+      "target": "libc syscall landlock_create_ruleset, landlock_add_rule, openat2, open, fstat, read, fcntl, socketpair, recvmsg, poll and the seccomp notification ioctls in the parent; prctl, open, getdents64, fcntl, landlock_restrict_self, seccomp, sendmsg, readlinkat, close, dup2, _exit and execveat in the forked child before exec",
+      "justification": "Builds a Landlock ruleset and a seccomp-BPF program for an agent, and installs both, with no_new_privs, between fork and exec (D18S build step 4). For a broker it also places the inherited key descriptors at 3..3+n just before the one exec (P2.6d-3). Neither has a safe std API."
     }
   ],
   "justification": "The D18S Linux applier. The unsafe syscalls and the pre_exec hook live here, so the supervisor crates keep forbid(unsafe_code)."

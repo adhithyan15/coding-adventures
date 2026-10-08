@@ -97,6 +97,26 @@ pub fn open_owner_only_secret(path: &Path) -> Result<std::fs::File, SecretFileEr
     }
 }
 
+/// Check that `path` is a directory only its owner can use: owned by the
+/// current effective user, with nothing granted to group or others
+/// (`mode & 0o077 == 0`). The walk never follows a link, as for a secret
+/// file (D18S P2.6d-3).
+///
+/// A directory that holds secrets must be like this for P2.6c's hard-link
+/// check to mean anything: linking a file needs search permission on its
+/// directory. Unix only. Elsewhere it returns `AccessFailed`.
+pub fn check_owner_only_directory(path: &Path) -> Result<(), SecretFileError> {
+    #[cfg(unix)]
+    {
+        unix::check_directory(path)
+    }
+    #[cfg(not(unix))]
+    {
+        let _ = path;
+        Err(SecretFileError::AccessFailed)
+    }
+}
+
 /// Read one exact-length secret from an already-open file, after enforcing
 /// the owner-only policy on it (D18S P2.6d).
 ///
@@ -169,6 +189,47 @@ mod tests {
             Err(error) => error,
             Ok(_) => panic!("secret read unexpectedly succeeded"),
         }
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn only_an_owner_only_directory_reached_without_links_passes() {
+        use std::os::unix::fs::{symlink, PermissionsExt};
+        let directory = TestDirectory::new("owner-only-dir");
+        let keys = directory.0.join("keys");
+        fs::create_dir(&keys).unwrap();
+        fs::set_permissions(&keys, fs::Permissions::from_mode(0o700)).unwrap();
+        assert_eq!(check_owner_only_directory(&keys), Ok(()));
+        // Search for the group is enough to refuse it, as is any read.
+        for mode in [0o710, 0o701, 0o750, 0o755, 0o770] {
+            fs::set_permissions(&keys, fs::Permissions::from_mode(mode)).unwrap();
+            assert_eq!(
+                check_owner_only_directory(&keys),
+                Err(SecretFileError::InsecurePermissions),
+                "{mode:o}"
+            );
+        }
+        fs::set_permissions(&keys, fs::Permissions::from_mode(0o700)).unwrap();
+        // A link to it, a file, a missing path, and a relative path.
+        let linked = directory.0.join("linked");
+        symlink(&keys, &linked).unwrap();
+        assert_eq!(
+            check_owner_only_directory(&linked),
+            Err(SecretFileError::UnsafeFileType)
+        );
+        directory.write_secret(&[1; 32]);
+        assert_eq!(
+            check_owner_only_directory(&directory.secret()),
+            Err(SecretFileError::UnsafeFileType)
+        );
+        assert_eq!(
+            check_owner_only_directory(&directory.0.join("missing")),
+            Err(SecretFileError::AccessFailed)
+        );
+        assert_eq!(
+            check_owner_only_directory(Path::new("relative/keys")),
+            Err(SecretFileError::InvalidPath)
+        );
     }
 
     #[cfg(unix)]

@@ -30,6 +30,17 @@ impl Prepared {
         let binary = std::fs::File::open(executable).map_err(|error| {
             ConfinementError::Executable(format!("{}: {error}", executable.display()))
         })?;
+        Self::build_from(binary, executable, grants)
+    }
+
+    /// As [`Self::build`], for a binary already open: a verified
+    /// executable's own descriptor (P2.6d-3). `executable` is its path, for
+    /// messages only; nothing is opened by it.
+    pub(crate) fn build_from(
+        binary: std::fs::File,
+        executable: &Path,
+        grants: &[FileGrant],
+    ) -> Result<Self, ConfinementError> {
         let binary = high_descriptor(binary);
         // The program is built per `apply`, around that spawn's socket; this
         // only refuses an architecture it is not built for, early.
@@ -188,10 +199,38 @@ pub(crate) fn poison(command: &mut Command) {
 /// `env_clear` was called. (An earlier version passed the child's
 /// `environ`, which `std` has not yet replaced when the hook runs: the
 /// agent got the supervisor's whole environment, tokens included.)
+/// The most descriptors an agent may inherit at 3..3+n (P2.6d-3). A broker
+/// holds at most a few keys per bound channel; the cap keeps every target
+/// far below [`INHERITED_SOURCE_FLOOR`].
+pub(crate) const MAX_INHERITED: usize = 64;
+
+/// Where the parent parks each inherited descriptor, close-on-exec, until
+/// the hook places it. Above every target (3 + [`MAX_INHERITED`]) and below
+/// the pinned executable and the exec-once socket (512 and up).
+const INHERITED_SOURCE_FLOOR: RawFd = 256;
+
 pub(crate) fn install(
     prepared: Arc<Prepared>,
     command: &mut Command,
+    inherited: Vec<OwnedFd>,
 ) -> Result<(), ConfinementError> {
+    // P2.6d-3: park what the agent inherits high and close-on-exec, so the
+    // shim's survivor check passes, and nothing the hook places can land on
+    // a source still waiting to be moved.
+    if inherited.len() > MAX_INHERITED {
+        return Err(ConfinementError::Inherited(format!(
+            "{} descriptors, at most {MAX_INHERITED}",
+            inherited.len()
+        )));
+    }
+    let sources = inherited
+        .iter()
+        .map(|fd| park(fd.as_raw_fd()))
+        .collect::<io::Result<Vec<OwnedFd>>>()
+        .map_err(|error| ConfinementError::Inherited(error.to_string()))?;
+    // The caller's copies close now: only the parked, close-on-exec ones
+    // stay in this process, so no concurrent spawn can inherit them.
+    drop(inherited);
     // S-I4a: only names from the closed set reach the agent.
     crate::shim::check_environment(
         command
@@ -227,13 +266,47 @@ pub(crate) fn install(
     // socket, argv and envp were built in the parent and are only read
     // here. The only errors it builds, `last_os_error` and
     // `from_raw_os_error`, do not allocate.
+    //
+    // With inherited descriptors (P2.6d-3) the hook also calls `dup2` and
+    // `_exit`, both async-signal-safe, and only after everything that may
+    // fail with an error has run.
     unsafe {
         command.pre_exec(move || {
             install_in_child(&prepared, &filter, &seal, exec_once.child_end.as_raw_fd())?;
-            exec_in_child(&prepared, &argv, &envp)
+            if sources.is_empty() {
+                return exec_in_child(&prepared, &argv, &envp);
+            }
+            // Last, so that nothing above can find a key where it expects
+            // its own descriptor. `dup2` clears close-on-exec on exactly
+            // 3..3+n. std's exec-error pipe may sit in one of those slots,
+            // so from the first `dup2` on, a failure exits 127 rather than
+            // returning an error nobody may be left to read.
+            for (index, source) in sources.iter().enumerate() {
+                if libc::dup2(source.as_raw_fd(), 3 + index as RawFd) < 0 {
+                    libc::_exit(127);
+                }
+            }
+            let _ = exec_in_child(&prepared, &argv, &envp);
+            libc::_exit(127);
         });
     }
     Ok(())
+}
+
+/// `fd` duplicated, close-on-exec, at or above [`INHERITED_SOURCE_FLOOR`].
+fn park(fd: RawFd) -> io::Result<OwnedFd> {
+    // SAFETY: F_DUPFD_CLOEXEC returns a new descriptor, or -1.
+    let parked = unsafe { libc::fcntl(fd, libc::F_DUPFD_CLOEXEC, INHERITED_SOURCE_FLOOR) };
+    if parked < 0 {
+        return Err(io::Error::last_os_error());
+    }
+    if parked >= 512 {
+        // SAFETY: just returned, owned here.
+        unsafe { libc::close(parked) };
+        return Err(io::Error::from_raw_os_error(libc::EMFILE));
+    }
+    // SAFETY: a fresh descriptor nothing else owns.
+    Ok(unsafe { OwnedFd::from_raw_fd(parked) })
 }
 
 /// argv or envp for the child: the strings, and the NULL-terminated
@@ -897,12 +970,22 @@ pub(crate) mod seccomp {
             op(RET, ALLOW),
             op(RET, KILL),
         ]);
-        // prctl: thread names only.
+        // prctl: thread names, and reading or *clearing* dumpability
+        // (P2.6d-3). exec resets dumpability, so a broker that holds keys
+        // must clear it itself after exec. Both can only make the process
+        // less inspectable; setting it to anything but 0 is a kill. Only
+        // the low 32 bits are compared, which is enough: the kernel refuses
+        // any value with high bits set (EINVAL).
         program.extend([
-            jump(JEQ, nr(libc::SYS_prctl), 0, 5),
+            jump(JEQ, nr(libc::SYS_prctl), 0, 10),
             op(LD, argument(0)),
-            jump(JEQ, libc::PR_SET_NAME as u32, 2, 0),
-            jump(JEQ, libc::PR_GET_NAME as u32, 1, 0),
+            jump(JEQ, libc::PR_SET_NAME as u32, 7, 0),
+            jump(JEQ, libc::PR_GET_NAME as u32, 6, 0),
+            jump(JEQ, libc::PR_GET_DUMPABLE as u32, 5, 0),
+            jump(JEQ, libc::PR_SET_DUMPABLE as u32, 1, 0),
+            op(RET, KILL),
+            op(LD, argument(1)),
+            jump(JEQ, 0, 1, 0),
             op(RET, KILL),
             op(RET, ALLOW),
         ]);
@@ -1068,13 +1151,42 @@ pub(crate) mod seccomp {
                 decide(libc::SYS_prctl, [libc::PR_SET_NAME as u32, 0, 0, 0, 0, 0]),
                 ALLOW
             );
+            // P2.6d-3: dumpability may be read, and cleared, never set.
             assert_eq!(
                 decide(
                     libc::SYS_prctl,
                     [libc::PR_SET_DUMPABLE as u32, 0, 0, 0, 0, 0]
                 ),
-                KILL
+                ALLOW
             );
+            assert_eq!(
+                decide(
+                    libc::SYS_prctl,
+                    [libc::PR_GET_DUMPABLE as u32, 0, 0, 0, 0, 0]
+                ),
+                ALLOW
+            );
+            for value in [1, 2, 0x8000_0000] {
+                assert_eq!(
+                    decide(
+                        libc::SYS_prctl,
+                        [libc::PR_SET_DUMPABLE as u32, value, 0, 0, 0, 0]
+                    ),
+                    KILL,
+                    "PR_SET_DUMPABLE {value}"
+                );
+            }
+            for option in [
+                libc::PR_SET_PDEATHSIG,
+                libc::PR_SET_SECCOMP,
+                libc::PR_SET_MM,
+            ] {
+                assert_eq!(
+                    decide(libc::SYS_prctl, [option as u32, 0, 0, 0, 0, 0]),
+                    KILL,
+                    "prctl {option}"
+                );
+            }
             assert_eq!(decide(libc::SYS_prlimit64, none), ALLOW);
             assert_eq!(decide(libc::SYS_readlinkat, none), EACCES);
             assert_eq!(decide(libc::SYS_prlimit64, [4242, 0, 0, 0, 0, 0]), KILL);

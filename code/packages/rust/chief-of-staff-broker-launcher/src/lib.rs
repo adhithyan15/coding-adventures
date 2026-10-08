@@ -90,6 +90,11 @@ pub enum LaunchError {
     Storage,
     /// No verified launch on this platform yet (S-P3).
     Unsupported,
+    /// A directory holding secrets is open to someone else, or is not a
+    /// directory reached without links (P2.6d-3).
+    SecretDirectory,
+    /// The broker's confinement could not be prepared or applied (P2.6d-3).
+    Confinement,
 }
 
 impl std::fmt::Display for LaunchError {
@@ -103,6 +108,8 @@ impl std::fmt::Display for LaunchError {
             Self::WrongKeys => "the broker's keys do not match the channel definitions",
             Self::Storage => "storage failed during broker launch",
             Self::Unsupported => "verified broker launch is not supported on this platform",
+            Self::SecretDirectory => "a directory holding secrets is not owner-only",
+            Self::Confinement => "the broker's sandbox could not be set up",
         })
     }
 }
@@ -129,6 +136,9 @@ type AgentKey = (PipelineId, Vec<u8>);
 #[derive(Clone, Debug, Default)]
 pub struct BrokerKeyFiles {
     by_agent: BTreeMap<AgentKey, BTreeMap<(ChannelId, KeyKind), PathBuf>>,
+    /// Directories holding other secrets (the vault's), checked owner-only
+    /// with the key files' own directories before every launch (P2.6d-3).
+    secret_directories: Vec<PathBuf>,
 }
 
 impl BrokerKeyFiles {
@@ -157,7 +167,33 @@ impl BrokerKeyFiles {
                 return Err(LaunchError::DuplicateKey);
             }
         }
-        Ok(Self { by_agent })
+        Ok(Self {
+            by_agent,
+            secret_directories: Vec::new(),
+        })
+    }
+
+    /// Also check `directories` owner-only before every launch: the other
+    /// places secrets live, such as the vault's storage (P2.6d-3).
+    pub fn with_secret_directories(mut self, directories: Vec<PathBuf>) -> Self {
+        self.secret_directories = directories;
+        self
+    }
+
+    /// Every directory that must be owner-only before a broker launches:
+    /// those given to [`Self::with_secret_directories`], and the directory
+    /// of every configured key file, each once.
+    pub fn secret_directories(&self) -> Vec<PathBuf> {
+        let mut directories: std::collections::BTreeSet<PathBuf> =
+            self.secret_directories.iter().cloned().collect();
+        for keys in self.by_agent.values() {
+            for path in keys.values() {
+                if let Some(parent) = path.parent() {
+                    directories.insert(parent.to_path_buf());
+                }
+            }
+        }
+        directories.into_iter().collect()
     }
 
     /// The slots for `binding`'s channels, in channel order, each with its
@@ -441,9 +477,15 @@ fn discard(mut child: Child) {
     let _ = child.wait();
 }
 
-/// Open `binding`'s key files, start `program` holding them at 3..3+n, send
-/// Bootstrap, and wait up to `ready_timeout` for a `Ready` that passes
-/// [`check_ready`]. On any failure the broker is killed and reaped.
+/// Check the secret directories, open `binding`'s key files, start
+/// `program` confined and holding them at 3..3+n, send Bootstrap, and wait
+/// up to `ready_timeout` for a `Ready` that passes [`check_ready`]. On any
+/// failure the broker is killed and reaped.
+///
+/// The broker runs under [`broker_plan`], a plan with no capabilities,
+/// through `chief-of-staff-linux-sandbox` (P2.6d-3): it can open no file by
+/// path, has no network, and can never exec. What it holds is its keys, on
+/// those descriptors, and its pipes.
 #[cfg(target_os = "linux")]
 pub fn launch(
     program: &VerifiedExecutable,
@@ -455,7 +497,17 @@ pub fn launch(
     use std::os::fd::OwnedFd;
     use std::process::{Command, Stdio};
 
+    // Before anything is opened: every directory holding secrets is
+    // owner-only, as P2.6c's hard-link check assumes.
+    for directory in keys.secret_directories() {
+        chief_of_staff_daemon_secret_file::check_owner_only_directory(&directory)
+            .map_err(|_| LaunchError::SecretDirectory)?;
+    }
     let slotted = keys.slots_for(binding)?;
+    // Prepared from the verified descriptor, which it re-verifies.
+    let confinement =
+        chief_of_staff_linux_sandbox::LinuxConfinement::prepare_verified(&broker_plan()?, program)
+            .map_err(|_| LaunchError::Confinement)?;
     let descriptors = slotted
         .iter()
         .map(|(_, path)| {
@@ -471,10 +523,11 @@ pub fn launch(
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .env_clear();
-    chief_of_staff_spawn_isolation::isolate_and_exec(&mut command, program, descriptors)
-        .map_err(|_| LaunchError::Spawn)?;
+    confinement
+        .apply_inheriting(&mut command, descriptors)
+        .map_err(|_| LaunchError::Confinement)?;
     let spawned = command.spawn();
-    // The command holds the relocated key descriptors; dropping it closes
+    // The command holds the parked key descriptors; dropping it closes
     // this process's last copies.
     drop(command);
     let mut child = spawned.map_err(|_| LaunchError::Spawn)?;
@@ -513,6 +566,17 @@ pub fn launch(
         return Err(error);
     }
     Ok(broker)
+}
+
+/// The broker's sandbox plan: a manifest with no capabilities, for Linux
+/// (P2.6d-3). Everything the broker needs it already holds when it starts.
+#[cfg(target_os = "linux")]
+pub fn broker_plan() -> Result<capability_os_sandbox::SandboxPlan, LaunchError> {
+    capability_os_sandbox::plan_from_json(
+        r#"{"version":1,"package":"rust/chief-of-staff-agent-broker","capabilities":[],"justification":"A per-agent channel broker holds its keys on inherited descriptors and talks to its supervisor over its pipes. It needs nothing else."}"#,
+        capability_os_sandbox::OsFamily::Linux,
+    )
+    .map_err(|_| LaunchError::Confinement)
 }
 
 /// Verified launch needs `execveat`; elsewhere there is none yet, and no

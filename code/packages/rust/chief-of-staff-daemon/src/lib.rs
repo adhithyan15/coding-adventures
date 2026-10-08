@@ -1162,7 +1162,27 @@ fn broker_key_files(config: &ChiefConfig, home: &Path) -> Result<BrokerKeyFiles,
             });
         }
     }
-    BrokerKeyFiles::new(declarations).map_err(|_| ChiefDaemonError::BrokerKeys)
+    // The vault's secrets too must sit in owner-only directories, which
+    // the launcher checks before every broker launch (D18S P2.6d-3): its
+    // storage, once it exists, and the directory of its KEK file.
+    let mut secret_directories = Vec::new();
+    let storage = config
+        .vault()
+        .storage_path()
+        .resolve(home)
+        .map_err(ChiefDaemonError::Config)?;
+    if storage.is_dir() {
+        secret_directories.push(storage);
+    }
+    if let Some(kek) = config.vault().kek_path() {
+        let kek = kek.resolve(home).map_err(ChiefDaemonError::Config)?;
+        if let Some(parent) = kek.parent() {
+            secret_directories.push(parent.to_path_buf());
+        }
+    }
+    BrokerKeyFiles::new(declarations)
+        .map(|keys| keys.with_secret_directories(secret_directories))
+        .map_err(|_| ChiefDaemonError::BrokerKeys)
 }
 
 /// Compose the exact production host data plane from validated daemon authority.
@@ -4277,6 +4297,9 @@ hardware_key_timeout = 60
             )
             .unwrap(),
         );
+        // The key files' own directory; the vault's storage does not exist
+        // here, and no KEK is configured.
+        assert_eq!(keys.secret_directories(), vec![directory.0.join("keys")]);
         let slots = keys.slots_for(&binding).unwrap();
         let paths: Vec<_> = slots
             .iter()
@@ -4297,6 +4320,32 @@ hardware_key_timeout = 60
                     KeyKind::ChannelMasterKey,
                     directory.0.join("keys/outbox.cmk")
                 ),
+            ]
+        );
+    }
+
+    #[test]
+    fn the_vault_s_directories_are_checked_with_the_key_directories() {
+        let directory = TestDir::new();
+        fs::create_dir_all(directory.0.join(".chief-of-staff/vault")).unwrap();
+        let config = parse_config(
+            &format!("{VALID_CONFIG}\n{BROKER_CHANNEL_KEYS}").replace(
+                "[vault]\nstorage_path = \"~/.chief-of-staff/vault/\"",
+                "[vault]\nstorage_path = \"~/.chief-of-staff/vault/\"\nkek_path = \"~/secrets/vault.kek\"",
+            ),
+        )
+        .unwrap();
+        assert!(
+            config.vault().kek_path().is_some(),
+            "fixture substitution missed"
+        );
+        let keys = broker_key_files(&config, &directory.0).unwrap();
+        assert_eq!(
+            keys.secret_directories(),
+            vec![
+                directory.0.join(".chief-of-staff/vault"),
+                directory.0.join("keys"),
+                directory.0.join("secrets"),
             ]
         );
     }

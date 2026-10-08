@@ -5,7 +5,7 @@
 #![cfg(target_os = "linux")]
 
 use std::fs;
-use std::os::unix::fs::PermissionsExt;
+use std::os::unix::fs::{DirBuilderExt, PermissionsExt};
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::mpsc::{self, SyncSender};
@@ -78,13 +78,15 @@ struct Scratch(PathBuf);
 impl Scratch {
     fn new() -> Self {
         static NEXT: AtomicUsize = AtomicUsize::new(0);
-        let path = std::env::temp_dir().join(format!(
+        // Owner-only, as every directory holding keys must be (P2.6d-3),
+        // and under Cargo's own scratch directory, not a shared /tmp.
+        let path = Path::new(env!("CARGO_TARGET_TMPDIR")).join(format!(
             "broker-launched-{}-{}",
             std::process::id(),
             NEXT.fetch_add(1, Ordering::Relaxed)
         ));
         let _ = fs::remove_dir_all(&path);
-        fs::create_dir_all(&path).unwrap();
+        fs::DirBuilder::new().mode(0o700).create(&path).unwrap();
         Self(fs::canonicalize(path).unwrap())
     }
 
@@ -241,4 +243,78 @@ fn a_key_file_open_to_others_is_refused_before_spawn() {
         .err()
         .expect("launched with a group-readable key");
     assert_eq!(error, LaunchError::KeyFile);
+}
+
+#[test]
+fn a_key_directory_open_to_others_is_refused_before_anything_is_opened() {
+    let scratch = Scratch::new();
+    let keys = scratch.keys(&SEED);
+    fs::set_permissions(&scratch.0, fs::Permissions::from_mode(0o750)).unwrap();
+    let error = launch(&broker(), &binding(), &keys, &*backend(), READY)
+        .err()
+        .expect("launched with a group-searchable key directory");
+    assert_eq!(error, LaunchError::SecretDirectory);
+}
+
+#[test]
+fn another_secret_directory_open_to_others_is_refused_too() {
+    let scratch = Scratch::new();
+    let vault = scratch.0.join("vault");
+    fs::create_dir(&vault).unwrap();
+    fs::set_permissions(&vault, fs::Permissions::from_mode(0o755)).unwrap();
+    let keys = scratch
+        .keys(&SEED)
+        .with_secret_directories(vec![vault.clone()]);
+    let error = launch(&broker(), &binding(), &keys, &*backend(), READY)
+        .err()
+        .expect("launched with a world-readable vault directory");
+    assert_eq!(error, LaunchError::SecretDirectory);
+    fs::set_permissions(&vault, fs::Permissions::from_mode(0o700)).unwrap();
+    assert!(launch(&broker(), &binding(), &keys, &*backend(), READY).is_ok());
+}
+
+#[test]
+fn the_launched_broker_is_confined() {
+    let scratch = Scratch::new();
+    let backend = backend();
+    let launched = launch(
+        &broker(),
+        &binding(),
+        &scratch.keys(&SEED),
+        &*backend,
+        READY,
+    )
+    .unwrap();
+    let (mut child, mut relay) = start_relay(
+        launched,
+        backend,
+        Arc::new(Metadata(Mutex::new(Vec::new()))),
+        Box::new(PinnedBindingResolver::new(|| Some(binding()), &binding())),
+        Box::new(Sink(mpsc::sync_channel(1).0)),
+        RelayConfig::default(),
+    )
+    .unwrap();
+    // Read from outside: seccomp in filter mode with no_new_privs, and not
+    // dumpable, which also keeps /proc/<pid>/mem and ptrace away.
+    let status = fs::read_to_string(format!("/proc/{}/status", child.id())).unwrap();
+    let field = |name: &str| {
+        status
+            .lines()
+            .find_map(|line| line.strip_prefix(name))
+            .map(str::trim)
+            .unwrap_or_else(|| panic!("{name} missing"))
+            .to_owned()
+    };
+    assert_eq!(field("NoNewPrivs:"), "1");
+    assert_eq!(field("Seccomp:"), "2");
+    let mem = fs::metadata(format!("/proc/{}/mem", child.id())).unwrap();
+    // Not dumpable: the kernel gives /proc/<pid>/mem to root, not to us
+    // (when the tests themselves run as root, there is nothing to show).
+    if unsafe { libc::geteuid() } != 0 {
+        use std::os::unix::fs::MetadataExt;
+        assert_eq!(mem.uid(), 0);
+    }
+    chief_of_staff_spawn_isolation::kill_session(&child).unwrap();
+    child.wait().unwrap();
+    assert!(relay.stop());
 }
