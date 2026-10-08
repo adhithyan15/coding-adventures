@@ -4,7 +4,7 @@
   "chapter": 81,
   "title": "Two Tamils",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b037f476f53c12e4",
+  "sourceHash": "fnv1a64:41732e906924f3e8",
   "lessons": [
     {
       "id": "TA-C81-two-tamils",
@@ -194,7 +194,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ff1bb478787cde3",
+      "sourceHash": "fnv1a64:2ee293643670385d",
       "notice": null,
       "blocks": [
         {
@@ -319,11 +319,29 @@
             {
               "kind": "prompt",
               "action": "RETURN TO",
-              "instruction": "say mēlē, read ஆனால் and say maṟṟadu — three distances back — then say which of the two Tamils each one belongs to",
+              "instruction": "say mēlē",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETURN TO: say *mēlē*, read **ஆனால்** and say *maṟṟadu* — three distances back — then say which of the two Tamils each one belongs to]"
+              "source": "[YOU RETURN TO: say *mēlē*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஆனால்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஆனால்**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RETURN TO",
+              "instruction": "say maṟṟadu — three distances back — then say which of the two Tamils each one belongs to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RETURN TO: say *maṟṟadu* — three distances back — then say which of the two Tamils each one belongs to]"
             }
           ]
         },

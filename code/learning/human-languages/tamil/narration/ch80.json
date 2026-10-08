@@ -4,7 +4,7 @@
   "chapter": 80,
   "title": "One, the Other, and the Price",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f7b867d2b3dbe741",
+  "sourceHash": "fnv1a64:2d456e0712984fa2",
   "lessons": [
     {
       "id": "TA-C80-other",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88832201c42baf46",
+      "sourceHash": "fnv1a64:2034714b7c06c802",
       "notice": null,
       "blocks": [
         {
@@ -136,11 +136,29 @@
             {
               "kind": "prompt",
               "action": "RETURN TO",
-              "instruction": "say ām / illai, read குடி and say -kkāga — three distances back — then set two of them against each other, one and the other",
+              "instruction": "say ām / illai",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETURN TO: say *ām / illai*, read **குடி** and say *-kkāga* — three distances back — then set two of them against each other, one and the other]"
+              "source": "[YOU RETURN TO: say *ām / illai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "குடி",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **குடி**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RETURN TO",
+              "instruction": "say -kkāga — three distances back — then set two of them against each other, one and the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RETURN TO: say *-kkāga* — three distances back — then set two of them against each other, one and the other]"
             },
             {
               "kind": "prompt",
@@ -203,7 +221,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fad2081efb1ae9c2",
+      "sourceHash": "fnv1a64:b3be2c7e79a5e1fa",
       "notice": null,
       "blocks": [
         {
@@ -319,11 +337,29 @@
             {
               "kind": "prompt",
               "action": "RETURN TO",
-              "instruction": "say niṟuttu, read சரியா and say eppōdu — three distances back — then set two of them against each other, one and the other",
+              "instruction": "say niṟuttu",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETURN TO: say *niṟuttu*, read **சரியா** and say *eppōdu* — three distances back — then set two of them against each other, one and the other]"
+              "source": "[YOU RETURN TO: say *niṟuttu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சரியா",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சரியா**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RETURN TO",
+              "instruction": "say eppōdu — three distances back — then set two of them against each other, one and the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RETURN TO: say *eppōdu* — three distances back — then set two of them against each other, one and the other]"
             }
           ]
         },
@@ -522,7 +558,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c4c4261f966b9fb",
+      "sourceHash": "fnv1a64:a6e98f760da1b6c7",
       "notice": null,
       "blocks": [
         {
@@ -660,11 +696,29 @@
             {
               "kind": "prompt",
               "action": "RETURN TO",
-              "instruction": "say mūḍu, say āṉāl and read எப்போது — three distances back — then set two of them against each other, one and the other",
+              "instruction": "say mūḍu and say āṉāl — three distances back",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETURN TO: say *mūḍu*, say *āṉāl* and read **எப்போது** — three distances back — then set two of them against each other, one and the other]"
+              "source": "[YOU RETURN TO: say *mūḍu* and say *āṉāl* — three distances back]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "எப்போது",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **எப்போது**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "RETURN TO",
+              "instruction": "set two of them against each other, one and the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU RETURN TO: set two of them against each other, one and the other]"
             }
           ]
         },

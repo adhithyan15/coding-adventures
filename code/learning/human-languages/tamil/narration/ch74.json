@@ -4,7 +4,7 @@
   "chapter": 74,
   "title": "And, and Also",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0de45c92af1f774b",
+  "sourceHash": "fnv1a64:a074a5eb222825e3",
   "lessons": [
     {
       "id": "TA-C74-and",
@@ -188,7 +188,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a16b2c9c3a724a1",
+      "sourceHash": "fnv1a64:4149b2dfac12dc05",
       "notice": null,
       "blocks": [
         {
@@ -317,12 +317,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "இன்று",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **இன்று**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RETURN TO",
-              "instruction": "read இன்று, say tuṭaippam and say kūrai — three distances back — then join two of them with -உம் (-um)",
+              "instruction": "say tuṭaippam and say kūrai — three distances back — then join two of them with -உம் (-um)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETURN TO: read **இன்று**, say *tuṭaippam* and say *kūrai* — three distances back — then join two of them with -உம்]"
+              "source": "[YOU RETURN TO: say *tuṭaippam* and say *kūrai* — three distances back — then join two of them with -உம்]"
             }
           ]
         },

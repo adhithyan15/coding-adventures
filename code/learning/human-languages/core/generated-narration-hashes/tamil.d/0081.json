@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 81,
-  "sourceHash": "fnv1a64:b037f476f53c12e4",
+  "sourceHash": "fnv1a64:41732e906924f3e8",
   "lessonIds": [
     "TA-C81-two-tamils",
     "TA-C81-which-tamil"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "tamil/narration/ch81.txt",
   "json": "tamil/narration/ch81.json",
-  "textHash": "fnv1a64:6c1bf6eaef109777",
-  "jsonHash": "fnv1a64:1d511beb2ba48cda",
+  "textHash": "fnv1a64:6de164c005ca0e94",
+  "jsonHash": "fnv1a64:1e55b925c40bb017",
   "findings": []
 }

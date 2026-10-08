@@ -70,7 +70,8 @@ The reason can now go on either side of the result.
 - [YOU RECALL: say *ēṉeṉṟāl*]
 - [YOU READ: **ஏன்**]
 - [YOU RECALL: say *adaṉāl*]
-- [YOU RETURN TO: read **சொல்**, say *pul* and say *āṇḍu* — three distances back — then ask ஏன் about one of them]
+- [YOU READ: **சொல்**]
+- [YOU RETURN TO: say *pul* and say *āṇḍu* — three distances back — then ask ஏன் about one of them]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C78-WHY-02, TA-SCRIPT-READ-EEN-01, TA-LEX-C78-WHY-03, TA-SCRIPT-READ-SOL-01, TA-LEX-C64-HARVEST-02, TA-LEX-C73-WHEN-05] -->

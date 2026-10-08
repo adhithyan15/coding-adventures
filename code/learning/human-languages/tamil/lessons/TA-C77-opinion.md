@@ -73,7 +73,8 @@ An opinion, which is the first thing here that is yours rather than a fact.
 - [YOU RECALL: say *"sari" eṉṟu solluṅgaḷ*]
 - [YOU READ: **சொல்**]
 - [YOU RECALL: give your opinion]
-- [YOU RETURN TO: read **ஆனால்**, say *tayakkam* and say *nēṟṟu* — three distances back — then quote one of them with என்று]
+- [YOU READ: **ஆனால்**]
+- [YOU RETURN TO: say *tayakkam* and say *nēṟṟu* — three distances back — then quote one of them with என்று]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C77-SAY-01, TA-GRAMMAR-C77-SAY-02, TA-SCRIPT-READ-SOL-01, TA-PRAGMATICS-C77-OPINION-03, TA-SCRIPT-READ-AANAAL-01, TA-LEX-C63-MANNERS-03, TA-LEX-C73-WHEN-02] -->

@@ -4,7 +4,7 @@
   "chapter": 77,
   "title": "Saying, and Thinking",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:af5f597d633379c0",
+  "sourceHash": "fnv1a64:6d5cf6fa3bc22615",
   "lessons": [
     {
       "id": "TA-C77-say",
@@ -503,7 +503,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:875cfa961d1194cf",
+      "sourceHash": "fnv1a64:288fa23957c6571d",
       "notice": null,
       "blocks": [
         {
@@ -640,12 +640,21 @@
             },
             {
               "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஆனால்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஆனால்**]"
+            },
+            {
+              "kind": "prompt",
               "action": "RETURN TO",
-              "instruction": "read ஆனால், say tayakkam and say nēṟṟu — three distances back — then quote one of them with என்று (eṉṟu)",
+              "instruction": "say tayakkam and say nēṟṟu — three distances back — then quote one of them with என்று (eṉṟu)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RETURN TO: read **ஆனால்**, say *tayakkam* and say *nēṟṟu* — three distances back — then quote one of them with என்று]"
+              "source": "[YOU RETURN TO: say *tayakkam* and say *nēṟṟu* — three distances back — then quote one of them with என்று]"
             }
           ]
         },

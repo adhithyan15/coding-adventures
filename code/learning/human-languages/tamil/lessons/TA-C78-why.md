@@ -72,7 +72,9 @@ The sixth member of a question family whose pattern you have known since chapter
 - [YOU ASK: *ēṉ tēnīr vēṇḍum?*]
 - [YOU READ: **சொல்**]
 - [YOU RECALL: say *idu nalla vīḍu eṉṟu niṉaikkiṟēṉ*, then ask *ēṉ?*]
-- [YOU RETURN TO: say *pāl vēṇḍumā, alladu tēnīr vēṇḍumā?*, say *nambikkai* and read **இன்று** — three distances back — then ask ஏன் about one of them]
+- [YOU RETURN TO: say *pāl vēṇḍumā, alladu tēnīr vēṇḍumā?* and say *nambikkai* — three distances back]
+- [YOU READ: **இன்று**]
+- [YOU RETURN TO: ask ஏன் about one of them]
 - [YOU RECALL: say *āṉāl*]
 
 ## Wrap-up Recall

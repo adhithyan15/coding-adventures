@@ -70,7 +70,8 @@ You can put a choice in front of somebody and take their answer.
 - [YOU RECALL: say *alladu*]
 - [YOU READ: **ஆனால்**]
 - [YOU RECALL: make the full offer]
-- [YOU RETURN TO: read **சரியா**, say *uṭaṉē* and say *varuttam* — three distances back — then offer two of them with அல்லது]
+- [YOU READ: **சரியா**]
+- [YOU RETURN TO: say *uṭaṉē* and say *varuttam* — three distances back — then offer two of them with அல்லது]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C76-JOIN-01, TA-LEX-C76-JOIN-02, TA-SCRIPT-READ-AANAAL-01, TA-PRAGMATICS-C76-CHOICE-03, TA-SCRIPT-READ-SARIYAA-01, TA-LEX-C62-JOIN-04, TA-LEX-C72-FEEL-03] -->
