@@ -20,15 +20,42 @@ import (
 
 const toolchainDetectionFixturePath = "code/specs/fixtures/build-tool-v1/cases/toolchain-detection-shared.json"
 
+// This test inventory is independent of the discovery-fixture and production
+// selector maps. The source-reference scan below catches a new native reader
+// that was added without updating either this contract or the selector.
+var toolchainDetectionTestConsumers = []struct{ name, path, lang string }{
+	{"dotnet/programs/build-tool-csharp", "code/programs/dotnet/build-tool-csharp", "csharp"},
+	{"dotnet/programs/build-tool-fsharp", "code/programs/dotnet/build-tool-fsharp", "fsharp"},
+	{"elixir/programs/build-tool", "code/programs/elixir/build-tool", "elixir"},
+	{"go/programs/build-tool", "code/programs/go/build-tool", "go"},
+	{"haskell/programs/build-tool", "code/programs/haskell/build-tool", "haskell"},
+	{"lua/programs/build-tool", "code/programs/lua/build-tool", "lua"},
+	{"perl/programs/build-tool", "code/programs/perl/build-tool", "perl"},
+	{"python/programs/build-tool", "code/programs/python/build-tool", "python"},
+	{"ruby/programs/build-tool", "code/programs/ruby/build-tool", "ruby"},
+	{"rust/programs/build-tool", "code/programs/rust/build-tool", "rust"},
+	{"swift/programs/build-tool", "code/programs/swift/build-tool", "swift"},
+	{"typescript/programs/build-tool", "code/programs/typescript/build-tool", "typescript"},
+}
+
 // The synthetic registry mirrors direct native fronts, with one unrelated
 // package to prove that a fixture edit never becomes a forced full build.
 func toolchainDetectionFixturePackages(root string) []discovery.Package {
-	return discoveryRegistryPackages(root)
+	packages := make([]discovery.Package, 0, len(toolchainDetectionTestConsumers)+1)
+	for _, consumer := range toolchainDetectionTestConsumers {
+		packages = append(packages, discovery.Package{
+			Name: consumer.name, Path: filepath.Join(root, filepath.FromSlash(consumer.path)), Language: consumer.lang,
+		})
+	}
+	packages = append(packages, discovery.Package{
+		Name: "rust/extra", Path: filepath.Join(root, "code", "packages", "rust", "extra"), Language: "rust",
+	})
+	return packages
 }
 
 func toolchainDetectionFixtureNames() []string {
-	want := make([]string, 0, len(discoveryRegistryConsumerRoots))
-	for _, consumer := range discoveryRegistryConsumerRoots {
+	want := make([]string, 0, len(toolchainDetectionTestConsumers))
+	for _, consumer := range toolchainDetectionTestConsumers {
 		want = append(want, consumer.name)
 	}
 	sort.Strings(want)
@@ -59,7 +86,6 @@ func TestToolchainFixtureSelectsExactFlatFamilyOnEveryPlatform(t *testing.T) {
 		"code/specs/fixtures/build-tool-v1/cases/toolchain-detection-nested/child.json",
 		"code/specs/fixtures/build-tool-v1/other/toolchain-detection-shared.json",
 		"code/specs/fixtures/build-tool-v1/cases/toolchain-detection-shared\\child.json",
-		"code/specs/fixtures/build-tool-v1/cases/ci-gate-selection-shared.json",
 	} {
 		got, err := changedPackageRootsForPlatform([]string{path}, packages, root, "linux")
 		if err != nil || len(got) != 0 {
@@ -84,7 +110,7 @@ func TestToolchainFixtureSelectsExactFlatFamilyOnEveryPlatform(t *testing.T) {
 func TestToolchainFixtureLanguageFilterAndMissingRootFailClosed(t *testing.T) {
 	root := t.TempDir()
 	packages := toolchainDetectionFixturePackages(root)
-	for _, consumer := range discoveryRegistryConsumerRoots {
+	for _, consumer := range toolchainDetectionTestConsumers {
 		got, err := changedPackageRootsForPlatformAndLanguage(
 			[]string{toolchainDetectionFixturePath}, packages, root, "linux", consumer.lang,
 		)
@@ -98,7 +124,7 @@ func TestToolchainFixtureLanguageFilterAndMissingRootFailClosed(t *testing.T) {
 	if err != nil || len(got) != 0 {
 		t.Fatalf("unrelated language roots = %v, error = %v", got, err)
 	}
-	for index, consumer := range discoveryRegistryConsumerRoots {
+	for index, consumer := range toolchainDetectionTestConsumers {
 		missing := append([]discovery.Package(nil), packages[:index]...)
 		missing = append(missing, packages[index+1:]...)
 		for _, language := range []string{"all", consumer.lang} {
@@ -265,7 +291,7 @@ func TestToolchainFixtureConsumerMapTracksNativeReaders(t *testing.T) {
 
 func TestToolchainFixtureConsumersResolveThroughDiscovery(t *testing.T) {
 	root := t.TempDir()
-	for _, consumer := range discoveryRegistryConsumerRoots {
+	for _, consumer := range toolchainDetectionTestConsumers {
 		dir := filepath.Join(root, filepath.FromSlash(consumer.path))
 		if err := os.MkdirAll(dir, 0o755); err != nil {
 			t.Fatal(err)

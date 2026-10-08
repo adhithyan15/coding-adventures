@@ -240,14 +240,24 @@ An explicit `-language` filter selects only the matching consumer; default
 all-language CI validates all twelve. Rename detection retains both the old and
 new paths so moving the fixture cannot silently bypass this rule.
 
-The flat `ci-gate-selection-*.json` case family separately seeds the Go and
-Python build-tool fronts. Their BUILD commands run the native Go
-`internal/cigates` and Python CI-gate fixture suites. This exact relation
+The flat `ci-gate-selection-*.json` case family separately seeds the C#,
+F#, Go, and Python build-tool fronts. Their BUILD commands run the native
+CI-gate fixture suites independently. This exact relation
 applies to fixture additions, edits, deletions, and renamed old paths on all
 platforms without a forced full build. Other fixture domains, nested paths,
 and filename lookalikes do not select these roots. Missing applicable roots
 fail planning; a single-language run selects only its own consumer. Detector
 tests check both the emitted affected roots/toolchains and reader-map drift.
+
+The flat `toolchain-detection-*.json` case family likewise seeds its twelve
+direct native test fronts: C#, F#, Elixir, Go, Haskell, Lua, Perl, Python,
+Ruby, Rust, Swift, and TypeScript. Its exact path check includes deleted or
+renamed old sources, but excludes nested, backup-suffixed, case-varied, and
+sibling fixture paths. Each platform plan retains these package roots before
+dependency closure, while explicit single-language plans seed only their
+applicable reader. A missing reader fails before a partial plan is written;
+unforced plans expose all selected roots and their eleven canonical toolchain
+flags (C# and F# share `dotnet`). A source-reference test guards map drift.
 
 ## Metadata safety
 
