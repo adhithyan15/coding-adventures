@@ -4,6 +4,11 @@
 
 ### Added
 
+- `tests/launched.rs` (P2.6d-3):
+  - the launched broker runs with `NoNewPrivs: 1` and `Seccomp: 2`;
+  - a key directory, or another secret directory, open to group or others
+    refuses the launch before anything is opened;
+  - the scratch area is now owner-only, under Cargo's temporary directory.
 - `serve_process`: the binary's whole serve loop, as a library function, so
   a test binary can run exactly what production runs (P2.6d-2b). `main.rs`
   keeps only the unsafe descriptor adoption.

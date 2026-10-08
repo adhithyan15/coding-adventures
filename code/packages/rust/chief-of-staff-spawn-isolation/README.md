@@ -57,25 +57,20 @@ and inheritable handles still pass to the child, because std spawns with
 that S-I3 asks for cannot be passed through stable `std`; that is D18S build
 step 8.
 
-## Launching a verified executable
+## A verified executable
 
-The per-agent broker (D18S P2.6d) is launched with two extra guarantees:
-- **S-K1:** what runs is exactly what was hashed. `VerifiedExecutable`
-  opens the binary once and hashes it through that descriptor.
-  `isolate_and_exec` re-hashes it and executes that same descriptor with
-  `execveat(fd, "", AT_EMPTY_PATH)`. A path is never executed.
-- **S-I3:** the broker holds exactly its key descriptors, at 3..3+n, and
-  nothing else above stderr.
+The per-agent broker (D18S P2.6d) runs from a binary pinned by its SHA-256
+(S-K1: what runs is exactly what was hashed). `VerifiedExecutable` opens the
+binary once and hashes it through that descriptor; `verify` hashes it again;
+`descriptor` hands out a duplicate of that same descriptor to execute.
 
-```rust,ignore
-let broker = VerifiedExecutable::open(Path::new("/opt/chief/broker"), pinned_sha256)?;
-let mut command = Command::new("chief-of-staff-agent-broker");
-command.stdin(Stdio::piped()).stdout(Stdio::piped()).env_clear();
-isolate_and_exec(&mut command, &broker, key_descriptors)?.spawn()?;
-```
+It launches nothing itself. `chief-of-staff-linux-sandbox`'s
+`LinuxConfinement::prepare_verified` and `apply_inheriting` re-verify it and
+exec its descriptor, confined, with the keys at 3..3+n (P2.6d-3). P2.6d-2a's
+unconfined `isolate_and_exec` was removed then: there is one way to start a
+broker.
 
-Linux only, since it needs `execveat`. Other platforms have no
-`VerifiedExecutable` yet.
+Linux only. Other platforms have no `VerifiedExecutable` yet.
 
 ## Where it is used
 

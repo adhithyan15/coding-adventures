@@ -4,6 +4,17 @@
 
 ### Added
 
+- `VerifiedExecutable::descriptor`: a duplicate of the descriptor that was
+  hashed, for the confinement to execute (P2.6d-3).
+
+### Removed
+
+- `isolate_and_exec` (P2.6d-3). The broker is now launched only by
+  `chief-of-staff-linux-sandbox`, confined; its descriptor-placement tests
+  moved there.
+
+### Added (earlier)
+
 - `VerifiedExecutable` and `isolate_and_exec` (Linux; D18S S-K1, S-I3;
   #13980 P2.6d-2a): launch the per-agent broker, holding exactly its key
   descriptors.

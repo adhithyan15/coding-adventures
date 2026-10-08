@@ -4,6 +4,13 @@
 
 ### Added
 
+- The broker runs confined (D18S P2.6d-3): `launch` starts it through
+  `chief-of-staff-linux-sandbox` under `broker_plan()`, a plan with no
+  capabilities, instead of spawn-isolation's `isolate_and_exec`.
+- Before every launch, each key file's directory, and each directory given
+  with `BrokerKeyFiles::with_secret_directories`, must be owner-only.
+  `BrokerKeyFiles::secret_directories` lists them.
+- `LaunchError::SecretDirectory` and `LaunchError::Confinement`.
 - `BrokerRelay::stop` takes `&mut self` and waits, bounded, for the relay
   thread. If the thread is still running it keeps the handle, so the
   supervisor can ask again (P2.6d-2b).

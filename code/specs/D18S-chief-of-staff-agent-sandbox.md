@@ -1983,9 +1983,17 @@ through S-I3 before two weeks are spent on Windows.
         protects those binaries is S-K1's not-writable-by-others check and
         the digest.
 
+        **Status: done on Linux.** The launched broker reports
+        `NoNewPrivs: 1` and `Seccomp: 2`. Holding inherited keys, it cannot
+        open another key file by path (`EACCES`), and `socket` or a fork
+        kills it (`SIGSYS`). A secret directory open to group or others
+        refuses the launch.
+
         **Residuals, recorded.**
         - The broker can still `stat` any path (Landlock mediates opening,
           not lookup), as an agent can.
+        - The vault's storage directory is checked only once it exists. A
+          daemon that creates it later creates it with the process umask.
         - Off Linux there is no broker launch at all yet (2b refuses
           `[hosts.broker]`).
      4. **P2.6d-4:** non-channel requests (completions and tools) are
