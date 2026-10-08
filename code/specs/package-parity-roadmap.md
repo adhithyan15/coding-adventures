@@ -16692,6 +16692,7 @@ Parallel audits registered newly discovered work before the next selection:
 | ARM1 simulator and gate level | `arm1-simulator-07e-neutral-full-state-conformance` → `arm1-simulator-seven-lane-parity`; `arm1-gatelevel-07e2-neutral-differential-conformance` → `arm1-gatelevel-seven-lane-parity` | Both 8/15; 599-vector full-state reference precedes gate-backed differential and same-lane simulator/arithmetic ports. |
 | Branch predictor | `branch-predictor-d02-neutral-conformance` → `branch-predictor-seven-lane-parity` | 8/15; reconcile D02 logical clock language with existing clock-free state-machine/directed-graph manifests. |
 | Mermaid Swimlane parser | `mermaid-swimlane-quoted-label-parser-neutral-conformance` → `mermaid-swimlane-entity-label-parser-neutral-conformance` | DG04 quoted Unicode labels and their interaction with entity decoding precede remaining entity-label behavior. Merged #17038 owns unquoted lane/node/pipe-edge entity baselines and #17049 owns metadata title/accTitle/accDescr entity baselines; the later child should classify residual inline edges and malformed/unknown or broader numeric entities without duplication. Neither parser owner overlaps the layout hierarchy. |
+| Mermaid Swimlane classes | `mermaid-swimlane-class-terminator-parser-neutral-conformance` → `mermaid-swimlane-class-decorator-parser-neutral-conformance` | Merged #17054/#17059 own inline and named/default class style projection; the pinned upstream example's terminal `;` is not yet accepted correctly for `class`/`classDef`, and DG04 still excludes `:::class` decorators. Repair terminators first, then reuse class resolution for decorators with neutral semantic and visual fixtures. These parser slices do not duplicate quoted/entity labels or layout/paint behavior. |
 
 Correct the pending validation-fixture selector's inventory to 22 checked
 flat cases: 14 have scoped direct native readers and eight remain
@@ -16815,17 +16816,34 @@ Perl's release-grammar work is merged. Neither is the next parity slice.
 Read-only audits across all established lanes found
 the inspected high-consensus gaps already owned, not silently complete.
 
-The next coherent item is
-`build-tool-validation-fixture-native-ci-selection`: all five prerequisites
-are merged, and 14 of 22 checked flat validation cases have direct native
-readers. Nine orphan-crate/tracked-artifact cases select eleven non-Go fronts;
-five orphan-package-root/Lua-Windows-sibling cases select Go; eight one-off
-cases remain neutral-only. Perl constructs fixture names dynamically, so
-the exact case-to-reader evidence and an unclassified-case fail-closed test
-are essential. Select this fixture-only CI tranche before the plan selector
-(two native-read cases of five); Point2D Java/Kotlin/Dart remains the
-strongest ready package DAG, but is a larger three-lane port. Native
-build-tool adapters, including OCaml, remain separate dependency-gated work.
+That refresh selected `build-tool-validation-fixture-native-ci-selection`,
+now merged as #17060. Its exact relation covers 14 native-read cases of 22:
+nine orphan-crate/tracked-artifact cases in eleven non-Go fronts, five
+orphan-package-root/Lua-Windows-sibling cases in Go, and eight neutral-only
+one-offs. Perl's dynamically constructed names are pinned by source drift
+tests. The plan selector and Point2D package DAG remain separate work.
+
+### Post-#17060 merged-main refresh (2026-10-08)
+
+PR #17060 passed 29 successful, seven skipped, and one neutral final-head
+checks, then auto-merged as `16a8c24016e1d17f71dd115180ca3429b89b8280`;
+the fetched `origin/main` contains that merge. The schema-3 parity report at
+this revision again has 15 established lanes, 1,497 implementation identities,
+4,767 implementation slots, zero canonical collisions, and zero unknown
+language buckets. The high-consensus, 5–9, 2–4, and singleton bands remain
+178/262, 123/934, 181/2,282, and 1,015/14,210 identities/missing slots.
+OCaml retains five emerging roots outside the all-language denominator.
+
+Read-only source review found two new Swimlane parser seams after merged
+#17054/#17059 style work. The pinned upstream Swimlane example uses terminal
+semicolons on `class` and `classDef`, while the checked grammar/parser does
+not handle both forms correctly. DG04 also excludes `:::class` decorators
+despite pinned upstream styled-vertex syntax. Register a small terminator
+neutral-conformance owner before a decorator owner; existing quoted/entity
+parser owners and style IR/layout/paint behavior remain distinct. No new
+package-root identity appeared. The next priority pass compares the already
+ready five-case plan-fixture selector (two native-read cases) with the larger
+Point2D Java/Kotlin/Dart package DAG and other dependency-ready owners.
 
 ## Autonomous Loop Protocol
 
