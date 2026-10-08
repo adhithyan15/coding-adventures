@@ -259,6 +259,19 @@ applicable reader. A missing reader fails before a partial plan is written;
 unforced plans expose all selected roots and their eleven canonical toolchain
 flags (C# and F# share `dotnet`). A source-reference test guards map drift.
 
+The flat `source-collection-*.json` cases have three separate native reader
+sets. The seven package-local cases seed C#, F#, Elixir, Go, Haskell, Lua,
+Perl, Python, Ruby, Rust, Swift, and TypeScript. The nine `repository-` cases
+seed only C#, F#, and Swift; the four `shared-input-` cases seed only C# and
+F#. C# and F# enumerate every checked case, while other fronts execute only
+their declared subfamilies or subsets. This exact relation schedules native
+BUILD tests for fixture-only additions, edits, deletions, and renamed old
+paths on detect and all three platform plans. It rejects nested and filename
+lookalikes, keeps ordinary changed roots, honors explicit language filters,
+and fails if an applicable native reader is absent before writing a plan.
+Focused tests verify unforced affected roots and toolchain flags as well as
+the direct test-source references; the neutral corpus gate remains separate.
+
 ## Metadata safety
 
 A package's CI toolchain is normally inferred purely from its path bucket

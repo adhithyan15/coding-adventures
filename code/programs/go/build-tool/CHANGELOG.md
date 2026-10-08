@@ -6,6 +6,15 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- Bounded native CI selection for the twenty flat `source-collection-*.json`
+  cases. Seven package-local cases schedule twelve direct build-tool test
+  fronts, nine repository cases schedule C#/F#/Swift, and four shared-input
+  cases schedule C#/F#. Exact path matching, per-language and three-platform
+  plans, fail-closed missing roots, rename-source detection, emitted
+  roots/toolchain assertions, and native-reader drift tests keep fixture-only
+  changes from passing on neutral validation alone without forcing a full
+  build or changing production source collectors.
+
 - Exact flat-family CI selection for the eleven shared
   `toolchain-detection-*.json` cases and their twelve direct native build-tool
   readers. Added, changed, deleted, and renamed case paths seed only the

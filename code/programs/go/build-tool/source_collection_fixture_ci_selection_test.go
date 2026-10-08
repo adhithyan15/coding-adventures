@@ -124,7 +124,7 @@ func TestSourceCollectionFixtureLanguageFilterAndMissingRoot(t *testing.T) {
 		path := sourceFixturePrefix + fixture.name
 		for _, consumer := range sourceFixtureConsumers {
 			got, err := changedPackageRootsForPlatformAndLanguage([]string{path}, packages, root, "linux", consumer.lang)
-			want := []string(nil)
+			want := []string{}
 			for _, lang := range fixture.want {
 				if lang == consumer.lang {
 					want = []string{consumer.name}
@@ -209,35 +209,51 @@ func TestSourceCollectionFixturePlanIsUnforcedCompleteAndAtomic(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	changed, err := changedPackageRootsForPlatform([]string{path}, packages, root, "linux")
-	if err != nil {
-		t.Fatal(err)
-	}
-	affected := affectedForGraph(graph, changed, nil, false)
-	if code := emitBuildPlan(packages, graph, affected, changed,
-		[]string{path}, false, nil, "origin/main", root, planPath,
-		false, 0, false, "", "all"); code != 0 {
-		t.Fatalf("complete plan exit = %d", code)
-	}
-	data, err := os.ReadFile(planPath)
-	if err != nil {
-		t.Fatal(err)
-	}
-	var built plan.BuildPlan
-	if err := json.Unmarshal(data, &built); err != nil {
-		t.Fatal(err)
-	}
-	if want := sourceFixtureNames(sourceFixtureCases[0].want); built.Force || !reflect.DeepEqual(sortedStrings(built.AffectedPackages), want) {
-		t.Fatalf("unforced affected roots = %v, force = %t, want %v", built.AffectedPackages, built.Force, want)
-	}
-	for _, goos := range []string{"linux", "darwin", "windows"} {
-		if got, want := sortedStrings(built.StateForPlatform(goos).AffectedPackages), sourceFixtureNames(sourceFixtureCases[0].want); !reflect.DeepEqual(got, want) {
-			t.Fatalf("%s affected roots = %v, want %v", goos, got, want)
+	for _, fixture := range sourceFixtureCases {
+		path := sourceFixturePrefix + fixture.name
+		changed, err := changedPackageRootsForPlatform([]string{path}, packages, root, "linux")
+		if err != nil {
+			t.Fatal(err)
 		}
-	}
-	for _, toolchain := range []string{"dotnet", "elixir", "go", "haskell", "lua", "perl", "python", "ruby", "rust", "swift", "typescript"} {
-		if !built.LanguagesNeeded[toolchain] {
-			t.Errorf("missing native toolchain %s from %v", toolchain, built.LanguagesNeeded)
+		affected := affectedForGraph(graph, changed, nil, false)
+		if code := emitBuildPlan(packages, graph, affected, changed,
+			[]string{path}, false, nil, "origin/main", root, planPath,
+			false, 0, false, "", "all"); code != 0 {
+			t.Fatalf("%s complete plan exit = %d", fixture.name, code)
+		}
+		data, err := os.ReadFile(planPath)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var built plan.BuildPlan
+		if err := json.Unmarshal(data, &built); err != nil {
+			t.Fatal(err)
+		}
+		want := sourceFixtureNames(fixture.want)
+		if built.Force || !reflect.DeepEqual(sortedStrings(built.AffectedPackages), want) {
+			t.Fatalf("%s unforced affected roots = %v, force = %t, want %v", fixture.name, built.AffectedPackages, built.Force, want)
+		}
+		for _, goos := range []string{"linux", "darwin", "windows"} {
+			if got := sortedStrings(built.StateForPlatform(goos).AffectedPackages); !reflect.DeepEqual(got, want) {
+				t.Fatalf("%s %s affected roots = %v, want %v", fixture.name, goos, got, want)
+			}
+		}
+		wantToolchains := map[string]bool{}
+		for _, lang := range fixture.want {
+			if lang == "csharp" || lang == "fsharp" {
+				lang = "dotnet"
+			}
+			wantToolchains[lang] = true
+		}
+		for toolchain, needed := range built.LanguagesNeeded {
+			if needed != wantToolchains[toolchain] {
+				t.Errorf("%s toolchain %s = %t, want %t", fixture.name, toolchain, needed, wantToolchains[toolchain])
+			}
+		}
+		for toolchain := range wantToolchains {
+			if !built.LanguagesNeeded[toolchain] {
+				t.Errorf("%s missing native toolchain %s from %v", fixture.name, toolchain, built.LanguagesNeeded)
+			}
 		}
 	}
 }

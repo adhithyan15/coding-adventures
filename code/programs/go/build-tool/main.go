@@ -188,6 +188,7 @@ func packagesForPlatform(packages []discovery.Package, goos string) []discovery.
 const sharedDiscoveryFixturePath = "code/specs/fixtures/build-tool-v1/cases/discovery-language-registry.json"
 const ciGateFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/ci-gate-selection-"
 const toolchainDetectionFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/toolchain-detection-"
+const sourceCollectionFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/source-collection-"
 
 const closureProvenanceSpecPath = "code/specs/CV02-checked-bounded-provenance-graphs.md"
 const closureProvenanceConsumer = "rust/programs/closurec"
@@ -236,6 +237,36 @@ var toolchainDetectionFixtureConsumers = []struct{ name, language string }{
 	{"typescript/programs/build-tool", "typescript"},
 }
 
+// Source collection has three distinct native reader sets. Dynamic C#/F#
+// tests enumerate all checked cases; Elixir and the other local readers test
+// only package-local cases. Keeping the narrower repository and shared-input
+// maps avoids scheduling native tests that do not read those subfamilies.
+var sourceCollectionLocalFixtureConsumers = []struct{ name, language string }{
+	{"dotnet/programs/build-tool-csharp", "csharp"},
+	{"dotnet/programs/build-tool-fsharp", "fsharp"},
+	{"elixir/programs/build-tool", "elixir"},
+	{"go/programs/build-tool", "go"},
+	{"haskell/programs/build-tool", "haskell"},
+	{"lua/programs/build-tool", "lua"},
+	{"perl/programs/build-tool", "perl"},
+	{"python/programs/build-tool", "python"},
+	{"ruby/programs/build-tool", "ruby"},
+	{"rust/programs/build-tool", "rust"},
+	{"swift/programs/build-tool", "swift"},
+	{"typescript/programs/build-tool", "typescript"},
+}
+
+var sourceCollectionRepositoryFixtureConsumers = []struct{ name, language string }{
+	{"dotnet/programs/build-tool-csharp", "csharp"},
+	{"dotnet/programs/build-tool-fsharp", "fsharp"},
+	{"swift/programs/build-tool", "swift"},
+}
+
+var sourceCollectionSharedInputFixtureConsumers = []struct{ name, language string }{
+	{"dotnet/programs/build-tool-csharp", "csharp"},
+	{"dotnet/programs/build-tool-fsharp", "fsharp"},
+}
+
 func hasCIGateFixturePath(changedFiles []string) bool {
 	for _, changed := range changedFiles {
 		name, ok := strings.CutPrefix(changed, ciGateFixturePrefix)
@@ -254,6 +285,31 @@ func hasToolchainDetectionFixturePath(changedFiles []string) bool {
 		}
 	}
 	return false
+}
+
+// Classify raw Git paths before any OS-specific cleanup. This deliberately
+// rejects backslash spellings and nested paths instead of normalizing them
+// into the checked flat fixture directory. Specific subfamilies win before
+// the package-local fallback, so their narrower reader maps stay intact.
+func sourceCollectionFixtureFamily(changed string) string {
+	name, ok := strings.CutPrefix(changed, sourceCollectionFixturePrefix)
+	if !ok || !strings.HasSuffix(name, ".json") || len(name) <= len(".json") || strings.ContainsAny(name, "/\\") {
+		return ""
+	}
+	stem := strings.TrimSuffix(name, ".json")
+	if strings.HasPrefix(stem, "repository-") {
+		if len(stem) > len("repository-") {
+			return "repository"
+		}
+		return ""
+	}
+	if strings.HasPrefix(stem, "shared-input-") {
+		if len(stem) > len("shared-input-") {
+			return "shared-input"
+		}
+		return ""
+	}
+	return "local"
 }
 
 func changedPackageRootsForPlatform(
@@ -334,7 +390,13 @@ func changedPackageRootsForPlatformAndLanguage(
 	discoveryFixtureChanged := containsPath(changedFiles, sharedDiscoveryFixturePath)
 	ciGateFixtureChanged := hasCIGateFixturePath(changedFiles)
 	toolchainFixtureChanged := hasToolchainDetectionFixturePath(changedFiles)
-	if !discoveryFixtureChanged && !ciGateFixtureChanged && !toolchainFixtureChanged {
+	sourceFixtureFamilies := map[string]bool{}
+	for _, path := range changedFiles {
+		if family := sourceCollectionFixtureFamily(path); family != "" {
+			sourceFixtureFamilies[family] = true
+		}
+	}
+	if !discoveryFixtureChanged && !ciGateFixtureChanged && !toolchainFixtureChanged && len(sourceFixtureFamilies) == 0 {
 		return changed, nil
 	}
 
@@ -375,6 +437,32 @@ func changedPackageRootsForPlatformAndLanguage(
 				return nil, fmt.Errorf("toolchain-detection fixture consumer %q is missing from discovered packages", consumer.name)
 			}
 			changed[consumer.name] = true
+		}
+	}
+	seedSourceConsumers := func(consumers []struct{ name, language string }, family string) error {
+		for _, consumer := range consumers {
+			if language != "all" && consumer.language != language {
+				continue
+			}
+			if !available[consumer.name] {
+				return fmt.Errorf("source-collection %s fixture consumer %q is missing from discovered packages", family, consumer.name)
+			}
+			changed[consumer.name] = true
+		}
+		return nil
+	}
+	for _, family := range []struct {
+		name      string
+		consumers []struct{ name, language string }
+	}{
+		{"local", sourceCollectionLocalFixtureConsumers},
+		{"repository", sourceCollectionRepositoryFixtureConsumers},
+		{"shared-input", sourceCollectionSharedInputFixtureConsumers},
+	} {
+		if sourceFixtureFamilies[family.name] {
+			if err := seedSourceConsumers(family.consumers, family.name); err != nil {
+				return nil, err
+			}
 		}
 	}
 	return changed, nil
