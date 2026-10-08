@@ -1520,10 +1520,28 @@ through S-I3 before two weeks are spent on Windows.
          ended.
      - Length bounds already exist on every frame and field, and are
        unchanged.
-   - **P2.6c, beneath-resolution (S-K5).** The `openat2(RESOLVE_BENEATH |
-     RESOLVE_NO_SYMLINKS | RESOLVE_NO_MAGICLINKS)` primitive, plus the
-     startup proof that the broker's roots are disjoint from S-I6's
-     never-grantable set. Brokered `fs:*` operations attach to it.
+   - **P2.6c, beneath-resolution (S-K5).** It lives in
+     `chief-of-staff-broker-roots`. No brokered `fs:*` operation exists
+     yet; when one does, it must go through this crate.
+     - `BrokerRoot::open(path, never_grantable)` opens a supervisor-chosen
+       root directory. It refuses the root if, after resolving symlinks,
+       the root lies inside any never-grantable path, or any never-grantable
+       path lies inside the root. This is the start-time proof S-K5 asks
+       for.
+     - `open_beneath(relative, Read | Write)` resolves an agent-supplied
+       path by the platform's own primitive, never by `realpath` and then
+       `open`:
+       - Linux: `openat2(RESOLVE_BENEATH | RESOLVE_NO_SYMLINKS |
+         RESOLVE_NO_MAGICLINKS)`;
+       - macOS: `openat` with `O_NOFOLLOW_ANY`, after refusing absolute
+         paths and `..` components;
+       - every other platform: a refusal. Without the primitive, the
+         broker does not offer the operation (S-P3).
+     - What it returns is a **regular file**, never a directory. It is
+       close-on-exec, and it carries only the access asked for.
+     - A file whose device and inode match a never-grantable file is
+       refused, which catches a hard link into the root.
+     - Paths are length-bounded (4 KiB), and refused if they contain NUL.
    - **P2.6d, one contained broker per agent (S-K7).** The dispatcher moves
      out of the daemon into one process per agent. Each holds only that
      agent's channel keys and runs under its own sandbox plan.
