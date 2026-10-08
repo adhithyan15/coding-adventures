@@ -1,9 +1,12 @@
-# G2D00/G2D03 neutral edge-case fixtures v1
+# G2D00-G2D03 neutral edge-case fixtures v1
 
-This process-free corpus freezes the point-normalization and SVG arc-degeneracy
-seams in [G2D00](../../G2D00-point2d.md) and
-[G2D03](../../G2D03-arc2d.md). It is not a claim that every existing lane
-already conforms, nor that rotated non-degenerate bounds are reconciled.
+This process-free corpus freezes point normalization, affine composition and
+inversion, quadratic/cubic Bezier algebra, and SVG arc-degeneracy seams in
+[G2D00](../../G2D00-point2d.md), [G2D01](../../G2D01-affine2d.md),
+[G2D02](../../G2D02-bezier2d.md), and [G2D03](../../G2D03-arc2d.md). It is
+not a claim that every existing lane already conforms, nor that rotated
+non-degenerate arc bounds are reconciled. Native flattening repairs use the
+separate `bezier2d-flattening-v1` adversarial corpus.
 
 `point-normalize` takes a two-number point and expects a two-number point.
 `svg-arc-degenerate` takes endpoint pairs, radii, and a sample parameter; its
@@ -17,6 +20,22 @@ coordinate by coordinate: the sub-threshold input `5e-13` must not pass merely
 because it is within the general `1e-12` output tolerance. Compare other
 numeric outputs with the pinned absolute tolerance (no relative tolerance),
 while checking presence, list length, and field shape exactly.
+
+`affine-compose` takes two six-number matrices in `[a,b,c,d,e,f]` order and
+a point; `first.multiply(second)` applies the second matrix first. Both
+matrix and transformed-point outputs are pinned. `affine-invert` publishes a
+six-number inverse or exact `null` under the strict `abs(det) < 1e-12`
+singularity threshold. `affine-vector` excludes translation by construction.
+
+`bezier-quadratic` and `bezier-cubic` take three or four control points and a
+sample `t`. Each publishes evaluation, tangent derivative, the two complete
+split control polygons, and tight `[x,y,width,height]` bounds from derivative
+roots. One cubic case places its x maximum beyond both endpoints, ensuring a
+conservative control-point box or endpoint-only box cannot pass. The validator
+derives polynomial answers independently of native implementations and rejects
+changed expectations, incomplete shapes, duplicate IDs/keys, and tolerance
+drift. Existing native readers may filter by operation; adding a new family
+does not imply that an older reader consumes it.
 
 The independent validator recomputes every expected point and rectangle from
 the spec's formulas without calling a package implementation:

@@ -16970,6 +16970,35 @@ lane repairs remain eligible after this one serial implementation PR. The Go
 snapshot and external-attester owners remain selection-blocked despite high
 raw descendant counts.
 
+## Post-#17104 inventory and geometry-fixture selection
+
+PR #17104 completed terminal acceptable CI and CodeQL checks without a merge
+conflict and merged through guarded auto-merge as
+`44919f4a28c3665871280a71807d2ffb6718b957`. The schema-3 inventory on
+that exact fetched main remains 15 established languages, 1,497 implementation
+identities, 4,770 occupied slots, 1,539 all-reported identities, 178
+high-consensus identities, zero canonical collisions, and zero unknown
+language buckets. This process-free Ruby graph/diff core changed no package
+slot. OCaml still has five emerging roots outside the denominator.
+
+Parallel read-only audits found no new unowned OCaml milestone: its native
+build-tool execution substrate, full adapter, conformance, three-platform CI,
+status documentation, and eventual promotion remain explicitly owned. The
+independent execution-fixture audit also found its first deterministic
+fail-stop/dependency case belongs after the trusted authority gates, not in
+an unsandboxed PR job. Existing pending owners therefore remain intact.
+
+The quick dependency/leverage pass selects exactly the ready
+`geometry-affine2d-bezier2d-neutral-fixture-extension` owner on a fresh clean
+branch. G2D01 composition/inversion and G2D02 evaluation/derivative/split/
+bounds vectors extend the currently eight-case `geometry2d-v1` corpus and
+unlock six absent Java/Kotlin/Dart Affine2D and Bezier2D slots, with Arc2D
+downstream. The now-ready Ruby repository-boundary reverse-diff/digest owner
+ranks second; existing C#/F# Bezier flattening repair is another bounded
+fallback. No live open PR overlaps geometry fixtures/specs or parity state.
+Keep the existing twelve-lane flattening repairs separate from this neutral
+fixture slice.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
