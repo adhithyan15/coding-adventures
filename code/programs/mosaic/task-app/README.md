@@ -94,10 +94,12 @@ rows, and the main content remains vertically scrollable. The fresh and restored
 lifecycle runs both require zero layout exceptions at that size (#16949).
 
 The same native contract ratchets the remaining style debt per backend and per
-property. Fresh `native-complete` reports currently contain 77 XAML, 144 SwiftUI,
-89 Compose, 163 Qt, and 197 Flutter drops; any new property or increase above
+property. Fresh `native-complete` reports currently contain 65 XAML, 132 SwiftUI,
+77 Compose, 151 Qt, and 185 Flutter drops; any new property or increase above
 those measured maxima fails CI. These inventories are explicit debt on the path
-to #12022's zero-drop gate, not a claim of visual completeness (#16995).
+to #12022's zero-drop gate, not a claim of visual completeness. Native text
+tracking now preserves TaskApp's authored `letter-spacing` on all five backends,
+retiring 60 allowances from that inventory (#16995, #17010).
 
 Those gates all assert the **semantics tree**, not appearance, and they can all
 pass while the app is unreadable — see #14798 for the first actual render and

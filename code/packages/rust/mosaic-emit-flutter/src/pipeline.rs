@@ -95,6 +95,28 @@ pub struct PipelineEmitResult {
     pub component_name: String,
 }
 
+#[cfg(test)]
+mod letter_spacing_tests {
+    use super::*;
+
+    #[test]
+    fn css_em_tracking_lowers_to_flutter_logical_pixels() {
+        let props = HashMap::from([
+            ("font-size".to_string(), "11px".to_string()),
+            ("letter-spacing".to_string(), "0.07em".to_string()),
+        ]);
+
+        assert_eq!(flutter_letter_spacing(&props), Some(0.77));
+        assert_eq!(
+            flutter_letter_spacing(&HashMap::from([(
+                "letter-spacing".to_string(),
+                "1px".to_string()
+            )])),
+            None
+        );
+    }
+}
+
 /// Errors the Flutter pipeline emitter can return. Same shape as the
 /// other backends.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -5235,6 +5257,38 @@ struct FlutterBoxStyle {
     inherited_text_style: String,
 }
 
+/// Lower CSS `letter-spacing` from `em` into Flutter's absolute logical
+/// pixels. Flutter's `TextStyle.letterSpacing` does not accept relative
+/// units, so a non-zero value is only safe when this same part authors an
+/// explicit pixel font size. Invalid or context-dependent values remain
+/// unread and therefore show up in strict-profile degradation reports.
+fn flutter_letter_spacing(props: &HashMap<String, String>) -> Option<f64> {
+    let raw = props.get("letter-spacing")?.trim().trim_matches('"').trim();
+    let em = if raw == "0" {
+        0.0
+    } else {
+        raw.strip_suffix("em")?.trim().parse::<f64>().ok()?
+    };
+    if !em.is_finite() {
+        return None;
+    }
+
+    let pixels = if em == 0.0 {
+        0.0
+    } else {
+        let font_size = props
+            .get("font-size")
+            .and_then(|value| strict_pixel_length(value))?;
+        em * font_size
+    };
+    if !pixels.is_finite() {
+        return None;
+    }
+
+    record_style_read("letter-spacing");
+    Some((pixels * 1_000_000.0).round() / 1_000_000.0)
+}
+
 fn flutter_box_style(
     base: &HashMap<String, String>,
     layers: &[StateLayer],
@@ -5329,6 +5383,7 @@ fn flutter_box_style(
     let font_size = style_prop(base, "font-size")
         .map(|v| parse_pixel_value(v))
         .or_else(|| ctx.sheet_font_size.map(str::to_string));
+    let letter_spacing = flutter_letter_spacing(base);
 
     let mut text_style_parts: Vec<String> = vec![format!("color: {text_color_expr}")];
     if let Some(ff) = font_family {
@@ -5336,6 +5391,9 @@ fn flutter_box_style(
     }
     if let Some(fs) = font_size {
         text_style_parts.push(format!("fontSize: {fs}"));
+    }
+    if let Some(spacing) = letter_spacing {
+        text_style_parts.push(format!("letterSpacing: {spacing}"));
     }
 
     // #15166 -- computed BEFORE the child is emitted, so it can be threaded
@@ -5367,6 +5425,9 @@ fn flutter_box_style(
         .or_else(|| ctx.sheet_font_size.and_then(strict_pixel_length))
     {
         inherited_parts.push(format!("fontSize: {size}"));
+    }
+    if let Some(spacing) = letter_spacing {
+        inherited_parts.push(format!("letterSpacing: {spacing}"));
     }
     let inherited_text_style = inherited_parts.join(", ");
 
@@ -6226,6 +6287,9 @@ fn host_input_text_style_arg(
     // merely unstyled.
     if let Some(size) = style_prop(&props, "font-size").and_then(|v| strict_pixel_length(v)) {
         fields.push(format!("fontSize: {size}"));
+    }
+    if let Some(spacing) = flutter_letter_spacing(&props) {
+        fields.push(format!("letterSpacing: {spacing}"));
     }
     // Only the generic families Flutter resolves without a bundled asset.
     // A named family that is not registered silently falls back, so it is

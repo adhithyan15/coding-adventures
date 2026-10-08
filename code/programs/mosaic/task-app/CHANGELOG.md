@@ -7,6 +7,14 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.1` accumulate here until the next version is
 cut.
 
+### Fixed — native text preserves authored letter spacing (#17010)
+
+XAML, SwiftUI, Compose, Qt, and Flutter now lower TaskApp's `em`-based letter
+spacing to their native text-tracking APIs. Fresh strict generation retires all
+60 `letter-spacing` allowances and reduces the style-drop inventories to 65
+XAML, 132 SwiftUI, 77 Compose, 151 Qt, and 185 Flutter without claiming broader
+visual or artifact coverage.
+
 ### Fixed — native style regressions cannot reclaim retired debt (#16995)
 
 The shared TaskApp native contract now pins the fresh Qt inventory at 163 style

@@ -85,12 +85,22 @@ def test_style_drop_baseline_totals_match_measured_main() -> None:
         backend: sum(properties.values())
         for backend, properties in STYLE_DROP_BASELINES.items()
     } == {
-        "xaml": 77,
-        "swiftui": 144,
-        "compose": 89,
-        "qt": 163,
-        "flutter": 197,
+        "xaml": 65,
+        "swiftui": 132,
+        "compose": 77,
+        "qt": 151,
+        "flutter": 185,
     }
+
+
+@pytest.mark.parametrize("backend", sorted(STYLE_DROP_BASELINES))
+def test_letter_spacing_is_no_longer_baselined(backend: str) -> None:
+    report = _report(backend)
+    report["styleDegradations"].append(_style_entry(backend, "letter-spacing"))
+
+    errors = validate_style_degradations(backend, report, "report.json")
+
+    assert any("unbaselined style drop 'letter-spacing'" in error for error in errors)
 
 
 @pytest.mark.parametrize("backend", sorted(STYLE_DROP_BASELINES))

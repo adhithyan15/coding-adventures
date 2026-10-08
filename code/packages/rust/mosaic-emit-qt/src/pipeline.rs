@@ -124,6 +124,31 @@ pub struct PipelineEmitResult {
     pub component_name: String,
 }
 
+#[cfg(test)]
+mod letter_spacing_tests {
+    use super::*;
+
+    #[test]
+    fn css_em_tracking_lowers_to_qt_pixels() {
+        let props = vec![
+            StyleProp {
+                name: "font-size".into(),
+                value: "10.5px".into(),
+            },
+            StyleProp {
+                name: "letter-spacing".into(),
+                value: "0.06em".into(),
+            },
+        ];
+
+        assert!(
+            qml_text_part_style_lines(&props)
+                .iter()
+                .any(|line| line == "font.letterSpacing: 0.66")
+        );
+    }
+}
+
 /// Errors the Qt pipeline emitter can return.
 ///
 /// Variants are intentionally string-bearing rather than rich values: the
@@ -3075,6 +3100,38 @@ fn qml_font_weight_is_bold(v: &str) -> Option<bool> {
     }
 }
 
+fn qml_letter_spacing(props: &[StyleProp]) -> Option<String> {
+    let raw = props
+        .iter()
+        .find(|prop| prop.name == "letter-spacing")?
+        .value
+        .trim()
+        .trim_matches('"')
+        .trim();
+    let em = if raw == "0" {
+        0.0
+    } else {
+        raw.strip_suffix("em")?.trim().parse::<f64>().ok()?
+    };
+    let pixels = if em == 0.0 {
+        0.0
+    } else {
+        let font_size = props
+            .iter()
+            .rev()
+            .find(|prop| prop.name == "font-size")
+            .and_then(|prop| qml_font_pixel_size(&prop.value))?
+            .parse::<f64>()
+            .ok()?;
+        em * font_size
+    };
+    if !pixels.is_finite() {
+        return None;
+    }
+    record_style_read(props, "letter-spacing");
+    Some(((pixels * 1_000_000.0).round() / 1_000_000.0).to_string())
+}
+
 fn qml_text_part_style_lines(props: &[StyleProp]) -> Vec<String> {
     let mut lines = Vec::new();
     if let Some(color) = style_prop(props, "color").and_then(qml_hex_color_or_none) {
@@ -3088,6 +3145,9 @@ fn qml_text_part_style_lines(props: &[StyleProp]) -> Vec<String> {
     }
     if let Some(is_bold) = style_prop(props, "font-weight").and_then(qml_font_weight_is_bold) {
         lines.push(format!("font.bold: {is_bold}"));
+    }
+    if let Some(spacing) = qml_letter_spacing(props) {
+        lines.push(format!("font.letterSpacing: {spacing}"));
     }
     if let Some(align) = style_prop(props, "text-align").and_then(qml_text_align) {
         lines.push(format!("horizontalAlignment: {align}"));
@@ -5991,6 +6051,9 @@ fn host_control_style_qml_lines(
         }
         if let Some(is_bold) = style_prop(base, "font-weight").and_then(qml_font_weight_is_bold) {
             lines.push(format!("font.bold: {is_bold}"));
+        }
+        if let Some(spacing) = qml_letter_spacing(base) {
+            lines.push(format!("font.letterSpacing: {spacing}"));
         }
     }
     // `opacity` on the CONTROL, not on its background Rectangle: it is an Item

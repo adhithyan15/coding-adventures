@@ -20,6 +20,24 @@ pub enum PipelineEmitError {
     InvalidTypography(String),
 }
 
+#[cfg(test)]
+mod letter_spacing_tests {
+    use super::*;
+
+    #[test]
+    fn css_em_tracking_lowers_to_compose_text_units() {
+        let props = vec![StyleProp {
+            name: "letter-spacing".into(),
+            value: "0.07em".into(),
+        }];
+
+        let style = compose_box_style(&props, &[], None, 0, None);
+
+        assert_eq!(style.letter_spacing.as_deref(), Some("0.07.em"));
+        assert!(style.dropped.is_empty(), "{:?}", style.dropped);
+    }
+}
+
 impl std::fmt::Display for PipelineEmitError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
@@ -567,6 +585,7 @@ fn emit_component(
     }
     writeln!(out, "import androidx.compose.ui.semantics.semantics").unwrap();
     writeln!(out, "import androidx.compose.ui.unit.dp").unwrap();
+    writeln!(out, "import androidx.compose.ui.unit.em").unwrap();
     writeln!(out, "import androidx.compose.ui.unit.sp").unwrap();
     writeln!(out, "import androidx.compose.ui.unit.TextUnit").unwrap();
     if uses_host_link || uses_host_dialog || uses_icon {
@@ -4665,6 +4684,8 @@ struct ComposeStyle {
     text_color: Option<String>,
     font_family_mono: bool,
     font_size: Option<String>,
+    /// Relative text tracking expressed as a Compose `TextUnit` expression.
+    letter_spacing: Option<String>,
     /// Properties this builder saw and did not lower, as `(name, value)`.
     ///
     /// Collected BY the builder rather than by a parallel list of "things
@@ -4746,6 +4767,19 @@ fn compose_box_style(
         }
     }
 
+    fn letter_spacing_em(v: &str) -> Option<String> {
+        let value = v.trim().trim_matches('"').trim();
+        let number = if value == "0" {
+            0.0
+        } else {
+            value.strip_suffix("em")?.trim().parse::<f64>().ok()?
+        };
+        if !number.is_finite() {
+            return None;
+        }
+        Some(((number * 1_000_000.0).round() / 1_000_000.0).to_string())
+    }
+
     let layer_count = state_layers.len();
     let mut width = PropBucket::new(layer_count);
     let mut max_width = PropBucket::new(layer_count);
@@ -4768,6 +4802,7 @@ fn compose_box_style(
     let mut foreground = PropBucket::new(layer_count);
     let mut font_size = PropBucket::new(layer_count);
     let mut font_family_mono = PropBucket::new(layer_count);
+    let mut letter_spacing = PropBucket::new(layer_count);
     let mut border_width = PropBucket::new(layer_count);
     let mut border_color = PropBucket::new(layer_count);
     // UI79 -- `dashed`/`dotted`; `None` means the solid `Modifier.border`.
@@ -4909,6 +4944,13 @@ fn compose_box_style(
             "font-family" => {
                 if p.value.trim() == "monospace" {
                     set(&mut font_family_mono, "true".to_string());
+                }
+            }
+            "letter-spacing" => {
+                if let Some(v) = letter_spacing_em(&p.value) {
+                    set(&mut letter_spacing, v);
+                } else {
+                    dropped.push((p.name.clone(), p.value.clone()));
                 }
             }
             "border-width" => {
@@ -5305,6 +5347,14 @@ fn compose_box_style(
     } else {
         Some(numeric_layer_value(&font_size, state_layers, "0"))
     };
+    let letter_spacing_out = if letter_spacing.empty() {
+        None
+    } else {
+        Some(format!(
+            "{}.em",
+            numeric_layer_value(&letter_spacing, state_layers, "0")
+        ))
+    };
 
     ComposeStyle {
         modifier,
@@ -5317,6 +5367,7 @@ fn compose_box_style(
         text_color,
         font_family_mono: !font_family_mono.empty(),
         font_size: font_size_out,
+        letter_spacing: letter_spacing_out,
         font_weight,
     }
 }
@@ -5407,6 +5458,8 @@ struct TextStyleCtx {
     size: Option<String>,
     /// Complete TextUnit expression for a validated live binding.
     bound_size: Option<String>,
+    /// Compose `TextUnit` expression for authored CSS letter spacing.
+    letter_spacing: Option<String>,
     /// Compose `FontWeight.*` expression for an authored `font-weight`.
     weight: Option<String>,
 }
@@ -5431,6 +5484,9 @@ impl TextStyleCtx {
         if let Some(w) = &self.weight {
             s.push_str(&format!(", fontWeight = {w}"));
         }
+        if let Some(spacing) = &self.letter_spacing {
+            s.push_str(&format!(", letterSpacing = {spacing}"));
+        }
         s
     }
 
@@ -5449,6 +5505,9 @@ impl TextStyleCtx {
         }
         if let Some(w) = &self.weight {
             fields.push(format!("fontWeight = {w}"));
+        }
+        if let Some(spacing) = &self.letter_spacing {
+            fields.push(format!("letterSpacing = {spacing}"));
         }
         if fields.is_empty() {
             None
@@ -5482,6 +5541,19 @@ fn sheet_text_style(part_styles: &PartStyleMap, part_name: &str) -> TextStyleCtx
                         ctx.size = Some(v);
                     }
                 }
+                "letter-spacing" => {
+                    let value = p.value.trim().trim_matches('"').trim();
+                    let number = if value == "0" {
+                        Some(0.0)
+                    } else {
+                        value
+                            .strip_suffix("em")
+                            .and_then(|v| v.trim().parse::<f64>().ok())
+                    };
+                    if let Some(number) = number.filter(|number| number.is_finite()) {
+                        ctx.letter_spacing = Some(format!("{number}.em"));
+                    }
+                }
                 _ => {}
             }
         }
@@ -5508,6 +5580,9 @@ fn cell_text_style(inherited: &TextStyleCtx, style: &ComposeStyle) -> TextStyleC
     }
     if let Some(w) = &style.font_weight {
         ctx.weight = Some(w.clone());
+    }
+    if let Some(spacing) = &style.letter_spacing {
+        ctx.letter_spacing = Some(spacing.clone());
     }
     ctx
 }
@@ -6347,9 +6422,10 @@ fn emit_container_frame(
                     text_color: None,
                     font_family_mono: false,
                     font_size: None,
-                dropped: Vec::new(),
-                gap: None,
-                font_weight: None,
+                    letter_spacing: None,
+                    dropped: Vec::new(),
+                    gap: None,
+                    font_weight: None,
                 })
             }
         }
@@ -6626,6 +6702,7 @@ fn emit_container(
                 text_color: None,
                 font_family_mono: false,
                 font_size: None,
+                letter_spacing: None,
                 dropped: Vec::new(),
                 gap: None,
                 font_weight: None,
@@ -6684,9 +6761,10 @@ fn emit_container(
                     text_color: None,
                     font_family_mono: false,
                     font_size: None,
-                dropped: Vec::new(),
-                gap: None,
-                font_weight: None,
+                    letter_spacing: None,
+                    dropped: Vec::new(),
+                    gap: None,
+                    font_weight: None,
                 });
             }
         }
@@ -6705,6 +6783,7 @@ fn emit_container(
                     text_color: None,
                     font_family_mono: false,
                     font_size: None,
+                    letter_spacing: None,
                     dropped: Vec::new(),
                     gap: None,
                     font_weight: None,
@@ -16214,10 +16293,9 @@ mod tests {
     #[test]
     fn dropped_properties_are_reported_with_a_reason() {
         let mut sheet = empty_style("F");
-        // `box-shadow` and `letter-spacing` have no Compose lowering at all,
-        // so this fixture does not go stale the moment another property is
-        // fixed. It did: it named `border-radius`, #14817 landed that, and the
-        // test then asserted a drop that no longer occurs.
+        // `box-shadow` has no Compose lowering at all. This fixture used to
+        // name `border-radius` and then `letter-spacing`; both are now native,
+        // so keeping them here would turn progress into a failing test.
         sheet.parts.push(part(
             "card",
             vec![
@@ -16232,7 +16310,7 @@ mod tests {
         let names: Vec<&str> = drops.iter().map(|d| d.name.as_str()).collect();
 
         assert!(names.contains(&"box-shadow"), "got: {names:?}");
-        assert!(names.contains(&"letter-spacing"), "got: {names:?}");
+        assert!(!names.contains(&"letter-spacing"), "got: {names:?}");
         // `background` IS lowered, so it must not appear -- a reporter that
         // named everything would be as useless as one that named nothing.
         assert!(!names.contains(&"background"), "got: {names:?}");

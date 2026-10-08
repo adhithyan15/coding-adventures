@@ -156,6 +156,9 @@ rather than letting them read as silent gaps.
     to 77 XAML, 144 SwiftUI, 89 Compose, 163 Qt, and 197 Flutter drops. #16995
     tightens the Qt and Flutter maxima to those fresh reports after #16297 and
     #16969, retiring 63 stale allowances that could otherwise regress silently.
+    #17010 then preserves TaskApp's authored letter spacing through each native
+    text API, retiring another 60 allowances and reducing the inventories to 65
+    XAML, 132 SwiftUI, 77 Compose, 151 Qt, and 185 Flutter drops.
     Keep the per-property maxima in the shared TaskApp contract so no new
     property or increased occurrence count can enter while fixes drive those
     inventories toward #12022's zero-drop hard fail. Do not call the existing
