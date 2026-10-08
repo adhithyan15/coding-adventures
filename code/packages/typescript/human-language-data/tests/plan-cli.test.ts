@@ -61,8 +61,18 @@ function corpus(inventoriesOnly = false): string {
   const root = mkdtempSync(join(tmpdir(), "hl-plan-"));
   roots.push(root);
   if (inventoriesOnly) {
+    // The same NEVER_READ_* pruning applies here. core/ alone is about 26,500
+    // files, and about 25,500 of them are the modality manifest and the
+    // generated hash ledgers the plan never opens. Copying those (and then
+    // deleting them in afterEach) was nearly all this fixture spent, and it
+    // pushed the duplicated-inventory case past its budget on a loaded machine
+    // while the assertion itself had passed. The first case's identical-output
+    // check is what keeps this filter honest.
     for (const directory of ["core", "concepts", "data"]) {
-      cpSync(join(defaultCurriculumRoot(), directory), join(root, directory), { recursive: true });
+      cpSync(join(defaultCurriculumRoot(), directory), join(root, directory), {
+        recursive: true,
+        filter: readByPlan,
+      });
     }
   } else {
     cpSync(defaultCurriculumRoot(), root, { recursive: true, filter: readByPlan });
