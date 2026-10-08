@@ -281,3 +281,26 @@ plain-decimal `print` arithmetic subset. Retain its negative probes for
 leading zero, decrement adjacency, carriage returns, and unsupported input;
 give each release its own token and grammar files without aliases or a claim
 of complete historical syntax.
+
+Prepare a separate bounded installment with six distinct, explicitly partial
+token/grammar pairs for `5.004_05-MT5` through `-MT9` and final `5.004_05`.
+Their own historical archives at
+`https://mirrors.develooper.com/perl/historical-perl/perl-<release>.tar.gz`
+have SHA-256 digests, in that order,
+`6832685e6bcb4993fab589f3b122de90ae2862bbc0cb1f5fdcac93bc9612d218`,
+`34a6a5e8ddaa5cf800729e5319ba65fba66b57697612507ed42e368576e34d9f`,
+`4dd052992d9cc3eed9abbc5f7f6bd1952493a30874eb12e2fc9f2ae722ab6373`,
+`f7da20ab60e70f1b485c52c6d9556fdb9e03bfc31a497d5678fb4a00e3207a13`,
+`29ab6b9332ee4021c0736fafd6340e19f6da6c24c4054208e7c4fa7e943296e9`,
+and `26ca43d9f1067f601c05ebeb3488bc3d473ee1cc772d57085dc43a4a9d5f225`.
+All six `perly.y` blobs match 5.004_04-m4. MT5's tokenizer changes input
+carriage-return handling, regex modifiers, and symbol lookup; MT6 changes
+filter cleanup and format-line carriage-return handling. MT7, MT8, MT9, and
+final 5.004_05 have byte-identical `perly.y` and `toke.c` to MT6. The final
+archive's two blobs also match the official `perl-5.004_05` Git tag. All seven
+releases from 5.004_04-m4 through 5.004_05 have a byte-identical `scan_num`
+function with its 250-digit decimal bound. None of those changes widen this
+stage's plain-decimal `print` arithmetic subset. Keep carriage returns,
+leading-zero literals, decrement adjacency, and unsupported characters
+rejected by the partial grammar, with separate files for every release and
+no complete historical syntax claim.

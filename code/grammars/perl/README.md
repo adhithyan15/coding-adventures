@@ -324,6 +324,15 @@ Current pairs:
   comment-stripped numeric scanner retains the
   250-digit limit. Each release has its own files and still rejects other
   Perl syntax.
+- `perl5.004_05-MT5.*` through `-MT9.*` and `perl5.004_05.*` are six
+  separate **partial** pairs checked against their own historical source
+  archives ([MT5], [MT6], [MT7], [MT8], [MT9], [final 5.004_05]). All yacc
+  blobs match 5.004_04-m4. MT5 changes input CRLF handling, regex modifiers,
+  and symbol lookup; MT6 changes filter cleanup and format-line CR handling;
+  MT7 through final have the same tokenizer as MT6. The final archive also
+  matches the [`perl-5.004_05` source tag]. The decimal scanner is identical
+  throughout, with the tested 250-digit bound. These pairs still reject
+  carriage returns and unsupported Perl syntax in the bounded subset.
 - `perl5.004_01_02.*` is a separate **partial** pair checked against the
   [historical 5.004_01_02 source archive] (SHA-256
   `185dc7317b340d4ca018f966993bb155bcc834c914fd26e579225d49c01e2a93`).
@@ -440,6 +449,13 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [5.004_04-m2 archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_04-m2.tar.gz
 [5.004_04-m3 archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_04-m3.tar.gz
 [5.004_04-m4 archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_04-m4.tar.gz
+[MT5]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_05-MT5.tar.gz
+[MT6]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_05-MT6.tar.gz
+[MT7]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_05-MT7.tar.gz
+[MT8]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_05-MT8.tar.gz
+[MT9]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_05-MT9.tar.gz
+[final 5.004_05]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_05.tar.gz
+[`perl-5.004_05` source tag]: https://github.com/Perl/perl5/tree/perl-5.004_05
 [`perl-5.004_03` source tag]: https://github.com/Perl/perl5/tree/perl-5.004_03
 [historical 5.004_01-t2 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01-t2.tar.gz
 [historical 5.004_01_01 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01_01.tar.gz
