@@ -11,15 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 17127,
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-08T13:53:45Z",
+    "observed_at": "2026-10-08T14:10:37Z",
     "pr_number": 17127,
-    "status": "pending",
-    "notes": "Ready-for-review neutral G2D03 PR #17127 is open from the locally validated branch. GitHub reports it mergeable without conflict; initial required checks are queued. Do not enable auto-merge until every required check is terminal and acceptable."
+    "status": "merged",
+    "notes": "PR #17127 completed seven successful and 25 skipped terminal checks with no failure or conflict. Guarded squash auto-merge completed as 8b9dbfc487fea50e8c2d2ad22c9385a0b4e02452 and was verified on fetched origin/main; it was not manually merged. No parity PR remains open."
   },
   "last_inventory": {
-    "revision": "93e0c01985e4d2a0bca600792dd07ff0896f6acd",
+    "revision": "8b9dbfc487fea50e8c2d2ad22c9385a0b4e02452",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1498,
@@ -9913,10 +9913,10 @@
       "id": "build-tool-ruby-repository-boundary-reverse-diff-digest-adoption",
       "title": "Adopt repository-boundary reverse diff and digest behavior in Ruby",
       "status": "pending",
-      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ruby-language-source-input-registry-adoption", "build-tool-ruby-diff-selection-match-work-ceiling-adoption"],
+      "depends_on": ["build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ruby-language-source-input-registry-adoption", "build-tool-ruby-diff-selection-match-work-ceiling-adoption", "build-tool-ruby-portable-dependency-hashing-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "Consume every neutral reverse-diff and local-plus-boundary digest case in the Ruby build tool after its exact source-input registry adoption."
+      "notes": "Ruby GraphDiff already validates boundary digests, builds exact reverse indexes, and consumes the reverse-index/shared-input diff fixtures; do not reimplement that half. Remaining scope is local-plus-boundary digest/cache evidence after the separately owned portable dependency-hashing repair, which currently uses unframed dependency digest text. Consume the neutral digest cases only after that prerequisite; split further if source-union and combined/cache behavior require independent changes."
     },
     {
       "id": "build-tool-rust-repository-boundary-reverse-diff-digest-adoption",
@@ -12110,21 +12110,44 @@
     },
     {
       "id": "geometry-2d-neutral-fixture-ci-scheduling",
-      "title": "Schedule the neutral geometry2d validator and test suite in CI",
+      "title": "Schedule both neutral geometry and Bezier flattening validators in CI",
       "status": "pending",
-      "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"],
+      "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-bezier2d-flattening-termination-contract"],
       "branch": null,
       "pr_number": null,
-      "notes": "The geometry2d-v1 validator and its unit tests exist but are absent from the unconditional contracts job. Add exact CI scheduling and verify on the live workflow; recheck open workflow PR overlap before editing."
+      "notes": "The geometry2d-v1 and bezier2d-flattening-v1 validators and their unit tests exist but are absent from the unconditional contracts job. Schedule both exact validators and both test files in that existing Python step; native package readers remain separately owned. Validate workflow syntax, command-presence regression, four focused commands, and live fixture-only CI. Recheck open workflow PR #15723 overlap before editing."
+    },
+    {
+      "id": "geometry-affine2d-bezier2d-existing-lane-neutral-fixture-consumption",
+      "title": "Classify existing-lane G2D01 and G2D02 neutral fixture consumption",
+      "status": "pending",
+      "depends_on": ["geometry-affine2d-bezier2d-neutral-fixture-extension"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Post-#17127 audit found that Java/Kotlin/Dart dynamically consume all eight G2D01/G2D02 cases, but pre-existing C#/Elixir/F#/Go/Haskell/Lua/Perl/Python/Ruby/Rust/Swift/TypeScript Affine2D and Bezier2D roots do not. Split this 12-lane umbrella by toolchain before selecting implementation. Each lane should dynamically consume five affine and three Bezier polynomial cases, run native package/coverage regression, and minimally repair semantic drift. Exclude the nine-case Bezier flattening, G2D03, schema/oracle, and fixture-only CI scheduling owners."
+    },
+    {
+      "id": "chief-spawn-isolation-native-authority-review",
+      "title": "Review the shared Chief spawn-isolation native authority boundary",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Rust-only chief-of-staff-spawn-isolation is a concrete host-security/native-runtime package, excluded from portable parity selection and the all-language denominator. Separately review its shared unsafe pre_exec descriptor/session/close-on-exec behavior, capability manifest and platform evidence, including the documented Windows explicit HANDLE_LIST gap (D18S step 8). Existing chief-process-supervisor, chief-agent-stdio-host, and chief-host-runtime native reviews cover consumers, not this factored shared crate. Do not create cross-language ports or select this item in the parity loop."
     },
     {
       "id": "geometry-arc2d-center-form-bounds-and-sweep-neutral-contract",
       "title": "Freeze analytic wrapped Arc2D bounds and bounded center-form cubic sweeps",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-affine2d-bezier2d-neutral-fixture-extension"],
       "branch": "codex/parity-arc2d-contract-20261008",
       "pr_number": 17127,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/17127",
+      "merge_revision": "8b9dbfc487fea50e8c2d2ad22c9385a0b4e02452",
+      "merged_at": "2026-10-08T14:10:37Z",
+      "merge_notes": "All 32 final-head checks were terminal and acceptable: seven successes and 25 expected skips. GitHub reported CLEAN/MERGEABLE; guarded squash auto-merge merged #17127 without a manual merge command, and the exact merge commit is on fetched origin/main.",
       "opened_at": "2026-10-08T13:53:45Z",
       "opened_revision": "52ef9a9bd42a9f094e2af84539dc3314028b9868",
       "selected_at": "2026-10-08T13:37:50Z",
@@ -13633,7 +13656,7 @@
     },
     {
       "id": "geometry-bezier2d-flattening-csharp-fsharp", "title": "Consume safe Bezier flattening contract in C# and F#", "status": "pending", "depends_on": ["geometry-bezier2d-flattening-termination-contract"], "branch": null, "pr_number": null,
-      "notes": "Read-only twelve-lane audit found both .NET lanes use midpoint flatness and unbounded recursion; their tolerance guard rejects negatives but permits zero. Consume nine neutral cases dynamically, reject nonfinite controls/tolerance, enforce finite-segment bound and shared budgets, then run Bezier2D and dependent Arc2D suites."
+      "notes": "Read-only twelve-lane audit found both .NET lanes use midpoint flatness and unbounded recursion; their tolerance guard rejects negatives but permits zero. Consume nine neutral cases dynamically, reject nonfinite controls/tolerance, enforce finite-segment bound and shared budgets, then run Bezier2D and dependent Arc2D suites. Raise both Bezier BUILD coverage floors from 80% to G2D02's >=95% line requirement within this owner."
     },
     {
       "id": "geometry-bezier2d-flattening-python-ruby-perl", "title": "Consume safe Bezier flattening contract in Python, Ruby, and Perl", "status": "pending", "depends_on": ["geometry-bezier2d-flattening-termination-contract"], "branch": null, "pr_number": null,
