@@ -245,8 +245,11 @@ claim by opening an unmediated agent-to-supervisor byte channel. Nor is it left
 closed, because the runtime's first `open()` would then land on fd 2 and
 stderr writes would corrupt it.
 
-The protocol is length-framed, and a frame that fails to parse **terminates the
-channel** rather than resynchronizing. It does not reach the
+The protocol is framed with a hard bound on every frame. The supervisor's
+control channel uses a 4-byte length prefix. `chief-agent-stdio-v1` uses one
+JSON object per line, with a maximum line length. Either way, a frame that is
+over the bound or fails to parse **terminates the channel** rather than
+resynchronizing. It does not reach the
 supervisor. An agent that discovers the supervisor's address, socket path, or
 PID can do nothing with the knowledge, because it has no syscall with which to
 act on it.
@@ -266,8 +269,14 @@ mediate `ioctl` on device nodes below ABI v5 (kernel 6.10).
 ### S-I3 — descriptor isolation is enforced by construction, not by audit
 
 Every descriptor in the supervisor is opened `O_CLOEXEC` (Windows:
-`WSA_FLAG_NO_HANDLE_INHERIT`) **atomically at the open site**, and the child
-calls `close_range(3, ~0U, 0)` between fork and exec. On Windows, handles are
+`WSA_FLAG_NO_HANDLE_INHERIT`) **atomically at the open site**. Between fork
+and exec, the child then makes every descriptor above 2 close-on-exec:
+`close_range(3, ~0U, CLOSE_RANGE_CLOEXEC)`, or `fcntl(fd, F_SETFD,
+FD_CLOEXEC)` on each one where that call is unavailable. At exec this has
+the same effect as `close_range(3, ~0U, 0)`, since every one of them is
+closed. Marking rather than closing keeps the runtime's own exec-error pipe
+open until the exec itself, so a failed exec is still reported as a failed
+spawn, not as a child that started and exited. On Windows, handles are
 passed with an explicit `PROC_THREAD_ATTRIBUTE_HANDLE_LIST`, never with
 `bInheritHandles=TRUE` alone.
 
@@ -1198,6 +1207,30 @@ through S-I3 before two weeks are spent on Windows.
        now. They become inputs when a deployment can choose them.
 2. **Descriptor isolation and the channel contract** (S-I2, S-I3):
    `O_CLOEXEC` at every open site, `close_range` in the child, no-tty check.
+   **Status (P2.2):** done for the agent spawn sites in
+   `chief-of-staff-spawn-isolation`. That crate holds the one `unsafe`
+   `pre_exec` hook, so the supervisor crates keep `#![forbid(unsafe_code)]`.
+   It is applied in three places: the production supervisor
+   (`ProcessHostSupervisor::spawn_verified`), the Level 4 stdio host and the
+   Deno runtime path. At each of them:
+   - **fd 2 is `/dev/null`**, not inherited from the daemon.
+   - **The child refuses to exec** if fd 0, 1 or 2 is a terminal. A pipe or
+     `/dev/null` never is, so this verifies the construction.
+   - **Every descriptor above 2 is made close-on-exec** between fork and exec.
+     Linux uses `close_range` with `CLOSE_RANGE_CLOEXEC`, falling back to an
+     `fcntl` loop on kernels before 5.11. Every other Unix uses the `fcntl`
+     loop, up to the descriptor limit read in the parent.
+
+   Not done here:
+   - **Windows' explicit handle list.** Stable Rust's `Command` cannot pass
+     `PROC_THREAD_ATTRIBUTE_HANDLE_LIST`, so it is step 8's applier. On
+     Windows, P2.2 only sets stderr to null.
+   - **`generic-job-runtime`'s worker pool.** It still inherits stderr, and
+     its reader skips a malformed line rather than ending the channel. Its
+     non-agent users need a separate change.
+   - **A CI lint for raw open sites** without `O_CLOEXEC`. Today every raw
+     open in the daemon's tree sets it. `kqueue()` has no flag, but BSD does
+     not let a forked child inherit a kqueue.
 3. **OpenBSD `pledge`/`unveil`; FreeBSD Capsicum** (Tier B). Days, not weeks.
    Proves the model. Requires step 1 because the current OpenBSD lowering is
    the most advisory in the tree.
