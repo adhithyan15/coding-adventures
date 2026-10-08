@@ -9,6 +9,9 @@
 //!   env [names]        the environment's names, its arguments, the values
 //!   exec <path> [args]      execve without forking; "errno=<n>" if refused
 //!   execveat <path> [args]  the same, by descriptor (AT_EMPTY_PATH)
+//!   execveat-on <n> <path> [args]    dup2 the file onto fd n, exec fd n
+//!   execveat-path <n> <path> [args]  execveat(n, absolute path)
+//!   opendir <path>     list a directory; "ok" or "errno=<n>"
 //!   socket | unix      socket(AF_INET) / socket(AF_UNIX)
 //!   fork               a new process (clone without CLONE_THREAD)
 //!   io_uring | ptrace | kill | tiocsti | mount | bpf
@@ -58,6 +61,41 @@ fn main() {
             }
         }
         Some("readlink") => report(std::fs::read_link(&args[1]).map(|_| ())),
+        Some("opendir") => report(std::fs::read_dir(&args[1]).map(|_| ())),
+        Some(mode @ ("execveat-on" | "execveat-path")) => {
+            // Exec by the pinned descriptor number: either by putting the
+            // file there (dup2), or with an absolute path, which ignores
+            // the descriptor argument.
+            let pinned: i32 = args[1].parse().unwrap();
+            let path = std::ffi::CString::new(args[2].as_str()).unwrap();
+            let rest: Vec<std::ffi::CString> = args[3..]
+                .iter()
+                .map(|arg| std::ffi::CString::new(arg.as_str()).unwrap())
+                .collect();
+            let mut argv = vec![path.as_ptr()];
+            argv.extend(rest.iter().map(|arg| arg.as_ptr()));
+            argv.push(std::ptr::null());
+            let envp = [std::ptr::null::<libc::c_char>()];
+            let target = if mode == "execveat-on" {
+                let fd = unsafe { libc::open(path.as_ptr(), libc::O_RDONLY) };
+                unsafe { libc::dup2(fd, pinned) };
+                c"".as_ptr()
+            } else {
+                path.as_ptr()
+            };
+            // SAFETY: NUL-terminated path and argv/envp arrays.
+            unsafe {
+                libc::syscall(
+                    libc::SYS_execveat,
+                    pinned,
+                    target,
+                    argv.as_ptr(),
+                    envp.as_ptr(),
+                    libc::AT_EMPTY_PATH,
+                )
+            };
+            println!("errno={}", errno());
+        }
         Some("execveat") => {
             // Open the file and exec it by descriptor, as the hook does.
             let path = std::ffi::CString::new(args[1].as_str()).unwrap();

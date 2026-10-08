@@ -12,7 +12,7 @@
     {
       "category": "ffi",
       "action": "call",
-      "target": "libc syscall landlock_create_ruleset, landlock_add_rule, openat2, open, fstat and read in the parent; prctl, landlock_restrict_self and seccomp in the forked child before exec",
+      "target": "libc syscall landlock_create_ruleset, landlock_add_rule, openat2, open, fstat, read, fcntl, socketpair, recvmsg, poll and the seccomp notification ioctls in the parent; prctl, open, getdents64, fcntl, landlock_restrict_self, seccomp, sendmsg, readlinkat, close and execveat in the forked child before exec",
       "justification": "Builds a Landlock ruleset and a seccomp-BPF program for an agent, and installs both, with no_new_privs, between fork and exec (D18S build step 4). Neither has a safe std API."
     }
   ],

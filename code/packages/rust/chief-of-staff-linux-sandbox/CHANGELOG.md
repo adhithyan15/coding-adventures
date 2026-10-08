@@ -44,3 +44,27 @@
   - `EACCES` for `readlink` and `readlinkat`.
 - The `linux-sandbox-probe` test child, and tests that check each denial
   from inside a real confined child, each with an unconfined control.
+
+### Added (P2.5, D18S step 5: the shim)
+
+- **Exec once.** The seccomp filter is installed with
+  `SECCOMP_FILTER_FLAG_NEW_LISTENER`, and `execveat` on the pinned
+  descriptor returns `SECCOMP_RET_USER_NOTIF`.
+  - The hook sends the listener over a per-`apply` socketpair. `sendmsg` is
+    allowed only on that descriptor number.
+  - A supervisor thread answers the first notification with `CONTINUE`,
+    then closes the listener, so every later exec gets `ENOSYS`.
+  - This closes the P2.4 residual: re-running the binary, or the loader, by
+    `dup2` or an absolute path.
+- **The environment's closed set**: `GRANTABLE_ENVIRONMENT`, with S-I4a's
+  deny-list as a redundant check. `apply` now returns
+  `Result<&mut Command, ConfinementError>`, and refuses any other name with
+  `ConfinementError::Environment`.
+- **Checks in the child**, before Landlock:
+  - exactly one thread;
+  - fds 0-2 open, and every other descriptor close-on-exec.
+- **Launch probes (S-P4)**:
+  - `readlinkat` must return seccomp's `EACCES`;
+  - opening `/` must return Landlock's.
+- `launch_verification()` lists the classes each launch confirms and those
+  only CI does.
