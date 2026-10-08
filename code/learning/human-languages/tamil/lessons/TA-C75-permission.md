@@ -33,7 +33,7 @@ reviews_of: [TA-W30-read-sariyaa]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-PRAGMATICS-C75-ANSWER-02, TA-SCRIPT-READ-SARIYAA-01] -->
 
-[PAUSE 2s] Read **சரியா**, then answer it.
+[PAUSE 2s] [YOU READ: **சரியா**, then answer it]
 
 ## You'll want to know: வரலாமா?
 <!-- hl-knowledge: introduces=[TA-PRAGMATICS-C75-PERMISSION-03]; assesses=[] -->

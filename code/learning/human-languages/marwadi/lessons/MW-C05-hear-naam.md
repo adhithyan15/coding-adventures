@@ -36,9 +36,12 @@ reviews_of: [MW-C05-hear-mharo, MW-C05-mharo]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MHARO-01, MW-SCRIPT-MHARO-01, MW-DIALOGUE-GREETING-01, MW-PERFORMANCE-PAANI-FOUR-SKILL-01] -->
 
-[PAUSE 25s] Hear **राम-राम सा** and answer it. Retrieve **पाणी**
-once by ear, voice, eye, and writing. Then hear *mhāro*, say **my**, and read
-**म्हारो** once.
+[PAUSE 25s] Hear **राम-राम सा** and answer it. Retrieve **पाणी** once by ear and
+voice. [YOU READ: **पाणी**]
+
+[YOU WRITE: **पाणी** once]
+
+Then hear *mhāro* and say **my**. [YOU READ: **म्हारो** once]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-NAAM-01]; assesses=[] -->

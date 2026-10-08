@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 27,
-  "sourceHash": "fnv1a64:401c0457ab6de01e",
+  "sourceHash": "fnv1a64:c6748f7742adc535",
   "lessonIds": [
     "PA-R27-ear-mouth-r4",
     "PA-R27-nose-heart-r4"
@@ -10,7 +10,7 @@
   "drivablePrefix": 2,
   "text": "punjabi/narration/ch27.txt",
   "json": "punjabi/narration/ch27.json",
-  "textHash": "fnv1a64:0a91d970044e3f23",
-  "jsonHash": "fnv1a64:13360ac170492e12",
+  "textHash": "fnv1a64:e058c48db625858d",
+  "jsonHash": "fnv1a64:3262f3b16c05d9c7",
   "findings": []
 }

@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 45,
-  "sourceHash": "fnv1a64:0080e43cb22bfe40",
+  "sourceHash": "fnv1a64:06e22c86bf686dc1",
   "lessonIds": [
     "PA-C45-labels",
     "PA-C45-form",
@@ -11,7 +11,7 @@
   "drivablePrefix": 0,
   "text": "punjabi/narration/ch45.txt",
   "json": "punjabi/narration/ch45.json",
-  "textHash": "fnv1a64:2764f5651308392e",
-  "jsonHash": "fnv1a64:cc8b72d10ca71403",
+  "textHash": "fnv1a64:287944b1fbacadb1",
+  "jsonHash": "fnv1a64:9f8459796dfe2e91",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 136,
   "title": "Crocodile, Mosquito, Fly, Bee, Butterfly",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:32558f3fe4539bd8",
+  "sourceHash": "fnv1a64:5f5533bd5ae0dc2b",
   "lessons": [
     {
       "id": "AR-C136-timsah",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:50fb7c2505e17f2d",
+      "sourceHash": "fnv1a64:1c1171a3aec65065",
       "notice": null,
       "blocks": [
         {
@@ -44,8 +44,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read each word whole, right to left: سلام، شكرًا، شاي."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each word whole, right to left — سلام، شكرًا، شاي",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each word whole, right to left — **سلام**، **شكرًا**، **شاي**]"
             }
           ]
         },

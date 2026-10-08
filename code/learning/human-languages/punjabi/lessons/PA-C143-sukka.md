@@ -38,7 +38,8 @@ reviews_of: [PA-C142-gilla]
 
 [PAUSE 2s] Before the new one: say the Punjabi for narrow, then the Punjabi for wet.
 
-[PAUSE 1s] Read on without stopping: **ਮਨਨ ਮੇਰਾ ਦੋਸਤ ਹੈ। ਉਹ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹੈ।**
+[PAUSE 1s]
+[YOU READ: **ਮਨਨ ਮੇਰਾ ਦੋਸਤ ਹੈ। ਉਹ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹੈ।** without stopping]
 
 ## You'll want to know: ਸੁੱਕਾ
 <!-- hl-knowledge: introduces=[PA-LEX-C143-QUAL143-01]; assesses=[] -->

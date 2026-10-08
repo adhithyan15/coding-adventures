@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Hand and Money: No New Signs",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:0abf9c62b9254e41",
+  "sourceHash": "fnv1a64:107a40bc2e5923a6",
   "lessons": [
     {
       "id": "MW-C10-hear-haath",
@@ -98,7 +98,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a843f7020bceeff4",
+      "sourceHash": "fnv1a64:e48ac5b9837ff7c6",
       "notice": null,
       "blocks": [
         {
@@ -144,8 +144,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, and wait five seconds."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
             },
             {
               "kind": "prompt",
@@ -295,7 +300,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31f7c21908bbf1c1",
+      "sourceHash": "fnv1a64:8ada3f6234443221",
       "notice": null,
       "blocks": [
         {
@@ -341,8 +346,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, and wait five seconds."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
             },
             {
               "kind": "prompt",
@@ -400,7 +410,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:20d32e51b874f025",
+      "sourceHash": "fnv1a64:69918bef4f786849",
       "notice": null,
       "blocks": [
         {
@@ -436,7 +446,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear all five in mixed order, say each from meaning, and read the five cards."
+              "text": "Hear all five in mixed order, and say each from meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the five cards",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the five cards]"
             },
             {
               "kind": "prompt",
@@ -498,7 +517,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ecdbe55ed09f46b",
+      "sourceHash": "fnv1a64:fc9e2f969109a73b",
       "notice": null,
       "blocks": [
         {
@@ -532,8 +551,13 @@
               "text": "Produce five words from meaning cues."
             },
             {
-              "kind": "speech",
-              "text": "Match five printed cards to meanings."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "five printed cards and match them to meanings",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: five printed cards and match them to meanings]"
             },
             {
               "kind": "prompt",

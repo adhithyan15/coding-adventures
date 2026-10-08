@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 80,
-  "sourceHash": "fnv1a64:c2c3a65cb165c978",
+  "sourceHash": "fnv1a64:f6ca36ef733e23a8",
   "lessonIds": [
     "ML-C80-uuru",
     "ML-C80-keralam",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "malayalam/narration/ch80.txt",
   "json": "malayalam/narration/ch80.json",
-  "textHash": "fnv1a64:e0ffcc146e3a1dc5",
-  "jsonHash": "fnv1a64:97fbe8f748fde4ac",
+  "textHash": "fnv1a64:798a7dd3aec0ef76",
+  "jsonHash": "fnv1a64:dea063308af505b4",
   "findings": []
 }

@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Ear, Mouth, Nose, and Heart at R4",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:401c0457ab6de01e",
+  "sourceHash": "fnv1a64:c6748f7742adc535",
   "lessons": [
     {
       "id": "PA-R27-ear-mouth-r4",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c5e2274a3e27ba6c",
+      "sourceHash": "fnv1a64:b334b596c346ad62",
       "notice": null,
       "blocks": [
         {
@@ -45,12 +45,17 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read, then stop."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਕੰਨ, ਮੂੰਹ once, then stop",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਕੰਨ · ਮੂੰਹ** once, then stop]"
             },
             {
               "kind": "speech",
-              "text": "Read ਕੰਨ, ਮੂੰਹ once. This lesson measures listening, speech, and recognition. It does not award independent Gurmukhi writing evidence."
+              "text": "This lesson measures listening, speech, and recognition. It does not award independent Gurmukhi writing evidence."
             },
             {
               "kind": "activity",
@@ -126,7 +131,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fea8b00d66e6fb5b",
+      "sourceHash": "fnv1a64:30b7316839b9b391",
       "notice": null,
       "blocks": [
         {
@@ -152,12 +157,17 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read, then stop."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ਨੱਕ, ਦਿਲ once, then stop",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ਨੱਕ · ਦਿਲ** once, then stop]"
             },
             {
               "kind": "speech",
-              "text": "Read ਨੱਕ, ਦਿਲ once. This lesson measures listening, speech, and recognition. It does not award independent Gurmukhi writing evidence."
+              "text": "This lesson measures listening, speech, and recognition. It does not award independent Gurmukhi writing evidence."
             },
             {
               "kind": "activity",

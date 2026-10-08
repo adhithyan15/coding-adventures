@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Counting One to Ten",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:ce150889fb604d6c",
+  "sourceHash": "fnv1a64:1fb82ee0f1fc694c",
   "lessons": [
     {
       "id": "KA-C07-ondu",
@@ -568,7 +568,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe65ef3e7725b543",
+      "sourceHash": "fnv1a64:b19890abb98fd317",
       "notice": null,
       "blocks": [
         {
@@ -603,7 +603,20 @@
             },
             {
               "kind": "speech",
-              "text": "Read the word slowly: ನಾ (nā), ಲ್ (l, with your virama stripping the vowel away), ಕು (ku). Four is where the virama earns its keep — it is what lets l and k sit together with no vowel between them."
+              "text": "The word breaks into ನಾ (nā), ಲ್ (l, with your virama stripping the vowel away), ಕು (ku)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the word slowly",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the word slowly]"
+            },
+            {
+              "kind": "speech",
+              "text": "Four is where the virama earns its keep — it is what lets l and k sit together with no vowel between them."
             }
           ]
         },

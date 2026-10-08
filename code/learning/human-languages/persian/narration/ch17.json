@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Six to Ten, and One Sound Law",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:69d42b2de2baeef4",
+  "sourceHash": "fnv1a64:25eac98020df9767",
   "lessons": [
     {
       "id": "FA-C17-shesh",
@@ -698,7 +698,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:842afd0272fbc5dc",
+      "sourceHash": "fnv1a64:69363679d024a8b4",
       "notice": null,
       "blocks": [
         {
@@ -732,8 +732,13 @@
               "text": "Count backwards from dah to yek."
             },
             {
-              "kind": "speech",
-              "text": "Read the ten printed shuffled and say each."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the ten printed shuffled, then say each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the ten printed shuffled, then say each]"
             },
             {
               "kind": "prompt",

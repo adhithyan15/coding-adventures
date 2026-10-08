@@ -39,9 +39,11 @@ Say **いもうと** once without looking back.
 ## Guided Practice — three cues
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-IMOUTO, JA-LEX-CHICHI, JA-LEX-HAHA, JA-BRIDGE-SINO-JAPANESE, JA-LEX-NIHONGO, JA-SCRIPT-KANJI-READINGS] -->
 
-[PAUSE 45s] Read distant **日本語** as *nihongo* and recall that borrowed kanji
-can carry word-specific readings. Then hear “younger sister,” say **いもうと**,
-and read **ちち・はは**.
+[PAUSE 45s] [YOU READ: distant **日本語** as *nihongo*]
+
+Recall that borrowed kanji can carry word-specific readings. Then hear “younger
+sister” and say **いもうと**. [YOU READ: **ちち・はは**]
+
 [YOU WRITE: all three]
 
 ## Wrap-up Recall

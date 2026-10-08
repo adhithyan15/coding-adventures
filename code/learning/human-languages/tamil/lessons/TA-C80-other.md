@@ -33,7 +33,9 @@ reviews_of: [TA-C79-when-clause]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-EPPOTHU-01, TA-GRAMMAR-C79-WHEN-03] -->
 
-[PAUSE 2s] Read **எப்போது**. Then say: when you come, tell me.
+[PAUSE 2s] [YOU READ: **எப்போது**]
+
+Then say: when you come, tell me.
 
 ## You'll want to know: மற்றது
 <!-- hl-knowledge: introduces=[TA-LEX-C80-OTHER-01]; assesses=[] -->

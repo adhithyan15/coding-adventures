@@ -1,7 +1,7 @@
 {
   "language": "gujarati",
   "chapter": 97,
-  "sourceHash": "fnv1a64:1180ff1c4e91d4f8",
+  "sourceHash": "fnv1a64:9b7c27cbbe3c6a35",
   "lessonIds": [
     "GU-C97-navembar",
     "GU-C97-kartak",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "gujarati/narration/ch97.txt",
   "json": "gujarati/narration/ch97.json",
-  "textHash": "fnv1a64:542d62b4d757540e",
-  "jsonHash": "fnv1a64:c0ed261fe62bd0a1",
+  "textHash": "fnv1a64:e12dc4f1a22d7c16",
+  "jsonHash": "fnv1a64:774cc6ff2f0bc308",
   "findings": []
 }

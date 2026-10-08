@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "A Little More Slowly",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:574ff8d8731207d6",
+  "sourceHash": "fnv1a64:6db14c1054ab048c",
   "lessons": [
     {
       "id": "JA-W10-se",
@@ -618,7 +618,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eab42c73e5ee11dc",
+      "sourceHash": "fnv1a64:f5972cb697b3824e",
       "notice": null,
       "blocks": [
         {
@@ -633,8 +633,13 @@
               "source": "[PAUSE 15s]"
             },
             {
-              "kind": "speech",
-              "text": "Read すこし (sukoshi)."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "すこし (sukoshi)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **すこし**]"
             },
             {
               "kind": "prompt",
@@ -1001,7 +1006,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:75546851958ec03e",
+      "sourceHash": "fnv1a64:2d2c082b01b11884",
       "notice": null,
       "blocks": [
         {
@@ -1051,8 +1056,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read もう | すこし (sukoshi)."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "もう | すこし (sukoshi)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **もう | すこし**]"
             },
             {
               "kind": "speech",
@@ -1121,7 +1131,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e1edd823e51c386",
+      "sourceHash": "fnv1a64:430be68f9983dab0",
       "notice": null,
       "blocks": [
         {
@@ -1137,7 +1147,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say “I do not understand,” then read もうすこし (mō sukoshi)."
+              "text": "Say “I do not understand.”"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "もうすこし (mō sukoshi)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **もうすこし**]"
             },
             {
               "kind": "prompt",
@@ -1248,7 +1267,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d333e98659323e9",
+      "sourceHash": "fnv1a64:0e7579923d8d151b",
       "notice": null,
       "blocks": [
         {
@@ -1302,8 +1321,13 @@
               "text": "Picture the spot beside you and say koko."
             },
             {
-              "kind": "speech",
-              "text": "Read こ | こ."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "こ | こ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **こ | こ**]"
             },
             {
               "kind": "speech",
@@ -1368,7 +1392,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dac7588ab7a8dab4",
+      "sourceHash": "fnv1a64:23654cd405797724",
       "notice": null,
       "blocks": [
         {
@@ -1393,7 +1417,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read sumimasen and onegaishimasu. Retrieve the repetition request, then the three new spoken pieces mō sukoshi, yukkuri, and itte kudasai."
+              "text": "Say sumimasen and onegaishimasu. Retrieve the repetition request, then the three new spoken pieces mō sukoshi, yukkuri, and itte kudasai."
             }
           ]
         },
@@ -1426,8 +1450,13 @@
               "text": "Speak: sumimasen + the slower request."
             },
             {
-              "kind": "speech",
-              "text": "Read: independently retrieve only もうすこし (mō sukoshi)."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "only もうすこし (mō sukoshi), retrieving it independently",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: only **もうすこし**, retrieving it independently]"
             },
             {
               "kind": "prompt",

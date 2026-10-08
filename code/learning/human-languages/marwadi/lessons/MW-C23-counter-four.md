@@ -46,7 +46,7 @@ Three turns, in this order and no other.
 
 1. Hear the three lines shuffled and put them back in order.
 2. Produce all three from meaning cues, as one continuous exchange.
-3. Read the three printed lines and say who speaks which.
+3. [YOU READ: the three printed lines, then say who speaks which]
 4. [YOU WRITE: all three from dictation, without a model]
 
 Pass each skill separately. You can now open a price, react to it, and make one

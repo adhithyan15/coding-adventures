@@ -38,7 +38,8 @@ reviews_of: [SA-C66-fever]
 
 [PAUSE 2s] Before the new one: say the Sanskrit for first, then the Sanskrit for a fever.
 
-[PAUSE 1s] Read a three-word line aloud, then say it with the words in another order — Sanskrit lets them move.
+[PAUSE 1s]
+[YOU READ: a three-word line aloud, then say it with the words in another order — Sanskrit lets them move]
 
 ## You'll want to know: कासः
 <!-- hl-knowledge: introduces=[SA-LEX-C66-UNWELL-02]; assesses=[] -->

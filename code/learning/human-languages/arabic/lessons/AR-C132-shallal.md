@@ -38,7 +38,7 @@ reviews_of: [AR-C132-sahil]
 
 [PAUSE 2s] Before the new one: say the Arabic for an island, then the Arabic for a coast.
 
-[PAUSE 1s] Read **أخذ** in its three pieces. (*ʾa-kha-dha*, "he took.")
+[PAUSE 1s] [YOU READ: **أخذ** in its three pieces (*ʾa-kha-dha*, "he took.")]
 
 ## You'll want to know: شلال
 <!-- hl-knowledge: introduces=[AR-LEX-C132-THINGS132-02]; assesses=[] -->

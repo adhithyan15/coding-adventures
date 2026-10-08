@@ -33,7 +33,9 @@ reviews_of: [TA-C77-opinion]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-SOL-01, TA-PRAGMATICS-C77-OPINION-03] -->
 
-[PAUSE 2s] Read **சொல்**. Then say: I think this is a good house.
+[PAUSE 2s] [YOU READ: **சொல்**]
+
+Then say: I think this is a good house.
 
 ## You'll want to know: ஏன்
 <!-- hl-knowledge: introduces=[TA-LEX-C78-WHY-01]; assesses=[] -->

@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 16,
-  "sourceHash": "fnv1a64:405deb76582406ef",
+  "sourceHash": "fnv1a64:5b12c8f27885482b",
   "lessonIds": [
     "MW-C11-hear-hawa",
     "MW-C11-hawa",
@@ -17,7 +17,7 @@
   "drivablePrefix": 9,
   "text": "marwadi/narration/ch16.txt",
   "json": "marwadi/narration/ch16.json",
-  "textHash": "fnv1a64:fa7c2ba29d7b26dd",
-  "jsonHash": "fnv1a64:69ca30b845f13e67",
+  "textHash": "fnv1a64:daed21045aafc68b",
+  "jsonHash": "fnv1a64:4b46a423a2c1118c",
   "findings": []
 }

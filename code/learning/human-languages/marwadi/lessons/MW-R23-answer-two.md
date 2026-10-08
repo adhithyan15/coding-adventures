@@ -43,7 +43,8 @@ reviews_of: [MW-C22-price-question, MW-C23-price-answer, MW-C23-ghano, MW-C21-ye
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PRICE-QUESTION-01, MW-SCRIPT-PRICE-QUESTION-01, MW-LEX-PRICE-ANSWER-01, MW-SCRIPT-PRICE-ANSWER-01, MW-LEX-GHANO-01, MW-SCRIPT-GHANO-01, MW-LEX-YE-01, MW-SCRIPT-YE-01] -->
 
 Hear the two lines in the wrong order and say which one has to come first. Give
-both meanings. Read two cards.
+both meanings. [YOU READ: two cards]
+
 [YOU WRITE: both from sound, one under the other, and read the pair aloud as a single exchange]
 
 ## Wrap-up Recall

@@ -40,8 +40,7 @@ Then say **secondary-school pupil**.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-NIHAOMA-01, ZH-ORTHO-SHIMA-01, ZH-LEX-HAOBUHAO-01, ZH-SCRIPT-MA-01, ZH-SCRIPT-HAO, ZH-SCRIPT-BU, ZH-GRAMMAR-V-NOT-V-01] -->
 
-Read the three cards cold. No pinyin is printed on any of them. For each one,
-say it aloud and then give the English.
+[YOU READ: the three cards cold — no pinyin is printed on any of them — and for each one, say it aloud, then give the English]
 
 Score reading on its own. Reading and hearing fail differently here: by ear the
 light *ma* is easy to lose, and on the page it is the most visible thing in the

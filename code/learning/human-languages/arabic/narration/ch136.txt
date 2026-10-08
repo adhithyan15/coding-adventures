@@ -9,7 +9,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Arabic for a duck, then the Arabic for a turtle.
 [pause 1 second]
-Read each word whole, right to left: سلام، شكرًا، شاي.
+[once you have stopped driving — read: each word whole, right to left — سلام، شكرًا، شاي]
 
 You'll want to know: تمساح.
 تمساح — timsāḥ — "a crocodile".

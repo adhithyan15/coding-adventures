@@ -125,7 +125,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Tamil for to send, then the Tamil for to look for.
 [pause 3 seconds]
-Read aloud as one run: அப்பா அங்கே. அம்மா இங்கே. இது என் வீடு.
+[once you have stopped driving — read: அப்பா அங்கே. அம்மா இங்கே. இது என் வீடு. aloud as one run]
 
 You'll want to know: கற்பி.
 கற்பி — kaṟpi — "to teach".

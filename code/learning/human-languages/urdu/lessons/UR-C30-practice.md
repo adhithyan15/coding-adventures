@@ -46,7 +46,7 @@ Four skills, scored separately.
 
 1. **Count aloud** one to ten without a model, then say **bīs** and **sau**.
 2. **Listening.** Hear twelve amounts named singly and out of order. [YOU WRITE: each amount in figures of your own language]
-3. **Reading.** Read the twelve printed shuffled and say each.
+3. [YOU READ: the twelve amounts, printed and shuffled, then say each]
 4. **Writing.** [YOU WRITE: all twelve from dictation, shuffled]
 
 Then say the three amounts a shop is likeliest to name — **das**, **bīs**,

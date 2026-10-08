@@ -56,8 +56,8 @@ reviews_of: [ES-C391-postre, ES-C391-supermercado]
 
 **el euro** — the currency.
 
-Open the Academy's dictionary at *euro* and find two entries, not one — and not
-the same word.
+The Academy's dictionary has two entries at *euro*, not one — and not the same
+word.
 
 The first is Latin **eurus**, from Greek **euros** — a poetic name for one of the
 cardinal winds. The second is the money. Four shared letters, nothing else.

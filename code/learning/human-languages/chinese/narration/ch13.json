@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "From study to university student",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e3d9a74c027c364d",
+  "sourceHash": "fnv1a64:de9e8d46857990e4",
   "lessons": [
     {
       "id": "ZH-C13-hear-da",
@@ -202,7 +202,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c00cb0871f7b3e8",
+      "sourceHash": "fnv1a64:7d4137e0196451b0",
       "notice": null,
       "blocks": [
         {
@@ -241,8 +241,17 @@
               "text": "大 — dà — big; large."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the character without pinyin",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the character without pinyin]"
+            },
+            {
               "kind": "speech",
-              "text": "Read the character without pinyin. Then say it once with a clear fourth-tone fall."
+              "text": "Then say it once with a clear fourth-tone fall."
             }
           ]
         },
@@ -666,7 +675,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd80e4448a48aa66",
+      "sourceHash": "fnv1a64:b81788c6a54a0ed4",
       "notice": null,
       "blocks": [
         {
@@ -705,8 +714,13 @@
               "text": "学 — xué — study; learn."
             },
             {
-              "kind": "speech",
-              "text": "Read it without pinyin, then give the syllable a clear rise."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "学 (xué) without pinyin, then give the syllable a clear rise",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **学** without pinyin, then give the syllable a clear rise]"
             }
           ]
         },
@@ -948,7 +962,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:403fb462a19955a1",
+      "sourceHash": "fnv1a64:bd60256e647ae2d1",
       "notice": null,
       "blocks": [
         {
@@ -987,8 +1001,17 @@
               "text": "学生 — xuésheng — student."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the two-character word without pinyin",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the two-character word without pinyin]"
+            },
+            {
               "kind": "speech",
-              "text": "Read the two-character word without pinyin. Keep the second syllable light."
+              "text": "Keep the second syllable light."
             }
           ]
         },
@@ -1407,7 +1430,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ddf5b036fc84c72",
+      "sourceHash": "fnv1a64:72b1738390cc870a",
       "notice": null,
       "blocks": [
         {
@@ -1439,7 +1462,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the six words in shuffled order and say each meaning. Then say each word from a meaning card and read each character card."
+              "text": "Hear the six words in shuffled order and say each meaning. Then say each word from its English meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each character card",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each character card]"
             },
             {
               "kind": "prompt",
@@ -1503,7 +1535,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e961b050ad4dcf1",
+      "sourceHash": "fnv1a64:06a4a4a97e7848bf",
       "notice": null,
       "blocks": [
         {
@@ -1539,11 +1571,16 @@
             },
             {
               "kind": "speech",
-              "text": "Speaking: produce all six from meaning cards, with tones audible."
+              "text": "Speaking: produce all six from their English meanings, with tones audible."
             },
             {
-              "kind": "speech",
-              "text": "Reading: read all six character cards without pinyin."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all six character cards without pinyin",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all six character cards without pinyin]"
             },
             {
               "kind": "speech",

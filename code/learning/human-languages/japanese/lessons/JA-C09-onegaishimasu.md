@@ -34,8 +34,9 @@ reviews_of: [JA-C09-ichido, JA-C09-sumimasen, JA-C09-wakarimasen, JA-W09-ku]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ICHIDO, JA-LEX-SUMIMASEN, JA-LEX-WAKARIMASEN, JA-SCRIPT-KU-01] -->
 
-[PAUSE 15s] Read **いちど**. Say *sumimasen, yoku wakarimasen*.
-[YOU WRITE: **く**]
+[PAUSE 15s] [YOU READ: **いちど**]
+
+Say *sumimasen, yoku wakarimasen*. [YOU WRITE: **く**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-ONEGAI-SHIMASU]; assesses=[] -->

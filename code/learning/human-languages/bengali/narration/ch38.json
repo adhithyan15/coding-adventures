@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Which One in the Line",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:3b4a95858073f6c2",
+  "sourceHash": "fnv1a64:2983440919a0516e",
   "lessons": [
     {
       "id": "BN-C27-ditiyo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80b70193df0eb79b",
+      "sourceHash": "fnv1a64:5d320c718c4ca083",
       "notice": null,
       "blocks": [
         {
@@ -84,8 +84,17 @@
               "text": "দুই answers how many. দ্বিতীয় (ditiyô) answers which one in the line, and it stands in front of its noun and never changes, the way লাল does. No agreement to learn."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the spelling and the romanization again",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the spelling and the romanization again]"
+            },
+            {
               "kind": "speech",
-              "text": "Read the spelling and the romanization again, because they disagree: written দ্ব-, said di-. The cluster is on the page and gone from the mouth."
+              "text": "They disagree: written দ্ব-, said di-. The cluster is on the page and gone from the mouth."
             }
           ]
         },

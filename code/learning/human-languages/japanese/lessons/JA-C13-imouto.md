@@ -46,7 +46,9 @@ Hear *i-mo-o-to*, say it, then contrast *o-to-o-to*.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-IMOUTO, JA-SCRIPT-I-01, JA-SCRIPT-MO-01, JA-SCRIPT-U-01, JA-SCRIPT-TO-01] -->
 
-Read **い | も | う | と**. [YOU WRITE: one copy of **いもうと**; then hide it and write it once]
+[YOU READ: **い | も | う | と**]
+
+[YOU WRITE: one copy of **いもうと**; then hide it and write it once]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-IMOUTO] -->

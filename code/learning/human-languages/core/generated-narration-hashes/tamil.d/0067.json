@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 67,
-  "sourceHash": "fnv1a64:efc36231b945f38b",
+  "sourceHash": "fnv1a64:b72db622cfde2548",
   "lessonIds": [
     "TA-C67-shirt",
     "TA-C67-veshti",
@@ -14,7 +14,7 @@
   "drivablePrefix": 2,
   "text": "tamil/narration/ch67.txt",
   "json": "tamil/narration/ch67.json",
-  "textHash": "fnv1a64:a78eb0c47f4e8f1d",
-  "jsonHash": "fnv1a64:9c63232305e2db2a",
+  "textHash": "fnv1a64:5dad527edb69e70d",
+  "jsonHash": "fnv1a64:58a6a7bc48fd8b9b",
   "findings": []
 }

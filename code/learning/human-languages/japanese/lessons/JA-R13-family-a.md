@@ -41,7 +41,8 @@ Say **おとうと** once without looking back.
 
 [PAUSE 35s] [YOU WRITE: distant **語** once, built from its parts]
 
-Hear *otooto* and say “younger brother.” Read **こども**.
+Hear *otooto* and say “younger brother.” [YOU READ: **こども**]
+
 [YOU WRITE: both family words from memory]
 
 ## Wrap-up Recall

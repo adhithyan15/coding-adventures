@@ -34,7 +34,7 @@ reviews_of: [ES-C425-sintesis-deletreo]
 
 [PAUSE 2s] [YOU WRITE: today's day and month in English, then the same two in Spanish]
 
-Read on to find out what you almost certainly got wrong.
+Go on to find out what you almost certainly got wrong.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ES-ORTH-C426-01]; assesses=[] -->

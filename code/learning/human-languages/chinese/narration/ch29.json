@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Reading — Characters, Words, and a First Passage",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:19f152c44ea70610",
+  "sourceHash": "fnv1a64:6d29627feecdf3c9",
   "lessons": [
     {
       "id": "ZH-C29-characters",
@@ -212,7 +212,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad08cd1c45d720c4",
+      "sourceHash": "fnv1a64:727d0e07cde23d12",
       "notice": null,
       "blocks": [
         {
@@ -258,8 +258,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six words down once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six words down once, without stopping]"
             },
             {
               "kind": "pause",
@@ -268,8 +273,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six words again, and this time notice there is nothing between the characters",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six words again, and this time notice there is nothing between the characters]"
+            },
+            {
               "kind": "speech",
-              "text": "Again — and this time notice there is nothing between the characters. No space tells you where one word ends."
+              "text": "No space tells you where one word ends."
             }
           ]
         },
@@ -398,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1634fe7197343be1",
+      "sourceHash": "fnv1a64:cc1b4464543d831f",
       "notice": null,
       "blocks": [
         {
@@ -444,8 +458,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read it through once without stopping. Do not translate as you go."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage through once without stopping; do not translate as you go",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage through once without stopping; do not translate as you go]"
             },
             {
               "kind": "pause",
@@ -454,8 +473,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage again, and this time notice that the passage turns at line six",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage again, and this time notice that the passage turns at line six]"
+            },
+            {
               "kind": "speech",
-              "text": "Again — and this time notice that the passage turns at line six. The first five are about the writer. The last five are addressed to you."
+              "text": "The first five are about the writer. The last five are addressed to you."
             }
           ]
         },

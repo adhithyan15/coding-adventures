@@ -43,8 +43,10 @@ Then say which one makes a description stronger.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-LAVO-01, MW-SCRIPT-LAVO-01, MW-LEX-BRING-REQUEST-01, MW-SCRIPT-BRING-REQUEST-01, MW-LEX-DIKHAVO-01, MW-SCRIPT-DIKHAVO-01, MW-LEX-KARO-01, MW-SCRIPT-KARO-01, MW-LEX-LO-01, MW-SCRIPT-LO-01, MW-LEX-DO-01, MW-SCRIPT-DO-01] -->
 
-Five asking words are now in play. Hear them shuffled and give each meaning.
-Read five cards: **दिखावो**, **करो**, **लो**, **दो**, **लावो**.
+Five asking words are now in play. Hear them shuffled and give each meaning. The
+five cards say **दिखावो**, **करो**, **लो**, **दो**, **लावो**.
+[YOU READ: the five cards]
+
 [YOU WRITE: all five from sound, then the tea order]
 
 Say which of the five the tea order uses.

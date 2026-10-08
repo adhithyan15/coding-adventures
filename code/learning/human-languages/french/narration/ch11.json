@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "The Four Seasons",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:4aedca9e5991023c",
+  "sourceHash": "fnv1a64:ad9c68cce78e7d09",
   "lessons": [
     {
       "id": "FR-C09-printemps",
@@ -671,7 +671,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c69609e2695864d8",
+      "sourceHash": "fnv1a64:6397a954490de032",
       "notice": null,
       "blocks": [
         {
@@ -703,8 +703,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down the left, then cover the right and read back:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "down the left, then cover the right and read back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: down the left, then cover the right and read back]"
             },
             {
               "kind": "table",

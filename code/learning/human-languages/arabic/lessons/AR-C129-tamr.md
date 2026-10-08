@@ -38,7 +38,10 @@ reviews_of: [AR-C129-tuffah]
 
 [PAUSE 2s] Before the new one: say the Arabic for a cucumber, then the Arabic for apples.
 
-[PAUSE 1s] Read **قرأ**. Where does the hamza sit? (On an *alif* seat, **أ**, closing the word: *qaraʾa*.)
+[PAUSE 1s] [YOU READ: **قرأ**]
+
+Where does the hamza sit? (On an *alif* seat, **أ**, closing the word:
+*qaraʾa*.)
 
 ## You'll want to know: تمر
 <!-- hl-knowledge: introduces=[AR-LEX-C129-THINGS129-05]; assesses=[] -->

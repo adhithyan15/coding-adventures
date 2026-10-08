@@ -62,7 +62,7 @@ Every word of the complaint is about **fit**, not quality.
 state rather than blaming anyone; and *sencillas, pero las hacemos bien*
 refuses the obvious conclusion.
 
-Now read it the way somebody else would report it:
+Now here it is the way somebody else would report it:
 
 > El **nivel** era **demasiado alto** para ella.
 

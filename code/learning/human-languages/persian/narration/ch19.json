@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "The Ten Persian Digits",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:28bad79b88659a78",
+  "sourceHash": "fnv1a64:d4793b6e1f1a88ab",
   "lessons": [
     {
       "id": "FA-W19-digits-zero-one",
@@ -517,7 +517,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63e2e1102228de6c",
+      "sourceHash": "fnv1a64:2e7b8f5e07d72e4c",
       "notice": null,
       "blocks": [
         {
@@ -543,12 +543,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read all ten signs shuffled and say each as a Persian word."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all ten signs shuffled, then say each as a Persian word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all ten signs shuffled, then say each as a Persian word]"
             },
             {
-              "kind": "speech",
-              "text": "Read ۱۰, ۱۱, ۲۰ and ۱۰۰ and say each — dah, yâzdah, bist, sad."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "۱۰, ۱۱, ۲۰ and ۱۰۰, then say each — dah, yâzdah, bist, sad",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **۱۰**, **۱۱**, **۲۰** and **۱۰۰**, then say each — *dah*, *yâzdah*, *bist*, *sad*]"
             },
             {
               "kind": "speech",

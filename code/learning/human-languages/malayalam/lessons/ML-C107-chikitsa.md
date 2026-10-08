@@ -91,8 +91,8 @@ You met all three long ago — the two letters at `ML-S08-letter-ta` and
 
 It is the machine **നമസ്കാരം** showed you on day one: the chandrakkala strips
 the first consonant's inherent *a*, and the next consonant sets in behind it.
-There **സ്** met **ക**; here **ത്** meets **സ**. Read **ചി-കി-ത്-സ** slowly,
-then at speed.
+There **സ്** met **ക**; here **ത്** meets **സ**. Say **ചി-കി-ത്-സ** slowly, then
+at speed.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C107-TREATMENT-01, ML-LEX-C107-MEDICINE-01, ML-LEX-C48-ROLE-03] -->

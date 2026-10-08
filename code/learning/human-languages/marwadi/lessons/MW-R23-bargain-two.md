@@ -42,7 +42,9 @@ reviews_of: [MW-C23-thodu, MW-C23-karo, MW-C23-bargain-request, MW-C23-ghano, MW
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-THODU-01, MW-SCRIPT-THODU-01, MW-LEX-KARO-01, MW-SCRIPT-KARO-01, MW-LEX-BARGAIN-REQUEST-01, MW-SCRIPT-BARGAIN-REQUEST-01] -->
 
-Hear each word alone, out of its line, and give its meaning. Read two cards.
+Hear each word alone, out of its line, and give its meaning.
+[YOU READ: two cards]
+
 [YOU WRITE: both from sound]
 
 Then rebuild the whole counter-offer from those two words plus the one you

@@ -38,7 +38,7 @@ reviews_of: [PA-C138-caunk]
 
 [PAUSE 2s] Before the new one: say the Punjabi for a library, then the Punjabi for a town square.
 
-[PAUSE 1s] Read each label whole, at a glance: **ਨਾਂ**, **ਉਮਰ**, **ਕੰਮ**.
+[PAUSE 1s] [YOU READ: each label whole, at a glance — **ਨਾਂ**, **ਉਮਰ**, **ਕੰਮ**]
 
 ## You'll want to know: ਬਾਗ਼
 <!-- hl-knowledge: introduces=[PA-LEX-C138-THINGS138-02]; assesses=[] -->

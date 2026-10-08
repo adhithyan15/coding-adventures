@@ -1,7 +1,7 @@
 {
   "language": "malayalam",
   "chapter": 70,
-  "sourceHash": "fnv1a64:4b33dbe18dacd22d",
+  "sourceHash": "fnv1a64:40753d49d422e4bb",
   "lessonIds": [
     "ML-C70-um",
     "ML-C70-um-more",
@@ -13,7 +13,7 @@
   "drivablePrefix": 4,
   "text": "malayalam/narration/ch70.txt",
   "json": "malayalam/narration/ch70.json",
-  "textHash": "fnv1a64:b96fddc344216708",
-  "jsonHash": "fnv1a64:f1b5cc03b999ab6e",
+  "textHash": "fnv1a64:a8d237741e32addb",
+  "jsonHash": "fnv1a64:8dc2b2a32820f2f2",
   "findings": []
 }

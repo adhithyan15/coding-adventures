@@ -4,7 +4,7 @@
   "chapter": 80,
   "title": "One, the Other, and the Price",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:2d456e0712984fa2",
+  "sourceHash": "fnv1a64:f65385d509cc6b9c",
   "lessons": [
     {
       "id": "TA-C80-other",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2034714b7c06c802",
+      "sourceHash": "fnv1a64:852d8640e5cbb87a",
       "notice": null,
       "blocks": [
         {
@@ -34,8 +34,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "எப்போது",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **எப்போது**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read எப்போது. Then say: when you come, tell me."
+              "text": "Then say: when you come, tell me."
             }
           ]
         },
@@ -558,7 +567,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a6e98f760da1b6c7",
+      "sourceHash": "fnv1a64:217970a920a40049",
       "notice": null,
       "blocks": [
         {
@@ -573,8 +582,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "மற்றது (maṟṟadu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மற்றது**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read மற்றது (maṟṟadu). Then say: one here, the other there."
+              "text": "Then say: one here, the other there."
             }
           ]
         },

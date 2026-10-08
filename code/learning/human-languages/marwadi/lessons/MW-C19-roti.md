@@ -50,7 +50,8 @@ The **ो** on **र** and the **ी** on **ट** are both long vowels met earli
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-ROTI-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, and wait five seconds.
+[YOU COVER: the model after one look, then wait five seconds]
+
 [YOU WRITE: **रोटी** — check that the second consonant has no inner ring]
 
 ## Wrap-up Recall

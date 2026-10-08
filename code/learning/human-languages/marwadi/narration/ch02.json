@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Aabhaar: Formal Thanks, Two New Signs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1346365474d107fc",
+  "sourceHash": "fnv1a64:585ba3ca4fb18c50",
   "lessons": [
     {
       "id": "MW-W02-aa-independent",
@@ -395,7 +395,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:91b452f80c7656a1",
+      "sourceHash": "fnv1a64:98c53873ff49766d",
       "notice": null,
       "blocks": [
         {
@@ -457,8 +457,13 @@
               "text": "Speak: imagine receiving help and say आभार (ābhār) without reading."
             },
             {
-              "kind": "speech",
-              "text": "Read: choose the thanks word from राम, आभार (ābhār), सा."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "राम, आभार (ābhār), सा, then choose the thanks word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **राम · आभार · सा**, then choose the thanks word]"
             },
             {
               "kind": "prompt",

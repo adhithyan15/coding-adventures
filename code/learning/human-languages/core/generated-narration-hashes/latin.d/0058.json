@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 58,
-  "sourceHash": "fnv1a64:b9a4d25e28f8090a",
+  "sourceHash": "fnv1a64:32da32ae105fd1cd",
   "lessonIds": [
     "LA-C58-labels",
     "LA-C58-phrases",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "latin/narration/ch58.txt",
   "json": "latin/narration/ch58.json",
-  "textHash": "fnv1a64:d8fbd802f7ae02aa",
-  "jsonHash": "fnv1a64:75f88f4020a49421",
+  "textHash": "fnv1a64:4b63790e6221c396",
+  "jsonHash": "fnv1a64:777c000a83571110",
   "findings": []
 }

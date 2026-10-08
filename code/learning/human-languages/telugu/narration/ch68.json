@@ -4,7 +4,7 @@
   "chapter": 68,
   "title": "Sound and Voice",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:921f92f2fe35119d",
+  "sourceHash": "fnv1a64:5cebaf88e6a85cce",
   "lessons": [
     {
       "id": "TE-C68-sound",
@@ -307,7 +307,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aaed607ac7daf828",
+      "sourceHash": "fnv1a64:353ede53465efb06",
       "notice": null,
       "blocks": [
         {
@@ -338,7 +338,7 @@
             },
             {
               "kind": "speech",
-              "text": "పాట (pāṭa) is a song. Watch the middle letter. పాత, with a plain letter, is the word for old that you already have; పాట (pāṭa) is a song. One has the tongue behind the teeth and the other has it curled back."
+              "text": "పాట (pāṭa) is a song. Listen for the middle letter. పాత, with a plain letter, is the word for old that you already have; పాట (pāṭa) is a song. One has the tongue behind the teeth and the other has it curled back."
             },
             {
               "kind": "speech",

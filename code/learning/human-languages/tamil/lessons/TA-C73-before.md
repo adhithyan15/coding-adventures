@@ -33,7 +33,7 @@ reviews_of: [TA-W28-read-inru]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-INRU-01] -->
 
-[PAUSE 2s] Before the new one: read **இன்று**, and say what it means.
+[PAUSE 2s] Before the new one, say what **இன்று** means. [YOU READ: **இன்று**]
 
 ## You'll want to know: முன்பு
 <!-- hl-knowledge: introduces=[TA-LEX-C73-WHEN-03]; assesses=[] -->

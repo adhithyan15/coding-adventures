@@ -4,7 +4,7 @@
   "chapter": 120,
   "title": "Mirror, Soap, Bucket, Pen, Paper",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:7a695f20525c96ce",
+  "sourceHash": "fnv1a64:1d2d7e8b519b6172",
   "lessons": [
     {
       "id": "TA-C120-kannati",
@@ -521,7 +521,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d489411293f6d0f",
+      "sourceHash": "fnv1a64:15b2c1460c883a55",
       "notice": null,
       "blocks": [
         {
@@ -546,8 +546,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read the lines aloud as one run: வணக்கம். இது என் வீடு. அம்மா இங்கே."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the lines aloud as one run — வணக்கம். இது என் வீடு. அம்மா இங்கே.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the lines aloud as one run — **வணக்கம். இது என் வீடு. அம்மா இங்கே.**]"
             }
           ]
         },

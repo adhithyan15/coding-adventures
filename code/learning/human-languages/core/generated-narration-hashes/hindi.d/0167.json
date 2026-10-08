@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 167,
-  "sourceHash": "fnv1a64:d2d769d0393554cd",
+  "sourceHash": "fnv1a64:f9ebc1b072e02367",
   "lessonIds": [
     "HI-C167-kiraya",
     "HI-C167-tarikh",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "hindi/narration/ch167.txt",
   "json": "hindi/narration/ch167.json",
-  "textHash": "fnv1a64:b06cd53c119f185c",
-  "jsonHash": "fnv1a64:325d0d8721d64c9f",
+  "textHash": "fnv1a64:e245f16694cbda27",
+  "jsonHash": "fnv1a64:825651803b0a392c",
   "findings": []
 }

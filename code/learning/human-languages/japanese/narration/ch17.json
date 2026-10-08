@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "The Other Five, and Where the Count Stops",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c72925521d5270a0",
+  "sourceHash": "fnv1a64:1a6845c2d6417a16",
   "lessons": [
     {
       "id": "JA-W17-mu",
@@ -906,7 +906,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:464ebb7b46645f17",
+      "sourceHash": "fnv1a64:54a33c5fcdc5b0fb",
       "notice": null,
       "blocks": [
         {
@@ -968,7 +968,20 @@
             },
             {
               "kind": "speech",
-              "text": "Read the first two signs on their own: ここ, the word for here you have had since chapter ten. They are the same two signs, and it means nothing. kokono- is simply the native word for nine; it is not built on here and there is no story joining them. Say so and move on — an accident that gets explained is worse than one that gets named."
+              "text": "The first two signs of ここのつ (kokonotsu) spell ここ, the word for here you have had since chapter ten."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the first two signs on their own",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the first two signs on their own]"
+            },
+            {
+              "kind": "speech",
+              "text": "They are the same two signs, and it means nothing. kokono- is simply the native word for nine; it is not built on here and there is no story joining them. Say so and move on — an accident that gets explained is worse than one that gets named."
             },
             {
               "kind": "speech",

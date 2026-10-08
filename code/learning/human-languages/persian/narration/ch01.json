@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings and responses",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0d59a450ea3304b3",
+  "sourceHash": "fnv1a64:0895cb6249412fe2",
   "lessons": [
     {
       "id": "FA-C01-salam",
@@ -759,7 +759,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ecd1756ff7d7e840",
+      "sourceHash": "fnv1a64:576e03b49b930086",
       "notice": null,
       "blocks": [
         {
@@ -769,7 +769,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep every model visible. Say سلام (salâm) once to greet and once to answer."
+              "text": "Say سلام (salâm) once to greet and once to answer."
             }
           ]
         },
@@ -779,8 +779,13 @@
           "title": "The exchange",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read each Persian line from right to left:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each Persian line from right to left",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each Persian line from right to left]"
             },
             {
               "kind": "speech",
@@ -854,7 +859,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Greet once without help. Then compare your ا (alef) with the model. No hidden-word spelling and no second letter: the chapter closes with one usable exchange and one supported stroke."
+              "text": "Greet once without help."
+            },
+            {
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "your ا (alef) against the model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: your **ا** against the model]"
+            },
+            {
+              "kind": "speech",
+              "text": "No hidden-word spelling and no second letter: the chapter closes with one usable exchange and one supported stroke."
             }
           ]
         }

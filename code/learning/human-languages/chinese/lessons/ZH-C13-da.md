@@ -41,8 +41,9 @@ reviews_of: [ZH-C13-hear-da, ZH-W13-da]
 
 > **大** — *dà* — **big; large**
 
-Read the character without pinyin. Then say it once with a clear fourth-tone
-fall.
+[YOU READ: the character without pinyin]
+
+Then say it once with a clear fourth-tone fall.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-DA-01, ZH-SCRIPT-DA-01] -->

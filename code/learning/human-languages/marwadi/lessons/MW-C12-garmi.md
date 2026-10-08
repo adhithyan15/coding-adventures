@@ -49,7 +49,8 @@ reviews_of: [MW-C12-hear-garmi, MW-W12-ga, MW-C12-mausam, MW-C11-hawa, MW-C06-he
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-GARMI-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, and wait five seconds.
+[YOU COVER: the model after one look, then wait five seconds]
+
 [YOU WRITE: **गर्मी** — check the virama under **र** and long **ी** after **म**]
 
 ## Wrap-up Recall

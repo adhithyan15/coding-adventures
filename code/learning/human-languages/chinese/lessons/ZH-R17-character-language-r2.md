@@ -33,15 +33,18 @@ reviews_of: [ZH-C16-practice, ZH-R16-identity-2, ZH-C17-zhongwen, ZH-W11-qing]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZI-02, ZH-ORTHO-ZHONGWEN-01, ZH-SCRIPT-PHONETIC, ZH-SCRIPT-QING] -->
 
-[PAUSE 18s] Read **中文**.
+[PAUSE 18s] [YOU READ: **中文**]
+
 [YOU WRITE: **请**, pointing to its 青 sound component, then **written character** without a model]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-HANZI-01, ZH-LEX-HANYU-01, ZH-ORTHO-HANZI-01, ZH-ORTHO-HANYU-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Hear **Chinese character** and **Chinese language** in mixed order. Say each
-and read its unpointed card. [YOU WRITE: each one]
+Hear **Chinese character** and **Chinese language** in mixed order. Say each.
+[YOU READ: each Mandarin form without pinyin]
+
+[YOU WRITE: each one]
 
 Listen for the ending before choosing 字 or 语.
 

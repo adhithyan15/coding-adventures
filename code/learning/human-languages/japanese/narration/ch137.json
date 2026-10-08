@@ -4,7 +4,7 @@
   "chapter": 137,
   "title": "Pencil and Ticket: Pa, Pi, Pu and Pe",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:28e6a574408921d9",
+  "sourceHash": "fnv1a64:a9d77bd0ebcff888",
   "lessons": [
     {
       "id": "JA-C137-ippai",
@@ -1740,7 +1740,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6839ea9acbf2e0e5",
+      "sourceHash": "fnv1a64:ee342410ec850da5",
       "notice": null,
       "blocks": [
         {
@@ -1808,8 +1808,13 @@
               "source": "[PAUSE 2s each]"
             },
             {
-              "kind": "speech",
-              "text": "Read each one aloud and say what it means."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one below aloud, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one below aloud, then say what it means]"
             },
             {
               "kind": "prompt",

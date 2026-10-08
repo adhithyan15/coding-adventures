@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "How Much Is This? No New Signs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e659e77d4efc90c6",
+  "sourceHash": "fnv1a64:f29d1c90613d7885",
   "lessons": [
     {
       "id": "MW-C22-hear-kitno",
@@ -309,7 +309,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f2dfbbb37198bbc",
+      "sourceHash": "fnv1a64:a403d0bd350b05b8",
       "notice": null,
       "blocks": [
         {
@@ -359,8 +359,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read the line once and cover it for ten seconds."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the line once, then cover it for ten seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the line once, then cover it for ten seconds]"
             },
             {
               "kind": "prompt",
@@ -417,7 +422,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a653157df2020b65",
+      "sourceHash": "fnv1a64:9f740b4f16b07765",
       "notice": null,
       "blocks": [
         {
@@ -453,7 +458,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the word alone and the whole question, in both orders, and give each meaning. Read two cards."
+              "text": "Hear the word alone and the whole question, in both orders, and give each meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "two cards",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: two cards]"
             },
             {
               "kind": "prompt",
@@ -610,7 +624,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25093aa9d893419d",
+      "sourceHash": "fnv1a64:c8363ea5759099b3",
       "notice": null,
       "blocks": [
         {
@@ -656,8 +670,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read the line once and cover it for ten seconds."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the line once, then cover it for ten seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the line once, then cover it for ten seconds]"
             },
             {
               "kind": "prompt",
@@ -714,7 +733,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79954a57f0b0ef88",
+      "sourceHash": "fnv1a64:c85fd8ecf8abe636",
       "notice": null,
       "blocks": [
         {
@@ -752,8 +771,13 @@
               "text": "Produce all three from meaning cues alone."
             },
             {
-              "kind": "speech",
-              "text": "Read three printed lines and match each to its counter."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "three printed lines, then match each to its counter",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: three printed lines, then match each to its counter]"
             },
             {
               "kind": "prompt",

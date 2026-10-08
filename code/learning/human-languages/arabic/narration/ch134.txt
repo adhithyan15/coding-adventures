@@ -125,7 +125,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Arabic for darkness, then the Arabic for a cloud.
 [pause 1 second]
-Read these turns without stopping: ما اسمك؟ اسمي سامي.
+[once you have stopped driving — read: these turns without stopping — ما اسمك؟ اسمي سامي.]
 
 You'll want to know: أرنب.
 أرنب — arnab — "a rabbit".

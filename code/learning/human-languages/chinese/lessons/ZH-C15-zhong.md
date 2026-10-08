@@ -41,7 +41,7 @@ reviews_of: [ZH-C15-hear-zhong, ZH-W15-zhong]
 
 > **中** — *zhōng* — **middle; centre**
 
-Read the character without pinyin, then hold its first tone level.
+[YOU READ: the character without pinyin, then hold its first tone level]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZHONG-01, ZH-SCRIPT-ZHONG-01] -->

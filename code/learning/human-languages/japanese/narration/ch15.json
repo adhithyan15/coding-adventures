@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "The Two Signs the Rest of the Run Cost",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b00ac5feb7e09c00",
+  "sourceHash": "fnv1a64:568a8003dd1c90e7",
   "lessons": [
     {
       "id": "JA-C15-nana",
@@ -648,7 +648,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7db6d4e9545c0f44",
+      "sourceHash": "fnv1a64:eca3739ec9b141fa",
       "notice": null,
       "blocks": [
         {
@@ -739,8 +739,13 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read ろ (ro) | く (ku)."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ろ (ro) | く (ku)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ろ | く**]"
             },
             {
               "kind": "prompt",

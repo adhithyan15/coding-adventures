@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Saying No",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:891ff8a8bfd9e015",
+  "sourceHash": "fnv1a64:d43dffdd12d92d68",
   "lessons": [
     {
       "id": "MW-C39-hear-koni",
@@ -393,7 +393,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c15e7be904ec68fb",
+      "sourceHash": "fnv1a64:cd05cfd22cbda0ef",
       "notice": null,
       "blocks": [
         {
@@ -473,8 +473,13 @@
               "text": "Speak. Run the exchange twice, once refusing and once agreeing, so the two branches sit side by side."
             },
             {
-              "kind": "speech",
-              "text": "Read. Read the three-turn refusal printed, and say the walk-away line aloud without looking."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the three-turn refusal printed, then say the walk-away line aloud without looking",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the three-turn refusal printed, then say the walk-away line aloud without looking]"
             },
             {
               "kind": "prompt",
@@ -685,7 +690,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8915b5dd004a254",
+      "sourceHash": "fnv1a64:934f7a5949203930",
       "notice": null,
       "blocks": [
         {
@@ -756,8 +761,13 @@
               "text": "Speak. Run the three turns with your own number in the first line."
             },
             {
-              "kind": "speech",
-              "text": "Read. Read the refusal printed above and say the walk-away without looking."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the refusal printed above, then say the walk-away without looking",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the refusal printed above, then say the walk-away without looking]"
             },
             {
               "kind": "prompt",

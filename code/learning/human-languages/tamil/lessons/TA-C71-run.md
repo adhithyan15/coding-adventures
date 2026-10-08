@@ -67,4 +67,4 @@ Three, and something is moving.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C71-DAY-02, TA-SCRIPT-RECOG-126, TA-LEX-C71-DAY-03] -->
 
-[PAUSE 3s] Read **ஓடு** and say what it means. ("To run".)
+[PAUSE 3s] Say what **ஓடு** means. ("To run".) [YOU READ: **ஓடு**]

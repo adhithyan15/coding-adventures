@@ -47,7 +47,7 @@ reviews_of: [MW-W35-digits-three-four-five, MW-C23-hear-price-answer, MW-C34-cou
 Run each digit in both directions. Reading only one way is how a lookalike
 survives practice.
 
-1. Read **३**, **५**, **४**, **१**, **१०** aloud, in that order.
+1. [YOU READ: **३**, **५**, **४**, **१**, **१०** aloud, in that order]
 2. [YOU WRITE: the word under each figure — **तीन**, **पांच**, **चार**, **एक**, **दस**]
 3. Now go the other way: hear *chār* and *pāṅch*.
    [YOU WRITE: the FIGURE, not the word]

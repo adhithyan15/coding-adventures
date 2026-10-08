@@ -53,7 +53,8 @@ long **ू** you first drew for **मिलसू**.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PRICE-QUESTION-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Read the line once and cover it for ten seconds.
+[YOU READ: the line once, then cover it for ten seconds]
+
 [YOU WRITE: all four words — then open the model, repair only the word that changed, and rewrite that word alone]
 
 ## Wrap-up Recall

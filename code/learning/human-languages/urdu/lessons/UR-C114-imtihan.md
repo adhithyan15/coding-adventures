@@ -38,7 +38,8 @@ reviews_of: [UR-C113-kapi]
 
 [PAUSE 2s] Before the new one: say the Urdu for a pencil, then the Urdu for an exercise book.
 
-[PAUSE 3s] Read the two lines aloud, one after the other: **یہ میز ہے۔ وہ دروازہ ہے۔**
+[PAUSE 3s]
+[YOU READ: the two lines aloud, one after the other — **یہ میز ہے۔ وہ دروازہ ہے۔**]
 
 ## You'll want to know: امتحان
 <!-- hl-knowledge: introduces=[UR-LEX-C114-THINGS114-01]; assesses=[] -->

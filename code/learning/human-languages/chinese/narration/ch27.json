@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Age, and And",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a43cf99e33442a2e",
+  "sourceHash": "fnv1a64:10b7b74e0cf5268a",
   "lessons": [
     {
       "id": "ZH-W27-sui",
@@ -230,7 +230,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa96fddb1b78248b",
+      "sourceHash": "fnv1a64:a64622a902e47555",
       "notice": null,
       "blocks": [
         {
@@ -338,7 +338,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read that again and look for the verb. There is none. No 是, no anything. Subject, number, 岁 (suì), stop."
+              "text": "Say that again and listen for the verb. There is none. No 是, no anything. Subject, number, 岁 (suì), stop."
             },
             {
               "kind": "speech",

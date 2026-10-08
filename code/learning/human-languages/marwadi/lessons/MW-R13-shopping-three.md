@@ -43,8 +43,10 @@ Then recall the six-word weather payoff.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DUKAN-01, MW-SCRIPT-DUKAN-01, MW-LEX-VASTU-01, MW-SCRIPT-VASTU-01, MW-LEX-BHAAV-01, MW-SCRIPT-BHAAV-01] -->
 
-Hear the three words in mixed order, say each from its meaning, and match three
-printed cards. [YOU WRITE: all three from sound]
+Hear the three words in mixed order and say each from its meaning.
+[YOU READ: three printed cards and match them]
+
+[YOU WRITE: all three from sound]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DUKAN-01, MW-LEX-VASTU-01, MW-LEX-BHAAV-01] -->

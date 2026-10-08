@@ -46,7 +46,7 @@ Say brother, then give the heard wellbeing answer with *hū̃* and *ṭhīk*.
 
 > **ब** + **ह** + **न** → **बहन** — *bahan* — sister
 
-All three signs are earned. Read the word as two sound groups: *ba-han*.
+All three signs are earned. [YOU READ: the word as two sound groups — *ba-han*]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAHAN-01, MW-SCRIPT-BAHAN-01] -->
@@ -59,6 +59,6 @@ Hear *bahan* and wait five seconds.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAHAN-01, MW-SCRIPT-BAHAN-01, MW-LEX-BHAI-01] -->
 <!-- hl-activity: {"id":"MW-C08-bahan-siblings","kind":"text","assesses":["MW-LEX-BAHAN-01","MW-SCRIPT-BAHAN-01","MW-LEX-BHAI-01"],"prompt":"Write sister, then brother, from the two spoken cues.","answer":"बहन — भाई","accepted":["बहन भाई","बहन, भाई"],"feedback":{"correct":"Right: बहन and भाई stay distinct by sound and spelling.","incorrect":"Repair sister as बहन; brother is भाई."},"response_seconds":20} -->
 
-Read **बहन — भाई** once, then stop.
+[YOU READ: **बहन — भाई** once, then stop]
 
 Source: [Marwari Pathshala, Lesson 4](https://www.marwaripathshala.com/marwari-lesson-4-english).

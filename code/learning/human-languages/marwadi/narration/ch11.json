@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Grandparents and Family: Two New Signs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:82c2e814e083f765",
+  "sourceHash": "fnv1a64:a03b2698e35c5415",
   "lessons": [
     {
       "id": "MW-C08-hear-dada",
@@ -437,7 +437,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8ffa011db2f349be",
+      "sourceHash": "fnv1a64:825dd33c5518bd1c",
       "notice": null,
       "blocks": [
         {
@@ -511,8 +511,13 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read दादा (dādā) — दादी (dādī) once, then stop."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "दादा (dādā) — दादी (dādī) once, then stop",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **दादा — दादी** once, then stop]"
             },
             {
               "kind": "speech",
@@ -866,7 +871,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c7ce8d41db66b02",
+      "sourceHash": "fnv1a64:77c2cd07650da61e",
       "notice": null,
       "blocks": [
         {
@@ -909,8 +914,13 @@
               "text": "Speak: say the word from one relation cue."
             },
             {
-              "kind": "speech",
-              "text": "Read: match मां, बाप, and दादी (dādī) to their meanings."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "मां, बाप, and दादी (dādī), then match them to their meanings",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **मां**, **बाप**, and **दादी**, then match them to their meanings]"
             },
             {
               "kind": "prompt",
@@ -974,7 +984,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d610ccaa829c4b9c",
+      "sourceHash": "fnv1a64:6a8e78c5ce00a706",
       "notice": null,
       "blocks": [
         {
@@ -1013,8 +1023,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Place four cards under the correct cues: भाई, बहन, दादा (dādā), and परिवार (parivār). Read each card and turn it over."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "four cards, placing each under its cue — भाई, बहन, दादा (dādā), and परिवार (parivār)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: four cards, placing each under its cue — **भाई**, **बहन**, **दादा**, and **परिवार**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each card again, then turn it over",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each card again, then turn it over]"
             },
             {
               "kind": "prompt",
@@ -1079,7 +1103,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d3d889cdf482caf",
+      "sourceHash": "fnv1a64:2cf7c961f3284193",
       "notice": null,
       "blocks": [
         {
@@ -1094,8 +1118,22 @@
               "source": "[PAUSE 20s]"
             },
             {
-              "kind": "speech",
-              "text": "Read the seven-word line once. Cover it before the scored pass."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the seven-word line once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the seven-word line once]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the line before the scored pass",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the line before the scored pass]"
             }
           ]
         },
@@ -1128,8 +1166,13 @@
               "text": "Speak: produce four different labels from relation cues."
             },
             {
-              "kind": "speech",
-              "text": "Read: match all seven printed words to meanings."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all seven printed words and match them to meanings",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all seven printed words and match them to meanings]"
             },
             {
               "kind": "prompt",

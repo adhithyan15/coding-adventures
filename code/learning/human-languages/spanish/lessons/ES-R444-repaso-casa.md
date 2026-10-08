@@ -32,8 +32,8 @@ reviews_of: [ES-C444-calefaccion, ES-C444-madera, ES-C444-plantar, ES-C444-cubri
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C444-CASA-01, ES-LEX-C444-CASA-02, ES-LEX-C444-CASA-03, ES-LEX-C444-CASA-04, ES-LEX-C444-CASA-05] -->
 
-[PAUSE 3s] Close the lessons before this one. Say all five: *the heating*,
-*wood*, *to plant*, *to cover*, *the trolley*.
+[PAUSE 3s] From memory alone, say all five: *the heating*, *wood*, *to plant*,
+*to cover*, *the trolley*.
 
 ## Grammar Lens: three things a word can do on its way into Spanish
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C444-CASA-02, ES-LEX-C444-CASA-03, ES-LEX-C444-CASA-05] -->

@@ -45,7 +45,8 @@ Then say *a little* — **R2**, five lessons back.
 ## Guided Practice — read the four words
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-OCHA, JA-SCRIPT-SMALL-YA-01, JA-LEX-C131-ISHA, JA-LEX-ANCHOR-CHOTTO, JA-SCRIPT-SMALL-YO-01, JA-LEX-C131-TOSHOKAN] -->
 
-[PAUSE 2s each] Read each one aloud, count its beats, and say what it means.
+[PAUSE 2s each]
+[YOU READ: each one below aloud, count its beats, then say what it means]
 
 - [YOU READ: **おちゃ** — two beats]
 - [YOU READ: **いしゃ** — two beats]

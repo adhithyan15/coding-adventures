@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Take Leave",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:92d845deb6aa8e83",
+  "sourceHash": "fnv1a64:5dbca3cfc29a8d15",
   "lessons": [
     {
       "id": "FA-C05-khoda",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0590efe1c1492957",
+      "sourceHash": "fnv1a64:f859a71f2edc925b",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,20 @@
             },
             {
               "kind": "speech",
-              "text": "Read from right to left: خ kh + د d + ا long â. The short o is learned with the word rather than written as a separate letter. Keep the back-of-the-mouth kh gentle; clarity matters more than force."
+              "text": "From right to left: خ kh + د d + ا long â."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the word from right to left",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the word from right to left]"
+            },
+            {
+              "kind": "speech",
+              "text": "The short o is learned with the word rather than written as a separate letter. Keep the back-of-the-mouth kh gentle; clarity matters more than force."
             }
           ]
         },
@@ -150,7 +163,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d43dee9ff4c1b0a",
+      "sourceHash": "fnv1a64:0f568bc1cf15b02e",
       "notice": null,
       "blocks": [
         {
@@ -165,8 +178,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "خدا, then say khodâ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **خدا**, then say **khodâ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read خدا and say khodâ. Keep it separate: this lesson adds only the second word behind the farewell."
+              "text": "Keep it separate: this lesson adds only the second word behind the farewell."
             }
           ]
         },
@@ -180,8 +202,17 @@
               "text": "حافظ — hâfez — guardian, protector."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ح ا ف ظ from right to left",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ح ا ف ظ** from right to left]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ح ا ف ظ from right to left. ا carries long â. In contemporary Persian, final ظ is pronounced z here, so say hâ-fez, not an English th sound. The short e is part of the learned word and is normally unwritten."
+              "text": "ا carries long â. In contemporary Persian, final ظ is pronounced z here, so say hâ-fez, not an English th sound. The short e is part of the learned word and is normally unwritten."
             }
           ]
         },
@@ -281,7 +312,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c0fa12a29bb3766",
+      "sourceHash": "fnv1a64:be5dc97ecab28a56",
       "notice": null,
       "blocks": [
         {
@@ -312,7 +343,20 @@
             },
             {
               "kind": "speech",
-              "text": "Persian normally writes the two spoken pieces together. Start with خدا, add حافظ, and read the joined spelling خداحافظ (khodâ hâfez) from the right edge. Keep the two meaning layers available underneath the complete form."
+              "text": "Persian normally writes the two spoken pieces together. Start with خدا (khodâ), add حافظ (hâfez)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the joined spelling خداحافظ (khodâ hâfez) from the right edge",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the joined spelling **خداحافظ** from the right edge]"
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the two meaning layers available underneath the complete form."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Reading — Words, Lines, a First Passage, and Timed Writing",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ee3e616f14cb21aa",
+  "sourceHash": "fnv1a64:5f1a6875f7d47a6a",
   "lessons": [
     {
       "id": "BN-C40-words",
@@ -212,7 +212,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd6e4ba902e89b71",
+      "sourceHash": "fnv1a64:dd3de6dfae1f8c13",
       "notice": null,
       "blocks": [
         {
@@ -258,8 +258,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six lines down once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six lines down once, without stopping]"
             },
             {
               "kind": "pause",
@@ -268,8 +273,17 @@
               "source": "[PAUSE 3s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six lines again, and notice the mark at the end of each line",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six lines again, and notice the mark at the end of each line]"
+            },
+            {
               "kind": "speech",
-              "text": "Again — and notice the mark at the end of each line. It is not a full stop but a দাঁড়ি, a single upright stroke."
+              "text": "It is not a full stop but a দাঁড়ি, a single upright stroke."
             }
           ]
         },
@@ -398,7 +412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:baf7bff38f93bacd",
+      "sourceHash": "fnv1a64:000c2c364d96dfa7",
       "notice": null,
       "blocks": [
         {
@@ -444,8 +458,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read it once without stopping. Do not translate as you go — let the sentences arrive."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage once without stopping; do not translate as you go — let the sentences arrive",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]"
             },
             {
               "kind": "pause",
@@ -454,8 +473,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Now read it again and find the three joining words."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage again and find the three joining words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage again and find the three joining words]"
             }
           ]
         },

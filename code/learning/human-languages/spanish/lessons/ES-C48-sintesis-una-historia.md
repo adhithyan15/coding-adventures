@@ -47,11 +47,11 @@ Four sentences. Watch the tenses take turns.
 > ***Tuve** un libro en marzo.*
 > *Y **cuando** **tuve** el libro, **hablé** con Ana.*
 
-Now read only the imperfects: *estudiaba*, *tenía*. Those two sentences tell
-you **what things were like** — the situation, with no edges, going on for as
-long as it needed to.
+Now take only the imperfects: *estudiaba*, *tenía*. Those two sentences tell you
+**what things were like** — the situation, with no edges, going on for as long
+as it needed to.
 
-Now read only the preterites: *tuve*, *hablé*. Those tell you **what happened**
+Now take only the preterites: *tuve*, *hablé*. Those tell you **what happened**
 — two events, each with edges, in order.
 
 The story is the two layers together. Neither layer is a story on its own: the

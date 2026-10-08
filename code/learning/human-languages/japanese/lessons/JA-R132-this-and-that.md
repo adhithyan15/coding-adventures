@@ -45,7 +45,7 @@ Then say *this* — **R2**, five lessons back.
 ## Guided Practice — read the five words
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-SOKO, JA-LEX-C132-SOTO, JA-LEX-ANCHOR-KORE, JA-LEX-C132-SORE, JA-LEX-ANCHOR-KURUMA, JA-SCRIPT-SO-01, JA-SCRIPT-RE-01, JA-SCRIPT-RU-01] -->
 
-[PAUSE 2s each] Read each one aloud and say what it means.
+[PAUSE 2s each] [YOU READ: each one below aloud, then say what it means]
 
 - [YOU READ: **そこ** — there, near the listener]
 - [YOU READ: **そと** — outside]

@@ -40,7 +40,12 @@ reviews_of: [PT-C137-o-horario]
 ## You'll want to know: o aviso
 <!-- hl-knowledge: introduces=[PT-LEX-C137-LER137-02]; assesses=[] -->
 
-**o aviso** — "a notice, a warning". Read the notice: **Aviso: loja fechada ao sábado.** The shop is closed on Saturdays, so come on another day.
+**o aviso** — "a notice, a warning".
+
+[YOU READ: the notice]
+
+The notice says **Aviso: loja fechada ao sábado.** The shop is closed on
+Saturdays, so come on another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

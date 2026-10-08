@@ -4,7 +4,7 @@
   "chapter": 434,
   "title": "El Taller Y La Máquina",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:13ff0583c0607bdf",
+  "sourceHash": "fnv1a64:4c2598c548c42446",
   "lessons": [
     {
       "id": "ES-C434-taller",
@@ -424,7 +424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:83bbc6fe66018a56",
+      "sourceHash": "fnv1a64:e1684535a1b85efe",
       "notice": null,
       "blocks": [
         {
@@ -440,7 +440,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say la tubería. You learned that -ería collects. Here is a word that ends the same way. Guess what it collects, then read on."
+              "text": "Say la tubería. You learned that -ería collects. Here is a word that ends the same way. Guess what it collects, then go on."
             }
           ]
         },
@@ -718,7 +718,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bbe02bac75c49269",
+      "sourceHash": "fnv1a64:6b420c9c452d7161",
       "notice": null,
       "blocks": [
         {
@@ -734,7 +734,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say the workshop, the machine and the charger."
+              "text": "From memory alone, say the workshop, the machine and the charger."
             }
           ]
         },
@@ -862,7 +862,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:99bd444c3e75073d",
+      "sourceHash": "fnv1a64:7b5bb2aeb9c79283",
       "notice": null,
       "blocks": [
         {
@@ -888,8 +888,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read it once, as though hearing it on the telephone, then answer."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the message once, as though hearing it on the telephone, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the message once, as though hearing it on the telephone, then answer]"
             },
             {
               "kind": "speech",

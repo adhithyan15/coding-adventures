@@ -4,7 +4,7 @@
   "chapter": 79,
   "title": "How Much Of It",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f0cd65a83704dd23",
+  "sourceHash": "fnv1a64:cc2aa35c23c7edc0",
   "lessons": [
     {
       "id": "ML-C79-valare",
@@ -527,7 +527,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69837f460f8b462b",
+      "sourceHash": "fnv1a64:95f697af9b1d99cb",
       "notice": null,
       "blocks": [
         {
@@ -543,7 +543,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say very, say a lot, and say which of the two you would put in a letter."
+              "text": "From memory alone, say very, say a lot, and say which of the two you would put in a letter."
             }
           ]
         },

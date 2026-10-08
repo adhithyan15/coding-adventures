@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "Reading — Words, Lines, and a First Passage",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b0893f4f68f8b0ca",
+  "sourceHash": "fnv1a64:d6f2a23fba55372a",
   "lessons": [
     {
       "id": "IT-C36-parole",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4a978ada57decf2",
+      "sourceHash": "fnv1a64:3e250d7c7d7e1966",
       "notice": null,
       "blocks": [
         {
@@ -65,8 +65,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down the list once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "down the list once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: down the list once, without stopping]"
             },
             {
               "kind": "pause",
@@ -75,8 +80,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Again — and notice that on a real sign each of these would arrive with a word in front of it."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the list again, and notice that on a real sign each of these would arrive with a word in front of it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the list again, and notice that on a real sign each of these would arrive with a word in front of it]"
             }
           ]
         },
@@ -205,7 +215,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1174c373e15363dc",
+      "sourceHash": "fnv1a64:6bd277460fbcc49c",
       "notice": null,
       "blocks": [
         {
@@ -251,8 +261,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six lines down once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six lines down once, without stopping]"
             },
             {
               "kind": "pause",
@@ -261,8 +276,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Again — and notice the list gets longer as it goes, from one word to three."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six lines again, and notice the list gets longer as it goes, from one word to three",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six lines again, and notice the list gets longer as it goes, from one word to three]"
             }
           ]
         },

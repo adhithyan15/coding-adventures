@@ -37,7 +37,8 @@ reviews_of: [IT-C114-gomma]
 
 [PAUSE 2s] Before the new one: say the Italian for a board, then the Italian for a rubber.
 
-[PAUSE 3s] Read the two lines aloud, as one run: *Il cinema è dietro. Il teatro è davanti.*
+[PAUSE 3s]
+[YOU READ: the two lines aloud, as one run — *Il cinema è dietro. Il teatro è davanti.*]
 
 ## You'll want to know: i compiti
 <!-- hl-knowledge: introduces=[IT-LEX-C115-SCUOLA115-01]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 123,
   "title": "Turtle, Crocodile, Mosquito, Fly, Bee",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:0cedb9c160678413",
+  "sourceHash": "fnv1a64:80f52c634de34994",
   "lessons": [
     {
       "id": "GU-C123-kacbo",
@@ -388,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:18ebdf58278dcbf3",
+      "sourceHash": "fnv1a64:3c6e2667b562f4e3",
       "notice": null,
       "blocks": [
         {
@@ -413,8 +413,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read on without stopping: તમારું નામ શું છે? મારું નામ મીરા છે।."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "તમારું નામ શું છે? મારું નામ મીરા છે।, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **તમારું નામ શું છે? મારું નામ મીરા છે।**, without stopping]"
             }
           ]
         },

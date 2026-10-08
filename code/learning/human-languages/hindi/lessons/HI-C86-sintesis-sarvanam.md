@@ -42,7 +42,9 @@ reading item that opens with it was unreadable from the first word.
 ## Reading
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C86-PRON-01, HI-LEX-C86-PRON-05, HI-LEX-C86-PRON-02] -->
 
-Read aloud. Every word has been taught:
+[YOU READ: the lines below aloud]
+
+Every word has been taught:
 
 > हम स्टेशन पर मिलेंगे।
 > वे भी आ रहे हैं।

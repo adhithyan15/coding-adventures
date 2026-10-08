@@ -49,9 +49,12 @@ already done, not as a list to swallow.
 | *lernen* | **ge**lern**t** |
 | *wohnen* | **ge**wohn**t** |
 
-Cover the right-hand side and rebuild it from the left. Then cover the left and
-work backwards: given *gemacht*, what was the infinitive? The recipe runs both
-ways, which is what makes it worth having.
+[YOU COVER: the right-hand side, and rebuild it from the left]
+
+[YOU COVER: the left, and work backwards]
+
+Given *gemacht*, what was the infinitive? The recipe runs both ways, which is
+what makes it worth having.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-SAGEN-01, GE-LEX-GESAGT-01, GE-LEX-GEMACHT-01, GE-LEX-GELERNT-01, GE-LEX-GEWOHNT-01] -->

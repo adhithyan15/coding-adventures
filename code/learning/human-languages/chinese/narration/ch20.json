@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Six to Ten, and the Character That Was Already Here",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6f07d6645e600c07",
+  "sourceHash": "fnv1a64:f0f838426af22fc6",
   "lessons": [
     {
       "id": "ZH-W20-liu",
@@ -1340,7 +1340,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f5e263af86e3868f",
+      "sourceHash": "fnv1a64:bbe4084ba5e18d79",
       "notice": null,
       "blocks": [
         {
@@ -1374,8 +1374,13 @@
               "text": "Hear all ten named singly and out of order, and say each."
             },
             {
-              "kind": "speech",
-              "text": "Read the ten characters printed shuffled — 九 (jiǔ) 三 十 (shí) 六 (liù) 一 八 (bā) 四 七 (qī) 二 五 — and say each with its tone."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the ten characters printed shuffled — 九 (jiǔ) 三 十 (shí) 六 (liù) 一 八 (bā) 四 七 (qī) 二 五 — then say each with its tone",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the ten characters printed shuffled — 九 三 十 六 一 八 四 七 二 五 — then say each with its tone]"
             },
             {
               "kind": "prompt",

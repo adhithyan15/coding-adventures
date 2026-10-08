@@ -4,7 +4,7 @@
   "chapter": 59,
   "title": "Reading — Objects, Places, and a Day",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1095156eb678d6a7",
+  "sourceHash": "fnv1a64:1934a42f000548b2",
   "lessons": [
     {
       "id": "LA-C59-a-objects",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa513fe646a29a20",
+      "sourceHash": "fnv1a64:17cc038eb1a2f31e",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,16 @@
             },
             {
               "kind": "speech",
-              "text": "You already know aqua: water. Read one new sentence."
+              "text": "You already know aqua: water."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "one new sentence",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: one new sentence]"
             },
             {
               "kind": "speech",
@@ -430,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0db7fc90dc4b23e",
+      "sourceHash": "fnv1a64:658a366b3ce25c3c",
       "notice": null,
       "blocks": [
         {
@@ -446,7 +455,16 @@
             },
             {
               "kind": "speech",
-              "text": "The form scholam is no longer new. Read it after a tiny word: ad scholam."
+              "text": "The form scholam is no longer new."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "scholam after a tiny word — ad scholam",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **scholam** after a tiny word — **ad scholam**]"
             },
             {
               "kind": "pause",
@@ -630,7 +648,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:204edb7204d8d432",
+      "sourceHash": "fnv1a64:e0b35738227b3a9e",
       "notice": null,
       "blocks": [
         {
@@ -676,8 +694,13 @@
               "source": "[PAUSE 4s]"
             },
             {
-              "kind": "speech",
-              "text": "Read once for the route: names, wellbeing, school, work, reason, farewell."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the dialogue once for the route — names, wellbeing, school, work, reason, farewell",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the dialogue once for the route — names, wellbeing, school, work, reason, farewell]"
             },
             {
               "kind": "pause",
@@ -686,8 +709,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read again and find the two things handled: librum and epistulam."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the dialogue again for the two things handled — librum, epistulam",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the dialogue again for the two things handled — **librum**, **epistulam**]"
             }
           ]
         },
@@ -802,7 +830,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1adb86e0650b0fa7",
+      "sourceHash": "fnv1a64:36fb9997de9300a7",
       "notice": null,
       "blocks": [
         {
@@ -848,8 +876,13 @@
               "source": "[PAUSE 4s]"
             },
             {
-              "kind": "speech",
-              "text": "Read once for time: morning, first hour, sixth hour, after midday, evening, night, tomorrow."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the account once for time — morning, first hour, sixth hour, after midday, evening, night, tomorrow",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the account once for time — morning, first hour, sixth hour, after midday, evening, night, tomorrow]"
             },
             {
               "kind": "pause",
@@ -858,8 +891,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read again for the route: home, toward school, in school, homeward."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the account again for the route — home, toward school, in school, homeward",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the account again for the route — home, toward school, in school, homeward]"
             }
           ]
         },

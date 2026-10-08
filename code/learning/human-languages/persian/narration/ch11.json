@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Eye, Hand, Foot, Tongue",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:35b7e1a689628cec",
+  "sourceHash": "fnv1a64:b6a2bf8f161a1a7e",
   "lessons": [
     {
       "id": "FA-C11-cheshm",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4770af19f1802bf0",
+      "sourceHash": "fnv1a64:3cf36a582782cd94",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say دختر. Then read حال شما چطور است؟ once more from the right edge — an earlier lesson asked about your حال, your state, but never once named the parts of you that state belongs to. This chapter does."
+              "text": "Say دختر."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "حال شما چطور است؟ once more from the right edge",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **حال شما چطور است؟** once more from the right edge]"
+            },
+            {
+              "kind": "speech",
+              "text": "An earlier lesson asked about your حال, your state, but never once named the parts of you that state belongs to. This chapter does."
             }
           ]
         },

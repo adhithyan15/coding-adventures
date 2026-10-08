@@ -4,7 +4,7 @@
   "chapter": 45,
   "title": "Reading — Labels, a Form, and the Same Facts as Sentences",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0080e43cb22bfe40",
+  "sourceHash": "fnv1a64:06e22c86bf686dc1",
   "lessons": [
     {
       "id": "PA-C45-labels",
@@ -212,7 +212,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba354345a50c2b83",
+      "sourceHash": "fnv1a64:d96d0c8744aff789",
       "notice": null,
       "blocks": [
         {
@@ -258,8 +258,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read it through once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the form through once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the form through once, without stopping]"
             },
             {
               "kind": "pause",
@@ -398,7 +403,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:697b0eeda0d2ef79",
+      "sourceHash": "fnv1a64:884c28aa9c722897",
       "notice": null,
       "blocks": [
         {
@@ -444,8 +449,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read it once without stopping. Do not translate as you go — let the sentences arrive."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage once without stopping; do not translate as you go — let the sentences arrive",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]"
             },
             {
               "kind": "pause",
@@ -454,8 +464,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Now read it again, and notice how little work it took."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage again, and notice how little work it took",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage again, and notice how little work it took]"
             }
           ]
         },

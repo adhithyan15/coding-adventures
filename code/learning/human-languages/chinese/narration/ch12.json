@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "People under one roof",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:b657c63bf156c8f6",
+  "sourceHash": "fnv1a64:bcf3c1521b169f23",
   "lessons": [
     {
       "id": "ZH-C12-ren",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a60326d52da1056",
+      "sourceHash": "fnv1a64:b8211621017edbf2",
       "notice": null,
       "blocks": [
         {
@@ -59,7 +59,20 @@
             },
             {
               "kind": "speech",
-              "text": "Hear the rising tone first. Say rén. Now read the character you already know. The meaning is singular here: one person. Number comes from context or another word; the character itself does not grow a plural ending."
+              "text": "Hear the rising tone first. Say rén."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the character you already know",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the character you already know]"
+            },
+            {
+              "kind": "speech",
+              "text": "The meaning is singular here: one person. Number comes from context or another word; the character itself does not grow a plural ending."
             }
           ]
         },
@@ -70,7 +83,25 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Say person in Mandarin. Read 人 (rén). Cover it and wait five seconds."
+              "text": "Say person in Mandarin."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "人 (rén)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **人**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "人 (rén), then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: **人**, then wait five seconds]"
             },
             {
               "kind": "prompt",
@@ -127,7 +158,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86ef51fa4672634e",
+      "sourceHash": "fnv1a64:088763b25582e02e",
       "notice": null,
       "blocks": [
         {
@@ -177,8 +208,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read 女 (nǚ) and cover it."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "女 (nǚ), then cover it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **女**, then cover it]"
             },
             {
               "kind": "prompt",
@@ -415,7 +451,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fee99d5f42737412",
+      "sourceHash": "fnv1a64:7c46e9a5b56ba364",
       "notice": null,
       "blocks": [
         {
@@ -474,8 +510,13 @@
               "source": "[YOU WRITE: one copy of **儿子**, while saying *ér-zi*]"
             },
             {
-              "kind": "speech",
-              "text": "Then read it once without pinyin."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "儿子 (érzi) once without pinyin",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **儿子** once without pinyin]"
             }
           ]
         },
@@ -887,7 +928,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f22f174f1590fc2",
+      "sourceHash": "fnv1a64:656011a7a8d96410",
       "notice": null,
       "blocks": [
         {
@@ -926,8 +967,17 @@
               "text": "家 — jiā — home; family."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "家 (jiā) once without pinyin",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **家** once without pinyin]"
+            },
+            {
               "kind": "speech",
-              "text": "Read it once without pinyin. The high line over ā records first tone; the character records no tone mark at all."
+              "text": "The high line over ā records first tone; the character records no tone mark at all."
             }
           ]
         },
@@ -1169,7 +1219,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b2da4b54ecef00f",
+      "sourceHash": "fnv1a64:d140c33be209fb47",
       "notice": null,
       "blocks": [
         {
@@ -1205,7 +1255,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the six words in a shuffled order and say each meaning. Then take six meaning cards, say each word, and read the six character cards."
+              "text": "Hear the six words in a shuffled order and say each meaning. Then, from six English meanings, say each word."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six character cards",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six character cards]"
             },
             {
               "kind": "prompt",
@@ -1269,7 +1328,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64514e9442abadcc",
+      "sourceHash": "fnv1a64:a488a2237ea2c156",
       "notice": null,
       "blocks": [
         {
@@ -1309,11 +1368,16 @@
             },
             {
               "kind": "speech",
-              "text": "Speaking: produce all six from meaning cards, with tones audible."
+              "text": "Speaking: produce all six from their English meanings, with tones audible."
             },
             {
-              "kind": "speech",
-              "text": "Reading: read the six character cards without pinyin."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six character cards without pinyin",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six character cards without pinyin]"
             },
             {
               "kind": "speech",

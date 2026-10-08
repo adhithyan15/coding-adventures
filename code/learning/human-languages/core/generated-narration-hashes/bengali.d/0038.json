@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 38,
-  "sourceHash": "fnv1a64:3b4a95858073f6c2",
+  "sourceHash": "fnv1a64:2983440919a0516e",
   "lessonIds": [
     "BN-C27-ditiyo",
     "BN-C27-tritiyo",
@@ -15,7 +15,7 @@
   "drivablePrefix": 4,
   "text": "bengali/narration/ch38.txt",
   "json": "bengali/narration/ch38.json",
-  "textHash": "fnv1a64:65058ff8f95f920b",
-  "jsonHash": "fnv1a64:6da82d6d720703f8",
+  "textHash": "fnv1a64:8d8d9eee8444cdad",
+  "jsonHash": "fnv1a64:fdcf9f56717fe497",
   "findings": []
 }

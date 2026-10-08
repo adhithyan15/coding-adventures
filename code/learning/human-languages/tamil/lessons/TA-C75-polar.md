@@ -33,7 +33,9 @@ reviews_of: [TA-C74-neither]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-PAALUM-01, TA-GRAMMAR-C74-JOIN-03] -->
 
-[PAUSE 2s] Read **பாலும்**. Then say: neither milk nor tea.
+[PAUSE 2s] [YOU READ: **பாலும்**]
+
+Then say: neither milk nor tea.
 
 ## Grammar lens: one letter on the end
 <!-- hl-knowledge: introduces=[TA-GRAMMAR-C75-POLAR-01]; assesses=[] -->

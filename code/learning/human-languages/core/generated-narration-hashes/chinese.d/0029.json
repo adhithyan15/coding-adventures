@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 29,
-  "sourceHash": "fnv1a64:19f152c44ea70610",
+  "sourceHash": "fnv1a64:6d29627feecdf3c9",
   "lessonIds": [
     "ZH-C29-characters",
     "ZH-C29-words",
@@ -11,7 +11,7 @@
   "drivablePrefix": 0,
   "text": "chinese/narration/ch29.txt",
   "json": "chinese/narration/ch29.json",
-  "textHash": "fnv1a64:fec80951c28767ff",
-  "jsonHash": "fnv1a64:50823654e159511b",
+  "textHash": "fnv1a64:5b169bd538dca361",
+  "jsonHash": "fnv1a64:012147abf71bdfed",
   "findings": []
 }

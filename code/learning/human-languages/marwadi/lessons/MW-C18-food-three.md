@@ -43,7 +43,7 @@ reviews_of: [MW-R18-food-three, MW-C16-hear-thela, MW-C10-mandir]
 
 1. Identify three heard words.
 2. Produce three words from meaning cues.
-3. Match three printed cards to meanings.
+3. [YOU READ: three printed cards and match them to meanings]
 4. [YOU WRITE: all three heard words without a model]
 
 Pass each skill separately. Three food names are a vocabulary foundation, not

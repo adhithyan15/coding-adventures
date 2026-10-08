@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 61,
-  "sourceHash": "fnv1a64:ddcb7d2e756c879d",
+  "sourceHash": "fnv1a64:c3c62a80a5d7d028",
   "lessonIds": [
     "MR-C61-sahava",
     "MR-C61-satva",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "marathi/narration/ch61.txt",
   "json": "marathi/narration/ch61.json",
-  "textHash": "fnv1a64:937ced08a85dc8be",
-  "jsonHash": "fnv1a64:98516d46e56a3710",
+  "textHash": "fnv1a64:70ae5d876aa80756",
+  "jsonHash": "fnv1a64:31f07e22d1a4573f",
   "findings": []
 }

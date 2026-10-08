@@ -45,7 +45,7 @@ Then recall the earlier wind-cloud-rain payoff before adding three words.
 
 1. Identify six heard words.
 2. Produce six words from meaning cues.
-3. Match six printed cards to meanings.
+3. [YOU READ: six printed cards and match them to meanings]
 4. [YOU WRITE: three heard words from each half without a model]
 
 Pass each skill separately.

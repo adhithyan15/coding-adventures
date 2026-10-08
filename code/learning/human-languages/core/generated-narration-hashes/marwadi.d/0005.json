@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 5,
-  "sourceHash": "fnv1a64:b77253bd604b456d",
+  "sourceHash": "fnv1a64:5e875d096acf930e",
   "lessonIds": [
     "MW-C05-hear-mharo",
     "MW-W05-virama",
@@ -18,7 +18,7 @@
   "drivablePrefix": 1,
   "text": "marwadi/narration/ch05.txt",
   "json": "marwadi/narration/ch05.json",
-  "textHash": "fnv1a64:ac61aef56d98b413",
-  "jsonHash": "fnv1a64:e4e329c8aa8fcee2",
+  "textHash": "fnv1a64:e3d875a9337a8f2e",
+  "jsonHash": "fnv1a64:83db186b4b42a54e",
   "findings": []
 }

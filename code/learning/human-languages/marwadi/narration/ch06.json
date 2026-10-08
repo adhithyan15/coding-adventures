@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Tharo Naam: Ask One Name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7e6f1f14abee364e",
+  "sourceHash": "fnv1a64:4b299d70f654cf3c",
   "lessons": [
     {
       "id": "MW-C05-hear-tharo",
@@ -226,7 +226,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b2d5a0fe9184e64f",
+      "sourceHash": "fnv1a64:5d061886b49ccbeb",
       "notice": null,
       "blocks": [
         {
@@ -242,7 +242,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say thāro and its meaning. Read म्हारो and give the opposite direction: my."
+              "text": "Say thāro and its meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "म्हारो, then give the opposite direction — my",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **म्हारो**, then give the opposite direction — my]"
             }
           ]
         },
@@ -267,8 +276,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look for five seconds, cover थारो (thāro), and wait five seconds."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "थारो (thāro) after a five-second look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: **थारो** after a five-second look, then wait five seconds]"
             },
             {
               "kind": "prompt",
@@ -287,8 +301,13 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read the two words once without romanization."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the two words once without romanization",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the two words once without romanization]"
             },
             {
               "kind": "activity",
@@ -328,7 +347,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e091f2bf9aa37f51",
+      "sourceHash": "fnv1a64:4831d170267f19fd",
       "notice": null,
       "blocks": [
         {
@@ -344,7 +363,25 @@
             },
             {
               "kind": "speech",
-              "text": "Retrieve हां सा once by ear, voice, eye, and writing."
+              "text": "Retrieve हां सा once by ear and voice."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "हां सा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **हां सा**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "हां सा once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **हां सा** once]"
             },
             {
               "kind": "prompt",
@@ -356,8 +393,17 @@
               "source": "[YOU POINT: **ै** in **है**]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "थारो (thāro)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **थारो**]"
+            },
+            {
               "kind": "speech",
-              "text": "Then read थारो, hear thāro nām, and give its meaning: your name."
+              "text": "Then hear thāro nām, and give its meaning: your name."
             }
           ]
         },
@@ -648,7 +694,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad314527a7d71c83",
+      "sourceHash": "fnv1a64:e90b3d6068d11c39",
       "notice": null,
       "blocks": [
         {
@@ -706,7 +752,16 @@
             },
             {
               "kind": "speech",
-              "text": "No shape is new. Read the whole word smoothly; the dot lightly nasalizes the long middle rather than creating an extra beat."
+              "text": "No shape is new."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the whole word smoothly — the dot lightly nasalizes the long middle rather than creating an extra beat",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the whole word smoothly — the dot lightly nasalizes the long middle rather than creating an extra beat]"
             }
           ]
         },
@@ -716,8 +771,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look for five seconds, cover कांई (kāĩ), and wait five seconds."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "कांई (kāĩ) after a five-second look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: **कांई** after a five-second look, then wait five seconds]"
             },
             {
               "kind": "prompt",
@@ -736,8 +796,13 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read थारो (thāro) नाम कांई (kāĩ) है? once without romanization."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "थारो (thāro) नाम कांई (kāĩ) है? once without romanization",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **थारो नाम कांई है?** once without romanization]"
             },
             {
               "kind": "activity",
@@ -776,7 +841,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b16255a9da04c64",
+      "sourceHash": "fnv1a64:407eaa32ef752392",
       "notice": null,
       "blocks": [
         {
@@ -834,8 +899,13 @@
               "text": "Speak: hear the question and answer with a chosen name, without notes."
             },
             {
-              "kind": "speech",
-              "text": "Read: match the printed question to the printed answer."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the printed question, then match it to the printed answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the printed question, then match it to the printed answer]"
             },
             {
               "kind": "prompt",

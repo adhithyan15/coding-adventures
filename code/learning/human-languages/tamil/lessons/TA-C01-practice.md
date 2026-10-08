@@ -51,8 +51,8 @@ Say each one before you check the meaning:
 
 These are five spoken words, so the recap gives you the sound and nothing to
 decode. One shape is the exception, because it is the one your hand has already
-met: **வணக்கம்**, whose opening **வ** you copied. Keep that model visible when
-you copy it again below.
+met: **வணக்கம்**, whose opening **வ** you copied. The copy below keeps that
+model in view.
 
 The other four are printed in Tamil in their own lessons, where you were shown
 them and asked to read nothing. Formal letter construction still begins later,
@@ -83,8 +83,8 @@ will be waiting when its verbs are.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C01-PRACTICE-01, TA-PRAGMATIC-VANAKKAM-03, TA-LEX-C01-AAM-01, TA-ROOT-C01-NANDRI-FAMILY-REGISTER-01] -->
 
-[PAUSE 3s] Say all five words aloud. Which one works both to meet someone and
-to part from them? (**வணக்கம்**.) Compare
-your one copied **வ** with the model. Repair one curve if you want, then stop.
+[PAUSE 3s] Say all five words aloud. Which one works both to meet someone and to
+part from them? (**வணக்கம்**.)
+[YOU CHECK: your one copied **வ** against the model — repair one curve if you want, then stop]
 
 Next chapter starts introducing yourself, one short possession form at a time.

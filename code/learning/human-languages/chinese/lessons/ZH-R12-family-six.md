@@ -38,8 +38,9 @@ reviews_of: [ZH-C12-ren, ZH-C12-nu, ZH-C12-erzi, ZH-C12-nuer, ZH-C12-jia, ZH-C12
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-REN-01, ZH-LEX-NU-01, ZH-LEX-ERZI-01, ZH-LEX-NUER-01, ZH-LEX-JIA-01, ZH-LEX-JIAREN-01] -->
 
-Hear the six words in a shuffled order and say each meaning. Then take six
-meaning cards, say each word, and read the six character cards.
+Hear the six words in a shuffled order and say each meaning. Then, from six
+English meanings, say each word. [YOU READ: the six character cards]
+
 [YOU WRITE: only the two you missed]
 
 Repair one item at a time.

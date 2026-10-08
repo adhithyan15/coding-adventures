@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Character or language?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:65082600dd02950e",
+  "sourceHash": "fnv1a64:7faad9a223b96f7d",
   "lessons": [
     {
       "id": "ZH-C16-hear-zi",
@@ -538,7 +538,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d2d5cec07496954",
+      "sourceHash": "fnv1a64:b990db26929425fc",
       "notice": null,
       "blocks": [
         {
@@ -568,8 +568,13 @@
               "text": "汉字 — hànzì — Chinese character."
             },
             {
-              "kind": "speech",
-              "text": "Read the two characters first without pinyin: Han Chinese + written character."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the two characters first without pinyin — Han Chinese + written character",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the two characters first without pinyin — Han Chinese + written character]"
             }
           ]
         },
@@ -716,7 +721,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5241ab2ee136f64f",
+      "sourceHash": "fnv1a64:26413a2663afd09d",
       "notice": null,
       "blocks": [
         {
@@ -752,7 +757,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear written character and Chinese character in mixed order. Say each answer and read its unpointed card."
+              "text": "Hear written character and Chinese character in mixed order. Say each answer."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each Mandarin form without pinyin",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each Mandarin form without pinyin]"
             },
             {
               "kind": "prompt",
@@ -1088,7 +1102,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e7fbc643bb2963bf",
+      "sourceHash": "fnv1a64:4ef0b6afb36f8581",
       "notice": null,
       "blocks": [
         {
@@ -1114,8 +1128,13 @@
           "title": "The word, taken apart",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read this before looking below:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "汉语 (hànyǔ) first, before the explanation",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **汉语** first, before the explanation]"
             },
             {
               "kind": "speech",
@@ -1142,8 +1161,13 @@
               "source": "[YOU WRITE: one copy of **汉语** — keep two separate squares]"
             },
             {
-              "kind": "speech",
-              "text": "Then read the whole word aloud."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the whole word aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the whole word aloud]"
             }
           ]
         },
@@ -1194,7 +1218,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dcd2d206cefc56b9",
+      "sourceHash": "fnv1a64:2d8c64d09354b96d",
       "notice": null,
       "blocks": [
         {
@@ -1230,7 +1254,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear written character, Chinese character, and Chinese language in a mixed order. Say and read each answer."
+              "text": "Hear written character, Chinese character, and Chinese language in a mixed order. Say each answer."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each answer]"
             },
             {
               "kind": "prompt",
@@ -1289,7 +1322,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f971fdad9cfd9b1",
+      "sourceHash": "fnv1a64:fa230f320f8ddc51",
       "notice": null,
       "blocks": [
         {
@@ -1336,11 +1369,16 @@
             },
             {
               "kind": "speech",
-              "text": "Speaking: produce all three from meaning cards, with tones audible."
+              "text": "Speaking: produce all three from their English meanings, with tones audible."
             },
             {
-              "kind": "speech",
-              "text": "Reading: read 字, 汉语 (hànyǔ), 汉字 (hànzì) cold and give each meaning."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "字, 汉语 (hànyǔ), 汉字 (hànzì) cold, then give each meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **字, 汉语, 汉字** cold, then give each meaning]"
             },
             {
               "kind": "speech",
@@ -1357,7 +1395,16 @@
             },
             {
               "kind": "speech",
-              "text": "Pass each skill separately. Check the 字 (zì) or 语 (yǔ) ending only after both written words are complete."
+              "text": "Pass each skill separately."
+            },
+            {
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "the 字 (zì) or 语 (yǔ) ending only after both written words are complete",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: the 字 or 语 ending only after both written words are complete]"
             }
           ]
         },

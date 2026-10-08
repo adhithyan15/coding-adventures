@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Have, and Count",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f21b744737f91d21",
+  "sourceHash": "fnv1a64:22614bef68a0baf7",
   "lessons": [
     {
       "id": "ZH-W24-you",
@@ -783,7 +783,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e094e09addb3ec61",
+      "sourceHash": "fnv1a64:031398a16cfee411",
       "notice": null,
       "blocks": [
         {
@@ -891,8 +891,13 @@
               "text": "Speak. Say what you have; then count three of something."
             },
             {
-              "kind": "speech",
-              "text": "Read. 我有一个名字 (wǒ yǒu yí ge míngzi) — 有人 — 三个学生."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "我有一个名字 (wǒ yǒu yí ge míngzi) — 有人 — 三个学生",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 我有一个名字 — 有人 — 三个学生]"
             },
             {
               "kind": "prompt",

@@ -41,7 +41,7 @@ reviews_of: [ZH-C16-hear-hanzi, ZH-W16-han-delayed, ZH-C16-zi]
 
 > **汉字** — *hànzì* — **Chinese character**
 
-Read the two characters first without pinyin: Han Chinese + written character.
+[YOU READ: the two characters first without pinyin — Han Chinese + written character]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-HANZI-01] -->

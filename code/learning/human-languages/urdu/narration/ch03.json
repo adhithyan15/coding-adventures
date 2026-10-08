@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Ask and Answer Names",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:6a7c0216e3dd545e",
+  "sourceHash": "fnv1a64:dac6dbaadaa8b77c",
   "lessons": [
     {
       "id": "UR-C03-aap-tum-tu",
@@ -262,7 +262,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7aa6c5012a68c1b8",
+      "sourceHash": "fnv1a64:9f48f7790de981b0",
       "notice": null,
       "blocks": [
         {
@@ -293,7 +293,20 @@
             },
             {
               "kind": "speech",
-              "text": "Read right to left: ک k, ی supplying the y glide here, then ا long ā. The same ی carried long ī in jī and nahī̃ — words you say but cannot spell yet. Its job depends on the word; here the learned shape is kyā."
+              "text": "Right to left: ک k, ی supplying the y glide here, then ا long ā."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the word right to left",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the word right to left]"
+            },
+            {
+              "kind": "speech",
+              "text": "The same ی carried long ī in jī and nahī̃ — words you say but cannot spell yet. Its job depends on the word; here the learned shape is kyā."
             }
           ]
         },

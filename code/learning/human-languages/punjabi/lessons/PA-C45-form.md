@@ -52,7 +52,7 @@ answer beside it.
 > ਭਾਸ਼ਾ: ਪੰਜਾਬੀ
 > ਫ਼ੋਨ: ੦੧੨ ੨੫੧
 
-[PAUSE 3s] Read it through once, without stopping.
+[PAUSE 3s] [YOU READ: the form through once, without stopping]
 
 [PAUSE 3s] Now answer without looking back: what does this person do?
 

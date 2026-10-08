@@ -4,7 +4,7 @@
   "chapter": 46,
   "title": "When the Verb Steps to the Front",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:745610fe87b1cb91",
+  "sourceHash": "fnv1a64:5951b7a42713cbe9",
   "lessons": [
     {
       "id": "GE-C33-ja-nein-frage",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52aec017ca69562a",
+      "sourceHash": "fnv1a64:0be76c63cd6427fa",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have owned ja, nein and doch since the yes-and-no chapter, and you have never been shown the question they answer. Say the three first, then read on."
+              "text": "You have owned ja, nein and doch since the yes-and-no chapter, and you have never been shown the question they answer. Say the three first, then go on."
             },
             {
               "kind": "prompt",

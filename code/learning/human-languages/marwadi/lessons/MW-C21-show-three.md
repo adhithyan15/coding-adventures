@@ -46,7 +46,7 @@ The middle word is the only one that changes.
 
 1. Identify which of the three lines you heard.
 2. Produce all three from meaning cues alone.
-3. Read three printed lines and say which counter each belongs at.
+3. [YOU READ: three printed lines, then say which counter each belongs at]
 4. [YOU WRITE: all three from dictation, without a model]
 
 Pass each skill separately. Asking to see something is one move; asking what it

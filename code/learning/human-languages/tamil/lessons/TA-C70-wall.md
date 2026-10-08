@@ -33,7 +33,7 @@ reviews_of: [TA-W26-read-mesai]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-MESAI-01] -->
 
-[PAUSE 2s] Before the new one: read **மேசை**, and say what it means.
+[PAUSE 2s] Before the new one, say what **மேசை** means. [YOU READ: **மேசை**]
 
 ## You'll want to know: சுவர்
 <!-- hl-knowledge: introduces=[TA-LEX-C70-ROOM-03]; assesses=[] -->

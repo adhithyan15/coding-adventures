@@ -55,7 +55,7 @@ Now join it to the previous word:
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ICHIDO, JA-LEX-MOU] -->
 1. Hear *i | chi | do* without looking.
 2. [YOU WRITE: **いちど** from the three morae]
-3. Read **もういちど**, keeping the two beats in **もう**.
+3. [YOU READ: **もういちど**, keeping the two beats in **もう**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ICHIDO] -->

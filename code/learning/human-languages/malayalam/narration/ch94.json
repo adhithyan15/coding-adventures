@@ -4,7 +4,7 @@
   "chapter": 94,
   "title": "Yesterday, Today, Tomorrow",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:195fc744122e1c2b",
+  "sourceHash": "fnv1a64:fe5c9484ce4a703d",
   "lessons": [
     {
       "id": "ML-C94-innu",
@@ -149,7 +149,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27639ed1a408c87c",
+      "sourceHash": "fnv1a64:05297f5bf0ae6f06",
       "notice": null,
       "blocks": [
         {
@@ -184,7 +184,7 @@
             },
             {
               "kind": "speech",
-              "text": "Put the two words side by side and read the fronts:"
+              "text": "Put the two words side by side and compare the fronts:"
             },
             {
               "kind": "table",
@@ -455,7 +455,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8b2a91fb9449c154",
+      "sourceHash": "fnv1a64:9b685e53c5294c04",
       "notice": null,
       "blocks": [
         {
@@ -471,7 +471,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Name the day you are standing in, and the one behind it."
+              "text": "From memory alone, name the day you are standing in, and the one behind it."
             }
           ]
         },
@@ -496,7 +496,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read straight down the middle: ഞാൻ three times, unmoved. The front and the back of each line change together, and everything between them holds still."
+              "text": "Straight down the middle: ഞാൻ three times, unmoved. The front and the back of each line change together, and everything between them holds still."
             },
             {
               "kind": "speech",

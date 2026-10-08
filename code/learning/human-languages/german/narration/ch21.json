@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "An Ancient Cousin and a Second Emigrant",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:77a7470fba9a5f21",
+  "sourceHash": "fnv1a64:87ab6238fec6f09b",
   "lessons": [
     {
       "id": "GE-C13-rot",
@@ -434,7 +434,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3dadfc968e41fe14",
+      "sourceHash": "fnv1a64:baa70c45b0cc7d08",
       "notice": null,
       "blocks": [
         {
@@ -480,7 +480,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read that last row twice. English is Germanic. It had inherited blēwaz itself — the word was already sitting in Old English — and it borrowed the French form anyway."
+              "text": "Go over that last row twice. English is Germanic. It had inherited blēwaz itself — the word was already sitting in Old English — and it borrowed the French form anyway."
             },
             {
               "kind": "speech",

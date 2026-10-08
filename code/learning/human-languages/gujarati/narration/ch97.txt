@@ -96,7 +96,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Gujarati for Kartak, then the Gujarati for Magshar.
 [pause 1 second]
-Read these two turns without stopping: તમે કેમ છો? હું મજામાં છું।.
+[once you have stopped driving — read: these two turns without stopping — તમે કેમ છો? હું મજામાં છું।]
 
 You'll want to know: ફાગણ.
 ફાગણ (phāgaṇ) — "Phagan, the month of Holi".

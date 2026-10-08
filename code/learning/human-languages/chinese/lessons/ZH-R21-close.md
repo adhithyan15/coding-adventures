@@ -51,7 +51,7 @@ Then put each back to work once.
 3. [YOU WRITE: **早**, and mark the **十** inside it]
 4. [YOU WRITE: **人** and **八** side by side, and say what separates them]
 5. Build six numbers between eleven and ninety-nine from the ten words.
-6. Read a price in digits and say it aloud in words.
+6. [YOU READ: a price in digits, then say it aloud in words]
 
 Say what the whole slice cost the hand: **six characters, fourteen strokes**,
 and one rule about the order of two of them.

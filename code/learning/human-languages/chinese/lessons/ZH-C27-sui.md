@@ -66,7 +66,7 @@ there was nothing for them to measure.
 
 > **我十八岁** *wǒ shíbā suì* — I am eighteen.
 
-Read that again and look for the verb. **There is none.** No 是, no anything.
+Say that again and listen for the verb. **There is none.** No 是, no anything.
 Subject, number, 岁, stop.
 
 English needs *am*. Spanish needs *tengo*. Mandarin puts an age straight after

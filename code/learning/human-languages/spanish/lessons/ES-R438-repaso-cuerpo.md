@@ -32,8 +32,8 @@ reviews_of: [ES-C438-polideportivo, ES-C438-natacion, ES-C438-torcerse, ES-C438-
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C438-CUERPO-01, ES-LEX-C438-CUERPO-02, ES-LEX-C438-CUERPO-03, ES-LEX-C438-CUERPO-04, ES-LEX-C438-CUERPO-05] -->
 
-[PAUSE 3s] Close the lessons before this one. Say all five: *the sports centre*,
-*swimming*, *to twist your ankle*, *to rest*, *to laugh*.
+[PAUSE 3s] From memory alone, say all five: *the sports centre*, *swimming*, *to
+twist your ankle*, *to rest*, *to laugh*.
 
 ## Grammar Lens: pieces that are real, and pieces that are not
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C438-CUERPO-01, ES-LEX-C438-CUERPO-04, ES-LEX-C438-CUERPO-05] -->

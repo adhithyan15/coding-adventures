@@ -33,13 +33,14 @@ reviews_of: [ZH-R18-listening-five, ZH-R18-looking-three-r2, ZH-R18-book-reading
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-KAN-01, ZH-LEX-SHU-01] -->
 
-[PAUSE 8s] Read **看** and **书** without saying their pinyin first.
+[PAUSE 8s] [YOU READ: **看** and **书** without saying their pinyin first]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-KAN-01, ZH-SCRIPT-KAN-01, ZH-LEX-KANJIAN-01, ZH-ORTHO-KANJIAN-01, ZH-LEX-HAOKAN-01, ZH-ORTHO-HAOKAN-01, ZH-LEX-SHU-01, ZH-SCRIPT-SHU-01, ZH-LEX-KANSHU-01, ZH-ORTHO-KANSHU-01] -->
 
-Shuffle five unpointed cards: **好看, 书, 看见, 看书, 看**. Read each cold and
-give its meaning. Score one point per form before any pinyin help.
+[YOU READ: five unpointed cards in a shuffled order — **好看, 书, 看见, 看书, 看** — each cold, then give its meaning]
+
+Score one point per form before any pinyin help.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-KANJIAN-01, ZH-ORTHO-KANSHU-01] -->

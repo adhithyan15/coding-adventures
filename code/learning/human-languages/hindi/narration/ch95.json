@@ -4,7 +4,7 @@
   "chapter": 95,
   "title": "The Past, And Where You Were",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:e7bc8e6633b26c3c",
+  "sourceHash": "fnv1a64:0532243078ccfbeb",
   "lessons": [
     {
       "id": "HI-C87-par",
@@ -1266,7 +1266,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:47fbfafac6c126e7",
+      "sourceHash": "fnv1a64:0cb6159020afb66d",
       "notice": null,
       "blocks": [
         {
@@ -1281,8 +1281,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Read this and say what it means before reading on."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the sentence and say what it means before going on",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the sentence and say what it means before going on]"
             },
             {
               "kind": "speech",

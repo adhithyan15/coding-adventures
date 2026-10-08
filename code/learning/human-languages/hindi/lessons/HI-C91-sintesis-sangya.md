@@ -36,7 +36,7 @@ reviews_of: [HI-C91-repaso-sangya, HI-C91-bhashaen, HI-C91-bacche-ko]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C91-NOUN-03, HI-CONCEPT-C05-BOLTAHUN-01] -->
 
-[PAUSE 2s] Read this and say how many languages, before reading on.
+[PAUSE 2s] [YOU READ: the line and say how many languages, before going on]
 
 > दो भाषाएँ बोलती है।
 

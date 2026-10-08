@@ -45,7 +45,7 @@ family structure.
 
 1. **Listen:** identify six randomly heard labels.
 2. **Speak:** produce six different labels from relationship cues.
-3. **Read:** match all twelve printed labels to meanings.
+3. [YOU READ: all twelve printed labels and match them to meanings]
 4. [YOU WRITE: four heard labels without a model]
 
 Score each skill separately. A strong spoken score cannot compensate for a

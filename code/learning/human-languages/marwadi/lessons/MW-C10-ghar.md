@@ -49,7 +49,9 @@ reviews_of: [MW-C10-hear-ghar, MW-W10-gha, MW-C10-bajar]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-GHAR-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, and wait five seconds. [YOU WRITE: the one-beat word]
+[YOU COVER: the model after one look, then wait five seconds]
+
+[YOU WRITE: the one-beat word]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-GHAR-01, MW-SCRIPT-GHAR-01] -->

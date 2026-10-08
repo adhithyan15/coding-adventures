@@ -39,7 +39,7 @@ are finished; this is a separate, untimed return to three earlier quality words.
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C146-QUAL146-01] -->
 
 [PAUSE 3s] Say the old word for **stale**. (**ਬੇਹਾ**, *behā*.)
-Cover the answer before the next cue.
+[YOU COVER: the answer before the next cue]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C146-QUAL146-01, PA-LEX-C146-QUAL146-02, PA-LEX-C146-QUAL146-03] -->
@@ -57,6 +57,8 @@ mean firm; *kaccā* can also mean raw. Do not add a new sense from this review.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-C146-QUAL146-01, PA-LEX-C146-QUAL146-02, PA-LEX-C146-QUAL146-03] -->
 
-Cover the three answers. [PAUSE 4s each] Say the Punjabi for **unripe**,
-**stale**, then **ripe**. Check only after all three: **ਕੱਚਾ**, **ਬੇਹਾ**,
-**ਪੱਕਾ**. If one slipped, revisit that earlier quality word.
+[YOU COVER: the three answers]
+
+[PAUSE 4s each] Say the Punjabi for **unripe**, **stale**, then **ripe**. Only
+after all three, hear the answers: **ਕੱਚਾ**, **ਬੇਹਾ**, **ਪੱਕਾ**. If one slipped,
+revisit that earlier quality word.

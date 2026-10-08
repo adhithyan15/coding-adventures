@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Case Endings and Dative Subjects",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:98b1af67e64cc8c4",
+  "sourceHash": "fnv1a64:46b7c74028c22f0a",
   "lessons": [
     {
       "id": "TE-S149-digit-0",
@@ -703,7 +703,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b5adbc8594c86a9e",
+      "sourceHash": "fnv1a64:5f5f5e207c5fc366",
       "notice": null,
       "blocks": [
         {
@@ -719,7 +719,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the book on everything so far. From memory: the word that opens a conversation, and the word that closes a piece of business."
+              "text": "From memory: the word that opens a conversation, and the word that closes a piece of business."
             }
           ]
         },

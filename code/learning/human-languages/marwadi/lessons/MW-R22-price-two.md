@@ -43,7 +43,9 @@ reviews_of: [MW-C22-kitno, MW-C22-price-question, MW-C21-show-request, MW-C19-ba
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-KITNO-01, MW-SCRIPT-KITNO-01, MW-LEX-PRICE-QUESTION-01, MW-SCRIPT-PRICE-QUESTION-01, MW-LEX-SHOW-REQUEST-01, MW-SCRIPT-SHOW-REQUEST-01] -->
 
 Hear the word alone and the whole question, in both orders, and give each
-meaning. Read two cards. [YOU WRITE: both from sound]
+meaning. [YOU READ: two cards]
+
+[YOU WRITE: both from sound]
 
 Then say the request from the last chapter and this question one after the
 other, in that order, as they would actually fall at a counter.

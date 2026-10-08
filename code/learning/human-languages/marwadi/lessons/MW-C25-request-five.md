@@ -46,7 +46,7 @@ All five end in the same sound and none of them is interchangeable.
 
 1. Hear all five shuffled and name each one's job.
 2. Produce all five from their jobs alone, without the sounds.
-3. Read five cards and match each to one line you already know.
+3. [YOU READ: five cards, then match each to one line you already know]
 4. [YOU WRITE: all five from dictation, then the tea order, the counter-offer, and the closing question that asks for a final price]
 
 Pass each skill separately. Five ways to ask is not five ways to be understood:

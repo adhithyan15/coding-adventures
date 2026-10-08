@@ -46,7 +46,9 @@ Hear *chi-chi*. Say “my father,” then say the two even morae once.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-CHICHI, JA-SCRIPT-CHI-01, JA-SCRIPT-TSU-01] -->
 
-Read **ち | ち**. [YOU WRITE: one copy of **ちち**; then hide it and write it once from the meaning]
+[YOU READ: **ち | ち**]
+
+[YOU WRITE: one copy of **ちち**; then hide it and write it once from the meaning]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-CHICHI] -->

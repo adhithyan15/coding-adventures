@@ -42,8 +42,10 @@ reviews_of: [MW-C16-bas, MW-C16-gaadi, MW-C16-thela, MW-W15-nukta]
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAS-01, MW-SCRIPT-BAS-01, MW-LEX-GAADI-01, MW-SCRIPT-GAADI-01, MW-LEX-THELA-01, MW-SCRIPT-THELA-01] -->
 
-Hear the three words in a mixed order, give each meaning, and read three
-shuffled cards. [YOU WRITE: all three from sound]
+Hear the three words in a mixed order and give each meaning.
+[YOU READ: three shuffled cards]
+
+[YOU WRITE: all three from sound]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAS-01, MW-LEX-GAADI-01, MW-LEX-THELA-01] -->

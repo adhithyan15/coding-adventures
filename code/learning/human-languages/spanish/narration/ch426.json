@@ -4,7 +4,7 @@
   "chapter": 426,
   "title": "Capitals, Short Forms And Symbols",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:847f09801ebed987",
+  "sourceHash": "fnv1a64:78e1b872e1a52642",
   "lessons": [
     {
       "id": "ES-C426-mayusculas",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55b93f66ce8d89e3",
+      "sourceHash": "fnv1a64:31ebfe242c9ddb57",
       "notice": null,
       "blocks": [
         {
@@ -44,7 +44,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read on to find out what you almost certainly got wrong."
+              "text": "Go on to find out what you almost certainly got wrong."
             }
           ]
         },

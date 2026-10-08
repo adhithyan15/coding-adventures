@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "One to Five — Where the Character Is the Count",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fbcda3254de262f1",
+  "sourceHash": "fnv1a64:340b3ccca509e773",
   "lessons": [
     {
       "id": "ZH-W03-yi",
@@ -140,7 +140,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0c5059be8d0554a",
+      "sourceHash": "fnv1a64:28222c8e3c43cbe0",
       "notice": null,
       "blocks": [
         {
@@ -176,7 +176,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read those two facts together, because their meeting is the point:"
+              "text": "Take those two facts together, because their meeting is the point:"
             },
             {
               "kind": "speech",

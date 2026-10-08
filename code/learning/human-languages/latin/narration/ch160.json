@@ -4,7 +4,7 @@
   "chapter": 160,
   "title": "To count, To destroy, To go away, To arrive, To live",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:dc4ae28931bb5b61",
+  "sourceHash": "fnv1a64:dfcd5db46ac824fb",
   "lessons": [
     {
       "id": "LA-C160-numero",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c00c600dfda014a0",
+      "sourceHash": "fnv1a64:9a66b440915e2874",
       "notice": null,
       "blocks": [
         {
@@ -536,8 +536,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read aloud as one account: Hodiē labōrō. Vespere domum redeō et dormiō."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "Hodiē labōrō. Vespere domum redeō et dormiō. aloud as one account",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: *Hodiē labōrō. Vespere domum redeō et dormiō.* aloud as one account]"
             }
           ]
         },

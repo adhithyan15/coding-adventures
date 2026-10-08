@@ -4,7 +4,7 @@
   "chapter": 439,
   "title": "Andenes Y Cierres",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:25f0e82d61db461f",
+  "sourceHash": "fnv1a64:5da34a4b0cd9092d",
   "lessons": [
     {
       "id": "ES-C439-anden",
@@ -781,7 +781,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f0679e08a63d215",
+      "sourceHash": "fnv1a64:b1f27aaec6ace275",
       "notice": null,
       "blocks": [
         {
@@ -797,7 +797,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all five: the platform, to move something across, closed, to cut, to throw away."
+              "text": "From memory alone, say all five: the platform, to move something across, closed, to cut, to throw away."
             }
           ]
         },
@@ -917,7 +917,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1dd41fe57787d358",
+      "sourceHash": "fnv1a64:ec39ac7e5076b7cc",
       "notice": null,
       "blocks": [
         {
@@ -943,8 +943,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read all four, then answer."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all four, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all four, then answer]"
             },
             {
               "kind": "speech",
@@ -1029,7 +1034,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now your turn, out loud and then in writing. Five sentences: which platform you came out at, what the street was like, why the first door was no use, where the office went, and what you had to do to the last door."
+              "text": "Now your turn, out loud. Five sentences: which platform you came out at, what the street was like, why the first door was no use, where the office went, and what you had to do to the last door."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same five sentences",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same five sentences]"
             },
             {
               "kind": "speech",

@@ -46,7 +46,7 @@ A run learned forwards is not yet a set of five words. Break it:
 
 1. Hear one number on its own and say what it is. Then another, out of order.
 2. Count backwards from five.
-3. Read the five printed shuffled and say each.
+3. [YOU READ: the five printed shuffled, then say each]
 4. [YOU WRITE: **तीन**, **पांच**, **एक**, **चार**, **दो** from dictation, in that order]
 
 [YOU WRITE: once more, only the one that missed]

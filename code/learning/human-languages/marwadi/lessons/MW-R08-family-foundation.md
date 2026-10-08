@@ -43,7 +43,7 @@ reviews_of: [MW-C08-maa, MW-C08-baap, MW-C08-dadi, MW-C08-parivaar, MW-W08-ba]
 
 1. **Listen:** identify *mā̃*, *bāp*, or *dādī* from sound alone.
 2. **Speak:** say the word from one relation cue.
-3. **Read:** match **मां**, **बाप**, and **दादी** to their meanings.
+3. [YOU READ: **मां**, **बाप**, and **दादी**, then match them to their meanings]
 4. [YOU WRITE: one heard word without a model]
 
 ## Wrap-up Recall

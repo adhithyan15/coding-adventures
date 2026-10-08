@@ -50,7 +50,7 @@ reviews_of: [MW-W35-digits-six-seven-eight, MW-C34-bees, MW-C34-price-number]
 **२०** is not a two and a zero read one after the other. It is one amount, and
 its name is a word with no two and no ten inside it.
 
-1. Read **६**, **७**, **८** aloud, then **१०** and **२०**.
+1. [YOU READ: **६**, **७**, **८** aloud, then **१०** and **२०**]
 2. [YOU WRITE: the word under each of the five]
 3. Hear *sāt*, *chha*, *bīs*. [YOU WRITE: the FIGURE each time]
 4. [YOU WRITE: **२०** and **८** from dictation, given out of order]

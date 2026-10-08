@@ -4,7 +4,7 @@
   "chapter": 458,
   "title": "El plazo",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6215e272266bda1d",
+  "sourceHash": "fnv1a64:ecf33c518b4ea9fc",
   "lessons": [
     {
       "id": "ES-C458-plazo",
@@ -532,7 +532,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6cbdf911e843bf26",
+      "sourceHash": "fnv1a64:d0f2c561aff2da3c",
       "notice": null,
       "blocks": [
         {
@@ -548,7 +548,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all three: the deadline, to hand in, to let in."
+              "text": "From memory alone, say all three: the deadline, to hand in, to let in."
             }
           ]
         },
@@ -676,7 +676,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de69e09f001ab25b",
+      "sourceHash": "fnv1a64:66ca507b9b15d703",
       "notice": null,
       "blocks": [
         {
@@ -703,7 +703,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "A notice on a noticeboard. Read it, then answer."
+              "text": "A notice on a noticeboard."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the notice, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the notice, then answer]"
             },
             {
               "kind": "speech",
@@ -792,7 +801,16 @@
             },
             {
               "kind": "speech",
-              "text": "Now your turn, out loud and then in writing. Four lines for a sign-up notice: give the window of dates, say where to hand the form in, say late forms are not accepted, and say when the list goes up."
+              "text": "Now your turn, out loud. Four lines for a sign-up notice: give the window of dates, say where to hand the form in, say late forms are not accepted, and say when the list goes up."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same four lines",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same four lines]"
             },
             {
               "kind": "speech",

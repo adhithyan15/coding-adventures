@@ -34,8 +34,8 @@ reviews_of: [ES-C54-repaso-hay, ES-C53-lo-que]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HAY, ES-LEX-AQUI] -->
 
-[PAUSE 2s] *Hay* is the word you reach for to describe a place. Look around the
-room you are in and say what is there.
+[PAUSE 2s] *Hay* is the word you reach for to describe a place. Picture the room
+you are in and say what is there.
 
 ## The exchange
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HAY, ES-GRAMMAR-RELATIVE-QUE, ES-GRAMMAR-LO-QUE, ES-GRAMMAR-HAY-QUE, ES-LEX-CASA, ES-LEX-LIBRO, ES-LEX-COMIDA, ES-GRAMMAR-DEFINITE-PLURAL-MASCULINE, ES-LEX-AQUI, ES-GRAMMAR-SE-IMPERSONAL] -->

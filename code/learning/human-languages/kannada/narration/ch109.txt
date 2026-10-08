@@ -125,7 +125,8 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Kannada for a temple, then the Kannada for a library.
 [pause 2 seconds]
-Say the ordinals past eight: ಒಂಬತ್ತನೆಯ, ಹತ್ತನೆಯ, ಹನ್ನೊಂದನೆಯ. Then the spoken ಮೊದಲನೇ, and read the sign form ೧ನೇ.
+Say the ordinals past eight: ಒಂಬತ್ತನೆಯ, ಹತ್ತನೆಯ, ಹನ್ನೊಂದನೆಯ. Then the spoken ಮೊದಲನೇ.
+[once you have stopped driving — read: the sign form ೧ನೇ]
 
 You'll want to know: ಬ್ಯಾಂಕು.
 ಬ್ಯಾಂಕು — byāṅku — "a bank".

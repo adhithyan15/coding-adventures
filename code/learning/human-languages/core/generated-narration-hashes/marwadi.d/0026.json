@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 26,
-  "sourceHash": "fnv1a64:adb252279ec224cc",
+  "sourceHash": "fnv1a64:63b0c4e301d7d4ce",
   "lessonIds": [
     "MW-C21-hear-ye",
     "MW-C21-ye",
@@ -18,7 +18,7 @@
   "drivablePrefix": 1,
   "text": "marwadi/narration/ch26.txt",
   "json": "marwadi/narration/ch26.json",
-  "textHash": "fnv1a64:73bd95e5848208d5",
-  "jsonHash": "fnv1a64:b2b48bd3d82e4cc1",
+  "textHash": "fnv1a64:01c51616ac9e42f1",
+  "jsonHash": "fnv1a64:7228dd248f8782c6",
   "findings": []
 }

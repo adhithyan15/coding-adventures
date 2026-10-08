@@ -43,7 +43,7 @@ reliable Urdu sentence for your own name.
 ## The exchange
 <!-- hl-knowledge: introduces=[UR-LEX-MERA-NAAM-HAI, UR-SCRIPT-MERA-NAAM-HAI]; assesses=[] -->
 
-Read the line right to left, but keep its spoken order:
+[YOU READ: the line right to left, but keep its spoken order]
 
 > **میرا | نام | ... | ہے** — *merā nām ... hai*
 

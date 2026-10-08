@@ -4,7 +4,7 @@
   "chapter": 64,
   "title": "Reading — Words, Lines, and a First Passage",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:dea8834342889f78",
+  "sourceHash": "fnv1a64:5f625dc579ec9050",
   "lessons": [
     {
       "id": "SA-C64-words",
@@ -434,7 +434,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:076154f8d4f2d8fc",
+      "sourceHash": "fnv1a64:f0499c7814064384",
       "notice": null,
       "blocks": [
         {
@@ -480,8 +480,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read it once without stopping. Do not translate as you go — let the lines arrive."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage once without stopping; do not translate as you go — let the lines arrive",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage once without stopping; do not translate as you go — let the lines arrive]"
             },
             {
               "kind": "pause",
@@ -490,8 +495,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Now read it again, and watch where अत्र turns into तत्र."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage again, and watch where अत्र turns into तत्र",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage again, and watch where **अत्र** turns into **तत्र**]"
             }
           ]
         },

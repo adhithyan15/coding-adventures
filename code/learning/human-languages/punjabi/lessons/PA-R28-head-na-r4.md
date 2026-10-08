@@ -37,7 +37,8 @@ reviews_of: [PA-C13-sir, PA-W01-na, PA-S04-phappha-gagga]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-SIR] -->
 
-[PAUSE 7s] Say the Punjabi word for **head** from memory. Then read **ਸਿਰ** once.
+[PAUSE 7s] Say the Punjabi word for **head** from memory.
+[YOU READ: **ਸਿਰ** once]
 
 ## Guided Practice — meaning and history
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-SIR, PA-ETYMON-SIR-HORN] -->
@@ -49,7 +50,9 @@ Keep the two claims together: **sir** means head, and **horn** is its surprising
 <!-- hl-knowledge: introduces=[]; assesses=[PA-SCRIPT-NA-01] -->
 <!-- hl-activity: {"id":"PA-R28-head-na-r4-script","kind":"text","assesses":["PA-SCRIPT-NA-01"],"prompt":"Which already-taught Gurmukhi consonant is na: ਨ or ਸ?","answer":"ਨ","accepted":["ਨ na","na is ਨ"],"feedback":{"correct":"ਨ is the old na shape.","incorrect":"Choose ਨ. The other shape, ਸ, begins sir."},"response_seconds":30} -->
 
-Read **ਨ** once and say **na**. Do not copy it in this lesson.
+[YOU READ: **ਨ** once, then say **na**]
+
+Do not copy it in this lesson.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-SIR, PA-ETYMON-SIR-HORN, PA-SCRIPT-NA-01, PA-SCRIPT-RECOG-SIHARI-01] -->

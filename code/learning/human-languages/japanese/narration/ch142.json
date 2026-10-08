@@ -4,7 +4,7 @@
   "chapter": 142,
   "title": "Notices: Caution, No Smoking, Reception, Open",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:f5fc3a0c6b23997c",
+  "sourceHash": "fnv1a64:83b92b6246b1339d",
   "lessons": [
     {
       "id": "JA-C142-chuui",
@@ -508,7 +508,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b0f7e3f8e2993f72",
+      "sourceHash": "fnv1a64:e6cf80982edc4d8e",
       "notice": null,
       "blocks": [
         {
@@ -574,8 +574,17 @@
               "text": "えいぎょうちゅう — eigyōchū — \"open\", \"open for business\", on a small sign hung on a shop or restaurant door. ちゅう at the end means \"in the middle of\": the shop is in the middle of doing business. Eight signs make six beats, e–i–gyo–o–chu–u: each small sign joins the one before it, and each う holds the sound before it long. On a real sign this word is usually printed in kanji, which this book has not reached yet; the reading is the same."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the door sign and act on it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the door sign and act on it]"
+            },
+            {
               "kind": "speech",
-              "text": "Read it and act on it: the door says えいぎょうちゅう (eigyōchū), so you can go in."
+              "text": "The door says えいぎょうちゅう (eigyōchū), so you can go in."
             }
           ]
         },
@@ -671,7 +680,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f818d7462d743b9b",
+      "sourceHash": "fnv1a64:b3b361d8f9347abb",
       "notice": null,
       "blocks": [
         {
@@ -737,8 +746,17 @@
               "text": "じゅんびちゅう — junbichū — \"getting ready\", \"not yet open\": the other side of the same door sign. じゅんび is preparation, and ちゅう again means \"in the middle of\". On a real sign this word is usually printed in kanji, which this book has not reached yet; the reading is the same."
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the door sign and act on it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the door sign and act on it]"
+            },
+            {
               "kind": "speech",
-              "text": "Read it and act on it: the door says じゅんびちゅう (junbichū), so the shop is not open yet. Wait, or come back later."
+              "text": "The door says じゅんびちゅう (junbichū), so the shop is not open yet. Wait, or come back later."
             },
             {
               "kind": "speech",
@@ -1001,7 +1019,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:18d9d92f229d5231",
+      "sourceHash": "fnv1a64:ad60b6f42938ed35",
       "notice": null,
       "blocks": [
         {
@@ -1082,8 +1100,13 @@
               "source": "[YOU READ: **ちゅうい**, **きんえん**, **うけつけ**, **えいぎょうちゅう**, **じゅんびちゅう** — and say what each sign asks of you]"
             },
             {
-              "kind": "speech",
-              "text": "Then read this notice on a clinic door, and say what you do:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "this notice on a clinic door, then say what you do",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: this notice on a clinic door, then say what you do]"
             },
             {
               "kind": "speech",

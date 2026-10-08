@@ -40,7 +40,7 @@ word *libro*.
 ## The exchange
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-DIRECT-OBJECT-LO, ES-GRAMMAR-DIRECT-OBJECT-LA, ES-LEX-LIBRO, ES-LEX-COMIDA, ES-GRAMMAR-TENER-PRESENT-SINGULAR, ES-GRAMMAR-HACER-PRESENT-SINGULAR] -->
 
-Here are the same two exchanges, twice. Read both versions aloud.
+Here are the same two exchanges, twice. [YOU READ: both versions aloud]
 
 **Version one:**
 

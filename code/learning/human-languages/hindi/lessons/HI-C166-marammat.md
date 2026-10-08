@@ -41,7 +41,13 @@ reviews_of: [HI-C166-vijnapan]
 ## You'll want to know: मरम्मत
 <!-- hl-knowledge: introduces=[HI-LEX-C166-READ166-05]; assesses=[] -->
 
-**मरम्मत** — *marammat* — "a repair". Read the note: **बिजली की मरम्मत कल सुबह दस बजे।** (*bijlī kī marammat kal subah das baje.*) The electricity is being repaired tomorrow at ten, so plan the morning without it.
+**मरम्मत** — *marammat* — "a repair".
+
+[YOU READ: the note]
+
+The note says **बिजली की मरम्मत कल सुबह दस बजे।** (*bijlī kī marammat kal subah
+das baje.*) The electricity is being repaired tomorrow at ten, so plan the
+morning without it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

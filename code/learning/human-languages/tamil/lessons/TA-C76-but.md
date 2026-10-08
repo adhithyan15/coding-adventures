@@ -33,7 +33,9 @@ reviews_of: [TA-C75-permission]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-SARIYAA-01, TA-PRAGMATICS-C75-PERMISSION-03] -->
 
-[PAUSE 2s] Read **சரியா**. Then ask to be let inside.
+[PAUSE 2s] [YOU READ: **சரியா**]
+
+Then ask to be let inside.
 
 ## You'll want to know: ஆனால்
 <!-- hl-knowledge: introduces=[TA-LEX-C76-JOIN-01]; assesses=[] -->

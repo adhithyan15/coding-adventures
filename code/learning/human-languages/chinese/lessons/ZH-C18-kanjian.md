@@ -43,8 +43,9 @@ reviews_of: [ZH-C18-hear-kanjian, ZH-C18-kan, ZH-W06-jian]
 
 > **看见** — *kànjiàn* — **see; catch sight of**
 
-Read the two known shapes from left to right. 看 supplies looking; 见 marks the
-perceived result.
+[YOU READ: the two known shapes from left to right]
+
+看 supplies looking; 见 marks the perceived result.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-KANJIAN-01] -->

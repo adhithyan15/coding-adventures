@@ -41,7 +41,8 @@ Say **おっと** once without looking back.
 
 [PAUSE 35s] [YOU WRITE: distant katakana **コ**]
 
-Hear *otto* and mark its held beat. Read **あに・あね** and say each meaning.
+Hear *otto* and mark its held beat. [YOU READ: **あに・あね**, then say each meaning]
+
 [YOU WRITE: all three]
 
 ## Wrap-up Recall

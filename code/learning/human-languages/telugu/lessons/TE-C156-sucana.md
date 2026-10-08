@@ -41,7 +41,12 @@ reviews_of: [TE-C156-kalapattika]
 ## You'll want to know: సూచన
 <!-- hl-knowledge: introduces=[TE-LEX-C156-CADUVU156-02]; assesses=[] -->
 
-**సూచన** — *sūcana* — "an instruction, a note (on a sign)". Read the notice: **ఇవాళ దుకాణం మూసి ఉంది** — *ivāḷa dukāṇaṁ mūsi undi* — "The shop is closed today." Come back on another day.
+**సూచన** — *sūcana* — "an instruction, a note (on a sign)".
+
+[YOU READ: the notice]
+
+The notice says **ఇవాళ దుకాణం మూసి ఉంది** — *ivāḷa dukāṇaṁ mūsi undi* — "The
+shop is closed today." Come back on another day.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

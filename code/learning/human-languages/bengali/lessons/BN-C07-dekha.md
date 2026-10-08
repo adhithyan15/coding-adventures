@@ -43,8 +43,8 @@ verb in this chapter.
 
 > **দেখা** — *dækhā* — **to see, to look**
 
-আমি দেখি (*āmi dekhi*), "I see." সে দেখে (*se dækhe*), "he sees." Read those two
-romanizations again — they are not the same vowel.
+আমি দেখি (*āmi dekhi*), "I see." সে দেখে (*se dækhe*), "he sees." Say those two
+again — they are not the same vowel.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

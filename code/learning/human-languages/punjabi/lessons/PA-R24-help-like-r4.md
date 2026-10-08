@@ -46,7 +46,9 @@ reviews_of: [PA-C09-madad-karna, PA-C09-pasand]
 
 **Liking keeps the liker in the dative.**
 
-Read **ਮਦਦ ਕਰਨਾ · ਮੈਨੂੰ ਪੰਜਾਬੀ ਪਸੰਦ ਹੈ** once. Romanization records speech retrieval only and earns no Gurmukhi writing credit.
+[YOU READ: **ਮਦਦ ਕਰਨਾ · ਮੈਨੂੰ ਪੰਜਾਬੀ ਪਸੰਦ ਹੈ** once]
+
+Romanization records speech retrieval only and earns no Gurmukhi writing credit.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-MADAD-KARNA, PA-LEX-PASAND] -->

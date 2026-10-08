@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 266,
-  "sourceHash": "fnv1a64:200342da474de0b5",
+  "sourceHash": "fnv1a64:044cbb0ef6f5732d",
   "lessonIds": [
     "ES-C67-repaso-a1",
     "ES-C67-repaso-lo-que-reemplazo-los-casos",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "spanish/narration/ch266.txt",
   "json": "spanish/narration/ch266.json",
-  "textHash": "fnv1a64:fa37281421c3b0d1",
-  "jsonHash": "fnv1a64:a0246be005a3354f",
+  "textHash": "fnv1a64:cfc79f5a71bc733d",
+  "jsonHash": "fnv1a64:fe45ede08771ecb4",
   "findings": []
 }

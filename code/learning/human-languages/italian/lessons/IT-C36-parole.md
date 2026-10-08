@@ -50,10 +50,10 @@ reviews_of: [IT-C33-questo, IT-C35-abbastanza]
 > amico
 > casa
 
-[PAUSE 3s] Read down the list once, without stopping.
+[PAUSE 3s] [YOU READ: down the list once, without stopping]
 
-[PAUSE 3s] Again — and notice that on a real sign each of these would arrive
-with a word in front of it.
+[PAUSE 3s]
+[YOU READ: the list again, and notice that on a real sign each of these would arrive with a word in front of it]
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[IT-LEX-ABBASTANZA-02] -->

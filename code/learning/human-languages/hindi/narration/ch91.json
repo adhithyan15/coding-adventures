@@ -4,7 +4,7 @@
   "chapter": 91,
   "title": "Character, Not Mood",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:925aba4dc327ac67",
+  "sourceHash": "fnv1a64:d4663b7e21fb4b7a",
   "lessons": [
     {
       "id": "HI-C83-buraa",
@@ -1244,7 +1244,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:20d089408abb390a",
+      "sourceHash": "fnv1a64:d463105ea60df614",
       "notice": null,
       "blocks": [
         {
@@ -1299,8 +1299,17 @@
           "title": "Reading",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the lines below aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the lines below aloud]"
+            },
+            {
               "kind": "speech",
-              "text": "Read aloud. Every word has been taught:"
+              "text": "Every word has been taught:"
             },
             {
               "kind": "speech",

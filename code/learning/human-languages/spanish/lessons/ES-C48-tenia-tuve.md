@@ -43,7 +43,7 @@ With one very common verb, they show you two **different** events.
 > ***Tenía** una casa.* — I **had** a house.
 > ***Tuve** una casa.* — I **got** a house.
 
-Read those twice. The second one is not "I had a house, viewed as finished." It
+Say those twice. The second one is not "I had a house, viewed as finished." It
 is a different verb in English altogether.
 
 The reason follows from everything you already know. *Tener* means a **state**

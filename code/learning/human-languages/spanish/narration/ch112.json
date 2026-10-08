@@ -4,7 +4,7 @@
   "chapter": 112,
   "title": "Cuando --- Both Pasts in One Sentence",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ce287f378d5f01a3",
+  "sourceHash": "fnv1a64:0f680a4402f3f1c4",
   "lessons": [
     {
       "id": "ES-C48-cuando",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6453a366cb222686",
+      "sourceHash": "fnv1a64:fdd6e7302dee7e96",
       "notice": null,
       "blocks": [
         {
@@ -84,7 +84,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read what each tense is doing:"
+              "text": "Here is what each tense is doing:"
             },
             {
               "kind": "speech",

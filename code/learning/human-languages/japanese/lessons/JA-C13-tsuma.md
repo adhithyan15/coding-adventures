@@ -47,7 +47,9 @@ after *ts*.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-TSUMA, JA-SCRIPT-TSU-01, JA-SCRIPT-MA-01] -->
 
-Read **つ | ま**. [YOU WRITE: one copy of **つま**; then hide it and write it once]
+[YOU READ: **つ | ま**]
+
+[YOU WRITE: one copy of **つま**; then hide it and write it once]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-TSUMA] -->

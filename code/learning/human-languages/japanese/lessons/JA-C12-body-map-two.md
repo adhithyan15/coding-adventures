@@ -34,8 +34,11 @@ reviews_of: [JA-C12-atama, JA-C12-kami, JA-C12-ha-tooth, JA-C12-kata, JA-C12-ona
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-ARIGATOU-READ-01, JA-PERFORMANCE-BODY-SEVEN-01] -->
 
-[PAUSE 55s] Read **ありがとう**. Then hear, say, and read any three words from the
-first seven-word body map.
+[PAUSE 55s] [YOU READ: **ありがとう**]
+
+Then hear and say any three words from the first seven-word body map.
+[YOU READ: the same three words]
+
 [YOU WRITE: the same three words]
 
 ## You'll want to know
@@ -49,7 +52,8 @@ retrieval scheduled in this chapter.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ATAMA, JA-LEX-KAMI-HAIR, JA-LEX-HA-TOOTH, JA-LEX-KATA-SHOULDER, JA-LEX-ONAKA, JA-LEX-SENAKA, JA-LEX-KOSHI] -->
 
-Listen and give each English meaning; say all seven; read all seven.
+Listen and give each English meaning; say all seven. [YOU READ: all seven]
+
 [YOU WRITE: any four from memory]
 
 ## Wrap-up Recall

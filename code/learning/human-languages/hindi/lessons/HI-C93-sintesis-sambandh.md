@@ -55,7 +55,7 @@ not repeating — B is conceding the weaker claim, because A asked for less.
 ## How to answer
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C93-REL-03, HI-LEX-C93-REL-04, HI-LEX-C93-REL-05] -->
 
-Find the **landmark** — the noun before **के** — then read the word after it,
+Find the **landmark** — the noun before **के** — then take the word after it,
 because that word alone carries the relation.
 
 **पास** gives distance and no side. **सामने** and **पीछे** give a side and no

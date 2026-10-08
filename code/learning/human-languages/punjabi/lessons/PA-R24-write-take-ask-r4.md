@@ -46,7 +46,10 @@ reviews_of: [PA-C08-likhna, PA-C09-laina, PA-C09-puchhna]
 
 **Three remembered histories.**
 
-Read **ਲਿਖਣਾ · ਲੈਣਾ · ਪੁੱਛਣਾ** once. The visible words support recognition; this lesson does not ask for or award independent Gurmukhi writing.
+[YOU READ: **ਲਿਖਣਾ · ਲੈਣਾ · ਪੁੱਛਣਾ** once]
+
+The visible words support recognition; this lesson does not ask for or award
+independent Gurmukhi writing.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-LIKHNA, PA-LEX-LAINA, PA-LEX-PUCHHNA] -->

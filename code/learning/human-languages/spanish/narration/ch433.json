@@ -4,7 +4,7 @@
   "chapter": 433,
   "title": "El Edificio Y Sus Normas",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:042431835812bbda",
+  "sourceHash": "fnv1a64:3f5b56fe468411a0",
   "lessons": [
     {
       "id": "ES-C433-portal",
@@ -705,7 +705,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6f61741a865d8f95",
+      "sourceHash": "fnv1a64:15ffbc2f10635621",
       "notice": null,
       "blocks": [
         {
@@ -721,7 +721,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say the entrance hall, the concierge and the garage."
+              "text": "From memory alone, say the entrance hall, the concierge and the garage."
             }
           ]
         },
@@ -850,7 +850,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38d9a256ee5cd341",
+      "sourceHash": "fnv1a64:48f558747f9e0893",
       "notice": null,
       "blocks": [
         {
@@ -876,8 +876,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read it once straight through, then answer."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the notice once straight through, then answer",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the notice once straight through, then answer]"
             },
             {
               "kind": "speech",

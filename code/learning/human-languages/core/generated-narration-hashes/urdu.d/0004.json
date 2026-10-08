@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 4,
-  "sourceHash": "fnv1a64:c91a0fd1c72e8550",
+  "sourceHash": "fnv1a64:043c37d3def3ab76",
   "lessonIds": [
     "UR-C04-kaise-kaisi",
     "UR-W04-joining",
@@ -18,7 +18,7 @@
   "drivablePrefix": 1,
   "text": "urdu/narration/ch04.txt",
   "json": "urdu/narration/ch04.json",
-  "textHash": "fnv1a64:6f616d25c5bb8c15",
-  "jsonHash": "fnv1a64:fff4bc5c7b33c22d",
+  "textHash": "fnv1a64:ba6ea6e83546ee3d",
+  "jsonHash": "fnv1a64:ea20ea0b9fd5a701",
   "findings": []
 }

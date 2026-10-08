@@ -4,7 +4,7 @@
   "chapter": 113,
   "title": "Word, Board, Rubber, Homework, Problem",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:73f9a61d02b94050",
+  "sourceHash": "fnv1a64:029016804183b228",
   "lessons": [
     {
       "id": "PT-C113-palavra",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:494a3b6b6fd8f8e6",
+      "sourceHash": "fnv1a64:795c0cdc68775d58",
       "notice": null,
       "blocks": [
         {
@@ -44,8 +44,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read the two lines aloud, as one run: O cinema está atrás. A piscina está ao lado."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the two lines aloud, as one run — O cinema está atrás. A piscina está ao lado.",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the two lines aloud, as one run — *O cinema está atrás. A piscina está ao lado.*]"
             }
           ]
         },

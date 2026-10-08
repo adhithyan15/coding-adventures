@@ -40,7 +40,12 @@ reviews_of: [GE-C143-termin]
 ## You'll want to know: die Öffnungszeiten
 <!-- hl-knowledge: introduces=[GE-LEX-C143-READ143-04]; assesses=[] -->
 
-**die Öffnungszeiten** — "opening hours". Read the door: **Montag bis Freitag, neun bis achtzehn Uhr.** Open on weekdays from nine to six: not on Saturday.
+**die Öffnungszeiten** — "opening hours".
+
+[YOU READ: the door]
+
+The door says **Montag bis Freitag, neun bis achtzehn Uhr.** Open on weekdays
+from nine to six: not on Saturday.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

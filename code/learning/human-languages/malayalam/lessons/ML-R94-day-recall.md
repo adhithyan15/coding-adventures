@@ -33,8 +33,8 @@ reviews_of: [ML-C94-innu, ML-C94-innale, ML-C94-three-days]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C94-TODAY-01, ML-LEX-C94-YESTERDAY-01] -->
 
-[PAUSE 3s] Close the lessons before this one. Name the day you are standing in,
-and the one behind it.
+[PAUSE 3s] From memory alone, name the day you are standing in, and the one
+behind it.
 
 ## Grammar Lens: the three lines
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C94-THREE-DAYS-01, ML-CONCEPT-C32-POKUKA-02, ML-LEX-NJAAN-01] -->
@@ -45,8 +45,8 @@ and the one behind it.
 | **ഇന്ന് ഞാൻ പോകുന്നു** | today I go |
 | **നാളെ ഞാൻ പോകും** | tomorrow I will go |
 
-Read straight down the middle: **ഞാൻ** three times, unmoved. The front and the
-back of each line change together, and everything between them holds still.
+Straight down the middle: **ഞാൻ** three times, unmoved. The front and the back
+of each line change together, and everything between them holds still.
 
 **The verb carries the tense.** The day word says which day. Neither is doing
 the other's work.

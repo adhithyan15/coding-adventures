@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "One Exchange, Two Figures",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:6b3ae51652e04357",
+  "sourceHash": "fnv1a64:9a79d8452744c138",
   "lessons": [
     {
       "id": "MW-R36-count-at-distance",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:364df526cd8505e7",
+      "sourceHash": "fnv1a64:97ae594cc5c4a241",
       "notice": null,
       "blocks": [
         {
@@ -71,8 +71,13 @@
               "text": "Hear twelve amounts named singly and out of order; say each back."
             },
             {
-              "kind": "speech",
-              "text": "Read twelve printed figures and say each as a word."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "twelve printed figures, then say each as a word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: twelve printed figures, then say each as a word]"
             },
             {
               "kind": "prompt",

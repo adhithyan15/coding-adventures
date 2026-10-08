@@ -4,7 +4,7 @@
   "chapter": 81,
   "title": "Two Tamils",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:41732e906924f3e8",
+  "sourceHash": "fnv1a64:66bb60a60e8e7ebb",
   "lessons": [
     {
       "id": "TA-C81-two-tamils",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1e818e2cbe20bc47",
+      "sourceHash": "fnv1a64:545f03b9da9de497",
       "notice": null,
       "blocks": [
         {
@@ -34,8 +34,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "மற்றது",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மற்றது**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read மற்றது. Then ask a shopkeeper the price."
+              "text": "Then ask a shopkeeper the price."
             }
           ]
         },

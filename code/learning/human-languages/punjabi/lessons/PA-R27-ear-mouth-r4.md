@@ -44,9 +44,9 @@ reviews_of: [PA-C12-kann, PA-C12-munh]
 <!-- hl-activity: {"id":"PA-R27-ear-mouth-r4-meaning","kind":"text","assesses":["PA-LEX-KANN","PA-CONTRAST-KANN-KARNA","PA-LEX-MUNH"],"prompt":"Say ear and mouth in Punjabi. Which word only sounds as though it belongs with karnā, to do?","answer":"kann / mūnh; kann is unrelated to karnā","accepted":["kann / munh; kann is unrelated to karna","ਕੰਨ ਮੂੰਹ; ਕੰਨ is unrelated to ਕਰਨਾ"],"feedback":{"correct":"Both meanings returned, and kann stayed separate from karnā.","incorrect":"Repair one link at a time: kann is ear, mūnh is mouth, and kann is not related to karnā."},"response_seconds":45} -->
 <!-- hl-activity: {"id":"PA-R27-ear-mouth-r4-history","kind":"text","assesses":["PA-CONTRAST-KANN-KARNA","PA-ETYMON-MUNH-MUKHA"],"prompt":"Match the old histories: karṇa without any link to karnā; mukha whose kh weakened and disappeared into a level high tone.","answer":"kann — karṇa, unrelated to karnā; mūnh — mukha, with kh lost into level high tone","accepted":["kann - karna ear root not do; munh - mukha lost kh high tone"],"feedback":{"correct":"The false resemblance and the real sound change stayed distinct.","incorrect":"Kann belongs with karṇa, ear, not karnā, do. Mūnh comes from mukha after kh weakened and disappeared."},"response_seconds":45} -->
 
-**Read, then stop.**
+[YOU READ: **ਕੰਨ · ਮੂੰਹ** once, then stop]
 
-Read **ਕੰਨ · ਮੂੰਹ** once. This lesson measures listening, speech, and recognition. It does not award independent Gurmukhi writing evidence.
+This lesson measures listening, speech, and recognition. It does not award independent Gurmukhi writing evidence.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-KANN, PA-CONTRAST-KANN-KARNA, PA-LEX-MUNH, PA-ETYMON-MUNH-MUKHA] -->

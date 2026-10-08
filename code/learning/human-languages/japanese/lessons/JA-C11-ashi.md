@@ -50,7 +50,7 @@ same.
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ASHI, JA-SCRIPT-A-01, JA-SCRIPT-SHI-01] -->
 
 1. Hear *ashi*; say what it names — a foot or leg.
-2. Read **あ | し**.
+2. [YOU READ: **あ | し**]
 3. [YOU WRITE: both known signs, with the word hidden]
 
 ## Wrap-up Recall

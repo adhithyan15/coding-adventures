@@ -46,7 +46,7 @@ Four passes over the same four items, scored separately:
 
 - **Listening.** Hear each of the four and give its English.
 - **Speaking.** Be given the English and say the Mandarin, tones and all.
-- **Reading.** Read four unpointed cards cold and give their meanings.
+- [YOU READ: four unpointed cards cold, then give their meanings]
 - **Writing.** Hear each one. [YOU WRITE: each one with no model]
 
 Record four numbers, not one. A reader who hears all four and writes none has a

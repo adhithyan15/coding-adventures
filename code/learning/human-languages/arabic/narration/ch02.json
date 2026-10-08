@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5158c217c6da89c6",
+  "sourceHash": "fnv1a64:f1e3fd0897f92215",
   "lessons": [
     {
       "id": "AR-C02-ism",
@@ -826,7 +826,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a2921802553f8be",
+      "sourceHash": "fnv1a64:bf9c6038b1407cd6",
       "notice": null,
       "blocks": [
         {
@@ -852,8 +852,13 @@
           "title": "The exchange",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read right to left:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the lines below right to left",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the lines below right to left]"
             },
             {
               "kind": "table",

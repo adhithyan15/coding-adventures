@@ -4,7 +4,7 @@
   "chapter": 103,
   "title": "School",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:66006f23959895a0",
+  "sourceHash": "fnv1a64:d290846668cb30fb",
   "lessons": [
     {
       "id": "ML-C103-pallikkoodam",
@@ -706,7 +706,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a5b60ce1c47890b6",
+      "sourceHash": "fnv1a64:6e024bf0b465169a",
       "notice": null,
       "blocks": [
         {
@@ -722,7 +722,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say school, lesson, exam and marks."
+              "text": "From memory alone, say school, lesson, exam and marks."
             }
           ]
         },

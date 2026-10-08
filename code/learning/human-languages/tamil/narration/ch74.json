@@ -4,7 +4,7 @@
   "chapter": 74,
   "title": "And, and Also",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a074a5eb222825e3",
+  "sourceHash": "fnv1a64:b65538114a977e89",
   "lessons": [
     {
       "id": "TA-C74-and",
@@ -531,7 +531,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c951f40173ea8153",
+      "sourceHash": "fnv1a64:38983012cbb7aaa3",
       "notice": null,
       "blocks": [
         {
@@ -547,7 +547,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say nāṉum. Then read பாலும் (pālum) aloud."
+              "text": "Say nāṉum."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "பாலும் (pālum) aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பாலும்** aloud]"
             }
           ]
         },

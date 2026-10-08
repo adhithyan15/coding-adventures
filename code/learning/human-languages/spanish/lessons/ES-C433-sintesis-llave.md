@@ -38,7 +38,7 @@ about to read, and the notice asks you to do something.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C433-EDIF-01, ES-LEX-C433-EDIF-02, ES-LEX-C433-EDIF-04, ES-LEX-C432-CASA-02] -->
 
-Read it once straight through, then answer.
+[YOU READ: the notice once straight through, then answer]
 
 > **NORMAS DEL PORTAL**
 > El jueves vendrán a leer los **contadores** entre las nueve y las dos. Es

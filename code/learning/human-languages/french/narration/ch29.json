@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Verbs of the Mind",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:05a1a0b3dfaaf13f",
+  "sourceHash": "fnv1a64:c6fd7779eab45a23",
   "lessons": [
     {
       "id": "FR-C25-comprendre",
@@ -379,7 +379,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86e3bc188327ed75",
+      "sourceHash": "fnv1a64:94a637b788fac293",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +549,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say \"I read French\" and \"we read.\" (Je lis le français. Nous lisons — the s only appears in the plural.) What did Latin legere mean first? (To gather, to pick out — reading came second.) Which of collect, elegant and book is not in this family? (Book — French livre is from liber, a different word.) Now read these two aloud. (Le chien, le chat.)"
+              "text": "Say \"I read French\" and \"we read.\" (Je lis le français. Nous lisons — the s only appears in the plural.) What did Latin legere mean first? (To gather, to pick out — reading came second.) Which of collect, elegant and book is not in this family? (Book — French livre is from liber, a different word.) Now say these two aloud. (Le chien, le chat.)"
             }
           ]
         }

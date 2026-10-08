@@ -58,10 +58,11 @@ reviews_of: [SA-C64-words, SA-C64-lines, SA-C52-ca, SA-C37-peace]
 > नरः वनम् पश्यति।
 > शान्तिः अत्र अस्ति।
 
-[PAUSE 3s] Read it once without stopping. Do not translate as you go — let the
-lines arrive.
+[PAUSE 3s]
+[YOU READ: the passage once without stopping; do not translate as you go — let the lines arrive]
 
-[PAUSE 3s] Now read it again, and watch where **अत्र** turns into **तत्र**.
+[PAUSE 3s]
+[YOU READ: the passage again, and watch where **अत्र** turns into **तत्र**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[SA-JOIN-KINTU-01, SA-LEX-C15-ADJ-01, SA-LEX-C37-COURTESY-01, SA-SKILL-CONNECTED-READING] -->

@@ -40,7 +40,7 @@ a reason. Which is which?
 ## The exchange
 <!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-POR-PARA-CONTRAST, ES-LEX-PARA, ES-LEX-POR, ES-LEX-COMIDA, ES-LEX-GRACIAS, ES-GRAMMAR-HACER-PRESENT-SINGULAR] -->
 
-Read this twice, changing only one word.
+Say this twice, changing only one word.
 
 > — *Hago la comida **para** ti.*
 > — *Gracias.*

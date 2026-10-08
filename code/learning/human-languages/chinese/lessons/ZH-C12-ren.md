@@ -43,7 +43,9 @@ Then say **wǒ** — I.
 
 > **人** — *rén* — **person**
 
-Hear the rising tone first. Say *rén*. Now read the character you already know.
+Hear the rising tone first. Say *rén*.
+[YOU READ: the character you already know]
+
 The meaning is singular here: one person. Number comes from context or another
 word; the character itself does not grow a plural ending.
 
@@ -51,7 +53,11 @@ word; the character itself does not grow a plural ending.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-REN-01, ZH-SCRIPT-REN-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Say **person** in Mandarin. Read **人**. Cover it and wait five seconds. [YOU WRITE: the character]
+Say **person** in Mandarin. [YOU READ: **人**]
+
+[YOU COVER: **人**, then wait five seconds]
+
+[YOU WRITE: the character]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-REN-01] -->

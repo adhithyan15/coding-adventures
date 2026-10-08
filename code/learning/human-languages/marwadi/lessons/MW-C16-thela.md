@@ -48,7 +48,9 @@ reviews_of: [MW-C16-hear-thela, MW-C16-gaadi]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-THELA-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, and wait five seconds. [YOU WRITE: **ठेला**]
+[YOU COVER: the model after one look, then wait five seconds]
+
+[YOU WRITE: **ठेला**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-THELA-01, MW-SCRIPT-THELA-01] -->

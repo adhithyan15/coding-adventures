@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "The Ten Digit Signs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:944e01de84572ec4",
+  "sourceHash": "fnv1a64:c22360acac7041e1",
   "lessons": [
     {
       "id": "MW-W35-digits-zero-one-two",
@@ -126,7 +126,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8fb5cd8218d0de6a",
+      "sourceHash": "fnv1a64:fbd01eab2cb8bc08",
       "notice": null,
       "blocks": [
         {
@@ -178,8 +178,13 @@
               "text": "The three signs from the last lesson already spell three amounts this book knows."
             },
             {
-              "kind": "speech",
-              "text": "Read १, २ and १० aloud as ek, do and das."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "१, २ and १० aloud as ek, do and das",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **१**, **२** and **१०** aloud as *ek*, *do* and *das*]"
             },
             {
               "kind": "prompt",
@@ -191,8 +196,13 @@
               "source": "[YOU WRITE: each of the three in words, underneath its figure]"
             },
             {
-              "kind": "speech",
-              "text": "Cover the figures."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the figures",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the figures]"
             },
             {
               "kind": "prompt",
@@ -378,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1af4a078ec4cfbbb",
+      "sourceHash": "fnv1a64:456b2559c5dabdf9",
       "notice": null,
       "blocks": [
         {
@@ -426,8 +436,13 @@
               "text": "Run each digit in both directions. Reading only one way is how a lookalike survives practice."
             },
             {
-              "kind": "speech",
-              "text": "Read ३, ५ (pāṅch), ४, १, १० (das) aloud, in that order."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "३, ५ (pāṅch), ४, १, १० (das) aloud, in that order",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **३**, **५**, **४**, **१**, **१०** aloud, in that order]"
             },
             {
               "kind": "prompt",
@@ -614,7 +629,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fe42293956d028ea",
+      "sourceHash": "fnv1a64:2c93b6541b0109be",
       "notice": null,
       "blocks": [
         {
@@ -662,8 +677,13 @@
               "text": "२० is not a two and a zero read one after the other. It is one amount, and its name is a word with no two and no ten inside it."
             },
             {
-              "kind": "speech",
-              "text": "Read ६, ७, ८ aloud, then १० (das) and २०."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "६, ७, ८ aloud, then १० (das) and २०",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **६**, **७**, **८** aloud, then **१०** and **२०**]"
             },
             {
               "kind": "prompt",
@@ -854,7 +874,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88956271f1203040",
+      "sourceHash": "fnv1a64:023e8bc0f2337c60",
       "notice": null,
       "blocks": [
         {
@@ -902,8 +922,13 @@
               "text": "Three tickets, one to three figures long, and the words behind them run the other way: the longest ticket carries the shortest word."
             },
             {
-              "kind": "speech",
-              "text": "Read the three aloud, then read them again shuffled."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the three aloud, then read them again shuffled",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the three aloud, then read them again shuffled]"
             },
             {
               "kind": "prompt",
@@ -928,8 +953,13 @@
               "source": "[YOU WRITE: the FIGURES each time]"
             },
             {
-              "kind": "speech",
-              "text": "Read six mixed tickets — ५ (pāṅch), १००, ७, २०, ३, ९ (9) — and say each amount without pausing on the trap digits."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "six mixed tickets — ५ (pāṅch), १००, ७, २०, ३, ९ (9) — then say each amount without pausing on the trap digits",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: six mixed tickets — **५**, **१००**, **७**, **२०**, **३**, **९** — then say each amount without pausing on the trap digits]"
             }
           ]
         },
@@ -979,7 +1009,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d4babd593608d17",
+      "sourceHash": "fnv1a64:0abc2acf08594ead",
       "notice": null,
       "blocks": [
         {
@@ -1023,11 +1053,25 @@
             },
             {
               "kind": "speech",
-              "text": "Speaking. Read twelve printed tickets aloud as Marwadi words, including every one of ४, ५ (pāṅch), ७ and ८."
+              "text": "Reading aloud."
             },
             {
-              "kind": "speech",
-              "text": "Reading. Given a stall with six labelled goods, say which is dearest and which is cheapest."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "twelve printed tickets aloud as Marwadi words, including every one of ४, ५ (pāṅch), ७ and ८",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: twelve printed tickets aloud as Marwadi words, including every one of **४**, **५**, **७** and **८**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the labels on a stall of six goods, then say which is dearest and which is cheapest",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the labels on a stall of six goods, then say which is dearest and which is cheapest]"
             },
             {
               "kind": "speech",

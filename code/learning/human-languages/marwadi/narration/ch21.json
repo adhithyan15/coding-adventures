@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Bus, Vehicle, and Cart: No New Signs",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:84f63bd0bd7646b6",
+  "sourceHash": "fnv1a64:a9d7078ac1313f0c",
   "lessons": [
     {
       "id": "MW-C16-hear-bas",
@@ -98,7 +98,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:78598ab162f5ed10",
+      "sourceHash": "fnv1a64:50164b8892119456",
       "notice": null,
       "blocks": [
         {
@@ -144,8 +144,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, and wait five seconds."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
             },
             {
               "kind": "prompt",
@@ -293,7 +298,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae599ac5c45388e7",
+      "sourceHash": "fnv1a64:820dddf386456d6f",
       "notice": null,
       "blocks": [
         {
@@ -343,8 +348,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, and wait five seconds."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
             },
             {
               "kind": "prompt",
@@ -493,7 +503,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2359c0fff93c9aa0",
+      "sourceHash": "fnv1a64:63fc66518af0e00a",
       "notice": null,
       "blocks": [
         {
@@ -539,8 +549,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, and wait five seconds."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
             },
             {
               "kind": "prompt",
@@ -599,7 +614,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4fe0b50fcb92d20e",
+      "sourceHash": "fnv1a64:70fe93a16c53fb92",
       "notice": null,
       "blocks": [
         {
@@ -635,7 +650,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the three words in a mixed order, give each meaning, and read three shuffled cards."
+              "text": "Hear the three words in a mixed order and give each meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "three shuffled cards",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: three shuffled cards]"
             },
             {
               "kind": "prompt",
@@ -695,7 +719,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1087fb9c0473878",
+      "sourceHash": "fnv1a64:611f5898d5a1c5d0",
       "notice": null,
       "blocks": [
         {
@@ -738,8 +762,13 @@
               "text": "Produce three words from meaning cues."
             },
             {
-              "kind": "speech",
-              "text": "Match three printed cards to meanings."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "three printed cards and match them to meanings",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: three printed cards and match them to meanings]"
             },
             {
               "kind": "prompt",
@@ -800,7 +829,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:76465d0ce18a7dcd",
+      "sourceHash": "fnv1a64:a794a6002512d857",
       "notice": null,
       "blocks": [
         {
@@ -836,7 +865,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "With every model hidden, identify, say, and read बस (bas), गाड़ी (gāṛī), and ठेला (ṭhelā) in a shuffled order."
+              "text": "With every model hidden, identify and say बस (bas), गाड़ी (gāṛī), and ठेला (ṭhelā) in a shuffled order."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all three, shuffled",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all three, shuffled]"
             },
             {
               "kind": "prompt",

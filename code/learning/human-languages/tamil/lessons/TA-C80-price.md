@@ -33,7 +33,9 @@ reviews_of: [TA-W35-read-marradu]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-C80-OTHER-02, TA-SCRIPT-READ-MARRADU-01] -->
 
-[PAUSE 2s] Read **மற்றது**. Then say: one here, the other there.
+[PAUSE 2s] [YOU READ: **மற்றது**]
+
+Then say: one here, the other there.
 
 ## You'll want to know: the question the shop is for
 <!-- hl-knowledge: introduces=[TA-PRAGMATICS-C80-PRICE-03]; assesses=[] -->

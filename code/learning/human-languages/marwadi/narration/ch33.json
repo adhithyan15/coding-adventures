@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Six To Ten",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:3690c1f5ddef11d6",
+  "sourceHash": "fnv1a64:acacea28ec63c6ba",
   "lessons": [
     {
       "id": "MW-C33-hear-chha",
@@ -1013,7 +1013,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:81738c8d87559884",
+      "sourceHash": "fnv1a64:21f862ae5087f332",
       "notice": null,
       "blocks": [
         {
@@ -1069,8 +1069,13 @@
               "text": "Count backwards from ten to one."
             },
             {
-              "kind": "speech",
-              "text": "Read आठ (āṭh), तीन, दस (das), छ (chha), एक, नो (no) printed in that order and say each."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "आठ (āṭh), तीन, दस (das), छ (chha), एक, नो (no) printed in that order, then say each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **आठ**, **तीन**, **दस**, **छ**, **एक**, **नो** printed in that order, then say each]"
             },
             {
               "kind": "prompt",
@@ -1133,7 +1138,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27f051525b4cfc67",
+      "sourceHash": "fnv1a64:ae374227cfb84627",
       "notice": null,
       "blocks": [
         {
@@ -1189,8 +1194,13 @@
               "text": "Speaking. Count one to ten, then ten to one, with no model."
             },
             {
-              "kind": "speech",
-              "text": "Reading. Read all ten printed in Devanagari, shuffled, and say each."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all ten printed in Devanagari, shuffled, then say each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all ten printed in Devanagari, shuffled, then say each]"
             },
             {
               "kind": "speech",

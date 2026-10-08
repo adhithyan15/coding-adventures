@@ -32,8 +32,8 @@ reviews_of: [ES-C443-doler, ES-C443-interesar, ES-C443-acercarse, ES-C443-concen
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C443-ANIMO-01, ES-LEX-C443-ANIMO-02, ES-LEX-C443-ANIMO-03, ES-LEX-C443-ANIMO-04, ES-LEX-C443-ANIMO-05] -->
 
-[PAUSE 3s] Close the lessons before this one. Say all five: *to hurt*, *to
-interest*, *to come closer*, *to concentrate*, *to regret*.
+[PAUSE 3s] From memory alone, say all five: *to hurt*, *to interest*, *to come
+closer*, *to concentrate*, *to regret*.
 
 ## Grammar Lens: five new words, no new grammar
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C443-ANIMO-01, ES-LEX-C443-ANIMO-02, ES-LEX-C443-ANIMO-03] -->

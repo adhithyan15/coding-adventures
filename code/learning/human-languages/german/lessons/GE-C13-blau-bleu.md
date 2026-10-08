@@ -52,7 +52,7 @@ strange to get it back.
 | Italian | **blu** |
 | English | **blue** — taken from **French**, not from Germanic |
 
-Read that last row twice. English is Germanic. It had inherited \**blēwaz*
+Go over that last row twice. English is Germanic. It had inherited \**blēwaz*
 itself — the word was already sitting in Old English — and it borrowed the
 French form anyway.
 

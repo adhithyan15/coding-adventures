@@ -4,7 +4,7 @@
   "chapter": 166,
   "title": "A Notice, a Message, Opening Times, an Advert, a Repair",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3b1f31f2f0b30d28",
+  "sourceHash": "fnv1a64:4f089ccb864dd35f",
   "lessons": [
     {
       "id": "HI-C166-sucna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f0a0daa720af2794",
+      "sourceHash": "fnv1a64:3a0bde442f6c06c0",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "सूचना — sūcnā — \"a notice, information\". Read the notice on the door: आज दुकान बंद है। (āj dukān band hai.) The shop is closed today, so come back kal."
+              "text": "सूचना — sūcnā — \"a notice, information\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the notice on the door",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the notice on the door]"
+            },
+            {
+              "kind": "speech",
+              "text": "The notice on the door says आज दुकान बंद है। (āj dukān band hai.) The shop is closed today, so come back kal."
             }
           ]
         },
@@ -142,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cadf5d7904044803",
+      "sourceHash": "fnv1a64:78238255532a9ee3",
       "notice": null,
       "blocks": [
         {
@@ -169,7 +182,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "संदेश — sandeś — \"a message\". Read the message: कल सुबह दस बजे दफ़्तर। (kal subah das baje daftar.) The office, tomorrow at ten in the morning: be there at ten."
+              "text": "संदेश — sandeś — \"a message\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the message",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the message]"
+            },
+            {
+              "kind": "speech",
+              "text": "The message says कल सुबह दस बजे दफ़्तर। (kal subah das baje daftar.) The office, tomorrow at ten in the morning: be there at ten."
             }
           ]
         },
@@ -265,7 +291,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:94456d9361bcb417",
+      "sourceHash": "fnv1a64:d39262ed94e073cd",
       "notice": null,
       "blocks": [
         {
@@ -292,7 +318,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "समय — samay — \"time, opening hours\". Read the opening times: दुकान सुबह नौ बजे से शाम छह बजे तक। (dukān subah nau baje se śām chah baje tak.) Nine in the morning until six in the evening: go before six."
+              "text": "समय — samay — \"time, opening hours\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the opening times",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the opening times]"
+            },
+            {
+              "kind": "speech",
+              "text": "The opening times say दुकान सुबह नौ बजे से शाम छह बजे तक। (dukān subah nau baje se śām chah baje tak.) Nine in the morning until six in the evening: go before six."
             }
           ]
         },
@@ -388,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e054494db7512823",
+      "sourceHash": "fnv1a64:8970848432211d17",
       "notice": null,
       "blocks": [
         {
@@ -415,7 +454,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "विज्ञापन — vijñāpan — \"an advertisement\". Read the advert: कमरा ख़ाली है। पानी और बिजली। (kamrā khālī hai. pānī aur bijlī.) A room is free, with water and electricity."
+              "text": "विज्ञापन — vijñāpan — \"an advertisement\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the advert",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the advert]"
+            },
+            {
+              "kind": "speech",
+              "text": "The advert says कमरा ख़ाली है। पानी और बिजली। (kamrā khālī hai. pānī aur bijlī.) A room is free, with water and electricity."
             }
           ]
         },
@@ -511,7 +563,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b60439da6d3bb0a",
+      "sourceHash": "fnv1a64:b098c67344b83832",
       "notice": null,
       "blocks": [
         {
@@ -538,7 +590,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "मरम्मत — marammat — \"a repair\". Read the note: बिजली की मरम्मत कल सुबह दस बजे। (bijlī kī marammat kal subah das baje.) The electricity is being repaired tomorrow at ten, so plan the morning without it."
+              "text": "मरम्मत — marammat — \"a repair\"."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the note",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the note]"
+            },
+            {
+              "kind": "speech",
+              "text": "The note says बिजली की मरम्मत कल सुबह दस बजे। (bijlī kī marammat kal subah das baje.) The electricity is being repaired tomorrow at ten, so plan the morning without it."
             }
           ]
         },

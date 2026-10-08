@@ -39,7 +39,7 @@ reviews_of: [ZH-C17-hear-zhongguo, ZH-W17-guo-delayed, ZH-C15-zhong, ZH-C12-hear
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ZH-ORTHO-ZHONGGUO-01]; assesses=[ZH-SCRIPT-ZHONG-01, ZH-SCRIPT-GUO-01] -->
 
-Read this before looking below:
+[YOU READ: **中国** first, before the explanation]
 
 > **中国**
 

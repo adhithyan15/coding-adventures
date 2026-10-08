@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Five Numbers, No New Signs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:84f3749b0488ca75",
+  "sourceHash": "fnv1a64:2d75daa9c4b58dcd",
   "lessons": [
     {
       "id": "JA-C14-ichi",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d7df83466aab21fc",
+      "sourceHash": "fnv1a64:705683ee5d2ea018",
       "notice": null,
       "blocks": [
         {
@@ -82,8 +82,13 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read い | ち."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "い | ち",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **い | ち**]"
             },
             {
               "kind": "prompt",
@@ -290,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:563c51cecae27b07",
+      "sourceHash": "fnv1a64:c71e47b3fdf2f0d1",
       "notice": null,
       "blocks": [
         {
@@ -362,8 +367,13 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read に (ni)."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "に (ni)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **に**]"
             },
             {
               "kind": "prompt",
@@ -431,7 +441,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e5961f2c8dbbb843",
+      "sourceHash": "fnv1a64:01bd96681ff4ee81",
       "notice": null,
       "blocks": [
         {
@@ -512,8 +522,13 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read さ | ん as two beats."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "さ | ん as two beats",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **さ | ん** as two beats]"
             },
             {
               "kind": "prompt",

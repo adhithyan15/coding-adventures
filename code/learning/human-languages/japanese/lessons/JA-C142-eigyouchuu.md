@@ -54,7 +54,9 @@ before it, and each **う** holds the sound before it long.
 On a real sign this word is usually printed in kanji, which this book has
 not reached yet; the reading is the same.
 
-Read it and act on it: the door says **えいぎょうちゅう**, so you can go in.
+[YOU READ: the door sign and act on it]
+
+The door says **えいぎょうちゅう**, so you can go in.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C142-EIGYOUCHUU, JA-LEX-C142-UKETSUKE] -->

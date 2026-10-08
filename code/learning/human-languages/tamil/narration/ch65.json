@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "Doing, and Undoing",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:cbec2370f8bb8fde",
+  "sourceHash": "fnv1a64:e397ac96d6d7f587",
   "lessons": [
     {
       "id": "TA-C65-drink",
@@ -476,7 +476,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ff2b3e941fbff48",
+      "sourceHash": "fnv1a64:06e223a537f9d7b4",
       "notice": null,
       "blocks": [
         {
@@ -491,8 +491,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "குடி (kuḍi) off the page once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **குடி** off the page once]"
+            },
+            {
               "kind": "speech",
-              "text": "Read குடி (kuḍi) off the page once. Then: what did naḍa mean?"
+              "text": "Then: what did naḍa mean?"
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Too Dear: The Answer and the Counter",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:ea12d47e0587fa00",
+  "sourceHash": "fnv1a64:bdaba9467f46b4e3",
   "lessons": [
     {
       "id": "MW-C23-hear-ghano",
@@ -309,7 +309,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba072b0e21ec57be",
+      "sourceHash": "fnv1a64:416dafcd614e70ce",
       "notice": null,
       "blocks": [
         {
@@ -359,8 +359,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read the line once and cover it for ten seconds."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the line once, then cover it for ten seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the line once, then cover it for ten seconds]"
             },
             {
               "kind": "prompt",
@@ -417,7 +422,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f82ae51747f720d2",
+      "sourceHash": "fnv1a64:fd842bf985adda76",
       "notice": null,
       "blocks": [
         {
@@ -453,7 +458,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the two lines in the wrong order and say which one has to come first. Give both meanings. Read two cards."
+              "text": "Hear the two lines in the wrong order and say which one has to come first. Give both meanings."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "two cards",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: two cards]"
             },
             {
               "kind": "prompt",
@@ -994,7 +1008,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a47912ab83e4b2c1",
+      "sourceHash": "fnv1a64:f48b57b8cc3af535",
       "notice": null,
       "blocks": [
         {
@@ -1040,8 +1054,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read the line once and cover it for ten seconds."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the line once, then cover it for ten seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the line once, then cover it for ten seconds]"
             },
             {
               "kind": "prompt",
@@ -1098,7 +1117,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:256cc1b60595e42a",
+      "sourceHash": "fnv1a64:1cc8f75d2b01cd9a",
       "notice": null,
       "blocks": [
         {
@@ -1134,7 +1153,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear each word alone, out of its line, and give its meaning. Read two cards."
+              "text": "Hear each word alone, out of its line, and give its meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "two cards",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: two cards]"
             },
             {
               "kind": "prompt",
@@ -1197,7 +1225,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:784ebfbb9def2c0b",
+      "sourceHash": "fnv1a64:6cb5a12322da91cd",
       "notice": null,
       "blocks": [
         {
@@ -1244,8 +1272,13 @@
               "text": "Produce all three from meaning cues, as one continuous exchange."
             },
             {
-              "kind": "speech",
-              "text": "Read the three printed lines and say who speaks which."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the three printed lines, then say who speaks which",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the three printed lines, then say who speaks which]"
             },
             {
               "kind": "prompt",

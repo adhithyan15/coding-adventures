@@ -51,10 +51,11 @@ reviews_of: [UR-W06-bari-ye, UR-C09-bhai, UR-C09-bahan, UR-C09-khandan]
 
 > **یہ میری ماں ہے۔** — *yih merī māṅ hai.* — "This is my mother."
 
-Read that sentence off the page. Every letter in it is one you can form except
-the last of **ماں**, which arrives shortly — and you can hear exactly where it
-goes, because it is the nasal hum you have been putting on the end of *maiṅ* and
-*hūṅ* all along.
+[YOU READ: that sentence off the page]
+
+Every letter in it is one you can form except the last of **ماں**, which arrives
+shortly — and you can hear exactly where it goes, because it is the nasal hum
+you have been putting on the end of *maiṅ* and *hūṅ* all along.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[UR-ETYMON-MAAN-MATER]; assesses=[UR-LEX-MAAN, UR-LEX-KHANDAN, UR-ETYMON-BHAI-BROTHER] -->

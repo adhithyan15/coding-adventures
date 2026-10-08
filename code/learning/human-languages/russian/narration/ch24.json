@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Six to Ten, and the Pairs That Shaped Each Other",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:528f40c9efe5978a",
+  "sourceHash": "fnv1a64:948375a972c4a98d",
   "lessons": [
     {
       "id": "RU-C24-shest",
@@ -661,7 +661,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b04d00fc530e3c07",
+      "sourceHash": "fnv1a64:726608b2c49fa6c7",
       "notice": null,
       "blocks": [
         {
@@ -695,8 +695,13 @@
               "text": "Hear all ten named singly and out of order, and say each."
             },
             {
-              "kind": "speech",
-              "text": "Read the ten printed shuffled and say each."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the ten printed shuffled, then say each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the ten printed shuffled, then say each]"
             },
             {
               "kind": "prompt",

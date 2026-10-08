@@ -4,7 +4,7 @@
   "chapter": 149,
   "title": "To get down, To join, To wear, To call, To count",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6901b22c36f47fc8",
+  "sourceHash": "fnv1a64:d2de5b10079c6316",
   "lessons": [
     {
       "id": "KA-C149-ili2",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9e18582983391c9c",
+      "sourceHash": "fnv1a64:b00311965f75b508",
       "notice": null,
       "blocks": [
         {
@@ -537,7 +537,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say the ordinals past eight: ಒಂಬತ್ತನೆಯ, ಹತ್ತನೆಯ, ಹನ್ನೊಂದನೆಯ. Then the spoken ಮೊದಲನೇ, and read the sign form ೧ನೇ."
+              "text": "Say the ordinals past eight: ಒಂಬತ್ತನೆಯ, ಹತ್ತನೆಯ, ಹನ್ನೊಂದನೆಯ. Then the spoken ಮೊದಲನೇ."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the sign form ೧ನೇ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the sign form **೧ನೇ**]"
             }
           ]
         },

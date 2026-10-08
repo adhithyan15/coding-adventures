@@ -4,7 +4,7 @@
   "chapter": 83,
   "title": "Reading — Words, Lines, and a First Passage",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c542cce9f408ebac",
+  "sourceHash": "fnv1a64:e56ab4ea8029fdac",
   "lessons": [
     {
       "id": "TE-C83-words",
@@ -212,7 +212,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cd8813a070ce9132",
+      "sourceHash": "fnv1a64:cf32a8c438322092",
       "notice": null,
       "blocks": [
         {
@@ -258,8 +258,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read down once, without stopping."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six lines down once, without stopping",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six lines down once, without stopping]"
             },
             {
               "kind": "pause",
@@ -268,8 +273,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Again — and look for the verb in the first four lines."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the six lines again, and search the first four lines for the verb",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the six lines again, and search the first four lines for the verb]"
             }
           ]
         },
@@ -398,7 +408,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b18f103b0974213",
+      "sourceHash": "fnv1a64:929fcdb3c7fe9411",
       "notice": null,
       "blocks": [
         {
@@ -444,8 +454,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read it once without stopping. Do not translate as you go — let the sentences arrive."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage once without stopping; do not translate as you go — let the sentences arrive",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]"
             },
             {
               "kind": "pause",
@@ -454,8 +469,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Now read it again, and notice that every line is about the same place."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage again, and notice that every line is about the same place",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage again, and notice that every line is about the same place]"
             }
           ]
         },

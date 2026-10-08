@@ -51,7 +51,7 @@ speaker-near place: **here**.
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KOKO, JA-SCRIPT-KO-01] -->
 
 1. Picture the spot beside you and say *koko*.
-2. Read **こ | こ**.
+2. [YOU READ: **こ | こ**]
 3. Hear *ko-ko* and wait ten seconds. [YOU WRITE: both signs]
 
 ## Wrap-up Recall

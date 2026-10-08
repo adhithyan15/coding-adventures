@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "A Counter for the Shape of the Thing",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:fa2d6bd564369f16",
+  "sourceHash": "fnv1a64:23aba08dbab1d3c6",
   "lessons": [
     {
       "id": "JA-C18-tsu-counter",
@@ -373,7 +373,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a359ce2253ec87b",
+      "sourceHash": "fnv1a64:bec01b17d65d6edd",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read the four words together and the exception stops looking like one:"
+              "text": "Take the four words together and the exception stops looking like one:"
             },
             {
               "kind": "table",

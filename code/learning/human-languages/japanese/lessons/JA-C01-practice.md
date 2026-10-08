@@ -64,7 +64,7 @@ they finally work together.
 1. **Listen:** hear one line with no text and identify greeting, language,
    answer, or thanks.
 2. **Speak:** take B's part while the other lines are read aloud.
-3. **Read:** run both voices from Japanese only, with the romanization covered.
+3. [YOU READ: both voices from Japanese only, with the romanization covered]
 4. [YOU WRITE: the three kanji of **日本語** — hear the word, wait ten seconds, and write with no visible model]
 
 Score the four actions separately. A fluent spoken line cannot cover a missing

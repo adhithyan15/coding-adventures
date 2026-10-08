@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 35,
-  "sourceHash": "fnv1a64:944e01de84572ec4",
+  "sourceHash": "fnv1a64:c22360acac7041e1",
   "lessonIds": [
     "MW-W35-digits-zero-one-two",
     "MW-C35-read-ten-ticket",
@@ -18,7 +18,7 @@
   "drivablePrefix": 0,
   "text": "marwadi/narration/ch35.txt",
   "json": "marwadi/narration/ch35.json",
-  "textHash": "fnv1a64:9cb307d0460924b2",
-  "jsonHash": "fnv1a64:d7cf1f88172a8bba",
+  "textHash": "fnv1a64:44e52dba558859dc",
+  "jsonHash": "fnv1a64:c3175771f16c5855",
   "findings": []
 }

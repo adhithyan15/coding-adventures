@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 137,
-  "sourceHash": "fnv1a64:29529646ad0f2d68",
+  "sourceHash": "fnv1a64:5113e8ee8cb70e75",
   "lessonIds": [
     "KA-C137-meju",
     "KA-C137-kitaki",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "kannada/narration/ch137.txt",
   "json": "kannada/narration/ch137.json",
-  "textHash": "fnv1a64:22f2bc66fade1610",
-  "jsonHash": "fnv1a64:a2c88b59d86d8043",
+  "textHash": "fnv1a64:9cf198d810f6b37a",
+  "jsonHash": "fnv1a64:f3597bcb09294046",
   "findings": []
 }

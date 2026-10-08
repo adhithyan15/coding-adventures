@@ -57,8 +57,8 @@ wrote it back in chapter six: it is nūn with the dot taken off.
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[UR-ETYMON-K-QUESTION-FAMILY]; assesses=[UR-LEX-KAHAN, UR-LEX-KYA, UR-LEX-KAISE-KAISI] -->
 
-Put the question words you have met beside the new one and read down the right
-edge:
+Put the question words you have met beside the new one.
+[YOU READ: down the right edge]
 
 - **کیا** — *kyā* — what
 - **کہاں** — *kahāṅ* — where

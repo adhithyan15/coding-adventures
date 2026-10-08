@@ -48,11 +48,11 @@ pedigree of about six thousand years.
 That is the whole word. A single letter, pronounced *ya*.
 
 It is a **new letter** — the writing track has taught в, р, с, н, б, д, п, и, е
-and т, and hasn't reached **я**. Read it here; you'll draw it when the track
-gets there.
+and т, and hasn't reached **я**. [YOU READ: **я** here]
 
-And be careful with its shape. **я looks like a mirrored Latin R and has nothing
-to do with R.** (It descends from ѧ, the "little yus" — not from R at all.)
+You'll draw it when the track gets there. And be careful with its shape. **я
+looks like a mirrored Latin R and has nothing to do with R.** (It descends from
+ѧ, the "little yus" — not from R at all.)
 
 It is also the **last** letter of the alphabet, 33rd of 33, and Russian has a
 rebuke built on that: «**Я — последняя буква в алфавите**», "*я* is the last

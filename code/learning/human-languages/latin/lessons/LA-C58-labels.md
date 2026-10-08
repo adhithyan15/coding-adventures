@@ -50,10 +50,10 @@ reviews_of: [LA-C53-liber, LA-C53-schola, LA-C53-magister, LA-C54-oculus]
 > discipulus
 > oculus
 
-[PAUSE 3s] Read down the list once, without stopping.
+[PAUSE 3s] [YOU READ: down the list once, without stopping]
 
-[PAUSE 3s] Again, and notice that five of the six end in **-us**, **-a** or
-**-er**, and that you know what that ending means.
+[PAUSE 3s]
+[YOU READ: the list again, and notice that five of the six end in **-us**, **-a** or **-er**, and that you know what that ending means]
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[LA-LEX-C53-SCHOOL-03, LA-LEX-C54-BODY-03] -->

@@ -33,7 +33,7 @@ reviews_of: [ES-C424-dos-puntos]
 <!-- hl-knowledge: introduces=[]; assesses=[ES-ORTH-C424-03] -->
 
 [PAUSE 2s] Every printed conversation you have read in this book opened its
-lines with a long horizontal mark. Name what it was doing there, before reading
+lines with a long horizontal mark. Name what it was doing there, before going
 on.
 
 ## The word, taken apart

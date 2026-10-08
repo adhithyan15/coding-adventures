@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Courtesy, Responses, and Leave-Taking",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d02c6693722252cc",
+  "sourceHash": "fnv1a64:861d64c3b6cf50f1",
   "lessons": [
     {
       "id": "MR-C01-ho",
@@ -510,7 +510,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:32579cf6ef8c7b56",
+      "sourceHash": "fnv1a64:ba1e9cba76a82ca2",
       "notice": null,
       "blocks": [
         {
@@ -676,8 +676,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read नमस्कार."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "नमस्कार",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **नमस्कार**]"
             },
             {
               "kind": "prompt",

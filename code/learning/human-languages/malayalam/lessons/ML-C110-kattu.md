@@ -33,7 +33,7 @@ reviews_of: [ML-C110-phon]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C110-PHONE-01] -->
 
-[PAUSE 2s] Read and say the word for a telephone: **ഫോൺ**.
+[PAUSE 2s] [YOU READ: the word for a telephone, **ഫോൺ**, then say it]
 
 [PAUSE 2s] Now think of the older way of reaching somebody who is far off.
 
@@ -56,7 +56,7 @@ at the end is the one you close dozens of words with.
 | **അകത്ത്** | *inside* |
 | **കത്ത്** | *a letter* |
 
-Cover the first character of **അകത്ത്** and what is left looks exactly like
+Take the first character off **അകത്ത്** and what is left looks exactly like
 **കത്ത്**. The two words are not related, and the resemblance is worth meeting
 once so it cannot mislead you later.
 

@@ -53,7 +53,8 @@ drop, so check for it last.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PRICE-ANSWER-01, MW-SCRIPT-ANUSVARA-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Read the line once and cover it for ten seconds.
+[YOU READ: the line once, then cover it for ten seconds]
+
 [YOU WRITE: all four words — then open the model, check the dot first, and repair only the word that changed]
 
 ## Wrap-up Recall

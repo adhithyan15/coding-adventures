@@ -40,7 +40,9 @@ reviews_of: [JA-C01-hai, JA-W05-go-kanji, JA-C01-nihongo, JA-C10-mou-sukoshi]
 Recall its Chinese-derived bridge.
 [YOU WRITE: **もうすこし**]
 
-Then hear, say, and read the first seven body words.
+Then hear and say the first seven body words.
+[YOU READ: the first seven body words]
+
 [YOU WRITE: the first seven body words]
 
 ## You'll want to know
@@ -53,7 +55,9 @@ One sign is the complete word.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HA-TOOTH] -->
 
-Hear, picture the part, say, and read **は**. [YOU WRITE: **は**]
+Hear, picture the part, and say **は**. [YOU READ: **は**]
+
+[YOU WRITE: **は**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HA-TOOTH] -->

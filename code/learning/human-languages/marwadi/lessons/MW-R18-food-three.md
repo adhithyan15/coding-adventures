@@ -43,8 +43,10 @@ Then say temple and home.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DAAL-01, MW-SCRIPT-DAAL-01, MW-LEX-GHEE-01, MW-SCRIPT-GHEE-01, MW-LEX-SABJI-01, MW-SCRIPT-SABJI-01] -->
 
-Hear the three words in a mixed order, give each meaning, and read three
-shuffled cards. [YOU WRITE: all three from sound]
+Hear the three words in a mixed order and give each meaning.
+[YOU READ: three shuffled cards]
+
+[YOU WRITE: all three from sound]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DAAL-01, MW-LEX-GHEE-01, MW-LEX-SABJI-01] -->

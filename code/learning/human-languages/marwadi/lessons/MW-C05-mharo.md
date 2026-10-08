@@ -51,13 +51,14 @@ Every piece is known. The virāma removes the vowel from **म** so **म्ह*
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-MHARO-01, MW-LEX-MHARO-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look for five seconds, cover **म्हारो**, and wait five seconds.
+[YOU COVER: **म्हारो** after a five-second look, then wait five seconds]
+
 [YOU WRITE: the word — then uncover it, compare **म्ह**, **ा**, and **रो** separately, and repair only the piece that differs]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-MHARO-01, MW-LEX-MHARO-01] -->
 <!-- hl-activity: {"id":"MW-C05-mharo-delayed","kind":"text","assesses":["MW-SCRIPT-MHARO-01","MW-LEX-MHARO-01"],"prompt":"After hiding the model, write mhāro and give its meaning.","answer":"म्हारो — my","accepted":["म्हारो","mhāro — my"],"feedback":{"correct":"Right: म्हारो means my here.","incorrect":"Build म्ह + ा + रो: म्हारो."},"response_seconds":15} -->
 
-Read your repaired word once without romanization.
+[YOU READ: your repaired word once without romanization]
 
 Sources: [SIL International, *Marwari–English Dictionary* (2015)](https://nepal.sil.org/resources/archives/63768) and [Rajasthan Sahitya Akademi, *Jāgtī Jot*, November 2007](https://rsad.artandculture.rajasthan.gov.in/content/dam/doitassets/art-and-culture/Rajasthani-Bhasha-Sahitya-Avm-Sanskriti-Academy-Bikaner/pdf/JJ_All_Pdf/JJ_36_08_08_November_to_November_2007.pdf).

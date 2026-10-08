@@ -39,7 +39,7 @@ reviews_of: [MW-C08-maa, MW-C08-baap, MW-C08-bhai, MW-C08-bahan, MW-W06-uu-matra
 
 [PAUSE 8s] [YOU WRITE: **ू** once]
 
-Say its long vowel. Then close the earlier page.
+Say its long vowel. [YOU COVER: the earlier page]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-PERFORMANCE-FAMILY-FOUR-FOUR-SKILL-01]; assesses=[MW-LEX-MAA-01, MW-LEX-BAAP-01, MW-LEX-BHAI-01, MW-LEX-BAHAN-01, MW-SCRIPT-MAA-01, MW-SCRIPT-BAAP-01, MW-SCRIPT-BHAI-01, MW-SCRIPT-BAHAN-01] -->
@@ -53,7 +53,7 @@ The four labels name relationships; they do not prescribe one family structure.
 
 1. **Listen:** identify all four heard labels.
 2. **Speak:** produce two different labels from meanings.
-3. **Read:** match all four printed words.
+3. [YOU READ: all four printed words and match them]
 4. [YOU WRITE: two heard labels without a model]
 
 Score each skill separately.

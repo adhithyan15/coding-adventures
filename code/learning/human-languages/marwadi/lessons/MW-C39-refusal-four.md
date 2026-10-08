@@ -65,8 +65,7 @@ Four skills, one exchange.
    numbers were.
 2. **Speak.** Run the exchange twice, once refusing and once agreeing, so the
    two branches sit side by side.
-3. **Read.** Read the three-turn refusal printed, and say the walk-away line
-   aloud without looking.
+3. [YOU READ: the three-turn refusal printed, then say the walk-away line aloud without looking]
 4. [YOU WRITE: **कोनी।** and **पाछे मिलसू।** as two lines, and above them the figure you were offered, in words]
 
 ## Wrap-up Recall

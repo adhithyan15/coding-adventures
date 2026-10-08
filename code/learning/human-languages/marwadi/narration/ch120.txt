@@ -9,7 +9,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Marwadi for a bucket, then the Marwadi for a broom.
 [pause 1 second]
-Read the end of the bargain in one breath: पंदरा करो। ठीक। पैसा ले लो।.
+[once you have stopped driving — read: the end of the bargain in one breath — पंदरा करो। ठीक। पैसा ले लो।]
 
 You'll want to know: सूपड़ो.
 सूपड़ो — sūpṛo — "a winnowing basket".

@@ -41,7 +41,12 @@ reviews_of: [SA-C140-deyakam]
 ## You'll want to know: प्राप्तिपत्रम्
 <!-- hl-knowledge: introduces=[SA-LEX-C140-READ140-05]; assesses=[] -->
 
-**प्राप्तिपत्रम्** — *prāptipatram* — "a receipt". Read the receipt: **प्रकोष्ठः — मूल्यम् — सहस्रम्।** The thousand for the room is paid: keep it.
+**प्राप्तिपत्रम्** — *prāptipatram* — "a receipt".
+
+[YOU READ: the receipt]
+
+The receipt says **प्रकोष्ठः — मूल्यम् — सहस्रम्।** The thousand for the room is
+paid: keep it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

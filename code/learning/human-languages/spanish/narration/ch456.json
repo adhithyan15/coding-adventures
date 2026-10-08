@@ -4,7 +4,7 @@
   "chapter": 456,
   "title": "La cuenta",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f0d57cd7be5833fc",
+  "sourceHash": "fnv1a64:883b588b4523e0c2",
   "lessons": [
     {
       "id": "ES-C456-ensalada",
@@ -854,7 +854,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:223d1d7b074ecaa6",
+      "sourceHash": "fnv1a64:f064a05287571684",
       "notice": null,
       "blocks": [
         {
@@ -870,7 +870,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all five: the salad, the charge, to accept, the cost, the agency."
+              "text": "From memory alone, say all five: the salad, the charge, to accept, the cost, the agency."
             }
           ]
         },

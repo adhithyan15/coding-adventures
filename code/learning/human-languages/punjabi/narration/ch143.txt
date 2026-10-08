@@ -9,7 +9,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Punjabi for narrow, then the Punjabi for wet.
 [pause 1 second]
-Read on without stopping: ਮਨਨ ਮੇਰਾ ਦੋਸਤ ਹੈ। ਉਹ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹੈ।.
+[once you have stopped driving — read: ਮਨਨ ਮੇਰਾ ਦੋਸਤ ਹੈ। ਉਹ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹੈ। without stopping]
 
 You'll want to know: ਸੁੱਕਾ.
 ਸੁੱਕਾ — sukkā — "dry".

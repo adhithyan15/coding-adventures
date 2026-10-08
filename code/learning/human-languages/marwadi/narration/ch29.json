@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Take the Money: Closing the Bargain",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:100906f0a0e80d9f",
+  "sourceHash": "fnv1a64:f4947680482bd0de",
   "lessons": [
     {
       "id": "MW-C24-hear-lo",
@@ -305,7 +305,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1415f83f6c17aec5",
+      "sourceHash": "fnv1a64:67d6f9244778f47f",
       "notice": null,
       "blocks": [
         {
@@ -341,7 +341,20 @@
             },
             {
               "kind": "speech",
-              "text": "The same ल stands twice in a row, once with े and once with ो. Read the pair slowly and watch only the mark: it is the mark, not the letter, that tells the two words apart."
+              "text": "The same ल stands twice in a row, once with े and once with ो."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the pair slowly and watch only the mark",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the pair slowly and watch only the mark]"
+            },
+            {
+              "kind": "speech",
+              "text": "It is the mark, not the letter, that tells the two words apart."
             }
           ]
         },
@@ -351,8 +364,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read the line once and cover it for ten seconds."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the line once, then cover it for ten seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the line once, then cover it for ten seconds]"
             },
             {
               "kind": "prompt",
@@ -409,7 +427,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba882fd92cf5757e",
+      "sourceHash": "fnv1a64:b720ef9e048975d8",
       "notice": null,
       "blocks": [
         {
@@ -445,7 +463,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the word alone and the whole line, in both orders, and give each meaning. Read two cards."
+              "text": "Hear the word alone and the whole line, in both orders, and give each meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "two cards",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: two cards]"
             },
             {
               "kind": "prompt",
@@ -982,7 +1009,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86f19b9557ecbeaf",
+      "sourceHash": "fnv1a64:55337ecef6e2393d",
       "notice": null,
       "blocks": [
         {
@@ -1037,8 +1064,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read the line once and cover it for ten seconds."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the line once, then cover it for ten seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the line once, then cover it for ten seconds]"
             },
             {
               "kind": "prompt",
@@ -1095,7 +1127,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f50d9001e77df07b",
+      "sourceHash": "fnv1a64:dd6832fa6bbb59eb",
       "notice": null,
       "blocks": [
         {
@@ -1131,7 +1163,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear each word out of its line and give its meaning. Read three cards: दो (do), लो (lo), आखरी (ākhrī)."
+              "text": "Hear each word out of its line and give its meaning. The three cards say दो (do), लो (lo), आखरी (ākhrī)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the three cards",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the three cards]"
             },
             {
               "kind": "prompt",

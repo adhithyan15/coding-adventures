@@ -272,7 +272,7 @@ question: ¿Cómo se dice? what it asks for: how it is said — the word itself.
 A form-filling exchange uses the first. An exam's listening paper uses it to dictate a name at you letter by letter, which is the one situation where knowing hache and jota and equis is the difference between hearing a name and writing it.
 
 Reading.
-Read this exchange aloud:
+[once you have stopped driving — read: this exchange aloud]
 — ¿Cómo se escribe su apellido? — Vázquez. Uve, a con tilde, zeta, cu, u, e, zeta. — ¿Uve o be? — Uve. Ve corta.
 The last two turns are the reason the second names exist. The listener could not tell b from v by ear, asked, and got an answer that settles it.
 

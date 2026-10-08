@@ -45,7 +45,7 @@ Then say goods.
 
 1. Identify three heard words.
 2. Produce three words from meaning cues.
-3. Match three printed cards to meanings.
+3. [YOU READ: three printed cards and match them to meanings]
 4. [YOU WRITE: all three heard words without a model]
 
 Pass each skill separately. Timetables, tickets, and location phrases remain

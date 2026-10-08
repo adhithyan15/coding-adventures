@@ -50,9 +50,11 @@ reviews_of: [GE-C38-klammer]
 > Bruder
 > Schwester
 
-[PAUSE 3s] Read down the list once, without stopping.
+[PAUSE 3s] [YOU READ: down the list once, without stopping]
 
-[PAUSE 3s] Again, and notice they all begin with a capital. Every one of them.
+[PAUSE 3s] [YOU READ: the list again, and notice they all begin with a capital]
+
+Every one of them.
 
 ## Grammar Lens: the capital is information
 <!-- hl-knowledge: introduces=[]; assesses=[GE-SKILL-READ-WORDS] -->

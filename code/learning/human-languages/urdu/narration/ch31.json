@@ -4,7 +4,7 @@
   "chapter": 31,
   "title": "The Ten Urdu Digits",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a15d4348db4d1db5",
+  "sourceHash": "fnv1a64:2366d3a66e69a6fa",
   "lessons": [
     {
       "id": "UR-W31-digits-zero-one",
@@ -517,7 +517,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:87df1a9f071275cf",
+      "sourceHash": "fnv1a64:2712c7722944c98b",
       "notice": null,
       "blocks": [
         {
@@ -543,12 +543,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read all ten signs shuffled and say each as an Urdu word."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all ten signs shuffled, then say each as an Urdu word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all ten signs shuffled, then say each as an Urdu word]"
             },
             {
-              "kind": "speech",
-              "text": "Read ۱۰, ۲۰ and ۱۰۰ and say each — das, bīs, sau."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "۱۰, ۲۰ and ۱۰۰, then say each — das, bīs, sau",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **۱۰**, **۲۰** and **۱۰۰**, then say each — *das*, *bīs*, *sau*]"
             },
             {
               "kind": "speech",
@@ -573,8 +583,13 @@
               "source": "[YOU WRITE: the ten signs from dictation, out of order, checking **۴**, **۵** and **۶** against the models rather than against memory]"
             },
             {
-              "kind": "speech",
-              "text": "Read a seven-figure telephone number aloud, one digit at a time."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "a seven-figure telephone number aloud, one digit at a time",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: a seven-figure telephone number aloud, one digit at a time]"
             },
             {
               "kind": "speech",

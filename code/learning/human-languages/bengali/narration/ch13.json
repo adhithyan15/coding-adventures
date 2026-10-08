@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "The Core Verbs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:c3a184f448cfbf47",
+  "sourceHash": "fnv1a64:f20fe385bd5fdec9",
   "lessons": [
     {
       "id": "BN-C07-howa",
@@ -643,7 +643,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79d01fcc7594fe31",
+      "sourceHash": "fnv1a64:bf27a7b7c7e8cb83",
       "notice": null,
       "blocks": [
         {
@@ -674,7 +674,7 @@
             },
             {
               "kind": "speech",
-              "text": "আমি দেখি (āmi dekhi), \"I see.\" সে দেখে (se dækhe), \"he sees.\" Read those two romanizations again — they are not the same vowel."
+              "text": "আমি দেখি (āmi dekhi), \"I see.\" সে দেখে (se dækhe), \"he sees.\" Say those two again — they are not the same vowel."
             }
           ]
         },

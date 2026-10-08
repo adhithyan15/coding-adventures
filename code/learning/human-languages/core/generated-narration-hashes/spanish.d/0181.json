@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 181,
-  "sourceHash": "fnv1a64:444d95790a41f7ba",
+  "sourceHash": "fnv1a64:e939c79d4e508c51",
   "lessonIds": [
     "ES-C52-se-habla"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch181.txt",
   "json": "spanish/narration/ch181.json",
-  "textHash": "fnv1a64:7f511169257e75c2",
-  "jsonHash": "fnv1a64:63a42c02259da3c2",
+  "textHash": "fnv1a64:2f678fe464d2b3e2",
+  "jsonHash": "fnv1a64:e0454f3a56fa8b57",
   "findings": []
 }

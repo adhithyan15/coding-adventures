@@ -4,7 +4,7 @@
   "chapter": 181,
   "title": "Se Habla Espanol --- Nobody in Particular",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:444d95790a41f7ba",
+  "sourceHash": "fnv1a64:e939c79d4e508c51",
   "lessons": [
     {
       "id": "ES-C52-se-habla",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7dced929e046eaf7",
+      "sourceHash": "fnv1a64:46b7dccdfdd6ec07",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Look for the person doing it. There is not one, and there is not meant to be. Se habla español does not tell you who speaks Spanish — it tells you that Spanish gets spoken, and that is the entire content."
+              "text": "Listen for the person doing it. There is not one, and there is not meant to be. Se habla español does not tell you who speaks Spanish — it tells you that Spanish gets spoken, and that is the entire content."
             },
             {
               "kind": "speech",

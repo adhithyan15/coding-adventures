@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "The Sweet and the Tea: One New Consonant",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:1f144c769e0deb5e",
+  "sourceHash": "fnv1a64:f1c53f9c0cf95ae1",
   "lessons": [
     {
       "id": "MW-C20-hear-churma",
@@ -108,7 +108,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:db5b5d477a0c3840",
+      "sourceHash": "fnv1a64:23afe13568d54db2",
       "notice": null,
       "blocks": [
         {
@@ -149,8 +149,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, and wait five seconds."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
             },
             {
               "kind": "prompt",
@@ -397,7 +402,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:464455bb62675772",
+      "sourceHash": "fnv1a64:6c46ab0f873349e2",
       "notice": null,
       "blocks": [
         {
@@ -447,8 +452,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, and wait five seconds."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
             },
             {
               "kind": "prompt",
@@ -506,7 +516,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfbaccebd4c8d3d4",
+      "sourceHash": "fnv1a64:b9bcdd16d8200972",
       "notice": null,
       "blocks": [
         {
@@ -551,7 +561,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear both words in both orders, give each meaning, and read two cards."
+              "text": "Hear both words in both orders and give each meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "two cards",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: two cards]"
             },
             {
               "kind": "prompt",
@@ -610,7 +629,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f065bb6a98c599d0",
+      "sourceHash": "fnv1a64:213b6430e13dc820",
       "notice": null,
       "blocks": [
         {
@@ -644,8 +663,13 @@
               "text": "Produce seven words from meaning cues."
             },
             {
-              "kind": "speech",
-              "text": "Match seven printed cards to meanings."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "seven printed cards and match them to meanings",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: seven printed cards and match them to meanings]"
             },
             {
               "kind": "prompt",

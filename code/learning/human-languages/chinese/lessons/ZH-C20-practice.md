@@ -43,8 +43,7 @@ reviews_of: [ZH-C20-shi, ZH-C20-jiu, ZH-C20-ba, ZH-C20-qi, ZH-C20-liu, ZH-C03-wu
 
 1. Count aloud one to ten, then ten to one.
 2. Hear all ten named singly and out of order, and say each.
-3. Read the ten characters printed shuffled — 九 三 十 六 一 八 四 七 二 五 —
-   and say each with its tone.
+3. [YOU READ: the ten characters printed shuffled — 九 三 十 六 一 八 四 七 二 五 — then say each with its tone]
 4. [YOU WRITE: the five new ones from dictation — 六 七 八 九 十]
 5. Say the tone of each of the ten in order. Only one of them rises.
 6. Say what 八 and 人 differ by, and what sits inside 早.

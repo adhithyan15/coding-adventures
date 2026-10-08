@@ -4,7 +4,7 @@
   "chapter": 134,
   "title": "Phone and Train: De, Ba, Be and Bu",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:169503f135055408",
+  "sourceHash": "fnv1a64:f4a614b1a2d989a5",
   "lessons": [
     {
       "id": "JA-C134-denwa",
@@ -1740,7 +1740,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa739488b81a79c1",
+      "sourceHash": "fnv1a64:5f4bcbb9939cdcfd",
       "notice": null,
       "blocks": [
         {
@@ -1808,8 +1808,13 @@
               "source": "[PAUSE 2s each]"
             },
             {
-              "kind": "speech",
-              "text": "Read each one aloud and say what it means."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each one below aloud, then say what it means",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each one below aloud, then say what it means]"
             },
             {
               "kind": "prompt",

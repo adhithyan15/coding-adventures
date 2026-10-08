@@ -33,7 +33,9 @@ reviews_of: [TA-W32-read-sol]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-GRAMMAR-C77-SAY-02, TA-SCRIPT-READ-SOL-01] -->
 
-[PAUSE 2s] Read **சொல்**. Then say: 'Say "okay".'
+[PAUSE 2s] [YOU READ: **சொல்**]
+
+Then say: 'Say "okay".'
 
 ## You'll want to know: what என்று hands to நினை
 <!-- hl-knowledge: introduces=[TA-PRAGMATICS-C77-OPINION-03]; assesses=[] -->

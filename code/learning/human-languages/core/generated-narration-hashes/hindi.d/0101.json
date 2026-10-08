@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 101,
-  "sourceHash": "fnv1a64:019c114775c16d99",
+  "sourceHash": "fnv1a64:a2abf5a1b50f88ab",
   "lessonIds": [
     "HI-C93-ke-saath",
     "HI-C93-ke-binaa",
@@ -17,7 +17,7 @@
   "drivablePrefix": 2,
   "text": "hindi/narration/ch101.txt",
   "json": "hindi/narration/ch101.json",
-  "textHash": "fnv1a64:01cf6921e427bc13",
-  "jsonHash": "fnv1a64:fd6288d227af8974",
+  "textHash": "fnv1a64:5d84409227aa48e4",
+  "jsonHash": "fnv1a64:b70454facd4ca8ac",
   "findings": []
 }

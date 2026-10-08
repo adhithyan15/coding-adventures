@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "The Room You Are In",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:c8cdcce7ea5f584c",
+  "sourceHash": "fnv1a64:cf7a94f795312de1",
   "lessons": [
     {
       "id": "TA-C70-table",
@@ -453,7 +453,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6eb6ba699831e692",
+      "sourceHash": "fnv1a64:4a51fddf80201706",
       "notice": null,
       "blocks": [
         {
@@ -469,7 +469,16 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new one: read மேசை (mēsai), and say what it means."
+              "text": "Before the new one, say what மேசை (mēsai) means."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "மேசை (mēsai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மேசை**]"
             }
           ]
         },

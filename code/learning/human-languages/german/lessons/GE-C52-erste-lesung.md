@@ -55,10 +55,11 @@ reviews_of: [GE-C52-words, GE-C52-saetze, GE-C35-weil, GE-C35-aber]
 > Morgen muss ich arbeiten.
 > Danke und auf Wiedersehen.
 
-[PAUSE 3s] Read it once without stopping. Do not translate as you go — let the
-sentences arrive.
+[PAUSE 3s]
+[YOU READ: the passage once without stopping; do not translate as you go — let the sentences arrive]
 
-[PAUSE 3s] Now read it again, and find the one line where the verb is last.
+[PAUSE 3s]
+[YOU READ: the passage again, and find the one line where the verb is last]
 
 ## Grammar Lens: the word that moves a verb
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-ABER-01, GE-LEX-WEIL-01, GE-GRAMMAR-VERB-LETZT-01, GE-SKILL-CONNECTED-READING] -->

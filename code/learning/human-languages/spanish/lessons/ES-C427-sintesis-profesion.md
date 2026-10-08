@@ -58,7 +58,9 @@ article.
 ## Reading
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C427-AGENT-05, ES-LEX-C427-AGENT-06, ES-LEX-C427-AGENT-03, ES-LEX-C427-AGENT-04] -->
 
-Read aloud. Every word has been taught:
+[YOU READ: the lines below aloud]
+
+Every word has been taught:
 
 > — ¿A qué se dedica?
 > — Soy abogado. Trabajo en una empresa grande.

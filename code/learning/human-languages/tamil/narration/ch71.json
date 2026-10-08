@@ -4,7 +4,7 @@
   "chapter": 71,
   "title": "Through the Day",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:50a267046056e9b2",
+  "sourceHash": "fnv1a64:cea3f3f14cef036c",
   "lessons": [
     {
       "id": "TA-C71-rise",
@@ -450,7 +450,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d67f826a0915cddd",
+      "sourceHash": "fnv1a64:b2cea5a98f93d929",
       "notice": null,
       "blocks": [
         {
@@ -584,7 +584,16 @@
             },
             {
               "kind": "speech",
-              "text": "Read ஓடு (ōḍu) and say what it means. (\"To run\".)"
+              "text": "Say what ஓடு (ōḍu) means. (\"To run\".)"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ஓடு (ōḍu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ஓடு**]"
             }
           ]
         }

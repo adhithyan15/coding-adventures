@@ -55,7 +55,9 @@ exactly as long as either beat of **いち**.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-NI, JA-LEX-ICHI, JA-LEX-GO, JA-SCRIPT-NI-01] -->
 
-Read **に**. [YOU WRITE: **に**; then hide it and write it again from the meaning]
+[YOU READ: **に**]
+
+[YOU WRITE: **に**; then hide it and write it again from the meaning]
 
 Then say
 *ichi — ni* and hold both at one beat each.

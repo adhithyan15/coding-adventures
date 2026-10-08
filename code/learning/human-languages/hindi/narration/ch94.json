@@ -4,7 +4,7 @@
   "chapter": 94,
   "title": "The Pronouns, And The Article Hindi Does Not Have",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:9677f5a25493d7bd",
+  "sourceHash": "fnv1a64:7ab4eb383031b7b3",
   "lessons": [
     {
       "id": "HI-C86-ham",
@@ -627,7 +627,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64d666e4d44ac1a5",
+      "sourceHash": "fnv1a64:040bf3bd3b5b4c11",
       "notice": null,
       "blocks": [
         {
@@ -643,7 +643,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say वह, \"that.\" Now try to say \"the book\" in Hindi, and read on when you find you have no word for the."
+              "text": "Say वह, \"that.\" Now try to say \"the book\" in Hindi, and go on when you find you have no word for the."
             }
           ]
         },
@@ -961,7 +961,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1fb78668d7a068c1",
+      "sourceHash": "fnv1a64:ac9ee74b937258b1",
       "notice": null,
       "blocks": [
         {
@@ -987,8 +987,17 @@
           "title": "Reading",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the lines below aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the lines below aloud]"
+            },
+            {
               "kind": "speech",
-              "text": "Read aloud. Every word has been taught:"
+              "text": "Every word has been taught:"
             },
             {
               "kind": "speech",
@@ -1105,7 +1114,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b62a88375e513f6",
+      "sourceHash": "fnv1a64:35899b98ec626b6a",
       "notice": null,
       "blocks": [
         {
@@ -1225,8 +1234,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Cover everything above."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "everything above",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: everything above]"
             },
             {
               "kind": "prompt",

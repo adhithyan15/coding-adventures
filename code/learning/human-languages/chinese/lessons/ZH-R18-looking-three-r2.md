@@ -33,7 +33,7 @@ reviews_of: [ZH-R18-looking-three-r1, ZH-C18-kan, ZH-C18-kanjian, ZH-C18-haokan,
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-KANSHU-01] -->
 
-[PAUSE 8s] Say **read a book** in Mandarin, then put that card away.
+[PAUSE 8s] Say **read a book** in Mandarin, then set that word aside.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-KAN-01, ZH-SCRIPT-KAN-01, ZH-LEX-KANJIAN-01, ZH-ORTHO-KANJIAN-01, ZH-LEX-HAOKAN-01, ZH-ORTHO-HAOKAN-01] -->
@@ -42,7 +42,7 @@ reviews_of: [ZH-R18-looking-three-r1, ZH-C18-kan, ZH-C18-kanjian, ZH-C18-haokan,
 [YOU WRITE: without looking back, **look**, **see**, and **good-looking** from
 mixed meaning cards]
 
-Read each answer aloud only after all three are complete.
+[YOU READ: each answer aloud only after all three are complete]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-KAN-01, ZH-LEX-KANJIAN-01, ZH-LEX-HAOKAN-01] -->

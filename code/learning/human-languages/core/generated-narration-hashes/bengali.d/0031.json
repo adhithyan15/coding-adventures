@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 31,
-  "sourceHash": "fnv1a64:ec85a5ef8fa105f3",
+  "sourceHash": "fnv1a64:70b3464ea33dd443",
   "lessonIds": [
     "BN-W05-tta",
     "BN-C20-tta-classifier",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "bengali/narration/ch31.txt",
   "json": "bengali/narration/ch31.json",
-  "textHash": "fnv1a64:0b0d87a831f8b287",
-  "jsonHash": "fnv1a64:a59942a6f4eb573a",
+  "textHash": "fnv1a64:35d7cdd956bd88aa",
+  "jsonHash": "fnv1a64:9bda40a5360f2434",
   "findings": []
 }

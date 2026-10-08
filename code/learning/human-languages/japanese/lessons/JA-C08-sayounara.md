@@ -53,7 +53,7 @@ producing this taught farewell, not claiming that it fits every goodbye.
 
 1. **Listen:** hear *konnichiwa* or *sayōnara* and identify meeting or parting.
 2. **Speak:** answer a parting cue with *sayōnara* on five morae.
-3. **Read:** cover the romanization and read **さようなら** sign by sign.
+3. [YOU COVER: the romanization, then read **さようなら** sign by sign]
 4. [YOU WRITE: all five signs from dictation — hear the word, then wait ten seconds before you start]
 
 Score the four actions separately. A remembered sound cannot cover missing

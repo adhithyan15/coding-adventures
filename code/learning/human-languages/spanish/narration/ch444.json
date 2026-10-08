@@ -4,7 +4,7 @@
   "chapter": 444,
   "title": "La Casa Por Fuera",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:af7dde2bc16ff638",
+  "sourceHash": "fnv1a64:84587abdb1317321",
   "lessons": [
     {
       "id": "ES-C444-calefaccion",
@@ -825,7 +825,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d3dd8bcc9f2a155",
+      "sourceHash": "fnv1a64:768e95c8fc85372f",
       "notice": null,
       "blocks": [
         {
@@ -841,7 +841,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Say all five: the heating, wood, to plant, to cover, the trolley."
+              "text": "From memory alone, say all five: the heating, wood, to plant, to cover, the trolley."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 120,
   "title": "Winnowing basket, Sieve, Grinding mill, Pestle, Rolling pin",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:8f9622e6983afb98",
+  "sourceHash": "fnv1a64:1d0eead2039f96fe",
   "lessons": [
     {
       "id": "MW-C120-supro",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37ea0051f65734ac",
+      "sourceHash": "fnv1a64:a6aecd9b4055c48e",
       "notice": null,
       "blocks": [
         {
@@ -44,8 +44,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read the end of the bargain in one breath: पंदरा करो। ठीक। पैसा ले लो।."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the end of the bargain in one breath — पंदरा करो। ठीक। पैसा ले लो।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the end of the bargain in one breath — **पंदरा करो। ठीक। पैसा ले लो।**]"
             }
           ]
         },

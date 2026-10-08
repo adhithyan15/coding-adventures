@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 152,
-  "sourceHash": "fnv1a64:f6254b1326618958",
+  "sourceHash": "fnv1a64:0af39188181ed8e6",
   "lessonIds": [
     "TE-C152-jhari",
     "TE-S173-letter-jha",
@@ -11,7 +11,7 @@
   "drivablePrefix": 1,
   "text": "telugu/narration/ch152.txt",
   "json": "telugu/narration/ch152.json",
-  "textHash": "fnv1a64:a23642f95e67f0ee",
-  "jsonHash": "fnv1a64:0ab0d7c47d5d54c3",
+  "textHash": "fnv1a64:a14dedbf0d276984",
+  "jsonHash": "fnv1a64:e827b1e6908a132c",
   "findings": []
 }

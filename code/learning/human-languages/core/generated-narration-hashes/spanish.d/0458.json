@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 458,
-  "sourceHash": "fnv1a64:6215e272266bda1d",
+  "sourceHash": "fnv1a64:ecf33c518b4ea9fc",
   "lessonIds": [
     "ES-C458-plazo",
     "ES-C458-entregar",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "spanish/narration/ch458.txt",
   "json": "spanish/narration/ch458.json",
-  "textHash": "fnv1a64:05a105d50ebc844c",
-  "jsonHash": "fnv1a64:6b7a9ec4ff3b70a1",
+  "textHash": "fnv1a64:0ae2ac5d4905ef97",
+  "jsonHash": "fnv1a64:86160b617193bf31",
   "findings": []
 }

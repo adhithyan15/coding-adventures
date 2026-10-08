@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "Joining Things Together",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:4b33dbe18dacd22d",
+  "sourceHash": "fnv1a64:40753d49d422e4bb",
   "lessons": [
     {
       "id": "ML-C70-um",
@@ -531,7 +531,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:401d01ccd05a5193",
+      "sourceHash": "fnv1a64:c7ca2c745cee7a0b",
       "notice": null,
       "blocks": [
         {
@@ -547,7 +547,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the three lessons before this one. Say the word for water and the word for tea, with nothing in front of you."
+              "text": "Say the word for water and the word for tea, with nothing in front of you."
             }
           ]
         },

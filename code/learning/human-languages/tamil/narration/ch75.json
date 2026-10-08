@@ -4,7 +4,7 @@
   "chapter": 75,
   "title": "Yes or No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:dbbfe7f138867a89",
+  "sourceHash": "fnv1a64:c62a66581b0b999b",
   "lessons": [
     {
       "id": "TA-C75-polar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ca5ad65d2534159",
+      "sourceHash": "fnv1a64:21a8f4a446d78883",
       "notice": null,
       "blocks": [
         {
@@ -34,8 +34,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "பாலும்",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **பாலும்**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read பாலும். Then say: neither milk nor tea."
+              "text": "Then say: neither milk nor tea."
             }
           ]
         },
@@ -524,7 +533,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:342c2f44a8791736",
+      "sourceHash": "fnv1a64:da7a8e1cb9c99b66",
       "notice": null,
       "blocks": [
         {
@@ -539,8 +548,13 @@
               "source": "[PAUSE 2s]"
             },
             {
-              "kind": "speech",
-              "text": "Read சரியா (sariyā), then answer it."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "சரியா (sariyā), then answer it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **சரியா**, then answer it]"
             }
           ]
         },

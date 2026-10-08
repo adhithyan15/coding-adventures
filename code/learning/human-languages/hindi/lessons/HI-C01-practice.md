@@ -35,8 +35,8 @@ reviews_of: [HI-C01-namaste, HI-C01-namaskar, HI-C01-dhanyavad, HI-C01-shukriya,
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-NAMASTE-01] -->
 
-[PAUSE 2s] No new words or letters. Read each aloud, then recall its meaning
-and which of Hindi's two heritages it comes from.
+[PAUSE 2s] No new words or letters.
+[YOU READ: each aloud, then recall its meaning and which of Hindi's two heritages it comes from]
 
 ## What you've built
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C01-PRACTICE-01]; assesses=[HI-CONCEPT-C01-NAMASTE-01, HI-CONCEPT-C01-NAMASKAR-01, HI-CONCEPT-C01-DHANYAVAD-01, HI-CONCEPT-C01-SHUKRIYA-01, HI-CONCEPT-C01-ALVIDA-01] -->

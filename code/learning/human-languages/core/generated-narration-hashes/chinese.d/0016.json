@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 16,
-  "sourceHash": "fnv1a64:65082600dd02950e",
+  "sourceHash": "fnv1a64:7faad9a223b96f7d",
   "lessonIds": [
     "ZH-C16-hear-zi",
     "ZH-C16-zi",
@@ -23,7 +23,7 @@
   "drivablePrefix": 1,
   "text": "chinese/narration/ch16.txt",
   "json": "chinese/narration/ch16.json",
-  "textHash": "fnv1a64:ca11cc9982cccab4",
-  "jsonHash": "fnv1a64:cf6fc075d8102298",
+  "textHash": "fnv1a64:7115d7d161e5ee34",
+  "jsonHash": "fnv1a64:42a87ee13596b1c7",
   "findings": []
 }

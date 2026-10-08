@@ -33,7 +33,9 @@ reviews_of: [TA-C65-walk, TA-W21-read-kudi, TA-C20-vaanilai]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C65-DOING-02, TA-SCRIPT-READ-KUDI-01] -->
 
-[PAUSE 2s] Read **குடி** off the page once. Then: what did *naḍa* mean?
+[PAUSE 2s] [YOU READ: **குடி** off the page once]
+
+Then: what did *naḍa* mean?
 
 ## You'll want to know: நிறுத்து
 <!-- hl-knowledge: introduces=[TA-LEX-C65-DOING-03]; assesses=[] -->

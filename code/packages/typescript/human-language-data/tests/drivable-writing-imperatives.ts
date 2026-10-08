@@ -58,10 +58,12 @@
 // One kind of cue is not safe either. `[YOU RECALL: write **ば** — **R1**]` is
 // a cue, but RECALL is a spoken action, so the narration reads it to a driver
 // as "recall: write ば". The last section of this module, "Inside a recall
-// cue", reads those, and `drivableWritingInstructions` runs both. The two
-// sections after it read cues for the other things a hand or an eye does on
-// the page: pointing at a sign (inside a recall), and reading printed script
-// (inside any cue the narration speaks unhedged).
+// cue", reads those, and `drivableWritingInstructions` runs both. The sections
+// after it read cues for the other things a hand or an eye does on the page:
+// pointing at a sign (inside a recall), reading printed script and making a
+// gesture (inside any cue the narration speaks unhedged). The last section
+// returns to bare prose, for reading printed script, handling cards and
+// covering the page.
 //
 // "Not inside a cue" is decided by the narration renderer's own cue splitter,
 // `splitNarrationCues`, not by a second bracket regex. The question being asked
@@ -993,4 +995,263 @@ export function gestureSpokenCues(markdown: string): string[] {
     if (spokenCueAsksForGesture(raw.content)) cues.push(part.cue.source);
   }
   return cues;
+}
+
+// ---------------------------------------------------------------------------
+// Reading the page, or handling cards, in prose
+// ---------------------------------------------------------------------------
+//
+// Everything since "Inside a recall cue" reads cues. Bare prose is read aloud
+// just as it is written, so a prose instruction to read printed script reaches
+// a driver too (issue #12070, tenth pass):
+//
+//     authored                                       narrated
+//     ---------------------------------------------  --------------------------------------
+//     Hear, picture the part, say, and read **は**.   "Hear, picture the part, say, and read は."
+//     Then take six meaning cards, say each word,    "Then take six meaning cards, …"
+//       and read the six character cards.
+//     Look, cover, and wait five seconds.            "Look, cover, and wait five seconds."
+//
+// The fix was the one the reading cues got: the reading or card step moves into
+// a cue the narration defers ("Hear, picture the part, and say **は**. [YOU
+// READ: **は**]"), and a step that has an ear form gets it ("Then, from six
+// English meanings, say each word", "Say that again and listen for the verb").
+// This check keeps the narrow, mechanical part of that fixed.
+//
+// What fires
+// ----------
+//
+// Four shapes, each a closed vocabulary, judged on the narrated prose spans the
+// writing check reads (`narratedProseSpans`, so a cue is never prose):
+//
+//   shape                                          example from the corpus
+//   ---------------------------------------------  --------------------------------------------
+//   "read" where a step starts, with its object    Read **いちど**. Say *sumimasen* …
+//     on the page: script (bold, or any non-Latin  3. **Reading:** read all six character cards
+//     word), "printed", "script", a card, or       Read the five printed shuffled …
+//     "down"/"across" a list                       **Read.** 我是中国人 — 你是中国人吗
+//     (see `proseReadsThePage`)                    Read down once, without stopping.
+//   a card-handling verb where a step starts,      Shuffle five unpointed cards: …
+//     with "card"/"cards" before the clause ends   Then take six meaning cards …
+//   a card named by what is printed on it,         produce all six from meaning cards
+//     anywhere: meaning, character, printed or
+//     unpointed card(s)
+//   cover, uncover or hide where a step starts,    Look, cover, and wait five seconds.
+//     with an object or a following link          Hide the pinyin. Read 书 …
+//
+// The step links are the reading cue check's, minus the em dash and the colon
+// (in prose an em dash opens a gloss — "*Cubre la olla* — cover the pot" — and
+// a colon is already a sentence start), plus the sentence starts of the
+// writing check (". ", "! ", "? ", "; ", ": " with an optional closing `)`,
+// `*` or quote between the stop and the space, so "**Reading:** read" counts).
+//
+// The controls, all corpus prose that says "read", "card" or "cover" and asks
+// nobody to look:
+//
+//   Read it literally and it says "it is two hours"     interpretation: "it" is not on the page
+//   Read it in Kannada order: **ಅದು ನಿಜ** (the thought)   a particle, then "in": no object
+//   the same stack you have written in **नमस्ते** and     a participle: "read in" is not an object
+//     read in **स्टेशन**
+//   Why is its **ட** read as a soft *ḍ*?               no step link before "read"
+//   **من فضلك** — read right to left, **min faḍlik**    a gloss after an em dash
+//   Read a notice like this and act on it               advice for the street: nothing bold
+//   say the Bengali for an identity card               a gloss: "for" is not a step link
+//   Name what the card hanging on it says              "name" is not a handling verb
+//   English lets *sit* cover both                      no step link before "cover"
+//   *Cubre la olla* — cover the pot                    a gloss after an em dash
+//
+// Measured over the corpus as it stood before the fix, the check fired on 418
+// prose spans in 391 drivable lessons (Marwadi 120, Japanese 53, Chinese 48,
+// Tamil 28, and the rest in every other track but Spanish), each of which this
+// change rewrote; afterwards, on none. In lessons that are not drivable it
+// fires on 740 spans in 603 lessons, and a sample of them is all real reading,
+// card and look-cover-write work, which those lessons' narration already
+// hedges with its hands-and-eyes notice.
+//
+// A review follow-up widened three things, each still a closed literal: " or "
+// is a step link ("turn the page or cover every Arabic model"), "cover up"
+// covers, and a bare "cover" may end its step with " and wait", " and write"
+// or " and say" as well as ", and " ("Look, cover and wait"). Over the
+// pre-fix corpus that changed nothing in drivable lessons (still 418 spans) and
+// added one span elsewhere (AR-W00-full-greeting-recall, a real
+// turn-the-page-or-cover step).
+//
+// Two widenings were measured and left out, because they were not precise:
+// a bare "read," in a chain ("hear, say, read, and write") is as often a list
+// of the skills a lesson teaches, heading included, as a step; and "cover,
+// then" also matches a stroke the Chinese writing lessons call "cover" ("top
+// slant, cover, then the middle"). Those, like the rest of this list, were
+// inventoried by hand instead.
+//
+// Deliberately out of scope, because no closed vocabulary separates them from
+// description: an object that is a passage rather than script ("Read it once
+// without stopping", fixed by inventory), a look at a table ("Look down the two
+// columns"), and the conditional narrative "Look up **पहिला** in Molesworth's
+// dictionary and it is there". Those were inventoried by reading every
+// drivable lesson that says read, look, see, watch, card, cover, page or
+// printed, and are recorded in each track's changelog.
+//
+// Linear: whitespace runs are collapsed and quotations blanked as for the cue
+// checks. Each step regex is a fixed-literal link, an optional fixed literal and
+// a fixed verb, ending in a lookahead; each match then looks at most
+// `READ_OBJECT_WINDOW` characters ahead in plain code over a fixed number of
+// words. `PRINTED_CARD` is fixed literals. So a span of N characters costs O(N).
+
+/** Where a step starts in prose: a sentence start, or a step link. No em dash: in prose it opens a gloss. */
+const PROSE_LINK = String.raw`(?:^|[.!?;:]["”’)*]{0,3} |, (?:and |or )?|; | and | or | then )(?:\*\*)?(?:then |now |and |also |first )?`;
+
+const PROSE_READING_STEP = new RegExp(`${PROSE_LINK}read(?=[ :.]|\\*\\*)`, "gi");
+
+/** Card-handling verbs; the card itself must follow before the clause ends. */
+const CARD_STEP = new RegExp(
+  `${PROSE_LINK}(?:turn|shuffle|take|place|put|pick up|reverse|sort|deal|lay out|hold up|match|read)\\b`,
+  "gi",
+);
+
+/** A card named by what is printed on it is always a card on the table. */
+const PRINTED_CARD = /\b(?:meaning|character|printed|unpointed) cards?\b/i;
+
+/** Covering the page: "Look, cover, and wait", "Hide the pinyin", "Cover it". The object is judged by `coversThePage`. */
+const COVER_STEP = new RegExp(`${PROSE_LINK}(?:cover|uncover|hide)(?=[ ,.])`, "gi");
+
+/** What may follow a bare "cover" that ends its step: "Look, cover, and wait", "Look, cover and wait". */
+const BARE_STEP_ENDS: readonly string[] = [", and ", " and wait", " and write", " and say", "."];
+
+/** What a hand covers on the page, after a determiner and at most three plain words. */
+const PAGE_NOUNS: ReadonlySet<string> = new Set([
+  "page", "pages", "model", "models", "line", "lines", "word", "words", "text", "answer", "answers",
+  "romanization", "romanizations", "pinyin", "english", "figures", "card", "cards", "side", "left", "right",
+]);
+
+/**
+ * Is the text just after "cover", "uncover" or "hide" the page? Constant work
+ * over at most `READ_OBJECT_WINDOW` characters.
+ *
+ *   ", and wait five seconds"      yes  a bare step in a chain ("Look, cover, and wait")
+ *   "."                            yes  a bare step ending its sentence
+ *   " it and wait five seconds"    yes  a pronoun: the thing just read
+ *   " **कांई**, and wait"          yes  script
+ *   " the pinyin."                 yes  a page noun
+ *   " the right-hand side and"     yes  a page noun within three words
+ *   " the pattern that makes it"   no   not a thing on the page
+ *   " both; French makes you"      no   "both" alone is not on the page
+ */
+function coversThePage(ahead: string): boolean {
+  if (BARE_STEP_ENDS.some((end) => ahead.startsWith(end))) return true;
+  const words = ahead.trim().split(" ");
+  if ((words[0] ?? "").toLowerCase() === "up") words.shift();
+  const first = (words[0] ?? "").toLowerCase().replace(/[,.;:]$/, "");
+  if (first === "it" || first === "them" || first === "everything" || first.startsWith("**")) return true;
+  if (!PROSE_DETERMINERS.has(first) && first !== "every" && first !== "your") return false;
+  for (let step = 1; step <= 3; step += 1) {
+    const word = (words[step] ?? "").toLowerCase().replace(/[,.;:]$/, "");
+    if (PAGE_NOUNS.has(word) || PAGE_NOUNS.has(word.replace(/^(?:right|left)-hand$/, "side"))) return true;
+    if (!/^[a-z-]+$/.test(word)) return false;
+  }
+  return false;
+}
+
+/** Words that may open a noun phrase in prose: articles, possessives, quantities. */
+const PROSE_DETERMINERS: ReadonlySet<string> = new Set([
+  "a", "an", "the", "its", "each", "every", "both", "all", "this", "these", "that", "those",
+  "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve",
+]);
+
+/** Words that put the object on the page by themselves, in prose. */
+const PROSE_PAGE_WORDS: ReadonlySet<string> = new Set(["printed", "script", "card", "cards"]);
+
+/** Directions that only a list on the page has: "Read down once", "read across each line". */
+const PAGE_DIRECTIONS: ReadonlySet<string> = new Set(["down", "across"]);
+
+function isProsePageWord(word: string): boolean {
+  return PROSE_PAGE_WORDS.has(word.toLowerCase().replace(/[,.;:]$/, ""));
+}
+
+/**
+ * Is `word` written in a script other than the Latin alphabet ("书", "我是中国人")?
+ * Prose often leaves a short Chinese or Japanese form unbolded, and no English
+ * word starts with one, so a step that reads it is reading the page.
+ */
+function isNonLatinScript(word: string): boolean {
+  return /^\p{L}/u.test(word) && !/^\p{Script=Latin}/u.test(word);
+}
+
+/**
+ * Is the text just after a prose "read" something on the page? Like
+ * `readsTheObjectOnThePage`, constant work per call over at most
+ * `READ_OBJECT_WINDOW` characters, with three prose additions: a bold label's
+ * closing ("**Read.** 我是…", "read:"), a determiner that is a quantity or a
+ * possessive ("read its unpointed card", "Read twelve printed figures"), and
+ * the directions only a printed list has ("Read down once").
+ *
+ *   " **いちど**."                   yes  script
+ *   ".** 我是中国人 — …"              yes  a bold label, then script
+ *   " the six character cards"       yes  a card
+ *   " its unpointed card."            yes  a possessive, then a card
+ *   " twelve printed figures"         yes  a quantity, then printed
+ *   " 书, hold the level first tone"   yes  script that is not bold
+ *   " down once, without stopping."   yes  a list on the page
+ *   " it literally and it says"       no   a particle, then nothing printed
+ *   " it in Kannada order: **…**"     no   "in" is not an object
+ *   " in **स्टेशन**"                  no   a participle's place, not an object
+ *   " a notice like this and act"     no   no script within four plain words
+ */
+export function proseReadsThePage(ahead: string): boolean {
+  let start = 0;
+  if (ahead[start] === "." || ahead[start] === ":") start += 1;
+  if (ahead.startsWith("**", start)) start += 2;
+  if (ahead[start] !== " ") return false;
+  const words = ahead.slice(start + 1).split(" ");
+  let index = 0;
+  for (let particles = 0; particles < MAX_READ_PARTICLES; particles += 1) {
+    const word = (words[index] ?? "").toLowerCase();
+    const bare = word.endsWith(":") ? word.slice(0, -1) : word;
+    if (!READ_PARTICLES.has(bare)) break;
+    index += 1;
+    if (bare !== word) break;
+  }
+  const first = words[index] ?? "";
+  if (first.startsWith("**") || isProsePageWord(first) || isNonLatinScript(first)) return true;
+  if (index === 0 && PAGE_DIRECTIONS.has(first.toLowerCase())) return true;
+  if (!PROSE_DETERMINERS.has(first.toLowerCase())) return false;
+  for (let step = 1; step <= MAX_NOUN_PHRASE_WORDS + 1; step += 1) {
+    const word = words[index + step] ?? "";
+    if (word.startsWith("**") || isProsePageWord(word)) return true;
+    if (step > MAX_NOUN_PHRASE_WORDS || !PLAIN_WORD.test(word)) return false;
+    if (word.endsWith(":")) return (words[index + step + 1] ?? "").startsWith("**");
+  }
+  return false;
+}
+
+/**
+ * Does the clause after a card-handling verb name a card before it ends?
+ * `ahead` is at most `READ_OBJECT_WINDOW` characters, so this is constant work.
+ */
+function handlesACard(ahead: string): boolean {
+  const end = ahead.search(/[.;!?]/);
+  return /\bcards?\b/i.test(end === -1 ? ahead : ahead.slice(0, end));
+}
+
+/** Does one narrated prose span ask the listener to read printed script, handle cards, or cover the page? */
+export function proseAsksToReadOrHandleCards(span: string): boolean {
+  const text = withoutQuotations(span.replace(/\s+/g, " ").trim());
+  if (PRINTED_CARD.test(text)) return true;
+  for (const step of text.matchAll(COVER_STEP)) {
+    const from = (step.index ?? 0) + step[0].length;
+    if (coversThePage(text.slice(from, from + READ_OBJECT_WINDOW))) return true;
+  }
+  for (const step of text.matchAll(PROSE_READING_STEP)) {
+    const from = (step.index ?? 0) + step[0].length;
+    if (proseReadsThePage(text.slice(from, from + READ_OBJECT_WINDOW))) return true;
+  }
+  for (const step of text.matchAll(CARD_STEP)) {
+    const from = (step.index ?? 0) + step[0].length;
+    if (handlesACard(text.slice(from, from + READ_OBJECT_WINDOW))) return true;
+  }
+  return false;
+}
+
+/** Every narrated prose span of `markdown` that asks to read the page, handle cards, or cover the page. */
+export function readingOrCardProse(markdown: string): string[] {
+  return narratedProseSpans(markdown).filter(proseAsksToReadOrHandleCards);
 }

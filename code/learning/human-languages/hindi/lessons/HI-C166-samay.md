@@ -41,7 +41,13 @@ reviews_of: [HI-C166-sandesh]
 ## You'll want to know: समय
 <!-- hl-knowledge: introduces=[HI-LEX-C166-READ166-03]; assesses=[] -->
 
-**समय** — *samay* — "time, opening hours". Read the opening times: **दुकान सुबह नौ बजे से शाम छह बजे तक।** (*dukān subah nau baje se śām chah baje tak.*) Nine in the morning until six in the evening: go before six.
+**समय** — *samay* — "time, opening hours".
+
+[YOU READ: the opening times]
+
+The opening times say **दुकान सुबह नौ बजे से शाम छह बजे तक।** (*dukān subah nau
+baje se śām chah baje tak.*) Nine in the morning until six in the evening: go
+before six.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

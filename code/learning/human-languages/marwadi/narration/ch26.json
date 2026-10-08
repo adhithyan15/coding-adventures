@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Show It To Me: The First Transaction",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:adb252279ec224cc",
+  "sourceHash": "fnv1a64:63b0c4e301d7d4ce",
   "lessons": [
     {
       "id": "MW-C21-hear-ye",
@@ -423,7 +423,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de612dab880f3b4e",
+      "sourceHash": "fnv1a64:e60f02a86078e25a",
       "notice": null,
       "blocks": [
         {
@@ -473,8 +473,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read the three groups once. Cover the word and wait five seconds."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the three groups once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the three groups once]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the word, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the word, then wait five seconds]"
             },
             {
               "kind": "prompt",
@@ -532,7 +546,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2299d885755e1f4d",
+      "sourceHash": "fnv1a64:319570d70952e17f",
       "notice": null,
       "blocks": [
         {
@@ -568,7 +582,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear both words in both orders and give each meaning. Read two cards."
+              "text": "Hear both words in both orders and give each meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "two cards",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: two cards]"
             },
             {
               "kind": "prompt",
@@ -725,7 +748,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2d68a2599258132c",
+      "sourceHash": "fnv1a64:08810b144b3baff6",
       "notice": null,
       "blocks": [
         {
@@ -775,8 +798,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read the line once and cover it for ten seconds."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the line once, then cover it for ten seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the line once, then cover it for ten seconds]"
             },
             {
               "kind": "prompt",
@@ -833,7 +861,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:772a046ea030bdda",
+      "sourceHash": "fnv1a64:7ee061268ccb8bbe",
       "notice": null,
       "blocks": [
         {
@@ -871,8 +899,13 @@
               "text": "Produce all three from meaning cues alone."
             },
             {
-              "kind": "speech",
-              "text": "Read three printed lines and say which counter each belongs at."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "three printed lines, then say which counter each belongs at",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: three printed lines, then say which counter each belongs at]"
             },
             {
               "kind": "prompt",

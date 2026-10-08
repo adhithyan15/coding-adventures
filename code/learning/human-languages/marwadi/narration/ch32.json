@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Counting To Five, And The One New Sign",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3fe73f83b9f7c62b",
+  "sourceHash": "fnv1a64:c387fbb23e37f471",
   "lessons": [
     {
       "id": "MW-W32-e",
@@ -1075,7 +1075,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3de94eba0ffadaeb",
+      "sourceHash": "fnv1a64:3b8ae3e40735eaf5",
       "notice": null,
       "blocks": [
         {
@@ -1122,8 +1122,13 @@
               "text": "Count backwards from five."
             },
             {
-              "kind": "speech",
-              "text": "Read the five printed shuffled and say each."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the five printed shuffled, then say each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the five printed shuffled, then say each]"
             },
             {
               "kind": "prompt",
@@ -1191,7 +1196,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f3dfa596af0f51d",
+      "sourceHash": "fnv1a64:46f77bbe677e0ee9",
       "notice": null,
       "blocks": [
         {
@@ -1247,8 +1252,13 @@
               "text": "Speaking. Count one to five, then five to one, without a model."
             },
             {
-              "kind": "speech",
-              "text": "Reading. Read the five printed in Devanagari, shuffled, and say each."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the five printed in Devanagari, shuffled, then say each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the five printed in Devanagari, shuffled, then say each]"
             },
             {
               "kind": "speech",

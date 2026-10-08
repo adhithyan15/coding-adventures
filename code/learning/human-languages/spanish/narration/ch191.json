@@ -4,7 +4,7 @@
   "chapter": 191,
   "title": "Hay --- There Is, There Are, Same Word",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:375643654867d108",
+  "sourceHash": "fnv1a64:6cb9534c05e94023",
   "lessons": [
     {
       "id": "ES-C54-hay",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:187dbc5ff8fab2f1",
+      "sourceHash": "fnv1a64:c053399fbd30987b",
       "notice": null,
       "blocks": [
         {
@@ -65,7 +65,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read those twice. One book or a hundred, hay does not move."
+              "text": "Say those twice. One book or a hundred, hay does not move."
             },
             {
               "kind": "speech",

@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Seven More Body Words, Spaced on Purpose",
   "drivablePrefix": 20,
-  "sourceHash": "fnv1a64:e33d1fb96a24833d",
+  "sourceHash": "fnv1a64:da2b00c5da72b633",
   "lessons": [
     {
       "id": "JA-R12-foundation-01",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48e8769cedec37f0",
+      "sourceHash": "fnv1a64:803c766ccff367e8",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Tap one mora for い."
+              "text": "Say い and count its one mora aloud."
             },
             {
               "kind": "prompt",
@@ -48,7 +48,16 @@
             },
             {
               "kind": "speech",
-              "text": "Hear, say, and read the first seven-word body map."
+              "text": "Hear and say the first seven-word body map."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the first seven-word body map",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the first seven-word body map]"
             },
             {
               "kind": "prompt",
@@ -72,7 +81,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear a polite thank-you, say it, read ありがとうございます, and choose it for someone outside your close circle."
+              "text": "Hear a polite thank-you and say it."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ありがとうございます",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ありがとうございます**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then choose it for someone outside your close circle."
             }
           ]
         },
@@ -83,7 +105,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Stop after one accurate card."
+              "text": "Stop after one accurate round."
             },
             {
               "kind": "activity",
@@ -126,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6d2b881cb7f33e8",
+      "sourceHash": "fnv1a64:a259628537dfdad2",
       "notice": null,
       "blocks": [
         {
@@ -150,8 +172,17 @@
               "source": "[YOU WRITE: **は** and **日**]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ございます",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ございます**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ございます, say yukkuri, then retrieve はな."
+              "text": "Say yukkuri, then retrieve はな."
             }
           ]
         },
@@ -177,7 +208,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear, picture the part, say, and read あたま (atama)."
+              "text": "Hear, picture the part, and say あたま (atama)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "あたま (atama)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **あたま**]"
             },
             {
               "kind": "prompt",
@@ -234,7 +274,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2138ab7c9a23ba2d",
+      "sourceHash": "fnv1a64:80adedcac910d559",
       "notice": null,
       "blocks": [
         {
@@ -258,8 +298,13 @@
               "source": "[YOU WRITE: **あたま**]"
             },
             {
-              "kind": "speech",
-              "text": "Read はい."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "はい",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **はい**]"
             },
             {
               "kind": "prompt",
@@ -294,7 +339,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear, picture the part, say, and read かみ (kami)."
+              "text": "Hear, picture the part, and say かみ (kami)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "かみ (kami)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **かみ**]"
             },
             {
               "kind": "prompt",
@@ -438,7 +492,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:240f9637f077eb13",
+      "sourceHash": "fnv1a64:3ac211f80d151cbf",
       "notice": null,
       "blocks": [
         {
@@ -480,7 +534,16 @@
             },
             {
               "kind": "speech",
-              "text": "Then hear, say, and read the first seven body words."
+              "text": "Then hear and say the first seven body words."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the first seven body words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the first seven body words]"
             },
             {
               "kind": "prompt",
@@ -515,7 +578,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear, picture the part, say, and read は (ha)."
+              "text": "Hear, picture the part, and say は (ha)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "は (ha)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **は**]"
             },
             {
               "kind": "prompt",
@@ -572,7 +644,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0b6fae66166de984",
+      "sourceHash": "fnv1a64:62d74f6da0cec912",
       "notice": null,
       "blocks": [
         {
@@ -597,7 +669,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say いいえ with its full vowel length. Read 日本語 with its learned readings, then close with wakarimashita."
+              "text": "Say いいえ with its full vowel length."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "日本語 with its learned readings",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **日本語** with its learned readings]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then close with wakarimashita."
             }
           ]
         },
@@ -623,7 +708,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear, picture the part, say, and read かた (kata)."
+              "text": "Hear, picture the part, and say かた (kata)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "かた (kata)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **かた**]"
             },
             {
               "kind": "prompt",
@@ -758,7 +852,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c6f9beb025607bf7",
+      "sourceHash": "fnv1a64:4a74d2eb96e64b45",
       "notice": null,
       "blocks": [
         {
@@ -818,7 +912,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear, picture the part, say, and read おなか (onaka)."
+              "text": "Hear, picture the part, and say おなか (onaka)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "おなか (onaka)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **おなか**]"
             },
             {
               "kind": "prompt",
@@ -875,7 +978,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f6bffa018d15bb3",
+      "sourceHash": "fnv1a64:170ce9cb30abb4a3",
       "notice": null,
       "blocks": [
         {
@@ -899,8 +1002,13 @@
               "source": "[YOU WRITE: **おなか** and **に**]"
             },
             {
-              "kind": "speech",
-              "text": "Read コーヒー as a katakana loan."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "コーヒー as a katakana loan",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **コーヒー** as a katakana loan]"
             },
             {
               "kind": "prompt",
@@ -935,7 +1043,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear, picture the part, say, and read せなか (senaka)."
+              "text": "Hear, picture the part, and say せなか (senaka)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "せなか (senaka)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **せなか**]"
             },
             {
               "kind": "prompt",
@@ -1083,7 +1200,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a5f6988d275e44c7",
+      "sourceHash": "fnv1a64:fbc18a3dc25e88d9",
       "notice": null,
       "blocks": [
         {
@@ -1147,7 +1264,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear, picture the part, say, and read こし (koshi)."
+              "text": "Hear, picture the part, and say こし (koshi)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "こし (koshi)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **こし**]"
             },
             {
               "kind": "prompt",
@@ -1204,7 +1330,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62671af1cb9034b9",
+      "sourceHash": "fnv1a64:9ef8e0e5aa3fa8fd",
       "notice": null,
       "blocks": [
         {
@@ -1219,8 +1345,26 @@
               "source": "[PAUSE 85s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "こんにちは",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **こんにちは**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read こんにちは. Hear, say, and read さようなら."
+              "text": "Hear and say さようなら."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "さようなら",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **さようなら**]"
             },
             {
               "kind": "prompt",
@@ -1782,7 +1926,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b2c8d80ac304a379",
+      "sourceHash": "fnv1a64:bd6c189075320dd9",
       "notice": null,
       "blocks": [
         {
@@ -1807,7 +1951,16 @@
             },
             {
               "kind": "speech",
-              "text": "Then hear, say, and read め."
+              "text": "Then hear and say め."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "め",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **め**]"
             },
             {
               "kind": "prompt",
@@ -1865,7 +2018,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:68f6c6f406992e3d",
+      "sourceHash": "fnv1a64:9a9218b896a20959",
       "notice": null,
       "blocks": [
         {
@@ -1880,8 +2033,26 @@
               "source": "[PAUSE 55s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ありがとう",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ありがとう**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read ありがとう. Then hear, say, and read any three words from the first seven-word body map."
+              "text": "Then hear and say any three words from the first seven-word body map."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the same three words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the same three words]"
             },
             {
               "kind": "prompt",
@@ -1916,7 +2087,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Listen and give each English meaning; say all seven; read all seven."
+              "text": "Listen and give each English meaning; say all seven."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all seven",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all seven]"
             },
             {
               "kind": "prompt",

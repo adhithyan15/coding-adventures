@@ -40,7 +40,11 @@ reviews_of: [IT-C139-laffitto]
 ## You'll want to know: la ricevuta
 <!-- hl-knowledge: introduces=[IT-LEX-C139-READ139-04]; assesses=[] -->
 
-**la ricevuta** — "a receipt". Read the receipt: **Ricevuta: affitto, 400.** The rent is paid: keep it.
+**la ricevuta** — "a receipt".
+
+[YOU READ: the receipt]
+
+The receipt says **Ricevuta: affitto, 400.** The rent is paid: keep it.
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

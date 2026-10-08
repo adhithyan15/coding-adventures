@@ -45,8 +45,9 @@ Recall your four looking-and-reading scores.
 
 > **吗** — *ma* — **the question particle**
 
-Hide the pinyin. Read 吗, give it no tone at all, and say what it does rather
-than what it means.
+[YOU COVER: the pinyin]
+
+[YOU READ: 吗, give it no tone at all, then say what it does rather than what it means]
 
 ## Grammar lens — one character, every statement
 <!-- hl-knowledge: introduces=[ZH-GRAMMAR-MA-QUESTION-01]; assesses=[ZH-SCRIPT-MA-01, ZH-LEX-KANSHU-01] -->

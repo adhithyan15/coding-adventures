@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "The Doorway Signs at Long Distance",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:e4f3821f4fb6ea18",
+  "sourceHash": "fnv1a64:27de535c4de3e461",
   "lessons": [
     {
       "id": "MR-R18-script-warmup",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55bfe8f0135af6f2",
+      "sourceHash": "fnv1a64:1525004a526a50f6",
       "notice": null,
       "blocks": [
         {
@@ -28,8 +28,17 @@
           "title": "Warm-up",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "every earlier model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: every earlier model]"
+            },
+            {
               "kind": "speech",
-              "text": "Close every earlier model and listen before picking up the pencil."
+              "text": "Listen before picking up the pencil."
             }
           ]
         },
@@ -40,7 +49,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear dhanyavād. Say its meaning, read धन्यवाद, then cover the model."
+              "text": "Hear dhanyavād. Say its meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "धन्यवाद (dhanyavād), then cover the model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **धन्यवाद**, then cover the model]"
             },
             {
               "kind": "prompt",
@@ -90,7 +108,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:71b874300f7cfef2",
+      "sourceHash": "fnv1a64:7ab0a46ee8f3e80a",
       "notice": null,
       "blocks": [
         {
@@ -99,8 +117,13 @@
           "title": "Warm-up",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Keep every model closed and one blank line ready."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "every model, and keep one blank line ready",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: every model, and keep one blank line ready]"
             }
           ]
         },
@@ -119,8 +142,13 @@
               "source": "[YOU WRITE: *dhanyavād*, visarga, independent *ā*, and *bha*, from sound and spoken names only]"
             },
             {
-              "kind": "speech",
-              "text": "Compare once: धन्यवाद (dhanyavād); ः आ भ."
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "your answer once against धन्यवाद (dhanyavād); ः आ भ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: your answer once against **धन्यवाद; ः आ भ**]"
             },
             {
               "kind": "activity",
@@ -159,7 +187,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f3e1fb5310272da8",
+      "sourceHash": "fnv1a64:674b65906c0d95b6",
       "notice": null,
       "blocks": [
         {
@@ -168,8 +196,13 @@
           "title": "Warm-up",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Keep every model closed and one blank line ready."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "every model, and keep one blank line ready",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: every model, and keep one blank line ready]"
             }
           ]
         },
@@ -188,8 +221,13 @@
               "source": "[YOU WRITE: the e-mark, anusvāra, and dental *ta*, from spoken names only]"
             },
             {
-              "kind": "speech",
-              "text": "Compare once: े ं त."
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "your answer once against े ं त",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: your answer once against **े ं त**]"
             },
             {
               "kind": "activity",
@@ -227,7 +265,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:234fde8b1487f19e",
+      "sourceHash": "fnv1a64:73698684b39de86c",
       "notice": null,
       "blocks": [
         {
@@ -236,8 +274,13 @@
           "title": "Warm-up",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Keep every model closed and one blank line ready."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "every model, and keep one blank line ready",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: every model, and keep one blank line ready]"
             }
           ]
         },
@@ -256,8 +299,13 @@
               "source": "[YOU WRITE: *da*, *dha*, and *ba*, from spoken names only]"
             },
             {
-              "kind": "speech",
-              "text": "Compare once: द ध ब."
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "your answer once against द ध ब",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: your answer once against **द ध ब**]"
             },
             {
               "kind": "activity",
@@ -295,7 +343,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de678e165649b488",
+      "sourceHash": "fnv1a64:34c24adad763bd42",
       "notice": null,
       "blocks": [
         {
@@ -304,8 +352,13 @@
           "title": "Warm-up",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Keep every model closed and one blank line ready."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "every model, and keep one blank line ready",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: every model, and keep one blank line ready]"
             }
           ]
         },
@@ -324,8 +377,13 @@
               "source": "[YOU WRITE: *ya*, curled-back *ḷa*, and *va*, from spoken names only]"
             },
             {
-              "kind": "speech",
-              "text": "Compare once: य ळ व."
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "your answer once against य ळ व",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: your answer once against **य ळ व**]"
             },
             {
               "kind": "activity",

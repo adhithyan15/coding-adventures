@@ -4,7 +4,7 @@
   "chapter": 52,
   "title": "Two Things Joined",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:b657bdcc1d92fa7c",
+  "sourceHash": "fnv1a64:436708dcfeeb5026",
   "lessons": [
     {
       "id": "SA-C52-ca",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3022f3efd951ea1b",
+      "sourceHash": "fnv1a64:bbcbb08825f3b8e1",
       "notice": null,
       "blocks": [
         {
@@ -62,7 +62,7 @@
             },
             {
               "kind": "speech",
-              "text": "English puts and in the gap. Sanskrit puts च (ca) at the end and leaves the gap empty. Read the phrase again and notice that nothing sits between the two nouns at all: they stand side by side, and च (ca) at the back is what tells you they were a pair."
+              "text": "English puts and in the gap. Sanskrit puts च (ca) at the end and leaves the gap empty. Say the phrase again and notice that nothing sits between the two nouns at all: they stand side by side, and च (ca) at the back is what tells you they were a pair."
             },
             {
               "kind": "speech",

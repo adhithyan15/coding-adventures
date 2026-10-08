@@ -56,7 +56,9 @@ person, *está alegre* is a person having a good day.
 ## Reading
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C423-CHAR-01, ES-LEX-C423-CHAR-02, ES-LEX-C423-CHAR-03, ES-LEX-C423-CHAR-05, ES-LEX-C380-COUNT-36] -->
 
-Read aloud. Every word has been taught:
+[YOU READ: the lines below aloud]
+
+Every word has been taught:
 
 > — ¿Cómo es tu hermana?
 > — Es simpática e inteligente. Es un poco tímida, pero es muy trabajadora.

@@ -53,7 +53,8 @@ word rather than starting one.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-TOTAL-QUESTION-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Read the line once and cover it for ten seconds.
+[YOU READ: the line once, then cover it for ten seconds]
+
 [YOU WRITE: the three words — check that **हुआ** keeps its **ु** below the first sign and its **आ** at full height]
 
 ## Wrap-up Recall

@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 452,
-  "sourceHash": "fnv1a64:5fc20ab21df0af4e",
+  "sourceHash": "fnv1a64:e81b501841a2af27",
   "lessonIds": [
     "ES-C452-almacen",
     "ES-C452-ruta",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "spanish/narration/ch452.txt",
   "json": "spanish/narration/ch452.json",
-  "textHash": "fnv1a64:72f16046fbf0ac49",
-  "jsonHash": "fnv1a64:123f512bf31cab2a",
+  "textHash": "fnv1a64:88338574bfbf5274",
+  "jsonHash": "fnv1a64:37bfb8093e49e611",
   "findings": []
 }

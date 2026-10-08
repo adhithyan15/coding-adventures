@@ -69,9 +69,10 @@
 // rather than the pen: pointing at a sign (inside a recall), reading printed
 // script, and making a gesture — clapping, pointing, touching, showing fingers
 // (both inside any cue the narration speaks unhedged — RECALL, RETURN TO, SAY,
-// RUN, …). Each demands exactly zero in drivable lessons, with no ledger,
-// because every such cue was fixed in the change that added (or widened) the
-// check.
+// RUN, …). A last one reads bare prose again, for reading printed script,
+// handling cards, or covering the page. Each demands exactly zero in drivable
+// lessons, with no ledger, because every case was fixed in the change that
+// added (or widened) the check.
 
 import { type Dirent, existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -86,6 +87,8 @@ import {
   narratedProseSpans,
   opensChainedOrFrontedWriting,
   pointingRecallCues,
+  proseAsksToReadOrHandleCards,
+  readingOrCardProse,
   readingSpokenCues,
   recallCueAsksForWriting,
   recallCueAsksToPoint,
@@ -697,6 +700,124 @@ describe("spokenCueAsksForGesture stays linear", () => {
 });
 
 // ---------------------------------------------------------------------------
+// Reading the page, or handling cards, in prose
+// ---------------------------------------------------------------------------
+//
+// The positives are corpus prose as authored before the reading or card step
+// moved into a deferred cue (or was said for the ear); the controls are corpus
+// prose that says "read", "card" or "cover" and asks nobody to look, and the
+// rewrites themselves.
+
+describe("readingOrCardProse: what fires", () => {
+  it.each([
+    // Reading, with the object on the page.
+    ["a reading after a chain of spoken steps", "Hear, picture the part, say, and read **おなか**. [YOU WRITE: **おなか**]"],
+    ["a reading that opens the span", "[PAUSE 15s] Read **いちど**. Say *sumimasen, yoku wakarimasen*."],
+    ["a reading after then", "[PAUSE 2s] Say **the shirt**. Then read **এক**."],
+    ["character cards after a bold label", "3. **Reading:** read the six character cards without pinyin."],
+    ["a card named by a possessive", "Hear **middle** and **middle school** in mixed order. Say each and read its card."],
+    ["a bold label, then script", "**Read.** 我是中国人 — 你是中国人吗"],
+    ["down a printed list", "[PAUSE 3s] Read down once, without stopping."],
+    ["something printed", "3. Read the five printed shuffled — **پانچ، ایک، چار، تین، دو** — and say each."],
+    ["a quantity, then printed", "2. Read twelve printed figures and say each as a word."],
+    ["a notice closed by a colon", "**বিজ্ঞাপন** — *bigyāpôn* — \"an advert\". Read the advert: **বাড়ি ভাড়া দেওয়া হবে** — *bāṛi bhāṛā deoyā hôbe* — \"House to let.\""],
+    ["read cards at the end of a chain", "Hear all five in a mixed order, say each from meaning, and read the five cards."],
+    // Handling cards.
+    ["taking meaning cards", "Hear the six words in a shuffled order and say each meaning. Then take six meaning cards, say each word."],
+    ["shuffling cards", "Shuffle five unpointed cards: **汉语, 字, 中国, 汉字, 中文**. Read each cold and give its meaning."],
+    ["producing from meaning cards", "2. **Speaking:** produce all six from meaning cards, with tones audible."],
+    ["placing cards", "Place four cards under the correct cues: **भाई**, **बहन**, **दादा**, and **परिवार**."],
+    ["reversing the cards", "Keep the page covered. Then reverse the cards and say all five Mandarin forms."],
+    ["putting a card away", "[PAUSE 8s] Say **read a book** in Mandarin, then put that card away."],
+    // Covering the page.
+    ["look, cover, and wait", "Look, cover, and wait five seconds. [YOU WRITE: the one-beat word]"],
+    ["hiding the pinyin", "Hide the pinyin. Read 书, hold the level first tone, then give its meaning."],
+    ["read, then cover it", "Read the line once and cover it for ten seconds."],
+    ["cover it, as its own sentence", "Read **ఛాయ** once. Cover it. [YOU WRITE: only its first base letter — **ఛ**]"],
+    ["covering the romanization", "3. **Read:** cover the romanization and read **さようなら** sign by sign."],
+    ["covering one side", "Cover the right-hand side and rebuild it from the left."],
+    ["covering a word after a look", "Look for five seconds, cover **कांई**, and wait five seconds."],
+    ["a span wrapped across two source lines", "Then take six\nmeaning cards, say each word."],
+    // Review follow-up: the links and bare steps the first pass missed.
+    ["covering after an or", "Say *as-salāmu ʿalaykum* once. Then turn the page or cover every Arabic model."],
+    ["reading after an or", "Say it once more, or read **किताब** aloud."],
+    ["look, cover and wait, without the serial comma", "Look, cover and wait five seconds."],
+    ["covering up the romanization", "Cover up the romanization and say it again."],
+  ])("%s", (_label, markdown) => {
+    expect(readingOrCardProse(markdown)).toHaveLength(1);
+  });
+});
+
+describe("readingOrCardProse: what does not fire", () => {
+  it.each([
+    // The rewrites.
+    ["the rewrite of a chain", "Hear, picture the part, and say **おなか**. [YOU READ: **おなか**] [YOU WRITE: **おなか**]"],
+    ["the rewrite of a reading", "[PAUSE 15s] [YOU READ: **いちど**]\n\nSay *sumimasen, yoku wakarimasen*."],
+    ["the rewrite of character cards", "3. [YOU READ: the six character cards without pinyin]"],
+    ["the rewrite of meaning cards", "Then, from six English meanings, say each word. [YOU READ: the six character cards]"],
+    ["the rewrite of look, cover, and wait", "[YOU COVER: the model after one look, then wait five seconds]"],
+    ["the rewrite of closing the lessons", "From memory alone, say *near*, then say *far*."],
+    ["the rewrite of producing from cards", "2. **Speaking:** produce all six from their English meanings, with tones audible."],
+    // Interpretation, description, glosses and advice.
+    ["reading literally", "**Il est deux heures.** Read it literally and it says *\"it is two **hours**.\"*"],
+    ["reading in an order", "Read it in Kannada order: **ಅದು ನಿಜ** (the thought) — **ಅಂತ** (closed off)"],
+    ["reading as a meaning", "When you meet **celebrarse** on a notice, read it as **is held**."],
+    ["a participle", "the same stack you have written in **नमस्ते** and read in **स्टेशन**."],
+    ["a passive", "Why is its **ட** read as a soft *ḍ*? (Because it sits between two vowels.)"],
+    ["a gloss after an em dash", "**من فضلك** — read right to left, **min faḍlik** — is two pieces:"],
+    ["advice for the street", "Read a notice like this and act on it: stop, look, and cross with care."],
+    ["what the learner can now do", "Two more an address prints, both of which you can now read: **c/** for *calle*."],
+    ["a memory of reading", "Both were taught once and read once. Say each aloud."],
+    ["a gloss of read", "*kànshū* — **read a book; read books**"],
+    ["a heading", "# (dejar una llave) — read it, then do what it says"],
+    ["a card as vocabulary", "Before the new one: say the Bengali for an identity card, then the Bengali for a longing."],
+    ["a card in a scene", "The office has been **trasladada**. Name what the card hanging on it says."],
+    ["a card through the letterbox", "A card through the letterbox. [YOU READ: the card, then answer]"],
+    ["cover as a meaning", "English lets *sit* cover both; French makes you choose."],
+    ["cover as a gloss", "*Cubre la olla* — cover the pot."],
+    ["hiding a pattern", "Learning them apart would teach the same single fact twice and hide the pattern that makes it easy."],
+    ["a page kept covered", "Keep the page covered. Hear the five Mandarin words in mixed order."],
+    ["a pencil kept down", "Keep your pencil down: the next five meanings and sounds come before their shapes."],
+    ["a quotation being said", 'Say "then read **किताब**" once more.'],
+    ["a choice that is not a step", "Ask whether they would rather hear it or say it."],
+    ["a skill list with a bare read", "# Practice — hear, say, read, and write water"],
+    ["a stroke called cover", "2. **尔** — top slant, cover, then the middle and its hook"],
+  ])("%s", (_label, markdown) => {
+    expect(readingOrCardProse(markdown)).toEqual([]);
+  });
+});
+
+describe("proseAsksToReadOrHandleCards stays linear", () => {
+  // About 50,000 characters each; only the answers are asserted, because
+  // timing bounds flake on a loaded runner.
+  it.each([
+    ["a long run of spaces before the script", `read${" ".repeat(50_000)}**क**`, true],
+    ["a long run of spaces with no verb", `say it${" ".repeat(50_000)}x`, false],
+    ["many links with no verb", `say ${"it, and then ".repeat(4_000)}stop`, false],
+    ["many links, the last one reading", `say ${"it, and then ".repeat(4_000)}read **क**`, true],
+    ["many readings of nothing printed", `${"then read the whole line ".repeat(2_000)}`, false],
+    ["many readings of a phrase too long", `${"then read the very long and winding sign ".repeat(1_200)}`, false],
+    ["many card verbs with no card", `${"then take the next word ".repeat(2_000)}`, false],
+    ["many card verbs, the last one a card", `${"then take the next word ".repeat(2_000)}then take two cards`, true],
+    ["many cards with no verb", `${"the card ".repeat(6_000)}`, false],
+    ["many meanings before a card", `${"meaning ".repeat(6_000)}card`, true],
+    ["many covers of nothing on the page", `${"and cover the pattern ".repeat(2_400)}`, false],
+    ["many covers, the last one of the page", `${"and cover the pattern ".repeat(2_400)}and cover the page.`, true],
+    ["many unclosed quotation openers", `say ${"“".repeat(50_000)} and read **क**`, true],
+    ["a quotation that hides every step", `say “${"and read **क** ".repeat(4_000)}” now`, false],
+    ["many stars after read", `read ${"*".repeat(50_000)}`, true],
+    ["many ors with no verb", `say ${"it or ".repeat(8_000)}stop`, false],
+    ["many covers up of nothing on the page", `${"or cover up the pattern ".repeat(2_000)}`, false],
+    ["many bare covers before a chained step", `${"or cover and ".repeat(4_000)}wait.`, true],
+    ["many full stops", `${". ".repeat(25_000)}read`, false],
+    ["many bold labels with no script", `${"**Read.** x ".repeat(4_000)}`, false],
+  ])("%s", (_label, content, expected) => {
+    expect(content.length).toBeGreaterThan(40_000);
+    expect(proseAsksToReadOrHandleCards(content)).toBe(expected);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // The corpus
 // ---------------------------------------------------------------------------
 
@@ -938,5 +1059,43 @@ describe("drivable lessons carry no spoken cue that asks for a gesture", () => {
     // non-drivable lessons), and high enough that a detector which lost most
     // of its matches fails here rather than passing quietly.
     expect(gesture, "non-drivable lessons with a gesture cue").toBeGreaterThan(20);
+  });
+});
+
+describe("drivable lessons carry no prose that asks to read the page or handle cards", () => {
+  it("no drivable lesson asks a driver, in prose, to read printed script, handle cards, or cover the page", () => {
+    // No ledger: every such span was moved into a deferred cue or said for
+    // the ear when the check arrived (418 spans in 391 drivable lessons before
+    // the fix, every one of them rewritten), so the corpus answer is exactly
+    // zero.
+    const problems: string[] = [];
+    for (const lesson of lessons) {
+      const id = String(lesson.frontmatter.id);
+      if (!drivableIds.has(id)) continue;
+      for (const span of readingOrCardProse(lessonMarkdown(lesson))) {
+        problems.push(
+          `${id}: drivable prose asks the listener to read the page, handle cards, or cover the page. ` +
+            `Move the step into a cue the narration defers ([YOU READ: …], [YOU COVER: …]), or say it ` +
+            `for the ear ("from its English meaning", "say it again and listen for …"):\n       ${span.slice(0, 160)}`,
+        );
+      }
+    }
+    expect(problems, problems.join("\n")).toEqual([]);
+  });
+
+  it("the prose check still fires on the real corpus, where reading the page is legitimate", () => {
+    // Anti-vacuity, as for the cue checks: a detector that matched nothing
+    // would also report zero above. Lessons that are NOT drivable keep their
+    // reading, card and look-cover-write work, and their narration already
+    // opens with the hands-and-eyes notice.
+    let prose = 0;
+    for (const lesson of lessons) {
+      if (drivableIds.has(String(lesson.frontmatter.id))) continue;
+      if (readingOrCardProse(lessonMarkdown(lesson)).length > 0) prose += 1;
+    }
+    // A floor set below the count measured when this was written (603
+    // non-drivable lessons, 740 spans), and high enough that a detector which lost most
+    // of its matches fails here rather than passing quietly.
+    expect(prose, "non-drivable lessons with prose that reads the page").toBeGreaterThan(400);
   });
 });

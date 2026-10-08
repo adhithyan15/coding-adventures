@@ -42,7 +42,10 @@ reviews_of: [KA-C62-broom]
 
 ಕೊಡೆ works twice over in Karnataka: it keeps the ಮಳೆಗಾಲ off you, and it keeps the ಬಿಸಿಲು off you in the months on either side of it. In a Kannada street both uses are ordinary.
 
-Read it carefully. ಕೊಡೆ and the ಕೊಡು you already know start with the same two letters, and they are separate items — one is a thing, the other is what you do with it, and joining them would be inventing a story. Kannada gives you plenty of real ones; this is not one.
+Say it carefully. ಕೊಡೆ and the ಕೊಡು you already know start with the same two
+letters, and they are separate items — one is a thing, the other is what you do
+with it, and joining them would be inventing a story. Kannada gives you plenty
+of real ones; this is not one.
 
 Put ದಯವಿಟ್ಟು in front of any of this chapter's five and you have asked for it properly.
 

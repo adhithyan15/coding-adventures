@@ -50,10 +50,12 @@ reviews_of: [BN-C40-words, BN-C01-nomoshkar, BN-C13-doya-kore]
 > দয়া করে।
 > স্বাগতম।
 
-[PAUSE 3s] Read down once, without stopping.
+[PAUSE 3s] [YOU READ: the six lines down once, without stopping]
 
-[PAUSE 3s] Again — and notice the mark at the end of each line. It is not a
-full stop but a **দাঁড়ি**, a single upright stroke.
+[PAUSE 3s]
+[YOU READ: the six lines again, and notice the mark at the end of each line]
+
+It is not a full stop but a **দাঁড়ি**, a single upright stroke.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[BN-LEX-C13-DOYAKORE-01, BN-LEX-C13-SBAGOTOM-01, BN-SKILL-READ-LINES] -->

@@ -4,7 +4,7 @@
   "chapter": 195,
   "title": "Synthesis --- Describing Where You Are",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6270bb7cf4a2e585",
+  "sourceHash": "fnv1a64:c861d8fa0cab265f",
   "lessons": [
     {
       "id": "ES-C54-sintesis-lo-que-hay",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f880e30194bf14e9",
+      "sourceHash": "fnv1a64:fb942a6b8565fc79",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hay is the word you reach for to describe a place. Look around the room you are in and say what is there."
+              "text": "Hay is the word you reach for to describe a place. Picture the room you are in and say what is there."
             }
           ]
         },

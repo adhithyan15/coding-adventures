@@ -42,7 +42,7 @@ reviews_of: [ZH-R17-character-language-r2, ZH-C16-practice]
 [YOU WRITE: without looking back, **written character**, **Chinese character**,
 and **Chinese language**]
 
-Read each answer aloud only after all three are complete.
+[YOU READ: each answer aloud only after all three are complete]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-PERFORMANCE-LANGUAGE-IDENTITY-THREE-FOUR-SKILL-01] -->

@@ -38,7 +38,7 @@ to read.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C436-GENTE-02, ES-LEX-C436-GENTE-03, ES-LEX-C436-GENTE-05] -->
 
-Read it once straight through, then answer.
+[YOU READ: the notice once straight through, then answer]
 
 > **CURSO DE COCINA — AVISO**
 > El **grupo** de los martes está completo. Podemos **ofrecer** plaza en el de

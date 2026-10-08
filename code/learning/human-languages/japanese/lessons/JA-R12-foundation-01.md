@@ -34,10 +34,12 @@ reviews_of: [JA-W01-i, JA-C01-gozaimasu, JA-W10-shi]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-HIRAGANA-MORA, JA-SCRIPT-I-01, JA-SCRIPT-SHI-01, JA-PERFORMANCE-BODY-SEVEN-01, JA-LEX-ASHI] -->
 
-[PAUSE 80s] Tap one mora for **い**.
+[PAUSE 80s] Say **い** and count its one mora aloud.
 [YOU WRITE: **い** and **し** from memory]
 
-Hear, say, and read the first seven-word body map.
+Hear and say the first seven-word body map.
+[YOU READ: the first seven-word body map]
+
 [YOU WRITE: the first seven-word body map]
 
 Finish by isolating **あし**.
@@ -45,11 +47,12 @@ Finish by isolating **あし**.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ARIGATOU-GOZAIMASU, JA-REGISTER-TEINEIGO] -->
 
-Hear a polite thank-you, say it, read **ありがとうございます**, and choose it for
-someone outside your close circle.
+Hear a polite thank-you and say it. [YOU READ: **ありがとうございます**]
+
+Then choose it for someone outside your close circle.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-HIRAGANA-MORA, JA-SCRIPT-I-01, JA-LEX-ARIGATOU-GOZAIMASU, JA-REGISTER-TEINEIGO, JA-SCRIPT-SHI-01, JA-PERFORMANCE-BODY-SEVEN-01, JA-LEX-ASHI] -->
 <!-- hl-activity: {"id":"JA-R12-foundation-01-card","kind":"text","assesses":["JA-SCRIPT-HIRAGANA-MORA","JA-SCRIPT-I-01","JA-LEX-ARIGATOU-GOZAIMASU","JA-REGISTER-TEINEIGO","JA-SCRIPT-SHI-01","JA-PERFORMANCE-BODY-SEVEN-01","JA-LEX-ASHI"],"prompt":"Write i, shi, the polite thank-you, and the seven-word body map; label each spoken unit a mora.","answer":"い・し・ありがとうございます・て・みみ・くち・あし・はな・かお・め; mora; polite","accepted":["い し ありがとうございます て みみ くち あし はな かお め mora polite"],"feedback":{"correct":"The distant and recent returns are in place.","incorrect":"Retrieve い, し, the polite thank-you, and the first seven body words."},"response_seconds":40} -->
 
-Stop after one accurate card.
+Stop after one accurate round.

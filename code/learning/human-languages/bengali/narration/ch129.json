@@ -4,7 +4,7 @@
   "chapter": 129,
   "title": "Mosque, Church, Pencil, Eraser, Bag",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:77795bce7c7263cc",
+  "sourceHash": "fnv1a64:0d828d0391fe211c",
   "lessons": [
     {
       "id": "BN-C129-mosjid",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9228289ee5277286",
+      "sourceHash": "fnv1a64:d1b7d7ea2a106e58",
       "notice": null,
       "blocks": [
         {
@@ -167,8 +167,13 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "Read each word whole: ভাত, জল, বোন."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each word whole — ভাত, জল, বোন",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each word whole — **ভাত**, **জল**, **বোন**]"
             }
           ]
         },

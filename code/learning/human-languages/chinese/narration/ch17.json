@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Language or country?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:69c7defc0430dea2",
+  "sourceHash": "fnv1a64:001a9f94e4fbfd0c",
   "lessons": [
     {
       "id": "ZH-C17-hear-zhongwen",
@@ -398,7 +398,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca49304fa2f83e41",
+      "sourceHash": "fnv1a64:a9a651e35261693d",
       "notice": null,
       "blocks": [
         {
@@ -414,7 +414,7 @@
             },
             {
               "kind": "speech",
-              "text": "Run the two-line 谢谢 / 不谢 exchange. Then take one Chapter 15 school-word meaning card and hear its Mandarin word."
+              "text": "Run the two-line 谢谢 / 不谢 exchange. Then take one Chapter 15 school word by its English meaning and hear its Mandarin word."
             },
             {
               "kind": "prompt",
@@ -426,8 +426,17 @@
               "source": "[YOU WRITE: that word]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "that word aloud, then give its meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: that word aloud, then give its meaning]"
+            },
+            {
               "kind": "speech",
-              "text": "Read it aloud and give its meaning. Finally say Chinese language as zhōngwén."
+              "text": "Finally say Chinese language as zhōngwén."
             }
           ]
         },
@@ -437,8 +446,13 @@
           "title": "The word, taken apart",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read this before looking below:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "中文 (zhōngwén) first, before the explanation",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **中文** first, before the explanation]"
             },
             {
               "kind": "speech",
@@ -514,7 +528,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e9000a8ca639fac",
+      "sourceHash": "fnv1a64:d5dc94d633ffdd8c",
       "notice": null,
       "blocks": [
         {
@@ -529,8 +543,13 @@
               "source": "[PAUSE 18s]"
             },
             {
-              "kind": "speech",
-              "text": "Read 中文 (zhōngwén)."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "中文 (zhōngwén)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **中文**]"
             },
             {
               "kind": "prompt",
@@ -550,7 +569,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear Chinese character and Chinese language in mixed order. Say each and read its unpointed card."
+              "text": "Hear Chinese character and Chinese language in mixed order. Say each."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each Mandarin form without pinyin",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each Mandarin form without pinyin]"
             },
             {
               "kind": "prompt",
@@ -993,7 +1021,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a69ce7358d0a494",
+      "sourceHash": "fnv1a64:f8d5087c0007683e",
       "notice": null,
       "blocks": [
         {
@@ -1019,8 +1047,13 @@
           "title": "The word, taken apart",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read this before looking below:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "中国 (zhōngguó) first, before the explanation",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **中国** first, before the explanation]"
             },
             {
               "kind": "speech",
@@ -1095,7 +1128,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:984c0b6fd94a36b5",
+      "sourceHash": "fnv1a64:7802d0f2768eee69",
       "notice": null,
       "blocks": [
         {
@@ -1140,7 +1173,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear Chinese language and China in mixed order. Say each answer and read its unpointed card."
+              "text": "Hear Chinese language and China in mixed order. Say each answer."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each Mandarin form without pinyin",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each Mandarin form without pinyin]"
             },
             {
               "kind": "prompt",
@@ -1199,7 +1241,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:690d6ab718724971",
+      "sourceHash": "fnv1a64:771324cc54b6fc2f",
       "notice": null,
       "blocks": [
         {
@@ -1234,8 +1276,13 @@
               "source": "[YOU WRITE: without looking back, **written character**, **Chinese character**, and **Chinese language**]"
             },
             {
-              "kind": "speech",
-              "text": "Read each answer aloud only after all three are complete."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each answer aloud only after all three are complete",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each answer aloud only after all three are complete]"
             }
           ]
         },
@@ -1284,7 +1331,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e3fabfb207e4b944",
+      "sourceHash": "fnv1a64:9f2962cbec8da5ac",
       "notice": null,
       "blocks": [
         {
@@ -1311,7 +1358,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Keep the page covered. Hear the five Mandarin words in mixed order and give the English meaning of each. Then reverse the cards and say all five Mandarin forms. Score listening and speaking separately out of five."
+              "text": "Keep the page covered. Hear the five Mandarin words in mixed order and give the English meaning of each. Then reverse the direction and say all five Mandarin forms. Score listening and speaking separately out of five."
             }
           ]
         },
@@ -1361,7 +1408,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1d3e3f9d57bc5f5",
+      "sourceHash": "fnv1a64:59b029da33eda67b",
       "notice": null,
       "blocks": [
         {
@@ -1376,8 +1423,13 @@
               "source": "[PAUSE 10s]"
             },
             {
-              "kind": "speech",
-              "text": "Read 中国 (zhōngguó) and 中文 (zhōngwén) without saying their pinyin first."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "中国 (zhōngguó) and 中文 (zhōngwén) without saying their pinyin first",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **中国** and **中文** without saying their pinyin first]"
             }
           ]
         },
@@ -1387,8 +1439,17 @@
           "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "five unpointed cards in a shuffled order — 汉语, 字, 中国 (zhōngguó), 汉字, 中文 (zhōngwén) — each cold, then give its meaning",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: five unpointed cards in a shuffled order — **汉语, 字, 中国, 汉字, 中文** — each cold, then give its meaning]"
+            },
+            {
               "kind": "speech",
-              "text": "Shuffle five unpointed cards: 汉语, 字, 中国 (zhōngguó), 汉字, 中文 (zhōngwén). Read each cold and give its meaning. Score one point per form; pronunciation help comes only after the reading score is recorded."
+              "text": "Score one point per form; pronunciation help comes only after the reading score is recorded."
             }
           ]
         },

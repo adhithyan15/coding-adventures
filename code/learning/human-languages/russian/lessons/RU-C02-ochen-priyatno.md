@@ -53,8 +53,10 @@ There is no "to meet you" and no "I am." Russian states the **quality of the
 moment** and leaves the rest understood — the same economy as *меня зовут*, which
 left out "my" and "name."
 
-Both **ч** (*ch*) and **я** are letters the writing track hasn't reached. Read
-them; you'll draw them later.
+Both **ч** (*ch*) and **я** are letters the writing track hasn't reached.
+[YOU READ: both letters]
+
+You'll draw them later.
 
 ## приятно, taken apart — and its cousin "friend"
 <!-- hl-knowledge: introduces=[RU-ETYMON-PRIYATNO-FRIEND]; assesses=[RU-LEX-OCHEN-PRIYATNO] -->

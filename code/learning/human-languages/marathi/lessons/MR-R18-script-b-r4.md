@@ -36,7 +36,7 @@ reviews_of: [MR-R09-script-b-r3]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-Keep every model closed and one blank line ready.
+[YOU COVER: every model, and keep one blank line ready]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-E-MATRA-01, MR-SCRIPT-ANUSVARA-01, MR-SCRIPT-TA-01] -->
@@ -44,4 +44,4 @@ Keep every model closed and one blank line ready.
 
 [YOU WRITE: the e-mark, anusvāra, and dental *ta*, from spoken names only]
 
-Compare once: **े ं त**.
+[YOU CHECK: your answer once against **े ं त**]

@@ -42,9 +42,8 @@ line.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[FA-PERFORMANCE-DIGITS-READ]; assesses=[FA-SCRIPT-DIGIT-ZERO, FA-SCRIPT-DIGIT-ONE, FA-SCRIPT-DIGIT-TWO, FA-SCRIPT-DIGIT-THREE, FA-SCRIPT-DIGIT-FOUR, FA-SCRIPT-DIGIT-FIVE, FA-SCRIPT-DIGIT-SIX, FA-SCRIPT-DIGIT-SEVEN, FA-SCRIPT-DIGIT-EIGHT, FA-SCRIPT-DIGIT-NINE, FA-LEX-BIST, FA-LEX-SAD, FA-LEX-DAH, FA-LEX-YAZDAH, FA-ETYMON-SAD, FA-LEX-SIZDAH, FA-LEX-PANZDAH, FA-GRAMMAR-TEENS-DAH] -->
 
-1. Read all ten signs shuffled and say each as a Persian word.
-2. Read **۱۰**, **۱۱**, **۲۰** and **۱۰۰** and say each — *dah*, *yâzdah*,
-   *bist*, *sad*.
+1. [YOU READ: all ten signs shuffled, then say each as a Persian word]
+2. [YOU READ: **۱۰**, **۱۱**, **۲۰** and **۱۰۰**, then say each — *dah*, *yâzdah*, *bist*, *sad*]
 3. Hear ten amounts named. [YOU WRITE: each in Persian figures]
 4. [YOU WRITE: the ten signs from dictation, out of order, and check **۴**, **۵** and **۶** against the models rather than against memory]
 

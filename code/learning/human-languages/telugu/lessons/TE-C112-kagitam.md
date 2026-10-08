@@ -38,7 +38,8 @@ reviews_of: [TE-C112-kalam]
 
 [PAUSE 2s] Before the new one: say the Telugu for a bag, then the Telugu for a pen.
 
-[PAUSE 3s] Read the lines aloud as one run: **ఇది పుస్తకం. కుర్చీ ఇక్కడ ఉంది.**
+[PAUSE 3s]
+[YOU READ: the lines aloud as one run — **ఇది పుస్తకం. కుర్చీ ఇక్కడ ఉంది.**]
 
 ## You'll want to know: కాగితం
 <!-- hl-knowledge: introduces=[TE-LEX-C112-THINGS112-03]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 65,
   "title": "Synthesis --- Reading a Paragraph",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:43f7893879da36fd",
+  "sourceHash": "fnv1a64:06396bb6ad3f7e41",
   "lessons": [
     {
       "id": "ES-C09-sintesis-ocho",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e4f7aa596aac2d88",
+      "sourceHash": "fnv1a64:3c9b3c292f2bf5b8",
       "notice": null,
       "blocks": [
         {
@@ -55,8 +55,17 @@
           "title": "What you've built",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the passage below slowly",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the passage below slowly]"
+            },
+            {
               "kind": "speech",
-              "text": "Read it slowly. Not one of these words appears anywhere else in this book."
+              "text": "Not one of these words appears anywhere else in this book."
             },
             {
               "kind": "speech",

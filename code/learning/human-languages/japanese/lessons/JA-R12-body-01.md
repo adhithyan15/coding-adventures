@@ -36,7 +36,8 @@ reviews_of: [JA-W03-u, JA-C11-me-eye]
 
 [PAUSE 25s] [YOU WRITE: **う**]
 
-Then hear, say, and read **め**.
+Then hear and say **め**. [YOU READ: **め**]
+
 [YOU WRITE: **め**]
 
 ## Wrap-up Recall

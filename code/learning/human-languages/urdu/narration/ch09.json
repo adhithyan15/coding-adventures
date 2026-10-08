@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "People You'd Introduce",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e12650e085883cdf",
+  "sourceHash": "fnv1a64:ae2635f7e5bc7352",
   "lessons": [
     {
       "id": "UR-C09-bhai",
@@ -192,7 +192,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:316edaf122aed94d",
+      "sourceHash": "fnv1a64:f8e8d5576afa1b4d",
       "notice": null,
       "blocks": [
         {
@@ -227,7 +227,7 @@
             },
             {
               "kind": "speech",
-              "text": "Not میرا بہن (bahan). Read on for why."
+              "text": "Not میرا بہن (bahan). The reason comes next."
             }
           ]
         },

@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 17,
-  "sourceHash": "fnv1a64:b538ce34122fae32",
+  "sourceHash": "fnv1a64:89f553284a6515d9",
   "lessonIds": [
     "MW-C12-hear-mausam",
     "MW-W12-au-matra",
@@ -21,7 +21,7 @@
   "drivablePrefix": 1,
   "text": "marwadi/narration/ch17.txt",
   "json": "marwadi/narration/ch17.json",
-  "textHash": "fnv1a64:e11b1f09c683f3e5",
-  "jsonHash": "fnv1a64:aa43830dde08c013",
+  "textHash": "fnv1a64:9fc7622401a36ce2",
+  "jsonHash": "fnv1a64:cde2af7224e0b265",
   "findings": []
 }

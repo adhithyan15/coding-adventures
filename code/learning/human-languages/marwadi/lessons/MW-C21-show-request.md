@@ -52,7 +52,8 @@ but the joining, which is the point of the chapter.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-SHOW-REQUEST-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Read the line once and cover it for ten seconds.
+[YOU READ: the line once, then cover it for ten seconds]
+
 [YOU WRITE: all three words — then open the model, repair only the word that changed, and rewrite that word alone]
 
 ## Wrap-up Recall

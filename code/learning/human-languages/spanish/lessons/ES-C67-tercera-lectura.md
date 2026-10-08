@@ -48,9 +48,10 @@ notice.
 > Ahora es tarde, pero están bien.
 > Mañana es domingo, y María no trabaja.
 
-[PAUSE 3s] Once through, without stopping.
+[PAUSE 3s] [YOU READ: the passage once through, without stopping]
 
-[PAUSE 3s] Now answer this before you read it again: how many people are in it?
+[PAUSE 3s] Now answer this before going through it again: how many people are in
+it?
 
 ## Why it's said this way
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-PERO] -->

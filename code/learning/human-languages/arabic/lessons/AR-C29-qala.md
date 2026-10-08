@@ -52,10 +52,12 @@ One new letter, and it is a sound English does not have.
   top of the throat — heavier and darker than English *k*.
 - **ا** (*alif*) and **ل** (*lām*) are yours already.
 
-Read **قال** right to left: *qāf*, long *ā*, *lām*. Be honest about the
-sound: in most everyday spoken Arabic **ق** is not said that way at all — in
-Cairo and Damascus it becomes a glottal stop, and across much of the Gulf a
-hard *g*. The uvular version is the formal one.
+**قال** runs right to left: *qāf*, long *ā*, *lām*.
+[YOU READ: **قال** right to left]
+
+Be honest about the sound: in most everyday spoken Arabic **ق** is not said that
+way at all — in Cairo and Damascus it becomes a glottal stop, and across much of
+the Gulf a hard *g*. The uvular version is the formal one.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C29-QALA-02]; assesses=[] -->

@@ -45,7 +45,7 @@ Then say *a dog* — **R2**, five lessons back.
 ## Guided Practice — read the seven words
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-EKI, JA-LEX-C133-KINOU, JA-LEX-ANCHOR-IKE, JA-LEX-C133-KESA, JA-LEX-ANCHOR-INU, JA-LEX-C133-NUNO, JA-LEX-ANCHOR-HEYA, JA-SCRIPT-KI-01, JA-SCRIPT-KE-01, JA-SCRIPT-NU-01, JA-SCRIPT-HE-01] -->
 
-[PAUSE 2s each] Read each one aloud and say what it means.
+[PAUSE 2s each] [YOU READ: each one below aloud, then say what it means]
 
 - [YOU READ: **えき** — a station]
 - [YOU READ: **きのう** — yesterday]

@@ -4,7 +4,7 @@
   "chapter": 428,
   "title": "Five Last Pieces",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:d860f93ae8aad026",
+  "sourceHash": "fnv1a64:a186ee4fe27ed816",
   "lessons": [
     {
       "id": "ES-C428-arroba",
@@ -176,7 +176,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2a3289e83bc36c94",
+      "sourceHash": "fnv1a64:aa526add2e6bf55e",
       "notice": null,
       "blocks": [
         {
@@ -245,7 +245,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read that aloud and you have completed the task the source calls dictating an e-mail address. It needed four words, three of which you already had."
+              "text": "Say that aloud and you have completed the task the source calls dictating an e-mail address. It needed four words, three of which you already had."
             },
             {
               "kind": "speech",
@@ -961,7 +961,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3b1791e3a0f36a1a",
+      "sourceHash": "fnv1a64:b7de06dcd3aa4520",
       "notice": null,
       "blocks": [
         {
@@ -987,8 +987,13 @@
           "title": "Reading",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read this invitation aloud, saying every symbol by name:"
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "this invitation aloud, saying every symbol by name",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: this invitation aloud, saying every symbol by name]"
             },
             {
               "kind": "speech",

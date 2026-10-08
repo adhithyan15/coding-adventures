@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Pachhe Milsu: See You Later",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8109e8c39f81d2b8",
+  "sourceHash": "fnv1a64:232346f84978adcd",
   "lessons": [
     {
       "id": "MW-C07-hear-later",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8d1318c2f0b1f520",
+      "sourceHash": "fnv1a64:1c7a71eaf9a06ca4",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,20 @@
             },
             {
               "kind": "speech",
-              "text": "Ask how someone is, answer hū̃ ṭhīk hū̃, then say राम राम सा once. Close the text before the new parting line begins."
+              "text": "Ask how someone is, answer hū̃ ṭhīk hū̃, then say राम राम सा once."
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the text",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the text]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then the new parting line begins."
             }
           ]
         },
@@ -646,7 +659,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:75f00e0a100a4ea6",
+      "sourceHash": "fnv1a64:50323dc128b109ce",
       "notice": null,
       "blocks": [
         {
@@ -704,8 +717,13 @@
               "text": "Speak: answer a later-meeting cue with pāchhe milsū."
             },
             {
-              "kind": "speech",
-              "text": "Read: match both printed lines to their meanings."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "both printed lines, then match them to their meanings",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: both printed lines, then match them to their meanings]"
             },
             {
               "kind": "prompt",

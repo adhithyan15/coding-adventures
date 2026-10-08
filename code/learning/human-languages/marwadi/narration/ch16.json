@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Wind, Cloud, and Rain: No New Signs",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:405deb76582406ef",
+  "sourceHash": "fnv1a64:5b12c8f27885482b",
   "lessons": [
     {
       "id": "MW-C11-hear-hawa",
@@ -107,7 +107,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:68b7b6c51c90e2d6",
+      "sourceHash": "fnv1a64:c3ffe95ca1801eae",
       "notice": null,
       "blocks": [
         {
@@ -153,8 +153,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, and wait five seconds."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
             },
             {
               "kind": "prompt",
@@ -309,7 +314,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b14b98291d89ad85",
+      "sourceHash": "fnv1a64:82da8a4cdd9596e3",
       "notice": null,
       "blocks": [
         {
@@ -359,8 +364,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, and wait five seconds."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
             },
             {
               "kind": "prompt",
@@ -520,7 +530,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d24efc67543e65bf",
+      "sourceHash": "fnv1a64:f2988221ac35cedb",
       "notice": null,
       "blocks": [
         {
@@ -566,8 +576,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, and wait five seconds."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
             },
             {
               "kind": "prompt",
@@ -626,7 +641,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:198109265a10ae9c",
+      "sourceHash": "fnv1a64:2b04a4c8aaf41f5c",
       "notice": null,
       "blocks": [
         {
@@ -662,7 +677,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the three words in mixed order, say each from its meaning, and match three printed cards."
+              "text": "Hear the three words in mixed order and say each from its meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "three printed cards and match them",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: three printed cards and match them]"
             },
             {
               "kind": "prompt",
@@ -722,7 +746,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5fdd0b3ea87ee721",
+      "sourceHash": "fnv1a64:6dafbf0a434cfae1",
       "notice": null,
       "blocks": [
         {
@@ -769,8 +793,13 @@
               "text": "Produce three words from meaning cues."
             },
             {
-              "kind": "speech",
-              "text": "Match three printed cards to meanings."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "three printed cards and match them to meanings",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: three printed cards and match them to meanings]"
             },
             {
               "kind": "prompt",
@@ -834,7 +863,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7183170d9eb209f7",
+      "sourceHash": "fnv1a64:4ea9e2e066bf3497",
       "notice": null,
       "blocks": [
         {
@@ -870,7 +899,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Without a model, hear one word, say its meaning, and read the other two in mixed order."
+              "text": "Without a model, hear one word and say its meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the other two in mixed order",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the other two in mixed order]"
             },
             {
               "kind": "prompt",

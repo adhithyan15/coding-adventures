@@ -48,7 +48,7 @@ No new grammar is hiding here. **もう** points beyond the present amount;
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-MOU-SUKOSHI] -->
 
-1. Read **もう | すこし**.
+1. [YOU READ: **もう | すこし**]
 2. Say *mō sukoshi*, keeping the extra beat in **もう**.
 3. Hear the phrase and wait ten seconds. [YOU WRITE: **もうすこし** from memory]
 

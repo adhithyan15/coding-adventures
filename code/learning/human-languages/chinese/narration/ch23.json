@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "De — The Hinge",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:81d7d939d9d53ab9",
+  "sourceHash": "fnv1a64:9fded9446ec3049b",
   "lessons": [
     {
       "id": "ZH-W23-de",
@@ -423,7 +423,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1eb5bded2e0dcf29",
+      "sourceHash": "fnv1a64:ea631e8ee7129847",
       "notice": null,
       "blocks": [
         {
@@ -512,7 +512,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read the Mandarin order against the English. English says the person who reads books: noun first, description trailing after it. Mandarin says reads-books 的 person: description first, noun last, always."
+              "text": "Set the Mandarin order against the English. English says the person who reads books: noun first, description trailing after it. Mandarin says reads-books 的 person: description first, noun last, always."
             },
             {
               "kind": "speech",
@@ -768,7 +768,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:be709ceb9ff4318c",
+      "sourceHash": "fnv1a64:99ca97c61d66a2ec",
       "notice": null,
       "blocks": [
         {
@@ -876,8 +876,13 @@
               "text": "Speak. Say whose the book is, then say who the reader is."
             },
             {
-              "kind": "speech",
-              "text": "Read. 我的名字 — 看书的学生 — 书 — 我看."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "我的名字 — 看书的学生 — 书 — 我看",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: 我的名字 — 看书的学生 — 书 — 我看]"
             },
             {
               "kind": "prompt",

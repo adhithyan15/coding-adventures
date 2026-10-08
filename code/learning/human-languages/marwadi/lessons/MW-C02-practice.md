@@ -54,7 +54,7 @@ Marwadi gratitude form; do not make this one word carry every register.
 1. **Listen:** ask someone or a screen reader to say *ābhār*; identify it as
    formal gratitude.
 2. **Speak:** imagine receiving help and say **आभार** without reading.
-3. **Read:** choose the thanks word from **राम · आभार · सा**.
+3. [YOU READ: **राम · आभार · सा**, then choose the thanks word]
 4. [YOU WRITE: **आभार** from memory, after fifteen seconds with the book closed]
 
 The written response counts only with the model hidden.

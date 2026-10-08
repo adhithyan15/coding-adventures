@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:79fb848cd9b16329",
+  "sourceHash": "fnv1a64:65bce183605e4c43",
   "lessons": [
     {
       "id": "TE-S01-letter-ta",
@@ -1906,7 +1906,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f04f7586ddeecf9b",
+      "sourceHash": "fnv1a64:5dac14a3e68e734b",
       "notice": null,
       "blocks": [
         {
@@ -1933,7 +1933,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Three sentences about yourself, read off the page before you say them:"
+              "text": "Three sentences about yourself."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each off the page before you say it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each off the page before you say it]"
             },
             {
               "kind": "table",

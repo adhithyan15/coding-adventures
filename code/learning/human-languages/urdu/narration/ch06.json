@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Five Verbs at the Core",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3a080cedfaa9dac7",
+  "sourceHash": "fnv1a64:fbe76e6108503088",
   "lessons": [
     {
       "id": "UR-C06-hona",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:71b0203605cb0f64",
+      "sourceHash": "fnv1a64:c0d2a9932fe87148",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,20 @@
             },
             {
               "kind": "speech",
-              "text": "Read from the right edge: ہ h, then و carrying o, then ن n, then ا long ā. Every one of those four shapes has already turned up in a word you have met. There is nothing new to decode here, which is rare, and worth enjoying."
+              "text": "From the right edge: ہ h, then و carrying o, then ن n, then ا long ā."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the word from the right edge",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the word from the right edge]"
+            },
+            {
+              "kind": "speech",
+              "text": "Every one of those four shapes has already turned up in a word you have met. There is nothing new to decode here, which is rare, and worth enjoying."
             }
           ]
         },

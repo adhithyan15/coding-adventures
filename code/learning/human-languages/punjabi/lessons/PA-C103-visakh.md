@@ -38,7 +38,8 @@ reviews_of: [PA-C103-cet]
 
 [PAUSE 2s] Before the new one: say the Punjabi for December, then the Punjabi for Chet.
 
-[PAUSE 1s] Read these two lines without stopping: **ਮੇਰਾ ਨਾਂ ਅਮਨ ਹੈ। ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ।**
+[PAUSE 1s]
+[YOU READ: these two lines without stopping — **ਮੇਰਾ ਨਾਂ ਅਮਨ ਹੈ। ਮੈਂ ਪੰਜਾਬੀ ਬੋਲਦਾ ਹਾਂ।**]
 
 ## You'll want to know: ਵਿਸਾਖ
 <!-- hl-knowledge: introduces=[PA-LEX-C103-TIME103-05]; assesses=[] -->

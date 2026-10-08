@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 160,
-  "sourceHash": "fnv1a64:dc4ae28931bb5b61",
+  "sourceHash": "fnv1a64:dfcd5db46ac824fb",
   "lessonIds": [
     "LA-C160-numero",
     "LA-C160-deleo",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "latin/narration/ch160.txt",
   "json": "latin/narration/ch160.json",
-  "textHash": "fnv1a64:b30fe9f8b9cf46ac",
-  "jsonHash": "fnv1a64:8a7058edf575db47",
+  "textHash": "fnv1a64:e61b57b05648d9e4",
+  "jsonHash": "fnv1a64:24b7277e338ebd9c",
   "findings": []
 }

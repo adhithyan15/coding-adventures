@@ -33,7 +33,7 @@ reviews_of: [TA-W24-read-kadai]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-KADAI-01] -->
 
-[PAUSE 2s] Before the new one: read **கடை**, and say what it means.
+[PAUSE 2s] Before the new one, say what **கடை** means. [YOU READ: **கடை**]
 
 ## You'll want to know: பணம்
 <!-- hl-knowledge: introduces=[TA-LEX-C68-SHOP-03]; assesses=[] -->

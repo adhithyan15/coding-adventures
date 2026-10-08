@@ -4,7 +4,7 @@
   "chapter": 151,
   "title": "A Word for Shade — Then Its First Letter",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:07393923844f1bf8",
+  "sourceHash": "fnv1a64:c20b2b12feec4951",
   "lessons": [
     {
       "id": "TE-C151-chhaya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1531017d7962b74",
+      "sourceHash": "fnv1a64:d1f53c3c83ffce1c",
       "notice": null,
       "blocks": [
         {
@@ -59,7 +59,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it in two gentle pieces: chā, ya. The first sound is an airy ch; the second is the familiar య sound. Read the word as ఛా-య."
+              "text": "Say it in two gentle pieces: chā, ya. The first sound is an airy ch; the second is the familiar య sound. Say the word as ఛా-య."
             },
             {
               "kind": "speech",
@@ -357,7 +357,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d6a207b111cae71b",
+      "sourceHash": "fnv1a64:f20fb977de6b476d",
       "notice": null,
       "blocks": [
         {
@@ -383,8 +383,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read ఛాయ (chāya) once. Cover it."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "ఛాయ (chāya) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **ఛాయ** once]"
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the word]"
             },
             {
               "kind": "prompt",
@@ -396,8 +410,22 @@
               "source": "[YOU WRITE: only its first base letter — **ఛ**]"
             },
             {
-              "kind": "speech",
-              "text": "Now uncover the word and check two things: the broad curved body and the short separate stem beneath it. Add the long ా sign only after the base letter is steady."
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "the uncovered word for two things — the broad curved body and the short separate stem beneath it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: the uncovered word for two things — the broad curved body and the short separate stem beneath it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the long ా sign only after the base letter is steady",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the long **ా** sign only after the base letter is steady]"
             },
             {
               "kind": "prompt",

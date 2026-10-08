@@ -1,7 +1,7 @@
 {
   "language": "punjabi",
   "chapter": 43,
-  "sourceHash": "fnv1a64:0361bd9fa5a55673",
+  "sourceHash": "fnv1a64:5c3553a7a46872e8",
   "lessonIds": [
     "PA-C43-kaun",
     "PA-C43-kadon",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "punjabi/narration/ch43.txt",
   "json": "punjabi/narration/ch43.json",
-  "textHash": "fnv1a64:784e7fd4393c6e5b",
-  "jsonHash": "fnv1a64:ba6cd27688dd8729",
+  "textHash": "fnv1a64:fbb3480e9fe4a94f",
+  "jsonHash": "fnv1a64:96b364db960524ee",
   "findings": []
 }

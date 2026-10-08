@@ -40,7 +40,9 @@ reviews_of: [TE-C68-voice]
 
 **పాట** (*pāṭa*) — "a song".
 
-పాట is a song. Watch the middle letter. పాత, with a plain letter, is the word for old that you already have; పాట is a song. One has the tongue behind the teeth and the other has it curled back.
+పాట is a song. Listen for the middle letter. పాత, with a plain letter, is the
+word for old that you already have; పాట is a song. One has the tongue behind the
+teeth and the other has it curled back.
 
 The word is inherited and it is everywhere: work songs at the కల్లం, lullabies, film songs a whole state can hum. A Telugu speaker will name a పాట faster than a book.
 

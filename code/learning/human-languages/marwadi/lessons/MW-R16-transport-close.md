@@ -42,8 +42,10 @@ reviews_of: [MW-C16-transport-three, MW-C16-bas, MW-C16-gaadi, MW-C16-thela]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-TRANSPORT-THREE-FOUR-SKILL-01, MW-LEX-BAS-01, MW-SCRIPT-BAS-01, MW-LEX-GAADI-01, MW-SCRIPT-GAADI-01, MW-LEX-THELA-01, MW-SCRIPT-THELA-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-With every model hidden, identify, say, and read **बस**, **गाड़ी**, and **ठेला**
-in a shuffled order. [YOU WRITE: all three, in a shuffled order]
+With every model hidden, identify and say **बस**, **गाड़ी**, and **ठेला** in a
+shuffled order. [YOU READ: all three, shuffled]
+
+[YOU WRITE: all three, in a shuffled order]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-TRANSPORT-THREE-FOUR-SKILL-01] -->

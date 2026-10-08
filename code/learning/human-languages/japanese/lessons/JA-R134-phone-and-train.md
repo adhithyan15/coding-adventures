@@ -45,7 +45,7 @@ reviews_of: [JA-C134-denwa, JA-W134-de, JA-C134-densha, JA-C134-kaban, JA-W134-b
 ## Guided Practice — read the seven words
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANCHOR-DENWA, JA-SCRIPT-DE-01, JA-LEX-C134-DENSHA, JA-LEX-ANCHOR-KABAN, JA-SCRIPT-BA-01, JA-LEX-C134-BASHO, JA-LEX-ANCHOR-TABERU, JA-SCRIPT-BE-01, JA-LEX-C134-BENKYOU, JA-LEX-ANCHOR-SHINBUN, JA-SCRIPT-BU-01] -->
 
-[PAUSE 2s each] Read each one aloud and say what it means.
+[PAUSE 2s each] [YOU READ: each one below aloud, then say what it means]
 
 - [YOU READ: **でんわ** — a telephone]
 - [YOU READ: **でんしゃ** — a train]

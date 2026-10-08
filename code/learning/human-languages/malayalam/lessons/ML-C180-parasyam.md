@@ -41,7 +41,11 @@ reviews_of: [ML-C180-vataka]
 ## You'll want to know: പരസ്യം
 <!-- hl-knowledge: introduces=[ML-LEX-C180-VAYANA180-04]; assesses=[] -->
 
-**പരസ്യം** — *parasyaṁ* — "an advertisement". Read the advert: **വീട് വാടകയ്ക്ക്** — *vīṭŭ vāṭakaykkŭ* — "House for rent."
+**പരസ്യം** — *parasyaṁ* — "an advertisement".
+
+[YOU READ: the advert]
+
+The advert says **വീട് വാടകയ്ക്ക്** — *vīṭŭ vāṭakaykkŭ* — "House for rent."
 
 ## What you've built
 <!-- hl-knowledge: introduces=[]; assesses=[] -->

@@ -4,7 +4,7 @@
   "chapter": 114,
   "title": "Exam, Language, Vegetable, Onion, Garlic",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:b2ee6b038cb891ba",
+  "sourceHash": "fnv1a64:a942732fdba59b9d",
   "lessons": [
     {
       "id": "UR-C114-imtihan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc339098d5cb2281",
+      "sourceHash": "fnv1a64:f42c4c8ed08ace5b",
       "notice": null,
       "blocks": [
         {
@@ -44,8 +44,13 @@
               "source": "[PAUSE 3s]"
             },
             {
-              "kind": "speech",
-              "text": "Read the two lines aloud, one after the other: یہ میز ہے۔ وہ دروازہ ہے۔."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the two lines aloud, one after the other — یہ میز ہے۔ وہ دروازہ ہے۔",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the two lines aloud, one after the other — **یہ میز ہے۔ وہ دروازہ ہے۔**]"
             }
           ]
         },

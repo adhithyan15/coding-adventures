@@ -37,9 +37,8 @@ reviews_of: [FA-C10-baradar, FA-C10-pedar, FA-C10-madar, FA-C02-esm-e-man]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-BARADAR, FA-SCRIPT-ESM-MAN-AST] -->
 
-[PAUSE 2s] Say **برادر**. Then read **اسمِ من ... است** once more, from the
-right edge — the very first sentence this track ever built, and the pattern
-this lesson reuses to close a family.
+[PAUSE 2s] Say **برادر**.
+[YOU READ: **اسمِ من ... است** once more, from the right edge — the very first sentence this track ever built, and the pattern this lesson reuses to close a family]
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[FA-LEX-DOKHTAR]; assesses=[] -->

@@ -54,7 +54,8 @@ before.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BRING-REQUEST-01, MW-SCRIPT-LAVO-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Read the line once and cover it for ten seconds.
+[YOU READ: the line once, then cover it for ten seconds]
+
 [YOU WRITE: the line; then the two variants from memory — check that **लावो** is identical in all three]
 
 ## Wrap-up Recall

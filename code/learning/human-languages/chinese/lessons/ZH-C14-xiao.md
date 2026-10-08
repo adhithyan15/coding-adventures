@@ -41,7 +41,7 @@ reviews_of: [ZH-C14-hear-xiao, ZH-W14-xiao]
 
 > **小** — *xiǎo* — **small; little**
 
-Read the character without pinyin, then say it with a low third tone.
+[YOU READ: the character without pinyin, then say it with a low third tone]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XIAO-01, ZH-SCRIPT-XIAO-01] -->

@@ -49,7 +49,7 @@ familiar **య** at the end and a different uncommon letter at the beginning.
 **ఛాయ** — *chāya* — "shade" or "shadow".
 
 Say it in two gentle pieces: *chā · ya*. The first sound is an airy **ch**; the
-second is the familiar **య** sound. Read the word as **ఛా-య**.
+second is the familiar **య** sound. Say the word as **ఛా-య**.
 
 **ఛాయ** is a learned word with a wider range than one dark shape. In literary
 or careful language it can also name a reflected image or a tinge of colour.

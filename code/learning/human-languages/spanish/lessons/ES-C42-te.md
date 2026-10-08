@@ -50,8 +50,8 @@ the same way English keeps *I* and *me* apart.
 > *Me quieres.* — You love me.
 > *Te quiero.* — I love you.
 
-Two words each, and a complete exchange. Read them aloud one after the other:
-the pair is a conversation.
+Two words each, and a complete exchange. Say them aloud one after the other: the
+pair is a conversation.
 
 **One thing worth knowing before you use it.** *Querer* means *to want*, and you
 have been using it that way for a long time. But *querer* pointed at a **person**

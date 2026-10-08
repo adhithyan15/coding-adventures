@@ -38,7 +38,8 @@ reviews_of: [KA-C137-kampyutar]
 
 [PAUSE 2s] Before the new one: say the Kannada for a television, then the Kannada for a computer.
 
-[PAUSE 2s] Read the digits aloud: **೨**, **೪**, **೫**, **೬**, **೭**, **೮**, **೯**, **೦**.
+[PAUSE 2s]
+[YOU READ: the digits aloud — **೨**, **೪**, **೫**, **೬**, **೭**, **೮**, **೯**, **೦**]
 
 ## You'll want to know: ರೂಪಾಯಿ
 <!-- hl-knowledge: introduces=[KA-LEX-C138-THINGS138-01]; assesses=[] -->

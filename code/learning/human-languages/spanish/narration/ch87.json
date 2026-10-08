@@ -4,7 +4,7 @@
   "chapter": 87,
   "title": "Synthesis --- Saying It Once",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:030842fa60e1bf2d",
+  "sourceHash": "fnv1a64:adfb772021da9f52",
   "lessons": [
     {
       "id": "ES-C42-sintesis-decirlo-una-vez",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f92a7abe2ef7c240",
+      "sourceHash": "fnv1a64:7affa0e52e237dfa",
       "notice": null,
       "blocks": [
         {
@@ -46,7 +46,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here are the same two exchanges, twice. Read both versions aloud."
+              "text": "Here are the same two exchanges, twice."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "both versions aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: both versions aloud]"
             },
             {
               "kind": "speech",

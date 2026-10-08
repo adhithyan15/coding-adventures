@@ -33,7 +33,9 @@ reviews_of: [TA-C80-price]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-READ-MARRADU-01, TA-PRAGMATICS-C80-PRICE-03] -->
 
-[PAUSE 2s] Read **மற்றது**. Then ask a shopkeeper the price.
+[PAUSE 2s] [YOU READ: **மற்றது**]
+
+Then ask a shopkeeper the price.
 
 ## Grammar lens: one language, two forms, and everybody uses both
 <!-- hl-knowledge: introduces=[TA-PRAGMATICS-C81-REG-01]; assesses=[] -->

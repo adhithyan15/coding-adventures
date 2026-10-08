@@ -4,7 +4,7 @@
   "chapter": 74,
   "title": "One Ending, Two Sentences",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:662cccb70c492569",
+  "sourceHash": "fnv1a64:22bdf037a9b45a43",
   "lessons": [
     {
       "id": "ML-C74-aan",
@@ -509,7 +509,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:97a697730d9e09f8",
+      "sourceHash": "fnv1a64:e50c2daac83f0788",
       "notice": null,
       "blocks": [
         {
@@ -525,7 +525,7 @@
             },
             {
               "kind": "speech",
-              "text": "Close the lessons before this one. Take to read, to go and to see out of the dictionary and swap their endings."
+              "text": "From memory alone, take to read, to go and to see out of the dictionary and swap their endings."
             }
           ]
         },

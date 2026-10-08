@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "The Past That Takes To Be",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:00503e83f01ee2e8",
+  "sourceHash": "fnv1a64:6974ef74f86450db",
   "lessons": [
     {
       "id": "GE-C16-perfekt-sein",
@@ -850,7 +850,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da82209e87cd83ac",
+      "sourceHash": "fnv1a64:40acdf83dd732a70",
       "notice": null,
       "blocks": [
         {
@@ -910,7 +910,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look closely at gewesen. Strip the ge- wrap and the -en ending and what is left is wes- — the third of the three roots inside this verb, the one that gave war and English was."
+              "text": "Listen closely to gewesen. Strip the ge- wrap and the -en ending and what is left is wes- — the third of the three roots inside this verb, the one that gave war and English was."
             },
             {
               "kind": "speech",

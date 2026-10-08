@@ -50,7 +50,8 @@ The **य** carries no vowel mark of its own here and closes the word.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-CHAAY-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, and wait five seconds.
+[YOU COVER: the model after one look, then wait five seconds]
+
 [YOU WRITE: **चाय** — check that the **ा** sits after **च** and that **य** ends the word bare]
 
 ## Wrap-up Recall

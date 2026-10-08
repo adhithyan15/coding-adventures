@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Four Family Words: Meaning First, One New Sign",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:489abf10dd5381d4",
+  "sourceHash": "fnv1a64:2f551b5adec17b8b",
   "lessons": [
     {
       "id": "MW-C08-hear-maa",
@@ -445,7 +445,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f456dfe04c3f553b",
+      "sourceHash": "fnv1a64:83aa65daa5e65ebf",
       "notice": null,
       "blocks": [
         {
@@ -498,7 +498,16 @@
             },
             {
               "kind": "speech",
-              "text": "Only the first sign is newly learned. Read the whole word without romanization."
+              "text": "Only the first sign is newly learned."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the whole word without romanization",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the whole word without romanization]"
             }
           ]
         },
@@ -508,8 +517,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look for five seconds, cover बाप (bāp), and wait five seconds."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "बाप (bāp) after a five-second look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: **बाप** after a five-second look, then wait five seconds]"
             },
             {
               "kind": "prompt",
@@ -528,8 +542,13 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read मां (mā̃) — बाप (bāp) once, then stop."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "मां (mā̃) — बाप (bāp) once, then stop",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **मां — बाप** once, then stop]"
             },
             {
               "kind": "speech",
@@ -891,7 +910,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fcd24ba73317fea9",
+      "sourceHash": "fnv1a64:cee908c33fcf43ab",
       "notice": null,
       "blocks": [
         {
@@ -931,7 +950,16 @@
             },
             {
               "kind": "speech",
-              "text": "All three signs are earned. Read the word as two sound groups: ba-han."
+              "text": "All three signs are earned."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the word as two sound groups — ba-han",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the word as two sound groups — *ba-han*]"
             }
           ]
         },
@@ -961,8 +989,13 @@
           "title": "Wrap-up Recall",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read बहन (bahan) — भाई (bhāī) once, then stop."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "बहन (bahan) — भाई (bhāī) once, then stop",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **बहन — भाई** once, then stop]"
             },
             {
               "kind": "speech",
@@ -1006,7 +1039,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a6182c9c3e2947e8",
+      "sourceHash": "fnv1a64:e44a5fa8cc05c136",
       "notice": null,
       "blocks": [
         {
@@ -1031,7 +1064,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say its long vowel. Then close the earlier page."
+              "text": "Say its long vowel."
+            },
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the earlier page",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the earlier page]"
             }
           ]
         },
@@ -1064,8 +1106,13 @@
               "text": "Speak: produce two different labels from meanings."
             },
             {
-              "kind": "speech",
-              "text": "Read: match all four printed words."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all four printed words and match them",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all four printed words and match them]"
             },
             {
               "kind": "prompt",

@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "One to Five, and the Words English Already Says",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:8293cdac8a509b6b",
+  "sourceHash": "fnv1a64:97cc858493a22a46",
   "lessons": [
     {
       "id": "FA-C16-yek",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0bc06aca6b965d1a",
+      "sourceHash": "fnv1a64:2823d2a7216684c4",
       "notice": null,
       "blocks": [
         {
@@ -34,8 +34,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "سلام and نان off the page, without the romanization",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **سلام** and **نان** off the page, without the romanization]"
+            },
+            {
               "kind": "speech",
-              "text": "Read سلام and نان off the page, without the romanization. Nine letters, and the words they finish."
+              "text": "Nine letters, and the words they finish."
             }
           ]
         },
@@ -715,7 +724,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:51d284d2e8081dd7",
+      "sourceHash": "fnv1a64:73b28dfea7e377bd",
       "notice": null,
       "blocks": [
         {
@@ -753,8 +762,13 @@
               "text": "Count backwards from panj to yek."
             },
             {
-              "kind": "speech",
-              "text": "Read the five printed shuffled — پنج (panj)، یک (yek)، چهار (chahâr)، سه (se)، دو (do) — and say each."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the five printed shuffled — پنج (panj)، یک (yek)، چهار (chahâr)، سه (se)، دو (do) — then say each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the five printed shuffled — **پنج، یک، چهار، سه، دو** — then say each]"
             },
             {
               "kind": "prompt",

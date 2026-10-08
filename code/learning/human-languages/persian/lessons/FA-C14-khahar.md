@@ -47,8 +47,8 @@ words are done; the family the earlier tranche built — **مادر، پدر،
 > **خواهر** — *khâhar* — **sister**
 
 Five letters, all already yours: **خ و ا ه ر**. The **و** here is silent,
-exactly the pattern **خواندن** taught: written after **خ** and before
-**ا**, never pronounced. Read it **kh-â-har**.
+exactly the pattern **خواندن** taught: written after **خ** and before **ا**,
+never pronounced. Say it **kh-â-har**.
 
 ## The word, taken apart — brother's missing counterpart
 <!-- hl-knowledge: introduces=[FA-ETYMON-KHAHAR]; assesses=[] -->

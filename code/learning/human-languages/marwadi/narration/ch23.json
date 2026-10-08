@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "First Food Words: No New Signs",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:b4016604e026b7ac",
+  "sourceHash": "fnv1a64:2e377f4840f59394",
   "lessons": [
     {
       "id": "MW-C18-hear-daal",
@@ -99,7 +99,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d187916dc8e9a892",
+      "sourceHash": "fnv1a64:30dfdde8e88edda6",
       "notice": null,
       "blocks": [
         {
@@ -149,8 +149,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, and wait five seconds."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
             },
             {
               "kind": "prompt",
@@ -297,7 +302,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:35dbac6b94ce9a6b",
+      "sourceHash": "fnv1a64:8789ea80ca73e905",
       "notice": null,
       "blocks": [
         {
@@ -338,8 +343,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, and wait five seconds."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
             },
             {
               "kind": "prompt",
@@ -483,7 +493,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d75fd69082513050",
+      "sourceHash": "fnv1a64:be3ae693181bbbc4",
       "notice": null,
       "blocks": [
         {
@@ -533,8 +543,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Look, cover, and wait five seconds."
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the model after one look, then wait five seconds",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the model after one look, then wait five seconds]"
             },
             {
               "kind": "prompt",
@@ -592,7 +607,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8845d416948b972d",
+      "sourceHash": "fnv1a64:27243786386e8b4f",
       "notice": null,
       "blocks": [
         {
@@ -628,7 +643,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the three words in a mixed order, give each meaning, and read three shuffled cards."
+              "text": "Hear the three words in a mixed order and give each meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "three shuffled cards",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: three shuffled cards]"
             },
             {
               "kind": "prompt",
@@ -688,7 +712,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:652e76f735247b2a",
+      "sourceHash": "fnv1a64:1bc03ea2c13d0922",
       "notice": null,
       "blocks": [
         {
@@ -731,8 +755,13 @@
               "text": "Produce three words from meaning cues."
             },
             {
-              "kind": "speech",
-              "text": "Match three printed cards to meanings."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "three printed cards and match them to meanings",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: three printed cards and match them to meanings]"
             },
             {
               "kind": "prompt",
@@ -793,7 +822,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9fc4187b4e1999e6",
+      "sourceHash": "fnv1a64:0c91ff33ed06dcae",
       "notice": null,
       "blocks": [
         {
@@ -829,7 +858,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "With every model hidden, identify, say, and read दाल (dāl), घी (ghī), and सबजी (sabjī) in a shuffled order."
+              "text": "With every model hidden, identify and say दाल (dāl), घी (ghī), and सबजी (sabjī) in a shuffled order."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "all three, shuffled",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: all three, shuffled]"
             },
             {
               "kind": "prompt",

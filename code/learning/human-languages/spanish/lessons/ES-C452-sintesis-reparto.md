@@ -38,7 +38,7 @@ you to one using the other.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C452-REPARTO-01, ES-LEX-C452-REPARTO-03, ES-LEX-C452-REPARTO-04] -->
 
-A card through the letterbox. Read it, then answer.
+A card through the letterbox. [YOU READ: the card, then answer]
 
 > **AVISO DE ENTREGA**
 
@@ -75,9 +75,11 @@ and every card of this kind.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-C452-REPARTO-01, ES-LEX-C452-REPARTO-02, ES-LEX-C452-REPARTO-03, ES-LEX-C452-REPARTO-04] -->
 
-[PAUSE 3s] Now your turn, out loud and then in writing. Four lines for a
-delivery card: say nobody was in, say the parcel goes back to the warehouse,
-give a tracking number to check, and offer a time that suits them.
+[PAUSE 3s] Now your turn, out loud. Four lines for a delivery card: say nobody
+was in, say the parcel goes back to the warehouse, give a tracking number to
+check, and offer a time that suits them.
+
+[YOU WRITE: the same four lines]
 
 Then check yourself: did *cómoda* agree with *la hora*, and did you use the
 *usted* command?

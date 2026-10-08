@@ -4,7 +4,7 @@
   "chapter": 127,
   "title": "Curtain, Lock, Handkerchief, Bracelet, Earring",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:2afaf9df64953b3c",
+  "sourceHash": "fnv1a64:f5b998604fc8d215",
   "lessons": [
     {
       "id": "AR-C127-sitara",
@@ -142,7 +142,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ecf06447955175de",
+      "sourceHash": "fnv1a64:66abe0e520c964e2",
       "notice": null,
       "blocks": [
         {
@@ -167,8 +167,17 @@
               "source": "[PAUSE 1s]"
             },
             {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "قال",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **قال**]"
+            },
+            {
               "kind": "speech",
-              "text": "Read قال. Which letter is the deep q? (ق, qāf, two dots above.)"
+              "text": "Which letter is the deep q? (ق, qāf, two dots above.)"
             }
           ]
         },
