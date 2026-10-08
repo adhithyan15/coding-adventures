@@ -16999,6 +16999,28 @@ fallback. No live open PR overlaps geometry fixtures/specs or parity state.
 Keep the existing twelve-lane flattening repairs separate from this neutral
 fixture slice.
 
+## Post-#17109 inventory and next geometry tranche
+
+PR #17109 passed its terminal CI/CodeQL gates and was squash auto-merged at
+`34fc85f7e0da67a7d41d0e229ab3c975ccb55342`; the merge was verified on
+fetched `origin/main`. The exact-main schema-3 reporter still finds 15
+established implementation languages, 1,497 implementation identities, 4,770
+occupied slots, 1,539 all-reported identities, 178 high-consensus packages,
+zero canonical collisions, and zero unknown language buckets. The bounded
+parallel inventory and OCaml audits found no newly unowned gap; existing
+execution, native build-tool, CI, and denominator-promotion owners remain
+pending for OCaml.
+
+The `geometry-affine2d-bezier2d-java-kotlin-dart-lane-parity` owner is now
+selected on a fresh clean branch. Java, Kotlin, and Dart each have Point2D but
+none has Affine2D or Bezier2D. The merged neutral G2D01/G2D02 corpus supplies
+five affine and three Bezier cases, with nine separate flattening cases. This
+one dependency-shaped port fills six absent package slots and unlocks the
+three Arc2D slots downstream. Keep Arc2D in its separate owner. The Ruby
+repository-boundary digest adoption is independently ready and ranks second;
+its existing graph/diff reader should not be reimplemented. No active parity
+PR or package-path overlap remained after #17109 merged.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
