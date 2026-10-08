@@ -43,12 +43,12 @@ flatbread.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-KHA-01, MW-SCRIPT-YA-01, MW-SCRIPT-SHA-01, MW-SCRIPT-TTA-01, MW-SCRIPT-DIKHAVO-01, MW-SCRIPT-YE-01, MW-SCRIPT-RIKSHA-01, MW-SCRIPT-ROTI-01, MW-SCRIPT-CHAAY-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Without a model, write four single signs from sound cues: **ख**, **य**, **श**,
-**ट**. Three of those four have been on the page for chapters without being
-asked for on their own, which is why they are here.
+[YOU WRITE: four single signs from sound cues, without a model — **ख**, **य**, **श**, **ट**]
 
-Then write **दिखावो**, **ये**, **रिक्शा**, **रोटी**, and **चाय** from
-dictation. Repair only the missed unit and rewrite its word once.
+Three of those four have been on the page for chapters without being asked for
+on their own, which is why they are here.
+
+[YOU WRITE: **दिखावो**, **ये**, **रिक्शा**, **रोटी**, and **चाय** from dictation — repair only the missed unit and rewrite its word once]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-KHA-01, MW-SCRIPT-SHA-01] -->

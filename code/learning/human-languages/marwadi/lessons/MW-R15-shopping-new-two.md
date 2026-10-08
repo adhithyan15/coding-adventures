@@ -36,13 +36,14 @@ reviews_of: [MW-C15-kapda, MW-C15-mahango, MW-W15-nukta]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-NUKTA-01, MW-SCRIPT-RRA-01, MW-PERFORMANCE-WEATHER-SIX-FOUR-SKILL-01, MW-SCRIPT-DUKAN-01] -->
 
-[PAUSE 20s] Recall the six-word weather payoff, write shop, then write **ड़**.
+[PAUSE 20s] Recall the six-word weather payoff.
+[YOU WRITE: the word for shop, then **ड़**]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-KAPDA-01, MW-SCRIPT-KAPDA-01, MW-LEX-MAHANGO-01, MW-SCRIPT-MAHANGO-01] -->
 
-Hear both words in both orders, give each meaning, read two cards, then write
-both from sound.
+Hear both words in both orders, give each meaning, and read two cards.
+[YOU WRITE: both from sound]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-KAPDA-01, MW-LEX-MAHANGO-01] -->

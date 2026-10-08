@@ -37,8 +37,8 @@ reviews_of: [MW-C09-hear-bachcha, MW-W09-cha, MW-W05-virama, MW-C09-patni]
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-BACHCHA-01]; assesses=[MW-LEX-BACHCHA-01, MW-SCRIPT-BA-01, MW-SCRIPT-CHA-01, MW-SCRIPT-VIRAMA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-PATNI-01, MW-LEX-PATNI-01, MW-SCRIPT-BHA-01, MW-SCRIPT-DADI-01] -->
 
-[PAUSE 20s] Say child and wife. Write **ब**, **च**, **्**, **ा**, familiar **भ**,
-then write **पत्नी** and **दादी** from memory.
+[PAUSE 20s] Say child and wife.
+[YOU WRITE: **ब**, **च**, **्**, **ा**, familiar **भ**, then **पत्नी** and **दादी** from memory]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BACHCHA-01, MW-SCRIPT-BACHCHA-01] -->
@@ -49,8 +49,7 @@ then write **पत्नी** and **दादी** from memory.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BACHCHA-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Copy once. Cover it, wait five seconds, and write it. Check the doubled middle
-before checking the final vowel mark.
+[YOU WRITE: one copy of **बच्चा**; then cover it, wait five seconds, and write it again — check the doubled middle before checking the final vowel mark]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BACHCHA-01, MW-SCRIPT-BACHCHA-01] -->

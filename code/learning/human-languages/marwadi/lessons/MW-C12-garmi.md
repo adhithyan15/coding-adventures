@@ -37,8 +37,8 @@ reviews_of: [MW-C12-hear-garmi, MW-W12-ga, MW-C12-mausam, MW-C11-hawa, MW-C06-he
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-GARMI-01]; assesses=[MW-LEX-GARMI-01, MW-SCRIPT-GA-01, MW-SCRIPT-VIRAMA-01, MW-SCRIPT-RA-01, MW-SCRIPT-MA-01, MW-SCRIPT-II-MATRA-01, MW-LEX-MAUSAM-01, MW-SCRIPT-MAUSAM-01, MW-LEX-HAWA-01, MW-ANSWER-WELLBEING-HEARD-01, MW-LEX-HOON-01, MW-LEX-THIK-01, MW-SCRIPT-HAATH-01] -->
 
-[PAUSE 30s] Say heat, weather, wind, and the known fine answer; write **हाथ**
-and **मौसम**, then form **ग**, **र्**, **म**, and **ी**.
+[PAUSE 30s] Say heat, weather, wind, and the known fine answer.
+[YOU WRITE: **हाथ** and **मौसम**, then form **ग**, **र्**, **म**, and **ी**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-GARMI-01, MW-SCRIPT-GARMI-01] -->
@@ -49,8 +49,8 @@ and **मौसम**, then form **ग**, **र्**, **म**, and **ी**.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-GARMI-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **गर्मी**. Check the virama under **र**
-and long **ी** after **म**.
+Look, cover, and wait five seconds.
+[YOU WRITE: **गर्मी** — check the virama under **र** and long **ी** after **म**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-GARMI-01, MW-SCRIPT-GARMI-01] -->

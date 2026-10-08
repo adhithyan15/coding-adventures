@@ -37,8 +37,8 @@ reviews_of: [MW-R24-pay-two, MW-C13-dukan, MW-W13-u-matra, MW-C15-shopping-seven
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-SHOPPING-SEVEN-FOUR-SKILL-01, MW-LEX-DUKAN-01, MW-SCRIPT-DUKAN-01, MW-SCRIPT-U-MATRA-01, MW-SCRIPT-LO-01] -->
 
-[PAUSE 24s] Recall the seven-word shopping payoff, write shop, then write
-*take it*.
+[PAUSE 24s] Recall the seven-word shopping payoff.
+[YOU WRITE: the word for shop, then the word for *take it*]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-DO-01]; assesses=[MW-LEX-LO-01, MW-LEX-PAY-01] -->

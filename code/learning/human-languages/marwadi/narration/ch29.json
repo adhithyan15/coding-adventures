@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Take the Money: Closing the Bargain",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f25b8553725ebbdd",
+  "sourceHash": "fnv1a64:696b6f191fc2d604",
   "lessons": [
     {
       "id": "MW-C24-hear-lo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d2dc419a38082eb",
+      "sourceHash": "fnv1a64:6701b183f3f75e7d",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the bargaining payoff and the three-word shopping payoff, then write price and make it."
+              "text": "Recall the bargaining payoff and the three-word shopping payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for price and make it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for price and *make it*]"
             }
           ]
         },
@@ -202,7 +211,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a7d7ccb53d54a99",
+      "sourceHash": "fnv1a64:589c17cceadfa555",
       "notice": null,
       "blocks": [
         {
@@ -218,7 +227,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the five-word shopping payoff, say the counter-offer, then write goods, money, and take it."
+              "text": "Recall the five-word shopping payoff and say the counter-offer."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for goods, money, and take it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for goods, money, and *take it*]"
             }
           ]
         },
@@ -287,7 +305,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2acedd97eccd8593",
+      "sourceHash": "fnv1a64:1415f83f6c17aec5",
       "notice": null,
       "blocks": [
         {
@@ -302,8 +320,13 @@
               "source": "[PAUSE 22s]"
             },
             {
-              "kind": "speech",
-              "text": "Write ै on its own, then write what and this."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ै on its own, then the words for what and this",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ै** on its own, then the words for *what* and *this*]"
             }
           ]
         },
@@ -329,7 +352,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read the line once. Cover it for ten seconds and write all three words. Open the model and check the two marks on the two ल before anything else."
+              "text": "Read the line once and cover it for ten seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three words — then open the model and check the two marks on the two ल before anything else",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three words — then open the model and check the two marks on the two **ल** before anything else]"
             }
           ]
         },
@@ -377,7 +409,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc4883d382e85f70",
+      "sourceHash": "fnv1a64:3c9533313d574250",
       "notice": null,
       "blocks": [
         {
@@ -393,7 +425,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the three-counter request payoff. Write the request itself, then write how much and clarified butter."
+              "text": "Recall the three-counter request payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the request itself, then the words for how much and clarified butter",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the request itself, then the words for *how much* and clarified butter]"
             }
           ]
         },
@@ -404,7 +445,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the word alone and the whole line, in both orders, and give each meaning. Read two cards. Write both from sound, then say the line at speaking pace with your hand out as if the money were in it."
+              "text": "Hear the word alone and the whole line, in both orders, and give each meaning. Read two cards."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both from sound",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both from sound]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then say the line at speaking pace with your hand out as if the money were in it."
             }
           ]
         },
@@ -454,7 +508,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0922a284f0aa8593",
+      "sourceHash": "fnv1a64:25b975dcc3ee3f9b",
       "notice": null,
       "blocks": [
         {
@@ -470,7 +524,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the seven-word shopping payoff, write shop, then write take it."
+              "text": "Recall the seven-word shopping payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for shop, then the word for take it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for shop, then the word for *take it*]"
             }
           ]
         },
@@ -637,7 +700,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89c2796ee92d021f",
+      "sourceHash": "fnv1a64:e4c12b3253bbf487",
       "notice": null,
       "blocks": [
         {
@@ -652,8 +715,13 @@
               "source": "[PAUSE 24s]"
             },
             {
-              "kind": "speech",
-              "text": "Write the counter-offer, then write ख, horse, and give."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the counter-offer, then ख and the words for horse and give",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the counter-offer, then **ख** and the words for horse and *give*]"
             }
           ]
         },
@@ -820,7 +888,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ae08c9bd634d772c",
+      "sourceHash": "fnv1a64:0691c8232014780c",
       "notice": null,
       "blocks": [
         {
@@ -836,7 +904,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say the first price question, then write how much, price, final, and give."
+              "text": "Say the first price question."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for how much, price, final, and give",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for *how much*, price, *final*, and *give*]"
             }
           ]
         },
@@ -905,7 +982,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74a30fdf7f56fc53",
+      "sourceHash": "fnv1a64:86f19b9557ecbeaf",
       "notice": null,
       "blocks": [
         {
@@ -920,8 +997,13 @@
               "source": "[PAUSE 24s]"
             },
             {
-              "kind": "speech",
-              "text": "Write भ and ग on their own, then write brother."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "भ and ग on their own, then the word for brother",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **भ** and **ग** on their own, then the word for brother]"
             }
           ]
         },
@@ -936,7 +1018,16 @@
             },
             {
               "kind": "speech",
-              "text": "Four written words. Three you have written alone; the fourth, दोगे, is the दो (do) of two lessons ago with गे added. Write दो (do) and दोगे one above the other so the added part is the only difference on the page."
+              "text": "Four written words. Three you have written alone; the fourth, दोगे, is the दो (do) of two lessons ago with गे added."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "दो (do) and दोगे one above the other, so the added part is the only difference on the page",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **दो** and **दोगे** one above the other, so the added part is the only difference on the page]"
             }
           ]
         },
@@ -947,7 +1038,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read the line once. Cover it for ten seconds and write all four words. Open the model and repair only the word that changed, then rewrite that word alone."
+              "text": "Read the line once and cover it for ten seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all four words — then open the model, repair only the word that changed, and rewrite that word alone",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all four words — then open the model, repair only the word that changed, and rewrite that word alone]"
             }
           ]
         },
@@ -995,7 +1095,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9dee797c27e31613",
+      "sourceHash": "fnv1a64:f50d9001e77df07b",
       "notice": null,
       "blocks": [
         {
@@ -1011,7 +1111,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the five-word shopping payoff, write cheap, then write the total question."
+              "text": "Recall the five-word shopping payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for cheap, then the total question",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for cheap, then the total question]"
             }
           ]
         },
@@ -1022,7 +1131,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear each word out of its line and give its meaning. Read three cards: दो (do), लो, आखरी (ākhrī). Write all three from sound. Then rebuild the closing question from them and say it once at speaking pace."
+              "text": "Hear each word out of its line and give its meaning. Read three cards: दो (do), लो (lo), आखरी (ākhrī)."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three from sound",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three from sound]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then rebuild the closing question from them and say it once at speaking pace."
             }
           ]
         },
@@ -1072,7 +1194,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a6a76d653fd4dc8",
+      "sourceHash": "fnv1a64:4931526693a71668",
       "notice": null,
       "blocks": [
         {
@@ -1088,7 +1210,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the three-turn bargaining payoff, then write money, price, and goods."
+              "text": "Recall the three-turn bargaining payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for money, price, and goods",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for money, price, and goods]"
             }
           ]
         },
@@ -1114,8 +1245,13 @@
               "text": "Read both printed lines and point to the two words that mean give and take."
             },
             {
-              "kind": "speech",
-              "text": "Write both from dictation, without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both from dictation, without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both from dictation, without a model]"
             },
             {
               "kind": "speech",
@@ -1167,7 +1303,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f1809160dc98658",
+      "sourceHash": "fnv1a64:c304812229ad26a0",
       "notice": null,
       "blocks": [
         {
@@ -1183,7 +1319,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the closing payoff, then write paternal grandmother, maternal grandmother, and cart."
+              "text": "Recall the closing payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for paternal grandmother, maternal grandmother, and cart",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for paternal grandmother, maternal grandmother, and cart]"
             }
           ]
         },
@@ -1193,12 +1338,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write the three marks on their own from spoken cues: above the headstroke, after the stem, and reaching above the line. Add ख from its breath cue."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the three marks on their own from spoken cues — above the headstroke, after the stem, and reaching above the line; then add ख from its breath cue",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the three marks on their own from spoken cues — above the headstroke, after the stem, and reaching above the line; then add **ख** from its breath cue]"
             },
             {
-              "kind": "speech",
-              "text": "Then write लो (lo), दो (do), ले, आखरी (ākhrī), and both lines of this chapter from dictation. In this chapter a mark rather than a letter often carries the meaning, so check every mark before you check any letter."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "लो (lo), दो (do), ले, आखरी (ākhrī), and both lines of this chapter from dictation — in this chapter a mark rather than a letter often carries the meaning, so check every mark before you check any letter",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **लो**, **दो**, **ले**, **आखरी**, and both lines of this chapter from dictation — in this chapter a mark rather than a letter often carries the meaning, so check every mark before you check any letter]"
             }
           ]
         },

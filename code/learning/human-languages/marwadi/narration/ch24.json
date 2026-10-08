@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Bread and Rolls: One New Consonant",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a4fe922724533127",
+  "sourceHash": "fnv1a64:48a1f03463570698",
   "lessons": [
     {
       "id": "MW-C19-hear-roti",
@@ -201,7 +201,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:347184a631c9d806",
+      "sourceHash": "fnv1a64:9d106202beabc460",
       "notice": null,
       "blocks": [
         {
@@ -217,7 +217,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say flatbread and money, then write ट (ṭa)."
+              "text": "Say flatbread and money."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ट (ṭa)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ट**]"
             }
           ]
         },
@@ -243,7 +252,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write रोटी (roṭī). Check that the second consonant has no inner ring."
+              "text": "Look, cover, and wait five seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "रोटी (roṭī) — check that the second consonant has no inner ring",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **रोटी** — check that the second consonant has no inner ring]"
             }
           ]
         },
@@ -292,7 +310,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:864c03ce7ebd062c",
+      "sourceHash": "fnv1a64:036d6d712f5c13f2",
       "notice": null,
       "blocks": [
         {
@@ -307,8 +325,17 @@
               "source": "[PAUSE 18s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for flatbread and money",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for flatbread and money]"
+            },
+            {
               "kind": "speech",
-              "text": "Write flatbread and money, then say rickshaw."
+              "text": "Then say rickshaw."
             }
           ]
         },
@@ -372,7 +399,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:829b7c4450925077",
+      "sourceHash": "fnv1a64:db153c08b134135d",
       "notice": null,
       "blocks": [
         {
@@ -388,7 +415,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say hard wheat rolls, then write flatbread and श."
+              "text": "Say hard wheat rolls."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for flatbread, then श",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for flatbread, then **श**]"
             }
           ]
         },
@@ -414,7 +450,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write बाटी (bāṭī). Then write रोटी (roṭī) beneath it and check that only the first syllable changed."
+              "text": "Look, cover, and wait five seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "बाटी (bāṭī), then रोटी (roṭī) beneath it — check that only the first syllable changed",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **बाटी**, then **रोटी** beneath it — check that only the first syllable changed]"
             }
           ]
         },
@@ -463,7 +508,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3f41e3eb7f2ab3ad",
+      "sourceHash": "fnv1a64:487054d62de9fdf7",
       "notice": null,
       "blocks": [
         {
@@ -479,7 +524,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the five-word travel payoff, then write ट (ṭa) and rickshaw."
+              "text": "Recall the five-word travel payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ट (ṭa), and the word for rickshaw",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ट**, and the word for rickshaw]"
             }
           ]
         },
@@ -490,7 +544,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear both words in both orders, give each meaning, read two cards, then write both from sound."
+              "text": "Hear both words in both orders, give each meaning, and read two cards."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both from sound",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both from sound]"
             }
           ]
         },
@@ -540,7 +603,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:678469b13feaa2fa",
+      "sourceHash": "fnv1a64:dfe78001b2202f70",
       "notice": null,
       "blocks": [
         {
@@ -578,8 +641,13 @@
               "text": "Match five printed cards to meanings."
             },
             {
-              "kind": "speech",
-              "text": "Write all five heard words without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all five heard words without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all five heard words without a model]"
             },
             {
               "kind": "speech",
@@ -631,7 +699,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e10301b5f8c92f2e",
+      "sourceHash": "fnv1a64:b66e9130123352c0",
       "notice": null,
       "blocks": [
         {
@@ -647,7 +715,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the five-word food payoff, say wind, then write horse."
+              "text": "Recall the five-word food payoff and say wind."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for horse",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for horse]"
             }
           ]
         },
@@ -657,8 +734,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Without a model, write ट (ṭa) and ठ from sound cues. Then write रोटी (roṭī), बाटी (bāṭī), and ठेला from dictation. Repair only the missed unit and repeat that word once."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ट (ṭa) and ठ from sound cues, without a model; then रोटी (roṭī), बाटी (bāṭī), and ठेला from dictation — repair only the missed unit and repeat that word once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ट** and **ठ** from sound cues, without a model; then **रोटी**, **बाटी**, and **ठेला** from dictation — repair only the missed unit and repeat that word once]"
             }
           ]
         },

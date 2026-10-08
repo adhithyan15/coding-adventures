@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "How Much Is This? No New Signs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9d999ea95266ab8c",
+  "sourceHash": "fnv1a64:b5271bd41ef27dee",
   "lessons": [
     {
       "id": "MW-C22-hear-kitno",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:74d538bc527460ea",
+      "sourceHash": "fnv1a64:17aec40c0963d2c6",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the three-counter request payoff. Say price and weather, then write both and point to the ौ inside one of them."
+              "text": "Recall the three-counter request payoff. Say price and weather."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both words, and point to the ौ inside one of them",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both words, and point to the **ौ** inside one of them]"
             }
           ]
         },
@@ -202,7 +211,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7fc8677322202e5b",
+      "sourceHash": "fnv1a64:bc231d7e86aecdc7",
       "notice": null,
       "blocks": [
         {
@@ -218,7 +227,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say item and cold and write both, then write ड and है on their own."
+              "text": "Say item and cold."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both words, then ड and है on their own",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both words, then **ड** and **है** on their own]"
             }
           ]
         },
@@ -291,7 +309,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c71a3d11109ca88",
+      "sourceHash": "fnv1a64:5f2dfbbb37198bbc",
       "notice": null,
       "blocks": [
         {
@@ -307,7 +325,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say how much is this, write shop, then write ु on its own."
+              "text": "Say how much is this."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for shop, then ु on its own",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for shop, then **ु** on its own]"
             }
           ]
         },
@@ -333,7 +360,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read the line once. Cover it for ten seconds and write all four words. Open the model and repair only the word that changed, then rewrite that word alone."
+              "text": "Read the line once and cover it for ten seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all four words — then open the model, repair only the word that changed, and rewrite that word alone",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all four words — then open the model, repair only the word that changed, and rewrite that word alone]"
             }
           ]
         },
@@ -381,7 +417,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4af222ed4e260435",
+      "sourceHash": "fnv1a64:a653157df2020b65",
       "notice": null,
       "blocks": [
         {
@@ -397,7 +433,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the three-word food payoff, write ट, then write hard wheat rolls."
+              "text": "Recall the three-word food payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ट, then the word for hard wheat rolls",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ट**, then the word for hard wheat rolls]"
             }
           ]
         },
@@ -408,7 +453,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the word alone and the whole question, in both orders, and give each meaning. Read two cards. Write both from sound. Then say the request from the last chapter and this question one after the other, in that order, as they would actually fall at a counter."
+              "text": "Hear the word alone and the whole question, in both orders, and give each meaning. Read two cards."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both from sound",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both from sound]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then say the request from the last chapter and this question one after the other, in that order, as they would actually fall at a counter."
             }
           ]
         },
@@ -458,7 +516,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dcffae227d5202c1",
+      "sourceHash": "fnv1a64:b3a157be53d8ef9f",
       "notice": null,
       "blocks": [
         {
@@ -474,7 +532,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the five-word shopping payoff, then say money and goods and write both."
+              "text": "Recall the five-word shopping payoff, then say money and goods."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both words]"
             }
           ]
         },
@@ -543,7 +610,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1c0f7d2ef046c625",
+      "sourceHash": "fnv1a64:25093aa9d893419d",
       "notice": null,
       "blocks": [
         {
@@ -558,8 +625,13 @@
               "source": "[PAUSE 22s]"
             },
             {
-              "kind": "speech",
-              "text": "Write आ on its own, then write formal thanks, then write the price question from the last lesson."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "आ on its own, then the word for formal thanks, then the price question from the last lesson",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **आ** on its own, then the word for formal thanks, then the price question from the last lesson]"
             }
           ]
         },
@@ -585,7 +657,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read the line once. Cover it for ten seconds and write the three words. Check that हुआ keeps its ु below the first sign and its आ at full height."
+              "text": "Read the line once and cover it for ten seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the three words — check that हुआ keeps its ु below the first sign and its आ at full height",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the three words — check that **हुआ** keeps its **ु** below the first sign and its **आ** at full height]"
             }
           ]
         },
@@ -633,7 +714,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9c838d1085617fd4",
+      "sourceHash": "fnv1a64:79954a57f0b0ef88",
       "notice": null,
       "blocks": [
         {
@@ -675,8 +756,13 @@
               "text": "Read three printed lines and match each to its counter."
             },
             {
-              "kind": "speech",
-              "text": "Write all three from dictation, then write the total question once."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three from dictation, then the total question once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three from dictation, then the total question once]"
             },
             {
               "kind": "speech",
@@ -728,7 +814,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ed4d2f6a7a17eb2d",
+      "sourceHash": "fnv1a64:01b1e8546c0ff471",
       "notice": null,
       "blocks": [
         {
@@ -744,7 +830,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the three-counter price payoff, say water, then write ख."
+              "text": "Recall the three-counter price payoff and say water."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ख",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ख**]"
             }
           ]
         },
@@ -754,12 +849,26 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Without a model, write four single signs from sound cues: ू, ण, आ, ई. This chapter added no sign of its own, so the four it borrowed most are the four it has to prove."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "four single signs from sound cues, without a model — ू, ण, आ, ई",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: four single signs from sound cues, without a model — **ू**, **ण**, **आ**, **ई**]"
             },
             {
               "kind": "speech",
-              "text": "Then write कितणो (kitṇo), पाणी, पाछे मिलसू, and both price questions from dictation. Repair only the missed unit and rewrite its word once."
+              "text": "This chapter added no sign of its own, so the four it borrowed most are the four it has to prove."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "कितणो (kitṇo), पाणी, पाछे मिलसू, and both price questions from dictation — repair only the missed unit and rewrite its word once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **कितणो**, **पाणी**, **पाछे मिलसू**, and both price questions from dictation — repair only the missed unit and rewrite its word once]"
             }
           ]
         },

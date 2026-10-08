@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 38,
-  "sourceHash": "fnv1a64:3c5d1124612d3aa9",
+  "sourceHash": "fnv1a64:99948f5e6cbfaba1",
   "lessonIds": [
     "MW-W38-lla",
     "MW-C38-hear-sola",
@@ -20,7 +20,7 @@
   "drivablePrefix": 0,
   "text": "marwadi/narration/ch38.txt",
   "json": "marwadi/narration/ch38.json",
-  "textHash": "fnv1a64:61efc06f323720e4",
-  "jsonHash": "fnv1a64:55e4d42721d93ca1",
+  "textHash": "fnv1a64:e0f053cc76a20cb5",
+  "jsonHash": "fnv1a64:96ec500c48f2597d",
   "findings": []
 }

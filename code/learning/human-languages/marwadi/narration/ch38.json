@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Sixteen to Nineteen, Counting Down",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3c5d1124612d3aa9",
+  "sourceHash": "fnv1a64:99948f5e6cbfaba1",
   "lessons": [
     {
       "id": "MW-W38-lla",
@@ -1414,7 +1414,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e51874d42b299ac",
+      "sourceHash": "fnv1a64:9b6500cb0f1e5bea",
       "notice": null,
       "blocks": [
         {
@@ -1430,21 +1430,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write उघणीस (ughaṇīs) — R1",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "उघणीस (ughaṇīs) from memory — R1",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **उघणीस** — **R1**]"
+              "source": "[YOU WRITE: **उघणीस** from memory — **R1**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write अठारा (aṭhārā), four lessons back — R2",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "अठारा (aṭhārā) from memory, four lessons back — R2",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **अठारा**, four lessons back — **R2**]"
+              "source": "[YOU WRITE: **अठारा** from memory, four lessons back — **R2**]"
             },
             {
               "kind": "prompt",
@@ -1475,12 +1475,22 @@
               "text": "Hear six of the twenty named out of order; say each back and say the one above it."
             },
             {
-              "kind": "speech",
-              "text": "Write four of the nine teens from dictation."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "four of the nine teens from dictation",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: four of the nine teens from dictation]"
             },
             {
-              "kind": "speech",
-              "text": "Write the four signs this run of numbers added — इ, ळ (ḷa), अ, उ — and beside each write the number that needed it."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the four signs this run of numbers added — इ, ळ (ḷa), अ, उ — and beside each, the number that needed it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the four signs this run of numbers added — **इ**, **ळ**, **अ**, **उ** — and beside each, the number that needed it]"
             },
             {
               "kind": "speech",

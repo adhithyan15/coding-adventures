@@ -35,8 +35,8 @@ reviews_of: [MW-C32-paanch, MW-C26-counter-exchange, MW-C22-hear-price-question,
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-COUNTER-EXCHANGE-FOUR-SKILL-01, MW-LEX-PRICE-QUESTION-01, MW-SCRIPT-E-01, MW-SCRIPT-LAVO-01] -->
 
-[PAUSE 24s] Run the five-turn counter exchange, ask the price question aloud,
-write the bring-it word, then write **ए**.
+[PAUSE 24s] Run the five-turn counter exchange and ask the price question aloud.
+[YOU WRITE: the bring-it word, then **ए**]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-EK-01, MW-LEX-DO-TWO-01, MW-LEX-TEEN-01, MW-LEX-CHAAR-01, MW-LEX-PAANCH-01, MW-SCRIPT-EK-01, MW-SCRIPT-DO-TWO-01, MW-SCRIPT-TEEN-01, MW-SCRIPT-CHAAR-01, MW-SCRIPT-PAANCH-01] -->
@@ -47,10 +47,9 @@ A run learned forwards is not yet a set of five words. Break it:
 1. Hear one number on its own and say what it is. Then another, out of order.
 2. Count backwards from five.
 3. Read the five printed shuffled and say each.
-4. Write **तीन**, **पांच**, **एक**, **चार**, **दो** from dictation in that
-   order.
+4. [YOU WRITE: **तीन**, **पांच**, **एक**, **चार**, **दो** from dictation, in that order]
 
-Repair only the one that missed, and write it once more.
+[YOU WRITE: once more, only the one that missed]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PAANCH-01, MW-SCRIPT-PAANCH-01, MW-SCRIPT-DO-TWO-01] -->

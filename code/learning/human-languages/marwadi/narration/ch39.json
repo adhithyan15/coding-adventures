@@ -4,7 +4,7 @@
   "chapter": 39,
   "title": "Saying No",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fb178a4a7e4eb8e5",
+  "sourceHash": "fnv1a64:3c320c5bebd7be9d",
   "lessons": [
     {
       "id": "MW-C39-hear-koni",
@@ -393,7 +393,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8a6331ab849aab3",
+      "sourceHash": "fnv1a64:c15e7be904ec68fb",
       "notice": null,
       "blocks": [
         {
@@ -409,21 +409,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write उघणीस, five lessons back — R2",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "उघणीस from memory, five lessons back — R2",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **उघणीस**, five lessons back — **R2**]"
+              "source": "[YOU WRITE: **उघणीस** from memory, five lessons back — **R2**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write एक, the first number this book taught — R4",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "एक from memory, the first number this book taught — R4",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **एक**, the first number this book taught — **R4**]"
+              "source": "[YOU WRITE: **एक** from memory, the first number this book taught — **R4**]"
             },
             {
               "kind": "prompt",
@@ -477,8 +477,13 @@
               "text": "Read. Read the three-turn refusal printed, and say the walk-away line aloud without looking."
             },
             {
-              "kind": "speech",
-              "text": "Write. Write कोनी (konī)। and पाछे मिलसू। as two lines, and above them write the figure you were offered in words."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "कोनी (konī)। and पाछे मिलसू। as two lines, and above them the figure you were offered, in words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **कोनी।** and **पाछे मिलसू।** as two lines, and above them the figure you were offered, in words]"
             }
           ]
         },
@@ -530,7 +535,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c3ac93e7abf7eff7",
+      "sourceHash": "fnv1a64:28bf99bcc9288da1",
       "notice": null,
       "blocks": [
         {
@@ -573,21 +578,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write कोनी (konī) — R1",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "कोनी (konī) from memory — R1",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **कोनी** — **R1**]"
+              "source": "[YOU WRITE: **कोनी** from memory — **R1**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write चौदा — R3",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "चौदा from memory — R3",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **चौदा** — **R3**]"
+              "source": "[YOU WRITE: **चौदा** from memory — **R3**]"
             }
           ]
         },
@@ -601,16 +606,31 @@
               "text": "Four signs arrived in the last three chapters, each riding behind one number. None of them is closed until it can be written with no chapter to prompt it."
             },
             {
-              "kind": "speech",
-              "text": "Write इ, ळ, अ and उ in a row from dictation, shuffled."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "इ, ळ, अ and उ in a row from dictation, shuffled",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **इ**, **ळ**, **अ** and **उ** in a row from dictation, shuffled]"
             },
             {
-              "kind": "speech",
-              "text": "Beside each, write the number that needed it — and only that number."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "beside each, the number that needed it — and only that number",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: beside each, the number that needed it — and only that number]"
             },
             {
-              "kind": "speech",
-              "text": "Write कोनी (konī) and पाछे मिलसू, which needed no new sign at all."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "कोनी (konī) and पाछे मिलसू, which needed no new sign at all",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **कोनी** and **पाछे मिलसू**, which needed no new sign at all]"
             },
             {
               "kind": "speech",
@@ -665,7 +685,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:518a68b9da5613aa",
+      "sourceHash": "fnv1a64:b8915b5dd004a254",
       "notice": null,
       "blocks": [
         {
@@ -740,8 +760,13 @@
               "text": "Read. Read the refusal printed above and say the walk-away without looking."
             },
             {
-              "kind": "speech",
-              "text": "Write. Write कोनी (konī)। and पाछे मिलसू। from the sound alone, with the page covered."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "कोनी (konī)। and पाछे मिलसू। from the sound alone, with the page covered",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **कोनी।** and **पाछे मिलसू।** from the sound alone, with the page covered]"
             }
           ]
         },

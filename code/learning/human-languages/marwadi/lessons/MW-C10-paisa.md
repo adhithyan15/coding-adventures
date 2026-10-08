@@ -37,8 +37,8 @@ reviews_of: [MW-C10-hear-paisa, MW-W05-ai-matra, MW-C10-haath]
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-PAISA-01]; assesses=[MW-LEX-PAISA-01, MW-SCRIPT-PA-01, MW-SCRIPT-AI-MATRA-01, MW-SCRIPT-SA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-HAATH-01, MW-LEX-HAATH-01, MW-SCRIPT-O-MATRA-01, MW-LEX-PATNI-01] -->
 
-[PAUSE 18s] Say money, hand, and wife. Write **प**, **ै**, **स**, **ा**, **ो**,
-then **हाथ**.
+[PAUSE 18s] Say money, hand, and wife.
+[YOU WRITE: **प**, **ै**, **स**, **ा**, **ो**, then **हाथ**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PAISA-01, MW-SCRIPT-PAISA-01] -->
@@ -49,7 +49,8 @@ then **हाथ**.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PAISA-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write the word. Check **ै** before **ा**.
+Look, cover, and wait five seconds.
+[YOU WRITE: the word — check **ै** before **ा**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PAISA-01, MW-SCRIPT-PAISA-01] -->

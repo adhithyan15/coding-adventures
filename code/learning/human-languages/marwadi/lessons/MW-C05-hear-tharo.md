@@ -36,8 +36,10 @@ reviews_of: [MW-C05-hear-mharo, MW-C05-answer]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PHRASE-MY-NAME-IS-01, MW-LEX-MHARO-01, MW-SCRIPT-NA-01, MW-SCRIPT-HAI-01] -->
 
-[PAUSE 15s] Say *mhāro nām rām hai* once. Write **न**, then **है**, from
-memory. Point to yourself on *mhāro*.
+[PAUSE 15s] Say *mhāro nām rām hai* once.
+[YOU WRITE: **न**, then **है**, from memory]
+
+Point to yourself on *mhāro*.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-THARO-01]; assesses=[] -->

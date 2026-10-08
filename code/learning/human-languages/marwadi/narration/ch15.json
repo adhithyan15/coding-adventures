@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Hand and Money: No New Signs",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:1a3253fdbd6b6fc5",
+  "sourceHash": "fnv1a64:0abf9c62b9254e41",
   "lessons": [
     {
       "id": "MW-C10-hear-haath",
@@ -98,7 +98,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4638add817ee9dd2",
+      "sourceHash": "fnv1a64:a843f7020bceeff4",
       "notice": null,
       "blocks": [
         {
@@ -114,7 +114,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say hand and my, write ह, ा, थ, घर, and पति."
+              "text": "Say hand and my."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ह, ा, थ, घर, and पति",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ह**, **ा**, **थ**, **घर**, and **पति**]"
             }
           ]
         },
@@ -136,7 +145,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write the word."
+              "text": "Look, cover, and wait five seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word]"
             }
           ]
         },
@@ -185,7 +203,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc2caaa05bd51811",
+      "sourceHash": "fnv1a64:d513222303d8e26f",
       "notice": null,
       "blocks": [
         {
@@ -201,7 +219,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say hand and market, write virama ्, then recall the ten-label four-skill checkpoint."
+              "text": "Say hand and market."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "virama ्",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: virama **्**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then recall the ten-label four-skill checkpoint."
             }
           ]
         },
@@ -264,7 +295,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b7cb6da3b1c49f3",
+      "sourceHash": "fnv1a64:31f7c21908bbf1c1",
       "notice": null,
       "blocks": [
         {
@@ -280,7 +311,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say money, hand, and wife. Write प, ै, स, ा, ो, then हाथ (hāth)."
+              "text": "Say money, hand, and wife."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "प, ै, स, ा, ो, then हाथ (hāth)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **प**, **ै**, **स**, **ा**, **ो**, then **हाथ**]"
             }
           ]
         },
@@ -302,7 +342,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write the word. Check ै before ा."
+              "text": "Look, cover, and wait five seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word — check ै before ा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word — check **ै** before **ा**]"
             }
           ]
         },
@@ -351,7 +400,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:17d170c127691269",
+      "sourceHash": "fnv1a64:20d32e51b874f025",
       "notice": null,
       "blocks": [
         {
@@ -366,8 +415,17 @@
               "source": "[PAUSE 18s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ज, घ, म्हारो, and पत्नी",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ज**, **घ**, **म्हारो**, and **पत्नी**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ज, घ, म्हारो, and पत्नी, then recall the three-place payoff."
+              "text": "Then recall the three-place payoff."
             }
           ]
         },
@@ -378,7 +436,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear all five in mixed order, say each from meaning, read the five cards, then write the two named aloud."
+              "text": "Hear all five in mixed order, say each from meaning, and read the five cards."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the two named aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the two named aloud]"
             }
           ]
         },
@@ -431,7 +498,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4bb3b704e00926f",
+      "sourceHash": "fnv1a64:8ecdbe55ed09f46b",
       "notice": null,
       "blocks": [
         {
@@ -469,8 +536,13 @@
               "text": "Match five printed cards to meanings."
             },
             {
-              "kind": "speech",
-              "text": "Write three heard words without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "three heard words without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: three heard words without a model]"
             },
             {
               "kind": "speech",
@@ -527,7 +599,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb055da2d5b6d446",
+      "sourceHash": "fnv1a64:3453acd6ed0c3f34",
       "notice": null,
       "blocks": [
         {
@@ -542,8 +614,17 @@
               "source": "[PAUSE 18s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "earlier त, च, न, and हाथ (hāth)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: earlier **त**, **च**, **न**, and **हाथ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write earlier त, च, न, and हाथ (hāth), then name the four scored skills."
+              "text": "Then name the four scored skills."
             }
           ]
         },
@@ -553,8 +634,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "From sound alone, write ज, घ, बाजार, and घर."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ज, घ, बाजार, and घर, from sound alone",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ज**, **घ**, **बाजार**, and **घर**, from sound alone]"
             }
           ]
         },

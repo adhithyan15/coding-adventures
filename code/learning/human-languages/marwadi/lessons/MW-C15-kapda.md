@@ -37,7 +37,7 @@ reviews_of: [MW-C15-hear-kapda, MW-W15-nukta]
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-KAPDA-01]; assesses=[MW-LEX-KAPDA-01, MW-SCRIPT-NUKTA-01, MW-SCRIPT-RRA-01, MW-LEX-PARIVAAR-01] -->
 
-[PAUSE 15s] Say clothes and family, then write **ड़**.
+[PAUSE 15s] Say clothes and family. [YOU WRITE: **ड़**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-KAPDA-01, MW-SCRIPT-KAPDA-01] -->
@@ -48,7 +48,8 @@ reviews_of: [MW-C15-hear-kapda, MW-W15-nukta]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-KAPDA-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **कपड़ा**. Check the dot below **ड**.
+Look, cover, and wait five seconds.
+[YOU WRITE: **कपड़ा** — check the dot below **ड**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-KAPDA-01, MW-SCRIPT-KAPDA-01] -->

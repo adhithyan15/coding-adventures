@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Eleven to Fifteen",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5b8ac0c93f7c056f",
+  "sourceHash": "fnv1a64:85e25acb32ca9c52",
   "lessons": [
     {
       "id": "MW-W37-i",
@@ -1310,7 +1310,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a3c54ef7a6a2764a",
+      "sourceHash": "fnv1a64:0fa1a2b9110ff60e",
       "notice": null,
       "blocks": [
         {
@@ -1326,21 +1326,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write पंदरा (pandarā) — R1",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "पंदरा (pandarā) from memory — R1",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **पंदरा** — **R1**]"
+              "source": "[YOU WRITE: **पंदरा** from memory — **R1**]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write इ, the letter five lessons back stood up — R2",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "इ from memory, the letter five lessons back stood up — R2",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **इ**, the letter five lessons back stood up — **R2**]"
+              "source": "[YOU WRITE: **इ** from memory, the letter five lessons back stood up — **R2**]"
             },
             {
               "kind": "prompt",
@@ -1371,8 +1371,13 @@
               "text": "Read the five printed and say each aloud."
             },
             {
-              "kind": "speech",
-              "text": "Write three of them from dictation, the choice named only as you write."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "three of them from dictation, the choice named only as you write",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: three of them from dictation, the choice named only as you write]"
             },
             {
               "kind": "speech",

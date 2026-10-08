@@ -37,7 +37,7 @@ reviews_of: [MW-C17-hear-ghodo, MW-C16-gaadi]
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-GHODO-01]; assesses=[MW-LEX-GHODO-01, MW-SCRIPT-GAADI-01, MW-SCRIPT-BACHCHA-01] -->
 
-[PAUSE 16s] Say horse, then write vehicle and child.
+[PAUSE 16s] Say horse. [YOU WRITE: the words for vehicle and child]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-GHODO-01, MW-SCRIPT-GHODO-01] -->
@@ -48,8 +48,8 @@ reviews_of: [MW-C17-hear-ghodo, MW-C16-gaadi]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-GHODO-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **घोड़ो**. Check both long-o marks
-and the dot below **ड**.
+Look, cover, and wait five seconds.
+[YOU WRITE: **घोड़ो** — check both long-o marks and the dot below **ड**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-GHODO-01, MW-SCRIPT-GHODO-01] -->

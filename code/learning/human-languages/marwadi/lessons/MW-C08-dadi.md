@@ -37,8 +37,10 @@ reviews_of: [MW-C08-hear-dadi, MW-C08-dada, MW-C08-bahan]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DADI-01, MW-SCRIPT-DA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-II-MATRA-01, MW-LEX-BAHAN-01, MW-PERFORMANCE-FAMILY-FOUR-FOUR-SKILL-01, MW-SCRIPT-CHHA-01] -->
 
-[PAUSE 20s] Recall the four-word family checkpoint, write **छ**, then write
-**दा** and **दी**. Say sister once.
+[PAUSE 20s] Recall the four-word family checkpoint.
+[YOU WRITE: **छ**, then **दा** and **दी**]
+
+Say sister once.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-SCRIPT-DADI-01]; assesses=[MW-LEX-DADI-01, MW-SCRIPT-DA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-II-MATRA-01] -->
@@ -51,8 +53,7 @@ Compare **दादा** and **दादी**. Only the final vowel sign changes
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DADI-01, MW-SCRIPT-DADI-01, MW-LEX-DADA-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Hear *dādā* or *dādī*. Write the matching word without a model, then check the
-final vowel sign.
+Hear *dādā* or *dādī*. [YOU WRITE: the matching word without a model, then check the final vowel sign]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DADI-01, MW-SCRIPT-DADI-01, MW-LEX-DADA-01] -->

@@ -36,7 +36,9 @@ reviews_of: [MW-C34-so, MW-C22-hear-price-question, MW-C22-kitno]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-KITNO-01, MW-LEX-SO-01, MW-LEX-BEES-01] -->
 
-[PAUSE 18s] Write how much, then say a hundred and twenty.
+[PAUSE 18s] [YOU WRITE: the words for how much]
+
+Then say a hundred and twenty.
 
 - [YOU RECALL: *āṭh* and *no*, two chapters back, and which of the two opens on
   a standing vowel]

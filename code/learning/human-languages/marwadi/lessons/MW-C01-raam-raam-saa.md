@@ -66,6 +66,7 @@ greeting merely because the scripts are shared.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-RAAM-RAAM-SAA, MW-REGISTER-SAA] -->
 <!-- hl-activity: {"id":"MW-C01-raam-raam-saa-greeting-cue","kind":"text","assesses":["MW-LEX-RAAM-RAAM-SAA","MW-REGISTER-SAA"],"prompt":"Give the respectful Marwadi greeting taught in this lesson.","answer":"राम-राम सा","accepted":["राम राम सा","rām-rām sā","ram-ram sa"],"feedback":{"correct":"राम-राम सा — exactly.","incorrect":"Use the repeated राम plus respectful सा: राम-राम सा."},"response_seconds":10} -->
 
-Hide the line. Say the greeting once; then write as much as you can remember.
+Hide the line. Say the greeting once.
+[YOU WRITE: as much of it as you can remember]
 
 Source: [Rajasthan Sahitya Akademi, *Jāgtī Jot*, August–September 2018](https://rsad.artandculture.rajasthan.gov.in/content/dam/doitassets/art-and-culture/Rajasthani-Bhasha-Sahitya-Avm-Sanskriti-Academy-Bikaner/pdf/jjpdf/JJ_All_Pdf/August-September%202018%20E-Ank.pdf).

@@ -37,8 +37,8 @@ reviews_of: [MW-C10-ghar, MW-C10-bajar, MW-W10-ja]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-GHAR-01, MW-LEX-BAJAR-01, MW-SCRIPT-JA-01, MW-SCRIPT-NNA-01, MW-LEX-NANI-01] -->
 
-[PAUSE 18s] Say home, market, and maternal grandmother, then write **ज** and
-retroflex **ण**.
+[PAUSE 18s] Say home, market, and maternal grandmother.
+[YOU WRITE: **ज** and retroflex **ण**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-MANDIR-01]; assesses=[] -->

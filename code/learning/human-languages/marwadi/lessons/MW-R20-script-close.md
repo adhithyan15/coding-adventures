@@ -42,9 +42,7 @@ reviews_of: [MW-C20-food-seven, MW-W20-ya, MW-W19-tta, MW-C20-chaay, MW-C19-roti
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-YA-01, MW-SCRIPT-TTA-01, MW-SCRIPT-CHAAY-01, MW-SCRIPT-ROTI-01, MW-SCRIPT-BAATI-01, MW-SCRIPT-CHURMA-01, MW-SCRIPT-SABJI-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Without a model, write **य** and **ट** from sound cues. Then write **चाय**,
-**रोटी**, **बाटी**, **चूरमा**, and **सबजी** from dictation. Repair only the
-missed unit and repeat that word once.
+[YOU WRITE: **य** and **ट** from sound cues, without a model; then **चाय**, **रोटी**, **बाटी**, **चूरमा**, and **सबजी** from dictation — repair only the missed unit and repeat that word once]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-YA-01, MW-SCRIPT-TTA-01] -->

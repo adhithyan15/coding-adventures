@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Grandparents and Family: Two New Signs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:175ca27757bb21e2",
+  "sourceHash": "fnv1a64:82c2e814e083f765",
   "lessons": [
     {
       "id": "MW-C08-hear-dada",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45b75c03ae917ac2",
+      "sourceHash": "fnv1a64:fe24cd219d9baca0",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the four-word family checkpoint, say the known word for name, then write familiar ठ once."
+              "text": "Recall the four-word family checkpoint and say the known word for name."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "familiar ठ once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: familiar **ठ** once]"
             }
           ]
         },
@@ -321,7 +330,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2998ea7566262a8c",
+      "sourceHash": "fnv1a64:2143cc7c8e9d93ec",
       "notice": null,
       "blocks": [
         {
@@ -337,7 +346,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say and write paternal grandfather and sister, then give the known see-you-later line and its two meaning parts."
+              "text": "Say paternal grandfather and sister."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both words]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then give the known see-you-later line and its two meaning parts."
             }
           ]
         },
@@ -415,7 +437,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff37d6ed424770e6",
+      "sourceHash": "fnv1a64:8ffa011db2f349be",
       "notice": null,
       "blocks": [
         {
@@ -431,7 +453,20 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the four-word family checkpoint, write छ, then write दा and दी. Say sister once."
+              "text": "Recall the four-word family checkpoint."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "छ, then दा and दी",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **छ**, then **दा** and **दी**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say sister once."
             }
           ]
         },
@@ -457,7 +492,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear dādā or dādī. Write the matching word without a model, then check the final vowel sign."
+              "text": "Hear dādā or dādī."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the matching word without a model, then check the final vowel sign",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the matching word without a model, then check the final vowel sign]"
             }
           ]
         },
@@ -512,7 +556,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:71bfb940fee47e07",
+      "sourceHash": "fnv1a64:61bf2ec846a73bf9",
       "notice": null,
       "blocks": [
         {
@@ -528,7 +572,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say paternal grandfather and sister, write paternal grandmother, then write े once."
+              "text": "Say paternal grandfather and sister."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for paternal grandmother, then े once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for paternal grandmother, then **े** once]"
             }
           ]
         },
@@ -813,7 +866,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:825ccdcec5eeaea4",
+      "sourceHash": "fnv1a64:5c7ce8d41db66b02",
       "notice": null,
       "blocks": [
         {
@@ -829,7 +882,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say and write family, then write ब and the known पाछे मिलसू once."
+              "text": "Say family."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for family, then ब and the known पाछे मिलसू once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for family, then **ब** and the known **पाछे मिलसू** once]"
             }
           ]
         },
@@ -851,8 +913,13 @@
               "text": "Read: match मां, बाप, and दादी (dādī) to their meanings."
             },
             {
-              "kind": "speech",
-              "text": "Write: write one heard word without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one heard word without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one heard word without a model]"
             }
           ]
         },
@@ -907,7 +974,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:189ce17acdfce980",
+      "sourceHash": "fnv1a64:d610ccaa829c4b9c",
       "notice": null,
       "blocks": [
         {
@@ -923,7 +990,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say and write paternal grandmother, then complete the earlier four-skill see-you-later response once."
+              "text": "Say paternal grandmother."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for paternal grandmother",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for paternal grandmother]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then complete the earlier four-skill see-you-later response once."
             }
           ]
         },
@@ -934,7 +1014,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Place four cards under the correct cues: भाई, बहन, दादा (dādā), and परिवार (parivār). Read each card, turn it over, and write only the one named aloud."
+              "text": "Place four cards under the correct cues: भाई, बहन, दादा (dādā), and परिवार (parivār). Read each card and turn it over."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "only the one named aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: only the one named aloud]"
             }
           ]
         },
@@ -990,7 +1079,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1308919a76c1e75",
+      "sourceHash": "fnv1a64:2d3d889cdf482caf",
       "notice": null,
       "blocks": [
         {
@@ -1043,8 +1132,13 @@
               "text": "Read: match all seven printed words to meanings."
             },
             {
-              "kind": "speech",
-              "text": "Write: write three heard labels without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "three heard labels without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: three heard labels without a model]"
             },
             {
               "kind": "speech",
@@ -1107,7 +1201,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:552ddbee013308c5",
+      "sourceHash": "fnv1a64:6a4ba419a77388eb",
       "notice": null,
       "blocks": [
         {
@@ -1123,7 +1217,20 @@
             },
             {
               "kind": "speech",
-              "text": "Name the family group, write मां, and recall one successful part of the four-skill family check."
+              "text": "Name the family group."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "मां",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **मां**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall one successful part of the four-skill family check."
             }
           ]
         },
@@ -1133,8 +1240,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write ब, द (da), and व (va) from spoken sign names. Circle only the sign that stalled, reopen its one-sign lesson, then try that sign once more."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ब, द (da), and व (va) from spoken sign names — circle only the sign that stalled, reopen its one-sign lesson, then try that sign once more",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ब**, **द**, and **व** from spoken sign names — circle only the sign that stalled, reopen its one-sign lesson, then try that sign once more]"
             }
           ]
         },

@@ -7,7 +7,8 @@ The whole count, at a distance — twelve words and ten figures, retrieved four 
 
 Warm-up.
 [pause 22 seconds]
-Say the bargaining request, recall the five-number payoff from four chapters back, then write ए.
+Say the bargaining request, and recall the five-number payoff from four chapters back.
+[once you have stopped driving — write: ए]
 [your turn — recall: ७ and ८, and which Latin figure each is mistaken for]
 [pause 8 seconds for the answer]
 
@@ -15,7 +16,7 @@ Guided Practice.
 Everything, shuffled, with no chapter to give the answer away.
 Hear twelve amounts named singly and out of order; say each back.
 Read twelve printed figures and say each as a word.
-Write six amounts from dictation in words and six in figures, the choice named only as you write.
+[once you have stopped driving — write: six amounts from dictation in words and six in figures, the choice named only as you write]
 Say the three that rhyme, the two that end in the tens स, and the four figures a Latin eye reads wrongly.
 
 Wrap-up Recall.
@@ -29,14 +30,15 @@ The shopping map, with prices on it — the seven shopping words, each given a p
 
 Warm-up.
 [pause 22 seconds]
-Write the bargaining request, then recall the seven-word shopping payoff.
+[once you have stopped driving — write: the bargaining request]
+Then recall the seven-word shopping payoff.
 
 Guided Practice.
 Take the seven shopping words one at a time. For each one:
 Ask its price with the question from chapter 27.
 Hear a figure back and say the amount aloud.
 Offer a lower figure with करो।.
-Write the seller's amount as a Devanagari figure and your own as a word.
+[once you have stopped driving — write: the seller's amount as a Devanagari figure, and your own as a word]
 The word भाव has meant price since chapter 18 and could not be answered until now. Say what changed.
 
 Wrap-up Recall.
@@ -50,7 +52,8 @@ The food map, ordered and paid for — the seven food words, ordered and paid fo
 
 Warm-up.
 [pause 22 seconds]
-Recall the seven-word food payoff, then write the bring request and the word that carries it.
+Recall the seven-word food payoff.
+[once you have stopped driving — write: the bring request and the word that carries it]
 [your turn — recall: दस करो।, and the chapter-28 request it replaced]
 [pause 8 seconds for the answer]
 
@@ -59,7 +62,7 @@ Take the seven food words one at a time.
 Order it with लावो।.
 Ask what it costs and hear a figure between ek and das.
 Say the amount, then hand over the money with the chapter-30 turn.
-Write the amount twice: once as a word, once as a figure.
+[once you have stopped driving — write: the amount twice, once as a word and once as a figure]
 A stall prices tea at pāṅch and a plate at das. This is where the first five numbers stop being a recitation.
 
 Wrap-up Recall.
@@ -73,7 +76,8 @@ The transport map, with a fare on it — the five transport words, with a fare n
 
 Warm-up.
 [pause 22 seconds]
-Recall the five-word transport payoff and the four-skill bargaining payoff, then write bus.
+Recall the five-word transport payoff and the four-skill bargaining payoff.
+[once you have stopped driving — write: the word for bus]
 [your turn — recall: १०० and सो, and which of the two is longer]
 [pause 8 seconds for the answer]
 
@@ -82,7 +86,7 @@ Take the five transport words one at a time.
 Ask the fare with the price question.
 Hear a figure — a rickshaw across a town centre asks bīs rather than pāṅch.
 Offer a lower one with करो।, and say the amount aloud twice so the driver hears the same figure you meant.
-Write both figures down, the asked and the offered.
+[once you have stopped driving — write: both figures, the asked and the offered]
 Say why this exchange has to be finished before the journey and not after it.
 
 Wrap-up Recall.
@@ -96,11 +100,13 @@ The five least-drilled signs — the least-drilled signs of this slice, retrieve
 
 Warm-up.
 [pause 22 seconds]
-Write the price question and the word for very, then recall the ticket payoff.
+[once you have stopped driving — write: the price question and the word for very]
+Then recall the ticket payoff.
 
 Guided Practice.
-Five signs, alone, from spoken cues and with no word around them: ए, ४, ५, ७, ८.
-Then put each back to work once. ए opens एक and its mark rides over the second spelling of six; the four figures write four of this slice's twelve amounts. Write those six things and check each sign against the model only after writing it.
+[once you have stopped driving — write: five signs, alone, from spoken cues and with no word around them — ए, ४, ५, ७, ८]
+Then put each back to work once. ए opens एक and its mark rides over the second spelling of six; the four figures write four of this slice's twelve amounts.
+[once you have stopped driving — write: those six things — check each sign against the model only after writing it]
 
 Wrap-up Recall.
 Sources: Unicode Devanagari chart; Omniglot, Numbers in Rajasthani.
@@ -113,7 +119,8 @@ Payoff — one exchange, with an amount in it.
 
 Warm-up.
 [pause 24 seconds]
-Run the five-turn counter exchange from chapter 31, say the take-it word, write the paying turn, and write ए.
+Run the five-turn counter exchange from chapter 31, and say the take-it word.
+[once you have stopped driving — write: the paying turn, then ए]
 
 Guided Practice.
 Six turns now, and two of them are numbers.
@@ -137,15 +144,16 @@ Close the numeral slice — the whole numeral slice, written once more and close
 
 Warm-up.
 [pause 24 seconds]
-Recall the six-turn payoff, write the take-it word, and write the bargaining request it now shares a chapter with.
+Recall the six-turn payoff.
+[once you have stopped driving — write: the take-it word, and the bargaining request it now shares a chapter with]
 
 Guided Practice.
-Everything this slice added, from dictation, with no model in view.
+[once you have stopped driving — write: everything this slice added, from dictation, with no model in view — then repair only what missed]
 The letter: ए, and the mark े beside it.
 The twelve words, shuffled, from एक to सो.
 The ten figures, shuffled, from ० to ९.
 The two turns: बीस। and दस करो।.
-Repair only what missed. Then say what the whole slice cost the hand: one letter and ten figures, against twelve numbers and a bargaining turn that finally has a figure in it.
+Say what the whole slice cost the hand: one letter and ten figures, against twelve numbers and a bargaining turn that finally has a figure in it.
 
 Wrap-up Recall.
 Sources: Unicode Devanagari chart; Omniglot, Numbers in Rajasthani.

@@ -36,20 +36,17 @@ reviews_of: [MW-C23-counter-four, MW-W15-nukta, MW-W05-virama, MW-W03-anusvara, 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-BARGAIN-FOUR-SKILL-01, MW-LEX-MAHANGO-01, MW-SCRIPT-KHA-01] -->
 
-[PAUSE 20s] Recall the three-turn bargaining payoff, say expensive, then write
-**ख**.
+[PAUSE 20s] Recall the three-turn bargaining payoff and say expensive.
+[YOU WRITE: **ख**]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-NUKTA-01, MW-SCRIPT-VIRAMA-01, MW-SCRIPT-ANUSVARA-01, MW-SCRIPT-RRA-01, MW-SCRIPT-THODU-01, MW-SCRIPT-BARGAIN-REQUEST-01, MW-SCRIPT-PRICE-ANSWER-01, MW-SCRIPT-MAHANGO-01, MW-SCRIPT-KAPDA-01, MW-SCRIPT-PATNI-01, MW-SCRIPT-BACHCHA-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
 Three marks change a word without adding a letter, and all three are easy to
-lose. Write each on its own from a spoken cue: the dot under a letter, the
-vowel-killer, the dot above the headstroke.
+lose. [YOU WRITE: each on its own from a spoken cue — the dot under a letter, the vowel-killer, the dot above the headstroke]
 
-Then write **थोड़ु**, **कपड़ा**, **पत्नी**, **बच्चा**, and **महंगो** from
-dictation and mark which of the three you used in each. Finish with both lines
-of this chapter. Repair only the missed mark and rewrite its word once.
+[YOU WRITE: **थोड़ु**, **कपड़ा**, **पत्नी**, **बच्चा**, and **महंगो** from dictation, marking which of the three you used in each; finish with both lines of this chapter — repair only the missed mark and rewrite its word once]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-NUKTA-01, MW-SCRIPT-ANUSVARA-01] -->

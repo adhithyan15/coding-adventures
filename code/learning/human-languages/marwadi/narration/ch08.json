@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Thik Hoon: Answer in Two New Signs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:c423ef3a7e5a92ae",
+  "sourceHash": "fnv1a64:2a394dd9ddfa367f",
   "lessons": [
     {
       "id": "MW-C06-hear-answer",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d896e0dee12439f",
+      "sourceHash": "fnv1a64:5dae683985295f83",
       "notice": null,
       "blocks": [
         {
@@ -34,8 +34,17 @@
               "source": "[PAUSE 12s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "independent ई",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: independent **ई**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write independent ई, say that mhāro means my, then ask āp kaiso ho? once from memory. Keep the page closed."
+              "text": "Say that mhāro means my, then ask āp kaiso ho? once from memory. Keep the page closed."
             }
           ]
         },
@@ -441,7 +450,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:acc80428869f163e",
+      "sourceHash": "fnv1a64:43d4af626d87b9ba",
       "notice": null,
       "blocks": [
         {
@@ -494,8 +503,13 @@
               "text": "Read: match the printed question to its answer."
             },
             {
-              "kind": "speech",
-              "text": "Write: hear the answer, wait ten seconds, and write it with no model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the answer with no model, ten seconds after hearing it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the answer with no model, ten seconds after hearing it]"
             },
             {
               "kind": "speech",

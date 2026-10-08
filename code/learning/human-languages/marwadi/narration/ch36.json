@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "One Exchange, Two Figures",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:6ffd43824c33906a",
+  "sourceHash": "fnv1a64:6b3ae51652e04357",
   "lessons": [
     {
       "id": "MW-R36-count-at-distance",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:164e03603a8d4dbd",
+      "sourceHash": "fnv1a64:364df526cd8505e7",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say the bargaining request, recall the five-number payoff from four chapters back, then write ए."
+              "text": "Say the bargaining request, and recall the five-number payoff from four chapters back."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ए",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ए**]"
             },
             {
               "kind": "prompt",
@@ -66,8 +75,13 @@
               "text": "Read twelve printed figures and say each as a word."
             },
             {
-              "kind": "speech",
-              "text": "Write six amounts from dictation in words and six in figures, the choice named only as you write."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "six amounts from dictation in words and six in figures, the choice named only as you write",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: six amounts from dictation in words and six in figures, the choice named only as you write]"
             },
             {
               "kind": "speech",
@@ -120,7 +134,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d3699fd8afc8714",
+      "sourceHash": "fnv1a64:18d3d8f1b82cc4ca",
       "notice": null,
       "blocks": [
         {
@@ -135,8 +149,17 @@
               "source": "[PAUSE 22s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the bargaining request",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the bargaining request]"
+            },
+            {
               "kind": "speech",
-              "text": "Write the bargaining request, then recall the seven-word shopping payoff."
+              "text": "Then recall the seven-word shopping payoff."
             }
           ]
         },
@@ -162,8 +185,13 @@
               "text": "Offer a lower figure with करो।."
             },
             {
-              "kind": "speech",
-              "text": "Write the seller's amount as a Devanagari figure and your own as a word."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the seller's amount as a Devanagari figure, and your own as a word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the seller's amount as a Devanagari figure, and your own as a word]"
             },
             {
               "kind": "speech",
@@ -215,7 +243,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:04eb76c5753720dd",
+      "sourceHash": "fnv1a64:96bea10e455c3215",
       "notice": null,
       "blocks": [
         {
@@ -231,7 +259,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the seven-word food payoff, then write the bring request and the word that carries it."
+              "text": "Recall the seven-word food payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the bring request and the word that carries it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the bring request and the word that carries it]"
             },
             {
               "kind": "prompt",
@@ -266,8 +303,13 @@
               "text": "Say the amount, then hand over the money with the chapter-30 turn."
             },
             {
-              "kind": "speech",
-              "text": "Write the amount twice: once as a word, once as a figure."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the amount twice, once as a word and once as a figure",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the amount twice, once as a word and once as a figure]"
             },
             {
               "kind": "speech",
@@ -320,7 +362,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f3d53ac6c621e2c",
+      "sourceHash": "fnv1a64:4b823613167aceec",
       "notice": null,
       "blocks": [
         {
@@ -336,7 +378,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the five-word transport payoff and the four-skill bargaining payoff, then write bus."
+              "text": "Recall the five-word transport payoff and the four-skill bargaining payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for bus",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for bus]"
             },
             {
               "kind": "prompt",
@@ -371,8 +422,13 @@
               "text": "Offer a lower one with करो।, and say the amount aloud twice so the driver hears the same figure you meant."
             },
             {
-              "kind": "speech",
-              "text": "Write both figures down, the asked and the offered."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both figures, the asked and the offered",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both figures, the asked and the offered]"
             },
             {
               "kind": "speech",
@@ -426,7 +482,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:52b0e32f47f74a71",
+      "sourceHash": "fnv1a64:2250c692db4a4f75",
       "notice": null,
       "blocks": [
         {
@@ -441,8 +497,17 @@
               "source": "[PAUSE 22s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the price question and the word for very",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the price question and the word for very]"
+            },
+            {
               "kind": "speech",
-              "text": "Write the price question and the word for very, then recall the ticket payoff."
+              "text": "Then recall the ticket payoff."
             }
           ]
         },
@@ -452,12 +517,26 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Five signs, alone, from spoken cues and with no word around them: ए, ४, ५, ७, ८."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "five signs, alone, from spoken cues and with no word around them — ए, ४, ५, ७, ८",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: five signs, alone, from spoken cues and with no word around them — **ए**, **४**, **५**, **७**, **८**]"
             },
             {
               "kind": "speech",
-              "text": "Then put each back to work once. ए opens एक and its mark rides over the second spelling of six; the four figures write four of this slice's twelve amounts. Write those six things and check each sign against the model only after writing it."
+              "text": "Then put each back to work once. ए opens एक and its mark rides over the second spelling of six; the four figures write four of this slice's twelve amounts."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "those six things — check each sign against the model only after writing it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: those six things — check each sign against the model only after writing it]"
             }
           ]
         },
@@ -506,7 +585,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc3f2c72c3462f97",
+      "sourceHash": "fnv1a64:dce4582c77698195",
       "notice": null,
       "blocks": [
         {
@@ -522,7 +601,16 @@
             },
             {
               "kind": "speech",
-              "text": "Run the five-turn counter exchange from chapter 31, say the take-it word, write the paying turn, and write ए."
+              "text": "Run the five-turn counter exchange from chapter 31, and say the take-it word."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the paying turn, then ए",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the paying turn, then **ए**]"
             }
           ]
         },
@@ -614,7 +702,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a24d16631691431",
+      "sourceHash": "fnv1a64:d98aa2043c4abf55",
       "notice": null,
       "blocks": [
         {
@@ -630,7 +718,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the six-turn payoff, write the take-it word, and write the bargaining request it now shares a chapter with."
+              "text": "Recall the six-turn payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the take-it word, and the bargaining request it now shares a chapter with",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the take-it word, and the bargaining request it now shares a chapter with]"
             }
           ]
         },
@@ -640,8 +737,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Everything this slice added, from dictation, with no model in view."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "everything this slice added, from dictation, with no model in view — then repair only what missed",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: everything this slice added, from dictation, with no model in view — then repair only what missed]"
             },
             {
               "kind": "speech",
@@ -661,7 +763,7 @@
             },
             {
               "kind": "speech",
-              "text": "Repair only what missed. Then say what the whole slice cost the hand: one letter and ten figures, against twelve numbers and a bargaining turn that finally has a figure in it."
+              "text": "Say what the whole slice cost the hand: one letter and ten figures, against twelve numbers and a bargaining turn that finally has a figure in it."
             }
           ]
         },

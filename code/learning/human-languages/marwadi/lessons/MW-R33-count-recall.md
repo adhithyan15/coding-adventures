@@ -35,8 +35,9 @@ reviews_of: [MW-C33-das, MW-C21-dikhavo, MW-C32-count-five, MW-W32-e]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-DIKHAVO-01, MW-PERFORMANCE-COUNT-FIVE-FOUR-SKILL-01, MW-SCRIPT-E-01] -->
 
-[PAUSE 22s] Write the show-request word, recall the counting payoff from the
-last chapter, then write **ए**.
+[PAUSE 22s] [YOU WRITE: the show-request word]
+
+Recall the counting payoff from the last chapter. [YOU WRITE: **ए**]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-CHHA-SIX-01, MW-LEX-SAAT-01, MW-LEX-AATH-01, MW-LEX-NO-NINE-01, MW-LEX-DAS-01, MW-SCRIPT-CHHA-SIX-01, MW-SCRIPT-SAAT-01, MW-SCRIPT-AATH-01, MW-SCRIPT-NO-NINE-01, MW-SCRIPT-DAS-01, MW-LEX-EK-01, MW-LEX-DO-TWO-01, MW-LEX-TEEN-01, MW-LEX-CHAAR-01, MW-LEX-PAANCH-01, MW-SCRIPT-EK-01, MW-SCRIPT-DO-TWO-01, MW-SCRIPT-TEEN-01, MW-SCRIPT-CHAAR-01, MW-SCRIPT-PAANCH-01] -->
@@ -48,7 +49,7 @@ Two runs of five are still two runs until they are mixed.
 2. Count backwards from ten to one.
 3. Read **आठ**, **तीन**, **दस**, **छ**, **एक**, **नो** printed in that order
    and say each.
-4. Write **सात**, **पांच**, **नो**, **दो**, **दस** from dictation.
+4. [YOU WRITE: **सात**, **पांच**, **नो**, **दो**, **दस** from dictation]
 
 Then say which pairs share a sign: two and nine, seven and ten, four and five.
 

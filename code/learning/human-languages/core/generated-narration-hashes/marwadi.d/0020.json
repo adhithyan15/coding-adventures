@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 20,
-  "sourceHash": "fnv1a64:9f7bba043d9b4ff5",
+  "sourceHash": "fnv1a64:164af0a3cb866b91",
   "lessonIds": [
     "MW-C15-hear-kapda",
     "MW-W15-nukta",
@@ -16,7 +16,7 @@
   "drivablePrefix": 1,
   "text": "marwadi/narration/ch20.txt",
   "json": "marwadi/narration/ch20.json",
-  "textHash": "fnv1a64:e3fac8f34d7387a5",
-  "jsonHash": "fnv1a64:57bc15e712d49e55",
+  "textHash": "fnv1a64:dc7e4a5ea9cc2bd6",
+  "jsonHash": "fnv1a64:4ffbd0461a239e5d",
   "findings": []
 }

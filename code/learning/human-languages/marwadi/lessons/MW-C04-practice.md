@@ -36,9 +36,10 @@ reviews_of: [MW-C02-aabhaar, MW-C03-haan-saa, MW-C04-hear-paani, MW-W04-pa, MW-W
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-HAAN-SAA-FOUR-SKILL-01, MW-LEX-AABHAAR-01, MW-LEX-HAAN-01, MW-LEX-PAANI-01, MW-SCRIPT-PA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-NNA-01, MW-SCRIPT-II-MATRA-01] -->
 
 [PAUSE 20s] Give the older respectful yes in four quick steps: hear it and name
-its meaning; say it; read **हां सा**; then cover and write it. Now say the three
-meanings in English as you hear *ābhār*, *hā(n) sā*, and *pāṇī*. Write **पा**,
-then **ण** and **ी** separately from memory.
+its meaning; say it; read **हां सा**; then cover it. [YOU WRITE: the phrase]
+
+Now say the three meanings in English as you hear *ābhār*, *hā(n) sā*, and
+*pāṇī*. [YOU WRITE: **पा**, then **ण** and **ी** separately from memory]
 
 ## Guided Practice — four independent checks
 <!-- hl-knowledge: introduces=[MW-PERFORMANCE-PAANI-FOUR-SKILL-01]; assesses=[MW-LEX-PAANI-01, MW-SCRIPT-PAANI-01] -->
@@ -46,7 +47,7 @@ then **ण** and **ी** separately from memory.
 1. **Listen:** hear *pāṇī* and identify water, without text.
 2. **Speak:** see a picture or imagine a glass of water and say *pāṇī*, without notes.
 3. **Read:** choose **पाणी** from **आभार · हां · पाणी** and give its meaning.
-4. **Write:** hear *pāṇī*, wait fifteen seconds, then write **पाणी** with no model.
+4. [YOU WRITE: **पाणी** with no model, fifteen seconds after hearing *pāṇī*]
 
 Score each line separately. Repeat only the missed line; strong speaking does
 not compensate for a missing **ण** or **ी** in writing.

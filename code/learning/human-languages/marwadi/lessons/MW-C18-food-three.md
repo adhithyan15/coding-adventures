@@ -36,7 +36,7 @@ reviews_of: [MW-R18-food-three, MW-C16-hear-thela, MW-C10-mandir]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-THELA-01, MW-SCRIPT-MANDIR-01] -->
 
-[PAUSE 16s] Say cart, then write temple.
+[PAUSE 16s] Say cart. [YOU WRITE: the word for temple]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[MW-PERFORMANCE-FOOD-THREE-FOUR-SKILL-01]; assesses=[MW-LEX-DAAL-01, MW-SCRIPT-DAAL-01, MW-LEX-GHEE-01, MW-SCRIPT-GHEE-01, MW-LEX-SABJI-01, MW-SCRIPT-SABJI-01] -->
@@ -44,7 +44,7 @@ reviews_of: [MW-R18-food-three, MW-C16-hear-thela, MW-C10-mandir]
 1. Identify three heard words.
 2. Produce three words from meaning cues.
 3. Match three printed cards to meanings.
-4. Write all three heard words without a model.
+4. [YOU WRITE: all three heard words without a model]
 
 Pass each skill separately. Three food names are a vocabulary foundation, not
 an order placed in a kitchen or a shop.

@@ -37,8 +37,7 @@ reviews_of: [MW-C10-hear-mandir, MW-C10-ghar, MW-W03-anusvara, MW-W08-da]
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-MANDIR-01]; assesses=[MW-LEX-MANDIR-01, MW-SCRIPT-MA-01, MW-SCRIPT-ANUSVARA-01, MW-SCRIPT-DA-01, MW-SCRIPT-I-MATRA-01, MW-SCRIPT-RA-01, MW-SCRIPT-GHAR-01, MW-SCRIPT-II-MATRA-01, MW-SCRIPT-NANI-01] -->
 
-[PAUSE 20s] Say temple, write **म**, **ं**, **द**, **ि**, **र**, **ी**, then write
-**घर** and **नानी**.
+[PAUSE 20s] Say temple. [YOU WRITE: **म**, **ं**, **द**, **ि**, **र**, **ी**, then **घर** and **नानी**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MANDIR-01, MW-SCRIPT-MANDIR-01] -->
@@ -49,8 +48,8 @@ reviews_of: [MW-C10-hear-mandir, MW-C10-ghar, MW-W03-anusvara, MW-W08-da]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-MANDIR-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write the word. Check the nasal mark and the
-short-i position separately.
+Look, cover, and wait five seconds.
+[YOU WRITE: the word — check the nasal mark and the short-i position separately]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MANDIR-01, MW-SCRIPT-MANDIR-01] -->

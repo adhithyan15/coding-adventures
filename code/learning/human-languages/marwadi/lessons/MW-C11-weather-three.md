@@ -36,8 +36,10 @@ reviews_of: [MW-R11-weather-three, MW-C10-bajar, MW-C10-ghar, MW-C09-family-twel
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAJAR-01, MW-SCRIPT-BAJAR-01, MW-LEX-GHAR-01, MW-SCRIPT-GHAR-01, MW-PERFORMANCE-FAMILY-TWELVE-FOUR-SKILL-01, MW-LEX-KAIN-01, MW-LEX-HAI-01] -->
 
-[PAUSE 25s] Say and write market and home, recall the twelve-label family
-payoff, then give the meanings of *kāĩ* and *hai* from the known name exchange.
+[PAUSE 25s] Say market and home. [YOU WRITE: both words]
+
+Recall the twelve-label family payoff, then give the meanings of *kāĩ* and *hai*
+from the known name exchange.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[MW-PERFORMANCE-WEATHER-THREE-FOUR-SKILL-01]; assesses=[MW-LEX-HAWA-01, MW-SCRIPT-HAWA-01, MW-LEX-BAADAL-01, MW-SCRIPT-BAADAL-01, MW-LEX-BARSAAT-01, MW-SCRIPT-BARSAAT-01] -->
@@ -45,7 +47,7 @@ payoff, then give the meanings of *kāĩ* and *hai* from the known name exchange
 1. Identify three heard words.
 2. Produce three words from meaning cues.
 3. Match three printed cards to meanings.
-4. Write all three heard words without a model.
+4. [YOU WRITE: all three heard words without a model]
 
 Pass each skill separately.
 

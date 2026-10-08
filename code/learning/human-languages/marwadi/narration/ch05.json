@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Mharo Naam: Give One Name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:abd7d84c2c435be1",
+  "sourceHash": "fnv1a64:af1c94e7c3bfbfb3",
   "lessons": [
     {
       "id": "MW-C05-hear-mharo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d36649cf412a62c",
+      "sourceHash": "fnv1a64:c892db69332e8d5a",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,20 @@
             },
             {
               "kind": "speech",
-              "text": "Hear pāṇī, say water, say the Marwadi word back, then write its first sign प once. Set writing aside. The next chapter begins with the ear."
+              "text": "Hear pāṇī, say water, and say the Marwadi word back."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "its first sign प, once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: its first sign **प**, once]"
+            },
+            {
+              "kind": "speech",
+              "text": "Set writing aside. The next chapter begins with the ear."
             }
           ]
         },
@@ -318,7 +331,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9141ca73ca80acec",
+      "sourceHash": "fnv1a64:33cc798e4b0692b6",
       "notice": null,
       "blocks": [
         {
@@ -334,7 +347,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say the Marwadi word for my and recall what respectful सा does. From the heard cue pāṇī, write पाणी. Then write the vowel-off mark and रो from memory."
+              "text": "Say the Marwadi word for my and recall what respectful सा does."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "पाणी from the heard cue pāṇī; then the vowel-off mark and रो from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **पाणी** from the heard cue *pāṇī*; then the vowel-off mark and **रो** from memory]"
             }
           ]
         },
@@ -360,7 +382,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look for five seconds, cover म्हारो (mhāro), wait five seconds, then write it. Uncover and compare म्ह, ा, and रो separately. Repair only the piece that differs."
+              "text": "Look for five seconds, cover म्हारो (mhāro), and wait five seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word — then uncover it, compare म्ह, ा, and रो separately, and repair only the piece that differs",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word — then uncover it, compare **म्ह**, **ा**, and **रो** separately, and repair only the piece that differs]"
             }
           ]
         },
@@ -607,7 +638,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54cf01a258a1c012",
+      "sourceHash": "fnv1a64:59124d4767f0bfc2",
       "notice": null,
       "blocks": [
         {
@@ -622,8 +653,26 @@
               "source": "[PAUSE 8s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "known भ and the vowel-off mark ् (virāma), once each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: known **भ** and the vowel-off mark **्**, once each]"
+            },
+            {
               "kind": "speech",
-              "text": "Write known भ and the vowel-off mark ् (virāma) once each. Say nām and its meaning, then write न (na) once."
+              "text": "Say nām and its meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "न (na) once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **न** once]"
             }
           ]
         },
@@ -649,7 +698,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look for five seconds, cover नाम (nām), wait five seconds, and write it once. Uncover, compare one piece at a time, and repair only a differing piece."
+              "text": "Look for five seconds, cover नाम (nām), and wait five seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word once — then uncover it, compare one piece at a time, and repair only a differing piece",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word once — then uncover it, compare one piece at a time, and repair only a differing piece]"
             }
           ]
         },
@@ -699,7 +757,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:47ce944df5c6e88d",
+      "sourceHash": "fnv1a64:42c539c9b3b33219",
       "notice": null,
       "blocks": [
         {
@@ -715,7 +773,20 @@
             },
             {
               "kind": "speech",
-              "text": "Read and write आभार once. Hear mhāro and nām in either order, then give each meaning."
+              "text": "Read आभार once."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "आभार once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **आभार** once]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hear mhāro and nām in either order, then give each meaning."
             }
           ]
         },
@@ -896,7 +967,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7a8dfcb0cef6c50e",
+      "sourceHash": "fnv1a64:2156386c9bb63b86",
       "notice": null,
       "blocks": [
         {
@@ -957,7 +1028,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Cover every written model. Hear the line once and write it. Then uncover and repair one group, not the whole sentence."
+              "text": "Cover every written model. Hear the line once."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the line — then uncover the model and repair one group, not the whole sentence",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the line — then uncover the model and repair one group, not the whole sentence]"
             },
             {
               "kind": "speech",

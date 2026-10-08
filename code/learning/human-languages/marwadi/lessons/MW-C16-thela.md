@@ -37,7 +37,7 @@ reviews_of: [MW-C16-hear-thela, MW-C16-gaadi]
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-THELA-01]; assesses=[MW-LEX-THELA-01, MW-SCRIPT-GAADI-01, MW-LEX-PATI-01, MW-LEX-SASTA-01] -->
 
-[PAUSE 18s] Say cart, husband, and cheap, then write vehicle.
+[PAUSE 18s] Say cart, husband, and cheap. [YOU WRITE: the word for vehicle]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-THELA-01, MW-SCRIPT-THELA-01] -->
@@ -48,7 +48,7 @@ reviews_of: [MW-C16-hear-thela, MW-C16-gaadi]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-THELA-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **ठेला**.
+Look, cover, and wait five seconds. [YOU WRITE: **ठेला**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-THELA-01, MW-SCRIPT-THELA-01] -->

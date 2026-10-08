@@ -36,8 +36,8 @@ reviews_of: [MW-C01-practice, MW-C02-practice, MW-C03-practice, MW-C04-practice,
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-RAAM-RAAM-SAA, MW-LEX-AABHAAR-01, MW-RESPONSE-HAAN-SAA-POLITE-01, MW-LEX-PAANI-01, MW-SCRIPT-II-MATRA-01] -->
 
-[PAUSE 25s] Say the four older meanings as you hear *rām-rām sā, ābhār,
-hā(n) sā,* and *pāṇī*. Write only **पाणी** from the last cue.
+[PAUSE 25s] Say the four older meanings as you hear *rām-rām sā, ābhār, hā(n)
+sā,* and *pāṇī*. [YOU WRITE: only **पाणी**, from the last cue]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-QUESTION-NAME-01, MW-DIALOGUE-NAME-EXCHANGE-01]; assesses=[MW-PHRASE-MY-NAME-IS-01] -->
@@ -57,7 +57,7 @@ possessive or copula, and that variation is not an error.
 1. **Listen:** hear one of the two lines and identify question or answer.
 2. **Speak:** hear the question and answer with a chosen name, without notes.
 3. **Read:** match the printed question to the printed answer.
-4. **Write:** hear the question, wait ten seconds, and write it with no model.
+4. [YOU WRITE: the question with no model, ten seconds after hearing it]
 
 Score each line separately. Speaking cannot cover a missing word in writing;
 reading cannot cover an unanswered spoken question.

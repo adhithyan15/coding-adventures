@@ -37,7 +37,7 @@ reviews_of: [MW-R21-show-two, MW-C15-kapda, MW-C14-samaan]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-KAPDA-01, MW-SCRIPT-KAPDA-01, MW-LEX-SAMAAN-01, MW-SCRIPT-SAMAAN-01] -->
 
-[PAUSE 20s] Say clothes and goods, then write both.
+[PAUSE 20s] Say clothes and goods. [YOU WRITE: both words]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-SHOW-REQUEST-01]; assesses=[MW-LEX-YE-01, MW-LEX-DIKHAVO-01] -->

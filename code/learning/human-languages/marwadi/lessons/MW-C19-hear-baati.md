@@ -37,7 +37,9 @@ reviews_of: [MW-C19-roti, MW-C17-hear-riksha, MW-C10-paisa]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-ROTI-01, MW-LEX-RIKSHA-01, MW-SCRIPT-PAISA-01] -->
 
-[PAUSE 18s] Write flatbread and money, then say rickshaw.
+[PAUSE 18s] [YOU WRITE: the words for flatbread and money]
+
+Then say rickshaw.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-BAATI-01]; assesses=[] -->

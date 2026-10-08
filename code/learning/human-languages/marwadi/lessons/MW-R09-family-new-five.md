@@ -36,14 +36,17 @@ reviews_of: [MW-C09-nana, MW-C09-nani, MW-C09-pati, MW-C09-patni, MW-C09-bachcha
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-FAMILY-TEN-FOUR-SKILL-01, MW-SCRIPT-TA-01, MW-SCRIPT-CHA-01, MW-LEX-AABHAAR-01, MW-SCRIPT-AABHAAR-01] -->
 
-[PAUSE 18s] Write **त**, **च**, and **आभार**, give the gratitude meaning, then
-recall the earlier three-word payoff.
+[PAUSE 18s] [YOU WRITE: **त**, **च**, and **आभार**]
+
+Give the gratitude meaning, then recall the earlier three-word payoff.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-NANA-01, MW-SCRIPT-NANA-01, MW-LEX-NANI-01, MW-SCRIPT-NANI-01, MW-LEX-PATI-01, MW-SCRIPT-PATI-01, MW-LEX-PATNI-01, MW-SCRIPT-PATNI-01, MW-LEX-BACHCHA-01, MW-SCRIPT-BACHCHA-01] -->
 
-Hear all five in a mixed order, say each from meaning, read the five cards, then
-write the two cards named aloud. Repair only a missed card.
+Hear all five in a mixed order, say each from meaning, and read the five cards.
+[YOU WRITE: the two cards named aloud]
+
+Repair only a missed card.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-NANA-01, MW-LEX-NANI-01, MW-LEX-PATI-01, MW-LEX-PATNI-01, MW-LEX-BACHCHA-01] -->

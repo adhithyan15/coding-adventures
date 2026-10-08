@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Kaiso Ho: Ask How Someone Is",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:eab36b939432f187",
+  "sourceHash": "fnv1a64:1182aa31edf6347e",
   "lessons": [
     {
       "id": "MW-C06-hear-question",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a5b73a26d21bd8d",
+      "sourceHash": "fnv1a64:4f26ffcd11f293a3",
       "notice": null,
       "blocks": [
         {
@@ -34,8 +34,17 @@
               "source": "[PAUSE 12s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "पाणी",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **पाणी**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write पाणी, ask the name question once, and answer it once. Recall that kāĩ asks what, then put the page out of sight. The next question has a different social job."
+              "text": "Ask the name question once, and answer it once. Recall that kāĩ asks what, then put the page out of sight. The next question has a different social job."
             }
           ]
         },

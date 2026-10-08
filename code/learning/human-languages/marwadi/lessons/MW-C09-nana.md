@@ -37,7 +37,7 @@ reviews_of: [MW-C09-hear-nana, MW-W05-na, MW-C08-dada]
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-NANA-01]; assesses=[MW-LEX-NANA-01, MW-SCRIPT-NA-01, MW-SCRIPT-AA-MATRA-01] -->
 
-[PAUSE 12s] Say *nānā*, then write familiar **न** and **ा**.
+[PAUSE 12s] Say *nānā*. [YOU WRITE: familiar **न** and **ा**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-NANA-01, MW-SCRIPT-NANA-01] -->
@@ -48,8 +48,10 @@ reviews_of: [MW-C09-hear-nana, MW-W05-na, MW-C08-dada]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-NANA-01, MW-SCRIPT-NANA-01, MW-LEX-DADA-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look for five seconds, cover the word, and write it. Then label **दादा** and
-**नाना** orally without ranking either side of the family.
+Look for five seconds and cover the word. [YOU WRITE: the word]
+
+Then label **दादा** and **नाना** orally without ranking either side of the
+family.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-NANA-01, MW-SCRIPT-NANA-01] -->

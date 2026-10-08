@@ -37,8 +37,9 @@ reviews_of: [MW-R12-weather-first-two, MW-C11-baadal, MW-C11-barsaat, MW-C10-pai
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAUSAM-01, MW-SCRIPT-MAUSAM-01, MW-LEX-GARMI-01, MW-SCRIPT-GARMI-01, MW-LEX-BAADAL-01, MW-SCRIPT-BARSAAT-01, MW-SCRIPT-PAISA-01] -->
 
-[PAUSE 26s] Say and write weather and heat, recall cloud, then write rain and
-money.
+[PAUSE 26s] Say weather and heat. [YOU WRITE: both words]
+
+Recall cloud. [YOU WRITE: the words for rain and money]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-THANDI-01]; assesses=[] -->

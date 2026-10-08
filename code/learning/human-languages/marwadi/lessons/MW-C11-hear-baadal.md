@@ -37,8 +37,9 @@ reviews_of: [MW-C11-hawa, MW-C10-mandir, MW-C10-haath, MW-C09-nani, MW-W05-ai-ma
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-HAWA-01, MW-SCRIPT-HAWA-01, MW-LEX-MANDIR-01, MW-SCRIPT-HAATH-01, MW-LEX-NANI-01, MW-SCRIPT-AI-MATRA-01] -->
 
-[PAUSE 22s] Say and write wind, then recall temple, hand, maternal grandmother,
-and the **ै** mark in **है**.
+[PAUSE 22s] Say wind. [YOU WRITE: the word for wind]
+
+Then recall temple, hand, maternal grandmother, and the **ै** mark in **है**.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-BAADAL-01]; assesses=[] -->

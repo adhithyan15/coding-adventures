@@ -36,15 +36,17 @@ reviews_of: [MW-C23-thodu, MW-C23-karo, MW-C23-bargain-request, MW-C23-ghano, MW
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-TRANSPORT-FIVE-FOUR-SKILL-01, MW-LEX-GAADI-01, MW-SCRIPT-GAADI-01, MW-LEX-GHANO-01, MW-SCRIPT-GHANO-01] -->
 
-[PAUSE 24s] Recall the five-word transport payoff, then write vehicle and
-*very*.
+[PAUSE 24s] Recall the five-word transport payoff.
+[YOU WRITE: the words for vehicle and *very*]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-THODU-01, MW-SCRIPT-THODU-01, MW-LEX-KARO-01, MW-SCRIPT-KARO-01, MW-LEX-BARGAIN-REQUEST-01, MW-SCRIPT-BARGAIN-REQUEST-01] -->
 
 Hear each word alone, out of its line, and give its meaning. Read two cards.
-Write both from sound. Then rebuild the whole counter-offer from those two words
-plus the one you already had, and say it once at speaking pace.
+[YOU WRITE: both from sound]
+
+Then rebuild the whole counter-offer from those two words plus the one you
+already had, and say it once at speaking pace.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-THODU-01, MW-LEX-KARO-01] -->

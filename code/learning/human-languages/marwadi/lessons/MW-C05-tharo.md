@@ -50,8 +50,8 @@ Only **थ** was new. The rest comes from **राम** and **म्हारो
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-THARO-01, MW-LEX-THARO-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look for five seconds, cover **थारो**, wait five seconds, then write it.
-Uncover and compare **थ**, **ा**, and **रो** separately.
+Look for five seconds, cover **थारो**, and wait five seconds.
+[YOU WRITE: the word — then uncover it and compare **थ**, **ा**, and **रो** separately]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-THARO-01, MW-LEX-THARO-01, MW-SCRIPT-MHARO-01, MW-LEX-MHARO-01] -->

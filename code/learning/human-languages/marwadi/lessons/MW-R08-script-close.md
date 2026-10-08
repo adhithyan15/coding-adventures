@@ -36,14 +36,14 @@ reviews_of: [MW-W08-ba, MW-W08-da, MW-W08-va, MW-C08-family-seven, MW-C08-pariva
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-FAMILY-SEVEN-FOUR-SKILL-01, MW-LEX-PARIVAAR-01, MW-SCRIPT-MAA-01] -->
 
-[PAUSE 18s] Name the family group, write **मां**, and recall one successful part
-of the four-skill family check.
+[PAUSE 18s] Name the family group. [YOU WRITE: **मां**]
+
+Recall one successful part of the four-skill family check.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BA-01, MW-SCRIPT-DA-01, MW-SCRIPT-VA-01] -->
 
-Write **ब**, **द**, and **व** from spoken sign names. Circle only the sign that
-stalled, reopen its one-sign lesson, then try that sign once more.
+[YOU WRITE: **ब**, **द**, and **व** from spoken sign names — circle only the sign that stalled, reopen its one-sign lesson, then try that sign once more]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BA-01, MW-SCRIPT-DA-01, MW-SCRIPT-VA-01, MW-PERFORMANCE-FAMILY-SEVEN-FOUR-SKILL-01] -->

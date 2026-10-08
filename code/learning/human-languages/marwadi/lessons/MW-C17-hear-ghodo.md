@@ -37,7 +37,7 @@ reviews_of: [MW-C17-riksha, MW-C16-hear-gaadi, MW-W15-nukta]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-RIKSHA-01, MW-SCRIPT-RRA-01, MW-LEX-GAADI-01, MW-SCRIPT-CHA-01, MW-LEX-KAPDA-01] -->
 
-[PAUSE 18s] Say rickshaw, vehicle, and clothes, then write **च** and **ड़**.
+[PAUSE 18s] Say rickshaw, vehicle, and clothes. [YOU WRITE: **च** and **ड़**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-GHODO-01]; assesses=[] -->

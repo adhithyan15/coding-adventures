@@ -37,7 +37,7 @@ reviews_of: [MW-C18-hear-sabji, MW-C16-hear-gaadi, MW-C10-ghar]
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-SABJI-01]; assesses=[MW-LEX-SABJI-01, MW-LEX-GAADI-01, MW-SCRIPT-GHAR-01] -->
 
-[PAUSE 18s] Say vegetables and vehicle, then write home.
+[PAUSE 18s] Say vegetables and vehicle. [YOU WRITE: the word for home]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-SABJI-01, MW-SCRIPT-SABJI-01] -->
@@ -53,8 +53,8 @@ than as the only one anybody uses.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-SABJI-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **सबजी**. Check that **ब** keeps its
-own short vowel and carries no vowel-killer.
+Look, cover, and wait five seconds.
+[YOU WRITE: **सबजी** — check that **ब** keeps its own short vowel and carries no vowel-killer]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-SABJI-01, MW-SCRIPT-SABJI-01] -->

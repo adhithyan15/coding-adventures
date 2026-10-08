@@ -37,7 +37,7 @@ reviews_of: [MW-C15-kapda, MW-C14-hear-sasta]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-SASTA-01, MW-LEX-KAPDA-01, MW-SCRIPT-VA-01] -->
 
-[PAUSE 14s] Say cheap and clothes, then write **व**.
+[PAUSE 14s] Say cheap and clothes. [YOU WRITE: **व**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-MAHANGO-01]; assesses=[] -->

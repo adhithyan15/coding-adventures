@@ -4,7 +4,7 @@
   "chapter": 34,
   "title": "Twenty, A Hundred, And A Price With A Figure In It",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b5952da225675d96",
+  "sourceHash": "fnv1a64:9b733a673fb47f5c",
   "lessons": [
     {
       "id": "MW-C34-hear-bees",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce88b2af6f80f617",
+      "sourceHash": "fnv1a64:51f484d2b93cdf73",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,20 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the ten-number payoff, write the show request, then say ten."
+              "text": "Recall the ten-number payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the show request",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the show request]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then say ten."
             },
             {
               "kind": "prompt",
@@ -412,7 +425,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:79d42462af0aad03",
+      "sourceHash": "fnv1a64:048fc9841aa5cb37",
       "notice": null,
       "blocks": [
         {
@@ -427,8 +440,17 @@
               "source": "[PAUSE 18s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for how much",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for how much]"
+            },
+            {
               "kind": "speech",
-              "text": "Write how much, then say a hundred and twenty."
+              "text": "Then say a hundred and twenty."
             },
             {
               "kind": "prompt",
@@ -509,7 +531,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8fa58d2836302d8e",
+      "sourceHash": "fnv1a64:4288eaf059c2a6d8",
       "notice": null,
       "blocks": [
         {
@@ -525,7 +547,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say the price question, then write ten and a hundred."
+              "text": "Say the price question."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for ten and a hundred",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for ten and a hundred]"
             }
           ]
         },
@@ -554,8 +585,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write the question and answer as two lines. Then rewrite the answer line three times with दस, बीस (bīs) and सो (so) in turn, and read each pair aloud."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the question and answer as two lines; then the answer line three more times, with दस, बीस (bīs) and सो (so) in turn, and read each pair aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the question and answer as two lines; then the answer line three more times, with **दस**, **बीस** and **सो** in turn, and read each pair aloud]"
             }
           ]
         },
@@ -604,7 +640,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:68c3517a12a1dabc",
+      "sourceHash": "fnv1a64:22d41a10397ec448",
       "notice": null,
       "blocks": [
         {
@@ -619,8 +655,17 @@
               "source": "[PAUSE 18s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the price question",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the price question]"
+            },
+            {
               "kind": "speech",
-              "text": "Write the price question, say make it, then say five."
+              "text": "Say make it, then say five."
             },
             {
               "kind": "prompt",
@@ -702,7 +747,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5da1b227049abd1c",
+      "sourceHash": "fnv1a64:caa78fe205cb682a",
       "notice": null,
       "blocks": [
         {
@@ -717,8 +762,13 @@
               "source": "[PAUSE 16s]"
             },
             {
-              "kind": "speech",
-              "text": "Write the price answer, then write twenty on its own."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the price answer, then the word for twenty on its own",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the price answer, then the word for twenty on its own]"
             }
           ]
         },
@@ -747,8 +797,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write दस करो। (das karo.) from a cover. Then write the same line twice more with पांच and बीस (bīs) in the number slot, and read all three aloud as offers against a seller's सो (so)।."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "दस करो। (das karo.) from a cover; then the same line twice more with पांच and बीस (bīs) in the number slot, and read all three aloud as offers against a seller's सो (so)।",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **दस करो।** from a cover; then the same line twice more with **पांच** and **बीस** in the number slot, and read all three aloud as offers against a seller's **सो।**]"
             }
           ]
         },
@@ -896,7 +951,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9bd243693dbef4cd",
+      "sourceHash": "fnv1a64:7bcca7d55eefdc3d",
       "notice": null,
       "blocks": [
         {
@@ -911,8 +966,17 @@
               "source": "[PAUSE 22s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the total question and the make-it word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the total question and the make-it word]"
+            },
+            {
               "kind": "speech",
-              "text": "Write the total question and the make-it word, then recall the ten-number payoff."
+              "text": "Then recall the ten-number payoff."
             }
           ]
         },
@@ -927,7 +991,16 @@
             },
             {
               "kind": "speech",
-              "text": "Listening. Hear the price question answered with a figure, ten times over with different figures, and write each amount down."
+              "text": "Listening. Hear the price question answered with a figure, ten times over with different figures."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "each amount",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: each amount]"
             },
             {
               "kind": "speech",
@@ -939,7 +1012,16 @@
             },
             {
               "kind": "speech",
-              "text": "Writing. Write a whole three-turn exchange from dictation, with no model."
+              "text": "Writing."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "a whole three-turn exchange from dictation, with no model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: a whole three-turn exchange from dictation, with no model]"
             },
             {
               "kind": "speech",

@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Paani: Hear Water, Then Write It Sign by Sign",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f5c7337221d17637",
+  "sourceHash": "fnv1a64:68490147eba043e4",
   "lessons": [
     {
       "id": "MW-C04-hear-paani",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:10138e81ee9069bf",
+      "sourceHash": "fnv1a64:c31a23d818e1a11f",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,20 @@
             },
             {
               "kind": "speech",
-              "text": "Give the Chapter 3 four-skill response once: hear hā(n) sā and identify a respectful yes; say it; read हां सा; then cover and write it. Say ābhār for formal thanks. Now set writing aside: today's new word begins with the ear and voice."
+              "text": "Give the Chapter 3 four-skill response once: hear hā(n) sā and identify a respectful yes; say it; read हां सा; then cover it."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the phrase",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the phrase]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say ābhār for formal thanks. Now set writing aside: today's new word begins with the ear and voice."
             }
           ]
         },
@@ -597,7 +610,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9179361a997c9e10",
+      "sourceHash": "fnv1a64:e4d2369ee8a75502",
       "notice": null,
       "blocks": [
         {
@@ -613,7 +626,29 @@
             },
             {
               "kind": "speech",
-              "text": "Give the older respectful yes in four quick steps: hear it and name its meaning; say it; read हां सा; then cover and write it. Now say the three meanings in English as you hear ābhār, hā(n) sā, and pāṇī. Write पा, then ण (ṇa) and ी (long ī mark) separately from memory."
+              "text": "Give the older respectful yes in four quick steps: hear it and name its meaning; say it; read हां सा; then cover it."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the phrase",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the phrase]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say the three meanings in English as you hear ābhār, hā(n) sā, and pāṇī."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "पा, then ण (ṇa) and ी (long ī mark) separately from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **पा**, then **ण** and **ी** separately from memory]"
             }
           ]
         },
@@ -635,8 +670,13 @@
               "text": "Read: choose पाणी (pāṇī) from आभार, हां, पाणी (pāṇī) and give its meaning."
             },
             {
-              "kind": "speech",
-              "text": "Write: hear pāṇī, wait fifteen seconds, then write पाणी with no model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "पाणी with no model, fifteen seconds after hearing pāṇī",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **पाणी** with no model, fifteen seconds after hearing *pāṇī*]"
             },
             {
               "kind": "speech",

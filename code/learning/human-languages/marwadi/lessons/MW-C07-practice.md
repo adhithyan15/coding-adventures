@@ -37,7 +37,9 @@ reviews_of: [MW-C01-raam-raam-saa, MW-C07-hear-later, MW-C07-read-later]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-RAAM-RAAM-SAA, MW-REGISTER-SAA, MW-SCRIPT-THA-01] -->
 
-[PAUSE 12s] Write **थ**, then say **राम राम सा** once as the common farewell.
+[PAUSE 12s] [YOU WRITE: **थ**]
+
+Then say **राम राम सा** once as the common farewell.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-PERFORMANCE-FAREWELL-LATER-FOUR-SKILL-01]; assesses=[MW-LEX-PACHHE-01, MW-LEX-MILSOO-01, MW-FAREWELL-LATER-HEARD-01, MW-SCRIPT-PACHHE-MILSOO-01] -->
@@ -56,7 +58,7 @@ source-attested choices it taught.
 1. **Listen:** hear one line and identify common farewell or see-you-later.
 2. **Speak:** answer a later-meeting cue with *pāchhe milsū*.
 3. **Read:** match both printed lines to their meanings.
-4. **Write:** hear *pāchhe milsū*, wait ten seconds, and write it without a model.
+4. [YOU WRITE: the line without a model, ten seconds after hearing *pāchhe milsū*]
 
 Score all four separately. A spoken line does not replace missing writing.
 

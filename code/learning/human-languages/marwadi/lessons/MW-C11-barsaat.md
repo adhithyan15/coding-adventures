@@ -37,8 +37,8 @@ reviews_of: [MW-C11-hear-barsaat, MW-C11-hawa, MW-C10-travel-five, MW-W05-tha]
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-BARSAAT-01]; assesses=[MW-LEX-BARSAAT-01, MW-SCRIPT-BA-01, MW-SCRIPT-RA-01, MW-SCRIPT-SA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-TA-01, MW-LEX-HAWA-01, MW-SCRIPT-HAWA-01, MW-PERFORMANCE-TRAVEL-FIVE-FOUR-SKILL-01, MW-SCRIPT-THA-01] -->
 
-[PAUSE 24s] Say rain and wind, recall the travel payoff, write **थ**, then form
-**ब**, **र**, **स**, **ा**, and **त**.
+[PAUSE 24s] Say rain and wind, and recall the travel payoff.
+[YOU WRITE: **थ**, then form **ब**, **र**, **स**, **ा**, and **त**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BARSAAT-01, MW-SCRIPT-BARSAAT-01] -->
@@ -49,8 +49,8 @@ reviews_of: [MW-C11-hear-barsaat, MW-C11-hawa, MW-C10-travel-five, MW-W05-tha]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BARSAAT-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **बरसात**. Check that **ा** sits only
-in the final chunk.
+Look, cover, and wait five seconds.
+[YOU WRITE: **बरसात** — check that **ा** sits only in the final chunk]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BARSAAT-01, MW-SCRIPT-BARSAAT-01] -->

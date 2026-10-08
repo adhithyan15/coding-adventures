@@ -37,8 +37,10 @@ reviews_of: [MW-C14-hear-samaan, MW-C14-sasta, MW-C13-dukan, MW-C13-vastu, MW-C1
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-SAMAAN-01]; assesses=[MW-LEX-SAMAAN-01, MW-SCRIPT-AA-MATRA-01, MW-LEX-SASTA-01, MW-SCRIPT-SASTA-01, MW-SCRIPT-DUKAN-01, MW-SCRIPT-VASTU-01, MW-SCRIPT-MAUSAM-01, MW-SCRIPT-NAAM-01, MW-PERFORMANCE-FAMILY-FOUR-FOUR-SKILL-01] -->
 
-[PAUSE 25s] Say goods and cheap. Write **सस्ता**, **दुकान**, **वस्तु**,
-**मौसम**, and **नाम**, retrieve the four-word family payoff, then form **ा** once.
+[PAUSE 25s] Say goods and cheap.
+[YOU WRITE: **सस्ता**, **दुकान**, **वस्तु**, **मौसम**, and **नाम**]
+
+Retrieve the four-word family payoff. [YOU WRITE: **ा** once]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-SAMAAN-01, MW-SCRIPT-SAMAAN-01] -->
@@ -49,8 +51,8 @@ reviews_of: [MW-C14-hear-samaan, MW-C14-sasta, MW-C13-dukan, MW-C13-vastu, MW-C1
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-SAMAAN-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **सामान**. Check both long **ा**
-marks and the final **न**.
+Look, cover, and wait five seconds.
+[YOU WRITE: **सामान** — check both long **ा** marks and the final **न**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-SAMAAN-01, MW-SCRIPT-SAMAAN-01] -->

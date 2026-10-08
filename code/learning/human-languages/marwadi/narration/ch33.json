@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Six To Ten",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:45a1573913a1e7ec",
+  "sourceHash": "fnv1a64:90560ed1da53f69e",
   "lessons": [
     {
       "id": "MW-C33-hear-chha",
@@ -118,7 +118,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b6841c00b491b433",
+      "sourceHash": "fnv1a64:982df69fc76af6e9",
       "notice": null,
       "blocks": [
         {
@@ -133,8 +133,13 @@
               "source": "[PAUSE 18s]"
             },
             {
-              "kind": "speech",
-              "text": "Write य, write ए, then write four."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "य, then ए, then the word for four",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **य**, then **ए**, then the word for four]"
             }
           ]
         },
@@ -163,8 +168,17 @@
           "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "छ (chha), then छे beneath it, then ए beside both",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **छ**, then **छे** beneath it, then **ए** beside both]"
+            },
+            {
               "kind": "speech",
-              "text": "Write छ (chha), then write छे beneath it, then write ए beside both. Say which of the three stands alone and which two need something under them."
+              "text": "Say which of the three stands alone and which two need something under them."
             }
           ]
         },
@@ -999,7 +1013,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:07f9be144df19e6a",
+      "sourceHash": "fnv1a64:81738c8d87559884",
       "notice": null,
       "blocks": [
         {
@@ -1014,8 +1028,26 @@
               "source": "[PAUSE 22s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the show-request word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the show-request word]"
+            },
+            {
               "kind": "speech",
-              "text": "Write the show-request word, recall the counting payoff from the last chapter, then write ए."
+              "text": "Recall the counting payoff from the last chapter."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ए",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ए**]"
             }
           ]
         },
@@ -1041,8 +1073,13 @@
               "text": "Read आठ (āṭh), तीन, दस (das), छ (chha), एक, नो (no) printed in that order and say each."
             },
             {
-              "kind": "speech",
-              "text": "Write सात (sāt), पांच, नो (no), दो, दस (das) from dictation."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "सात (sāt), पांच, नो (no), दो, दस (das) from dictation",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **सात**, **पांच**, **नो**, **दो**, **दस** from dictation]"
             },
             {
               "kind": "speech",
@@ -1096,7 +1133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bf27b07ef165089f",
+      "sourceHash": "fnv1a64:27f051525b4cfc67",
       "notice": null,
       "blocks": [
         {
@@ -1112,7 +1149,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the five-number payoff, then write the letter that made it possible."
+              "text": "Recall the five-number payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the letter that made it possible",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the letter that made it possible]"
             }
           ]
         },
@@ -1127,7 +1173,16 @@
             },
             {
               "kind": "speech",
-              "text": "Listening. Hear ten numbers named singly and out of order; write each in figures of your own language."
+              "text": "Listening. Hear ten numbers named singly and out of order."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "each in figures of your own language",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: each in figures of your own language]"
             },
             {
               "kind": "speech",
@@ -1139,7 +1194,16 @@
             },
             {
               "kind": "speech",
-              "text": "Writing. Write all ten from dictation, shuffled, with no model in view."
+              "text": "Writing."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all ten from dictation, shuffled, with no model in view",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all ten from dictation, shuffled, with no model in view]"
             },
             {
               "kind": "speech",
@@ -1196,7 +1260,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff7746484edbf2e3",
+      "sourceHash": "fnv1a64:52c652143d5757d3",
       "notice": null,
       "blocks": [
         {
@@ -1212,7 +1276,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the ten-number payoff, say the show request, then write market."
+              "text": "Recall the ten-number payoff and say the show request."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for market",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for market]"
             }
           ]
         },
@@ -1222,12 +1295,22 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write three single signs from sound cues: छ (chha), ठ, स. Then write च beside छ (chha) and mark which of the two carries the breath."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "three single signs from sound cues — छ (chha), ठ, स; then च beside छ (chha), and mark which of the two carries the breath",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: three single signs from sound cues — **छ**, **ठ**, **स**; then **च** beside **छ**, and mark which of the two carries the breath]"
             },
             {
-              "kind": "speech",
-              "text": "Then write छ (chha), सात (sāt), आठ (āṭh), नो (no), दस (das) from dictation. Repair only the missed sign and rewrite its word once."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "छ (chha), सात (sāt), आठ (āṭh), नो (no), दस (das) from dictation — repair only the missed sign and rewrite its word once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **छ**, **सात**, **आठ**, **नो**, **दस** from dictation — repair only the missed sign and rewrite its word once]"
             }
           ]
         },

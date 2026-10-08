@@ -37,8 +37,8 @@ reviews_of: [MW-R23-answer-two, MW-C16-thela, MW-C16-bas, MW-C16-transport-three
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-TRANSPORT-THREE-FOUR-SKILL-01, MW-LEX-THELA-01, MW-SCRIPT-THELA-01, MW-LEX-BAS-01, MW-SCRIPT-BAS-01] -->
 
-[PAUSE 22s] Recall the three-word transport payoff, then say cart and bus and
-write both.
+[PAUSE 22s] Recall the three-word transport payoff, then say cart and bus.
+[YOU WRITE: both words]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-THODU-01]; assesses=[MW-LEX-GHANO-01, MW-LEX-PRICE-ANSWER-01] -->

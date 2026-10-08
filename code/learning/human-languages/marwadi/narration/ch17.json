@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Weather, Heat, and Cold: Three New Signs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:10551a8a41fe9d22",
+  "sourceHash": "fnv1a64:b538ce34122fae32",
   "lessons": [
     {
       "id": "MW-C12-hear-mausam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e10757be5768e6d6",
+      "sourceHash": "fnv1a64:541b89c18025abaa",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall wind, cloud, and rain in four skills, then write ई, कांई, and घर."
+              "text": "Recall wind, cloud, and rain in four skills."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ई, कांई, and घर",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ई**, **कांई**, and **घर**]"
             }
           ]
         },
@@ -195,7 +204,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b7b9ee81bafef72",
+      "sourceHash": "fnv1a64:f92b38fb58ab83f4",
       "notice": null,
       "blocks": [
         {
@@ -211,7 +220,16 @@
             },
             {
               "kind": "speech",
-              "text": "Ask and answer the known name exchange, say weather and wind, write मंदिर, बादल, and थारो, then form मौ and स."
+              "text": "Ask and answer the known name exchange, and say weather and wind."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "मंदिर, बादल, and थारो, then form मौ and स",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **मंदिर**, **बादल**, and **थारो**, then form **मौ** and **स**]"
             }
           ]
         },
@@ -233,7 +251,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write मौसम (mausam). Check the first-syllable vowel mark."
+              "text": "Look, cover, and wait five seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "मौसम (mausam) — check the first-syllable vowel mark",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **मौसम** — check the first-syllable vowel mark]"
             }
           ]
         },
@@ -282,7 +309,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0839d8ff60533969",
+      "sourceHash": "fnv1a64:d594da5d8f4a8713",
       "notice": null,
       "blocks": [
         {
@@ -298,7 +325,29 @@
             },
             {
               "kind": "speech",
-              "text": "Say and write weather, recall rain and the three-place payoff, ask āp kaiso ho?, then write the है ending from the known name line."
+              "text": "Say weather."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for weather",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for weather]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall rain and the three-place payoff, and ask āp kaiso ho?"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the है ending from the known name line",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the **है** ending from the known name line]"
             }
           ]
         },
@@ -463,7 +512,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:67a9517baa43582d",
+      "sourceHash": "fnv1a64:d5a29307d5617bf9",
       "notice": null,
       "blocks": [
         {
@@ -479,7 +528,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say heat, weather, wind, and the known fine answer; write हाथ and मौसम (mausam), then form ग (ga), र्, म, and ी."
+              "text": "Say heat, weather, wind, and the known fine answer."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "हाथ and मौसम (mausam), then form ग (ga), र्, म, and ी",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **हाथ** and **मौसम**, then form **ग**, **र्**, **म**, and **ी**]"
             }
           ]
         },
@@ -501,7 +559,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write गर्मी (garmī). Check the virama under र and long ी after म."
+              "text": "Look, cover, and wait five seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "गर्मी (garmī) — check the virama under र and long ी after म",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **गर्मी** — check the virama under **र** and long **ी** after **म**]"
             }
           ]
         },
@@ -551,7 +618,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d101b0420d8261e9",
+      "sourceHash": "fnv1a64:348cb30354c91459",
       "notice": null,
       "blocks": [
         {
@@ -567,7 +634,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say money, then write मौ, ग (ga), बादल, है, and ू."
+              "text": "Say money."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "मौ, ग (ga), बादल, है, and ू",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **मौ**, **ग**, **बादल**, **है**, and **ू**]"
             }
           ]
         },
@@ -578,7 +654,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the two words in mixed order, give each meaning, read both cards, then write both from sound."
+              "text": "Hear the two words in mixed order, give each meaning, and read both cards."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both from sound",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both from sound]"
             }
           ]
         },
@@ -628,7 +713,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0aa5f0275afddce2",
+      "sourceHash": "fnv1a64:20f20dbead3ffc42",
       "notice": null,
       "blocks": [
         {
@@ -644,7 +729,29 @@
             },
             {
               "kind": "speech",
-              "text": "Say and write weather and heat, recall cloud, then write rain and money."
+              "text": "Say weather and heat."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both words]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall cloud."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for rain and money",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for rain and money]"
             }
           ]
         },
@@ -810,7 +917,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:572183a20e1def9a",
+      "sourceHash": "fnv1a64:d22d297074e4d99c",
       "notice": null,
       "blocks": [
         {
@@ -826,7 +933,16 @@
             },
             {
               "kind": "speech",
-              "text": "Perform the known wellbeing exchange and travel payoff, say cold, heat, and weather, write गर्मी (garmī), then form ठ, ं, ड (ḍa), and ी."
+              "text": "Perform the known wellbeing exchange and travel payoff, and say cold, heat, and weather."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "गर्मी (garmī), then form ठ, ं, ड (ḍa), and ी",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **गर्मी**, then form **ठ**, **ं**, **ड**, and **ी**]"
             }
           ]
         },
@@ -848,7 +964,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write ठंडी (ṭhaṇḍī). Check the nasal mark and keep ड (ḍa) distinct from द."
+              "text": "Look, cover, and wait five seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ठंडी (ṭhaṇḍī) — check the nasal mark and keep ड (ḍa) distinct from द",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ठंडी** — check the nasal mark and keep **ड** distinct from **द**]"
             }
           ]
         },
@@ -898,7 +1023,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:55a7863fa335cad6",
+      "sourceHash": "fnv1a64:ba059bdec1b37d74",
       "notice": null,
       "blocks": [
         {
@@ -914,7 +1039,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say the known see-you-later line, then write मौ, ग (ga), ड (ḍa), and बरसात."
+              "text": "Say the known see-you-later line."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "मौ, ग (ga), ड (ḍa), and बरसात",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **मौ**, **ग**, **ड**, and **बरसात**]"
             }
           ]
         },
@@ -925,7 +1059,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the three words in mixed order, give each meaning, read three cards, then write all three from sound."
+              "text": "Hear the three words in mixed order, give each meaning, and read three cards."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three from sound",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three from sound]"
             }
           ]
         },
@@ -976,7 +1119,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a66bc71cebceeb12",
+      "sourceHash": "fnv1a64:408c5fe96a7e93ba",
       "notice": null,
       "blocks": [
         {
@@ -991,8 +1134,17 @@
               "source": "[PAUSE 18s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "छ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **छ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write छ, then recall the earlier wind-cloud-rain payoff before adding three words."
+              "text": "Then recall the earlier wind-cloud-rain payoff before adding three words."
             }
           ]
         },
@@ -1014,8 +1166,13 @@
               "text": "Match six printed cards to meanings."
             },
             {
-              "kind": "speech",
-              "text": "Write three heard words from each half without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "three heard words from each half without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: three heard words from each half without a model]"
             },
             {
               "kind": "speech",
@@ -1073,7 +1230,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40d7fccf0fe2de2f",
+      "sourceHash": "fnv1a64:a242ad41a4f36141",
       "notice": null,
       "blocks": [
         {
@@ -1088,8 +1245,17 @@
               "source": "[PAUSE 24s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ज, घ, े, and हवा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ज**, **घ**, **े**, and **हवा**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ज, घ, े, and हवा, then name the four weather-payoff skills."
+              "text": "Then name the four weather-payoff skills."
             }
           ]
         },
@@ -1099,8 +1265,17 @@
           "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "मौ, ग, ड (ḍa), then मौसम (mausam), गर्मी (garmī), and ठंडी (ṭhaṇḍī), from sound alone",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **मौ**, **ग**, **ड**, then **मौसम**, **गर्मी**, and **ठंडी**, from sound alone]"
+            },
+            {
               "kind": "speech",
-              "text": "From sound alone, write मौ, ग, ड (ḍa), then मौसम (mausam), गर्मी (garmī), and ठंडी (ṭhaṇḍī). Give each word's meaning."
+              "text": "Give each word's meaning."
             }
           ]
         },

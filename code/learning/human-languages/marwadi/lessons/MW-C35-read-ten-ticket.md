@@ -35,7 +35,7 @@ reviews_of: [MW-W35-digits-zero-one-two, MW-C23-hear-ghano, MW-C34-price-number]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-GHANO-01, MW-SCRIPT-PRICE-NUMBER-01] -->
 
-[PAUSE 18s] Say very, then write the price question with its answer.
+[PAUSE 18s] Say very. [YOU WRITE: the price question with its answer]
 
 - [YOU RECALL: *bīs*, and why twenty had to be taught before the numbers under
   it]
@@ -50,8 +50,8 @@ The three signs from the last lesson already spell three amounts this book
 knows.
 
 1. Read **१**, **२** and **१०** aloud as *ek*, *do* and *das*.
-2. Write each of the three in words underneath its figure.
-3. Cover the figures and write them again from the words.
+2. [YOU WRITE: each of the three in words, underneath its figure]
+3. Cover the figures. [YOU WRITE: the figures again, from the words]
 4. Hear *das* and point at **१०** rather than at **दस**.
 
 Reading a figure and reading a word are two different skills, and a stall gives

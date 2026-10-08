@@ -37,7 +37,7 @@ reviews_of: [MW-W20-ya, MW-C11-barsaat]
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-CHAAY-01]; assesses=[MW-LEX-CHAAY-01, MW-SCRIPT-YA-01, MW-SCRIPT-BARSAAT-01] -->
 
-[PAUSE 18s] Say tea, then write **य** and rain.
+[PAUSE 18s] Say tea. [YOU WRITE: **य**, then the word for rain]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-CHAAY-01, MW-SCRIPT-CHAAY-01] -->
@@ -50,8 +50,8 @@ The **य** carries no vowel mark of its own here and closes the word.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-CHAAY-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **चाय**. Check that the **ा** sits
-after **च** and that **य** ends the word bare.
+Look, cover, and wait five seconds.
+[YOU WRITE: **चाय** — check that the **ा** sits after **च** and that **य** ends the word bare]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-CHAAY-01, MW-SCRIPT-CHAAY-01] -->
