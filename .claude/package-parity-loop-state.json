@@ -12120,10 +12120,13 @@
     {
       "id": "geometry-arc2d-center-form-bounds-and-sweep-neutral-contract",
       "title": "Freeze analytic wrapped Arc2D bounds and bounded center-form cubic sweeps",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-affine2d-bezier2d-neutral-fixture-extension"],
-      "branch": null,
+      "branch": "codex/parity-arc2d-contract-20261008",
       "pr_number": null,
+      "selected_at": "2026-10-08T13:37:50Z",
+      "selection_revision": "17d883c68bc59c4e51c5cebb94fdadec97aa2924",
+      "selection_notes": "Selected only after #17117 merged, exact-main inventory refresh and new gap registration. This spec/fixture prerequisite prevents the downstream Java/Kotlin/Dart Arc2D port from inheriting sampled off-grid bounds or unbounded center-form cubic allocation. No active parity PR exists; the Go and existing-lane implementation owners remain separate.",
       "notes": "New post-#17117 cross-lane contract gap: G2D03's raw candidate-angle quotient omits extrema across 2π and negative sweeps, while direct CenterArc cubic conversion has no finite or one-turn bound before allocating. Add a closed additive neutral corpus/schema with two off-grid wrapped analytic bounds, zero/full/over-turn segment cases, an independent analytic validator, native nonfinite guidance, and explicit 1-4 cubic fail-stop contract. Preserve existing Go implementation ownership separately."
     },
     {
