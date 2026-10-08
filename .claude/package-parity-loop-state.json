@@ -1380,11 +1380,11 @@
     {
       "id": "build-tool-ruby-diff-selection-match-work-ceiling-adoption",
       "title": "Complete the 20-case process-free graph and diff-selection contract in the Ruby build tool",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["build-tool-neutral-graph-diff-corpus-completion", "build-tool-neutral-graph-diff-contract-coverage-completion", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-diff-selection-match-work-ceiling", "build-tool-neutral-graph-diff-adversarial-corpus-hardening", "build-tool-ruby-glob-matcher-complexity-hardening", "build-tool-shared-input-multiconsumer-diff-selection-fixture"],
-      "branch": null,
+      "branch": "codex/parity-ruby-diff-selection-20261008",
       "pr_number": null,
-      "notes": "Complete and dynamically consume the eight-graph and twelve-diff process-free contract, including shared-input multi-consumer selection, through production code, reusing the separately hardened shared Ruby matcher and preserving stable empty failures."
+      "notes": "Selected after #17097 merged and exact-main collision-checked inventory/owner refresh. All seven prerequisites are merged; no live open PR overlaps Ruby build-tool source/tests or neutral graph/diff fixtures. Complete and dynamically consume the eight-graph and twelve-diff process-free contract, including shared-input multi-consumer selection, through production code, reusing the separately hardened shared Ruby matcher and preserving stable empty failures. Keep execution authority outside this process-free slice."
     },
     {
       "id": "build-tool-rust-diff-selection-match-work-ceiling-adoption",
