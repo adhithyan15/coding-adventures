@@ -6,6 +6,14 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- Case-exact native CI selection for the twenty-two checked
+  `validation-*.json` fixtures. Nine orphan-crate/tracked-artifact cases
+  select eleven non-Go validator fronts, five package-root/Lua-Windows cases
+  select Go, and eight remain neutral-only. Unknown flat cases fail closed;
+  exact raw paths, three-platform plans, language filters, missing roots,
+  rename sources, and native test-source drift are covered without forcing a
+  full build or changing validator behavior.
+
 - Case-exact native CI selection for all eleven checked
   `hashing-cache-*.json` fixtures. C#/F#/Lua read every case; Python reads
   missing/hit/corrupt, Go/Perl/Ruby/Swift read missing, and TypeScript reads

@@ -12,20 +12,20 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 17042,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/17042",
-    "branch": "codex/parity-hashing-cache-fixture-ci-20261008",
-    "implementation_revision": "29b0c54c29614646e9ce887aff84c1a9bb3b3962",
+    "number": 17060,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/17060",
+    "branch": "codex/parity-validation-fixture-ci-20261008",
+    "implementation_revision": "aa0c879b0744d944ae862d4f3653766ceced72c8",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-08T05:33:11Z",
-    "pr_number": 17042,
+    "observed_at": "2026-10-08T07:28:52Z",
+    "pr_number": 17060,
     "status": "checks-pending",
-    "notes": "Ready-for-review PR #17042 opened from the tested, rebased clean worktree after #17028 was verified merged. Initial GitHub checks are queued and mergeability is MERGEABLE; auto-merge remains disabled until every final-head required check is terminal acceptable and conflict-free. No other parity PR is open."
+    "notes": "Ready-for-review PR #17060 opened from the tested clean parity worktree after #17042 was verified merged. Initial GitHub checks are queued and mergeability is MERGEABLE; auto-merge remains disabled until every final-head required check is terminal acceptable and conflict-free. No other parity PR is open."
   },
   "last_inventory": {
-    "revision": "e71e05f3b8394a3d87f0032bc541f4f2d7d48141",
+    "revision": "57ff56c81c0b683dad83858e974ea09e918c63e1",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1497,
@@ -6109,6 +6109,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
+      "post_17042_audit_notes": "Merged #17036 adds deterministic F1-F9 sealed freshness index, record generation, tombstone, reconcile, CAS, and rollback acceptance behavior over injected storage; pin these as portable fixtures. Open #17046 overlaps Vault paths and must settle before selecting this owner.",
       "notes": "Newly surfaced while classifying merged PRs #10272, #10288, and #10289 in the existing mixed vault-sealed-store package. Extract language-neutral fixtures for manifest and envelope validation, source-marked password-derived versus custody-injected KEKs, address-bound AAD, collision-safe conditional writes, key-rotation plans, seal and unseal state transitions, exact revisions, redacted status and envelope summaries, and stable no-mutation failures over injected storage, clock, entropy, and cryptographic operations. Concrete entropy, trusted time, cryptography, key custody, plaintext memory, and backend effects remain separately reviewed native authority."
     },
     {
@@ -6119,6 +6120,7 @@
       "branch": null,
       "pr_number": null,
       "selection_blocked": true,
+      "post_17042_audit_notes": "Merged #17036 leaves trusted persistent F10 external-anchor and host custody outside the portable F1-F9 core; retain that boundary here. Open #17046 overlaps this native authority and remains outside autonomous parity selection.",
       "notes": "Review the existing Rust vault-sealed-store package's OS CSPRNG, SystemTime, plaintext, DEK and KEK custody, zeroization, cryptographic execution, and injected backend effects after its deterministic core is extracted. Merged PR #10272 adds custody-injected root KEKs, while the legacy capability profile declares only os_random despite direct SystemTime reads. Require truthful structured time, entropy, memory, key, and backend authority, bounded redacted failures, and platform evidence. Do not manufacture all-language native custody or entropy hosts; this native-runtime item is excluded from autonomous selection."
     },
     {
@@ -9377,6 +9379,7 @@
       "status": "pending",
       "depends_on": [],
       "branch": null,
+      "post_17042_audit_notes": "Merged #17030 and #17043 extend bounded sqrt/cos sign widening to exact multiplicative unit factors and exact exponent-one power-base preservation. Keep non-unit, dynamic, repeated-sign, and overridden counterexamples rejected within this existing neutral owner; do not mint a duplicate.",
       "classification_notes": "Merged PR #12955 extends this existing neutral and dependent applicable-lane family with addition of negative real zero as an exact finite-real selector identity while positive-zero addition and negative-zero subtraction remain conservative. Merged PR #14642 extends AL4 path-independent standard-result arithmetic to bounded powers whose exponent is an exact initialized tracked local integer across Native AOT, LLVM, Wasm, JVM, CLR, VM, and JIT while preserving the runtime selector and avoiding f64_pow; uninitialized integer and tracked-real exponents remain fail-closed or runtime.",
       "pr_number": null,
       "notes": "Discovered in the post-#12819 commit audit after the Rust algol-iir-compiler added bounded selector identity semantics and seven-backend results without an exact portable owner. Merged PR #12831 extends that same bounded contract to complete integer and real literal exponent chains that evaluate to positive one while dynamic, real-valued, zero, and non-unit exponents fail closed. Merged PR #12851 adds signed integer/real neutral selector writes and keeps non-unit signed forms fail-closed. Merged PR #12927 adds static mixed integer/real comparison folding with finite binary64-exact widening, and merged PR #12939 extends that checked widening to integer snapshots assigned into real scalar targets, including transitive while dependencies while overflow and inexact values fail closed. Merged PR #12950 recognizes subtraction of positive numeric zero, including grouped and left-associative chains, as an exact finite-real selector identity while keeping addition of positive zero and subtraction of negative real zero conservative because they can change the negative-zero sign bit. Merged PR #13352 adds signed tracked real-exponent unrolling across the existing Rust compiler and lang-aot proof surfaces and remains owned here. Retain those canonical identity, widening, subtraction, and rejection cases here. Pin accepted and rejected programs, the ten-level selector bound, identity-chain behavior, power-one and signed-neutral selector writes, exact mixed numeric comparisons and real-target snapshots, fail-closed counterexamples, and canonical IIR/runtime results independently of the existing generic singleton-classification umbrella."
@@ -11508,6 +11511,7 @@
       "depends_on": [],
       "branch": null,
       "pr_number": null,
+      "post_17042_audit_notes": "Merged #17040 adds emitting-only Directive::Undef behavior, later-include visibility, malformed C operand/location diagnostics, and no cross-translation-unit leakage. Add accepted/rejected neutral fixtures within this owner; no new identity was added.",
       "notes": "Discovered after merged PRs #15853 and #15873 added the Rust-only `source-preprocessor` identity. Define neutral fixtures and established-lane implementations for injected-file include resolution, conditionals, macro expansion, Prosser hide sets, source maps, diagnostics, recursion and work ceilings, and transactional failure. Require a truthful empty capability manifest for the pure injected core; keep filesystem traversal, environment lookup, and CLI I/O outside."
     },
     {
@@ -13194,6 +13198,7 @@
       "depends_on": ["array-runtime-and-language-frontends-neutral-foundation"],
       "branch": null,
       "pr_number": null,
+      "post_17042_audit_notes": "Merged #17035 and #17047 add partial LANG82 Perl 5.004_55/56/57 release-grammar accepted/rejected pairs inside existing Rust perl-parser, not new package lanes. Fold bounded release-grammar fixtures into this owner. Recheck open Perl grammar PR overlap before selection.",
       "notes": "Post-#16898 four-singleton audit: Rust perl-lexer and perl-parser are new LANG81 bounded source-language pilots with no exact owner. Review deterministic accepted/rejected grammar fixtures and pure frontend portability, separating CLI file and VM effects from any lane-sized port decision."
     },
     {
@@ -13629,12 +13634,12 @@
       "notes": "Selected after #16989 merged and all newly discovered owners were registered. Twenty exact flat source-collection cases have direct native readers in twelve build-tool fronts, including an Elixir local-case reader found during independent source review; fixture-only diffs seed only the neutral gate. Map seven local cases to twelve fronts, nine repository cases to C#/F#/Swift, and four shared-input cases to C#/F#; verify dynamic and explicit reader drift, three-platform/single-language selection, rename source, and missing-root atomicity. Do not change production collectors or claim every reader replays every case."
     },
     {
-      "id": "build-tool-hashing-cache-fixture-native-ci-selection", "title": "Gate native hashing-cache fixture readers", "status": "pr-open", "depends_on": ["build-tool-pure-domain-corpus", "build-tool-neutral-dependency-hashing-adversarial-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-hashing-cache-fixture-ci-20261008", "pr_number": 17042,
+      "id": "build-tool-hashing-cache-fixture-native-ci-selection", "title": "Gate native hashing-cache fixture readers", "status": "merged", "depends_on": ["build-tool-pure-domain-corpus", "build-tool-neutral-dependency-hashing-adversarial-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-hashing-cache-fixture-ci-20261008", "pr_number": 17042,
       "notes": "Selected after #17028 merged and newly discovered work was registered. Eleven checked hashing-cache cases have direct native readers in nine build-tool fronts: C#/F#/Lua all cases, Python missing/hit/corrupt, Go/Perl/Ruby/Swift missing, and TypeScript corrupt. Fixture-only diffs do not select those BUILD roots. Use a closed exact case-to-reader map, independent source-reference drift evidence, neutral fallback, and three-platform/language/rename/missing-root tests; some fronts assert only digest slices rather than replaying the full oracle. Separate from Lua/Perl hashing-cache implementation owners."
     },
     {
-      "id": "build-tool-validation-fixture-native-ci-selection", "title": "Gate native validation fixture readers", "status": "pending", "depends_on": ["build-tool-validation-oracle-corpus", "build-tool-tracked-artifact-validation-corpus", "build-tool-orphan-crate-validation-corpus", "build-tool-orphan-package-root-validation-corpus-and-go-adoption", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": null, "pr_number": null,
-      "notes": "The flat validation family has 22 cases, but direct native readers cover only scoped subfamilies: four orphan-package-root cases in Go, four orphan-crate/exemption and five tracked-artifact cases in eleven non-Go fronts, plus one Lua Windows sibling case in Go. Fourteen cases have native readers; eight one-off cases have no verified native reader. Perl composes filenames dynamically; avoid blanket validation-* fanout."
+      "id": "build-tool-validation-fixture-native-ci-selection", "title": "Gate native validation fixture readers", "status": "pr-open", "depends_on": ["build-tool-validation-oracle-corpus", "build-tool-tracked-artifact-validation-corpus", "build-tool-orphan-crate-validation-corpus", "build-tool-orphan-package-root-validation-corpus-and-go-adoption", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-validation-fixture-ci-20261008", "pr_number": 17060,
+      "notes": "Selected from collision-checked bedf869390 main after #17042 merged; all five prerequisites are merged and no active parity PR or direct open-PR overlap remains. The flat validation family has 22 cases, but direct native readers cover only scoped subfamilies: four orphan-package-root cases in Go, four orphan-crate/exemption and five tracked-artifact cases in eleven non-Go fronts, plus one Lua Windows sibling case in Go. Fourteen cases have native readers; eight one-off cases have no verified native reader. Perl composes filenames dynamically; avoid blanket validation-* fanout."
     },
     {
       "id": "actor-d19-portable-core-neutral-conformance", "title": "Freeze D19 actor portable core and host-adapter boundary", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
@@ -13738,11 +13743,11 @@
     },
     {
       "id": "mermaid-swimlane-quoted-label-parser-neutral-conformance", "title": "Classify DG04 Swimlane quoted-label parser semantics", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
-      "notes": "Existing Rust-only Mermaid parser gained quoted Unicode Swimlane labels on main #17001; the hierarchy-layout owner explicitly excludes parsing. Freeze quoted/escaped Unicode, label normalization, malformed quote rejection, node-shape ambiguity, and exact semantic IR against pinned DG04/corpus before deciding applicable portable parser lanes. Review #17026 point/circle/cross/bidirectional marker vectors and open #17038 entity-label semantics within this owner rather than creating duplicates; wait for #17038 to settle before selecting overlapping parser work. Routing, typography, Metal, and full Mermaid compatibility are separate."
+      "notes": "Existing Rust-only Mermaid parser gained quoted Unicode Swimlane labels on main #17001; the hierarchy-layout owner explicitly excludes parsing. Freeze quoted/escaped Unicode, label normalization, malformed quote rejection, node-shape ambiguity, and exact semantic IR against pinned DG04/corpus before deciding applicable portable parser lanes. Review #17026 point/circle/cross/bidirectional marker vectors and merged #17038 label-entity plus #17049 metadata-entity baselines within this owner rather than creating duplicates; explicitly test quoted/entity interaction. Routing, typography, Metal, and full Mermaid compatibility are separate."
     },
     {
       "id": "mermaid-swimlane-entity-label-parser-neutral-conformance", "title": "Classify remaining DG04 Swimlane entity-label semantics", "status": "pending", "depends_on": ["mermaid-swimlane-quoted-label-parser-neutral-conformance"], "branch": null, "pr_number": null,
-      "notes": "Open #17038 already covers unquoted lane &amp;, bracket node &nbsp;, and pipe edge &#32;&check; plus a visual fixture. After it settles, audit inline-edge entity decoding, malformed/unknown and broader numeric entities, and exact semantic IR against DG04 and neutral fixtures; do not repeat those three baseline cases or expand the quoted-label owner beyond its quoted/entity interaction."
+      "notes": "Merged #17038 covers unquoted lane &amp;, bracket node &nbsp;, and pipe edge &#32;&check; plus a visual fixture; merged #17049 adds metadata title/accTitle/accDescr named/numeric entity baselines. After the quoted-label neutral owner closes, audit residual inline-edge entity decoding, malformed/unknown and broader numeric entities, and exact semantic IR against DG04 and neutral fixtures; do not repeat landed baselines or expand the quoted-label owner beyond its quoted/entity interaction."
     },
     {
       "id": "build-tool-plan-fixture-native-ci-selection", "title": "Gate exact native plan fixture readers", "status": "pending", "depends_on": ["build-tool-fixtures", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": null, "pr_number": null,

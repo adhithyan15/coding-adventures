@@ -1669,6 +1669,21 @@ native BUILD root is an error, not an omission. This scheduling evidence does
 not imply each front asserts the complete neutral cache-decision oracle: some
 native tests intentionally exercise only digest slices.
 
+Validation fixture-only CI selection has the same closed-world requirement.
+For each changed flat `code/specs/fixtures/build-tool-v1/cases/validation-*.json`
+case, the plan MUST include the neutral fixture gate and exactly its direct
+native validator readers before ordinary affected/prerequisite closure. The
+orphan-crate and tracked-artifact cases have non-Go validator readers; the
+orphan-package-root and Lua Windows sibling cases have Go readers. The other
+checked validation cases are neutral-only. New valid flat cases MUST fail
+closed until their reader relation is classified. Raw Git paths, including
+both sides of renames, MUST be used without path normalization: nested,
+backslash-spelled, case-varied, and backup lookalikes do not match. Explicit
+language filters, Linux/macOS/Windows plans, existing changed package roots,
+and missing applicable BUILD roots follow the same exact-reader rules as the
+hashing-cache selector. Selecting a validator test front is scheduling
+evidence, not a claim that the front executes every neutral oracle.
+
 Toolchain detection v1 treats extra-CI declarations as inert BUILD metadata.
 Each package supplies a required generic `BUILD` string plus optional
 `BUILD_windows`, `BUILD_mac`, `BUILD_linux`, and `BUILD_mac_and_linux` strings.
