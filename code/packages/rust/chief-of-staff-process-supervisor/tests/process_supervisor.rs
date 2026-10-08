@@ -594,6 +594,138 @@ fn injected_dispatcher_answers_authenticated_requests_automatically() {
     assert_eq!(exited.process_id(), None);
 }
 
+/// Holds one host's requests until released, and answers every other
+/// host's at once (D18S P2.6d-4).
+struct GatedDispatcher {
+    gated_host: &'static str,
+    released: Mutex<bool>,
+    release: std::sync::Condvar,
+    inner: TestDataPlaneDispatcher,
+}
+
+impl GatedDispatcher {
+    fn open(&self) {
+        *self.released.lock().unwrap() = true;
+        self.release.notify_all();
+    }
+}
+
+impl HostDataPlaneDispatcher for GatedDispatcher {
+    fn dispatch(
+        &self,
+        registration: &HostRegistration,
+        request: &DataPlaneRequest,
+    ) -> DataPlaneResponse {
+        if registration.host_name().as_str() == self.gated_host {
+            let mut released = self.released.lock().unwrap();
+            while !*released {
+                released = self.release.wait(released).unwrap();
+            }
+        }
+        self.inner.dispatch(registration, request)
+    }
+}
+
+#[test]
+fn a_slow_dispatch_holds_only_its_own_host() {
+    // D18S P2.6d-4: completions and tool calls are served on each host's
+    // own worker. Before, one slow request held the supervisor's thread,
+    // and with it every other host's requests and heartbeats.
+    let slow = TestPackage::new("gated-slow", Some("DATA_PLANE"));
+    let fast = TestPackage::new("gated-fast", Some("DATA_PLANE"));
+    let slow_host = slow.registration("gated-slow-host");
+    let fast_host = fast.registration("gated-fast-host");
+    let dispatcher = Arc::new(GatedDispatcher {
+        gated_host: "gated-slow-host",
+        released: Mutex::new(false),
+        release: std::sync::Condvar::new(),
+        inner: TestDataPlaneDispatcher::default(),
+    });
+    let mut supervisor = new_supervisor(
+        Arc::new(keyring()),
+        Arc::new(generate_identity_keypair()),
+        Duration::from_secs(2),
+        Duration::from_secs(2),
+    )
+    .with_data_plane_dispatcher(dispatcher.clone());
+    supervisor.start(&slow_host).unwrap();
+    supervisor.start(&fast_host).unwrap();
+
+    // The fast host gets all seven of its answers while the slow host's
+    // first request is still held.
+    let deadline = Instant::now() + Duration::from_secs(10);
+    while dispatcher.inner.operations.lock().unwrap().len() < 7 {
+        supervisor.inspect(&slow_host).unwrap();
+        supervisor.inspect(&fast_host).unwrap();
+        assert!(Instant::now() < deadline, "the fast host was held");
+        thread::sleep(Duration::from_millis(10));
+    }
+    assert_eq!(dispatcher.inner.operations.lock().unwrap().len(), 7);
+    assert!(matches!(
+        supervisor.inspect(&fast_host).unwrap(),
+        SupervisorObservation::Instance(instance) if instance.phase() == SupervisorPhase::Running
+    ));
+
+    // Released, the slow host finishes too.
+    dispatcher.open();
+    while dispatcher.inner.operations.lock().unwrap().len() < 14 {
+        supervisor.inspect(&slow_host).unwrap();
+        supervisor.inspect(&fast_host).unwrap();
+        assert!(Instant::now() < deadline, "the slow host never finished");
+        thread::sleep(Duration::from_millis(10));
+    }
+    supervisor.stop(slow_host.host_name()).unwrap();
+    supervisor.stop(fast_host.host_name()).unwrap();
+}
+
+/// Answers every request with a response for another request id.
+struct MisdirectedDispatcher;
+
+impl HostDataPlaneDispatcher for MisdirectedDispatcher {
+    fn dispatch(
+        &self,
+        _registration: &HostRegistration,
+        request: &DataPlaneRequest,
+    ) -> DataPlaneResponse {
+        let other = RequestId::new(request.id().get().wrapping_add(1).max(1)).unwrap();
+        DataPlaneResponse::Failed {
+            id: other,
+            failure: DataPlaneFailure::Unavailable,
+        }
+    }
+}
+
+#[test]
+fn a_response_the_worker_cannot_deliver_ends_its_host() {
+    // D18S P2.6d-4: the worker cannot end the host itself; it records why,
+    // and the next refresh ends the host with that error, as the
+    // synchronous dispatch did.
+    let package = TestPackage::new("misdirected", Some("DATA_PLANE"));
+    let registration = package.registration("misdirected-host");
+    let mut supervisor = new_supervisor(
+        Arc::new(keyring()),
+        Arc::new(generate_identity_keypair()),
+        Duration::from_secs(2),
+        Duration::from_secs(2),
+    )
+    .with_data_plane_dispatcher(Arc::new(MisdirectedDispatcher));
+    supervisor.start(&registration).unwrap();
+    let deadline = Instant::now() + Duration::from_secs(5);
+    let error = loop {
+        if let Err(error) = supervisor.inspect(&registration) {
+            break error;
+        }
+        assert!(Instant::now() < deadline, "the host was never ended");
+        thread::sleep(Duration::from_millis(10));
+    };
+    assert_eq!(error, ProcessSupervisorError::Control);
+    assert!(matches!(
+        supervisor.inspect(&registration).unwrap(),
+        SupervisorObservation::Instance(instance)
+            if matches!(instance.phase(), SupervisorPhase::Exited { .. })
+    ));
+}
+
 #[test]
 fn a_host_over_its_request_budget_is_refused_not_dispatched() {
     // D18S S-K5: a per-host token bucket in front of the dispatcher. With a
