@@ -18,12 +18,21 @@ use std::sync::Arc;
 pub(crate) struct Prepared {
     ruleset: OwnedFd,
     filter: Vec<libc::sock_filter>,
+    /// The agent executable, opened `O_RDONLY | O_CLOEXEC` here in the
+    /// parent. The child execs this descriptor, never a path (S-I4d), so
+    /// what runs is the file that was parsed and given the Landlock rule,
+    /// even if its path is replaced in between.
+    binary: std::fs::File,
     pub(crate) landlock_abi: u32,
 }
 
 impl Prepared {
     pub(crate) fn build(executable: &Path, grants: &[FileGrant]) -> Result<Self, ConfinementError> {
-        let filter = seccomp::program()?;
+        let binary = std::fs::File::open(executable).map_err(|error| {
+            ConfinementError::Executable(format!("{}: {error}", executable.display()))
+        })?;
+        let binary = high_descriptor(binary);
+        let filter = seccomp::program(binary.as_raw_fd())?;
         let abi = landlock::abi().ok_or(ConfinementError::LandlockUnavailable)?;
         if !grants.is_empty() && abi < landlock::ABI_TRUNCATE {
             return Err(ConfinementError::LandlockTooOld {
@@ -31,12 +40,18 @@ impl Prepared {
                 needed: landlock::ABI_TRUNCATE,
             });
         }
-        use landlock::Target::{Grant, Interpreter, Optional, Required};
+        use landlock::Target::{Executable, Grant, Interpreter, Optional, Required};
         let ruleset = landlock::Ruleset::new(abi)?;
         // The agent's own image: never also a grant (S-I6), or it could
         // rewrite the code it runs.
-        let mut image = vec![ruleset.allow(executable, landlock::READ_EXECUTE, Required)?];
-        if let Some(interpreter) = elf::interpreter(executable)? {
+        let shown = || executable.display().to_string();
+        let mut image = vec![Some(ruleset.add(
+            binary.as_raw_fd(),
+            landlock::READ_EXECUTE,
+            Executable,
+            &shown,
+        )?)];
+        if let Some(interpreter) = elf::interpreter(&binary)? {
             let interpreter = system_interpreter(&interpreter)?;
             image.push(ruleset.allow(&interpreter, landlock::READ_EXECUTE, Interpreter)?);
         }
@@ -78,9 +93,26 @@ impl Prepared {
         Ok(Self {
             ruleset: ruleset.into_fd(),
             filter,
+            binary,
             landlock_abi: abi,
         })
     }
+}
+
+/// Move `file` to a descriptor number at or above 512, where the agent's
+/// own opens will not land by accident. The seccomp program pins `execveat`
+/// to this number; a low one could coincide with a file the agent opened
+/// (on purpose, the agent can still `dup2` onto it: see the spec's
+/// residual). If the limit is too low for that, the file stays where it is.
+fn high_descriptor(file: std::fs::File) -> std::fs::File {
+    // SAFETY: duplicates an open descriptor; returns a new one or -1.
+    let high = unsafe { libc::fcntl(file.as_raw_fd(), libc::F_DUPFD_CLOEXEC, 512) };
+    if high < 0 {
+        return file;
+    }
+    // SAFETY: a fresh descriptor the kernel just returned; `file` closes
+    // the original when it drops.
+    unsafe { std::fs::File::from_raw_fd(high) }
 }
 
 /// The system library directories: readable by every agent, and the only
@@ -128,16 +160,74 @@ fn in_library_directory(resolved: &Path) -> bool {
     })
 }
 
-/// Register the hook that installs `prepared` in the child.
+/// Register the hook that installs `prepared` in the child, and then execs
+/// the prepared binary from there.
+///
+/// The hook never returns on success: it ends in
+/// `execveat(binary, "", argv, environ, AT_EMPTY_PATH)`, the one exec the
+/// seccomp program allows (S-I4d). `std`'s own exec, by path, would need
+/// `execve`, which the program kills. The command still supplies argv
+/// (its program, as argv[0], then its arguments) and the environment,
+/// which `std` has already installed as `environ` when the hook runs.
 pub(crate) fn install(prepared: Arc<Prepared>, command: &mut Command) {
+    // argv is built here, in the parent: the child must not allocate.
+    let strings: Vec<CString> = std::iter::once(command.get_program())
+        .chain(command.get_args())
+        .map(|arg| CString::new(arg.as_bytes()).unwrap_or_default())
+        .collect();
+    let mut argv: Vec<*const libc::c_char> = strings.iter().map(|arg| arg.as_ptr()).collect();
+    argv.push(std::ptr::null());
+    let argv = Argv {
+        _strings: strings,
+        pointers: argv,
+    };
     // SAFETY: the closure runs in the forked child, before exec. It makes
     // three syscalls (prctl, landlock_restrict_self, seccomp), builds one
-    // `sock_fprog` on the stack, and allocates nothing: the ruleset fd and
-    // the program were built in the parent and are only read here. The
-    // only errors it builds, `last_os_error`, do not allocate.
+    // `sock_fprog` on the stack, then execs. It allocates nothing: the
+    // ruleset fd, the program, the binary and argv were built in the
+    // parent and are only read here. The only errors it builds,
+    // `last_os_error`, do not allocate.
     unsafe {
-        command.pre_exec(move || install_in_child(&prepared));
+        command.pre_exec(move || {
+            install_in_child(&prepared)?;
+            exec_in_child(&prepared, &argv)
+        });
     }
+}
+
+/// argv for the child: the strings, and the NULL-terminated pointer array
+/// into them. Raw pointers are not `Send`, but these only point into
+/// `_strings`, which moves with them.
+struct Argv {
+    _strings: Vec<CString>,
+    pointers: Vec<*const libc::c_char>,
+}
+
+// SAFETY: see the type's comment; nothing aliases the strings.
+unsafe impl Send for Argv {}
+// SAFETY: as above; the child only reads them.
+unsafe impl Sync for Argv {}
+
+extern "C" {
+    /// The process environment, as `std` left it for the child.
+    static environ: *const *const libc::c_char;
+}
+
+fn exec_in_child(prepared: &Prepared, argv: &Argv) -> io::Result<()> {
+    // SAFETY: a valid descriptor, an empty NUL-terminated path, a
+    // NULL-terminated argv, and the environment `std` installed. On
+    // success it does not return.
+    unsafe {
+        libc::syscall(
+            libc::SYS_execveat,
+            prepared.binary.as_raw_fd(),
+            c"".as_ptr(),
+            argv.pointers.as_ptr(),
+            environ,
+            libc::AT_EMPTY_PATH,
+        );
+    }
+    Err(io::Error::last_os_error())
 }
 
 fn install_in_child(prepared: &Prepared) -> io::Result<()> {
@@ -280,12 +370,14 @@ pub(crate) mod landlock {
         Grant,
         /// The executable's resolved interpreter: as exact as a grant.
         Interpreter,
+        /// The agent executable itself, already open: a regular file.
+        Executable,
     }
 
     impl Target {
         /// Opened with no symlinks, and refused unless a regular file.
         fn exact(self) -> bool {
-            matches!(self, Self::Grant | Self::Interpreter)
+            matches!(self, Self::Grant | Self::Interpreter | Self::Executable)
         }
     }
 
@@ -387,9 +479,22 @@ pub(crate) mod landlock {
             }
             // SAFETY: a fresh descriptor the kernel just returned.
             let fd = unsafe { OwnedFd::from_raw_fd(fd) };
+            self.add(fd.as_raw_fd(), rights, target, &shown).map(Some)
+        }
+
+        /// Allow `rights` on the file `fd` is open on, and return its
+        /// identity (device, inode). The rule lands on that inode, whatever
+        /// its path names by the time the agent runs.
+        pub(crate) fn add(
+            &self,
+            fd: RawFd,
+            rights: u64,
+            target: Target,
+            shown: &dyn Fn() -> String,
+        ) -> Result<(u64, u64), ConfinementError> {
             let mut stat = std::mem::MaybeUninit::<libc::stat>::uninit();
             // SAFETY: `fstat` writes one `stat`, or fails.
-            if unsafe { libc::fstat(fd.as_raw_fd(), stat.as_mut_ptr()) } != 0 {
+            if unsafe { libc::fstat(fd, stat.as_mut_ptr()) } != 0 {
                 return Err(ConfinementError::Path(shown()));
             }
             // SAFETY: initialized by the successful call.
@@ -410,7 +515,7 @@ pub(crate) mod landlock {
             }
             let rule = PathBeneathAttr {
                 allowed_access: allowed,
-                parent_fd: fd.as_raw_fd(),
+                parent_fd: fd,
             };
             // SAFETY: a valid rule structure and the ruleset's own fd.
             let added = unsafe {
@@ -430,7 +535,7 @@ pub(crate) mod landlock {
                 )));
             }
             #[allow(clippy::unnecessary_cast)] // the widths differ by target
-            Ok(Some((stat.st_dev as u64, stat.st_ino as u64)))
+            Ok((stat.st_dev as u64, stat.st_ino as u64))
         }
 
         pub(crate) fn into_fd(self) -> OwnedFd {
@@ -502,9 +607,8 @@ pub(crate) mod seccomp {
     ///
     /// Memory, signals, futexes and threads' bookkeeping; time; reading,
     /// writing and polling its own descriptors; opening files (Landlock
-    /// decides which); identity queries; and exiting. `execve` is here
-    /// because the exec that starts the agent comes after the filter;
-    /// Landlock's EXECUTE right decides what it can run.
+    /// decides which); identity queries; and exiting. `execve` is not
+    /// here: the only exec is the argument-matched `execveat` below.
     fn allowed() -> Vec<libc::c_long> {
         let mut calls = vec![
             libc::SYS_read,
@@ -563,7 +667,6 @@ pub(crate) mod seccomp {
             libc::SYS_faccessat2,
             libc::SYS_getcwd,
             libc::SYS_uname,
-            libc::SYS_execve,
             libc::SYS_restart_syscall,
         ];
         #[cfg(target_arch = "x86_64")]
@@ -597,7 +700,7 @@ pub(crate) mod seccomp {
 
     /// Build the program. An architecture this module does not know is
     /// refused here, rather than run with a filter for another table.
-    pub(crate) fn program() -> Result<Vec<libc::sock_filter>, ConfinementError> {
+    pub(crate) fn program(binary: RawFd) -> Result<Vec<libc::sock_filter>, ConfinementError> {
         let arch = if cfg!(target_arch = "x86_64") {
             AUDIT_ARCH_X86_64
         } else if cfg!(target_arch = "aarch64") {
@@ -621,6 +724,18 @@ pub(crate) mod seccomp {
             jump(JEQ, nr(libc::SYS_clone), 0, 4),
             op(LD, argument(0)),
             jump(JSET, libc::CLONE_THREAD as u32, 0, 1),
+            op(RET, ALLOW),
+            op(RET, KILL),
+        ]);
+        // execveat: only `binary`, by descriptor (AT_EMPTY_PATH). S-I4d:
+        // the hook's own exec needs it, and filters survive exec, so an
+        // unconstrained exec would stay granted to the agent for good.
+        program.extend([
+            jump(JEQ, nr(libc::SYS_execveat), 0, 6),
+            op(LD, argument(0)),
+            jump(JEQ, binary as u32, 0, 3),
+            op(LD, argument(4)),
+            jump(JEQ, libc::AT_EMPTY_PATH as u32, 0, 1),
             op(RET, ALLOW),
             op(RET, KILL),
         ]);
@@ -703,13 +818,28 @@ pub(crate) mod seccomp {
             }
         }
 
+        /// A descriptor number for the program to pin execveat to.
+        const BINARY: RawFd = 7;
+
         #[test]
         fn the_program_decides_what_the_spec_says() {
-            let program = program().unwrap();
+            let program = program(BINARY).unwrap();
             let decide = |nr: libc::c_long, args: [u32; 6]| run(&program, arch(), nr as u32, args);
             let none = [0; 6];
             assert_eq!(decide(libc::SYS_read, none), ALLOW);
-            assert_eq!(decide(libc::SYS_execve, none), ALLOW);
+            // The one exec: the prepared descriptor, by AT_EMPTY_PATH.
+            let empty = libc::AT_EMPTY_PATH as u32;
+            let binary = BINARY as u32;
+            assert_eq!(decide(libc::SYS_execve, none), KILL);
+            assert_eq!(
+                decide(libc::SYS_execveat, [binary, 0, 0, 0, empty, 0]),
+                ALLOW
+            );
+            assert_eq!(
+                decide(libc::SYS_execveat, [binary + 1, 0, 0, 0, empty, 0]),
+                KILL
+            );
+            assert_eq!(decide(libc::SYS_execveat, [binary, 0, 0, 0, 0, 0]), KILL);
             for denied in [
                 libc::SYS_socket,
                 libc::SYS_socketpair,
@@ -789,11 +919,16 @@ pub(crate) mod elf {
 
     const PT_INTERP: u32 = 3;
 
-    pub(crate) fn interpreter(executable: &Path) -> Result<Option<PathBuf>, ConfinementError> {
+    pub(crate) fn interpreter(
+        executable: &std::fs::File,
+    ) -> Result<Option<PathBuf>, ConfinementError> {
         let bad = |why: &str| ConfinementError::Executable(why.to_string());
         let mut bytes = Vec::new();
-        std::fs::File::open(executable)
-            .map_err(|_| bad("cannot open"))?
+        // Read through a duplicate of the descriptor. The offset it moves is
+        // shared, and irrelevant: the exec does not read through it.
+        executable
+            .try_clone()
+            .map_err(|_| bad("cannot read"))?
             .take(1 << 20)
             .read_to_end(&mut bytes)
             .map_err(|_| bad("cannot read"))?;
@@ -849,7 +984,7 @@ pub(crate) mod elf {
         #[test]
         fn a_dynamic_executable_names_its_interpreter() {
             let own = std::env::current_exe().unwrap();
-            let interpreter = interpreter(&own)
+            let interpreter = interpreter(&std::fs::File::open(&own).unwrap())
                 .unwrap()
                 .expect("test binaries are dynamic");
             assert!(interpreter.is_absolute());
@@ -874,7 +1009,7 @@ pub(crate) mod elf {
                 std::thread::current().id()
             ));
             std::fs::write(&path, bytes).unwrap();
-            let parsed = interpreter(&path);
+            let parsed = interpreter(&std::fs::File::open(&path).unwrap());
             std::fs::remove_file(&path).unwrap();
             parsed
         }
@@ -925,7 +1060,7 @@ pub(crate) mod elf {
         fn a_non_elf_file_is_refused() {
             let script = std::env::temp_dir().join(format!("not-elf-{}", std::process::id()));
             std::fs::write(&script, b"#!/bin/sh\n").unwrap();
-            assert!(interpreter(&script).is_err());
+            assert!(interpreter(&std::fs::File::open(&script).unwrap()).is_err());
             let _ = std::fs::remove_file(&script);
         }
     }

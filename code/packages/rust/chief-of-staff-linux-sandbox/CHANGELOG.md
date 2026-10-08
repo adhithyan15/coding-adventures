@@ -27,6 +27,11 @@
   - The ELF parse checks all of its arithmetic, so a hostile header is a
     refused launch, never a panic.
   - A `Direct` grant needs ABI 3 or later.
+- The exec is the hook's own: `execveat` on the descriptor `prepare`
+  opened, with `AT_EMPTY_PATH` (S-I4d). The seccomp program kills `execve`,
+  and allows `execveat` only on that descriptor number with that flag. What
+  runs is the file that was parsed and given its Landlock rule, even if its
+  path is replaced after `prepare`.
 - seccomp:
   - an arch check (x86_64 with x32 refused, and aarch64);
   - an allowlist with `SECCOMP_RET_KILL_PROCESS` as the default;

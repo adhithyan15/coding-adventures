@@ -60,6 +60,11 @@ let child = command.spawn()?; // a spawn error if any step failed
   - executing anything but the agent itself;
   - `readlink`, which Landlock does not mediate, and which would otherwise
     read `/proc/<supervisor>/fd`.
+- **Exec.** The agent is started by the hook itself, with
+  `execveat(fd, "", AT_EMPTY_PATH)` on the descriptor `prepare` opened.
+  Seccomp filters survive exec, so the filter kills `execve` and allows
+  `execveat` only on that descriptor number. The descriptor closes at the
+  exec, so the agent never holds it.
 
 ## What it refuses to launch
 

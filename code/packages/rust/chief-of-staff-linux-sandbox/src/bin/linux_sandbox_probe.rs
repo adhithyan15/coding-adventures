@@ -6,7 +6,8 @@
 //!   read <path>        open and read; "ok" or "errno=<n>"
 //!   write <path>       open for writing and write; "ok" or "errno=<n>"
 //!   readlink <path>    read a symlink; "ok" or "errno=<n>"
-//!   exec <path>        execve without forking; "errno=<n>" if refused
+//!   exec <path> [args]      execve without forking; "errno=<n>" if refused
+//!   execveat <path> [args]  the same, by descriptor (AT_EMPTY_PATH)
 //!   socket | unix      socket(AF_INET) / socket(AF_UNIX)
 //!   fork               a new process (clone without CLONE_THREAD)
 //!   io_uring | ptrace | kill | tiocsti | mount | bpf
@@ -47,9 +48,41 @@ fn main() {
                 .write_all(b"written")
         })()),
         Some("readlink") => report(std::fs::read_link(&args[1]).map(|_| ())),
+        Some("execveat") => {
+            // Open the file and exec it by descriptor, as the hook does.
+            let path = std::ffi::CString::new(args[1].as_str()).unwrap();
+            let fd = unsafe { libc::open(path.as_ptr(), libc::O_RDONLY | libc::O_CLOEXEC) };
+            let rest: Vec<std::ffi::CString> = args[2..]
+                .iter()
+                .map(|arg| std::ffi::CString::new(arg.as_str()).unwrap())
+                .collect();
+            let mut argv = vec![path.as_ptr()];
+            argv.extend(rest.iter().map(|arg| arg.as_ptr()));
+            argv.push(std::ptr::null());
+            let envp = [std::ptr::null::<libc::c_char>()];
+            // SAFETY: a descriptor (or -1), an empty path, NULL-terminated
+            // argv and envp.
+            unsafe {
+                libc::syscall(
+                    libc::SYS_execveat,
+                    fd,
+                    c"".as_ptr(),
+                    argv.as_ptr(),
+                    envp.as_ptr(),
+                    libc::AT_EMPTY_PATH,
+                )
+            };
+            println!("errno={}", errno());
+        }
         Some("exec") => {
             let path = std::ffi::CString::new(args[1].as_str()).unwrap();
-            let argv = [path.as_ptr(), std::ptr::null()];
+            let rest: Vec<std::ffi::CString> = args[2..]
+                .iter()
+                .map(|arg| std::ffi::CString::new(arg.as_str()).unwrap())
+                .collect();
+            let mut argv = vec![path.as_ptr()];
+            argv.extend(rest.iter().map(|arg| arg.as_ptr()));
+            argv.push(std::ptr::null());
             // SAFETY: a NUL-terminated path and a NULL-terminated argv.
             unsafe { libc::execv(path.as_ptr(), argv.as_ptr()) };
             println!("errno={}", errno());

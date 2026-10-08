@@ -154,19 +154,49 @@ fn the_agent_cannot_read_symlinks_to_learn_the_supervisors_files() {
 }
 
 #[test]
-fn the_agent_cannot_exec_another_program() {
+fn the_agent_cannot_exec_anything() {
+    // S-I4d: filters survive exec, so the exec that starts the agent must
+    // not stay available to it. `execve` is gone, and `execveat` only
+    // works on the supervisor's own descriptor, which closed at the exec.
     let confined = confinement(&[]);
-    for program in ["/bin/true", "/usr/bin/true", "/bin/sh"] {
+    for (mode, program) in [
+        ("exec", "/bin/true"),
+        ("exec", PROBE),
+        ("execveat", "/bin/true"),
+        ("execveat", PROBE),
+    ] {
         if !Path::new(program).exists() {
             continue;
         }
-        // Landlock grants execute on the probe alone.
+        let control = run(None, &[mode, program, "hello"]);
+        assert!(
+            control.status.success(),
+            "control {mode} {program}: {control:?}"
+        );
+        let output = run(Some(&confined), &[mode, program, "hello"]);
         assert_eq!(
-            stdout(&run(Some(&confined), &["exec", program])),
-            "errno=13",
-            "{program} must not run"
+            output.status.signal(),
+            Some(libc::SIGSYS),
+            "{mode} {program} must be killed: {output:?}"
         );
     }
+}
+
+#[test]
+fn what_runs_is_the_file_prepared_not_whatever_the_path_names_later() {
+    // The binary is opened at prepare and exec'd by descriptor, so
+    // replacing the path in between changes nothing.
+    let agent = temp_file("swapped-agent", "");
+    std::fs::copy(PROBE, &agent).unwrap();
+    let confined = LinuxConfinement::prepare(&plan(&[]), &agent).unwrap();
+    std::fs::remove_file(&agent).unwrap();
+    std::fs::write(&agent, b"#!/bin/sh\necho swapped\n").unwrap();
+    let mut command = Command::new(&agent);
+    command.arg("hello").stdin(Stdio::null());
+    confined.apply(&mut command);
+    let output = command.output().unwrap();
+    assert_eq!(stdout(&output), "hello\nthread=4", "{output:?}");
+    std::fs::remove_file(agent).unwrap();
 }
 
 #[test]

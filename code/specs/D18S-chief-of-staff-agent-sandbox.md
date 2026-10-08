@@ -1332,10 +1332,32 @@ through S-I3 before two weeks are spent on Windows.
      and POSIX IPC, `bpf`, `mount`, `unshare` and the `pidfd` family.
 
    *What it does not do.*
-   - A compiled agent may `execve` the loader with another ELF file as its
-     argument. The loader maps that file itself, and Landlock does not
-     mediate `mmap`, so readable code can run without an execute right. It
-     gains nothing the agent could not already read, and S-I4d bounds it.
+   - *The exec (S-I4d).* The parent opens the agent `O_RDONLY | O_CLOEXEC`
+     at prepare time, moved to a descriptor number at 512 or above. The
+     hook execs it itself: `execveat(fd, "", argv, environ, AT_EMPTY_PATH)`,
+     never `std`'s exec by path. The seccomp program kills `execve`, and
+     allows `execveat` only when its descriptor argument is that number and
+     its flags are `AT_EMPTY_PATH`. The Landlock rule is added from the same
+     descriptor, so the file that runs is the one that was parsed and given
+     its rule, even if its path is replaced after prepare.
+   - **Amendment to S-I4d's first option.** That option withholds
+     `LANDLOCK_ACCESS_FS_EXECUTE` from every path rule, but Landlock checks
+     `EXECUTE` on the file being exec'd, and on its `PT_INTERP` loader, when
+     the kernel opens them for the exec. A domain installed before the exec
+     must therefore grant `EXECUTE` on exactly those two files, and this
+     applier grants it on nothing else. What remains is this:
+     - An `AT_EMPTY_PATH` exec with an absolute path ignores the descriptor
+       argument, so the agent can still exec its own binary or the loader.
+       So can a `dup2` onto the pinned number.
+     - The loader can run any readable ELF named in its argv, mapping it
+       itself, and Landlock does not mediate `mmap`.
+     - For a compiled agent this is bounded. The code that runs is readable
+       already, and it runs in the same seccomp and Landlock domain, with
+       no syscall the agent did not already have.
+     - For an interpreted agent it is not bounded: re-exec'ing the runtime
+       with chosen argv defeats S-K6's digest pinning. Step 5 must use
+       S-I4d's second option there, `SECCOMP_FILTER_FLAG_NEW_LISTENER` with
+       the supervisor permitting exactly one exec.
    - The S-P4 launch-time probes are the shim's (step 5).
    - Here, the full negative coverage runs in CI as the probe tests: each
      denied class kills the probe with `SIGSYS`, and each Landlock denial

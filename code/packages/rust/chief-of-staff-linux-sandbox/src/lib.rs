@@ -8,19 +8,29 @@
 //!   parent (supervisor)                    child (after fork, before exec)
 //!   ----------------------------------     ---------------------------------
 //!   LinuxConfinement::prepare(plan, exe)
+//!     opens exe O_RDONLY (fd B)
 //!     reads the Landlock ABI                 spawn-isolation:
 //!     builds the Landlock ruleset (an fd)      no terminal, setsid,
 //!     builds the seccomp program (a Vec)       fds above 2 close-on-exec
 //!   apply(&mut command)                      this crate, in order:
-//!     registers both pre_exec hooks            1. PR_SET_NO_NEW_PRIVS
+//!     builds argv, registers the hooks         1. PR_SET_NO_NEW_PRIVS
 //!   command.spawn()  ──── fork ────────►       2. landlock_restrict_self
 //!                                              3. seccomp(SET_MODE_FILTER)
-//!                                            execve(agent)   ← already confined
+//!                                              4. execveat(B, "", AT_EMPTY_PATH)
+//!                                            the agent's first instruction:
+//!                                            already confined
 //! ```
 //!
 //! Everything that can fail or allocate happens in the parent. The child
-//! makes three syscalls and checks each one; a failure refuses the spawn
+//! makes four syscalls and checks each one; a failure refuses the spawn
 //! (S-P3), so an agent never runs half-confined.
+//!
+//! The exec is the hook's own, by descriptor, not `std`'s by path. Filters
+//! survive exec, so whatever exec the filter allows stays allowed to the
+//! agent (S-I4d). It allows only `execveat` on descriptor B with
+//! `AT_EMPTY_PATH`, and B, being close-on-exec, is gone once the agent runs.
+//! It also means the file that runs is the one that was parsed and given its
+//! Landlock rule, even if its path is replaced in between.
 //!
 //! The child is single-threaded at that point, which is what S-I4b
 //! requires: a seccomp filter or a Landlock domain applies only to the
@@ -81,6 +91,8 @@
 //!   prlimit64  only on the calling process (pid 0)
 //!   readlink   EACCES: Landlock does not mediate it, and through
 //!              /proc/<supervisor>/fd it would name the supervisor's files
+//!   execve     never: the agent's own exec is the execveat below
+//!   execveat   only on the prepared descriptor, with AT_EMPTY_PATH
 //! ```
 //!
 //! Not on the list, so a kill: `socket`, `socketpair`, `io_uring_*`,
@@ -233,9 +245,11 @@ impl LinuxConfinement {
     }
 
     /// Isolate `command`'s descriptors (`chief-of-staff-spawn-isolation`),
-    /// then confine it. Call it last, after stdin and stdout are set: the
-    /// order of the two hooks is the order that makes the child's first
-    /// syscall after `exec` already confined.
+    /// then confine it. Call it last, after stdin, stdout, the arguments and
+    /// the environment are set: argv is taken from the command here.
+    ///
+    /// What runs is always the executable `prepare` opened; the command's
+    /// program is only argv\[0\].
     pub fn apply<'a>(&self, command: &'a mut Command) -> &'a mut Command {
         chief_of_staff_spawn_isolation::isolate(command);
         #[cfg(target_os = "linux")]
