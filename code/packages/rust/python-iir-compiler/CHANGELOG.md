@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — bounded empty Python print
+
+- Lower an exact zero-argument `print()` grammar call to a Rust `vm-core`
+  builtin that writes one newline and retains it if a later VM instruction
+  fails. Other call forms remain bounded by the existing pilot.
+
 ## 0.1.0 — 2026-10-07
 
 - Add Python 3.12 float expressions and one-argument `print` lowering to IIR.
