@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-08 — re-audited after PREP01 pathless C
+Status date: 2026-10-08 — re-audited after Perl 5.004_59
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -288,13 +288,20 @@ keeps standard headers for the native C oracle and omits those exact leading
 oracle-only headers on the pathless frontend leg. The next fresh selection
 rotates to LANG82's prepared, separate, explicitly partial Perl 5.004_59 pair.
 
+PR #17067 delivered that separate Perl 5.004_59 token/grammar pair and merged
+as `4894e21da2963b184e3c444d79324e19a49c94b2` after its exact-head CI,
+CodeQL, and books checks passed. The 776-row inventory now has 104 explicitly
+partial pairs and 672 pending, without a full-syntax or exhaustive-release
+claim. The next fresh selection rotates to LANG79's bounded native Python
+zero-argument `print()` stage.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG82 historical 5.004_59 (selected):** land its separate, own-archive-
-   backed token/grammar pair for the bounded plain-decimal print subset. Keep
-   the pair explicitly partial and exclude CR from its accepted subset.
+1. **LANG79 Python `print()` (selected):** lower exact zero-argument calls from
+   the Python grammar AST directly to InterpreterIR, then execute the newline
+   effect on Rust vm-core. Keep host Python as a conformance oracle.
 2. **LANG82 continued:** continue distinct source-backed partial pairs. Keep
    5.004_01-t1 pending until its own source is found; do not imply complete
    syntax or an exhaustive release inventory.
