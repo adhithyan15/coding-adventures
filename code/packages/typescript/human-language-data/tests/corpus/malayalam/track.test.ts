@@ -30,14 +30,12 @@ it("gives Malayalam a complete pre-A1 writing runway", () => {
   ]));
 });
 
-it("extends Malayalam's writing runway through its first A1 controlled composition", () => {
+it("extends Malayalam's writing runway through a complete A1 timed paper", () => {
   const malayalam = languageWritingStages("malayalam");
   expect(malayalam.defects).toEqual([]);
   expect(malayalam.validEvidence.at(-1)).toMatchObject({
-    lessonId: "ML-W108-evide-controlled-question",
-    stage: "controlled-composition",
+    lessonId: "ML-W108-a1-timed-production",
+    stage: "timed-assessment-production",
   });
-  expect(malayalam.levels.find((level) => level.level === "A1")?.missingStages).toEqual([
-    "timed-assessment-production",
-  ]);
+  expect(malayalam.levels.find((level) => level.level === "A1")?.missingStages).toEqual([]);
 });
