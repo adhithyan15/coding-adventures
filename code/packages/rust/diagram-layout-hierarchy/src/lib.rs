@@ -3,7 +3,7 @@
 use std::collections::{BTreeMap, HashMap};
 
 use diagram_ir::{
-    DiagramDirection, DiagramIconGlyph, LayoutedSwimlaneDiagram, LayoutedSwimlaneEdge, LayoutedSwimlaneLane,
+    DiagramDirection, DiagramIconGlyph, DiagramShape, LayoutedSwimlaneDiagram, LayoutedSwimlaneEdge, LayoutedSwimlaneLane,
     LayoutedSwimlaneNode, LayoutedTreeViewConnector, LayoutedTreeViewDiagram, LayoutedTreeViewNode, LayoutedTreemapDiagram,
     LayoutedTreemapNode, Point, SwimlaneDiagram, TreeViewDiagram, TreemapDiagram,
     LayoutedRailroadDiagram, LayoutedRailroadElement, LayoutedRailroadPath, LayoutedRailroadRule,
@@ -135,7 +135,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         diagram.lanes.iter().map(|lane| {
             let widths = lane.node_ids.iter().filter_map(|node_id| {
                 diagram.nodes.iter().find(|node| &node.id == node_id)
-                    .map(|node| swimlane_node_width(&node.label))
+                    .map(|node| swimlane_node_width(&node.shape, &node.label))
             }).collect::<Vec<_>>();
             lane_header + widths.iter().sum::<f64>()
                 + node_gap * widths.len().saturating_sub(1) as f64 + 40.0
@@ -192,20 +192,25 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
             let Some(node) = diagram.nodes.iter().find(|node| &node.id == node_id) else {
                 continue;
             };
-            let resolved_node_width = if horizontal_flow {
-                swimlane_node_width(&node.label)
+            let compact_control = matches!(node.shape, DiagramShape::SmallCircle | DiagramShape::FramedCircle);
+            let resolved_node_width = if compact_control {
+                14.0
+            } else if horizontal_flow {
+                swimlane_node_width(&node.shape, &node.label)
             } else {
                 node_width
             };
+            let resolved_node_height = if compact_control { 14.0 } else { node_height };
             let (node_x, node_y) = if horizontal_flow {
                 (
                     horizontal_cursor,
-                    y + (lane_cross - node_height) / 2.0,
+                    y + (lane_cross - resolved_node_height) / 2.0,
                 )
             } else {
                 (
                     x + (lane_cross - resolved_node_width) / 2.0,
-                    y + lane_header + 20.0 + node_index as f64 * (node_height + node_gap),
+                    y + lane_header + 20.0 + node_index as f64 * (node_height + node_gap)
+                        + (node_height - resolved_node_height) / 2.0,
                 )
             };
             nodes.push(LayoutedSwimlaneNode {
@@ -217,7 +222,7 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                 x: node_x,
                 y: node_y,
                 width: resolved_node_width,
-                height: node_height,
+                height: resolved_node_height,
             });
             horizontal_cursor += resolved_node_width + node_gap;
         }
@@ -283,7 +288,10 @@ fn swimlane_edge_endpoints(
     )
 }
 
-fn swimlane_node_width(label: &str) -> f64 {
+fn swimlane_node_width(shape: &DiagramShape, label: &str) -> f64 {
+    if matches!(shape, DiagramShape::SmallCircle | DiagramShape::FramedCircle) {
+        return 14.0;
+    }
     (label.chars().count() as f64 * 7.2 + 28.0).clamp(132.0, 260.0)
 }
 /// Lay out a treemap using stable alternating slice-and-dice partitions.
@@ -698,7 +706,7 @@ mod tests {
             direction: DiagramDirection::Lr, title: None, accessibility_title: None,
             accessibility_description: None,
             lanes: vec![SwimlaneLane { id: "runtime".into(), label: "Runtime".into(),
-                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into()] }],
+                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into(), "start".into(), "stop".into()] }],
             nodes: vec![
                 SwimlaneNode { id: "hosted".into(), label: "Hosted".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::Cloud, classes: Vec::new(), style: Default::default() },
@@ -716,6 +724,10 @@ mod tests {
                     shape: DiagramShape::LinedRect, classes: Vec::new(), style: Default::default() },
                 SwimlaneNode { id: "text".into(), label: "Text".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::TextBlock, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "start".into(), label: "Start".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::SmallCircle, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "stop".into(), label: "Stop".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::FramedCircle, classes: Vec::new(), style: Default::default() },
             ],
             edges: vec![], links: Vec::new(), callbacks: Vec::new(),
         };
@@ -728,6 +740,10 @@ mod tests {
         assert_eq!(layout.nodes[5].shape, DiagramShape::NotchedRect);
         assert_eq!(layout.nodes[6].shape, DiagramShape::LinedRect);
         assert_eq!(layout.nodes[7].shape, DiagramShape::TextBlock);
+        assert_eq!(layout.nodes[8].shape, DiagramShape::SmallCircle);
+        assert_eq!((layout.nodes[8].width, layout.nodes[8].height), (14.0, 14.0));
+        assert_eq!(layout.nodes[9].shape, DiagramShape::FramedCircle);
+        assert_eq!((layout.nodes[9].width, layout.nodes[9].height), (14.0, 14.0));
     }
 
     #[test]

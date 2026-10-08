@@ -63,6 +63,10 @@
       "source": "swimlane-beta LR\nsubgraph Notes\n  explanation@{ shape: text, label: \"Context only\" }\nend"
     },
     {
+      "name": "start-stop-control-shapes",
+      "source": "swimlane-beta LR\nsubgraph Control\n  begin@{ shape: small-circle }\n  finish@{ shape: framed-circle }\nend\nbegin --> finish"
+    },
+    {
       "name": "input-output-and-asymmetric-shapes",
       "source": "swimlane-beta LR\nsubgraph Intake\n  input[/Receive payload/]\nend\nsubgraph Review\n  flag>Manual review]\nend\ninput --> flag"
     },

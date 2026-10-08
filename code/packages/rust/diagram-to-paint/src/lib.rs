@@ -918,13 +918,14 @@ where
                 stroke_dash: None,
                 stroke_dash_offset: None,
             }),
-            DiagramShape::Ellipse | DiagramShape::DoubleCircle => PaintInstruction::Ellipse(PaintEllipse {
+            DiagramShape::Ellipse | DiagramShape::DoubleCircle
+            | DiagramShape::SmallCircle | DiagramShape::FramedCircle => PaintInstruction::Ellipse(PaintEllipse {
                 base: PaintBase::default(),
                 cx: node.x + node.width / 2.0,
                 cy: node.y + node.height / 2.0,
                 rx: node.width / 2.0,
                 ry: node.height / 2.0,
-                fill: Some(fill.clone()),
+                fill: Some(if node.shape == DiagramShape::SmallCircle { stroke.clone() } else { fill.clone() }),
                 stroke: Some(stroke.clone()),
                 stroke_width: Some(stroke_width),
                 stroke_dash: stroke_dash.clone(),
@@ -1086,20 +1087,34 @@ where
                 stroke_dash: None,
                 stroke_dash_offset: None,
             })),
+            DiagramShape::FramedCircle => instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(),
+                cx: node.x + node.width / 2.0,
+                cy: node.y + node.height / 2.0,
+                rx: node.width * 5.0 / 28.0,
+                ry: node.height * 5.0 / 28.0,
+                fill: Some(stroke.clone()),
+                stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            })),
             _ => {}
         }
-        let text_color = node.style.text_color.as_deref().and_then(parse_css_color).unwrap_or(Color {
-            r: 13, g: 71, b: 161, a: 255,
-        });
-        text_children.push(text_node(
-            &node.label,
-            node.x + 8.0,
-            node.y + 10.0,
-            node.width - 16.0,
-            node.height - 16.0,
-            options.label_font.clone(),
-            text_color,
-        ));
+        if !matches!(node.shape, DiagramShape::SmallCircle | DiagramShape::FramedCircle) {
+            let text_color = node.style.text_color.as_deref().and_then(parse_css_color).unwrap_or(Color {
+                r: 13, g: 71, b: 161, a: 255,
+            });
+            text_children.push(text_node(
+                &node.label,
+                node.x + 8.0,
+                node.y + 10.0,
+                node.width - 16.0,
+                node.height - 16.0,
+                options.label_font.clone(),
+                text_color,
+            ));
+        }
     }
     if let Some(title) = &diagram.title {
         text_children.push(text_node(
@@ -1833,6 +1848,19 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
             stroke_dash: None,
             stroke_dash_offset: None,
         }),
+        DiagramShape::SmallCircle => node_ellipse_instruction(node, 0.0, Some(node.style.stroke.clone())),
+        DiagramShape::FramedCircle => {
+            let inner_inset = node.width.min(node.height) * 9.0 / 28.0;
+            PaintInstruction::Group(PaintGroup {
+                base: PaintBase::default(),
+                children: vec![
+                    node_ellipse_instruction(node, 0.0, Some(node.style.fill.clone())),
+                    node_ellipse_instruction(node, inner_inset, Some(node.style.stroke.clone())),
+                ],
+                transform: None,
+                opacity: None,
+            })
+        }
         DiagramShape::Cloud => {
             PaintInstruction::Path(PaintPath {
                 base: PaintBase::default(),
