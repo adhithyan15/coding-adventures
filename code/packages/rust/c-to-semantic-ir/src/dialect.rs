@@ -99,6 +99,14 @@ fn condition_operand(token: &Token) -> Result<i64, PpError> {
 }
 
 fn condition_clause(tokens: &[Token]) -> Result<bool, PpError> {
+    // One negated operand is a complete clause. An exact four-token shape
+    // avoids turning this into general parenthesis parsing; the operand keeps
+    // the existing decimal/undefined-identifier policy after macro expansion.
+    if let [not, open, operand, close] = tokens {
+        if not.value == "!" && open.value == "(" && close.value == ")" {
+            return Ok(condition_operand(operand)? == 0);
+        }
+    }
     // Peel one exact negated comparison. The inner slice has three tokens, so
     // this call cannot recurse again or turn parentheses into a general parser.
     if let [not, open, _, op, _, close] = tokens {
@@ -720,7 +728,6 @@ mod tests {
             "(1 << 2)",
             "(1 & 2)",
             "(1) == 1",
-            "!(1)",
             "(1",
             "1)",
             "(2 < 3",
@@ -746,8 +753,10 @@ mod tests {
             ("!(0)", "1"),
             ("!(2)", "0"),
             ("!(MISSING)", "1"),
+            ("!(defined(MISSING))", "1"),
             ("!(ZERO)", "1"),
             ("!(ANSWER)", "0"),
+            ("!(defined(ANSWER))", "0"),
             ("0 || !(0) && 1", "1"),
             ("1 && !(ANSWER)", "0"),
         ] {
@@ -814,7 +823,6 @@ mod tests {
             assert_eq!(values, ["int", "x", "=", expected, ";"], "{condition}");
         }
         for condition in [
-            "!(1)",
             "!((1 == 2))",
             "!(1 + 2)",
             "!(1 << 2)",

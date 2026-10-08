@@ -53,6 +53,10 @@ arithmetic, shift, or bitwise operation remain unsupported.
 One `!(left comparison right)` clause is also accepted. Its two operands and
 comparison operator use the existing bounded rules; nested parentheses and
 negated arithmetic or logical chains remain unsupported.
+One `!(operand)` clause is accepted for a plain-decimal literal or undefined
+identifier after macro expansion or `defined()` preparation. It preserves
+the earlier negated-comparison form and rejects nested, arithmetic, and
+longer mixed expressions.
 Stringize and paste in macro bodies also fail explicitly.
 
 The pathless `compile_source` API below still uses the legacy C source parser
