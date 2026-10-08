@@ -434,6 +434,60 @@ mod tests {
     }
 
     #[test]
+    fn empty_parenthesized_puts_emits_newline_in_source_order() {
+        assert_eq!(run_source("puts()\nputs(7)\nputs()").unwrap(), "\n7\n\n");
+        assert!(run_source("puts").is_err());
+        assert!(run_source("puts(1, 2)").is_err());
+
+        let module = compile_source("puts()", "empty").unwrap();
+        let calls: Vec<_> = module.functions[0]
+            .instructions
+            .iter()
+            .filter(|instruction| instruction.op == "call_builtin")
+            .collect();
+        assert_eq!(calls.len(), 1);
+        assert_eq!(calls[0].srcs.len(), 1);
+    }
+
+    #[test]
+    fn direct_ast_rejects_forged_empty_puts_delimiters() {
+        for source in ["puts()", "puts(1)"] {
+            for delimiter_index in [1, if source == "puts()" { 2 } else { 3 }] {
+                let mut parser = try_create_ruby_parser(source).unwrap();
+                let mut ast = parser.parse().unwrap();
+                let ASTNodeOrToken::Node(statement) = &mut ast.children[0] else {
+                    panic!("expected statement");
+                };
+                let ASTNodeOrToken::Node(call) = &mut statement.children[0] else {
+                    panic!("expected call");
+                };
+                let ASTNodeOrToken::Token(delimiter) = &mut call.children[delimiter_index] else {
+                    panic!("expected delimiter");
+                };
+                delimiter.type_ = TokenType::String;
+                assert!(compile_ast(&ast, "forged").is_err(), "{source}");
+
+                let ASTNodeOrToken::Node(statement) = &mut ast.children[0] else {
+                    unreachable!();
+                };
+                let ASTNodeOrToken::Node(call) = &mut statement.children[0] else {
+                    unreachable!();
+                };
+                let ASTNodeOrToken::Token(delimiter) = &mut call.children[delimiter_index] else {
+                    unreachable!();
+                };
+                delimiter.type_ = if delimiter_index == 1 {
+                    TokenType::LParen
+                } else {
+                    TokenType::RParen
+                };
+                delimiter.type_name = Some("STRING".into());
+                assert!(compile_ast(&ast, "forged").is_err(), "{source}");
+            }
+        }
+    }
+
+    #[test]
     fn direct_ast_rejects_a_forged_puts_callee() {
         for source in ["puts 1", "puts(1)"] {
             let mut parser = try_create_ruby_parser(source).unwrap();

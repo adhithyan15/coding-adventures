@@ -76,3 +76,17 @@ expression forms still fail before VM execution. The resulting IIR must call
 the existing `rb_puts_int` builtin; Ruby is only a conformance oracle.
 Directly supplied ASTs must also carry a name-like callee token with a matching
 effective grammar type; a string or number token spelling `puts` is not a call.
+
+## Follow-on bounded empty call: `puts()`
+
+An exact parenthesized zero-argument `puts()` call lowers through the Ruby
+parser's three-child `method_call` AST to a zero-argument Ruby-specific IIR
+builtin. It emits one newline on Rust `vm-core`, in source order with the
+existing one-argument calls. The host Ruby runtime is only a conformance
+oracle. The bare zero-argument spelling `puts` and all other new call forms
+remain outside this stage. Directly supplied ASTs must have a literal
+name-like `puts` callee and actual left/right parenthesis token kinds with
+matching effective grammar types; matching delimiter text alone is
+insufficient. The existing source, AST, VM instruction, and output bounds
+still apply, including a checked output-length increment before appending the
+newline.
