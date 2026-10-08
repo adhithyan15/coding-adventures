@@ -9,7 +9,7 @@ its managed worktree is archived. The detailed [CV04 specification](CV04-exact-l
 first accepts CV04a actual matcher capture/domain validation, then CV04b compiler
 source inventory/ingestion-leaf reuse. CV04a implementation and exact range controls are in local validation;
 #16970 remains open until both slices pass. Preserve one active shared-stack PR.
-**Current audit base:** `b490bcf88a0f90a61507150841df9a27fbe246dc`
+**Current audit base:** `52b53049ecb38094d0c93b6f59a767884032b63e`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
@@ -69,15 +69,36 @@ final production planning remain pending. No accepted delivery is claimed.
 
 The first local Miri compiled lexer metadata before the final lexer source edit
 (22:36:27 versus22:38:21 UTC). Its stopped stale-source run is excluded. The full
-required script restarted frozen at `0fb99935d187`: runtime-core/dynval pass again,
-and final lexer metadata compiled at23:04:34 UTC after the source edit. Twig VM
-is still running. Upstream merges do not touch its transitive package dependencies;
-source hashes must remain unchanged and the complete script must exit successfully
-before push. Independent exact `0fb99935d187` security and its three-native-platform
-production-plan selection passed; refreshed docs/head review and final plan remain
-required before publication. No source branch has been pushed and no CV04a PR exists.
-Native CI/actual merge acceptance remain pending; these local results do not claim
-accepted delivery. #16970 remains open through CV04b.
+final-source script restarted at `0fb99935d187`, with correct23:04:34 lexer
+compilation and unchanged sources, but actually exited101 after7223.9 seconds.
+Runtime-core/dynval253 tests and four Twig doctests passed; Twig library aborted
+at host_read_byte_returns_value_in_dest because isolated Miri forbids reading
+stdin. This was an unsupported host operation, without a UB report. The complete
+failed log/receipt is preserved. A zero parsed failed-test count does not turn
+an aborted target or failed script into acceptance.
+
+[Runner specification](CV04a-miri-host-input-validation.md) at `130e0b72b4`
+precedes red recording-runner controls and the narrow repair. The exact existing
+host/read_byte test reproduces the isolation diagnostic and then passes with
+controlled EOF plus the supported host-access flag. No assertion or test filter
+changed. The canonical script now keeps runtime-core/dynval isolated and gives
+only Twig host access with stdin redirected from /dev/null; UB/aliasing/alignment/
+data-race checks remain enabled. All three runner controls and shell syntax pass;
+the test fixture's Ruff ordering was corrected. These controls are not actual
+full Miri acceptance. A complete new frozen script pass remains required before
+push, with final source/runner hashes and exact-head independent security.
+
+Current main `52b53049ecb3` is merged, preserving both C changelog entries and
+every upstream change. Its newer Perl/Mermaid/ALGOL/C/Compose shared consumers
+need consolidated current-source validation; the previous known LANG-AOT full
+FAIL and two exact old-base baseline cells remain retained. Upstream PROGRAMS
+insertions shift numeric cell indexes, so any new cell probe must rediscover its
+actual source. Current BUILD selections and the new ALGOL native regressions
+will run without editing assertions/filters. Current Go build-tool source also
+changed, requiring actual rebuild/plan generation. Refreshed current-head review,
+planning, full local Miri and native CI/actual merge acceptance remain pending.
+No source branch has been pushed and no CV04a PR exists. #16970 remains open
+through CV04b; these local results do not claim accepted delivery.
 
 The real ES2025 grammar rejects bare U+2028/U+2029 between tokens (`a<LS>b`,
 `a<PS>b`), although coordinate capture handles all four ECMAScript terminators in
