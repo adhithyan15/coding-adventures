@@ -1293,11 +1293,13 @@ through S-I3 before two weeks are spent on Windows.
      image would let the agent rewrite the code it runs (S-I6).
    - The interpreter comes from the executable's `PT_INTERP`, so the agent's
      author chooses it. It is resolved, must lie under one of the library
-     directories, and is then opened like a grant (no symlinks, a regular
-     file). Otherwise a directory there would become a whole-tree read rule,
+     directories with a loader's name (`ld-*.so*`), and is then opened like
+     a grant (no symlinks, a regular file). Otherwise a directory there would become a whole-tree read rule,
      and any file a read-and-execute rule.
    - The ELF parse that finds it checks all of its arithmetic. A malformed
      header refuses the launch; it never panics the supervisor.
+   - A write grant inside a library directory is refused. The libraries
+     are the runtime image of every agent and of the host (S-I6).
    - The rest of S-I6's never-grantable set (the vault, the audit log, the
      shim, the broker, the plan files) is checked by the supervisor at step
      9, which is the only place those paths are known.

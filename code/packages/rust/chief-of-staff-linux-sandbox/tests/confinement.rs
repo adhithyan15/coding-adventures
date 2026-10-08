@@ -274,6 +274,29 @@ fn the_agents_own_executable_is_never_writable() {
 }
 
 #[test]
+fn a_shared_library_is_never_writable() {
+    // S-I6: the libraries are the runtime image, the host's included.
+    let library = [
+        "/usr/lib/x86_64-linux-gnu/libc.so.6",
+        "/usr/lib/aarch64-linux-gnu/libc.so.6",
+        "/usr/lib64/libc.so.6",
+        "/usr/lib/libc.so.6",
+    ]
+    .into_iter()
+    .find(|path| Path::new(path).exists())
+    .expect("a libc to test with");
+    let error = LinuxConfinement::prepare(&plan(&[("write", library)]), Path::new(PROBE))
+        .err()
+        .expect("a write grant on libc must refuse");
+    assert!(
+        matches!(error, ConfinementError::InexpressibleGrant(_)),
+        "{error:?}"
+    );
+    // A read grant there adds nothing: the libraries are readable anyway.
+    assert!(LinuxConfinement::prepare(&plan(&[("read", library)]), Path::new(PROBE)).is_ok());
+}
+
+#[test]
 fn a_plan_for_another_os_is_refused() {
     let manifest = r#"{"version":1,"package":"rust/p","capabilities":[],"justification":"x"}"#;
     let macos = plan_from_json(manifest, OsFamily::Macos).unwrap();
@@ -332,6 +355,8 @@ fn an_interpreter_outside_the_library_directories_is_refused() {
         "/lib",
         "/lib/../etc/passwd",
         "/no/such",
+        // Inside a library directory, but not a loader.
+        "/usr/lib/os-release",
     ] {
         let hostile = probe_with_interpreter(interpreter);
         let error = LinuxConfinement::prepare(&plan(&[]), &hostile)

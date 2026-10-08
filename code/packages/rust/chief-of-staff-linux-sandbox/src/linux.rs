@@ -56,6 +56,17 @@ impl Prepared {
             } else {
                 landlock::READ
             };
+            // Review round 2, L2: the shared libraries are every agent's
+            // runtime image, and the supervisor's too (S-I6). A write grant
+            // there could rewrite libc for the whole host.
+            if grant.write
+                && std::fs::canonicalize(&grant.path).is_ok_and(|path| in_library_directory(&path))
+            {
+                return Err(ConfinementError::InexpressibleGrant(format!(
+                    "{}: a shared library directory is never writable",
+                    grant.path
+                )));
+            }
             let identity = ruleset.allow(Path::new(&grant.path), rights, Grant)?;
             if identity.is_some() && image.contains(&identity) {
                 return Err(ConfinementError::InexpressibleGrant(format!(
@@ -94,15 +105,27 @@ fn system_interpreter(named: &Path) -> Result<PathBuf, ConfinementError> {
         ))
     };
     let resolved = std::fs::canonicalize(named).map_err(|_| outside())?;
-    let inside = LIBRARY_DIRECTORIES.iter().any(|directory| {
-        std::fs::canonicalize(directory)
-            .is_ok_and(|directory| resolved.starts_with(&directory) && resolved != directory)
-    });
-    if inside {
+    // Review round 2, L1: inside the directories is not enough, or any
+    // helper there (a setuid launcher, say) could be named. It must also be
+    // named like a dynamic loader: `ld-linux-x86-64.so.2`, `ld-musl-*.so.1`.
+    let loader = resolved
+        .file_name()
+        .and_then(|name| name.to_str())
+        .is_some_and(|name| name.starts_with("ld-") && name.contains(".so"));
+    if loader && in_library_directory(&resolved) {
         Ok(resolved)
     } else {
         Err(outside())
     }
+}
+
+/// Whether `resolved`, a canonical path, lies strictly inside one of the
+/// (canonicalized) library directories.
+fn in_library_directory(resolved: &Path) -> bool {
+    LIBRARY_DIRECTORIES.iter().any(|directory| {
+        std::fs::canonicalize(directory)
+            .is_ok_and(|directory| resolved.starts_with(&directory) && resolved != directory)
+    })
 }
 
 /// Register the hook that installs `prepared` in the child.

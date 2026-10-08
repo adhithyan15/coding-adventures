@@ -21,8 +21,9 @@
   - A grant must be an existing regular file, reached through no symlink,
     and not the agent's own image.
   - The interpreter named by `PT_INTERP`, which the agent's author wrote,
-    is resolved, must lie in a library directory, and is opened like a
-    grant.
+    is resolved, must be named like a loader (`ld-*.so*`) inside a library
+    directory, and is opened like a grant.
+  - A write grant inside a library directory is refused (S-I6).
   - The ELF parse checks all of its arithmetic, so a hostile header is a
     refused launch, never a panic.
   - A `Direct` grant needs ABI 3 or later.

@@ -58,8 +58,9 @@
 //! the shim, ...) is the supervisor's to check: only it knows those paths.
 //!
 //! The interpreter is named by the executable itself (`PT_INTERP`), so by
-//! the agent's author. It is resolved, must lie in a library directory, and
-//! is then opened as exactly as a grant; anything else refuses the launch.
+//! the agent's author. It is resolved, must be a loader (`ld-*.so*`) in a
+//! library directory, and is then opened as exactly as a grant; anything
+//! else refuses the launch. No write grant may land in a library directory.
 //!
 //! Landlock mediates opening, not looking: `stat` and `access` on any path
 //! still answer, so an agent can learn whether a file exists and its size.

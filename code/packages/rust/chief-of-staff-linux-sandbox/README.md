@@ -73,8 +73,9 @@ Any of these refuses the launch rather than confining "what it can" (S-P3):
   whole directory;
 - a grant on a directory, on a path through a symlink, on a missing file,
   or on the agent's own executable;
+- a write grant inside a library directory;
 - an executable whose interpreter (`PT_INTERP`, chosen by the agent's
-  author) does not resolve into a system library directory, or whose ELF
+  author) does not resolve to a loader in a system library directory, or whose ELF
   headers are malformed;
 - an architecture other than x86_64 or aarch64.
 
