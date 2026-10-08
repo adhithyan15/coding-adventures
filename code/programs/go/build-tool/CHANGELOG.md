@@ -6,6 +6,14 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- Case-exact native CI selection for all eleven checked
+  `hashing-cache-*.json` fixtures. C#/F#/Lua read every case; Python reads
+  missing/hit/corrupt, Go/Perl/Ruby/Swift read missing, and TypeScript reads
+  corrupt. New unclassified flat cases fail before a partial plan. Three-
+  platform and language-filtered plans, missing-root atomicity, renamed old
+  paths, corpus roster, and native source-reference drift are tested without
+  changing production hashing or forcing a full build.
+
 - Case-exact native CI selection for all twenty-six checked
   `resolution-*.json` conformance fixtures. Each case schedules only its
   direct Go, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, or TypeScript
