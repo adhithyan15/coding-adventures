@@ -2026,9 +2026,13 @@ pub fn dropped_style_properties(
 /// concept at all.
 fn qt_drop_reason(name: &str) -> &'static str {
     match name {
-        "box-shadow" | "elevation" => {
+        "box-shadow" => {
             "QML has no shadow property on Item; this needs a DropShadow effect \
              from Qt5Compat.GraphicalEffects or a hand-drawn Rectangle beneath"
+        }
+        "elevation" => {
+            "only the supported Mosaic elevation tokens `raised` and `overlay` \
+             lower to QtQuick.Effects.MultiEffect"
         }
         "flex-grow" | "flex-shrink" | "flex" => {
             "Qt distributes space with Layout.fillWidth / Layout.preferredWidth \
@@ -2544,11 +2548,19 @@ fn part_elevation_tier(base_props: &[StyleProp]) -> Option<ElevationTier> {
         .find(|p| p.name == "elevation")?
         .value
         .as_str();
-    match value {
+    let tier = match value {
         "raised" => Some(ElevationTier::Raised),
         "overlay" => Some(ElevationTier::Overlay),
         _ => None,
+    };
+    if tier.is_some() {
+        // #17126 -- this helper participates in real lowering without going
+        // through `style_prop`, so it must make the successful read explicit.
+        // Recording only recognised tiers keeps a manually constructed or
+        // future unsupported value visible to the drop reporter.
+        record_style_read(base_props, "elevation");
     }
+    tier
 }
 
 /// Allocate the next `mosaicElevation<N>` id — the unique `id:` a
@@ -17572,6 +17584,10 @@ mod tests {
         // The raw box-shadow CSS value never leaks into the shadow block —
         // `elevation` is the only signal Qt reads.
         assert!(!out.contains("rgba(60,45,25"), "got:\n{out}");
+
+        let dropped = dropped_style_properties(&component("X", vec![], vec![]), &l, &style);
+        assert_eq!(dropped.len(), 1, "only raw CSS shadow remains: {dropped:?}");
+        assert_eq!(dropped[0].name, "box-shadow");
     }
 
     #[test]
@@ -17598,6 +17614,35 @@ mod tests {
             out.contains("shadowColor: \"#60000000\""),
             "missing overlay shadow color:\n{out}"
         );
+        assert!(
+            dropped_style_properties(&component("X", vec![], vec![]), &l, &style).is_empty(),
+            "supported elevation must not be reported dropped"
+        );
+    }
+
+    #[test]
+    fn unsupported_elevation_value_remains_a_drop() {
+        // mosstyle validation rejects this before a production emit. Keeping
+        // the reporter honest for a directly constructed StyleDef ensures a
+        // future token cannot silently gain false coverage.
+        let style = StyleDef {
+            component_name: "X".to_string(),
+            parts: vec![PartStyle {
+                name: "card".to_string(),
+                base: vec![sp("elevation", "floating"), sp("background", "#ffffff")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let layout = box_layout_with_part("card");
+        let model = component("X", vec![], vec![]);
+
+        let out = from_pipeline(&model, &layout, &style).unwrap().output;
+        assert!(!out.contains("MultiEffect {"), "unsupported tier lowered:\n{out}");
+        let dropped = dropped_style_properties(&model, &layout, &style);
+        assert_eq!(dropped.len(), 1, "got: {dropped:?}");
+        assert_eq!(dropped[0].name, "elevation");
+        assert!(dropped[0].reason.contains("raised"), "got: {dropped:?}");
     }
 
     #[test]

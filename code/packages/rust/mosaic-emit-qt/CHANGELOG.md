@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-10-08 (elevation reporting matches native effects)
+
+- Supported `elevation: raised` and `elevation: overlay` declarations now
+  leave the style-drop report when Qt emits their `MultiEffect` shadows.
+  Unsupported tokens remain explicit degradations (#17126).
+
 ## 2026-10-08 (solid per-edge border reporting)
 
 - `border-{top,right,bottom,left}-style: solid` is now recorded as consumed
