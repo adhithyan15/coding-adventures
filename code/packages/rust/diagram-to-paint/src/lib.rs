@@ -990,14 +990,16 @@ where
                 })
             }
             DiagramShape::Cloud | DiagramShape::Bang | DiagramShape::Hourglass
-            | DiagramShape::Triangle | DiagramShape::InvertedTriangle | DiagramShape::NotchedRect => {
+            | DiagramShape::Triangle | DiagramShape::InvertedTriangle | DiagramShape::NotchedRect
+            | DiagramShape::LinedRect => {
                 let commands = match node.shape {
                     DiagramShape::Cloud => cloud_path_commands(node.x, node.y, node.width, node.height),
                     DiagramShape::Bang => polygon_path_commands(&bang_polygon_points(node.x, node.y, node.width, node.height)),
                     DiagramShape::Hourglass => polygon_path_commands(&hourglass_polygon_points(node.x, node.y, node.width, node.height)),
                     DiagramShape::Triangle => polygon_path_commands(&triangle_polygon_points(node.x, node.y, node.width, node.height)),
                     DiagramShape::InvertedTriangle => polygon_path_commands(&inverted_triangle_polygon_points(node.x, node.y, node.width, node.height)),
-                    _ => polygon_path_commands(&notched_rect_polygon_points(node.x, node.y, node.width, node.height)),
+                    DiagramShape::NotchedRect => polygon_path_commands(&notched_rect_polygon_points(node.x, node.y, node.width, node.height)),
+                    _ => lined_rect_path_commands(node.x, node.y, node.width, node.height),
                 };
                 PaintInstruction::Path(PaintPath {
                     base: PaintBase::default(), commands, fill: Some(fill.clone()), fill_rule: None,
@@ -1793,6 +1795,18 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
             let points = notched_rect_polygon_points(node.x, node.y, node.width, node.height);
             polygon_node_instruction(node, &points)
         }
+        DiagramShape::LinedRect => PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: lined_rect_path_commands(node.x, node.y, node.width, node.height),
+            fill: Some(node.style.fill.clone()),
+            fill_rule: None,
+            stroke: Some(node.style.stroke.clone()),
+            stroke_width: Some(node.style.stroke_width),
+            stroke_cap: None,
+            stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: node.style.stroke_dash.clone(),
+            stroke_dash_offset: None,
+        }),
         DiagramShape::Cloud => {
             PaintInstruction::Path(PaintPath {
                 base: PaintBase::default(),
@@ -2103,6 +2117,19 @@ fn notched_rect_polygon_points(x: f64, y: f64, width: f64, height: f64) -> Vec<(
         (x + width, y + height),
         (x, y + height),
         (x, y + notch),
+    ]
+}
+
+fn lined_rect_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCommand> {
+    let frame_width = width.min(height) * 0.12;
+    vec![
+        PathCommand::MoveTo { x, y },
+        PathCommand::LineTo { x: x + width, y },
+        PathCommand::LineTo { x: x + width, y: y + height },
+        PathCommand::LineTo { x, y: y + height },
+        PathCommand::Close,
+        PathCommand::MoveTo { x: x + frame_width, y },
+        PathCommand::LineTo { x: x + frame_width, y: y + height },
     ]
 }
 
