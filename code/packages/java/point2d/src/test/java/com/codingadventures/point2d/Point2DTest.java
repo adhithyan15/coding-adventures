@@ -38,8 +38,10 @@ class Point2DTest {
         assertEquals(5, Point.origin().distance(threeFour), 1e-12);
         assertEquals(new Point(5, 5), Point.origin().lerp(new Point(10, 10), 0.5));
         assertEquals(new Point(-5, -5), Point.origin().lerp(new Point(10, 10), -0.5));
-        assertEquals(up, right.perpendicular());
-        assertEquals(right.negate(), right.perpendicular().perpendicular());
+        assertEquals(up.x(), right.perpendicular().x(), 0.0);
+        assertEquals(up.y(), right.perpendicular().y(), 0.0);
+        assertEquals(right.negate().x(), right.perpendicular().perpendicular().x(), 0.0);
+        assertEquals(right.negate().y(), right.perpendicular().perpendicular().y(), 0.0);
         assertEquals(0, right.angle(), 1e-10);
         assertEquals(Math.PI / 2, up.angle(), 1e-9);
         assertEquals(Math.PI, new Point(-1, 0).angle(), 1e-9);

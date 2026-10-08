@@ -17,6 +17,8 @@ void main() {
       expect(a.negate(), const Point(-1, -2));
       expect(a, const Point(1, 2));
       expect(b, const Point(3, 4));
+      expect(a.hashCode, const Point(1, 2).hashCode);
+      expect(a == b, isFalse);
     });
 
     test('vector geometry and PHY00 angle quadrants', () {
@@ -63,6 +65,8 @@ void main() {
       expect(a.containsPoint(const Point(-1, 0)), isFalse);
       expect(Rect.zero().containsPoint(Point.origin()), isFalse);
       expect(a.union(b), const Rect(0, 0, 15, 15));
+      expect(a.hashCode, const Rect(0, 0, 10, 10).hashCode);
+      expect(a == b, isFalse);
       expect(a.union(Rect.zero()), a);
       expect(Rect.zero().union(a), a);
       expect(a.intersection(b), const Rect(5, 5, 5, 5));
@@ -73,13 +77,11 @@ void main() {
   });
 
   test('consumes all four checked point-normalize fixtures only', () {
-    final corpus =
-        jsonDecode(
-              File(
-                '../../../specs/fixtures/geometry2d-v1/cases.json',
-              ).readAsStringSync(),
-            )
-            as Map<String, dynamic>;
+    final corpus = jsonDecode(
+      File(
+        '../../../specs/fixtures/geometry2d-v1/cases.json',
+      ).readAsStringSync(),
+    ) as Map<String, dynamic>;
     expect(corpus['version'], 1);
     expect(corpus['absolute_tolerance'], 1e-12);
     final seen = <String>{};

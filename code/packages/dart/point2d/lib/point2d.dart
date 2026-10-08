@@ -15,7 +15,9 @@ final class Point {
   final double y;
 
   const Point(this.x, this.y);
-  const Point.origin() : x = 0.0, y = 0.0;
+  const Point.origin()
+      : x = 0.0,
+        y = 0.0;
 
   Point add(Point other) => Point(x + other.x, y + other.y);
   Point subtract(Point other) => Point(x - other.x, y - other.y);
@@ -70,7 +72,11 @@ final class Rect {
   final double height;
 
   const Rect(this.x, this.y, this.width, this.height);
-  const Rect.zero() : x = 0.0, y = 0.0, width = 0.0, height = 0.0;
+  const Rect.zero()
+      : x = 0.0,
+        y = 0.0,
+        width = 0.0,
+        height = 0.0;
 
   factory Rect.fromPoints(Point min, Point max) =>
       Rect(min.x, min.y, max.x - min.x, max.y - min.y);
