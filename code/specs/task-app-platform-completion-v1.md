@@ -170,7 +170,10 @@ rather than letting them read as silent gaps.
     per-edge border styles only where a supported positive-width edge is
     actually drawn, retiring another 70 false positives and reducing the
     fresh inventories to 38 XAML, 83 SwiftUI, 50 Compose, 130 Qt, and 144
-    Flutter drops.
+    Flutter drops. #17126 then reconciles Qt's existing native elevation
+    effects with the reporter, retiring eight false positives while surfacing
+    22 genuine, previously unqueried `HostDraggable` board-card omissions. The
+    honest Qt inventory is therefore 144; #17128 tracks those native lowerings.
     Keep the per-property maxima in the shared TaskApp contract so no new
     property or increased occurrence count can enter while fixes drive those
     inventories toward #12022's zero-drop hard fail. Do not call the existing

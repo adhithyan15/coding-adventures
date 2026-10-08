@@ -85,11 +85,11 @@ def test_style_drop_baseline_totals_match_measured_main() -> None:
         backend: sum(properties.values())
         for backend, properties in STYLE_DROP_BASELINES.items()
     } == {
-        "xaml": 54,
-        "swiftui": 99,
-        "compose": 66,
-        "qt": 138,
-        "flutter": 158,
+        "xaml": 38,
+        "swiftui": 83,
+        "compose": 50,
+        "qt": 144,
+        "flutter": 144,
     }
 
 
@@ -111,6 +111,15 @@ def test_text_transform_is_no_longer_baselined(backend: str) -> None:
     errors = validate_style_degradations(backend, report, "report.json")
 
     assert any("unbaselined style drop 'text-transform'" in error for error in errors)
+
+
+def test_qt_elevation_is_no_longer_baselined() -> None:
+    report = _report("qt")
+    report["styleDegradations"].append(_style_entry("qt", "elevation"))
+
+    errors = validate_style_degradations("qt", report, "report.json")
+
+    assert any("unbaselined style drop 'elevation'" in error for error in errors)
 
 
 @pytest.mark.parametrize("backend", sorted(STYLE_DROP_BASELINES))

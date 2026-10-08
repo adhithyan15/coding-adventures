@@ -7,6 +7,15 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.1` accumulate here until the next version is
 cut.
 
+### Fixed — Qt elevation effects leave the style-debt inventory (#17126)
+
+Qt's existing `MultiEffect` lowering now records supported Mosaic elevation
+tokens as consumed. Fresh strict generation retires eight false-positive
+`elevation` allowances without hiding raw CSS shadows or unsupported tokens.
+That read also surfaces 22 genuine, pre-existing `HostDraggable` board-card
+style omissions, so the honest Qt inventory is 144; #17128 tracks their
+native lowering.
+
 ### Fixed — solid native edge borders leave degradation reports (#17098)
 
 All five native emitters now treat `border-{top,right,bottom,left}-style:

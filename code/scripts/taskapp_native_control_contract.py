@@ -94,12 +94,17 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "white-space": 1,
     },
     "qt": {
+        # Recording Qt's existing elevation lowering makes TaskApp's two
+        # HostDraggable board-card parts visible to the reporter. Their 22
+        # pre-existing container-style omissions are tracked by #17128.
+        "background": 2,
         "border-bottom-color": 3,
         "border-bottom-width": 3,
-        "border-color": 1,
-        "border-left-color": 2,
-        "border-left-style": 2,
-        "border-left-width": 2,
+        "border-color": 3,
+        "border-left-color": 4,
+        "border-left-style": 4,
+        "border-left-width": 4,
+        "border-radius": 2,
         "border-right-color": 6,
         "border-right-style": 3,
         "border-right-width": 6,
@@ -109,11 +114,11 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "border-top-right-radius": 1,
         "border-top-style": 1,
         "border-top-width": 3,
-        "border-width": 1,
-        "box-shadow": 9,
+        "border-width": 3,
+        "box-shadow": 11,
         "box-sizing": 1,
         "color": 2,
-        "elevation": 8,
+        "cursor": 2,
         # The compact task identity uses flexible name sizing in Flutter. Qt
         # keeps the portable row structure and records that task-name flex
         # occurrence until the emitter grows an equivalent lowering (#16949).
@@ -122,11 +127,13 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "flex-wrap": 1,
         "font": 1,
         "font-size": 2,
+        "gap": 2,
         "left": 6,
         "margin-bottom": 1,
         "margin-left": 1,
         "min-height": 1,
         "outline": 2,
+        "padding": 2,
         "position": 6,
         "text-align": 6,
         "top": 6,
