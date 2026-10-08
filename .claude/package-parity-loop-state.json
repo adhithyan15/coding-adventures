@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 17042,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/17042",
+    "branch": "codex/parity-hashing-cache-fixture-ci-20261008",
+    "implementation_revision": "29b0c54c29614646e9ce887aff84c1a9bb3b3962",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-08T04:56:57Z",
-    "pr_number": 17028,
-    "status": "merged",
-    "notes": "PR #17028 passed 29 successful, seven skipped, and one neutral terminal checks without failure or conflict. Guarded auto-merge completed as e71e05f3b8394a3d87f0032bc541f4f2d7d48141, verified on fetched origin/main; it was not manually merged."
+    "observed_at": "2026-10-08T05:33:11Z",
+    "pr_number": 17042,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #17042 opened from the tested, rebased clean worktree after #17028 was verified merged. Initial GitHub checks are queued and mergeability is MERGEABLE; auto-merge remains disabled until every final-head required check is terminal acceptable and conflict-free. No other parity PR is open."
   },
   "last_inventory": {
     "revision": "e71e05f3b8394a3d87f0032bc541f4f2d7d48141",
@@ -13623,7 +13629,7 @@
       "notes": "Selected after #16989 merged and all newly discovered owners were registered. Twenty exact flat source-collection cases have direct native readers in twelve build-tool fronts, including an Elixir local-case reader found during independent source review; fixture-only diffs seed only the neutral gate. Map seven local cases to twelve fronts, nine repository cases to C#/F#/Swift, and four shared-input cases to C#/F#; verify dynamic and explicit reader drift, three-platform/single-language selection, rename source, and missing-root atomicity. Do not change production collectors or claim every reader replays every case."
     },
     {
-      "id": "build-tool-hashing-cache-fixture-native-ci-selection", "title": "Gate native hashing-cache fixture readers", "status": "in-progress", "depends_on": ["build-tool-pure-domain-corpus", "build-tool-neutral-dependency-hashing-adversarial-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-hashing-cache-fixture-ci-20261008", "pr_number": null,
+      "id": "build-tool-hashing-cache-fixture-native-ci-selection", "title": "Gate native hashing-cache fixture readers", "status": "pr-open", "depends_on": ["build-tool-pure-domain-corpus", "build-tool-neutral-dependency-hashing-adversarial-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-hashing-cache-fixture-ci-20261008", "pr_number": 17042,
       "notes": "Selected after #17028 merged and newly discovered work was registered. Eleven checked hashing-cache cases have direct native readers in nine build-tool fronts: C#/F#/Lua all cases, Python missing/hit/corrupt, Go/Perl/Ruby/Swift missing, and TypeScript corrupt. Fixture-only diffs do not select those BUILD roots. Use a closed exact case-to-reader map, independent source-reference drift evidence, neutral fallback, and three-platform/language/rename/missing-root tests; some fronts assert only digest slices rather than replaying the full oracle. Separate from Lua/Perl hashing-cache implementation owners."
     },
     {
