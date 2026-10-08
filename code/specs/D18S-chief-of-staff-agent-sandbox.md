@@ -1632,7 +1632,8 @@ through S-I3 before two weeks are spent on Windows.
 
      **Until P2.6d-3, none of this is a claim.** An unsandboxed broker runs
      as the daemon's user and can open every agent's key file by path.
-     P2.6d-1 and -2 build the mechanism. P2.6d-3 makes it a boundary.
+     P2.6d-1 and -2 build the mechanism. P2.6d-3 makes it a boundary: a
+     confined broker can open no file by path at all.
 
      **Identity (S-K2).** A broker serves one resolved
      `HostPipelineBinding`: a pipeline id and the channel `AgentId` within
@@ -1929,6 +1930,64 @@ through S-I3 before two weeks are spent on Windows.
         At start it refuses to serve unless every never-grantable
         directory is mode 0700, which is what P2.6c's link check relies on.
         From here, S-I5's per-agent claim holds on Linux.
+
+        **How.** The broker is launched by the P2.4/P2.5 applier, under a
+        deny-all Linux plan: a manifest with no capabilities. So it gets
+        exactly what a compiled agent with no grants gets:
+        - Landlock: its own executable, its loader, the shared libraries,
+          `/dev/null` and `/dev/urandom`, and nothing else. It cannot open
+          another agent's key file, or its own, by path. No TCP, and no
+          abstract unix sockets or signals outside its domain.
+        - seccomp: the compiled-agent allowlist. No `socket`, no new
+          processes, no `ptrace` or `process_vm_readv`, no `kill`.
+        - exec once (S-I4d's second option): the one `execveat` that starts
+          it, then `ENOSYS` for every exec, and the seal.
+        - the shim's checks and the launch probes, as for any agent.
+
+        Three changes to the applier make that possible:
+        - **Prepared from the verified descriptor.** The confinement is
+          built from a duplicate of `VerifiedExecutable`'s descriptor, not
+          by opening the path again. The bytes that were hashed are the
+          bytes that are parsed for `PT_INTERP`, given the Landlock rule,
+          and executed. The launcher re-verifies before each launch, as in
+          2a.
+        - **Inherited descriptors.** `apply` with a list of descriptors
+          places them at 3..3+n in the child, and only there:
+          - the parent first duplicates each one close-on-exec to a high
+            number, so the shim's survivor check passes and nothing the
+            hook uses can sit in a target slot when it is needed;
+          - the hook installs everything and runs the probes first, all of
+            which may still fail with an error;
+          - only then does it `dup2` the keys onto 3..3+n, which clears
+            close-on-exec on exactly those, and execs. A failure after the
+            first `dup2` exits 127, because std's exec-error pipe may have
+            been in a target slot (as in 2a).
+          - at most 64 descriptors, so the targets stay far below the high
+            numbers.
+          This replaces 2a's `isolate_and_exec`, which is removed.
+        - **Core dumps.** The broker suppresses its own core dumps after
+          exec, because exec resets dumpability. seccomp allows
+          `prctl(PR_SET_DUMPABLE, 0)` and `PR_GET_DUMPABLE`, for every
+          confined process: both can only make it less inspectable. Any
+          other `PR_SET_DUMPABLE` value is still a kill.
+
+        **The 0700 check is the launcher's.** Divergence from the text
+        above, which says the broker checks. The confined broker holds no
+        paths and could only `stat` them; the launcher knows them. So
+        before every broker launch it refuses unless each never-grantable
+        directory exists, is a directory, is owned by the daemon's user,
+        and grants nothing to group or others (`mode & 0o077 == 0`). The
+        set is the directories that hold secrets: the vault's storage
+        directory and the directory of each configured channel key file.
+        The broker's and the shim's own directories are not in it: what
+        protects those binaries is S-K1's not-writable-by-others check and
+        the digest.
+
+        **Residuals, recorded.**
+        - The broker can still `stat` any path (Landlock mediates opening,
+          not lookup), as an agent can.
+        - Off Linux there is no broker launch at all yet (2b refuses
+          `[hosts.broker]`).
      4. **P2.6d-4:** non-channel requests (completions and tools) are
         served on a worker thread, off the refresh path.
 7. **macOS Seatbelt** (Tier A).
