@@ -7,7 +7,8 @@ import importlib.util
 import json
 import pathlib
 import unittest
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 from jsonschema import Draft202012Validator  # type: ignore[import-untyped]
 
@@ -41,25 +42,48 @@ class Geometry2DConformanceTests(unittest.TestCase):
 
     def test_complete_operation_and_case_roster(self) -> None:
         expected = {
-            "normalize-zero", "normalize-below-epsilon", "normalize-at-epsilon",
-            "normalize-three-four", "arc-zero-radius-reversed",
-            "arc-negative-near-zero-radius", "arc-near-coincident-endpoints",
-            "arc-coincident-endpoints", "affine-compose-order-a",
-            "affine-compose-order-b", "affine-invert-nonsingular",
-            "affine-invert-singular", "affine-vector-translation",
-            "bezier-quadratic-quarter", "bezier-cubic-quarter",
+            "normalize-zero",
+            "normalize-below-epsilon",
+            "normalize-at-epsilon",
+            "normalize-three-four",
+            "arc-zero-radius-reversed",
+            "arc-negative-near-zero-radius",
+            "arc-near-coincident-endpoints",
+            "arc-coincident-endpoints",
+            "affine-compose-order-a",
+            "affine-compose-order-b",
+            "affine-invert-nonsingular",
+            "affine-invert-singular",
+            "affine-vector-translation",
+            "bezier-quadratic-quarter",
+            "bezier-cubic-quarter",
             "bezier-cubic-x-overshoot",
         }
         self.assertEqual({case["id"] for case in self.document["cases"]}, expected)
 
     def test_new_expected_values_cannot_drift(self) -> None:
         edits: list[tuple[str, Callable[[dict[str, Any]], None]]] = [
-            ("affine-compose-order-a", lambda c: c["expected_matrix"].__setitem__(4, 8)),
-            ("affine-invert-nonsingular", lambda c: c["expected_inverse"].__setitem__(0, 0)),
+            (
+                "affine-compose-order-a",
+                lambda c: c["expected_matrix"].__setitem__(4, 8),
+            ),
+            (
+                "affine-invert-nonsingular",
+                lambda c: c["expected_inverse"].__setitem__(0, 0),
+            ),
             ("affine-vector-translation", lambda c: c["expected"].__setitem__(0, 99)),
-            ("bezier-quadratic-quarter", lambda c: c["expected_derivative"].__setitem__(1, 5)),
-            ("bezier-cubic-quarter", lambda c: c["expected_split"][0][1].__setitem__(1, 2)),
-            ("bezier-cubic-x-overshoot", lambda c: c["expected_bounds"].__setitem__(2, 4)),
+            (
+                "bezier-quadratic-quarter",
+                lambda c: c["expected_derivative"].__setitem__(1, 5),
+            ),
+            (
+                "bezier-cubic-quarter",
+                lambda c: c["expected_split"][0][1].__setitem__(1, 2),
+            ),
+            (
+                "bezier-cubic-x-overshoot",
+                lambda c: c["expected_bounds"].__setitem__(2, 4),
+            ),
         ]
         for case_id, edit in edits:
             with self.subTest(case_id=case_id):

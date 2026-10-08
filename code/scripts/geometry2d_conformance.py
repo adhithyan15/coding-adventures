@@ -11,6 +11,7 @@ import json
 import math
 import pathlib
 import re
+from itertools import pairwise
 from typing import Any
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
@@ -57,6 +58,11 @@ def _tuple(value: Any, size: int, where: str) -> tuple[float, ...]:
     return tuple(_number(item, where) for item in value)
 
 
+def _point(value: Any, where: str) -> tuple[float, float]:
+    x, y = _tuple(value, 2, where)
+    return (x, y)
+
+
 def _expected(value: Any, answer: tuple[float, ...], where: str) -> None:
     published = _tuple(value, len(answer), where)
     if any(
@@ -72,18 +78,21 @@ def _affine_multiply(
     a, b, c, d, e, f = first
     g, h, i, j, k, l = second
     return (
-        a * g + c * h, b * g + d * h,
-        a * i + c * j, b * i + d * j,
-        a * k + c * l + e, b * k + d * l + f,
+        a * g + c * h,
+        b * g + d * h,
+        a * i + c * j,
+        b * i + d * j,
+        a * k + c * l + e,
+        b * k + d * l + f,
     )
 
 
-def _affine_apply(matrix: tuple[float, ...], point: tuple[float, ...],
-                  *, vector: bool = False) -> tuple[float, float]:
+def _affine_apply(
+    matrix: tuple[float, ...], point: tuple[float, ...], *, vector: bool = False
+) -> tuple[float, float]:
     a, b, c, d, e, f = matrix
     x, y = point
-    return (a * x + c * y + (0 if vector else e),
-            b * x + d * y + (0 if vector else f))
+    return (a * x + c * y + (0 if vector else e), b * x + d * y + (0 if vector else f))
 
 
 def _affine_inverse(matrix: tuple[float, ...]) -> tuple[float, ...] | None:
@@ -91,42 +100,58 @@ def _affine_inverse(matrix: tuple[float, ...]) -> tuple[float, ...] | None:
     determinant = a * d - b * c
     if abs(determinant) < 1e-12:
         return None
-    return (d / determinant, -b / determinant, -c / determinant,
-            a / determinant, (c * f - d * e) / determinant,
-            (b * e - a * f) / determinant)
+    return (
+        d / determinant,
+        -b / determinant,
+        -c / determinant,
+        a / determinant,
+        (c * f - d * e) / determinant,
+        (b * e - a * f) / determinant,
+    )
 
 
-def _lerp(first: tuple[float, float], second: tuple[float, float],
-          t: float) -> tuple[float, float]:
-    return (first[0] + (second[0] - first[0]) * t,
-            first[1] + (second[1] - first[1]) * t)
+def _lerp(
+    first: tuple[float, float], second: tuple[float, float], t: float
+) -> tuple[float, float]:
+    return (
+        first[0] + (second[0] - first[0]) * t,
+        first[1] + (second[1] - first[1]) * t,
+    )
 
 
-def _bezier_evaluate(points: tuple[tuple[float, float], ...],
-                     t: float) -> tuple[float, float]:
+def _bezier_evaluate(
+    points: tuple[tuple[float, float], ...], t: float
+) -> tuple[float, float]:
     """Use the Bernstein basis, independently of the split construction."""
     degree = len(points) - 1
-    weights = [math.comb(degree, index) * (1 - t) ** (degree - index) * t ** index
-               for index in range(degree + 1)]
-    return (sum(weight * point[0] for weight, point in zip(weights, points, strict=True)),
-            sum(weight * point[1] for weight, point in zip(weights, points, strict=True)))
+    weights = [
+        math.comb(degree, index) * (1 - t) ** (degree - index) * t**index
+        for index in range(degree + 1)
+    ]
+    return (
+        sum(weight * point[0] for weight, point in zip(weights, points, strict=True)),
+        sum(weight * point[1] for weight, point in zip(weights, points, strict=True)),
+    )
 
 
-def _bezier_derivative(points: tuple[tuple[float, float], ...],
-                       t: float) -> tuple[float, float]:
+def _bezier_derivative(
+    points: tuple[tuple[float, float], ...], t: float
+) -> tuple[float, float]:
     degree = len(points) - 1
-    differences = tuple((degree * (right[0] - left[0]), degree * (right[1] - left[1]))
-                        for left, right in zip(points, points[1:]))
+    differences = tuple(
+        (degree * (right[0] - left[0]), degree * (right[1] - left[1]))
+        for left, right in pairwise(points)
+    )
     return _bezier_evaluate(differences, t)
 
 
-def _bezier_split(points: tuple[tuple[float, float], ...],
-                  t: float) -> tuple[tuple[tuple[float, float], ...], ...]:
+def _bezier_split(
+    points: tuple[tuple[float, float], ...], t: float
+) -> tuple[tuple[tuple[float, float], ...], ...]:
     rows = [points]
     while len(rows[-1]) > 1:
         prior = rows[-1]
-        rows.append(tuple(_lerp(left, right, t)
-                          for left, right in zip(prior, prior[1:])))
+        rows.append(tuple(_lerp(left, right, t) for left, right in pairwise(prior)))
     left = tuple(row[0] for row in rows)
     right = tuple(row[-1] for row in reversed(rows))
     return (left, right)
@@ -149,9 +174,14 @@ def _bezier_bounds(points: tuple[tuple[float, float], ...]) -> tuple[float, ...]
                 roots = [-alpha / beta] if abs(beta) >= 1e-12 else []
             else:
                 discriminant = beta * beta - 4 * gamma * alpha
-                roots = ([] if discriminant < 0 else
-                         [(-beta - math.sqrt(discriminant)) / (2 * gamma),
-                          (-beta + math.sqrt(discriminant)) / (2 * gamma)])
+                roots = (
+                    []
+                    if discriminant < 0
+                    else [
+                        (-beta - math.sqrt(discriminant)) / (2 * gamma),
+                        (-beta + math.sqrt(discriminant)) / (2 * gamma),
+                    ]
+                )
         candidates.update(root for root in roots if 0.0 <= root <= 1.0)
     evaluated = [_bezier_evaluate(points, t) for t in candidates]
     min_x = min(point[0] for point in evaluated)
@@ -163,7 +193,7 @@ def _bezier_bounds(points: tuple[tuple[float, float], ...]) -> tuple[float, ...]
 
 def _validate_case(case: Any) -> str:
     if not isinstance(case, dict):
-        raise ValueError("case fields must form an object")
+        raise ValueError("case fields must form an object")  # noqa: TRY004 - stable corpus error
     case_id = case.get("id")
     if not isinstance(case_id, str) or CASE_ID.fullmatch(case_id) is None:
         raise ValueError("case id must be canonical lowercase hyphenated text")
@@ -226,15 +256,29 @@ def _validate_case(case: Any) -> str:
             f"{case_id}.expected_bounds",
         )
     elif operation == "affine-compose":
-        _fields(case, {"id", "operation", "first", "second", "point",
-                       "expected_matrix", "expected_point"}, case_id)
+        _fields(
+            case,
+            {
+                "id",
+                "operation",
+                "first",
+                "second",
+                "point",
+                "expected_matrix",
+                "expected_point",
+            },
+            case_id,
+        )
         first = _tuple(case["first"], 6, f"{case_id}.first")
         second = _tuple(case["second"], 6, f"{case_id}.second")
         point = _tuple(case["point"], 2, f"{case_id}.point")
         result = _affine_multiply(first, second)
         _expected(case["expected_matrix"], result, f"{case_id}.expected_matrix")
-        _expected(case["expected_point"], _affine_apply(result, point),
-                  f"{case_id}.expected_point")
+        _expected(
+            case["expected_point"],
+            _affine_apply(result, point),
+            f"{case_id}.expected_point",
+        )
     elif operation == "affine-invert":
         _fields(case, {"id", "operation", "matrix", "expected_inverse"}, case_id)
         matrix = _tuple(case["matrix"], 6, f"{case_id}.matrix")
@@ -243,38 +287,61 @@ def _validate_case(case: Any) -> str:
             if case["expected_inverse"] is not None:
                 raise ValueError(f"{case_id}.expected_inverse must be absent")
         else:
-            _expected(case["expected_inverse"], inverse,
-                      f"{case_id}.expected_inverse")
+            _expected(case["expected_inverse"], inverse, f"{case_id}.expected_inverse")
             identity = (1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
-            for product in (_affine_multiply(matrix, inverse),
-                            _affine_multiply(inverse, matrix)):
-                if any(not math.isclose(got, want, rel_tol=0.0,
-                                        abs_tol=RUNTIME_TOLERANCE)
-                       for got, want in zip(product, identity, strict=True)):
+            for product in (
+                _affine_multiply(matrix, inverse),
+                _affine_multiply(inverse, matrix),
+            ):
+                if any(
+                    not math.isclose(got, want, rel_tol=0.0, abs_tol=RUNTIME_TOLERANCE)
+                    for got, want in zip(product, identity, strict=True)
+                ):
                     raise ValueError(f"{case_id}.expected_inverse does not compose")
     elif operation == "affine-vector":
         _fields(case, {"id", "operation", "matrix", "vector", "expected"}, case_id)
         matrix = _tuple(case["matrix"], 6, f"{case_id}.matrix")
         vector = _tuple(case["vector"], 2, f"{case_id}.vector")
-        _expected(case["expected"], _affine_apply(matrix, vector, vector=True),
-                  f"{case_id}.expected")
+        _expected(
+            case["expected"],
+            _affine_apply(matrix, vector, vector=True),
+            f"{case_id}.expected",
+        )
     elif operation in ("bezier-quadratic", "bezier-cubic"):
-        _fields(case, {"id", "operation", "control_points", "t", "expected_point",
-                       "expected_derivative", "expected_split", "expected_bounds"},
-                case_id)
+        _fields(
+            case,
+            {
+                "id",
+                "operation",
+                "control_points",
+                "t",
+                "expected_point",
+                "expected_derivative",
+                "expected_split",
+                "expected_bounds",
+            },
+            case_id,
+        )
         size = 3 if operation == "bezier-quadratic" else 4
         raw_points = case["control_points"]
         if not isinstance(raw_points, list) or len(raw_points) != size:
             raise ValueError(f"{case_id}.control_points needs exactly {size} points")
-        points = tuple(_tuple(point, 2, f"{case_id}.control_points")
-                       for point in raw_points)
+        points = tuple(
+            _point(point, f"{case_id}.control_points") for point in raw_points
+        )
         t = _number(case["t"], f"{case_id}.t")
         if not 0.0 <= t <= 1.0:
             raise ValueError(f"{case_id}.t must be in [0,1]")
-        _expected(case["expected_point"], _bezier_evaluate(points, t),
-                  f"{case_id}.expected_point")
-        _expected(case["expected_derivative"], _bezier_derivative(points, t),
-                  f"{case_id}.expected_derivative")
+        _expected(
+            case["expected_point"],
+            _bezier_evaluate(points, t),
+            f"{case_id}.expected_point",
+        )
+        _expected(
+            case["expected_derivative"],
+            _bezier_derivative(points, t),
+            f"{case_id}.expected_derivative",
+        )
         split = case["expected_split"]
         if not isinstance(split, list) or len(split) != 2:
             raise ValueError(f"{case_id}.expected_split needs two control polygons")
@@ -283,10 +350,16 @@ def _validate_case(case: Any) -> str:
             if not isinstance(published_side, list) or len(published_side) != size:
                 raise ValueError(f"{case_id}.expected_split side shape is invalid")
             for point_index, expected_point in enumerate(expected_side):
-                _expected(published_side[point_index], expected_point,
-                          f"{case_id}.expected_split[{side_index}][{point_index}]")
-        _expected(case["expected_bounds"], _bezier_bounds(points),
-                  f"{case_id}.expected_bounds")
+                _expected(
+                    published_side[point_index],
+                    expected_point,
+                    f"{case_id}.expected_split[{side_index}][{point_index}]",
+                )
+        _expected(
+            case["expected_bounds"],
+            _bezier_bounds(points),
+            f"{case_id}.expected_bounds",
+        )
     else:
         raise ValueError(f"{case_id} has unsupported operation")
     return case_id
