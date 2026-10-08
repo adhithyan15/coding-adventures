@@ -37,6 +37,25 @@ belong on main, not PRs — fast PR iteration matters more than 100% per-PR
 coverage."* The registry generalizes it from a case-by-case judgment into
 something the planner enforces.
 
+### Neutral geometry fixtures
+
+The process-free `geometry2d-v1` and `bezier2d-flattening-v1` validators are
+repo-wide source-of-truth checks, not native package builds. The existing
+unconditional `contracts` job's "Verify repo-wide metadata contracts" Python
+step MUST run each validator and its focused unit tests on every pull request:
+
+```sh
+python3 code/scripts/geometry2d_conformance.py
+python3 -m unittest discover -s code/scripts/tests -p 'test_geometry2d_conformance.py'
+python3 code/scripts/bezier2d_flattening_conformance.py
+python3 -m unittest discover -s code/scripts/tests -p 'test_bezier2d_flattening_conformance.py'
+```
+
+Keep the job and this step free of an `if:` selector. A fixture-only change
+must reach these oracles even when it maps to no native package. Native fixture
+readers and their build-plan scheduling are separate conformance owners; a
+green neutral check does not establish native lane parity.
+
 ## Registry file
 
 `code/specs/data/ci-gates.json`.

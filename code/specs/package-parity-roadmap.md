@@ -17110,6 +17110,41 @@ but lower leverage than the Go geometry prerequisite, while its full native
 build-tool and adapter remain blocked by the upstream Go oracle/substrate
 chain. No second parity PR was opened during #17136.
 
+## Post-#17143 inventory and neutral-fixture CI priority
+
+PR #17143 completed eight successful and 24 expected skipped final-head
+checks, then merged by guarded squash auto-merge as
+`17aca3015e4655dd7202ecde45357747419952b1`; it was not manually
+merged. Go Arc2D now consumes all seven center-form fixture records, computes
+rotated extrema analytically, emits exactly four full-turn cubics, rejects
+invalid/non-finite direct center forms before allocation, and measures 96.8%
+statement coverage. Its SVG endpoint convenience and strict degeneracy
+thresholds remain a separate pending owner.
+
+The collision-checked schema-3 report on fetched `origin/main` at
+`59d58463222ad2f3589447dd21a7b42870b94e4d` still has 15 established
+lanes, 1,499 implementation identities, 4,781 occupied slots, 1,541
+all-reported identities, 178 high-consensus identities with 250 missing
+slots, 1,017 singletons (818 Rust), zero canonical collisions, and zero
+unknown buckets. There is no new identity or lane root to register. The
+existing chief Linux sandbox singleton remains classified as native
+host-security work outside portable delivery. OCaml has five emerging roots
+and remains outside the all-language denominator; the Go oracle, native
+build-tool/adapter, three-platform CI, and promotion gates remain open.
+
+The next selected dependency-shaped item is
+`geometry-2d-neutral-fixture-ci-scheduling`: add the two existing neutral
+geometry/Bezier flattening validators and their test suites to the
+unconditional repo-wide metadata-contracts step, with a regression proving
+those exact commands stay scheduled. This unlocks the existing 11-lane
+Arc2D center-form follow-up without conflating neutral oracles with native
+reader conformance. Go SVG endpoint reconciliation is ready but a single-lane
+leaf; portable build-tool hashing and OCaml promotion remain separately
+owned. Open #15723 touches `ci.yml` action pins, but its live patch has no
+metadata-command hunk overlap; recheck before delivery. Read-only audits
+confirmed C#/F# can form a later shared .NET Arc2D tranche after this CI
+prerequisite, and found no eligible unowned gap.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

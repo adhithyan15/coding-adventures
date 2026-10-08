@@ -56,5 +56,9 @@ python code/scripts/geometry2d_conformance.py
 python -m unittest discover -s code/scripts/tests -p test_geometry2d_conformance.py -v
 ```
 
+These two commands also run in the unconditional repo-wide metadata-contracts
+CI step on every pull request. This checks the neutral corpus and oracle, not
+the separate native reader conformance of each implementation lane.
+
 SVG's negative-radius absolute-value rule and zero-radius line rule come from
 the [W3C SVG 1.1 implementation notes](https://www.w3.org/TR/SVG11/implnote.html#ArcOutOfRangeParameters).
