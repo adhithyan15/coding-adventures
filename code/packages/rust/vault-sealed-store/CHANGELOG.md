@@ -9,6 +9,72 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Vault identity** (VLT01 F12, #13980 P1.20d).
+  - **Every vault has a random 16-byte id, created by `init`.** It is carried
+    in every KEK id: `kek-<n>.<32 hex digits>`.
+    - The KEK id is part of every record's and index's wrap AAD. An envelope
+      from another vault therefore fails to unwrap, even under the same key,
+      and so does one relabelled with this vault's id.
+    - Before this, a vault reinitialized under the same KEK accepted the old
+      vault's files, and reconcile would absorb them.
+    - The record and index formats do not change.
+  - **`FreshnessAnchor` gains `vault_id()` and `bind_vault(id, reset)`.**
+    - `init` resets the anchor for the new vault, forgetting every epoch,
+      before it writes the manifest.
+    - Unsealing a different vault under an anchor is `Tamper`. So is
+      unsealing a pre-F12 vault under an anchor that records an id. That
+      catches a whole older storage directory put back, manifest included.
+    - An anchor with no id adopts the first vault it meets.
+    - A reset is now just wiping the storage directory. It no longer needs
+      a KEK rotation or removing the anchor by hand.
+  - **`FileFreshnessAnchor` keeps the id in a strict `vault-id` file.** The
+    file holds 32 lowercase hex digits and a newline, and is written like an
+    epoch file. A reset deletes only the hex-named epoch files.
+  - **A vault made before F12 is rebound on its first unseal under the
+    active entry.** The steps:
+    1. The active entry is renamed `kek-<n+1>.<id>` and the manifest records
+       `rebind_from`.
+    2. Every record and index in the registered namespaces is re-wrapped
+       with the same key, each with a CAS. Only the DEK wrap changes.
+    3. The marker is cleared.
+
+    A crash at any step is resumed by the next unseal. Two processes
+    rebinding at once converge on one id through the manifest CAS.
+    Unsealing under a retired entry does not rebind, because that is a
+    rotation being resumed.
+  - **Rotation keeps the vault id**, and KEK numbering counts both id
+    formats.
+  - **Nothing in the manifest is taken on trust.** It sits in the storage
+    directory, so anyone who can write there can rename or add entries and
+    fields. Five protections, each from a security-review finding with a
+    PoC:
+    - A vault-bound entry's verifier binds its id (`"vault-verifier" || 0 ||
+      id`), so the active entry cannot be relabelled to another vault, or to
+      look pre-F12.
+    - Parsing refuses ids this store does not write, more than one active
+      entry, and entries naming two vaults. Unseal tries the active entry
+      first. A bound vault runs only as its own entries, never as another
+      vault's or a pre-F12 id.
+    - The rebind marker carries a tag the key makes over the old and new
+      ids, and `rebind_from` must be a pre-F12 id. The anchor adopts the
+      vault only after the rebind completes, so a marker replayed after that
+      is `Tamper`.
+    - A process that loses the rebind race re-reads the manifest and runs as
+      the renamed entry, never the old id. A re-wrap that loses its CAS
+      re-reads the envelope.
+    - `init` refuses with `Tamper` when the reserved namespace still holds
+      records. A deleted manifest is no longer silently taken as a reset that
+      makes every secret unreadable. The manifest is written create-only.
+  - From the second review round:
+    - A pre-F12 manifest that holds a vault-bound entry is refused.
+    - In a bound vault, a record under a pre-F12 retired id is skipped by
+      migration instead of blocking the namespace.
+    - A marker seen right after a concurrent rebind finished is re-read once
+      before it is called a replay.
+  - **`FileFreshnessAnchor::bind_vault(reset)` writes the new id before it
+    forgets the epochs.** A failure part-way can no longer leave the old id
+    with no epochs, which would have accepted the old vault whole.
+
 - **The freshness anchor** (VLT01 F11, #13980 P1.20b). The new
   `FreshnessAnchor` trait, and `SealedStore::with_anchor`, keep each
   namespace's highest index epoch **outside** the storage directory. Under

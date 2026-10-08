@@ -104,7 +104,10 @@ metadata  = {
     , …
   ],
   "created_at_ms": <u64>,
-  "rebind_from": "<old KEK id>"           (only while an F12 rebind runs)
+  "rebind_from": "<old KEK id>",          (only while an F12 rebind runs,
+  "rebind_nonce": "<base16 24>",           with a tag the KEK made over
+  "rebind_ct": "<base16 16>",              the old and new ids)
+  "rebind_tag": "<base16 16>"
 }
 body = (empty)
 ```
@@ -489,9 +492,10 @@ both requirements.
 - Pointing a `kek_path` at a new file, even with the same key, starts an
   empty anchor. Protection for that opener's namespaces restarts as trust
   on first use: a snapshot already in place at that restart is accepted.
-- Resetting the vault is wiping the storage directory (F12). The daemon's
-  next start runs `init`, which resets the shared anchor for the new
-  vault id.
+- Resetting the vault is wiping the whole storage directory (F12). The
+  daemon's next start runs `init`, which resets the shared anchor for the
+  new vault id. Deleting only the manifest is refused at start, not taken
+  as a reset.
 
 **F12: vault identity (P1.20d).** Every vault has a random 16-byte vault id,
 created by `init`. It is carried in every KEK entry id:
@@ -508,67 +512,134 @@ AAD it was wrapped with stays the same. No record or index format changes,
 and F1 to F11 hold as written. Their "only a KEK holder can write a v2
 record" now reads "only a KEK holder writing **this** vault".
 
+**The manifest is not trusted.** It is plain data in the storage directory,
+so anyone who can write there can rename entries, add entries and add
+fields. F12 therefore authenticates every part of it that it relies on:
+
+- **A vault-bound entry's verifier binds its id.** Its AAD is
+  `"vault-verifier" || 0x00 || id`, where a pre-F12 entry's is just
+  `"vault-verifier"`. An entry cannot be renamed, so the active entry cannot
+  be relabelled to name another vault, or to look pre-F12 and force a
+  rebind. A copy of another vault's entry keeps naming that vault.
+- **Every id must be one this store writes,** at most one entry may be
+  active, and in a bound vault every vault-bound id must name the same
+  vault. A pre-F12 manifest may hold no vault-bound id at all, because only
+  a rebind makes one, by renaming the active entry. A manifest that breaks
+  any of these is refused with `Validation`.
+- **Unseal tries the active entry first,** and if the key opens it, the
+  store runs as the active entry, whatever else is listed. In a bound vault
+  only that vault's entries are candidates at all. A pre-F12 id left over
+  from an earlier rotation is never run as, because its verifier proves
+  nothing about which vault it belongs to.
+- **The rebind marker carries a tag** that only the key could have made,
+  over the id it moves from and the id it moves to. See the rebind below.
+
+What this gives:
+
 - **Another vault's files are refused.** A record or index from an earlier
   vault under the same KEK is `Tamper` on `get` and on index load.
-  Reconcile and migration never absorb such a record.
-- **The anchor records the vault id.** `FreshnessAnchor` gains
-  `vault_id()` and `bind_vault(id, reset)`.
-  - `init` calls `bind_vault(new_id, reset: true)` **before** it writes the
-    manifest. That forgets every epoch, then records the new id. A crash
-    before the manifest write leaves no manifest, so the next start runs
-    `init` again.
+  Reconcile and migration never absorb such a record. This holds with or
+  without an anchor.
+- **The anchor records the vault id.** `FreshnessAnchor` gains `vault_id()`
+  and `bind_vault(id, reset)`.
   - Unsealing a vault whose id differs from the anchor's is `Tamper`. So is
     unsealing a vault with no id while the anchor records one. That catches
     a whole earlier storage directory put back after a reset, manifest
-    included, which the epochs alone would not when its epochs happen to
-    be higher.
+    included, which the epochs alone would not when its epochs happen to be
+    higher.
   - An anchor that records no id adopts the vault's id on the first unseal
     (trust on first use, as with epochs).
-- **A reset is now just "wipe the storage directory".** The next `init`
-  starts a new vault id and a new anchor history in place. Neither the KEK
-  nor the anchor directory has to change, and the files of the old vault
-  never open in the new one.
+- **`init` resets the anchor, and refuses to start over a damaged vault.**
+  - `init` first refuses with `Tamper` if the reserved namespace still holds
+    any record: the namespace registry, or a freshness index. A missing
+    manifest beside those was deleted, not never written. Initializing over
+    them would silently make every secret unreadable and erase the anchor's
+    evidence. Putting the manifest back recovers the vault. That recovery
+    covers a deleted manifest only. If the whole reserved namespace is
+    deleted, `init` proceeds and resets the anchor. The vault is still
+    refused, not silently replaced: every namespace with v2 records and no
+    index reads as `Tamper` (F3, F6). But restoring a backup of the reserved
+    namespace afterwards means removing the anchor by hand.
+  - Otherwise `init` calls `bind_vault(new_id, reset: true)` **before** it
+    writes the manifest, then writes the manifest create-only. A concurrent
+    `init` that loses gets `AlreadyInitialized`.
+- **A reset is wiping the whole storage directory.** The next `init` starts a
+  new vault id and a new anchor history in place. The KEK does not change.
+  The anchor of the opener that runs `init` is reset. An anchor of another
+  opener that names a different KEK file is not reset, and it then refuses
+  the new vault. D18U's "name the same file" matters here too.
 - **Rotation keeps the vault id.** `rotate_kek` names its new entry
-  `kek-<n+1>.<vault id>`.
-- **Unseal prefers the active entry.** It tries the active entry first, then
-  the retired ones. After a rebind (below), a retired entry holds the same
-  key as the active one, and a store must never run under the retired id.
+  `kek-<n+1>.<vault id>`, with a verifier bound to that id.
 
 `FileFreshnessAnchor` keeps the vault id in a file named `vault-id`. The file
 holds the 32 hex digits and a newline. It is written and read like an epoch
 file: temporary file, sync, rename, under the `.lock`, and refused unless it
 is a regular file with exactly that content. Epoch file names are pure hex,
-so `vault-id` cannot collide with one. A reset deletes every epoch file
-before it writes `vault-id`.
+so `vault-id` cannot collide with one.
+
+A reset writes the new `vault-id` first and **then** deletes every epoch
+file. A failure in between leaves the new id over the old epochs, and no
+manifest, since `init` writes the manifest only afterwards. So the next
+`init` resets again, and the old vault put back meanwhile is refused for
+its id. The other order would leave the *old* id with *no* epochs, which
+would accept the old vault whole.
 
 **Rebinding a vault made before F12.** A vault whose active entry id has no
-vault-id suffix is rebound by the first unseal under that active entry:
+vault-id suffix is rebound by the first unseal whose key opens that active
+entry:
 
 1. Under an anchor that records an id: `Tamper`. A vault that was bound
    never goes back to unbound.
-2. Write the manifest with a CAS. It gets a fresh vault id, and a new active
-   entry `kek-<n+1>.<id>` holding the **same** key. The salt, source and
-   verifier are copied; the verifier does not depend on the id. The old
-   entry is retired, and the manifest gets a `rebind_from: <old id>` field.
-3. The anchor adopts the id.
-4. Every record and index still wrapped under the old id is re-wrapped
-   under the new id, each with a CAS on its revision. Only the DEK wrap
-   changes. Bodies, generations and body AADs stay the same. An envelope
-   that does not unwrap is left alone, and `get` refuses it.
-5. Write the manifest with a CAS that removes `rebind_from`.
+2. Write the manifest with a CAS:
+   - the active entry is **renamed** `kek-<n+1>.<id>`, with a fresh vault id
+     and a fresh verifier bound to that id; its salt and source stay;
+   - the manifest gets a rebind marker: `rebind_from: <old id>`, plus a tag
+     the key makes over the old and new ids.
 
-A crash anywhere is resumed by the next unseal, which finds `rebind_from`.
-Until then, envelopes still under the old id read as `Tamper`, exactly as
-during an interrupted rotation. Two processes rebinding at once is safe.
-The step 2 CAS lets one vault id win, and the loser re-reads the manifest
-and resumes. A re-wrap that loses its CAS re-reads the envelope and skips it
-if it is already under the new id. Unsealing under a *retired* entry does
-not rebind, because that is a rotation being resumed.
+   The old id is no longer listed, so nothing but step 3 ever opens an
+   envelope under it. A file planted under that id is junk, like any
+   unknown `kek_id` (F6).
+3. In every registered namespace (as rotation walks them), every record and
+   index still wrapped under the old id is re-wrapped under the new id, each
+   with a CAS on its revision. A re-wrap that loses its CAS re-reads the
+   envelope and tries again. Only the DEK wrap changes; bodies, generations
+   and body AADs stay the same. An envelope that does not unwrap is left
+   alone, and `get` refuses it.
+4. Write the manifest with a CAS that removes the marker.
+5. Only now does the anchor adopt the id.
+
+A crash anywhere is resumed by the next unseal. A marker is acted on only
+if:
+- `rebind_from` is a pre-F12 id;
+- its tag opens under this key for this move;
+- no anchor already records the vault (step 5 has not happened).
+
+A marker that fails any of these is refused, `Validation` for the first and
+`Tamper` for the others. That stops a planted or replayed marker from
+re-opening the window in which pre-F12 files are adopted. Without an anchor,
+a replayed genuine marker is not detected, which is within F10's limits.
+
+Two processes rebinding at once is safe. The step 2 CAS lets one vault id
+win. The loser re-reads the manifest, finds that its key opens the renamed
+active entry, and runs as that entry, joining the re-wrap if the marker is
+still there. It never runs under the old id. Unsealing under a *retired*
+entry does not rebind, because that is a rotation being resumed.
 
 The rebind is trust on first use too. Whatever is wrapped under the old id
-at that first unseal is adopted, including an older file of another
-pre-F12 vault under the same key, if one was planted before then. After
-the rebind, such files are refused.
+at that first unseal is adopted, including an older file of another pre-F12
+vault under the same key, if one was planted before then. After the rebind,
+such files are refused. A namespace missing from the registry is skipped,
+as rotation skips it, and its records are left under the old id, which
+reads as `Tamper`. Finish an interrupted rotation before the first unseal
+of this release. The rebind cannot re-wrap envelopes under a retired id,
+and a bound vault never runs as a pre-F12 id. So a record left under a
+pre-F12 retired id is junk in a bound vault: F6 migration skips it, rather
+than stopping to wait for a rotation that can no longer be resumed. In a
+bound vault, only this vault's retired ids stop migration.
+
+A process that sees a marker just after a concurrent rebinder finished,
+while the anchor already records the vault, reads the manifest once more
+before calling the marker a replay.
 
 **Library constructors are the caller's job.** `oauth-credential-sealed-store`
 takes a `SealedStore` from its caller rather than opening one. No production

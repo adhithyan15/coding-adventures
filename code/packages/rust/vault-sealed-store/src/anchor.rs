@@ -20,6 +20,11 @@
 //! The anchor is trusted because of **where** it is, not because of
 //! cryptography. A MAC would not help: an old copy of a MAC'd anchor is just
 //! as valid as the current one.
+//!
+//! It also remembers **which vault** it belongs to (F12, P1.20d). Epochs
+//! only order one vault's history. After a reset, a new vault starts again
+//! from epoch 1, so the anchor has to know the history it holds is the new
+//! vault's, and that an old vault put back in its place is not.
 
 use std::fs::{self, File, OpenOptions};
 use std::io::{Read, Write};
@@ -39,7 +44,21 @@ pub trait FreshnessAnchor: Send + Sync {
     fn load(&self, namespace: &str) -> Result<Option<u64>, AnchorError>;
     /// Record `epoch` for `namespace`, unless a higher one is already there.
     fn advance(&self, namespace: &str, epoch: u64) -> Result<(), AnchorError>;
+    /// The vault this anchor's epochs belong to (F12), if one is recorded.
+    fn vault_id(&self) -> Result<Option<[u8; VAULT_ID_BYTES]>, AnchorError>;
+    /// Record `id` as this anchor's vault.
+    ///
+    /// With `reset`, `id` is recorded and then every epoch is forgotten:
+    /// `init` calls this before it writes a new vault's manifest, because
+    /// the new vault's history starts again from nothing. The id goes first,
+    /// so a failure part-way never leaves the old id with no epochs. Without `reset`, this only adopts `id`
+    /// into an anchor that records no vault yet, and refuses
+    /// ([`AnchorError::Invalid`]) if it records a different one.
+    fn bind_vault(&self, id: &[u8; VAULT_ID_BYTES], reset: bool) -> Result<(), AnchorError>;
 }
+
+/// The length of a vault id (F12): 16 random bytes.
+pub const VAULT_ID_BYTES: usize = 16;
 
 /// Why an anchor could not be read or written. Carries no paths and no
 /// content, because it ends up in errors that may be logged.
@@ -86,6 +105,12 @@ pub struct FileFreshnessAnchor {
     /// other processes are excluded by the OS lock in `advance`.
     lock: Mutex<()>,
 }
+
+/// Where the vault id lives (F12). Not hex, so it cannot be an epoch file.
+const VAULT_ID_FILE: &str = "vault-id";
+
+/// The vault id file's exact size: 32 hex digits and a newline.
+const VAULT_ID_FILE_BYTES: u64 = 2 * VAULT_ID_BYTES as u64 + 1;
 
 /// The lock file every `advance` holds exclusively. Two writers that each
 /// read 4 and then wrote 6 and 5 would otherwise leave the anchor at 5,
@@ -149,6 +174,106 @@ impl FileFreshnessAnchor {
     }
 }
 
+impl FileFreshnessAnchor {
+    /// Take the in-process mutex and the OS lock, in that order, for one
+    /// read-modify-write. Both are released when the returned guards drop.
+    fn exclusive(&self) -> Result<(std::sync::MutexGuard<'_, ()>, File), AnchorError> {
+        let guard = self.lock.lock().map_err(|_| AnchorError::Io)?;
+        let lock = OpenOptions::new()
+            .create(true)
+            .truncate(false)
+            .write(true)
+            .open(self.directory.join(LOCK_FILE))
+            .map_err(|_| AnchorError::Io)?;
+        lock.lock().map_err(|_| AnchorError::Io)?;
+        Ok((guard, lock))
+    }
+
+    /// Replace `path` with `content`: a temporary file in the same
+    /// directory, synced, renamed into place, then the directory synced.
+    fn replace(&self, path: &Path, content: &[u8]) -> Result<(), AnchorError> {
+        let temporary = self.directory.join(format!(
+            ".tmp-{}-{}",
+            std::process::id(),
+            NEXT_TEMPORARY.fetch_add(1, Ordering::Relaxed)
+        ));
+        let written = (|| {
+            let mut file = create_private_file(&temporary)?;
+            file.write_all(content)?;
+            file.sync_all()?;
+            fs::rename(&temporary, path)?;
+            sync_dir(&self.directory)
+        })();
+        if written.is_err() {
+            let _ = fs::remove_file(&temporary);
+            return Err(AnchorError::Io);
+        }
+        Ok(())
+    }
+
+    fn read_vault_id(&self) -> Result<Option<[u8; VAULT_ID_BYTES]>, AnchorError> {
+        let path = self.directory.join(VAULT_ID_FILE);
+        let metadata = match fs::symlink_metadata(&path) {
+            Ok(metadata) => metadata,
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
+            Err(_) => return Err(AnchorError::Io),
+        };
+        if !metadata.file_type().is_file() {
+            return Err(AnchorError::Invalid);
+        }
+        let mut bytes = Vec::new();
+        File::open(&path)
+            .map_err(|_| AnchorError::Io)?
+            .take(VAULT_ID_FILE_BYTES + 1)
+            .read_to_end(&mut bytes)
+            .map_err(|_| AnchorError::Io)?;
+        parse_vault_id(&bytes).map(Some).ok_or(AnchorError::Invalid)
+    }
+
+    /// Delete every epoch file: the names that are non-empty lowercase hex.
+    /// `.lock`, `vault-id` and temporary files are not hex, so they stay.
+    fn forget_epochs(&self) -> Result<(), AnchorError> {
+        for entry in fs::read_dir(&self.directory).map_err(|_| AnchorError::Io)? {
+            let entry = entry.map_err(|_| AnchorError::Io)?;
+            let name = entry.file_name();
+            let Some(name) = name.to_str() else {
+                continue;
+            };
+            let is_epoch_file = !name.is_empty()
+                && name.len() % 2 == 0
+                && name.bytes().all(|b| matches!(b, b'0'..=b'9' | b'a'..=b'f'));
+            if is_epoch_file {
+                fs::remove_file(entry.path()).map_err(|_| AnchorError::Io)?;
+            }
+        }
+        sync_dir(&self.directory).map_err(|_| AnchorError::Io)
+    }
+}
+
+/// `32 lowercase hex digits "\n"`, and nothing else.
+fn parse_vault_id(bytes: &[u8]) -> Option<[u8; VAULT_ID_BYTES]> {
+    let digits = bytes.strip_suffix(b"\n")?;
+    if digits.len() != 2 * VAULT_ID_BYTES {
+        return None;
+    }
+    let mut id = [0u8; VAULT_ID_BYTES];
+    for (slot, pair) in id.iter_mut().zip(digits.chunks(2)) {
+        let nibble = |b: u8| match b {
+            b'0'..=b'9' => Some(b - b'0'),
+            b'a'..=b'f' => Some(b - b'a' + 10),
+            _ => None,
+        };
+        *slot = nibble(pair[0])? << 4 | nibble(pair[1])?;
+    }
+    Some(id)
+}
+
+fn format_vault_id(id: &[u8; VAULT_ID_BYTES]) -> String {
+    let mut text: String = id.iter().map(|byte| format!("{byte:02x}")).collect();
+    text.push('\n');
+    text
+}
+
 /// `digits "\n"`, canonical: `0`, or no leading zero.
 fn parse_epoch(bytes: &[u8]) -> Option<u64> {
     let digits = bytes.strip_suffix(b"\n")?;
@@ -167,34 +292,41 @@ impl FreshnessAnchor for FileFreshnessAnchor {
     }
 
     fn advance(&self, namespace: &str, epoch: u64) -> Result<(), AnchorError> {
-        let _guard = self.lock.lock().map_err(|_| AnchorError::Io)?;
-        // Held across read, compare and rename, and released when dropped.
-        let lock = OpenOptions::new()
-            .create(true)
-            .truncate(false)
-            .write(true)
-            .open(self.directory.join(LOCK_FILE))
-            .map_err(|_| AnchorError::Io)?;
-        lock.lock().map_err(|_| AnchorError::Io)?;
+        // Held across read, compare and rename.
+        let _locks = self.exclusive()?;
         let path = self.path_for(namespace);
         if Self::read(&path)?.is_some_and(|current| current >= epoch) {
             return Ok(());
         }
-        let temporary = self.directory.join(format!(
-            ".tmp-{}-{}",
-            std::process::id(),
-            NEXT_TEMPORARY.fetch_add(1, Ordering::Relaxed)
-        ));
-        let written = (|| {
-            let mut file = create_private_file(&temporary)?;
-            file.write_all(format!("{epoch}\n").as_bytes())?;
-            file.sync_all()?;
-            fs::rename(&temporary, &path)?;
-            sync_dir(&self.directory)
-        })();
-        if written.is_err() {
-            let _ = fs::remove_file(&temporary);
-            return Err(AnchorError::Io);
+        self.replace(&path, format!("{epoch}\n").as_bytes())
+    }
+
+    fn vault_id(&self) -> Result<Option<[u8; VAULT_ID_BYTES]>, AnchorError> {
+        self.read_vault_id()
+    }
+
+    fn bind_vault(&self, id: &[u8; VAULT_ID_BYTES], reset: bool) -> Result<(), AnchorError> {
+        let _locks = self.exclusive()?;
+        if !reset {
+            match self.read_vault_id()? {
+                Some(existing) if existing == *id => return Ok(()),
+                Some(_) => return Err(AnchorError::Invalid),
+                None => {}
+            }
+        }
+        self.replace(
+            &self.directory.join(VAULT_ID_FILE),
+            format_vault_id(id).as_bytes(),
+        )?;
+        if reset {
+            // The new id first, then the epochs. A failure in between leaves
+            // the new id over the old vault's epochs, with no manifest yet
+            // (`init` writes it only after this returns), so the next `init`
+            // resets again, and the old vault put back meanwhile is refused
+            // because its id differs. The other order would leave the *old*
+            // id with *no* epochs: the old vault put back would then match,
+            // with nothing to hold its indexes to.
+            self.forget_epochs()?;
         }
         Ok(())
     }
@@ -411,5 +543,93 @@ mod tests {
             FileFreshnessAnchor::open(&file),
             Err(AnchorError::Invalid)
         ));
+    }
+
+    #[test]
+    fn the_vault_id_round_trips_and_is_strict() {
+        let dir = TempDir::new("vault-id");
+        let anchor = FileFreshnessAnchor::open(&dir.0).unwrap();
+        assert_eq!(anchor.vault_id().unwrap(), None);
+        let id = [0xa5; VAULT_ID_BYTES];
+        anchor.bind_vault(&id, false).unwrap();
+        assert_eq!(anchor.vault_id().unwrap(), Some(id));
+        assert_eq!(
+            fs::read(dir.0.join(VAULT_ID_FILE)).unwrap(),
+            format!("{}\n", "a5".repeat(VAULT_ID_BYTES)).into_bytes()
+        );
+        // Adopting is idempotent, and never replaces a different vault.
+        anchor.bind_vault(&id, false).unwrap();
+        assert_eq!(
+            anchor.bind_vault(&[1; VAULT_ID_BYTES], false),
+            Err(AnchorError::Invalid)
+        );
+        assert_eq!(anchor.vault_id().unwrap(), Some(id));
+        // Anything but exactly 32 lowercase hex digits and a newline.
+        for bad in [
+            "A5".repeat(VAULT_ID_BYTES) + "\n",
+            "a5".repeat(VAULT_ID_BYTES),
+            "a5".repeat(VAULT_ID_BYTES) + "\n\n",
+            "a5".repeat(VAULT_ID_BYTES - 1) + "\n",
+            "g5".repeat(VAULT_ID_BYTES) + "\n",
+            String::new(),
+        ] {
+            fs::write(dir.0.join(VAULT_ID_FILE), &bad).unwrap();
+            assert_eq!(anchor.vault_id(), Err(AnchorError::Invalid), "{bad:?}");
+            // And a damaged id is never treated as absent.
+            assert_eq!(
+                anchor.bind_vault(&id, false),
+                Err(AnchorError::Invalid),
+                "{bad:?}"
+            );
+        }
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn a_symlinked_vault_id_is_refused() {
+        let dir = TempDir::new("vault-id-symlink");
+        let anchor = FileFreshnessAnchor::open(&dir.0).unwrap();
+        let elsewhere = dir.0.join("elsewhere");
+        fs::write(&elsewhere, "a5".repeat(VAULT_ID_BYTES) + "\n").unwrap();
+        std::os::unix::fs::symlink(&elsewhere, dir.0.join(VAULT_ID_FILE)).unwrap();
+        assert_eq!(anchor.vault_id(), Err(AnchorError::Invalid));
+    }
+
+    #[test]
+    fn a_reset_forgets_every_epoch_and_records_the_new_vault() {
+        let dir = TempDir::new("reset");
+        let anchor = FileFreshnessAnchor::open(&dir.0).unwrap();
+        anchor.bind_vault(&[1; VAULT_ID_BYTES], false).unwrap();
+        anchor.advance("chief-secrets", 41).unwrap();
+        anchor.advance("smart_home.hue.credentials", 7).unwrap();
+        fs::write(dir.0.join("notes"), b"kept").unwrap();
+
+        anchor.bind_vault(&[2; VAULT_ID_BYTES], true).unwrap();
+        assert_eq!(anchor.vault_id().unwrap(), Some([2; VAULT_ID_BYTES]));
+        assert_eq!(anchor.load("chief-secrets").unwrap(), None);
+        assert_eq!(anchor.load("smart_home.hue.credentials").unwrap(), None);
+        // Only epoch files go: the lock, and anything not hex-named, stay.
+        assert!(dir.0.join(LOCK_FILE).exists());
+        assert_eq!(fs::read(dir.0.join("notes")).unwrap(), b"kept");
+        // The new vault's history starts again from epoch 1.
+        anchor.advance("chief-secrets", 1).unwrap();
+        assert_eq!(anchor.load("chief-secrets").unwrap(), Some(1));
+    }
+
+    #[test]
+    fn a_failed_reset_has_already_recorded_the_new_vault() {
+        // Review MEDIUM-2: if forgetting the epochs fails, the anchor must
+        // not be left naming the old vault with no epochs.
+        let dir = TempDir::new("reset-failure");
+        let anchor = FileFreshnessAnchor::open(&dir.0).unwrap();
+        anchor.bind_vault(&[1; VAULT_ID_BYTES], false).unwrap();
+        anchor.advance("ns", 9).unwrap();
+        // A hex-named directory: `forget_epochs` cannot remove it as a file.
+        fs::create_dir(dir.0.join("abcd")).unwrap();
+        assert_eq!(
+            anchor.bind_vault(&[2; VAULT_ID_BYTES], true),
+            Err(AnchorError::Io)
+        );
+        assert_eq!(anchor.vault_id().unwrap(), Some([2; VAULT_ID_BYTES]));
     }
 }
