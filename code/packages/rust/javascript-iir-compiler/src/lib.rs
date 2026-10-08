@@ -84,9 +84,14 @@ fn check_expression_budget(expr: &Expression, remaining: &mut usize) -> Result<(
                 pending.push((&binary.left, depth + 1));
             }
             Expression::CallExpression(call) => {
-                if let Some(argument) = call.arguments.first() {
+                for argument in call.arguments.iter().rev() {
                     pending.push((argument, depth + 1));
                 }
+                pending.push((&call.callee, depth + 1));
+            }
+            Expression::MemberExpression(member) => {
+                pending.push((&member.property, depth + 1));
+                pending.push((&member.object, depth + 1));
             }
             _ => {}
         }
@@ -122,20 +127,25 @@ pub fn run_source(source: &str) -> Result<String, JavaScriptRunError> {
     vm.max_instructions = Some(100_000);
     vm.builtins_mut().register("js_console_log", move |args| {
         let rendered = match args {
-            [] => None,
+            [] => String::new(),
             [Value::Float(number)] => {
-                Some(format_js_number(*number).map_err(vm_core::errors::VMError::Custom)?)
+                format_js_number(*number).map_err(vm_core::errors::VMError::Custom)?
+            }
+            [Value::Float(first), Value::Float(second)] => {
+                let first = format_js_number(*first).map_err(vm_core::errors::VMError::Custom)?;
+                let second = format_js_number(*second).map_err(vm_core::errors::VMError::Custom)?;
+                format!("{first} {second}")
             }
             _ => {
                 return Err(vm_core::errors::VMError::Custom(
-                    "js_console_log expects zero or one JavaScript Number".into(),
+                    "js_console_log expects zero, one, or two JavaScript Numbers".into(),
                 ))
             }
         };
         let mut sink = captured.lock().map_err(|_| {
             vm_core::errors::VMError::Custom("JavaScript console lock poisoned".into())
         })?;
-        let appended_bytes = rendered.as_ref().map_or(1, |text| text.len() + 1);
+        let appended_bytes = rendered.len() + 1;
         if sink
             .len()
             .checked_add(appended_bytes)
@@ -145,9 +155,7 @@ pub fn run_source(source: &str) -> Result<String, JavaScriptRunError> {
                 "JavaScript console output limit exceeded".into(),
             ));
         }
-        if let Some(rendered) = rendered {
-            sink.push_str(&rendered);
-        }
+        sink.push_str(&rendered);
         sink.push('\n');
         Ok(Value::Null)
     });
@@ -205,11 +213,11 @@ impl Compiler {
     fn compile_statement(&mut self, expr: &Expression) -> Result<(), String> {
         if let Expression::CallExpression(call) = expr {
             if is_console_log(&call.callee) {
-                if call.arguments.len() > 1 {
-                    return Err("native console.log pilot requires at most one argument".into());
+                if call.arguments.len() > 2 {
+                    return Err("native console.log pilot requires at most two arguments".into());
                 }
                 let mut operands = vec![Operand::Var("js_console_log".into())];
-                if let Some(argument) = call.arguments.first() {
+                for argument in &call.arguments {
                     operands.push(self.compile_number(argument)?);
                 }
                 self.emit("call_builtin", None, operands, "void");
@@ -305,11 +313,68 @@ mod tests {
     }
 
     #[test]
+    fn two_numeric_arguments_lower_in_order_and_print_with_one_space() {
+        let ast =
+            parse_javascript_program("console.log(1 + 2, 3 / 2);", EsVersion::Es2020).unwrap();
+        let module = compile_ast(&ast, "two-log").unwrap();
+        let call = module.functions[0]
+            .instructions
+            .iter()
+            .find(|instruction| instruction.op == "call_builtin")
+            .unwrap();
+        assert_eq!(call.srcs.len(), 3);
+        assert_eq!(
+            run_source("console.log(); console.log(1 + 2, 3 / 2); console.log(4);").unwrap(),
+            "\n3 1.5\n4\n"
+        );
+    }
+
+    #[test]
+    fn two_argument_display_failure_keeps_only_prior_completed_output() {
+        let error = run_source("console.log(7); console.log(1e21, 2);").unwrap_err();
+        assert_eq!(error.output, "7\n");
+        assert!(error.message.contains("number display outside"));
+        let error = run_source("console.log(7); console.log(1, 1e21);").unwrap_err();
+        assert_eq!(error.output, "7\n");
+        assert!(error.message.contains("number display outside"));
+        let error = run_source("console.log(7); console.log(1, 2, 3);").unwrap_err();
+        assert!(error.output.is_empty());
+        assert!(error.message.contains("requires"));
+    }
+
+    #[test]
+    fn direct_ast_budget_checks_the_second_console_argument() {
+        use coding_adventures_javascript_ast::expression::UnaryExpression;
+
+        let mut ast = parse_javascript_program("console.log(1, 2);", EsVersion::Es2020).unwrap();
+        let ProgramItem::Statement(Statement::Tagged(TaggedStatement::ExpressionStatement(stmt))) =
+            &mut ast.body[0]
+        else {
+            panic!("expected expression statement");
+        };
+        let Expression::CallExpression(call) = &mut stmt.expression else {
+            panic!("expected call expression");
+        };
+        let mut deep = call.arguments[1].clone();
+        for _ in 0..MAX_EXPRESSION_DEPTH {
+            deep = Expression::UnaryExpression(UnaryExpression {
+                cv: None,
+                operator: UnaryOperator::Negate,
+                prefix: true,
+                argument: Box::new(deep),
+            });
+        }
+        call.arguments[1] = deep;
+        let error = compile_ast(&ast, "forged-deep-second-argument").unwrap_err();
+        assert!(error.contains("depth limit"), "{error}");
+    }
+
+    #[test]
     fn empty_console_output_survives_later_vm_error_but_compile_errors_emit_nothing() {
         let error = run_source("console.log(); console.log(1e21);").unwrap_err();
         assert_eq!(error.output, "\n");
         assert!(error.message.contains("number display outside"));
-        let error = run_source("console.log(); console.log(1, 2);").unwrap_err();
+        let error = run_source("console.log(); console.log(1, 2, 3);").unwrap_err();
         assert!(error.output.is_empty());
         assert!(error.message.contains("requires"));
     }

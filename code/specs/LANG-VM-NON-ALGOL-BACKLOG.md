@@ -365,21 +365,29 @@ merged as `4ef8956b4c1337144cf31e4eca999ccb700338b8` after exact-head CI,
 CodeQL, and books checks passed. The next selection rotates to LANG82's
 separate, own-archive-backed partial Perl 5.004_64 pair.
 
+PR #17122 delivered that distinct, own-archive-backed partial 5.004_64 pair
+and merged as `b9f3bede5f945ea738fa9dd2e76e19bc86088b54` after exact-head
+CI, CodeQL, and books checks passed. The 776-row inventory now has 109
+explicitly partial pairs and 667 pending. Neither complete syntax nor an
+exhaustive public-release inventory is claimed. The next selection rotates
+to LANG78's bounded two-argument numeric JavaScript `console.log` stage.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG82 continued (selected):** add the separate, explicitly partial
-   Perl 5.004_64 token/grammar pair from its own historical source archive.
+1. **LANG78 JavaScript (selected):** lower exactly two positional numeric
+   `console.log` arguments from the typed AST directly to IIR and print them
+   on Rust vm-core with one separating space. Keep unsupported calls and
+   source/AST limits explicit; Node remains a conformance oracle only.
+2. **LANG82 continued:** source-audit the next distinct Perl release pair.
    Keep 5.004_01-t1 pending until its own source is found; do not imply
    complete syntax or an exhaustive release inventory.
-2. **LANG79 Python:** the two-argument float `print` stage is complete;
+3. **LANG79 Python:** the two-argument float `print` stage is complete;
    broader native frontend semantics remain open, with host Python only as
    a conformance oracle.
-3. **LANG80 Ruby:** the zero-argument parenthesized stage is complete; broader
+4. **LANG80 Ruby:** the zero-argument parenthesized stage is complete; broader
    native frontend semantics remain open, with host Ruby only as an oracle.
-4. **LANG78 JavaScript:** the zero-argument stage is complete; broader native
-   frontend semantics remain open, with Node only as a conformance oracle.
 5. **PREP01 C:** the bounded logical short-circuit stage is complete. Full C
    `#if` and stringize/paste remain open.
 
