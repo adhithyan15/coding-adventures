@@ -369,6 +369,14 @@ Current pairs:
   function signatures and changes thread-magical interpolation outside the
   plain-decimal `print` subset. Its numeric scanner body is byte-identical to
   5.004_53, preserving the tested 250-digit bound and explicit rejections.
+- `perl5.004_55.*` is a separate **partial** development-release pair checked
+  against its own [5.004_55 historical source archive] (SHA-256
+  `1eb2d7a6f70e7501fe62d8838a6e575f446e12e60cf1f6ad6d6ebeeaa6ed700b`).
+  Its `perly.y` changes a BEGIN/END/INIT subname action; its `scan_num` section
+  matches 5.004_54 byte for byte, retaining the tested 250-digit bound.
+  Other tokenizer changes lie outside the plain-decimal `print` subset.
+  `WIN32CHEAT` changes carriage-return handling, so this subset excludes CR
+  without claiming platform-wide historical rejection parity.
 - `perl5.004_01_02.*` is a separate **partial** pair checked against the
   [historical 5.004_01_02 source archive] (SHA-256
   `185dc7317b340d4ca018f966993bb155bcc834c914fd26e579225d49c01e2a93`).
@@ -496,6 +504,7 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [5.004_52 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_52.tar.gz
 [5.004_53 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_53.tar.gz
 [5.004_54 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_54.tar.gz
+[5.004_55 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_55.tar.gz
 [`perl-5.004_05` source tag]: https://github.com/Perl/perl5/tree/perl-5.004_05
 [`perl-5.004_03` source tag]: https://github.com/Perl/perl5/tree/perl-5.004_03
 [historical 5.004_01-t2 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01-t2.tar.gz

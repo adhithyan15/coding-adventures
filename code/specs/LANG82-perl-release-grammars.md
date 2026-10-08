@@ -367,3 +367,19 @@ interpolation changes are outside plain-decimal arithmetic `print`. The
 bound. Keep the separate pair partial, accepting 250 digits and rejecting
 251, leading-zero literals, adjacent decrement, carriage returns, and other
 unsupported syntax.
+
+Add a separate, explicitly partial `5.004_55` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_55.tar.gz`
+source archive, SHA-256
+`1eb2d7a6f70e7501fe62d8838a6e575f446e12e60cf1f6ad6d6ebeeaa6ed700b`.
+Its `perly.y` changes a BEGIN/END/INIT subname action, outside this standalone
+plain-decimal `print` arithmetic subset. Its `scan_num` section is byte-identical
+to `5.004_54`, retaining the 250-digit decimal bound. Other `toke.c` changes
+concern thread variables, imported keyword overrides, regex and filters.
+The `WIN32CHEAT` branch changes carriage-return handling; this partial grammar
+excludes carriage returns from its accepted subset on every platform and makes
+no claim of matching each platform's rejection behavior. Accept the bounded
+plain-decimal examples, including 250 digits, and reject 251 digits,
+leading-zero forms, adjacent decrement, carriage returns, and other unsupported
+input in the partial grammar. Keep its own distinct files and pending releases
+pending; do not claim full historical Perl syntax.
