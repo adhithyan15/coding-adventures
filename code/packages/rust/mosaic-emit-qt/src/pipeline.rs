@@ -1680,6 +1680,10 @@ impl<'a> EmitCtx<'a> {
 /// styled cell so the value aligns and colours correctly.
 #[derive(Clone, Default)]
 struct CellTextStyle {
+    /// Whether descendant text should fill its immediate parent. Styled table
+    /// cells need this geometry; ordinary container typography inheritance
+    /// must leave a Row/Column child's layout untouched.
+    fill_parent: bool,
     /// QML expression for the text `color:` — a literal `"#RRGGBB"` or a
     /// conditional `(<selected-pred>) ? "#fff" : "#ccc"`.
     color: Option<String>,
@@ -2384,6 +2388,7 @@ fn lower_styled_box(node: &LayoutNode, part: &str, ctx: &EmitCtx) -> StyledBox {
     // --- Inner text styling -------------------------------------------
     // Font cascades from the table's `sheet` part when the cell omits it.
     let mut ts = CellTextStyle {
+        fill_parent: true,
         horizontal_alignment: style_prop(base, "text-align").and_then(qml_text_align),
         font_family_mono: style_prop(base, "font-family")
             .map(|v| v.trim() == "monospace")
@@ -3296,6 +3301,25 @@ fn emit_styled_layout_container_qml(
         return Ok(None);
     }
 
+    // QML layout primitives do not expose font properties, so authored
+    // container weight has to travel through the emitter context to the
+    // descendant Text. Keep the geometry flag from a surrounding styled
+    // table cell, but do not introduce fill anchors for an ordinary Row or
+    // Column such as TaskApp's status pills.
+    let inherited_font_bold = props
+        .iter()
+        .find(|prop| prop.name == "font-weight")
+        .and_then(|prop| qml_font_weight_is_bold(&prop.value));
+    if inherited_font_bold.is_some() {
+        record_style_read(props, "font-weight");
+    }
+    let inherited_ctx = inherited_font_bold.map(|font_bold| {
+        let mut text_style = ctx.text_style.clone().unwrap_or_default();
+        text_style.font_bold = Some(font_bold);
+        ctx.with_text_style(Some(text_style))
+    });
+    let child_ctx = inherited_ctx.as_ref().unwrap_or(ctx);
+
     let pad = "    ".repeat(depth);
     let inner_pad = "    ".repeat(depth + 1);
     let layout_lines = qml_layout_container_lines_with_states(props, &state_layers);
@@ -3305,7 +3329,10 @@ fn emit_styled_layout_container_qml(
             .iter()
             .any(|layer| needs_container_wrapper(layer.props));
     if !needs_wrapper {
-        if layout_lines.is_empty() && child_alignment.is_none() {
+        if layout_lines.is_empty()
+            && child_alignment.is_none()
+            && inherited_font_bold.is_none()
+        {
             return Ok(None);
         }
 
@@ -3320,7 +3347,7 @@ fn emit_styled_layout_container_qml(
             depth + 1,
             is_stack,
             child_alignment.as_deref(),
-            ctx,
+            child_ctx,
         )?);
         writeln!(out, "{pad}}}").unwrap();
         return Ok(Some(out));
@@ -3398,7 +3425,7 @@ fn emit_styled_layout_container_qml(
         depth + 2,
         node.tag == "Stack",
         child_alignment.as_deref(),
-        ctx,
+        child_ctx,
     )?);
     writeln!(out, "{inner_pad}}}").unwrap();
     writeln!(out, "{pad}}}").unwrap();
@@ -4468,15 +4495,17 @@ fn emit_qml_tree(
 /// font, and padding come from the part's `.msl` props.
 fn cell_text_style_lines(ts: &CellTextStyle) -> Vec<String> {
     let mut lines = Vec::new();
-    lines.push("anchors.fill: parent".to_string());
-    if let Some(p) = &ts.padding {
-        // Inset the content on all sides (padding), then let the
-        // horizontal alignment push the text to the requested edge.
-        lines.push(format!("anchors.margins: {p}"));
-    }
-    lines.push("verticalAlignment: Text.AlignVCenter".to_string());
-    if let Some(a) = ts.horizontal_alignment {
-        lines.push(format!("horizontalAlignment: {a}"));
+    if ts.fill_parent {
+        lines.push("anchors.fill: parent".to_string());
+        if let Some(p) = &ts.padding {
+            // Inset the content on all sides (padding), then let the
+            // horizontal alignment push the text to the requested edge.
+            lines.push(format!("anchors.margins: {p}"));
+        }
+        lines.push("verticalAlignment: Text.AlignVCenter".to_string());
+        if let Some(a) = ts.horizontal_alignment {
+            lines.push(format!("horizontalAlignment: {a}"));
+        }
     }
     if let Some(c) = &ts.color {
         lines.push(format!("color: {c}"));
@@ -17637,6 +17666,90 @@ mod tests {
         );
         assert!(out.contains("MultiEffect {"), "got:\n{out}");
         assert!(out.contains("shadowVerticalOffset: 4"), "got:\n{out}");
+    }
+
+    #[test]
+    fn layout_container_font_weight_reaches_descendant_text_without_cell_anchors() {
+        for (weight, expected) in [("bold", "true"), ("normal", "false")] {
+            let style = StyleDef {
+                component_name: "StatusPill".to_string(),
+                parts: vec![PartStyle {
+                    name: "pill".to_string(),
+                    base: vec![sp("font-weight", weight)],
+                    transitions: vec![],
+                    states: vec![],
+                }],
+            };
+            let layout = LayoutDef {
+                component_name: "StatusPill".to_string(),
+                root: LayoutNode {
+                    tag: "Row".to_string(),
+                    part_name: Some("pill".to_string()),
+                    props: vec![],
+                    children: vec![LayoutNode {
+                        tag: "Text".to_string(),
+                        part_name: None,
+                        props: vec![lp(
+                            "content",
+                            LayoutPropValue::String("Status".to_string()),
+                        )],
+                        children: vec![],
+                    }],
+                },
+            };
+            let model = component("StatusPill", vec![], vec![]);
+
+            let out = from_pipeline(&model, &layout, &style).unwrap().output;
+            assert!(
+                out.contains(&format!("font.bold: {expected}")),
+                "container font weight must reach descendant Text:\n{out}"
+            );
+            assert!(
+                !out.contains("anchors.fill: parent"),
+                "ordinary container inheritance must not apply cell geometry:\n{out}"
+            );
+            assert!(
+                dropped_style_properties(&model, &layout, &style).is_empty(),
+                "implemented container font weight was reported dropped"
+            );
+        }
+    }
+
+    #[test]
+    fn unsupported_layout_container_font_weight_remains_dropped() {
+        let style = StyleDef {
+            component_name: "StatusPill".to_string(),
+            parts: vec![PartStyle {
+                name: "pill".to_string(),
+                base: vec![sp("font-weight", "semibold")],
+                transitions: vec![],
+                states: vec![],
+            }],
+        };
+        let layout = LayoutDef {
+            component_name: "StatusPill".to_string(),
+            root: LayoutNode {
+                tag: "Row".to_string(),
+                part_name: Some("pill".to_string()),
+                props: vec![],
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![lp("content", LayoutPropValue::String("Status".to_string()))],
+                    children: vec![],
+                }],
+            },
+        };
+        let model = component("StatusPill", vec![], vec![]);
+
+        let out = from_pipeline(&model, &layout, &style).unwrap().output;
+        assert!(
+            !out.contains("font.bold:"),
+            "got unsupported weight:\n{out}"
+        );
+        let drops = dropped_style_properties(&model, &layout, &style);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "font-weight");
     }
 
     /// `HostButton`'s styled background is a nested `background: Rectangle
