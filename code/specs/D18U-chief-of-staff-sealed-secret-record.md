@@ -147,6 +147,36 @@ unzeroed, which the final zeroizing drop cannot reach.
 that failed and, where it is safe, the secret *name*; never the payload, never
 an agent id read from a corrupt record.
 
+## The envelope, version 2 (P1.21)
+
+Version 2 is version 1 with one section added between the agent list and the
+payload: the destinations the secret may be sent to (D18V V-S7, VLT06 P9).
+
+| Field | Encoding | Bound |
+|---|---|---|
+| magic … agent ids | as in version 1, with version byte `2` | as in version 1 |
+| destination count | `u16` | 0–32 |
+| each destination | `string` | `host:port`, see U-E8; strictly ascending, no duplicates |
+| payload | `u32 length ∥ bytes` | 1–65 536 bytes |
+
+**U-E8 — a destination is a DNS name and a port, canonical.** The host is 1–253
+bytes of lowercase labels (`[a-z0-9-]`, each 1–63 bytes, not starting or ending
+with `-`), separated by single dots, with no trailing dot. It is never an IP
+literal, because `net.fetch` refuses IP-literal hosts (D18V V-A1), so an IP
+destination could never be used. The port is decimal 1–65 535 with no leading
+zeros. Destinations are written strictly ascending, which is U-E4's rule
+applied to a second list.
+
+**U-E9 — an empty destination list means "nowhere".** A secret with no
+destinations can still be leased or delivered directly, but `net.fetch` will
+never write it into a request. **A version 1 record decodes with no
+destinations**, so a secret provisioned before version 2 is not usable with
+`net.fetch` until it is re-`put`. This is the conservative direction: the
+alternative, treating "absent" as "anywhere", is the exact mistake VLT06 P3
+exists to forbid.
+
+The encoder always writes version 2. The decoder reads versions 1 and 2.
+
 ### Versioning
 
 The version byte gates the whole layout. A future version is a new decoder
@@ -188,6 +218,7 @@ authorization.
 ```text
 chief-of-staff vault put <NAME> --mode direct|leased|both --tier 0..3
                                (--allow-agent HOST)... | --any-agent
+                               [--destination HOST:PORT]...
                                [--raw]                  < secret-on-stdin
 chief-of-staff vault delete <NAME>
 chief-of-staff vault list
@@ -221,6 +252,12 @@ default. Exactly one of `--allow-agent` (repeatable) or `--any-agent` is
 required. This is VLT06 P5 carried to the command line: a secret must not
 become permissive because a flag was omitted, and the owner must type
 `--any-agent` to say a secret is unguarded.
+
+**U-C4a — a leasable secret names its destinations.** `--mode leased` and
+`--mode both` require at least one `--destination HOST:PORT` (repeatable, at
+most 32). `--mode direct` refuses `--destination`, because a direct-only
+secret is never leased and so never reaches `net.fetch`. Destinations follow
+U-E8 and are lowercased before validation.
 
 **U-C5 — agent names are host names.** The daemon attests a caller as its
 registered host name (`ToolContext::agent_id` is the registration's
