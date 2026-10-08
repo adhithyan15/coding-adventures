@@ -1,0 +1,15 @@
+{
+  "language": "malayalam",
+  "chapter": 338,
+  "sourceHash": "fnv1a64:0e166ae2638ee4aa",
+  "lessonIds": [
+    "ML-W338-a2-connected-composition"
+  ],
+  "voiceLessons": 0,
+  "drivablePrefix": 0,
+  "text": "malayalam/narration/ch338.txt",
+  "json": "malayalam/narration/ch338.json",
+  "textHash": "fnv1a64:74cfa3e988c8ddfa",
+  "jsonHash": "fnv1a64:707ef17de0b5ad64",
+  "findings": []
+}

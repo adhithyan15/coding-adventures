@@ -1,0 +1,21 @@
+{
+  "chapter": 338,
+  "title": "A Connected A2 Message",
+  "label": "ch:ml-connected-a2-message",
+  "canDo": "I can plan and write a connected 70–90 word Malayalam message about a familiar day for a named reader and purpose.",
+  "spineNodes": [
+    "SPINE-SAY-WHAT-I-DO"
+  ],
+  "payoff": {
+    "lesson": "ML-W338-a2-connected-composition",
+    "kind": "production",
+    "summary": "Complete chapter 338 by writing a model-free 70–90 word connected Malayalam message for a named reader and practical purpose.",
+    "assesses": [
+      "ML-LEX-C64-SMALL-01",
+      "ML-LEX-C64-SMALL-05",
+      "ML-GRAMMAR-C73-BECAUSE-01",
+      "ML-LEX-C106-AFTER-01",
+      "ML-LEX-C276-SAMAYAM276-04"
+    ]
+  }
+}
