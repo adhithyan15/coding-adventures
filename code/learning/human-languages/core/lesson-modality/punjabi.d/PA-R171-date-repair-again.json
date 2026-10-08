@@ -1,0 +1,24 @@
+{
+  "lesson": {
+    "id": "PA-R171-date-repair-again",
+    "language": "punjabi",
+    "chapter": 171,
+    "sequence": 9140,
+    "modality": "pen",
+    "derived": "voice",
+    "drivable": false,
+    "reasons": [
+      "no-visual-dependency"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:55cdbe9fdd35c68e",
+    "authored": "pen",
+    "authoredReason": "The learner must inspect and repair printed Gurmukhi date-form marks; this task is not drivable.",
+    "overridden": true
+  },
+  "findings": []
+}
