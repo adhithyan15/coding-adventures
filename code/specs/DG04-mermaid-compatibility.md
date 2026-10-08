@@ -1000,10 +1000,10 @@ markers and bidirectional arrows, multiline edge continuations,
 parallel branch and join
 endpoints, normalized quoted pipe-delimited and Flowchart-style link labels, titles, and
 accessibility metadata with named and numeric entity decoding. Direct node
-styles, named/default classes, and node class decorators cover fill, stroke,
-text color, stroke width, and dash patterns. URL clicks, tooltips, and standard
-browser link targets and explicit `call` callback actions survive as scene
-metadata. The family lowers through
+styles, named/default classes with optional terminal semicolons, and node class
+decorators cover fill, stroke, text color, stroke width, and dash patterns. URL
+clicks, tooltips, standard browser link targets, explicit `call` callback
+actions, and legacy callback aliases survive as scene metadata. The family lowers through
 dedicated ownership IR and stable lane geometry before producing
 backend-neutral paint instructions. Horizontal nodes expand deterministically
 for long labels while remaining bounded by their ownership lane. A pinned
@@ -1011,7 +1011,6 @@ visual subset, including parallel
 handoffs, is rendered through Metal-to-PNG.
 
 This is intentionally partial. Nested subgraphs, the complete Flowchart shape
-and link catalog beyond the documented marker forms, legacy callback aliases,
-configuration-driven lane
+and link catalog beyond the documented marker forms, configuration-driven lane
 ordering and line hops, and exact upstream routing or typography remain
 unsupported rather than being counted as compatible.
