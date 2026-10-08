@@ -1334,7 +1334,7 @@ through S-I3 before two weeks are spent on Windows.
    *What it does not do.*
    - *The exec (S-I4d).* The parent opens the agent `O_RDONLY | O_CLOEXEC`
      at prepare time, moved to a descriptor number at 512 or above. The
-     hook execs it itself: `execveat(fd, "", argv, environ, AT_EMPTY_PATH)`,
+     hook execs it itself: `execveat(fd, "", argv, envp, AT_EMPTY_PATH)`,
      never `std`'s exec by path. The seccomp program kills `execve`, and
      allows `execveat` only when its descriptor argument is that number and
      its flags are `AT_EMPTY_PATH`. The Landlock rule is added from the same

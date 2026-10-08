@@ -249,7 +249,9 @@ impl LinuxConfinement {
     /// the environment are set: argv is taken from the command here.
     ///
     /// What runs is always the executable `prepare` opened; the command's
-    /// program is only argv\[0\].
+    /// program is only argv\[0\]. argv and the environment are taken when
+    /// `apply` runs: arguments or variables added afterwards are not
+    /// passed, and `CommandExt::arg0` is ignored.
     pub fn apply<'a>(&self, command: &'a mut Command) -> &'a mut Command {
         chief_of_staff_spawn_isolation::isolate(command);
         #[cfg(target_os = "linux")]
