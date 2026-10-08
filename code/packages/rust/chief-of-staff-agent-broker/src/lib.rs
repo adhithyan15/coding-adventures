@@ -672,6 +672,12 @@ impl ChannelBroker {
 
     /// Give a reservation back. A refusal here changes nothing for the host:
     /// the request has already failed.
+    ///
+    /// Delivery is at least once. A commit can be refused after its message
+    /// was stored (only the pending header failed to clear). Abandoning then
+    /// consumes the sequence, but the stored message stays valid and is
+    /// delivered, while the host, told the publish failed, may publish
+    /// again.
     fn abandon(
         &self,
         id: RequestId,

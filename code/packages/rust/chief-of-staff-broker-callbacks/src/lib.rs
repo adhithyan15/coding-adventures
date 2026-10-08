@@ -63,8 +63,8 @@ use chief_of_staff_broker_protocol::{
 };
 use chief_of_staff_channel_crypto::wire::{encode_key_grant, encode_message, ChannelWireError};
 use chief_of_staff_channel_crypto::{
-    verify_channel_key_grant_signature, ChannelCryptoError, ChannelId,
-    SealedChannelKeyGrant, Sequence,
+    verify_channel_key_grant_signature, ChannelCryptoError, ChannelId, SealedChannelKeyGrant,
+    Sequence,
 };
 use chief_of_staff_channel_endpoints::{
     AgentId, ChannelDefinition, ChannelDefinitionStore, ChannelEndpointError, ChannelLifecycle,
@@ -128,7 +128,8 @@ pub struct InFlight {
 ///
 /// A refused commit leaves `Committing(s)`, from which the broker may still
 /// give the reservation back. Otherwise the channel would stay stuck behind
-/// it until the broker is replaced.
+/// it until the broker is replaced. Both arrows into `Closed` are taken only
+/// once the store has done the work, so a refused abandon can be retried.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum Append {
     None,
@@ -244,10 +245,12 @@ impl InFlight {
                 Append::Committing(sequence)
             }
             (Callback::CommitAppend { .. }, _) => return Err(Violation::AppendOutOfOrder),
+            // Closed only once the store has abandoned it; a refused
+            // abandon may be retried, within the request's budget.
             (
                 Callback::AbandonAppend { sequence, .. },
                 Append::Reserved(reserved) | Append::Committing(reserved),
-            ) if reserved.0 == *sequence => Append::Closed,
+            ) if reserved.0 == *sequence => self.append,
             (Callback::AbandonAppend { .. }, _) => return Err(Violation::AppendOutOfOrder),
             _ => self.append,
         };
@@ -456,6 +459,7 @@ impl<'a> CallbackServer<'a> {
                 let abandoned = store
                     .abandon_pending_at(Sequence(sequence))
                     .map_err(store_refusal)?;
+                in_flight.append = Append::Closed;
                 Ok(CallbackReply::Abandoned { abandoned })
             }
         }
