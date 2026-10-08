@@ -547,6 +547,9 @@ makes sense: the control polygon is symmetric about $x=2$.
 | Lua        | `CubicBezier, CubicBezier` (multi-return)    |
 | Perl       | `($left, $right)` (list return)              |
 | Swift      | `(CubicBezier, CubicBezier)` (tuple)         |
+| Java       | immutable `Split<T>` pair with `left`/`right` accessors |
+| Kotlin     | `Pair<CubicBezier, CubicBezier>`             |
+| Dart       | `(CubicBezier, CubicBezier)` (record)        |
 
 ### Vec<Point> / list / array
 
@@ -626,3 +629,6 @@ Coverage threshold: ≥ 95% lines.
 | Lua        | `code/packages/lua/bezier2d/`                  | `coding_adventures.bezier2d`              |
 | Perl       | `code/packages/perl/bezier2d/`                 | `CodingAdventures::Bezier2D`              |
 | Swift      | `code/packages/swift/bezier2d/`                | `Bezier2D`                                |
+| Java       | `code/packages/java/bezier2d/`                 | `com.codingadventures.bezier2d`          |
+| Kotlin     | `code/packages/kotlin/bezier2d/`               | `com.codingadventures.bezier2d`          |
+| Dart       | `code/packages/dart/bezier2d/`                 | `coding_adventures_bezier2d`             |

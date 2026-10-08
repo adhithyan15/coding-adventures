@@ -500,3 +500,6 @@ Coverage threshold: ≥ 95% lines.
 | Lua        | `code/packages/lua/affine2d/`                  | `coding_adventures.affine2d`             |
 | Perl       | `code/packages/perl/affine2d/`                 | `CodingAdventures::Affine2D`             |
 | Swift      | `code/packages/swift/affine2d/`                | `Affine2D`                               |
+| Java       | `code/packages/java/affine2d/`                 | `com.codingadventures.affine2d.Affine2D` |
+| Kotlin     | `code/packages/kotlin/affine2d/`               | `com.codingadventures.affine2d.Affine2D` |
+| Dart       | `code/packages/dart/affine2d/`                 | `coding_adventures_affine2d`             |
