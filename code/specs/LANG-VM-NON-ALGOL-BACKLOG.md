@@ -214,16 +214,21 @@ pairs and 682 pending, without a full-syntax or exhaustive-release claim. The
 next fresh selection rotates to the prepared bounded PREP01 negated C
 comparison clause.
 
+PR #17009 delivered that bounded negated-comparison C `#if` slice and merged
+as `47060eef4ec94d6bd989cc1635883c86071b88f7` after exact-head CI,
+CodeQL, and books checks passed. The next fresh selection rotates to LANG82's
+prepared source-backed Perl development-release pairs. Full C `#if`,
+stringize/paste, and default frontend routing remain open.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **PREP01 C (selected):** accept one negated comparison clause while keeping
-   nested and longer mixed forms explicit errors. Full C `#if`, stringize/paste,
-   and default frontend routing remain open.
-2. **LANG82 Perl release grammars:** continue distinct source-backed partial
+1. **LANG82 Perl release grammars (selected):** continue distinct source-backed partial
    pairs. Keep 5.004_01-t1 pending until its own source is found; do not imply
    complete syntax or an exhaustive release inventory.
+2. **PREP01 C:** continue bounded conditional forms. Full C `#if`,
+   stringize/paste, and default frontend routing remain open.
 3. **LANG78 JavaScript:** the completed output repair leaves the broader
    source/AST-to-IIR frontend subset open; Node remains a conformance oracle.
 

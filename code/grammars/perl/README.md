@@ -346,6 +346,14 @@ Current pairs:
   Its `perly.y` and `toke.c` blobs match 5.004_50 byte for byte, including
   the 250-digit decimal bound. It keeps its own files and the same bounded
   rejection probes; matching source does not imply full syntax coverage.
+- `perl5.004_52.*` is a separate **partial** development-release pair checked
+  against its own [5.004_52 historical source archive] (SHA-256
+  `f5edcffd4bf28db7bad95562470e37d57da65503822abb77de049b4d18cddd09`).
+  Its `perly.y` matches 5.004_51 byte for byte; `toke.c` changes input
+  handling and diagnostics outside the plain-decimal `print` subset. The
+  comment-stripped numeric scanner remains identical with the tested
+  250-digit bound. The separate files reject unsupported syntax, carriage
+  returns, and leading-zero forms.
 - `perl5.004_01_02.*` is a separate **partial** pair checked against the
   [historical 5.004_01_02 source archive] (SHA-256
   `185dc7317b340d4ca018f966993bb155bcc834c914fd26e579225d49c01e2a93`).
@@ -470,6 +478,7 @@ Sources: [Perl history], [CPAN source releases], [Perl version policy].
 [final 5.004_05]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_05.tar.gz
 [5.004_50 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_50.tar.gz
 [5.004_51 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_51.tar.gz
+[5.004_52 historical source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_52.tar.gz
 [`perl-5.004_05` source tag]: https://github.com/Perl/perl5/tree/perl-5.004_05
 [`perl-5.004_03` source tag]: https://github.com/Perl/perl5/tree/perl-5.004_03
 [historical 5.004_01-t2 source archive]: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_01-t2.tar.gz
