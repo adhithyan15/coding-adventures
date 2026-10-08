@@ -12,13 +12,13 @@ Point point(List<dynamic> pair) =>
     Point((pair[0] as num).toDouble(), (pair[1] as num).toDouble());
 
 Affine2D matrix(List<dynamic> values) => Affine2D(
-  (values[0] as num).toDouble(),
-  (values[1] as num).toDouble(),
-  (values[2] as num).toDouble(),
-  (values[3] as num).toDouble(),
-  (values[4] as num).toDouble(),
-  (values[5] as num).toDouble(),
-);
+      (values[0] as num).toDouble(),
+      (values[1] as num).toDouble(),
+      (values[2] as num).toDouble(),
+      (values[3] as num).toDouble(),
+      (values[4] as num).toDouble(),
+      (values[5] as num).toDouble(),
+    );
 
 void nearPoint(Point expected, Point actual) {
   expect(actual.x, closeTo(expected.x, epsilon));
@@ -70,13 +70,11 @@ void main() {
   });
 
   test('consumes all and only five G2D01 neutral cases', () {
-    final corpus =
-        jsonDecode(
-              File(
-                '../../../specs/fixtures/geometry2d-v1/cases.json',
-              ).readAsStringSync(),
-            )
-            as Map<String, dynamic>;
+    final corpus = jsonDecode(
+      File(
+        '../../../specs/fixtures/geometry2d-v1/cases.json',
+      ).readAsStringSync(),
+    ) as Map<String, dynamic>;
     expect(corpus['version'], 1);
     expect(corpus['absolute_tolerance'], epsilon);
     final seen = <String>{};

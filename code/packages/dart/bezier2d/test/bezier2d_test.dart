@@ -12,24 +12,24 @@ Point point(List<dynamic> pair) =>
     Point((pair[0] as num).toDouble(), (pair[1] as num).toDouble());
 
 Rect rect(List<dynamic> values) => Rect(
-  (values[0] as num).toDouble(),
-  (values[1] as num).toDouble(),
-  (values[2] as num).toDouble(),
-  (values[3] as num).toDouble(),
-);
+      (values[0] as num).toDouble(),
+      (values[1] as num).toDouble(),
+      (values[2] as num).toDouble(),
+      (values[3] as num).toDouble(),
+    );
 
 QuadraticBezier quadratic(List<dynamic> controls) => QuadraticBezier(
-  point(controls[0] as List<dynamic>),
-  point(controls[1] as List<dynamic>),
-  point(controls[2] as List<dynamic>),
-);
+      point(controls[0] as List<dynamic>),
+      point(controls[1] as List<dynamic>),
+      point(controls[2] as List<dynamic>),
+    );
 
 CubicBezier cubic(List<dynamic> controls) => CubicBezier(
-  point(controls[0] as List<dynamic>),
-  point(controls[1] as List<dynamic>),
-  point(controls[2] as List<dynamic>),
-  point(controls[3] as List<dynamic>),
-);
+      point(controls[0] as List<dynamic>),
+      point(controls[1] as List<dynamic>),
+      point(controls[2] as List<dynamic>),
+      point(controls[3] as List<dynamic>),
+    );
 
 void nearPoint(Point expected, Point actual) {
   expect(actual.x, closeTo(expected.x, epsilon));
@@ -62,13 +62,11 @@ double polylineDistance(Point p, List<Point> line) {
 
 void main() {
   test('consumes exactly the three G2D02 polynomial cases', () {
-    final corpus =
-        jsonDecode(
-              File(
-                '../../../specs/fixtures/geometry2d-v1/cases.json',
-              ).readAsStringSync(),
-            )
-            as Map<String, dynamic>;
+    final corpus = jsonDecode(
+      File(
+        '../../../specs/fixtures/geometry2d-v1/cases.json',
+      ).readAsStringSync(),
+    ) as Map<String, dynamic>;
     expect(corpus['version'], 1);
     expect(corpus['absolute_tolerance'], epsilon);
     final seen = <String>{};
@@ -145,13 +143,11 @@ void main() {
   });
 
   test('consumes all nine safe-flattening cases', () {
-    final corpus =
-        jsonDecode(
-              File(
-                '../../../specs/fixtures/bezier2d-flattening-v1/cases.json',
-              ).readAsStringSync(),
-            )
-            as Map<String, dynamic>;
+    final corpus = jsonDecode(
+      File(
+        '../../../specs/fixtures/bezier2d-flattening-v1/cases.json',
+      ).readAsStringSync(),
+    ) as Map<String, dynamic>;
     expect(corpus['version'], 1);
     expect(corpus['absolute_tolerance'], epsilon);
     expect(corpus['max_depth'], 32);

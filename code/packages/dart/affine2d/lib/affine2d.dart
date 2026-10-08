@@ -29,9 +29,9 @@ final class Affine2D {
 
   /// Conjugating an origin rotation keeps [center] in place.
   static Affine2D rotateAround(Point center, double angle) => translate(
-    center.x,
-    center.y,
-  ).multiply(rotate(angle)).multiply(translate(-center.x, -center.y));
+        center.x,
+        center.y,
+      ).multiply(rotate(angle)).multiply(translate(-center.x, -center.y));
 
   static Affine2D scale(double sx, double sy) => Affine2D(sx, 0, 0, sy, 0, 0);
   static Affine2D scaleUniform(double factor) => scale(factor, factor);
@@ -42,13 +42,13 @@ final class Affine2D {
 
   /// Matrix multiplication applies [other] first, then this transform.
   Affine2D multiply(Affine2D other) => Affine2D(
-    a * other.a + c * other.b,
-    b * other.a + d * other.b,
-    a * other.c + c * other.d,
-    b * other.c + d * other.d,
-    a * other.e + c * other.f + e,
-    b * other.e + d * other.f + f,
-  );
+        a * other.a + c * other.b,
+        b * other.a + d * other.b,
+        a * other.c + c * other.d,
+        b * other.c + d * other.d,
+        a * other.e + c * other.f + e,
+        b * other.e + d * other.f + f,
+      );
 
   Point applyToPoint(Point point) =>
       Point(a * point.x + c * point.y + e, b * point.x + d * point.y + f);

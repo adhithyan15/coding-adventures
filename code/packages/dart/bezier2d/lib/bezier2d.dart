@@ -27,8 +27,8 @@ double _segmentDistance(Point control, Point start, Point end) {
   final u = lengthSquared == 0
       ? 0.0
       : (control.subtract(start).dot(chord) / lengthSquared)
-            .clamp(0.0, 1.0)
-            .toDouble();
+          .clamp(0.0, 1.0)
+          .toDouble();
   final distance = control.distance(start.add(chord.scale(u)));
   if (!distance.isFinite) throw ArgumentError('Bezier flatness overflowed');
   return distance;
@@ -84,11 +84,11 @@ final class QuadraticBezier {
   }
 
   CubicBezier elevate() => CubicBezier(
-    p0,
-    p0.scale(1 / 3).add(p1.scale(2 / 3)),
-    p1.scale(2 / 3).add(p2.scale(1 / 3)),
-    p2,
-  );
+        p0,
+        p0.scale(1 / 3).add(p1.scale(2 / 3)),
+        p1.scale(2 / 3).add(p2.scale(1 / 3)),
+        p2,
+      );
 
   Rect boundingBox() {
     final candidates = <Point>[p0, p2];
