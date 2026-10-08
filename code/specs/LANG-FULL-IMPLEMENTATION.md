@@ -1338,6 +1338,10 @@ backend immediately) come before the enabler-dependent items.
   conservative.
   Built-in `sign` may likewise remain inside `sqrt` when its operand is already
   nonnegative and bounded; signed and overridden forms remain conservative.
+  Built-in `cos` over a direct built-in `sign` result may also remain inside
+  `sqrt`: its input is restricted to `-1`, `0`, or `1`, so the cosine is
+  nonnegative. Non-sign-rooted, exponential, and overridden forms remain
+  conservative.
   Built-in `sin`, `cos`, and `arctan` may map a bounded sign-rooted result
   before `entier`, including nested combinations; domain-sensitive or
   unbounded standard functions and non-sign-rooted runtime operands remain
