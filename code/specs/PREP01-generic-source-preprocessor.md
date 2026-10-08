@@ -767,6 +767,20 @@ trailing operators, and negated logical chains.
 Keep rooted C directive error locations for rejected forms. Tests cover true
 and false operands, macros and undefined identifiers, logical combination,
 and explicit rejection of the longer shapes.
+
+The next bounded directive stage adds generic macro removal as
+`Directive::Undef(name)`, with `MacroTable` deleting the current definition of
+that name. The engine processes it only in an emitting conditional branch;
+inside a skipped group it has no effect. Removing an undefined name is a
+no-op. Removing either an object-like or function-like macro takes effect on
+later lines and in later included files of the same translation unit, while
+the normal translation-unit reset still prevents cross-file leakage.
+The C dialect recognizes only `#undef` followed by exactly one raw identifier:
+the name is inspected without macro expansion, and missing, extra, or
+non-identifier operands fail with the directive location. This stage does not
+add `#elif`, stringize, paste, or pathless frontend routing. Tests must cover
+definition removal and redefinition, an initially undefined name, skipped
+branch preservation, malformed C directives, and a rooted C file-input path.
 *Acceptance:* a C program using `#define` (object- and function-like), `#if`/
 `#ifdef`/`#else`/`#endif` and a real project-local `#include` compiles through
 `c-to-semantic-ir` and executes with the expected result — the first C program
