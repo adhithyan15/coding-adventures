@@ -1126,6 +1126,9 @@ where
         if let Some(tooltip) = &link.tooltip {
             metadata.insert(format!("{prefix}.tooltip"), tooltip.clone());
         }
+        if let Some(target) = &link.target {
+            metadata.insert(format!("{prefix}.target"), target.clone());
+        }
         if let Some(node) = diagram.nodes.iter().find(|node| node.id == link.node_id) {
             metadata.insert(
                 format!("{prefix}.bounds"),
@@ -3861,6 +3864,9 @@ where
         metadata.insert(format!("{prefix}.url"), link.url.clone());
         if let Some(tooltip) = &link.tooltip {
             metadata.insert(format!("{prefix}.tooltip"), tooltip.clone());
+        }
+        if let Some(target) = &link.target {
+            metadata.insert(format!("{prefix}.target"), target.clone());
         }
         if let Some(node) = diagram.nodes.iter().find(|node| node.id == link.node_id) {
             metadata.insert(
@@ -8579,6 +8585,7 @@ mod tests {
             node_id: "A".into(),
             url: "https://example.com/ready".into(),
             tooltip: Some("Open ready state".into()),
+            target: Some("_blank".into()),
         });
         let shaper = FakeShaper;
         let metrics = FakeMetrics;
@@ -8592,6 +8599,7 @@ mod tests {
             "https://example.com/ready"
         );
         assert_eq!(metadata["graph.node.A.link.tooltip"], "Open ready state");
+        assert_eq!(metadata["graph.node.A.link.target"], "_blank");
         assert!(metadata.contains_key("graph.node.A.link.bounds"));
     }
 

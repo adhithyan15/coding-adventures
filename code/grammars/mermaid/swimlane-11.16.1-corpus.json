@@ -80,7 +80,7 @@
     },
     {
       "name": "click-url-tooltip",
-      "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nclick request href \"https://example.com/request?a=1&amp;b=2\" \"Open request\"\nrequest --> done"
+      "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nclick request href \"https://example.com/request?a=1&amp;b=2\" \"Open request\" _blank\nrequest --> done"
     }
   ]
 }

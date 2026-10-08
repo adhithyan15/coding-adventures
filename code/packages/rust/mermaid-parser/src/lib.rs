@@ -6398,10 +6398,12 @@ fn parse_swimlane_click(value: &str, line: usize) -> Result<GraphLink, ParseErro
     } else {
         (None, rest)
     };
-    if !rest.trim().is_empty() {
-        return Err(swimlane_error(line, "unsupported trailing Swimlane click syntax"));
-    }
-    Ok(GraphLink { node_id: node_id.to_string(), url, tooltip })
+    let target = match rest.trim() {
+        "" => None,
+        target @ ("_blank" | "_self" | "_parent" | "_top") => Some(target.to_string()),
+        _ => return Err(swimlane_error(line, "unsupported Swimlane click link target")),
+    };
+    Ok(GraphLink { node_id: node_id.to_string(), url, tooltip, target })
 }
 
 fn take_swimlane_quoted_value<'a>(value: &'a str, line: usize, kind: &str) -> Result<(String, &'a str), ParseError> {
@@ -8820,6 +8822,7 @@ pub fn parse_state_diagram(source: &str) -> Result<GraphDiagram, ParseError> {
                 node_id,
                 url,
                 tooltip,
+                target: None,
             });
         } else if cursor.current().value.eq_ignore_ascii_case("classDef") {
             cursor.advance();
