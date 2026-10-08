@@ -11,12 +11,17 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 17136,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/17136",
+    "branch": "codex/parity-arc2d-java-kotlin-dart-20261008",
+    "item_id": "geometry-arc2d-java-kotlin-dart-lane-parity"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-08T14:10:37Z",
-    "pr_number": 17127,
-    "status": "merged",
-    "notes": "PR #17127 completed seven successful and 25 skipped terminal checks with no failure or conflict. Guarded squash auto-merge completed as 8b9dbfc487fea50e8c2d2ad22c9385a0b4e02452 and was verified on fetched origin/main; it was not manually merged. No parity PR remains open."
+    "observed_at": "2026-10-08T14:38:40Z",
+    "pr_number": 17136,
+    "status": "pr-open",
+    "notes": "Ready-for-review PR #17136 opened after native Java/Kotlin/Dart tests, exact 100% line coverage, neutral fixtures, build plans, collision inventory, diff, and security review. GitHub checks are not yet considered terminal; keep this as the only active parity PR and do not manually merge."
   },
   "last_inventory": {
     "revision": "8b9dbfc487fea50e8c2d2ad22c9385a0b4e02452",
@@ -12218,14 +12223,14 @@
     {
       "id": "geometry-arc2d-java-kotlin-dart-lane-parity",
       "title": "Implement arc2d parity in Java, Kotlin, and Dart",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["geometry-affine2d-bezier2d-java-kotlin-dart-lane-parity", "geometry-arc2d-center-form-bounds-and-sweep-neutral-contract"],
       "branch": "codex/parity-arc2d-java-kotlin-dart-20261008",
-      "pr_number": null,
+      "pr_number": 17136,
       "selected_at": "2026-10-08T14:13:15Z",
       "selection_revision": "8b9dbfc487fea50e8c2d2ad22c9385a0b4e02452",
       "selection_notes": "Selected only after #17127 actually merged, exact-main collision inventory and newly discovered owner registrations. The merged Point2D/Bezier2D/Trig foundations and 23-case G2D03 neutral corpus make one dependency-shaped Java/Kotlin/Dart port ready, filling three high-consensus slots. No active parity PR or exact package-path overlap exists. Preserve the separate Go and existing-lane center-form conformance owners, and do not select native/security work.",
-      "notes": "Complete the G2D03 arc layer after point, affine, and Bezier foundations, using neutral vectors and native coverage without native drawing authority."
+      "notes": "PR #17136 delivers the G2D03 Java/Kotlin/Dart arc layer, all 11 neutral arc records per lane, local 100% line coverage and 95% gates, three live Go build-tool lane plans, and a degenerate-overflow security regression. CI and mergeability still require live verification; no manual merge."
     },
     {
       "id": "gfm-fenced-block-ast-and-consumer-contract-repair",
