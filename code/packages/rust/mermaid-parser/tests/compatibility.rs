@@ -1666,6 +1666,18 @@ fn swimlane_named_classes_resolve_into_semantic_styles() {
 }
 
 #[test]
+fn swimlane_node_class_decorators_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  request[Request]:::accent\nend\nsubgraph Support\n  done[Done]\nend\nrequest --> done:::complete\nclassDef accent fill:#dbeafe,stroke:#1d4ed8\nclassDef complete fill:#dcfce7,stroke:#166534",
+    ).expect("Swimlane class decorators should parse");
+
+    assert_eq!(diagram.nodes[0].classes, ["accent"]);
+    assert_eq!(diagram.nodes[0].style.stroke.as_deref(), Some("#1d4ed8"));
+    assert_eq!(diagram.nodes[1].classes, ["complete"]);
+    assert_eq!(diagram.nodes[1].style.fill.as_deref(), Some("#dcfce7"));
+}
+
+#[test]
 fn swimlane_flowchart_endpoint_markers_lower_to_semantic_ir() {
     use diagram_ir::EdgeMarker;
 

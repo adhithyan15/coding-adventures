@@ -1902,7 +1902,7 @@ pub struct LayoutedCynefinDiagram { pub width: f64, pub height: f64, pub title: 
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneNode {
     pub id: String, pub label: String, pub lane_id: Option<String>, pub shape: DiagramShape,
-    pub style: DiagramStyle,
+    pub classes: Vec<String>, pub style: DiagramStyle,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneLane { pub id: String, pub label: String, pub node_ids: Vec<String> }
@@ -1923,7 +1923,7 @@ pub struct SwimlaneDiagram {
 pub struct LayoutedSwimlaneLane { pub id: String, pub label: String, pub x: f64, pub y: f64, pub width: f64, pub height: f64 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneNode {
-    pub id: String, pub label: String, pub shape: DiagramShape, pub style: DiagramStyle,
+    pub id: String, pub label: String, pub shape: DiagramShape, pub classes: Vec<String>, pub style: DiagramStyle,
     pub x: f64, pub y: f64, pub width: f64, pub height: f64,
 }
 #[derive(Clone, Debug, PartialEq)]

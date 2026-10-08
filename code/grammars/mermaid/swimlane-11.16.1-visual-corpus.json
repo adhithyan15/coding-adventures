@@ -18,6 +18,7 @@
     "html-entity-labels",
     "metadata-entities",
     "inline-node-styles",
-    "named-node-classes"
+    "named-node-classes",
+    "node-class-decorators"
   ]
 }
