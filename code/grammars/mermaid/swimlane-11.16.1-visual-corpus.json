@@ -11,6 +11,7 @@
     "input-output-and-asymmetric-shapes",
     "sloped-flowchart-shapes",
     "quoted-unicode-node-labels",
-    "long-process-labels"
+    "long-process-labels",
+    "quoted-edge-labels"
   ]
 }
