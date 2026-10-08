@@ -7,6 +7,14 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.1` accumulate here until the next version is
 cut.
 
+### Fixed — native style regressions cannot reclaim retired debt (#16995)
+
+The shared TaskApp native contract now pins the fresh Qt inventory at 163 style
+drops and Flutter at 197. It removes stale `align` allowances on both backends,
+the stale Qt `height` allowance, and lowers the maximum `width` counts to 18 on
+Qt and 23 on Flutter, so the 63 occurrences already fixed by recent layout work
+cannot silently return.
+
 ### Fixed — Flutter compact controls remain reachable at 800 x 600 (#16949)
 
 The view switcher and task action controls now scroll horizontally when the
