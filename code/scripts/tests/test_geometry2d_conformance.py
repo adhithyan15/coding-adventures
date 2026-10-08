@@ -32,12 +32,12 @@ class Geometry2DConformanceTests(unittest.TestCase):
         self.assertEqual(
             list(Draft202012Validator(schema).iter_errors(self.document)), []
         )
-        self.assertEqual(MODULE.validate_document(self.document), 22)
+        self.assertEqual(MODULE.validate_document(self.document), 23)
         self.assertEqual(
             MODULE.validate_document(
                 MODULE.parse_json(CORPUS.read_text(encoding="utf-8"))
             ),
-            22,
+            23,
         )
 
     def test_complete_operation_and_case_roster(self) -> None:
@@ -61,6 +61,7 @@ class Geometry2DConformanceTests(unittest.TestCase):
             "arc-center-bounds-positive-wrap",
             "arc-center-bounds-negative-wrap",
             "arc-center-bounds-zero-sweep",
+            "arc-center-bounds-rotated-extrema",
             "arc-center-cubics-zero",
             "arc-center-cubics-full-turn",
             "arc-center-cubics-over-turn",
@@ -102,6 +103,10 @@ class Geometry2DConformanceTests(unittest.TestCase):
                 "arc-center-bounds-zero-sweep",
                 lambda c: c["expected_bounds"].__setitem__(2, 1),
             ),
+            (
+                "arc-center-bounds-rotated-extrema",
+                lambda c: c["expected_bounds"].__setitem__(2, 1),
+            ),
             ("arc-center-cubics-zero", lambda c: c.update(expected_count=0)),
             ("arc-center-cubics-full-turn", lambda c: c.update(expected_count=5)),
             (
@@ -134,6 +139,19 @@ class Geometry2DConformanceTests(unittest.TestCase):
                 edit(case)
                 with self.assertRaises(ValueError):
                     MODULE.validate_document(changed)
+
+    def test_invalid_sweep_schema_branch_rejects_valid_sweep(self) -> None:
+        schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
+        changed = copy.deepcopy(self.document)
+        case = next(
+            item
+            for item in changed["cases"]
+            if item["id"] == "arc-center-cubics-over-turn"
+        )
+        case["sweep_angle"] = 0
+        self.assertNotEqual(list(Draft202012Validator(schema).iter_errors(changed)), [])
+        with self.assertRaises(ValueError):
+            MODULE.validate_document(changed)
 
     def test_duplicate_keys_and_ids_rejected(self) -> None:
         with self.assertRaisesRegex(ValueError, "duplicate JSON key"):

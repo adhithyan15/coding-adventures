@@ -107,7 +107,9 @@ coordinate system) is:
 
 $$\begin{pmatrix} x \\ y \end{pmatrix} = \begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix} \begin{pmatrix} r_x \cos\phi \\ r_y \sin\phi \end{pmatrix} + \begin{pmatrix} c_x \\ c_y \end{pmatrix}$$
 
-where $\theta$ is `x_rotation` and $(c_x, c_y)$ is the center. Written out:
+where $\theta$ is `x_rotation` and $(c_x, c_y)$ is the center. Direct
+`CenterArc` values require positive, finite `rx` and `ry`; zero-radius SVG
+endpoint arcs follow the separate line-degeneracy path. Written out:
 
 $$x = \cos\theta \cdot r_x \cos\phi - \sin\theta \cdot r_y \sin\phi + c_x$$
 $$y = \sin\theta \cdot r_x \cos\phi + \cos\theta \cdot r_y \sin\phi + c_y$$
@@ -718,6 +720,10 @@ where all four control points coincide.
     zero sweep (one degenerate cubic), full turn (four cubics), and over-turn
     rejection. Native tests must additionally reject non-finite input before
     angle arithmetic or allocation; JSON cannot carry NaN or infinity.
+
+25. **Rotated center-form extrema**: consume the `center-arc-bounds` case with
+    nonzero `x_rotation`, where both coordinate maxima occur in the arc
+    interior. Ignoring rotation or bounding endpoints alone must fail.
 
 Coverage threshold: ≥ 95% lines.
 

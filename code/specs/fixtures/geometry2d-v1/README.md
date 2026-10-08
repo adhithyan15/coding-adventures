@@ -37,9 +37,10 @@ drift. Existing native readers may filter by operation; adding a new family
 does not imply that an older reader consumes it.
 
 `center-arc-bounds` pins analytic `[x,y,width,height]` bounds for two
-off-grid extrema across the $2\pi$ seam (positive and negative sweep) and a
-zero-sweep point rect. Adapters must account for angle periodicity; sampling
-100 points does not satisfy these cases. `center-arc-cubics` pins one segment
+off-grid extrema across the $2\pi$ seam (positive and negative sweep), a
+zero-sweep point rect, and rotated interior extrema. Adapters must account
+for angle periodicity; sampling 100 points does not satisfy these cases.
+`center-arc-cubics` pins one segment
 for zero sweep, four for a full turn, and fail-stop `invalid-sweep` for a span
 exceeding one turn. All center-form inputs must be finite, positive-radius,
 and bounded before any angle arithmetic or allocation. JSON cannot represent
