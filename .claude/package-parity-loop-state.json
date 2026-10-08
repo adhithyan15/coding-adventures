@@ -11,21 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 17076,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/17076",
-    "branch": "codex/parity-plan-fixture-ci-20261008",
-    "implementation_revision": "0f9b702131f0bc9ff74aa4470bbacc71be8c8e77",
-    "status": "checks-pending"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-08T09:05:31Z",
+    "observed_at": "2026-10-08T09:50:25Z",
     "pr_number": 17076,
-    "status": "checks-pending",
-    "notes": "Ready-for-review PR #17076 opened from the tested clean parity worktree after #17060 was verified merged. Initial GitHub checks are queued and mergeability is MERGEABLE; auto-merge remains disabled until every final-head required check is terminal acceptable and conflict-free. No other parity PR is open."
+    "status": "merged",
+    "notes": "PR #17076 passed 29 successful, seven skipped, and one neutral terminal checks without conflict. Guarded auto-merge completed as 493806695ff4c7bdc01e010f3da656741650b25a and was verified on fetched origin/main; it was not manually merged. No parity PR remains open."
   },
   "last_inventory": {
-    "revision": "16a8c24016e1d17f71dd115180ca3429b89b8280",
+    "revision": "6477579f1dc2da4a4122f6bdf70e6b0025ce3a3d",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1497,
@@ -13750,8 +13744,8 @@
       "notes": "Merged #17038 covers unquoted lane &amp;, bracket node &nbsp;, and pipe edge &#32;&check; plus a visual fixture; merged #17049 adds metadata title/accTitle/accDescr named/numeric entity baselines. After the quoted-label neutral owner closes, audit residual inline-edge entity decoding, malformed/unknown and broader numeric entities, and exact semantic IR against DG04 and neutral fixtures; do not repeat landed baselines or expand the quoted-label owner beyond its quoted/entity interaction."
     },
     {
-      "id": "build-tool-plan-fixture-native-ci-selection", "title": "Gate exact native plan fixture readers", "status": "pr-open", "depends_on": ["build-tool-fixtures", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-plan-fixture-ci-20261008", "pr_number": 17076,
-      "notes": "Selected after #17060 merged and newly discovered Swimlane parser gaps were registered. Five checked flat plan cases exist. Python directly reads plan-replace-existing and TypeScript directly reads plan-portable-package-path; plan-affected-empty, plan-affected-null, and plan-future-version currently have neutral-runner coverage only. Exact per-case CI selection and fail-closed unknown cases are now in ready-for-review PR #17076. A security review identified Git quotePath escaping of non-ASCII fixture names; this PR also preserves NUL-delimited raw Git paths so the selector cannot silently bypass them. Three sharding cases remain separately neutral-only pending verified native readers. Existing plan atomic-overwrite owners govern implementation, not fixture-only CI selection."
+      "id": "build-tool-plan-fixture-native-ci-selection", "title": "Gate exact native plan fixture readers", "status": "merged", "depends_on": ["build-tool-fixtures", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-plan-fixture-ci-20261008", "pr_number": 17076,
+      "notes": "Merged #17076 after 29 successful, seven skipped, and one neutral final-head checks. Its five-case relation schedules Python for plan-replace-existing, TypeScript for plan-portable-package-path, and no native reader for three neutral-only cases. It also preserves NUL-delimited raw Git paths so quotePath escaping cannot bypass unknown-case rejection. Three sharding cases remain neutral-only pending verified direct native readers. Runtime plan semantics and separate atomic-overwrite owners are unchanged."
     },
     {
       "id": "fp01-bit-vectors-v1", "title": "Freeze language-neutral FP01 bit-vector conformance", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
@@ -13782,8 +13776,8 @@
       "notes": "Newly discovered after #17060: merged #17059 adds named/default class resolution atop #17054 inline styles, but CLASS_LINE rejects a terminal semicolon and classDef declarations retain semicolons in color and stroke-width values. Pinned upstream Swimlane docs use both forms. Freeze a minimal grammar, semantic-IR, and visual fixture for semicolon-terminated class and classDef lines before broadening class syntax. This is parser-only, not a new layout/paint model, and does not duplicate the quoted/entity-label owners."
     },
     {
-      "id": "mermaid-swimlane-class-decorator-parser-neutral-conformance", "title": "Classify DG04 Swimlane class decorators", "status": "pending", "depends_on": ["mermaid-swimlane-class-terminator-parser-neutral-conformance"], "branch": null, "pr_number": null,
-      "notes": "After the terminator baseline, classify :::class on a Swimlane node or edge endpoint against pinned upstream flow.jison styledVertex syntax. DG04 currently excludes decorators and the node parser does not accept them; reuse #17059 class resolution and #17054 style IR/layout/paint projection. Add grammar, semantic, and pinned visual fixtures without claiming full Mermaid or platform-renderer parity."
+      "id": "mermaid-swimlane-class-decorator-parser-neutral-conformance", "title": "Classify portable DG04 Swimlane decorator semantics", "status": "pending", "depends_on": [], "branch": null, "pr_number": null,
+      "notes": "Merged #17065 already delivered :::class grammar, Rust parser/semantic behavior for standalone nodes and edge endpoints, DG04 updates, corpus tests, and a Metal visual fixture; do not repeat that implementation or imply decorators are excluded. The remaining classification task is a language-neutral expected-semantic oracle and lane review for decorated endpoints, unknown/repeated classes, and class/style precedence, adding only verified unowned behavior. The separate terminal-semicolon class/classDef parser gap remains pending independently; neither task claims full Mermaid or all platform-renderer parity."
     }
   ]
 }

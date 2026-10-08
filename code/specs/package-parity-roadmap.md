@@ -16692,7 +16692,7 @@ Parallel audits registered newly discovered work before the next selection:
 | ARM1 simulator and gate level | `arm1-simulator-07e-neutral-full-state-conformance` → `arm1-simulator-seven-lane-parity`; `arm1-gatelevel-07e2-neutral-differential-conformance` → `arm1-gatelevel-seven-lane-parity` | Both 8/15; 599-vector full-state reference precedes gate-backed differential and same-lane simulator/arithmetic ports. |
 | Branch predictor | `branch-predictor-d02-neutral-conformance` → `branch-predictor-seven-lane-parity` | 8/15; reconcile D02 logical clock language with existing clock-free state-machine/directed-graph manifests. |
 | Mermaid Swimlane parser | `mermaid-swimlane-quoted-label-parser-neutral-conformance` → `mermaid-swimlane-entity-label-parser-neutral-conformance` | DG04 quoted Unicode labels and their interaction with entity decoding precede remaining entity-label behavior. Merged #17038 owns unquoted lane/node/pipe-edge entity baselines and #17049 owns metadata title/accTitle/accDescr entity baselines; the later child should classify residual inline edges and malformed/unknown or broader numeric entities without duplication. Neither parser owner overlaps the layout hierarchy. |
-| Mermaid Swimlane classes | `mermaid-swimlane-class-terminator-parser-neutral-conformance` → `mermaid-swimlane-class-decorator-parser-neutral-conformance` | Merged #17054/#17059 own inline and named/default class style projection; the pinned upstream example's terminal `;` is not yet accepted correctly for `class`/`classDef`, and DG04 still excludes `:::class` decorators. Repair terminators first, then reuse class resolution for decorators with neutral semantic and visual fixtures. These parser slices do not duplicate quoted/entity labels or layout/paint behavior. |
+| Mermaid Swimlane classes | `mermaid-swimlane-class-terminator-parser-neutral-conformance`; `mermaid-swimlane-class-decorator-parser-neutral-conformance` | Merged #17054/#17059 own inline and named/default class style projection. Merged #17065 owns `:::class` grammar, Rust semantics, and a Metal visual fixture, so the decorator item now only classifies residual language-neutral semantic expectations and implementation lanes; it must not repeat the Rust feature. The pinned upstream example's terminal `;` is still not accepted correctly for `class`/`classDef`, and remains an independent parser gap. |
 
 Correct the pending validation-fixture selector's inventory to 22 checked
 flat cases: 14 have scoped direct native readers and eight remain
@@ -16834,13 +16834,14 @@ language buckets. The high-consensus, 5–9, 2–4, and singleton bands remain
 178/262, 123/934, 181/2,282, and 1,015/14,210 identities/missing slots.
 OCaml retains five emerging roots outside the all-language denominator.
 
-Read-only source review found two new Swimlane parser seams after merged
-#17054/#17059 style work. The pinned upstream Swimlane example uses terminal
-semicolons on `class` and `classDef`, while the checked grammar/parser does
-not handle both forms correctly. DG04 also excludes `:::class` decorators
-despite pinned upstream styled-vertex syntax. Register a small terminator
-neutral-conformance owner before a decorator owner; existing quoted/entity
-parser owners and style IR/layout/paint behavior remain distinct. No new
+Read-only source review at this revision found two Swimlane parser seams after
+merged #17054/#17059 style work. The pinned upstream Swimlane example uses
+terminal semicolons on `class` and `classDef`, while the checked grammar/parser
+does not handle both forms correctly. The initial decorator gap was then
+implemented by merged #17065 (grammar, Rust semantics, and Metal visual
+evidence); only cross-language neutral semantic classification remains under
+its pending item. Existing quoted/entity parser owners and style IR/layout/paint
+behavior remain distinct. No new
 package-root identity appeared. The next priority pass compares the already
 ready five-case plan-fixture selector (two native-read cases) with the larger
 Point2D Java/Kotlin/Dart package DAG and other dependency-ready owners.
@@ -16851,7 +16852,30 @@ open, and its two direct native readers can be scheduled by a five-case
 closed map without altering plan semantics. The three neutral-only cases
 remain neutral-only. Point2D Java/Kotlin/Dart has greater package leverage
 but is a larger multi-lane implementation DAG; it remains queued. The two
-new Swimlane parser owners are also queued behind this bounded CI slice.
+Swimlane terminator parser owner and residual decorator-classification owner
+remain separate from this bounded CI slice.
+
+### Post-#17076 merged-main refresh (2026-10-08)
+
+PR #17076 passed 29 successful, seven skipped, and one neutral final-head
+checks and auto-merged as `493806695ff4c7bdc01e010f3da656741650b25a`.
+The fetched `origin/main` contains the merge. Its five-case plan selector has
+two direct native readers and three neutral-only cases; NUL-delimited Git
+paths close the non-ASCII quotePath bypass. All three sharding cases remain
+neutral-only with no verified direct native reader, so a native selector is
+not yet eligible.
+
+The refreshed schema-3 report at `6477579f1dc2da4a4122f6bdf70e6b0025ce3a3d`
+still finds 15 established implementation lanes, 1,497 identities, 4,767
+occupied slots, zero canonical collisions, and zero unknown language buckets.
+OCaml has five emerging roots and remains outside the promoted denominator.
+The merged #17065 decorator implementation is now credited explicitly;
+terminal-semicolon class parsing remains pending, while portable decorator
+oracle/lane classification is a separate pending review rather than a Rust
+feature request. No package roots were added by #17076 or the later main
+commits. The next dependency/leverage pass compares ready Point2D Java/Kotlin/
+Dart (three missing slots and unlocks nine downstream geometry slots) against
+the remaining package and build-tool items.
 
 ## Autonomous Loop Protocol
 
