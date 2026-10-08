@@ -41,6 +41,10 @@
     {
       "name": "quoted-unicode-node-labels",
       "source": "swimlane-beta LR\nsubgraph intake [Intake team]\n  request[\"Request \\\"priority\\\" service\"]\nend\nsubgraph support [Support team]\n  triage{\"Ready for review?\"}\n  done((\"Complete ✓\"))\nend\nrequest --> triage --> done"
+    },
+    {
+      "name": "long-process-labels",
+      "source": "swimlane-beta LR\nsubgraph Customer\n  submit[Submit a detailed service request]\nend\nsubgraph Support\n  investigate[Investigate and document the reported issue]\nend\nsubmit --> investigate"
     }
   ]
 }

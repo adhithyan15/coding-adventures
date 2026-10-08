@@ -10,6 +10,7 @@
     "hexagon-and-double-circle-shapes",
     "input-output-and-asymmetric-shapes",
     "sloped-flowchart-shapes",
-    "quoted-unicode-node-labels"
+    "quoted-unicode-node-labels",
+    "long-process-labels"
   ]
 }

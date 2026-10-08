@@ -131,7 +131,18 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         .unwrap_or(1)
         .max(1);
     let lane_cross = 150.0;
-    let lane_along = lane_header + max_nodes as f64 * (node_width + node_gap) + 28.0;
+    let lane_along = if horizontal_flow {
+        diagram.lanes.iter().map(|lane| {
+            let widths = lane.node_ids.iter().filter_map(|node_id| {
+                diagram.nodes.iter().find(|node| &node.id == node_id)
+                    .map(|node| swimlane_node_width(&node.label))
+            }).collect::<Vec<_>>();
+            lane_header + widths.iter().sum::<f64>()
+                + node_gap * widths.len().saturating_sub(1) as f64 + 40.0
+        }).fold(0.0, f64::max)
+    } else {
+        lane_header + max_nodes as f64 * (node_height + node_gap) + 28.0
+    };
     let (width, height) = if horizontal_flow {
         (
             lane_along.max(420.0),
@@ -176,18 +187,24 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         ) {
             member_ids.reverse();
         }
+        let mut horizontal_cursor = x + lane_header + 20.0;
         for (node_index, node_id) in member_ids.iter().enumerate() {
             let Some(node) = diagram.nodes.iter().find(|node| &node.id == node_id) else {
                 continue;
             };
+            let resolved_node_width = if horizontal_flow {
+                swimlane_node_width(&node.label)
+            } else {
+                node_width
+            };
             let (node_x, node_y) = if horizontal_flow {
                 (
-                    x + lane_header + 20.0 + node_index as f64 * (node_width + node_gap),
+                    horizontal_cursor,
                     y + (lane_cross - node_height) / 2.0,
                 )
             } else {
                 (
-                    x + (lane_cross - node_width) / 2.0,
+                    x + (lane_cross - resolved_node_width) / 2.0,
                     y + lane_header + 20.0 + node_index as f64 * (node_height + node_gap),
                 )
             };
@@ -197,9 +214,10 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
                 shape: node.shape.clone(),
                 x: node_x,
                 y: node_y,
-                width: node_width,
+                width: resolved_node_width,
                 height: node_height,
             });
+            horizontal_cursor += resolved_node_width + node_gap;
         }
     }
     let centers = nodes
@@ -237,6 +255,10 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         nodes,
         edges,
     }
+}
+
+fn swimlane_node_width(label: &str) -> f64 {
+    (label.chars().count() as f64 * 7.2 + 28.0).clamp(132.0, 260.0)
 }
 /// Lay out a treemap using stable alternating slice-and-dice partitions.
 pub fn layout_treemap(diagram: &TreemapDiagram, _canvas_width: f64) -> LayoutedTreemapDiagram {
@@ -615,6 +637,23 @@ mod tests {
             assert!(node.x >= lane.x && node.x + node.width <= lane.x + lane.width);
             assert!(node.y >= lane.y && node.y + node.height <= lane.y + lane.height);
         }
+    }
+
+    #[test]
+    fn swimlane_layout_expands_horizontal_nodes_for_long_labels() {
+        use diagram_ir::{DiagramShape, SwimlaneDiagram, SwimlaneLane, SwimlaneNode};
+        let diagram = SwimlaneDiagram {
+            direction: DiagramDirection::Lr, title: None, accessibility_title: None,
+            accessibility_description: None,
+            lanes: vec![SwimlaneLane { id: "lane".into(), label: "Lane".into(), node_ids: vec!["long".into()] }],
+            nodes: vec![SwimlaneNode { id: "long".into(),
+                label: "A substantially longer process description".into(),
+                lane_id: Some("lane".into()), shape: DiagramShape::Rect }],
+            edges: vec![],
+        };
+        let layout = layout_swimlane(&diagram);
+        assert!(layout.nodes[0].width > 132.0);
+        assert!(layout.nodes[0].x + layout.nodes[0].width < layout.lanes[0].x + layout.lanes[0].width);
     }
 
     #[test]
