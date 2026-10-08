@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- `open_chief_vault` now anchors the vault (VLT01 F11) in
+  `<kek_path>.freshness/`, created owner-only next to the KEK. A consistent
+  snapshot of the storage directory put back, records and index together, is
+  `Tamper` at startup. The index alone could not catch that. A new
+  `ChiefDaemonError::ChiefVaultAnchor` reports an anchor directory that
+  cannot be opened, or one that is writable by others.
 - New `compose_host_data_plane_with_fetcher`. It is the production composition
   with the `net.fetch` resolver and transport supplied as a `NetFetch<R, T>`,
   so the whole pipeline still runs. `compose_host_data_plane` calls it with

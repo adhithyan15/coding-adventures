@@ -412,6 +412,21 @@ write. A store built with `SealedStore::with_anchor` consults it:
   in between leaves the anchor behind, which is weaker for one write but
   never refuses an index the vault itself wrote. An anchor never moves
   down.
+- **Raising on read.** When an index authenticates and is not below the
+  anchor, the anchor is raised to its epoch. An authentic index carries an
+  epoch the vault itself wrote, so this is always safe. It does two things.
+  It repairs an advance that a crash or a failed anchor write skipped. And
+  it protects a vault written before anchoring existed from its first
+  anchored read, not only from its next write.
+- **Cache hits are checked too.** A cached index whose epoch is below the
+  anchor is refused. A restored file can carry the old revision string, and
+  another process may have moved the anchor past the cached index.
+
+**Trust on first use.** An anchor protects only history the anchored store
+has seen. Whatever the storage directory holds at the first anchored load is
+taken as current. A namespace that has only v1 records, and so has no index
+yet, has nothing to anchor until its first write migrates it. Rolling back
+before that first load, or into that pre-migration state, is not detected.
 
 The anchor is trusted because of **where** it is, not because of
 cryptography. A MAC would not help: an old copy of a MAC'd anchor is just as
@@ -421,20 +436,35 @@ F10, and nothing worse.
 `FileFreshnessAnchor` is the provided implementation. It keeps one file per
 namespace in a directory:
 
-- The file name is the hex-encoded namespace.
+- The file name is the hex-encoded namespace. A namespace longer than 127
+  bytes would exceed common file-name limits, and fails closed.
 - The content is the decimal epoch and a newline.
 - Each write goes to a temporary file, which is synced and then renamed into
   place.
 - On Unix, the directory is created `0700` and the files `0600`.
 - A symlink, a non-regular file, or content that is not exactly a canonical
   `u64` is refused with an error. It is never treated as absent.
+- Every advance holds an exclusive OS lock on `.lock` in the directory
+  across its read, compare and rename. Two writers, in one process or many,
+  therefore cannot leave the anchor below an epoch either acknowledged.
+- Not checked: who owns the directory (only its mode is), and Windows ACLs.
+  The directory is assumed to be where the owner put it.
 
 One file per namespace means two processes writing different namespaces of
 the same store never contend, for example the CLI writing the Chief vault
 while the daemon writes a pairing vault.
 
+**Same KEK, different vault.** Indexes and records are bound to their
+namespace and key, but not to a particular vault. A vault reinitialized
+under the same KEK accepts another vault's authentic files. Under an anchor,
+those files then raise it, so the real index reads as `Tamper` from then on.
+**When resetting a vault, rotate the KEK.** Binding a random per-vault id
+into the AADs would remove this requirement (backlog P1.20d).
+
 **Who is anchored today.** Only the Chief vault: `open_chief_vault` keeps its
-anchor in `<kek_path>.freshness/`, next to the KEK. The six smart-home
+anchor in `<kek_path>.freshness/`, next to the KEK. It refuses an anchor
+directory inside the storage directory, because whoever can roll the storage
+back could roll such an anchor back with it. The six smart-home
 pairing vaults and the OAuth credential store still open `SealedStore::new`,
 so F10 still applies to them. Anchoring them is backlog item P1.20c.
 

@@ -9,6 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **The freshness anchor** (VLT01 F11, #13980 P1.20b). The new
+  `FreshnessAnchor` trait, and `SealedStore::with_anchor`, keep each
+  namespace's highest index epoch **outside** the storage directory. Under
+  an anchor, an index older than the anchor, or a missing index the anchor
+  remembers, is `Tamper`, across restarts. That closes F10: restoring an old
+  index together with an old record, and deleting the index to restore a v1
+  file.
+  - `FileFreshnessAnchor` keeps one hex-named file per namespace in an
+    owner-only directory, holding a canonical decimal epoch. Writes go to a
+    temporary file that is synced, then renamed into place.
+  - It refuses symlinks, damaged files, and a directory writable by others.
+    A damaged anchor fails closed and is never treated as absent.
+  - An authentic index raises the anchor when it loads. A vault written
+    before anchoring is therefore protected from its first anchored read
+    (trust on first use), and an advance a crash skipped is repaired.
+  - Cache hits are checked against the anchor too.
+  - Every advance holds an exclusive OS lock (`std::fs::File::lock`), so
+    concurrent writers cannot lower the anchor.
+
 - **Freshness: rollback protection for sealed records** (VLT01 F1-F10,
   #13980 P1.20). Before this, someone who could write the storage directory
   could put back an older ciphertext file and it would still verify. That

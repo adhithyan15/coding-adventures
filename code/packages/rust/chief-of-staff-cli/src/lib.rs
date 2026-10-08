@@ -1301,6 +1301,60 @@ hardware_key_timeout = 60
         );
     }
 
+    fn copy_tree(from: &Path, to: &Path) {
+        fs::create_dir_all(to).unwrap();
+        for entry in fs::read_dir(from).unwrap() {
+            let entry = entry.unwrap();
+            let target = to.join(entry.file_name());
+            if entry.file_type().unwrap().is_dir() {
+                copy_tree(&entry.path(), &target);
+            } else {
+                fs::copy(entry.path(), target).unwrap();
+            }
+        }
+    }
+
+    #[test]
+    fn restoring_a_snapshot_of_the_whole_vault_directory_stops_the_load() {
+        // VLT01 F10/F11: a consistent snapshot of the storage directory,
+        // records and index together, is exactly what the index alone cannot
+        // catch. The anchor next to the KEK, outside that directory, can.
+        let (directory, config) = vault_home("vault-snapshot");
+        vault_run(
+            &directory,
+            &config,
+            PUT,
+            &mut FakeInput::piped(b"leaked-key"),
+        )
+        .unwrap();
+        let loaded = load_config_file(&config).unwrap();
+        let vault_dir = loaded.vault().storage_path().resolve(&directory.0).unwrap();
+        let snapshot = directory.0.join("vault-snapshot");
+        copy_tree(&vault_dir, &snapshot);
+
+        vault_run(
+            &directory,
+            &config,
+            PUT,
+            &mut FakeInput::piped(b"rotated-key"),
+        )
+        .unwrap();
+        let anchor = directory
+            .0
+            .join(".chief-of-staff")
+            .join("vault.kek.freshness");
+        assert!(anchor.is_dir(), "the anchor sits next to the KEK");
+
+        fs::remove_dir_all(&vault_dir).unwrap();
+        copy_tree(&snapshot, &vault_dir);
+        match chief_of_staff_daemon::load_chief_vault_runtime(&loaded, &directory.0) {
+            Err(ChiefDaemonError::ChiefVaultLoad(StoreError::Sealed(error))) => {
+                assert!(error.to_string().contains("tamper"), "{error}");
+            }
+            other => panic!("expected a tamper refusal, got {:?}", other.map(|_| ())),
+        }
+    }
+
     #[test]
     fn one_corrupt_record_stops_the_daemon_vault_load() {
         let (directory, config) = vault_home("vault-corrupt");

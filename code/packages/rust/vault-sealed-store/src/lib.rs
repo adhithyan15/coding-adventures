@@ -28,7 +28,10 @@
 
 #![forbid(unsafe_code)]
 
+mod anchor;
 mod freshness;
+
+pub use anchor::{AnchorError, FileFreshnessAnchor, FreshnessAnchor};
 
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
@@ -310,6 +313,8 @@ pub struct SealedStore {
     /// returns the newer, authentic index, which is the safe direction. A
     /// legitimate write always changes the revision, so it always misses.
     indexes: Mutex<HashMap<String, (Revision, FreshnessIndex)>>,
+    /// The external epoch floor (F11), if this store was given one.
+    anchor: Option<Arc<dyn FreshnessAnchor>>,
 }
 
 /// In-memory unseal state. Held under a mutex so `seal()` from one thread
@@ -340,6 +345,29 @@ impl SealedStore {
             backend,
             state: Mutex::new(State { unsealed: None }),
             indexes: Mutex::new(HashMap::new()),
+            anchor: None,
+        }
+    }
+
+    /// Wrap a backend, with a freshness anchor kept outside it (VLT01 F11).
+    ///
+    /// The anchor remembers, per namespace, the highest index epoch this
+    /// vault wrote. An index older than that, or a missing index the anchor
+    /// remembers, is `Tamper`. That closes the restored-pair cases the
+    /// index alone cannot see (F10), across restarts, provided the anchor's
+    /// location is outside the attacker's reach.
+    pub fn with_anchor(backend: Arc<dyn StorageBackend>, anchor: Arc<dyn FreshnessAnchor>) -> Self {
+        Self {
+            anchor: Some(anchor),
+            ..Self::new(backend)
+        }
+    }
+
+    /// The anchored epoch for `namespace`, or `None` without an anchor.
+    fn anchored_epoch(&self, namespace: &str) -> Result<Option<u64>, SealedStoreError> {
+        match &self.anchor {
+            None => Ok(None),
+            Some(anchor) => anchor.load(namespace).map_err(anchor_error),
         }
     }
 
@@ -1276,15 +1304,30 @@ impl SealedStore {
     ) -> Result<Option<(FreshnessIndex, Revision)>, SealedStoreError> {
         let index_key = freshness_key(namespace);
         let Some(record) = self.backend.get(RESERVED_NAMESPACE, &index_key)? else {
+            // F11: an index the anchor remembers was deleted, not never made.
+            if self.anchored_epoch(namespace)?.is_some() {
+                return Err(tamper(RESERVED_NAMESPACE, &index_key));
+            }
             return Ok(None);
         };
-        {
+        let cached = {
             let cache = self.indexes.lock().expect("vault index cache poisoned");
-            if let Some((revision, index)) = cache.get(namespace) {
-                if *revision == record.revision {
-                    return Ok(Some((index.clone(), record.revision)));
-                }
+            cache
+                .get(namespace)
+                .filter(|(revision, _)| *revision == record.revision)
+                .map(|(_, index)| index.clone())
+        };
+        if let Some(index) = cached {
+            // The revision string is the backend's to report, and a restored
+            // file can carry the old one. A cache hit is still held to the
+            // anchor, which another process may have moved past it.
+            if self
+                .anchored_epoch(namespace)?
+                .is_some_and(|anchored| index.epoch < anchored)
+            {
+                return Err(tamper(RESERVED_NAMESPACE, &index_key));
             }
+            return Ok(Some((index, record.revision)));
         }
         let invalid = || tamper(RESERVED_NAMESPACE, &index_key);
         let meta = SealedRecordMeta::parse(&record.metadata).map_err(|_| invalid())?;
@@ -1300,6 +1343,25 @@ impl SealedStore {
             &record.body,
         )?;
         let index = FreshnessIndex::decode(&plaintext).ok_or_else(invalid)?;
+        // F11: an authentic index older than the anchor is an old copy put
+        // back, across restarts as well as within this process.
+        let anchored = self.anchored_epoch(namespace)?;
+        if anchored.is_some_and(|anchored| index.epoch < anchored) {
+            return Err(invalid());
+        }
+        // F11, raise on read: an authentic index carries an epoch this vault
+        // wrote, so the anchor may safely move up to it. That gives a vault
+        // written before anchoring existed its protection from the first
+        // anchored *read* (trust on first use), not only from its next
+        // write, and it repairs an advance a crash or a failed anchor write
+        // skipped.
+        if let Some(anchor) = &self.anchor {
+            if anchored.is_none_or(|anchored| anchored < index.epoch) {
+                anchor
+                    .advance(namespace, index.epoch)
+                    .map_err(anchor_error)?;
+            }
+        }
         let mut cache = self.indexes.lock().expect("vault index cache poisoned");
         // The epoch floor. Every index write advances the epoch, so an
         // authentic index older than one this process has already seen is
@@ -1362,6 +1424,14 @@ impl SealedStore {
                 namespace.to_string(),
                 (record.revision.clone(), index.clone()),
             );
+        // F11: index first, then anchor. A crash between them leaves the
+        // anchor behind, which is weaker for one write but never refuses an
+        // index this vault wrote.
+        if let Some(anchor) = &self.anchor {
+            anchor
+                .advance(namespace, index.epoch)
+                .map_err(anchor_error)?;
+        }
         Ok(record.revision)
     }
 
@@ -1827,6 +1897,15 @@ fn freshness_aad(namespace: &str) -> Vec<u8> {
     v.push(0);
     v.extend_from_slice(namespace.as_bytes());
     v
+}
+
+/// An anchor failure, as a storage error with a fixed message. It is never
+/// treated as "no anchor": an unreadable anchor must not quietly disable
+/// the check it exists for.
+fn anchor_error(error: AnchorError) -> SealedStoreError {
+    SealedStoreError::Storage(StorageError::Backend {
+        message: error.to_string(),
+    })
 }
 
 fn tamper(namespace: &str, key: &str) -> SealedStoreError {
@@ -4267,5 +4346,152 @@ mod tests {
             )
             .unwrap();
         assert_tamper(store.get("ns", "k"));
+    }
+
+    // ---- the freshness anchor (VLT01 F11) ----------------------------------
+
+    /// An anchor in memory, shared across "restarts" of the store.
+    #[derive(Default)]
+    struct MemoryAnchor(Mutex<HashMap<String, u64>>);
+
+    impl FreshnessAnchor for MemoryAnchor {
+        fn load(&self, namespace: &str) -> Result<Option<u64>, AnchorError> {
+            Ok(self.0.lock().unwrap().get(namespace).copied())
+        }
+        fn advance(&self, namespace: &str, epoch: u64) -> Result<(), AnchorError> {
+            let mut map = self.0.lock().unwrap();
+            let entry = map.entry(namespace.to_string()).or_insert(epoch);
+            *entry = (*entry).max(epoch);
+            Ok(())
+        }
+    }
+
+    fn anchored(backend: &Arc<dyn StorageBackend>, anchor: &Arc<MemoryAnchor>) -> SealedStore {
+        let store = SealedStore::with_anchor(Arc::clone(backend), anchor.clone());
+        if store.status().unwrap().initialized {
+            store.unseal(b"pw").unwrap();
+        } else {
+            store.init(b"pw", &fast_opts()).unwrap();
+        }
+        store
+    }
+
+    #[test]
+    fn the_anchor_refuses_a_restored_pair_across_a_restart() {
+        // F10's "consistent pair", which the index alone accepts after a
+        // restart.
+        let backend: Arc<dyn StorageBackend> = Arc::new(InMemoryStorageBackend::new());
+        backend.initialize().unwrap();
+        let anchor = Arc::new(MemoryAnchor::default());
+        let store = anchored(&backend, &anchor);
+        store.put("ns", "k", b"leaked", None).unwrap();
+        let old_index = snapshot(&backend, RESERVED_NAMESPACE, &freshness_key("ns"));
+        let old_record = snapshot(&backend, "ns", "k");
+        store.put("ns", "k", b"rotated", None).unwrap();
+        drop(store);
+
+        restore(&backend, old_index);
+        restore(&backend, old_record);
+        // Without the anchor, a restarted store accepts the pair...
+        assert_eq!(
+            reopen(&backend)
+                .get("ns", "k")
+                .unwrap()
+                .unwrap()
+                .plaintext
+                .to_vec(),
+            b"leaked"
+        );
+        // ...and with it, it does not.
+        assert_tamper(anchored(&backend, &anchor).get("ns", "k"));
+    }
+
+    #[test]
+    fn the_anchor_refuses_a_deleted_index_and_a_restored_v1_file() {
+        // F10's "no index" case.
+        let backend: Arc<dyn StorageBackend> = Arc::new(InMemoryStorageBackend::new());
+        backend.initialize().unwrap();
+        let anchor = Arc::new(MemoryAnchor::default());
+        let store = anchored(&backend, &anchor);
+        put_v1(&store, &backend, "k", b"pre-migration");
+        let v1 = snapshot(&backend, "ns", "k");
+        store.put("ns", "other", b"x", None).unwrap(); // migrates
+        store.put("ns", "k", b"current", None).unwrap();
+        drop(store);
+
+        backend
+            .delete(RESERVED_NAMESPACE, &freshness_key("ns"), None)
+            .unwrap();
+        restore(&backend, v1);
+        assert_eq!(
+            reopen(&backend)
+                .get("ns", "k")
+                .unwrap()
+                .unwrap()
+                .plaintext
+                .to_vec(),
+            b"pre-migration"
+        );
+        assert_tamper(anchored(&backend, &anchor).get("ns", "k"));
+        // A write refuses too, rather than migrating the restored file.
+        assert!(matches!(
+            anchored(&backend, &anchor).put("ns", "k", b"y", None),
+            Err(SealedStoreError::Tamper { .. })
+        ));
+    }
+
+    #[test]
+    fn a_damaged_anchor_fails_closed() {
+        let dir = std::env::temp_dir().join(format!(
+            "vault-sealed-anchor-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let backend: Arc<dyn StorageBackend> = Arc::new(InMemoryStorageBackend::new());
+        backend.initialize().unwrap();
+        let anchor = Arc::new(FileFreshnessAnchor::open(&dir).unwrap());
+        let store = SealedStore::with_anchor(Arc::clone(&backend), anchor);
+        store.init(b"pw", &fast_opts()).unwrap();
+        store.put("ns", "k", b"v", None).unwrap();
+        assert_eq!(read(&store, "ns", "k"), b"v");
+        // The anchor file for "ns" is hex("ns") = "6e73".
+        std::fs::write(dir.join("6e73"), b"not an epoch").unwrap();
+        let reopened = SealedStore::with_anchor(
+            Arc::clone(&backend),
+            Arc::new(FileFreshnessAnchor::open(&dir).unwrap()),
+        );
+        reopened.unseal(b"pw").unwrap();
+        assert!(matches!(
+            reopened.get("ns", "k"),
+            Err(SealedStoreError::Storage(StorageError::Backend { .. }))
+        ));
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn the_first_anchored_read_protects_a_vault_written_before_anchoring() {
+        // Review finding MEDIUM-1: history built without an anchor, then
+        // only read under one, must still be protected after the next
+        // restart.
+        let backend: Arc<dyn StorageBackend> = Arc::new(InMemoryStorageBackend::new());
+        backend.initialize().unwrap();
+        let unanchored = SealedStore::new(Arc::clone(&backend));
+        unanchored.init(b"pw", &fast_opts()).unwrap();
+        unanchored.put("ns", "k", b"leaked", None).unwrap();
+        let old_index = snapshot(&backend, RESERVED_NAMESPACE, &freshness_key("ns"));
+        let old_record = snapshot(&backend, "ns", "k");
+        unanchored.put("ns", "k", b"rotated", None).unwrap();
+        drop(unanchored);
+
+        // The upgrade: an anchored store that only ever reads.
+        let anchor = Arc::new(MemoryAnchor::default());
+        assert_eq!(read(&anchored(&backend, &anchor), "ns", "k"), b"rotated");
+
+        restore(&backend, old_index);
+        restore(&backend, old_record);
+        assert_tamper(anchored(&backend, &anchor).get("ns", "k"));
     }
 }

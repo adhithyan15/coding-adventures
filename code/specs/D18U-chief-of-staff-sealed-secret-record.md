@@ -73,13 +73,15 @@ and `register_all` fails closed on them:
 
 The Chief vault also opens its store with a freshness anchor (VLT01 F11). It is
 kept in `<kek_path>.freshness/`, next to the owner-only KEK file and outside
-the storage directory. The anchor closes F10's remaining cases, so restoring
-an old index together with an old record is also `Tamper`, across restarts.
+the storage directory. From the first anchored load, the anchor closes F10's
+remaining cases, so restoring an old index together with an old record is also
+`Tamper`, across restarts. What the storage directory holds at that first load
+is taken as current (trust on first use).
 The trust assumption moves from the storage directory to the KEK's own
 directory, which the KEK file's owner-only check already relies on. The
 operating requirement is now that **the KEK's directory is writable only by
 the owner**. If someone else can write the storage directory, they still
-cannot roll the Chief vault back.
+cannot roll the Chief vault back to before its first anchored load.
 
 ### Why startup-only (U-D4, U-D5)
 

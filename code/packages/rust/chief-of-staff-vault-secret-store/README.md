@@ -72,9 +72,10 @@ let count = store.register_all(&runtime)?;
 **Rollback is detected for single files, not whole snapshots.** The sealed
 store underneath keeps a sealed freshness index (VLT01 F1-F10). Restoring an
 older record file, or one that was deleted, reads as `Tamper`, and
-`register_all` refuses to load. An old index restored *with* an old record it
-pins is not yet detected after a restart (P1.20b). So keep the vault directory
-writable only by the owner.
+`register_all` refuses to load. The daemon and CLI open the vault with a
+freshness anchor next to the KEK (VLT01 F11). So a whole old snapshot of the
+storage directory, index included, is refused too. The trust assumption is
+now the KEK's own directory being owner-only.
 
 `privilege_tier` is stored but not enforced. VLT06 records that nothing reads
 it yet.
