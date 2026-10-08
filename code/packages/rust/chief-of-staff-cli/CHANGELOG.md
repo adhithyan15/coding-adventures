@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- `vault put` writes the destinations from `--destination` into the sealed
+  record. The end-to-end test now redeems through `consume_for` and shows an
+  unprovisioned destination being refused.
 - Add `vault put`, `vault delete` and `vault list` (D18U, P1.4b on #13980).
   These are local commands that open the Chief vault through the daemon
   crate's `open_chief_vault`, and never contact the daemon:

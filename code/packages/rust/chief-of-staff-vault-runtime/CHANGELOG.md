@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- **Breaking**: `SecretPolicy` gains `allowed_destinations`, the `host:port`
+  pairs a host-mediated network operation may send the secret to (VLT06 P9).
+  Empty means none. `SecretPolicy::unrestricted` leaves it empty, because
+  "unrestricted" is about who may ask, not where the secret may be sent.
+- New `consume_for(vault_ref, agent, destination)` (VLT06 P8, P9). The runtime
+  now records the attested agent with every lease. `consume_for` refuses,
+  without consuming, unless the agent matches and the destination is
+  provisioned. That makes a leaked bearer reference useless, and keeps a key
+  minted for one API off every other host the agent may reach. The secrets
+  lock is held through consumption, so a concurrent rotation cannot land
+  between the decision and the redemption. `consume` remains for trusted
+  handlers that are not network operations.
+- New `VaultRuntimeError::DestinationNotPermitted`.
 - **Breaking**: `register_secret` now takes a `SecretPolicy`, and
   `request_lease` takes a `VaultLeaseRequest` carrying the requesting agent.
   Implements VLT06's per-secret admission policy: each secret declares

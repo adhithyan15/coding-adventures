@@ -338,6 +338,7 @@ fn a_direct_only_secret_cannot_be_leased_through_the_tool_boundary() {
         allowed_agents: AllowedAgents::Any,
         allowed_mode: VaultDeliveryMode::Direct,
         rotated_at_ms: 0,
+        allowed_destinations: Default::default(),
     });
 
     let trace = runtime.invoke_with_events(&request(
@@ -363,6 +364,7 @@ fn a_leased_only_secret_cannot_be_direct_delivered_through_the_tool_boundary() {
         allowed_agents: AllowedAgents::Any,
         allowed_mode: VaultDeliveryMode::Leased,
         rotated_at_ms: 0,
+        allowed_destinations: Default::default(),
     });
 
     let trace = runtime.invoke_with_events(&request(
@@ -392,6 +394,7 @@ fn the_attested_agent_identity_decides_admission() {
         allowed_agents: AllowedAgents::only(["agent:finance"]),
         allowed_mode: VaultDeliveryMode::Both,
         rotated_at_ms: 0,
+        allowed_destinations: Default::default(),
     });
     let trace = refused.invoke_with_events(&request(
         VAULT_REQUEST_LEASE_TOOL_ID,
@@ -412,6 +415,7 @@ fn the_attested_agent_identity_decides_admission() {
         allowed_agents: AllowedAgents::only(["agent:weather"]),
         allowed_mode: VaultDeliveryMode::Both,
         rotated_at_ms: 0,
+        allowed_destinations: Default::default(),
     });
     let trace = admitted.invoke_with_events(&request(
         VAULT_REQUEST_LEASE_TOOL_ID,
@@ -435,6 +439,7 @@ fn a_refusal_says_no_more_than_the_two_static_messages() {
                 allowed_agents: AllowedAgents::only(["agent:finance"]),
                 allowed_mode: VaultDeliveryMode::Both,
                 rotated_at_ms: 0,
+                allowed_destinations: Default::default(),
             },
             VAULT_REQUEST_LEASE_TOOL_ID,
             lease_arguments(SECRET_NAME, 60_000),
@@ -445,6 +450,7 @@ fn a_refusal_says_no_more_than_the_two_static_messages() {
                 allowed_agents: AllowedAgents::Any,
                 allowed_mode: VaultDeliveryMode::Direct,
                 rotated_at_ms: 0,
+                allowed_destinations: Default::default(),
             },
             VAULT_REQUEST_LEASE_TOOL_ID,
             lease_arguments(SECRET_NAME, 60_000),

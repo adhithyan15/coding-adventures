@@ -1249,6 +1249,8 @@ hardware_key_timeout = 60
         "1",
         "--allow-agent",
         "weather-host",
+        "--destination",
+        "api.weather.gov:443",
     ];
 
     #[test]
@@ -1282,9 +1284,18 @@ hardware_key_timeout = 60
                 ttl_ms: 60_000,
             })
             .unwrap();
+        // The provisioned destination survives the sealed round trip, so the
+        // lease can only be redeemed for that host (VLT06 P9).
+        assert!(matches!(
+            runtime.consume_for(&receipt.vault_ref, "weather-host", "evil.example:443"),
+            Err(chief_of_staff_vault_runtime::VaultRuntimeError::DestinationNotPermitted)
+        ));
         // U-C3: the one trailing newline `echo` adds is gone.
         assert_eq!(
-            runtime.consume(&receipt.vault_ref).unwrap().as_bytes(),
+            runtime
+                .consume_for(&receipt.vault_ref, "weather-host", "api.weather.gov:443")
+                .unwrap()
+                .as_bytes(),
             b"api-key-value"
         );
     }

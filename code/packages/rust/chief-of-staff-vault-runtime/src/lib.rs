@@ -140,6 +140,11 @@ pub struct SecretPolicy {
     pub allowed_mode: VaultDeliveryMode,
     /// When the secret was last changed, in milliseconds since Unix epoch.
     pub rotated_at_ms: u64,
+    /// The `host:port` pairs a host-mediated network operation may send this
+    /// secret to (VLT06 P9). Empty means none: the secret can still be leased
+    /// to a trusted handler or delivered directly, but `consume_for` will
+    /// never release it for a request anywhere.
+    pub allowed_destinations: BTreeSet<String>,
 }
 
 impl SecretPolicy {
@@ -153,6 +158,9 @@ impl SecretPolicy {
             allowed_agents: AllowedAgents::Any,
             allowed_mode: VaultDeliveryMode::Both,
             rotated_at_ms,
+            // "Unrestricted" is about who may ask, not where the secret may
+            // be sent: destinations are never implied (VLT06 P9).
+            allowed_destinations: BTreeSet::new(),
         }
     }
 }
@@ -271,6 +279,8 @@ pub enum VaultRuntimeError {
     InvalidConsumerAgentId,
     /// The supplied reference was not minted by this broker format.
     InvalidVaultRef,
+    /// The secret is not provisioned for the requested destination (VLT06 P9).
+    DestinationNotPermitted,
     /// The trusted direct-delivery adapter rejected the operation.
     DirectDelivery(VaultDirectDeliveryError),
     /// The underlying lease manager rejected the operation.
@@ -290,6 +300,9 @@ impl fmt::Display for VaultRuntimeError {
             Self::AgentNotPermitted => f.write_str("agent is not permitted to request this secret"),
             Self::InvalidConsumerAgentId => f.write_str("invalid consumer agent identifier"),
             Self::InvalidVaultRef => f.write_str("invalid VaultRef"),
+            Self::DestinationNotPermitted => {
+                f.write_str("secret is not provisioned for this destination")
+            }
             Self::DirectDelivery(error) => write!(f, "{error}"),
             Self::Lease(error) => write!(f, "lease operation failed: {error}"),
         }
@@ -454,13 +467,24 @@ const MAX_TRACKED_LEASES_PER_SECRET: usize = 1024;
 #[derive(Default)]
 struct IssuedIndex {
     by_secret: HashMap<String, HashSet<LeaseId>>,
-    by_lease: HashMap<LeaseId, String>,
+    by_lease: HashMap<LeaseId, LeaseOwner>,
+}
+
+/// Who a lease was issued to, and over which secret (VLT06 P8).
+struct LeaseOwner {
+    secret_name: String,
+    agent: Option<String>,
 }
 
 impl IssuedIndex {
-    fn record(&mut self, secret_name: &str, lease_id: LeaseId) {
-        self.by_lease
-            .insert(lease_id.clone(), secret_name.to_string());
+    fn record(&mut self, secret_name: &str, lease_id: LeaseId, agent: Option<&str>) {
+        self.by_lease.insert(
+            lease_id.clone(),
+            LeaseOwner {
+                secret_name: secret_name.to_string(),
+                agent: agent.map(str::to_string),
+            },
+        );
         self.by_secret
             .entry(secret_name.to_string())
             .or_default()
@@ -472,11 +496,11 @@ impl IssuedIndex {
     /// Called on redemption and revocation: both make the capability dead, and
     /// a dead capability is not something rotation needs to revoke.
     fn forget(&mut self, lease_id: &LeaseId) {
-        if let Some(secret_name) = self.by_lease.remove(lease_id) {
-            if let Some(set) = self.by_secret.get_mut(&secret_name) {
+        if let Some(owner) = self.by_lease.remove(lease_id) {
+            if let Some(set) = self.by_secret.get_mut(&owner.secret_name) {
                 set.remove(lease_id);
                 if set.is_empty() {
-                    self.by_secret.remove(&secret_name);
+                    self.by_secret.remove(&owner.secret_name);
                 }
             }
         }
@@ -663,7 +687,11 @@ impl ChiefVaultRuntime {
 
         let lease_id = self.leases.issue(payload, request.ttl_ms)?;
         let info = self.leases.lookup(&lease_id)?;
-        issued.record(request.secret_name, lease_id.clone());
+        issued.record(
+            request.secret_name,
+            lease_id.clone(),
+            request.requesting_agent_id,
+        );
 
         Ok(VaultLeaseReceipt {
             vault_ref: VaultRef::trusted(format!("{VAULT_REF_PREFIX}{}", lease_id.as_hex())),
@@ -714,6 +742,47 @@ impl ChiefVaultRuntime {
             .lock()
             .expect("vault issued-lease mutex poisoned")
             .forget(&lease_id);
+        Ok(payload)
+    }
+
+    /// Redeem a lease for a host-mediated network request (VLT06 P8, P9).
+    ///
+    /// Refuses **without consuming** unless the lease was issued to
+    /// `requesting_agent_id` and the secret is provisioned for `destination`
+    /// (`host:port`). Without the first check a leaked bearer reference is
+    /// redeemable by whoever reads it; without the second, a key minted for
+    /// one API can be sent to any other host the same agent may reach.
+    ///
+    /// The secrets lock is held from the policy check through consumption --
+    /// the same order rotation takes it in (secrets -> issued -> leases) -- so
+    /// a rotation cannot land between deciding and redeeming.
+    pub fn consume_for(
+        &self,
+        vault_ref: &VaultRef,
+        requesting_agent_id: &str,
+        destination: &str,
+    ) -> Result<LeasePayload, VaultRuntimeError> {
+        let lease_id = lease_id(vault_ref)?;
+        let secrets = self.secrets.lock().expect("vault secret mutex poisoned");
+        let mut issued = self
+            .issued
+            .lock()
+            .expect("vault issued-lease mutex poisoned");
+        let owner = issued
+            .by_lease
+            .get(&lease_id)
+            .ok_or(VaultRuntimeError::InvalidVaultRef)?;
+        if owner.agent.as_deref() != Some(requesting_agent_id) {
+            return Err(VaultRuntimeError::AgentNotPermitted);
+        }
+        let stored = secrets
+            .get(&owner.secret_name)
+            .ok_or(VaultRuntimeError::SecretNotFound)?;
+        if !stored.policy().allowed_destinations.contains(destination) {
+            return Err(VaultRuntimeError::DestinationNotPermitted);
+        }
+        let payload = self.leases.consume(&lease_id)?;
+        issued.forget(&lease_id);
         Ok(payload)
     }
 
@@ -832,6 +901,7 @@ mod tests {
                 allowed_agents: AllowedAgents::Any,
                 allowed_mode: VaultDeliveryMode::Direct,
                 rotated_at_ms: 0,
+                allowed_destinations: Default::default(),
             },
         );
 
@@ -858,6 +928,7 @@ mod tests {
                 allowed_agents: AllowedAgents::Any,
                 allowed_mode: VaultDeliveryMode::Leased,
                 rotated_at_ms: 0,
+                allowed_destinations: Default::default(),
             },
         );
         let delivery = RecordingDelivery::default();
@@ -890,6 +961,7 @@ mod tests {
                 allowed_agents: AllowedAgents::only(["agent:finance"]),
                 allowed_mode: VaultDeliveryMode::Both,
                 rotated_at_ms: 0,
+                allowed_destinations: Default::default(),
             },
         );
         let delivery = RecordingDelivery::default();
@@ -932,6 +1004,7 @@ mod tests {
                 allowed_agents: AllowedAgents::only(["agent:finance"]),
                 allowed_mode: VaultDeliveryMode::Both,
                 rotated_at_ms: 0,
+                allowed_destinations: Default::default(),
             },
         );
         let delivery = RecordingDelivery::default();
@@ -1025,6 +1098,7 @@ mod tests {
                 allowed_agents: AllowedAgents::only(["agent:finance"]),
                 allowed_mode: VaultDeliveryMode::Direct,
                 rotated_at_ms: 1,
+                allowed_destinations: Default::default(),
             },
         );
 
@@ -1076,6 +1150,7 @@ mod tests {
             allowed_agents: AllowedAgents::only(["agent:finance"]),
             allowed_mode: VaultDeliveryMode::Direct,
             rotated_at_ms: 0,
+            allowed_destinations: Default::default(),
         };
 
         assert!(matches!(
@@ -1104,6 +1179,7 @@ mod tests {
             allowed_agents: AllowedAgents::only(["agent:finance"]),
             allowed_mode: VaultDeliveryMode::Direct,
             rotated_at_ms: 0,
+            allowed_destinations: Default::default(),
         };
 
         assert!(
@@ -1124,6 +1200,7 @@ mod tests {
             allowed_agents: AllowedAgents::only(Vec::<String>::new()),
             allowed_mode: VaultDeliveryMode::Both,
             rotated_at_ms: 0,
+            allowed_destinations: Default::default(),
         };
 
         assert!(check_admission(&policy, Some("agent:anyone"), true).is_err());
@@ -1145,6 +1222,7 @@ mod tests {
                 allowed_agents: AllowedAgents::only(["agent:vault"]),
                 allowed_mode: VaultDeliveryMode::Direct,
                 rotated_at_ms: 0,
+                allowed_destinations: Default::default(),
             },
         );
         let delivery = RecordingDelivery::default();
@@ -1166,6 +1244,7 @@ mod tests {
             allowed_agents: AllowedAgents::only(["agent:finance", "agent:audit"]),
             allowed_mode: VaultDeliveryMode::Leased,
             rotated_at_ms: 1_700_000_000_000,
+            allowed_destinations: Default::default(),
         };
         vault.register_secret(
             "finance-key",
