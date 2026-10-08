@@ -6219,6 +6219,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         lanes: Vec::new(),
         nodes: Vec::new(),
         edges: Vec::new(),
+        links: Vec::new(),
     };
     let mut current_lane: Option<usize> = None;
     let mut last_edge_targets: Option<Vec<String>> = None;
@@ -6282,6 +6283,12 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             }
             continue;
         }
+        if let Some(value) = line.strip_prefix("click ") {
+            let link = parse_swimlane_click(value, line_number)?;
+            diagram.links.retain(|existing| existing.node_id != link.node_id);
+            diagram.links.push(link);
+            continue;
+        }
         if let Some(value) = line.strip_prefix("classDef ") {
             let Some((name, declarations)) = value.trim().split_once(char::is_whitespace) else {
                 return Err(swimlane_error(line_number, "Swimlane classDef requires a name and declarations"));
@@ -6333,6 +6340,11 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             "Swimlane diagrams require at least one lane and one node",
         ));
     }
+    for link in &diagram.links {
+        if !diagram.nodes.iter().any(|node| node.id == link.node_id) {
+            return Err(swimlane_error(1, format!("Swimlane click references unknown node {:?}", link.node_id)));
+        }
+    }
     if let Some(style) = class_styles.get("default") {
         for node in &mut diagram.nodes {
             merge_state_style(&mut node.style, style);
@@ -6370,6 +6382,44 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         merge_state_style(&mut node.style, &style);
     }
     Ok(diagram)
+}
+
+fn parse_swimlane_click(value: &str, line: usize) -> Result<GraphLink, ParseError> {
+    let Some((node_id, rest)) = value.trim().split_once(char::is_whitespace) else {
+        return Err(swimlane_error(line, "Swimlane click requires a node and URL"));
+    };
+    let rest = rest.trim_start();
+    let rest = rest.strip_prefix("href").map(str::trim_start).unwrap_or(rest);
+    let (url, rest) = take_swimlane_quoted_value(rest, line, "URL")?;
+    let rest = rest.trim_start();
+    let (tooltip, rest) = if rest.starts_with('"') {
+        let (tooltip, rest) = take_swimlane_quoted_value(rest, line, "tooltip")?;
+        (Some(tooltip), rest)
+    } else {
+        (None, rest)
+    };
+    if !rest.trim().is_empty() {
+        return Err(swimlane_error(line, "unsupported trailing Swimlane click syntax"));
+    }
+    Ok(GraphLink { node_id: node_id.to_string(), url, tooltip })
+}
+
+fn take_swimlane_quoted_value<'a>(value: &'a str, line: usize, kind: &str) -> Result<(String, &'a str), ParseError> {
+    if !value.starts_with('"') {
+        return Err(swimlane_error(line, format!("Swimlane click {kind} must be quoted")));
+    }
+    let mut escaped = false;
+    for (index, character) in value[1..].char_indices() {
+        if character == '"' && !escaped {
+            let close = index + 1;
+            return Ok((normalize_swimlane_label(&value[..=close]), &value[close + 1..]));
+        }
+        escaped = character == '\\' && !escaped;
+        if character != '\\' {
+            escaped = false;
+        }
+    }
+    Err(swimlane_error(line, format!("unterminated Swimlane click {kind}")))
 }
 
 fn parse_swimlane_style(value: &str, line: usize) -> Result<(String, DiagramStyle, usize), ParseError> {

@@ -1120,6 +1120,19 @@ where
     if let Some(description) = &diagram.accessibility_description {
         metadata.insert("accessibility.description".into(), description.clone());
     }
+    for link in &diagram.links {
+        let prefix = format!("swimlane.node.{}.link", link.node_id);
+        metadata.insert(format!("{prefix}.url"), link.url.clone());
+        if let Some(tooltip) = &link.tooltip {
+            metadata.insert(format!("{prefix}.tooltip"), tooltip.clone());
+        }
+        if let Some(node) = diagram.nodes.iter().find(|node| node.id == link.node_id) {
+            metadata.insert(
+                format!("{prefix}.bounds"),
+                format!("{},{},{},{}", node.x, node.y, node.width, node.height),
+            );
+        }
+    }
     PaintScene {
         width: diagram.width,
         height: diagram.height,
