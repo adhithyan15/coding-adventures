@@ -993,7 +993,8 @@ silently degrading.
 The native Mermaid 11.16.1 Swimlane slice recognizes `swimlane-beta` with all
 five directions, top-level `subgraph` lanes, common process-node shapes
 (including storage, subprocess, hexagon, double-circle, input/output, and
-asymmetric, parallelogram, and trapezoid nodes), quoted Unicode node labels,
+asymmetric, parallelogram, and trapezoid nodes), normalized quoted Unicode lane
+and node labels,
 directed/undirected/dotted/thick chained links, point/circle/cross endpoint
 markers and bidirectional arrows, multiline edge continuations,
 parallel branch and join

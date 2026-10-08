@@ -6350,12 +6350,12 @@ fn parse_swimlane_lane(
                 "Swimlane id and label must not be empty",
             ));
         }
-        return Ok((id.to_string(), label.trim().trim_matches('"').to_string()));
+        return Ok((id.to_string(), normalize_swimlane_label(label)));
     }
     if value.is_empty() {
         return Err(swimlane_error(line, "Swimlane label must not be empty"));
     }
-    let label = value.trim_matches('"').to_string();
+    let label = normalize_swimlane_label(value);
     let id = if value
         .chars()
         .all(|character| character.is_ascii_alphanumeric() || character == '_')
@@ -6418,7 +6418,7 @@ fn parse_swimlane_edge_chain(
             return Err(swimlane_error(line_number, "Swimlane edge has multiple labels"));
         }
         let label = inline_label.take().or(pipe_label)
-            .map(|label| normalize_swimlane_node_label(&label));
+            .map(|label| normalize_swimlane_label(&label));
         let next = next_swimlane_operator(after_label);
         let node_text = next.as_ref().map_or(after_label, |operator| &after_label[..operator.at]);
         let nodes = parse_swimlane_node_group(
@@ -6628,7 +6628,7 @@ fn parse_swimlane_node(
             format!("unsupported Swimlane node syntax {value:?}"),
         ));
     };
-    let label = normalize_swimlane_node_label(&label);
+    let label = normalize_swimlane_label(&label);
     if label.trim().is_empty() {
         return Err(swimlane_error(
             line,
@@ -6643,7 +6643,7 @@ fn parse_swimlane_node(
     })
 }
 
-fn normalize_swimlane_node_label(value: &str) -> String {
+fn normalize_swimlane_label(value: &str) -> String {
     let value = value.trim();
     if value.len() >= 2 && value.starts_with('"') && value.ends_with('"') {
         value[1..value.len() - 1]

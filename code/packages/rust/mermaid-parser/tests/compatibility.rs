@@ -1583,6 +1583,25 @@ request --> done"#,
 }
 
 #[test]
+fn swimlane_quoted_lane_labels_normalize_into_semantic_ir() {
+    let diagram = parse_swimlane(
+        r#"swimlane-beta LR
+subgraph intake["Request \"priority\" team ✓"]
+  request[Request]
+end
+subgraph "Completion \"crew\""
+  done[Done]
+end
+request --> done"#,
+    ).expect("quoted Swimlane lane labels should parse");
+
+    assert_eq!(diagram.lanes[0].id, "intake");
+    assert_eq!(diagram.lanes[0].label, "Request \"priority\" team ✓");
+    assert_eq!(diagram.lanes[1].id, "swimlane-2");
+    assert_eq!(diagram.lanes[1].label, "Completion \"crew\"");
+}
+
+#[test]
 fn swimlane_quoted_edge_labels_normalize_into_semantic_ir() {
     let diagram = parse_swimlane(
         r#"swimlane-beta LR
