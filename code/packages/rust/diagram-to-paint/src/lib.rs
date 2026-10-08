@@ -905,6 +905,19 @@ where
         let stroke_width = node.style.stroke_width.unwrap_or(2.0);
         let stroke_dash = node.style.stroke_dash.clone();
         let shape = match node.shape {
+            DiagramShape::TextBlock => PaintInstruction::Rect(PaintRect {
+                base: PaintBase::default(),
+                x: node.x,
+                y: node.y,
+                width: node.width,
+                height: node.height,
+                fill: None,
+                stroke: None,
+                stroke_width: None,
+                corner_radius: None,
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }),
             DiagramShape::Ellipse | DiagramShape::DoubleCircle => PaintInstruction::Ellipse(PaintEllipse {
                 base: PaintBase::default(),
                 cx: node.x + node.width / 2.0,
@@ -1805,6 +1818,19 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
             stroke_cap: None,
             stroke_join: Some(StrokeJoin::Round),
             stroke_dash: node.style.stroke_dash.clone(),
+            stroke_dash_offset: None,
+        }),
+        DiagramShape::TextBlock => PaintInstruction::Rect(PaintRect {
+            base: PaintBase::default(),
+            x: node.x,
+            y: node.y,
+            width: node.width,
+            height: node.height,
+            fill: None,
+            stroke: None,
+            stroke_width: None,
+            corner_radius: None,
+            stroke_dash: None,
             stroke_dash_offset: None,
         }),
         DiagramShape::Cloud => {
