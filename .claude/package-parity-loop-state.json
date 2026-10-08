@@ -12143,11 +12143,11 @@
     {
       "id": "geometry-point2d-java-kotlin-dart-lane-parity",
       "title": "Implement point2d parity in Java, Kotlin, and Dart",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"],
-      "branch": null,
+      "branch": "codex/parity-point2d-jkd-20261008",
       "pr_number": null,
-      "notes": "Port the pure G2D00 point and rectangle foundation with exact neutral vectors, native tests, package metadata, and no paint or host authority; it unlocks the other three geometry gaps."
+      "notes": "Selected after #17076 merged and the refreshed 15-lane inventory remained collision-free. The merged G2D00 neutral contract is ready, local Java/Kotlin/Dart PHY00 trig roots already provide atan2, and no open PR directly overlaps geometry/trig implementation paths. Port only pure Point/Rect foundations in these three lanes with exact four-case normalization fixtures, native tests and at least 95% line coverage, manifests/BUILD fronts/docs, and no affine, Bezier, arc, paint, or host authority. This fills three absent package slots and unlocks the nine downstream geometry slots."
     },
     {
       "id": "geometry-affine2d-bezier2d-java-kotlin-dart-lane-parity",

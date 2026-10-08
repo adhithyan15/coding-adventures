@@ -16877,6 +16877,16 @@ commits. The next dependency/leverage pass compares ready Point2D Java/Kotlin/
 Dart (three missing slots and unlocks nine downstream geometry slots) against
 the remaining package and build-tool items.
 
+That pass selected exactly `geometry-point2d-java-kotlin-dart-lane-parity`:
+its neutral G2D00 prerequisite is merged, local PHY00 trig is available in
+all three languages, and no open PR directly overlaps the geometry/trig
+package paths. The pure Point/Rect layer fills three missing slots and
+unlocks the downstream Affine2D, Bezier2D, and Arc2D DAG. Keep those later
+layers, the separate geometry neutral-fixture CI scheduling owner, and host
+paint authority outside this PR. Native suites must load all four Point2D
+normalization cases from the mixed geometry2d-v1 corpus and meet G2D00's
+95% line-coverage requirement.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
