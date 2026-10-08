@@ -458,15 +458,46 @@ while the daemon writes a pairing vault.
 namespace and key, but not to a particular vault. A vault reinitialized
 under the same KEK accepts another vault's authentic files. Under an anchor,
 those files then raise it, so the real index reads as `Tamper` from then on.
-**When resetting a vault, rotate the KEK.** Binding a random per-vault id
+**When resetting a vault, rotate the KEK, and remove its anchor.** The
+anchor is found by the KEK's *path*, not by the key. So a storage directory
+wiped and reinitialized under a new key at the same `kek_path` reads every
+remembered namespace as `Tamper`, because the index is missing. That fails
+closed, but it is an outage. A reset therefore removes
+`<kek_path>.freshness/` together with the storage directory, or uses a new
+`kek_path`. Binding a random per-vault id
 into the AADs would remove this requirement (backlog P1.20d).
 
-**Who is anchored today.** Only the Chief vault: `open_chief_vault` keeps its
-anchor in `<kek_path>.freshness/`, next to the KEK. It refuses an anchor
-directory inside the storage directory, because whoever can roll the storage
-back could roll such an anchor back with it. The six smart-home
-pairing vaults and the OAuth credential store still open `SealedStore::new`,
-so F10 still applies to them. Anchoring them is backlog item P1.20c.
+**Who is anchored today.** Every vault the Chief daemon opens.
+- The Chief vault and the six smart-home pairing vaults share one storage
+  directory, the configured `[vault] storage_path`. All seven open it
+  through one function, `open_anchored_vault`, which keeps the anchor in
+  `<kek_path>.freshness/`, next to whichever KEK file that opener reads.
+- It refuses an anchor directory inside the storage directory, or a storage
+  directory inside the anchor, because whoever can roll the storage back
+  could roll such an anchor back with it. It checks the spellings first,
+  then the resolved locations once the storage directory exists. On Unix it
+  also compares device and inode numbers, so a symlinked `storage_path` or a
+  case-insensitive filesystem cannot hide the anchor inside the storage
+  (`ChiefVaultAnchorInsideStorage`).
+- It reads the KEK before creating the anchor or touching the store, so a
+  bad KEK file leaves nothing on disk.
+- Openers that name the same KEK file share one anchor, which is the
+  recommended setup (D18U).
+- Openers that name different files holding the same key get separate
+  anchors. That never causes a false `Tamper`, because an anchor only ever
+  holds epochs its opener saw on the authentic index.
+- Rollback protection holds in that setup only because each namespace has
+  exactly one opener. Today it does: `chief-secrets`, plus one
+  `smart_home.*.credentials` namespace for each pairing service.
+- Pointing a `kek_path` at a new file, even with the same key, starts an
+  empty anchor. Protection for that opener's namespaces restarts as trust
+  on first use: a snapshot already in place at that restart is accepted.
+
+**Library constructors are the caller's job.** `oauth-credential-sealed-store`
+takes a `SealedStore` from its caller rather than opening one. No production
+code builds it yet. Whoever wires it into a program must pass an anchored
+store, built with `SealedStore::with_anchor`. `SealedStore::new` stays for
+tests and in-memory backends, where there is no restart to survive.
 
 ## Seal / unseal state machine
 

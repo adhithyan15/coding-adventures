@@ -313,6 +313,11 @@ pub enum ChiefDaemonError {
     /// The vault's freshness anchor directory could not be opened safely
     /// (VLT01 F11).
     ChiefVaultAnchor(AnchorError),
+    /// The vault's freshness anchor would sit inside the storage directory it
+    /// protects, or the storage directory inside the anchor, or the two
+    /// locations could not be resolved to tell (VLT01 F11).
+    /// Whoever can roll the storage back could roll such an anchor back too.
+    ChiefVaultAnchorInsideStorage,
     /// The local operator credential could not be loaded or created safely.
     Credential(CredentialFileError),
     /// Local bearer policy construction failed.
@@ -465,6 +470,9 @@ impl Display for ChiefDaemonError {
             Self::ChiefVault(_) => "chief daemon: vault failed to open",
             Self::ChiefVaultLoad(_) => "chief daemon: vault secrets failed to load",
             Self::ChiefVaultAnchor(_) => "chief daemon: vault freshness anchor failed",
+            Self::ChiefVaultAnchorInsideStorage => {
+                "chief daemon: vault freshness anchor is inside the vault storage directory"
+            }
             Self::Credential(_) => "chief daemon: operator credential failed",
             Self::Authentication(_) => "chief daemon: local authentication policy failed",
             Self::Policy(_) => "chief daemon: approval policy composition failed",
@@ -538,26 +546,7 @@ pub fn open_chief_vault(
         .as_slice()
         .try_into()
         .map_err(|_| ChiefDaemonError::ChiefVaultSecret(SecretFileError::InvalidLength))?;
-    // VLT01 F11: the freshness anchor lives next to the KEK, in the
-    // directory whose owner-only-ness the KEK check already relies on, and
-    // outside the storage directory it protects. An index older than the
-    // anchor, or a missing index the anchor remembers, is then Tamper even
-    // across restarts.
-    let mut anchor_dir = kek_path.clone().into_os_string();
-    anchor_dir.push(".freshness");
-    let anchor_dir = PathBuf::from(anchor_dir);
-    // An anchor inside the directory it protects protects nothing: whoever
-    // can roll the storage back could roll the anchor back with it.
-    if anchor_dir.starts_with(&vault_dir) {
-        return Err(ChiefDaemonError::ChiefVaultAnchor(
-            AnchorError::InsecureDirectory,
-        ));
-    }
-    let anchor =
-        FileFreshnessAnchor::open(anchor_dir).map_err(ChiefDaemonError::ChiefVaultAnchor)?;
-    let backend: Arc<dyn StorageBackend> = Arc::new(FsStorageBackend::new(vault_dir));
-    backend.initialize().map_err(ChiefDaemonError::Storage)?;
-    let vault = SealedStore::with_anchor(backend, Arc::new(anchor));
+    let vault = open_anchored_vault(&vault_dir, &kek_path)?;
     if vault
         .status()
         .map_err(ChiefDaemonError::ChiefVault)?
@@ -572,6 +561,94 @@ pub fn open_chief_vault(
             .map_err(ChiefDaemonError::ChiefVault)?;
     }
     Ok(Some(vault))
+}
+
+/// Open the sealed store in `vault_dir` under its freshness anchor (VLT01 F11).
+///
+/// Every vault the daemon opens comes through here: the Chief vault and the
+/// six smart-home pairing vaults. They all live in the one configured
+/// storage directory, so an unanchored opener would leave that directory's
+/// pairing namespaces open to F10 (an old index restored together with the
+/// old record it pins) even though the Chief namespaces were anchored.
+///
+/// The anchor lives next to the KEK, in `<kek_path>.freshness/`. That is
+/// the directory whose owner-only-ness the KEK check already relies on, and
+/// it is outside the storage directory it protects. An index older than the
+/// anchor, or a missing index the anchor remembers, is then `Tamper` even
+/// across restarts.
+///
+/// ```text
+///   <kek_path>             the KEK (owner-only)
+///   <kek_path>.freshness/  one epoch file per namespace (0700 / 0600)
+///   <vault_dir>/           sealed records and per-namespace indexes
+/// ```
+///
+/// Openers that share a KEK file share its anchor; the anchor is per
+/// namespace and only ever rises, under an OS lock, so that is safe.
+fn open_anchored_vault(vault_dir: &Path, kek_path: &Path) -> Result<SealedStore, ChiefDaemonError> {
+    let mut anchor_dir = kek_path.as_os_str().to_os_string();
+    anchor_dir.push(".freshness");
+    let anchor_dir = PathBuf::from(anchor_dir);
+    // An anchor inside the directory it protects protects nothing: whoever
+    // can roll the storage back could roll the anchor back with it. This
+    // first check is on the spellings, before anything is created.
+    if anchor_dir.starts_with(vault_dir) || vault_dir.starts_with(&anchor_dir) {
+        return Err(ChiefDaemonError::ChiefVaultAnchorInsideStorage);
+    }
+    let backend: Arc<dyn StorageBackend> = Arc::new(FsStorageBackend::new(vault_dir));
+    backend.initialize().map_err(ChiefDaemonError::Storage)?;
+    // The spellings can differ while the places are the same: a symlinked
+    // `storage_path`, or a case-insensitive filesystem. Now that the storage
+    // directory exists, compare where things really are.
+    if anchor_shares_storage(&anchor_dir, vault_dir)? {
+        return Err(ChiefDaemonError::ChiefVaultAnchorInsideStorage);
+    }
+    let anchor =
+        FileFreshnessAnchor::open(anchor_dir).map_err(ChiefDaemonError::ChiefVaultAnchor)?;
+    Ok(SealedStore::with_anchor(backend, Arc::new(anchor)))
+}
+
+/// Whether `anchor_dir` really lies inside `vault_dir`, or `vault_dir` inside
+/// `anchor_dir`, once symlinks are resolved.
+///
+/// `anchor_dir` may not exist yet; its parent (the KEK's directory) does,
+/// because the KEK was read from it. On Unix the walk also compares device
+/// and inode numbers, which catches what path comparison cannot: two
+/// spellings of one directory on a case-insensitive filesystem.
+fn anchor_shares_storage(anchor_dir: &Path, vault_dir: &Path) -> Result<bool, ChiefDaemonError> {
+    let unresolvable = |_| ChiefDaemonError::ChiefVaultAnchorInsideStorage;
+    let real_vault = fs::canonicalize(vault_dir).map_err(unresolvable)?;
+    let (Some(parent), Some(name)) = (anchor_dir.parent(), anchor_dir.file_name()) else {
+        return Err(ChiefDaemonError::ChiefVaultAnchorInsideStorage);
+    };
+    let real_anchor = fs::canonicalize(parent).map_err(unresolvable)?.join(name);
+    if real_anchor.starts_with(&real_vault) || real_vault.starts_with(&real_anchor) {
+        return Ok(true);
+    }
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::MetadataExt;
+        let identity = |path: &Path| fs::metadata(path).map(|m| (m.dev(), m.ino())).ok();
+        let vault_identity = identity(&real_vault);
+        // Is the storage directory one of the anchor's ancestors?
+        if real_anchor
+            .ancestors()
+            .skip(1)
+            .any(|ancestor| vault_identity.is_some() && identity(ancestor) == vault_identity)
+        {
+            return Ok(true);
+        }
+        // Is the anchor directory (if it exists) one of the storage's?
+        if let Some(anchor_identity) = identity(&real_anchor) {
+            if real_vault
+                .ancestors()
+                .any(|ancestor| identity(ancestor) == Some(anchor_identity))
+            {
+                return Ok(true);
+            }
+        }
+    }
+    Ok(false)
 }
 
 /// Open the Chief vault and load every sealed secret into a runtime (D18V V-D1).
@@ -1333,18 +1410,15 @@ fn configure_hue_pairing_service(
     instance_name: &str,
     clock: Arc<dyn UnixTimeClock>,
 ) -> Result<ChiefHuePairingService, ChiefDaemonError> {
-    let vault_backend: Arc<dyn StorageBackend> =
-        Arc::new(FsStorageBackend::new(vault_dir.to_path_buf()));
-    vault_backend
-        .initialize()
-        .map_err(ChiefDaemonError::Storage)?;
-    let vault = Arc::new(SealedStore::new(vault_backend));
     let kek = read_owner_only_secret(kek_path, SMART_HOME_PAIRING_KEK_BYTES)
         .map_err(ChiefDaemonError::SmartHomePairingSecret)?;
     let kek: &[u8; SMART_HOME_PAIRING_KEK_BYTES] = kek
         .as_slice()
         .try_into()
         .map_err(|_| ChiefDaemonError::SmartHomePairingSecret(SecretFileError::InvalidLength))?;
+    // Read the key before touching the store or the anchor, so a bad
+    // KEK file leaves no trace on disk.
+    let vault = Arc::new(open_anchored_vault(vault_dir, kek_path)?);
     if vault
         .status()
         .map_err(ChiefDaemonError::SmartHomePairingVault)?
@@ -1381,12 +1455,6 @@ fn configure_onvif_pairing_service(
     home: &Path,
     clock: Arc<dyn UnixTimeClock>,
 ) -> Result<ChiefOnvifPairingService, ChiefDaemonError> {
-    let vault_backend: Arc<dyn StorageBackend> =
-        Arc::new(FsStorageBackend::new(vault_dir.to_path_buf()));
-    vault_backend
-        .initialize()
-        .map_err(ChiefDaemonError::Storage)?;
-    let vault = Arc::new(SealedStore::new(vault_backend));
     let kek_path = config
         .kek_path()
         .resolve(home)
@@ -1396,6 +1464,9 @@ fn configure_onvif_pairing_service(
     let kek: &[u8; SMART_HOME_PAIRING_KEK_BYTES] = kek.as_slice().try_into().map_err(|_| {
         ChiefDaemonError::SmartHomeOnvifPairingSecret(SecretFileError::InvalidLength)
     })?;
+    // Read the key before touching the store or the anchor, so a bad
+    // KEK file leaves no trace on disk.
+    let vault = Arc::new(open_anchored_vault(vault_dir, &kek_path)?);
     if vault
         .status()
         .map_err(ChiefDaemonError::SmartHomeOnvifPairingVault)?
@@ -1451,12 +1522,6 @@ fn configure_axis_pairing_service(
     home: &Path,
     clock: Arc<dyn UnixTimeClock>,
 ) -> Result<ChiefAxisPairingService, ChiefDaemonError> {
-    let vault_backend: Arc<dyn StorageBackend> =
-        Arc::new(FsStorageBackend::new(vault_dir.to_path_buf()));
-    vault_backend
-        .initialize()
-        .map_err(ChiefDaemonError::Storage)?;
-    let vault = Arc::new(SealedStore::new(vault_backend));
     let kek_path = config
         .kek_path()
         .resolve(home)
@@ -1466,6 +1531,9 @@ fn configure_axis_pairing_service(
     let kek: &[u8; SMART_HOME_PAIRING_KEK_BYTES] = kek.as_slice().try_into().map_err(|_| {
         ChiefDaemonError::SmartHomeAxisPairingSecret(SecretFileError::InvalidLength)
     })?;
+    // Read the key before touching the store or the anchor, so a bad
+    // KEK file leaves no trace on disk.
+    let vault = Arc::new(open_anchored_vault(vault_dir, &kek_path)?);
     if vault
         .status()
         .map_err(ChiefDaemonError::SmartHomeAxisPairingVault)?
@@ -1521,12 +1589,6 @@ fn configure_zoneminder_pairing_service(
     home: &Path,
     clock: Arc<dyn UnixTimeClock>,
 ) -> Result<ChiefZoneMinderPairingService, ChiefDaemonError> {
-    let vault_backend: Arc<dyn StorageBackend> =
-        Arc::new(FsStorageBackend::new(vault_dir.to_path_buf()));
-    vault_backend
-        .initialize()
-        .map_err(ChiefDaemonError::Storage)?;
-    let vault = Arc::new(SealedStore::new(vault_backend));
     let kek_path = config
         .kek_path()
         .resolve(home)
@@ -1536,6 +1598,9 @@ fn configure_zoneminder_pairing_service(
     let kek: &[u8; SMART_HOME_PAIRING_KEK_BYTES] = kek.as_slice().try_into().map_err(|_| {
         ChiefDaemonError::SmartHomeZoneMinderPairingSecret(SecretFileError::InvalidLength)
     })?;
+    // Read the key before touching the store or the anchor, so a bad
+    // KEK file leaves no trace on disk.
+    let vault = Arc::new(open_anchored_vault(vault_dir, &kek_path)?);
     if vault
         .status()
         .map_err(ChiefDaemonError::SmartHomeZoneMinderPairingVault)?
@@ -1591,12 +1656,6 @@ fn configure_reolink_pairing_service(
     home: &Path,
     clock: Arc<dyn UnixTimeClock>,
 ) -> Result<ChiefReolinkPairingService, ChiefDaemonError> {
-    let vault_backend: Arc<dyn StorageBackend> =
-        Arc::new(FsStorageBackend::new(vault_dir.to_path_buf()));
-    vault_backend
-        .initialize()
-        .map_err(ChiefDaemonError::Storage)?;
-    let vault = Arc::new(SealedStore::new(vault_backend));
     let kek_path = config
         .kek_path()
         .resolve(home)
@@ -1606,6 +1665,9 @@ fn configure_reolink_pairing_service(
     let kek: &[u8; SMART_HOME_PAIRING_KEK_BYTES] = kek.as_slice().try_into().map_err(|_| {
         ChiefDaemonError::SmartHomeReolinkPairingSecret(SecretFileError::InvalidLength)
     })?;
+    // Read the key before touching the store or the anchor, so a bad
+    // KEK file leaves no trace on disk.
+    let vault = Arc::new(open_anchored_vault(vault_dir, &kek_path)?);
     if vault
         .status()
         .map_err(ChiefDaemonError::SmartHomeReolinkPairingVault)?
@@ -1667,12 +1729,6 @@ fn configure_synology_pairing_service(
     home: &Path,
     clock: Arc<dyn UnixTimeClock>,
 ) -> Result<ChiefSynologyPairingService, ChiefDaemonError> {
-    let vault_backend: Arc<dyn StorageBackend> =
-        Arc::new(FsStorageBackend::new(vault_dir.to_path_buf()));
-    vault_backend
-        .initialize()
-        .map_err(ChiefDaemonError::Storage)?;
-    let vault = Arc::new(SealedStore::new(vault_backend));
     let kek_path = config
         .kek_path()
         .resolve(home)
@@ -1682,6 +1738,9 @@ fn configure_synology_pairing_service(
     let kek: &[u8; SMART_HOME_PAIRING_KEK_BYTES] = kek.as_slice().try_into().map_err(|_| {
         ChiefDaemonError::SmartHomeSynologyPairingSecret(SecretFileError::InvalidLength)
     })?;
+    // Read the key before touching the store or the anchor, so a bad
+    // KEK file leaves no trace on disk.
+    let vault = Arc::new(open_anchored_vault(vault_dir, &kek_path)?);
     if vault
         .status()
         .map_err(ChiefDaemonError::SmartHomeSynologyPairingVault)?
@@ -3824,6 +3883,130 @@ hardware_key_timeout = 60
         fn drop(&mut self) {
             let _ = fs::remove_dir_all(&self.0);
         }
+    }
+
+    fn copy_tree(from: &Path, to: &Path) {
+        fs::create_dir_all(to).unwrap();
+        for entry in fs::read_dir(from).unwrap() {
+            let entry = entry.unwrap();
+            let target = to.join(entry.file_name());
+            if entry.file_type().unwrap().is_dir() {
+                copy_tree(&entry.path(), &target);
+            } else {
+                fs::copy(entry.path(), target).unwrap();
+            }
+        }
+    }
+
+    #[test]
+    fn a_restored_pairing_vault_snapshot_is_refused_after_a_restart() {
+        // VLT01 F10/F11 for the pairing vaults (#13980 P1.20c). They share
+        // the Chief vault's storage directory, and before this they opened
+        // it unanchored: a snapshot of the directory, restored after a
+        // credential rotation, loaded the old credential.
+        let directory = TestDir::new();
+        let vault_dir = directory.0.join("vault");
+        let kek_path = directory.0.join("pairing.kek");
+        let kek = [0x5A; SMART_HOME_PAIRING_KEK_BYTES];
+        let open = |anchored: bool| {
+            let vault = if anchored {
+                open_anchored_vault(&vault_dir, &kek_path).unwrap()
+            } else {
+                let backend: Arc<dyn StorageBackend> =
+                    Arc::new(FsStorageBackend::new(vault_dir.clone()));
+                backend.initialize().unwrap();
+                SealedStore::new(backend)
+            };
+            if vault.status().unwrap().initialized {
+                vault.unseal_with_kek(&kek).unwrap();
+            } else {
+                vault.init_with_kek(&kek).unwrap();
+            }
+            vault
+        };
+        let vault = open(true);
+        vault.put("hue", "bridge", b"old-credential", None).unwrap();
+        let snapshot = directory.0.join("snapshot");
+        copy_tree(&vault_dir, &snapshot);
+        vault.put("hue", "bridge", b"rotated", None).unwrap();
+        drop(vault);
+        fs::remove_dir_all(&vault_dir).unwrap();
+        copy_tree(&snapshot, &vault_dir);
+
+        // The anchor sits next to the KEK, outside the storage directory.
+        assert!(directory.0.join("pairing.kek.freshness").is_dir());
+        // Without the anchor, the restored snapshot loads...
+        assert_eq!(
+            open(false)
+                .get("hue", "bridge")
+                .unwrap()
+                .unwrap()
+                .plaintext
+                .to_vec(),
+            b"old-credential"
+        );
+        // ...and through the daemon's opener it is Tamper.
+        assert!(matches!(
+            open(true).get("hue", "bridge"),
+            Err(SealedStoreError::Tamper { .. })
+        ));
+    }
+
+    #[test]
+    fn a_vault_anchor_inside_the_storage_directory_is_refused() {
+        let directory = TestDir::new();
+        let vault_dir = directory.0.join("vault");
+        assert!(matches!(
+            open_anchored_vault(&vault_dir, &vault_dir.join("pairing.kek")),
+            Err(ChiefDaemonError::ChiefVaultAnchorInsideStorage)
+        ));
+        assert!(!vault_dir.join("pairing.kek.freshness").exists());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn a_symlinked_storage_path_cannot_hide_the_anchor_inside_it() {
+        // The spellings differ (`link/` against `real/pairing.kek`), but the
+        // anchor `real/pairing.kek.freshness` would be inside the storage.
+        let directory = TestDir::new();
+        let real = directory.0.join("real");
+        fs::create_dir(&real).unwrap();
+        let link = directory.0.join("link");
+        std::os::unix::fs::symlink(&real, &link).unwrap();
+        assert!(matches!(
+            open_anchored_vault(&link, &real.join("pairing.kek")),
+            Err(ChiefDaemonError::ChiefVaultAnchorInsideStorage)
+        ));
+        assert!(!real.join("pairing.kek.freshness").exists());
+        // The other direction: storage inside the anchor directory.
+        let kek_path = directory.0.join("outer.kek");
+        let anchor_dir = directory.0.join("outer.kek.freshness");
+        fs::create_dir(&anchor_dir).unwrap();
+        let inner_link = directory.0.join("inner");
+        std::os::unix::fs::symlink(&anchor_dir, &inner_link).unwrap();
+        assert!(matches!(
+            open_anchored_vault(&inner_link.join("vault"), &kek_path),
+            Err(ChiefDaemonError::ChiefVaultAnchorInsideStorage)
+        ));
+    }
+
+    #[test]
+    fn no_production_vault_opener_bypasses_the_anchor() {
+        // Every vault the daemon opens shares one storage root, so one
+        // unanchored opener reopens F10 for its namespaces (P1.20c). A test
+        // that opens each of the six pairing services would need six live
+        // device fixtures; the source is the cheaper, exact witness.
+        let source = include_str!("lib.rs");
+        let production = source.split("#[cfg(test)]\nmod tests {").next().unwrap();
+        assert!(production.len() < source.len(), "tests module marker moved");
+        let unanchored = ["SealedStore", "::new("].concat();
+        assert!(
+            !production.contains(&unanchored),
+            "a production opener uses SealedStore::new; use open_anchored_vault"
+        );
+        let opener = ["open_anchored", "_vault("].concat();
+        // The definition, open_chief_vault, and the six pairing services.
+        assert_eq!(production.matches(&opener).count(), 8);
     }
 
     #[test]
