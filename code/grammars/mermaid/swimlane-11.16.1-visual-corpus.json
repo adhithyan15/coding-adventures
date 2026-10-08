@@ -16,6 +16,7 @@
     "flowchart-endpoint-markers",
     "quoted-unicode-lane-labels",
     "html-entity-labels",
-    "metadata-entities"
+    "metadata-entities",
+    "inline-node-styles"
   ]
 }

@@ -900,8 +900,10 @@ where
         }
     }
     for node in &diagram.nodes {
-        let fill = "#ffffff".to_string();
-        let stroke = "#1565c0".to_string();
+        let fill = node.style.fill.clone().unwrap_or_else(|| "#ffffff".into());
+        let stroke = node.style.stroke.clone().unwrap_or_else(|| "#1565c0".into());
+        let stroke_width = node.style.stroke_width.unwrap_or(2.0);
+        let stroke_dash = node.style.stroke_dash.clone();
         let shape = match node.shape {
             DiagramShape::Ellipse | DiagramShape::DoubleCircle => PaintInstruction::Ellipse(PaintEllipse {
                 base: PaintBase::default(),
@@ -909,10 +911,10 @@ where
                 cy: node.y + node.height / 2.0,
                 rx: node.width / 2.0,
                 ry: node.height / 2.0,
-                fill: Some(fill),
-                stroke: Some(stroke),
-                stroke_width: Some(2.0),
-                stroke_dash: None,
+                fill: Some(fill.clone()),
+                stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width),
+                stroke_dash: stroke_dash.clone(),
                 stroke_dash_offset: None,
             }),
             DiagramShape::Diamond | DiagramShape::Hexagon | DiagramShape::ParallelogramRight
@@ -977,13 +979,13 @@ where
                 PaintInstruction::Path(PaintPath {
                     base: PaintBase::default(),
                     commands,
-                    fill: Some(fill),
+                    fill: Some(fill.clone()),
                     fill_rule: None,
-                    stroke: Some(stroke),
-                    stroke_width: Some(2.0),
+                    stroke: Some(stroke.clone()),
+                    stroke_width: Some(stroke_width),
                     stroke_cap: None,
                     stroke_join: Some(StrokeJoin::Round),
-                    stroke_dash: None,
+                    stroke_dash: stroke_dash.clone(),
                     stroke_dash_offset: None,
                 })
             }
@@ -993,15 +995,15 @@ where
                 y: node.y,
                 width: node.width,
                 height: node.height,
-                fill: Some(fill),
-                stroke: Some(stroke),
-                stroke_width: Some(2.0),
+                fill: Some(fill.clone()),
+                stroke: Some(stroke.clone()),
+                stroke_width: Some(stroke_width),
                 corner_radius: Some(match node.shape {
                     DiagramShape::Rect | DiagramShape::Subroutine => 2.0,
                     DiagramShape::Cylinder => 12.0,
                     _ => 18.0,
                 }),
-                stroke_dash: None,
+                stroke_dash: stroke_dash.clone(),
                 stroke_dash_offset: None,
             }),
         };
@@ -1010,12 +1012,12 @@ where
             DiagramShape::Subroutine => {
                 instructions.push(PaintInstruction::Path(line_path(
                     &[Point { x: node.x + 11.0, y: node.y }, Point { x: node.x + 11.0, y: node.y + node.height }],
-                    "#1565c0",
+                    &stroke,
                     1.5,
                 )));
                 instructions.push(PaintInstruction::Path(line_path(
                     &[Point { x: node.x + node.width - 11.0, y: node.y }, Point { x: node.x + node.width - 11.0, y: node.y + node.height }],
-                    "#1565c0",
+                    &stroke,
                     1.5,
                 )));
             }
@@ -1034,7 +1036,7 @@ where
                 ],
                 fill: None,
                 fill_rule: None,
-                stroke: Some("#1565c0".into()),
+                stroke: Some(stroke.clone()),
                 stroke_width: Some(1.5),
                 stroke_cap: None,
                 stroke_join: Some(StrokeJoin::Round),
@@ -1048,13 +1050,16 @@ where
                 rx: node.width / 2.0 - 5.0,
                 ry: node.height / 2.0 - 5.0,
                 fill: None,
-                stroke: Some("#1565c0".into()),
+                stroke: Some(stroke.clone()),
                 stroke_width: Some(1.5),
                 stroke_dash: None,
                 stroke_dash_offset: None,
             })),
             _ => {}
         }
+        let text_color = node.style.text_color.as_deref().and_then(parse_css_color).unwrap_or(Color {
+            r: 13, g: 71, b: 161, a: 255,
+        });
         text_children.push(text_node(
             &node.label,
             node.x + 8.0,
@@ -1062,12 +1067,7 @@ where
             node.width - 16.0,
             node.height - 16.0,
             options.label_font.clone(),
-            Color {
-                r: 13,
-                g: 71,
-                b: 161,
-                a: 255,
-            },
+            text_color,
         ));
     }
     if let Some(title) = &diagram.title {
