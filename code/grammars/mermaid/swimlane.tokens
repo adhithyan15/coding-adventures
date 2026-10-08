@@ -10,6 +10,6 @@ ACC_TITLE_LINE = /[ \t]*accTitle:[ \t]*[^\r\n]+/
 ACC_DESCR_LINE = /[ \t]*accDescr:[ \t]*[^\r\n]+/
 SUBGRAPH_LINE = /[ \t]*subgraph[ \t]+[^\r\n]+/
 END_LINE = /[ \t]*end[ \t]*/
-CONTINUATION_LINE = /[ \t]*(?:-->|---|-.->|==>)[^\r\n]+/
-EDGE_LINE = /[ \t]*[A-Za-z_][^\r\n]*(?:-->|---|-.->|==>)[^\r\n]+/
+CONTINUATION_LINE = /[ \t]*(?:<-.->|<-->|<==>|o--o|x--x|o--x|x--o|o-->|x-->|-.->|-->|---|==>|--o|--x)[^\r\n]+/
+EDGE_LINE = /[ \t]*[A-Za-z_][^\r\n]*(?:<-.->|<-->|<==>|o--o|x--x|o--x|x--o|o-->|x-->|-.->|-->|---|==>|--o|--x)[^\r\n]+/
 NODE_LINE = /[ \t]*[A-Za-z_][A-Za-z0-9_]*(?:\(\(\([^\r\n]*\)\)\)|\(\([^\r\n]*\)\)|\(\[[^\r\n]*\]\)|\[\[[^\r\n]*\]\]|\[\([^\r\n]*\)\]|\{\{[^\r\n]*\}\}|>[^\r\n]*\]|\([^\r\n]*\)|\[[^\r\n]*\]|\{[^\r\n]*\})?[ \t]*/

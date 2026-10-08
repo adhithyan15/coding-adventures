@@ -1597,6 +1597,20 @@ request -->|"Priority \"A\""| done"#,
 }
 
 #[test]
+fn swimlane_flowchart_endpoint_markers_lower_to_semantic_ir() {
+    use diagram_ir::EdgeMarker;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Review\n  open[Open]\n  check[Check]\n  close[Close]\nend\nopen <--> check\ncheck o--x close\nclose x--> open\nopen --x close",
+    ).expect("Flowchart endpoint markers should parse");
+
+    assert_eq!((diagram.edges[0].start_marker, diagram.edges[0].end_marker), (EdgeMarker::Point, EdgeMarker::Point));
+    assert_eq!((diagram.edges[1].start_marker, diagram.edges[1].end_marker), (EdgeMarker::Circle, EdgeMarker::Cross));
+    assert_eq!((diagram.edges[2].start_marker, diagram.edges[2].end_marker), (EdgeMarker::Cross, EdgeMarker::Point));
+    assert_eq!((diagram.edges[3].start_marker, diagram.edges[3].end_marker), (EdgeMarker::None, EdgeMarker::Cross));
+}
+
+#[test]
 fn railroad_dispatches_all_notations_to_recursive_ir() {
     let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
     let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");

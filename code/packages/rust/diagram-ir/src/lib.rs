@@ -1906,7 +1906,10 @@ pub struct SwimlaneLane { pub id: String, pub label: String, pub node_ids: Vec<S
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum SwimlaneEdgeKind { Directed, Undirected, Dotted, Thick }
 #[derive(Clone, Debug, PartialEq)]
-pub struct SwimlaneEdge { pub from: String, pub to: String, pub label: Option<String>, pub kind: SwimlaneEdgeKind }
+pub struct SwimlaneEdge {
+    pub from: String, pub to: String, pub label: Option<String>, pub kind: SwimlaneEdgeKind,
+    pub start_marker: EdgeMarker, pub end_marker: EdgeMarker,
+}
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneDiagram {
     pub direction: DiagramDirection, pub title: Option<String>, pub accessibility_title: Option<String>,
@@ -1918,7 +1921,10 @@ pub struct LayoutedSwimlaneLane { pub id: String, pub label: String, pub x: f64,
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneNode { pub id: String, pub label: String, pub shape: DiagramShape, pub x: f64, pub y: f64, pub width: f64, pub height: f64 }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedSwimlaneEdge { pub from: Point, pub to: Point, pub label: Option<String>, pub kind: SwimlaneEdgeKind }
+pub struct LayoutedSwimlaneEdge {
+    pub from: Point, pub to: Point, pub label: Option<String>, pub kind: SwimlaneEdgeKind,
+    pub start_marker: EdgeMarker, pub end_marker: EdgeMarker,
+}
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneDiagram {
     pub width: f64, pub height: f64, pub direction: DiagramDirection, pub title: Option<String>,
