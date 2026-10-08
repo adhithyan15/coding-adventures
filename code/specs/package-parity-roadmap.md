@@ -16928,6 +16928,48 @@ implementations in this neutral contract PR; their separately owned repairs
 must consume the frozen cases afterward. Do not open another implementation
 PR while this one is active.
 
+## Post-#17097 inventory and bounded follow-up ranking
+
+PR #17097 completed seven successful and 25 skipped terminal checks without
+conflict and merged through guarded auto-merge as
+`6a97d0c290c80f0570dd3635a727abf85b88980b`. The collision-checked
+schema-3 inventory on that exact fetched main remains 15 established lanes,
+1,497 implementation identities, 4,770 occupied slots, 1,539 all-reported
+identities, zero canonical collisions, and zero unknown buckets. No package
+slot changed in this neutral-contract PR; OCaml remains five emerging roots
+outside the all-language denominator.
+
+A read-only twelve-lane Bezier2D audit confirmed that every existing native
+implementation still uses midpoint-to-chord flatness and unbounded recursion.
+C# and F# alone have partial tolerance validation, but both permit zero. Five
+new bounded pending owners divide the conformance repair by API/toolchain
+family: C#/F#; Python/Ruby/Perl; Go/Rust; Haskell/Swift; and
+TypeScript/Elixir/Lua. Each must consume the nine-case neutral corpus, test
+nonfinite native inputs, enforce finite-segment control bounds and shared
+depth/work limits, and run dependent Arc2D regressions. The twelve-lane
+umbrella now depends on all five and cannot be marked merged early.
+
+The Java/Kotlin/Dart Affine2D and Bezier2D roots remain absent. Their
+Point2D packages and dynamic four-case reader are present; the separate
+G2D01/G2D02 evaluation/affine fixture extension is the prerequisite before
+those package ports. Bezier2D should depend directly only on Point2D; Arc2D
+remains downstream. The read-only OCaml audit found no new unowned gap:
+scaffold, resolver, capability analyzer, representative package CI, and
+process-free graph/diff core exist, but execution corpus, native tool front,
+current-contract conformance, three-platform build-tool CI/adapter, and lane
+promotion remain pending in the recorded dependency chain.
+
+The quick leverage pass selects the ready
+`build-tool-ruby-diff-selection-match-work-ceiling-adoption` owner next: all
+seven prerequisites are merged, its eight graph and twelve diff cases can
+exercise a production gap in Ruby selection, and it unlocks five unfinished
+descendants. No live open PR overlaps Ruby build-tool source/tests or neutral
+graph/diff fixtures; the merged parity state/roadmap overlap is resolved by
+this exact-main refresh. The geometry neutral extension and bounded existing
+lane repairs remain eligible after this one serial implementation PR. The Go
+snapshot and external-attester owners remain selection-blocked despite high
+raw descendant counts.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

@@ -822,6 +822,22 @@ values and gain no filesystem, process, environment, Git, network, clock,
 randomness, or credential authority. This adoption alone does not make either
 neutral execution adapter ready.
 
+The Ruby build-tool engine MUST likewise expose process-free graph and
+diff-selection operations that dynamically consume the exact eight graph and
+twelve diff-selection cases through production code. Its native test suite
+MUST pin the case-ID roster and reject any missing or extra case. Ruby MUST
+return canonical prerequisite-first levels, stable empty-result failures,
+sorted dependent and prerequisite closures, strict portable glob selection,
+exact shared repository-input fanout, boundary-digest verification, and the
+operation-wide 50,000,000-unit Unicode-scalar match-work preflight with the
+same validation and diagnostic precedence. The existing checkout-coupled
+`GitDiff.map_files_to_packages` and resolver graph may delegate to this core,
+but cannot substitute for fixture exercise of the pure operations. Fixture
+JSON loading stays in tests; the core MUST NOT read a checkout or invoke Git,
+the filesystem, environment, processes, network, clock, randomness, or
+credentials. Passing these cases does not claim a ready neutral execution
+adapter.
+
 The Swift build-tool engine MUST expose an equally process-free, typed graph
 and diff-selection core. Its native test suite MUST discover and evaluate the
 exact eight `graph-*.json` and twelve `diff-selection-*.json` cases through
