@@ -207,16 +207,23 @@ CodeQL, and books checks passed. The next fresh selection rotates to LANG82's
 prepared 5.004_05 maintenance pairs. Full C `#if`, stringize/paste, and
 default frontend routing remain open.
 
+PR #17004 delivered six separate partial Perl 5.004_05 maintenance pairs and
+merged as `3cbabe8f11842001e655e9ef4d099a5e8217ab46` after exact-head
+CI, CodeQL, and books checks passed. The 776-row inventory now has 94 partial
+pairs and 682 pending, without a full-syntax or exhaustive-release claim. The
+next fresh selection rotates to the prepared bounded PREP01 negated C
+comparison clause.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG82 Perl release grammars (selected):** add six separate source-backed
-   partial 5.004_05 maintenance pairs. Keep
-   5.004_01-t1 pending until its own source is found; do not imply complete
-   syntax or an exhaustive release inventory.
-2. **PREP01 C:** continue the bounded `#if` expression ladder. Full C `#if`,
-   stringize/paste, and default frontend routing remain open.
+1. **PREP01 C (selected):** accept one negated comparison clause while keeping
+   nested and longer mixed forms explicit errors. Full C `#if`, stringize/paste,
+   and default frontend routing remain open.
+2. **LANG82 Perl release grammars:** continue distinct source-backed partial
+   pairs. Keep 5.004_01-t1 pending until its own source is found; do not imply
+   complete syntax or an exhaustive release inventory.
 3. **LANG78 JavaScript:** the completed output repair leaves the broader
    source/AST-to-IIR frontend subset open; Node remains a conformance oracle.
 
