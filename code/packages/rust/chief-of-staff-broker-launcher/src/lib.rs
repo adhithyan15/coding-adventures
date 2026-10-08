@@ -309,7 +309,7 @@ impl LaunchedBroker {
         (
             self.child,
             BrokerIo {
-                stdin: self.stdin,
+                stdin: Box::new(self.stdin),
                 frames: self.frames,
                 reader: self.reader,
             },
@@ -317,11 +317,12 @@ impl LaunchedBroker {
     }
 }
 
-/// The broker's decoded output frames, as the reader thread delivers them.
-type Frames = Receiver<Result<FromBroker, ProtocolError>>;
+/// The broker's decoded output frames, as its reader delivers them. The
+/// channel closes when the broker's output does.
+pub type Frames = Receiver<Result<FromBroker, ProtocolError>>;
 
 struct BrokerIo {
-    stdin: ChildStdin,
+    stdin: Box<dyn std::io::Write + Send>,
     frames: Frames,
     reader: Option<JoinHandle<()>>,
 }
@@ -604,6 +605,39 @@ pub fn start_relay(
     config: RelayConfig,
 ) -> std::io::Result<(Child, BrokerRelay)> {
     let (child, io) = broker.into_parts();
+    let relay = spawn_relay(io, backend, metadata, resolver, sink, config)?;
+    Ok((child, relay))
+}
+
+/// Relay over any byte sink to the broker and any source of its frames:
+/// what [`start_relay`] does for a launched broker, without the process.
+/// It exists so the relay's handling of a misbehaving broker can be tested
+/// in process.
+pub fn start_relay_over(
+    to_broker: Box<dyn std::io::Write + Send>,
+    from_broker: Frames,
+    backend: Arc<dyn StorageBackend>,
+    metadata: Arc<dyn MessageMetadataSource>,
+    resolver: Box<dyn BindingResolver + Send>,
+    sink: Box<dyn ResponseSink>,
+    config: RelayConfig,
+) -> std::io::Result<BrokerRelay> {
+    let io = BrokerIo {
+        stdin: to_broker,
+        frames: from_broker,
+        reader: None,
+    };
+    spawn_relay(io, backend, metadata, resolver, sink, config)
+}
+
+fn spawn_relay(
+    io: BrokerIo,
+    backend: Arc<dyn StorageBackend>,
+    metadata: Arc<dyn MessageMetadataSource>,
+    resolver: Box<dyn BindingResolver + Send>,
+    sink: Box<dyn ResponseSink>,
+    config: RelayConfig,
+) -> std::io::Result<BrokerRelay> {
     let (commands, requests) = mpsc::sync_channel(1);
     let (report, ended) = mpsc::sync_channel(1);
     let thread = std::thread::Builder::new()
@@ -618,14 +652,11 @@ pub fn start_relay(
                 let _ = report.send(end);
             }
         })?;
-    Ok((
-        child,
-        BrokerRelay {
-            commands: Some(commands),
-            ended,
-            thread: Some(thread),
-        },
-    ))
+    Ok(BrokerRelay {
+        commands: Some(commands),
+        ended,
+        thread: Some(thread),
+    })
 }
 
 /// Serve requests until told to stop (`None`) or until something ends the
