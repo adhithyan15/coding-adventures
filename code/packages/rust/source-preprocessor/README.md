@@ -109,6 +109,11 @@ object-like or function-like. Removing an absent name has no effect; a directive
 inside a skipped conditional group leaves the table unchanged. The C dialect
 supplies the `#undef` syntax while this engine owns the table mutation.
 
+`Directive::Elif(condition)` tries another branch of the current group using
+the same bounded evaluation as `If`. Once a branch wins, later conditions stay
+unexpanded and unevaluated. `Else` may occur only once, after any `Elif`
+branches, and an included file cannot extend its caller's conditional group.
+
 Controlling expressions are macro-expanded before `Dialect::eval_condition`
 sees them, so `@if LED_PORT == 1` takes the true branch after
 `@define LED_PORT 1`. A name that *survives* expansion is genuinely undefined

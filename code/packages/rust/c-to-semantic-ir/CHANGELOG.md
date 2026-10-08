@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — PREP01 bounded C `#elif`
+
+- Recognize nonempty `#elif` expressions and use the generic conditional
+  engine to select the first true branch. Reuse the current bounded `#if`
+  expression subset; malformed branch ordering and active conditions report
+  directive locations on rooted file input.
+
 ## Unreleased — PREP01 pathless C preprocessing
 
 - Route `compile_source` through the bounded C dialect preprocessor and the

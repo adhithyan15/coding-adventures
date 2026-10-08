@@ -41,6 +41,8 @@ pub enum Directive {
     Include(IncludeRequest),
     /// Begin a conditional group; the tokens are its controlling expression.
     If(Vec<Token>),
+    /// Try another branch of the innermost group if no earlier branch matched.
+    Elif(Vec<Token>),
     /// Alternative branch of the innermost conditional.
     Else,
     /// End the innermost conditional. Spelled `@end` in MacroOct, `#endif` in

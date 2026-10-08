@@ -14,6 +14,8 @@ The PREP01 C adapter is being built in stages. `dialect::CDialect` can classify
 the core directive shapes and run object and function-like macros, local
 includes, `#ifdef`, `defined`, bounded decimal comparisons, one-operator
 arithmetic and bounded logical conditions in `#if` through the generic engine.
+It also accepts `#elif` with that same bounded condition subset and rejects a
+second `#else` or `#elif` after `#else`.
 `compile_preprocessed_file` uses that token stream with declared include roots
 before parsing and lowering. Pathless `compile_source` uses the same bounded
 preprocessor with an in-memory primary source. Every active include fails
