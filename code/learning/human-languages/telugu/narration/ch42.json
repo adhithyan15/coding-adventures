@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "Describing Things",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:000036d76be44512",
+  "sourceHash": "fnv1a64:d46e59fe6ba10637",
   "lessons": [
     {
       "id": "TE-C42-big",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:acfef9cc6dd8ffcf",
+      "sourceHash": "fnv1a64:1fca8ae4030baa8f",
       "notice": null,
       "blocks": [
         {
@@ -72,11 +72,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"పెద్ద (pedda)\" three times, pointing at something different each time",
+              "instruction": "\"పెద్ద (pedda)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"పెద్ద\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"పెద్ద\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -121,7 +121,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3ba86b6117e37bf0",
+      "sourceHash": "fnv1a64:3f3f394fd5769a7c",
       "notice": null,
       "blocks": [
         {
@@ -178,11 +178,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"చిన్న (cinna)\" three times, pointing at something different each time",
+              "instruction": "\"చిన్న (cinna)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"చిన్న\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"చిన్న\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -227,7 +227,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d5b3f567ca07e00",
+      "sourceHash": "fnv1a64:c257ce84b3c48d58",
       "notice": null,
       "blocks": [
         {
@@ -284,11 +284,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"మంచి (manci)\" three times, pointing at something different each time",
+              "instruction": "\"మంచి (manci)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"మంచి\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"మంచి\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -333,7 +333,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e150e42cdcc541fe",
+      "sourceHash": "fnv1a64:ca362e04044de642",
       "notice": null,
       "blocks": [
         {
@@ -390,11 +390,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"కొత్త (kotta)\" three times, pointing at something different each time",
+              "instruction": "\"కొత్త (kotta)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"కొత్త\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"కొత్త\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -439,7 +439,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4982ca3a2c5eae23",
+      "sourceHash": "fnv1a64:fbe6208be7be4b3b",
       "notice": null,
       "blocks": [
         {
@@ -496,11 +496,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"పాత (pāta)\" three times, pointing at something different each time",
+              "instruction": "\"పాత (pāta)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"పాత\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"పాత\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",

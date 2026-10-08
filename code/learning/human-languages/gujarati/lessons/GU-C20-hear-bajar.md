@@ -43,7 +43,7 @@ yet; hold only the sound and meaning.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-BAJAR-01] -->
 
-Point to a market picture when you hear *bajār*, then say *bajār* once from the
+Picture a market when you hear *bajār*, then say *bajār* once from the
 English cue.
 
 ## Wrap-up Recall

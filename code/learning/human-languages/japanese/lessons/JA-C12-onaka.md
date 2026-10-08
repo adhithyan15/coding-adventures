@@ -49,7 +49,7 @@ Keep three morae.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ONAKA] -->
 
-Hear, point, say, and read **おなか**. [YOU WRITE: **おなか**]
+Hear, picture the part, say, and read **おなか**. [YOU WRITE: **おなか**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ONAKA] -->

@@ -54,7 +54,7 @@ You do not have to guess between them without context.
 <!-- hl-knowledge: introduces=[]; assesses=[IT-PRAGMATIC-PREGO-GO-AHEAD-04, IT-PRAGMATIC-PREGO-HERE-YOU-ARE-05] -->
 
 - [YOU SAY: "Prego" while yielding a doorway]
-- [YOU SAY: "Prego" while handing over an imaginary cup]
+- [YOU SAY: "Prego" as you offer someone a cup]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[IT-PRAGMATIC-PREGO-HERE-YOU-ARE-05] -->

@@ -4,7 +4,7 @@
   "chapter": 36,
   "title": "The One It Happens To",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:130a90e96ceb4ba2",
+  "sourceHash": "fnv1a64:6799e0faf49f0d66",
   "lessons": [
     {
       "id": "BN-C25-ke-suffix",
@@ -722,7 +722,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:995d21d56563ced1",
+      "sourceHash": "fnv1a64:d4d940c381869f85",
       "notice": null,
       "blocks": [
         {
@@ -845,11 +845,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "pointing, counting, colouring — ei ekṭā lāl jāmā",
+              "instruction": "near, counted and coloured — ei ekṭā lāl jāmā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: pointing, counting, colouring — *ei ekṭā lāl jāmā*]"
+              "source": "[YOU SAY: near, counted and coloured — *ei ekṭā lāl jāmā*]"
             },
             {
               "kind": "prompt",

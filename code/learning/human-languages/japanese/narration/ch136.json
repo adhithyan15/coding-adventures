@@ -4,7 +4,7 @@
   "chapter": 136,
   "title": "Family and Water: Zo, Zu and Ze",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d081d97cbc95594d",
+  "sourceHash": "fnv1a64:455c91d5c7f99e28",
   "lessons": [
     {
       "id": "JA-C136-kazoku",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4064ed7258a3fc4",
+      "sourceHash": "fnv1a64:921d576acf1b1474",
       "notice": null,
       "blocks": [
         {
@@ -104,11 +104,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "kazoku, clapping three beats",
+              "instruction": "kazoku, then count its beats aloud — three",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *kazoku*, clapping three beats]"
+              "source": "[YOU SAY: *kazoku*, then count its beats aloud — three]"
             },
             {
               "kind": "prompt",
@@ -487,7 +487,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:785d55a3474f1468",
+      "sourceHash": "fnv1a64:68fcc9ede270319e",
       "notice": null,
       "blocks": [
         {
@@ -581,11 +581,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "mizu, clapping two beats",
+              "instruction": "mizu, then count its beats aloud — two",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *mizu*, clapping two beats]"
+              "source": "[YOU SAY: *mizu*, then count its beats aloud — two]"
             },
             {
               "kind": "prompt",
@@ -962,7 +962,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c4ca8fa8a5e087e7",
+      "sourceHash": "fnv1a64:4ad1c428bd758d05",
       "notice": null,
       "blocks": [
         {
@@ -1056,11 +1056,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "kaze, clapping two beats",
+              "instruction": "kaze, then count its beats aloud — two",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *kaze*, clapping two beats]"
+              "source": "[YOU SAY: *kaze*, then count its beats aloud — two]"
             },
             {
               "kind": "prompt",

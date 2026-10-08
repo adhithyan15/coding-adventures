@@ -58,7 +58,7 @@ writes it.
 
 [PAUSE 1s]
 - [YOU SAY: *kore*]
-- [YOU SAY: *kore*, holding up a pen, then *koko*, pointing at the floor where you stand]
+- [YOU SAY: *kore*, picturing a pen in your hand, then *koko*, picturing the spot where you stand]
 - [YOU RECALL: name the sign in **これ** you can already write, and the one you cannot]
 
 ## Wrap-up Recall

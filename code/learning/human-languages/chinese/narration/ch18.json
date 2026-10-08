@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Looking and reading",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:daf2b67196492856",
+  "sourceHash": "fnv1a64:2451da07237b61af",
   "lessons": [
     {
       "id": "ZH-C18-hear-kan",
@@ -589,7 +589,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:839217c0d2416ced",
+      "sourceHash": "fnv1a64:b53fe36305a8e16d",
       "notice": null,
       "blocks": [
         {
@@ -617,8 +617,13 @@
               "source": "[YOU WRITE: 看]"
             },
             {
-              "kind": "speech",
-              "text": "Then point to 见 in 再见."
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "见 in 再见",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: 见 in 再见]"
             }
           ]
         },

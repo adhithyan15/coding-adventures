@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Paani: Hear Water, Then Write It Sign by Sign",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:68490147eba043e4",
+  "sourceHash": "fnv1a64:b9bff08e02beb06c",
   "lessons": [
     {
       "id": "MW-C04-hear-paani",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c31a23d818e1a11f",
+      "sourceHash": "fnv1a64:a3ea0f38b656155f",
       "notice": null,
       "blocks": [
         {
@@ -74,7 +74,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Imagine two cups: one holds water, one holds tea. Hear pāṇī and point to the water. Change the order and do it again. Then say pāṇī while imagining water."
+              "text": "Imagine two cups: one holds water, one holds tea. Hear pāṇī and say which cup it names. Change the order and do it again. Then say pāṇī while imagining water."
             }
           ]
         },

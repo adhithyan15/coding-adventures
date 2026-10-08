@@ -829,3 +829,168 @@ export function readingSpokenCues(markdown: string): string[] {
   }
   return cues;
 }
+
+// ---------------------------------------------------------------------------
+// A gesture, inside any spoken cue
+// ---------------------------------------------------------------------------
+//
+// The last two sections read a cue for the page. This one reads it for the
+// body. A spoken cue is read to a driver as an ordinary turn, so any hand
+// movement folded into it is asked of someone holding a steering wheel:
+//
+//     authored                                            narrated
+//     --------------------------------------------------  ----------------------------------------
+//     [YOU HEAR: *añcŭ*; YOU SHOW: 5]                     "your turn — hear: añcŭ; YOU SHOW: 5"
+//     [YOU SAY: *denwa*, clapping three beats]            "your turn — say: denwa, clapping …"
+//     [YOU SAY: "இங்கே" three times, pointing at …]        "your turn — say: இங்கே three times, …"
+//
+// The corpus had 135 of them in drivable lessons (issue #12070, ninth pass):
+// 66 demonstrative drills in six Indic tracks ("three times, pointing at
+// something different each time"), 24 Japanese mora drills ("clapping three
+// beats"), finger counting in the Tamil and Malayalam number lessons (four
+// nested `YOU SHOW: N` cues among them), touching a body part as it is named,
+// raising each hand for right and left, a hand-wobble, a small bow, and
+// labels that name a gesture ("[YOU SAY: pointing at them — *ei bhāirā*]"),
+// which a listener at speed cannot tell from a request for one.
+//
+// Unlike reading, almost every one of these has an ear-and-voice form that
+// keeps the learning goal, so the fix is a rewrite rather than a split:
+// counting the beats aloud instead of clapping them ("then count its beats
+// aloud — three"), picturing the thing a demonstrative lands on instead of
+// pointing at it, saying the number heard instead of showing it, "say
+// *right* or *left* after each" instead of raising each hand.
+//
+// Which cues are read
+// -------------------
+//
+// Every cue the narration does not defer, exactly as for reading: a gesture
+// inside a `[YOU POINT: …]` or `[YOU WRITE: …]` cue is already deferred.
+//
+// What fires
+// ----------
+//
+// Three shapes, each a fixed vocabulary:
+//
+//   shape                                         example from the corpus
+//   --------------------------------------------  -----------------------------------------------
+//   a gesture verb where a step starts            [YOU SAY: *eki*, clapping two beats]
+//     (the step links of the reading check,       [YOU SAY: *kandhā*, and touch it]
+//     plus " while ", " as you " and " by ")      [YOU SAY: … *añcŭ* while raising one more finger]
+//                                                 [YOU SAY: point to one person, ask **¿Quién?** …]
+//                                                 [YOU SAY: *mo | o* and tap twice]
+//   a hand or body manner phrase, anywhere        [YOU SAY: *tohfā*, offered with both hands]
+//                                                 [YOU SAY: "vaṇakkam" with a small bow]
+//                                                 [YOU SAY: hello / goodbye, palms together — …]
+//   a nested cue whose verb is manual             [YOU HEAR: *mūnnŭ*; YOU SHOW: 3]
+//
+// The gesture verbs, each only in the forms that are always a gesture:
+// "point"/"pointing" (not "point out", a gloss, and not "points", which
+// describes a word), "clap", "tap" only with "twice", "once", "out" or a count
+// of beats, groups, syllables or morae (a bare "tap on the *r*" is the tongue's
+// tap consonant), "touch" with a pronoun or an indefinite object (not
+// "touching the sound once", which is a Malayalam single consonant), "raise"
+// with a finger or a hand (not "raise the pitch"), "hold up", "show" with a
+// number of fingers, "gesture"/"gesturing", "wave goodbye"/"wave your hand"
+// (not "wave away an apology", a speech act), "handing over" and "handing
+// something over" (only the participle, the manner of saying a word; "hand
+// over a gift" and "hands over" are English meanings to put into the
+// language), "nod" and "shake your head".
+//
+// A nested cue is read with the narration's own `isManualCueAction`, so the
+// day a lesson nests `YOU WRITE:` (or a longer action such as
+// `YOU WRITE FROM MEMORY:`) inside a `[YOU SAY: …]`, it is caught by the
+// same list that decides deferral. SHOW and CLAP joined `MANUAL_CUE_ACTIONS`
+// for this: no cue heads with either now, but SHOW is the verb the nested
+// finger-counting cues used.
+//
+// The controls, all corpus cues that mention a hand or a gesture and ask for
+// none:
+//
+//   [YOU RECALL: say the Tamil for to touch, then …]   a gloss: "for to " is no link
+//   [YOU SAY: a heel, a fist, a palm, the liver, a lung] vocabulary being taught
+//   [YOU SAY: "kai" — hand]                            a word and its meaning
+//   [YOU SAY: wave away an apology — *paravāgilla*]    a speech act, not a wave
+//   [YOU SAY: "gracias" — *GRAH-syahs*, one soft tap on the *r*]
+//                                                      the tongue's tap, a noun
+//   [YOU SAY: *kuṭi*, touching the sound once]         a single consonant
+//   [YOU SAY: "comme ci, comme ça" — with a little hand-wobble in the voice]
+//                                                      the voice does the wobble
+//   [YOU SAY: the three pointing and person words you now own — …]
+//                                                      "pointing" names the words
+//   [YOU SAY: *koṭu*, then *vāṅgu* — and say which way each hand is moving]
+//                                                      a thing to say about hands
+//   [YOU RECALL: the plain *ch* you tested with a hand at your mouth]
+//                                                      NOT a control: a memory,
+//                                                      but "hand at your mouth"
+//                                                      is a manner phrase and
+//                                                      fires; the one corpus cue
+//                                                      of this shape was reworded
+//
+// Measured over every spoken cue in the corpus before the fix, the check fired
+// on exactly the 135 drivable cues that were rewritten and, in lessons that
+// are not drivable, on 29 cues that are real gesture work there (Kannada digit
+// lessons that point at a printed figure, aspiration drills with a hand in
+// front of the mouth, Bengali and Urdu demonstrative reviews, two Japanese
+// writing recalls that clap). One drivable cue was rewritten without the check
+// seeing it: "[YOU SAY: all five in order, then say *namaste* and name what
+// your hands are doing]" presupposes the gesture without naming a movement,
+// and a pattern for "what your hands are doing" would be a pattern for one
+// sentence.
+//
+// Linear, with no nested quantifier: whitespace runs are collapsed and
+// quotations blanked as before. `GESTURE_STEP` is a fixed-literal link, an
+// optional fixed-literal connective and a choice of fixed phrases, each with
+// at most optional single characters or optional fixed words, so each start
+// position does a bounded amount of work. `GESTURE_MANNER` is a choice of
+// fixed phrases. `NESTED_CUE` is a fixed literal and one run of capitals,
+// which no other part of the pattern can also match. Each regex is applied
+// once per cue (the nested one as one global pass), so a text of N characters
+// costs O(N).
+
+/** Where a step starts in a spoken cue: the reading check's links, plus a participle's "while", "as you" and "by". */
+const GESTURE_LINK = String.raw`(?:^|, |; | — |: | and | then | while | as you | by )(?:and then |and |then |now |also )?`;
+
+/** The gesture verbs, each only in a form that is always a movement of the body. See the header. */
+const GESTURE_VERB = String.raw`(?:point(?:ing)?(?! out\b)(?=[ ,.;:]|$)|clap(?:s|ping)?\b|tap(?:ping)? (?:twice|once|out)\b|tap(?:ping)? (?:the |its )?(?:two |three |four |five |six |even )?(?:beats?|groups?|syllables?|morae)\b|touch(?:ing)? (?:it|them|each|your|yourself|one|a|an|something)\b|rais(?:e|ing) (?:one more|one|a|each|your|both) (?:finger|hand)s?\b|hold(?:ing)? (?:up|it up|them up)\b|show(?:ing)? (?:\d|(?:one|two|three|four|five|your) fingers?\b)|gestur(?:e|ing)\b|wav(?:e|ing) (?:goodbye|your hand|a hand)\b|handing (?:it |them |something |things )?over\b|nod(?:ding)?\b|shak(?:e|ing) your head\b)`;
+
+const GESTURE_STEP = new RegExp(GESTURE_LINK + GESTURE_VERB, "i");
+
+/** A hand or a bow as the manner of saying something, wherever it sits in the cue. */
+const GESTURE_MANNER =
+  /with (?:a|one|both|your|each) (?:small )?(?:hands?|bow|head-bow)\b|\b(?:palms|hands) together\b|\bpressed palms\b|\bmatching gesture\b|\bhand (?:at|in front of) (?:your|the) mouth\b/i;
+
+/**
+ * A cue nested inside another cue's content: "[YOU HEAR: *añcŭ*; YOU SHOW: 5]".
+ * Case-sensitive, as the cue grammar is. The action may be several words
+ * ("YOU WRITE FROM MEMORY:"), but at most five: a fixed bound, so a long run
+ * of "YOU YOU YOU …" with no colon costs a bounded scan from each start rather
+ * than one to the end of the text.
+ */
+const NESTED_CUE = /\bYOU ([A-Z]+(?: [A-Z]+){0,4}):/g;
+
+/** Does the content of a spoken cue ask the learner to make a gesture? */
+export function spokenCueAsksForGesture(content: string): boolean {
+  const text = withoutQuotations(content.replace(/\s+/g, " ").trim());
+  if (GESTURE_STEP.test(text) || GESTURE_MANNER.test(text)) return true;
+  for (const nested of text.matchAll(NESTED_CUE)) {
+    if (isManualCueAction(nested[1] ?? "")) return true;
+  }
+  return false;
+}
+
+/**
+ * Every cue in `markdown` that the narration reads out as an ordinary turn
+ * (any action `isManualCueAction` does not defer) and that asks for a gesture,
+ * quoted as authored.
+ */
+export function gestureSpokenCues(markdown: string): string[] {
+  const cues: string[] = [];
+  for (const part of narratedParts(markdown)) {
+    if (!("cue" in part) || part.cue.kind !== "prompt") continue;
+    if (isManualCueAction(part.cue.action)) continue;
+    const raw = parseDeliveryCue(part.cue.source.slice(1, -1));
+    if (raw?.kind !== "prompt") continue;
+    if (spokenCueAsksForGesture(raw.content)) cues.push(part.cue.source);
+  }
+  return cues;
+}

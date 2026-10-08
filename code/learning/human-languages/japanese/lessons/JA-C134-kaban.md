@@ -59,7 +59,7 @@ is **は** with the voicing mark, and on an *h* sign the mark makes a *b*:
 
 [PAUSE 1s]
 - [YOU SAY: *kaban*]
-- [YOU SAY: *kaban*, clapping three beats]
+- [YOU SAY: *kaban*, then count its beats aloud — three]
 - [YOU RECALL: say which sign in **かばん** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall

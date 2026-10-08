@@ -4,7 +4,7 @@
   "chapter": 135,
   "title": "Hospital and Bank: Bi, Gu, Ge and Gi",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:785b17d8510a5b51",
+  "sourceHash": "fnv1a64:0d7bf64cfcb11621",
   "lessons": [
     {
       "id": "JA-C135-byouin",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b1a462169df325c8",
+      "sourceHash": "fnv1a64:c889e3b6cfc17e2c",
       "notice": null,
       "blocks": [
         {
@@ -108,11 +108,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "byōin, clapping four beats",
+              "instruction": "byōin, then count its beats aloud — four",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *byōin*, clapping four beats]"
+              "source": "[YOU SAY: *byōin*, then count its beats aloud — four]"
             },
             {
               "kind": "prompt",
@@ -332,7 +332,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f77b4f6085f25466",
+      "sourceHash": "fnv1a64:a404667ec5e3e982",
       "notice": null,
       "blocks": [
         {
@@ -426,11 +426,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "doyōbi, clapping four beats",
+              "instruction": "doyōbi, then count its beats aloud — four",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *doyōbi*, clapping four beats]"
+              "source": "[YOU SAY: *doyōbi*, then count its beats aloud — four]"
             },
             {
               "kind": "prompt",
@@ -494,7 +494,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a4b9d41002f74848",
+      "sourceHash": "fnv1a64:5faf87f2fabae918",
       "notice": null,
       "blocks": [
         {
@@ -592,11 +592,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "iriguchi, clapping four beats",
+              "instruction": "iriguchi, then count its beats aloud — four",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *iriguchi*, clapping four beats]"
+              "source": "[YOU SAY: *iriguchi*, then count its beats aloud — four]"
             },
             {
               "kind": "prompt",
@@ -966,7 +966,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c903ee5a8c3c1c5",
+      "sourceHash": "fnv1a64:486429d0957ae937",
       "notice": null,
       "blocks": [
         {
@@ -1060,11 +1060,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "getsuyōbi, clapping five beats",
+              "instruction": "getsuyōbi, then count its beats aloud — five",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *getsuyōbi*, clapping five beats]"
+              "source": "[YOU SAY: *getsuyōbi*, then count its beats aloud — five]"
             },
             {
               "kind": "prompt",
@@ -1436,7 +1436,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:21649f546efcd5e5",
+      "sourceHash": "fnv1a64:626f415888d5c8ef",
       "notice": null,
       "blocks": [
         {
@@ -1530,11 +1530,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ginkō, clapping four beats",
+              "instruction": "ginkō, then count its beats aloud — four",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ginkō*, clapping four beats]"
+              "source": "[YOU SAY: *ginkō*, then count its beats aloud — four]"
             },
             {
               "kind": "prompt",

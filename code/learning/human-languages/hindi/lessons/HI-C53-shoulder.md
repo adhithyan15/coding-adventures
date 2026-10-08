@@ -58,7 +58,7 @@ The first of five more parts of the body.
 [PAUSE 1s]
 - [YOU SAY: *kandhā*]
 - [YOU SAY: it once more, slowly]
-- [YOU SAY: *kandhā*, and touch it]
+- [YOU SAY: *kandhā*, picturing your shoulder]
 - [YOU RECALL: say *phūl*]
 - [YOU READ: **चावल**]
 

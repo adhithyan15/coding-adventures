@@ -55,8 +55,8 @@ spell it yet; the next three tiny lessons will give the hand one piece at a time
 ## Guided Practice — meaning without letters
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PAANI-01] -->
 
-Imagine two cups: one holds water, one holds tea. Hear *pāṇī* and point to the
-water. Change the order and do it again. Then say *pāṇī* while imagining water.
+Imagine two cups: one holds water, one holds tea. Hear *pāṇī* and say which
+cup it names. Change the order and do it again. Then say *pāṇī* while imagining water.
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PAANI-01] -->

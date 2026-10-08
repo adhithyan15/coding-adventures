@@ -52,7 +52,7 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-05, TA-LEX-C40-DEIXIS-06] -->
 
 [PAUSE 1s]
-- [YOU SAY: "பழைய" three times, pointing at something different each time]
+- [YOU SAY: "பழைய" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU RECALL: say *eṅgē*]
 

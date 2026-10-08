@@ -4,7 +4,7 @@
   "chapter": 134,
   "title": "Phone and Train: De, Ba, Be and Bu",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4d8a181c3c133aa3",
+  "sourceHash": "fnv1a64:169503f135055408",
   "lessons": [
     {
       "id": "JA-C134-denwa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ede6525cd91e63f9",
+      "sourceHash": "fnv1a64:b46495ec18f1fccf",
       "notice": null,
       "blocks": [
         {
@@ -104,11 +104,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "denwa, clapping three beats",
+              "instruction": "denwa, then count its beats aloud — three",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *denwa*, clapping three beats]"
+              "source": "[YOU SAY: *denwa*, then count its beats aloud — three]"
             },
             {
               "kind": "prompt",
@@ -487,7 +487,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4509b16c178c0dbb",
+      "sourceHash": "fnv1a64:2449b172893b39c5",
       "notice": null,
       "blocks": [
         {
@@ -581,11 +581,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "kaban, clapping three beats",
+              "instruction": "kaban, then count its beats aloud — three",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *kaban*, clapping three beats]"
+              "source": "[YOU SAY: *kaban*, then count its beats aloud — three]"
             },
             {
               "kind": "prompt",
@@ -955,7 +955,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6c6e25d0bc4175b6",
+      "sourceHash": "fnv1a64:a679efe071f01b8a",
       "notice": null,
       "blocks": [
         {
@@ -1049,11 +1049,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "taberu, clapping three beats",
+              "instruction": "taberu, then count its beats aloud — three",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *taberu*, clapping three beats]"
+              "source": "[YOU SAY: *taberu*, then count its beats aloud — three]"
             },
             {
               "kind": "prompt",
@@ -1424,7 +1424,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f31bf21f65b09ba9",
+      "sourceHash": "fnv1a64:4c4bda1ef203c857",
       "notice": null,
       "blocks": [
         {
@@ -1518,11 +1518,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "shinbun, clapping four beats",
+              "instruction": "shinbun, then count its beats aloud — four",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *shinbun*, clapping four beats]"
+              "source": "[YOU SAY: *shinbun*, then count its beats aloud — four]"
             },
             {
               "kind": "prompt",

@@ -50,7 +50,7 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-01, ML-CONCEPT-C39-PAAL-01, ML-CONCEPT-C39-PAAL-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "വലിയ" three times, pointing at something different each time]
+- [YOU SAY: "വലിയ" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU RECALL: say *pāl*]
 

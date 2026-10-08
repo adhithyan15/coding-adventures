@@ -36,7 +36,7 @@ reviews_of: [AR-C10-ab-umm, AR-C10-akh-ukht, AR-C11-ras, AR-C11-yad, AR-C17-kam-
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C11-RAS-01, AR-CONCEPT-C11-YAD-01] -->
 
-[PAUSE 4s] Touch your head, then your hand, and give the Arabic for each. Both
+[PAUSE 4s] Picture your head, then your hand, and give the Arabic for each. Both
 arrived a dozen lessons ago in single words and have not been asked for since.
 
 ## Across the family: five words older than Arabic

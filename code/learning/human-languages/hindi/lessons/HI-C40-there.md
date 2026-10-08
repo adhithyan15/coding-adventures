@@ -43,8 +43,8 @@ reviews_of: [HI-C40-here]
 
 **वहाँ** — *vahā̃* — there — where I am not.
 
-Say it, and point while you say it. That is the whole word: it does not mean
-anything on its own, it means whatever your finger is on.
+Say it, and picture the thing it lands on as you say it. That is the whole word:
+it does not mean anything on its own, it means whatever the speaker is pointing at.
 
 Its partner is **यहाँ** *yahā̃*, which you will meet just now. The two of them
 differ by one sound at the front — **v-** for far — and that is not a
@@ -54,7 +54,7 @@ coincidence. It is the whole system, and the last lesson of this chapter says so
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C40-DEIXIS-04, HI-CONCEPT-C38-PAIR-01, HI-CONCEPT-C38-PAIR-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "वहाँ" three times, pointing at something different each time]
+- [YOU SAY: "वहाँ" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU READ: **पैर / पाँव**]
 

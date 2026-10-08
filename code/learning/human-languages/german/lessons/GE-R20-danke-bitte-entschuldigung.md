@@ -59,7 +59,7 @@ something different each time:
 
 - [YOU SAY: *please*, asking for something]
 - [YOU SAY: *you're welcome*, answering a thank-you]
-- [YOU SAY: *here you go*, handing something over]
+- [YOU SAY: *here you go*, offering something]
 - [YOU SAY: *pardon?*, when you did not catch it]
 - [YOU SAY: and the two shortest answers there are — *ja*, *nein*]
 

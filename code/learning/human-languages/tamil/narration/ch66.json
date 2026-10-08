@@ -4,7 +4,7 @@
   "chapter": 66,
   "title": "Which Way",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:afa45c1cd0305e76",
+  "sourceHash": "fnv1a64:1e3795876a0cee99",
   "lessons": [
     {
       "id": "TA-C66-up",
@@ -882,7 +882,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f4aa4aa8e37cd9c5",
+      "sourceHash": "fnv1a64:3243aa96a6ed43c9",
       "notice": null,
       "blocks": [
         {
@@ -898,7 +898,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which hand is the வலது (valadu) கை? Hold it up."
+              "text": "Which hand is the வலது (valadu) கை? Say which: right or left."
             }
           ]
         },
@@ -955,11 +955,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "valadu kai, then iḍadu kai — and raise each hand as you say it",
+              "instruction": "valadu kai, then iḍadu kai — and say right or left after each",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *valadu kai*, then *iḍadu kai* — and raise each hand as you say it]"
+              "source": "[YOU SAY: *valadu kai*, then *iḍadu kai* — and say *right* or *left* after each]"
             },
             {
               "kind": "prompt",
@@ -1004,7 +1004,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:059dc2132484fffe",
+      "sourceHash": "fnv1a64:2ef4d35dd7426626",
       "notice": null,
       "blocks": [
         {
@@ -1214,11 +1214,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "வலது (valadu) கை, then இடது (iḍadu) கை, raising each hand",
+              "instruction": "வலது (valadu) கை, then இடது (iḍadu) கை, saying right or left after each",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **வலது கை**, then **இடது கை**, raising each hand]"
+              "source": "[YOU SAY: **வலது கை**, then **இடது கை**, saying *right* or *left* after each]"
             }
           ]
         },

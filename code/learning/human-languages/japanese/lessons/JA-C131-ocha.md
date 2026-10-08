@@ -57,7 +57,7 @@ lesson takes that small sign and writes it on its own.
 
 [PAUSE 1s]
 - [YOU SAY: *ocha*]
-- [YOU SAY: *ocha*, clapping once per beat — two claps]
+- [YOU SAY: *ocha*, then count its beats aloud — two]
 - [YOU RECALL: name the sign in **おちゃ** you can already write, and the one you cannot]
 
 ## Wrap-up Recall

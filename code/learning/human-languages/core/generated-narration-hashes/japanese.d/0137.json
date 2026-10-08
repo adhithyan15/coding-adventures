@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 137,
-  "sourceHash": "fnv1a64:eaabf63cf422a991",
+  "sourceHash": "fnv1a64:28e6a574408921d9",
   "lessonIds": [
     "JA-C137-ippai",
     "JA-W137-pa",
@@ -20,7 +20,7 @@
   "drivablePrefix": 1,
   "text": "japanese/narration/ch137.txt",
   "json": "japanese/narration/ch137.json",
-  "textHash": "fnv1a64:73a8f7854cf1e625",
-  "jsonHash": "fnv1a64:0ad960d3bda6a4dc",
+  "textHash": "fnv1a64:eba0e775719bd5a1",
+  "jsonHash": "fnv1a64:94b95ff91ac97eec",
   "findings": []
 }

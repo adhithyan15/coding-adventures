@@ -143,6 +143,9 @@ describe("the two cue-verb sets", () => {
       "YOU READ: **でぐち** — an exit",
       "YOU FIND: the familiar **య** at the end",
       "YOU TAP: *yu | hold | ku | ri*",
+      // Nested inside a HEAR cue in four drivable number drills until they were
+      // rewritten; deferred now should it ever head a cue.
+      "YOU SHOW: 5",
     ]) {
       expect(parseNarrationCue(source), source).toMatchObject({ kind: "prompt", spoken: false });
     }

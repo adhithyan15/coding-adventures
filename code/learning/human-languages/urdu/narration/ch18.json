@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "The Meeting Comes Off the Page",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:2ef9625b0da2447c",
+  "sourceHash": "fnv1a64:5e74874d9fcd231f",
   "lessons": [
     {
       "id": "UR-C18-aam",
@@ -783,7 +783,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:98dc580061234a2a",
+      "sourceHash": "fnv1a64:35fadff6a461a9a6",
       "notice": null,
       "blocks": [
         {
@@ -870,20 +870,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "voh — that; and point at something across the room",
+              "instruction": "voh — that; and picture something across the room",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **voh** — that; and point at something across the room]"
+              "source": "[YOU SAY: **voh** — that; and picture something across the room]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "yih ām hai, then voh ām hai, pointing differently each time",
+              "instruction": "yih ām hai, then voh ām hai, picturing one mango near and one far",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *yih ām hai*, then *voh ām hai*, pointing differently each time]"
+              "source": "[YOU SAY: *yih ām hai*, then *voh ām hai*, picturing one mango near and one far]"
             },
             {
               "kind": "prompt",

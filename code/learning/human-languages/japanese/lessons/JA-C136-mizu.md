@@ -58,7 +58,7 @@ the voicing mark, so *su* becomes *zu*. The next lesson writes it.
 
 [PAUSE 1s]
 - [YOU SAY: *mizu*]
-- [YOU SAY: *mizu*, clapping two beats]
+- [YOU SAY: *mizu*, then count its beats aloud — two]
 - [YOU RECALL: say which sign in **みず** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall

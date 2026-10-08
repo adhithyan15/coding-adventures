@@ -36,7 +36,7 @@ reviews_of: [JA-W11-te]
 
 [PAUSE 25s] [YOU WRITE: **て** and **だ**]
 
-Point here and say *koko*, then ask for the line a little more slowly.
+Picture the spot where you are and say *koko*, then ask for the line a little more slowly.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-TE-HAND]; assesses=[] -->
@@ -49,7 +49,7 @@ without adding another shape.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-TE-HAND, JA-SCRIPT-TE-01] -->
 
-1. Hear *te*; touch one hand.
+1. Hear *te*; say what it names — a hand.
 2. See **て**; say “hand.”
 3. [YOU WRITE: its one sign, with the word hidden]
 

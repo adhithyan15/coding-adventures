@@ -45,8 +45,8 @@ reviews_of: [MW-C24-lo, MW-C24-pay, MW-C21-show-request, MW-C22-kitno, MW-C21-sh
 Hear the word alone and the whole line, in both orders, and give each meaning.
 Read two cards. [YOU WRITE: both from sound]
 
-Then say the line at speaking pace with your hand out as if the money were in
-it.
+Then say the line at speaking pace as if the money were in your
+hand.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-LO-01, MW-LEX-PAY-01] -->

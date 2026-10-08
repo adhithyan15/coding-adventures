@@ -43,8 +43,8 @@ reviews_of: []
 
 **एतत्** — *etat* — this one — the thing near me.
 
-Say it, and point while you say it. That is the whole word: it does not mean
-anything on its own, it means whatever your finger is on.
+Say it, and picture the thing it lands on as you say it. That is the whole word:
+it does not mean anything on its own, it means whatever the speaker is pointing at.
 
 Its partner is **तत्** *tat*, which you will meet in a moment. The two of them
 differ by one sound at the front — **a-** for near — and that is not a
@@ -54,7 +54,7 @@ coincidence. It is the whole system, and the last lesson of this chapter says so
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C14-DEIXIS-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: "एतत्" three times, pointing at something different each time]
+- [YOU SAY: "एतत्" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
 
 ## Wrap-up Recall

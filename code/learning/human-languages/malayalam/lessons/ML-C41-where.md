@@ -40,8 +40,8 @@ reviews_of: [ML-C41-who]
 
 **എവിടെ** — *eviṭe* — where? — asking about a place.
 
-Say it, and point while you say it. That is the whole word: it does not mean
-anything on its own, it means whatever your finger is on.
+Say it, and picture the thing it lands on as you say it. That is the whole word:
+it does not mean anything on its own, it means whatever the speaker is pointing at.
 
 Its partner is **ആര്** *ārŭ*, which you will meet just now. The two of them
 differ by one sound at the front — **e-** for ask — and that is not a
@@ -51,7 +51,7 @@ coincidence. It is the whole system, and the last lesson of this chapter says so
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C41-DEIXIS-06, ML-CONCEPT-C39-CHAAYA-01, ML-CONCEPT-C39-CHAAYA-02, ML-CONCEPT-C39-KAAPI-01, ML-CONCEPT-C39-KAAPI-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "എവിടെ" three times, pointing at something different each time]
+- [YOU SAY: "എവിടെ" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU READ: **ചായ**]
 - [YOU RECALL: say *kāppi*]

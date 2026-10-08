@@ -1,7 +1,7 @@
 {
   "language": "bengali",
   "chapter": 36,
-  "sourceHash": "fnv1a64:130a90e96ceb4ba2",
+  "sourceHash": "fnv1a64:6799e0faf49f0d66",
   "lessonIds": [
     "BN-C25-ke-suffix",
     "BN-C25-amake",
@@ -13,7 +13,7 @@
   "drivablePrefix": 2,
   "text": "bengali/narration/ch36.txt",
   "json": "bengali/narration/ch36.json",
-  "textHash": "fnv1a64:dbfe272b642d185e",
-  "jsonHash": "fnv1a64:be8043316839a996",
+  "textHash": "fnv1a64:833d21b83fc69cc3",
+  "jsonHash": "fnv1a64:53f54144e9d9f239",
   "findings": []
 }

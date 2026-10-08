@@ -61,7 +61,7 @@ never said so. Run all of it, cold.
 - [YOU SAY: with an adjective that follows the noun over — *kāle kamre meṅ*, *purāne kamre meṅ*, *nīle kamre meṅ*]
 - [YOU SAY: people, marked — *māṅ ko*, and the older fused one, *mujhe*]
 - [YOU SAY: the postpositions you already had — *āp kā nām*, *kamre ke liye*]
-- [YOU SAY: pointing and placing at once — *yih kamrā*, then *is kamre meṅ* … which is the next chapter]
+- [YOU SAY: near and inside at once — *yih kamrā*, then *is kamre meṅ* … which is the next chapter]
 - [YOU SAY: the two words spelled میں — *maiṅ*, then *meṅ*]
 
 ## Wrap-up Recall

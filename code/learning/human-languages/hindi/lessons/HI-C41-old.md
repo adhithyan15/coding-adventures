@@ -55,7 +55,7 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-05, HI-LEX-C40-DEIXIS-06] -->
 
 [PAUSE 1s]
-- [YOU SAY: "पुराना" three times, pointing at something different each time]
+- [YOU SAY: "पुराना" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU RECALL: say *kahā̃*]
 

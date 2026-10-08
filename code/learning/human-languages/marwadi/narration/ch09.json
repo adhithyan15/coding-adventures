@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Pachhe Milsu: See You Later",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:9ca85357abd11b26",
+  "sourceHash": "fnv1a64:8109e8c39f81d2b8",
   "lessons": [
     {
       "id": "MW-C07-hear-later",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19af7c7bbff31734",
+      "sourceHash": "fnv1a64:8d1318c2f0b1f520",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hear two groups: pā-chhe | mil-sū. The first points later/back; the second carries meeting again. Listen twice, tap the two groups, and say them once. Do not spell the line yet."
+              "text": "Hear two groups: pā-chhe | mil-sū. The first points later/back; the second carries meeting again. Listen twice, say the two groups apart, then say them once together. Do not spell the line yet."
             }
           ]
         },

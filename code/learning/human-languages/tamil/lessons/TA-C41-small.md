@@ -52,7 +52,7 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-02, TA-LEX-EVVALAVU-01, TA-GRAMMAR-EVVALAVU-VS-ETHANAI-02, TA-LEX-C40-DEIXIS-03] -->
 
 [PAUSE 1s]
-- [YOU SAY: "சிறிய" three times, pointing at something different each time]
+- [YOU SAY: "சிறிய" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU READ: **எவ்வளவு**]
 - [YOU RECALL: say *iṅgē*]

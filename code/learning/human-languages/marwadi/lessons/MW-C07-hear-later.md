@@ -46,7 +46,7 @@ Close the text before the new parting line begins.
 > *pāchhe milsū* — **see you later**
 
 Hear two groups: *pā-chhe | mil-sū*. The first points later/back; the second
-carries meeting again. Listen twice, tap the two groups, and say them once. Do
+carries meeting again. Listen twice, say the two groups apart, then say them once together. Do
 not spell the line yet.
 
 ## Guided Practice

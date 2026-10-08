@@ -57,7 +57,7 @@ Both signs are yours: **い + ち**.
 Read **い | ち**. [YOU WRITE: one copy of **いち**; then hide it and write it from the meaning]
 
 Then say
-**いちど** and point to the part of it that is the number.
+**いちど** and name the part of it that is the number.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ICHI, JA-LEX-ICHIDO] -->

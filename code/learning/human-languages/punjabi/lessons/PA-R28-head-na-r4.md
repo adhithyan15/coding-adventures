@@ -54,4 +54,6 @@ Read **ਨ** once and say **na**. Do not copy it in this lesson.
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[PA-LEX-SIR, PA-ETYMON-SIR-HORN, PA-SCRIPT-NA-01, PA-SCRIPT-RECOG-SIHARI-01] -->
 
-[PAUSE 4s] Say **sir — head — horn**, then point to **ਨ**. This lesson measures listening, speech, and recognition. It does not award independent Gurmukhi writing evidence.
+[PAUSE 4s] Say **sir — head — horn**. [YOU POINT: **ਨ**]
+
+This lesson measures listening, speech, and recognition. It does not award independent Gurmukhi writing evidence.

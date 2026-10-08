@@ -48,7 +48,7 @@ No new sign: repeat **み** on two even morae.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-MIMI, JA-SCRIPT-MI-01] -->
 
-1. Hear *mimi*; point to an ear.
+1. Hear *mimi*; say what it names — an ear.
 2. Read **み | み** aloud.
 3. [YOU WRITE: the repeated sign twice, with the word hidden]
 

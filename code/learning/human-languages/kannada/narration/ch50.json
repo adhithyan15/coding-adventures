@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "Taking Your Leave",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:4b9c7a222c885403",
+  "sourceHash": "fnv1a64:da7d5d537c17c318",
   "lessons": [
     {
       "id": "KA-C50-now",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2dfdf38cdd02c1ab",
+      "sourceHash": "fnv1a64:be731e39f3425cc1",
       "notice": null,
       "blocks": [
         {
@@ -101,11 +101,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "īga, then āga, and point at the near one and the far one",
+              "instruction": "īga, then āga, and say which is near and which is far",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *īga*, then *āga*, and point at the near one and the far one]"
+              "source": "[YOU SAY: *īga*, then *āga*, and say which is near and which is far]"
             },
             {
               "kind": "prompt",

@@ -47,7 +47,7 @@ attach each one to a quantity, and say them before your eyes meet the script.
 | 4 | ***nālŭ*** |
 | 5 | ***añcŭ*** |
 
-Point to one finger and say *onnŭ*. Add one finger at a time: *raṇṭŭ, mūnnŭ,
+Say *onnŭ*. Count up aloud, one word to each beat: *raṇṭŭ, mūnnŭ,
 nālŭ, añcŭ*. [REPEAT x2]
 
 ## Why it's said this way
@@ -67,9 +67,9 @@ Five moved furthest: an older *aintu* softened toward Malayalam *añcŭ*. Say
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ML-CONCEPT-C07-NUMBERS-1-5-01, ML-CONCEPT-C07-NUMBERS-1-5-02, ML-CONCEPT-C07-NUMBERS-1-5-03, ML-LEX-TAAMASIKKUKA-01, ML-CONCEPT-C05-POSTPOSITION-IL-01, ML-LEX-JOLI-CEYYUKA-01, ML-CONCEPT-C05-NOUN-PLUS-CEYYUKA-01] -->
 
-- [YOU SAY: *onnŭ, raṇṭŭ, mūnnŭ, nālŭ, añcŭ* while raising one more finger]
-- [YOU HEAR: *mūnnŭ*; YOU SHOW: 3]
-- [YOU HEAR: *añcŭ*; YOU SHOW: 5]
+- [YOU SAY: *onnŭ, raṇṭŭ, mūnnŭ, nālŭ, añcŭ*, one number to each beat]
+- [YOU HEAR: *mūnnŭ*, then say the number — three]
+- [YOU HEAR: *añcŭ*, then say the number — five]
 - [YOU RECALL: say *tāmasikkuka*, then say *jōli ceyyuka*]
 
 ## Wrap-up Recall

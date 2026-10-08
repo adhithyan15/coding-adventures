@@ -58,7 +58,7 @@ becomes *gi*. The next lesson writes it.
 
 [PAUSE 1s]
 - [YOU SAY: *ginkō*]
-- [YOU SAY: *ginkō*, clapping four beats]
+- [YOU SAY: *ginkō*, then count its beats aloud — four]
 - [YOU RECALL: say which sign in **ぎんこう** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall

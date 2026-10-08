@@ -4,7 +4,7 @@
   "chapter": 70,
   "title": "The Room You Are In",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:4bf42b14fd294aec",
+  "sourceHash": "fnv1a64:c8cdcce7ea5f584c",
   "lessons": [
     {
       "id": "TA-C70-table",
@@ -768,7 +768,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42289c0a7f551fd3",
+      "sourceHash": "fnv1a64:64c426c7f602af2b",
       "notice": null,
       "blocks": [
         {
@@ -803,7 +803,7 @@
             },
             {
               "kind": "speech",
-              "text": "With தரை (tarai) under your feet and கூரை (kūrai) over your head, the room has both ends — and you already have the two words for the space between them: மேலே and கீழே. Point up at the கூரை (kūrai), down at the தரை (tarai), and every word in that sentence is one you have been taught."
+              "text": "With தரை (tarai) under your feet and கூரை (kūrai) over your head, the room has both ends — and you already have the two words for the space between them: மேலே and கீழே. Picture the கூரை (kūrai) up above, the தரை (tarai) down below, and every word in that sentence is one you have been taught."
             },
             {
               "kind": "speech",

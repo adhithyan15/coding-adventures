@@ -43,7 +43,7 @@ the Gujarati spelling waits for the next small step.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-SHAHAR-01] -->
 
-Point to the city picture when you hear *shahar*, then say *shahar* once from
+Picture a city when you hear *shahar*, then say *shahar* once from
 the English cue.
 
 ## Wrap-up Recall

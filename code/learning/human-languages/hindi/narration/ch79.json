@@ -4,7 +4,7 @@
   "chapter": 79,
   "title": "What It Costs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:f781dbc637342fa2",
+  "sourceHash": "fnv1a64:bf6369d9f69f35e8",
   "lessons": [
     {
       "id": "HI-C72-money",
@@ -329,7 +329,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9a6d6874d59b14e",
+      "sourceHash": "fnv1a64:55a3f8b8a7c05bca",
       "notice": null,
       "blocks": [
         {
@@ -423,11 +423,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "it again, pointing at something in the room",
+              "instruction": "it again, picturing something you might buy",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: it again, pointing at something in the room]"
+              "source": "[YOU SAY: it again, picturing something you might buy]"
             },
             {
               "kind": "prompt",

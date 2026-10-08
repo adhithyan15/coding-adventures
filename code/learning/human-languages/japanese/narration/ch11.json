@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Seven Body Words, No New Guessing",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d78aba586a48c920",
+  "sourceHash": "fnv1a64:45ebbcaa2b365887",
   "lessons": [
     {
       "id": "JA-W11-small-tsu",
@@ -471,7 +471,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:65147885681a9509",
+      "sourceHash": "fnv1a64:46759d9240516eb7",
       "notice": null,
       "blocks": [
         {
@@ -496,7 +496,7 @@
             },
             {
               "kind": "speech",
-              "text": "Point here and say koko, then ask for the line a little more slowly."
+              "text": "Picture the spot where you are and say koko, then ask for the line a little more slowly."
             }
           ]
         },
@@ -522,7 +522,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear te; touch one hand."
+              "text": "Hear te; say what it names — a hand."
             },
             {
               "kind": "speech",
@@ -587,7 +587,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7ecd2290e9cb7791",
+      "sourceHash": "fnv1a64:e9d6ad82c9682c55",
       "notice": null,
       "blocks": [
         {
@@ -638,7 +638,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear mimi; point to an ear."
+              "text": "Hear mimi; say what it names — an ear."
             },
             {
               "kind": "speech",
@@ -703,7 +703,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:07f7b670ae87c8bb",
+      "sourceHash": "fnv1a64:dccc2fdc6ced71b1",
       "notice": null,
       "blocks": [
         {
@@ -754,7 +754,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear kuchi; point to the mouth."
+              "text": "Hear kuchi; say what it names — the mouth."
             },
             {
               "kind": "speech",
@@ -820,7 +820,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e4a395350c2047bc",
+      "sourceHash": "fnv1a64:31ae2319436048dc",
       "notice": null,
       "blocks": [
         {
@@ -871,7 +871,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear ashi; touch a foot or leg."
+              "text": "Hear ashi; say what it names — a foot or leg."
             },
             {
               "kind": "speech",
@@ -936,7 +936,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:af1b63141eefd54a",
+      "sourceHash": "fnv1a64:e8dcaf7ebe9905c4",
       "notice": null,
       "blocks": [
         {
@@ -987,7 +987,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear hana; point to the nose."
+              "text": "Hear hana; say what it names — the nose."
             },
             {
               "kind": "speech",
@@ -1052,7 +1052,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d77d04053f3f4be",
+      "sourceHash": "fnv1a64:82a7b0a3ae21a94a",
       "notice": null,
       "blocks": [
         {
@@ -1103,7 +1103,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear two beats, ka-o; point to the face."
+              "text": "Hear two beats, ka-o; say what it names — the face."
             },
             {
               "kind": "speech",
@@ -1168,7 +1168,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f96739007a614b53",
+      "sourceHash": "fnv1a64:1efa0a090afa478d",
       "notice": null,
       "blocks": [
         {
@@ -1219,7 +1219,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear me; point to an eye."
+              "text": "Hear me; say what it names — an eye."
             },
             {
               "kind": "speech",
@@ -1284,7 +1284,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f25cd1a54197f56",
+      "sourceHash": "fnv1a64:c0735c679e480170",
       "notice": null,
       "blocks": [
         {
@@ -1335,7 +1335,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Listen: point to the named body part."
+              "text": "Listen: say the English for the named body part."
             },
             {
               "kind": "speech",

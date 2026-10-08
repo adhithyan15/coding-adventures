@@ -36,7 +36,7 @@ reviews_of: [HI-C88-aaunga]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C88-FUT-02, HI-LEX-C40-DEIXIS-02] -->
 
-[PAUSE 2s] You can say *I will come*. Point at somebody else and try to say it
+[PAUSE 2s] You can say *I will come*. Think of somebody else and try to say it
 about them — and notice which part of the word has to move.
 
 ## You'll want to know: आएगा

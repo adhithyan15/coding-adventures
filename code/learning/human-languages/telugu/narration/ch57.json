@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "More of the Body",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c0f9578bd5b071f3",
+  "sourceHash": "fnv1a64:6c8ff514ed095e02",
   "lessons": [
     {
       "id": "TE-C57-neck",
@@ -595,7 +595,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7492c2f3d329b50a",
+      "sourceHash": "fnv1a64:ff75c7abbe8c83a2",
       "notice": null,
       "blocks": [
         {
@@ -681,11 +681,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all five in order, then point at your మెడ (meḍa) and say nāku noppi",
+              "instruction": "all five in order, then name your మెడ (meḍa) and say nāku noppi",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all five in order, then point at your మెడ and say *nāku noppi*]"
+              "source": "[YOU SAY: all five in order, then name your మెడ and say *nāku noppi*]"
             },
             {
               "kind": "prompt",

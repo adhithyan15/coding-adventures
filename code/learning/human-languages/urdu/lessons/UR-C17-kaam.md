@@ -37,7 +37,7 @@ reviews_of: [UR-C17-yih, UR-C08-puchhna]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-YIH] -->
 
-[PAUSE 2s] Say the near-pointing word, then point at your own ear and use it.
+[PAUSE 2s] Say the near-pointing word, then use it to name your own ear.
 (*yih*; *yih kān*.)
 
 ## You'll want to know first — one word

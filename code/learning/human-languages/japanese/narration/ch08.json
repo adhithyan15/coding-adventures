@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "One Goodbye, Sign by Sign",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:438a7505c1d9718d",
+  "sourceHash": "fnv1a64:5caa7b539b4cab66",
   "lessons": [
     {
       "id": "JA-C08-hear-sayounara",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f866ca785d34586d",
+      "sourceHash": "fnv1a64:edfc6d12069018a1",
       "notice": null,
       "blocks": [
         {
@@ -59,7 +59,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hear five morae: sa | yo | o | na | ra. The held ō occupies two beats, just as the final long vowel did in arigatō. Listen twice. Tap five even beats, then say the expression once. Its writing waits for the next four tiny sessions."
+              "text": "Hear five morae: sa | yo | o | na | ra. The held ō occupies two beats, just as the final long vowel did in arigatō. Listen twice. Count five even beats aloud, then say the expression once. Its writing waits for the next four tiny sessions."
             },
             {
               "kind": "speech",

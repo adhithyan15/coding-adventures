@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "One small step into school",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a5a3437893117f3a",
+  "sourceHash": "fnv1a64:9c1bf575a511ce6f",
   "lessons": [
     {
       "id": "ZH-C14-hear-xiao",
@@ -198,7 +198,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14686e4923983758",
+      "sourceHash": "fnv1a64:2926a3361bc0d24a",
       "notice": null,
       "blocks": [
         {
@@ -214,7 +214,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say small, then point to the first stroke of 小 (xiǎo)."
+              "text": "Say small."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the first stroke of 小 (xiǎo)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the first stroke of 小]"
             }
           ]
         },

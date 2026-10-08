@@ -58,7 +58,7 @@ writes it.
 
 [PAUSE 1s]
 - [YOU SAY: *shinbun*]
-- [YOU SAY: *shinbun*, clapping four beats]
+- [YOU SAY: *shinbun*, then count its beats aloud — four]
 - [YOU RECALL: say which sign in **しんぶん** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall

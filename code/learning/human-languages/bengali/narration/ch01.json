@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7286439380c40932",
+  "sourceHash": "fnv1a64:cc4afd6c89428202",
   "lessons": [
     {
       "id": "BN-C01-nomoshkar",
@@ -644,7 +644,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:205ee0ac043493e9",
+      "sourceHash": "fnv1a64:26bcab130e52b4fd",
       "notice": null,
       "blocks": [
         {
@@ -678,11 +678,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "hello / goodbye, palms together — nômoshkar",
+              "instruction": "hello / goodbye, the palms-together greeting — nômoshkar",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: hello / goodbye, palms together — *nômoshkar*]"
+              "source": "[YOU SAY: hello / goodbye, the palms-together greeting — *nômoshkar*]"
             },
             {
               "kind": "prompt",

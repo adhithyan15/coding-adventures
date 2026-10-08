@@ -62,7 +62,7 @@ it: an entrance is the mouth you go in by.
 
 [PAUSE 1s]
 - [YOU SAY: *iriguchi*]
-- [YOU SAY: *iriguchi*, clapping four beats]
+- [YOU SAY: *iriguchi*, then count its beats aloud — four]
 - [YOU RECALL: say which sign in **いりぐち** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall

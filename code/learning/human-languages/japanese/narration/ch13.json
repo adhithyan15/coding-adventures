@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Nine Family Words Through One New Kana",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b996138fceb8da71",
+  "sourceHash": "fnv1a64:aebed6b85717cde6",
   "lessons": [
     {
       "id": "JA-W13-tsu",
@@ -214,7 +214,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fdf7238a3ae53000",
+      "sourceHash": "fnv1a64:7931352a4fd15e64",
       "notice": null,
       "blocks": [
         {
@@ -244,7 +244,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear chi-chi. Point to “my father,” then say the two even morae once."
+              "text": "Hear chi-chi. Say “my father,” then say the two even morae once."
             }
           ]
         },
@@ -1078,7 +1078,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c1089355a9c590c",
+      "sourceHash": "fnv1a64:aedde6319344f298",
       "notice": null,
       "blocks": [
         {
@@ -1114,7 +1114,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hear otooto and point to “younger brother.” Read こども (kodomo)."
+              "text": "Hear otooto and say “younger brother.” Read こども (kodomo)."
             },
             {
               "kind": "prompt",

@@ -34,7 +34,7 @@ reviews_of: [ZH-C13-hear-da, ZH-W13-da]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-DA-01, ZH-SCRIPT-DA-01] -->
 
-[PAUSE 10s] Say **big**, then point to the first stroke of 大.
+[PAUSE 10s] Say **big**. [YOU POINT: the first stroke of 大]
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-DA-01, ZH-SCRIPT-DA-01] -->

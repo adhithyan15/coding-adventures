@@ -36,7 +36,7 @@ reviews_of: [ZH-C18-hear-kanjian, ZH-C18-kan, ZH-W06-jian]
 
 [PAUSE 12s] Say **see** as *kànjiàn*. [YOU WRITE: 看]
 
-Then point to 见 in 再见.
+[YOU POINT: 见 in 再见]
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ZH-ORTHO-KANJIAN-01]; assesses=[ZH-SCRIPT-KAN-01, ZH-SCRIPT-JIAN] -->

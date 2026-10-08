@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 41,
-  "sourceHash": "fnv1a64:4a7e6e51998f6cda",
+  "sourceHash": "fnv1a64:e844046fb11d5130",
   "lessonIds": [
     "TE-C41-this",
     "TE-C41-that",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "telugu/narration/ch41.txt",
   "json": "telugu/narration/ch41.json",
-  "textHash": "fnv1a64:3f9fb4b8404fcceb",
-  "jsonHash": "fnv1a64:73399e019f83b003",
+  "textHash": "fnv1a64:b9dee95b7599b953",
+  "jsonHash": "fnv1a64:bbe5974fa98b6e43",
   "findings": []
 }

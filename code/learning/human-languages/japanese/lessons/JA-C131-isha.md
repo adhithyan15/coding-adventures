@@ -57,7 +57,7 @@ the word is two beats: *i–sha*.
 
 [PAUSE 1s]
 - [YOU SAY: *isha*]
-- [YOU SAY: *isha*, clapping the two beats]
+- [YOU SAY: *isha*, then count its beats aloud — two]
 - [YOU WRITE: **いしゃ** from memory, keeping the last sign small]
 
 ## Wrap-up Recall

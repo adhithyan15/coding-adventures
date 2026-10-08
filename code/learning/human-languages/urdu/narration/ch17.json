@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "The Sentence Learns to End",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:a5d31a715633254f",
+  "sourceHash": "fnv1a64:3c925f8068afe3a8",
   "lessons": [
     {
       "id": "UR-C17-yih",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a1200c96ab9eabe",
+      "sourceHash": "fnv1a64:ee9e2e42e4fe4292",
       "notice": null,
       "blocks": [
         {
@@ -58,7 +58,7 @@
             },
             {
               "kind": "speech",
-              "text": "Point at something within reach and name it:"
+              "text": "Picture something within reach and name it:"
             },
             {
               "kind": "speech",
@@ -106,11 +106,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "yih kān, then yih nāk, pointing each time",
+              "instruction": "yih kān, then yih nāk, picturing each one as you say it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: **yih kān**, then **yih nāk**, pointing each time]"
+              "source": "[YOU SAY: **yih kān**, then **yih nāk**, picturing each one as you say it]"
             },
             {
               "kind": "prompt",
@@ -216,7 +216,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:514e97692137ed40",
+      "sourceHash": "fnv1a64:6965e4ece8b1013a",
       "notice": null,
       "blocks": [
         {
@@ -232,7 +232,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say the near-pointing word, then point at your own ear and use it. (yih; yih kān.)"
+              "text": "Say the near-pointing word, then use it to name your own ear. (yih; yih kān.)"
             }
           ]
         },

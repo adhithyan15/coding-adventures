@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 135,
-  "sourceHash": "fnv1a64:785b17d8510a5b51",
+  "sourceHash": "fnv1a64:0d7bf64cfcb11621",
   "lessonIds": [
     "JA-C135-byouin",
     "JA-W135-bi",
@@ -20,7 +20,7 @@
   "drivablePrefix": 1,
   "text": "japanese/narration/ch135.txt",
   "json": "japanese/narration/ch135.json",
-  "textHash": "fnv1a64:ea33d989e9930462",
-  "jsonHash": "fnv1a64:de458e6b868161ec",
+  "textHash": "fnv1a64:59623370be72e9eb",
+  "jsonHash": "fnv1a64:07106cc1f3ef769a",
   "findings": []
 }

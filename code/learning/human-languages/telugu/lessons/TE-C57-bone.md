@@ -57,7 +57,7 @@ Five: మెడ, వీపు, పెదవి, గోరు, ఎముక. Enou
 [PAUSE 1s]
 - [YOU SAY: *emuka*]
 - [YOU SAY: it once more, slowly]
-- [YOU SAY: all five in order, then point at your మెడ and say *nāku noppi*]
+- [YOU SAY: all five in order, then name your మెడ and say *nāku noppi*]
 - [YOU RECALL: say *bāṭa*]
 - [YOU READ: **పెట్టె**, then say what it means]
 

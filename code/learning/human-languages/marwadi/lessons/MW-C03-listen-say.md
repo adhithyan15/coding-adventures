@@ -43,7 +43,7 @@ Say which belongs to formal thanks and which begins a yes answer.
 <!-- hl-knowledge: introduces=[MW-RESPONSE-HAAN-SAA-POLITE-01]; assesses=[] -->
 
 Have someone or a screen reader say these in either order: *ābhār* and *hā(n) sā*.
-Without looking, point left for formal thanks and right for respectful yes. Then
+Without looking, answer *formal thanks* or *respectful yes* for each. Then
 say **हां सा** as the answer to a question you accept.
 
 ## Guided Practice — four tiny skills

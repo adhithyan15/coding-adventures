@@ -37,7 +37,9 @@ reviews_of: [TE-S110-letter-ya, TE-S171-letter-nga]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-110, TE-SCRIPT-RECOG-171] -->
 
-[PAUSE 2s] Point once to the rare **ఙ** you met in **వాఙ్మయం**. Now imagine the
+[PAUSE 2s] [YOU POINT: the rare **ఙ** you met in **వాఙ్మయం**, once]
+
+Now imagine the
 cool patch beneath a tree. This lesson gives that patch a name, using the
 familiar **య** at the end and a different uncommon letter at the beginning.
 

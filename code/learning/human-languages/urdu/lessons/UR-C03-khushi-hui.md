@@ -37,9 +37,10 @@ reviews_of: [UR-C03-aap-ka-naam-kya-hai, UR-C02-mera-naam]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-SHIN-RECOGNITION-01, UR-SCRIPT-KAF-RECOGNITION-01, UR-SCRIPT-RE-RECOGNITION-01, UR-SCRIPT-YE-RECOGNITION-01, UR-SCRIPT-HE-RECOGNITION-01, UR-LEX-SHUKRIYA, UR-LEX-JI-HAN, UR-REGISTER-JI-RESPECT, UR-SCRIPT-NUN-GHUNNA-01, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01, UR-LEX-NAME-QUESTION, UR-LEX-MERA-NAAM-HAI, UR-LEX-AAP-TUM-TU] -->
 
-[PAUSE 2s] Say the opening ladder once: **shukriyā — jī hā̃ — nahī̃**. Point
-to the three shapes you traced before the joined thank-you word. Then ask
-**āp kā nām kyā hai?** and answer **merā nām ... hai**.
+[PAUSE 2s] Say the opening ladder once: **shukriyā — jī hā̃ — nahī̃**.
+[YOU POINT: the three shapes you traced before the joined thank-you word]
+
+Then ask **āp kā nām kyā hai?** and answer **merā nām ... hai**.
 
 ## The exchange
 <!-- hl-knowledge: introduces=[UR-LEX-NICE-TO-MEET, UR-CHUNK-AAP-SE-MIL-KAR]; assesses=[] -->

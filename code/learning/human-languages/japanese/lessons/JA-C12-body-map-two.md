@@ -49,7 +49,7 @@ retrieval scheduled in this chapter.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ATAMA, JA-LEX-KAMI-HAIR, JA-LEX-HA-TOOTH, JA-LEX-KATA-SHOULDER, JA-LEX-ONAKA, JA-LEX-SENAKA, JA-LEX-KOSHI] -->
 
-Listen and point; say all seven; read all seven.
+Listen and give each English meaning; say all seven; read all seven.
 [YOU WRITE: any four from memory]
 
 ## Wrap-up Recall

@@ -4,7 +4,7 @@
   "chapter": 35,
   "title": "The Ten Digit Signs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:dd5938f254568056",
+  "sourceHash": "fnv1a64:944e01de84572ec4",
   "lessons": [
     {
       "id": "MW-W35-digits-zero-one-two",
@@ -126,7 +126,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7d6656b74eab5a5a",
+      "sourceHash": "fnv1a64:8fb5cd8218d0de6a",
       "notice": null,
       "blocks": [
         {
@@ -205,7 +205,16 @@
             },
             {
               "kind": "speech",
-              "text": "Hear das and point at १० rather than at दस."
+              "text": "Hear das."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "१० (das) rather than दस",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: **१०** rather than **दस**]"
             },
             {
               "kind": "speech",

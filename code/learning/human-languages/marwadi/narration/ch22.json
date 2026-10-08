@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Rickshaw and Horse: One New Consonant",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:da8ce51cf8dcf953",
+  "sourceHash": "fnv1a64:bdd774325767bc8b",
   "lessons": [
     {
       "id": "MW-C17-hear-riksha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f18f00fb07bca320",
+      "sourceHash": "fnv1a64:b6a0c221f727c0b2",
       "notice": null,
       "blocks": [
         {
@@ -59,7 +59,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hear the three beats, point to a rickshaw picture, and say the word once. Keep the written cluster covered for now."
+              "text": "Hear the three beats, picture a rickshaw, and say the word once. Keep the written cluster covered for now."
             }
           ]
         },
@@ -316,7 +316,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cfe233a22e68f025",
+      "sourceHash": "fnv1a64:03f602c91f4ee8bb",
       "notice": null,
       "blocks": [
         {
@@ -356,7 +356,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hear the breathy first sound and curled middle sound. Point to a horse and say the word once."
+              "text": "Hear the breathy first sound and curled middle sound. Picture a horse and say the word once."
             }
           ]
         },

@@ -52,7 +52,7 @@ knows.
 1. Read **१**, **२** and **१०** aloud as *ek*, *do* and *das*.
 2. [YOU WRITE: each of the three in words, underneath its figure]
 3. Cover the figures. [YOU WRITE: the figures again, from the words]
-4. Hear *das* and point at **१०** rather than at **दस**.
+4. Hear *das*. [YOU POINT: **१०** rather than **दस**]
 
 Reading a figure and reading a word are two different skills, and a stall gives
 the learner the figure.

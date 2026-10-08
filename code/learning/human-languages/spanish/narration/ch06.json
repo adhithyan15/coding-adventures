@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Asking Someone's Name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:eb8dfddd45c9d1a1",
+  "sourceHash": "fnv1a64:bfc00d0f356a7905",
   "lessons": [
     {
       "id": "ES-C03-como",
@@ -1030,7 +1030,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad563f20c2908f86",
+      "sourceHash": "fnv1a64:9078c6edee996f8e",
       "notice": null,
       "blocks": [
         {
@@ -1141,11 +1141,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "point to either speaker and ask ¿Quién? — answer with the name",
+              "instruction": "think of either speaker and ask ¿Quién? — answer with the name",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: point to either speaker and ask **¿Quién?** — answer with the name]"
+              "source": "[YOU SAY: think of either speaker and ask **¿Quién?** — answer with the name]"
             },
             {
               "kind": "repeat",

@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "One More Time, Please",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4d3f6e68c2354947",
+  "sourceHash": "fnv1a64:7c7cc45011bae67c",
   "lessons": [
     {
       "id": "JA-C09-sumimasen",
@@ -407,7 +407,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a93ca12a70a8949d",
+      "sourceHash": "fnv1a64:ee5950b518060763",
       "notice": null,
       "blocks": [
         {
@@ -423,7 +423,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say sumimasen. Point to み and め (me) inside it."
+              "text": "Say sumimasen."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "み (mi) and め (me) inside it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: **み** and **め** inside it]"
             }
           ]
         },
@@ -888,7 +897,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:675841903f070bea",
+      "sourceHash": "fnv1a64:59f7c4ca07aa3652",
       "notice": null,
       "blocks": [
         {
@@ -949,11 +958,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "mo | o and tap twice",
+              "instruction": "mo | o, then count its beats aloud — two",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *mo | o* and tap twice]"
+              "source": "[YOU SAY: *mo | o*, then count its beats aloud — two]"
             },
             {
               "kind": "prompt",

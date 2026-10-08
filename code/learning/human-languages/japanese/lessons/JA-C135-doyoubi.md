@@ -58,7 +58,7 @@ it. You write every sign in it now.
 
 [PAUSE 1s]
 - [YOU SAY: *doyōbi*]
-- [YOU SAY: *doyōbi*, clapping four beats]
+- [YOU SAY: *doyōbi*, then count its beats aloud — four]
 - [YOU WRITE: **どようび** from memory, and point to the two signs that carry the mark]
 
 ## Wrap-up Recall

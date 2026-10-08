@@ -58,7 +58,7 @@ so *so* becomes *zo*. The next lesson writes it.
 
 [PAUSE 1s]
 - [YOU SAY: *kazoku*]
-- [YOU SAY: *kazoku*, clapping three beats]
+- [YOU SAY: *kazoku*, then count its beats aloud — three]
 - [YOU RECALL: say which sign in **かぞく** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall

@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "People under one roof",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:cf9b06109e0bba48",
+  "sourceHash": "fnv1a64:b657c63bf156c8f6",
   "lessons": [
     {
       "id": "ZH-C12-ren",
@@ -1169,7 +1169,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38dadf0fb5e2948b",
+      "sourceHash": "fnv1a64:8b2da4b54ecef00f",
       "notice": null,
       "blocks": [
         {
@@ -1205,7 +1205,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the six words in a shuffled order and point to meanings. Then take six meaning cards, say each word, and read the six character cards."
+              "text": "Hear the six words in a shuffled order and say each meaning. Then take six meaning cards, say each word, and read the six character cards."
             },
             {
               "kind": "prompt",

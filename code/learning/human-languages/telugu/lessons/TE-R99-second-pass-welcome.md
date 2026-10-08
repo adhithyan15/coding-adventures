@@ -32,7 +32,7 @@ reviews_of: [TE-C98-nothing, TE-C98-notyet, TE-C98-enough, TE-C98-true, TE-C98-t
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C99-WELCOME-01, TE-LEX-C99-WELCOME-02] -->
 
-[PAUSE 3s] A friend arrives at your door. Greet them with palms together, and say you are delighted.
+[PAUSE 3s] A friend arrives at your door. Greet them, and say you are delighted.
 
 ## Grammar Lens: the ending -ఏ, "exactly this"
 <!-- hl-knowledge: introduces=[]; assesses=[TE-LEX-C98-REPLY-04, TE-LEX-C98-REPLY-05] -->

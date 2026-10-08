@@ -58,7 +58,7 @@ lesson writes it.
 
 [PAUSE 1s]
 - [YOU SAY: *enpitsu*]
-- [YOU SAY: *enpitsu*, clapping four beats]
+- [YOU SAY: *enpitsu*, then count its beats aloud — four]
 - [YOU RECALL: say which sign in **えんぴつ** carries the small circle, and name the sign under it]
 
 ## Wrap-up Recall

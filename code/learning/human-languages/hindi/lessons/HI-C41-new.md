@@ -55,7 +55,7 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-04, HI-CONCEPT-C39-AURAT-01, HI-CONCEPT-C39-AURAT-02, HI-CONCEPT-C39-AURAT-03, HI-LEX-C40-DEIXIS-05] -->
 
 [PAUSE 1s]
-- [YOU SAY: "नया" three times, pointing at something different each time]
+- [YOU SAY: "नया" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU RECALL: say *aurat / mahilā / strī*, then say *kaun*]
 

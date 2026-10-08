@@ -61,7 +61,7 @@ it a thing, as in **これ**. Put side by side, the four words line up:
 
 [PAUSE 1s]
 - [YOU SAY: *sore*]
-- [YOU SAY: *kore*, touching something in front of you, then *sore*, pointing at something by the listener]
+- [YOU SAY: *kore*, picturing something in front of you, then *sore*, picturing something by the listener]
 - [YOU WRITE: **それ** from memory; you write every sign in it now]
 
 ## Wrap-up Recall

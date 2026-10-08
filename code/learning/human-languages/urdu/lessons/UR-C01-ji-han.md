@@ -37,8 +37,10 @@ reviews_of: [UR-W01-shukriya-first-three, UR-C01-shukriya]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-SHIN-RECOGNITION-01, UR-SCRIPT-KAF-RECOGNITION-01, UR-SCRIPT-RE-RECOGNITION-01, UR-SCRIPT-YE-RECOGNITION-01, UR-SCRIPT-HE-RECOGNITION-01, UR-LEX-SHUKRIYA] -->
 
-[PAUSE 2s] Say **شکریہ** once. Point to its first three shapes, then its final
-two. Your pen can rest; this lesson is for a spoken respectful answer.
+[PAUSE 2s] Say **شکریہ** once.
+[YOU POINT: its first three shapes, then its final two]
+
+Your pen can rest; this lesson is for a spoken respectful answer.
 
 ## The two words
 <!-- hl-knowledge: introduces=[UR-LEX-JI-HAN, UR-SCRIPT-NUN-GHUNNA-01]; assesses=[] -->

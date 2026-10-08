@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Six to Ten, and the Change That Happened Next Door",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:f65c9ab2b78f7d28",
+  "sourceHash": "fnv1a64:0836a2b74d1496e1",
   "lessons": [
     {
       "id": "UR-C29-chhe",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19caba294a090444",
+      "sourceHash": "fnv1a64:4d865d393a942034",
       "notice": null,
       "blocks": [
         {
@@ -54,7 +54,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hand at the mouth: chār moves nothing, chhe pushes air out. The tongue does the same thing in both; the lungs do not."
+              "text": "Listen for the breath: chār moves nothing, chhe pushes air out. The tongue does the same thing in both; the lungs do not."
             }
           ]
         },

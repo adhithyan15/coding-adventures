@@ -49,7 +49,7 @@ Only the opening changes from **おなか**.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SENAKA] -->
 
-Hear, point, say, and read **せなか**. [YOU WRITE: **せなか**]
+Hear, picture the part, say, and read **せなか**. [YOU WRITE: **せなか**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-SENAKA] -->

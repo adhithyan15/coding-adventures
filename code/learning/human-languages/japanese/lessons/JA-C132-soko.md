@@ -57,7 +57,7 @@ place moves across to the listener: *soko*, there, by them. The second sign is t
 
 [PAUSE 1s]
 - [YOU SAY: *soko*]
-- [YOU SAY: *koko*, pointing at your own feet, then *soko*, pointing at the listener's]
+- [YOU SAY: *koko*, picturing the spot at your own feet, then *soko*, picturing the spot at the listener's]
 - [YOU RECALL: name the sign in **そこ** you can already write, and the one you cannot]
 
 ## Wrap-up Recall

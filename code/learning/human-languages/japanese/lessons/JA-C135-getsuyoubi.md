@@ -58,7 +58,7 @@ Five beats: *ge–tsu–yo–o–bi*. It ends in *yōbi*, the day of the week, a
 
 [PAUSE 1s]
 - [YOU SAY: *getsuyōbi*]
-- [YOU SAY: *getsuyōbi*, clapping five beats]
+- [YOU SAY: *getsuyōbi*, then count its beats aloud — five]
 - [YOU RECALL: say which sign in **げつようび** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall

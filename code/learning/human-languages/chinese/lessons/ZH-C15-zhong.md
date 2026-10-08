@@ -34,7 +34,7 @@ reviews_of: [ZH-C15-hear-zhong, ZH-W15-zhong]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZHONG-01, ZH-SCRIPT-ZHONG-01] -->
 
-[PAUSE 9s] Say **middle**, then point to 中's last stroke.
+[PAUSE 9s] Say **middle**. [YOU POINT: 中's last stroke]
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZHONG-01, ZH-SCRIPT-ZHONG-01] -->

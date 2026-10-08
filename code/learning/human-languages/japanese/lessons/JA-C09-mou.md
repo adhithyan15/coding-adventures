@@ -50,7 +50,7 @@ spelling shows it with final **う**. In other settings this adverb can mean
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-MOU] -->
 
 - [YOU HEAR: *mō* in a repair → choose **again**]
-- [YOU SAY: *mo | o* and tap twice]
+- [YOU SAY: *mo | o*, then count its beats aloud — two]
 - [YOU POINT: **も | う**; **う** owns the held second beat]
 
 ## Wrap-up Recall

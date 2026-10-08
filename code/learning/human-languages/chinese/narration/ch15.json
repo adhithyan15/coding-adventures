@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "A wider school map",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:376718d85ead8ea2",
+  "sourceHash": "fnv1a64:627af77e413331cb",
   "lessons": [
     {
       "id": "ZH-C15-hear-zhong",
@@ -199,7 +199,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:405898c291b5941b",
+      "sourceHash": "fnv1a64:b8bf4ff230008e6d",
       "notice": null,
       "blocks": [
         {
@@ -215,7 +215,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say middle, then point to 中 (zhōng)'s last stroke."
+              "text": "Say middle."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "中 (zhōng)'s last stroke",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: 中's last stroke]"
             }
           ]
         },
@@ -640,7 +649,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:206dcf97958fe7d0",
+      "sourceHash": "fnv1a64:7d94ba680e4dee68",
       "notice": null,
       "blocks": [
         {
@@ -655,8 +664,13 @@
               "source": "[PAUSE 12s]"
             },
             {
-              "kind": "speech",
-              "text": "Read 中学 (zhōngxué), then point to 生."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "中学 (zhōngxué), then point to 生",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **中学**, then point to 生]"
             }
           ]
         },

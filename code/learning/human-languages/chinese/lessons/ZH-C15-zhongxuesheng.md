@@ -34,7 +34,7 @@ reviews_of: [ZH-C15-hear-zhongxuesheng, ZH-C15-zhongxue, ZH-C13-xuesheng]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-ZHONG-01, ZH-SCRIPT-XUE-01, ZH-SCRIPT-SHENG-01] -->
 
-[PAUSE 12s] Read **中学**, then point to 生.
+[PAUSE 12s] [YOU READ: **中学**, then point to 生]
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ZH-ORTHO-ZHONGXUESHENG-01]; assesses=[ZH-LEX-ZHONGXUESHENG-01] -->

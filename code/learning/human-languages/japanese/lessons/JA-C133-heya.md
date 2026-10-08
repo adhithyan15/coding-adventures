@@ -57,7 +57,7 @@ writes it.
 
 [PAUSE 1s]
 - [YOU SAY: *heya*]
-- [YOU SAY: *heya*, pointing at the room you are in]
+- [YOU SAY: *heya*, picturing a room you know]
 - [YOU RECALL: name the sign in **へや** you can already write, and the one you cannot]
 
 ## Wrap-up Recall

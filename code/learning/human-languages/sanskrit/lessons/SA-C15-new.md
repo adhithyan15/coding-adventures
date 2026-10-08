@@ -55,7 +55,7 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C15-ADJ-04] -->
 
 [PAUSE 1s]
-- [YOU SAY: "नव" three times, pointing at something different each time]
+- [YOU SAY: "नव" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
 
 ## Wrap-up Recall

@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "Green and Yellow",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:3b35dcce3c18bed3",
+  "sourceHash": "fnv1a64:fe495313eecc3cf5",
   "lessons": [
     {
       "id": "AR-C22-akhdar-asfar",
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6bbdd3747c91874c",
+      "sourceHash": "fnv1a64:2c4703ee5fb4a84a",
       "notice": null,
       "blocks": [
         {
@@ -149,7 +149,7 @@
             },
             {
               "kind": "speech",
-              "text": "Touch your head, then your hand, and give the Arabic for each. Both arrived a dozen lessons ago in single words and have not been asked for since."
+              "text": "Picture your head, then your hand, and give the Arabic for each. Both arrived a dozen lessons ago in single words and have not been asked for since."
             }
           ]
         },

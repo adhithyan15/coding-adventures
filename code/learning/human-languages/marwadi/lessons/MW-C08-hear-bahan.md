@@ -54,7 +54,7 @@ source form *bahan*.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAHAN-01, MW-LEX-BHAI-01] -->
 
-Hear *bhāī* or *bahan*. Point to brother or sister, then repeat the heard word.
+Hear *bhāī* or *bahan*. Say *brother* or *sister*, then repeat the heard word.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAHAN-01] -->

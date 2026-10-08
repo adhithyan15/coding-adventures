@@ -45,7 +45,7 @@ reviews_of: [MW-R16-transport-close]
 
 > *rikśā* — **rickshaw**
 
-Hear the three beats, point to a rickshaw picture, and say the word once.
+Hear the three beats, picture a rickshaw, and say the word once.
 Keep the written cluster covered for now.
 
 ## Wrap-up Recall

@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Tharo Naam: Ask One Name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:1a79af5a09e1196b",
+  "sourceHash": "fnv1a64:7e6f1f14abee364e",
   "lessons": [
     {
       "id": "MW-C05-hear-tharo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:988077bc70336501",
+      "sourceHash": "fnv1a64:124cdfd836bdd13b",
       "notice": null,
       "blocks": [
         {
@@ -48,7 +48,7 @@
             },
             {
               "kind": "speech",
-              "text": "Point to yourself on mhāro."
+              "text": "Say my on mhāro."
             }
           ]
         },
@@ -63,7 +63,7 @@
             },
             {
               "kind": "speech",
-              "text": "Listen twice: thā-ro. Let a small breath follow t. Point to another person when you hear it. Spelling waits for the next lesson."
+              "text": "Listen twice: thā-ro. Let a small breath follow t. Say your when you hear it. Spelling waits for the next lesson."
             }
           ]
         },
@@ -74,7 +74,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear mhāro and point to yourself. Hear thāro and point gently away. Change the order twice."
+              "text": "Hear mhāro and say my. Hear thāro and say your. Change the order twice."
             }
           ]
         },
@@ -328,7 +328,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c4ed1c4e47c75a7",
+      "sourceHash": "fnv1a64:e091f2bf9aa37f51",
       "notice": null,
       "blocks": [
         {
@@ -344,7 +344,20 @@
             },
             {
               "kind": "speech",
-              "text": "Retrieve हां सा once by ear, voice, eye, and writing; point to ै in है. Then read थारो, hear thāro nām, and give its meaning: your name."
+              "text": "Retrieve हां सा once by ear, voice, eye, and writing."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "ै in है",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: **ै** in **है**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then read थारो, hear thāro nām, and give its meaning: your name."
             }
           ]
         },
@@ -370,7 +383,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear thāro nām kāĩ hai? Point to the question mark and say What is your name? No spelling yet."
+              "text": "Hear thāro nām kāĩ hai?"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the question mark",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the question mark]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then say What is your name? No spelling yet."
             }
           ]
         },
@@ -622,7 +648,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e8213731893a14f3",
+      "sourceHash": "fnv1a64:ad314527a7d71c83",
       "notice": null,
       "blocks": [
         {
@@ -659,8 +685,13 @@
               "source": "[YOU WRITE: **क** and independent **ई**]"
             },
             {
-              "kind": "speech",
-              "text": "Point to the known nasal dot in हां."
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the known nasal dot in हां",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the known nasal dot in **हां**]"
             }
           ]
         },

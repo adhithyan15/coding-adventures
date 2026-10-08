@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "Five More of the Body",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5156f9a502933d3e",
+  "sourceHash": "fnv1a64:7c99c1b350af8960",
   "lessons": [
     {
       "id": "ML-C57-neck",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1958a6f105507e6d",
+      "sourceHash": "fnv1a64:542791bd3dee817d",
       "notice": null,
       "blocks": [
         {
@@ -240,11 +240,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "kaḻuttŭ, then mutukŭ, and place each one with a hand",
+              "instruction": "kaḻuttŭ, then mutukŭ, and say where on the body each one is",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *kaḻuttŭ*, then *mutukŭ*, and place each one with a hand]"
+              "source": "[YOU SAY: *kaḻuttŭ*, then *mutukŭ*, and say where on the body each one is]"
             },
             {
               "kind": "prompt",

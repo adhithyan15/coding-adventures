@@ -52,7 +52,7 @@ so this lesson teaches one source-attested everyday label, not one family model.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAA-01] -->
 
-Point to the mother cue when you hear *mā̃*, then say the word once from the
+Say *mother* when you hear *mā̃*, then say the word once from the
 meaning alone.
 
 ## Wrap-up Recall

@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "City, School, and Road",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f73e357f94971e02",
+  "sourceHash": "fnv1a64:47aae12db7d1aaf7",
   "lessons": [
     {
       "id": "GU-C22-hear-shahar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f6b732285971df1",
+      "sourceHash": "fnv1a64:7168689677bfb307",
       "notice": null,
       "blocks": [
         {
@@ -40,7 +40,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Point to the city picture when you hear shahar, then say shahar once from the English cue."
+              "text": "Picture a city when you hear shahar, then say shahar once from the English cue."
             }
           ]
         },
@@ -326,7 +326,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fac3f1ae6c9b3408",
+      "sourceHash": "fnv1a64:d6b92b6c56ffe59a",
       "notice": null,
       "blocks": [
         {
@@ -347,7 +347,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Point to the road when you hear rasto, then say rasto from the meaning."
+              "text": "Picture a road when you hear rasto, then say rasto from the meaning."
             }
           ]
         },

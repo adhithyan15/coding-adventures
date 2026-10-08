@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6b00158133c2ec5f",
+  "sourceHash": "fnv1a64:9fd1a8ede2136cdd",
   "lessons": [
     {
       "id": "TA-C01-vanakkam",
@@ -250,7 +250,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:29a8dff0dd75a040",
+      "sourceHash": "fnv1a64:0716ea3b6bfeae76",
       "notice": null,
       "blocks": [
         {
@@ -306,7 +306,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Say vaṇakkam with pressed palms or a small head-bow: the gesture is the word. It works as hello and goodbye, at any time, to almost anyone. It is respectful without being stiff; cinema and formal speech can also use it as a ringing one-word salutation to a whole room."
+              "text": "Vaṇakkam is said with pressed palms or a small head-bow: the gesture is the word. It works as hello and goodbye, at any time, to almost anyone. It is respectful without being stiff; cinema and formal speech can also use it as a ringing one-word salutation to a whole room."
             }
           ]
         },
@@ -324,11 +324,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"vaṇakkam\" with a small bow",
+              "instruction": "\"vaṇakkam\", the word that names the bow",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"vaṇakkam\" with a small bow]"
+              "source": "[YOU SAY: \"vaṇakkam\", the word that names the bow]"
             },
             {
               "kind": "prompt",

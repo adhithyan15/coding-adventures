@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Show It To Me: The First Transaction",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b9fd9b0a5a8c080f",
+  "sourceHash": "fnv1a64:adb252279ec224cc",
   "lessons": [
     {
       "id": "MW-C21-hear-ye",
@@ -627,7 +627,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88d18ed0e1dad08d",
+      "sourceHash": "fnv1a64:5e511e020d2463d1",
       "notice": null,
       "blocks": [
         {
@@ -667,11 +667,11 @@
             },
             {
               "kind": "speech",
-              "text": "Three words, and you already own all three. Point first, name the thing second, ask last: that order does not change when the noun changes."
+              "text": "Three words, and you already own all three. The pointing word first, the thing second, the ask last: that order does not change when the noun changes."
             },
             {
               "kind": "speech",
-              "text": "Hear the line twice. Say it once with your hand out, as if the cloth were on the counter in front of you."
+              "text": "Hear the line twice. Say it once as if the cloth were on the counter in front of you."
             },
             {
               "kind": "speech",

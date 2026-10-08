@@ -36,7 +36,7 @@ reviews_of: [HI-C89-kar-rahi-hun, HI-C02-hai]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C89-CONT-02, HI-CONCEPT-C02-HAI-01] -->
 
-[PAUSE 2s] Say *I am doing*. Now point at somebody else and change only what has
+[PAUSE 2s] Say *I am doing*. Now think of somebody else and change only what has
 to change.
 
 ## You'll want to know: कर रहा है

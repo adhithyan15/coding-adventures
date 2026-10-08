@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 96,
-  "sourceHash": "fnv1a64:485390e229d481e0",
+  "sourceHash": "fnv1a64:a00ec53348bdb335",
   "lessonIds": [
     "HI-C88-karunga",
     "HI-C88-aaunga",
@@ -16,7 +16,7 @@
   "drivablePrefix": 6,
   "text": "hindi/narration/ch96.txt",
   "json": "hindi/narration/ch96.json",
-  "textHash": "fnv1a64:3d78b4e43e8d7fa1",
-  "jsonHash": "fnv1a64:8a7e8e494f49a0e7",
+  "textHash": "fnv1a64:0dd9af181aa527b7",
+  "jsonHash": "fnv1a64:03cc6da3fff826fc",
   "findings": []
 }

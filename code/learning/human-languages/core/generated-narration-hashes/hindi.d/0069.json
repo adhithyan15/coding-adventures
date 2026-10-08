@@ -1,7 +1,7 @@
 {
   "language": "hindi",
   "chapter": 69,
-  "sourceHash": "fnv1a64:8ecb36039601d5e6",
+  "sourceHash": "fnv1a64:784797af319ac925",
   "lessonIds": [
     "HI-C69-verb-last",
     "HI-C69-ki",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "hindi/narration/ch69.txt",
   "json": "hindi/narration/ch69.json",
-  "textHash": "fnv1a64:a5edfa0c6f1608f0",
-  "jsonHash": "fnv1a64:9a33537016fd88e9",
+  "textHash": "fnv1a64:44ba612e8f8c12b4",
+  "jsonHash": "fnv1a64:6dbd5673b1672228",
   "findings": []
 }

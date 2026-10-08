@@ -44,7 +44,7 @@ reviews_of: [MW-C17-riksha, MW-C16-hear-gaadi, MW-W15-nukta]
 
 > *ghoṛo* — **horse**
 
-Hear the breathy first sound and curled middle sound. Point to a horse and
+Hear the breathy first sound and curled middle sound. Picture a horse and
 say the word once.
 
 ## Wrap-up Recall

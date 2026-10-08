@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Four Family Words: Meaning First, One New Sign",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:afd1288bb99dd3e9",
+  "sourceHash": "fnv1a64:489abf10dd5381d4",
   "lessons": [
     {
       "id": "MW-C08-hear-maa",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa2f508a6d6ac449",
+      "sourceHash": "fnv1a64:37852b764aaa6343",
       "notice": null,
       "blocks": [
         {
@@ -70,7 +70,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Point to the mother cue when you hear mā̃, then say the word once from the meaning alone."
+              "text": "Say mother when you hear mā̃, then say the word once from the meaning alone."
             }
           ]
         },
@@ -225,7 +225,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d818d5194bc13704",
+      "sourceHash": "fnv1a64:f6f34fc75d5449e6",
       "notice": null,
       "blocks": [
         {
@@ -289,7 +289,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear mā̃ and bāp in either order. Point to mother or father, then say only the word you heard."
+              "text": "Hear mā̃ and bāp in either order. Say mother or father, then say only the word you heard."
             }
           ]
         },
@@ -784,7 +784,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:24dcf677455c29b9",
+      "sourceHash": "fnv1a64:ecd7f3743a10b9a3",
       "notice": null,
       "blocks": [
         {
@@ -839,7 +839,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear bhāī or bahan. Point to brother or sister, then repeat the heard word."
+              "text": "Hear bhāī or bahan. Say brother or sister, then repeat the heard word."
             }
           ]
         },
