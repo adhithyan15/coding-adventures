@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **Rollback is now detected per file.** That protection comes from
+  `vault-sealed-store`'s freshness index (VLT01 F1-F10, P1.20). A new test
+  shows the attack failing: rotate a secret, put the old record file back,
+  and `register_all` refuses with `Tamper` and registers nothing. The module
+  docs and README now describe only the remaining whole-snapshot gap
+  (P1.20b).
 - **D18U envelope version 2** (P1.21). It adds the canonical, bounded list of
   `host:port` destinations a secret may be sent to (U-E8: a DNS name and a
   port, never an IP literal, strictly ascending, at most 32). The encoder

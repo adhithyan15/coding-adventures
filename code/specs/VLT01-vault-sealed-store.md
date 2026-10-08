@@ -192,13 +192,28 @@ for its reserved address. The plaintext is canonical binary:
 ```text
 "VFRESH" | version u8 = 1 | epoch u64 BE | count u32 BE
 then `count` entries, keys strictly ascending by byte value:
-  key_len u16 BE | key bytes | generation u64 BE | state u8
+  key_len u16 BE | key bytes | generation u64 BE | state u8 | tag [16]
 state: 1 = live, 2 = tombstone, 3 = legacy
+tag:   the AEAD tag of the live record at `generation`; zero otherwise
 ```
 
-There are at most 65 536 entries. Anything else, including trailing bytes,
-duplicate keys or an unknown state, is `Tamper`. The `epoch` increases by one
-on every index write. Nothing reads it yet; it is what F10 anchors.
+The tag is what makes an entry name exactly one record. A generation number
+alone is not enough. If a `put` ever reuses a generation, two different
+authentic records share it, and putting the older one back would pass. A
+`put` can reuse one when the index it builds on is stale and the newer record
+has also been deleted.
+
+There are at most 65 536 entries. Tombstones count, and nothing prunes them,
+because a pruned tombstone would let its deleted record come back. A
+namespace that creates and deletes that many distinct keys stops accepting
+new ones. Anything else, including trailing bytes, duplicate keys or an
+unknown state, is `Tamper`.
+
+The `epoch` increases by one on every index write. A store remembers the
+highest epoch it has seen for each namespace, and refuses an authentic index
+with a lower epoch as `Tamper` (the epoch floor). That stops a process from
+reading an old index put back while it runs, or building on one. The floor
+does not survive a restart. Persisting it is F10's anchor.
 
 **F2: record format version 2 carries a generation.** A record written by
 this format has `vault_sealed_version: 2` and `generation: <u64 >= 1>` in its
@@ -213,14 +228,15 @@ generation.
 | Index | Entry `e` | v1 record | v2 record, generation `g` |
 |---|---|---|---|
 | none | — | accept | `Tamper` |
-| present | live `n` | `Tamper` | accept if `g >= n` |
+| present | live `n`, tag `t` | `Tamper` | accept if `g > n`, or `g == n` and its tag is `t` |
 | present | tombstone `n` | `Tamper` | accept if `g > n` |
 | present | legacy | accept | accept if `g >= 1` |
 | present | absent | `Tamper` | accept |
 
-- **Live `n` and `g >= n`.** A record newer than the index is accepted. Only a
+- **Live `n` and `g > n`.** A record newer than the index is accepted. Only a
   KEK holder can write a v2 record, so `g > n` means a `put` whose index
-  update did not land, not an attack.
+  update did not land, not an attack. At `g == n` only the pinned record is
+  accepted.
 - **Absent entry, v2 record: accepted** for the same reason.
 - **Absent entry, v1 record: refused**, because migration (F6) puts every v1
   key in the index.
@@ -232,21 +248,56 @@ index.
 
 **F4: `put`.**
 
-1. If the namespace has no index, migrate it first (F6).
-2. Write the record as v2 with `g = n + 1`, where `n` is the entry's
-   generation. An absent entry counts as 0, and a legacy entry as 1. The
-   caller's `if_revision` and `if_absent` apply to this write.
-3. Set the entry to live `g`. This is a compare-and-swap on the index's
-   storage revision, retried up to 8 times. It never lowers a generation.
+1. **Prepare.** If the namespace has no index, migrate it (F6). Then
+   **reconcile**: list the namespace, and for every v2 record whose metadata
+   is ahead of its entry, open it under its AAD. If it is authentic, absorb
+   it into the index as live at its generation and tag. Records that do not
+   open are skipped, and `get` refuses them anyway.
+2. **Write the record.** Write it as v2 with `g = n + 1`, where `n` is the
+   entry's generation after reconciling. An absent entry counts as 0. `g`
+   must fit in an `i64`, because metadata is JSON, or the put is refused.
+   The caller's `if_revision` and `if_absent` apply to this write.
+3. **Update the index.** Set the entry to live `g` with the new record's tag.
+   This is a compare-and-swap on the index's storage revision, retried up
+   to 8 times. It never lowers a generation. If a re-read shows another
+   writer pinned a different record at `g`, the put fails with
+   `Storage(Conflict)` rather than pinning either one.
+
+Reconciling first is what keeps an index from going backwards. Without it, a
+write that found a stale index would seal that stale floor as the newest.
+The stale index could be from a crashed put, or an old copy put back. Every
+record the stale index had forgotten would then lose its rollback check.
+Every write therefore costs one listing of the namespace, plus one decrypt
+per record that is ahead.
 
 Record first, then index: if the process crashes between them, the record is
-ahead of the index, which F3 accepts.
+ahead of the index, which F3 accepts and the next write absorbs.
 
 **F5: `delete`.**
 
-1. If the namespace has no index, migrate it first (F6).
-2. Set the entry to a tombstone at `max(n, the record's generation)`.
+1. Prepare as in F4 step 1: migrate, then reconcile.
+2. Set the entry to a tombstone at `n + 1`, where `n` is the reconciled
+   generation and an absent entry counts as 0. This happens even when nothing
+   is on disk or the key is unknown.
 3. Delete the record.
+
+**Why `n + 1`.** A put whose index update was lost leaves an authentic record
+at `n + 1`, and reconcile absorbs it only if it can see it. Someone who hides
+that file while the delete runs, then puts it back, would otherwise
+resurrect it. Every put writes the reconciled `n + 1`, and entries never go
+down, so no authentic record is above `n + 1`. A tombstone at `n + 1`
+therefore covers them all.
+
+The tombstone is never set from the record's own plaintext metadata: a forged
+generation there could push it to `i64::MAX` and destroy the key.
+
+Every delete writes the index, even for an unknown or already-tombstoned
+key, and even when the backend delete then fails. Each distinct key deleted
+costs one index entry, and the F1 bound counts them.
+
+If the caller's `if_revision` does not match the record on disk, the
+delete stops before step 2. A delete that is going to fail never leaves a
+tombstone hiding the record it failed to remove.
 
 Tombstone first, then delete: if the process crashes between them, the
 remaining record has `g <= n` and F3 refuses it, so the delete holds. A later
@@ -260,8 +311,21 @@ reach a namespace with no index migrates it:
    are present now would launder a rollback.
 2. Write the index with every key as `legacy`.
 3. Re-seal each v1 record as v2 with generation 1, using a CAS on its
-   revision.
-4. Rewrite the index with those keys as live 1.
+   revision. The v1 record is decrypted under the v1 AAD first, so a forged
+   v1 file is never laundered into an authentic v2 one. A generation-1
+   record left by an earlier crash is authenticated before its tag is used.
+   A record that does not parse or decrypt is skipped. A v1 record whose
+   `kek_id` is one the manifest lists as *retired* stops the migration with
+   an error instead. That record comes from an interrupted rotation,
+   resuming `rotate_kek` recovers it, and skipping it would strand it. An
+   unknown `kek_id` is junk and is skipped, because `kek_id` is plaintext:
+   honouring a planted one would let any file block every write. One rare
+   case still strands a record. If a generation-1 record is left under a
+   retired KEK, by a crash mid-migration followed by an interrupted
+   rotation, it is pinned with no tag.
+4. Rewrite the index with those keys as live 1, each pinned to its re-sealed
+   record's tag. A skipped key gets no tag, so `get` keeps refusing it as
+   before, and one bad file cannot block every write to the namespace.
 
 During migration, F3's legacy row accepts both the v1 file and its v2
 replacement. Before migration there is no newer value to roll back to, so
@@ -279,24 +343,54 @@ with `Storage(Conflict)` after 8 attempts.
 **F9: what this guarantees.** Each of these is reported as `Tamper` on
 `get`:
 
-- restoring an older generation of a record file;
+- restoring an older generation of a record file, including one that shares
+  a generation with the current record (it carries a different tag);
 - resurrecting a deleted record;
 - putting a pre-migration v1 file back over a migrated record;
-- deleting the index of a migrated namespace.
+- deleting the index of a migrated namespace, for its v2 records;
+- putting back an old copy of the index and, later, an old record, in either
+  of two cases:
+  - the process is still running, and the epoch floor refuses the old index;
+  - a write happened in between **while the newer records were on disk**,
+    so that write reconciled the index forward past them first.
+- hiding a put's uncommitted record during a delete, then putting it back
+  (F5's `n + 1`).
 
-All of these are changes to individual files, which is what a sync conflict
-or a careless one-file restore produces. A Chief vault load (D18U) fails
+These are what a sync conflict, a careless restore of one file, or an
+attacker restoring files one at a time produce. A Chief vault load (D18U) fails
 closed on any of them.
 
-**F10: what this does not guarantee.** Restoring the index **together with**
-its records, meaning a consistent earlier snapshot of the namespace, is not
-detected. That includes reverting a whole namespace to before its migration.
-Every file involved is a valid file the attacker already holds. Detecting it
-needs a monotonic value outside the attacker-writable directory, for example
-the index `epoch` mirrored to an owner-only file next to the KEK. That is
-backlog item P1.20b. Until it lands, the vault storage directory must still
-be writable only by the owner. Freshness narrows what a mistake in that
-requirement costs. It does not replace the requirement.
+**F10: what this does not guarantee.** Everything below works by putting
+back the **index together with** an old record. Every file involved is one
+the attacker already holds, and each verifies.
+
+- **A consistent pair.** Restore an old index, plus the old record it pins,
+  before any write reconciles. While a process is running, the epoch floor
+  refuses the old index. After a restart nothing does.
+- **A hidden pair.** After a restart, restore an old index and hide the
+  newer records. Let any write run: it reconciles against what it can see
+  and seals the old floor. Then restore an old record, or resurrect a
+  deleted one, under that floor.
+- **No index.** Delete the index, then restore a pre-migration v1 record. F3's
+  "no index" row accepts it. Other keys in the namespace read as `Tamper`,
+  so the attack is visible, but the target key returns its old value.
+
+Cross-process limits:
+
+- `storage-fs`'s compare-and-swap is not atomic across processes. A lost
+  concurrent write can leave a lower epoch on disk, which a long-running
+  process then refuses as `Tamper` until it restarts.
+- Two processes each adding a new key at the F1 bound can push an index past
+  it, after which writes to that namespace fail.
+
+Both are availability failures, not rollbacks.
+
+Detecting these needs a monotonic value outside the attacker-writable
+directory: the index `epoch` (and the fact that an index exists), mirrored
+to an owner-only file next to the KEK. That is backlog item P1.20b. Until it
+lands, the vault storage directory must still be writable only by the owner.
+Freshness narrows what a mistake in that requirement costs. It does not
+replace the requirement.
 
 Deleting files is always possible for someone with write access, and is a
 denial of service. Freshness makes it visible as `Tamper`, and cannot

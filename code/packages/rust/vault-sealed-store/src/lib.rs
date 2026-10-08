@@ -28,7 +28,12 @@
 
 #![forbid(unsafe_code)]
 
+mod freshness;
+
+use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
+
+use freshness::{accepts, Entry, EntryState, FreshnessIndex, MAX_ENTRIES, NO_TAG, TAG_BYTES};
 
 use coding_adventures_argon2id::{argon2id, Options as Argon2Options, VERSION as ARGON2_VERSION};
 use coding_adventures_bounded_json::{JsonNumber, JsonValue};
@@ -66,8 +71,27 @@ const NAMESPACES_CONTENT_TYPE: &str = "application/vault-namespaces+json-v1";
 /// Manifest schema version. Increments on any breaking on-disk change.
 const MANIFEST_VERSION: u64 = 1;
 
-/// Sealed record schema version. Increments on any breaking on-disk change.
-const SEALED_RECORD_VERSION: u64 = 1;
+/// Sealed record schema version written today. Version 2 carries a
+/// `generation` bound into the body AAD (VLT01 F2).
+const SEALED_RECORD_VERSION: u64 = 2;
+
+/// The original record format: no generation. Still read (F3), never written
+/// for a record, and still used for the freshness index's own envelope, which
+/// is versioned by its content type instead.
+const SEALED_RECORD_VERSION_1: u64 = 1;
+
+/// Key prefix, under the reserved namespace, of each namespace's freshness
+/// index (F1).
+const FRESHNESS_KEY_PREFIX: &str = "freshness/";
+
+/// Content-type tag on a freshness index record (F1).
+const FRESHNESS_CONTENT_TYPE: &str = "application/vault-freshness-v1";
+
+/// Domain separator for the freshness index's body AAD (F1).
+const FRESHNESS_AAD_DOMAIN: &[u8] = b"vault-freshness-v1";
+
+/// How many times an index compare-and-swap is retried before giving up (F8).
+const INDEX_CAS_ATTEMPTS: usize = 8;
 
 /// The 16 zero bytes that the verifier AEADs under the KEK. Chosen over
 /// hashing the KEK because a known-plaintext verifier cannot leak the KEK.
@@ -277,6 +301,15 @@ impl From<StorageError> for SealedStoreError {
 pub struct SealedStore {
     backend: Arc<dyn StorageBackend>,
     state: Mutex<State>,
+    /// Decoded freshness indexes, by namespace, with the storage revision
+    /// they were read at.
+    ///
+    /// Only an index that passed its AEAD is ever cached, so a cache hit can
+    /// only ever return an index this process authenticated. If someone puts
+    /// back an old index file but keeps the cached revision string, the hit
+    /// returns the newer, authentic index, which is the safe direction. A
+    /// legitimate write always changes the revision, so it always misses.
+    indexes: Mutex<HashMap<String, (Revision, FreshnessIndex)>>,
 }
 
 /// In-memory unseal state. Held under a mutex so `seal()` from one thread
@@ -306,6 +339,7 @@ impl SealedStore {
         Self {
             backend,
             state: Mutex::new(State { unsealed: None }),
+            indexes: Mutex::new(HashMap::new()),
         }
     }
 
@@ -676,38 +710,38 @@ impl SealedStore {
         // namespace is already known it returns immediately with no write.
         self.register_namespace(namespace)?;
 
+        // The state lock is held for the whole put, index update included.
+        // That is what serializes this process's index writes (F8).
         let guard = self.state.lock().expect("vault state mutex poisoned");
         let unsealed = guard.unsealed.as_ref().ok_or(SealedStoreError::Sealed)?;
 
-        // Fresh per-record DEK from CSPRNG. Wrapped in Zeroizing *at
-        // creation* so any `?` below wipes on the way out.
-        let dek: Zeroizing<[u8; KEY_LEN]> = Zeroizing::new(
-            random_array().map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?,
-        );
+        // F4: the next generation is one past whatever the index remembers,
+        // live, tombstoned or legacy. An absent entry counts as zero.
+        let current = self.ready_index(unsealed, namespace)?;
+        let remembered = current.0.entries.get(key).map(|entry| entry.generation);
+        if remembered.is_none() && current.0.entries.len() >= MAX_ENTRIES {
+            // Refused before the record is written: a record the index can
+            // never hold would be accepted forever as "ahead of the index".
+            return Err(SealedStoreError::Validation {
+                field: "freshness".to_string(),
+                message: "namespace index is full".to_string(),
+            });
+        }
+        // Bounded to i64::MAX because metadata stores it as a JSON integer.
+        // A generation that cannot be written exactly must not be written
+        // at all, or the metadata and the AAD would disagree.
+        let generation = remembered
+            .unwrap_or(0)
+            .checked_add(1)
+            .filter(|generation| i64::try_from(*generation).is_ok())
+            .ok_or_else(|| SealedStoreError::Validation {
+                field: "generation".to_string(),
+                message: "exhausted".to_string(),
+            })?;
 
-        let body_nonce: [u8; NONCE_LEN] =
-            random_array().map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
-        let aad = record_aad(namespace, key);
-        let (ciphertext, body_tag) =
-            xchacha20_poly1305_aead_encrypt(plaintext, &dek, &body_nonce, &aad);
-
-        // Wrap the DEK under the KEK.
-        let wrap_nonce: [u8; NONCE_LEN] =
-            random_array().map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
-        let wrap_aad = wrap_aad(namespace, key, &unsealed.id);
-        let (wrapped_dek, wrap_tag) =
-            xchacha20_poly1305_aead_encrypt(&*dek, &unsealed.key, &wrap_nonce, &wrap_aad);
-
-        let metadata = build_sealed_metadata(
-            &body_nonce,
-            &body_tag,
-            &aad,
-            &wrapped_dek,
-            &wrap_nonce,
-            &wrap_tag,
-            &unsealed.id,
-        );
-
+        let aad = record_aad_v2(namespace, key, generation);
+        let (metadata, ciphertext, tag) =
+            seal_envelope(unsealed, namespace, key, &aad, Some(generation), plaintext)?;
         let mut put_in = StoragePutInput::new(
             namespace.to_string(),
             key.to_string(),
@@ -722,8 +756,39 @@ impl SealedStore {
             put_in.with_if_revision(if_revision)
         };
 
+        // Record first, then index. A crash in between leaves the record
+        // ahead of the index, which F3 accepts.
         let rec = self.backend.put(put_in)?;
-        // `dek` drops here, wiping the cleartext DEK bytes.
+        let key_owned = key.to_string();
+        self.update_index(unsealed, namespace, current, |index| {
+            let entry = index.entries.entry(key_owned.clone()).or_insert(Entry {
+                generation: 0,
+                state: EntryState::Live,
+                tag: NO_TAG,
+            });
+            if entry.generation == generation && entry.tag != tag {
+                // Another writer recorded a different record at this same
+                // generation while we wrote ours. Pinning either one would
+                // leave the other's file ambiguous, so this put reports a
+                // conflict and the caller retries.
+                return Err(SealedStoreError::Storage(StorageError::Conflict {
+                    namespace: namespace.to_string(),
+                    key: key_owned.clone(),
+                    expected_revision: None,
+                    actual_revision: None,
+                }));
+            }
+            // Never lower a generation. If a racing delete already
+            // tombstoned past us, the delete happened later and stands.
+            if entry.generation <= generation {
+                *entry = Entry {
+                    generation,
+                    state: EntryState::Live,
+                    tag,
+                };
+            }
+            Ok(())
+        })?;
         Ok(rec.revision)
     }
 
@@ -745,48 +810,33 @@ impl SealedStore {
 
         let sealed = SealedRecordMeta::parse(&record.metadata)?;
 
-        // Guard: the AAD-bound namespace/key must match where we found it.
-        let expected_aad = record_aad(namespace, key);
-        if sealed.body_aad != expected_aad {
-            return Err(SealedStoreError::Tamper {
-                namespace: namespace.to_string(),
-                key: key.to_string(),
-            });
+        // F3: refuse a record the freshness index says is stale, before
+        // spending any crypto on it.
+        let index = self.load_index(unsealed, namespace)?;
+        let entry = index
+            .as_ref()
+            .and_then(|(index, _)| index.entries.get(key).copied());
+        let shape = sealed
+            .generation
+            .map(|generation| (generation, sealed.body_tag));
+        if !accepts(index.is_some(), entry, shape) {
+            return Err(tamper(namespace, key));
         }
 
-        // We only unwrap records wrapped under the in-memory KEK. Records
-        // wrapped under an earlier KEK (e.g. during an in-progress rotation)
-        // are surfaced as Tamper so the caller knows to resume rotation or
-        // unseal under the older password.
-        if sealed.kek_id != unsealed.id {
-            return Err(SealedStoreError::Tamper {
-                namespace: namespace.to_string(),
-                key: key.to_string(),
-            });
-        }
-
-        let wrap_aad = wrap_aad(namespace, key, &unsealed.id);
-        let dek = unwrap_dek(
-            &sealed.wrapped_dek,
-            &unsealed.key,
-            &sealed.wrap_nonce,
-            &wrap_aad,
-            &sealed.wrap_tag,
+        // The generation is read from plaintext metadata, so it is trusted
+        // only because it is part of the AAD the AEAD checks below.
+        let expected_aad = match sealed.generation {
+            None => record_aad(namespace, key),
+            Some(generation) => record_aad_v2(namespace, key, generation),
+        };
+        let plaintext = open_envelope(
+            unsealed,
             namespace,
             key,
-        )?;
-
-        let plaintext = xchacha20_poly1305_aead_decrypt(
+            &sealed,
+            &expected_aad,
             &record.body,
-            &dek,
-            &sealed.body_nonce,
-            &sealed.body_aad,
-            &sealed.body_tag,
-        )
-        .ok_or_else(|| SealedStoreError::Tamper {
-            namespace: namespace.to_string(),
-            key: key.to_string(),
-        })?;
+        )?;
 
         // `dek` drops here, wiping the cleartext DEK bytes.
         Ok(Some(SealedRecord {
@@ -795,7 +845,7 @@ impl SealedStore {
             revision: record.revision,
             created_at_ms: record.created_at,
             updated_at_ms: record.updated_at,
-            plaintext: Zeroizing::new(plaintext),
+            plaintext,
         }))
     }
 
@@ -808,15 +858,64 @@ impl SealedStore {
         if_revision: Option<Revision>,
     ) -> Result<(), SealedStoreError> {
         check_external_namespace(namespace)?;
-        // Deletion does not require a decrypt but does require unseal —
-        // otherwise a sealed vault could be used as a "destroy records"
-        // oracle without proving knowledge of the password.
-        {
-            let guard = self.state.lock().expect("vault state mutex poisoned");
-            if guard.unsealed.is_none() {
-                return Err(SealedStoreError::Sealed);
+        // Deletion does not decrypt the record, but it does require unseal.
+        // Otherwise a sealed vault could be used as a "destroy records"
+        // oracle without proving knowledge of the password. Now it also
+        // writes the sealed index, which needs the KEK anyway.
+        let guard = self.state.lock().expect("vault state mutex poisoned");
+        let unsealed = guard.unsealed.as_ref().ok_or(SealedStoreError::Sealed)?;
+
+        let current = self.ready_index(unsealed, namespace)?;
+        let entry = current.0.entries.get(key).copied();
+        let record = self.backend.get(namespace, key)?;
+        // Check the caller's revision before touching the index. A delete
+        // that is going to fail must not leave a tombstone that hides the
+        // record it failed to delete.
+        if let (Some(expected), Some(record)) = (&if_revision, &record) {
+            if record.revision != *expected {
+                return Err(SealedStoreError::Storage(StorageError::Conflict {
+                    namespace: namespace.to_string(),
+                    key: key.to_string(),
+                    expected_revision: Some(expected.to_string()),
+                    actual_revision: Some(record.revision.to_string()),
+                }));
             }
         }
+        // F5: the tombstone is one past the reconciled generation `n`, and it
+        // is written even when nothing is on disk or the key is unknown.
+        //
+        // One past, because a put whose index update was lost leaves an
+        // authentic record at `n + 1` that reconcile can only absorb if it
+        // can see it. Someone who hides that file during this delete and puts
+        // it back afterwards would otherwise resurrect it. Every put writes
+        // the reconciled `n + 1` and entries never go down, so no authentic
+        // record is ever above `n + 1`, and a tombstone there covers them all.
+        // It is never taken from the record's own plaintext metadata: a forged
+        // generation there could otherwise push it to `i64::MAX` and destroy
+        // the key.
+        let tombstone = entry
+            .map_or(0, |entry| entry.generation)
+            .checked_add(1)
+            .filter(|generation| i64::try_from(*generation).is_ok())
+            .ok_or_else(|| SealedStoreError::Validation {
+                field: "generation".to_string(),
+                message: "exhausted".to_string(),
+            })?;
+        let key_owned = key.to_string();
+        // Tombstone first, then delete. A crash in between leaves a record
+        // at or below the tombstone, which F3 refuses.
+        self.update_index(unsealed, namespace, current, |index| {
+            let existing = index.entries.get(&key_owned).map_or(0, |e| e.generation);
+            index.entries.insert(
+                key_owned.clone(),
+                Entry {
+                    generation: existing.max(tombstone),
+                    state: EntryState::Tombstone,
+                    tag: NO_TAG,
+                },
+            );
+            Ok(())
+        })?;
         self.backend.delete(namespace, key, if_revision.as_ref())?;
         Ok(())
     }
@@ -1076,15 +1175,13 @@ impl SealedStore {
                     );
                     // `dek` drops at end of this loop iteration.
 
-                    let new_meta = build_sealed_metadata(
-                        &meta.body_nonce,
-                        &meta.body_tag,
-                        &meta.body_aad,
-                        &new_wrapped_dek,
-                        &new_wrap_nonce,
-                        &new_wrap_tag,
-                        &new_kek_id,
-                    );
+                    let new_meta = build_sealed_metadata(&SealedRecordMeta {
+                        wrapped_dek: new_wrapped_dek,
+                        wrap_nonce: new_wrap_nonce,
+                        wrap_tag: new_wrap_tag,
+                        kek_id: new_kek_id.clone(),
+                        ..meta
+                    });
                     let rewrite = StoragePutInput::new(
                         rec.namespace.clone(),
                         rec.key.clone(),
@@ -1100,6 +1197,49 @@ impl SealedStore {
                 match page.next_cursor {
                     Some(next) => cursor = Some(next),
                     None => break,
+                }
+            }
+            // F7: the namespace's freshness index is a sealed envelope too.
+            // Left under the old KEK, every later read of the namespace
+            // would fail as tamper.
+            let index_key = freshness_key(&ns);
+            if let Some(rec) = self.backend.get(RESERVED_NAMESPACE, &index_key)? {
+                let meta = SealedRecordMeta::parse(&rec.metadata)?;
+                if meta.kek_id == old_kek_id {
+                    let dek = unwrap_dek(
+                        &meta.wrapped_dek,
+                        &old_kek,
+                        &meta.wrap_nonce,
+                        &wrap_aad(RESERVED_NAMESPACE, &index_key, &old_kek_id),
+                        &meta.wrap_tag,
+                        RESERVED_NAMESPACE,
+                        &index_key,
+                    )?;
+                    let new_wrap_nonce: [u8; NONCE_LEN] = random_array()
+                        .map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
+                    let (new_wrapped_dek, new_wrap_tag) = xchacha20_poly1305_aead_encrypt(
+                        &*dek,
+                        &new_kek,
+                        &new_wrap_nonce,
+                        &wrap_aad(RESERVED_NAMESPACE, &index_key, &new_kek_id),
+                    );
+                    let new_meta = build_sealed_metadata(&SealedRecordMeta {
+                        wrapped_dek: new_wrapped_dek,
+                        wrap_nonce: new_wrap_nonce,
+                        wrap_tag: new_wrap_tag,
+                        kek_id: new_kek_id.clone(),
+                        ..meta
+                    });
+                    let rewrite = StoragePutInput::new(
+                        RESERVED_NAMESPACE.to_string(),
+                        index_key.clone(),
+                        FRESHNESS_CONTENT_TYPE.to_string(),
+                        new_meta,
+                        rec.body.clone(),
+                    )
+                    .map_err(SealedStoreError::Storage)?
+                    .with_if_revision(Some(rec.revision.clone()));
+                    self.backend.put(rewrite)?;
                 }
             }
         }
@@ -1120,6 +1260,459 @@ impl SealedStore {
             records_rewrapped: rewrapped,
             records_already_new: already_new,
         })
+    }
+
+    // ---- freshness (VLT01 F1-F8) -------------------------------------------
+
+    /// Read and authenticate a namespace's freshness index, if it has one.
+    ///
+    /// Any failure to open or decode an index that exists is `Tamper`. An
+    /// index we cannot read is never treated as "no index", because "no
+    /// index" accepts every v1 record (F3).
+    fn load_index(
+        &self,
+        unsealed: &UnsealedKey,
+        namespace: &str,
+    ) -> Result<Option<(FreshnessIndex, Revision)>, SealedStoreError> {
+        let index_key = freshness_key(namespace);
+        let Some(record) = self.backend.get(RESERVED_NAMESPACE, &index_key)? else {
+            return Ok(None);
+        };
+        {
+            let cache = self.indexes.lock().expect("vault index cache poisoned");
+            if let Some((revision, index)) = cache.get(namespace) {
+                if *revision == record.revision {
+                    return Ok(Some((index.clone(), record.revision)));
+                }
+            }
+        }
+        let invalid = || tamper(RESERVED_NAMESPACE, &index_key);
+        let meta = SealedRecordMeta::parse(&record.metadata).map_err(|_| invalid())?;
+        if meta.generation.is_some() {
+            return Err(invalid());
+        }
+        let plaintext = open_envelope(
+            unsealed,
+            RESERVED_NAMESPACE,
+            &index_key,
+            &meta,
+            &freshness_aad(namespace),
+            &record.body,
+        )?;
+        let index = FreshnessIndex::decode(&plaintext).ok_or_else(invalid)?;
+        let mut cache = self.indexes.lock().expect("vault index cache poisoned");
+        // The epoch floor. Every index write advances the epoch, so an
+        // authentic index older than one this process has already seen is
+        // an old copy put back. Refusing it here stops it being read and,
+        // more importantly, stops the next write building on it and sealing
+        // it as the newest. This holds only for the life of the process;
+        // across a restart it needs the external anchor (F10, P1.20b).
+        if let Some((_, seen)) = cache.get(namespace) {
+            if index.epoch < seen.epoch {
+                return Err(invalid());
+            }
+        }
+        cache.insert(
+            namespace.to_string(),
+            (record.revision.clone(), index.clone()),
+        );
+        Ok(Some((index, record.revision)))
+    }
+
+    /// Seal and write an index: CAS on `revision`, or create-only when
+    /// `None`.
+    fn store_index(
+        &self,
+        unsealed: &UnsealedKey,
+        namespace: &str,
+        index: &FreshnessIndex,
+        revision: Option<&Revision>,
+    ) -> Result<Revision, SealedStoreError> {
+        let encoded =
+            Zeroizing::new(index.encode().ok_or_else(|| SealedStoreError::Validation {
+                field: "freshness".to_string(),
+                message: "namespace index is full".to_string(),
+            })?);
+        let index_key = freshness_key(namespace);
+        let (metadata, body, _) = seal_envelope(
+            unsealed,
+            RESERVED_NAMESPACE,
+            &index_key,
+            &freshness_aad(namespace),
+            None,
+            &encoded,
+        )?;
+        let input = StoragePutInput::new(
+            RESERVED_NAMESPACE.to_string(),
+            index_key,
+            FRESHNESS_CONTENT_TYPE.to_string(),
+            metadata,
+            body,
+        )
+        .map_err(SealedStoreError::Storage)?;
+        let input = match revision {
+            Some(revision) => input.with_if_revision(Some(revision.clone())),
+            None => input.with_if_absent(),
+        };
+        let record = self.backend.put(input)?;
+        self.indexes
+            .lock()
+            .expect("vault index cache poisoned")
+            .insert(
+                namespace.to_string(),
+                (record.revision.clone(), index.clone()),
+            );
+        Ok(record.revision)
+    }
+
+    /// Apply `change` and write the index, re-reading and retrying on a CAS
+    /// conflict (F8). Every write advances the epoch.
+    fn update_index(
+        &self,
+        unsealed: &UnsealedKey,
+        namespace: &str,
+        current: (FreshnessIndex, Revision),
+        change: impl Fn(&mut FreshnessIndex) -> Result<(), SealedStoreError>,
+    ) -> Result<(), SealedStoreError> {
+        let mut current = current;
+        for _ in 0..INDEX_CAS_ATTEMPTS {
+            let (mut index, revision) = current;
+            change(&mut index)?;
+            index.epoch = index.epoch.saturating_add(1);
+            match self.store_index(unsealed, namespace, &index, Some(&revision)) {
+                Ok(_) => return Ok(()),
+                Err(SealedStoreError::Storage(StorageError::Conflict { .. })) => {
+                    current = self
+                        .load_index(unsealed, namespace)?
+                        .ok_or_else(|| tamper(RESERVED_NAMESPACE, &freshness_key(namespace)))?;
+                }
+                Err(error) => return Err(error),
+            }
+        }
+        Err(SealedStoreError::Storage(StorageError::Backend {
+            message: "freshness index: too many CAS conflicts".to_string(),
+        }))
+    }
+
+    /// The index a write may build on: migrated (F6), with no entry still
+    /// `Legacy`, and caught up with every authentic record on disk (F4).
+    fn ready_index(
+        &self,
+        unsealed: &UnsealedKey,
+        namespace: &str,
+    ) -> Result<(FreshnessIndex, Revision), SealedStoreError> {
+        let mut current = match self.load_index(unsealed, namespace)? {
+            Some(current) => current,
+            None => self.begin_migration(unsealed, namespace)?,
+        };
+        if current.0.has_legacy() {
+            current = self.finish_migration(unsealed, namespace, current)?;
+        }
+        self.reconcile(unsealed, namespace, current)
+    }
+
+    /// F4's catch-up step: absorb every authentic record that is ahead of
+    /// the index before a write builds on it.
+    ///
+    /// Without this, a write would extend whatever index it found. If that
+    /// index were stale (a `put` that crashed before its index update, or an
+    /// old copy of the index put back by someone), the write would seal the
+    /// stale floor as the newest index. Generations would then be reused, and
+    /// a later single-file restore of an old record would pass. Absorbing
+    /// first means the floor a write seals is never below a record a KEK
+    /// holder actually wrote.
+    ///
+    /// Only records whose metadata claims to be ahead are opened, and only
+    /// one that passes its AEAD is absorbed. An attacker can make this read
+    /// more, but cannot make it accept anything they wrote. Junk files are
+    /// skipped rather than failing the write; `get` refuses them anyway.
+    fn reconcile(
+        &self,
+        unsealed: &UnsealedKey,
+        namespace: &str,
+        current: (FreshnessIndex, Revision),
+    ) -> Result<(FreshnessIndex, Revision), SealedStoreError> {
+        let mut absorbed: Vec<(String, Entry)> = Vec::new();
+        let mut cursor: Option<String> = None;
+        loop {
+            let page = self.backend.list(
+                namespace,
+                StorageListOptions {
+                    prefix: None,
+                    recursive: true,
+                    page_size: Some(128),
+                    cursor: cursor.clone(),
+                },
+            )?;
+            for record in page.records {
+                let Ok(meta) = SealedRecordMeta::parse(&record.metadata) else {
+                    continue;
+                };
+                let Some(generation) = meta.generation else {
+                    continue;
+                };
+                let ahead = match current.0.entries.get(&record.key) {
+                    None => true,
+                    Some(entry) => match entry.state {
+                        EntryState::Live | EntryState::Tombstone => generation > entry.generation,
+                        EntryState::Legacy => false,
+                    },
+                };
+                if !ahead {
+                    continue;
+                }
+                let authentic = open_envelope(
+                    unsealed,
+                    namespace,
+                    &record.key,
+                    &meta,
+                    &record_aad_v2(namespace, &record.key, generation),
+                    &record.body,
+                )
+                .is_ok();
+                if authentic {
+                    absorbed.push((
+                        record.key,
+                        Entry {
+                            generation,
+                            state: EntryState::Live,
+                            tag: meta.body_tag,
+                        },
+                    ));
+                }
+            }
+            match page.next_cursor {
+                Some(next) => cursor = Some(next),
+                None => break,
+            }
+        }
+        if absorbed.is_empty() {
+            return Ok(current);
+        }
+        self.update_index(unsealed, namespace, current, |index| {
+            for (key, entry) in &absorbed {
+                let behind = index
+                    .entries
+                    .get(key)
+                    .is_none_or(|existing| existing.generation < entry.generation);
+                if behind {
+                    index.entries.insert(key.clone(), *entry);
+                }
+            }
+            Ok(())
+        })?;
+        self.load_index(unsealed, namespace)?
+            .ok_or_else(|| tamper(RESERVED_NAMESPACE, &freshness_key(namespace)))
+    }
+
+    /// F6 steps 1-2: list the namespace and write an index with every key
+    /// `legacy`.
+    ///
+    /// A v2 record here means the namespace was migrated once and its index
+    /// has since disappeared. Adopting the records found now would accept
+    /// whatever older files were put back alongside the deletion, so this
+    /// refuses instead.
+    fn begin_migration(
+        &self,
+        unsealed: &UnsealedKey,
+        namespace: &str,
+    ) -> Result<(FreshnessIndex, Revision), SealedStoreError> {
+        let mut index = FreshnessIndex::default();
+        let mut cursor: Option<String> = None;
+        loop {
+            let page = self.backend.list(
+                namespace,
+                StorageListOptions {
+                    prefix: None,
+                    recursive: true,
+                    page_size: Some(128),
+                    cursor: cursor.clone(),
+                },
+            )?;
+            for record in page.records {
+                if SealedRecordMeta::parse(&record.metadata)?
+                    .generation
+                    .is_some()
+                {
+                    return Err(tamper(namespace, &record.key));
+                }
+                index.entries.insert(
+                    record.key,
+                    Entry {
+                        generation: 1,
+                        state: EntryState::Legacy,
+                        tag: NO_TAG,
+                    },
+                );
+                if index.entries.len() > MAX_ENTRIES {
+                    return Err(SealedStoreError::Validation {
+                        field: "freshness".to_string(),
+                        message: "namespace index is full".to_string(),
+                    });
+                }
+            }
+            match page.next_cursor {
+                Some(next) => cursor = Some(next),
+                None => break,
+            }
+        }
+        match self.store_index(unsealed, namespace, &index, None) {
+            Ok(revision) => Ok((index, revision)),
+            // Another process created the index first. Build on theirs.
+            Err(SealedStoreError::Storage(StorageError::Conflict { .. })) => self
+                .load_index(unsealed, namespace)?
+                .ok_or_else(|| tamper(RESERVED_NAMESPACE, &freshness_key(namespace))),
+            Err(error) => Err(error),
+        }
+    }
+
+    /// F6 steps 3-4: re-seal each legacy key's v1 record as v2 generation 1,
+    /// then mark those entries live, pinned to the re-sealed record's tag.
+    ///
+    /// Each step leaves a state F3 accepts, so a crash anywhere here is
+    /// resumed by the next write. A v1 record is decrypted under the v1 AAD
+    /// before it is re-sealed, and a v2 one left by an earlier crash is
+    /// authenticated before its tag is pinned, so nothing an attacker wrote
+    /// is laundered into an authentic-looking v2 record.
+    ///
+    /// A record that does not parse or decrypt is skipped. Its entry becomes
+    /// live with no tag, which no generation-1 record matches, so `get` keeps
+    /// refusing it exactly as before, and one bad file cannot block every
+    /// write to the namespace. A v1 record wrapped under a *retired* KEK is
+    /// different: it is recoverable by resuming `rotate_kek`, so migration
+    /// stops with an error instead of stranding it.
+    fn finish_migration(
+        &self,
+        unsealed: &UnsealedKey,
+        namespace: &str,
+        current: (FreshnessIndex, Revision),
+    ) -> Result<(FreshnessIndex, Revision), SealedStoreError> {
+        let legacy: Vec<String> = current
+            .0
+            .entries
+            .iter()
+            .filter(|(_, entry)| entry.state == EntryState::Legacy)
+            .map(|(key, _)| key.clone())
+            .collect();
+        let mut pinned: HashMap<String, [u8; TAG_BYTES]> = HashMap::new();
+        for key in &legacy {
+            if let Some(tag) = self.migrate_one(unsealed, namespace, key)? {
+                pinned.insert(key.clone(), tag);
+            }
+        }
+        self.update_index(unsealed, namespace, current, |index| {
+            for (key, entry) in index.entries.iter_mut() {
+                if entry.state == EntryState::Legacy {
+                    *entry = Entry {
+                        generation: 1,
+                        state: EntryState::Live,
+                        tag: pinned.get(key).copied().unwrap_or(NO_TAG),
+                    };
+                }
+            }
+            Ok(())
+        })?;
+        self.load_index(unsealed, namespace)?
+            .ok_or_else(|| tamper(RESERVED_NAMESPACE, &freshness_key(namespace)))
+    }
+
+    /// Whether `kek_id` names a retired entry in the manifest.
+    fn is_retired_kek(&self, kek_id: &str) -> Result<bool, SealedStoreError> {
+        let manifest = self
+            .backend
+            .get(RESERVED_NAMESPACE, MANIFEST_KEY)?
+            .ok_or(SealedStoreError::NotInitialized)?;
+        Ok(Manifest::parse(&manifest.metadata)?
+            .keks
+            .iter()
+            .any(|entry| entry.id == kek_id && entry.status == "retired"))
+    }
+
+    /// Bring one legacy key to v2 generation 1, and return the tag of its
+    /// authentic generation-1 record. `None` means no such record now
+    /// exists: the key is gone, its file does not open, or a concurrent
+    /// writer replaced it first.
+    fn migrate_one(
+        &self,
+        unsealed: &UnsealedKey,
+        namespace: &str,
+        key: &str,
+    ) -> Result<Option<[u8; TAG_BYTES]>, SealedStoreError> {
+        let Some(record) = self.backend.get(namespace, key)? else {
+            return Ok(None);
+        };
+        let Ok(meta) = SealedRecordMeta::parse(&record.metadata) else {
+            return Ok(None);
+        };
+        match meta.generation {
+            // Re-sealed before an earlier crash: pin it only if it is
+            // genuine.
+            Some(1) => {
+                let authentic = open_envelope(
+                    unsealed,
+                    namespace,
+                    key,
+                    &meta,
+                    &record_aad_v2(namespace, key, 1),
+                    &record.body,
+                )
+                .is_ok();
+                Ok(authentic.then_some(meta.body_tag))
+            }
+            Some(_) => Ok(None),
+            None => {
+                if meta.kek_id != unsealed.id {
+                    // `kek_id` is plaintext, so only a KEK the manifest
+                    // actually lists as retired counts. That is a real
+                    // interrupted rotation: resuming it recovers the record,
+                    // and skipping would strand it, so migration stops. Any
+                    // other id is junk and is skipped, or a planted file
+                    // naming "kek-999" could block every write here.
+                    if !self.is_retired_kek(&meta.kek_id)? {
+                        return Ok(None);
+                    }
+                    return Err(SealedStoreError::Validation {
+                        field: "kek_id".to_string(),
+                        message: "record is under a retired KEK; resume rotate_kek first"
+                            .to_string(),
+                    });
+                }
+                let Ok(plaintext) = open_envelope(
+                    unsealed,
+                    namespace,
+                    key,
+                    &meta,
+                    &record_aad(namespace, key),
+                    &record.body,
+                ) else {
+                    return Ok(None);
+                };
+                let (metadata, body, tag) = seal_envelope(
+                    unsealed,
+                    namespace,
+                    key,
+                    &record_aad_v2(namespace, key, 1),
+                    Some(1),
+                    &plaintext,
+                )?;
+                let put = StoragePutInput::new(
+                    namespace.to_string(),
+                    key.to_string(),
+                    SEALED_CONTENT_TYPE.to_string(),
+                    metadata,
+                    body,
+                )
+                .map_err(SealedStoreError::Storage)?
+                .with_if_revision(Some(record.revision));
+                match self.backend.put(put) {
+                    Ok(_) => Ok(Some(tag)),
+                    // A concurrent writer changed it; that writer owns it,
+                    // and the next write's reconcile absorbs its record.
+                    Err(StorageError::Conflict { .. }) => Ok(None),
+                    Err(error) => Err(SealedStoreError::Storage(error)),
+                }
+            }
+        }
     }
 
     // ---- internal namespace registry --------------------------------------
@@ -1209,6 +1802,121 @@ fn record_aad(namespace: &str, key: &str) -> Vec<u8> {
     v.push(0);
     v.extend_from_slice(key.as_bytes());
     v
+}
+
+/// The format-2 body AAD (F2): the v1 address, then the generation.
+///
+/// Binding the generation here is what makes it tamper-evident. It is stored
+/// in plaintext metadata, and editing it changes the AAD the AEAD checks.
+fn record_aad_v2(namespace: &str, key: &str, generation: u64) -> Vec<u8> {
+    let mut v = record_aad(namespace, key);
+    v.push(0);
+    v.extend_from_slice(&generation.to_be_bytes());
+    v
+}
+
+/// Where a namespace's freshness index lives, under the reserved namespace.
+fn freshness_key(namespace: &str) -> String {
+    format!("{FRESHNESS_KEY_PREFIX}{namespace}")
+}
+
+/// The index's body AAD (F1), domain-separated from every record AAD.
+fn freshness_aad(namespace: &str) -> Vec<u8> {
+    let mut v = Vec::with_capacity(FRESHNESS_AAD_DOMAIN.len() + 1 + namespace.len());
+    v.extend_from_slice(FRESHNESS_AAD_DOMAIN);
+    v.push(0);
+    v.extend_from_slice(namespace.as_bytes());
+    v
+}
+
+fn tamper(namespace: &str, key: &str) -> SealedStoreError {
+    SealedStoreError::Tamper {
+        namespace: namespace.to_string(),
+        key: key.to_string(),
+    }
+}
+
+/// Encrypt `plaintext` for the address `(namespace, key)`: a fresh DEK
+/// under `aad`, wrapped by the active KEK. Returns the metadata and the
+/// ciphertext.
+fn seal_envelope(
+    unsealed: &UnsealedKey,
+    namespace: &str,
+    key: &str,
+    aad: &[u8],
+    generation: Option<u64>,
+    plaintext: &[u8],
+) -> Result<(JsonValue, Vec<u8>, [u8; TAG_BYTES]), SealedStoreError> {
+    // Wrapped in Zeroizing at creation, so any `?` below wipes it.
+    let dek: Zeroizing<[u8; KEY_LEN]> = Zeroizing::new(
+        random_array().map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?,
+    );
+    let body_nonce: [u8; NONCE_LEN] =
+        random_array().map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
+    let (ciphertext, body_tag) = xchacha20_poly1305_aead_encrypt(plaintext, &dek, &body_nonce, aad);
+    let wrap_nonce: [u8; NONCE_LEN] =
+        random_array().map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
+    let (wrapped_dek, wrap_tag) = xchacha20_poly1305_aead_encrypt(
+        &*dek,
+        &unsealed.key,
+        &wrap_nonce,
+        &wrap_aad(namespace, key, &unsealed.id),
+    );
+    let metadata = build_sealed_metadata(&SealedRecordMeta {
+        version: SEALED_RECORD_VERSION_1,
+        aead: "xchacha20poly1305".to_string(),
+        body_nonce,
+        body_tag,
+        body_aad: aad.to_vec(),
+        wrapped_dek,
+        wrap_nonce,
+        wrap_tag,
+        kek_id: unsealed.id.clone(),
+        generation,
+    });
+    Ok((metadata, ciphertext, body_tag))
+}
+
+/// Decrypt an envelope found at `(namespace, key)`, after checking that its
+/// AAD is the one expected there and that it is wrapped by the active KEK.
+fn open_envelope(
+    unsealed: &UnsealedKey,
+    namespace: &str,
+    key: &str,
+    meta: &SealedRecordMeta,
+    expected_aad: &[u8],
+    body: &[u8],
+) -> Result<Zeroizing<Vec<u8>>, SealedStoreError> {
+    // The AAD must be the one for where we found it.
+    if meta.body_aad != expected_aad {
+        return Err(tamper(namespace, key));
+    }
+    // We only unwrap envelopes wrapped under the in-memory KEK. One wrapped
+    // under an earlier KEK (e.g. during an in-progress rotation) is surfaced
+    // as Tamper, so the caller knows to resume rotation or unseal under the
+    // older password.
+    if meta.kek_id != unsealed.id {
+        return Err(tamper(namespace, key));
+    }
+    let dek = unwrap_dek(
+        &meta.wrapped_dek,
+        &unsealed.key,
+        &meta.wrap_nonce,
+        &wrap_aad(namespace, key, &unsealed.id),
+        &meta.wrap_tag,
+        namespace,
+        key,
+    )?;
+    let plaintext = xchacha20_poly1305_aead_decrypt(
+        body,
+        &dek,
+        &meta.body_nonce,
+        &meta.body_aad,
+        &meta.body_tag,
+    )
+    .ok_or_else(|| tamper(namespace, key))?;
+    // `dek` drops here, wiping the cleartext DEK bytes.
+    Ok(Zeroizing::new(plaintext))
 }
 
 fn wrap_aad(namespace: &str, key: &str, kek_id: &str) -> Vec<u8> {
@@ -1416,6 +2124,8 @@ struct SealedRecordMeta {
     wrap_nonce: [u8; NONCE_LEN],
     wrap_tag: [u8; TAG_LEN],
     kek_id: String,
+    /// `Some` exactly for a format-2 record (F2), and always `>= 1`.
+    generation: Option<u64>,
 }
 
 fn build_manifest_json(
@@ -1492,19 +2202,35 @@ fn build_manifest_json(
     ])
 }
 
-fn build_sealed_metadata(
-    body_nonce: &[u8; NONCE_LEN],
-    body_tag: &[u8; TAG_LEN],
-    body_aad: &[u8],
-    wrapped_dek: &[u8],
-    wrap_nonce: &[u8; NONCE_LEN],
-    wrap_tag: &[u8; TAG_LEN],
-    kek_id: &str,
-) -> JsonValue {
-    JsonValue::Object(vec![
+/// Serialize a record's envelope metadata.
+///
+/// `version` and `aead` on the input are ignored: the version is derived from
+/// whether there is a generation (F2), and the AEAD is the one suite this
+/// format commits to. Taking the struct the parser produces keeps the writer
+/// and the reader describing the same fields.
+fn build_sealed_metadata(meta: &SealedRecordMeta) -> JsonValue {
+    let SealedRecordMeta {
+        body_nonce,
+        body_tag,
+        body_aad,
+        wrapped_dek,
+        wrap_nonce,
+        wrap_tag,
+        kek_id,
+        generation,
+        ..
+    } = meta;
+    let generation = *generation;
+    // The version follows the shape: a generation means format 2 (F2).
+    let version = if generation.is_some() {
+        SEALED_RECORD_VERSION
+    } else {
+        SEALED_RECORD_VERSION_1
+    };
+    let mut fields = vec![
         (
             "vault_sealed_version".to_string(),
-            JsonValue::Number(JsonNumber::Integer(SEALED_RECORD_VERSION as i64)),
+            JsonValue::Number(JsonNumber::Integer(version as i64)),
         ),
         (
             "aead".to_string(),
@@ -1535,7 +2261,18 @@ fn build_sealed_metadata(
             JsonValue::String(hex_encode(wrap_tag)),
         ),
         ("kek_id".to_string(), JsonValue::String(kek_id.to_string())),
-    ])
+    ];
+    if let Some(generation) = generation {
+        // A JSON integer is an i64. A generation past i64::MAX would take
+        // 9.2e18 writes to one key; saturate rather than wrap negative.
+        fields.push((
+            "generation".to_string(),
+            JsonValue::Number(JsonNumber::Integer(
+                i64::try_from(generation).unwrap_or(i64::MAX),
+            )),
+        ));
+    }
+    JsonValue::Object(fields)
 }
 
 fn build_namespaces_json(names: &[String]) -> JsonValue {
@@ -1693,12 +2430,36 @@ impl SealedRecordMeta {
     fn parse(meta: &JsonValue) -> Result<Self, SealedStoreError> {
         let obj = expect_object(meta, "sealed_record")?;
         let version = get_u64(obj, "vault_sealed_version")?;
-        if version != SEALED_RECORD_VERSION {
-            return Err(SealedStoreError::Validation {
-                field: "vault_sealed_version".to_string(),
-                message: "unsupported".to_string(),
-            });
-        }
+        // Version 1 has no generation and version 2 requires one. A field
+        // that does not match its version is refused rather than ignored,
+        // so a v1 record cannot be passed off as v2 or the other way round.
+        let generation = match version {
+            SEALED_RECORD_VERSION_1 => {
+                if get_field(obj, "generation").is_ok() {
+                    return Err(SealedStoreError::Validation {
+                        field: "generation".to_string(),
+                        message: "not allowed in version 1".to_string(),
+                    });
+                }
+                None
+            }
+            SEALED_RECORD_VERSION => {
+                let generation = get_u64(obj, "generation")?;
+                if generation == 0 {
+                    return Err(SealedStoreError::Validation {
+                        field: "generation".to_string(),
+                        message: "must be at least 1".to_string(),
+                    });
+                }
+                Some(generation)
+            }
+            _ => {
+                return Err(SealedStoreError::Validation {
+                    field: "vault_sealed_version".to_string(),
+                    message: "unsupported".to_string(),
+                })
+            }
+        };
         let aead = get_string(obj, "aead")?.to_string();
         if aead != "xchacha20poly1305" {
             return Err(SealedStoreError::Validation {
@@ -1737,6 +2498,7 @@ impl SealedRecordMeta {
             wrap_nonce,
             wrap_tag,
             kek_id,
+            generation,
         })
     }
 }
@@ -2419,7 +3181,8 @@ mod tests {
         assert_eq!(summary.ciphertext_len, secret.len());
         assert_eq!(summary.body_nonce_len, NONCE_LEN);
         assert_eq!(summary.body_tag_len, TAG_LEN);
-        assert_eq!(summary.body_aad_len, record_aad("ns", "k").len());
+        // The first put makes generation 1, so the AAD is the v2 one (F2).
+        assert_eq!(summary.body_aad_len, record_aad_v2("ns", "k", 1).len());
         assert_eq!(summary.wrapped_dek_len, KEY_LEN);
         assert_eq!(summary.wrap_nonce_len, NONCE_LEN);
         assert_eq!(summary.wrap_tag_len, TAG_LEN);
@@ -2605,15 +3368,18 @@ mod tests {
     #[test]
     fn sealed_metadata_and_json_helpers_reject_malformed_values() {
         let valid = || {
-            build_sealed_metadata(
-                &[0; NONCE_LEN],
-                &[0; TAG_LEN],
-                b"aad",
-                &[0; KEY_LEN],
-                &[0; NONCE_LEN],
-                &[0; TAG_LEN],
-                "kek-1",
-            )
+            build_sealed_metadata(&SealedRecordMeta {
+                version: 0,
+                aead: String::new(),
+                body_nonce: [0; NONCE_LEN],
+                body_tag: [0; TAG_LEN],
+                body_aad: b"aad".to_vec(),
+                wrapped_dek: vec![0; KEY_LEN],
+                wrap_nonce: [0; NONCE_LEN],
+                wrap_tag: [0; TAG_LEN],
+                kek_id: "kek-1".to_string(),
+                generation: None,
+            })
         };
         let parse_error = |metadata: &JsonValue| match SealedRecordMeta::parse(metadata) {
             Ok(_) => panic!("expected malformed metadata to fail"),
@@ -2924,5 +3690,582 @@ mod tests {
             reopened.unseal_with_kek(&[0xA5; KEY_LEN]),
             Err(SealedStoreError::Validation { ref field, .. }) if field == "source"
         ));
+    }
+
+    // ---- freshness (VLT01 F1-F10) ------------------------------------------
+    //
+    // Each attack below is performed exactly the way someone with write
+    // access to the storage directory, and no KEK, would perform it: by
+    // copying record files aside and putting them back.
+
+    /// A record file, exactly as stored, to put back later.
+    fn snapshot(backend: &Arc<dyn StorageBackend>, namespace: &str, key: &str) -> StoragePutInput {
+        let record = backend.get(namespace, key).unwrap().unwrap();
+        StoragePutInput::new(
+            record.namespace,
+            record.key,
+            record.content_type,
+            record.metadata,
+            record.body,
+        )
+        .unwrap()
+    }
+
+    fn restore(backend: &Arc<dyn StorageBackend>, file: StoragePutInput) {
+        backend.put(file).unwrap();
+    }
+
+    fn assert_tamper(result: Result<Option<SealedRecord>, SealedStoreError>) {
+        assert!(
+            matches!(result, Err(SealedStoreError::Tamper { .. })),
+            "expected Tamper, got {:?}",
+            result.map(|record| record.map(|record| record.plaintext.to_vec()))
+        );
+    }
+
+    fn read(store: &SealedStore, namespace: &str, key: &str) -> Vec<u8> {
+        store
+            .get(namespace, key)
+            .unwrap()
+            .unwrap()
+            .plaintext
+            .to_vec()
+    }
+
+    /// Write a format-1 record the way the previous release did: no
+    /// generation, the v1 AAD, and no index.
+    fn put_v1(store: &SealedStore, backend: &Arc<dyn StorageBackend>, key: &str, plaintext: &[u8]) {
+        let guard = store.state.lock().unwrap();
+        let unsealed = guard.unsealed.as_ref().unwrap();
+        let (metadata, body, _) =
+            seal_envelope(unsealed, "ns", key, &record_aad("ns", key), None, plaintext).unwrap();
+        backend
+            .put(
+                StoragePutInput::new(
+                    "ns".to_string(),
+                    key.to_string(),
+                    SEALED_CONTENT_TYPE.to_string(),
+                    metadata,
+                    body,
+                )
+                .unwrap(),
+            )
+            .unwrap();
+    }
+
+    fn index_of(store: &SealedStore, namespace: &str) -> Option<FreshnessIndex> {
+        let guard = store.state.lock().unwrap();
+        let unsealed = guard.unsealed.as_ref().unwrap();
+        store
+            .load_index(unsealed, namespace)
+            .unwrap()
+            .map(|(index, _)| index)
+    }
+
+    #[test]
+    fn rolling_back_one_record_file_is_tamper() {
+        let (store, backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        store.put("ns", "k", b"leaked", None).unwrap();
+        let old = snapshot(&backend, "ns", "k");
+        store.put("ns", "k", b"rotated", None).unwrap();
+        assert_eq!(read(&store, "ns", "k"), b"rotated");
+
+        restore(&backend, old);
+        assert_tamper(store.get("ns", "k"));
+    }
+
+    #[test]
+    fn resurrecting_a_deleted_record_is_tamper() {
+        let (store, backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        store.put("ns", "k", b"revoked", None).unwrap();
+        let old = snapshot(&backend, "ns", "k");
+        store.delete("ns", "k", None).unwrap();
+        assert!(store.get("ns", "k").unwrap().is_none());
+
+        restore(&backend, old);
+        assert_tamper(store.get("ns", "k"));
+
+        // A put after the delete continues past the tombstone and is read.
+        store.put("ns", "k", b"reissued", None).unwrap();
+        assert_eq!(read(&store, "ns", "k"), b"reissued");
+        let entry = index_of(&store, "ns").unwrap().entries["k"];
+        // Generation 1, tombstone 2 (one past, F5), then the put at 3.
+        assert_eq!((entry.generation, entry.state), (3, EntryState::Live));
+    }
+
+    #[test]
+    fn a_record_ahead_of_its_index_is_accepted() {
+        // A crash between the record write and the index write (F4).
+        let (store, backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        store.put("ns", "k", b"one", None).unwrap();
+        let index_then = snapshot(&backend, RESERVED_NAMESPACE, &freshness_key("ns"));
+        store.put("ns", "k", b"two", None).unwrap();
+
+        restore(&backend, index_then);
+        // A restarted process has no epoch floor, sees the stale index, and
+        // still reads the newer record.
+        let restarted = SealedStore::new(Arc::clone(&backend));
+        restarted.unseal(b"pw").unwrap();
+        assert_eq!(read(&restarted, "ns", "k"), b"two");
+        // The next put absorbs it first, then moves past it (F4).
+        restarted.put("ns", "k", b"three", None).unwrap();
+        assert_eq!(read(&restarted, "ns", "k"), b"three");
+        assert_eq!(
+            index_of(&restarted, "ns").unwrap().entries["k"].generation,
+            3
+        );
+    }
+
+    fn reopen(backend: &Arc<dyn StorageBackend>) -> SealedStore {
+        let store = SealedStore::new(Arc::clone(backend));
+        store.unseal(b"pw").unwrap();
+        store
+    }
+
+    #[test]
+    fn a_put_after_a_lost_index_update_never_reuses_a_generation() {
+        // Review finding HIGH-1(b). "two" is written but its index update
+        // is lost; "three" must not be written at the same generation, or
+        // putting the saved "two" back would pass.
+        let (store, backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        store.put("ns", "k", b"one", None).unwrap();
+        let index_then = snapshot(&backend, RESERVED_NAMESPACE, &freshness_key("ns"));
+        store.put("ns", "k", b"two", None).unwrap();
+        restore(&backend, index_then); // the lost index update
+        let two = snapshot(&backend, "ns", "k");
+
+        let restarted = reopen(&backend);
+        restarted.put("ns", "k", b"three", None).unwrap();
+        restore(&backend, two);
+        assert_tamper(reopen(&backend).get("ns", "k"));
+    }
+
+    #[test]
+    fn a_reused_generation_is_told_apart_by_its_tag() {
+        // Review finding HIGH-1(a), with the newer record deleted first, so
+        // there is nothing on disk for the next put to absorb: the put does
+        // reuse generation 2, and only the pinned tag tells the files apart.
+        let (store, backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        store.put("ns", "k", b"one", None).unwrap();
+        let index_then = snapshot(&backend, RESERVED_NAMESPACE, &freshness_key("ns"));
+        store.put("ns", "k", b"two", None).unwrap();
+        let two = snapshot(&backend, "ns", "k");
+        restore(&backend, index_then);
+        backend.delete("ns", "k", None).unwrap();
+
+        let restarted = reopen(&backend);
+        restarted.put("ns", "k", b"three", None).unwrap();
+        assert_eq!(
+            index_of(&restarted, "ns").unwrap().entries["k"].generation,
+            2
+        );
+        restore(&backend, two);
+        assert_tamper(reopen(&backend).get("ns", "k"));
+    }
+
+    #[test]
+    fn an_old_index_put_back_is_not_laundered_by_a_later_write() {
+        // Review finding MEDIUM-2: restore the index, let the owner write
+        // something else, then restore the target's old record.
+        let (store, backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        store.put("ns", "j", b"j-leaked", None).unwrap();
+        let index_then = snapshot(&backend, RESERVED_NAMESPACE, &freshness_key("ns"));
+        let leaked = snapshot(&backend, "ns", "j");
+        store.put("ns", "j", b"j-rotated", None).unwrap();
+
+        // In the same process the epoch floor refuses the old index outright.
+        restore(&backend, index_then);
+        assert!(matches!(
+            store.put("ns", "other", b"x", None),
+            Err(SealedStoreError::Tamper { .. })
+        ));
+
+        // After a restart there is no floor. The write absorbs j's newer
+        // record before building on the stale index, so the floor it seals
+        // is j's real one.
+        let restarted = reopen(&backend);
+        restarted.put("ns", "other", b"x", None).unwrap();
+        restore(&backend, leaked);
+        assert_tamper(reopen(&backend).get("ns", "j"));
+    }
+
+    #[test]
+    fn a_forged_generation_cannot_set_a_tombstone() {
+        // Review finding L1: delete must not take its tombstone from
+        // plaintext metadata.
+        let (store, backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        store.put("ns", "k", b"v", None).unwrap();
+        let record = backend.get("ns", "k").unwrap().unwrap();
+        let mut metadata = record.metadata.clone();
+        set_object_field(
+            &mut metadata,
+            "generation",
+            JsonValue::Number(JsonNumber::Integer(i64::MAX)),
+        );
+        backend
+            .put(
+                StoragePutInput::new(
+                    record.namespace,
+                    record.key,
+                    record.content_type,
+                    metadata,
+                    record.body,
+                )
+                .unwrap(),
+            )
+            .unwrap();
+        store.delete("ns", "k", None).unwrap();
+        // One past the authentic generation 1, not the forged one.
+        assert_eq!(index_of(&store, "ns").unwrap().entries["k"].generation, 2);
+        store.put("ns", "k", b"after", None).unwrap();
+        assert_eq!(read(&store, "ns", "k"), b"after");
+    }
+
+    #[test]
+    fn one_unopenable_v1_file_does_not_block_writes() {
+        // Review finding L4.
+        let (store, backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        put_v1(&store, &backend, "good", b"fine");
+        put_v1(&store, &backend, "bad", b"soon corrupt");
+        let bad = backend.get("ns", "bad").unwrap().unwrap();
+        let mut body = bad.body.clone();
+        body[0] ^= 1;
+        backend
+            .put(
+                StoragePutInput::new(bad.namespace, bad.key, bad.content_type, bad.metadata, body)
+                    .unwrap(),
+            )
+            .unwrap();
+
+        store.put("ns", "new", b"x", None).unwrap();
+        assert_eq!(read(&store, "ns", "good"), b"fine");
+        assert_tamper(store.get("ns", "bad"));
+        store.delete("ns", "bad", None).unwrap();
+        store.put("ns", "bad", b"replaced", None).unwrap();
+        assert_eq!(read(&store, "ns", "bad"), b"replaced");
+    }
+
+    #[test]
+    fn deleting_the_index_of_a_migrated_namespace_is_tamper() {
+        let (store, backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        store.put("ns", "k", b"value", None).unwrap();
+        backend
+            .delete(RESERVED_NAMESPACE, &freshness_key("ns"), None)
+            .unwrap();
+
+        // A fresh store instance, so nothing is cached.
+        let reopened = SealedStore::new(Arc::clone(&backend));
+        reopened.unseal(b"pw").unwrap();
+        assert_tamper(reopened.get("ns", "k"));
+        // And a write refuses to adopt what it finds (F6 step 1).
+        assert!(matches!(
+            reopened.put("ns", "other", b"x", None),
+            Err(SealedStoreError::Tamper { .. })
+        ));
+    }
+
+    #[test]
+    fn a_tampered_index_is_tamper_not_absent() {
+        let (store, backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        store.put("ns", "k", b"value", None).unwrap();
+        let record = backend
+            .get(RESERVED_NAMESPACE, &freshness_key("ns"))
+            .unwrap()
+            .unwrap();
+        let mut body = record.body.clone();
+        body[0] ^= 1;
+        backend
+            .put(
+                StoragePutInput::new(
+                    record.namespace,
+                    record.key,
+                    record.content_type,
+                    record.metadata,
+                    body,
+                )
+                .unwrap(),
+            )
+            .unwrap();
+        let reopened = SealedStore::new(Arc::clone(&backend));
+        reopened.unseal(b"pw").unwrap();
+        assert_tamper(reopened.get("ns", "k"));
+    }
+
+    #[test]
+    fn format_one_records_read_until_migrated_and_never_after() {
+        let (store, backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        put_v1(&store, &backend, "old", b"from the last release");
+        let original_v1 = snapshot(&backend, "ns", "old");
+
+        // No index yet: the v1 record reads as before.
+        assert!(index_of(&store, "ns").is_none());
+        assert_eq!(read(&store, "ns", "old"), b"from the last release");
+
+        // The first write migrates the namespace (F6).
+        store.put("ns", "new", b"fresh", None).unwrap();
+        let index = index_of(&store, "ns").unwrap();
+        assert!(!index.has_legacy());
+        assert_eq!(index.entries["old"].generation, 1);
+        let migrated = backend.get("ns", "old").unwrap().unwrap();
+        assert_eq!(
+            SealedRecordMeta::parse(&migrated.metadata)
+                .unwrap()
+                .generation,
+            Some(1)
+        );
+        assert_eq!(read(&store, "ns", "old"), b"from the last release");
+        assert_eq!(read(&store, "ns", "new"), b"fresh");
+
+        // Putting the pre-migration v1 file back is now a rollback.
+        restore(&backend, original_v1);
+        assert_tamper(store.get("ns", "old"));
+    }
+
+    #[test]
+    fn a_crash_mid_migration_is_resumed_by_the_next_write() {
+        let (store, backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        put_v1(&store, &backend, "a", b"alpha");
+        put_v1(&store, &backend, "b", b"beta");
+        // Steps 1-2 only, then "crash".
+        {
+            let guard = store.state.lock().unwrap();
+            store
+                .begin_migration(guard.unsealed.as_ref().unwrap(), "ns")
+                .unwrap();
+        }
+        assert!(index_of(&store, "ns").unwrap().has_legacy());
+        // Legacy entries still read their v1 records.
+        assert_eq!(read(&store, "ns", "a"), b"alpha");
+
+        store.put("ns", "c", b"gamma", None).unwrap();
+        let index = index_of(&store, "ns").unwrap();
+        assert!(!index.has_legacy());
+        for key in ["a", "b", "c"] {
+            assert_eq!(index.entries[key].state, EntryState::Live, "{key}");
+        }
+        assert_eq!(read(&store, "ns", "b"), b"beta");
+    }
+
+    #[test]
+    fn a_delete_that_fails_its_revision_check_leaves_the_record_readable() {
+        let (store, _backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        let first = store.put("ns", "k", b"one", None).unwrap();
+        store.put("ns", "k", b"two", None).unwrap();
+        assert!(matches!(
+            store.delete("ns", "k", Some(first)),
+            Err(SealedStoreError::Storage(StorageError::Conflict { .. }))
+        ));
+        assert_eq!(read(&store, "ns", "k"), b"two");
+    }
+
+    #[test]
+    fn deleting_an_unknown_key_still_tombstones_it() {
+        let (store, _backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        store.put("ns", "k", b"v", None).unwrap();
+        store.delete("ns", "never-seen", None).unwrap();
+        let entry = index_of(&store, "ns").unwrap().entries["never-seen"];
+        assert_eq!((entry.generation, entry.state), (1, EntryState::Tombstone));
+    }
+
+    /// A put whose record landed but whose index update did not: put
+    /// `value`, then put the index back as it was before.
+    fn put_with_lost_index_update(
+        store: &SealedStore,
+        backend: &Arc<dyn StorageBackend>,
+        key: &str,
+        value: &[u8],
+    ) {
+        let index_before = snapshot(backend, RESERVED_NAMESPACE, &freshness_key("ns"));
+        store.put("ns", key, value, None).unwrap();
+        restore(backend, index_before);
+    }
+
+    #[test]
+    fn a_delete_cannot_be_undone_by_hiding_an_uncommitted_record() {
+        // Re-review finding: the uncommitted record is at n + 1, it is hidden
+        // while the delete runs, then put back. Tombstoning at n would let it
+        // through; F5 tombstones at n + 1.
+        let (store, backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        store.put("ns", "k", b"one", None).unwrap();
+        put_with_lost_index_update(&store, &backend, "k", b"uncommitted");
+        let restarted = reopen(&backend); // no epoch floor across a restart
+        let hidden = snapshot(&backend, "ns", "k");
+        backend.delete("ns", "k", None).unwrap();
+        restarted.delete("ns", "k", None).unwrap();
+        restore(&backend, hidden);
+        assert_tamper(restarted.get("ns", "k"));
+        restarted.put("ns", "other", b"x", None).unwrap();
+        assert_tamper(reopen(&backend).get("ns", "k"));
+    }
+
+    #[test]
+    fn a_delete_of_a_new_key_cannot_be_undone_by_hiding_its_record() {
+        // The same, for a key the index has never seen.
+        let (store, backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        store.put("ns", "anchor", b"a", None).unwrap();
+        put_with_lost_index_update(&store, &backend, "fresh", b"uncommitted");
+        let restarted = reopen(&backend);
+        let hidden = snapshot(&backend, "ns", "fresh");
+        backend.delete("ns", "fresh", None).unwrap();
+        restarted.delete("ns", "fresh", None).unwrap();
+        restore(&backend, hidden);
+        assert_tamper(restarted.get("ns", "fresh"));
+    }
+
+    #[test]
+    fn a_planted_unknown_kek_id_does_not_block_migration() {
+        // Third-review LOW-1: only a KEK the manifest lists as retired stops
+        // migration.
+        let (store, backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        put_v1(&store, &backend, "planted", b"junk");
+        let planted = backend.get("ns", "planted").unwrap().unwrap();
+        let mut metadata = planted.metadata.clone();
+        set_object_field(&mut metadata, "kek_id", JsonValue::String("kek-999".into()));
+        backend
+            .put(
+                StoragePutInput::new(
+                    planted.namespace,
+                    planted.key,
+                    planted.content_type,
+                    metadata,
+                    planted.body,
+                )
+                .unwrap(),
+            )
+            .unwrap();
+        store.put("ns", "real", b"ok", None).unwrap();
+        assert_eq!(read(&store, "ns", "real"), b"ok");
+        assert_tamper(store.get("ns", "planted"));
+    }
+
+    #[test]
+    fn migration_waits_for_an_interrupted_rotation() {
+        // Re-review LOW-b: a v1 record under a retired KEK is recoverable by
+        // resuming rotation, so migration must not strand it.
+        let (store, backend) = new_store();
+        store.init(b"old", &fast_opts()).unwrap();
+        // Written straight to the backend, so the namespace is unregistered
+        // and the rotation below leaves this record under the old KEK.
+        put_v1(&store, &backend, "stranded", b"keep me");
+        store.rotate_kek(b"old", b"new").unwrap();
+        assert!(matches!(
+            store.put("ns", "new", b"x", None),
+            Err(SealedStoreError::Validation { ref field, .. }) if field == "kek_id"
+        ));
+        assert!(index_of(&store, "ns").unwrap().has_legacy());
+    }
+
+    #[test]
+    fn rotation_rewraps_the_freshness_index() {
+        let (store, backend) = new_store();
+        store.init(b"old", &fast_opts()).unwrap();
+        store.put("ns", "k", b"value", None).unwrap();
+        let report = store.rotate_kek(b"old", b"new").unwrap();
+
+        let index = backend
+            .get(RESERVED_NAMESPACE, &freshness_key("ns"))
+            .unwrap()
+            .unwrap();
+        assert_eq!(
+            SealedRecordMeta::parse(&index.metadata).unwrap().kek_id,
+            report.new_kek_id
+        );
+        let reopened = SealedStore::new(Arc::clone(&backend));
+        reopened.unseal(b"new").unwrap();
+        assert_eq!(read(&reopened, "ns", "k"), b"value");
+        reopened.put("ns", "k", b"after", None).unwrap();
+        assert_eq!(read(&reopened, "ns", "k"), b"after");
+    }
+
+    #[test]
+    fn record_metadata_binds_version_to_generation() {
+        let base = || {
+            build_sealed_metadata(&SealedRecordMeta {
+                version: 0,
+                aead: String::new(),
+                body_nonce: [0; NONCE_LEN],
+                body_tag: [0; TAG_LEN],
+                body_aad: b"aad".to_vec(),
+                wrapped_dek: vec![0; KEY_LEN],
+                wrap_nonce: [0; NONCE_LEN],
+                wrap_tag: [0; TAG_LEN],
+                kek_id: "kek-1".to_string(),
+                generation: Some(3),
+            })
+        };
+        assert_eq!(
+            SealedRecordMeta::parse(&base()).unwrap().generation,
+            Some(3)
+        );
+
+        let mut zero = base();
+        set_object_field(
+            &mut zero,
+            "generation",
+            JsonValue::Number(JsonNumber::Integer(0)),
+        );
+        assert_validation_field(SealedRecordMeta::parse(&zero).err().unwrap(), "generation");
+
+        let mut v1_with_generation = base();
+        set_object_field(
+            &mut v1_with_generation,
+            "vault_sealed_version",
+            JsonValue::Number(JsonNumber::Integer(1)),
+        );
+        assert_validation_field(
+            SealedRecordMeta::parse(&v1_with_generation).err().unwrap(),
+            "generation",
+        );
+
+        let JsonValue::Object(mut fields) = base() else {
+            unreachable!()
+        };
+        fields.retain(|(name, _)| name != "generation");
+        assert_validation_field(
+            SealedRecordMeta::parse(&JsonValue::Object(fields))
+                .err()
+                .unwrap(),
+            "generation",
+        );
+    }
+
+    #[test]
+    fn editing_the_generation_in_plaintext_metadata_is_caught_by_the_aad() {
+        let (store, backend) = new_store();
+        store.init(b"pw", &fast_opts()).unwrap();
+        store.put("ns", "k", b"one", None).unwrap();
+        let old = backend.get("ns", "k").unwrap().unwrap();
+        store.put("ns", "k", b"two", None).unwrap();
+        // Bump the stale file's generation to look current.
+        let mut metadata = old.metadata.clone();
+        set_object_field(
+            &mut metadata,
+            "generation",
+            JsonValue::Number(JsonNumber::Integer(2)),
+        );
+        backend
+            .put(
+                StoragePutInput::new(old.namespace, old.key, old.content_type, metadata, old.body)
+                    .unwrap(),
+            )
+            .unwrap();
+        assert_tamper(store.get("ns", "k"));
     }
 }
