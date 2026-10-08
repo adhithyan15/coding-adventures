@@ -6,6 +6,14 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- Exact flat-family CI selection for the eleven shared
+  `toolchain-detection-*.json` cases and their twelve direct native build-tool
+  readers. Added, changed, deleted, and renamed case paths seed only the
+  applicable roots before affected closure on Linux, macOS, and Windows;
+  explicit language filters remain bounded, missing readers fail before a
+  plan is written, and focused regressions cover emitted toolchains and
+  source-reference drift without forcing unrelated packages.
+
 - Exact flat-family native CI selection for shared
   `ci-gate-selection-*.json` fixture changes. The planner seeds the Go and
   Python build-tool fronts before affected closure on all platforms, preserving

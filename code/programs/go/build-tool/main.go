@@ -187,6 +187,7 @@ func packagesForPlatform(packages []discovery.Package, goos string) []discovery.
 
 const sharedDiscoveryFixturePath = "code/specs/fixtures/build-tool-v1/cases/discovery-language-registry.json"
 const ciGateFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/ci-gate-selection-"
+const toolchainDetectionFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/toolchain-detection-"
 
 const closureProvenanceSpecPath = "code/specs/CV02-checked-bounded-provenance-graphs.md"
 const closureProvenanceConsumer = "rust/programs/closurec"
@@ -217,9 +218,37 @@ var ciGateFixtureConsumers = []struct{ name, language string }{
 	{"python/programs/build-tool", "python"},
 }
 
+// These native test fronts read the flat toolchain-detection case family.
+// Keep this relation separate from discovery and CI-gate fixtures: their
+// reader sets can evolve independently as more build-tool lanes mature.
+var toolchainDetectionFixtureConsumers = []struct{ name, language string }{
+	{"dotnet/programs/build-tool-csharp", "csharp"},
+	{"dotnet/programs/build-tool-fsharp", "fsharp"},
+	{"elixir/programs/build-tool", "elixir"},
+	{"go/programs/build-tool", "go"},
+	{"haskell/programs/build-tool", "haskell"},
+	{"lua/programs/build-tool", "lua"},
+	{"perl/programs/build-tool", "perl"},
+	{"python/programs/build-tool", "python"},
+	{"ruby/programs/build-tool", "ruby"},
+	{"rust/programs/build-tool", "rust"},
+	{"swift/programs/build-tool", "swift"},
+	{"typescript/programs/build-tool", "typescript"},
+}
+
 func hasCIGateFixturePath(changedFiles []string) bool {
 	for _, changed := range changedFiles {
 		name, ok := strings.CutPrefix(changed, ciGateFixturePrefix)
+		if ok && strings.HasSuffix(name, ".json") && len(name) > len(".json") && !strings.ContainsAny(name, "/\\") {
+			return true
+		}
+	}
+	return false
+}
+
+func hasToolchainDetectionFixturePath(changedFiles []string) bool {
+	for _, changed := range changedFiles {
+		name, ok := strings.CutPrefix(changed, toolchainDetectionFixturePrefix)
 		if ok && strings.HasSuffix(name, ".json") && len(name) > len(".json") && !strings.ContainsAny(name, "/\\") {
 			return true
 		}
@@ -304,7 +333,8 @@ func changedPackageRootsForPlatformAndLanguage(
 	}
 	discoveryFixtureChanged := containsPath(changedFiles, sharedDiscoveryFixturePath)
 	ciGateFixtureChanged := hasCIGateFixturePath(changedFiles)
-	if !discoveryFixtureChanged && !ciGateFixtureChanged {
+	toolchainFixtureChanged := hasToolchainDetectionFixturePath(changedFiles)
+	if !discoveryFixtureChanged && !ciGateFixtureChanged && !toolchainFixtureChanged {
 		return changed, nil
 	}
 
@@ -332,6 +362,17 @@ func changedPackageRootsForPlatformAndLanguage(
 			}
 			if !available[consumer.name] {
 				return nil, fmt.Errorf("CI-gate fixture consumer %q is missing from discovered packages", consumer.name)
+			}
+			changed[consumer.name] = true
+		}
+	}
+	if toolchainFixtureChanged {
+		for _, consumer := range toolchainDetectionFixtureConsumers {
+			if language != "all" && consumer.language != language {
+				continue
+			}
+			if !available[consumer.name] {
+				return nil, fmt.Errorf("toolchain-detection fixture consumer %q is missing from discovered packages", consumer.name)
 			}
 			changed[consumer.name] = true
 		}

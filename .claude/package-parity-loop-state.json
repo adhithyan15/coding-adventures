@@ -12,20 +12,20 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 16981,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/16981",
-    "branch": "codex/parity-cigates-dotnet-20261007",
-    "implementation_revision": "7398562d001f2ff9c2c1c22fd83565c5cae0a1e5",
+    "number": 16989,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/16989",
+    "branch": "codex/parity-toolchain-fixture-ci-20261007",
+    "implementation_revision": "119262645b4be58a3d4a8cb9de9bf6f5278a11fb",
     "status": "checks-pending"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-07T23:21:35Z",
-    "pr_number": 16981,
+    "observed_at": "2026-10-08T00:28:51Z",
+    "pr_number": 16989,
     "status": "checks-pending",
-    "notes": "Ready-for-review PR #16981 opened after both native .NET suites, Go full/race/vet, 5,304-package BUILD validation, neutral corpus/parity/diff checks and independent SHIP security review. GitHub reported MERGEABLE but BLOCKED with the initial CI, CodeQL, and Human Languages Books checks queued; no auto-merge until every final-head check is terminal acceptable and no conflict remains. Prior PR #16972 merged through guarded auto-merge as 2ef032426b5fc69ce19fdf6a0b67fddadcf33dd4."
+    "notes": "Ready-for-review PR #16989 opened after final-head Go package/race/vet/build, 5,304-package BUILD-plan, neutral-corpus, lessons, parity, diff, and independent SHIP security validation. GitHub reports MERGEABLE with initial checks pending; do not enable auto-merge until every final-head check is terminal acceptable and no conflict remains. Prior PR #16981 merged through guarded auto-merge as 26e5792ae7ba88fe1918c55ce4a4bf3c41a2fa2f."
   },
   "last_inventory": {
-    "revision": "2ef032426b5fc69ce19fdf6a0b67fddadcf33dd4",
+    "revision": "8efe4884ea5a828b81807fea84b959e50330c172",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1496,
@@ -9735,11 +9735,13 @@
     {
       "id": "build-tool-csharp-fsharp-ci-gate-selection-conformance",
       "title": "Implement CI gate selection in the shared C# and F# build-tool lanes",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["build-tool-ci-gate-registry-conformance-corpus-and-engine-audit", "build-tool-ci-gate-selection-match-work-ceiling", "build-tool-ci-gate-shared-pattern-dedup-neutral-fixture"],
       "branch": "codex/parity-cigates-dotnet-20261007",
       "pr_number": 16981,
-      "notes": "The exact-main engine audit found no CI gate registry or evaluator in either .NET front door. Add one bounded C# pure engine consumed independently by both language-native front doors, preserve the reviewed shared-engine boundary, and execute every neutral ci_gate_selection case in both lane suites."
+      "merged_at": "2026-10-07T23:59:43Z",
+      "merge_commit": "26e5792ae7ba88fe1918c55ce4a4bf3c41a2fa2f",
+      "notes": "The shared pure C# engine and F# facade independently replay all eleven neutral CI-gate cases; the exact native fixture selector covers both .NET fronts. Final-head CI passed and GitHub squash auto-merged #16981."
     },
     {
       "id": "build-tool-elixir-ci-gate-selection-conformance",
@@ -13521,8 +13523,8 @@
       "notes": "Seven Brainfuck/Nib/AOT families each 9/15 and 42 structural slots absent in C#/Dart/F#/Java/Kotlin/Swift. Separate BF02 IR producer from Nib frontend, then split per dependency and lane before ports; no native-runtime scope."
     },
     {
-      "id": "build-tool-toolchain-detection-fixture-native-ci-selection", "title": "Gate native toolchain-detection fixture readers", "status": "pending", "depends_on": ["build-tool-ci-gate-fixture-native-ci-selection", "build-tool-extra-ci-toolchain-declaration-corpus"], "branch": null, "pr_number": null,
-      "notes": "Twelve native direct readers of the toolchain-detection corpus; add exact-package, three-platform, missing-root CI selection without broad build-tool specs fanout."
+      "id": "build-tool-toolchain-detection-fixture-native-ci-selection", "title": "Gate native toolchain-detection fixture readers", "status": "pr-open", "depends_on": ["build-tool-ci-gate-fixture-native-ci-selection", "build-tool-extra-ci-toolchain-declaration-corpus"], "branch": "codex/parity-toolchain-fixture-ci-20261007", "pr_number": 16989,
+      "notes": "Selected after #16981 merged and an unchanged, collision-free 15-lane inventory. Twelve native direct readers of the toolchain-detection corpus need exact flat-family, three-platform, single-language, and missing-root CI selection without broad specs fanout. A fixture-only change currently reaches neutral validation but not those native test fronts. Rebased conflict-free onto origin/main 8efe4884ea5a828b81807fea84b959e50330c172 after confirming zero overlap with 39 intervening main paths; the refreshed inventory still has 1,496 identities, 4,766 slots, zero collisions, and zero unknown buckets."
     },
     {
       "id": "build-tool-graph-diff-fixture-native-ci-selection", "title": "Gate native graph/diff fixture readers", "status": "pending", "depends_on": ["build-tool-ci-gate-fixture-native-ci-selection", "build-tool-neutral-graph-diff-corpus-completion"], "branch": null, "pr_number": null,

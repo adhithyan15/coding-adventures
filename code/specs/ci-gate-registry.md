@@ -132,6 +132,27 @@ an incomplete plan. The emitted affected set and .NET/Go/Python toolchain flags
 MUST demonstrate native scheduling with `force=false`. A new direct reader of
 this family must extend the relation and its drift test together.
 
+The exact flat case family
+`code/specs/fixtures/build-tool-v1/cases/toolchain-detection-*.json` MUST
+likewise seed every direct native toolchain-detection reader before affected
+and prerequisite closure. Its current consumers are
+`dotnet/programs/build-tool-csharp`, `dotnet/programs/build-tool-fsharp`, and
+`<language>/programs/build-tool` for Elixir, Go, Haskell, Lua, Perl, Python,
+Ruby, Rust, Swift, and TypeScript. The relation applies on detect and Linux,
+macOS, and Windows build-plan overrides for added, modified, deleted, and
+renamed fixture paths, including the deleted source of a rename. Only a flat
+filename with a nonempty stem after `toolchain-detection-` and a final `.json`
+extension belongs to this family; nested, case-varied, backup-suffixed, and
+sibling fixture paths MUST NOT seed these roots. Ordinary changed package
+roots are united with the fixture roots; the change MUST NOT force a full
+build. An explicit single-language plan seeds and validates only its own
+applicable consumer. Missing applicable registered consumers MUST abort
+planning before any partial plan is emitted. The unforced affected sets and
+toolchain flags MUST demonstrate scheduling on all three platforms; C# and
+F# remain distinct package roots but share the canonical `dotnet` toolchain
+flag. Every new direct native reader MUST extend this relation and a
+source-reference drift test in the same change.
+
 ## Evaluation
 
 A gate is **required** when ANY of the following holds:

@@ -16596,6 +16596,31 @@ native fixture-only CI selector for both readers. Keep workflow edits and
 host execution out of this slice; the next toolchain and graph/diff selectors
 remain pending.
 
+## Post-#16981 merged refresh (2026-10-07)
+
+PR #16981 passed 29 successful, seven skipped, and one neutral final-head
+checks. GitHub reported `MERGEABLE` and `CLEAN`; guarded squash auto-merge
+merged it as `26e5792ae7ba88fe1918c55ce4a4bf3c41a2fa2f` without a manual
+merge. The exact merged-main schema-3 inventory remains at 15 established
+lanes, 1,496 implementation identities, 4,766 occupied slots, and 1,538
+all-reported identities. The completion bands remain 178/262, 123/934,
+181/2,282, and 1,014/14,196; Rust has 815 singletons. OCaml's five roots
+remain emerging. Canonical collisions and unknown buckets are zero.
+
+Parallel read-only audits found no new package identity or eligible unowned
+high-consensus gap in Java, Kotlin, Dart, Swift, or Haskell. Existing owners
+cover the missing slots. Ready dependency leverage includes neutral DT15 and
+DT28 contracts, Dart/Swift DT03 binary-tree ports, Ruby CI-gate parity, and
+the exact native toolchain-fixture selector; these remain separate slices.
+
+Select only `build-tool-toolchain-detection-fixture-native-ci-selection` next.
+The neutral corpus already has eleven toolchain-detection cases and twelve
+direct native readers, but a fixture-only diff does not seed their BUILD
+fronts. Add an exact flat-family detector, per-language and three-platform
+selection, fail-closed missing-root behavior, source-reference drift tests,
+and emitted-plan/toolchain evidence. Keep production toolchain evaluators,
+workflow changes, and the graph/diff fixture selector outside this slice.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
