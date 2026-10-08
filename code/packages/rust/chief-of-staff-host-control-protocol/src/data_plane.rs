@@ -498,6 +498,7 @@ pub(crate) enum DataRecord {
     Response(DataPlaneResponse),
 }
 
+#[cfg(test)]
 impl DataRecord {
     pub(crate) fn as_ref(&self) -> DataRecordRef<'_> {
         match self {
