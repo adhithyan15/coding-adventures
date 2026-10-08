@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 17089,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/17089",
+    "branch": "codex/parity-point2d-jkd-20261008",
+    "implementation_revision": "8e48161ad1b69bab1a6ea1d7de9ef5131a59ee95",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-08T09:50:25Z",
-    "pr_number": 17076,
-    "status": "merged",
-    "notes": "PR #17076 passed 29 successful, seven skipped, and one neutral terminal checks without conflict. Guarded auto-merge completed as 493806695ff4c7bdc01e010f3da656741650b25a and was verified on fetched origin/main; it was not manually merged. No parity PR remains open."
+    "observed_at": "2026-10-08T10:16:21Z",
+    "pr_number": 17089,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #17089 opened from the tested, clean parity worktree at 8e48161ad1b69bab1a6ea1d7de9ef5131a59ee95. Java and Kotlin Gradle tests/check/JaCoCo gates, Dart format/analyzer/coverage, upstream trig tests, neutral geometry validation, 5,308-package Go build plan, Go vet, parity collision scan, diff check, and read-only security review passed. Initial GitHub checks are queued and mergeability is MERGEABLE; auto-merge remains disabled until every required check is terminal acceptable and conflict-free. No other parity PR is open."
   },
   "last_inventory": {
     "revision": "6477579f1dc2da4a4122f6bdf70e6b0025ce3a3d",
@@ -12143,10 +12149,10 @@
     {
       "id": "geometry-point2d-java-kotlin-dart-lane-parity",
       "title": "Implement point2d parity in Java, Kotlin, and Dart",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"],
       "branch": "codex/parity-point2d-jkd-20261008",
-      "pr_number": null,
+      "pr_number": 17089,
       "notes": "Selected after #17076 merged and the refreshed 15-lane inventory remained collision-free. The merged G2D00 neutral contract is ready, local Java/Kotlin/Dart PHY00 trig roots already provide atan2, and no open PR directly overlaps geometry/trig implementation paths. Port only pure Point/Rect foundations in these three lanes with exact four-case normalization fixtures, native tests and at least 95% line coverage, manifests/BUILD fronts/docs, and no affine, Bezier, arc, paint, or host authority. This fills three absent package slots and unlocks the nine downstream geometry slots."
     },
     {
