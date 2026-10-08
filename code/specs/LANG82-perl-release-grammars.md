@@ -499,3 +499,19 @@ with its 250-digit numeric limit. Accept 250 digits; reject 251 digits,
 leading-zero forms, adjacent decrement, carriage returns, and other
 unsupported input in the partial grammar. Leave later releases pending and
 make no full-syntax, exhaustive-inventory, or platform-wide rejection claim.
+
+Add a separate, explicitly partial `5.004_65` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_65.tar.gz`
+source archive, SHA-256
+`aa774928afb0b0b2402c397d1e171523e5d3be4f8e022f1a42093274d78b1b72`.
+Relative to `5.004_64`, `perly.y` and `keywords.h` are byte-identical.
+The `toke.c` changes are confined to `scan_const` documentation and its
+non-pattern `leaveit` expression, plus pattern/substitution flag handling;
+the decimal scanner, arithmetic-print token path, and their grammar
+productions are unchanged. Keep an independent file pair for this release
+and retain only the source-backed, bounded standalone plain-decimal
+arithmetic `print` subset with its 250-digit numeric limit. Accept 250
+digits; reject 251 digits, leading-zero forms, adjacent decrement, carriage
+returns, and other unsupported input in the partial grammar. Leave later
+releases pending and make no full-syntax, exhaustive-inventory, or
+platform-wide rejection claim.
