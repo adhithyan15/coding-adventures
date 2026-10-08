@@ -59,6 +59,10 @@
       "source": "swimlane-beta LR\nsubgraph Planning\n  first@{ shape: lin-rect, label: \"First\" }\nend\nsubgraph Delivery\n  second@{ shape: shaded-process, label: \"Second\" }\nend\nfirst --> second"
     },
     {
+      "name": "text-block-shape",
+      "source": "swimlane-beta LR\nsubgraph Notes\n  explanation@{ shape: text, label: \"Context only\" }\nend"
+    },
+    {
       "name": "input-output-and-asymmetric-shapes",
       "source": "swimlane-beta LR\nsubgraph Intake\n  input[/Receive payload/]\nend\nsubgraph Review\n  flag>Manual review]\nend\ninput --> flag"
     },

@@ -1616,6 +1616,16 @@ fn swimlane_lined_process_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_text_block_attribute_reaches_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Notes\n  explanation@{ shape: text, label: \"Context only\" }\nend",
+    ).expect("Swimlane text block should parse");
+
+    assert_eq!(diagram.nodes[0].shape, diagram_ir::DiagramShape::TextBlock);
+    assert_eq!(diagram.nodes[0].label, "Context only");
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",

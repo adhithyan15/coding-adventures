@@ -33,6 +33,7 @@ pub enum DiagramShape {
     InvertedTriangle,
     NotchedRect,
     LinedRect,
+    TextBlock,
     Cloud,
     Bang,
     Stadium,

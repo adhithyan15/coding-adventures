@@ -698,7 +698,7 @@ mod tests {
             direction: DiagramDirection::Lr, title: None, accessibility_title: None,
             accessibility_description: None,
             lanes: vec![SwimlaneLane { id: "runtime".into(), label: "Runtime".into(),
-                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into()] }],
+                node_ids: vec!["hosted".into(), "alert".into(), "collect".into(), "extract".into(), "manual".into(), "card".into(), "lined".into(), "text".into()] }],
             nodes: vec![
                 SwimlaneNode { id: "hosted".into(), label: "Hosted".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::Cloud, classes: Vec::new(), style: Default::default() },
@@ -714,6 +714,8 @@ mod tests {
                     shape: DiagramShape::NotchedRect, classes: Vec::new(), style: Default::default() },
                 SwimlaneNode { id: "lined".into(), label: "Lined".into(), lane_id: Some("runtime".into()),
                     shape: DiagramShape::LinedRect, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "text".into(), label: "Text".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::TextBlock, classes: Vec::new(), style: Default::default() },
             ],
             edges: vec![], links: Vec::new(), callbacks: Vec::new(),
         };
@@ -725,6 +727,7 @@ mod tests {
         assert_eq!(layout.nodes[4].shape, DiagramShape::InvertedTriangle);
         assert_eq!(layout.nodes[5].shape, DiagramShape::NotchedRect);
         assert_eq!(layout.nodes[6].shape, DiagramShape::LinedRect);
+        assert_eq!(layout.nodes[7].shape, DiagramShape::TextBlock);
     }
 
     #[test]

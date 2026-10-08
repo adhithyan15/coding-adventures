@@ -6891,6 +6891,7 @@ fn parse_swimlane_shape_attributes(
                     "flip-tri" | "flipped-triangle" | "manual-file" => DiagramShape::InvertedTriangle,
                     "notch-rect" | "card" | "notched-rectangle" => DiagramShape::NotchedRect,
                     "lin-rect" | "lined-rectangle" | "lined-process" | "lin-proc" | "shaded-process" => DiagramShape::LinedRect,
+                    "text" => DiagramShape::TextBlock,
                     "cloud" => DiagramShape::Cloud,
                     "bang" => DiagramShape::Bang,
                     "stadium" | "pill" | "terminal" => DiagramShape::Stadium,
