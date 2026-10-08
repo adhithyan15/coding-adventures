@@ -1116,9 +1116,10 @@ function renderLessonBody(lesson: (typeof LESSONS)[number], initiallyOpen = fals
   // first one that is not the warm-up, where the book puts it too.
   let teachingSection: HTMLElement | null = null;
   const sections = lessonSections(lesson.body);
-  // The book's rule: Writing, else Script, else the first section that shows
-  // a model (guided or delayed copy, trace); see lessonbody.ts.
-  const filmstripAt = filmstripSectionIndex(sections);
+  // The section the BOOK prints this lesson's strip in, found by the book's
+  // own placement code (see lessonbody.ts): Writing, else Script, else the
+  // first section that shows a model, never a dictation or a composition.
+  const filmstripAt = filmstripSectionIndex(lesson.body, sections);
   for (const [index, sectionData] of sections.entries()) {
     const sectionEl = el("section", "lesson-body__section");
     const heading = el("h4", "lesson-body__heading");
@@ -1153,6 +1154,9 @@ function renderLessonBody(lesson: (typeof LESSONS)[number], initiallyOpen = fals
   // has no image for the app to discover. Ask for the lesson-owned SVG only
   // when its details open. `generatedFilmstripUrl` returns null for writing
   // lessons whose glyph has no cited ductus; HL11 section 5.2 remains intact.
+  // (The book also prints one DECLARED strip on a word lesson, FA-C03-chist,
+  // captioned with its target glyph چ rather than the headword چیست. The app
+  // captions from the headword, so it leaves that one out.)
   let filmstripRequested = false;
   const loadFilmstrip = async () => {
     if (filmstripRequested || lesson.type !== "writing" || filmstripSection === null) return;
