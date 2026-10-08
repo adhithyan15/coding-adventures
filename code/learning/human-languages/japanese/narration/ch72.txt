@@ -9,7 +9,7 @@ Warm-up.
 [pause 2 seconds]
 Before the new one: say the Japanese for a nephew, then the Japanese for a niece.
 [pause 1 second]
-[once you have stopped driving — read: the request without stopping — もういちど、おねがいします (Once more, please.)]
+[once you have stopped driving — read: もういちど、おねがいします (Once more, please.) without stopping]
 
 You'll want to know: ごご.
 ごご — gogo — "the afternoon, p.m.".

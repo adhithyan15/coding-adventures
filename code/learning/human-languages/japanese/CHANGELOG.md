@@ -79,6 +79,14 @@ lessons. Every edited lesson stays `drivable: true` (only its
     question …" together (JA-C09-sumimasen, JA-C10-wakarimashita, the JA-C12
     body words, JA-R12, JA-R13; 17 lessons).
 - **Second review follow-up:** JA-C08-sayounara drops the `**Reading:**` label in front of its COVER cue, which printed as "Reading: Cover:" and left "Reading:" alone in the narration.
+- **Book compile follow-up:** JA-C72-gogo's cue "[YOU READ: the request without
+  stopping — **もういちど、おねがいします** (Once more, please.)]" left the book
+  one overfull line (27pt, chapter 72), because the bold Japanese is one
+  unbreakable box and the English before it was too long to share its line and
+  too short to stand alone. The cue now leads with the Japanese, as other READ
+  cues do: "[YOU READ: **もういちど、おねがいします** (Once more, please.) without
+  stopping]". The narration still defers it ("once you have stopped driving —
+  read: …"), and the book's overfull count is back to its baseline of 0.
 
 ## Fixed — drivable lessons stop asking a driver to gesture
 

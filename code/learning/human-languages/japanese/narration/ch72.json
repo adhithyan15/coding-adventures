@@ -4,7 +4,7 @@
   "chapter": 72,
   "title": "Afternoon, Middle of the night, Early morning, Evening meal, Morning sun",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ddfe9e7e03ad5c28",
+  "sourceHash": "fnv1a64:93258cca5fe35e74",
   "lessons": [
     {
       "id": "JA-C72-gogo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bddce7ce5b387880",
+      "sourceHash": "fnv1a64:0a7f765c413b7e90",
       "notice": null,
       "blocks": [
         {
@@ -46,11 +46,11 @@
             {
               "kind": "prompt",
               "action": "READ",
-              "instruction": "the request without stopping — もういちど、おねがいします (Once more, please.)",
+              "instruction": "もういちど、おねがいします (Once more, please.) without stopping",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU READ: the request without stopping — **もういちど、おねがいします** (Once more, please.)]"
+              "source": "[YOU READ: **もういちど、おねがいします** (Once more, please.) without stopping]"
             }
           ]
         },
