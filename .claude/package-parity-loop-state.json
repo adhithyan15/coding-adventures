@@ -13594,8 +13594,8 @@
       "notes": "Thirteen absent HIR slots; split by lane after schema contract."
     },
     {
-      "id": "geometry-bezier2d-flattening-termination-contract", "title": "Freeze conservative and terminating G2D02 flattening contract", "status": "pending", "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"], "branch": null, "pr_number": null,
-      "notes": "Newly discovered unowned G2D02 gap: midpoint-only cubic flatness erases symmetric S-curves, perpendicular distance to the infinite chord line misses collinear overshoot, and nonpositive/nonfinite tolerances can recurse without bound. Repair the spec first, add bounded adversarial language-neutral fixtures plus independent validator/schema/negative tests, and define finite positive tolerance and explicit termination/failure policy. Keep existing-lane implementations in the separate dependent owner."
+      "id": "geometry-bezier2d-flattening-termination-contract", "title": "Freeze conservative and terminating G2D02 flattening contract", "status": "in-progress", "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"], "branch": "codex/parity-bezier-flattening-contract-20261008", "pr_number": null,
+      "notes": "Selected after #17089 merged and exact-main inventory/owner refresh. Midpoint-only cubic flatness erases symmetric S-curves, infinite-line distance misses collinear overshoot, and nonpositive/nonfinite tolerances can recurse without bound. This bounded neutral-only slice repairs G2D02 first, adds adversarial versioned fixtures and independent validator/schema/negative tests, and freezes finite positive tolerance plus explicit work/depth failure policy. Existing native implementation repairs remain in the separate dependent owner; no second PR is active."
     },
     {
       "id": "geometry-bezier2d-existing-lane-flattening-conformance", "title": "Bring twelve established Bezier2D lanes to the corrected flattening contract", "status": "pending", "depends_on": ["geometry-bezier2d-flattening-termination-contract"], "branch": null, "pr_number": null,

@@ -16919,6 +16919,15 @@ raw descendant counts. The build-tool corpus still validates 179 process-free
 cases across 13 domains, but no adapter is ready and no execution case has
 run; selector gates must not be mistaken for full native conformance.
 
+The pass selected exactly `geometry-bezier2d-flattening-termination-contract`
+on a fresh clean branch. Its scope is the G2D02 behavioral correction and a
+small independent, versioned, language-neutral adversarial fixture suite:
+S-curves, collinear overshoot, coincident endpoints, invalid tolerances, and
+bounded subdivision. Do not modify the twelve existing native Bezier2D
+implementations in this neutral contract PR; their separately owned repairs
+must consume the frozen cases afterward. Do not open another implementation
+PR while this one is active.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
