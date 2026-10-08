@@ -331,16 +331,22 @@ partial pairs and 670 pending. Neither complete syntax nor exhaustive public
 release coverage is claimed. The next selection rotates to LANG80's bounded
 parenthesized zero-argument Ruby `puts()` stage.
 
+PR #17102 delivered that exact parenthesized zero-argument Ruby `puts()`
+stage and merged as `2b0ae0cb35f4d7f5167040e13ce34c20149313f5` after its
+latest-head CI, CodeQL, and books checks passed. The grammar AST lowers
+directly to InterpreterIR and Rust vm-core; host Ruby remains an oracle.
+The next selection rotates to LANG82's distinct, explicitly partial Perl
+5.004_62 pair, backed by its own historical source archive.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG80 Ruby (selected):** lower exact parenthesized zero-argument `puts()`
-   from the Ruby grammar AST to InterpreterIR and execute it on Rust vm-core,
-   using host Ruby only as a conformance oracle.
-2. **LANG82 continued:** add the next distinct, own-source-backed partial
-   token/grammar pair. Keep 5.004_01-t1 pending until its own source is found;
-   do not imply complete syntax or an exhaustive release inventory.
+1. **LANG82 continued (selected):** add a distinct, own-archive-backed partial
+   5.004_62 token/grammar pair. Keep 5.004_01-t1 pending until its own source
+   is found; do not imply complete syntax or an exhaustive release inventory.
+2. **LANG80 Ruby:** the zero-argument parenthesized stage is complete; broader
+   native frontend semantics remain open, with host Ruby only as an oracle.
 3. **LANG78 JavaScript:** the zero-argument stage is complete; broader native
    frontend semantics remain open, with Node only as a conformance oracle.
 4. **PREP01 C:** continue the bounded conditional ladder. Full C `#if` and
