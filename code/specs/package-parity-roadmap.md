@@ -17145,6 +17145,37 @@ metadata-command hunk overlap; recheck before delivery. Read-only audits
 confirmed C#/F# can form a later shared .NET Arc2D tranche after this CI
 prerequisite, and found no eligible unowned gap.
 
+## Post-#17148 inventory and bounded Arc2D .NET selection
+
+PR #17148 passed all 38 final-head checks (31 successes, seven expected
+skips), including a same-head retry of the flaky Windows Forme web-quality
+sample and its downstream CI gate. GitHub reported CLEAN/MERGEABLE and guarded
+squash auto-merge completed as `435df54f862f154b216e1204e299ffc67a713af6`;
+there was no manual merge. Both geometry and Bezier flattening neutral
+validators are now unconditional CI contracts.
+
+The collision-gated schema-3 report on fetched `origin/main` at that commit
+has 15 established lanes, 1,500 implementation identities, 4,782 occupied
+slots, 1,542 all-reported identities, 178 high-consensus identities with 250
+missing slots, 1,018 singletons (819 Rust), zero canonical collisions and
+zero unknown language buckets. Five OCaml roots remain emerging and outside
+the established denominator. The new Rust-only
+`chief-of-staff-process-hardening` root is host-security/native-runtime work;
+its separate pending authority review is selection-blocked, not a portable
+port target.
+
+Read-only reviews found a missing NET00 neutral conformance prerequisite for
+the existing Java/Kotlin/Dart URL-parser owner. They also confirmed arithmetic
+09 subtraction carry needs neutral adjudication before its three absent-lane
+ports, and that Haskell CT01 is ready but narrower than the shared geometry
+repair. The existing 11-lane Arc2D center-form owner is now a completion
+umbrella. Its first selected child is the C#/F# .NET slice: dynamically consume
+the seven center-form cases, replace sampled bounds with analytic extrema,
+enforce finite one-turn cubic limits, and run real native/downstream tests,
+coverage, build-file, parity, diff and security validation. Remaining
+Arc2D lanes will be split after this child. OCaml native build-tool promotion
+still depends on its separately tracked execution-authority and CI gates.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

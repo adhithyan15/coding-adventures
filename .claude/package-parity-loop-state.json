@@ -11,34 +11,29 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": {
-    "number": 17148,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/17148",
-    "branch": "codex/parity-geometry-neutral-fixture-ci-20261008",
-    "item_id": "geometry-2d-neutral-fixture-ci-scheduling"
-  },
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-08T15:54:53Z",
+    "observed_at": "2026-10-08T17:57:11Z",
     "pr_number": 17148,
-    "status": "pr-open",
-    "notes": "Ready-for-review PR #17148 opened from locally validated head c8e9bf0754824e45f811e93e7a745228e1c3dcaa. GitHub reports MERGEABLE but its CI, CodeQL, and book-detection checks are queued; do not enable auto-merge until every required check is terminal and acceptable."
+    "status": "merged",
+    "notes": "Final-head retry completed with 31 successful and seven expected skipped checks, including the previously flaky Windows Forme job and CI gate. GitHub reported CLEAN/MERGEABLE; guarded squash auto-merge merged #17148 without a manual merge. Exact merge commit 435df54f862f154b216e1204e299ffc67a713af6 was fetched on origin/main."
   },
   "last_inventory": {
-    "revision": "59d58463222ad2f3589447dd21a7b42870b94e4d",
+    "revision": "435df54f862f154b216e1204e299ffc67a713af6",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1499,
-    "implementation_package_slots": 4781,
-    "all_reported_identities": 1541,
+    "implementation_identities": 1500,
+    "implementation_package_slots": 4782,
+    "all_reported_identities": 1542,
     "high_consensus_packages": 178,
     "high_consensus_missing_slots": 250,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 181,
     "two_to_four_missing_slots": 2282,
-    "singleton_packages": 1017,
-    "singleton_missing_slots": 14238,
-    "rust_singletons": 818,
+    "singleton_packages": 1018,
+    "singleton_missing_slots": 14252,
+    "rust_singletons": 819,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -10911,10 +10906,19 @@
       "id": "url-parser-java-kotlin-dart-lane-parity",
       "title": "Implement the portable URL parser in Java, Kotlin, and Dart",
       "status": "pending",
+      "depends_on": ["url-parser-net00-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Post-#16717 audit found code/specs/NET00-url-parser.md defines a standard-library-only parser used downstream by HTTP/1.0 client and Venture, but the Java, Kotlin, and Dart roots and exact parity owner are absent. Post-#17148 review found existing Rust/TypeScript/Python reference disagreements on decoded fields, empty hosts, slash encoding and serialization; require the new neutral NET00 corpus and adapters before bounded per-lane ports. Do not inherit one reference silently."
+    },
+    {
+      "id": "url-parser-net00-neutral-conformance",
+      "title": "Reconcile NET00 URL parsing and serialization into neutral fixtures",
+      "status": "pending",
       "depends_on": [],
       "branch": null,
       "pr_number": null,
-      "notes": "Post-#16717 audit found code/specs/NET00-url-parser.md defines a standard-library-only parser used downstream by HTTP/1.0 client and Venture, but the Java, Kotlin, and Dart roots and exact parity owner are absent. Preserve the pure grammar and error contract before consuming it downstream; no current open PR owns these paths."
+      "notes": "New collision-checked post-#17148 owner: NET00 text and existing Rust, TypeScript and Python implementations diverge on percent-decoded parsed fields, empty host treatment, slash encoding, serialization and Rust-only canonicalization. Adjudicate the pure contract against governing spec and references, add a closed language-neutral corpus/validator and existing-lane adapters, then unlock the separately owned Java/Kotlin/Dart ports. Do not conflate native Venture authority or NET04 HTTP framing."
     },
     {
       "id": "build-tool-shared-input-multiconsumer-diff-selection-fixture",
@@ -12116,13 +12120,17 @@
     {
       "id": "geometry-2d-neutral-fixture-ci-scheduling",
       "title": "Schedule both neutral geometry and Bezier flattening validators in CI",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-bezier2d-flattening-termination-contract"],
       "branch": "codex/parity-geometry-neutral-fixture-ci-20261008",
       "pr_number": 17148,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/17148",
       "opened_at": "2026-10-08T15:54:47Z",
       "opened_revision": "c8e9bf0754824e45f811e93e7a745228e1c3dcaa",
+      "merged_head_revision": "e687315e266b57153ee67feed22f75c740ceafa2",
+      "merged_at": "2026-10-08T17:57:11Z",
+      "merge_revision": "435df54f862f154b216e1204e299ffc67a713af6",
+      "merge_notes": "All 38 final-head checks completed acceptably: 31 successes and seven expected skips. The first Windows Forme web-quality sample was below its Lighthouse threshold; same-head failed-job retry passed, including the downstream CI gate. GitHub reported CLEAN/MERGEABLE, and guarded squash auto-merge completed without manual merge.",
       "selected_at": "2026-10-08T15:37:20Z",
       "selection_revision": "59d58463222ad2f3589447dd21a7b42870b94e4d",
       "validation_notes": "Spec-first and tests-first commits pin both neutral fixture validators and their unit suites in the existing unconditional contracts metadata step; the regression failed on missing commands before workflow implementation and now passes 19 tests. Exact local validators pass 23 geometry cases and nine Bezier flattening cases; their unit suites pass 11 and seven tests. The package-parity reporter and ten tests pass with 15 established lanes, 1,499 identities, 4,781 slots, and zero collisions or unknown buckets. Ruby YAML parse, Ruff lint, git diff hygiene, independent read-only security review, full Go build-tool tests and vet, and a real Go build-tool dry-run validating 45 Starlark BUILD files and 5,319 packages pass. Whole-file Ruff formatting reports only pre-existing unrelated drift in the CI registry test file; new lines are clean. No native package source changed, so coverage is not a direct acceptance gate for this CI-only tranche.",
@@ -12158,6 +12166,16 @@
       "pr_number": null,
       "selection_blocked": true,
       "notes": "The new Rust-only chief-of-staff-linux-sandbox root on exact post-#17136 main accounts for one new singleton identity. Its seccomp, Landlock, no-new-privileges and pre-exec host enforcement are concrete native/security behavior, not a portable package contract or all-language denominator gap. Record it for a separate authority and platform-evidence review; do not select it or invent cross-language ports in this parity loop."
+    },
+    {
+      "id": "chief-process-hardening-native-authority-review",
+      "title": "Review the Chief process-hardening native authority boundary",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Exact post-#17148 fetched-main inventory adds one Rust-only chief-of-staff-process-hardening singleton root. It is host-security/native-runtime FFI, distinct from existing spawn-isolation and Linux sandbox reviews, not a portable all-language parity package. Preserve a separate authority/platform-evidence review and exclude this item from parity implementation selection."
     },
     {
       "id": "geometry-arc2d-center-form-bounds-and-sweep-neutral-contract",
@@ -12205,7 +12223,20 @@
       "depends_on": ["geometry-arc2d-center-form-bounds-and-sweep-neutral-contract", "geometry-2d-neutral-fixture-ci-scheduling"],
       "branch": null,
       "pr_number": null,
-      "notes": "Post-#17136 audit confirms ten existing non-Go/non-Haskell Arc2D lanes sample 100 points and underbound wrapped/rotated extrema; Haskell already uses modular analytic bounds but still needs finite one-turn limits. All eleven direct CenterArc cubic paths lack finite/one-turn fail-stop; Perl additionally emits five segments on an exact full turn. Existing five dynamic readers consume only four SVG degeneracies, not seven new center records. Split by language/toolchain after the neutral fixture CI scheduling dependency; a focused C#/F# shared .NET slice is a candidate. Go remains owned separately."
+      "selection_blocked": true,
+      "notes": "Post-#17136 audit confirms ten existing non-Go/non-Haskell Arc2D lanes sample 100 points and underbound wrapped/rotated extrema; Haskell already uses modular analytic bounds but still needs finite one-turn limits. All eleven direct CenterArc cubic paths lack finite/one-turn fail-stop; Perl additionally emits five segments on an exact full turn. Existing five dynamic readers consume only four SVG degeneracies, not seven new center records. This is a completion umbrella, not one implementation PR: start with the focused C#/F# child after merged neutral fixture CI, then register remaining lane/toolchain children. Go remains owned separately."
+    },
+    {
+      "id": "geometry-arc2d-csharp-fsharp-center-form-conformance",
+      "title": "Conform C# and F# Arc2D center forms to G2D03",
+      "status": "in-progress",
+      "depends_on": ["geometry-arc2d-center-form-bounds-and-sweep-neutral-contract", "geometry-2d-neutral-fixture-ci-scheduling"],
+      "branch": "codex/parity-arc2d-csharp-fsharp-20261008",
+      "pr_number": null,
+      "selected_at": "2026-10-08T18:00:19Z",
+      "selection_revision": "435df54f862f154b216e1204e299ffc67a713af6",
+      "selection_notes": "Selected only after #17148 actually merged, final 38 checks were acceptable, origin/main was fetched, collision-gated schema-3 inventory regenerated, and three newly discovered owners were registered. The merged G2D03 and now-unconditional geometry fixture contracts make C#/F# a bounded shared .NET implementation slice with direct dependency leverage. Java/Kotlin/Dart arithmetic and NET00 require upstream neutral adjudication; Haskell CT01 is ready but a narrower one-lane leaf; OCaml promotion remains upstream-blocked. No active parity PR or exact Arc2D package-path overlap was found.",
+      "notes": "First bounded child of the 11-lane Arc2D existing-center-form umbrella. C# and F# currently sample 100 points for bounds and use unchecked integer quadrant segmentation; both already link geometry2d-v1 but must dynamically consume its four center-bounds and three center-cubics records. Implement analytic rotated extrema, finite/valid one-turn fail-stop before allocation, zero/full-turn segment rules, native invalid/nonfinite tests, same-lane point2d/bezier2d/trig regression and real .NET coverage/build validation. G2D03 and merged neutral validators govern; no Go endpoint or absent-lane port in this slice."
     },
     {
       "id": "geometry-arc2d-go-endpoint-api-reconciliation",
