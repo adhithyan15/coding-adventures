@@ -1497,6 +1497,17 @@ through S-I3 before two weeks are spent on Windows.
        protocol does not change, and the agent is not ended for it.
      - Each host's count of refused requests is readable from the
        supervisor, for the audit record.
+     - A host must back off on `Unavailable`. The reference host sleeps for
+       its idle poll interval, 250 ms. A host that retries at once only
+       burns its own refusals.
+     - Two more bounds stop one host from holding the supervisor's single
+       thread:
+       - one `refresh` handles at most 64 records per host, and the rest
+         wait for the next refresh;
+       - responses go to the host through a writer thread with a queue of 8
+         frames. A host that stops reading its stdin fills the queue, and
+         the next send ends it, rather than blocking the supervisor.
+         Ending it breaks the pipe, which frees the writer.
      - Length bounds already exist on every frame and field, and are
        unchanged.
    - **P2.6c, beneath-resolution (S-K5).** The `openat2(RESOLVE_BENEATH |

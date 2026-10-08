@@ -15,6 +15,16 @@
     - an end-to-end test where the test child's new `FLOOD` mode sends 20
       requests against a budget of 5: 5 are dispatched and 15 refused.
   - Mutation-checked: disabling the bucket fails the flood test.
+- **No host can hold the supervisor's thread** (review round 7). Before
+  this, a host that never read its stdin could stall every host on a
+  blocking write, and one that wrote faster than the supervisor could decrypt
+  could keep `refresh` looping.
+  - Responses now go through a per-host writer thread, with a queue of 8
+    frames. A full queue makes the send fail, and the host is ended.
+  - One `refresh` handles at most 64 records per host.
+  - Frame length is checked at queue time.
+  - Tests: a child that never reads fails within 9 sends and under 5 s;
+    out-of-bound frames are refused.
 
 - **Descriptor isolation at the production agent spawn** (D18S S-I2, S-I3;
   #13980 P2.2). `spawn_verified` now calls

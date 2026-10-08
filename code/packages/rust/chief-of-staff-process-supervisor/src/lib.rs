@@ -314,7 +314,7 @@ struct OwnedInstance {
     registration: HostRegistration,
     package_hash: [u8; 32],
     child: Option<Child>,
-    stdin: Option<BufWriter<ChildStdin>>,
+    stdin: Option<RecordWriter>,
     reader: Option<JoinHandle<()>>,
     records: Receiver<ReaderEvent>,
     control: Option<OrchestratorControl>,
@@ -379,7 +379,11 @@ impl OwnedInstance {
         if matches!(self.phase, InstancePhase::Exited { .. }) {
             return Ok(());
         }
-        self.drain_records(dispatcher)?;
+        // Capped (review round 7): a host writing faster than the
+        // supervisor decrypts would otherwise keep this loop running, and
+        // with it the one thread that drives every host. The rest waits for
+        // the next refresh.
+        self.drain_records(dispatcher, Some(MAX_RECORDS_PER_DRAIN))?;
 
         if let Some(child) = self.child.as_mut() {
             if let Some(status) = child
@@ -409,7 +413,9 @@ impl OwnedInstance {
                 if let Some(reader) = self.reader.take() {
                     let _ = reader.join();
                 }
-                self.drain_records(dispatcher)?;
+                // Uncapped: the reader is joined, so the queue is final, and
+                // bounded by the reader channel's capacity.
+                self.drain_records(dispatcher, None)?;
                 self.finish_exit(status);
             }
         }
@@ -421,8 +427,14 @@ impl OwnedInstance {
     fn drain_records(
         &mut self,
         dispatcher: Option<&dyn HostDataPlaneDispatcher>,
+        limit: Option<usize>,
     ) -> Result<(), ProcessSupervisorError> {
+        let mut handled = 0usize;
         loop {
+            if limit.is_some_and(|limit| handled >= limit) {
+                break;
+            }
+            handled += 1;
             match self.records.try_recv() {
                 Ok(ReaderEvent::Record {
                     bytes,
@@ -492,11 +504,10 @@ impl OwnedInstance {
             .ok_or(ProcessSupervisorError::Control)?
             .respond(response)
             .map_err(|_| ProcessSupervisorError::Control)?;
-        let stdin = self
-            .stdin
-            .as_mut()
-            .ok_or(ProcessSupervisorError::ProcessIo)?;
-        write_record(stdin, &frame)?;
+        self.stdin
+            .as_ref()
+            .ok_or(ProcessSupervisorError::ProcessIo)?
+            .send(frame)?;
         self.pending_data_plane_request = None;
         Ok(())
     }
@@ -574,6 +585,9 @@ impl ProcessHostSupervisor {
 
     /// Set the per-host request budget (D18S S-K5). Applies to hosts
     /// started afterwards; the default is [`RequestBudget::DEFAULT`].
+    /// A zero `burst` refuses every request, and a zero `per_second` refuses
+    /// every request after the first burst: both are fail-closed
+    /// misconfigurations, not unlimited.
     pub fn with_request_budget(mut self, budget: RequestBudget) -> Self {
         self.request_budget = budget;
         self
@@ -726,7 +740,7 @@ impl ProcessHostSupervisor {
                 registration: registration.clone(),
                 package_hash: *registration.package_hash(),
                 child: Some(child),
-                stdin: Some(stdin),
+                stdin: Some(RecordWriter::start(stdin)?),
                 reader: Some(reader),
                 records,
                 channel_id: ChannelId(control.session_id().as_bytes()),
@@ -849,11 +863,11 @@ impl HostSupervisor for ProcessHostSupervisor {
             .terminate()
             .map_err(|_| ProcessSupervisorError::Control);
         let write_result = terminate.and_then(|frame| {
-            let stdin = instance
+            instance
                 .stdin
-                .as_mut()
-                .ok_or(ProcessSupervisorError::ProcessIo)?;
-            write_record(stdin, &frame)
+                .as_ref()
+                .ok_or(ProcessSupervisorError::ProcessIo)?
+                .send(frame)
         });
         if let Err(error) = write_result {
             let _ = instance.hard_kill_and_reap();
@@ -1139,6 +1153,52 @@ fn validate_runtime_bindings(
     }
 }
 
+/// Most records one `refresh` handles for a host; the rest wait for the
+/// next one (D18S S-K5, review round 7).
+const MAX_RECORDS_PER_DRAIN: usize = MAX_PENDING_RECORDS;
+
+/// Most response frames queued for a host that is not reading them.
+const MAX_QUEUED_FRAMES: usize = 8;
+
+/// A host's stdin, written by a thread of its own (D18S S-K5, review round
+/// 7). A blocking write on the supervisor's thread would let a host that
+/// stops reading its stdin stall every host. Here the supervisor only
+/// queues: when a host lets `MAX_QUEUED_FRAMES` pile up, the queue is full,
+/// `send` fails, and the caller ends the host. Ending it breaks the pipe,
+/// which ends a write the thread is blocked in.
+struct RecordWriter {
+    queue: mpsc::SyncSender<Vec<u8>>,
+}
+
+impl RecordWriter {
+    fn start(stdin: BufWriter<ChildStdin>) -> Result<Self, ProcessSupervisorError> {
+        let (queue, frames) = mpsc::sync_channel::<Vec<u8>>(MAX_QUEUED_FRAMES);
+        thread::Builder::new()
+            .name("host-stdin".into())
+            .spawn(move || {
+                let mut stdin = stdin;
+                for frame in frames {
+                    if write_record(&mut stdin, &frame).is_err() {
+                        break;
+                    }
+                }
+            })
+            .map_err(|_| ProcessSupervisorError::ProcessIo)?;
+        Ok(Self { queue })
+    }
+
+    /// Queue one frame. The length is checked here, so a bad frame is the
+    /// caller's error at once; a full or closed queue is `ProcessIo`.
+    fn send(&self, frame: Vec<u8>) -> Result<(), ProcessSupervisorError> {
+        if frame.is_empty() || frame.len() > MAX_RECORD_BYTES {
+            return Err(ProcessSupervisorError::Framing);
+        }
+        self.queue
+            .try_send(frame)
+            .map_err(|_| ProcessSupervisorError::ProcessIo)
+    }
+}
+
 fn write_record(writer: &mut impl Write, payload: &[u8]) -> Result<(), ProcessSupervisorError> {
     if payload.is_empty() || payload.len() > MAX_RECORD_BYTES {
         return Err(ProcessSupervisorError::Framing);
@@ -1174,6 +1234,58 @@ fn map_read_error(error: io::Error) -> ProcessSupervisorError {
 mod tests {
     use super::*;
     use chief_of_staff_host_control_protocol::ControlState;
+
+    /// Review round 7: a host that never reads its stdin must not block the
+    /// supervisor. Queueing fails once the writer is stuck and the queue is
+    /// full, within a bounded number of sends, and quickly.
+    #[cfg(unix)]
+    #[test]
+    fn a_host_that_stops_reading_fills_its_queue_instead_of_blocking() {
+        let mut child = Command::new("sleep")
+            .arg("30")
+            .stdin(Stdio::piped())
+            .spawn()
+            .expect("sleep runs");
+        let writer = RecordWriter::start(BufWriter::new(child.stdin.take().unwrap())).unwrap();
+        let started = Instant::now();
+        let frame = vec![7u8; MAX_RECORD_BYTES];
+        // The pipe holds well under one frame, so the thread blocks on the
+        // first, and the queue then takes MAX_QUEUED_FRAMES more.
+        let accepted = (0..MAX_QUEUED_FRAMES + 8)
+            .take_while(|_| writer.send(frame.clone()).is_ok())
+            .count();
+        assert!(accepted <= MAX_QUEUED_FRAMES + 1, "accepted {accepted}");
+        assert_eq!(
+            writer.send(frame.clone()),
+            Err(ProcessSupervisorError::ProcessIo)
+        );
+        assert!(started.elapsed() < Duration::from_secs(5), "send blocked");
+        // Ending the host breaks the pipe, which ends the blocked write.
+        child.kill().unwrap();
+        child.wait().unwrap();
+        drop(writer);
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn a_frame_out_of_bounds_is_refused_before_it_is_queued() {
+        let mut child = Command::new("sleep")
+            .arg("5")
+            .stdin(Stdio::piped())
+            .spawn()
+            .expect("sleep runs");
+        let writer = RecordWriter::start(BufWriter::new(child.stdin.take().unwrap())).unwrap();
+        assert_eq!(
+            writer.send(Vec::new()),
+            Err(ProcessSupervisorError::Framing)
+        );
+        assert_eq!(
+            writer.send(vec![0; MAX_RECORD_BYTES + 1]),
+            Err(ProcessSupervisorError::Framing)
+        );
+        child.kill().unwrap();
+        child.wait().unwrap();
+    }
     use coding_adventures_x3dh::generate_identity_keypair;
     use std::sync::mpsc::{channel, Receiver, Sender};
 
