@@ -1366,8 +1366,8 @@ backend immediately) come before the enabler-dependent items.
   Built-in `sin` and `arctan` preserve the direct sign-rooted unit range before
   cosine, including nested combinations; unrestricted operands and overrides
   remain conservative.
-  Built-in `ln` may map one built-in exponential over a nonnegative
-  unit-bounded sign-rooted range before cosine; unrestricted operands, nested
+  Built-in `ln` may map one built-in exponential over a signed unit-bounded
+  sign-rooted range before cosine; unrestricted operands, nested
   exponentials, and overrides remain conservative.
   Built-in `exp` may map a unary-negated nonnegative unit-bounded sign-rooted
   range into `(0, 1]` before cosine; unrestricted, positive, and overridden
