@@ -472,3 +472,16 @@ file pair. Accept 250 digits; reject 251 digits, leading-zero forms, adjacent
 decrement, carriage returns, and other unsupported input in the partial
 grammar. Leave later releases pending and make no full-syntax,
 exhaustive-inventory, or platform-wide rejection claim.
+
+Add a separate, explicitly partial `5.004_63` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_63.tar.gz`
+source archive, SHA-256
+`13e89ca65507f22ea6dcf503ffc525ade51c13eb42f0c15fd9c3ad4d495c6a92`.
+Its `perly.y`, `toke.c`, and `keywords.h` are each byte-identical to their
+`5.004_62` counterparts. Keep an independent file pair for this release and
+retain only the source-backed, bounded standalone plain-decimal arithmetic
+`print` subset with its 250-digit numeric limit. Accept 250 digits; reject
+251 digits, leading-zero forms, adjacent decrement, carriage returns, and
+other unsupported input in the partial grammar. Leave later releases pending
+and make no full-syntax, exhaustive-inventory, or platform-wide rejection
+claim.
