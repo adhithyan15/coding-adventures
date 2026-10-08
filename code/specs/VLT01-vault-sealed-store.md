@@ -461,12 +461,26 @@ those files then raise it, so the real index reads as `Tamper` from then on.
 **When resetting a vault, rotate the KEK.** Binding a random per-vault id
 into the AADs would remove this requirement (backlog P1.20d).
 
-**Who is anchored today.** Only the Chief vault: `open_chief_vault` keeps its
-anchor in `<kek_path>.freshness/`, next to the KEK. It refuses an anchor
-directory inside the storage directory, because whoever can roll the storage
-back could roll such an anchor back with it. The six smart-home
-pairing vaults and the OAuth credential store still open `SealedStore::new`,
-so F10 still applies to them. Anchoring them is backlog item P1.20c.
+**Who is anchored today.** Every vault the Chief daemon opens.
+- The Chief vault and the six smart-home pairing vaults share one storage
+  directory, the configured `[vault] storage_path`. All seven open it
+  through one function, `open_anchored_vault`, which keeps the anchor in
+  `<kek_path>.freshness/`, next to whichever KEK file that opener reads.
+- It refuses an anchor directory inside the storage directory, because
+  whoever can roll the storage back could roll such an anchor back with it.
+- It reads the KEK before creating the anchor or touching the store, so a
+  bad KEK file leaves nothing on disk.
+- D18U requires every opener of the root to name the same KEK file, so they
+  share one anchor. Openers that name different files holding the same key
+  get separate anchors. That is still safe: each anchor only ever holds
+  epochs its opener saw on the authentic index, and raise-on-read seeds
+  each one.
+
+**Library constructors are the caller's job.** `oauth-credential-sealed-store`
+takes a `SealedStore` from its caller rather than opening one. No production
+code builds it yet. Whoever wires it into a program must pass an anchored
+store, built with `SealedStore::with_anchor`. `SealedStore::new` stays for
+tests and in-memory backends, where there is no restart to survive.
 
 ## Seal / unseal state machine
 

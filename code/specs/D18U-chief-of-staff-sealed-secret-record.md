@@ -293,7 +293,11 @@ commands refuse and name the missing setting. They do not invent a key.
 `[vault] storage_path` is also the storage root of the six smart-home pairing
 vaults. A `SealedStore` root has one KEK manifest, so when `[vault] kek_path`
 and a pairing `kek_path` are both configured **they must name the same KEK
-file**, or whichever opens second fails with `InvalidKek`.
+file**, or whichever opens second fails with `InvalidKek`. Naming the same
+file also gives every opener of the root the same freshness anchor,
+`<kek_path>.freshness/`. Every opener is anchored, so a restored snapshot of
+the root is `Tamper` for pairing namespaces too, not only for the Chief
+vault's (VLT01 F11; #13980 P1.20c).
 
 `storage-fs` serializes writers inside one process only. A `vault put` while
 the daemon is running is safe for the record itself: the write is an atomic
