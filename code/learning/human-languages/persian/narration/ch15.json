@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Nine Letters, and the Words You Already Knew",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6452bd0337afb460",
+  "sourceHash": "fnv1a64:4a1809f63478d75a",
   "lessons": [
     {
       "id": "FA-W15-alef",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:22c8ddc9881fc195",
+      "sourceHash": "fnv1a64:2895d932bd518565",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -116,11 +116,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "at the right edge of a Persian word, where your pen would begin",
+              "instruction": "the right edge of a Persian word, where your pen would begin",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: at the right edge of a Persian word, where your pen would begin]"
+              "source": "[YOU POINT: the right edge of a Persian word, where your pen would begin]"
             }
           ]
         },

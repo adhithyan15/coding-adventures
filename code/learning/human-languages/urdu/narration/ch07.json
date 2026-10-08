@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2916ce0858ca600b",
+  "sourceHash": "fnv1a64:21c0e243d3f39a5a",
   "lessons": [
     {
       "id": "UR-W07-alif-madda",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:eea2bf0b86d3a620",
+      "sourceHash": "fnv1a64:cfd0377e571992a2",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -132,11 +132,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "at both alifs in آسان and say which is which",
+              "instruction": "both alifs in آسان and say which is which",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: at both alifs in آسان and say which is which]"
+              "source": "[YOU POINT: both alifs in آسان and say which is which]"
             },
             {
               "kind": "prompt",
@@ -573,7 +573,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:01bad136eb7b374f",
+      "sourceHash": "fnv1a64:ed9afa03948f7161",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -697,11 +697,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "at the pe in پیر and the pe in آپ, and say what changed",
+              "instruction": "the pe in پیر and the pe in آپ, and say what changed",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: at the pe in پیر and the pe in آپ, and say what changed]"
+              "source": "[YOU POINT: the pe in پیر and the pe in آپ, and say what changed]"
             },
             {
               "kind": "prompt",

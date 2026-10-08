@@ -4,7 +4,7 @@
   "chapter": 8,
   "title": "Four Verbs Between People",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d058612ae5198a8a",
+  "sourceHash": "fnv1a64:7ded04ca20010bc0",
   "lessons": [
     {
       "id": "UR-W08-vao",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:c0443341ce5cb487",
+      "sourceHash": "fnv1a64:7689e4ee508761b7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -169,11 +169,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "at the break after vāʾo in ہوں and say why it is there",
+              "instruction": "the break after vāʾo in ہوں and say why it is there",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: at the break after vāʾo in ہوں and say why it is there]"
+              "source": "[YOU POINT: the break after vāʾo in ہوں and say why it is there]"
             }
           ]
         },

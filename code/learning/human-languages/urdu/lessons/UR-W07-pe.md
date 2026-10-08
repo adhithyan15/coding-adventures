@@ -98,7 +98,7 @@ in on both sides.
 
 - [YOU WRITE: پ — the boat, then a lift, then three dots beneath]
 - [YOU WRITE: آپ, then پیر, then اپنا]
-- [YOU POINT: at the pe in پیر and the pe in آپ, and say what changed]
+- [YOU POINT: the pe in پیر and the pe in آپ, and say what changed]
 - [YOU SAY: **āp**, and say who you would use it with rather than *tum*]
 
 ## Wrap-up Recall

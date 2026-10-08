@@ -54,7 +54,7 @@ the greeting and the page direction, not decoding every letter.
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-SALAM-01, FA-ETYMON-SALAM-SLM-02, FA-SCRIPT-RTL-01, FA-SCRIPT-ALEF-01] -->
 
 - [YOU SAY: the four-line exchange, choosing **bale** or **na**]
-- [YOU POINT: to the right edge where each Persian line begins]
+- [YOU POINT: the right edge where each Persian line begins]
 - [YOU COPY: **ا** once beside the visible model, top to bottom]
 - [YOU SAY: the old idea behind **salâm** — "peace"]
 

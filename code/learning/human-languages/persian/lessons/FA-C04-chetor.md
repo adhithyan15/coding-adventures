@@ -61,7 +61,7 @@ question word now.
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-CHETOR, FA-SCRIPT-CHETOR, FA-ETYMON-CHE-TOR] -->
 
 - [YOU SAY: **chetor?** — how?]
-- [YOU POINT: to familiar **چ** at the right edge]
+- [YOU POINT: familiar **چ** at the right edge]
 - [YOU REBUILD: **che** “what” + **tor** “manner”]
 
 ## Wrap-up Recall

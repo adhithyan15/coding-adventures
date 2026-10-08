@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Seasons",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f1b47aa8cd512fed",
+  "sourceHash": "fnv1a64:2f38fc04fe2d0da9",
   "lessons": [
     {
       "id": "HI-C14-ghee",
@@ -623,7 +623,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4f2a9e500aa891e7",
+      "sourceHash": "fnv1a64:e36881d4f6a67c93",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -739,11 +739,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "to the letter, then say “independent vowel — not र”",
+              "instruction": "the letter, then say “independent vowel — not र”",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: to the letter, then say “independent vowel — not र”]"
+              "source": "[YOU POINT: the letter, then say “independent vowel — not र”]"
             }
           ]
         },

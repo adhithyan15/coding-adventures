@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "How Are You?",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:55f7abb7906300db",
+  "sourceHash": "fnv1a64:24b63b9e3d046939",
   "lessons": [
     {
       "id": "FA-C04-hal",
@@ -162,7 +162,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a4139c36e3bbff7",
+      "sourceHash": "fnv1a64:2fef2b5d23cbde4f",
       "notice": null,
       "blocks": [
         {
@@ -225,11 +225,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "to familiar چ at the right edge",
+              "instruction": "familiar چ at the right edge",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: to familiar **چ** at the right edge]"
+              "source": "[YOU POINT: familiar **چ** at the right edge]"
             },
             {
               "kind": "prompt",
@@ -559,7 +559,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc908a16aa2d335b",
+      "sourceHash": "fnv1a64:810c1d65261be6af",
       "notice": null,
       "blocks": [
         {
@@ -631,11 +631,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "to final م carrying “I am”",
+              "instruction": "final م carrying “I am”",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: to final **م** carrying “I am”]"
+              "source": "[YOU POINT: final **م** carrying “I am”]"
             }
           ]
         },

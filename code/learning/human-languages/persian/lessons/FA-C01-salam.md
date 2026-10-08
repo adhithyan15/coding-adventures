@@ -78,7 +78,7 @@ word. The next two-minute lesson will name and copy this one shape.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-SALAM-01, FA-SCRIPT-RTL-01] -->
 
-- [YOU POINT: to the right edge, where Persian reading begins]
+- [YOU POINT: the right edge, where Persian reading begins]
 - [YOU SAY: **salâm** once to greet, and once to answer]
 
 ## Wrap-up Recall

@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Five Verbs at the Core",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:fbe76e6108503088",
+  "sourceHash": "fnv1a64:e4ce90a919334c0a",
   "lessons": [
     {
       "id": "UR-C06-hona",
@@ -186,7 +186,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0ae18f79664964b2",
+      "sourceHash": "fnv1a64:099206f7175256e4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -311,11 +311,11 @@
             {
               "kind": "prompt",
               "action": "POINT",
-              "instruction": "at the two nūns in نہیں and say what each one does",
+              "instruction": "the two nūns in نہیں and say what each one does",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU POINT: at the two nūns in نہیں and say what each one does]"
+              "source": "[YOU POINT: the two nūns in نہیں and say what each one does]"
             },
             {
               "kind": "prompt",

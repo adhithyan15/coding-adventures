@@ -64,7 +64,7 @@ Urdu ends the question with **؟**, curved for a right-to-left line. Begin at
 
 - [YOU SAY: **āp kā nām kyā hai?**]
 - [YOU SAY: ask, then answer — **merā nām ... hai**]
-- [YOU POINT: to **؟** at the end]
+- [YOU POINT: **؟** at the end]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-NAME-QUESTION, UR-GRAMMAR-AAP-KA, UR-SCRIPT-URDU-QUESTION-MARK] -->
