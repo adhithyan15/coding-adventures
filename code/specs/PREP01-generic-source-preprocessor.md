@@ -811,6 +811,23 @@ expression subset; this stage does not add C arithmetic or stringize/paste.
 Tests cover branch selection, macro and `defined` preparation, skipped
 condition budget behavior, malformed ordering, nesting, and rooted C input.
 
+The following bounded C condition stage short-circuits evaluation of the
+existing `&&` and `||` clauses. The generic engine still prepares and expands
+the entire active `#if` or `#elif` expression under its normal bounds. The C
+dialect then validates every expanded clause against its existing finite
+grammar, decimal literal policy, and operand range before computing values.
+Within that validated expression, `&&` skips value computation after a false
+left side, and `||` skips it after a true left side. Consequently a zero
+divisor, overflowing arithmetic, or invalid shift in a skipped clause does not
+fail the directive. The same operation still fails when its clause is needed
+to determine the result. Empty or unsupported clauses remain errors even when
+they appear after a decisive value. This changes the earlier staged behavior
+that evaluated every supported clause while preserving its syntax boundary.
+The stage does not expand the supported expression grammar or change skipped
+conditional-group processing. Tests cover both operators and precedence,
+needed versus skipped evaluation, malformed skipped clauses, macro expansion,
+and rooted C directive locations.
+
 *Acceptance:* a C program using `#define` (object- and function-like), `#if`/
 `#ifdef`/`#else`/`#endif` and a real project-local `#include` compiles through
 `c-to-semantic-ir` and executes with the expected result — the first C program

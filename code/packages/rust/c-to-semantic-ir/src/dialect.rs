@@ -98,7 +98,7 @@ fn condition_operand(token: &Token) -> Result<i64, PpError> {
     ))
 }
 
-fn condition_clause(tokens: &[Token]) -> Result<bool, PpError> {
+fn condition_clause(tokens: &[Token], evaluate: bool) -> Result<bool, PpError> {
     // One negated operand is a complete clause. An exact four-token shape
     // avoids turning this into general parenthesis parsing; the operand keeps
     // the existing decimal/undefined-identifier policy after macro expansion.
@@ -115,7 +115,7 @@ fn condition_clause(tokens: &[Token]) -> Result<bool, PpError> {
             && close.value == ")"
             && matches!(op.value.as_str(), "==" | "!=" | "<" | "<=" | ">" | ">=")
         {
-            return condition_clause(&tokens[2..5]).map(|value| !value);
+            return condition_clause(&tokens[2..5], evaluate).map(|value| !value);
         }
     }
     // Unwrap at most one pair. Matching only these exact shapes keeps nested
@@ -151,6 +151,9 @@ fn condition_clause(tokens: &[Token]) -> Result<bool, PpError> {
                     let right = i32::try_from(right).map_err(|_| {
                         PpError::new("C arithmetic condition operand is out of range")
                     })?;
+                    if !evaluate {
+                        return Ok(false);
+                    }
                     if matches!(op.value.as_str(), "/" | "%") && right == 0 {
                         return Err(PpError::new("C arithmetic condition divisor is zero"));
                     }
@@ -170,6 +173,9 @@ fn condition_clause(tokens: &[Token]) -> Result<bool, PpError> {
                         .map_err(|_| PpError::new("C shift condition operand is out of range"))?;
                     let right = i32::try_from(right)
                         .map_err(|_| PpError::new("C shift condition count is out of range"))?;
+                    if !evaluate {
+                        return Ok(false);
+                    }
                     if left < 0 {
                         return Err(PpError::new("C shift condition left operand is negative"));
                     }
@@ -194,6 +200,9 @@ fn condition_clause(tokens: &[Token]) -> Result<bool, PpError> {
                         .map_err(|_| PpError::new("C bitwise condition operand is out of range"))?;
                     let right = i32::try_from(right)
                         .map_err(|_| PpError::new("C bitwise condition operand is out of range"))?;
+                    if !evaluate {
+                        return Ok(false);
+                    }
                     if left < 0 || right < 0 {
                         return Err(PpError::new("C bitwise condition operand is negative"));
                     }
@@ -205,12 +214,12 @@ fn condition_clause(tokens: &[Token]) -> Result<bool, PpError> {
                     };
                     Ok(value != 0)
                 }
-                "==" => Ok(left == right),
-                "!=" => Ok(left != right),
-                "<" => Ok(left < right),
-                "<=" => Ok(left <= right),
-                ">" => Ok(left > right),
-                ">=" => Ok(left >= right),
+                "==" => Ok(evaluate && left == right),
+                "!=" => Ok(evaluate && left != right),
+                "<" => Ok(evaluate && left < right),
+                "<=" => Ok(evaluate && left <= right),
+                ">" => Ok(evaluate && left > right),
+                ">=" => Ok(evaluate && left >= right),
                 _ => Err(PpError::new(
                     "C conditional expression is not supported by this handoff yet",
                 )),
@@ -450,9 +459,14 @@ impl Dialect for CDialect {
                         "C conditional expression has an empty AND operand",
                     ));
                 }
-                // Validate every operand even when a previous one determines
-                // the result: this partial grammar must reject unsupported syntax.
-                all &= condition_clause(conjunct)?;
+                // Even a skipped value must keep the finite grammar, decimal
+                // operand policy, and width checks. Only value computation
+                // short-circuits after a decisive clause.
+                let evaluate = !any && all;
+                let value = condition_clause(conjunct, evaluate)?;
+                if evaluate {
+                    all = value;
+                }
             }
             any |= all;
         }
@@ -899,6 +913,72 @@ mod tests {
     }
 
     #[test]
+    fn logical_conditions_skip_unneeded_value_computation() {
+        for (condition, expected) in [
+            ("0 && 1 / 0", "0"),
+            ("1 || 1 / 0", "1"),
+            ("0 && 2147483647 + 1", "0"),
+            ("1 || 1 << 32", "1"),
+            ("1 || 0 && 1 / 0", "1"),
+            ("0 && 1 / 0 || 1", "1"),
+            ("ZERO && 1 / ZERO || ONE", "1"),
+        ] {
+            let source = format!(
+                "#define ZERO 0\n#define ONE 1\n#if {condition}\nint x = 1;\n#else\nint x = 0;\n#endif\n"
+            );
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+            let values: Vec<_> = result
+                .tokens
+                .iter()
+                .map(|token| token.value.as_str())
+                .collect();
+            assert_eq!(values, ["int", "x", "=", expected, ";"], "{condition}");
+        }
+
+        let source = "#if 0\nint x = 0;\n#elif 1 || 1 / 0\nint x = 1;\n#else\nint x = 2;\n#endif\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        let values: Vec<_> = result
+            .tokens
+            .iter()
+            .map(|token| token.value.as_str())
+            .collect();
+        assert_eq!(values, ["int", "x", "=", "1", ";"]);
+    }
+
+    #[test]
+    fn logical_conditions_validate_skipped_clauses_and_evaluate_needed_ones() {
+        for condition in [
+            "0 && (1 + 2)",
+            "1 || 010",
+            "0 && 2147483648 / 2",
+            "0 && 1 /",
+            "1 ||",
+            "0 || 1 / 0",
+            "1 && 1 / 0",
+            "0 || 2147483647 + 1",
+            "0 || 1 << 32",
+        ] {
+            let source = format!("#if {condition}\nint x;\n#endif\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            match preprocess(tokens, file, &dialect, &mut fs, Bounds::default()) {
+                Err(error) => assert_eq!(error.position().unwrap().line, 1, "{condition}"),
+                Ok(_) => panic!("expected a condition error: {condition}"),
+            }
+        }
+    }
+
+    #[test]
     fn one_operator_arithmetic_conditions_use_checked_signed_values() {
         for (condition, expected) in [
             ("2 + 3", "1"),
@@ -977,7 +1057,6 @@ mod tests {
         for condition in [
             "1 / 0",
             "1 % 0",
-            "1 || 1 / 0",
             "1 / MISSING",
             "1 % MISSING",
             "2147483648 / 2",
@@ -1037,7 +1116,6 @@ mod tests {
             "1 + 1 << 2",
             "010 << 1",
             "1 << 2 == 4",
-            "1 || 1 << 32",
         ] {
             let source = format!("#if {condition}\nint x;\n#endif\n");
             let mut fs = MemoryFs::new();
