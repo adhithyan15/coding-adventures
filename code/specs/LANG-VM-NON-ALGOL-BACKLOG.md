@@ -385,22 +385,28 @@ explicitly partial pairs and 666 pending. Neither complete syntax nor an
 exhaustive public-release inventory is claimed. The next selection rotates
 to LANG80's bounded parenthesized two-argument integer `puts` stage.
 
+PR #17138 delivered that bounded parenthesized two-argument integer `puts`
+stage and merged as `088afa0c0a22bcec36ae00b742396480d88497c8` after
+exact-head CI, CodeQL, and books checks passed. The next selection rotates
+to LANG82's separate, own-archive-backed partial Perl 5.004_66 pair.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG80 Ruby (selected):** add exactly two positional integer arguments
-   to parenthesized `puts` through the Ruby grammar AST and Rust VM. Host Ruby
-   remains only a conformance oracle.
+1. **LANG82 continued (selected):** add the distinct, explicitly partial
+   Perl 5.004_66 token/grammar pair from its own historical source archive.
+   Keep 5.004_01-t1 pending until its own source is found; do not imply
+   complete syntax or an exhaustive release inventory.
 2. **LANG78 JavaScript:** the two-argument numeric `console.log` stage is
    complete; broader native frontend semantics remain open, with Node only
    as a conformance oracle.
 3. **LANG79 Python:** the two-argument float `print` stage is complete;
    broader native frontend semantics remain open, with host Python only as
    a conformance oracle.
-4. **LANG82 continued:** the separate, explicitly partial Perl 5.004_65
-   pair is complete. Keep 5.004_01-t1 pending until its own source is found;
-   do not imply complete syntax or an exhaustive release inventory.
+4. **LANG80 Ruby:** the two-argument parenthesized integer `puts` stage is
+   complete; broader native frontend semantics remain open, with host Ruby
+   only as a conformance oracle.
 5. **PREP01 C:** the bounded logical short-circuit stage is complete. Full C
    `#if` and stringize/paste remain open.
 
