@@ -58,6 +58,8 @@ dynamic, repeated-sign, denominator-sign, and overridden forms remain gated.
 An exact variable-free exponent chain evaluating to one may preserve that sign
 result as the power base; other exponents, a sign-rooted exponent, and
 overrides remain gated.
+Built-in `abs` may normalize that sign-rooted result while retaining the same
+bound; non-sign-rooted operands and `abs` or `sign` overrides remain gated.
 Built-in `sin`, `cos`, and `arctan` may map a bounded sign-rooted result before
 `entier`, including nested combinations; domain-sensitive or unbounded
 standard functions and non-sign-rooted runtime operands remain conservative.
