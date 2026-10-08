@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"io/fs"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -212,6 +213,13 @@ func TestResolutionFixturePlanIsUnforcedAndAtomic(t *testing.T) {
 	if _, err := os.Stat(atomicPlan); !os.IsNotExist(err) {
 		t.Fatalf("partial plan: %v", err)
 	}
+	unknownPlan := filepath.Join(root, "unknown-plan.json")
+	if code := emitBuildPlan(packages, graph, map[string]bool{}, map[string]bool{}, []string{resolutionTestPath("unclassified")}, false, nil, "origin/main", root, unknownPlan, false, 0, false, "", "all"); code != 1 {
+		t.Fatalf("unclassified resolution plan exit %d", code)
+	}
+	if _, err := os.Stat(unknownPlan); !os.IsNotExist(err) {
+		t.Fatalf("partial unclassified plan: %v", err)
+	}
 }
 
 func TestResolutionFixtureCorpusAndNativeReaderDrift(t *testing.T) {
@@ -285,6 +293,63 @@ func TestResolutionFixtureCorpusAndNativeReaderDrift(t *testing.T) {
 			want := strings.ContainsRune(resolutionExpectedReaders[stem], code)
 			if found != want {
 				t.Errorf("native reader %c case %s: source reference %t, route %t", code, stem, found, want)
+			}
+		}
+	}
+	// Search all test-like files under each build-tool front, not just the
+	// sources above. A new test file that starts reading a case must extend
+	// the relation, including Rust's in-module resolver tests.
+	for code, reader := range resolutionReaderRoots {
+		foundCases := map[string]bool{}
+		front := filepath.Join(root, filepath.FromSlash(reader.path))
+		err := filepath.WalkDir(front, func(path string, entry fs.DirEntry, walkErr error) error {
+			if walkErr != nil {
+				return walkErr
+			}
+			if entry.IsDir() {
+				switch entry.Name() {
+				case "node_modules", "target", ".build", "dist-newstyle", "coverage", ".venv":
+					return filepath.SkipDir
+				}
+				return nil
+			}
+			rel, err := filepath.Rel(front, path)
+			if err != nil {
+				return err
+			}
+			slash := "/" + filepath.ToSlash(rel)
+			lowerSlash := strings.ToLower(slash)
+			if entry.Name() == "resolution_fixture_ci_selection_test.go" {
+				return nil
+			}
+			isTest := strings.Contains(lowerSlash, "/test/") || strings.Contains(lowerSlash, "/tests/") || strings.Contains(lowerSlash, "/t/") ||
+				strings.HasSuffix(entry.Name(), "_test.go") || (code == 'R' && slash == "/src/resolver.rs")
+			if !isTest {
+				return nil
+			}
+			data, err := os.ReadFile(path)
+			if err != nil {
+				return err
+			}
+			for _, stem := range expectedCases {
+				if bytes.Contains(data, []byte("resolution-"+stem+".json")) {
+					foundCases[stem] = true
+				}
+			}
+			return nil
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if code == 'H' {
+			for _, stem := range []string{"gradle-java-field-aware", "gradle-kotlin-field-aware", "dotnet-csharp-field-aware", "dotnet-fsharp-field-aware"} {
+				foundCases[stem] = true
+			}
+		}
+		for _, stem := range expectedCases {
+			want := strings.ContainsRune(resolutionExpectedReaders[stem], code)
+			if foundCases[stem] != want {
+				t.Errorf("%s discovered case %s = %t, route = %t", reader.name, stem, foundCases[stem], want)
 			}
 		}
 	}
