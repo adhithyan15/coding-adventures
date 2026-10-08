@@ -74,7 +74,90 @@ class TestGraphDiff < Minitest::Test
     assert_equal before, Marshal.dump(options)
   end
 
+  def test_graph_rejects_invalid_topology_without_partial_result
+    graph = BuildTool::GraphDiff
+    names = %w[code/a code/b]
+    invalid_utf8 = "\xFF".b.force_encoding(Encoding::UTF_8)
+    assert_contract("GRAPH_PACKAGE_INVALID") do
+      graph.evaluate_graph(graph::GraphInput.new([invalid_utf8], []))
+    end
+    assert_contract("GRAPH_PACKAGE_DUPLICATE") do
+      graph.evaluate_graph(graph::GraphInput.new([names.first, names.first], []))
+    end
+    assert_contract("GRAPH_EDGE_UNKNOWN") do
+      graph.evaluate_graph(graph::GraphInput.new(names, [["code/missing", names.last]]))
+    end
+    assert_contract("GRAPH_EDGE_SELF") do
+      graph.evaluate_graph(graph::GraphInput.new(names, [[names.first, names.first]]))
+    end
+    assert_contract("GRAPH_EDGE_DUPLICATE") do
+      graph.evaluate_graph(graph::GraphInput.new(names, [[names.first, names.last]] * 2))
+    end
+    result = graph.evaluate_graph(graph::GraphInput.new(names, [[names.first, names.last], [names.last, names.first]]))
+    assert_equal({}, result.result)
+    assert_equal "GRAPH_CYCLE", result.error_code
+  end
+
+  def test_diff_rejects_invalid_materialized_values
+    invalid_utf8 = "\xFF".b.force_encoding(Encoding::UTF_8)
+    assert_contract("DIFF_PACKAGE_INVALID") { diff_input(packages: [nil]) }
+    assert_contract("DIFF_PATH_INVALID") { diff_input(paths: [invalid_utf8]) }
+    assert_contract("DIFF_PATH_INVALID") { diff_input(paths: ["code/CON.txt"]) }
+    assert_contract("DIFF_PATH_INVALID") { diff_input(paths: ["code/a/"]) }
+    assert_contract("DIFF_PATH_INVALID") { diff_input(root: "code/A/../b") }
+    assert_contract("DIFF_PATH_INVALID") { diff_input(root: "code/a/") }
+    assert_contract("DIFF_SOURCE_MODE_INVALID") { diff_input(mode: "anything") }
+    assert_contract("DIFF_GLOB_INVALID") { diff_input(globs: ["**/[z-a]"]) }
+    assert_contract("DIFF_GLOB_INVALID") { diff_input(globs: ["src/*.rb/"]) }
+    assert_contract("DIFF_POLICY_INVALID") { diff_input(policy: "ignore") }
+    assert_contract("DIFF_FORCED_PACKAGE_UNKNOWN") { diff_input(forced: ["code/other"]) }
+    assert_contract("DIFF_BOUNDARY_DIGEST_MISMATCH") { diff_input(digest: "wrong") }
+  end
+
+  def test_match_limit_returns_no_partial_selection
+    document = cases("diff-selection").find { |entry| entry.fetch("id") == "diff-selection/match-work-over-limit" }
+    options = document.fetch("input").fetch("options")
+    input = BuildTool::GraphDiff::DiffInput.new(
+      options.fetch("packages"), options.fetch("edges"), options.fetch("forced_packages"),
+      options.fetch("unknown_path_policy"), document.fetch("input").fetch("changed_paths"), "", nil
+    )
+    result = BuildTool::GraphDiff.evaluate_diff_selection(input)
+    assert_equal({}, result.result)
+    assert_equal "DIFF_MATCH_LIMIT_EXCEEDED", result.error_code
+  end
+
+  def test_boundary_digest_rejects_changed_content
+    document = cases("diff-selection").find do |entry|
+      entry.fetch("id") == "diff-selection/repository-boundary-reverse-index"
+    end
+    values = document.fetch("input").fetch("options")
+    boundary = JSON.parse(CORPUS.join("repository-source-input-boundary.json").read)
+    boundary.fetch("boundaries").first["reason"] = "tampered"
+    input = BuildTool::GraphDiff::DiffInput.new(
+      values.fetch("packages"), values.fetch("edges"), values.fetch("forced_packages"),
+      values.fetch("unknown_path_policy"), document.fetch("input").fetch("changed_paths"),
+      values.fetch("boundary_sha256"), boundary
+    )
+    assert_contract("DIFF_BOUNDARY_DIGEST_MISMATCH") do
+      BuildTool::GraphDiff.evaluate_diff_selection(input)
+    end
+  end
+
   private
+
+  def diff_input(packages: nil, root: "code/a", mode: "strict_globs", globs: [],
+    paths: [], policy: "error", forced: [], digest: "")
+    package = {"name" => "code/a", "rel_path" => root, "source_mode" => mode, "source_globs" => globs}
+    input = BuildTool::GraphDiff::DiffInput.new(
+      packages || [package], [], forced, policy, paths, digest, nil
+    )
+    BuildTool::GraphDiff.evaluate_diff_selection(input)
+  end
+
+  def assert_contract(code)
+    error = assert_raises(BuildTool::GraphDiff::ContractError) { yield }
+    assert_equal code, error.code
+  end
 
   def assert_case(document, actual)
     expected = document.fetch("expected")
@@ -84,7 +167,7 @@ class TestGraphDiff < Minitest::Test
     else
       assert_equal({}, actual.result, document.fetch("id"))
       assert_equal expected.fetch("diagnostics").fetch(0).fetch("code"), actual.error_code,
-                   document.fetch("id")
+        document.fetch("id")
     end
   end
 end
