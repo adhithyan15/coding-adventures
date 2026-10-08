@@ -1532,15 +1532,23 @@ through S-I3 before two weeks are spent on Windows.
        path by the platform's own primitive, never by `realpath` and then
        `open`:
        - Linux: `openat2(RESOLVE_BENEATH | RESOLVE_NO_SYMLINKS |
-         RESOLVE_NO_MAGICLINKS)`;
+         RESOLVE_NO_MAGICLINKS | RESOLVE_NO_XDEV)`. `RESOLVE_NO_XDEV` also
+         refuses to cross a mount point, so a bind mount placed inside a
+         root cannot be walked into;
        - macOS: `openat` with `O_NOFOLLOW_ANY`, after refusing absolute
-         paths and `..` components;
+         paths and `..` components. macOS has no mount-crossing refusal;
+         mounting inside a root needs privilege an agent does not have;
        - every other platform: a refusal. Without the primitive, the
          broker does not offer the operation (S-P3).
      - What it returns is a **regular file**, never a directory. It is
-       close-on-exec, and it carries only the access asked for.
-     - A file whose device and inode match a never-grantable file is
-       refused, which catches a hard link into the root.
+       close-on-exec, and it carries only the access asked for. A write
+       never creates or truncates.
+     - The open is non-blocking until `fstat` proves the file regular, so
+       a FIFO planted in the root cannot hang the broker.
+     - A file with more than one hard link is refused. That catches a hard
+       link into the root from anywhere, the vault included, without the
+       broker having to know every never-grantable inode. It also refuses
+       a legitimately hard-linked file, which costs nothing here.
      - Paths are length-bounded (4 KiB), and refused if they contain NUL.
    - **P2.6d, one contained broker per agent (S-K7).** The dispatcher moves
      out of the daemon into one process per agent. Each holds only that
