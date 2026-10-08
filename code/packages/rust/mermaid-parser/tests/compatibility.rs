@@ -1627,6 +1627,17 @@ fn swimlane_label_entities_decode_into_semantic_ir() {
 }
 
 #[test]
+fn swimlane_metadata_entities_decode_into_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\ntitle Request &amp; Delivery\naccTitle: Accessible&#32;handoff\naccDescr: Intake &lt; Support\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nrequest --> done",
+    ).expect("Swimlane metadata entities should parse");
+
+    assert_eq!(diagram.title.as_deref(), Some("Request & Delivery"));
+    assert_eq!(diagram.accessibility_title.as_deref(), Some("Accessible handoff"));
+    assert_eq!(diagram.accessibility_description.as_deref(), Some("Intake < Support"));
+}
+
+#[test]
 fn swimlane_flowchart_endpoint_markers_lower_to_semantic_ir() {
     use diagram_ir::EdgeMarker;
 

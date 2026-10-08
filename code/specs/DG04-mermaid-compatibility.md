@@ -999,7 +999,7 @@ directed/undirected/dotted/thick chained links, point/circle/cross endpoint
 markers and bidirectional arrows, multiline edge continuations,
 parallel branch and join
 endpoints, normalized quoted pipe-delimited and Flowchart-style link labels, titles, and
-accessibility metadata. It lowers through
+accessibility metadata with named and numeric entity decoding. It lowers through
 dedicated ownership IR and stable lane geometry before producing
 backend-neutral paint instructions. Horizontal nodes expand deterministically
 for long labels while remaining bounded by their ownership lane. A pinned
