@@ -1,0 +1,1 @@
+cargo test -p chief-of-staff-broker-protocol && cargo clippy -p chief-of-staff-broker-protocol --all-targets -- -D warnings
