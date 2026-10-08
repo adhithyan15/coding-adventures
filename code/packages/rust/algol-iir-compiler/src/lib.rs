@@ -3949,6 +3949,33 @@ impl Compiler {
             }
             return None;
         }
+        if matches!(node.rule_name.as_str(), "expr_add" | "simple_arith") {
+            let sequence = pieces(node);
+            if sequence.len() >= 3 && sequence.len() % 2 == 1 {
+                let mut sign_operand = None;
+                for (index, piece) in sequence.iter().enumerate() {
+                    if index % 2 == 0 {
+                        let Piece::Node(operand) = piece else {
+                            return None;
+                        };
+                        if let Some(operand) = self.builtin_direct_sign_operand(operand) {
+                            if sign_operand.replace(operand).is_some() {
+                                return None;
+                            }
+                        } else if !expr_static_real_arithmetic_value_with(operand, &|_| None)
+                            .is_some_and(|value| value == 0.0)
+                        {
+                            return None;
+                        }
+                    } else if !matches!(piece, Piece::Op(op) if matches!(op.as_str(), "+" | "-")) {
+                        return None;
+                    }
+                }
+                if sign_operand.is_some() {
+                    return sign_operand;
+                }
+            }
+        }
         if node.rule_name != "proc_call" {
             let children = direct_nodes(node);
             if direct_tokens(node).is_empty() && children.len() == 1 {
@@ -13676,12 +13703,49 @@ mod tests {
     #[test]
     fn al4_sqrt_cos_signed_sign_widening_rejects_unproven_operands() {
         for source in [
-            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(0 - sign(pick())))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(-(sign(pick()) * 1)))); output(result) end",
             "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(-exp(sign(pick()))))); output(result) end",
             "begin real procedure pick; pick := -2.25; integer procedure sign(x); value x; real x; sign := 0; real result; result := entier(sqrt(cos(-sign(pick())))); output(result) end",
         ] {
             let err = compile_source(source, "test").expect_err(
-                "additive, exponential, and overridden signed-sign cosine mappings under sqrt must remain conservative",
+                "multiplicative, exponential, and overridden signed-sign cosine mappings under sqrt must remain conservative",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "{source:?} failed with an unexpected diagnostic: {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_sqrt_cos_additive_sign_widening() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(sqrt(cos(0 - sign(pick())))); output(x) end",
+            "begin real procedure pick; pick := 3.5; real procedure relay(x); real x; relay := x; output(relay(entier(sqrt(sqrt(cos(0.0 + sign(pick()) - 0)))))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "sqrt preserves cosine over a zero-additive bounded sign result for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_sqrt_cos_additive_sign_widening_rejects_unproven_operands() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(1 - sign(pick())))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(sign(pick()) + sign(pick())))); output(result) end",
+            "begin real procedure pick; pick := -2.25; integer procedure sign(x); value x; real x; sign := 0; real result; result := entier(sqrt(cos(0 - sign(pick())))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "nonzero, repeated-sign, and overridden additive cosine mappings under sqrt must remain conservative",
             );
             assert!(
                 format!("{err:?}").contains("cannot print a real value"),
