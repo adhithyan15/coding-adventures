@@ -6889,6 +6889,7 @@ fn parse_swimlane_shape_attributes(
                     "hourglass" | "collate" => DiagramShape::Hourglass,
                     "tri" | "extract" | "triangle" => DiagramShape::Triangle,
                     "flip-tri" | "flipped-triangle" | "manual-file" => DiagramShape::InvertedTriangle,
+                    "notch-rect" | "card" | "notched-rectangle" => DiagramShape::NotchedRect,
                     "cloud" => DiagramShape::Cloud,
                     "bang" => DiagramShape::Bang,
                     "stadium" | "pill" | "terminal" => DiagramShape::Stadium,

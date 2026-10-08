@@ -51,6 +51,10 @@
       "source": "swimlane-beta LR\nsubgraph Manual\n  first@{ shape: flip-tri, label: \"First\" }\nend\nsubgraph Archive\n  second@{ shape: manual-file, label: \"Second\" }\nend\nfirst --> second"
     },
     {
+      "name": "notched-rectangle-card-shape",
+      "source": "swimlane-beta LR\nsubgraph Planning\n  first@{ shape: card, label: \"First\" }\nend\nsubgraph Delivery\n  second@{ shape: notch-rect, label: \"Second\" }\nend\nfirst --> second"
+    },
+    {
       "name": "input-output-and-asymmetric-shapes",
       "source": "swimlane-beta LR\nsubgraph Intake\n  input[/Receive payload/]\nend\nsubgraph Review\n  flag>Manual review]\nend\ninput --> flag"
     },
