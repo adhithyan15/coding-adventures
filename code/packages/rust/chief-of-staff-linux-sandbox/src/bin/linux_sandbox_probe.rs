@@ -6,6 +6,7 @@
 //!   read <path>        open and read; "ok" or "errno=<n>"
 //!   write <path>       open for writing and write; "ok" or "errno=<n>"
 //!   readlink <path>    read a symlink; "ok" or "errno=<n>"
+//!   env [names]        the environment's names, its arguments, the values
 //!   exec <path> [args]      execve without forking; "errno=<n>" if refused
 //!   execveat <path> [args]  the same, by descriptor (AT_EMPTY_PATH)
 //!   socket | unix      socket(AF_INET) / socket(AF_UNIX)
@@ -47,6 +48,15 @@ fn main() {
                 .open(&args[1])?
                 .write_all(b"written")
         })()),
+        Some("env") => {
+            let mut names: Vec<String> = std::env::vars().map(|(name, _)| name).collect();
+            names.sort();
+            println!("names={}", names.join(","));
+            println!("args={}", args[1..].join(","));
+            for name in &args[1..] {
+                println!("{name}={}", std::env::var(name).unwrap_or_default());
+            }
+        }
         Some("readlink") => report(std::fs::read_link(&args[1]).map(|_| ())),
         Some("execveat") => {
             // Open the file and exec it by descriptor, as the hook does.

@@ -65,6 +65,8 @@ let child = command.spawn()?; // a spawn error if any step failed
   Seccomp filters survive exec, so the filter kills `execve` and allows
   `execveat` only on that descriptor number. The descriptor closes at the
   exec, so the agent never holds it.
+- **Environment.** The agent gets exactly the variables set on the command
+  with `env`, and nothing inherited, with or without `env_clear` (S-I4a).
 
 ## What it refuses to launch
 

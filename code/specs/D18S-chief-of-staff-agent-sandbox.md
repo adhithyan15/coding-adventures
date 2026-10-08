@@ -1340,6 +1340,10 @@ through S-I3 before two weeks are spent on Windows.
      its flags are `AT_EMPTY_PATH`. The Landlock rule is added from the same
      descriptor, so the file that runs is the one that was parsed and given
      its rule, even if its path is replaced after prepare.
+   - The envp passed to that exec is built in the parent from exactly the
+     variables set on the command. Nothing is inherited (S-I4a's closed set).
+     `std` installs the command's environment only for its own exec, so the
+     child's `environ` at hook time is still the supervisor's.
    - **Amendment to S-I4d's first option.** That option withholds
      `LANDLOCK_ACCESS_FS_EXECUTE` from every path rule, but Landlock checks
      `EXECUTE` on the file being exec'd, and on its `PT_INTERP` loader, when

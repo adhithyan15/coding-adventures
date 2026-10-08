@@ -164,23 +164,29 @@ fn in_library_directory(resolved: &Path) -> bool {
 /// the prepared binary from there.
 ///
 /// The hook never returns on success: it ends in
-/// `execveat(binary, "", argv, environ, AT_EMPTY_PATH)`, the one exec the
+/// `execveat(binary, "", argv, envp, AT_EMPTY_PATH)`, the one exec the
 /// seccomp program allows (S-I4d). `std`'s own exec, by path, would need
-/// `execve`, which the program kills. The command still supplies argv
-/// (its program, as argv[0], then its arguments) and the environment,
-/// which `std` has already installed as `environ` when the hook runs.
+/// `execve`, which the program kills. The command still supplies argv: its
+/// program, as argv\[0\], then its arguments.
+///
+/// The environment is a closed set (S-I4a): exactly the variables set on
+/// the command with `env`, and nothing inherited, whether or not
+/// `env_clear` was called. (An earlier version passed the child's
+/// `environ`, which `std` has not yet replaced when the hook runs: the
+/// agent got the supervisor's whole environment, tokens included.)
 pub(crate) fn install(prepared: Arc<Prepared>, command: &mut Command) {
-    // argv is built here, in the parent: the child must not allocate.
-    let strings: Vec<CString> = std::iter::once(command.get_program())
-        .chain(command.get_args())
-        .map(|arg| CString::new(arg.as_bytes()).unwrap_or_default())
-        .collect();
-    let mut argv: Vec<*const libc::c_char> = strings.iter().map(|arg| arg.as_ptr()).collect();
-    argv.push(std::ptr::null());
-    let argv = Argv {
-        _strings: strings,
-        pointers: argv,
-    };
+    // argv and envp are built here, in the parent: the child must not
+    // allocate.
+    let argv = Argv::new(
+        std::iter::once(command.get_program().as_bytes().to_vec())
+            .chain(command.get_args().map(|arg| arg.as_bytes().to_vec())),
+    );
+    let envp = Argv::new(command.get_envs().filter_map(|(name, value)| {
+        let mut entry = name.as_bytes().to_vec();
+        entry.push(b'=');
+        entry.extend_from_slice(value?.as_bytes());
+        Some(entry)
+    }));
     // SAFETY: the closure runs in the forked child, before exec. It makes
     // three syscalls (prctl, landlock_restrict_self, seccomp), builds one
     // `sock_fprog` on the stack, then execs. It allocates nothing: the
@@ -190,17 +196,39 @@ pub(crate) fn install(prepared: Arc<Prepared>, command: &mut Command) {
     unsafe {
         command.pre_exec(move || {
             install_in_child(&prepared)?;
-            exec_in_child(&prepared, &argv)
+            exec_in_child(&prepared, &argv, &envp)
         });
     }
 }
 
-/// argv for the child: the strings, and the NULL-terminated pointer array
-/// into them. Raw pointers are not `Send`, but these only point into
-/// `_strings`, which moves with them.
+/// argv or envp for the child: the strings, and the NULL-terminated
+/// pointer array into them. Raw pointers are not `Send`, but these only
+/// point into `_strings`, which moves with them.
 struct Argv {
     _strings: Vec<CString>,
     pointers: Vec<*const libc::c_char>,
+}
+
+impl Argv {
+    /// An entry with an interior NUL cannot be passed to `exec` whole; it is
+    /// cut at the NUL, as C would read it.
+    fn new(entries: impl Iterator<Item = Vec<u8>>) -> Self {
+        let strings: Vec<CString> = entries
+            .map(|mut entry| {
+                if let Some(nul) = entry.iter().position(|byte| *byte == 0) {
+                    entry.truncate(nul);
+                }
+                CString::new(entry).unwrap_or_default()
+            })
+            .collect();
+        let mut pointers: Vec<*const libc::c_char> =
+            strings.iter().map(|entry| entry.as_ptr()).collect();
+        pointers.push(std::ptr::null());
+        Self {
+            _strings: strings,
+            pointers,
+        }
+    }
 }
 
 // SAFETY: see the type's comment; nothing aliases the strings.
@@ -208,22 +236,16 @@ unsafe impl Send for Argv {}
 // SAFETY: as above; the child only reads them.
 unsafe impl Sync for Argv {}
 
-extern "C" {
-    /// The process environment, as `std` left it for the child.
-    static environ: *const *const libc::c_char;
-}
-
-fn exec_in_child(prepared: &Prepared, argv: &Argv) -> io::Result<()> {
-    // SAFETY: a valid descriptor, an empty NUL-terminated path, a
-    // NULL-terminated argv, and the environment `std` installed. On
-    // success it does not return.
+fn exec_in_child(prepared: &Prepared, argv: &Argv, envp: &Argv) -> io::Result<()> {
+    // SAFETY: a valid descriptor, an empty NUL-terminated path, and
+    // NULL-terminated argv and envp. On success it does not return.
     unsafe {
         libc::syscall(
             libc::SYS_execveat,
             prepared.binary.as_raw_fd(),
             c"".as_ptr(),
             argv.pointers.as_ptr(),
-            environ,
+            envp.pointers.as_ptr(),
             libc::AT_EMPTY_PATH,
         );
     }

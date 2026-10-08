@@ -183,6 +183,32 @@ fn the_agent_cannot_exec_anything() {
 }
 
 #[test]
+fn the_agent_gets_the_commands_arguments_and_exactly_its_environment() {
+    // S-I4a: the environment is a closed set. The agent gets exactly the
+    // variables set on the command, nothing inherited, with or without
+    // `env_clear`; and argv is the command's.
+    // The first version passed the child's `environ`, which std had not
+    // yet replaced: every inherited variable reached the agent, tokens
+    // included. This test caught it.
+    let confined = confinement(&[]);
+    for clear in [true, false] {
+        let mut command = Command::new(PROBE);
+        command.args(["env", "AGENT_TOKEN", "second arg"]);
+        if clear {
+            command.env_clear();
+        }
+        command.env("AGENT_TOKEN", "granted").stdin(Stdio::null());
+        confined.apply(&mut command);
+        let output = command.output().unwrap();
+        assert_eq!(
+            stdout(&output),
+            "names=AGENT_TOKEN\nargs=AGENT_TOKEN,second arg\nAGENT_TOKEN=granted\nsecond arg=",
+            "env_clear={clear}: {output:?}"
+        );
+    }
+}
+
+#[test]
 fn what_runs_is_the_file_prepared_not_whatever_the_path_names_later() {
     // The binary is opened at prepare and exec'd by descriptor, so
     // replacing the path in between changes nothing.

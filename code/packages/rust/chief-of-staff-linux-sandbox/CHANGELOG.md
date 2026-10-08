@@ -32,6 +32,9 @@
   and allows `execveat` only on that descriptor number with that flag. What
   runs is the file that was parsed and given its Landlock rule, even if its
   path is replaced after `prepare`.
+- The agent's environment is a closed set (S-I4a): exactly the variables set
+  on the command with `env`, and nothing inherited, with or without
+  `env_clear`.
 - seccomp:
   - an arch check (x86_64 with x32 refused, and aarch64);
   - an allowlist with `SECCOMP_RET_KILL_PROCESS` as the default;
