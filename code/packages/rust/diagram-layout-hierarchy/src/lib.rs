@@ -692,6 +692,27 @@ mod tests {
     }
 
     #[test]
+    fn swimlane_layout_preserves_expanded_node_shapes() {
+        use diagram_ir::{DiagramShape, SwimlaneDiagram, SwimlaneLane, SwimlaneNode};
+        let diagram = SwimlaneDiagram {
+            direction: DiagramDirection::Lr, title: None, accessibility_title: None,
+            accessibility_description: None,
+            lanes: vec![SwimlaneLane { id: "runtime".into(), label: "Runtime".into(),
+                node_ids: vec!["hosted".into(), "alert".into()] }],
+            nodes: vec![
+                SwimlaneNode { id: "hosted".into(), label: "Hosted".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::Cloud, classes: Vec::new(), style: Default::default() },
+                SwimlaneNode { id: "alert".into(), label: "Alert".into(), lane_id: Some("runtime".into()),
+                    shape: DiagramShape::Bang, classes: Vec::new(), style: Default::default() },
+            ],
+            edges: vec![], links: Vec::new(), callbacks: Vec::new(),
+        };
+        let layout = layout_swimlane(&diagram);
+        assert_eq!(layout.nodes[0].shape, DiagramShape::Cloud);
+        assert_eq!(layout.nodes[1].shape, DiagramShape::Bang);
+    }
+
+    #[test]
     fn railroad_layout_preserves_choice_branches_and_repetition_loopbacks() {
         use diagram_ir::{RailroadDiagram, RailroadExpression, RailroadRule};
         let diagram = RailroadDiagram {

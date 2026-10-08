@@ -1557,11 +1557,11 @@ fn parse_kanban_node_metadata<'a>(
         .strip_suffix('}')
         .ok_or_else(|| token_error(token, "unterminated kanban metadata"))?;
     let mut metadata = KanbanNodeMetadata::default();
-    for field in split_kanban_metadata_fields(body) {
+    for field in split_mermaid_metadata_fields(body) {
         let (key, value) = field
             .split_once(':')
             .ok_or_else(|| token_error(token, "kanban metadata fields require key: value"))?;
-        let value = parse_kanban_metadata_scalar(value.trim());
+        let value = parse_mermaid_metadata_scalar(value.trim());
         match key.trim() {
             "label" => metadata.label = Some(value),
             "ticket" => metadata.ticket = Some(value),
@@ -1574,7 +1574,7 @@ fn parse_kanban_node_metadata<'a>(
     Ok((source[..open].trim_end(), metadata))
 }
 
-fn split_kanban_metadata_fields(source: &str) -> Vec<&str> {
+fn split_mermaid_metadata_fields(source: &str) -> Vec<&str> {
     let mut fields = Vec::new();
     let mut start = 0;
     let mut quote = None;
@@ -1611,7 +1611,7 @@ fn split_kanban_metadata_fields(source: &str) -> Vec<&str> {
     fields
 }
 
-fn parse_kanban_metadata_scalar(source: &str) -> String {
+fn parse_mermaid_metadata_scalar(source: &str) -> String {
     source
         .strip_prefix('\'')
         .and_then(|value| value.strip_suffix('\''))
@@ -6771,6 +6771,8 @@ fn parse_swimlane_node(
     let suffix = value[id_end..].trim();
     let (label, shape) = if suffix.is_empty() {
         (id.to_string(), DiagramShape::RoundedRect)
+    } else if suffix.starts_with("@{") {
+        parse_swimlane_shape_attributes(suffix, id, line)?
     } else if suffix.starts_with("(((") && suffix.ends_with(")))") {
         (
             suffix[3..suffix.len() - 3].to_string(),
@@ -6859,6 +6861,36 @@ fn parse_swimlane_node(
         classes,
         style: DiagramStyle::default(),
     })
+}
+
+fn parse_swimlane_shape_attributes(
+    suffix: &str,
+    default_label: &str,
+    line: usize,
+) -> Result<(String, DiagramShape), ParseError> {
+    let body = suffix.strip_prefix("@{").and_then(|value| value.strip_suffix('}'))
+        .ok_or_else(|| swimlane_error(line, "unterminated Swimlane shape attributes"))?;
+    let mut label = None;
+    let mut shape = None;
+    for field in split_mermaid_metadata_fields(body) {
+        let (key, value) = field.split_once(':')
+            .ok_or_else(|| swimlane_error(line, "Swimlane shape attributes require key: value"))?;
+        let key = parse_mermaid_metadata_scalar(key.trim());
+        let value = parse_mermaid_metadata_scalar(value.trim());
+        match key.as_str() {
+            "label" => label = Some(value),
+            "shape" => {
+                shape = Some(match value.to_ascii_lowercase().as_str() {
+                    "cloud" => DiagramShape::Cloud,
+                    "bang" => DiagramShape::Bang,
+                    other => return Err(swimlane_error(line, format!("unsupported Swimlane attribute shape {other:?}"))),
+                });
+            }
+            other => return Err(swimlane_error(line, format!("unsupported Swimlane shape attribute {other:?}"))),
+        }
+    }
+    let shape = shape.ok_or_else(|| swimlane_error(line, "Swimlane shape attributes require shape"))?;
+    Ok((label.unwrap_or_else(|| default_label.to_string()), shape))
 }
 
 fn split_swimlane_class_decorators(value: &str) -> (&str, Vec<String>) {
