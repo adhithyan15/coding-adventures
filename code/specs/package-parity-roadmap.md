@@ -16887,6 +16887,47 @@ paint authority outside this PR. Native suites must load all four Point2D
 normalization cases from the mixed geometry2d-v1 corpus and meet G2D00's
 95% line-coverage requirement.
 
+## Post-#17089 inventory and G2D02 contract discovery
+
+PR #17089 passed all 32 terminal checks (eight successful, 24 skipped) and
+merged through guarded auto-merge as `9ced08c27037fd4d294ce62a27a08e2a5fc3e0bf`.
+The collision-checked schema-3 inventory on that exact fetched main has 15
+established lanes, 1,497 implementation identities, 4,770 occupied slots,
+1,539 all-reported identities, zero canonical collisions, and zero unknown
+buckets. The only slot change is Java/Kotlin/Dart Point2D, which now occupies
+all 15 established lanes. OCaml still has five emerging roots and is not in
+the all-language denominator. No newly unowned package identity appeared.
+
+A read-only G2D02 audit found an unowned contract defect before the next
+geometry ports: the current midpoint-only cubic flatness test can flatten a
+curved symmetric S into its chord, an infinite-line control-point distance
+misses collinear overshoot, and nonpositive or nonfinite tolerance can make
+existing recursive implementations fail to terminate. The explicit
+`geometry-bezier2d-flattening-termination-contract` owner now precedes the
+existing G2D01/G2D02 neutral-fixture extension; a distinct dependent owner
+tracks conformance of the twelve established Bezier2D implementations. This
+keeps a neutral specification/fixture repair separate from multi-lane source
+changes. New Java/Kotlin/Dart Bezier2D ports remain downstream of the neutral
+extension. No open PR overlaps the G2D02 spec/fixture paths.
+
+The next dependency/leverage pass compares that safety prerequisite with
+Ruby build-tool graph/diff adoption: Ruby is ready and has five unfinished
+descendants, but the G2D02 contract must be corrected before new geometry
+fixtures and ports can safely replicate it. Go snapshot hardening and
+external-attester owners remain explicitly selection-blocked despite larger
+raw descendant counts. The build-tool corpus still validates 179 process-free
+cases across 13 domains, but no adapter is ready and no execution case has
+run; selector gates must not be mistaken for full native conformance.
+
+The pass selected exactly `geometry-bezier2d-flattening-termination-contract`
+on a fresh clean branch. Its scope is the G2D02 behavioral correction and a
+small independent, versioned, language-neutral adversarial fixture suite:
+S-curves, collinear overshoot, coincident endpoints, invalid tolerances, and
+bounded subdivision. Do not modify the twelve existing native Bezier2D
+implementations in this neutral contract PR; their separately owned repairs
+must consume the frozen cases afterward. Do not open another implementation
+PR while this one is active.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

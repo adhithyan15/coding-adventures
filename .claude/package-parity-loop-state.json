@@ -12,27 +12,26 @@
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
   "active_pr": {
-    "number": 17089,
-    "url": "https://github.com/adhithyan15/coding-adventures/pull/17089",
-    "branch": "codex/parity-point2d-jkd-20261008",
-    "implementation_revision": "8e48161ad1b69bab1a6ea1d7de9ef5131a59ee95",
-    "status": "checks-pending"
+    "number": 17097,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/17097",
+    "item_id": "geometry-bezier2d-flattening-termination-contract",
+    "branch": "codex/parity-bezier-flattening-contract-20261008"
   },
   "last_ci_action": {
-    "observed_at": "2026-10-08T10:16:21Z",
-    "pr_number": 17089,
+    "observed_at": "2026-10-08T10:54:48Z",
+    "pr_number": 17097,
     "status": "checks-pending",
-    "notes": "Ready-for-review PR #17089 opened from the tested, clean parity worktree at 8e48161ad1b69bab1a6ea1d7de9ef5131a59ee95. Java and Kotlin Gradle tests/check/JaCoCo gates, Dart format/analyzer/coverage, upstream trig tests, neutral geometry validation, 5,308-package Go build plan, Go vet, parity collision scan, diff check, and read-only security review passed. Initial GitHub checks are queued and mergeability is MERGEABLE; auto-merge remains disabled until every required check is terminal acceptable and conflict-free. No other parity PR is open."
+    "notes": "Ready-for-review neutral G2D02 contract PR is open and mergeable. Live detect and human-language checks were queued and CodeQL language detection was in progress at first inspection. Wait for all required checks before enabling auto-merge; no second parity implementation PR may open."
   },
   "last_inventory": {
-    "revision": "6477579f1dc2da4a4122f6bdf70e6b0025ce3a3d",
+    "revision": "9ced08c27037fd4d294ce62a27a08e2a5fc3e0bf",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1497,
-    "implementation_package_slots": 4767,
+    "implementation_package_slots": 4770,
     "all_reported_identities": 1539,
     "high_consensus_packages": 178,
-    "high_consensus_missing_slots": 262,
+    "high_consensus_missing_slots": 259,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 181,
@@ -12149,7 +12148,7 @@
     {
       "id": "geometry-point2d-java-kotlin-dart-lane-parity",
       "title": "Implement point2d parity in Java, Kotlin, and Dart",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"],
       "branch": "codex/parity-point2d-jkd-20261008",
       "pr_number": 17089,
@@ -13600,8 +13599,16 @@
       "notes": "Thirteen absent HIR slots; split by lane after schema contract."
     },
     {
-      "id": "geometry-affine2d-bezier2d-neutral-fixture-extension", "title": "Add dynamic G2D01/G2D02 neutral fixtures", "status": "pending", "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"], "branch": null, "pr_number": null,
-      "notes": "Existing Java/Kotlin/Dart geometry owner cites dynamic affine/Bezier cases not yet present; add them before claiming fixture-consumed parity."
+      "id": "geometry-bezier2d-flattening-termination-contract", "title": "Freeze conservative and terminating G2D02 flattening contract", "status": "pr-open", "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair"], "branch": "codex/parity-bezier-flattening-contract-20261008", "pr_number": 17097,
+      "notes": "PR #17097 opened ready for review after exact-main rebase and local validation. Corrects midpoint-only and infinite-line flatness, nonfinite/nonpositive tolerance, and bounded depth/work failure; adds nine adversarial process-free cases including a mathematically proved budget-error case, closed schema, independent oracle, negative tests, and README. New validator has 100% statement/branch coverage. Existing native implementation repairs remain in a separate dependent owner; no second parity PR is active."
+    },
+    {
+      "id": "geometry-bezier2d-existing-lane-flattening-conformance", "title": "Bring twelve established Bezier2D lanes to the corrected flattening contract", "status": "pending", "depends_on": ["geometry-bezier2d-flattening-termination-contract"], "branch": null, "pr_number": null,
+      "notes": "Audit and split the twelve existing C#/Elixir/F#/Go/Haskell/Lua/Perl/Python/Ruby/Rust/Swift/TypeScript implementations into reviewable lane repairs. Consume the adversarial neutral cases, reject invalid tolerance, bound subdivision, and preserve conservative finite-chord error. Do not claim this umbrella merged until every lane has tested coverage or a reviewed exception."
+    },
+    {
+      "id": "geometry-affine2d-bezier2d-neutral-fixture-extension", "title": "Add dynamic G2D01/G2D02 neutral fixtures", "status": "pending", "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-bezier2d-flattening-termination-contract"], "branch": null, "pr_number": null,
+      "notes": "Extend the corrected G2D01/G2D02 neutral contract with affine composition/inversion and Bezier evaluation, derivative, split, and bounds cases before Java/Kotlin/Dart fixture-consumed parity. Keep existing-lane flattening repairs separately owned."
     },
     {
       "id": "geometry-arc2d-existing-endpoint-api-neutral-fixture-consumption", "title": "Make six existing Arc2D endpoint lanes consume neutral cases", "status": "pending", "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-arc2d-existing-api-degenerate-reconciliation"], "branch": null, "pr_number": null,
