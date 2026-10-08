@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Require a distinct, own-archive-backed partial Perl 5.004_61 token/grammar
+  pair with the established 250-digit decimal and unsupported-input probes.
+
 - Require a distinct, own-archive-backed partial Perl 5.004_60 token/grammar
   pair with the established 250-digit decimal and unsupported-input probes.
 
