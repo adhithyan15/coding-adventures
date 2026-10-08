@@ -249,14 +249,22 @@ calls require a literal `puts` callee with the expected token and grammar
 types. The next fresh selection rotates to LANG82's prepared, separate,
 explicitly partial Perl 5.004_55 source-backed token/grammar pair.
 
+PR #17035 delivered that distinct, explicitly partial, own-archive-backed
+Perl 5.004_55 token/grammar pair and merged as
+`7adb054c712e16d8318602e28b470a6cf6670520` after exact-head CI,
+CodeQL, and books checks passed. The 776-row inventory now has 100 partial
+pairs and 676 pending; neither full historical syntax nor exhaustive public
+release coverage is claimed. The next fresh selection rotates to the prepared
+generic PREP01 macro undefinition stage and its bounded C `#undef` spelling.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG82 Perl release grammars (selected):** add the distinct, explicitly
-   partial 5.004_55 token/grammar pair backed by its own historical archive.
-   Keep carriage returns outside the bounded accepted subset and avoid a
-   platform-wide historical rejection claim.
+1. **PREP01 generic macro undefinition (selected):** add dialect-owned
+   `#undef` classification and generic removal of the current macro by raw
+   name. Keep skipped conditional groups inert and malformed C operands
+   explicitly rejected with the rooted directive location.
 2. **LANG82 continued:** continue distinct source-backed partial
    pairs. Keep 5.004_01-t1 pending until its own source is found; do not imply
    complete syntax or an exhaustive release inventory.
