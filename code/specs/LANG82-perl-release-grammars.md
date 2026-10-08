@@ -530,3 +530,19 @@ reject 251 digits, leading-zero forms, adjacent decrement, carriage returns,
 and other unsupported input in the partial grammar. Leave later releases
 pending and make no full-syntax, exhaustive-inventory, or platform-wide
 rejection claim.
+
+Add a separate, explicitly partial `5.004_67` token/grammar pair from its own
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_67.tar.gz`
+source archive, SHA-256
+`fe6700c401129032c2cc20757d87fe0e7b32fa9f3bedc0f134d447748bab5928`.
+Relative to `5.004_66`, `keywords.h` is byte-identical. `perly.y` changes
+only the semantic action for the `star '{' expr ';' '}'` production, outside
+the bounded arithmetic-print subset. `toke.c` changes only the `FILTER_READ`
+object-context call before the decimal scanner; the complete `scan_num`
+definition and file tail are byte-identical. Keep only the standalone
+plain-decimal arithmetic `print` subset and its source-backed 250-digit
+numeric limit. Keep a distinct file pair for this release. Accept 250 digits;
+reject 251 digits, leading-zero forms, adjacent decrement, carriage returns,
+and other unsupported input in the partial grammar. Leave later releases
+pending and make no full-syntax, exhaustive-inventory, or platform-wide
+rejection claim.
