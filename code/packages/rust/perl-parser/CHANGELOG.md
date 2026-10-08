@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Require the separate partial Perl 5.004_50 token/grammar pair and apply
+- Require separate partial Perl 5.004_50 and 5.004_51 token/grammar pairs and apply
   existing leading-zero, carriage-return, unsupported-character, and
   250-digit decimal probes to it.
 
