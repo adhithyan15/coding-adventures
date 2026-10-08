@@ -1,0 +1,11 @@
+{
+  "id": "RU-C01-checkpoint",
+  "pathSegment": "RU-PATH-005A",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "RU-EXT-001-CONSOLIDATION",
+      "order": 1
+    }
+  ]
+}

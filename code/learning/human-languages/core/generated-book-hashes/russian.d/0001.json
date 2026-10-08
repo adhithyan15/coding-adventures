@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 1,
-  "sourceHash": "fnv1a64:4134325f972b53c0",
+  "sourceHash": "fnv1a64:9341fd34eadefd14",
   "lessonIds": [
     "RU-C01-privet",
     "RU-C01-zdravstvuyte",
@@ -18,7 +18,8 @@
     "RU-W05-privet-observe",
     "RU-W05-privet-guided-copy",
     "RU-W05-privet-delayed-copy",
-    "RU-W05-privet-dictation"
+    "RU-W05-privet-dictation",
+    "RU-C01-checkpoint"
   ],
   "tex": "russian/book/chapters/ch01-greetings-and-courtesy.tex"
 }
