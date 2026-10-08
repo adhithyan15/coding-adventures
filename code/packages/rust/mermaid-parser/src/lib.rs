@@ -6418,7 +6418,8 @@ fn parse_swimlane_edge_chain(
         if inline_label.is_some() && pipe_label.is_some() {
             return Err(swimlane_error(line_number, "Swimlane edge has multiple labels"));
         }
-        let label = inline_label.take().or(pipe_label);
+        let label = inline_label.take().or(pipe_label)
+            .map(|label| normalize_swimlane_node_label(&label));
         let next = next_swimlane_operator(after_label);
         let node_text = next.as_ref().map_or(after_label, |operator| &after_label[..operator.at]);
         let nodes = parse_swimlane_node_group(

@@ -1583,6 +1583,20 @@ request --> done"#,
 }
 
 #[test]
+fn swimlane_quoted_edge_labels_normalize_into_semantic_ir() {
+    let diagram = parse_swimlane(
+        r#"swimlane-beta LR
+subgraph Intake
+  request[Request]
+  done[Done]
+end
+request -->|"Priority \"A\""| done"#,
+    ).expect("quoted Swimlane edge labels should parse");
+
+    assert_eq!(diagram.edges[0].label.as_deref(), Some("Priority \"A\""));
+}
+
+#[test]
 fn railroad_dispatches_all_notations_to_recursive_ir() {
     let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
     let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");

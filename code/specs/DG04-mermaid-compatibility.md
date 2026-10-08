@@ -996,7 +996,7 @@ five directions, top-level `subgraph` lanes, common process-node shapes
 asymmetric, parallelogram, and trapezoid nodes), quoted Unicode node labels,
 directed/undirected/dotted/thick chained links, multiline edge continuations,
 parallel branch and join
-endpoints, pipe-delimited and Flowchart-style link labels, titles, and
+endpoints, normalized quoted pipe-delimited and Flowchart-style link labels, titles, and
 accessibility metadata. It lowers through
 dedicated ownership IR and stable lane geometry before producing
 backend-neutral paint instructions. Horizontal nodes expand deterministically

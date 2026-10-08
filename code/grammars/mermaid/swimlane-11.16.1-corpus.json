@@ -45,6 +45,10 @@
     {
       "name": "long-process-labels",
       "source": "swimlane-beta LR\nsubgraph Customer\n  submit[Submit a detailed service request]\nend\nsubgraph Support\n  investigate[Investigate and document the reported issue]\nend\nsubmit --> investigate"
+    },
+    {
+      "name": "quoted-edge-labels",
+      "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Complete\n  done[Done]\nend\nrequest -->|\"Priority \\\"A\\\"\"| done"
     }
   ]
 }
