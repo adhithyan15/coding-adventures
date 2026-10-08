@@ -1992,8 +1992,11 @@ through S-I3 before two weeks are spent on Windows.
         **Residuals, recorded.**
         - The broker can still `stat` any path (Landlock mediates opening,
           not lookup), as an agent can.
-        - The vault's storage directory is checked only once it exists. A
-          daemon that creates it later creates it with the process umask.
+        - A secret directory that does not exist yet is skipped, and checked
+          at the first launch after it appears. The daemon also runs the
+          check at startup, so a layout that would refuse every launch
+          (a home directory of 0755 holding the KEK, a symlink on the path)
+          stops it there with one error.
         - Off Linux there is no broker launch at all yet (2b refuses
           `[hosts.broker]`).
      4. **P2.6d-4:** non-channel requests (completions and tools) are

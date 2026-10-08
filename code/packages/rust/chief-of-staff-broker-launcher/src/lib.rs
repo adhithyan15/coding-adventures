@@ -180,6 +180,23 @@ impl BrokerKeyFiles {
         self
     }
 
+    /// Check every directory in [`Self::secret_directories`] is owner-only,
+    /// as each launch does (P2.6d-3). One that does not exist yet holds no
+    /// secret yet, and is skipped; it is checked at the next launch after
+    /// it appears (review round 1, L2). A daemon calls this at startup too,
+    /// so a bad layout stops it there, not at every launch.
+    pub fn check_secret_directories(&self) -> Result<(), LaunchError> {
+        for directory in self.secret_directories() {
+            match std::fs::symlink_metadata(&directory) {
+                Err(error) if error.kind() == std::io::ErrorKind::NotFound => continue,
+                _ => {}
+            }
+            chief_of_staff_daemon_secret_file::check_owner_only_directory(&directory)
+                .map_err(|_| LaunchError::SecretDirectory)?;
+        }
+        Ok(())
+    }
+
     /// Every directory that must be owner-only before a broker launches:
     /// those given to [`Self::with_secret_directories`], and the directory
     /// of every configured key file, each once.
@@ -499,10 +516,7 @@ pub fn launch(
 
     // Before anything is opened: every directory holding secrets is
     // owner-only, as P2.6c's hard-link check assumes.
-    for directory in keys.secret_directories() {
-        chief_of_staff_daemon_secret_file::check_owner_only_directory(&directory)
-            .map_err(|_| LaunchError::SecretDirectory)?;
-    }
+    keys.check_secret_directories()?;
     let slotted = keys.slots_for(binding)?;
     // Prepared from the verified descriptor, which it re-verifies.
     let confinement =

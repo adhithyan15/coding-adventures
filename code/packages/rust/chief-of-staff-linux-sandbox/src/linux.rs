@@ -223,6 +223,14 @@ pub(crate) fn install(
             inherited.len()
         )));
     }
+    // The pinned binary must sit at 512 or above, clear of every target
+    // slot: `high_descriptor` leaves it low if it could not move it, and a
+    // key placed over it would then be what is exec'd (review round 1, L1).
+    if !inherited.is_empty() && prepared.binary.as_raw_fd() < 512 {
+        return Err(ConfinementError::Inherited(
+            "the executable's descriptor is not above the target slots".into(),
+        ));
+    }
     let sources = inherited
         .iter()
         .map(|fd| park(fd.as_raw_fd()))

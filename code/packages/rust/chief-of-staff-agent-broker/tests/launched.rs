@@ -307,6 +307,23 @@ fn the_launched_broker_is_confined() {
     };
     assert_eq!(field("NoNewPrivs:"), "1");
     assert_eq!(field("Seccomp:"), "2");
+    // Once ready, exactly its pipes and stderr (review round 1, L4): the
+    // real broker binary read its two keys from 3 and 4 and closed them, so
+    // not even its own key files remain open.
+    let mut descriptors: Vec<u32> = fs::read_dir(format!("/proc/{}/fd", child.id()))
+        .unwrap()
+        .map(|entry| {
+            entry
+                .unwrap()
+                .file_name()
+                .to_str()
+                .unwrap()
+                .parse()
+                .unwrap()
+        })
+        .collect();
+    descriptors.sort_unstable();
+    assert_eq!(descriptors, vec![0, 1, 2]);
     let mem = fs::metadata(format!("/proc/{}/mem", child.id())).unwrap();
     // Not dumpable: the kernel gives /proc/<pid>/mem to root, not to us
     // (when the tests themselves run as root, there is nothing to show).

@@ -15,7 +15,8 @@
     first, then `dup2`s them into place and execs. After the first `dup2`
     a failure exits 127. At most 64; more refuse with `Inherited` and
     poison the command.
-  - `ConfinementError::Inherited`.
+  - `ConfinementError::Inherited`, also returned when the executable's
+    descriptor could not be moved above the target slots (review round 1).
 - seccomp allows `prctl(PR_SET_DUMPABLE, 0)` and `PR_GET_DUMPABLE` for
   every confined process, so a broker can clear its dumpability after exec.
   Setting it to anything else is still a kill.

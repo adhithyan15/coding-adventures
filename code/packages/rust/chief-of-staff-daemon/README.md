@@ -225,6 +225,10 @@ symlinks on the way), or the launch is refused. That set is:
 - the vault's storage directory, once it exists;
 - the directory of the vault's KEK file.
 
+The daemon checks them at startup too (`BrokerSecretDirectory`), so give
+the KEK and the key files directories of their own rather than `$HOME`. A
+directory that does not exist yet is skipped until it does.
+
 In this step the daemon still provisions the same keys for its own channel
 path. Step 2c removes that path, and `channel_keys` will then require
 `[hosts.broker]`.

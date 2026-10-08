@@ -11,6 +11,8 @@
   with `BrokerKeyFiles::with_secret_directories`, must be owner-only.
   `BrokerKeyFiles::secret_directories` lists them.
 - `LaunchError::SecretDirectory` and `LaunchError::Confinement`.
+- Review round 1: `BrokerKeyFiles::check_secret_directories`, which skips
+  a directory that does not exist yet; the daemon calls it at startup too.
 - `BrokerRelay::stop` takes `&mut self` and waits, bounded, for the relay
   thread. If the thread is still running it keeps the handle, so the
   supervisor can ask again (P2.6d-2b).
