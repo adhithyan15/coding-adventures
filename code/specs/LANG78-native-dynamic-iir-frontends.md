@@ -82,6 +82,17 @@ log's newline; a compile error returns no output. Test source-to-AST-to-IIR
 execution and direct typed-AST lowering, with Node used only as an output
 oracle. The broader JavaScript coercion and string-display rules stay open.
 
+The next bounded stage accepts exactly two positional numeric expressions in
+`console.log` through the typed JavaScript AST. Lower both expressions in
+source order to the existing Rust VM builtin. Format each with the pilot's
+bounded JavaScript Number display rule, join them with one space, and append
+one newline. Keep zero- and one-argument behavior, the one-million-byte output
+cap, and prior completed console output when a later accepted call fails at
+runtime. A display failure in either argument must append none of that call's
+text. Reject three or more arguments and unsupported expressions during
+compilation, with no completed output. Verify actual AST-to-IIR-to-VM execution
+against a Node output oracle; do not use Node to run the compiled module.
+
 ## Slice B — Python
 
 Create `python-iir-compiler` against `python-parser`'s grammar tree. Its first
