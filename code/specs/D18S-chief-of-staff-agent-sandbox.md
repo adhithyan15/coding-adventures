@@ -1122,6 +1122,21 @@ through S-I3 before two weeks are spent on Windows.
    policy term and the `Unsupported` coverage variant; assert no `Advisory`
    rule survives lowering. Platform independent, and every later step is
    unsound without it.
+   **Status (P2.1):** done in `capability-os-sandbox`.
+   - `SandboxPlan.base` is a `BasePolicy` built from the OS alone. It lists
+     the primitives the deny-all base installs, and records
+     `principal_model` and `broker_topology`.
+   - `SandboxCoverage::Unsupported` exists.
+   - No lowering produces `Advisory` any more. Time, wildcard filesystem, and
+     OpenBSD network and process grants are brokered. Windows DLL loading is
+     `Unsupported`.
+   - `SandboxPlan::launch_preconditions` refuses a plan with an advisory or
+     unsupported rule, an empty or mismatched base, or a per-supervisor
+     broker. `run_with_kernel_sandbox` checks it before anything is
+     installed.
+   - **The base is modelled, not yet installed.** The one existing applier
+     (macOS Seatbelt) still writes an `(allow default)` profile. Steps 3, 4,
+     7 and 8 make each applier install its base.
 2. **Descriptor isolation and the channel contract** (S-I2, S-I3):
    `O_CLOEXEC` at every open site, `close_range` in the child, no-tty check.
 3. **OpenBSD `pledge`/`unveil`; FreeBSD Capsicum** (Tier B). Days, not weeks.
