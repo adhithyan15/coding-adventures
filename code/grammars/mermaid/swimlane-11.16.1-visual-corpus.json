@@ -13,6 +13,7 @@
     "quoted-unicode-node-labels",
     "long-process-labels",
     "quoted-edge-labels",
-    "flowchart-endpoint-markers"
+    "flowchart-endpoint-markers",
+    "quoted-unicode-lane-labels"
   ]
 }
