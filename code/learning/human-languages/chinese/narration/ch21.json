@@ -4,7 +4,7 @@
   "chapter": 21,
   "title": "Ten Words, Ninety-Nine Numbers",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:a770a5301c462609",
+  "sourceHash": "fnv1a64:c603408dcfe2aa50",
   "lessons": [
     {
       "id": "ZH-C21-shiyi",
@@ -448,7 +448,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ad265597d35a8f03",
+      "sourceHash": "fnv1a64:6b0355454ff4fc4f",
       "notice": null,
       "blocks": [
         {
@@ -463,8 +463,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "百 (bǎi)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 百]"
+            },
+            {
               "kind": "speech",
-              "text": "Write 百 (bǎi), then say twenty."
+              "text": "Then say twenty."
             }
           ]
         },
@@ -722,7 +731,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0aa793c803535195",
+      "sourceHash": "fnv1a64:5d9ea663138d75b7",
       "notice": null,
       "blocks": [
         {
@@ -764,8 +773,13 @@
               "text": "Read 8, 15, 30, 99 and 100 off a page and say each aloud."
             },
             {
-              "kind": "speech",
-              "text": "Write 十一 (shíyī), 二十 (èrshí) and 一百 (yìbǎi) in characters."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "十一 (shíyī), 二十 (èrshí) and 一百 (yìbǎi) in characters",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **十一**, **二十** and **一百** in characters]"
             },
             {
               "kind": "speech",
@@ -827,7 +841,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25ff4b93157e9e26",
+      "sourceHash": "fnv1a64:d8909d921ce4b6be",
       "notice": null,
       "blocks": [
         {
@@ -861,20 +875,40 @@
               "text": "Then put each back to work once."
             },
             {
-              "kind": "speech",
-              "text": "Write the five single digits and say the stroke count of each. Four, two, two, two, two — twelve strokes for five numbers."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the five single digits, and say the stroke count of each — four, two, two, two, two; twelve strokes for five numbers",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the five single digits, and say the stroke count of each — four, two, two, two, two; twelve strokes for five numbers]"
             },
             {
-              "kind": "speech",
-              "text": "Write 百 (bǎi) and mark the four strokes it shares with 四."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "百 (bǎi), and mark the four strokes it shares with 四",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **百**, and mark the four strokes it shares with **四**]"
             },
             {
-              "kind": "speech",
-              "text": "Write 早 and mark the 十 inside it."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "早, and mark the 十 inside it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **早**, and mark the **十** inside it]"
             },
             {
-              "kind": "speech",
-              "text": "Write 人 and 八 side by side and say what separates them."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "人 and 八 side by side, and say what separates them",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **人** and **八** side by side, and say what separates them]"
             },
             {
               "kind": "speech",

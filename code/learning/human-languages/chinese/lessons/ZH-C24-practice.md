@@ -71,7 +71,7 @@ And the same nine strokes give:
 
 **Read.** 我有一个名字 — 有人 — 三个学生
 
-**Write.** 有 — bar, long fall, 月. 个 — 人, then a line.
+[YOU WRITE: 有 — bar, long fall, 月; 个 — 人, then a line]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-YOU-01, ZH-LEX-YOU-01, ZH-GRAMMAR-YOU-EXISTENCE-01, ZH-SCRIPT-GE-01, ZH-LEX-GE-01, ZH-GRAMMAR-MEASURE-WORD-01, ZH-PERFORMANCE-HAVE-COUNT-01] -->

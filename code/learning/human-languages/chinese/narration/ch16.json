@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "Character or language?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0a6a528ca2f4efcb",
+  "sourceHash": "fnv1a64:388c5849d6436e4a",
   "lessons": [
     {
       "id": "ZH-C16-hear-zi",
@@ -538,7 +538,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bbcd60f5151a6fd8",
+      "sourceHash": "fnv1a64:0d2d5cec07496954",
       "notice": null,
       "blocks": [
         {
@@ -579,8 +579,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Copy 汉字 (hànzì) once. Leave a small, even gap; do not merge the two squares."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of 汉字 (hànzì) — leave a small, even gap; do not merge the two squares",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **汉字** — leave a small, even gap; do not merge the two squares]"
             }
           ]
         },
@@ -711,7 +716,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:19ff5cec4a66b517",
+      "sourceHash": "fnv1a64:5241ab2ee136f64f",
       "notice": null,
       "blocks": [
         {
@@ -727,7 +732,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say and write written character without a model."
+              "text": "Say written character."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same word, without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same word, without a model]"
             }
           ]
         },
@@ -738,7 +752,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear written character and Chinese character in mixed order. Say each answer, read its unpointed card, then write it without a model. Repair only the missed item."
+              "text": "Hear written character and Chinese character in mixed order. Say each answer and read its unpointed card."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "each one without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: each one without a model]"
+            },
+            {
+              "kind": "speech",
+              "text": "Repair only the missed item."
             }
           ]
         },
@@ -1061,7 +1088,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6b2156ed96c0a607",
+      "sourceHash": "fnv1a64:e7fbc643bb2963bf",
       "notice": null,
       "blocks": [
         {
@@ -1106,8 +1133,17 @@
           "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of 汉语 (hànyǔ) — keep two separate squares",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **汉语** — keep two separate squares]"
+            },
+            {
               "kind": "speech",
-              "text": "Copy 汉语 (hànyǔ) once. Keep two separate squares and read the whole word aloud."
+              "text": "Then read the whole word aloud."
             }
           ]
         },
@@ -1235,7 +1271,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:440cc877838dff2f",
+      "sourceHash": "fnv1a64:4f971fdad9cfd9b1",
       "notice": null,
       "blocks": [
         {
@@ -1261,8 +1297,13 @@
               "source": "[PAUSE 16s]"
             },
             {
-              "kind": "speech",
-              "text": "Write 汉 (hàn) and 语 (yǔ) without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "汉 (hàn) and 语 (yǔ) without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 汉 and 语 without a model]"
             }
           ]
         },
@@ -1285,7 +1326,16 @@
             },
             {
               "kind": "speech",
-              "text": "Writing: hear Chinese character and Chinese language, then write both without a model."
+              "text": "Writing: hear Chinese character and Chinese language."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both without a model]"
             },
             {
               "kind": "speech",

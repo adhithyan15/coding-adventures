@@ -35,8 +35,10 @@ reviews_of: [ZH-C19-hear-ma, ZH-W19-ma-delayed, ZH-C18-kanshu]
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-MA-01, ZH-LEX-KAN-01, ZH-LEX-KANSHU-01, ZH-LEX-HAOKAN-01, ZH-LEX-XIAOXUESHENG-01, ZH-SCRIPT-XIAO-01, ZH-PERFORMANCE-LOOKING-READING-FIVE-FOUR-SKILL-01] -->
 
 [PAUSE 10s] Say the neutral question syllable. Then say **look** and **read a
-book**. Say **good-looking** and **primary-school pupil**,
-write 小, and recall your four looking-and-reading scores.
+book**. Say **good-looking** and **primary-school pupil**.
+[YOU WRITE: 小]
+
+Recall your four looking-and-reading scores.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-MA-01, ZH-SCRIPT-MA-01] -->
@@ -70,8 +72,9 @@ taught yet, so neither is printed here.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-GRAMMAR-MA-QUESTION-01, ZH-SCRIPT-MA-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Hear *ma*. Wait three seconds, then write **吗** once without a model. Then take
-any sentence you own and put 吗 on the end of it.
+Hear *ma*. Wait three seconds. [YOU WRITE: **吗** once, without a model]
+
+Then take any sentence you own and put 吗 on the end of it.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-MA-01, ZH-SCRIPT-MA-01, ZH-GRAMMAR-MA-QUESTION-01] -->

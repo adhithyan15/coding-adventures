@@ -39,9 +39,10 @@ reviews_of: [ZH-C18-kan, ZH-C18-kanjian, ZH-C18-haokan]
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-KAN-01, ZH-SCRIPT-KAN-01, ZH-LEX-KANJIAN-01, ZH-ORTHO-KANJIAN-01, ZH-LEX-HAOKAN-01, ZH-ORTHO-HAOKAN-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Hear the three meanings in mixed order. Say each Mandarin answer, read its
-unpointed card, then write it. Check the neighbour of 看 before deciding the
-whole meaning.
+Hear the three meanings in mixed order. Say each Mandarin answer and read its
+unpointed card. [YOU WRITE: each one]
+
+Check the neighbour of 看 before deciding the whole meaning.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-KAN-01, ZH-LEX-KANJIAN-01, ZH-LEX-HAOKAN-01] -->

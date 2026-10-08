@@ -4,7 +4,7 @@
   "chapter": 20,
   "title": "Six to Ten, and the Character That Was Already Here",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f854cccc8a60bfad",
+  "sourceHash": "fnv1a64:6f07d6645e600c07",
   "lessons": [
     {
       "id": "ZH-W20-liu",
@@ -164,7 +164,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:54b2438c5bc54b02",
+      "sourceHash": "fnv1a64:7b4e7d086f52aa1c",
       "notice": null,
       "blocks": [
         {
@@ -179,8 +179,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "六 (liù)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 六]"
+            },
+            {
               "kind": "speech",
-              "text": "Write 六 (liù), then count aloud to five."
+              "text": "Then count aloud to five."
             }
           ]
         },
@@ -419,7 +428,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a60c1c4a3d58ae6",
+      "sourceHash": "fnv1a64:88aea644188b0b12",
       "notice": null,
       "blocks": [
         {
@@ -434,8 +443,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "七 (qī)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 七]"
+            },
+            {
               "kind": "speech",
-              "text": "Write 七 (qī), then say six."
+              "text": "Then say six."
             }
           ]
         },
@@ -663,7 +681,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:88c1fca8c62ffd58",
+      "sourceHash": "fnv1a64:84b4a3cdffc74eb6",
       "notice": null,
       "blocks": [
         {
@@ -678,8 +696,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "八 (bā)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 八]"
+            },
+            {
               "kind": "speech",
-              "text": "Write 八 (bā), then say seven."
+              "text": "Then say seven."
             }
           ]
         },
@@ -913,7 +940,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a61c6d8f811536d4",
+      "sourceHash": "fnv1a64:5f33f1610635b166",
       "notice": null,
       "blocks": [
         {
@@ -928,8 +955,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "九 (jiǔ)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 九]"
+            },
+            {
               "kind": "speech",
-              "text": "Write 九 (jiǔ), then say eight."
+              "text": "Then say eight."
             }
           ]
         },
@@ -1170,7 +1206,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:39614b1609833452",
+      "sourceHash": "fnv1a64:b34eb9862c5e539e",
       "notice": null,
       "blocks": [
         {
@@ -1185,8 +1221,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "十 (shí)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 十]"
+            },
+            {
               "kind": "speech",
-              "text": "Write 十 (shí), then say nine."
+              "text": "Then say nine."
             }
           ]
         },
@@ -1295,7 +1340,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c934e2f4d0c32a5",
+      "sourceHash": "fnv1a64:f5e263af86e3868f",
       "notice": null,
       "blocks": [
         {
@@ -1333,8 +1378,13 @@
               "text": "Read the ten characters printed shuffled — 九 (jiǔ) 三 十 (shí) 六 (liù) 一 八 (bā) 四 七 (qī) 二 五 — and say each with its tone."
             },
             {
-              "kind": "speech",
-              "text": "Write the five new ones from dictation: 六 (liù) 七 (qī) 八 (bā) 九 (jiǔ) 十 (shí)."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the five new ones from dictation — 六 (liù) 七 (qī) 八 (bā) 九 (jiǔ) 十 (shí)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the five new ones from dictation — 六 七 八 九 十]"
             },
             {
               "kind": "speech",

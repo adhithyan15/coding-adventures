@@ -47,7 +47,7 @@ Read the two characters first without pinyin: Han Chinese + written character.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-HANZI-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy **汉字** once. Leave a small, even gap; do not merge the two squares.
+[YOU WRITE: one copy of **汉字** — leave a small, even gap; do not merge the two squares]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-HANZI-01, ZH-ORTHO-HANZI-01] -->

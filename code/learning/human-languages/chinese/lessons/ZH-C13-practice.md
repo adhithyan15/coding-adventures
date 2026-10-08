@@ -33,7 +33,7 @@ reviews_of: [ZH-R13-school-six, ZH-C12-practice, ZH-C08-practice]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-DA-01, ZH-SCRIPT-XUE-01, ZH-SCRIPT-SHENG-01] -->
 
-[PAUSE 18s] Write 大, 学, and 生 without a model.
+[PAUSE 18s] [YOU WRITE: 大, 学, and 生 without a model]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[ZH-PERFORMANCE-SCHOOL-SIX-FOUR-SKILL-01]; assesses=[ZH-LEX-DA-01, ZH-LEX-DAJIA-01, ZH-LEX-XUE-01, ZH-LEX-XUESHENG-01, ZH-LEX-DAXUE-01, ZH-LEX-DAXUESHENG-01] -->
@@ -42,7 +42,7 @@ reviews_of: [ZH-R13-school-six, ZH-C12-practice, ZH-C08-practice]
 1. **Listening:** hear six words in mixed order and choose every meaning.
 2. **Speaking:** produce all six from meaning cards, with tones audible.
 3. **Reading:** read all six character cards without pinyin.
-4. **Writing:** hear all six and write them without a model.
+4. **Writing:** hear all six. [YOU WRITE: all six without a model]
 
 Pass each skill separately. Repair and retry only the failed skill. This is a
 school vocabulary checkpoint, not yet a full conversation about education.

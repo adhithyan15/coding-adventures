@@ -34,7 +34,7 @@ reviews_of: [ZH-C12-ren, ZH-W01-nu, ZH-C01-hao]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-REN-01, ZH-SCRIPT-NU-01, ZH-LEX-HAO] -->
 
-[PAUSE 12s] Say **person**, then write the three-stroke left half of 好.
+[PAUSE 12s] Say **person**. [YOU WRITE: the three-stroke left half of 好]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[ZH-LEX-NU-01]; assesses=[] -->
@@ -49,7 +49,7 @@ call out to a woman. Here you are learning the word for reading and building.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NU-01, ZH-SCRIPT-NU-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Read **女**, cover it, and write it from the meaning cue **female**.
+Read **女** and cover it. [YOU WRITE: the character, from the meaning cue **female**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NU-01] -->

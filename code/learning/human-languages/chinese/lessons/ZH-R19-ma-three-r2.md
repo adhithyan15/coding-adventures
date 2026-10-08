@@ -34,16 +34,15 @@ reviews_of: [ZH-C19-nihaoma, ZH-C19-shima, ZH-C19-haobuhao]
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NIHAOMA-01, ZH-LEX-SHIMA-01, ZH-LEX-HAOBUHAO-01, ZH-LEX-MA-01, ZH-LEX-KANSHU-01, ZH-ORTHO-ZHONGXUE-01] -->
 
 [PAUSE 12s] Say **how are you**, **is that so**, and **is it good**, in that
-order. Then say **read a book** and write **中学**.
+order. Then say **read a book**. [YOU WRITE: **中学**]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NIHAOMA-01, ZH-ORTHO-NIHAOMA-01, ZH-LEX-SHIMA-01, ZH-ORTHO-SHIMA-01, ZH-LEX-HAOBUHAO-01, ZH-GRAMMAR-V-NOT-V-01, ZH-GRAMMAR-MA-QUESTION-01, ZH-SCRIPT-MA-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Hear the three meanings in mixed order. Say each Mandarin answer, read its
-unpointed card, then write it. Before you write, decide which of the two
-question patterns it uses — the light syllable on the end, or the word denied in
-the middle.
+Hear the three meanings in mixed order. Say each Mandarin answer and read its
+unpointed card. Decide which of the two question patterns it uses — the light
+syllable on the end, or the word denied in the middle. [YOU WRITE: each one]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-NIHAOMA-01, ZH-LEX-SHIMA-01, ZH-LEX-HAOBUHAO-01, ZH-GRAMMAR-V-NOT-V-01] -->

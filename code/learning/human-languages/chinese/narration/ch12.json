@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "People under one roof",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:626eb96c5ac549d1",
+  "sourceHash": "fnv1a64:cf9b06109e0bba48",
   "lessons": [
     {
       "id": "ZH-C12-ren",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c73e635208809d0",
+      "sourceHash": "fnv1a64:0a60326d52da1056",
       "notice": null,
       "blocks": [
         {
@@ -34,8 +34,17 @@
               "source": "[PAUSE 12s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the two-stroke figure",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the two-stroke figure]"
+            },
+            {
               "kind": "speech",
-              "text": "Write the two-stroke figure, then say wǒ — I."
+              "text": "Then say wǒ — I."
             }
           ]
         },
@@ -61,7 +70,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Say person in Mandarin. Read 人 (rén). Cover it, wait five seconds, and write it."
+              "text": "Say person in Mandarin. Read 人 (rén). Cover it and wait five seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the character",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the character]"
             }
           ]
         },
@@ -109,7 +127,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e182f3f8949015e6",
+      "sourceHash": "fnv1a64:86ef51fa4672634e",
       "notice": null,
       "blocks": [
         {
@@ -125,7 +143,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say person, then write the three-stroke left half of 好."
+              "text": "Say person."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the three-stroke left half of 好",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the three-stroke left half of 好]"
             }
           ]
         },
@@ -151,7 +178,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read 女 (nǚ), cover it, and write it from the meaning cue female."
+              "text": "Read 女 (nǚ) and cover it."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the character, from the meaning cue female",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the character, from the meaning cue **female**]"
             }
           ]
         },
@@ -379,7 +415,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bebc6c05960290b8",
+      "sourceHash": "fnv1a64:fee99d5f42737412",
       "notice": null,
       "blocks": [
         {
@@ -395,7 +431,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say son, then write 儿 (ér) and 子 separately."
+              "text": "Say son."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "儿 (ér) and 子 separately",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 儿 and 子 separately]"
             }
           ]
         },
@@ -420,8 +465,17 @@
           "title": "Guided Practice",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of 儿子 (érzi), while saying ér-zi",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **儿子**, while saying *ér-zi*]"
+            },
+            {
               "kind": "speech",
-              "text": "Copy 儿子 (érzi) once while saying ér-zi. Then read it once without pinyin."
+              "text": "Then read it once without pinyin."
             }
           ]
         },
@@ -833,7 +887,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7384800d4b0bb0ae",
+      "sourceHash": "fnv1a64:5f22f174f1590fc2",
       "notice": null,
       "blocks": [
         {
@@ -849,7 +903,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say home or family, then write 宀."
+              "text": "Say home or family."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "宀",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 宀]"
             }
           ]
         },
@@ -874,8 +937,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Copy 家 (jiā) once from the model. Name the roof before you write the lower body."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of 家 (jiā), from the model — name the roof before you write the lower body",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **家**, from the model — name the roof before you write the lower body]"
             }
           ]
         },
@@ -1101,7 +1169,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:925e809e18f50e45",
+      "sourceHash": "fnv1a64:38dadf0fb5e2948b",
       "notice": null,
       "blocks": [
         {
@@ -1117,7 +1185,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say name, then write 儿 (ér) and 家 (jiā)."
+              "text": "Say name."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "儿 (ér) and 家 (jiā)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 儿 and 家]"
             }
           ]
         },
@@ -1128,7 +1205,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the six words in a shuffled order and point to meanings. Then take six meaning cards, say each word, read the six character cards, and write only the two you missed. Repair one item at a time."
+              "text": "Hear the six words in a shuffled order and point to meanings. Then take six meaning cards, say each word, and read the six character cards."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "only the two you missed",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: only the two you missed]"
+            },
+            {
+              "kind": "speech",
+              "text": "Repair one item at a time."
             }
           ]
         },
@@ -1179,7 +1269,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fc8792abb0c5783c",
+      "sourceHash": "fnv1a64:64514e9442abadcc",
       "notice": null,
       "blocks": [
         {
@@ -1195,7 +1285,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say name, then write 儿 (ér) and 家 (jiā) without a model."
+              "text": "Say name."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "儿 (ér) and 家 (jiā) without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 儿 and 家 without a model]"
             }
           ]
         },
@@ -1218,7 +1317,16 @@
             },
             {
               "kind": "speech",
-              "text": "Writing: hear all six and write them without a model."
+              "text": "Writing: hear all six."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all six without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all six without a model]"
             },
             {
               "kind": "speech",

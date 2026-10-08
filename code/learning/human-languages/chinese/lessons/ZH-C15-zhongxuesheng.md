@@ -47,8 +47,7 @@ Read all three characters once without pinyin.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-ZHONGXUESHENG-01, ZH-LEX-ZHONGXUESHENG-01, ZH-SCRIPT-ZHONG-01, ZH-SCRIPT-XUE-01, ZH-SCRIPT-SHENG-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Hear *zhōngxuésheng*, then write **中学生** without looking. Check one
-character at a time.
+Hear *zhōngxuésheng*. [YOU WRITE: **中学生** without looking — check one character at a time]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZHONGXUESHENG-01] -->

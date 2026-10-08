@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 23,
-  "sourceHash": "fnv1a64:bd9a7d8cdeb091f6",
+  "sourceHash": "fnv1a64:81d7d939d9d53ab9",
   "lessonIds": [
     "ZH-W23-de",
     "ZH-C23-de",
@@ -13,7 +13,7 @@
   "drivablePrefix": 0,
   "text": "chinese/narration/ch23.txt",
   "json": "chinese/narration/ch23.json",
-  "textHash": "fnv1a64:bff3ebc5af6cfabc",
-  "jsonHash": "fnv1a64:6733469512c35f2a",
+  "textHash": "fnv1a64:df430550a10415ae",
+  "jsonHash": "fnv1a64:ff746af81555a2b4",
   "findings": []
 }

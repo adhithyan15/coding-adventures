@@ -47,7 +47,7 @@ Read it without pinyin, then give the syllable a clear rise.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XUE-01, ZH-SCRIPT-XUE-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy **学** once. Pause mentally after the top, after the cover, and after 子.
+[YOU WRITE: one copy of **学** — pause mentally after the top, after the cover, and after 子]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XUE-01] -->

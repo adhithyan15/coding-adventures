@@ -47,7 +47,7 @@ Read the pair without pinyin. Both syllables rise.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-TONGXUE-01, ZH-LEX-TONGXUE-01, ZH-SCRIPT-TONG-01, ZH-SCRIPT-XUE-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy **同学** once. Keep the inner 口 inside 同's open-bottom outer frame.
+[YOU WRITE: one copy of **同学** — keep the inner 口 inside 同's open-bottom outer frame]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-TONGXUE-01] -->

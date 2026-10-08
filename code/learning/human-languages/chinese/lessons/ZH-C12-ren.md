@@ -34,7 +34,9 @@ reviews_of: [ZH-W01-ren, ZH-C08-wo, ZH-C11-practice]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-REN-01, ZH-LEX-WO] -->
 
-[PAUSE 12s] Write the two-stroke figure, then say **wǒ** — I.
+[PAUSE 12s] [YOU WRITE: the two-stroke figure]
+
+Then say **wǒ** — I.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[ZH-LEX-REN-01]; assesses=[] -->
@@ -49,7 +51,7 @@ word; the character itself does not grow a plural ending.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-REN-01, ZH-SCRIPT-REN-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Say **person** in Mandarin. Read **人**. Cover it, wait five seconds, and write it.
+Say **person** in Mandarin. Read **人**. Cover it and wait five seconds. [YOU WRITE: the character]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-REN-01] -->

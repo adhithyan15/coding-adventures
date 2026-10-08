@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "A wider school map",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:662b96560faad4c6",
+  "sourceHash": "fnv1a64:376718d85ead8ea2",
   "lessons": [
     {
       "id": "ZH-C15-hear-zhong",
@@ -199,7 +199,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fc22fd13d2fe916d",
+      "sourceHash": "fnv1a64:405898c291b5941b",
       "notice": null,
       "blocks": [
         {
@@ -240,8 +240,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Copy 中 (zhōng) once. Check that the box closes before the centre line."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of 中 (zhōng) — check that the box closes before the centre line",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **中** — check that the box closes before the centre line]"
             }
           ]
         },
@@ -465,7 +470,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e9514c067201edca",
+      "sourceHash": "fnv1a64:f42db7a24857afaa",
       "notice": null,
       "blocks": [
         {
@@ -492,7 +497,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear middle and middle school in mixed order. Say each, read its card, then write it once. Repair only the missed item."
+              "text": "Hear middle and middle school in mixed order. Say each and read its card."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "each one, once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: each one, once]"
+            },
+            {
+              "kind": "speech",
+              "text": "Repair only the missed item."
             }
           ]
         },
@@ -622,7 +640,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd132f3c8a67f002",
+      "sourceHash": "fnv1a64:206dcf97958fe7d0",
       "notice": null,
       "blocks": [
         {
@@ -664,7 +682,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear zhōngxuésheng, then write 中学生 without looking. Check one character at a time."
+              "text": "Hear zhōngxuésheng."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "中学生 (zhōngxuésheng) without looking — check one character at a time",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **中学生** without looking — check one character at a time]"
             }
           ]
         },
@@ -892,7 +919,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:344f37b317a5e191",
+      "sourceHash": "fnv1a64:7f8a16d26c47abe3",
       "notice": null,
       "blocks": [
         {
@@ -933,8 +960,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Copy 同学 (tóngxué) once. Keep the inner 口 inside 同's open-bottom outer frame."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of 同学 (tóngxué) — keep the inner 口 inside 同's open-bottom outer frame",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **同学** — keep the inner 口 inside 同's open-bottom outer frame]"
             }
           ]
         },
@@ -982,7 +1014,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5672e6977fe93728",
+      "sourceHash": "fnv1a64:419b9b606ea8689a",
       "notice": null,
       "blocks": [
         {
@@ -997,8 +1029,13 @@
               "source": "[PAUSE 12s]"
             },
             {
-              "kind": "speech",
-              "text": "Write 中 (zhōng) and 同 (tóng) from memory."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "中 (zhōng) and 同 (tóng) from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 中 and 同 from memory]"
             }
           ]
         },
@@ -1009,7 +1046,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear middle school, middle-school student, and classmate in mixed order. Say, read, and write each. Repair one word at a time."
+              "text": "Hear middle school, middle-school student, and classmate in mixed order. Say and read each."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: each one]"
+            },
+            {
+              "kind": "speech",
+              "text": "Repair one word at a time."
             }
           ]
         },
@@ -1238,7 +1288,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8bfc6d13c136f92",
+      "sourceHash": "fnv1a64:4934ed698503554c",
       "notice": null,
       "blocks": [
         {
@@ -1253,8 +1303,17 @@
               "source": "[PAUSE 12s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "中 (zhōng) and 同 (tóng)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 中 and 同]"
+            },
+            {
               "kind": "speech",
-              "text": "Write 中 (zhōng) and 同 (tóng), then read 学."
+              "text": "Then read 学."
             }
           ]
         },
@@ -1265,7 +1324,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Shuffle four meaning cards: middle school, middle-school student, classmate, go to school. Say, read, and write each. Sort them as place, person, relationship, or action."
+              "text": "Shuffle four meaning cards: middle school, middle-school student, classmate, go to school. Say and read each."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: each one]"
+            },
+            {
+              "kind": "speech",
+              "text": "Sort them as place, person, relationship, or action."
             }
           ]
         },
@@ -1317,7 +1389,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a7f0db304babaa68",
+      "sourceHash": "fnv1a64:a0e7acf1e794da04",
       "notice": null,
       "blocks": [
         {
@@ -1332,8 +1404,13 @@
               "source": "[PAUSE 14s]"
             },
             {
-              "kind": "speech",
-              "text": "Write 小, 中 (zhōng), and 大 from memory."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "小, 中 (zhōng), and 大 from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 小, 中, and 大 from memory]"
             }
           ]
         },
@@ -1395,7 +1472,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a932033cba82478c",
+      "sourceHash": "fnv1a64:f2acb90c23645d40",
       "notice": null,
       "blocks": [
         {
@@ -1410,8 +1487,13 @@
               "source": "[PAUSE 18s]"
             },
             {
-              "kind": "speech",
-              "text": "Write 中 (zhōng), 同 (tóng), 上, 学, and 生 without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "中 (zhōng), 同 (tóng), 上, 学, and 生 without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 中, 同, 上, 学, and 生 without a model]"
             }
           ]
         },
@@ -1434,7 +1516,16 @@
             },
             {
               "kind": "speech",
-              "text": "Writing: hear all four and write them without a model."
+              "text": "Writing: hear all four."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all four without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all four without a model]"
             },
             {
               "kind": "speech",

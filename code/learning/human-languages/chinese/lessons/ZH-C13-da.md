@@ -48,7 +48,7 @@ fall.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-DA-01, ZH-SCRIPT-DA-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy **大** once from the model. Keep the crossing near the centre.
+[YOU WRITE: one copy of **大**, from the model — keep the crossing near the centre]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-DA-01] -->

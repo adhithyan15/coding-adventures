@@ -70,7 +70,7 @@ slots, and not one of them changes shape.
 
 **Read.** 你是学生吗 — 对 — 你呢
 
-**Write.** 呢 — 口 first. 对 — 又 first, dot last.
+[YOU WRITE: 呢 — 口 first; 对 — 又 first, dot last]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-NE-01, ZH-LEX-NE-01, ZH-GRAMMAR-NE-FOLLOWUP-01, ZH-SCRIPT-DUI-01, ZH-LEX-DUI-01, ZH-PRAGMATIC-DUI-BACKCHANNEL-01, ZH-PERFORMANCE-NE-DUI-01] -->

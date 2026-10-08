@@ -64,7 +64,7 @@ for 看 and 书, and neither of them changed what could be *said about time*.
 
 **Read.** 我看了书 — 有人了 — 你看了吗
 
-**Write.** 了 — the turn, then the hook.
+[YOU WRITE: 了 — the turn, then the hook]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-LE-01, ZH-LEX-LE-01, ZH-GRAMMAR-LE-COMPLETION-01, ZH-GRAMMAR-LE-CHANGED-STATE-01, ZH-GRAMMAR-ASPECT-01, ZH-PERFORMANCE-LE-FOUR-SKILL-01] -->

@@ -34,7 +34,9 @@ reviews_of: [ZH-C18-hear-kanjian, ZH-C18-kan, ZH-W06-jian]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-KANJIAN-01, ZH-SCRIPT-KAN-01, ZH-SCRIPT-JIAN] -->
 
-[PAUSE 12s] Say **see** as *kànjiàn*. Write 看, then point to 见 in 再见.
+[PAUSE 12s] Say **see** as *kànjiàn*. [YOU WRITE: 看]
+
+Then point to 见 in 再见.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ZH-ORTHO-KANJIAN-01]; assesses=[ZH-SCRIPT-KAN-01, ZH-SCRIPT-JIAN] -->
@@ -48,8 +50,7 @@ perceived result.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-KANJIAN-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy **看见** once. Leave a clear boundary between the nine-stroke 看 and the
-four-stroke 见.
+[YOU WRITE: one copy of **看见** — leave a clear boundary between the nine-stroke 看 and the four-stroke 见]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-KANJIAN-01, ZH-ORTHO-KANJIAN-01] -->

@@ -70,7 +70,7 @@ is a join between two things the book had already given you and never let meet.
 
 **Read.** 我是中国人 — 你是中国人吗
 
-**Write.** 中国人 — every stroke of it is one you have written before.
+[YOU WRITE: 中国人 — every stroke of it is one you have written before]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-GRAMMAR-VERB-INVARIANT-01, ZH-GRAMMAR-NO-AGREEMENT-01, ZH-GRAMMAR-NO-COMPLEMENT-AGREEMENT-01, ZH-GRAMMAR-NO-ARTICLE-01, ZH-LEX-ZHONGGUOREN-01, ZH-GRAMMAR-COUNTRY-PLUS-REN-01, ZH-PERFORMANCE-NO-ENDINGS-01] -->

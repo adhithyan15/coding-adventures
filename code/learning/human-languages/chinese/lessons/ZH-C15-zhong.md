@@ -47,7 +47,7 @@ Read the character without pinyin, then hold its first tone level.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZHONG-01, ZH-SCRIPT-ZHONG-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy **中** once. Check that the box closes before the centre line.
+[YOU WRITE: one copy of **中** — check that the box closes before the centre line]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZHONG-01] -->

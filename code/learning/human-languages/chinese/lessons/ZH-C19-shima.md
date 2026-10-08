@@ -34,8 +34,7 @@ reviews_of: [ZH-C19-hear-shima, ZH-C19-nihaoma]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-SHIMA-01, ZH-SCRIPT-SHI, ZH-LEX-SHI, ZH-SCRIPT-SHU-01, ZH-LEX-ZHONG-01, ZH-SCRIPT-ZHONG-01] -->
 
-[PAUSE 12s] Say **is that so**. Then write 是, finishing 日 before the lower
-body. Write 书 and 中 as well.
+[PAUSE 12s] Say **is that so**. [YOU WRITE: 是, finishing 日 before the lower body, then 书 and 中 as well]
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ZH-ORTHO-SHIMA-01]; assesses=[ZH-SCRIPT-SHI, ZH-SCRIPT-MA-01, ZH-GRAMMAR-MA-QUESTION-01] -->
@@ -54,8 +53,7 @@ one-word sentence.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-SHIMA-01, ZH-SCRIPT-MA-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy **是吗** once. Leave a clear boundary between the two characters, and keep
-是 the wider of the pair.
+[YOU WRITE: one copy of **是吗** — leave a clear boundary between the two characters, and keep 是 the wider of the pair]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-SHIMA-01, ZH-ORTHO-SHIMA-01, ZH-GRAMMAR-MA-QUESTION-01] -->

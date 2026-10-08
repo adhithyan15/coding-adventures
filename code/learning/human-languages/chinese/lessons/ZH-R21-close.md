@@ -46,11 +46,10 @@ The six new characters, alone, from spoken cues and with no number around them:
 
 Then put each back to work once.
 
-1. Write the five single digits and say the stroke count of each. Four, two,
-   two, two, two — twelve strokes for five numbers.
-2. Write **百** and mark the four strokes it shares with **四**.
-3. Write **早** and mark the **十** inside it.
-4. Write **人** and **八** side by side and say what separates them.
+1. [YOU WRITE: the five single digits, and say the stroke count of each — four, two, two, two, two; twelve strokes for five numbers]
+2. [YOU WRITE: **百**, and mark the four strokes it shares with **四**]
+3. [YOU WRITE: **早**, and mark the **十** inside it]
+4. [YOU WRITE: **人** and **八** side by side, and say what separates them]
 5. Build six numbers between eleven and ninety-nine from the ten words.
 6. Read a price in digits and say it aloud in words.
 

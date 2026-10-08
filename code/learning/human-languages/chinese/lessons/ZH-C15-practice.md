@@ -33,7 +33,7 @@ reviews_of: [ZH-R15-school-map-1, ZH-R15-school-map-2, ZH-R15-school-map-3, ZH-R
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-ZHONG-01, ZH-SCRIPT-TONG-01, ZH-SCRIPT-SHANG, ZH-SCRIPT-XUE-01, ZH-SCRIPT-SHENG-01] -->
 
-[PAUSE 18s] Write 中, 同, 上, 学, and 生 without a model.
+[PAUSE 18s] [YOU WRITE: 中, 同, 上, 学, and 生 without a model]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[ZH-PERFORMANCE-SCHOOL-COMPOUNDS-FOUR-SKILL-01]; assesses=[ZH-ORTHO-ZHONGXUE-01, ZH-ORTHO-ZHONGXUESHENG-01, ZH-ORTHO-TONGXUE-01, ZH-ORTHO-SHANGXUE-01, ZH-LEX-ZHONGXUE-01, ZH-LEX-ZHONGXUESHENG-01, ZH-LEX-TONGXUE-01, ZH-LEX-SHANGXUE-01] -->
@@ -42,7 +42,7 @@ reviews_of: [ZH-R15-school-map-1, ZH-R15-school-map-2, ZH-R15-school-map-3, ZH-R
 1. **Listening:** hear the four words in mixed order and choose each meaning.
 2. **Speaking:** produce all four from meaning cards, with tones audible.
 3. **Reading:** read all four character cards without pinyin.
-4. **Writing:** hear all four and write them without a model.
+4. **Writing:** hear all four. [YOU WRITE: all four without a model]
 
 Pass each skill separately. Repair and retry only the failed skill.
 
