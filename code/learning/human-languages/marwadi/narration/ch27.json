@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "How Much Is This? No New Signs",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b5271bd41ef27dee",
+  "sourceHash": "fnv1a64:e659e77d4efc90c6",
   "lessons": [
     {
       "id": "MW-C22-hear-kitno",
@@ -211,7 +211,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bc231d7e86aecdc7",
+      "sourceHash": "fnv1a64:7f5a10131402e2a5",
       "notice": null,
       "blocks": [
         {
@@ -259,7 +259,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hear it twice. Say it once with your hand on the thing you are asking about."
+              "text": "Hear it twice. Say it once as if the thing you are asking about were in front of you."
             }
           ]
         },

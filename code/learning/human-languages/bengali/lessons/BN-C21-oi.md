@@ -69,7 +69,7 @@ person — and it is still the same gesture.
 
 [PAUSE 1s]
 - [YOU SAY: *oi jāmā* — that shirt]
-- [YOU SAY: the pair, pointing twice — *ei jāmā*, *oi jāmā*]
+- [YOU SAY: the pair, near then far — *ei jāmā*, *oi jāmā*]
 - [YOU SAY: *ei lāl, oi kālo*]
 - [YOU WRITE: এই ওই]
 

@@ -40,8 +40,8 @@ reviews_of: []
 
 **ಇದು** — *idu* — this one — the thing near me.
 
-Say it, and point while you say it. That is the whole word: it does not mean
-anything on its own, it means whatever your finger is on.
+Say it, and picture the thing it lands on as you say it. That is the whole word:
+it does not mean anything on its own, it means whatever the speaker is pointing at.
 
 Its partner is **ಅದು** *adu*, which you will meet in a moment. The two of them
 differ by one sound at the front — **i-** for near — and that is not a
@@ -51,7 +51,7 @@ coincidence. It is the whole system, and the last lesson of this chapter says so
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C41-DEIXIS-01, KA-LEX-C37-KANNU-01, KA-ETYMON-C37-KANNU-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ಇದು" three times, pointing at something different each time]
+- [YOU SAY: "ಇದು" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU RECALL: say *kaṇṇu*]
 

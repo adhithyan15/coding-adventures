@@ -4,7 +4,7 @@
   "chapter": 96,
   "title": "The Future, And The Two Letters It Needed",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:485390e229d481e0",
+  "sourceHash": "fnv1a64:a00ec53348bdb335",
   "lessons": [
     {
       "id": "HI-C88-karunga",
@@ -380,7 +380,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f89233dd13423b7d",
+      "sourceHash": "fnv1a64:018876b063d2290d",
       "notice": null,
       "blocks": [
         {
@@ -396,7 +396,7 @@
             },
             {
               "kind": "speech",
-              "text": "You can say I will come. Point at somebody else and try to say it about them — and notice which part of the word has to move."
+              "text": "You can say I will come. Think of somebody else and try to say it about them — and notice which part of the word has to move."
             }
           ]
         },

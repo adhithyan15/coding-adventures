@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Numbers One to Ten",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6bad53939fb35790",
+  "sourceHash": "fnv1a64:aaaa682c93a9fddd",
   "lessons": [
     {
       "id": "TA-C07-numbers-1-5",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:600a02bff0b4a343",
+      "sourceHash": "fnv1a64:194ebaa02cceec5b",
       "notice": null,
       "blocks": [
         {
@@ -62,7 +62,7 @@
             },
             {
               "kind": "speech",
-              "text": "Raise one more finger for each word: onru, irantu, muunru, naanku, aintu."
+              "text": "Count up aloud, one word to each beat: onru, irantu, muunru, naanku, aintu."
             },
             {
               "kind": "repeat",
@@ -83,29 +83,29 @@
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "muunru; YOU SHOW: 3",
+              "instruction": "muunru, then say the number — three",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *muunru*; YOU SHOW: 3]"
+              "source": "[YOU HEAR: *muunru*, then say the number — three]"
             },
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "aintu; YOU SHOW: 5",
+              "instruction": "aintu, then say the number — five",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *aintu*; YOU SHOW: 5]"
+              "source": "[YOU HEAR: *aintu*, then say the number — five]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "onru through aintu while raising one more finger",
+              "instruction": "onru through aintu, one number to each beat",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *onru* through *aintu* while raising one more finger]"
+              "source": "[YOU SAY: *onru* through *aintu*, one number to each beat]"
             }
           ]
         },
@@ -794,7 +794,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f06b36b76a754485",
+      "sourceHash": "fnv1a64:b13c7fd9250a184d",
       "notice": null,
       "blocks": [
         {
@@ -885,20 +885,20 @@
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "eezhu; YOU SHOW: 7",
+              "instruction": "eezhu, then say the number — seven",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *eezhu*; YOU SHOW: 7]"
+              "source": "[YOU HEAR: *eezhu*, then say the number — seven]"
             },
             {
               "kind": "prompt",
               "action": "HEAR",
-              "instruction": "onpatu; YOU SHOW: 9",
+              "instruction": "onpatu, then say the number — nine",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU HEAR: *onpatu*; YOU SHOW: 9]"
+              "source": "[YOU HEAR: *onpatu*, then say the number — nine]"
             }
           ]
         },

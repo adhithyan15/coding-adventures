@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Welcoming a Guest",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:9436f2d7da667ac5",
+  "sourceHash": "fnv1a64:267eefff93e643fb",
   "lessons": [
     {
       "id": "SA-C30-door",
@@ -579,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bbf6d72724ec3831",
+      "sourceHash": "fnv1a64:043a19f1f4f2ca79",
       "notice": null,
       "blocks": [
         {
@@ -661,11 +661,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "all five in order, then say namaste and name what your hands are doing",
+              "instruction": "all five in order, then say namaste and name the gesture that goes with it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: all five in order, then say *namaste* and name what your hands are doing]"
+              "source": "[YOU SAY: all five in order, then say *namaste* and name the gesture that goes with it]"
             },
             {
               "kind": "prompt",

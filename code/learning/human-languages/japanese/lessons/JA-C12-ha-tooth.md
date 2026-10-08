@@ -53,7 +53,7 @@ One sign is the complete word.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HA-TOOTH] -->
 
-Hear, point, say, and read **は**. [YOU WRITE: **は**]
+Hear, picture the part, say, and read **は**. [YOU WRITE: **は**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HA-TOOTH] -->

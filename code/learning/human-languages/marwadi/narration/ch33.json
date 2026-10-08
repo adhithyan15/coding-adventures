@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Six To Ten",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:90560ed1da53f69e",
+  "sourceHash": "fnv1a64:3690c1f5ddef11d6",
   "lessons": [
     {
       "id": "MW-C33-hear-chha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa895a2eb0bac542",
+      "sourceHash": "fnv1a64:bce2fbe19068701a",
       "notice": null,
       "blocks": [
         {
@@ -40,11 +40,11 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "chār from the last chapter, and the plain ch you tested with a hand at your mouth",
+              "instruction": "chār from the last chapter, and its plain ch, the one with no puff of air",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: *chār* from the last chapter, and the plain *ch* you tested with a hand at your mouth]"
+              "source": "[YOU RECALL: *chār* from the last chapter, and its plain *ch*, the one with no puff of air]"
             }
           ]
         },
@@ -59,7 +59,7 @@
             },
             {
               "kind": "speech",
-              "text": "Hand at the mouth again. chār moves nothing. chha pushes a puff of air out with the consonant."
+              "text": "Listen for the breath again. chār moves nothing. chha pushes a puff of air out with the consonant."
             },
             {
               "kind": "speech",

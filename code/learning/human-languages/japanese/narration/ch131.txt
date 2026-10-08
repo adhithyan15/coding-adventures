@@ -22,7 +22,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: ocha]
 [pause 8 seconds for the answer]
-[your turn — say: ocha, clapping once per beat — two claps]
+[your turn — say: ocha, then count its beats aloud — two]
 [pause 8 seconds for the answer]
 [your turn — recall: name the sign in おちゃ (ocha) you can already write, and the one you cannot]
 [pause 8 seconds for the answer]
@@ -96,7 +96,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: isha]
 [pause 8 seconds for the answer]
-[your turn — say: isha, clapping the two beats]
+[your turn — say: isha, then count its beats aloud — two]
 [pause 8 seconds for the answer]
 [once you have stopped driving — write: いしゃ (isha) from memory, keeping the last sign small]
 
@@ -129,7 +129,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: chotto]
 [pause 8 seconds for the answer]
-[your turn — say: chotto, clapping three beats — the middle clap is silent]
+[your turn — say: chotto, then count its beats aloud — three, and the middle one is a silent hold]
 [pause 8 seconds for the answer]
 [your turn — recall: name the two small signs in ちょっと (chotto) and say which one holds and which one joins]
 [pause 8 seconds for the answer]
@@ -203,7 +203,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: toshokan]
 [pause 8 seconds for the answer]
-[your turn — say: toshokan, clapping four beats]
+[your turn — say: toshokan, then count its beats aloud — four]
 [pause 8 seconds for the answer]
 [once you have stopped driving — write: としょかん (toshokan) from memory, keeping the second sign small]
 
@@ -304,7 +304,7 @@ Then say a little — R2, five lessons back.
 
 Guided Practice — read the four words.
 [pause 2 seconds after each]
-Read each one aloud, clap its beats, and say what it means.
+Read each one aloud, count its beats, and say what it means.
 [once you have stopped driving — read: おちゃ (ocha) — two beats]
 [once you have stopped driving — read: いしゃ (isha) — two beats]
 [once you have stopped driving — read: ちょっと (chotto) — three beats]

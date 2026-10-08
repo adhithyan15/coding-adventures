@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "A Little More Slowly",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4068ce1b36c30bb7",
+  "sourceHash": "fnv1a64:574ff8d8731207d6",
   "lessons": [
     {
       "id": "JA-W10-se",
@@ -1248,7 +1248,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a71bb94fc6d4d347",
+      "sourceHash": "fnv1a64:7d333e98659323e9",
       "notice": null,
       "blocks": [
         {
@@ -1299,7 +1299,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Point beside yourself and say koko."
+              "text": "Picture the spot beside you and say koko."
             },
             {
               "kind": "speech",

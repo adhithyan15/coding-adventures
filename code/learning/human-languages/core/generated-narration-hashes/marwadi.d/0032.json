@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 32,
-  "sourceHash": "fnv1a64:f9e4da92e7923827",
+  "sourceHash": "fnv1a64:3fe73f83b9f7c62b",
   "lessonIds": [
     "MW-W32-e",
     "MW-C32-hear-ek",
@@ -22,7 +22,7 @@
   "drivablePrefix": 0,
   "text": "marwadi/narration/ch32.txt",
   "json": "marwadi/narration/ch32.json",
-  "textHash": "fnv1a64:3382a25e560b6ed8",
-  "jsonHash": "fnv1a64:53f6c6df178dd6b8",
+  "textHash": "fnv1a64:9403c93c525b3677",
+  "jsonHash": "fnv1a64:077ab27906914864",
   "findings": []
 }

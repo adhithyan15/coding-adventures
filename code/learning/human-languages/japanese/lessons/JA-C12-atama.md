@@ -48,7 +48,7 @@ Every sign is earned. Keep three even morae.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ATAMA] -->
 
-Hear, point, say, and read **あたま**. [YOU WRITE: **あたま**, with the word hidden]
+Hear, picture the part, say, and read **あたま**. [YOU WRITE: **あたま**, with the word hidden]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ATAMA] -->

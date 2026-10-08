@@ -4,7 +4,7 @@
   "chapter": 37,
   "title": "Who, and How Many",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:a3e344163085e77c",
+  "sourceHash": "fnv1a64:03ea58ecb83ea4fb",
   "lessons": [
     {
       "id": "MR-C37-kon",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9630912aa7d8d55",
+      "sourceHash": "fnv1a64:d16420a23fe7648f",
       "notice": null,
       "blocks": [
         {
@@ -62,7 +62,7 @@
             },
             {
               "kind": "speech",
-              "text": "Point it at somebody you have already named: मीरा कोण आहे? — Mīrā koṇ āhe? — who is Mira?"
+              "text": "Aim it at somebody you have already named: मीरा कोण आहे? — Mīrā koṇ āhe? — who is Mira?"
             }
           ]
         },

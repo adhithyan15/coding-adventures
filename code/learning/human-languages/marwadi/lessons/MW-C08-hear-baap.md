@@ -53,7 +53,7 @@ meaning and one sound small.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAAP-01, MW-LEX-MAA-01] -->
 
-Hear *mā̃* and *bāp* in either order. Point to mother or father, then say only
+Hear *mā̃* and *bāp* in either order. Say *mother* or *father*, then say only
 the word you heard.
 
 ## Wrap-up Recall

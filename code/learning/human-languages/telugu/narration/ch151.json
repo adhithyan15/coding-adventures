@@ -4,7 +4,7 @@
   "chapter": 151,
   "title": "A Word for Shade — Then Its First Letter",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:a328d9062bbf77a9",
+  "sourceHash": "fnv1a64:07393923844f1bf8",
   "lessons": [
     {
       "id": "TE-C151-chhaya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:840075c534669996",
+      "sourceHash": "fnv1a64:f1531017d7962b74",
       "notice": null,
       "blocks": [
         {
@@ -34,8 +34,17 @@
               "source": "[PAUSE 2s]"
             },
             {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the rare ఙ you met in వాఙ్మయం, once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the rare **ఙ** you met in **వాఙ్మయం**, once]"
+            },
+            {
               "kind": "speech",
-              "text": "Point once to the rare ఙ you met in వాఙ్మయం. Now imagine the cool patch beneath a tree. This lesson gives that patch a name, using the familiar య at the end and a different uncommon letter at the beginning."
+              "text": "Now imagine the cool patch beneath a tree. This lesson gives that patch a name, using the familiar య at the end and a different uncommon letter at the beginning."
             }
           ]
         },

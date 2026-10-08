@@ -39,20 +39,20 @@ reviews_of: [MW-C05-hear-mharo, MW-C05-answer]
 [PAUSE 15s] Say *mhāro nām rām hai* once.
 [YOU WRITE: **न**, then **है**, from memory]
 
-Point to yourself on *mhāro*.
+Say *my* on *mhāro*.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-THARO-01]; assesses=[] -->
 
 > *thāro* — **your**, before a masculine singular noun
 
-Listen twice: *thā-ro*. Let a small breath follow *t*. Point to another person
+Listen twice: *thā-ro*. Let a small breath follow *t*. Say *your*
 when you hear it. Spelling waits for the next lesson.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-THARO-01, MW-LEX-MHARO-01] -->
 
-Hear *mhāro* and point to yourself. Hear *thāro* and point gently away.
+Hear *mhāro* and say *my*. Hear *thāro* and say *your*.
 Change the order twice.
 
 ## Wrap-up Recall

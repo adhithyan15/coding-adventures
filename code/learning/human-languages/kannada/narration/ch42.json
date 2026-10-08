@@ -4,7 +4,7 @@
   "chapter": 42,
   "title": "Describing Things",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:b884a4bef17cb2dd",
+  "sourceHash": "fnv1a64:bbec12c4e687c8fa",
   "lessons": [
     {
       "id": "KA-C42-big",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c46515ee33f9ae97",
+      "sourceHash": "fnv1a64:6ea73026caceba7b",
       "notice": null,
       "blocks": [
         {
@@ -72,11 +72,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ದೊಡ್ಡ (doḍḍa)\" three times, pointing at something different each time",
+              "instruction": "\"ದೊಡ್ಡ (doḍḍa)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ದೊಡ್ಡ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"ದೊಡ್ಡ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -130,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f92ad3f61d58293",
+      "sourceHash": "fnv1a64:f44e389e0e59bb57",
       "notice": null,
       "blocks": [
         {
@@ -187,11 +187,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ಚಿಕ್ಕ (cikka)\" three times, pointing at something different each time",
+              "instruction": "\"ಚಿಕ್ಕ (cikka)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ಚಿಕ್ಕ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"ಚಿಕ್ಕ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -245,7 +245,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2f0e7ecf2d5776bc",
+      "sourceHash": "fnv1a64:4b1d15beee099950",
       "notice": null,
       "blocks": [
         {
@@ -302,11 +302,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ಒಳ್ಳೆಯ (oḷḷeya)\" three times, pointing at something different each time",
+              "instruction": "\"ಒಳ್ಳೆಯ (oḷḷeya)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ಒಳ್ಳೆಯ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"ಒಳ್ಳೆಯ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -360,7 +360,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1b9cb5aa2cee55c3",
+      "sourceHash": "fnv1a64:f957409c0ce1a76b",
       "notice": null,
       "blocks": [
         {
@@ -417,11 +417,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ಹೊಸ (hosa)\" three times, pointing at something different each time",
+              "instruction": "\"ಹೊಸ (hosa)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ಹೊಸ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"ಹೊಸ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -475,7 +475,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b9fadd24133fe8e",
+      "sourceHash": "fnv1a64:fa442686935df2b2",
       "notice": null,
       "blocks": [
         {
@@ -532,11 +532,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ಹಳೆಯ (haḷeya)\" three times, pointing at something different each time",
+              "instruction": "\"ಹಳೆಯ (haḷeya)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ಹಳೆಯ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"ಹಳೆಯ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",

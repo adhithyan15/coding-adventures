@@ -57,7 +57,7 @@ voicing mark at its upper right, so *te* becomes *de*. The next lesson writes it
 
 [PAUSE 1s]
 - [YOU SAY: *denwa*]
-- [YOU SAY: *denwa*, clapping three beats]
+- [YOU SAY: *denwa*, then count its beats aloud — three]
 - [YOU RECALL: say which sign in **でんわ** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall

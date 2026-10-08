@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "More Than One",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:44857e40524038cb",
+  "sourceHash": "fnv1a64:71152973856adda2",
   "lessons": [
     {
       "id": "BN-C22-animacy",
@@ -193,7 +193,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc17f72c19994816",
+      "sourceHash": "fnv1a64:1fdc64ab925dcdcc",
       "notice": null,
       "blocks": [
         {
@@ -308,11 +308,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "pointing at them — ei bhāirā",
+              "instruction": "these brothers here — ei bhāirā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: pointing at them — *ei bhāirā*]"
+              "source": "[YOU SAY: these brothers here — *ei bhāirā*]"
             }
           ]
         },

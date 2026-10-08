@@ -4,7 +4,7 @@
   "chapter": 40,
   "title": "Pointing, and Asking",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:133d28592a58c7a1",
+  "sourceHash": "fnv1a64:2aec1dd6b57d5d41",
   "lessons": [
     {
       "id": "HI-C40-this",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ca659bb04a5e2a02",
+      "sourceHash": "fnv1a64:bbbc8f0dca12fb1a",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -72,11 +72,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"यह (yah)\" three times, pointing at something different each time",
+              "instruction": "\"यह (yah)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"यह\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"यह\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -139,7 +139,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e70d82e82fbeae0e",
+      "sourceHash": "fnv1a64:82fe9aee5c13058e",
       "notice": null,
       "blocks": [
         {
@@ -170,7 +170,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -192,11 +192,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"वह (vah)\" three times, pointing at something different each time",
+              "instruction": "\"वह (vah)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"वह\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"वह\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -250,7 +250,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6f2b7ed73a3187a8",
+      "sourceHash": "fnv1a64:8a54e2cc05d64f74",
       "notice": null,
       "blocks": [
         {
@@ -281,7 +281,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -303,11 +303,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"यहाँ (yahā̃)\" three times, pointing at something different each time",
+              "instruction": "\"यहाँ (yahā̃)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"यहाँ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"यहाँ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -361,7 +361,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c2028bcfff867052",
+      "sourceHash": "fnv1a64:ee363ca5ce986832",
       "notice": null,
       "blocks": [
         {
@@ -392,7 +392,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -414,11 +414,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"वहाँ (vahā̃)\" three times, pointing at something different each time",
+              "instruction": "\"वहाँ (vahā̃)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"वहाँ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"वहाँ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -472,7 +472,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:83223be4ebe462b5",
+      "sourceHash": "fnv1a64:956e1807b7710105",
       "notice": null,
       "blocks": [
         {
@@ -503,7 +503,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -525,11 +525,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"कौन (kaun)\" three times, pointing at something different each time",
+              "instruction": "\"कौन (kaun)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"कौन\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"कौन\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -592,7 +592,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de9228e2273be438",
+      "sourceHash": "fnv1a64:74931c698cbdcaa4",
       "notice": null,
       "blocks": [
         {
@@ -623,7 +623,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -645,11 +645,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"कहाँ (kahā̃)\" three times, pointing at something different each time",
+              "instruction": "\"कहाँ (kahā̃)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"कहाँ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"कहाँ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",

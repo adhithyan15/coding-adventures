@@ -61,8 +61,8 @@ listener; the sign after them says whether you mean a place or a thing.
 
 1. [YOU WRITE: **これ** and **それ** from memory, and circle the sign that changes]
 2. [YOU WRITE: **そ**, **れ** and **る** once each]
-3. Touch something in front of you and say *kore*; point at something by the
-   listener and say *sore*; point at the window and say *soto*. [YOU WRITE: **くるま**]
+3. Picture something in front of you and say *kore*; picture something by the
+   listener and say *sore*; picture a window and say *soto*. [YOU WRITE: **くるま**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-RU-01, JA-LEX-ANCHOR-KURUMA, JA-LEX-C132-SORE] -->

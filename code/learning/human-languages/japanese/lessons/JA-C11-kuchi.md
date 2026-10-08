@@ -50,7 +50,7 @@ morae.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KUCHI, JA-SCRIPT-KU-01, JA-SCRIPT-CHI-01, JA-SCRIPT-KANJI-MOUTH-COMPONENT-01] -->
 
-1. Hear *kuchi*; point to the mouth.
+1. Hear *kuchi*; say what it names — the mouth.
 2. Read **口**, then its reading **く | ち**.
 3. [YOU WRITE: **口**, then the two signs in order, with the word hidden]
 

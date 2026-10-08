@@ -61,7 +61,7 @@ hair salon.
 
 [PAUSE 1s]
 - [YOU SAY: *byōin*]
-- [YOU SAY: *byōin*, clapping four beats]
+- [YOU SAY: *byōin*, then count its beats aloud — four]
 - [YOU RECALL: say which sign in **びょういん** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall

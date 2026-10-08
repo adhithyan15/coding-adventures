@@ -53,7 +53,7 @@ The asking word arrives as *kitṇe*, not *kitṇo*. Marwadi bends the ending of
 that word before *kū*, exactly as the source prints it; learn the whole line as
 one heard shape now and the bending will be taught on its own later.
 
-Hear it twice. Say it once with your hand on the thing you are asking about.
+Hear it twice. Say it once as if the thing you are asking about were in front of you.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PRICE-QUESTION-01] -->

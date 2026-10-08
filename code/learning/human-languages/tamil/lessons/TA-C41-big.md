@@ -50,7 +50,7 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-01, TA-LEX-VENDUM-01, TA-GRAMMAR-VENDAAM-NEGATION-02, TA-LEX-C40-DEIXIS-01, TA-LEX-C40-DEIXIS-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "பெரிய" three times, pointing at something different each time]
+- [YOU SAY: "பெரிய" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU RECALL: say *vēṇḍum*]
 - [YOU READ: **இது**]

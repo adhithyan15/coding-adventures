@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "First Food Words: No New Signs",
   "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:e5c3b2152324540d",
+  "sourceHash": "fnv1a64:b4016604e026b7ac",
   "lessons": [
     {
       "id": "MW-C18-hear-daal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1244e01a31c4c2d8",
+      "sourceHash": "fnv1a64:05ba1f2a926605d2",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two beats, and the second one is long. Hear it twice, point to a bowl of cooked lentils, and say it once. The spelling stays covered until the sound and the meaning are comfortable."
+              "text": "Two beats, and the second one is long. Hear it twice, picture a bowl of cooked lentils, and say it once. The spelling stays covered until the sound and the meaning are comfortable."
             }
           ]
         },
@@ -398,7 +398,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c0d340b4c135db5",
+      "sourceHash": "fnv1a64:a727202926802ce3",
       "notice": null,
       "blocks": [
         {
@@ -434,7 +434,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three beats, ending long. Hear it twice, point to a vegetable dish, and say it once."
+              "text": "Three beats, ending long. Hear it twice, picture a vegetable dish, and say it once."
             }
           ]
         },

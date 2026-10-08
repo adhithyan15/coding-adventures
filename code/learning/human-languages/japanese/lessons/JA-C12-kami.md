@@ -49,7 +49,7 @@ Two known signs, two morae.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KAMI-HAIR] -->
 
-Hear, point, say, and read **かみ**. [YOU WRITE: **かみ** from memory]
+Hear, picture the part, say, and read **かみ**. [YOU WRITE: **かみ** from memory]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KAMI-HAIR] -->

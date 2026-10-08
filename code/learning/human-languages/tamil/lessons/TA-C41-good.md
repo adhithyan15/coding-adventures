@@ -52,7 +52,7 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-C41-ADJ-03, TA-LEX-C40-DEIXIS-04] -->
 
 [PAUSE 1s]
-- [YOU SAY: "நல்ல" three times, pointing at something different each time]
+- [YOU SAY: "நல்ல" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU RECALL: say *aṅgē*]
 

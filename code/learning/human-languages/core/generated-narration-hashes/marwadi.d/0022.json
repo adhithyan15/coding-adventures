@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 22,
-  "sourceHash": "fnv1a64:da8ce51cf8dcf953",
+  "sourceHash": "fnv1a64:bdd774325767bc8b",
   "lessonIds": [
     "MW-C17-hear-riksha",
     "MW-W17-sha",
@@ -16,7 +16,7 @@
   "drivablePrefix": 1,
   "text": "marwadi/narration/ch22.txt",
   "json": "marwadi/narration/ch22.json",
-  "textHash": "fnv1a64:806235c4c9c225af",
-  "jsonHash": "fnv1a64:8ad80b074efb5936",
+  "textHash": "fnv1a64:4185c18875737c13",
+  "jsonHash": "fnv1a64:36c325aa3265ed7f",
   "findings": []
 }

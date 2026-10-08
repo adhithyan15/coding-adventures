@@ -59,7 +59,7 @@ the voicing mark, so *se* becomes *ze*. The next lesson writes it.
 
 [PAUSE 1s]
 - [YOU SAY: *kaze*]
-- [YOU SAY: *kaze*, clapping two beats]
+- [YOU SAY: *kaze*, then count its beats aloud — two]
 - [YOU RECALL: say which sign in **かぜ** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall

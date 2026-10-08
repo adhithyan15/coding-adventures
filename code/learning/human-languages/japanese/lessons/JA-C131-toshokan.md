@@ -56,7 +56,7 @@ Five signs, four beats: *to–sho–ka–n*. **し** with **ょ** after it is on
 
 [PAUSE 1s]
 - [YOU SAY: *toshokan*]
-- [YOU SAY: *toshokan*, clapping four beats]
+- [YOU SAY: *toshokan*, then count its beats aloud — four]
 - [YOU WRITE: **としょかん** from memory, keeping the second sign small]
 
 ## Wrap-up Recall

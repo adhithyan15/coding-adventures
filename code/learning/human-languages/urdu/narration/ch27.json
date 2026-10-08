@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Where You Are From",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:59aafe8605295dd1",
+  "sourceHash": "fnv1a64:99ba6bd9e2699476",
   "lessons": [
     {
       "id": "UR-C27-shahr",
@@ -606,7 +606,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42c4d724ec898b40",
+      "sourceHash": "fnv1a64:b238a74828559d5c",
       "notice": null,
       "blocks": [
         {
@@ -747,11 +747,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "pointing, near and far — is shahr meṅ, us mulk meṅ, yahāṅ, vahāṅ",
+              "instruction": "near and far — is shahr meṅ, us mulk meṅ, yahāṅ, vahāṅ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: pointing, near and far — *is shahr meṅ*, *us mulk meṅ*, *yahāṅ*, *vahāṅ*]"
+              "source": "[YOU SAY: near and far — *is shahr meṅ*, *us mulk meṅ*, *yahāṅ*, *vahāṅ*]"
             },
             {
               "kind": "prompt",

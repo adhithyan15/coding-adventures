@@ -60,7 +60,7 @@ writes it.
 
 [PAUSE 1s]
 - [YOU SAY: *perapera*]
-- [YOU SAY: *perapera*, clapping four beats]
+- [YOU SAY: *perapera*, then count its beats aloud — four]
 - [YOU RECALL: say which sign in **ぺらぺら** carries the small circle, and name the sign under it]
 
 ## Wrap-up Recall

@@ -151,6 +151,14 @@ export const PROMPT_RESPONSE_SECONDS = 8;
  *   TAP        hand   tapping out beats with a finger ("*yu | hold | ku | ri*") —
  *                     the same family as GESTURE
  *   GESTURE    hand   a movement that carries the meaning
+ *   CLAP       hand   clapping out beats; TAP's louder sibling. No cue heads with it:
+ *                     the 24 drivable "[YOU SAY: *denwa*, clapping three beats]" drills
+ *                     now count the beats aloud instead
+ *   SHOW       hand   holding up fingers or a thing. No cue heads with it either; four
+ *                     drivable number drills nested it ("[YOU HEAR: *añcŭ*; YOU SHOW: 5]")
+ *                     and now say the number. The gesture check in
+ *                     tests/drivable-writing-imperatives.ts reads a nested cue's verb with
+ *                     {@link isManualCueAction}, so listing SHOW here is what it catches
  *   LABEL      hand   writing a label against something on the page
  *   FEEL       hand   a hand at the throat or the mouth, feeling the sound
  *   TEST       hand   the corpus's one TEST is FEEL by another name: "hand at the
@@ -182,6 +190,8 @@ export const MANUAL_CUE_ACTIONS: ReadonlySet<string> = new Set([
   "TICK",
   "TAP",
   "GESTURE",
+  "CLAP",
+  "SHOW",
   "LABEL",
   "FEEL",
   "TEST",

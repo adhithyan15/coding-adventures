@@ -34,7 +34,7 @@ reviews_of: [ZH-C13-hear-xue, ZH-W13-xue]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XUE-01, ZH-SCRIPT-XUE-01, ZH-SCRIPT-ZI-CHAR] -->
 
-[PAUSE 10s] Say **study**, then point to 子 inside 学.
+[PAUSE 10s] Say **study**. [YOU POINT: 子 inside 学]
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XUE-01, ZH-SCRIPT-XUE-01] -->

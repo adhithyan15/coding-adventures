@@ -51,7 +51,7 @@ Two signs, two morae.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KOSHI] -->
 
-Hear, point, say, and read **こし**. [YOU WRITE: **こし**]
+Hear, picture the part, say, and read **こし**. [YOU WRITE: **こし**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KOSHI] -->

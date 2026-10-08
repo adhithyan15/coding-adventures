@@ -55,7 +55,7 @@ The first of five words for going.
 [PAUSE 1s]
 - [YOU SAY: *īga*]
 - [YOU SAY: it once more, slowly]
-- [YOU SAY: *īga*, then *āga*, and point at the near one and the far one]
+- [YOU SAY: *īga*, then *āga*, and say which is near and which is far]
 - [YOU RECALL: say *śikṣaka*]
 
 ## Wrap-up Recall

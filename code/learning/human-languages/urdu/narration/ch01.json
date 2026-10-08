@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings and responses",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:332f353d8d60d509",
+  "sourceHash": "fnv1a64:525e8cd000e075b5",
   "lessons": [
     {
       "id": "UR-C01-salam",
@@ -377,7 +377,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:165053f6534b6db9",
+      "sourceHash": "fnv1a64:db83c4e6e472f161",
       "notice": null,
       "blocks": [
         {
@@ -393,7 +393,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say شکریہ (shukriyā) once. Point to its first three shapes, then its final two. Your pen can rest; this lesson is for a spoken respectful answer."
+              "text": "Say شکریہ (shukriyā) once."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "its first three shapes, then its final two",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: its first three shapes, then its final two]"
+            },
+            {
+              "kind": "speech",
+              "text": "Your pen can rest; this lesson is for a spoken respectful answer."
             }
           ]
         },

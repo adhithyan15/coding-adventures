@@ -43,8 +43,8 @@ reviews_of: [TA-C70-floor]
 The roof over you.
 
 With தரை under your feet and கூரை over your head, the room has both ends — and you already
-have the two words for the space between them: மேலே and கீழே. Point up at the கூரை, down at
-the தரை, and every word in that sentence is one you have been taught.
+have the two words for the space between them: மேலே and கீழே. Picture the கூரை up above, the தரை down
+below, and every word in that sentence is one you have been taught.
 
 Its **ூ** is the long u sign, and it ends, like தரை, in **ை**.
 

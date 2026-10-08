@@ -58,7 +58,7 @@ is **へ** with the voicing mark, so *he* becomes *be*. The next lesson writes i
 
 [PAUSE 1s]
 - [YOU SAY: *taberu*]
-- [YOU SAY: *taberu*, clapping three beats]
+- [YOU SAY: *taberu*, then count its beats aloud — three]
 - [YOU RECALL: say which sign in **たべる** carries the two-stroke mark, and name the sign under it]
 
 ## Wrap-up Recall

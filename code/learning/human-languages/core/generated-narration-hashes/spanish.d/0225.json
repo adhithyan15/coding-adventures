@@ -1,7 +1,7 @@
 {
   "language": "spanish",
   "chapter": 225,
-  "sourceHash": "fnv1a64:3d2a27db058a1ee2",
+  "sourceHash": "fnv1a64:02571d2de4e9771a",
   "lessonIds": [
     "ES-C59-repaso-demostrativos"
   ],
@@ -9,7 +9,7 @@
   "drivablePrefix": 1,
   "text": "spanish/narration/ch225.txt",
   "json": "spanish/narration/ch225.json",
-  "textHash": "fnv1a64:b91713005a3015a5",
-  "jsonHash": "fnv1a64:8580a50a355b279e",
+  "textHash": "fnv1a64:572b0e92243ed5a2",
+  "jsonHash": "fnv1a64:db608563ff82c29a",
   "findings": []
 }

@@ -57,7 +57,7 @@ lesson writes it.
 
 [PAUSE 1s]
 - [YOU SAY: *inu*]
-- [YOU SAY: *inu*, clapping two beats]
+- [YOU SAY: *inu*, then count its beats aloud — two]
 - [YOU RECALL: name the sign in **いぬ** you cannot write yet, and say which sign it looks like]
 
 ## Wrap-up Recall

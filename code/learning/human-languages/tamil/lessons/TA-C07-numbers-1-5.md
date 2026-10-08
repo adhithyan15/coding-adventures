@@ -47,7 +47,7 @@ a quantity, and say them before your eyes meet Tamil writing.
 | 4 | ***naanku*** |
 | 5 | ***aintu*** |
 
-Raise one more finger for each word: *onru, irantu, muunru, naanku, aintu*.
+Count up aloud, one word to each beat: *onru, irantu, muunru, naanku, aintu*.
 [REPEAT x2]
 
 These are inherited Dravidian words, not borrowed Sanskrit number names. The
@@ -56,9 +56,9 @@ family history can wait until the sounds and quantities feel secure.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01] -->
 
-- [YOU HEAR: *muunru*; YOU SHOW: 3]
-- [YOU HEAR: *aintu*; YOU SHOW: 5]
-- [YOU SAY: *onru* through *aintu* while raising one more finger]
+- [YOU HEAR: *muunru*, then say the number — three]
+- [YOU HEAR: *aintu*, then say the number — five]
+- [YOU SAY: *onru* through *aintu*, one number to each beat]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-LEX-NUMBERS-1-5-01] -->

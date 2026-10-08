@@ -59,7 +59,7 @@ writes it.
 
 [PAUSE 1s]
 - [YOU SAY: *chotto*]
-- [YOU SAY: *chotto*, clapping three beats — the middle clap is silent]
+- [YOU SAY: *chotto*, then count its beats aloud — three, and the middle one is a silent hold]
 - [YOU RECALL: name the two small signs in **ちょっと** and say which one holds and which one joins]
 
 ## Wrap-up Recall

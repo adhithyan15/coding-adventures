@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Pointing, and Asking",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:c9300896c15f386b",
+  "sourceHash": "fnv1a64:545709e7bfbf87c0",
   "lessons": [
     {
       "id": "KA-C41-this",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:965344080a7e625e",
+      "sourceHash": "fnv1a64:c904eea6a24f9dde",
       "notice": null,
       "blocks": [
         {
@@ -50,7 +50,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -72,11 +72,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ಇದು (idu)\" three times, pointing at something different each time",
+              "instruction": "\"ಇದು (idu)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ಇದು\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"ಇದು\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -130,7 +130,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ea241086ed05b7e3",
+      "sourceHash": "fnv1a64:0b9b959573766747",
       "notice": null,
       "blocks": [
         {
@@ -161,7 +161,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -183,11 +183,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ಅದು (adu)\" three times, pointing at something different each time",
+              "instruction": "\"ಅದು (adu)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ಅದು\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"ಅದು\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -241,7 +241,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:903a4a69f5451c85",
+      "sourceHash": "fnv1a64:018269875ffad5e5",
       "notice": null,
       "blocks": [
         {
@@ -272,7 +272,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -294,11 +294,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ಇಲ್ಲಿ (illi)\" three times, pointing at something different each time",
+              "instruction": "\"ಇಲ್ಲಿ (illi)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ಇಲ್ಲಿ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"ಇಲ್ಲಿ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -352,7 +352,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e23cfd525049ed1c",
+      "sourceHash": "fnv1a64:a2f8314f46e4c55c",
       "notice": null,
       "blocks": [
         {
@@ -383,7 +383,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -405,11 +405,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ಅಲ್ಲಿ (alli)\" three times, pointing at something different each time",
+              "instruction": "\"ಅಲ್ಲಿ (alli)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ಅಲ್ಲಿ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"ಅಲ್ಲಿ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -463,7 +463,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:818d48b66ec3c3f2",
+      "sourceHash": "fnv1a64:fafc4f54bc1b9ff6",
       "notice": null,
       "blocks": [
         {
@@ -494,7 +494,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -516,11 +516,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ಯಾರು (yāru)\" three times, pointing at something different each time",
+              "instruction": "\"ಯಾರು (yāru)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ಯಾರು\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"ಯಾರು\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -574,7 +574,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ef2db673d1f5a4e5",
+      "sourceHash": "fnv1a64:baec5a7302428025",
       "notice": null,
       "blocks": [
         {
@@ -605,7 +605,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say it, and point while you say it. That is the whole word: it does not mean anything on its own, it means whatever your finger is on."
+              "text": "Say it, and picture the thing it lands on as you say it. That is the whole word: it does not mean anything on its own, it means whatever the speaker is pointing at."
             },
             {
               "kind": "speech",
@@ -627,11 +627,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ಎಲ್ಲಿ (elli)\" three times, pointing at something different each time",
+              "instruction": "\"ಎಲ್ಲಿ (elli)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ಎಲ್ಲಿ\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"ಎಲ್ಲಿ\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",

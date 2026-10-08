@@ -22,7 +22,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: soko]
 [pause 8 seconds for the answer]
-[your turn — say: koko, pointing at your own feet, then soko, pointing at the listener's]
+[your turn — say: koko, picturing the spot at your own feet, then soko, picturing the spot at the listener's]
 [pause 8 seconds for the answer]
 [your turn — recall: name the sign in そこ (soko) you can already write, and the one you cannot]
 [pause 8 seconds for the answer]
@@ -93,7 +93,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: soto]
 [pause 8 seconds for the answer]
-[your turn — say: soto, pointing at a window or a door]
+[your turn — say: soto, picturing a window or a door]
 [pause 8 seconds for the answer]
 [once you have stopped driving — write: そと (soto) from memory, one stroke for the first sign and two for the second]
 
@@ -124,7 +124,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: kore]
 [pause 8 seconds for the answer]
-[your turn — say: kore, holding up a pen, then koko, pointing at the floor where you stand]
+[your turn — say: kore, picturing a pen in your hand, then koko, picturing the spot where you stand]
 [pause 8 seconds for the answer]
 [your turn — recall: name the sign in これ (kore) you can already write, and the one you cannot]
 [pause 8 seconds for the answer]
@@ -200,7 +200,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: sore]
 [pause 8 seconds for the answer]
-[your turn — say: kore, touching something in front of you, then sore, pointing at something by the listener]
+[your turn — say: kore, picturing something in front of you, then sore, picturing something by the listener]
 [pause 8 seconds for the answer]
 [once you have stopped driving — write: それ (sore) from memory; you write every sign in it now]
 
@@ -231,7 +231,7 @@ Guided Practice.
 [pause 1 second]
 [your turn — say: kuruma]
 [pause 8 seconds for the answer]
-[your turn — say: kuruma, clapping three beats]
+[your turn — say: kuruma, then count its beats aloud — three]
 [pause 8 seconds for the answer]
 [your turn — recall: name the sign in くるま (kuruma) you cannot write yet, and say which sign it looks like]
 [pause 8 seconds for the answer]
@@ -312,7 +312,7 @@ Two signs do the pointing. こ points near you and そ (so) points near the list
 Guided Practice — point and write.
 [once you have stopped driving — write: これ (kore) and それ (sore) from memory, and circle the sign that changes]
 [once you have stopped driving — write: そ (so), れ (re) and る (ru) once each]
-Touch something in front of you and say kore; point at something by the listener and say sore; point at the window and say soto.
+Picture something in front of you and say kore; picture something by the listener and say sore; picture a window and say soto.
 [once you have stopped driving — write: くるま (kuruma)]
 
 Wrap-up Recall.

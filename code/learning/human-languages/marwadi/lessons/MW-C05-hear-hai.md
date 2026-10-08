@@ -51,7 +51,7 @@ Do not spell it yet; one vowel sign is still missing from your hand.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-HAI-01, MW-LEX-MHARO-01, MW-LEX-NAAM-01] -->
 
-Hear *mhāro nām rām hai*. Tap four beats: **my | name | Ram | is**.
+Hear *mhāro nām rām hai*. Count four beats aloud: **my | name | Ram | is**.
 English changes the order in translation: **My name is Ram.**
 
 ## Wrap-up Recall

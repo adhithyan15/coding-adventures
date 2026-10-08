@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 29,
-  "sourceHash": "fnv1a64:f65c9ab2b78f7d28",
+  "sourceHash": "fnv1a64:0836a2b74d1496e1",
   "lessonIds": [
     "UR-C29-chhe",
     "UR-C29-saat",
@@ -14,7 +14,7 @@
   "drivablePrefix": 6,
   "text": "urdu/narration/ch29.txt",
   "json": "urdu/narration/ch29.json",
-  "textHash": "fnv1a64:ea915d15d31e564f",
-  "jsonHash": "fnv1a64:7ed25cf8ac3363d8",
+  "textHash": "fnv1a64:d47aac4a6a59444e",
+  "jsonHash": "fnv1a64:03820ba81bf303a3",
   "findings": []
 }

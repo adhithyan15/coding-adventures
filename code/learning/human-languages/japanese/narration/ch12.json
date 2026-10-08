@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Seven More Body Words, Spaced on Purpose",
   "drivablePrefix": 20,
-  "sourceHash": "fnv1a64:00735cea272240f2",
+  "sourceHash": "fnv1a64:e33d1fb96a24833d",
   "lessons": [
     {
       "id": "JA-R12-foundation-01",
@@ -126,7 +126,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f253d1745f4436fe",
+      "sourceHash": "fnv1a64:b6d2b881cb7f33e8",
       "notice": null,
       "blocks": [
         {
@@ -177,7 +177,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear, point, say, and read あたま (atama)."
+              "text": "Hear, picture the part, say, and read あたま (atama)."
             },
             {
               "kind": "prompt",
@@ -234,7 +234,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7fccb1ed8b65aa5f",
+      "sourceHash": "fnv1a64:2138ab7c9a23ba2d",
       "notice": null,
       "blocks": [
         {
@@ -294,7 +294,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear, point, say, and read かみ (kami)."
+              "text": "Hear, picture the part, say, and read かみ (kami)."
             },
             {
               "kind": "prompt",
@@ -438,7 +438,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2472f45146f2390d",
+      "sourceHash": "fnv1a64:240f9637f077eb13",
       "notice": null,
       "blocks": [
         {
@@ -515,7 +515,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear, point, say, and read は (ha)."
+              "text": "Hear, picture the part, say, and read は (ha)."
             },
             {
               "kind": "prompt",
@@ -572,7 +572,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:de3cded3df4add34",
+      "sourceHash": "fnv1a64:0b6fae66166de984",
       "notice": null,
       "blocks": [
         {
@@ -623,7 +623,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear, point, say, and read かた (kata)."
+              "text": "Hear, picture the part, say, and read かた (kata)."
             },
             {
               "kind": "prompt",
@@ -680,7 +680,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dc410a5b5c7a4588",
+      "sourceHash": "fnv1a64:6ef4fab593d8ee02",
       "notice": null,
       "blocks": [
         {
@@ -705,7 +705,7 @@
             },
             {
               "kind": "speech",
-              "text": "Point here with ここ. Name shoulder, then retrieve head after the longer gap."
+              "text": "Picture the spot where you are and say ここ. Name shoulder, then retrieve head after the longer gap."
             }
           ]
         },
@@ -758,7 +758,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c18e8b4572247055",
+      "sourceHash": "fnv1a64:c6f9beb025607bf7",
       "notice": null,
       "blocks": [
         {
@@ -818,7 +818,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear, point, say, and read おなか (onaka)."
+              "text": "Hear, picture the part, say, and read おなか (onaka)."
             },
             {
               "kind": "prompt",
@@ -875,7 +875,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2338a9825a97da21",
+      "sourceHash": "fnv1a64:1f6bffa018d15bb3",
       "notice": null,
       "blocks": [
         {
@@ -935,7 +935,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear, point, say, and read せなか (senaka)."
+              "text": "Hear, picture the part, say, and read せなか (senaka)."
             },
             {
               "kind": "prompt",
@@ -1083,7 +1083,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f8782af3ed77a297",
+      "sourceHash": "fnv1a64:a5f6988d275e44c7",
       "notice": null,
       "blocks": [
         {
@@ -1147,7 +1147,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear, point, say, and read こし (koshi)."
+              "text": "Hear, picture the part, say, and read こし (koshi)."
             },
             {
               "kind": "prompt",
@@ -1865,7 +1865,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d04de3dd229f01d",
+      "sourceHash": "fnv1a64:68f6c6f406992e3d",
       "notice": null,
       "blocks": [
         {
@@ -1916,7 +1916,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Listen and point; say all seven; read all seven."
+              "text": "Listen and give each English meaning; say all seven; read all seven."
             },
             {
               "kind": "prompt",

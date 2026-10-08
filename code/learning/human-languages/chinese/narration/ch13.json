@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "From study to university student",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:abe92fd834351526",
+  "sourceHash": "fnv1a64:e3d9a74c027c364d",
   "lessons": [
     {
       "id": "ZH-C13-hear-da",
@@ -202,7 +202,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f2b04c15534ce27a",
+      "sourceHash": "fnv1a64:4c00cb0871f7b3e8",
       "notice": null,
       "blocks": [
         {
@@ -218,7 +218,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say big, then point to the first stroke of 大 (dà)."
+              "text": "Say big."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the first stroke of 大 (dà)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the first stroke of 大]"
             }
           ]
         },
@@ -657,7 +666,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ecc5c0007eadfcd0",
+      "sourceHash": "fnv1a64:cd80e4448a48aa66",
       "notice": null,
       "blocks": [
         {
@@ -673,7 +682,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say study, then point to 子 inside 学 (xué)."
+              "text": "Say study."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "子 inside 学 (xué)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: 子 inside 学]"
             }
           ]
         },
@@ -930,7 +948,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:07513169cd6109e5",
+      "sourceHash": "fnv1a64:403fb462a19955a1",
       "notice": null,
       "blocks": [
         {
@@ -945,8 +963,17 @@
               "source": "[PAUSE 12s]"
             },
             {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "学 (xué), then 生 (sheng)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: 学, then 生]"
+            },
+            {
               "kind": "speech",
-              "text": "Point to 学 (xué), then 生 (sheng). Say study, then student."
+              "text": "Say study, then student."
             }
           ]
         },
@@ -1380,7 +1407,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3aeed56de4d8be28",
+      "sourceHash": "fnv1a64:3ddf5b036fc84c72",
       "notice": null,
       "blocks": [
         {
@@ -1412,7 +1439,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the six words in shuffled order and point to meanings. Then say each word from a meaning card and read each character card."
+              "text": "Hear the six words in shuffled order and say each meaning. Then say each word from a meaning card and read each character card."
             },
             {
               "kind": "prompt",

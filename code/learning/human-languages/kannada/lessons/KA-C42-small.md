@@ -52,7 +52,7 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-02, KA-LEX-C39-HAALU-01, KA-ETYMON-C39-HAALU-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ಚಿಕ್ಕ" three times, pointing at something different each time]
+- [YOU SAY: "ಚಿಕ್ಕ" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU READ: **ಹಾಲು**]
 

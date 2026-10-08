@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Ask and Answer Names",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:2b2980ab35bf95ff",
+  "sourceHash": "fnv1a64:6a7c0216e3dd545e",
   "lessons": [
     {
       "id": "UR-C03-aap-tum-tu",
@@ -671,7 +671,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8f2496ec4fb771a",
+      "sourceHash": "fnv1a64:cb1c0aac66a751a8",
       "notice": null,
       "blocks": [
         {
@@ -687,7 +687,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say the opening ladder once: shukriyā — jī hā̃ — nahī̃. Point to the three shapes you traced before the joined thank-you word. Then ask āp kā nām kyā hai? and answer merā nām... hai."
+              "text": "Say the opening ladder once: shukriyā — jī hā̃ — nahī̃."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the three shapes you traced before the joined thank-you word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the three shapes you traced before the joined thank-you word]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then ask āp kā nām kyā hai? and answer merā nām... hai."
             }
           ]
         },

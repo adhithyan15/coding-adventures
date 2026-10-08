@@ -50,7 +50,7 @@ speaker-near place: **here**.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KOKO, JA-SCRIPT-KO-01] -->
 
-1. Point beside yourself and say *koko*.
+1. Picture the spot beside you and say *koko*.
 2. Read **こ | こ**.
 3. Hear *ko-ko* and wait ten seconds. [YOU WRITE: both signs]
 

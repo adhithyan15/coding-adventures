@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 6,
-  "sourceHash": "fnv1a64:1a79af5a09e1196b",
+  "sourceHash": "fnv1a64:7e6f1f14abee364e",
   "lessonIds": [
     "MW-C05-hear-tharo",
     "MW-W05-tha",
@@ -16,7 +16,7 @@
   "drivablePrefix": 1,
   "text": "marwadi/narration/ch06.txt",
   "json": "marwadi/narration/ch06.json",
-  "textHash": "fnv1a64:626c0b2685285643",
-  "jsonHash": "fnv1a64:8dbd24de9ee99dc3",
+  "textHash": "fnv1a64:7e8967275e699a4b",
+  "jsonHash": "fnv1a64:74ad018c162a6870",
   "findings": []
 }

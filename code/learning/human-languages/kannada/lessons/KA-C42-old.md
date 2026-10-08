@@ -52,7 +52,7 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-05, KA-LEX-C41-DEIXIS-02, KA-LEX-C41-DEIXIS-03] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ಹಳೆಯ" three times, pointing at something different each time]
+- [YOU SAY: "ಹಳೆಯ" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU RECALL: say *adu*]
 - [YOU READ: **ಇಲ್ಲಿ**]

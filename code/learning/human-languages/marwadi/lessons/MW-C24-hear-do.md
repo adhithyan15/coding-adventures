@@ -49,8 +49,9 @@ One beat, like *lo*, and the same *-o* ending as every asking word so far. The
 two are a pair worth holding together: *lo* asks somebody to take, *do* asks
 them to give.
 
-Say them alternately, four times, with the matching gesture each time. If the
-gesture stops matching the word, slow down until it does.
+Say them alternately, four times, picturing the matching hand each time: taking
+for *lo*, giving for *do*. If the picture stops matching the word, slow down
+until it does.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DO-01, MW-LEX-LO-01] -->

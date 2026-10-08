@@ -52,7 +52,7 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[ML-LEX-C42-ADJ-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ചെറിയ" three times, pointing at something different each time]
+- [YOU SAY: "ചെറിയ" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
 
 ## Wrap-up Recall

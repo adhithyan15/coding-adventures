@@ -52,7 +52,7 @@ attempt because every sign is already yours.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PHRASE-MY-NAME-IS-01, MW-SCRIPT-HAI-01] -->
 
-1. hear the line and point to the person naming themself
+1. hear the line and say the name the speaker gives
 2. say the line once with *rām*
 3. read the four groups without romanization
 

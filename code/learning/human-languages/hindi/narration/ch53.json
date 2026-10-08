@@ -4,7 +4,7 @@
   "chapter": 53,
   "title": "More of the Body",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:bc91974771df463f",
+  "sourceHash": "fnv1a64:b7ee9c7dfd4914dc",
   "lessons": [
     {
       "id": "HI-C53-shoulder",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7b9721f8b9c59f5b",
+      "sourceHash": "fnv1a64:4a6d70578ec30f3b",
       "notice": null,
       "blocks": [
         {
@@ -101,11 +101,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "kandhā, and touch it",
+              "instruction": "kandhā, picturing your shoulder",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *kandhā*, and touch it]"
+              "source": "[YOU SAY: *kandhā*, picturing your shoulder]"
             },
             {
               "kind": "prompt",

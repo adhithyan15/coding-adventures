@@ -58,7 +58,7 @@ Two of five.
 [PAUSE 1s]
 - [YOU SAY: *uṅglī*]
 - [YOU SAY: it once more, slowly]
-- [YOU SAY: *uṅglī*, then *bāl*, and touch each as you name it]
+- [YOU SAY: *uṅglī*, then *bāl*, picturing each as you name it]
 - [YOU READ: **बेटी**]
 - [YOU RECALL: say *kapṛā*]
 

@@ -55,7 +55,7 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[HI-LEX-C41-ADJ-02, HI-CONCEPT-C39-BACCHA-01, HI-CONCEPT-C39-BACCHA-02, HI-LEX-C40-DEIXIS-03] -->
 
 [PAUSE 1s]
-- [YOU SAY: "छोटा" three times, pointing at something different each time]
+- [YOU SAY: "छोटा" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU READ: **बच्चा**]
 - [YOU RECALL: say *yahā̃*]

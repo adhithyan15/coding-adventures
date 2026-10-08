@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 14,
-  "sourceHash": "fnv1a64:a5a3437893117f3a",
+  "sourceHash": "fnv1a64:9c1bf575a511ce6f",
   "lessonIds": [
     "ZH-C14-hear-xiao",
     "ZH-W14-xiao",
@@ -17,7 +17,7 @@
   "drivablePrefix": 1,
   "text": "chinese/narration/ch14.txt",
   "json": "chinese/narration/ch14.json",
-  "textHash": "fnv1a64:77685e9eab52654a",
-  "jsonHash": "fnv1a64:ac65790ac5c2b342",
+  "textHash": "fnv1a64:1f97c7567a250da6",
+  "jsonHash": "fnv1a64:903270bee79997f6",
   "findings": []
 }

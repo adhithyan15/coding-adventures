@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Here, There, and Where",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6ebb3be49bffe873",
+  "sourceHash": "fnv1a64:77f2cc3a8acfb44c",
   "lessons": [
     {
       "id": "UR-C24-is",
@@ -722,7 +722,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eb56b574f49c9c0a",
+      "sourceHash": "fnv1a64:6a37eb272aa54006",
       "notice": null,
       "blocks": [
         {
@@ -774,11 +774,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "gesturing, then naming — vahāṅ, then us kamre meṅ",
+              "instruction": "the bare there, then the named place — vahāṅ, then us kamre meṅ",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: gesturing, then naming — *vahāṅ*, then *us kamre meṅ*]"
+              "source": "[YOU SAY: the bare *there*, then the named place — *vahāṅ*, then *us kamre meṅ*]"
             },
             {
               "kind": "prompt",

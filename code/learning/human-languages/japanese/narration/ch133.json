@@ -4,7 +4,7 @@
   "chapter": 133,
   "title": "The Last Four Hiragana: Ki, Ke, Nu and He",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:6c9143049afdd8f1",
+  "sourceHash": "fnv1a64:1736607708699a2d",
   "lessons": [
     {
       "id": "JA-C133-eki",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8149b7713d27c658",
+      "sourceHash": "fnv1a64:c71e2e7334d4a170",
       "notice": null,
       "blocks": [
         {
@@ -95,11 +95,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "eki, clapping two beats",
+              "instruction": "eki, then count its beats aloud — two",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *eki*, clapping two beats]"
+              "source": "[YOU SAY: *eki*, then count its beats aloud — two]"
             },
             {
               "kind": "prompt",
@@ -501,7 +501,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:def016fcd66a9bff",
+      "sourceHash": "fnv1a64:9640ad8801d4d36f",
       "notice": null,
       "blocks": [
         {
@@ -586,11 +586,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "ike, clapping two beats",
+              "instruction": "ike, then count its beats aloud — two",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *ike*, clapping two beats]"
+              "source": "[YOU SAY: *ike*, then count its beats aloud — two]"
             },
             {
               "kind": "prompt",
@@ -990,7 +990,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d45e26bdfdc2ddd",
+      "sourceHash": "fnv1a64:3f082b973b8b5a09",
       "notice": null,
       "blocks": [
         {
@@ -1075,11 +1075,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "inu, clapping two beats",
+              "instruction": "inu, then count its beats aloud — two",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *inu*, clapping two beats]"
+              "source": "[YOU SAY: *inu*, then count its beats aloud — two]"
             },
             {
               "kind": "prompt",
@@ -1474,7 +1474,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:97c3203ac5b2d2a2",
+      "sourceHash": "fnv1a64:f564e9991141c6de",
       "notice": null,
       "blocks": [
         {
@@ -1550,11 +1550,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "heya, pointing at the room you are in",
+              "instruction": "heya, picturing a room you know",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *heya*, pointing at the room you are in]"
+              "source": "[YOU SAY: *heya*, picturing a room you know]"
             },
             {
               "kind": "prompt",

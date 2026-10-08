@@ -58,7 +58,7 @@ lesson writes it.
 
 [PAUSE 1s]
 - [YOU SAY: *kippu*]
-- [YOU SAY: *kippu*, clapping three beats]
+- [YOU SAY: *kippu*, then count its beats aloud — three]
 - [YOU RECALL: say which sign in **きっぷ** carries the small circle, and name the sign under it]
 
 ## Wrap-up Recall

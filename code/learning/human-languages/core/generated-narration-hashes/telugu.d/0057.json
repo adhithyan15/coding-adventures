@@ -1,7 +1,7 @@
 {
   "language": "telugu",
   "chapter": 57,
-  "sourceHash": "fnv1a64:c0f9578bd5b071f3",
+  "sourceHash": "fnv1a64:6c8ff514ed095e02",
   "lessonIds": [
     "TE-C57-neck",
     "TE-C57-back",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "telugu/narration/ch57.txt",
   "json": "telugu/narration/ch57.json",
-  "textHash": "fnv1a64:ce71937fca529e8b",
-  "jsonHash": "fnv1a64:6fa650728afdb321",
+  "textHash": "fnv1a64:0e5cc069230d361b",
+  "jsonHash": "fnv1a64:e64098c9b41fe633",
   "findings": []
 }

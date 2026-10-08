@@ -59,7 +59,7 @@ The next lesson writes it.
 
 [PAUSE 1s]
 - [YOU SAY: *ippai*]
-- [YOU SAY: *ippai*, clapping four beats]
+- [YOU SAY: *ippai*, then count its beats aloud — four]
 - [YOU RECALL: say which sign in **いっぱい** carries the small circle, and name the sign under it]
 
 ## Wrap-up Recall

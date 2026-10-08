@@ -50,7 +50,7 @@ adjective you will ever meet here.
 <!-- hl-knowledge: introduces=[]; assesses=[KA-LEX-C42-ADJ-01, KA-LEX-C39-KAAPI-01, KA-ETYMON-C39-KAAPI-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: "ದೊಡ್ಡ" three times, pointing at something different each time]
+- [YOU SAY: "ದೊಡ್ಡ" three times, picturing something different each time]
 - [YOU SAY: it once with a word you already know after it]
 - [YOU RECALL: say *kāphi*]
 

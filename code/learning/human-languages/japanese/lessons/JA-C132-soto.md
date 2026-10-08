@@ -57,7 +57,7 @@ anywhere beyond the walls, out of doors.
 
 [PAUSE 1s]
 - [YOU SAY: *soto*]
-- [YOU SAY: *soto*, pointing at a window or a door]
+- [YOU SAY: *soto*, picturing a window or a door]
 - [YOU WRITE: **そと** from memory, one stroke for the first sign and two for the second]
 
 ## Wrap-up Recall

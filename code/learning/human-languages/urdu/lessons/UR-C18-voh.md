@@ -83,8 +83,8 @@ which is fewer words to learn and one more reason context does the work.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-VOH, UR-LEX-YIH, UR-LEX-MAAN, UR-LEX-MAIN] -->
 
-- [YOU SAY: **voh** — that; and point at something across the room]
-- [YOU SAY: *yih ām hai*, then *voh ām hai*, pointing differently each time]
+- [YOU SAY: **voh** — that; and picture something across the room]
+- [YOU SAY: *yih ām hai*, then *voh ām hai*, picturing one mango near and one far]
 - [YOU SAY: *voh merī māṅ haiṅ* — and say why the copula is *haiṅ*]
 - [YOU SAY: the three pointing and person words you now own — **maiṅ, yih,
   voh**]

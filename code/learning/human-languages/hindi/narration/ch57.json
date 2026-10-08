@@ -4,7 +4,7 @@
   "chapter": 57,
   "title": "A Gift and a Feast",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:ad283be158016066",
+  "sourceHash": "fnv1a64:2eefd717d4575a18",
   "lessons": [
     {
       "id": "HI-C57-present",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:adb0d2eaabb44cc3",
+      "sourceHash": "fnv1a64:b4a6ef08f79699ef",
       "notice": null,
       "blocks": [
         {
@@ -101,11 +101,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "tohfā, offered with both hands",
+              "instruction": "tohfā, as if offering it",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: *tohfā*, offered with both hands]"
+              "source": "[YOU SAY: *tohfā*, as if offering it]"
             },
             {
               "kind": "prompt",

@@ -40,7 +40,7 @@ reviews_of: [MW-C05-hear-kain, MW-W05-ka, MW-W05-ii-independent, MW-W03-anusvara
 
 Say *kāĩ* and its meaning. [YOU WRITE: **क** and independent **ई**]
 
-Point to the known nasal dot in **हां**.
+[YOU POINT: the known nasal dot in **हां**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-SCRIPT-KAIN-01]; assesses=[MW-LEX-KAIN-01, MW-SCRIPT-AA-MATRA-01] -->

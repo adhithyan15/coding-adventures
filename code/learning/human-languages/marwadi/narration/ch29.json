@@ -4,7 +4,7 @@
   "chapter": 29,
   "title": "Take the Money: Closing the Bargain",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:696b6f191fc2d604",
+  "sourceHash": "fnv1a64:100906f0a0e80d9f",
   "lessons": [
     {
       "id": "MW-C24-hear-lo",
@@ -409,7 +409,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c9533313d574250",
+      "sourceHash": "fnv1a64:ba882fd92cf5757e",
       "notice": null,
       "blocks": [
         {
@@ -458,7 +458,7 @@
             },
             {
               "kind": "speech",
-              "text": "Then say the line at speaking pace with your hand out as if the money were in it."
+              "text": "Then say the line at speaking pace as if the money were in your hand."
             }
           ]
         },
@@ -508,7 +508,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:25b975dcc3ee3f9b",
+      "sourceHash": "fnv1a64:45d1020ecbcd3a2f",
       "notice": null,
       "blocks": [
         {
@@ -552,7 +552,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say them alternately, four times, with the matching gesture each time. If the gesture stops matching the word, slow down until it does."
+              "text": "Say them alternately, four times, picturing the matching hand each time: taking for lo, giving for do. If the picture stops matching the word, slow down until it does."
             }
           ]
         },
@@ -1194,7 +1194,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4931526693a71668",
+      "sourceHash": "fnv1a64:b33651f0b416f5f0",
       "notice": null,
       "blocks": [
         {
@@ -1241,8 +1241,13 @@
               "text": "Produce both from meaning cues, straight after the three turns of Chapter 28."
             },
             {
-              "kind": "speech",
-              "text": "Read both printed lines and point to the two words that mean give and take."
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "both printed lines, then point to the two words that mean give and take",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: both printed lines, then point to the two words that mean *give* and *take*]"
             },
             {
               "kind": "prompt",

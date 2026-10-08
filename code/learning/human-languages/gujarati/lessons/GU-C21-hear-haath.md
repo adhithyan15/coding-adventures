@@ -43,7 +43,7 @@ final puff distinct from *ghar*.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-HAATH-01] -->
 
-Touch your hand when you hear *hāth*, then say *hāth* once from the meaning.
+Picture your hand when you hear *hāth*, then say *hāth* once from the meaning.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-HAATH-01] -->

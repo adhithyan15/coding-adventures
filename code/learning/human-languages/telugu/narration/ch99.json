@@ -4,7 +4,7 @@
   "chapter": 99,
   "title": "Welcomes, Gifts, Invitations",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:413045e0d3561771",
+  "sourceHash": "fnv1a64:755d8235ea411a39",
   "lessons": [
     {
       "id": "TE-C99-namaste",
@@ -654,7 +654,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c2af6b2c4037b8b6",
+      "sourceHash": "fnv1a64:a2a11e5ef10431e4",
       "notice": null,
       "blocks": [
         {
@@ -670,7 +670,7 @@
             },
             {
               "kind": "speech",
-              "text": "A friend arrives at your door. Greet them with palms together, and say you are delighted."
+              "text": "A friend arrives at your door. Greet them, and say you are delighted."
             }
           ]
         },

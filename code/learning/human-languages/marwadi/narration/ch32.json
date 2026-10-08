@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Counting To Five, And The One New Sign",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f9e4da92e7923827",
+  "sourceHash": "fnv1a64:3fe73f83b9f7c62b",
   "lessons": [
     {
       "id": "MW-W32-e",
@@ -696,7 +696,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a4b6d82d5d0c45f8",
+      "sourceHash": "fnv1a64:42b9f72887e4d596",
       "notice": null,
       "blocks": [
         {
@@ -727,7 +727,7 @@
             },
             {
               "kind": "speech",
-              "text": "Put a hand in front of your mouth and say it. There is no puff of air on the opening consonant. That plain ch is the one बच्चा doubles."
+              "text": "Say it and listen for the breath. There is no puff of air on the opening consonant. That plain ch is the one बच्चा doubles."
             },
             {
               "kind": "speech",

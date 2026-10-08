@@ -50,7 +50,7 @@ its own lesson, and every sign was already earned.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-TE-HAND, JA-LEX-MIMI, JA-LEX-KUCHI, JA-LEX-ASHI, JA-LEX-HANA-NOSE, JA-LEX-KAO, JA-LEX-ME-EYE] -->
 
-1. **Listen:** point to the named body part.
+1. **Listen:** say the English for the named body part.
 2. **Speak:** name any three without reading.
 3. **Read:** read all seven from left to right.
 4. [YOU WRITE: any three of the seven, from memory]

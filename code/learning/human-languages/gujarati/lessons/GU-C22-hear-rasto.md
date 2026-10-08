@@ -42,7 +42,7 @@ Listen twice: **rasto**. It means **road**. Keep the middle *st* together.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-RASTO-01] -->
 
-Point to the road when you hear *rasto*, then say *rasto* from the meaning.
+Picture a road when you hear *rasto*, then say *rasto* from the meaning.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GU-LEX-RASTO-01] -->

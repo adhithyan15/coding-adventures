@@ -4,7 +4,7 @@
   "chapter": 41,
   "title": "Describing Things",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:480a0d8e368996b1",
+  "sourceHash": "fnv1a64:73a52fd8a84b8901",
   "lessons": [
     {
       "id": "HI-C41-big",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aa332d1158353c10",
+      "sourceHash": "fnv1a64:baded91d79584440",
       "notice": null,
       "blocks": [
         {
@@ -72,11 +72,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"बड़ा (baṛā)\" three times, pointing at something different each time",
+              "instruction": "\"बड़ा (baṛā)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"बड़ा\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"बड़ा\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -148,7 +148,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0604ea2dc959e89",
+      "sourceHash": "fnv1a64:735a705ba4052a89",
       "notice": null,
       "blocks": [
         {
@@ -205,11 +205,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"छोटा (choṭā)\" three times, pointing at something different each time",
+              "instruction": "\"छोटा (choṭā)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"छोटा\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"छोटा\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -272,7 +272,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d73814866b493529",
+      "sourceHash": "fnv1a64:2ca4e7d235ad7f41",
       "notice": null,
       "blocks": [
         {
@@ -329,11 +329,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"अच्छा (acchā)\" three times, pointing at something different each time",
+              "instruction": "\"अच्छा (acchā)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"अच्छा\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"अच्छा\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -396,7 +396,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0dfb7f32b610d2e0",
+      "sourceHash": "fnv1a64:4b90dd1b3e9b1318",
       "notice": null,
       "blocks": [
         {
@@ -453,11 +453,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"नया (nayā)\" three times, pointing at something different each time",
+              "instruction": "\"नया (nayā)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"नया\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"नया\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",
@@ -511,7 +511,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9505558e0ff76c69",
+      "sourceHash": "fnv1a64:35cb26905cb74965",
       "notice": null,
       "blocks": [
         {
@@ -568,11 +568,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"पुराना (purānā)\" three times, pointing at something different each time",
+              "instruction": "\"पुराना (purānā)\" three times, picturing something different each time",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"पुराना\" three times, pointing at something different each time]"
+              "source": "[YOU SAY: \"पुराना\" three times, picturing something different each time]"
             },
             {
               "kind": "prompt",

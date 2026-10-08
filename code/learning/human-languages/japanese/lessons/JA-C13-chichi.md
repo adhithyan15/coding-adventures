@@ -41,7 +41,7 @@ Then say it on one even mora.
 ## You'll Want to Know — hear it before reading it
 <!-- hl-knowledge: introduces=[JA-LEX-CHICHI]; assesses=[] -->
 
-Hear *chi-chi*. Point to “my father,” then say the two even morae once.
+Hear *chi-chi*. Say “my father,” then say the two even morae once.
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-CHICHI, JA-SCRIPT-CHI-01, JA-SCRIPT-TSU-01] -->

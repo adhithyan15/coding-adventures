@@ -65,10 +65,11 @@
 // writing ("[YOU RECALL: write **ば** — **R1**]"). The second is a cue, but
 // RECALL is a spoken action, so the narration reads it out with no deferral.
 //
-// Two more checks at the end of this file read cues for the page rather than
-// the pen: pointing at a sign (inside a recall), and reading printed script
-// (inside any cue the narration speaks unhedged — RECALL, RETURN TO, SAY,
-// RUN, …). Both demand exactly zero in drivable lessons, with no ledger,
+// Three more checks at the end of this file read cues for the page or the body
+// rather than the pen: pointing at a sign (inside a recall), reading printed
+// script, and making a gesture — clapping, pointing, touching, showing fingers
+// (both inside any cue the narration speaks unhedged — RECALL, RETURN TO, SAY,
+// RUN, …). Each demands exactly zero in drivable lessons, with no ledger,
 // because every such cue was fixed in the change that added (or widened) the
 // check.
 
@@ -81,12 +82,14 @@ import {
   bareWritingImperatives,
   clausesOf,
   drivableWritingInstructions,
+  gestureSpokenCues,
   narratedProseSpans,
   opensChainedOrFrontedWriting,
   pointingRecallCues,
   readingSpokenCues,
   recallCueAsksForWriting,
   recallCueAsksToPoint,
+  spokenCueAsksForGesture,
   spokenCueAsksToReadScript,
   withoutHtmlComments,
   writingRecallCues,
@@ -567,6 +570,122 @@ describe("spokenCueAsksToReadScript stays linear", () => {
 });
 
 // ---------------------------------------------------------------------------
+// A gesture, inside any spoken cue
+// ---------------------------------------------------------------------------
+//
+// The positives are corpus cues as they were before they were rewritten for
+// the ear, one per shape the fix met, plus the non-drivable cues that keep
+// their gestures; the controls are corpus cues that mention a hand, a clap or
+// a point and ask for none, and the rewrites themselves.
+
+describe("gestureSpokenCues: what fires", () => {
+  it.each([
+    // A gesture verb where a step starts.
+    ["a demonstrative drill", '- [YOU SAY: "இங்கே" three times, pointing at something different each time]'],
+    ["a mora drill", "- [YOU SAY: *denwa*, clapping three beats]"],
+    ["a clap with a silent beat", "- [YOU SAY: *chotto*, clapping three beats — the middle clap is silent]"],
+    ["a tap after and", "- [YOU SAY: *mo | o* and tap twice]"],
+    ["finger counting after while", "- [YOU SAY: *onnŭ, raṇṭŭ, mūnnŭ, nālŭ, añcŭ* while raising one more finger]"],
+    ["a hand raised after a dash", "- [YOU SAY: *valadu kai*, then *iḍadu kai* — and raise each hand as you say it]"],
+    ["raising each hand", "- [YOU SAY: **வலது கை**, then **இடது கை**, raising each hand]"],
+    ["a body part touched", "- [YOU SAY: *kandhā*, and touch it]"],
+    ["each part touched", "- [YOU SAY: *uṅglī*, then *bāl*, and touch each as you name it]"],
+    ["a pen held up", "- [YOU SAY: *kore*, holding up a pen, then *koko*, pointing at the floor where you stand]"],
+    ["pointing at the start", "- [YOU SAY: point to one person, ask **¿Quién?**, and answer with a name]"],
+    ["pointing after then", "- [YOU SAY: all five in order, then point at your మెడ and say *nāku noppi*]"],
+    ["pointing after a semicolon and and", "- [YOU SAY: **voh** — that; and point at something across the room]"],
+    ["pointing as you say it", "[YOU SAY: \"ondu\" as you point at ೧]"],
+    ["a gesture named as a label", "- [YOU SAY: gesturing, then naming — *vahāṅ*, then *us kamre meṅ*]"],
+    ["pointing named as a label", "- [YOU SAY: pointing at them — *ei bhāirā*]"],
+    ["clapping inside a recall", "[YOU RECALL: say *a car*, and clap its beats — **R1**, one lesson back]"],
+    // A hand or a bow as the manner of saying something.
+    ["offered with both hands", "- [YOU SAY: *tohfā*, offered with both hands]"],
+    ["placed with a hand", "- [YOU SAY: *kaḻuttŭ*, then *mutukŭ*, and place each one with a hand]"],
+    ["a hand-wobble", '- [YOU SAY: "così così" — *koh-ZEE koh-ZEE*, with a hand-wobble]'],
+    ["a small bow", '- [YOU SAY: "vaṇakkam" with a small bow]'],
+    ["palms together", "- [YOU SAY: hello / goodbye, palms together — *nômoshkar*]"],
+    ["a hand in front of the mouth", "[YOU SAY: ద then ಧ, and ಬ then ಭ, with a hand in front of your mouth]"],
+    ["a remembered hand at the mouth", "- [YOU RECALL: *chār* from the last chapter, and the plain *ch* you tested with a hand at your mouth]"],
+    // A nested cue whose verb is manual.
+    ["a nested show", "- [YOU HEAR: *añcŭ*; YOU SHOW: 5]"],
+    ["a nested write", "[YOU SAY: *ek*; YOU WRITE: **एक**]"],
+    ["a cue wrapped across two source lines", "- [YOU SAY: *eki*,\n  clapping two beats]"],
+  ])("%s", (_label, markdown) => {
+    expect(gestureSpokenCues(markdown)).toHaveLength(1);
+  });
+
+  it("quotes the cue as authored, one entry per cue", () => {
+    const markdown = "- [YOU SAY: *eki*, clapping two beats]\n- [YOU SAY: *eki*]\n- [YOU HEAR: *aintu*; YOU SHOW: 5]";
+    expect(gestureSpokenCues(markdown)).toEqual(["[YOU SAY: *eki*, clapping two beats]", "[YOU HEAR: *aintu*; YOU SHOW: 5]"]);
+  });
+});
+
+describe("gestureSpokenCues: what does not fire", () => {
+  it.each([
+    // The rewrites.
+    ["the rewrite of a demonstrative drill", '- [YOU SAY: "இங்கே" three times, picturing something different each time]'],
+    ["the rewrite of a mora drill", "- [YOU SAY: *denwa*, then count its beats aloud — three]"],
+    ["the rewrite of finger counting", "- [YOU HEAR: *añcŭ*, then say the number — five]"],
+    ["the rewrite of raising each hand", "- [YOU SAY: *valadu kai*, then *iḍadu kai* — and say *right* or *left* after each]"],
+    ["the rewrite of a pen held up", "- [YOU SAY: *kore*, picturing a pen in your hand, then *koko*, picturing the spot where you stand]"],
+    ["the rewrite of a bow", '- [YOU SAY: "vaṇakkam", the word that names the bow]'],
+    ["the rewrite of palms together", "- [YOU SAY: hello / goodbye, the palms-together greeting — *nômoshkar*]"],
+    ["the rewrite of a pointing label", "- [YOU SAY: these brothers here — *ei bhāirā*]"],
+    ["a gesture the narration defers", "- [YOU POINT: **み** and **め** inside it]"],
+    ["a reading the narration defers", "- [YOU READ: both printed lines, then point to the two words that mean *give* and *take*]"],
+    // Vocabulary, glosses and material.
+    ["a gloss after for to", "[YOU RECALL: say the Tamil for to touch, then the Tamil for to sneeze, then say *viḻuṅku* again]"],
+    ["a gloss of to shake hands", "[YOU RECALL: say the Tamil for to shake hands, then the Tamil for to take a photo, then say *naṭi* again]"],
+    ["a gloss of to clap", "[YOU RECALL: say the Kannada for to whisper, then the Kannada for to clap]"],
+    ["a list of body words", "[YOU SAY: a heel, a fist, a palm, the liver, a lung]"],
+    ["a list of verbs", "[YOU SAY: to cool, to tap, to pluck, to till, to grow]"],
+    ["a word and its meaning", '[YOU SAY: "kai" — hand]'],
+    ["material about hands", '[YOU SAY: "Ich mache die Hand auf. Ich mache die Hand zu."]'],
+    ["material to translate", "[YOU SAY: you must show your card at the entrance]"],
+    ["a speech act", "[YOU SAY: wave away an apology — *paravāgilla*]"],
+    ["the tongue's tap", '[YOU SAY: "gracias" — *GRAH-syahs*, one soft tap on the *r*]'],
+    ["a single consonant", "[YOU SAY: *kuṭi*, touching the sound once]"],
+    ["a wobble in the voice", '[YOU SAY: "comme ci, comme ça" — with a little hand-wobble in the voice]'],
+    ["the pointing words, named", "[YOU SAY: the three pointing and person words you now own — **maiṅ, yih, voh**]"],
+    ["a word that points", "[YOU RECALL: two chapters back, the word that points at something near — *ei*]"],
+    ["point out, as a gloss", "[YOU RECALL: say the French for to imagine, then the French for to point out, then say *informer* again]"],
+    ["a thing to say about hands", "[YOU SAY: *koṭu*, then *vāṅgu* — and say which way each hand is moving]"],
+    ["a noun point", "[YOU SAY: the honest point — Arabic noon carries a religious meaning]"],
+    ["raising the pitch", '[YOU SAY: ask it — "¿Hablas español?" (raise the pitch; ¿ opens it)]'],
+    ["a quotation being said", '[YOU SAY: "and clap twice" once more]'],
+    ["a nested spoken cue", "[YOU HEAR: *ek*; YOU SAY: one]"],
+    ["nested words in lower case", "[YOU SAY: you show: 5 of them]"],
+  ])("%s", (_label, markdown) => {
+    expect(gestureSpokenCues(markdown)).toEqual([]);
+  });
+});
+
+describe("spokenCueAsksForGesture stays linear", () => {
+  // About 50,000 characters each; only the answers are asserted, because
+  // timing bounds flake on a loaded runner.
+  it.each([
+    ["a long run of spaces before the verb", `say it${" ".repeat(50_000)}and clap twice`, true],
+    ["a long run of spaces with no verb", `say it${" ".repeat(50_000)}x`, false],
+    ["a long run of spaces inside a manner phrase", `say it with${" ".repeat(50_000)}a hand`, true],
+    ["many links with no verb", `say ${"it, and then ".repeat(4_000)}stop`, false],
+    ["many links, the last one pointing", `say ${"it, and then ".repeat(4_000)}point at it`, true],
+    ["many near misses on point", `${"and point out ".repeat(4_000)}`, false],
+    ["many near misses on tap", `${"and tap the r ".repeat(4_000)}`, false],
+    ["many near misses on raise", `${"and raise the pitch ".repeat(3_000)}`, false],
+    ["many near misses on with", `${"with a little hand ".repeat(3_000)}`, false],
+    ["many unclosed quotation openers", `say ${"“".repeat(50_000)} and touch it`, true],
+    ["a quotation that hides every gesture", `say “${"and clap twice ".repeat(4_000)}” now`, false],
+    ["many nested spoken cues", `${"YOU SAY: a; ".repeat(5_000)}`, false],
+    ["many nested spoken cues, the last one manual", `${"YOU SAY: a; ".repeat(5_000)}YOU SHOW: 5`, true],
+    ["a long run of capitals before a colon", `YOU ${"A".repeat(50_000)}: x`, false],
+    ["many YOUs with no colon", `${"YOU SHOW ".repeat(6_000)}`, false],
+  ])("%s", (_label, content, expected) => {
+    expect(content.length).toBeGreaterThan(40_000);
+    expect(spokenCueAsksForGesture(content)).toBe(expected);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // The corpus
 // ---------------------------------------------------------------------------
 
@@ -770,5 +889,43 @@ describe("drivable lessons carry no spoken cue that asks to read script", () => 
     // read), and high enough that a detector which lost most of its matches
     // fails here rather than passing quietly.
     expect(reading, "non-drivable lessons with a reading cue").toBeGreaterThan(40);
+  });
+});
+
+describe("drivable lessons carry no spoken cue that asks for a gesture", () => {
+  it("no drivable lesson asks a driver to clap, point, touch or show fingers inside a spoken cue", () => {
+    // No ledger: every such cue was rewritten for the ear when the check
+    // arrived, so the corpus answer is exactly zero.
+    const problems: string[] = [];
+    for (const lesson of lessons) {
+      const id = String(lesson.frontmatter.id);
+      if (!drivableIds.has(id)) continue;
+      for (const cue of gestureSpokenCues(lessonMarkdown(lesson))) {
+        problems.push(
+          `${id}: a drivable spoken cue asks the listener to make a gesture. Say the same thing ` +
+            `for the ear ("then count its beats aloud — three", "picturing something different ` +
+            `each time", "then say the number"), or move the gesture into a cue the narration ` +
+            `defers ([YOU POINT: …]):\n       ${cue.slice(0, 160)}`,
+        );
+      }
+    }
+    expect(problems, problems.join("\n")).toEqual([]);
+  });
+
+  it("the gesture check still fires on the real corpus, where gestures are legitimate", () => {
+    // Anti-vacuity, as for the other cue checks: a detector that matched
+    // nothing would also report zero above. Lessons that are NOT drivable keep
+    // their gesture work (digit lessons that point at a printed figure,
+    // aspiration drills with a hand in front of the mouth), and their
+    // narration already opens with the hands-and-eyes notice.
+    let gesture = 0;
+    for (const lesson of lessons) {
+      if (drivableIds.has(String(lesson.frontmatter.id))) continue;
+      if (gestureSpokenCues(lessonMarkdown(lesson)).length > 0) gesture += 1;
+    }
+    // A floor set below the count measured when this was written (29
+    // non-drivable lessons), and high enough that a detector which lost most
+    // of its matches fails here rather than passing quietly.
+    expect(gesture, "non-drivable lessons with a gesture cue").toBeGreaterThan(20);
   });
 });

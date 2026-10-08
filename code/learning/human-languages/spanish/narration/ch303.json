@@ -4,7 +4,7 @@
   "chapter": 303,
   "title": "When the Words Run Out --- Help, a Moment, Again, I Don't Know, What Does It Mean",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:c04d281c67b8fbac",
+  "sourceHash": "fnv1a64:dc150b4229b03fba",
   "lessons": [
     {
       "id": "ES-C303-ayuda",
@@ -567,7 +567,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4b77b6c9c7ac93e8",
+      "sourceHash": "fnv1a64:8d7fe8e38a58f410",
       "notice": null,
       "blocks": [
         {
@@ -621,7 +621,7 @@
             },
             {
               "kind": "speech",
-              "text": "Point at the written word, or say it back, and ask."
+              "text": "Say the word back, and ask."
             }
           ]
         },

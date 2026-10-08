@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Haan Sa: A Respectful Yes, Sign by Sign",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:08507ec20d72ecf7",
+  "sourceHash": "fnv1a64:91af327455d53c92",
   "lessons": [
     {
       "id": "MW-W03-ha",
@@ -371,7 +371,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:595e046cbca392e9",
+      "sourceHash": "fnv1a64:d9c9e81024bde9d1",
       "notice": null,
       "blocks": [
         {
@@ -407,7 +407,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Have someone or a screen reader say these in either order: ābhār and hā(n) sā. Without looking, point left for formal thanks and right for respectful yes. Then say हां सा as the answer to a question you accept."
+              "text": "Have someone or a screen reader say these in either order: ābhār and hā(n) sā. Without looking, answer formal thanks or respectful yes for each. Then say हां सा as the answer to a question you accept."
             }
           ]
         },

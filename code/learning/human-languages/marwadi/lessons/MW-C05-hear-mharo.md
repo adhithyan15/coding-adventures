@@ -53,7 +53,7 @@ it today.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MHARO-01] -->
 
-Point to yourself when you hear *mhāro*. Point away when you hear *pāṇī*.
+Say *my* when you hear *mhāro*. Say *water* when you hear *pāṇī*.
 Change the order and do it once more.
 
 ## Wrap-up Recall

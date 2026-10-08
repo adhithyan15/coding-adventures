@@ -44,7 +44,7 @@ reviews_of: [MW-C18-ghee, MW-C16-bas, MW-W10-gha]
 
 > *sabjī* — **vegetables**
 
-Three beats, ending long. Hear it twice, point to a vegetable dish, and say it
+Three beats, ending long. Hear it twice, picture a vegetable dish, and say it
 once.
 
 ## Wrap-up Recall

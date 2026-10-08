@@ -52,7 +52,7 @@ memory hook; today's task is only sound and meaning.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-NAAM-01, MW-LEX-MHARO-01] -->
 
-Touch your name on a card when you hear *nām*. Touch yourself when you hear
+Say *name* when you hear *nām*. Say *my* when you hear
 *mhāro*. Change the order once.
 
 ## Wrap-up Recall

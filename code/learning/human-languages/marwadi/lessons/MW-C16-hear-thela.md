@@ -45,7 +45,7 @@ reviews_of: [MW-C16-gaadi, MW-W06-ttha]
 
 > *ṭhelā* — **cart; handcart**
 
-Hear the strong first sound, point to a handcart, and say the word once.
+Hear the strong first sound, picture a handcart, and say the word once.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-THELA-01] -->

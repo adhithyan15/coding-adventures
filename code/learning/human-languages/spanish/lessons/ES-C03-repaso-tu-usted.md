@@ -52,7 +52,7 @@ You know which word to reach for, and why *usted* takes the shape it does.
 
 [PAUSE 1s]
 - [YOU SAY: the whole exchange, both parts, without stopping]
-- [YOU SAY: point to one person, ask **¿Quién?**, and answer with a name]
+- [YOU SAY: think of one person, ask **¿Quién?**, and answer with a name]
 - [YOU SAY: it again, faster, and let it sound like speech rather than recital]
 
 [REPEAT x2]

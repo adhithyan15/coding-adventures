@@ -47,8 +47,7 @@ Two turns, and they only work in this order.
 1. Hear both lines and say which one the buyer says and which one ends the
    exchange.
 2. Produce both from meaning cues, straight after the three turns of Chapter 28.
-3. Read both printed lines and point to the two words that mean *give* and
-   *take*.
+3. [YOU READ: both printed lines, then point to the two words that mean *give* and *take*]
 4. [YOU WRITE: both from dictation, without a model]
 
 Pass each skill separately. A five-turn purchase now runs end to end. Nothing

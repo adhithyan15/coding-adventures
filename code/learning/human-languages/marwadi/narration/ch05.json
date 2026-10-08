@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Mharo Naam: Give One Name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:af1c94e7c3bfbfb3",
+  "sourceHash": "fnv1a64:b77253bd604b456d",
   "lessons": [
     {
       "id": "MW-C05-hear-mharo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c892db69332e8d5a",
+      "sourceHash": "fnv1a64:c68ae833cf3e665e",
       "notice": null,
       "blocks": [
         {
@@ -74,7 +74,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Point to yourself when you hear mhāro. Point away when you hear pāṇī. Change the order and do it once more."
+              "text": "Say my when you hear mhāro. Say water when you hear pāṇī. Change the order and do it once more."
             }
           ]
         },
@@ -445,7 +445,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0087eec68addd8b8",
+      "sourceHash": "fnv1a64:34dafb89b598c5c2",
       "notice": null,
       "blocks": [
         {
@@ -487,7 +487,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Touch your name on a card when you hear nām. Touch yourself when you hear mhāro. Change the order once."
+              "text": "Say name when you hear nām. Say my when you hear mhāro. Change the order once."
             }
           ]
         },
@@ -757,7 +757,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42c539c9b3b33219",
+      "sourceHash": "fnv1a64:360563ed6eb0d6d1",
       "notice": null,
       "blocks": [
         {
@@ -812,7 +812,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear mhāro nām rām hai. Tap four beats: my | name | Ram | is. English changes the order in translation: My name is Ram."
+              "text": "Hear mhāro nām rām hai. Count four beats aloud: my | name | Ram | is. English changes the order in translation: My name is Ram."
             }
           ]
         },
@@ -967,7 +967,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2156386c9bb63b86",
+      "sourceHash": "fnv1a64:45f4d06ab7e0124a",
       "notice": null,
       "blocks": [
         {
@@ -1009,7 +1009,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "hear the line and point to the person naming themself."
+              "text": "hear the line and say the name the speaker gives."
             },
             {
               "kind": "speech",
