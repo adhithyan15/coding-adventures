@@ -48,6 +48,95 @@ public sealed class Arc2DTests
     }
 
     [Fact]
+    public void CenterArcConsumesNeutralBoundsAndCubicCases()
+    {
+        using var fixture = JsonDocument.Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "geometry2d-v1-cases.json")));
+        var root = fixture.RootElement;
+        var tolerance = root.GetProperty("absolute_tolerance").GetDouble();
+        var boundsCount = 0;
+        var cubicCount = 0;
+        foreach (var entry in root.GetProperty("cases").EnumerateArray())
+        {
+            var operation = entry.GetProperty("operation").GetString();
+            if (operation is not ("center-arc-bounds" or "center-arc-cubics"))
+            {
+                continue;
+            }
+
+            var center = entry.GetProperty("center");
+            var arc = new CenterArc(new Point(center[0].GetDouble(), center[1].GetDouble()),
+                entry.GetProperty("rx").GetDouble(), entry.GetProperty("ry").GetDouble(),
+                entry.GetProperty("start_angle").GetDouble(), entry.GetProperty("sweep_angle").GetDouble(),
+                entry.GetProperty("x_rotation").GetDouble());
+            var id = entry.GetProperty("id").GetString();
+            if (operation == "center-arc-bounds")
+            {
+                boundsCount++;
+                var actual = arc.BoundingBox();
+                var expected = entry.GetProperty("expected_bounds");
+                Assert.True(Math.Abs(actual.X - expected[0].GetDouble()) <= tolerance, id);
+                Assert.True(Math.Abs(actual.Y - expected[1].GetDouble()) <= tolerance, id);
+                Assert.True(Math.Abs(actual.Width - expected[2].GetDouble()) <= tolerance, id);
+                Assert.True(Math.Abs(actual.Height - expected[3].GetDouble()) <= tolerance, id);
+            }
+            else
+            {
+                cubicCount++;
+                if (entry.TryGetProperty("expected_error", out var error))
+                {
+                    Assert.Equal("invalid-sweep", error.GetString());
+                    Assert.Throws<ArgumentOutOfRangeException>(() => arc.ToCubicBeziers());
+                    continue;
+                }
+
+                var beziers = arc.ToCubicBeziers();
+                Assert.Equal(entry.GetProperty("expected_count").GetInt32(), beziers.Count);
+                if (arc.SweepAngle == 0)
+                {
+                    var cubic = Assert.Single(beziers);
+                    Assert.True(cubic.P0.Distance(cubic.P1) <= tolerance, id);
+                    Assert.True(cubic.P0.Distance(cubic.P2) <= tolerance, id);
+                    Assert.True(cubic.P0.Distance(cubic.P3) <= tolerance, id);
+                }
+            }
+        }
+
+        Assert.Equal(4, boundsCount);
+        Assert.Equal(3, cubicCount);
+    }
+
+    [Fact]
+    public void CenterArcRejectsInvalidInputsAndNonfiniteDerivedPoints()
+    {
+        var valid = new CenterArc(Point.Origin(), 1, 1, 0, TrigPackage.PI / 2.0, 0);
+        var invalid = new[]
+        {
+            valid with { Center = new Point(double.NaN, 0) },
+            valid with { Rx = 0 },
+            valid with { Ry = double.PositiveInfinity },
+            valid with { StartAngle = double.NaN },
+            valid with { SweepAngle = double.PositiveInfinity },
+            valid with { XRotation = double.NaN },
+            valid with { Center = new Point(double.MaxValue, 0), Rx = double.MaxValue },
+        };
+        foreach (var arc in invalid)
+        {
+            Assert.Throws<ArgumentException>(() => arc.Evaluate(0));
+            Assert.Throws<ArgumentException>(() => arc.Tangent(0));
+            Assert.Throws<ArgumentException>(() => arc.BoundingBox());
+            Assert.Throws<ArgumentException>(() => arc.ToCubicBeziers());
+        }
+
+        var overTurn = valid with { SweepAngle = 2 * TrigPackage.PI + 0.1 };
+        Assert.Throws<ArgumentOutOfRangeException>(() => overTurn.Evaluate(0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => overTurn.Tangent(0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => overTurn.BoundingBox());
+        Assert.Throws<ArgumentOutOfRangeException>(() => overTurn.ToCubicBeziers());
+        Assert.Throws<ArgumentException>(() => valid.Evaluate(double.NaN));
+        Assert.Throws<ArgumentException>(() => valid.Tangent(double.PositiveInfinity));
+    }
+
+    [Fact]
     public void SvgArcHandlesDegenerateInputs()
     {
         Assert.Null(new SvgArc(Point.Origin(), Point.Origin(), 1, 1, 0, false, true).ToCenterArc());
