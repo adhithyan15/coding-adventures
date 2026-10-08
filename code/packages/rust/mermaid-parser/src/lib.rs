@@ -6564,6 +6564,21 @@ fn parse_swimlane_node(
             suffix[2..suffix.len() - 2].to_string(),
             DiagramShape::ParallelogramRight,
         )
+    } else if suffix.starts_with("[/") && suffix.ends_with("\\]") {
+        (
+            suffix[2..suffix.len() - 2].to_string(),
+            DiagramShape::Trapezoid,
+        )
+    } else if suffix.starts_with("[\\") && suffix.ends_with("/]") {
+        (
+            suffix[2..suffix.len() - 2].to_string(),
+            DiagramShape::InvertedTrapezoid,
+        )
+    } else if suffix.starts_with("[\\") && suffix.ends_with("\\]") {
+        (
+            suffix[2..suffix.len() - 2].to_string(),
+            DiagramShape::ParallelogramLeft,
+        )
     } else if suffix.starts_with('>') && suffix.ends_with(']') {
         (
             suffix[1..suffix.len() - 1].to_string(),

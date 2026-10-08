@@ -8,6 +8,7 @@
     "multiline-edge-continuation",
     "subprocess-and-database-shapes",
     "hexagon-and-double-circle-shapes",
-    "input-output-and-asymmetric-shapes"
+    "input-output-and-asymmetric-shapes",
+    "sloped-flowchart-shapes"
   ]
 }

@@ -1551,6 +1551,23 @@ fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_sloped_flowchart_shapes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        r#"swimlane-beta LR
+subgraph Shapes
+  left[\Inbound\]
+  wide[/Expand\]
+  narrow[\Contract/]
+end
+left --> wide --> narrow"#,
+    ).expect("sloped Flowchart nodes should parse");
+
+    assert_eq!(diagram.nodes[0].shape, diagram_ir::DiagramShape::ParallelogramLeft);
+    assert_eq!(diagram.nodes[1].shape, diagram_ir::DiagramShape::Trapezoid);
+    assert_eq!(diagram.nodes[2].shape, diagram_ir::DiagramShape::InvertedTrapezoid);
+}
+
+#[test]
 fn railroad_dispatches_all_notations_to_recursive_ir() {
     let source = "railroad-beta\ntitle Number\ndigit = choice(terminal(\"0\"), terminal(\"1\"));\nnumber = oneOrMore(nonterminal(\"digit\"));";
     let diagram = parse_any_mermaid(source).expect("railroad constructor notation should parse");

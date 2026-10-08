@@ -918,7 +918,8 @@ where
                 stroke_dash_offset: None,
             }),
             DiagramShape::Diamond | DiagramShape::Hexagon | DiagramShape::ParallelogramRight
-            | DiagramShape::Asymmetric => {
+            | DiagramShape::ParallelogramLeft | DiagramShape::Trapezoid
+            | DiagramShape::InvertedTrapezoid | DiagramShape::Asymmetric => {
                 let cx = node.x + node.width / 2.0;
                 let cy = node.y + node.height / 2.0;
                 let commands = match node.shape {
@@ -936,6 +937,27 @@ where
                         PathCommand::LineTo { x: node.x + node.width, y: node.y },
                         PathCommand::LineTo { x: node.x + node.width * 0.84, y: node.y + node.height },
                         PathCommand::LineTo { x: node.x, y: node.y + node.height },
+                        PathCommand::Close,
+                    ],
+                    DiagramShape::ParallelogramLeft => vec![
+                        PathCommand::MoveTo { x: node.x, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width * 0.84, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width, y: node.y + node.height },
+                        PathCommand::LineTo { x: node.x + node.width * 0.16, y: node.y + node.height },
+                        PathCommand::Close,
+                    ],
+                    DiagramShape::Trapezoid => vec![
+                        PathCommand::MoveTo { x: node.x + node.width * 0.16, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width * 0.84, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width, y: node.y + node.height },
+                        PathCommand::LineTo { x: node.x, y: node.y + node.height },
+                        PathCommand::Close,
+                    ],
+                    DiagramShape::InvertedTrapezoid => vec![
+                        PathCommand::MoveTo { x: node.x, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width * 0.84, y: node.y + node.height },
+                        PathCommand::LineTo { x: node.x + node.width * 0.16, y: node.y + node.height },
                         PathCommand::Close,
                     ],
                     DiagramShape::Asymmetric => vec![

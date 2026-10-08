@@ -33,6 +33,10 @@
     {
       "name": "input-output-and-asymmetric-shapes",
       "source": "swimlane-beta LR\nsubgraph Intake\n  input[/Receive payload/]\nend\nsubgraph Review\n  flag>Manual review]\nend\ninput --> flag"
+    },
+    {
+      "name": "sloped-flowchart-shapes",
+      "source": "swimlane-beta LR\nsubgraph Inputs\n  left[\\Inbound\\]\nend\nsubgraph Work\n  wide[/Expand\\]\n  narrow[\\Contract/]\nend\nleft --> wide --> narrow"
     }
   ]
 }
