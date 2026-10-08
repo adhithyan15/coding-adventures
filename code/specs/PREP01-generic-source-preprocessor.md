@@ -777,7 +777,9 @@ later lines and in later included files of the same translation unit, while
 the normal translation-unit reset still prevents cross-file leakage.
 The C dialect recognizes only `#undef` followed by exactly one raw identifier:
 the name is inspected without macro expansion, and missing, extra, or
-non-identifier operands fail with the directive location. This stage does not
+non-identifier operands fail with the directive location. The engine supplies
+that position for an unlocated `Dialect::classify` error and preserves a
+position already supplied by the dialect. This stage does not
 add `#elif`, stringize, paste, or pathless frontend routing. Tests must cover
 definition removal and redefinition, an initially undefined name, skipped
 branch preservation, malformed C directives, and a rooted C file-input path.

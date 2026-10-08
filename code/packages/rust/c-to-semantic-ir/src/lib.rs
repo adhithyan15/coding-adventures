@@ -142,6 +142,37 @@ mod tests {
     }
 
     #[test]
+    fn undef_reaches_rooted_c_frontend_and_preserves_skipped_definitions() {
+        let root = uniq("_undef");
+        std::fs::create_dir(&root).unwrap();
+        write_fresh(
+            &root.join("main.c"),
+            b"#define ANSWER 7\n#if 0\n#undef ANSWER\n#endif\nint before(void) { return ANSWER; }\n#undef ANSWER\n#if defined(ANSWER)\nint after(void) { return 0; }\n#else\nint after(void) { return 9; }\n#endif\n",
+        );
+        let module =
+            compile_preprocessed_file("main.c", [root.clone()], "undef", Bounds::default())
+                .unwrap();
+        let text = semantic_ir::print_module(&module);
+        assert!(text.contains("(function before"), "{text}");
+        assert!(text.contains("(function after"), "{text}");
+        assert!(text.contains("(block (int 7))"), "{text}");
+        assert!(text.contains("(block (int 9))"), "{text}");
+        assert!(!text.contains("(block (int 0))"), "{text}");
+        assert!(semantic_ir::validate(&module).is_ok());
+
+        write_fresh(&root.join("invalid.c"), b"#undef ANSWER extra\nint x;\n");
+        let error = compile_preprocessed_file(
+            "invalid.c",
+            [root.clone()],
+            "invalid_undef",
+            Bounds::default(),
+        )
+        .unwrap_err();
+        assert_eq!((error.line, error.column), (1, 1), "{error}");
+        std::fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
     fn arithmetic_if_reaches_the_rooted_c_frontend() {
         let root = uniq("_arithmetic_if");
         std::fs::create_dir(&root).unwrap();

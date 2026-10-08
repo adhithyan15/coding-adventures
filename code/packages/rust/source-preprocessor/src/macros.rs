@@ -137,6 +137,11 @@ impl MacroTable {
         self.defs.insert(name.into(), StoredMacro { def, param_index });
     }
 
+    /// Remove an object-like or function-like definition, if present.
+    pub fn undef(&mut self, name: &str) {
+        self.defs.remove(name);
+    }
+
     #[must_use]
     pub fn get(&self, name: &str) -> Option<&StoredMacro> {
         self.defs.get(name)

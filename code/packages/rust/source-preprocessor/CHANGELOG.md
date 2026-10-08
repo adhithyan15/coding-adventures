@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased — PREP01 generic macro undefinition
+
+- Add `Directive::Undef` and `MacroTable::undef` so dialects can remove the
+  current object-like or function-like definition. An absent name is a no-op;
+  skipped conditional branches do not mutate the table.
+- Attach the directive location to an unlocated `Dialect::classify` error,
+  preserving an explicit dialect position. A rooted C regression exposed the
+  previous `(0, 0)` error location.
+- Engine tests cover removal, later redefinition, and skipped-group behavior.
+
 ## Unreleased — PREP01 header-relative quoted includes
 
 - `RootedFs` resolves a quoted include beside its verified including file

@@ -197,7 +197,21 @@ pub fn preprocess(
                     emit(&expanded, &mut out, &mut map, &bounds)?;
                 }
             }
-            Some(Err(e)) => return Err(e),
+            Some(Err(error)) => {
+                // A dialect may classify a malformed directive before it
+                // creates a positioned error. Keep an explicit dialect
+                // position, otherwise use the directive's first token.
+                let error = if error.position().is_some() {
+                    error
+                } else {
+                    error.at(Position {
+                        file: current_file,
+                        line: line_no as u32,
+                        column: run[0].column as u32,
+                    })
+                };
+                return Err(error);
+            }
             Some(Ok(directive)) => {
                 apply_directive(
                     directive,
@@ -475,6 +489,13 @@ fn apply_directive(
                     defined_at: here,
                 },
             );
+        }
+        Directive::Undef(name) => {
+            // Directive classification sees skipped lines, but their macro
+            // operations must not mutate the live translation unit.
+            if emitting {
+                macros.undef(&name);
+            }
         }
         Directive::Ignore => {}
     }

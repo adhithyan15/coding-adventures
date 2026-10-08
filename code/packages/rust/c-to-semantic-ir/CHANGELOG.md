@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — PREP01 bounded C #undef
+
+- Recognize `#undef` with exactly one raw identifier and remove its current
+  macro definition through the generic PREP01 engine. Reject missing, extra,
+  and non-identifier operands with a rooted directive location.
+- Rooted C tests cover a skipped `#undef`, later live removal, `defined()`
+  branch selection, function-like macro removal, and malformed spelling.
+
 ## Unreleased — PREP01 bounded negated C operands
 
 - Accept exactly one `!(operand)` logical clause for an expanded decimal

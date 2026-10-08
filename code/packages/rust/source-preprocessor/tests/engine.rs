@@ -14,7 +14,7 @@ use coding_adventures_source_preprocessor::{
     fs::{IncludeRequest, MemoryFs},
     macros::MacroTable,
     preprocess,
-    source_map::FileId,
+    source_map::{FileId, Position},
 };
 use lexer::token::{Token, TokenType};
 use std::cell::Cell;
@@ -42,7 +42,7 @@ fn program(lines: &[&str]) -> Vec<Token> {
     out
 }
 
-/// A tiny non-C dialect: `@if`/`@else`/`@end`/`@include`/`@define`.
+/// A tiny non-C dialect: `@if`/`@else`/`@end`/`@include`/`@define`/`@undef`.
 ///
 /// `evals` counts condition evaluations, which is how the "a skipped group is
 /// not evaluated" tests prove a negative.
@@ -52,6 +52,7 @@ struct TestDialect {
     preparations: Cell<u32>,
     grow_condition: bool,
     grow_condition_spelling: bool,
+    classification_error_at: Option<Position>,
 }
 
 impl Dialect for TestDialect {
@@ -77,6 +78,13 @@ impl Dialect for TestDialect {
                 params: None,
                 body: line.get(2..).unwrap_or(&[]).to_vec(),
             })),
+            "@undef" => Some(Ok(Directive::Undef(
+                line.get(1).map(|t| t.value.clone()).unwrap_or_default(),
+            ))),
+            "@bad" => {
+                let error = PpError::new("malformed test directive");
+                Some(Err(error.at_opt(self.classification_error_at)))
+            }
             _ => None,
         }
     }
@@ -419,6 +427,77 @@ fn a_definition_inside_a_skipped_group_never_takes_effect() {
     )
     .unwrap();
     assert_eq!(out.join(" "), "value = ANSWER ;", "a skipped @define must not define");
+}
+
+#[test]
+fn undefinition_removes_a_macro_only_from_later_lines() {
+    let mut fs = MemoryFs::new();
+    let out = run(
+        &[
+            "@define ANSWER 42",
+            "before = ANSWER ;",
+            "@undef ANSWER",
+            "after = ANSWER ;",
+            "@undef MISSING",
+            "@define ANSWER 9",
+            "latest = ANSWER ;",
+        ],
+        &mut fs,
+        Bounds::default(),
+    )
+    .unwrap();
+    assert_eq!(out.join(" "), "before = 42 ; after = ANSWER ; latest = 9 ;");
+}
+
+#[test]
+fn undefinition_in_a_skipped_group_does_not_remove_a_macro() {
+    let mut fs = MemoryFs::new();
+    let out = run(
+        &["@define ANSWER 42", "@if 0", "@undef ANSWER", "@end", "value = ANSWER ;"],
+        &mut fs,
+        Bounds::default(),
+    )
+    .unwrap();
+    assert_eq!(out.join(" "), "value = 42 ;");
+}
+
+#[test]
+fn undefinition_in_an_include_affects_later_parent_lines() {
+    let mut fs = MemoryFs::new();
+    fs.insert("drop.oct", "@undef ANSWER");
+    let out = run(
+        &["@define ANSWER 42", "@include drop.oct", "value = ANSWER ;"],
+        &mut fs,
+        Bounds::default(),
+    )
+    .unwrap();
+    assert_eq!(out.join(" "), "value = ANSWER ;");
+}
+
+#[test]
+fn classification_errors_get_a_fallback_location_without_replacing_an_explicit_one() {
+    let mut fs = MemoryFs::new();
+    let file = fs.insert("<main>", "");
+    let error = preprocess(
+        program(&["@bad"]),
+        file,
+        &TestDialect::default(),
+        &mut fs,
+        Bounds::default(),
+    )
+    .err()
+    .expect("classification should fail");
+    assert_eq!(error.position(), Some(Position { file, line: 1, column: 1 }));
+
+    let explicit = Position { file, line: 99, column: 7 };
+    let dialect = TestDialect {
+        classification_error_at: Some(explicit),
+        ..TestDialect::default()
+    };
+    let error = preprocess(program(&["@bad"]), file, &dialect, &mut fs, Bounds::default())
+        .err()
+        .expect("classification should fail");
+    assert_eq!(error.position(), Some(explicit));
 }
 
 #[test]
