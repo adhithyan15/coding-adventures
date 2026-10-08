@@ -361,7 +361,7 @@ What do क and त say alone? (Ka, ta — each has an inherent vowel.) What ord
 
 
 Lesson 10 of 10.
-Practice — the Hindi greetings, read and understood.
+Practice — the Hindi greetings and the first four letters.
 
 Warm-up.
 [pause 2 seconds]
@@ -375,6 +375,13 @@ dhanyavād — "thanks" (Sanskrit dhanya "worthy" + vāda "saying"); formal.
 shukriyā — "thanks" (Persian, from Arabic shukr); everyday.
 alvidā — "the farewell" (Persian, from Arabic al-widāʿ); weighty.
 Two big ideas from one small chapter: how Devanagari reads (consonants carry a; a mātrā changes the vowel; a halant removes it and makes a conjunct), and Hindi's double heritage — a Sanskrit layer (namaste, dhanyavād) and a Perso-Arabic layer (shukriyā, alvidā), often the formal vs. the everyday word for the same thing.
+
+Guided Practice — the first letters, by hand.
+[once you have stopped driving — write: न, म (na, ma), क, त (ka, ta) — each body first, the bar last — then compare with the shapes in this chapter and repair one]
+The line on top: its name, and when is it drawn? (Shirorekhā, "head-line"; last, one line across the word.)
+What frame do the four share? (Spine right, shape left, bar on top — म starts at the top, क with a loop, त with a curl.)
+What does क say alone? (Ka, not k: the inherent vowel is built in — the mark of an abugida, a name from Ge'ez.)
+What orders क … त? (Where the mouth closes, from the soft palate forward to the lips.)
 
 Guided Practice.
 [pause 1 second]

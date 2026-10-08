@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 1,
-  "sourceHash": "fnv1a64:525e8cd000e075b5",
+  "sourceHash": "fnv1a64:3534f022b937372d",
   "lessonIds": [
     "UR-C01-salam",
     "UR-W01-shukriya-first-three",
@@ -14,7 +14,7 @@
   "drivablePrefix": 0,
   "text": "urdu/narration/ch01.txt",
   "json": "urdu/narration/ch01.json",
-  "textHash": "fnv1a64:f1585bc8a572607d",
-  "jsonHash": "fnv1a64:dd233e7f4db09a7c",
+  "textHash": "fnv1a64:7ee1ed7edb260834",
+  "jsonHash": "fnv1a64:65e23d41ccc2d43c",
   "findings": []
 }

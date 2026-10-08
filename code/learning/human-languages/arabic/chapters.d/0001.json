@@ -16,11 +16,31 @@
     "summary": "Complete AR-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in Arabic, recognize the reply, and choose an appropriate response.",
     "assesses": [
       "AR-C01-SALAM-01",
+      "AR-SCRIPT-SIN-LAM-02",
       "AR-SCRIPT-WRITE-SALAM-03",
+      "AR-SCRIPT-JOINING-FORMS-04",
       "AR-C01-MARHABA-05",
+      "AR-SCRIPT-RA-HA-06",
+      "AR-SCRIPT-BA-FAMILY-07",
+      "AR-SCRIPT-AL-08",
+      "AR-CONCEPT-AL-09",
+      "AR-CONCEPT-SUN-MOON-10",
       "AR-C01-FULL-GREETING-11",
-      "AR-SCRIPT-WRITE-FULL-GREETING-13"
+      "AR-SCRIPT-AYN-YA-12",
+      "AR-SCRIPT-WRITE-FULL-GREETING-13",
+      "AR-SCRIPT-SAD-KHA-14",
+      "AR-CONCEPT-SABAH-15",
+      "AR-CULTURE-SABAH-REPLY-16",
+      "AR-SCRIPT-HAMZA-17",
+      "AR-CONCEPT-MASA-18",
+      "AR-CULTURE-MASA-19",
+      "AR-SCRIPT-SHIN-KAF-20",
+      "AR-CONCEPT-SHUKRAN-21",
+      "AR-CULTURE-SHUKRAN-22",
+      "AR-LEX-ANCHOR-THABIT",
+      "AR-LEX-ANCHOR-IID",
+      "AR-LEX-ANCHOR-KUKH"
     ],
-    "note": "The closing checkpoint now scores spoken meaning, reading, guided writing, and delayed transcription from the migrated chapter-1 ramp."
+    "note": "AR-C01-practice assesses all twenty-five atoms the chapter introduces: reading the greetings and the three anchor words right to left, the greeting-and-reply exchange, delayed transcription of salām, and a from-memory recall of joining, al- and its sun/moon rule, the new letters and hamza, the time-of-day roots and their light-replies, and the sh-k-r patterns with ʿafwan."
   }
 }

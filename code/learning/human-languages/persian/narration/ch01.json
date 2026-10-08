@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings and responses",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:25d177e2f0c50cfc",
+  "sourceHash": "fnv1a64:1b394be9c9f5a78f",
   "lessons": [
     {
       "id": "FA-C01-salam",
@@ -759,7 +759,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4be23bc2b8b4e162",
+      "sourceHash": "fnv1a64:329d22cd5293ae4d",
       "notice": null,
       "blocks": [
         {
@@ -805,12 +805,39 @@
             },
             {
               "kind": "speech",
-              "text": "The later three words remain visible whole-word supports. Today you are proving the greeting and the page direction, not decoding every letter."
+              "text": "The later three words stay as whole-word supports: you read them as shapes you know, not letter by letter. The next section checks that you can say them without the page."
             }
           ]
         },
         {
           "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — say it back",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Someone holds a door for you. What do you say? (Mamnun.)"
+            },
+            {
+              "kind": "speech",
+              "text": "What does mamnun literally describe? (Someone grateful, or obliged — from the Arabic consonant family m-n-n, favour and kindness.)"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Are you ready?\" Answer yes. (Bale.) Now answer no. (Na.)"
+            },
+            {
+              "kind": "speech",
+              "text": "na did not come from Arabic. Where is it from? (An old Indo-Iranian negative.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which vowels does Persian writing leave for you to supply? (The short ones.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -853,7 +880,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -12,16 +12,16 @@ prerequisites: [FA-C01-na, FA-W00-alef-guided-copy]
 sounds: [rtl, long-a, short-vowels-unwritten]
 roots: [s-l-m]
 duration:
-  max_seconds: 180
+  max_seconds: 190
 requires:
-  knowledge: [FA-LEX-SALAM-01, FA-ETYMON-SALAM-SLM-02, FA-SCRIPT-RTL-01, FA-SCRIPT-ALEF-01]
+  knowledge: [FA-LEX-SALAM-01, FA-ETYMON-SALAM-SLM-02, FA-SCRIPT-RTL-01, FA-LEX-MAMNUN-01, FA-ETYMON-MAMNUN-MNN-02, FA-SCRIPT-SHORT-VOWELS-01, FA-LEX-BALE-01, FA-LEX-NA-01, FA-ETYMON-NA-INDO-IRANIAN-02, FA-SCRIPT-ALEF-01]
 introduces:
   knowledge: []
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [FA-LEX-SALAM-01, FA-ETYMON-SALAM-SLM-02, FA-SCRIPT-RTL-01, FA-SCRIPT-ALEF-01]
+  knowledge: [FA-LEX-SALAM-01, FA-ETYMON-SALAM-SLM-02, FA-SCRIPT-RTL-01, FA-LEX-MAMNUN-01, FA-ETYMON-MAMNUN-MNN-02, FA-SCRIPT-SHORT-VOWELS-01, FA-LEX-BALE-01, FA-LEX-NA-01, FA-ETYMON-NA-INDO-IRANIAN-02, FA-SCRIPT-ALEF-01]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -47,8 +47,21 @@ Say **سلام** once to greet and once to answer.
 - A: **ممنون** — *mamnun*
 - B: **بله** or **نه** — *bale* or *na*
 
-The later three words remain visible whole-word supports. Today you are proving
-the greeting and the page direction, not decoding every letter.
+The later three words stay as whole-word supports: you read them as shapes you
+know, not letter by letter. The next section checks that you can say them
+without the page.
+
+## Guided Practice — say it back
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-MAMNUN-01, FA-ETYMON-MAMNUN-MNN-02, FA-LEX-BALE-01, FA-LEX-NA-01, FA-ETYMON-NA-INDO-IRANIAN-02, FA-SCRIPT-SHORT-VOWELS-01] -->
+
+- Someone holds a door for you. What do you say? (***Mamnun.***)
+- What does *mamnun* literally describe? (**Someone grateful, or obliged** — from
+  the Arabic consonant family **m-n-n**, favour and kindness.)
+- "Are you ready?" Answer yes. (***Bale.***) Now answer no. (***Na.***)
+- *na* did not come from Arabic. Where is it from? (**An old Indo-Iranian
+  negative.**)
+- Which vowels does Persian writing leave for you to supply? (**The short
+  ones.**)
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-SALAM-01, FA-ETYMON-SALAM-SLM-02, FA-SCRIPT-RTL-01, FA-SCRIPT-ALEF-01] -->
