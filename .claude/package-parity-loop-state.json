@@ -19,7 +19,7 @@
     "notes": "PR #16981 completed 29 successful, seven skipped, and one neutral final-head checks with no failure. GitHub reported MERGEABLE/CLEAN; guarded squash auto-merge merged it as 26e5792ae7ba88fe1918c55ce4a4bf3c41a2fa2f without a plain manual merge. The post-merge collision-checked inventory is unchanged; no new package identity or unowned gap appeared."
   },
   "last_inventory": {
-    "revision": "26e5792ae7ba88fe1918c55ce4a4bf3c41a2fa2f",
+    "revision": "8efe4884ea5a828b81807fea84b959e50330c172",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1496,
@@ -13518,7 +13518,7 @@
     },
     {
       "id": "build-tool-toolchain-detection-fixture-native-ci-selection", "title": "Gate native toolchain-detection fixture readers", "status": "in-progress", "depends_on": ["build-tool-ci-gate-fixture-native-ci-selection", "build-tool-extra-ci-toolchain-declaration-corpus"], "branch": "codex/parity-toolchain-fixture-ci-20261007", "pr_number": null,
-      "notes": "Selected after #16981 merged and an unchanged, collision-free 15-lane inventory. Twelve native direct readers of the toolchain-detection corpus need exact flat-family, three-platform, single-language, and missing-root CI selection without broad specs fanout. A fixture-only change currently reaches neutral validation but not those native test fronts."
+      "notes": "Selected after #16981 merged and an unchanged, collision-free 15-lane inventory. Twelve native direct readers of the toolchain-detection corpus need exact flat-family, three-platform, single-language, and missing-root CI selection without broad specs fanout. A fixture-only change currently reaches neutral validation but not those native test fronts. Rebased conflict-free onto origin/main 8efe4884ea5a828b81807fea84b959e50330c172 after confirming zero overlap with 39 intervening main paths; the refreshed inventory still has 1,496 identities, 4,766 slots, zero collisions, and zero unknown buckets."
     },
     {
       "id": "build-tool-graph-diff-fixture-native-ci-selection", "title": "Gate native graph/diff fixture readers", "status": "pending", "depends_on": ["build-tool-ci-gate-fixture-native-ci-selection", "build-tool-neutral-graph-diff-corpus-completion"], "branch": null, "pr_number": null,
