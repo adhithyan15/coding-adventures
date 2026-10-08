@@ -177,6 +177,7 @@ fn the_emitted_xaml_host_answers_effects() {
                 .args(["run", "--no-build"])
                 .env("MOSAIC_APP_LIBRARY", &runtime)
                 .env("MOSAIC_PROBE_CASE", case)
+                .env("MOSAIC_PROFILE_PATH", "")
                 .env(
                     "MOSAIC_APP_STATE_PATH",
                     project.join(format!("{case}.json")),
@@ -245,5 +246,28 @@ fn the_emitted_xaml_host_answers_effects() {
         "a check ran vacuously:\n{transcript}"
     );
 
+    // Exercise the emitted profiler, including a failed export destination.
+    // Profiling must never change application success, and its memory is bounded.
+    let profile_path = project.join("profile.jsonl");
+    for (case, path) in [
+        ("profile-disabled", PathBuf::new()),
+        ("profile-bounded", profile_path.clone()),
+        ("profile-bounded", project.join("missing").join("profile.jsonl")),
+        ("profile-validate", profile_path.clone()),
+    ] {
+        let output = run(
+            Command::new("dotnet")
+                .current_dir(&project)
+                .args(["run", "--no-build"])
+                .env("MOSAIC_APP_LIBRARY", &runtime)
+                .env("MOSAIC_PROBE_CASE", case)
+                .env("MOSAIC_PROFILE_PATH", path)
+                .env("MOSAIC_APP_STATE_PATH", project.join("profiling-state.json")),
+            "XAML profiling acceptance",
+        );
+        assert!(output.contains("case passed"));
+    }
+    let samples = std::fs::read_to_string(profile_path).unwrap();
+    assert_eq!(samples.lines().count(), 4096);
     let _ = std::fs::remove_dir_all(&project);
 }

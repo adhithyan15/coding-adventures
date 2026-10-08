@@ -4739,18 +4739,27 @@ fn container_tap_attrs(
     } else {
         ("", String::new())
     };
+    let native_cell = ctx.native_table.as_ref().is_some_and(|table|
+        table.role == NativeTableRole::Body && table.for_depth == 2);
+    // Selection can replace the row's visual tree. Capture logical coordinates
+    // before dispatch and restore focus on the new realization afterwards.
+    let (capture_focus, restore_focus) = if native_cell {
+        (format!("        var restoreFocus = {}MosaicTableCell.CapturePointerFocus(sender as Microsoft.UI.Xaml.DependencyObject);\n", ctx.component_name),
+         "        restoreFocus?.Invoke();\n")
+    } else {
+        (String::new(), "")
+    };
     ctx.add_host_handler(HostHandler {
         name: handler.clone(),
         source: format!(
-            "    private void {handler}(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)\n    {{\n{guard}        Dispatch?.Invoke(this, new {union}.{case}({}));\n        e.Handled = true;\n    }}",
+            "    private void {handler}(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)\n    {{\n{guard}{capture_focus}        Dispatch?.Invoke(this, new {union}.{case}({}));\n{restore_focus}        e.Handled = true;\n    }}",
             args.join(", ")
         ),
     });
     // The native cell owns keyboard focus, while this authored container owns
     // the event contract. Give its wrapper the same safely lowered payload.
     // Read Tag when invoked: virtualized templates may acquire a new row VM.
-    if ctx.native_table.as_ref().is_some_and(|table|
-        table.role == NativeTableRole::Body && table.for_depth == 2)
+    if native_cell
     {
         let navigation = format!("{handler}_Navigate");
         ctx.add_host_handler(HostHandler {
@@ -5916,6 +5925,22 @@ public sealed class __COMPONENT__MosaicTableCell : ContentControl
     // Keyboard navigation reuses the authored pointer activation contract.
     // Empty/noninteractive cells keep ordinary native focus-only navigation.
     public event EventHandler? MosaicNavigate;
+
+    // Authored containers handle Tapped before it bubbles to this wrapper.
+    // Return a callback rather than focus immediately: adapter dispatch may
+    // discard this cell. Retain only the table and its logical coordinates.
+    internal static Action? CapturePointerFocus(DependencyObject? source)
+    {
+        while (source is not null && source is not __COMPONENT__MosaicTableCell)
+            source = VisualTreeHelper.GetParent(source);
+        if (source is not __COMPONENT__MosaicTableCell cell) return null;
+        var table = cell.FindTable();
+        if (table is null) return null;
+        var row = cell.Row;
+        var column = cell.Column;
+        return () => table.DispatcherQueue.TryEnqueue(() =>
+            table.FindCell(row, column)?.Focus(FocusState.Pointer));
+    }
 
     public int Row
     {
@@ -9311,6 +9336,18 @@ public sealed partial class MainWindow : Window
 
     private async void OnComponentDispatch(object? sender, {name}Event mosaicEvent)
     {{
+        using var handlerProfile = MosaicRuntimeHost.BeginProfile("interaction-handler");
+        var frameProfile = MosaicRuntimeHost.BeginProfile("interaction-next-render");
+        if (frameProfile is not null)
+        {{
+            System.EventHandler<object>? rendered = null;
+            rendered = (_, _) =>
+            {{
+                Microsoft.UI.Xaml.Media.CompositionTarget.Rendering -= rendered;
+                frameProfile.Dispose();
+            }};
+            Microsoft.UI.Xaml.Media.CompositionTarget.Rendering += rendered;
+        }}
         var result = await MosaicRuntimeHost.HandleRequiredEvent(
             this.Component, mosaicEvent, RequiredProps);
         this.StatusText.Text = result.Status;
@@ -16975,6 +17012,10 @@ mod tests {
         assert!(r.code_behind.contains("target.MosaicNavigate?.Invoke(target, EventArgs.Empty)"));
         assert!(r.code_behind.contains("ReferenceEquals(FocusManager.GetFocusedElement(XamlRoot), this)"));
         assert!(r.code_behind.contains("table.FindCell(nextRow, nextColumn)?.Focus"));
+        let capture = r.code_behind.find("var restoreFocus = SheetMosaicTableCell.CapturePointerFocus").unwrap();
+        let tap_body = &r.code_behind[capture..];
+        assert!(tap_body.find("Dispatch?.Invoke").unwrap() < tap_body.find("restoreFocus?.Invoke()").unwrap());
+        assert!(r.code_behind.contains("table.FindCell(row, column)?.Focus(FocusState.Pointer)"));
         table.children[1].children[0].children[0].children[0].children[0].children.push(cell);
         let result = from_pipeline(&c, &layout_with_root("Sheet", table), &empty_style("Sheet"), None, &EmitOptions::default());
         assert!(result.is_err(), "multiple authored actions must not pick an arbitrary callback");

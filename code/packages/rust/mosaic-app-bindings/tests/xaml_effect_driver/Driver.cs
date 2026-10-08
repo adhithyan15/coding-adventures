@@ -414,6 +414,35 @@ internal static class Driver
         var probeCase = Environment.GetEnvironmentVariable("MOSAIC_PROBE_CASE") ?? string.Empty;
         switch (probeCase)
         {
+            case "profile-disabled":
+                Check(MosaicRuntimeHost.BeginProfile("probe") is null, "profiling allocates no scope when disabled");
+                break;
+            case "profile-bounded":
+                var scopes = new List<IDisposable>();
+                for (var i = 0; i < 5000; i++)
+                {
+                    var scope = MosaicRuntimeHost.BeginProfile("probe");
+                    if (scope is not null) scopes.Add(scope);
+                }
+                Check(scopes.Count == 4096, "pending profiling scopes are bounded before disposal");
+                foreach (var scope in scopes) CheckScope(scope);
+                break;
+            case "profile-validate":
+                var lines = System.IO.File.ReadAllLines(Environment.GetEnvironmentVariable("MOSAIC_PROFILE_PATH")!);
+                Check(lines.Length == 4096, "profiling sample count is bounded");
+                foreach (var line in lines)
+                {
+                    using var document = System.Text.Json.JsonDocument.Parse(line);
+                    var sample = document.RootElement;
+                    if (sample.GetProperty("phase").GetString() != "probe"
+                        || sample.GetProperty("milliseconds").GetDouble() < 0
+                        || sample.GetProperty("bytes").GetInt64() < 0)
+                        failures++;
+                    var fields = 0;
+                    foreach (var property in sample.EnumerateObject()) fields++;
+                    if (fields != 3) failures++;
+                }
+                break;
             case "unhandled": await CaseUnhandled(); break;
             case "answered": await CaseAnswered(); break;
             case "batch-both": await CaseBatchBothAnswered(); break;
@@ -429,5 +458,12 @@ internal static class Driver
         }
         Console.WriteLine(failures == 0 ? "case passed" : $"{failures} check(s) failed");
         return failures == 0 ? 0 : 1;
+    }
+
+    private static void CheckScope(IDisposable? scope)
+    {
+        if (scope is null) { failures++; return; }
+        scope.Dispose();
+        scope.Dispose(); // A duplicate Dispose must not duplicate samples.
     }
 }
