@@ -182,6 +182,18 @@ void main() {
       } else {
         fail('unknown flattening disposition: $disposition');
       }
+      // Probe the entire parameter domain, not only the named adversarial witness.
+      for (var sample = 0; sample <= 1024; sample++) {
+        final t = sample / 1024.0;
+        final onCurve = isQuadratic
+            ? quadratic(controls).evaluate(t)
+            : cubic(controls).evaluate(t);
+        expect(
+          polylineDistance(onCurve, line),
+          lessThanOrEqualTo(tolerance + 1e-14),
+          reason: '$id at t=$t',
+        );
+      }
       if (fixture.containsKey('witness_t')) {
         final t = (fixture['witness_t'] as num).toDouble();
         final witness = isQuadratic
@@ -190,7 +202,7 @@ void main() {
         nearPoint(point(fixture['expected_witness'] as List<dynamic>), witness);
         expect(
           polylineDistance(witness, line),
-          lessThanOrEqualTo(tolerance + epsilon),
+          lessThanOrEqualTo(tolerance + 1e-14),
           reason: id,
         );
       }
@@ -215,6 +227,8 @@ void main() {
       const Point(2, 0),
     );
     expect(() => q.toPolyline(0.1), throwsArgumentError);
+    expect(() => q.toPolyline(double.nan), throwsArgumentError);
+    expect(() => q.toPolyline(double.negativeInfinity), throwsArgumentError);
     final c = CubicBezier(
       const Point(0, 0),
       const Point(1, 1),
@@ -222,5 +236,14 @@ void main() {
       const Point(3, 0),
     );
     expect(() => c.toPolyline(double.infinity), throwsArgumentError);
+    expect(
+      () => CubicBezier(
+        const Point(0, 0),
+        const Point(1, double.infinity),
+        const Point(2, 1),
+        const Point(3, 0),
+      ).toPolyline(0.1),
+      throwsArgumentError,
+    );
   });
 }

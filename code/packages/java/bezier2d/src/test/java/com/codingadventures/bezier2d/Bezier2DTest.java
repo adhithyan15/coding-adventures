@@ -149,11 +149,18 @@ class Bezier2DTest {
             if ("chord".equals(disposition)) assertEquals(2, polyline.size(), id);
             else if ("subdivide".equals(disposition)) assertTrue(polyline.size() > 2, id);
             else fail("unknown flattening disposition: " + disposition);
+            // Probe the entire parameter domain, not only the named adversarial witness.
+            for (int sample = 0; sample <= 1024; sample++) {
+                double t = sample / 1024.0;
+                Point onCurve = isQuadratic ? quadratic(controls).evaluate(t) : cubic(controls).evaluate(t);
+                assertTrue(polylineDistance(onCurve, polyline) <= tolerance + 1e-14,
+                        id + " at t=" + t);
+            }
             if (fixture.has("witness_t")) {
                 Point witness = isQuadratic ? quadratic(controls).evaluate(fixture.path("witness_t").asDouble())
                         : cubic(controls).evaluate(fixture.path("witness_t").asDouble());
                 near(point(fixture.path("expected_witness")), witness);
-                assertTrue(polylineDistance(witness, polyline) <= tolerance + EPS, id);
+                assertTrue(polylineDistance(witness, polyline) <= tolerance + 1e-14, id);
             }
         }
         assertEquals(Set.of("quadratic-straight", "quadratic-arch", "cubic-collinear-inside",
@@ -165,8 +172,13 @@ class Bezier2DTest {
     void rejectsNonfiniteInputsAndTolerance() {
         QuadraticBezier q = new QuadraticBezier(new Point(Double.NaN, 0), new Point(1, 1), new Point(2, 0));
         assertThrows(IllegalArgumentException.class, () -> q.toPolyline(0.1));
+        assertThrows(IllegalArgumentException.class, () -> q.toPolyline(Double.NaN));
+        assertThrows(IllegalArgumentException.class, () -> q.toPolyline(Double.NEGATIVE_INFINITY));
         CubicBezier c = new CubicBezier(new Point(0, 0), new Point(1, 1),
                 new Point(2, 1), new Point(3, 0));
         assertThrows(IllegalArgumentException.class, () -> c.toPolyline(Double.POSITIVE_INFINITY));
+        assertThrows(IllegalArgumentException.class, () -> new CubicBezier(
+                new Point(0, 0), new Point(1, Double.POSITIVE_INFINITY),
+                new Point(2, 1), new Point(3, 0)).toPolyline(0.1));
     }
 }

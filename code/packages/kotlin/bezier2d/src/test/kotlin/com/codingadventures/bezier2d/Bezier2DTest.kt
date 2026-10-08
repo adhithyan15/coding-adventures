@@ -115,11 +115,17 @@ class Bezier2DTest {
                 "subdivide" -> assertTrue(line.size > 2, id)
                 else -> fail<String>("unknown flattening disposition: $disposition")
             }
+            // Probe the entire parameter domain, not only the named adversarial witness.
+            for (sample in 0..1024) {
+                val t = sample / 1024.0
+                val onCurve = if (isQuadratic) quadratic(controls).evaluate(t) else cubic(controls).evaluate(t)
+                assertTrue(polylineDistance(onCurve, line) <= tolerance + 1e-14, "$id at t=$t")
+            }
             if (fixture.has("witness_t")) {
                 val witness = if (isQuadratic) quadratic(controls).evaluate(fixture.path("witness_t").asDouble())
                     else cubic(controls).evaluate(fixture.path("witness_t").asDouble())
                 near(point(fixture.path("expected_witness")), witness)
-                assertTrue(polylineDistance(witness, line) <= tolerance + epsilon, id)
+                assertTrue(polylineDistance(witness, line) <= tolerance + 1e-14, id)
             }
         }
         assertEquals(setOf("quadratic-straight", "quadratic-arch", "cubic-collinear-inside",
@@ -130,7 +136,13 @@ class Bezier2DTest {
     @Test fun rejectsNonfiniteInputsAndTolerance() {
         val q = QuadraticBezier(Point(Double.NaN, 0.0), Point(1.0, 1.0), Point(2.0, 0.0))
         assertThrows(IllegalArgumentException::class.java) { q.toPolyline(0.1) }
+        assertThrows(IllegalArgumentException::class.java) { q.toPolyline(Double.NaN) }
+        assertThrows(IllegalArgumentException::class.java) { q.toPolyline(Double.NEGATIVE_INFINITY) }
         val c = CubicBezier(Point(0.0, 0.0), Point(1.0, 1.0), Point(2.0, 1.0), Point(3.0, 0.0))
         assertThrows(IllegalArgumentException::class.java) { c.toPolyline(Double.POSITIVE_INFINITY) }
+        assertThrows(IllegalArgumentException::class.java) {
+            CubicBezier(Point(0.0, 0.0), Point(1.0, Double.POSITIVE_INFINITY),
+                Point(2.0, 1.0), Point(3.0, 0.0)).toPolyline(0.1)
+        }
     }
 }

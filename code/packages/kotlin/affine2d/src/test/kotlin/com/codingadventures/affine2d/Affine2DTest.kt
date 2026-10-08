@@ -67,10 +67,16 @@ class Affine2DTest {
                     near(point(fixture.path("expected_point")), actual.applyToPoint(point(fixture.path("point"))))
                 }
                 "affine-invert" -> {
-                    val actual = matrix(fixture.path("matrix")).invert()
+                    val original = matrix(fixture.path("matrix"))
+                    val actual = original.invert()
                     val expected = fixture.path("expected_inverse")
                     if (expected.isNull) assertNull(actual)
-                    else near(matrix(expected).toArray(), requireNotNull(actual).toArray())
+                    else {
+                        val inverse = requireNotNull(actual)
+                        near(matrix(expected).toArray(), inverse.toArray())
+                        near(Affine2D.identity().toArray(), original.multiply(inverse).toArray())
+                        near(Affine2D.identity().toArray(), inverse.multiply(original).toArray())
+                    }
                 }
                 "affine-vector" -> near(point(fixture.path("expected")),
                     matrix(fixture.path("matrix")).applyToVector(point(fixture.path("vector"))))

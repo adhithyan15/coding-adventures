@@ -99,7 +99,8 @@ void main() {
           );
           break;
         case 'affine-invert':
-          final actual = matrix(fixture['matrix'] as List<dynamic>).invert();
+          final original = matrix(fixture['matrix'] as List<dynamic>);
+          final actual = original.invert();
           final expected = fixture['expected_inverse'];
           if (expected == null) {
             expect(actual, isNull);
@@ -108,6 +109,14 @@ void main() {
             nearMatrix(
               matrix(expected as List<dynamic>).toArray(),
               actual!.toArray(),
+            );
+            nearMatrix(
+              Affine2D.identity().toArray(),
+              original.multiply(actual).toArray(),
+            );
+            nearMatrix(
+              Affine2D.identity().toArray(),
+              actual.multiply(original).toArray(),
             );
           }
           break;

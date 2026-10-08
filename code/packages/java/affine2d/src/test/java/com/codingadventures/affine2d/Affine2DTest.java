@@ -78,12 +78,15 @@ class Affine2DTest {
                             actual.applyToPoint(point(fixture.path("point"))));
                 }
                 case "affine-invert" -> {
-                    Affine2D inverse = matrix(fixture.path("matrix")).invert();
+                    Affine2D original = matrix(fixture.path("matrix"));
+                    Affine2D inverse = original.invert();
                     JsonNode expected = fixture.path("expected_inverse");
                     if (expected.isNull()) assertNull(inverse);
                     else {
                         assertNotNull(inverse);
                         near(matrix(expected).toArray(), inverse.toArray());
+                        near(Affine2D.identity().toArray(), original.multiply(inverse).toArray());
+                        near(Affine2D.identity().toArray(), inverse.multiply(original).toArray());
                     }
                 }
                 case "affine-vector" -> near(point(fixture.path("expected")),

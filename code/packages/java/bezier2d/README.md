@@ -11,7 +11,7 @@ Point middle = arch.evaluate(0.5); // (1, 1)
 List<Point> line = arch.toPolyline(0.1);
 ```
 
-Flattening tests both controls against each finite chord segment, not just a
+Flattening measures both controls against each finite chord segment, not just a
 midpoint or infinite line. Invalid tolerance/coordinates fail before work;
 depth 32 and 65,535 splits are hard limits with no returned partial line.
 Tests consume all three polynomial and nine flattening neutral cases. Run
