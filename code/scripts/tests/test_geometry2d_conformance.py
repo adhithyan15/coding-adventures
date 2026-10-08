@@ -31,13 +31,58 @@ class Geometry2DConformanceTests(unittest.TestCase):
         self.assertEqual(
             list(Draft202012Validator(schema).iter_errors(self.document)), []
         )
-        self.assertEqual(MODULE.validate_document(self.document), 8)
+        self.assertEqual(MODULE.validate_document(self.document), 16)
         self.assertEqual(
             MODULE.validate_document(
                 MODULE.parse_json(CORPUS.read_text(encoding="utf-8"))
             ),
-            8,
+            16,
         )
+
+    def test_complete_operation_and_case_roster(self) -> None:
+        expected = {
+            "normalize-zero", "normalize-below-epsilon", "normalize-at-epsilon",
+            "normalize-three-four", "arc-zero-radius-reversed",
+            "arc-negative-near-zero-radius", "arc-near-coincident-endpoints",
+            "arc-coincident-endpoints", "affine-compose-order-a",
+            "affine-compose-order-b", "affine-invert-nonsingular",
+            "affine-invert-singular", "affine-vector-translation",
+            "bezier-quadratic-quarter", "bezier-cubic-quarter",
+            "bezier-cubic-x-overshoot",
+        }
+        self.assertEqual({case["id"] for case in self.document["cases"]}, expected)
+
+    def test_new_expected_values_cannot_drift(self) -> None:
+        edits: list[tuple[str, Callable[[dict[str, Any]], None]]] = [
+            ("affine-compose-order-a", lambda c: c["expected_matrix"].__setitem__(4, 8)),
+            ("affine-invert-nonsingular", lambda c: c["expected_inverse"].__setitem__(0, 0)),
+            ("affine-vector-translation", lambda c: c["expected"].__setitem__(0, 99)),
+            ("bezier-quadratic-quarter", lambda c: c["expected_derivative"].__setitem__(1, 5)),
+            ("bezier-cubic-quarter", lambda c: c["expected_split"][0][1].__setitem__(1, 2)),
+            ("bezier-cubic-x-overshoot", lambda c: c["expected_bounds"].__setitem__(2, 4)),
+        ]
+        for case_id, edit in edits:
+            with self.subTest(case_id=case_id):
+                changed = copy.deepcopy(self.document)
+                case = next(item for item in changed["cases"] if item["id"] == case_id)
+                edit(case)
+                with self.assertRaisesRegex(ValueError, "expected"):
+                    MODULE.validate_document(changed)
+
+    def test_new_case_shapes_and_ranges_are_closed(self) -> None:
+        for case_id, edit in [
+            ("affine-compose-order-a", lambda c: c.update(first=[1, 0])),
+            ("affine-invert-singular", lambda c: c.update(expected_inverse=[1] * 6)),
+            ("bezier-quadratic-quarter", lambda c: c.update(control_points=[[0, 0]])),
+            ("bezier-cubic-quarter", lambda c: c.update(t=2)),
+            ("bezier-cubic-quarter", lambda c: c.update(unreviewed=True)),
+        ]:
+            with self.subTest(case_id=case_id):
+                changed = copy.deepcopy(self.document)
+                case = next(item for item in changed["cases"] if item["id"] == case_id)
+                edit(case)
+                with self.assertRaises(ValueError):
+                    MODULE.validate_document(changed)
 
     def test_duplicate_keys_and_ids_rejected(self) -> None:
         with self.assertRaisesRegex(ValueError, "duplicate JSON key"):
