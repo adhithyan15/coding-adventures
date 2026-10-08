@@ -300,3 +300,47 @@ fn descriptor_isolation_still_applies() {
     let output = run(Some(&confinement(&[])), &["hello"]);
     assert!(output.stderr.is_empty());
 }
+
+/// A copy of the probe whose `PT_INTERP` names `interpreter` instead of the
+/// real loader: what a hostile agent author can ship.
+fn probe_with_interpreter(interpreter: &str) -> PathBuf {
+    let mut bytes = std::fs::read(PROBE).unwrap();
+    let at = bytes
+        .windows(8)
+        .position(|window| window == b"ld-linux")
+        .expect("the probe is dynamically linked");
+    let start = bytes[..at].iter().rposition(|b| *b == 0).unwrap() + 1;
+    let end = at + bytes[at..].iter().position(|b| *b == 0).unwrap();
+    assert!(
+        interpreter.len() <= end - start,
+        "{interpreter} does not fit"
+    );
+    bytes[start..end].fill(0);
+    bytes[start..start + interpreter.len()].copy_from_slice(interpreter.as_bytes());
+    let path = temp_file("hostile-agent", "");
+    std::fs::write(&path, bytes).unwrap();
+    path
+}
+
+#[test]
+fn an_interpreter_outside_the_library_directories_is_refused() {
+    // Review M2: PT_INTERP is the agent author's to write. Trusted, it put
+    // a directory (a whole-tree read) or any file into the ruleset.
+    for interpreter in [
+        "/tmp",
+        "/etc/passwd",
+        "/lib",
+        "/lib/../etc/passwd",
+        "/no/such",
+    ] {
+        let hostile = probe_with_interpreter(interpreter);
+        let error = LinuxConfinement::prepare(&plan(&[]), &hostile)
+            .err()
+            .unwrap_or_else(|| panic!("PT_INTERP {interpreter} must refuse the launch"));
+        assert!(
+            matches!(error, ConfinementError::Executable(_)),
+            "{interpreter}: {error:?}"
+        );
+        std::fs::remove_file(hostile).unwrap();
+    }
+}

@@ -85,6 +85,12 @@ fn main() {
             println!("survived");
         }
         Some("tiocsti") => {
+            // Never with a terminal on stdin: unconfined, it would type
+            // into it. The tests give the probe /dev/null.
+            if unsafe { libc::isatty(0) } == 1 {
+                eprintln!("tiocsti needs a non-terminal stdin");
+                std::process::exit(2);
+            }
             let byte = b'x';
             unsafe { libc::ioctl(0, libc::TIOCSTI, &byte) };
             println!("survived");

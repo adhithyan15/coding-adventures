@@ -1291,6 +1291,13 @@ through S-I3 before two weeks are spent on Windows.
      or interpreter. A directory would grant its whole tree, and a symlink
      anywhere in the path would grant whatever it points at. A writable
      image would let the agent rewrite the code it runs (S-I6).
+   - The interpreter comes from the executable's `PT_INTERP`, so the agent's
+     author chooses it. It is resolved, must lie under one of the library
+     directories, and is then opened like a grant (no symlinks, a regular
+     file). Otherwise a directory there would become a whole-tree read rule,
+     and any file a read-and-execute rule.
+   - The ELF parse that finds it checks all of its arithmetic. A malformed
+     header refuses the launch; it never panics the supervisor.
    - The rest of S-I6's never-grantable set (the vault, the audit log, the
      shim, the broker, the plan files) is checked by the supervisor at step
      9, which is the only place those paths are known.
@@ -1323,6 +1330,10 @@ through S-I3 before two weeks are spent on Windows.
      and POSIX IPC, `bpf`, `mount`, `unshare` and the `pidfd` family.
 
    *What it does not do.*
+   - A compiled agent may `execve` the loader with another ELF file as its
+     argument. The loader maps that file itself, and Landlock does not
+     mediate `mmap`, so readable code can run without an execute right. It
+     gains nothing the agent could not already read, and S-I4d bounds it.
    - The S-P4 launch-time probes are the shim's (step 5).
    - Here, the full negative coverage runs in CI as the probe tests: each
      denied class kills the probe with `SIGSYS`, and each Landlock denial

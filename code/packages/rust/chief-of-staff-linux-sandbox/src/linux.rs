@@ -31,15 +31,16 @@ impl Prepared {
                 needed: landlock::ABI_TRUNCATE,
             });
         }
-        use landlock::Target::{Grant, Optional, Required};
+        use landlock::Target::{Grant, Interpreter, Optional, Required};
         let ruleset = landlock::Ruleset::new(abi)?;
         // The agent's own image: never also a grant (S-I6), or it could
         // rewrite the code it runs.
         let mut image = vec![ruleset.allow(executable, landlock::READ_EXECUTE, Required)?];
         if let Some(interpreter) = elf::interpreter(executable)? {
-            image.push(ruleset.allow(&interpreter, landlock::READ_EXECUTE, Required)?);
+            let interpreter = system_interpreter(&interpreter)?;
+            image.push(ruleset.allow(&interpreter, landlock::READ_EXECUTE, Interpreter)?);
         }
-        for directory in ["/lib", "/lib64", "/usr/lib", "/usr/lib64"] {
+        for directory in LIBRARY_DIRECTORIES {
             ruleset.allow(Path::new(directory), landlock::READ_TREE, Optional)?;
         }
         ruleset.allow(Path::new("/etc/ld.so.cache"), landlock::READ, Optional)?;
@@ -68,6 +69,39 @@ impl Prepared {
             filter,
             landlock_abi: abi,
         })
+    }
+}
+
+/// The system library directories: readable by every agent, and the only
+/// place its interpreter may live.
+const LIBRARY_DIRECTORIES: [&str; 4] = ["/lib", "/lib64", "/usr/lib", "/usr/lib64"];
+
+/// Resolve the interpreter an executable names, and refuse it unless it is
+/// in a system library directory.
+///
+/// Review M2: `PT_INTERP` is written by the agent's author. Taken on trust,
+/// it put a rule of their choosing into the ruleset: a directory became a
+/// whole-tree read, and any file became readable and executable. So the
+/// name is resolved here (the real loaders are reached through symlinks:
+/// `/lib64/ld-linux-x86-64.so.2` → `/usr/lib/x86_64-linux-gnu/...`), the
+/// result must lie under a library directory, and `Ruleset::allow` then
+/// opens the resolved path with no symlinks, as a regular file.
+fn system_interpreter(named: &Path) -> Result<PathBuf, ConfinementError> {
+    let outside = || {
+        ConfinementError::Executable(format!(
+            "interpreter {} is not in a system library directory",
+            named.display()
+        ))
+    };
+    let resolved = std::fs::canonicalize(named).map_err(|_| outside())?;
+    let inside = LIBRARY_DIRECTORIES.iter().any(|directory| {
+        std::fs::canonicalize(directory)
+            .is_ok_and(|directory| resolved.starts_with(&directory) && resolved != directory)
+    });
+    if inside {
+        Ok(resolved)
+    } else {
+        Err(outside())
     }
 }
 
@@ -221,6 +255,15 @@ pub(crate) mod landlock {
         Required,
         /// A plan grant: required, and an exact regular file.
         Grant,
+        /// The executable's resolved interpreter: as exact as a grant.
+        Interpreter,
+    }
+
+    impl Target {
+        /// Opened with no symlinks, and refused unless a regular file.
+        fn exact(self) -> bool {
+            matches!(self, Self::Grant | Self::Interpreter)
+        }
     }
 
     pub(crate) struct Ruleset {
@@ -287,7 +330,7 @@ pub(crate) mod landlock {
             let c_path = CString::new(path.as_os_str().as_bytes())
                 .map_err(|_| ConfinementError::Path(shown()))?;
             let flags = libc::O_PATH | libc::O_CLOEXEC;
-            let fd = if target == Target::Grant {
+            let fd = if target.exact() {
                 // A grant is opened with `openat2(RESOLVE_NO_SYMLINKS)`: a
                 // symlink anywhere in the path refuses the open, so the
                 // rule lands on the file the plan names and nothing else.
@@ -329,11 +372,13 @@ pub(crate) mod landlock {
             // SAFETY: initialized by the successful call.
             let stat = unsafe { stat.assume_init() };
             let kind = stat.st_mode & libc::S_IFMT;
-            if target == Target::Grant && kind != libc::S_IFREG {
-                return Err(ConfinementError::InexpressibleGrant(format!(
-                    "{}: not a regular file",
-                    shown()
-                )));
+            if target.exact() && kind != libc::S_IFREG {
+                let why = format!("{}: not a regular file", shown());
+                return Err(if target == Target::Grant {
+                    ConfinementError::InexpressibleGrant(why)
+                } else {
+                    ConfinementError::Executable(why)
+                });
             }
             let is_directory = kind == libc::S_IFDIR;
             let mut allowed = rights & self.handled;
@@ -733,29 +778,43 @@ pub(crate) mod elf {
         if bytes.len() < 64 || &bytes[..4] != b"\x7fELF" || bytes[4] != 2 || bytes[5] != 1 {
             return Err(bad("not a 64-bit little-endian ELF file"));
         }
-        let u16_at = |at: usize| u16::from_le_bytes([bytes[at], bytes[at + 1]]) as usize;
-        let u64_at = |at: usize| -> Result<usize, ConfinementError> {
-            bytes
-                .get(at..at + 8)
-                .map(|b| u64::from_le_bytes(b.try_into().unwrap()) as usize)
-                .ok_or_else(|| bad("truncated"))
+        // Every offset and size below comes from the file, which the agent's
+        // author wrote. All arithmetic on them is checked: an overflow is a
+        // refused launch, never a panic in the supervisor.
+        let truncated = || bad("truncated or malformed program headers");
+        let slice = |at: usize, len: usize| {
+            at.checked_add(len)
+                .and_then(|end| bytes.get(at..end))
+                .ok_or_else(truncated)
         };
-        let (phoff, phentsize, phnum) = (u64_at(0x20)?, u16_at(0x36), u16_at(0x38));
+        let u16_at = |at: usize| slice(at, 2).map(|b| u16::from_le_bytes([b[0], b[1]]) as usize);
+        let u32_at = |at: usize| slice(at, 4).map(|b| u32::from_le_bytes(b.try_into().unwrap()));
+        let u64_at = |at: usize| {
+            slice(at, 8).and_then(|b| {
+                usize::try_from(u64::from_le_bytes(b.try_into().unwrap())).map_err(|_| truncated())
+            })
+        };
+        let (phoff, phentsize, phnum) = (u64_at(0x20)?, u16_at(0x36)?, u16_at(0x38)?);
         for index in 0..phnum {
-            let header = phoff + index * phentsize;
-            let kind = bytes
-                .get(header..header + 4)
-                .map(|b| u32::from_le_bytes(b.try_into().unwrap()))
-                .ok_or_else(|| bad("truncated program header"))?;
-            if kind != PT_INTERP {
+            let header = index
+                .checked_mul(phentsize)
+                .and_then(|step| phoff.checked_add(step))
+                .ok_or_else(truncated)?;
+            if u32_at(header)? != PT_INTERP {
                 continue;
             }
-            let (offset, size) = (u64_at(header + 8)?, u64_at(header + 32)?);
-            let name = bytes
-                .get(offset..offset + size)
-                .ok_or_else(|| bad("truncated interpreter"))?;
-            let name = name.strip_suffix(b"\0").unwrap_or(name);
-            return Ok(Some(PathBuf::from(std::ffi::OsStr::from_bytes(name))));
+            let offset = u64_at(header.checked_add(8).ok_or_else(truncated)?)?;
+            let size = u64_at(header.checked_add(32).ok_or_else(truncated)?)?;
+            let name = slice(offset, size)?;
+            // The name ends at its first NUL; an empty one, or one that
+            // keeps going without a terminator, is malformed.
+            let end = name.iter().position(|b| *b == 0).ok_or_else(truncated)?;
+            if end == 0 {
+                return Err(truncated());
+            }
+            return Ok(Some(PathBuf::from(std::ffi::OsStr::from_bytes(
+                &name[..end],
+            ))));
         }
         Ok(None)
     }
@@ -772,6 +831,71 @@ pub(crate) mod elf {
                 .expect("test binaries are dynamic");
             assert!(interpreter.is_absolute());
             assert!(interpreter.exists(), "{}", interpreter.display());
+        }
+
+        /// A minimal ELF64 header with the given program header table.
+        fn elf_with(phoff: u64, phentsize: u16, phnum: u16, tail: &[u8]) -> Vec<u8> {
+            let mut bytes = vec![0u8; 64];
+            bytes[..6].copy_from_slice(b"\x7fELF\x02\x01");
+            bytes[0x20..0x28].copy_from_slice(&phoff.to_le_bytes());
+            bytes[0x36..0x38].copy_from_slice(&phentsize.to_le_bytes());
+            bytes[0x38..0x3a].copy_from_slice(&phnum.to_le_bytes());
+            bytes.extend_from_slice(tail);
+            bytes
+        }
+
+        fn parse(bytes: &[u8]) -> Result<Option<PathBuf>, ConfinementError> {
+            let path = std::env::temp_dir().join(format!(
+                "elf-{}-{:?}",
+                std::process::id(),
+                std::thread::current().id()
+            ));
+            std::fs::write(&path, bytes).unwrap();
+            let parsed = interpreter(&path);
+            std::fs::remove_file(&path).unwrap();
+            parsed
+        }
+
+        /// A PT_INTERP header at offset 64 naming `name` at offset 120.
+        fn interp_header(name: &[u8], size: u64) -> Vec<u8> {
+            let mut header = vec![0u8; 56];
+            header[..4].copy_from_slice(&PT_INTERP.to_le_bytes());
+            header[8..16].copy_from_slice(&120u64.to_le_bytes());
+            header[32..40].copy_from_slice(&size.to_le_bytes());
+            header.extend_from_slice(name);
+            header
+        }
+
+        #[test]
+        fn hostile_headers_are_refused_not_panicked_on() {
+            // Review M1: offsets near usize::MAX overflowed and panicked.
+            for (phoff, phentsize, phnum) in [
+                (u64::MAX, 56, 1),
+                (u64::MAX - 3, 56, 1),
+                (64, u16::MAX, u16::MAX),
+                (1 << 40, 56, 1),
+            ] {
+                assert!(parse(&elf_with(phoff, phentsize, phnum, &[])).is_err());
+            }
+            for size in [u64::MAX, u64::MAX - 100, 1 << 40] {
+                let bytes = elf_with(64, 56, 1, &interp_header(b"/lib/ld.so\0", size));
+                assert!(parse(&bytes).is_err(), "size {size}");
+            }
+        }
+
+        #[test]
+        fn the_interpreter_name_ends_at_its_first_nul() {
+            let bytes = elf_with(64, 56, 1, &interp_header(b"/lib/ld.so\0\0\0", 13));
+            assert_eq!(parse(&bytes).unwrap(), Some(PathBuf::from("/lib/ld.so")));
+            for bad in [&b"\0/lib/ld.so"[..], b"/lib/ld.so"] {
+                let bytes = elf_with(64, 56, 1, &interp_header(bad, bad.len() as u64));
+                assert!(parse(&bytes).is_err(), "{bad:?}");
+            }
+        }
+
+        #[test]
+        fn a_static_executable_has_no_interpreter() {
+            assert_eq!(parse(&elf_with(64, 56, 0, &[])).unwrap(), None);
         }
 
         #[test]
