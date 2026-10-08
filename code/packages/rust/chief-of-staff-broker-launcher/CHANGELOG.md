@@ -4,6 +4,12 @@
 
 ### Added
 
+- `BrokerRelay::stop` takes `&mut self` and waits, bounded, for the relay
+  thread. If the thread is still running it keeps the handle, so the
+  supervisor can ask again (P2.6d-2b).
+- `LaunchedBroker::discard`: kill and reap a broker that will not be used.
+- `start_relay` kills and reaps the broker if its relay thread cannot start,
+  rather than leaving it running unrelayed.
 - The broker launcher (D18S P2.6d-2a):
   - `BrokerKeyFiles` maps each binding to its key slots;
   - `abandon_pending_on_write_channels`;

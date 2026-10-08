@@ -2,6 +2,29 @@
 
 ## Unreleased
 
+- **Each agent can have its own channel broker** (D18S P2.6d-2b; #13980).
+  `with_channel_brokers(ChannelBrokers)` is opt-in; without it nothing
+  changes.
+  - A bound agent's broker is launched before its host, from the
+    digest-verified binary, holding only that agent's keys. The host's
+    Receive, Publish and Acknowledge requests go to it; everything else
+    still goes to the dispatcher.
+  - The host's end ends the broker, and the broker's end, or any violation,
+    ends the host. Both are killed and reaped.
+  - At most one live broker per agent: a relaunch is refused with
+    `BrokerBusy` until the old relay thread has finished, and only then are
+    the agent's pending reservations abandoned.
+  - The relay answers the host itself through a shared `HostLink` (secure
+    channel, writer and pending request behind one lock), so frames reach the
+    host in the order the channel numbered them.
+  - New errors: `BrokerLaunch`, `BrokerBusy`, `Broker`. New accessor:
+    `broker_process_id`, for the audit record and tests.
+  - Review round 1:
+    - a request with the broker is not offered to
+      `pending_data_plane_request`, and `respond_data_plane` refuses to
+      answer it;
+    - a broker's end is latched, and the broker is ended at once, even if
+      ending its host fails; the host is tried again on the next refresh.
 - The stalled-host queue test no longer races the writer thread. It used
   to assert a refusal right after the queue first filled, but the thread
   could take its first frame in between, which freed a slot (seen on macOS

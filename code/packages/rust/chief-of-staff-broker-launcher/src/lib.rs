@@ -304,6 +304,14 @@ impl LaunchedBroker {
         &mut self.child
     }
 
+    /// Kill and reap a broker that will not be used after all, and close
+    /// its pipes.
+    pub fn discard(self) {
+        let (child, io) = self.into_parts();
+        discard(child);
+        io.close();
+    }
+
     /// Split into the process and the relay's I/O.
     fn into_parts(self) -> (Child, BrokerIo) {
         (
@@ -328,7 +336,6 @@ struct BrokerIo {
 }
 
 impl BrokerIo {
-    #[cfg_attr(not(target_os = "linux"), allow(dead_code))]
     /// Close the broker's stdin and wait, bounded, for its reader. Call
     /// after the broker is killed: its stdout then closes, and the reader
     /// ends.
@@ -428,7 +435,6 @@ fn spawn_reader(
 }
 
 /// Kill and reap a broker that will not be used.
-#[cfg(target_os = "linux")]
 fn discard(mut child: Child) {
     let _ = chief_of_staff_spawn_isolation::kill_session(&child);
     let _ = child.kill();
@@ -646,9 +652,21 @@ impl BrokerRelay {
     /// `true`. (If that is missed, nothing is corrupted: the store's
     /// compare-and-swap lets exactly one of the commit and the abandon win.
     /// But the rule keeps "at most one live broker per agent" exact.)
-    pub fn stop(mut self) -> bool {
+    pub fn stop(&mut self) -> bool {
         self.commands = None;
-        self.thread.take().is_none_or(join_bounded)
+        let deadline = Instant::now() + Duration::from_secs(2);
+        while !self.is_finished() {
+            if Instant::now() >= deadline {
+                // Still running: keep the handle, so `is_finished` can be
+                // asked again later.
+                return false;
+            }
+            std::thread::sleep(Duration::from_millis(5));
+        }
+        if let Some(thread) = self.thread.take() {
+            let _ = thread.join();
+        }
+        true
     }
 }
 
@@ -663,8 +681,15 @@ pub fn start_relay(
     config: RelayConfig,
 ) -> std::io::Result<(Child, BrokerRelay)> {
     let (child, io) = broker.into_parts();
-    let relay = spawn_relay(io, backend, metadata, resolver, sink, config)?;
-    Ok((child, relay))
+    // The relay thread owns the I/O; if it cannot start, the broker is
+    // killed and reaped here rather than left running unrelayed.
+    match spawn_relay(io, backend, metadata, resolver, sink, config) {
+        Ok(relay) => Ok((child, relay)),
+        Err(error) => {
+            discard(child);
+            Err(error)
+        }
+    }
 }
 
 /// Relay over any byte sink to the broker and any source of its frames:

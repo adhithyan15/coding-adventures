@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/chief-of-staff-broker-e2e",
+  "capabilities": [
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "libc fcntl(F_GETFD) and sysconf in the test broker binary",
+      "justification": "The test broker checks and adopts its inherited key descriptors exactly as the production broker does."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "a result file the test names",
+      "justification": "The scripted test host reports what its broker answered, for the test to read."
+    }
+  ],
+  "justification": "Test-only crate: the supervisor, a per-agent broker and a scripted host run together (D18S P2.6d-2b)."
+}

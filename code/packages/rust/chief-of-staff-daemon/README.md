@@ -199,6 +199,28 @@ At startup, `load_chief_vault_runtime` opens the vault and registers every
 sealed record before anything serves. One corrupt record stops startup. To
 rotate a secret, run `chief-of-staff vault put`, then restart the daemon.
 
+## Per-agent channel brokers: `[hosts.broker]`
+
+With `[hosts.broker]` set, each host bound to a channel gets its own
+broker process (D18S P2.6d-2b). It holds only that agent's channel keys,
+and the host's Receive, Publish and Acknowledge requests go to it rather
+than to the daemon.
+
+```text
+[data_plane] channel_keys ─▶ broker_key_files    (read: 1 slot, write: 2)
+[hosts.broker] sha256     ─▶ VerifiedExecutable  (startup: wrong bytes stop the daemon)
+                          ─▶ ChannelBrokers ─▶ ProcessHostSupervisor
+```
+
+The daemon opens no key file here. The launcher opens an agent's files,
+owner-only or refused, when it launches that agent's broker, and passes
+them by descriptor. Off Linux the table is refused at startup
+(`BrokerUnsupported`), because there is no verified launch there yet.
+
+In this step the daemon still provisions the same keys for its own channel
+path. Step 2c removes that path, and `channel_keys` will then require
+`[hosts.broker]`.
+
 ## Validation
 
 ```sh

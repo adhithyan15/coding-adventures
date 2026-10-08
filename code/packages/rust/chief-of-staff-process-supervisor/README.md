@@ -53,6 +53,28 @@ compositions that intentionally have no durable pipeline wiring.
 Channel endpoint and LLM service implementations remain injected behind
 `chief-of-staff-host-data-plane` rather than entering this process-authority crate.
 
+### Per-agent channel brokers (D18S P2.6d-2b)
+
+`with_channel_brokers(ChannelBrokers)` gives every agent with bound channels
+its own broker process. It is opt-in; without it, channel requests go to the
+dispatcher as before.
+
+```text
+start(host)
+  ├─ BrokerBusy?      an old relay for this agent has not finished: retry later
+  ├─ abandon_pending  the agent's pending reservations (no old broker can commit now)
+  ├─ launch broker    verified binary, the agent's keys on 3..3+n, Ready checked
+  └─ spawn host       its Receive/Publish/Acknowledge go to the broker's relay
+
+host ends   ─▶ broker killed, reaped, relay stopped
+broker ends ─▶ host ended (inspect returns ProcessSupervisorError::Broker once)
+```
+
+The broker's relay thread answers the host itself, through the shared
+`HostLink`. That way a channel operation does not wait for the next refresh.
+Encrypting and queueing a response happen under one lock, so frames reach
+the host in the order the secure channel numbered them.
+
 ## Validation
 
 ```sh

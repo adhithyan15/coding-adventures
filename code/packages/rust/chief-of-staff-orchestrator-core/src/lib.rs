@@ -17,8 +17,8 @@ use chief_of_staff_pipeline_bindings::{
     HostPipelineBinding, LoadedHostPipelineBinding, PipelineBindingError, PipelineBindingStore,
 };
 use chief_of_staff_process_supervisor::{
-    HostLaunchBindingProvider, MonotonicClock, ProcessHostSupervisor, ProcessSupervisorConfig,
-    SessionIdSource,
+    ChannelBrokers, HostLaunchBindingProvider, MonotonicClock, ProcessHostSupervisor,
+    ProcessSupervisorConfig, SessionIdSource,
 };
 use chief_of_staff_service_reconciler::{
     HostSupervisor, ReconcileConfig, ReconcileError, ReconcileReport, ServiceReconciler,
@@ -879,13 +879,14 @@ impl<A> OrchestratorCore<ProcessHostSupervisor, A> {
         keyring: Arc<PackageKeyring>,
         launch_bindings: Arc<dyn HostLaunchBindingProvider>,
         data_plane_dispatcher: Arc<dyn HostDataPlaneDispatcher>,
+        channel_brokers: Option<ChannelBrokers>,
         identity: Arc<IdentityKeyPair>,
         clock: Arc<dyn MonotonicClock>,
         sessions: Box<dyn SessionIdSource>,
         reconcile_config: ReconcileConfig,
         authorizer: A,
     ) -> Self {
-        let supervisor = ProcessHostSupervisor::new(
+        let mut supervisor = ProcessHostSupervisor::new(
             process_config,
             keyring,
             launch_bindings,
@@ -894,6 +895,11 @@ impl<A> OrchestratorCore<ProcessHostSupervisor, A> {
             sessions,
         )
         .with_data_plane_dispatcher(data_plane_dispatcher);
+        // D18S P2.6d-2b: with brokers, each agent's channel operations go to
+        // its own broker process instead of the dispatcher.
+        if let Some(brokers) = channel_brokers {
+            supervisor = supervisor.with_channel_brokers(brokers);
+        }
         Self::new(backend, supervisor, authorizer, clock, reconcile_config)
     }
 }
@@ -2221,6 +2227,7 @@ mod tests {
             keyring,
             Arc::new(DenyHostLaunchBindings),
             Arc::new(UnavailableHostDataPlaneDispatcher),
+            None,
             identity,
             clock,
             Box::<UuidV7SessionIdSource>::default(),

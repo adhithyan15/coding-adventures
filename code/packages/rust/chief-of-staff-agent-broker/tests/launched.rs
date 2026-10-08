@@ -181,7 +181,7 @@ fn a_launched_broker_publishes_through_the_relay() {
         message_id: MessageId::from_uuid_v7(uuid_v7(101)).unwrap(),
         timestamp_ns: 7,
     }])));
-    let (mut child, relay) = start_relay(
+    let (mut child, mut relay) = start_relay(
         launched,
         backend,
         metadata,
