@@ -122,6 +122,31 @@ pub struct PipelineEmitResult {
     pub component_name: String,
 }
 
+#[cfg(test)]
+mod letter_spacing_tests {
+    use super::*;
+
+    #[test]
+    fn css_em_tracking_lowers_to_swiftui_points() {
+        let props = vec![
+            StyleProp {
+                name: "font-size".into(),
+                value: "22px".into(),
+            },
+            StyleProp {
+                name: "letter-spacing".into(),
+                value: "-0.02em".into(),
+            },
+        ];
+
+        let (chain, dropped) =
+            swiftui_modifier_chain_with_drops(&props, &[], &[], 0, None);
+
+        assert!(chain.contains(".tracking(-0.44)"), "{chain}");
+        assert!(dropped.is_empty(), "{dropped:?}");
+    }
+}
+
 #[derive(Clone, Copy)]
 struct ForPayloadScope<'a> {
     item: &'a str,
@@ -2385,6 +2410,26 @@ fn swiftui_modifier_chain_with_drops(
         }
     }
 
+    fn tracking_points(base_props: &[StyleProp], value: &str) -> Option<String> {
+        let value = value.trim().trim_matches('"').trim();
+        if value == "0" {
+            return Some("0".to_string());
+        }
+        let em = value.strip_suffix("em")?.trim().parse::<f64>().ok()?;
+        let font_size = base_props
+            .iter()
+            .rev()
+            .find(|prop| prop.name == "font-size")
+            .and_then(|prop| px_or_none(&prop.value))?
+            .parse::<f64>()
+            .ok()?;
+        let points = em * font_size;
+        if !points.is_finite() {
+            return None;
+        }
+        Some(((points * 1_000_000.0).round() / 1_000_000.0).to_string())
+    }
+
     // Map a CSS `text-align` value to a SwiftUI `Alignment`.  The
     // alignment becomes the `alignment:` argument of the `.frame(...)`
     // call so the (now full-width) cell positions its content the way
@@ -2424,6 +2469,7 @@ fn swiftui_modifier_chain_with_drops(
     let mut font_size = PropBucket::new(layer_count);
     let mut font_family_mono = PropBucket::new(layer_count);
     let mut font_weight = PropBucket::new(layer_count);
+    let mut letter_spacing = PropBucket::new(layer_count);
     let mut border_width = PropBucket::new(layer_count);
     let mut border_color = PropBucket::new(layer_count);
     // UI79 -- per-edge borders. SwiftUI's `.border` strokes all four
@@ -2559,6 +2605,18 @@ fn swiftui_modifier_chain_with_drops(
             "font-weight" => {
                 if let Some(w) = font_weight_swift(&p.value) {
                     set(&mut font_weight, w.to_string());
+                }
+            }
+            // SwiftUI's `.tracking` is an absolute point distance while CSS
+            // authors letter spacing relative to the current font with `em`.
+            // TaskApp's tracked text parts all declare an explicit font size,
+            // so resolve that relative value at emit time. A state-only value
+            // or one without a usable font size stays an explicit drop.
+            "letter-spacing" if layer_idx.is_none() => {
+                if let Some(points) = tracking_points(base_props, &p.value) {
+                    set(&mut letter_spacing, points);
+                } else {
+                    dropped.push(p.clone());
                 }
             }
             "border-width" => {
@@ -2707,6 +2765,11 @@ fn swiftui_modifier_chain_with_drops(
     if !font_weight.empty() {
         let expr = layer_value(&font_weight, state_layers, ".regular");
         out.push_str(&format!("\n{pad}.fontWeight({expr})"));
+    }
+
+    if !letter_spacing.empty() {
+        let expr = layer_value(&letter_spacing, state_layers, "0");
+        out.push_str(&format!("\n{pad}.tracking({expr})"));
     }
 
     // 4. .padding — insets the content before the frame sizes it.

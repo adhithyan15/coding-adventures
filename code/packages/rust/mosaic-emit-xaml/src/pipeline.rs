@@ -101,6 +101,18 @@ pub struct XamlEmitResult {
     pub if_helpers: Vec<EmittedFile>,
 }
 
+#[cfg(test)]
+mod letter_spacing_tests {
+    use super::*;
+
+    #[test]
+    fn css_em_tracking_lowers_to_winui_thousandths() {
+        assert_eq!(xaml_character_spacing("-0.02em").as_deref(), Some("-20"));
+        assert_eq!(xaml_character_spacing("0.07em").as_deref(), Some("70"));
+        assert_eq!(xaml_character_spacing("1px"), None);
+    }
+}
+
 /// A generated source file with a filename and its UTF-8 source text.
 /// Used for the `for_view_models` / `if_helpers` / `project` fields where
 /// one logical artifact corresponds to multiple physical files.
@@ -2808,6 +2820,14 @@ fn translate_xaml_value(key: &str, raw: &str) -> Option<String> {
         return normalize_xaml_color_value(raw);
     }
 
+    // WinUI measures CharacterSpacing in thousandths of the current font
+    // size, which is exactly the relative unit CSS `em` letter spacing uses.
+    // Keep the conversion here beside the other value-shape translations so
+    // unsupported units remain reported by the shared drop path.
+    if key == "CharacterSpacing" {
+        return xaml_character_spacing(trimmed);
+    }
+
     // Length setters: strip CSS `px` units (and reject percentages,
     // which WinUI's `Double`-typed length properties can't express).
     if is_length_setter(key) {
@@ -2849,6 +2869,23 @@ fn translate_xaml_value(key: &str, raw: &str) -> Option<String> {
 
     // Everything else passes through verbatim.
     Some(raw.to_string())
+}
+
+fn xaml_character_spacing(raw: &str) -> Option<String> {
+    let value = raw.trim().trim_matches('"').trim();
+    let em = if value == "0" {
+        0.0
+    } else {
+        value.strip_suffix("em")?.trim().parse::<f64>().ok()?
+    };
+    if !em.is_finite() {
+        return None;
+    }
+    let units = (em * 1000.0).round();
+    if units < i32::MIN as f64 || units > i32::MAX as f64 {
+        return None;
+    }
+    Some((units as i32).to_string())
 }
 
 // ---------------------------------------------------------------------
@@ -3262,6 +3299,7 @@ fn css_property_to_xaml_setter(name: &str) -> Option<String> {
         "font-family" => Some("FontFamily".to_string()),
         "font-size" => Some("FontSize".to_string()),
         "font-weight" => Some("FontWeight".to_string()),
+        "letter-spacing" => Some("CharacterSpacing".to_string()),
         "gap" => Some("Spacing".to_string()),
         "padding" => Some("Padding".to_string()),
         "margin" => Some("Margin".to_string()),
@@ -3425,7 +3463,12 @@ fn is_stack_panel_style_attr(setter: &str) -> bool {
 fn is_text_style_attr(setter: &str) -> bool {
     matches!(
         setter,
-        "Foreground" | "FontFamily" | "FontSize" | "FontWeight" | "TextAlignment"
+        "Foreground"
+            | "FontFamily"
+            | "FontSize"
+            | "FontWeight"
+            | "CharacterSpacing"
+            | "TextAlignment"
     )
 }
 
