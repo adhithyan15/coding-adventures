@@ -158,6 +158,47 @@ SIGINT, SIGTERM, Ctrl+C, Ctrl+Break, console close, logoff, and system shutdown
 request a cooperative stop of every configured listener. Dropping the composed
 process supervisor reaps every child still owned by this daemon instance.
 
+## Agent tools: `net.fetch` and `vault.request_lease`
+
+When `[data_plane] ollama_models` composes a model-tool surface, it has two
+sources.
+
+- **Smart home** offers the same tools to every host. It authorizes them by
+  capability grant when they are called.
+- **Agent tools** (`src/agent_tools.rs`, D18V "Daemon composition") gives each
+  host its own surface.
+
+The agent-tools surface is derived from the host's own signed package:
+
+```text
+registration ─▶ verify_agent_package ─▶ digest == package_hash
+             ─▶ parse_manifest, tier <= signing key ceiling
+             ─▶ HostProfile::from_manifest ─▶ check_registration(tool)
+                   net.fetch            needs net:connect
+                   vault.request_lease  needs a vault + vault_access leased|both
+```
+
+A host is offered a tool only if its manifest lists it in `allowed_tools`,
+grants its `tool_capabilities`, and declares a high enough `privilege_tier`.
+That is Tier 1 for `net.fetch` and Tier 2 for `vault.request_lease`, so a
+developer-signed package can fetch but cannot lease. Every call runs as the
+registration's host name.
+
+A lease is limited three times over:
+
+1. The manifest's `vault_access` says which secrets the host may lease, and
+   for how long.
+2. The sealed record says which agents the owner allowed.
+3. `consume_for` redeems the lease only for the host it was issued to, and
+   only for a destination the record names.
+
+If a package fails verification, this source offers that host nothing. It
+leaves smart home alone.
+
+At startup, `load_chief_vault_runtime` opens the vault and registers every
+sealed record before anything serves. One corrupt record stops startup. To
+rotate a secret, run `chief-of-staff vault put`, then restart the daemon.
+
 ## Validation
 
 ```sh

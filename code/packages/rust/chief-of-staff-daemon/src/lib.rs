@@ -3,6 +3,8 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
+mod agent_tools;
+
 use actor::{ActorError, ActorSystem};
 use chief_of_staff_channel_endpoints::{
     MessageId, MessageMetadata, MessageMetadataError, MessageMetadataSource,
@@ -31,6 +33,8 @@ use chief_of_staff_host_data_plane::{
     DurableHostDataPlaneDispatcher, HostDataPlaneDispatcher, HostDataPlaneService,
     ModelToolDispatcher, UnavailableHostDataPlaneService,
 };
+use chief_of_staff_host_runtime::PackageKeyring;
+use chief_of_staff_net_fetch::NetFetch;
 use chief_of_staff_orchestrator_core::OrchestratorCore;
 use chief_of_staff_process_supervisor::{
     DurableHostLaunchBindings, HostProgram, MonotonicClock, ProcessSupervisorConfig,
@@ -45,6 +49,8 @@ use chief_of_staff_smart_home_tools::{
     SMART_HOME_OBSERVE_SUPERVISION_TOOL_ID, SMART_HOME_PAIR_BRIDGE_TOOL_ID,
 };
 use chief_of_staff_tool_api::{RequestedBy, ToolInvocationRequest};
+use chief_of_staff_vault_runtime::ChiefVaultRuntime;
+use chief_of_staff_vault_secret_store::{ChiefSecretStore, StoreError};
 use coding_adventures_json_serializer::serialize as serialize_json;
 use coding_adventures_json_value::{parse as parse_json, JsonValue};
 use coding_adventures_storage_fs::FsStorageBackend;
@@ -299,6 +305,9 @@ pub enum ChiefDaemonError {
     ChiefVaultSecret(SecretFileError),
     /// The Chief vault could not initialize or unseal.
     ChiefVault(SealedStoreError),
+    /// A sealed secret record could not be loaded into the vault runtime
+    /// (D18V V-D1: one bad record stops startup).
+    ChiefVaultLoad(StoreError),
     /// The local operator credential could not be loaded or created safely.
     Credential(CredentialFileError),
     /// Local bearer policy construction failed.
@@ -449,6 +458,7 @@ impl Display for ChiefDaemonError {
             }
             Self::ChiefVaultSecret(_) => "chief daemon: vault KEK file failed",
             Self::ChiefVault(_) => "chief daemon: vault failed to open",
+            Self::ChiefVaultLoad(_) => "chief daemon: vault secrets failed to load",
             Self::Credential(_) => "chief daemon: operator credential failed",
             Self::Authentication(_) => "chief daemon: local authentication policy failed",
             Self::Policy(_) => "chief daemon: approval policy composition failed",
@@ -475,6 +485,7 @@ impl std::error::Error for ChiefDaemonError {
             Self::Config(error) => Some(error),
             Self::ChiefVaultSecret(error) => Some(error),
             Self::ChiefVault(error) => Some(error),
+            Self::ChiefVaultLoad(error) => Some(error),
             _ => None,
         }
     }
@@ -534,6 +545,61 @@ pub fn open_chief_vault(
             .map_err(ChiefDaemonError::ChiefVault)?;
     }
     Ok(Some(vault))
+}
+
+/// Open the Chief vault and load every sealed secret into a runtime (D18V V-D1).
+///
+/// `Ok(None)` when no vault is configured. Otherwise this is all or nothing:
+/// a bad KEK, an unreadable store, or one corrupt record is an error, and the
+/// caller stops. A daemon that started with *some* of its secrets would fail
+/// later, per request, in a way that looks like a policy refusal.
+///
+/// Rotation is `vault put` followed by a restart: the runtime is loaded once,
+/// here, and nothing reloads it.
+pub fn load_chief_vault_runtime(
+    config: &ChiefConfig,
+    home: &Path,
+) -> Result<Option<Arc<ChiefVaultRuntime>>, ChiefDaemonError> {
+    let Some(sealed) = open_chief_vault(config, home)? else {
+        return Ok(None);
+    };
+    let runtime = ChiefVaultRuntime::new();
+    ChiefSecretStore::new(sealed)
+        .register_all(&runtime)
+        .map_err(ChiefDaemonError::ChiefVaultLoad)?;
+    Ok(Some(Arc::new(runtime)))
+}
+
+/// What the agent tool source needs from startup: the package keyring that
+/// verifies each host's manifest, and the loaded vault, if any.
+#[derive(Clone)]
+struct AgentToolInputs {
+    keyring: Arc<PackageKeyring>,
+    vault: Option<Arc<ChiefVaultRuntime>>,
+}
+
+impl AgentToolInputs {
+    /// `given`, or both loaded the way [`run`] loads them.
+    ///
+    /// `None` is how the composition entry points that are not handed the
+    /// inputs ask for them. They are loaded only at the point a model-tool
+    /// surface is actually composed, so a data plane with no models touches
+    /// neither the keyring nor the vault.
+    fn resolve(
+        given: Option<Self>,
+        config: &ChiefConfig,
+        home: &Path,
+    ) -> Result<Self, ChiefDaemonError> {
+        if let Some(given) = given {
+            return Ok(given);
+        }
+        Ok(Self {
+            keyring: Arc::new(
+                load_package_keyring(config.keyring(), home).map_err(ChiefDaemonError::Keyring)?,
+            ),
+            vault: load_chief_vault_runtime(config, home)?,
+        })
+    }
 }
 
 /// Resolved absolute startup paths independent of process-global environment.
@@ -657,6 +723,11 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
 
     let keyring =
         Arc::new(load_package_keyring(config.keyring(), home).map_err(ChiefDaemonError::Keyring)?);
+    // V-D1: before anything serves. A vault that fails to load stops startup.
+    let agent_tools = AgentToolInputs {
+        keyring: Arc::clone(&keyring),
+        vault: load_chief_vault_runtime(&config, home)?,
+    };
     let credential =
         load_or_create_credential(&credential_path).map_err(ChiefDaemonError::Credential)?;
     let bearer =
@@ -724,6 +795,7 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
         Arc::clone(&clock),
         smart_home_controller.clone(),
         Arc::clone(&unix_clock),
+        Some(agent_tools),
     )?;
     let smart_home_http = config
         .smart_home()
@@ -885,6 +957,7 @@ pub fn compose_host_data_plane(
         clock,
         controller,
         Arc::new(SystemUnixTimeClock),
+        None,
     )
 }
 
@@ -895,6 +968,7 @@ fn compose_host_data_plane_with_controller(
     clock: Arc<dyn MonotonicClock>,
     controller: Option<SmartHomeControllerRuntime<FsStorageBackend>>,
     unix_clock: Arc<dyn UnixTimeClock>,
+    agent_tools: Option<AgentToolInputs>,
 ) -> Result<Arc<dyn HostDataPlaneDispatcher>, ChiefDaemonError> {
     let metadata_source: Arc<dyn MessageMetadataSource> =
         Arc::new(SystemMessageMetadataSource::new(clock));
@@ -905,6 +979,7 @@ fn compose_host_data_plane_with_controller(
         metadata_source,
         controller,
         unix_clock,
+        agent_tools,
     )?;
     Ok(Arc::new(DurableHostDataPlaneDispatcher::new(
         backend, service,
@@ -940,6 +1015,7 @@ fn compose_data_plane_service(
         metadata_source,
         controller,
         Arc::new(SystemUnixTimeClock),
+        None,
     )
 }
 
@@ -950,6 +1026,7 @@ fn compose_data_plane_service_with_controller(
     metadata_source: Arc<dyn MessageMetadataSource>,
     controller: Option<SmartHomeControllerRuntime<FsStorageBackend>>,
     unix_clock: Arc<dyn UnixTimeClock>,
+    agent_tools: Option<AgentToolInputs>,
 ) -> Result<Arc<dyn HostDataPlaneService>, ChiefDaemonError> {
     if config.data_plane().channel_keys().is_empty()
         && config.data_plane().ollama_models().is_empty()
@@ -984,6 +1061,7 @@ fn compose_data_plane_service_with_controller(
             metadata_source,
         )));
     }
+    let agent_tools = AgentToolInputs::resolve(agent_tools, config, home)?;
     let bridge = SmartHomeToolBridge::new(
         controller,
         SmartHomeAgentId::trusted("chief-daemon-model-tools"),
@@ -993,11 +1071,23 @@ fn compose_data_plane_service_with_controller(
     // the whole surface: there was no way to add a second source without
     // replacing the first. Composing it as a list of one changes no behaviour
     // today and makes adding the second an addition rather than a rewrite.
-    let model_tools: Vec<Arc<dyn ModelToolDispatcher>> = vec![Arc::new(D18dSmartHomeModelTools {
-        bridge,
-        clock: unix_clock,
-        offered: OnceLock::new(),
-    })];
+    //
+    // The second source is `net.fetch` and `vault.request_lease` (D18V
+    // V-D2). Unlike smart home it offers each host a different surface,
+    // computed from that host's own signed manifest.
+    let model_tools: Vec<Arc<dyn ModelToolDispatcher>> = vec![
+        Arc::new(D18dSmartHomeModelTools {
+            bridge,
+            clock: Arc::clone(&unix_clock),
+            offered: OnceLock::new(),
+        }),
+        Arc::new(agent_tools::AgentModelTools::new(
+            agent_tools.keyring,
+            agent_tools.vault,
+            NetFetch::production(),
+            unix_clock,
+        )),
+    ];
     Ok(Arc::new(
         AuthorityBackedHostDataPlaneService::with_model_tools(
             backend,
@@ -5604,9 +5694,20 @@ hardware_key_timeout = 60
         assert_eq!(controller.revision().unwrap(), None);
     }
 
+    /// The keyring file `VALID_CONFIG` names. Composing a model-tool surface
+    /// loads the keyring (the agent tool source verifies each host's package
+    /// against it), so a production composition needs one, as `run` does.
+    fn write_trusted_key(directory: &TestDir) {
+        let keys = directory.0.join(".chief-of-staff/keys");
+        fs::create_dir_all(&keys).unwrap();
+        let (public_key, _) = coding_adventures_ed25519::generate_keypair(&[3; 32]);
+        fs::write(keys.join("prod.pub"), public_key).unwrap();
+    }
+
     #[test]
     fn production_composition_provisions_grants_before_models_are_enabled() {
         let directory = TestDir::new();
+        write_trusted_key(&directory);
         let config = configured_tool_grant_config("active", SMART_HOME_LIST_DEVICES_TOOL_ID);
         let backend: Arc<dyn StorageBackend> = Arc::new(InMemoryStorageBackend::new());
         let monotonic: Arc<dyn MonotonicClock> = Arc::new(SystemMonotonicClock::new());

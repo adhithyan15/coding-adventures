@@ -1159,7 +1159,7 @@ hardware_key_timeout = 60
 
     // ── vault (D18U "Provisioning commands") ─────────────────────────────────
 
-    use chief_of_staff_vault_runtime::{ChiefVaultRuntime, VaultDeliveryMode, VaultLeaseRequest};
+    use chief_of_staff_vault_runtime::{VaultDeliveryMode, VaultLeaseRequest};
     use chief_of_staff_vault_secret_store::SecretName;
 
     /// Stdin stand-in: fixed bytes, a terminal flag, and a record of whether
@@ -1265,14 +1265,15 @@ hardware_key_timeout = 60
         assert!(output.contains("after the next daemon restart"));
         assert!(!output.contains("api-key-value"));
 
-        // What the daemon will do at startup: register, then lease.
-        let runtime = ChiefVaultRuntime::new();
-        assert_eq!(
-            open_store(&directory, &config)
-                .register_all(&runtime)
-                .unwrap(),
-            1
-        );
+        // What the daemon does at startup (D18V V-D1), through the daemon's
+        // own loader rather than a re-creation of it: open, register, lease.
+        let runtime = chief_of_staff_daemon::load_chief_vault_runtime(
+            &load_config_file(&config).unwrap(),
+            &directory.0,
+        )
+        .unwrap()
+        .expect("a configured vault loads");
+        assert!(runtime.secret_policy("weather-key").is_some());
         let policy = runtime.secret_policy("weather-key").unwrap();
         assert_eq!(policy.allowed_mode, VaultDeliveryMode::Leased);
         assert_eq!(policy.privilege_tier, 1);
@@ -1298,6 +1299,36 @@ hardware_key_timeout = 60
                 .as_bytes(),
             b"api-key-value"
         );
+    }
+
+    #[test]
+    fn one_corrupt_record_stops_the_daemon_vault_load() {
+        let (directory, config) = vault_home("vault-corrupt");
+        vault_run(
+            &directory,
+            &config,
+            PUT,
+            &mut FakeInput::piped(b"api-key-value"),
+        )
+        .unwrap();
+        let loaded = load_config_file(&config).unwrap();
+        open_chief_vault(&loaded, &directory.0)
+            .unwrap()
+            .unwrap()
+            .put(
+                chief_of_staff_vault_secret_store::NAMESPACE,
+                "broken-key",
+                b"not a CHIEFSEC record",
+                None,
+            )
+            .unwrap();
+        // V-D1: all or nothing. The good record does not load on its own.
+        assert!(matches!(
+            chief_of_staff_daemon::load_chief_vault_runtime(&loaded, &directory.0),
+            Err(ChiefDaemonError::ChiefVaultLoad(
+                StoreError::CorruptRecord { .. }
+            ))
+        ));
     }
 
     #[test]
