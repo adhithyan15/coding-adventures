@@ -4,6 +4,9 @@
 
 ### Added
 
+- `serve_process`: the binary's whole serve loop, as a library function, so
+  a test binary can run exactly what production runs (P2.6d-2b). `main.rs`
+  keeps only the unsafe descriptor adoption.
 - `tests/launched.rs` (Linux): the real binary, launched through
   `chief-of-staff-broker-launcher`, verified by digest and exec'd by
   descriptor, publishes end to end through the relay. Launch catches a key
