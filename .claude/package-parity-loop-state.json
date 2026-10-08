@@ -19,21 +19,21 @@
     "notes": "Final-head retry completed with 31 successful and seven expected skipped checks, including the previously flaky Windows Forme job and CI gate. GitHub reported CLEAN/MERGEABLE; guarded squash auto-merge merged #17148 without a manual merge. Exact merge commit 435df54f862f154b216e1204e299ffc67a713af6 was fetched on origin/main."
   },
   "last_inventory": {
-    "revision": "435df54f862f154b216e1204e299ffc67a713af6",
+    "revision": "89c47895e1303bf1baaae2da7290f3ae1be1a879",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1500,
-    "implementation_package_slots": 4782,
-    "all_reported_identities": 1542,
+    "implementation_identities": 1501,
+    "implementation_package_slots": 4783,
+    "all_reported_identities": 1543,
     "high_consensus_packages": 178,
     "high_consensus_missing_slots": 250,
     "five_to_nine_packages": 123,
     "five_to_nine_missing_slots": 934,
     "two_to_four_packages": 181,
     "two_to_four_missing_slots": 2282,
-    "singleton_packages": 1018,
-    "singleton_missing_slots": 14252,
-    "rust_singletons": 819,
+    "singleton_packages": 1019,
+    "singleton_missing_slots": 14266,
+    "rust_singletons": 820,
     "ocaml_packages": 5,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
@@ -12178,6 +12178,16 @@
       "notes": "Exact post-#17148 fetched-main inventory adds one Rust-only chief-of-staff-process-hardening singleton root. It is host-security/native-runtime FFI, distinct from existing spawn-isolation and Linux sandbox reviews, not a portable all-language parity package. Preserve a separate authority/platform-evidence review and exclude this item from parity implementation selection."
     },
     {
+      "id": "chief-broker-roots-native-authority-review",
+      "title": "Review Chief broker roots and beneath-resolution native authority",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Post-selection fetched main at 89c47895e1303bf1baaae2da7290f3ae1be1a879 adds the Rust-only chief-of-staff-broker-roots singleton. D18S S-K5 capability-gated filesystem broker authority, openat2/O_NOFOLLOW_ANY FFI and no-symlink beneath resolution are host security/native runtime, not a portable package contract. Review platform and security evidence separately; never select this as an all-language port in the parity loop."
+    },
+    {
       "id": "geometry-arc2d-center-form-bounds-and-sweep-neutral-contract",
       "title": "Freeze analytic wrapped Arc2D bounds and bounded center-form cubic sweeps",
       "status": "merged",
@@ -12235,6 +12245,8 @@
       "pr_number": null,
       "selected_at": "2026-10-08T18:00:19Z",
       "selection_revision": "435df54f862f154b216e1204e299ffc67a713af6",
+      "rebase_revision": "89c47895e1303bf1baaae2da7290f3ae1be1a879",
+      "rebase_notes": "Rebased conflict-free over unrelated Bengali, Chief broker-root and language-ladder merges before publication. Refreshed the collision-gated schema-3 inventory: one new Rust-only native-security singleton was classified and registered, with zero collisions/unknown buckets. No C#/F# Arc2D package path overlap or second parity PR appeared.",
       "selection_notes": "Selected only after #17148 actually merged, final 38 checks were acceptable, origin/main was fetched, collision-gated schema-3 inventory regenerated, and three newly discovered owners were registered. The merged G2D03 and now-unconditional geometry fixture contracts make C#/F# a bounded shared .NET implementation slice with direct dependency leverage. Java/Kotlin/Dart arithmetic and NET00 require upstream neutral adjudication; Haskell CT01 is ready but a narrower one-lane leaf; OCaml promotion remains upstream-blocked. No active parity PR or exact Arc2D package-path overlap was found.",
       "notes": "First bounded child of the 11-lane Arc2D existing-center-form umbrella. C# and F# currently sample 100 points for bounds and use unchecked integer quadrant segmentation; both already link geometry2d-v1 but must dynamically consume its four center-bounds and three center-cubics records. Implement analytic rotated extrema, finite/valid one-turn fail-stop before allocation, zero/full-turn segment rules, native invalid/nonfinite tests, same-lane point2d/bezier2d/trig regression and real .NET coverage/build validation. G2D03 and merged neutral validators govern; no Go endpoint or absent-lane port in this slice."
     },

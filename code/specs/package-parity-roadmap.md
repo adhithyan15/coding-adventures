@@ -17176,6 +17176,17 @@ coverage, build-file, parity, diff and security validation. Remaining
 Arc2D lanes will be split after this child. OCaml native build-tool promotion
 still depends on its separately tracked execution-authority and CI gates.
 
+Before the C#/F# PR, `origin/main` advanced to
+`89c47895e1303bf1baaae2da7290f3ae1be1a879` through unrelated Bengali,
+Chief broker-root, and language-ladder merges. The Arc2D branch rebased
+without conflict. The refreshed collision-gated inventory now has 1,501
+implementation identities, 4,783 slots, 1,543 all-reported identities,
+1,019 singletons (820 Rust), and unchanged high-consensus counts; collisions
+and unknown language buckets remain zero. The new Rust-only
+`chief-of-staff-broker-roots` package owns capability-gated filesystem and
+native beneath-resolution authority, so it has a separately blocked review
+item rather than a cross-language port.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
