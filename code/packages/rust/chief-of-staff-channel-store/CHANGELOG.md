@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Add `reserve_append_with_hash` and `commit_encrypted` (D18S P2.6d): the
+  storage half of an append, needing no keys.
+  - `reserve_append` delegates to `reserve_append_with_hash`.
+  - `commit_reserved` now encrypts first, then delegates to
+    `commit_encrypted`. Crash recovery there is a byte comparison, which is
+    sound because encryption is deterministic.
+  - Error order changes in one case only: when both the header and the
+    plaintext are wrong, the plaintext's mismatch is reported.
+  - A test shows the split writes byte-identical records to `append`.
 - Expose the production D18S state and D18A cursor codecs, normative content
   types and bounds, and stable D18P error codes through a public compatibility
   module.
