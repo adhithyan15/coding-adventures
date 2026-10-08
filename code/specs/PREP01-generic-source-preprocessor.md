@@ -738,7 +738,8 @@ operators and numeric checks; parentheses do not add new integer forms.
 Logical `&&` and `||` may still combine clauses with their existing
 precedence, including a parenthesized clause. Reject nested parentheses,
 parentheses around logical chains or arithmetic/shift/bitwise clauses,
-unmatched delimiters, and mixed forms such as `!(1)` or `(1) == 1`.
+unmatched delimiters, and mixed forms such as `(1) == 1`. The later negated
+operand stage handles `!(1)`.
 Validate every clause even when a logical result is already determined, and
 retain the directive location on errors through the rooted C frontend.
 The next bounded stage accepts exactly `!(left comparison right)` as one
@@ -747,11 +748,25 @@ two-operand comparisons and each operand keeps the existing decimal or
 undefined-identifier policy. The result is the logical negation of that
 comparison. Logical `&&` and `||` still combine clauses with their existing
 precedence, and all clauses remain syntax-checked even when an earlier value
-determines the result. Reject `!(operand)`, nested parentheses, a negated
-arithmetic/shift/bitwise clause, extra trailing operators, and a negated
-logical chain. The rooted C path must retain the directive location for
-these rejections. Test true and false comparisons, macro expansion,
+determines the result. At this stage, reject `!(operand)`, nested
+parentheses, a negated arithmetic/shift/bitwise clause, extra trailing
+operators, and a negated logical chain. The rooted C path must retain the
+directive location for these rejections. Test true and false comparisons,
+macro expansion,
 undefined identifiers, logical combination, and those unsupported shapes.
+The following bounded stage also accepts exactly `!(operand)` as one
+logical clause, with one expanded plain-decimal literal or undefined
+identifier inside the parentheses. Its value is true exactly when that
+operand is zero. The existing `defined()` preparation may provide that
+numeric operand. The decimal-only literal policy remains in force;
+leading-zero, negative, and other unsupported operand shapes still fail.
+Logical `&&` and `||` retain their existing precedence and validate every
+clause. The earlier `!(left comparison right)` form stays accepted. Reject
+nested parentheses, `!(!operand)`, arithmetic inside the parentheses,
+trailing operators, and negated logical chains.
+Keep rooted C directive error locations for rejected forms. Tests cover true
+and false operands, macros and undefined identifiers, logical combination,
+and explicit rejection of the longer shapes.
 *Acceptance:* a C program using `#define` (object- and function-like), `#if`/
 `#ifdef`/`#else`/`#endif` and a real project-local `#include` compiles through
 `c-to-semantic-ir` and executes with the expected result — the first C program

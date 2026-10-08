@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — PREP01 bounded negated C operands
+
+- Accept exactly one `!(operand)` logical clause for an expanded decimal
+  literal or undefined identifier. Keep nested, arithmetic, and longer mixed
+  forms explicit errors with rooted directive locations.
+
 ## Unreleased — PREP01 bounded negated C comparisons
 
 - Accept one `!(left comparison right)` logical clause using the existing

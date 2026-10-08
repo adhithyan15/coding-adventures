@@ -99,6 +99,14 @@ fn condition_operand(token: &Token) -> Result<i64, PpError> {
 }
 
 fn condition_clause(tokens: &[Token]) -> Result<bool, PpError> {
+    // One negated operand is a complete clause. An exact four-token shape
+    // avoids turning this into general parenthesis parsing; the operand keeps
+    // the existing decimal/undefined-identifier policy after macro expansion.
+    if let [not, open, operand, close] = tokens {
+        if not.value == "!" && open.value == "(" && close.value == ")" {
+            return Ok(condition_operand(operand)? == 0);
+        }
+    }
     // Peel one exact negated comparison. The inner slice has three tokens, so
     // this call cannot recurse again or turn parentheses into a general parser.
     if let [not, open, _, op, _, close] = tokens {
@@ -720,13 +728,63 @@ mod tests {
             "(1 << 2)",
             "(1 & 2)",
             "(1) == 1",
-            "!(1)",
             "(1",
             "1)",
             "(2 < 3",
             "2 < 3)",
             "1 || ((1))",
             "1 || (1 + 2)",
+        ] {
+            let source = format!("#if {condition}\nint x;\n#endif\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            assert!(
+                preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err(),
+                "{condition}"
+            );
+        }
+    }
+
+    #[test]
+    fn one_negated_parenthesized_operand_keeps_bounded_shapes() {
+        for (condition, expected) in [
+            ("!(0)", "1"),
+            ("!(2)", "0"),
+            ("!(MISSING)", "1"),
+            ("!(defined(MISSING))", "1"),
+            ("!(ZERO)", "1"),
+            ("!(ANSWER)", "0"),
+            ("!(defined(ANSWER))", "0"),
+            ("0 || !(0) && 1", "1"),
+            ("1 && !(ANSWER)", "0"),
+        ] {
+            let source = format!(
+                "#define ZERO 0\n#define ANSWER 7\n#if {condition}\nint x = 1;\n#else\nint x = 0;\n#endif\n"
+            );
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+            let values: Vec<_> = result
+                .tokens
+                .iter()
+                .map(|token| token.value.as_str())
+                .collect();
+            assert_eq!(values, ["int", "x", "=", expected, ";"], "{condition}");
+        }
+        for condition in [
+            "!((0))",
+            "!(!0)",
+            "!(1 + 2)",
+            "!(1 << 2)",
+            "!(1 && 0)",
+            "!(0) == 1",
+            "!(010)",
+            "!(-1)",
+            "1 || !(1 + 2)",
         ] {
             let source = format!("#if {condition}\nint x;\n#endif\n");
             let mut fs = MemoryFs::new();
@@ -765,7 +823,6 @@ mod tests {
             assert_eq!(values, ["int", "x", "=", expected, ";"], "{condition}");
         }
         for condition in [
-            "!(1)",
             "!((1 == 2))",
             "!(1 + 2)",
             "!(1 << 2)",
