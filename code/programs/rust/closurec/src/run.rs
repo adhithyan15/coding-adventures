@@ -96,6 +96,8 @@ impl std::fmt::Display for TypedPipelineStage {
 /// [`io::Error`] (it isn't `Clone`/`PartialEq`).
 #[derive(Debug, Clone, PartialEq)]
 pub enum CompilerError {
+    /// A provenance operation could not record complete evidence for this run.
+    Provenance { stage: String, message: String },
     /// Couldn't read an input file.
     InputReadError {
         path: PathBuf,
@@ -157,6 +159,9 @@ fn compilation_level_name(level: CompilationLevel) -> &'static str {
 impl std::fmt::Display for CompilerError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+            CompilerError::Provenance { stage, message } => {
+                write!(f, "provenance failed at {stage} stage: {message}")
+            }
             CompilerError::InputReadError { path, message, .. } => {
                 write!(f, "failed to read input {}: {message}", path.display())
             }
@@ -188,6 +193,14 @@ impl std::fmt::Display for CompilerError {
 }
 
 impl std::error::Error for CompilerError {}
+/// Keep the original CV failure and its stage; allocate stage text only on error.
+fn provenance_error(stage: &'static str) -> impl FnOnce(String) -> CompilerError {
+    move |message| CompilerError::Provenance {
+        stage: stage.into(),
+        message,
+    }
+}
+
 
 impl CompilerError {
     /// Process exit status for compiler execution errors.
@@ -196,7 +209,7 @@ impl CompilerError {
     /// errors). Existing closurec I/O/configuration failures retain exit 2.
     pub(crate) fn exit_code(&self) -> u8 {
         match self {
-            Self::TypedPipeline { .. } => 1,
+            Self::TypedPipeline { .. } | Self::Provenance { .. } => 1,
             _ => 2,
         }
     }
@@ -589,7 +602,12 @@ pub fn transform_source_with_cv(
                 )
             });
             whitespace_only::whitespace_only_minify(source, es_version, wo_cv)
-                .map_err(CompilerError::Minify)?
+                .map_err(|error| match error {
+                whitespace_only::MinifyError::Provenance(message) => CompilerError::Provenance {
+                    stage: "whitespace_only".into(), message,
+                },
+                other => CompilerError::Minify(other),
+            })?
         }
         // CLOC12.155: SIMPLE runs the typed-AST optimization pipeline (v2).
         //
@@ -791,7 +809,8 @@ pub fn transform_source_with_cv(
         for (k, v) in extras {
             meta.insert(k.to_string(), v);
         }
-        let _ = log.contribute(cv_id, "compilation_level", tag, meta);
+        log.contribute(cv_id, "compilation_level", tag, meta)
+            .map_err(provenance_error("compilation_level"))?;
     }
 
     // Step 2 — `--define / -D` substitution (CLOC11.19). Runs
@@ -826,7 +845,8 @@ pub fn transform_source_with_cv(
             "defines_count".to_string(),
             serde_json::Value::Number((config.defines.defines.len() as u64).into()),
         );
-        let _ = log.contribute(cv_id, "defines", "applied", meta);
+        log.contribute(cv_id, "defines", "applied", meta)
+            .map_err(provenance_error("defines"))?;
     }
 
     Ok(after_defines)
@@ -1012,6 +1032,8 @@ fn collect_externs_property_names(
 /// CLOC11.02: glob-expanded inputs, identity pipeline body. See the
 /// module docstring for the future expansion plan.
 pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerError> {
+    config.special_modes.correlation_vector_limits.validate()
+        .map_err(provenance_error("configuration"))?;
     // Step 0: identity-banner fallback. Empty argv → friendly
     // banner so users running `closurec` with no flags get a
     // useful response rather than a glob error.
@@ -1149,15 +1171,18 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // contributions through the per-file loop and dump them at
     // the end of `run_compiler` to a side-channel file
     // (`closurec-cv.json` by default) when enabled.
-    let mut cv_log = coding_adventures_correlation_vector::CVLog::new(
-        config.special_modes.correlation_vector,
-    );
+    let mut cv_log = if config.special_modes.correlation_vector {
+        coding_adventures_correlation_vector::CVLog::new_checked_chronology(
+            config.special_modes.correlation_vector_limits.clone(),
+        ).map_err(provenance_error("configuration"))?
+    } else {
+        coding_adventures_correlation_vector::CVLog::new_compact(false)
+    };
     // CLOC11.62: per-file CV IDs accumulate so the post-loop
     // stages (wrapper / IIFE / charset / etc.) can derive a
     // single "combined" CV entry with all of them as parents.
-    // That combined entry is the substrate the rest of the
-    // pipeline contributes against — every byte from any input
-    // gets its post-combine provenance recorded there.
+    // That combined entry retains post-combine stage facts. It does not yet
+    // establish source ownership for each emitted byte or a source-map join.
     let mut per_file_cv_ids: Vec<String> = Vec::new();
     for path in &inputs {
         let contents = fs::read_to_string(path).map_err(|e| CompilerError::InputReadError {
@@ -1177,14 +1202,18 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                 "byte_len".to_string(),
                 serde_json::Value::Number((contents.len() as u64).into()),
             );
-            Some(cv_log.create(Some(
+            meta.insert(
+                "content_sha256".into(),
+                serde_json::Value::String(coding_adventures_sha256::sha256_hex(contents.as_bytes())),
+            );
+            Some(cv_log.try_create(Some(
                 coding_adventures_correlation_vector::Origin {
                     source: "input_file".to_string(),
                     location: path.to_string_lossy().into_owned(),
                     timestamp: None,
                     meta,
                 },
-            )))
+            )).map_err(provenance_error("input"))?)
         } else {
             None
         };
@@ -1266,7 +1295,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                             "token_index".to_string(),
                             serde_json::Value::Number((idx as u64).into()),
                         );
-                        let tok_cv = cv_log.derive(
+                        let tok_cv = cv_log.try_derive(
                             id,
                             Some(coding_adventures_correlation_vector::Origin {
                                 source: "lexer_token".to_string(),
@@ -1279,7 +1308,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                                 timestamp: None,
                                 meta: tmeta,
                             }),
-                        );
+                        ).map_err(provenance_error("lex"))?;
                         token_cv_ids.push(tok_cv);
                     }
                     let mut cmeta = std::collections::HashMap::new();
@@ -1287,9 +1316,9 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                         "token_count".to_string(),
                         serde_json::Value::Number((token_count as u64).into()),
                     );
-                    let _ = cv_log.contribute(
+                    cv_log.contribute(
                         id, "lex", "tokens_emitted", cmeta,
-                    );
+                    ).map_err(provenance_error("lex"))?;
 
                     // CLOC11.65: per-token `defines.applied`.
                     // Walk the token stream; whenever a Name
@@ -1369,12 +1398,12 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                             // token_cv_ids[idx] is valid: same
                             // length and order as tokens (we
                             // built it in lock-step above).
-                            let _ = cv_log.contribute(
+                            cv_log.contribute(
                                 &token_cv_ids[idx],
                                 "defines",
                                 "applied",
                                 dmeta,
-                            );
+                            ).map_err(provenance_error("defines"))?;
                         }
                     }
 
@@ -1437,12 +1466,12 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                                     (tok.value.len() as u64).into(),
                                 ),
                             );
-                            cv_log.delete(
+                            cv_log.try_delete(
                                 &token_cv_ids[idx],
                                 "compilation_level",
                                 "whitespace_only_dropped",
                                 wmeta,
-                            );
+                            ).map_err(provenance_error("compilation_level"))?;
                         }
                     }
                 }
@@ -1452,9 +1481,9 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                         "message".to_string(),
                         serde_json::Value::String(err),
                     );
-                    let _ = cv_log.contribute(
+                    cv_log.contribute(
                         id, "lex", "failed", emeta,
-                    );
+                    ).map_err(provenance_error("lex"))?;
                 }
             }
         }
@@ -1523,7 +1552,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
             "byte_len".to_string(),
             serde_json::Value::Number((combined.len() as u64).into()),
         );
-        Some(cv_log.merge(
+        Some(cv_log.try_merge(
             &parent_refs,
             Some(coding_adventures_correlation_vector::Origin {
                 source: "concatenated_combined_source".to_string(),
@@ -1531,7 +1560,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                 timestamp: None,
                 meta,
             }),
-        ))
+        ).map_err(provenance_error("combined"))?)
     } else {
         None
     };
@@ -1584,12 +1613,12 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                     ((combined.len() + 16) as u64).into(),
                 ),
             );
-            let _ = cv_log.contribute(
+            cv_log.contribute(
                 id,
                 "emit_use_strict",
                 "prepended",
                 meta,
-            );
+            ).map_err(provenance_error("emit_use_strict"))?;
         }
         // Use double quotes to match CC's emission. A trailing
         // newline keeps the directive on its own line, which is
@@ -1632,12 +1661,12 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                 "output_byte_len".to_string(),
                 serde_json::Value::Number((wrapped.len() as u64).into()),
             );
-            let _ = cv_log.contribute(
+            cv_log.contribute(
                 id,
                 "output_wrapper",
                 "substituted",
                 meta,
-            );
+            ).map_err(provenance_error("output_wrapper"))?;
         }
     }
 
@@ -1665,12 +1694,12 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                 "output_byte_len".to_string(),
                 serde_json::Value::Number((isolated.len() as u64).into()),
             );
-            let _ = cv_log.contribute(
+            cv_log.contribute(
                 id,
                 "isolation_mode",
                 "iife_wrapped",
                 meta,
-            );
+            ).map_err(provenance_error("isolation_mode"))?;
         }
     }
 
@@ -1716,11 +1745,16 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
             "output_byte_len".to_string(),
             serde_json::Value::Number((encoded.len() as u64).into()),
         );
-        let _ = cv_log.contribute(id, "charset", "normalized", meta);
+        cv_log.contribute(id, "charset", "normalized", meta).map_err(provenance_error("charset"))?;
     }
 
-    // Step 4: write the output. Two cases:
-    //   a) --js_output_file set → write to disk via write_output_file.
+    // Prepare all payloads and candidate publication records before touching any
+    // destination. Recording/validation/encoding failures cannot overwrite old
+    // outputs. These candidate `wrote` events become observable only if all
+    // publication writes succeed and the prepared sidecar is published.
+    let mut pending_outputs: Vec<(PathBuf, String)> = Vec::new();
+    // Step 4: prepare the output. Two cases:
+    //   a) --js_output_file set → prepare a transactional disk output.
     //   b) absent → stdout via the returned `stdout_text`.
     //
     // Step 5 (CLOC11.42): when --create_source_map=path is set,
@@ -1737,6 +1771,14 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // None arm moves `encoded` into stdout_text; without the
     // pre-capture we'd see a borrow-of-moved error.
     let encoded_byte_len = encoded.len();
+    let encoded_digest = if combined_cv_id.is_some()
+        && config.io.js_output_file.is_some()
+        && !config.special_modes.correlation_vector_summary_only
+    {
+        Some(coding_adventures_sha256::sha256_hex(encoded.as_bytes()))
+    } else {
+        None
+    };
     // CLOC11.76 — when --correlation_vector_summary_only is
     // set, skip the JS write entirely. The CV log still
     // accumulates per-file / combined / post-combine
@@ -1748,7 +1790,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     } else {
         match &config.io.js_output_file {
             Some(path) => {
-                write_output_file(path, &encoded)?;
+                pending_outputs.push((path.clone(), encoded));
                 CompilerOutput {
                     stdout_text: String::new(),
                     stderr_text: String::new(),
@@ -1766,11 +1808,8 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     // Step 5 (CLOC11.42): source map write.
     let mut wrote_files = result.wrote_files;
 
-    // CLOC11.63: when CV is on AND the JS write actually went to
-    // disk, derive a `js_output_file` CV entry with the combined
-    // entry as parent. Contributes a `wrote` record with the
-    // path + byte_len so a CV trace consumer can match an output
-    // file back to its substrate.
+    // Prepare JS publication evidence under the combined output identity.
+    // It is published with the sidecar only after preparation succeeds.
     //
     // CLOC11.76: skip this CV record under summary_only — the
     // write never happened, so the trace should not pretend
@@ -1785,7 +1824,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                     js_path.to_string_lossy().into_owned(),
                 ),
             );
-            let js_cv_id = cv_log.derive(
+            let js_cv_id = cv_log.try_derive(
                 parent_id,
                 Some(coding_adventures_correlation_vector::Origin {
                     source: "js_output_file".to_string(),
@@ -1793,18 +1832,22 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                     timestamp: None,
                     meta: origin_meta,
                 }),
-            );
+            ).map_err(provenance_error("js_output_file"))?;
             let mut contrib_meta = std::collections::HashMap::new();
             contrib_meta.insert(
                 "byte_len".to_string(),
                 serde_json::Value::Number((encoded_byte_len as u64).into()),
             );
-            let _ = cv_log.contribute(
+            contrib_meta.insert(
+                "content_sha256".into(),
+                serde_json::Value::String(encoded_digest.expect("prepared JS digest")),
+            );
+            cv_log.contribute(
                 &js_cv_id,
                 "write_output_file",
                 "wrote",
                 contrib_meta,
-            );
+            ).map_err(provenance_error("write_output_file"))?;
         }
     }
     } // end CLOC11.76 summary_only gate around js CV record
@@ -1817,7 +1860,11 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
         let map_body = crate::source_map::format_minimal_v3(
             config.io.js_output_file.as_deref(),
         );
-        write_output_file(&map_path, &map_body)?;
+        let map_byte_len = map_body.len();
+        let map_digest = combined_cv_id
+            .as_ref()
+            .map(|_| coding_adventures_sha256::sha256_hex(map_body.as_bytes()));
+        pending_outputs.push((map_path.clone(), map_body));
         wrote_files.push(map_path.clone());
 
         // CLOC11.63: source map derives from the combined entry
@@ -1831,7 +1878,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                     map_path.to_string_lossy().into_owned(),
                 ),
             );
-            let map_cv_id = cv_log.derive(
+            let map_cv_id = cv_log.try_derive(
                 parent_id,
                 Some(coding_adventures_correlation_vector::Origin {
                     source: "source_map_output".to_string(),
@@ -1839,18 +1886,22 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                     timestamp: None,
                     meta: origin_meta,
                 }),
-            );
+            ).map_err(provenance_error("source_map_output"))?;
             let mut contrib_meta = std::collections::HashMap::new();
             contrib_meta.insert(
                 "byte_len".to_string(),
-                serde_json::Value::Number((map_body.len() as u64).into()),
+                serde_json::Value::Number((map_byte_len as u64).into()),
             );
-            let _ = cv_log.contribute(
+            contrib_meta.insert(
+                "content_sha256".into(),
+                serde_json::Value::String(map_digest.expect("prepared map digest")),
+            );
+            cv_log.contribute(
                 &map_cv_id,
                 "write_output_file",
                 "wrote",
                 contrib_meta,
-            );
+            ).map_err(provenance_error("write_output_file"))?;
         }
     }
 
@@ -1875,7 +1926,14 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     if !config.special_modes.correlation_vector_summary_only {
     if let Some(manifest_path) = &config.chunks.output_manifest_file {
         let body = format_manifest(&inputs);
-        write_output_file(manifest_path, &body)?;
+        let manifest_byte_len = body.len();
+        let manifest_digest =
+            if config.special_modes.correlation_vector && !per_file_cv_ids.is_empty() {
+                Some(coding_adventures_sha256::sha256_hex(body.as_bytes()))
+            } else {
+                None
+            };
+        pending_outputs.push((manifest_path.clone(), body));
         wrote_files.push(manifest_path.clone());
 
         // CLOC11.63: manifest derives from the *per-file* CVs,
@@ -1900,7 +1958,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                     (per_file_cv_ids.len() as u64).into(),
                 ),
             );
-            let manifest_cv_id = cv_log.merge(
+            let manifest_cv_id = cv_log.try_merge(
                 &parent_refs,
                 Some(coding_adventures_correlation_vector::Origin {
                     source: "manifest_output".to_string(),
@@ -1908,18 +1966,22 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                     timestamp: None,
                     meta: origin_meta,
                 }),
-            );
+            ).map_err(provenance_error("manifest_output"))?;
             let mut contrib_meta = std::collections::HashMap::new();
             contrib_meta.insert(
                 "byte_len".to_string(),
-                serde_json::Value::Number((body.len() as u64).into()),
+                serde_json::Value::Number((manifest_byte_len as u64).into()),
             );
-            let _ = cv_log.contribute(
+            contrib_meta.insert(
+                "content_sha256".into(),
+                serde_json::Value::String(manifest_digest.expect("prepared manifest digest")),
+            );
+            cv_log.contribute(
                 &manifest_cv_id,
                 "write_output_file",
                 "wrote",
                 contrib_meta,
-            );
+            ).map_err(provenance_error("write_output_file"))?;
         }
     }
     } // end CLOC11.76 summary_only gate around manifest write
@@ -1953,7 +2015,9 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
         use crate::config::CorrelationVectorFormat;
         match config.special_modes.correlation_vector_format {
             CorrelationVectorFormat::None => {
-                // explicit no-op
+                // No materialized sidecar, but complete graph evidence is still
+                // mandatory before publishing output or a summary.
+                cv_log.validate_graph().map_err(provenance_error("validate"))?;
             }
             fmt @ (CorrelationVectorFormat::Json
             | CorrelationVectorFormat::Ndjson) => {
@@ -1983,8 +2047,8 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                         config.special_modes.correlation_vector_filter_includes_origin,
                         config.special_modes.correlation_vector_filter_invert,
                     ),
-                };
-                write_output_file(&sidecar_path, &body)?;
+                }?;
+                pending_outputs.push((sidecar_path.clone(), body));
                 wrote_files.push(sidecar_path.clone());
                 cv_sidecar_written = Some(sidecar_path);
             }
@@ -2001,7 +2065,7 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
                 config.special_modes.correlation_vector_filter_invert,
                 cv_sidecar_written.as_deref(),
                 config.special_modes.correlation_vector_summary_format,
-            );
+            )?;
             // CLOC11.75 — route to stderr_text when the
             // stderr flag is on; default stays on stdout.
             if config.special_modes.correlation_vector_summary_stderr {
@@ -2012,6 +2076,11 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
         }
     }
 
+    // The sidecar is last in this prepared set. Return successful stdout only
+    // after the complete set commits; cleanup warnings name retained owned paths.
+    for warning in crate::publication::publish_outputs(&pending_outputs)? {
+        result.stderr_text.push_str(&warning);
+    }
     Ok(CompilerOutput {
         stdout_text: result.stdout_text,
         stderr_text: result.stderr_text,
@@ -2019,21 +2088,9 @@ pub fn run_compiler(config: &CompilerConfig) -> Result<CompilerOutput, CompilerE
     })
 }
 
-/// CLOC11.73 — produce a one-line stdout summary of the CV
-/// log, *after* the same filter would have been applied for
-/// the sidecar. The output ends with a newline so it composes
-/// cleanly with the rest of `stdout_text`.
-///
-/// Two flavors:
-///   - `wrote_path = Some(p)` (Json / Ndjson format):
-///     "cv sidecar: <p>: N entries, M contributions, T
-///      tombstones, pass_order=[...]"
-///   - `wrote_path = None` (NONE format / write skipped):
-///     "cv sidecar: skipped (format=NONE): N entries, M
-///      contributions, T tombstones, pass_order=[...]"
-///
-/// Counts reflect the post-filter view; under filter=[] the
-/// summary describes the unfiltered log.
+/// Checked export validates the full graph before selecting a presentation view.
+/// The library borrows evidence and enforces work/output caps during encoding;
+/// the compiler preserves its stage diagnostic instead of inventing a fallback.
 fn compute_cv_summary(
     cv_log: &coding_adventures_correlation_vector::CVLog,
     filter: &[String],
@@ -2041,402 +2098,69 @@ fn compute_cv_summary(
     filter_invert: bool,
     wrote_path: Option<&std::path::Path>,
     summary_format: crate::config::CorrelationVectorSummaryFormat,
-) -> String {
-    // Build the same parsed-Value form the formatters use,
-    // apply the same filter, then count.
-    let compact = cv_log
-        .to_json_string()
-        .unwrap_or_else(|_| "{}".to_string());
-    let mut root: serde_json::Value = match serde_json::from_str(&compact) {
-        Ok(v) => v,
-        Err(_) => {
-            // Fallback to a stub summary; pass_order is
-            // unknown but we still print zeros so the line
-            // is well-formed.
-            return summary_line(wrote_path, 0, 0, 0, &[], summary_format);
-        }
+) -> Result<String, CompilerError> {
+    use coding_adventures_correlation_vector::{SourceFilter, SummaryFormat};
+    let format = match summary_format {
+        crate::config::CorrelationVectorSummaryFormat::Text => SummaryFormat::Text,
+        crate::config::CorrelationVectorSummaryFormat::Json => SummaryFormat::Json,
+        crate::config::CorrelationVectorSummaryFormat::Kv => SummaryFormat::Kv,
     };
-    if !filter.is_empty() {
-        prune_entries_by_source(
-            &mut root,
-            filter,
-            filter_includes_origin,
-            filter_invert,
-        );
-    }
-    let entries = root
-        .get("entries")
-        .and_then(|v| v.as_object())
-        .map(|o| o.values().cloned().collect::<Vec<_>>())
-        .unwrap_or_default();
-    let entry_count = entries.len();
-    let contribution_count: usize = entries
-        .iter()
-        .map(|e| {
-            e.get("contributions")
-                .and_then(|v| v.as_array())
-                .map(|a| a.len())
-                .unwrap_or(0)
-        })
-        .sum();
-    let tombstone_count: usize = entries
-        .iter()
-        .filter(|e| {
-            e.get("deleted")
-                .map(|d| !d.is_null())
-                .unwrap_or(false)
-        })
-        .count();
-    let pass_order: Vec<String> = root
-        .get("pass_order")
-        .and_then(|v| v.as_array())
-        .map(|arr| {
-            arr.iter()
-                .filter_map(|v| v.as_str().map(str::to_string))
-                .collect()
-        })
-        .unwrap_or_default();
-    summary_line(
-        wrote_path,
-        entry_count,
-        contribution_count,
-        tombstone_count,
-        &pass_order,
-        summary_format,
-    )
+    let path = wrote_path.map(|path| path.to_string_lossy());
+    cv_log
+        .export_summary(
+            format,
+            SourceFilter {
+                sources: filter,
+                include_origin: filter_includes_origin,
+                invert: filter_invert,
+            },
+            path.as_deref(),
+        )
+        .map_err(provenance_error("summary"))
 }
 
-/// Render the CLOC11.73 summary as a single line ending in
-/// `\n`. Kept separate from `compute_cv_summary` so the
-/// formatting can be tested / changed without re-running the
-/// CV count walk.
-///
-/// CLOC11.74: dispatch on `summary_format` to produce one of
-/// three shapes:
-///   - `Text` (default): the CLOC11.73 human-readable form.
-///   - `Json`: single-line JSON object `{"cv_sidecar": {...}}`.
-///     `path` is `null` under `skipped=true`.
-///   - `Kv`: space-separated `key=value` pairs prefixed
-///     with `cv_sidecar.`. Values that may contain spaces
-///     (path; pass_order joined by `,`) are quoted on the
-///     RHS so shell tooling can `awk '{...}'`/`cut` safely.
-fn summary_line(
-    wrote_path: Option<&std::path::Path>,
-    entries: usize,
-    contributions: usize,
-    tombstones: usize,
-    pass_order: &[String],
-    summary_format: crate::config::CorrelationVectorSummaryFormat,
-) -> String {
-    use crate::config::CorrelationVectorSummaryFormat as F;
-    match summary_format {
-        F::Text => {
-            let prefix = match wrote_path {
-                Some(p) => format!("cv sidecar: {}", p.display()),
-                None => "cv sidecar: skipped (format=NONE)".to_string(),
-            };
-            format!(
-                "{}: {} entries, {} contributions, {} tombstones, pass_order=[{}]\n",
-                prefix,
-                entries,
-                contributions,
-                tombstones,
-                pass_order.join(","),
-            )
-        }
-        F::Json => {
-            // Build a serde_json::Map for the cv_sidecar
-            // payload so we don't have to hand-escape paths
-            // or pass_order entries. serde_json handles
-            // strings, quotes, nested objects safely.
-            let mut payload = serde_json::Map::new();
-            match wrote_path {
-                Some(p) => {
-                    payload.insert(
-                        "path".to_string(),
-                        serde_json::Value::String(p.display().to_string()),
-                    );
-                    payload.insert(
-                        "skipped".to_string(),
-                        serde_json::Value::Bool(false),
-                    );
-                }
-                None => {
-                    payload.insert(
-                        "path".to_string(),
-                        serde_json::Value::Null,
-                    );
-                    payload.insert(
-                        "skipped".to_string(),
-                        serde_json::Value::Bool(true),
-                    );
-                }
-            }
-            payload.insert(
-                "entries".to_string(),
-                serde_json::Value::Number((entries as u64).into()),
-            );
-            payload.insert(
-                "contributions".to_string(),
-                serde_json::Value::Number((contributions as u64).into()),
-            );
-            payload.insert(
-                "tombstones".to_string(),
-                serde_json::Value::Number((tombstones as u64).into()),
-            );
-            payload.insert(
-                "pass_order".to_string(),
-                serde_json::Value::Array(
-                    pass_order
-                        .iter()
-                        .map(|s| serde_json::Value::String(s.clone()))
-                        .collect(),
-                ),
-            );
-            let mut root = serde_json::Map::new();
-            root.insert(
-                "cv_sidecar".to_string(),
-                serde_json::Value::Object(payload),
-            );
-            let mut line = serde_json::to_string(&serde_json::Value::Object(root))
-                .unwrap_or_else(|_| "{\"cv_sidecar\":{}}".to_string());
-            line.push('\n');
-            line
-        }
-        F::Kv => {
-            // Quote path + pass_order on the RHS so callers
-            // can split on whitespace; the values themselves
-            // never contain a literal `"` in our pipeline,
-            // but we still let serde escape them defensively.
-            let path_val = match wrote_path {
-                Some(p) => p.display().to_string(),
-                None => String::new(),
-            };
-            let skipped_val = wrote_path.is_none();
-            let pass_order_joined = pass_order.join(",");
-            let path_quoted = serde_json::to_string(&path_val)
-                .unwrap_or_else(|_| "\"\"".to_string());
-            let pass_order_quoted = serde_json::to_string(&pass_order_joined)
-                .unwrap_or_else(|_| "\"\"".to_string());
-            format!(
-                "cv_sidecar.path={} cv_sidecar.skipped={} cv_sidecar.entries={} cv_sidecar.contributions={} cv_sidecar.tombstones={} cv_sidecar.pass_order={}\n",
-                path_quoted,
-                skipped_val,
-                entries,
-                contributions,
-                tombstones,
-                pass_order_quoted,
-            )
-        }
-    }
-}
-
-/// Serialize a `CVLog` to a JSON string for the
-/// `--correlation_vector` sidecar.
-///
-/// `pretty` (CLOC11.68): when true, pretty-prints the JSON
-/// (multi-line, 2-space indent) by round-tripping through
-/// `serde_json::Value` and `to_string_pretty`. When false
-/// (the default, and what CI / build pipelines want), emits
-/// compact single-line JSON via the CV crate's native
-/// `to_json_string`.
-///
-/// Why the round-trip for pretty mode: the CV crate's
-/// `to_json_string` is hard-coded to compact output and it's
-/// the only path that knows the `LogSnapshot` shape (the
-/// fields aren't pub). Parsing back to a `serde_json::Value`
-/// and re-emitting via `to_string_pretty` is wasteful but
-/// correct, and only happens on the opt-in slow path. The
-/// performance hit is irrelevant — humans-eyes mode is
-/// already off the critical path of a build.
-///
-/// On any serialization failure (vanishingly rare for the
-/// CV crate's well-formed structs, and additionally
-/// surviving a round-trip in pretty mode), we fall back to
-/// a minimal `{}` document so the write still succeeds —
-/// a missing sidecar would be worse than a stub one for the
-/// build-pipeline-consumes-the-file case.
 fn format_cv_log_json(
     cv_log: &coding_adventures_correlation_vector::CVLog,
     pretty: bool,
     filter: &[String],
     filter_includes_origin: bool,
     filter_invert: bool,
-) -> String {
-    let compact = cv_log
-        .to_json_string()
-        .unwrap_or_else(|_| "{}".to_string());
-    let need_filter = !filter.is_empty();
-    if !pretty && !need_filter {
-        // Fast path: default-default — no parse, no transform.
-        return compact;
-    }
-    // Round-trip: compact text → serde_json::Value → (filter?) → text.
-    let mut value: serde_json::Value =
-        match serde_json::from_str(&compact) {
-            Ok(v) => v,
-            Err(_) => return compact,
-        };
-    if need_filter {
-        prune_entries_by_source(
-            &mut value,
-            filter,
-            filter_includes_origin,
-            filter_invert,
-        );
-    }
-    if pretty {
-        serde_json::to_string_pretty(&value).unwrap_or(compact)
+) -> Result<String, CompilerError> {
+    use coding_adventures_correlation_vector::{SnapshotFormat, SourceFilter};
+    let format = if pretty {
+        SnapshotFormat::PrettyJson
     } else {
-        serde_json::to_string(&value).unwrap_or(compact)
-    }
+        SnapshotFormat::CompactJson
+    };
+    cv_log
+        .export_snapshot(
+            format,
+            SourceFilter {
+                sources: filter,
+                include_origin: filter_includes_origin,
+                invert: filter_invert,
+            },
+        )
+        .map_err(provenance_error("snapshot"))
 }
 
-/// CLOC11.69 — serialize a `CVLog` as newline-delimited JSON.
-///
-/// Output shape:
-///   - one line per CV entry, formatted as the JSON for the
-///     entry's `CVEntry` struct,
-///   - followed by one final line with the metadata object:
-///     `{"_meta": {"pass_order": [...], "enabled": <bool>}}`.
-///
-/// Why a final `_meta` line: streaming consumers reading the
-/// sidecar with `tail -f` or line-by-line want the entries
-/// available as they arrive without waiting for a closing
-/// brace. Trailing the metadata keeps `pass_order` parseable
-/// once the producer is done without polluting any individual
-/// entry line.
-///
-/// We reuse `to_json_string` + parse-as-Value rather than
-/// touching CV crate internals. The compact JSON has the shape
-/// `{"entries":{"id":{...}}, "pass_order":[...], "enabled":...}`
-/// so we walk the `entries` map and re-emit each value as a
-/// single-line JSON document. On any parse / serialize hiccup
-/// we fall through to the compact JSON document (a valid
-/// fallback the consumer's `tail` will still see).
 fn format_cv_log_ndjson(
     cv_log: &coding_adventures_correlation_vector::CVLog,
     filter: &[String],
     filter_includes_origin: bool,
     filter_invert: bool,
-) -> String {
-    let compact = cv_log
-        .to_json_string()
-        .unwrap_or_else(|_| "{}".to_string());
-    let mut root: serde_json::Value = match serde_json::from_str(&compact) {
-        Ok(v) => v,
-        Err(_) => return compact,
-    };
-    if !filter.is_empty() {
-        prune_entries_by_source(
-            &mut root,
-            filter,
-            filter_includes_origin,
-            filter_invert,
-        );
-    }
-    let mut out = String::new();
-    if let Some(entries) = root.get("entries").and_then(|v| v.as_object()) {
-        for entry in entries.values() {
-            if let Ok(line) = serde_json::to_string(entry) {
-                out.push_str(&line);
-                out.push('\n');
-            }
-        }
-    }
-    // Append the metadata footer line.
-    let mut meta = serde_json::Map::new();
-    if let Some(po) = root.get("pass_order") {
-        meta.insert("pass_order".to_string(), po.clone());
-    }
-    if let Some(en) = root.get("enabled") {
-        meta.insert("enabled".to_string(), en.clone());
-    }
-    let mut footer = serde_json::Map::new();
-    footer.insert("_meta".to_string(), serde_json::Value::Object(meta));
-    if let Ok(line) = serde_json::to_string(&serde_json::Value::Object(footer)) {
-        out.push_str(&line);
-        out.push('\n');
-    }
-    out
-}
-
-/// CLOC11.70 + CLOC11.71 — in-place prune of the `entries`
-/// object on a parsed CVLog JSON `Value` by a source allowlist.
-///
-/// Walks `root["entries"]` (an object map id → entry). An
-/// entry is kept iff at least one of the following matches a
-/// string in `allowlist`:
-///
-///   1. any element of `contributions` whose `source` is in
-///      the allowlist (the CLOC11.70 rule, always applied);
-///   2. **if** `include_origin` is true (CLOC11.71): the
-///      entry's `origin.source` string.
-///
-/// `include_origin=false` preserves CLOC11.70 strict
-/// semantics byte-for-byte. `include_origin=true` lets
-/// `--correlation_vector_filter lex` also keep per-token CV
-/// entries whose `Origin.source == "lexer_token"` even
-/// though they have zero contributions.
-///
-/// `allowlist` is treated as a closed set of exact-match
-/// strings — no wildcards, no prefix matching. The empty
-/// allowlist case is the caller's responsibility (caller
-/// should skip this function entirely; we'd otherwise prune
-/// everything).
-///
-/// Why a separate helper rather than inlining at each
-/// formatter: the json and ndjson paths both round-trip
-/// through `serde_json::Value` (the former for pretty mode,
-/// the latter unconditionally), so one helper handling both
-/// is cheaper than two near-identical loops and keeps the
-/// "entry is kept iff …" rule in one auditable place.
-fn prune_entries_by_source(
-    root: &mut serde_json::Value,
-    allowlist: &[String],
-    include_origin: bool,
-    invert: bool,
-) {
-    let Some(entries) = root
-        .get_mut("entries")
-        .and_then(|v| v.as_object_mut())
-    else {
-        return;
-    };
-    // Build a HashSet for O(1) lookup; the loop runs over
-    // every entry × every contribution otherwise.
-    let allow: std::collections::HashSet<&str> =
-        allowlist.iter().map(String::as_str).collect();
-    entries.retain(|_id, entry| {
-        // Compute "does this entry match the source list?"
-        // (1) any contribution.source in the allowlist, OR
-        // (2) (CLOC11.71 opt-in) origin.source in the allowlist.
-        let contrib_match = entry
-            .get("contributions")
-            .and_then(|v| v.as_array())
-            .map(|contribs| {
-                contribs.iter().any(|c| {
-                    c.get("source")
-                        .and_then(|s| s.as_str())
-                        .map(|s| allow.contains(s))
-                        .unwrap_or(false)
-                })
-            })
-            .unwrap_or(false);
-        let origin_match = include_origin
-            && entry
-                .get("origin")
-                .and_then(|o| o.get("source"))
-                .and_then(|s| s.as_str())
-                .map(|s| allow.contains(s))
-                .unwrap_or(false);
-        let matches = contrib_match || origin_match;
-        // CLOC11.72 — invert flips the keep rule. Default
-        // (invert=false): keep matches, drop non-matches
-        // (allowlist). invert=true: keep non-matches, drop
-        // matches (blocklist).
-        if invert { !matches } else { matches }
-    });
+) -> Result<String, CompilerError> {
+    use coding_adventures_correlation_vector::{SnapshotFormat, SourceFilter};
+    cv_log
+        .export_snapshot(
+            SnapshotFormat::Ndjson,
+            SourceFilter {
+                sources: filter,
+                include_origin: filter_includes_origin,
+                invert: filter_invert,
+            },
+        )
+        .map_err(provenance_error("snapshot"))
 }
 
 /// Format the contents of an `--output_manifest` file from a
@@ -2478,9 +2202,9 @@ fn format_manifest(inputs: &[PathBuf]) -> String {
 ///   means the value was quoted), and CC has the same limitation.
 /// - We don't `chmod` the created directories; default umask
 ///   applies (matches CC).
-/// - We don't atomically write via a tempfile + rename. CC writes
-///   directly too; the disk-half-full scenario is rare enough
-///   and CC's behavior is already what users expect.
+/// - This standalone compatibility helper writes directly. `run_compiler`
+///   publishes its prepared artifact set through the private publication
+///   transaction, including rollback and destination collision protection.
 ///
 /// Extracted as its own function so the directory-creation
 /// behavior is unit-testable independently of `run_compiler`'s
@@ -4166,24 +3890,29 @@ mod tests {
     // ------------------------------------------------------------------
 
     #[test]
-    fn correlation_vector_tombstones_trivia_tokens_under_whitespace_only() {
-        // With --correlation_vector + --compilation_level
-        // WHITESPACE_ONLY, the dropped trivia + EOF tokens
-        // should appear in the sidecar as deleted CV entries
-        // (DeletionRecord present, source=compilation_level,
-        // reason=whitespace_only_dropped). The surviving Name
-        // tokens (var, x, etc.) should NOT be tombstoned.
+    fn checked_cv_programmatic_configuration_rejects_unsafe_depth_before_inputs() {
+        let mut config = CompilerConfig::default();
+        config
+            .special_modes
+            .correlation_vector_limits
+            .max_metadata_depth = 65;
+        let error = run_compiler(&config).unwrap_err();
+        assert_eq!(error.exit_code(), 1);
+        assert!(matches!(&error, CompilerError::Provenance { stage, .. } if stage == "configuration"));
+        assert!(error.to_string().contains("cannot exceed 64"));
+    }
+
+    #[test]
+    fn correlation_vector_tombstones_eof_under_whitespace_only() {
+        // The lexer currently skips comments/whitespace rather than recording
+        // their own CV entries. This test proves the recorded EOF deletion;
+        // complete trivia/span coverage remains a separate frontend obligation.
         let dir = std::env::temp_dir().join("closurec_cloc11_66_ws_drop");
         let _ = fs::remove_dir_all(&dir);
         fs::create_dir_all(&dir).expect("create dir");
         let in_path = dir.join("a.js");
-        // Comments + whitespace generate trivia tokens; EOF
-        // is always emitted at end.
-        fs::write(
-            &in_path,
-            "// a comment\nvar x = 1; /* block */ var y = 2;",
-        )
-        .expect("write input");
+        // Comments and whitespace are skipped; EOF is always recorded.
+        fs::write(&in_path, "// a comment\nvar x = 1; /* block */ var y = 2;").expect("write input");
         let out_path = dir.join("out.js");
         let sidecar_path = dir.join("out.js.cv.json");
         let cfg = CompilerConfig {
@@ -4204,26 +3933,29 @@ mod tests {
         };
         let _ = run_compiler(&cfg).expect("ok");
         let body = fs::read_to_string(&sidecar_path).expect("read sidecar");
-        // The tombstone reason string lands in the sidecar.
+        let snapshot: serde_json::Value = serde_json::from_str(&body).expect("valid snapshot");
+        let entries = snapshot["entries"].as_object().expect("entries object");
+        // Inspect one deletion record, not adjacent JSON substrings. Canonical
+        // serialization sorts keys; field order is not a semantic guarantee.
         assert!(
-            body.contains("\"reason\":\"whitespace_only_dropped\""),
-            "expected whitespace_only_dropped tombstone, got: {body}"
+            entries.values().any(|entry| {
+                entry["origin"]["source"] == "lexer_token"
+                    && entry["origin"]["meta"]["kind"] == "eof"
+                    && entry["deleted"]["source"] == "compilation_level"
+                    && entry["deleted"]["reason"] == "whitespace_only_dropped"
+                    && entry["deleted"]["meta"]["kind"] == "eof"
+            }),
+            "expected EOF tombstone from compilation_level"
         );
-        // EOF kind always lands (every file ends with EOF
-        // sentinel; the JS grammar happens not to emit COMMENT
-        // tokens — comments are skipped at lex time — so trivia
-        // kind never fires for this grammar today, but the code
-        // path covers both cases against future grammar
-        // evolution).
-        assert!(
-            body.contains("\"kind\":\"eof\""),
-            "expected eof kind tombstone, got: {body}"
-        );
-        // The tombstone landed via the DeletionRecord field.
-        assert!(
-            body.contains("\"source\":\"compilation_level\",\"reason\":\"whitespace_only_dropped\""),
-            "expected DeletionRecord with compilation_level source, got: {body}"
-        );
+        for entry in entries.values().filter(|entry| {
+            entry["origin"]["source"] == "lexer_token"
+                && matches!(
+                    entry["origin"]["meta"]["kind"].as_str(),
+                    Some("name" | "number")
+                )
+        }) {
+            assert!(entry["deleted"].is_null(), "surviving token was tombstoned");
+        }
         let _ = fs::remove_dir_all(&dir);
     }
 

@@ -1,0 +1,262 @@
+# LANG82 — Perl release grammar and token history
+
+**Status:** Draft, 2026-10-07. This is a separate syntax-coverage track from
+LANG81's executable Perl 5.38 arithmetic pilot.
+
+## Version range and evidence
+
+Cover every public, numbered Perl release from 1.000 (18 December 1987)
+through the newest available release. As of this spec, Perl 5.44.0 is the
+current stable release and 5.45.3 is the newest development release. Include
+maintenance, development, and release-candidate releases in the inventory.
+Perl 0 was internal, so it is not a public release target. Raku is a separate
+language and is outside this Perl grammar line.
+
+Use the official Perl release history and, for each release, its tagged source
+and release documentation as the syntax evidence. Early Perl 1 syntax can be
+checked against the `perl-1.0` tag's `perl.y` and original manual; later
+releases can use their release tags, `perly.y`, and versioned `perlsyn`,
+`perlop`, and delta documents. Record source revisions and any uncertainty
+beside the relevant grammar change. A modern installed Perl is an oracle only
+for syntax it still accepts; it cannot establish old-version syntax alone.
+
+References:
+
+- https://perldoc.perl.org/perlhist
+- https://www.cpan.org/src/
+- https://perldoc.perl.org/perlpolicy
+- https://github.com/Perl/perl5/tree/perl-1.0
+
+## Files and completeness
+
+Each release gets its **own** materialized `code/grammars/perl/perl<V>.tokens`
+and `perl<V>.grammar` pair. No release is represented only by an alias to
+another release's files, including maintenance releases with unchanged syntax.
+The filename uses the release's exact public version spelling, normalized only
+where a filesystem character is illegal. The release inventory records each
+version's spelling, date, history line or tag, and coverage state. Pair paths
+follow the filename convention above; source revisions and the validated
+subset are recorded in each pair's comments and the release-grammar README.
+Inventory release IDs must be unique and safe to use in those file paths.
+The corrected `code/grammars/perl/releases.csv` inventory expands 765 release
+entries from a pinned `perlhist.pod` snapshot. An official source-tag audit
+added 11 release candidates omitted there, for 776 pending or partial release
+rows. The correction adds `p54rc1` and `p54rc2` from the pinned history's
+lines 264 and 265. Historical source archives for both are listed in the
+Perl archive index. The `v5.17.7.0` tag is excluded because its
+own annotation says that no such Perl release occurred. CPAN archives still
+need comparison before treating the inventory as exhaustive.
+
+For `p54rc1` and `p54rc2`, use the separate historical source archives,
+not an alias to 5.004. Both archives' `perly.y` files match the 5.004
+release; `p54rc2`'s `toke.c` also matches 5.004, while `p54rc1` differs
+only in the later addition of the regex `/c` modifier. Keep the two
+release pairs distinct and explicitly partial. Their accepted surface is
+the same plain-decimal `print` arithmetic subset with the 250-digit
+numeric bound; reject leading-zero literals, adjacent decrement, carriage
+returns and unsupported constructs. Check each archive's identity and run
+positive and negative parser probes before changing either inventory row
+from pending to partial.
+
+A pair must not claim to describe the complete language while it covers only
+a pilot subset. Mark partial pairs explicitly, list their accepted constructs,
+and reject unsupported syntax. Full coverage requires the release's actual
+lexical and grammatical forms, including context-sensitive constructs that
+cannot be expressed by a simple regular-expression lexer alone. Add lexical
+modes or parser hooks where the shared grammar system needs them, rather than
+quietly accepting a modern approximation.
+For release pairs that expose arithmetic subtraction, lex adjacent `--` as
+Perl's decrement operator and reject it if decrement semantics are outside the
+partial grammar; spaced binary/unary minus (`1- -2`) remains a separate form.
+For a release pair that declares a plain-decimal arithmetic-print subset,
+accept integer literals without a leading zero (and `0` itself). A
+leading-zero literal may use octal syntax; reject it until that release's
+actual numeric rules are implemented. Audit the already landed 1.000 through
+5.003_03 partial pairs against their release tokenizers: each currently uses
+`[0-9]+`, which accepts `08` and `09` as decimal integers. Perl 1's
+[`perly.c`](https://github.com/Perl/perl5/blob/perl-1.0/perly.c), and the
+Perl [2](https://github.com/Perl/perl5/blob/perl-2.0/toke.c),
+[3](https://github.com/Perl/perl5/blob/perl-3.000/toke.c),
+[4](https://github.com/Perl/perl5/blob/perl-4.0.36/toke.c), and
+[5](https://github.com/Perl/perl5/blob/perl-5.003_03/toke.c) tokenizers
+instead enter octal mode after a leading zero and reject `8` and `9` there.
+Keep those existing pairs partial and limit their integer rule to plain
+decimal forms until versioned octal tokenization is implemented. Preserve a
+positive `0`/nonzero-decimal probe and add negative `08`, `09`, and `012`
+probes for every affected pair.
+
+The existing unversioned `perl.tokens` and `perl.grammar` remain the bounded
+Perl 5.38 LANG81 execution grammar until a separately validated versioned
+pair replaces them. A version selector must never silently fall back to those
+files for a different release.
+
+## Delivery order and gates
+
+1. Inventory numbered releases and their primary sources. Start with 1.000,
+   then build forward in chronological slices; keep the newest stable and
+   development releases visible in the inventory so the endpoint cannot drift.
+2. For each release, add the two files, document differences from the previous
+   release, and validate both files with the repo grammar tools. Even if syntax
+   is unchanged, retain an independently addressable pair and verify that
+   against release evidence.
+3. Add positive and negative parsing fixtures for each new syntax boundary.
+   Run generated-grammar regeneration checks where a Rust package consumes the
+   pair. Do not infer full executable Perl semantics from syntax coverage.
+4. Mark a release complete only when the syntax inventory, lexer/parser
+   behavior, fixtures, and primary-source comparison support the claim.
+
+Keep this work in bounded, spec-first PRs. It may be prepared locally while
+another implementation PR is in CI, but there is only one active implementation
+PR at a time. LANG81 source-to-IIR execution continues to use its declared
+Perl 5.38 subset until a release pair and semantic lowering are ready.
+
+The next local historical slice selects 5.003_07. The official source repository
+has no `perl-5.003_06` tag; that release initially remained pending. Its source
+was then located in official commit `9c6be91f`, whose message introduces the
+5.003_06 patch and whose `patchlevel.h` identifies subversion 6. Use that
+commit to ground a separate 5.003_06 pair. The 5.003_07 pair is checked against
+its own tag; unchanged yacc syntax does not remove the separate-file rule.
+
+The following local slice selects 5.003_08. Its tagged yacc and tokenizer files
+both differ from 5.003_07, especially around lexical `my` scope, interpolation,
+and octal/hexadecimal overflow. Keep the initial release pair limited to the
+arithmetic and `print` forms that those changes do not extend; record it as
+partial and retain negative syntax probes.
+
+The next slice selects tagged 5.003_09. Its yacc changes rearrange lexical
+scope handling, while tokenizer changes mainly concern sigils, interpolation,
+patterns, and locale-aware numeric conversion. Preserve only the bounded
+plain-decimal arithmetic and `print` subset; reject leading-zero multi-digit
+forms and do not infer full syntax coverage from the pair.
+
+The following slice selects tagged 5.003_10. Its yacc source matches 5.003_09;
+the tokenizer changes sigil spacing and a few built-in/identifier decisions,
+outside this bounded print-arithmetic subset. It still needs its own pair and
+separate source note.
+
+The next slice selects tagged 5.003_11. Its yacc changes operator token type
+annotations and block bookkeeping; tokenizer changes cover sigils, patterns
+and numeric-locale setup. Keep the pair partial and independently addressable,
+with the same plain-decimal print-arithmetic limits and negative probes.
+
+This bounded follow-up installment materializes distinct partial pairs through
+5.003_15, including 5.003_06 from its identified source commit. The next
+local group begins at 5.003_16; none of these pairs claims full release syntax
+or changes LANG81's executable Perl 5.38 grammar.
+
+The next bounded installment is 5.003_16 through 5.003_28. Check each
+release against its own official source tag, retain separate token and
+grammar files even where source blobs match, and record only the
+plain-decimal arithmetic and `print` subset. Parser probes must reject
+adjacent decrement, leading-zero integer forms, and unsupported syntax.
+5.003_26 introduces explicit carriage-return refusal; preserve that
+boundary for 5.003_26 through 5.003_28. LANG81 execution is unchanged.
+
+Prepare the following bounded installment as twelve distinct, explicitly
+partial pairs for 5.003_90 through 5.003_97d. Check each release against
+its own official source tag. Retain the plain-decimal arithmetic and
+`print` syntax boundary, reject adjacent decrement and leading-zero
+forms, and keep carriage returns outside the accepted subset. This stage
+does not extend LANG81 execution or claim complete historical syntax.
+
+Prepare a subsequent seven-release installment for 5.003_97e through
+5.003_97j and 5.003_98. Check each release against its own official source
+tag and keep its token and grammar files distinct even when the source
+syntax is unchanged. Continue to accept only plain-decimal arithmetic and
+`print`; reject leading-zero forms, adjacent decrement, carriage returns,
+and other unsupported syntax. The 5.003_97i tokenizer introduces a bounded
+decimal scan, so its partial pair and the later pairs must accept at most
+250 decimal digits and reject longer literals. This stage does not change
+LANG81 execution or claim complete release syntax.
+
+For tagged 5.003_97i, `toke.c` adds a decimal scan bound using its 256-byte
+`tokenbuf` and an end pointer six bytes before the buffer end. The partial
+plain-decimal token rule may accept at most 250 digits and must reject a
+251-digit literal before parsing. Test both sides of that boundary. This is a
+lexer bound for the historical syntax pair, not a claim that LANG81 can
+execute a 250-digit integer or that other Perl numeric forms are supported.
+
+Prepare the next bounded installment as nine distinct partial pairs for
+5.003_99, 5.003_99a, 5.004, 5.004_01, 5.004_01-t2, 5.004_01_01 through
+5.004_01_03, and 5.004_02. Ground tagged releases in their own official
+source tags and the four trials in their own historical archives. Keep each
+token and grammar file separate even where source blobs agree. Retain the
+plain-decimal `print` arithmetic subset and the 250-digit bound; reject
+leading-zero forms, adjacent decrement, carriage returns, and unsupported
+syntax. Leave 5.004_01-t1 pending until source evidence for that trial is
+established. This installment does not extend executable LANG81 semantics or
+claim full historical release syntax.
+
+The historical 5.004_01-t2 source archive is independently available even
+though the inspected official Git tag list has no t2 tag. Its `patchlevel.h`
+identifies patchlevel 4, subversion 1; its `perly.y` and `toke.c` are
+byte-identical to the tagged final 5.004_01 files. Give t2 distinct partial
+token and grammar files and retain the plain-decimal 250-digit boundary
+probes. Keep 5.004_01-t1 pending until its own source can be established.
+
+The historical 5.004_01_01 trial archive has the same `perly.y` as
+5.004_01-t2. Its `toke.c` changes quoted-curly disambiguation, word
+operator expectations, warnings, and quote delimiter handling; these do not
+expand the plain-decimal `print` arithmetic subset. Give this numbered
+trial its own partial pair, retain the 250-digit decimal bound, and keep
+unsupported constructs rejected.
+
+The historical 5.004_01_03 trial archive keeps the same `perly.y` as
+5.004_01_02. Its `toke.c` changes debugger line hooks only, outside the
+bounded decimal `print` arithmetic subset. Give the trial a distinct
+partial pair with the inherited 250-digit bound and negative probes.
+
+The tagged final 5.004_02 release has `perly.y` and `toke.c` identical
+to the 5.004_01_03 trial archive. It still needs a distinct partial pair;
+retain the tested decimal boundary and unsupported-form rejection.
+
+The historical 5.004_01_02 trial archive again has the same `perly.y`.
+Its tokenizer changes command-line `-p` expansion and quoted delimiter
+handling outside the partial decimal `print` arithmetic subset. Record
+a distinct pair with the inherited 250-digit bound and reject unsupported
+syntax rather than claiming full release coverage.
+
+Prepare a later bounded maintenance installment with separate, explicitly partial
+pairs for `5.004_02_01`, `5.004_03-t2`, and `5.004_03`. The historical
+`perl-5.004_02_01.tar.gz` archive (SHA-256
+`e2fdda04633175d078cd2312a1e49374dbda9a7d35f8d6b95c993f20ee9d5420`)
+contains `perly.y` and `toke.c` byte-identical to 5.004_02. The separate
+`perl-5.004_03-t2.tar.gz` archive (SHA-256
+`077ca5870518c79c49a1fd2be9e39bdfbf23ad793cc2e1b87ad7168474e081c4`)
+retains those source blobs. The 5.004_03 historical archive (SHA-256
+`78b1905fdad1a0c5e1782651c898667b9c9b2a1ead88228021fc9c7752a2c85e`)
+matches the official `perl-5.004_03` tag's `perly.y` and `toke.c` Git blobs;
+its tokenizer only adds input-handle cleanup relative to the t2 archive.
+
+Each release still needs its own token and grammar file. Retain only the
+plain-decimal `print` arithmetic subset, its 250-digit lexical boundary, and
+negative probes for leading-zero forms, decrement adjacency, carriage returns,
+and unsupported characters. This stage does not extend executable LANG81
+semantics or claim full Perl release syntax. Keep `5.004_01-t1` pending until
+its own primary source evidence is found.
+
+A 2026-10-07 inventory audit reparsed the pinned `perlhist.pod` blob,
+including uncertain-date suffixes and expanded range rows. All 765 release
+identifiers found there are present in `releases.csv`; the other 11 rows are
+the separately annotated RC tags already cited by that inventory. This
+checks coverage of those pinned sources only. It does not prove that the
+inventory contains every public release after the snapshot or every
+historical distribution not named there; keep new discoveries explicit and
+never treat a pending or partial row as complete syntax.
+
+Prepare a separate bounded installment for `5.004_04-t1`, `-t2`, `-t3`,
+`-t4`, and final `5.004_04`. Their own historical source archives have
+SHA-256 digests `a159185d580f409b14bd286baca770ef3ca6457c7db851e3663438cb60cb03b0`,
+`c4c806d35feda5dd177880ccf13562610eb32afac64af4dfc86a0e56d2171030`,
+`3337caa03309b6f772dedde87b40600c04911e795cf64c9efa6949a9c2cae744`,
+`57a25365088de1d57a27516b84f39cc10f92403394e537f3405ec3cbfa151968`,
+and `a33e436a815e7dc16ea539eb566d7e5ac4852f2ed16bbcdf4105c6df748bcef0`,
+respectively. All five archives have byte-identical `perly.y` and `toke.c`;
+the final archive's blobs also match the official `perl-5.004_04` tag.
+Relative to 5.004_03, its yacc changes loop source-line construction,
+while its tokenizer changes `glob` classification and quote-delimiter
+whitespace handling. Those changes do not extend the accepted plain-decimal
+`print` arithmetic subset. Give every release a distinct token and grammar
+file; preserve the inherited 250-digit lexical bound and negative probes for
+leading zero, decrement adjacency, carriage returns, and unsupported input.
+Do not claim full Perl syntax or add a release alias.

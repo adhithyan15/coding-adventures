@@ -45,12 +45,12 @@ defmodule Point2D do
   def magnitude(p), do: Trig.sqrt(magnitude_squared(p))
 
   @doc """
-  Normalize to unit length. Returns the original point if magnitude is zero
-  (avoids division by zero).
+  Normalize to unit length. A magnitude below 1.0e-12 has no stable direction,
+  so return the origin instead of amplifying numerical noise.
   """
   def normalize(p) do
     m = magnitude(p)
-    if m < 1.0e-15, do: p, else: scale(p, 1.0 / m)
+    if m < 1.0e-12, do: {0.0, 0.0}, else: scale(p, 1.0 / m)
   end
 
   @doc "Squared distance between two points."

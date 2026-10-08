@@ -7,6 +7,20 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.1` accumulate here until the next version is
 cut.
 
+### Fixed — the Flutter topbar fits the declared desktop window (#13465)
+
+The project title and summary now occupy their own topbar line, with progress,
+theme, and complexity controls in a compact action row below. This portable
+stacked layout removes Flutter's horizontal RenderFlex overflow at TaskApp's
+declared 1280 x 900 desktop viewport without relying on unsupported flex-wrap.
+
+### Fixed — the Timeline legend fits constrained native cards (#16887)
+
+The four Timeline swatches now occupy two explicit rows, preserving the full
+On track / Critical path / Milestone / Today legend at Flutter's default widget
+test viewport. The layout uses ordinary portable rows rather than silently
+depending on `flex-wrap`, which Flutter's Mosaic backend does not support.
+
 ## [0.5.1] - 2026-09-27
 
 ### Fixed — release notes state the CI-only backend boundary (#16168)

@@ -1,0 +1,21 @@
+# Perl 5.003_05 (1996-09-12) tokens: verified arithmetic-print subset only.
+# @version 1
+# PARTIAL: this does not lex all Perl 5.003_05 source.
+# Evidence: https://github.com/Perl/perl5/blob/perl-5.003_05/perly.y
+# Evidence: https://github.com/Perl/perl5/blob/perl-5.003_05/toke.c
+# Both tagged source files match 5.003_04 exactly. This separate pair still
+# covers only the listed print and arithmetic forms.
+# Leading-zero multi-digit forms may be octal and are outside this subset.
+
+PRINT     = "print"
+INT       = /0|[1-9][0-9]*/
+PLUS      = "+"
+DECREMENT = "--"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\r\n]+/

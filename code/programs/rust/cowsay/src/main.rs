@@ -118,11 +118,80 @@ fn format_bubble(lines: &[String], is_think: bool) -> String {
     result.join("\n")
 }
 
-fn load_cow(cow_name: &str, root: &Path) -> String {
-    let mut cow_path = root.join(format!("code/specs/cows/{}.cow", cow_name));
-    if !cow_path.exists() {
-        cow_path = root.join("code/specs/cows/default.cow");
+// ═══════════════════════════════════════════════════════════════════════════
+// Choosing a cow file safely
+// ═══════════════════════════════════════════════════════════════════════════
+//
+// `-f NAME` / `--file NAME` picks which cow to draw. The name is glued into a
+// path — `<cows dir>/NAME.cow` — so it is untrusted input that decides which
+// file this program opens and echoes back to stdout. Left unchecked, a name
+// can walk out of the cows directory (issue #12169):
+//
+//   name given                    path actually opened
+//   ───────────────────────────── ─────────────────────────────────────────
+//   tux                           code/specs/cows/tux.cow          (fine)
+//   ../../../../home/me/notes     /home/me/notes.cow               (escape)
+//   /etc/secret                   /etc/secret.cow                  (escape —
+//                                 joining an absolute path REPLACES the base)
+//   C:\Users\me\x                 C:\Users\me\x.cow                (Windows)
+//
+// The forced `.cow` suffix limits what can be read, and a local CLI already
+// runs with its caller's privileges — but a wrapper script, web service or CI
+// job that forwards someone else's string to `cowsay -f` would hand that
+// someone a file-read primitive. So we defend in two layers, mirroring the
+// C#, F#, Java, Kotlin, Perl, Haskell, Dart, Lua and Swift ports:
+//
+//   1. Syntactic check (`is_safe_cow_name`). A cow name is a bare file stem,
+//      so anything that could mean "some other directory" is refused:
+//        `/` `\`   path separators (`\` is one on Windows)
+//        `..`      parent-directory steps
+//        `:`       Windows drive (`C:x`) and alternate-data-stream syntax
+//        NUL       C APIs stop reading at it, so the OS would see a
+//                  different name from the one we checked
+//        ""        the empty name
+//      An absolute path always contains `/`, `\` or `:`, so it is refused by
+//      the same rule.
+//   2. Containment check. After joining, both the cows directory and the
+//      candidate are canonicalized (symlinks and `.`/`..` resolved by the OS)
+//      and the candidate must still live inside the cows directory. This
+//      catches what string inspection cannot see — e.g. a symlink planted in
+//      the cows directory that points somewhere else.
+//
+// A name that fails either layer is treated exactly like a cow that does not
+// exist: we quietly draw `default.cow`. That matches every other port and
+// keeps cowsay's long-standing "unknown cow → default cow" behaviour.
+//
+// Nothing is URL-decoded: `%2F` is three literal characters to the operating
+// system, never a slash, so `..%2Fx` is just an odd (and here, rejected) name.
+
+/// True when `cow_name` is a bare file stem that cannot name another directory.
+fn is_safe_cow_name(cow_name: &str) -> bool {
+    !cow_name.is_empty()
+        && !cow_name.contains("..")
+        && !cow_name
+            .chars()
+            .any(|c| matches!(c, '/' | '\\' | ':' | '\0'))
+}
+
+/// Resolve `cow_name` to a readable `.cow` file inside `cows_dir`, falling back
+/// to `cows_dir/default.cow` when the name is unsafe, missing, or escapes.
+fn resolve_cow_path(cow_name: &str, cows_dir: &Path) -> PathBuf {
+    let default_path = cows_dir.join("default.cow");
+    if !is_safe_cow_name(cow_name) {
+        return default_path;
     }
+
+    let candidate = cows_dir.join(format!("{}.cow", cow_name));
+    // `canonicalize` fails for a file that does not exist, which is exactly the
+    // "unknown cow" case — so one match covers both "missing" and "escaped".
+    match (fs::canonicalize(cows_dir), fs::canonicalize(&candidate)) {
+        (Ok(root), Ok(real)) if real.starts_with(&root) && real.is_file() => real,
+        _ => default_path,
+    }
+}
+
+fn load_cow(cow_name: &str, cows_dir: &Path) -> String {
+    let cow_path = resolve_cow_path(cow_name, cows_dir);
 
     let content = fs::read_to_string(cow_path).unwrap_or_else(|_| "Error loading cow".to_string());
 
@@ -401,7 +470,7 @@ fn build_cowsay_output(
         .get("cowfile")
         .and_then(|v| v.as_str())
         .unwrap_or("default");
-    let mut cow_template = load_cow(cowfile, root);
+    let mut cow_template = load_cow(cowfile, &root.join("code/specs/cows"));
 
     // Replace placeholders
     cow_template = cow_template.replace("$eyes", &eyes);
@@ -638,5 +707,159 @@ mod tests {
                 .expect_err("PNG rendering cannot work without Metal");
             assert!(err.contains("Apple target"), "unexpected message: {err}");
         }
+    }
+
+    // ── Cow-file selection: path traversal (issue #12169) ──────────────────
+    //
+    // Each test builds a throwaway tree like this:
+    //
+    //   <tmp>/
+    //     secret.cow          ← must NEVER be readable via -f
+    //     cows/
+    //       default.cow       ← the fallback
+    //       tux.cow           ← a legitimate cow
+    //       nested/inner.cow  ← exists, but "nested/inner" is not a bare name
+    //
+    // and asserts that every hostile spelling of "secret" draws the default cow.
+
+    struct CowTree {
+        base: PathBuf,
+        cows: PathBuf,
+    }
+
+    impl CowTree {
+        fn new(tag: &str) -> Self {
+            let nanos = SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .map(|d| d.as_nanos())
+                .unwrap_or(0);
+            let base = env::temp_dir().join(format!(
+                "cowsay-traversal-{}-{}-{}",
+                tag,
+                std::process::id(),
+                nanos
+            ));
+            let cows = base.join("cows");
+            fs::create_dir_all(cows.join("nested")).unwrap();
+            fs::write(
+                cows.join("default.cow"),
+                "$the_cow = <<EOC;\nDEFAULT\nEOC\n",
+            )
+            .unwrap();
+            fs::write(cows.join("tux.cow"), "$the_cow = <<EOC;\nTUX\nEOC\n").unwrap();
+            fs::write(
+                cows.join("nested").join("inner.cow"),
+                "$the_cow = <<EOC;\nNESTED\nEOC\n",
+            )
+            .unwrap();
+            fs::write(base.join("secret.cow"), "$the_cow = <<EOC;\nSECRET\nEOC\n").unwrap();
+            CowTree { base, cows }
+        }
+    }
+
+    impl Drop for CowTree {
+        fn drop(&mut self) {
+            let _ = fs::remove_dir_all(&self.base);
+        }
+    }
+
+    #[test]
+    fn safe_names_are_bare_file_stems() {
+        for ok in [
+            "default",
+            "tux",
+            "bud-frogs",
+            "three_eyes",
+            "v2",
+            "dragon.and.cow",
+        ] {
+            assert!(is_safe_cow_name(ok), "should accept {ok:?}");
+        }
+        for bad in [
+            "",
+            "..",
+            "../secret",
+            "..\\secret",
+            "a/b",
+            "a\\b",
+            "/etc/passwd",
+            "C:secret",
+            "C:\\Windows\\win",
+            "tux\0",
+            "..%2Fsecret",
+            "%2e%2e/secret",
+        ] {
+            assert!(!is_safe_cow_name(bad), "should reject {bad:?}");
+        }
+    }
+
+    #[test]
+    fn normal_cow_names_still_load() {
+        let tree = CowTree::new("normal");
+        assert_eq!(load_cow("tux", &tree.cows), "TUX\n");
+        assert_eq!(load_cow("default", &tree.cows), "DEFAULT\n");
+    }
+
+    #[test]
+    fn unknown_cow_falls_back_to_default() {
+        let tree = CowTree::new("missing");
+        assert_eq!(load_cow("does-not-exist", &tree.cows), "DEFAULT\n");
+    }
+
+    #[test]
+    fn relative_traversal_falls_back_to_default() {
+        let tree = CowTree::new("relative");
+        // Sanity: the target really is reachable by naive joining.
+        assert!(tree.cows.join("../secret.cow").exists());
+        for hostile in ["../secret", "..\\secret", "./../secret", "tux/../../secret"] {
+            assert_eq!(
+                load_cow(hostile, &tree.cows),
+                "DEFAULT\n",
+                "for {hostile:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn absolute_path_falls_back_to_default() {
+        let tree = CowTree::new("absolute");
+        let absolute = tree.base.join("secret");
+        let absolute = absolute.to_str().unwrap();
+        assert_eq!(load_cow(absolute, &tree.cows), "DEFAULT\n");
+    }
+
+    #[test]
+    fn nested_names_are_refused_even_inside_the_cows_dir() {
+        let tree = CowTree::new("nested");
+        assert_eq!(load_cow("nested/inner", &tree.cows), "DEFAULT\n");
+        assert_eq!(load_cow("nested\\inner", &tree.cows), "DEFAULT\n");
+    }
+
+    #[test]
+    fn encoded_and_nul_names_fall_back_to_default() {
+        let tree = CowTree::new("encoded");
+        for hostile in [
+            "..%2Fsecret",
+            "%2e%2e%2fsecret",
+            "%2E%2E%5Csecret",
+            "tux\0../secret",
+        ] {
+            assert_eq!(
+                load_cow(hostile, &tree.cows),
+                "DEFAULT\n",
+                "for {hostile:?}"
+            );
+        }
+    }
+
+    /// Layer 2 in action: the name `evil` is syntactically fine, but the file
+    /// it names is a symlink leading out of the cows directory.
+    #[cfg(unix)]
+    #[test]
+    fn symlink_escaping_the_cows_dir_falls_back_to_default() {
+        let tree = CowTree::new("symlink");
+        std::os::unix::fs::symlink(tree.base.join("secret.cow"), tree.cows.join("evil.cow"))
+            .unwrap();
+        assert_eq!(load_cow("evil", &tree.cows), "DEFAULT\n");
     }
 }

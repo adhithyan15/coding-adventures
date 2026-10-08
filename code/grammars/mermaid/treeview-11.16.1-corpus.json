@@ -1,7 +1,8 @@
 {
   "upstream": "mermaid@11.16.1",
   "upstream_commit": "7ecca0cd7f1658ef74f4e7e91f925724ef403bbf",
-  "scope": "native hierarchy subset",
+  "level": "full",
+  "scope": "complete pinned upstream syntax corpus with hierarchy, metadata, annotations, icon semantics, box-drawing preprocessing, renderer configuration, theme variables, connector geometry, aligned descriptions, and backend-neutral icon lowering",
   "fixtures": [
     {
       "name": "header-only",
@@ -17,7 +18,7 @@
     },
     {
       "name": "layout-and-icon-config",
-      "source": "%%{init: {\"treeView\": {\"rowIndent\": 18, \"paddingX\": 9, \"paddingY\": 7, \"lineThickness\": 3, \"showIcons\": false}}}%%\ntreeView-beta\nproject/\n    src/ icon(folder)\n        main.rs"
+      "source": "%%{init: {\"treeView\": {\"rowIndent\": 18, \"paddingX\": 9, \"paddingY\": 7, \"lineThickness\": 3, \"useMaxWidth\": false, \"showIcons\": false}}}%%\ntreeView-beta\nproject/\n    src/ icon(folder)\n        main.rs"
     },
     {
       "name": "front-matter-config",
@@ -25,7 +26,35 @@
     },
     {
       "name": "icon-resolution-config",
-      "source": "%%{init: {\"treeView\": {\"defaultIconPack\": \"devicon\", \"filenameIcons\": {\"README.md\": \"logos:markdown\", \"package.json\": \"none\"}, \"extensionIcons\": {\".rs\": \"rust\", \"TS\": \"logos:typescript\"}}}}%%\ntreeView-beta\nREADME.md\npackage.json\nmain.RS\napp.ts\nnotes.txt icon(custom)"
+      "source": "%%{init: {\"treeView\": {\"showIcons\": true, \"defaultIconPack\": \"devicon\", \"filenameIcons\": {\"README.md\": \"logos:markdown\", \"package.json\": \"none\"}, \"extensionIcons\": {\".rs\": \"rust\", \"TS\": \"logos:typescript\"}}}}%%\ntreeView-beta\nREADME.md\npackage.json\nmain.RS\napp.ts\nplain.txt\nnotes.txt icon(custom)"
+    },
+    {
+      "name": "icon-detection-precedence",
+      "source": "%%{init: {\"treeView\": {\"showIcons\": true, \"defaultIconPack\": \"devicon\", \"filenameIcons\": {\"component.spec.ts\": \"logos:special\", \"notes.txt\": \"folder\", \"skip.ts\": \"none\", \"empty.ts\": \"\"}, \"extensionIcons\": {\".ts\": \"typescript\", \"bashrc\": \"console\"}}}}%%\ntreeView-beta\ncomponent.spec.ts\nAPP.TS\n.bashrc\nnotes.txt\nskip.ts\nempty.ts"
+    },
+    {
+      "name": "built-in-and-unprefixed-icons",
+      "source": "treeView-beta\nroot/ icon(folder)\n    file.txt icon(file)\n    custom icon(custom)"
+    },
+    {
+      "name": "parser-terminal-semantics",
+      "source": "treeView-beta\n\"\"\n'my folder/'\n.gitignore\ndocker-compose.yml\nMy Documents/ :::my-class\nindex.js ##"
+    },
+    {
+      "name": "icon-suppression-and-annotation-order",
+      "source": "%%{init: {\"treeView\": {\"showIcons\": true}}}%%\ntreeView-beta\napp.ts icon(none) :::highlight ## entry point\nApp.tsx icon()\nsrc/ icon(none)"
+    },
+    {
+      "name": "unicode-and-emoji-labels",
+      "source": "treeView-beta\nBut  _  _ton💓.tsx\n🚀 rocket-app/\n    📦 packages/\n        🎨 ui/\n    📝 README.md"
+    },
+    {
+      "name": "quoted-complex-hierarchy",
+      "source": "treeView-beta\n\"root\"\n    \"folder1\"\n        \"file1.js\"\n        \"file2.ts\"\n    \"folder2\"\n        \"file3.spec.ts\"\n        \"folder3\"\n            \"file4.ts\""
+    },
+    {
+      "name": "multiple-root-hierarchy",
+      "source": "treeView-beta\n\"folder1\"\n    \"file1.js\"\n    \"file2.ts\"\n\"folder2\"\n    \"file3.spec.ts\"\n\"file7.ts\""
     },
     {
       "name": "indented-directories-and-files",
@@ -42,6 +71,40 @@
     {
       "name": "heavy-box-drawing-input",
       "source": "treeView-beta\n┗━━ packages/\n    ┗━━ parser/\n        ┗━━ lib.rs"
+    },
+    {
+      "name": "rooted-box-drawing-hierarchy",
+      "source": "treeView-beta\nproject/\n├── src/\n│   └── index.ts\n│\n└── README.md"
+    },
+    {
+      "name": "compact-box-drawing-segments",
+      "source": "treeView-beta\nproject/\n├─ src/ :::highlight\n│ └─ lib.rs ## crate root\n└─ README.md"
+    },
+    {
+      "name": "front-matter-theme-variables",
+      "source": "---\nthemeVariables:\n  treeView:\n    labelFontSize: 20px\n    labelColor: '#112233'\n    lineColor: '#234567'\n    iconColor: '#345678'\n    descriptionColor: '#456789'\n    highlightBg: 'rgba(10, 20, 30, 0.25)'\n    highlightStroke: '#56789a'\n---\ntreeView-beta\nproject/ :::highlight icon(folder)\n    main.rs ## crate root"
+    },
+    {
+      "name": "directive-theme-variables",
+      "source": "%%{init: {\"themeVariables\": {\"treeView\": {\"labelFontSize\": \"18px\", \"labelColor\": \"#abcdef\", \"lineColor\": \"#123456\"}}}}%%\ntreeView-beta\nproject/\n    main.rs"
+    },
+    {
+      "name": "aligned-description-rows",
+      "source": "treeView-beta\nproject/\n    a.rs ## short label\n    much-longer-name.rs ## long label"
+    },
+    {
+      "name": "intrinsic-description-width",
+      "source": "treeView-beta\nproject/ :::highlight\n    main.rs ## a description that expands the intrinsic viewBox"
+    }
+  ],
+  "invalid": [
+    {
+      "name": "unterminated-quoted-label",
+      "source": "treeView-beta\n\"unterminated"
+    },
+    {
+      "name": "mixed-box-drawing-and-indentation",
+      "source": "treeView-beta\n├── src/\n    index.ts\n└── README.md"
     }
   ]
 }

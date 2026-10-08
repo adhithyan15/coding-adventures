@@ -34,12 +34,13 @@ reviews_of: [ZH-W17-wen-observe, ZH-W17-wen-guided, ZH-C10-buxie]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-WEN-01, ZH-LEX-BUXIE] -->
 
-[PAUSE 8s] Answer 谢谢 with **不谢**. Then look at **文** for five seconds and
-cover it.
+[PAUSE 8s] Answer 谢谢 with **不谢**.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-WEN-01] -->
 <!-- hl-writing-stage: delayed-copy -->
+
+Look at **文** for five seconds and cover it.
 
 [PAUSE 8s] Say **dot, bar, left, right**, then write **文** once without the
 model. Reveal it only after the fourth stroke. Repair only the first mismatch.

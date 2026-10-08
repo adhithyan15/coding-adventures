@@ -1321,7 +1321,38 @@ backend immediately) come before the enabler-dependent items.
   conservative. Variable-free exact additive zero terms may surround that
   bounded result before `entier`; nonzero or dynamic additive terms remain
   conservative. Variable-free exact multiplicative unit factors may likewise
-  surround it; non-unit or variable factors remain conservative.
+  surround it; non-unit or variable factors remain conservative. Exact unit
+  division is also permitted when the bounded result is the numerator;
+  non-unit or variable divisors and a bounded denominator remain conservative.
+  An exact variable-free exponent chain evaluating to one may preserve the
+  bounded result before `entier`; other or dynamic exponents remain
+  conservative.
+  Additional built-in `entier` calls may wrap that already integral bounded
+  result; an unrestricted runtime `entier` operand remains conservative.
+  Built-in `sqrt` may also map an `abs`-normalized bounded result to exact `0`
+  or `1` before `entier`; an unnormalized or unrestricted operand remains
+  conservative. Additional built-in `sqrt` calls may wrap that nonnegative
+  unit result while preserving the same bound.
+  Built-in `entier` may also remain inside `sqrt` when its operand is already
+  nonnegative and bounded; signed, unrestricted, and overridden forms remain
+  conservative.
+  Built-in `sin`, `cos`, and `arctan` may map a bounded sign-rooted result
+  before `entier`, including nested combinations; domain-sensitive or
+  unbounded standard functions and non-sign-rooted runtime operands remain
+  conservative.
+  A single built-in `exp` may also map such a bounded chain before `entier`;
+  nested exponential calls remain conservative to keep the finite bound
+  explicit.
+  Built-in `ln` may map that one exponential when its operand remains rooted
+  in the bounded sign chain; standalone `ln` and user-declared overrides stay
+  conservative.
+  Built-in `sqrt` may likewise map that one positive bounded exponential;
+  nested exponentials and user-declared overrides remain conservative.
+  Additional built-in `sqrt` calls may wrap that positive bounded result while
+  preserving the same finite proof.
+  Built-in `sqrt` may also map `ln(exp(...))` when the exponential operand is
+  already nonnegative and bounded; signed and nested-exponential forms stay
+  conservative.
   Provenance-backed local and other real-name branches remain conservative
   across selector calls. Unary plus
   and unary minus preserve the same runtime-real proof. Additive composition,

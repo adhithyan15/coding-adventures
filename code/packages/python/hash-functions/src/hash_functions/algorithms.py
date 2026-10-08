@@ -58,10 +58,10 @@ def fnv1a_32(data: bytes | str) -> int:
 
     Known-good test vectors:
       fnv1a_32(b"")       == 2166136261
-      fnv1a_32(b"a")      == 84696351
+      fnv1a_32(b"a")      == 3826002220
       fnv1a_32(b"abc")    == 440920331
       fnv1a_32(b"hello")  == 1335831723
-      fnv1a_32(b"foobar") == 2984838064
+      fnv1a_32(b"foobar") == 3214735720
 
     Args:
         data: Input bytes or string (str is UTF-8 encoded).
@@ -94,7 +94,7 @@ def fnv1a_64(data: bytes | str) -> int:
     Known-good test vectors:
       fnv1a_64(b"")   == 14695981039346656037
       fnv1a_64(b"a")  == 12638187200555641996
-      fnv1a_64(b"abc") == 1081NS  (see tests for exact value)
+      fnv1a_64(b"abc") == 16654208175385433931
 
     Args:
         data: Input bytes or string (str is UTF-8 encoded).
@@ -292,7 +292,7 @@ def murmur3_32(data: bytes | str, seed: int = 0) -> int:
     Known-good test vectors (from the reference implementation):
       murmur3_32(b"",    seed=0) == 0
       murmur3_32(b"",    seed=1) == 0x514E28B7
-      murmur3_32(b"a",   seed=0) == 0xE40C292C
+      murmur3_32(b"a",   seed=0) == 0x3C2569B2
       murmur3_32(b"abc", seed=0) == 0xB3DD93FA
 
     Args:

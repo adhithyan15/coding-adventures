@@ -6,6 +6,10 @@ The **primary build tool** for the coding-adventures monorepo. Compiled to a nat
 
 This tool discovers packages in the monorepo by recursively walking for `BUILD` files, resolves inter-package dependencies, hashes source files for change detection, and only rebuilds packages whose source or dependency inputs changed. Independent packages are built in parallel using Go goroutines.
 
+Changes to the exact shared language-registry discovery fixture schedule all
+eleven native build-tool consumers, including Haskell, on every platform; a
+source-reference check guards the selector map against new direct adopters.
+
 ## Portable source hashing
 
 Extension and declared-source collection share the language-neutral v1 rules.
@@ -212,6 +216,38 @@ Every gate needs both clauses. Files under `code/specs`, `code/fixtures`,
 `code/grammars`, and `code/scripts` map to no package at all, so the path clause
 is the only thing that can see a fixture or grammar edit. See
 `code/specs/ci-gate-registry.md`.
+
+The `build-windows-os-suites` step gate includes `rust/programs/closurec`
+and its CV02 acceptance specification. Rust toolchain selection alone does not
+run ordinary Windows package tests; this gate makes the compiler's native
+publication/ACL regressions execute for compiler or affected dependency changes.
+The exact CV02 specification path also selects `rust/programs/closurec` on all
+three platforms and requires Rust, including specification-only diffs. Planning
+fails if that consumer is missing; explicit non-Rust language filters skip it.
+Emitted-plan regressions check the actual test command, affected compiler,
+toolchain and Windows gate together without forcing unrelated packages.
+Acceptance still requires a non-skipped test step and successful package result.
+
+The shared `discovery/language-registry` case needs an additional, bounded
+package-selection rule: changing its exact JSON file schedules each native
+build-tool test consumer (the two .NET fronts plus Elixir, Go, Haskell, Lua,
+Perl, Python, Ruby, Rust, Swift, and TypeScript) in the ordinary affected build plan. The rule
+unites those roots with other changed packages on every platform; it does not
+force a repository-wide build or apply to neighboring fixtures. A missing
+registered consumer is an error rather than a silently skipped test. Native
+fixture adopters must extend the consumer map and its drift test together.
+An explicit `-language` filter selects only the matching consumer; default
+all-language CI validates all twelve. Rename detection retains both the old and
+new paths so moving the fixture cannot silently bypass this rule.
+
+The flat `ci-gate-selection-*.json` case family separately seeds the Go and
+Python build-tool fronts. Their BUILD commands run the native Go
+`internal/cigates` and Python CI-gate fixture suites. This exact relation
+applies to fixture additions, edits, deletions, and renamed old paths on all
+platforms without a forced full build. Other fixture domains, nested paths,
+and filename lookalikes do not select these roots. Missing applicable roots
+fail planning; a single-language run selects only its own consumer. Detector
+tests check both the emitted affected roots/toolchains and reader-map drift.
 
 ## Metadata safety
 

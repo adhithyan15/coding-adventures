@@ -19,6 +19,7 @@
   <ItemGroup>
     <Compile Include="HasherConformanceTests.fs" />
     <Compile Include="GraphDiffConformanceTests.fs" />
+    <Compile Include="CIGateConformanceTests.fs" />
     <Compile Include="BuildToolTests.fs" />
   </ItemGroup>
 </Project>

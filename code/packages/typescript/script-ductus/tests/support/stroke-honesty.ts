@@ -14,10 +14,12 @@ export const fontForDuctus = (letter: LetterDuctus) => {
     (candidate) => candidate.script === letter.script,
   );
   if (!script) throw new Error(`no verified script/font owns ${letter.glyph}`);
+  // Digits with a cited ductus (Kannada ೧-೯) are claimed like letters.
   const letterClaim = [
     ...script.letters,
     ...(script.independentVowels ?? []),
     ...(script.finalConsonants ?? []),
+    ...(script.digits ?? []),
   ].find(
     (entry) =>
       entry.glyph === letter.glyph &&

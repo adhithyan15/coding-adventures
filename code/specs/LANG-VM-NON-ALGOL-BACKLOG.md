@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-07 — reopened for BEAM GC roots
+Status date: 2026-10-07 — re-audited after PREP01 C conditional shifts
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -70,24 +70,121 @@ passed. The Z80 README, crate rustdoc, opcode docs, changelog, and normative 07k
 spec now distinguish shared 8080 instruction bytes and core operations from the
 architectures' different packed flags and arithmetic parity/overflow behavior.
 
-The current queue is:
-
 The 2026-09-30 audit found no remaining item in its scoped completion queue.
 PR #16295 was a separately authored duplicate of merged VM-075 PR #16294 and
-was closed without merging. A 2026-10-07 review of still-open issue #15882 and
-current `iir-to-beam` lowering found two intermediate-call scratch values that
-remain unprotected: the ETS table identifier in `array_set` and the function
-atom in `call_closure`. ETS allocation's length handoff already uses a Y slot.
+was closed without merging. The 2026-10-07 audit then found the BEAM scratch
+root hazard. PR #16862 delivered BEAM13 and merged as
+`e2dae2b55f219e1a4d2a5dc680e789049e3a4dbe`: the ETS table identifier in
+`array_set` and the function atom in `call_closure` now cross imported calls in
+initialized Y slots. ETS allocation's length handoff already used a Y slot.
+The backend-wide `OP_CALL_EXT` audit found no further parked scratch value
+crossing an imported call, and issue #15882 was closed with those findings.
+
+PR #16870 delivered LANG78's bounded native JavaScript numeric/console
+source-to-IIR pilot and merged as `b0c0a6a7aff9735019ed74e487cd2afc64a74a5a`.
+It runs directly on Rust `vm-core`; Semantic IR is outside this execution path.
+PR #16873 delivered the generic PREP01 MacroNib dialect and merged as
+`c0cb312513a2f3b83b81a82e423d9e5bdaec7c9f` after its full IIR identity
+proof and protected checks passed. PR #16885 delivered LANG79's bounded native
+Python float-expression and `print` pilot and merged as
+`88cfc5a3b874be7c8dd4e237cca229990cd73fdf` after its latest-head checks
+passed. The Python pilot also runs directly on Rust `vm-core`.
+PR #16894 delivered LANG80's bounded native Ruby integer `puts` pilot and
+merged as `6a9ece02b7e2725af351ca2beab983b19595f61a` after its latest-head
+checks passed. It runs directly on Rust `vm-core`.
+PR #16897 delivered LANG81's bounded Perl `print` arithmetic lexer, parser,
+direct-to-IIR compiler, and native VM runner. It merged as
+`a29d4de837cf14ef4bc73f92da3c3ad67f07a4a0` after its latest-head checks
+passed. The historical per-release Perl grammar inventory is tracked separately.
+PR #16902 delivered the bounded PREP01 C directive-token, dialect, and parser
+token-handoff stage and merged as `7cafea593aca52764f49ee2e528e7e1cad11031f`
+after its exact-head CI, CodeQL, and books checks passed. Its `compile_source`
+still uses the legacy path; full C `#if`, stringize/paste, and actual
+preprocessor-to-C-frontend composition remain open.
+PR #16907 delivered LANG82's first source-grounded release-grammar installment
+and merged as `2fd67ab15143282dc138eb9b484b945dbe927381` after its
+latest-head CI, CodeQL, and books checks passed. Its inventory has 774 public
+release entries, 21 distinct explicitly partial token/grammar pairs and 753
+pending pairs. The inventory and partial grammars do not satisfy the user's
+complete per-release request; continue source-backed coverage in bounded work.
+PR #16914 delivered rooted C file-input preprocessing into the token parser and
+SIR lowerer, plus bounded logical `#if` conditions. It merged as
+`f4031922c44da030632cabf4fc7930e217ab8346` after its latest-head CI,
+CodeQL, and books checks passed. An included macro and conditional program
+executed through SIR-to-Ruby. Quoted includes still search declared roots only;
+full C `#if`, stringize/paste, and pathless `compile_source` routing remain.
+PR #16921 delivered nested quoted include lookup beside the verified including
+header before declared roots and merged as
+`b0c223097bf34f0e4b81f6fca894743c9daa5a08` after latest-head CI, CodeQL,
+and books checks passed. Unknown origin remains rejected; primary and system
+includes remain root-only with the same containment and bounded reads.
+PR #16934 delivered one checked `+`, `-`, or `*` arithmetic operation per
+bounded C `#if` logical clause and merged as
+`3b80b57819dbb934cb92dc5592d6f6e96ed5e07c` after latest-head CI,
+CodeQL, and books checks passed. Longer and mixed expressions remain explicit
+errors; full C `#if`, stringize/paste, and default frontend routing remain.
+PR #16941 delivered 12 distinct, explicitly partial Perl 5.003_04 through
+5.003_15 token and grammar pairs and merged as
+`4d46c9feeeb1d38ee773fbcb3d5d17bbef094cf6` after latest-head CI,
+CodeQL, and books checks passed. The inventoried 774 releases now have 33
+partial pairs and 741 pending; this is not complete historical coverage.
+PR #16947 repaired those earlier 18 partial release pairs and the unversioned
+LANG81 pilot, whose decimal token rules accepted Perl octal spellings such as
+`08`, `09`, and `010` incorrectly. It merged as
+`1ab69d602a7bb9b20f1571bc9c8973d10bc33f08` after latest-head CI,
+CodeQL, and books checks passed. No octal execution is claimed.
+PR #16952 delivered one checked `/` or `%` operation per bounded C `#if`
+logical clause and merged as `f889e3db081c174cab17e890776dccd3ff274495`
+after latest-head CI, CodeQL, and books checks passed. Zero divisors and
+unsupported longer expressions remain explicit errors.
+PR #16957 delivered 13 distinct, explicitly partial source-tagged Perl
+5.003_16 through 5.003_28 token and grammar pairs and merged as
+`a56d722c6803ae153768e813eccacfb5f5f2ef78` after its exact-head CI,
+CodeQL, and books checks passed. The 774-row inventory now has 46 partial
+pairs and 728 pending; complete historical syntax is not claimed.
+PR #16962 delivered 12 distinct, explicitly partial source-tagged Perl
+5.003_90 through 5.003_97d token and grammar pairs and merged as
+`697492955c3dca729029ea58a196e21a492295e0` after exact-head CI,
+CodeQL, and books checks passed. The 774-row inventory now has 58 partial
+pairs and 716 pending; complete historical syntax is not claimed. A separate
+source audit found two omitted Perl 5.004 release candidates, `p54rc1` and
+`p54rc2`; their pending inventory correction and source-backed partial pairs
+are prepared locally for a later bounded slice.
+PR #16965 delivered seven distinct, explicitly partial source-tagged Perl
+5.003_97e through 5.003_98 token and grammar pairs and merged as
+`fd489a40634cb1be9a203d4b08592e282994603c` after exact-head CI,
+CodeQL, and books checks passed. The 774-row inventory now has 65 partial
+pairs and 709 pending; complete historical syntax and inventory
+exhaustiveness are not claimed.
+PR #16971 delivered 11 distinct, explicitly partial Perl token and grammar
+pairs for `p54rc1`, `p54rc2`, and 5.003_99 through 5.004_02, and merged as
+`4bb5711626e9b04f3b1595287c0936485780d99f` after exact-head CI,
+CodeQL, and books checks passed. Its corrected pinned-source inventory has
+776 rows, 76 partial pairs, and 700 pending; complete historical syntax and
+inventory exhaustiveness are not claimed.
+PR #16975 delivered three distinct, explicitly partial source-backed Perl
+token and grammar pairs for 5.004_02_01, 5.004_03-t2, and 5.004_03, and
+merged as `cb4e232a2f103cfc484edf993557657d538230e3` after exact-head CI,
+CodeQL, and books checks passed. The 776-row inventory now has 79 partial
+pairs and 697 pending; neither complete historical syntax nor exhaustive
+public-release coverage is claimed. The next fresh selection rotates to the
+prepared PREP01 C conditional-shift slice.
+PR #16978 delivered exactly one checked `<<` or `>>` per bounded logical C
+`#if` clause and merged as `b490bcf88a0f90a61507150841df9a27fbe246dc`
+after exact-head CI, CodeQL, and books checks passed. The next fresh
+selection rotates to five distinct, explicitly partial, archive-backed Perl
+5.004_04 trial and final release token/grammar pairs. Full C `#if` remains
+open.
 The separately owned ALGOL campaign remains outside this backlog.
 
-The renewed queue is:
+The refreshed queue is:
 
-1. **BEAM13 (selected):** root values needed after an intermediate imported
-   call in the ETS `array_set` and `call_closure` paths. Reuse an initialized
-   per-function Y slot, prove the save/call/reload order in emitted bytecode,
-   and run real-Erlang regressions. See `BEAM13-intermediate-call-gc-roots.md`.
-2. **BEAM13 follow-up:** audit other scratch values crossing calls under issue
-   #15882, then close the issue only when its backend-wide claim is covered.
+1. **LANG82 Perl release grammars (selected):** add separate, source-backed,
+   explicitly partial token and grammar pairs for 5.004_04-t1 through t4
+   and final 5.004_04. Keep 5.004_01-t1 pending until its own source is
+   found; do not imply complete syntax or an exhaustive release inventory.
+2. **PREP01 C:** continue bounded conditional-expression support. Full C
+   `#if`, stringize/paste, and default frontend routing remain open.
 
 The following run records the first VM-067 selection.
 

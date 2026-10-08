@@ -1,0 +1,13 @@
+# Perl 3.000 (1989-10-18) grammar: verified arithmetic-print subset only.
+# @version 1
+# PARTIAL: unsupported Perl 3.000 syntax is rejected.
+# Evidence: https://github.com/Perl/perl5/blob/perl-3.000/perl.y
+# The tagged yacc grammar has LISTOP expr, arithmetic operators, unary minus,
+# and parenthesized terms; only `print` is admitted from LISTOP here.
+
+program         = print_statement { print_statement } ;
+print_statement = PRINT LPAREN expr RPAREN SEMICOLON ;
+expr            = term { ( PLUS | MINUS ) term } ;
+term            = unary { STAR unary } ;
+unary           = MINUS unary | atom ;
+atom            = INT | LPAREN expr RPAREN ;

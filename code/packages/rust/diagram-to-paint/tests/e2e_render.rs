@@ -19,7 +19,10 @@ mod apple {
     use diagram_layout_chart::layout_chart_diagram;
     use diagram_layout_graph::{GraphLayoutOptions, layout_graph_diagram};
     use diagram_layout_grid::layout_grid_diagram;
-    use diagram_layout_hierarchy::{layout_railroad, layout_swimlane, layout_treeview, layout_treemap};
+    use diagram_layout_hierarchy::{
+        layout_railroad, layout_swimlane, layout_treeview, layout_treeview_with_options, layout_treemap,
+        TreeViewLayoutOptions,
+    };
     use diagram_layout_geometric::{layout_cynefin, layout_info, layout_ishikawa, layout_venn, layout_wardley};
     use diagram_layout_packet::layout_packet_diagram;
     use diagram_layout_sequence::layout_sequence_diagram;
@@ -77,6 +80,22 @@ mod apple {
     const CYNEFIN_VISUAL_CORPUS: &str = include_str!(concat!(
         env!("CARGO_MANIFEST_DIR"),
         "/../../../grammars/mermaid/cynefin-11.16.1-visual-corpus.json"
+    ));
+    const TREEVIEW_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/treeview-11.16.1-corpus.json"
+    ));
+    const TREEVIEW_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/treeview-11.16.1-visual-corpus.json"
+    ));
+    const SWIMLANE_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/swimlane-11.16.1-corpus.json"
+    ));
+    const SWIMLANE_VISUAL_CORPUS: &str = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../grammars/mermaid/swimlane-11.16.1-visual-corpus.json"
     ));
 
     #[test]
@@ -3254,48 +3273,144 @@ line "Target" [35, 50, 68, 82]"##,
             label_font: font_spec("Helvetica", 13.0), title_font: font_spec("Helvetica", 18.0),
             shaper: &shaper, metrics: &metrics, resolver: &resolver,
         });
+        assert_eq!(scene.metadata.as_ref().and_then(|metadata| metadata.get("treeView.title")),
+            Some(&"Application Files".to_string()));
+        assert_eq!(scene.instructions.iter().filter(|instruction| matches!(instruction, PaintInstruction::GlyphRun(_))).count(),
+            diagram.nodes.len() + diagram.nodes.iter().filter(|node| node.description.is_some()).count());
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         let pixels = render(&scene); write_png(&pixels, "/tmp/mermaid_treeview_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
 
-        let configured = parse_treeview("%%{init: {\"treeView\": {\"rowIndent\": 18, \"paddingX\": 9, \"paddingY\": 7, \"lineThickness\": 3, \"showIcons\": false}}}%%\ntreeView-beta\nproject/\n    src/ icon(folder)\n        main.rs")
+        let configured = parse_treeview("%%{init: {\"treeView\": {\"rowIndent\": 18, \"paddingX\": 9, \"paddingY\": 7, \"lineThickness\": 3, \"useMaxWidth\": false, \"showIcons\": false}}}%%\ntreeView-beta\nproject/\n    src/ icon(folder)\n        main.rs")
             .expect("configured treeview parse failed");
         let configured_layout = layout_treeview(&configured, 720.0);
         assert_eq!(configured_layout.nodes[1].x - configured_layout.nodes[0].x, 27.0);
-        assert_eq!(configured_layout.nodes[0].height, 32.0);
+        assert_eq!(configured_layout.nodes[0].height, 33.2);
         let configured_scene = diagram_to_paint_treeview(&configured_layout, &DiagramToPaintOptions {
             background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 }, device_pixel_ratio: 2.0,
             label_font: font_spec("Helvetica", 13.0), title_font: font_spec("Helvetica", 18.0),
             shaper: &shaper, metrics: &metrics, resolver: &resolver,
         });
         assert_eq!(configured_scene.instructions.iter()
-            .filter(|instruction| matches!(instruction, PaintInstruction::Rect(_))).count(), 1);
+            .filter(|instruction| matches!(instruction, PaintInstruction::Rect(_))).count(), 0);
         assert_eq!(configured_scene.metadata.as_ref().and_then(|metadata| metadata.get("treeView.config.lineThickness")),
             Some(&"3".to_string()));
+        assert_eq!(configured_scene.metadata.as_ref().and_then(|metadata| metadata.get("treeView.config.useMaxWidth")),
+            Some(&"false".to_string()));
         let configured_pixels = render(&configured_scene);
         write_png(&configured_pixels, "/tmp/mermaid_treeview_config_e2e.png")
             .expect("configured treeview PNG write failed");
         assert!(configured_pixels.width > 0 && configured_pixels.height > 0);
 
-        let mapped = parse_treeview("%%{init: {\"treeView\": {\"defaultIconPack\": \"devicon\", \"filenameIcons\": {\"README.md\": \"logos:markdown\", \"package.json\": \"none\"}, \"extensionIcons\": {\".rs\": \"rust\", \"TS\": \"logos:typescript\"}}}}%%\ntreeView-beta\nREADME.md\npackage.json\nmain.RS\napp.ts\nnotes.txt icon(custom)")
+        let mapped = parse_treeview("%%{init: {\"treeView\": {\"showIcons\": true, \"defaultIconPack\": \"devicon\", \"filenameIcons\": {\"README.md\": \"logos:markdown\", \"package.json\": \"none\", \"component.spec.ts\": \"logos:special\", \"notes.txt\": \"folder\", \"skip.ts\": \"none\"}, \"extensionIcons\": {\".rs\": \"rust\", \"TS\": \"logos:typescript\", \"bashrc\": \"console\"}}}}%%\ntreeView-beta\nREADME.md\npackage.json\ncomponent.spec.ts\nmain.RS\nAPP.TS\n.bashrc\nnotes.txt\nskip.ts\nplain.txt\ncustom.txt icon(custom)")
             .expect("mapped treeview parse failed");
-        let mapped_layout = layout_treeview(&mapped, 720.0);
+        let mapped_layout = layout_treeview_with_options(&mapped, 720.0, Some(&TreeViewLayoutOptions {
+            icon_glyphs: BTreeMap::from([
+                ("devicon:custom".into(), DiagramIconGlyph { text: "C".into(), font_family: "Helvetica".into() }),
+                ("devicon:rust".into(), DiagramIconGlyph { text: "R".into(), font_family: "Helvetica".into() }),
+                ("logos:markdown".into(), DiagramIconGlyph { text: "M".into(), font_family: "Helvetica".into() }),
+                ("logos:special".into(), DiagramIconGlyph { text: "S".into(), font_family: "Helvetica".into() }),
+                ("logos:typescript".into(), DiagramIconGlyph { text: "T".into(), font_family: "Helvetica".into() }),
+            ]),
+        }));
         let mapped_scene = diagram_to_paint_treeview(&mapped_layout, &DiagramToPaintOptions {
             background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 }, device_pixel_ratio: 2.0,
             label_font: font_spec("Helvetica", 13.0), title_font: font_spec("Helvetica", 18.0),
             shaper: &shaper, metrics: &metrics, resolver: &resolver,
         });
         let mapped_icons = mapped_scene.instructions.iter().filter_map(|instruction| match instruction {
-            PaintInstruction::Rect(rect) => rect.base.metadata.as_ref()
-                .and_then(|metadata| metadata.get("treeView.icon")).map(String::as_str),
+            PaintInstruction::Path(path) => path.base.metadata.as_ref(),
+            PaintInstruction::Rect(rect) => rect.base.metadata.as_ref(),
+            PaintInstruction::GlyphRun(run) => run.base.metadata.as_ref(),
             _ => None,
-        }).collect::<BTreeSet<_>>();
+        }.and_then(|metadata| metadata.get("treeView.icon")).map(String::as_str)).collect::<BTreeSet<_>>();
         assert_eq!(mapped_icons,
-            BTreeSet::from(["devicon:custom", "devicon:rust", "logos:markdown", "logos:typescript"]));
+            BTreeSet::from(["devicon:custom", "devicon:rust", "logos:markdown", "logos:special", "logos:typescript",
+                "mermaid-treeview:file", "mermaid-treeview:folder"]));
+        assert_eq!(mapped_scene.instructions.iter().filter(|instruction| matches!(instruction,
+            PaintInstruction::GlyphRun(run) if run.base.metadata.as_ref()
+                .and_then(|metadata| metadata.get("treeView.icon")).is_some())).count(), 5);
+        assert!(!mapped_scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.base.metadata.as_ref()
+                .and_then(|metadata| metadata.get("treeView.icon"))
+                .is_some_and(|icon| !icon.starts_with("mermaid-treeview:")))));
         let mapped_pixels = render(&mapped_scene);
         write_png(&mapped_pixels, "/tmp/mermaid_treeview_icon_map_e2e.png")
             .expect("mapped treeview PNG write failed");
         assert!(mapped_pixels.width > 0 && mapped_pixels.height > 0);
+
+        let themed = parse_treeview("---\nthemeVariables:\n  treeView:\n    labelFontSize: 20px\n    labelColor: '#112233'\n    lineColor: '#234567'\n    iconColor: '#345678'\n    descriptionColor: '#456789'\n    highlightBg: 'rgba(10, 20, 30, 0.25)'\n    highlightStroke: '#56789a'\n---\ntreeView-beta\nproject/ :::highlight icon(folder)\n    main.rs ## crate root")
+            .expect("themed treeview parse failed");
+        let themed_layout = layout_treeview(&themed, 720.0);
+        assert_eq!(themed_layout.nodes[0].height, 34.0);
+        let themed_scene = diagram_to_paint_treeview(&themed_layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 }, device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 13.0), title_font: font_spec("Helvetica", 18.0),
+            shaper: &shaper, metrics: &metrics, resolver: &resolver,
+        });
+        assert!(themed_scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.stroke.as_deref() == Some("#234567"))));
+        assert!(themed_scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Path(path) if path.fill.as_deref() == Some("#345678"))));
+        assert!(themed_scene.instructions.iter().any(|instruction| matches!(instruction,
+            PaintInstruction::Rect(rect) if rect.fill.as_deref().is_some_and(|fill| fill.starts_with("rgba(10,20,30,"))
+                && rect.stroke.as_deref() == Some("#56789a"))));
+        assert_eq!(themed_scene.metadata.as_ref().and_then(|metadata| metadata.get("treeView.theme.labelFontSize")),
+            Some(&"20".to_string()));
+        let themed_pixels = render(&themed_scene);
+        write_png(&themed_pixels, "/tmp/mermaid_treeview_theme_e2e.png")
+            .expect("themed treeview PNG write failed");
+        assert!(themed_pixels.width > 0 && themed_pixels.height > 0);
+
+        let described = parse_treeview("treeView-beta\nproject/\n    a.rs ## short label\n    much-longer-name.rs ## long label")
+            .expect("described treeview parse failed");
+        let described_layout = layout_treeview(&described, 720.0);
+        assert_eq!(described_layout.nodes[2].description_x, described_layout.nodes[3].description_x);
+        assert_eq!(described_layout.connectors.len(), 6);
+        let described_scene = diagram_to_paint_treeview(&described_layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 }, device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 13.0), title_font: font_spec("Helvetica", 18.0),
+            shaper: &shaper, metrics: &metrics, resolver: &resolver,
+        });
+        assert_eq!(described_scene.instructions.iter()
+            .filter(|instruction| matches!(instruction, PaintInstruction::Path(_))).count(), 6);
+        let described_pixels = render(&described_scene);
+        write_png(&described_pixels, "/tmp/mermaid_treeview_descriptions_e2e.png")
+            .expect("described treeview PNG write failed");
+        assert!(described_pixels.width > 0 && described_pixels.height > 0);
+
+        let intrinsic = parse_treeview("treeView-beta\nproject/ :::highlight\n    main.rs ## a description that expands the intrinsic viewBox")
+            .expect("intrinsic-width treeview parse failed");
+        let narrow_layout = layout_treeview(&intrinsic, 320.0);
+        let wide_layout = layout_treeview(&intrinsic, 960.0);
+        assert_eq!(narrow_layout.width, wide_layout.width);
+        assert!(narrow_layout.width < 960.0);
+        let intrinsic_scene = diagram_to_paint_treeview(&narrow_layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 }, device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 13.0), title_font: font_spec("Helvetica", 18.0),
+            shaper: &shaper, metrics: &metrics, resolver: &resolver,
+        });
+        let intrinsic_pixels = render(&intrinsic_scene);
+        write_png(&intrinsic_pixels, "/tmp/mermaid_treeview_intrinsic_width_e2e.png")
+            .expect("intrinsic-width treeview PNG write failed");
+        assert!(intrinsic_pixels.width > 0 && intrinsic_pixels.height > 0);
+
+        let box_drawing = parse_treeview("treeView-beta\nproject/\n├─ src/ :::highlight\n│ └─ lib.rs ## crate root\n└─ README.md")
+            .expect("box-drawing treeview parse failed");
+        assert_eq!(box_drawing.nodes.iter().map(|node| node.depth).collect::<Vec<_>>(), [0, 1, 2, 3, 2]);
+        let box_layout = layout_treeview(&box_drawing, 720.0);
+        assert!(box_layout.nodes[3].x > box_layout.nodes[2].x);
+        let box_scene = diagram_to_paint_treeview(&box_layout, &DiagramToPaintOptions {
+            background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 }, device_pixel_ratio: 2.0,
+            label_font: font_spec("Helvetica", 13.0), title_font: font_spec("Helvetica", 18.0),
+            shaper: &shaper, metrics: &metrics, resolver: &resolver,
+        });
+        assert_eq!(box_scene.instructions.iter()
+            .filter(|instruction| matches!(instruction, PaintInstruction::Path(_))).count(), 8);
+        let box_pixels = render(&box_scene);
+        write_png(&box_pixels, "/tmp/mermaid_treeview_box_drawing_e2e.png")
+            .expect("box-drawing treeview PNG write failed");
+        assert!(box_pixels.width > 0 && box_pixels.height > 0);
 
         let empty = parse_treeview("treeView-beta\ntitle\naccTitle: Empty tree\naccDescr {\n  No files are present\n}")
             .expect("empty treeview parse failed");
@@ -3315,6 +3430,52 @@ line "Target" [35, 50, 68, 82]"##,
     }
 
     #[test]
+    fn render_pinned_mermaid_treeview_visual_corpus_to_png() {
+        let syntax: Value = serde_json::from_str(TREEVIEW_CORPUS).expect("treeview corpus JSON");
+        let visual: Value = serde_json::from_str(TREEVIEW_VISUAL_CORPUS).expect("treeview visual corpus JSON");
+        assert_eq!(visual["upstream_commit"], syntax["upstream_commit"]);
+        let fixtures = syntax["fixtures"].as_array().expect("treeview fixtures");
+        let fixture_names = visual["fixtures"].as_array().expect("treeview visual fixture names");
+        let unique = fixture_names.iter().filter_map(Value::as_str).collect::<BTreeSet<_>>();
+        assert_eq!(unique.len(), fixture_names.len(), "visual fixture names must be unique");
+
+        let options = TreeViewLayoutOptions { icon_glyphs: BTreeMap::from([
+            ("devicon:custom".into(), DiagramIconGlyph { text: "C".into(), font_family: "Helvetica".into() }),
+            ("devicon:rust".into(), DiagramIconGlyph { text: "R".into(), font_family: "Helvetica".into() }),
+            ("devicon:typescript".into(), DiagramIconGlyph { text: "T".into(), font_family: "Helvetica".into() }),
+            ("logos:markdown".into(), DiagramIconGlyph { text: "M".into(), font_family: "Helvetica".into() }),
+            ("logos:react".into(), DiagramIconGlyph { text: "R".into(), font_family: "Helvetica".into() }),
+            ("logos:special".into(), DiagramIconGlyph { text: "S".into(), font_family: "Helvetica".into() }),
+            ("logos:typescript".into(), DiagramIconGlyph { text: "T".into(), font_family: "Helvetica".into() }),
+        ]) };
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+        for fixture_name in fixture_names {
+            let name = fixture_name.as_str().expect("visual fixture name");
+            let fixture = fixtures.iter().find(|fixture| fixture["name"] == name)
+                .unwrap_or_else(|| panic!("visual fixture {name} must exist in the syntax corpus"));
+            let diagram = parse_treeview(fixture["source"].as_str().expect("treeview fixture source"))
+                .unwrap_or_else(|error| panic!("visual fixture {name} failed to parse: {error}"));
+            let layout = layout_treeview_with_options(&diagram, 720.0, Some(&options));
+            let scene = diagram_to_paint_treeview(&layout, &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 13.0),
+                title_font: font_spec("Helvetica", 18.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            });
+            assert!(!scene.instructions.is_empty(), "visual fixture {name} must lower to paint");
+            let pixels = render(&scene);
+            assert!(pixels.width > 0 && pixels.height > 0, "visual fixture {name} must render");
+            write_png(&pixels, &format!("/tmp/mermaid_treeview_11_16_1_{name}.png"))
+                .unwrap_or_else(|error| panic!("visual fixture {name} PNG failed: {error}"));
+        }
+    }
+
+    #[test]
     fn render_mermaid_swimlane_to_png() {
         let diagram = parse_swimlane("swimlane-beta LR\ntitle Support escalation\naccTitle: Accessible support flow\nsubgraph Customer\n  request([Open request])\n  receive((Receive update))\nend\nsubgraph Support\n  triage{Known issue?}\n  answer[Send answer]\nend\nsubgraph Engineering\n  resolve[Prepare fix]\nend\nrequest --> triage\ntriage -->|Known| answer --> receive\ntriage -.->|Escalate| resolve ==> answer").expect("swimlane parse failed");
         let layout = layout_swimlane(&diagram);
@@ -3328,6 +3489,41 @@ line "Target" [35, 50, 68, 82]"##,
         assert!(scene.instructions.iter().any(|instruction| matches!(instruction, PaintInstruction::Path(_))));
         let pixels = render(&scene); write_png(&pixels, "/tmp/mermaid_swimlane_e2e.png").expect("PNG write failed");
         assert!(pixels.width > 0 && pixels.height > 0);
+    }
+
+    #[test]
+    fn render_pinned_mermaid_swimlane_visual_corpus_to_png() {
+        let syntax: Value = serde_json::from_str(SWIMLANE_CORPUS).expect("swimlane corpus JSON");
+        let visual: Value = serde_json::from_str(SWIMLANE_VISUAL_CORPUS).expect("swimlane visual corpus JSON");
+        assert_eq!(visual["upstream_commit"], syntax["upstream_commit"]);
+        let fixtures = syntax["fixtures"].as_array().expect("swimlane fixtures");
+        let fixture_names = visual["fixtures"].as_array().expect("swimlane visual fixture names");
+        let shaper = CoreTextShaper;
+        let metrics = CoreTextMetrics;
+        let resolver = CoreTextResolver::new();
+
+        for (index, fixture_name) in fixture_names.iter().enumerate() {
+            let fixture_name = fixture_name.as_str().expect("swimlane fixture name");
+            let fixture = fixtures.iter().find(|fixture| fixture["name"] == fixture_name)
+                .unwrap_or_else(|| panic!("missing Swimlane fixture {fixture_name}"));
+            let diagram = parse_swimlane(fixture["source"].as_str().expect("swimlane source"))
+                .unwrap_or_else(|error| panic!("failed to parse {fixture_name}: {error}"));
+            let layout = layout_swimlane(&diagram);
+            let scene = diagram_to_paint_swimlane(&layout, &DiagramToPaintOptions {
+                background: layout_ir::Color { r: 255, g: 255, b: 255, a: 255 },
+                device_pixel_ratio: 2.0,
+                label_font: font_spec("Helvetica", 13.0),
+                title_font: font_spec("Helvetica", 18.0),
+                shaper: &shaper,
+                metrics: &metrics,
+                resolver: &resolver,
+            });
+            assert!(!scene.instructions.is_empty(), "{fixture_name} must lower to paint");
+            let pixels = render(&scene);
+            let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
+            write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));
+            assert!(pixels.width > 0 && pixels.height > 0);
+        }
     }
 
     #[test]

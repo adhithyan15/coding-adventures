@@ -1,0 +1,11 @@
+{
+  "id": "PA-R159-people-quality-recall",
+  "pathSegment": "PA-PATH-159-REPAIR-AND-RECALL",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "PA-EXT-159-LEXICAL-RECALL",
+      "order": 0
+    }
+  ]
+}

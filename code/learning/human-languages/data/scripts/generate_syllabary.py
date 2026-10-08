@@ -333,7 +333,9 @@ def build_script(script_id: str, name: str, base: int, font: str, signature: str
     # Grounded like everything else: each is a Unicode "<SCRIPT> DIGIT <N>", and
     # the romanization is simply the digit's value (0-9) — the Unicode name (ZERO,
     # ONE, …) fixes it unambiguously, nothing guessed. Kept in a SEPARATE list, not
-    # mixed into `letters`. Recognition only — no ductus.
+    # mixed into `letters`. Generated as recognition-only rows; a committed
+    # digit row that cites a stroke-order source (Kannada ೧-೯) keeps its
+    # ductus fields through `merge_verified_rows`, like any verified row.
     DIGIT_NAMES = ["ZERO", "ONE", "TWO", "THREE", "FOUR",
                    "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"]
     digits = []

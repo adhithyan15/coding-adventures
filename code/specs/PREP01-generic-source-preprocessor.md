@@ -579,10 +579,145 @@ defect that the second dialect found. This is the cheapest genericity proof
 available, because Nib already has full matrix coverage to check against — the
 whole slice is one grammar, one dialect and some rows.
 
+**Slice 3 implementation contract (selected 2026-10-07).** The initial
+directive vocabulary is `.include "file"`, `.set NAME replacement`,
+`.ifdef NAME`, `.else`, and `.endif`. `.set` defines an object-like macro;
+function-like parameter syntax is deferred until the second dialect has
+proven the engine's existing object-like path. `.ifdef` tests definition
+status through `Dialect::prepare_condition`, without expanding its operand.
+All directive tokens, including the quote token needed only by `.include`,
+must be removed before Nib parsing. Ordinary Nib tokens and keyword rules
+must match `nib.tokens` byte-for-byte under an automated drift check.
+
+The Nib lexer, grammar, type rules and code generation stay the reference.
+Small additive token-input and AST-input entry points in `nib-parser` and
+`nib-iir-compiler` are permitted solely to compose a preprocessed token
+stream with that existing frontend; they must not change Nib source
+semantics. The identity oracle compares MacroNib against independently
+hand-expanded Nib at the IIR instruction level, preserving source-map
+length and testing full equality when lines are aligned. Negative tests
+must cover malformed directives, undefined includes, recursion and token
+bounds. The engine core must remain unchanged unless a reproducible
+genericity defect is found and documented.
+MacroNib must check the primary and every included file before lexing. The
+generic lexer materializes the token vector before the shared engine can apply
+its token budget, so each file has a conservative pre-lex source-byte cap no
+larger than the tightened token budget minus the EOF sentinel. That cap is
+also aggregate across lexed files so nested include frames cannot retain one
+full token budget apiece. The primary
+file also obeys the tightened file and aggregate byte budgets; included files
+retain the engine's read guards. The in-memory include API checks unused files,
+names, count, and aggregate bytes before copying them into `MemoryFs`.
+
 **Slice 4 — the C dialect, and real C.**
+The first publishable stage establishes the directive lexer, bounded token
+parser handoff, and a deliberately limited C dialect with direct engine tests.
+It does not satisfy Slice 4's end-to-end acceptance until the C frontend uses
+that preprocessed stream and the remaining C macro and condition semantics are
+implemented.
+The composition stage exposes an explicit file-input C frontend using
+`RootedFs`: it resolves and reads the primary file under declared roots,
+preprocesses its tokens, and passes the resulting directive-free tokens to
+`try_parse_c_tokens` before lowering. A pathless `compile_source` cannot
+resolve local includes and retains its compatibility behavior until the
+file-input path and remaining C semantics are validated. Tests may use
+`MemoryFs` through an internal helper; production callers use `RootedFs`.
+The file-input API checks the entry spelling against the tightened token
+spelling budget before cloning it into an include request. Its search roots
+come from the embedding host, not C source text.
+The first bounded file-input stage searched quoted includes under declared
+roots only. The next file-resolution stage uses `IncludeRequest.from` only for
+a quoted include (`system == false`) from a file that this `RootedFs` instance already
+resolved. It searches that file's canonical parent directory first, then the
+declared roots in order. The primary file (`from == None`) and a system include
+search declared roots only. An unknown `from` id fails closed; it cannot silently
+fall back to a root. Every candidate, including the header-relative candidate,
+is canonicalised and checked against the same declared-root containment rule
+before opening, and the retained handle receives the existing regular-file and
+byte-limit checks. Search order must not mint a new `FileId` for a previously
+resolved canonical file. No ambient compiler or host-system include path is
+added. Tests distinguish a header-neighbor from a same-named root file, cover
+an out-of-root relative path and symlink, reject an unknown `from`, and compile
+a nested quoted header through the real C file-input frontend.
+`RootedFs::resolve` also checks the request spelling against its tightened
+token-spelling bound before path screening or candidate construction, including
+when used directly outside an engine run.
 `c.tokens` stops discarding `#…` lines; `c-lexer` surfaces directive tokens; a
 `CDialect` implements §5; `c-to-semantic-ir` runs the engine as its
 `post_tokenize` hook. `SIR27`'s preprocessor scope statement is updated.
+The parser handoff is a prerequisite: `c-parser` exposes a fallible token-input
+entry point that uses the same compiled C grammar and recursion cap as its
+source-input entry point. It accepts the preprocessor's directive-free token
+stream without reconstructing source text or re-lexing it. Before invoking the
+packrat parser, this public entry point refuses more than 2,000,000 tokens,
+more than 64 MiB of aggregate token text (values, type names, and provenance
+IDs), or any one of those fields longer than 64 KiB. These finite ceilings use
+the shared preprocessor's default produced-token and token-spelling ceilings,
+with an additional 64 MiB aggregate text ceiling at the parser boundary. The C
+dialect will use the shared preprocessor's bounds for input and expansion; the
+parser handoff retains its own guard because it is also a public API.
+The token-input parser accepts a nonempty stream with no EOF sentinel or one
+final EOF sentinel. It rejects an empty stream and any EOF before the end,
+so trailing tokens cannot be silently ignored.
+The public C dialect classifier also accepts caller-supplied token metadata;
+function-like macro adjacency must use checked column arithmetic so an
+untrusted column cannot panic or wrap.
+The lexer exposes `#` and `##` as ordinary directive tokens rather than
+silently skipping their lines. During the handoff, the existing source-input
+`c-parser` API retains its historical behavior of ignoring directive lines;
+the token-input API never removes them. The C frontend switches to the
+preprocessor stream before that compatibility path is retired. A local quoted
+header can be lexed as a string token; `<...>` headers remain a separate system
+include policy decision and are not resolved from the host toolchain.
+The staged condition evaluator may accept a single comparison of expanded
+decimal integer literals or undefined identifiers, including `==`, `!=`,
+`<`, `<=`, `>`, and `>=`. It rejects more complex controlling expressions until
+their C integer-constant-expression semantics are implemented.
+The next bounded stage accepts `!` on a single decimal/identifier operand and
+chains of those operands or simple comparisons with `&&` and `||`, using C's
+`&&`-before-`||` precedence. It rejects parentheses, arithmetic and mixed
+unary/comparison forms until their full precedence and evaluation rules are
+implemented. Both branches of each accepted logical operator are checked for
+supported syntax, even when C would short-circuit execution; this stage has
+no expression side effects.
+Multi-digit leading-zero literals are C octal and must be rejected by this
+decimal-only stage instead of being silently evaluated as decimal.
+The next bounded `#if` arithmetic stage accepts exactly one `+`, `-`, or `*`
+between two expanded decimal integer literals or undefined identifiers within
+each logical clause. It interprets an undefined identifier as zero, evaluates
+with checked signed arithmetic, and accepts only operands and results in the
+signed 32-bit range, which avoids width-dependent answers across C hosts. The
+result is true exactly when nonzero. Longer arithmetic chains, division,
+remainder, unary signs, parentheses, and arithmetic mixed with a comparison
+remain explicit errors until their precedence and evaluation rules are added.
+Tests cover each accepted operator, false and negative results, undefined
+identifiers, leading-zero operands, out-of-range values, and unsupported mixed
+forms through the real C preprocessor path.
+The following bounded C `#if` stage accepts exactly one `/` or `%` between
+two expanded plain-decimal literals or undefined identifiers within a logical
+clause. As with `+`, `-`, and `*`, both operands must fit signed 32-bit integers.
+The divisor must be nonzero; division and remainder use C's integer quotient
+with the fractional part discarded. A zero divisor fails explicitly, including
+in a logical operand whose truth value would otherwise be unnecessary: this
+partial evaluator checks every accepted clause before combining results.
+Longer or mixed arithmetic, unary signs, parentheses, and arithmetic mixed
+with comparisons remain explicit errors. Tests must cover true and false
+quotients/remainders, macro expansion, undefined names, zero divisors, and
+rooted C file-input error locations.
+The next bounded C `#if` stage accepts exactly one `<<` or `>>` between two
+expanded plain-decimal literals or undefined identifiers in each logical
+clause. Both operands and the result must fit signed 32-bit integers. The
+left operand must be nonnegative and the shift count must be 0 through 31;
+negative left values, larger counts, and results outside the signed range
+fail explicitly. This stays within the defined and portable shift behavior
+described by [WG14 N1570 §6.5.7](https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf),
+while deliberately declining other valid C forms. Longer or mixed expressions
+remain unsupported. Test true and false
+results, macro-expanded operands, zero-valued undefined names, boundary
+counts, overflow, and rooted file-input diagnostics.
+Until stringize and paste are implemented, a `#define` replacement containing
+`#` or `##` must fail explicitly rather than emit those operator tokens as C
+source.
 *Acceptance:* a C program using `#define` (object- and function-like), `#if`/
 `#ifdef`/`#else`/`#endif` and a real project-local `#include` compiles through
 `c-to-semantic-ir` and executes with the expected result — the first C program

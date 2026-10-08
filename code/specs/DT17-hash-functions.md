@@ -53,7 +53,7 @@ Input:   "Hello, world!"                 (13 bytes)
          [=== hash function ===]
           ↓
 Output:  0xC0535E4B                      (always 4 bytes / 32 bits)
-         (3227534923 as unsigned decimal)
+         (3226689099 as unsigned decimal)
 ```
 
 Two critical properties set hash functions apart from other functions:
@@ -206,12 +206,12 @@ Byte 'b' = 0x62:
   hash ^= 0x62 → 0xe40c292c ^ 0x62 = 0xe40c294e
   hash  *= FNV_PRIME
        = 0xe40c294e * 0x01000193
-       = 0x4b9be1a3  (32-bit truncated)
+       = 0x4d2505ca  (32-bit truncated)
 
 Byte 'c' = 0x63:
-  hash ^= 0x63 → 0x4b9be1a3 ^ 0x63 = 0x4b9be1c0
+  hash ^= 0x63 → 0x4d2505ca ^ 0x63 = 0x4d2505a9
   hash  *= FNV_PRIME
-       = 0x4b9be1c0 * 0x01000193
+       = 0x4d2505a9 * 0x01000193
        = 0x1a47e90b  (32-bit truncated)
 
 FNV-1a("abc") = 0x1a47e90b
@@ -343,8 +343,8 @@ Step 2: h *= 0x85ebca6b
   Now bits are spread to positions 0, 1, 3, 5, 6, 9, 10, 11... (the prime's bit pattern)
 
 Step 3: h ^= h >> 13
-  0x85ebca6b >> 13 = 0x000042f5
-  0x85ebca6b ^ 0x000042f5 = 0x85eb889e
+  0x85ebca6b >> 13 = 0x00042f5e
+  0x85ebca6b ^ 0x00042f5e = 0x85efe535
   High bits now contaminate mid bits.
 
 Step 4: h *= 0xc2b2ae35
@@ -710,9 +710,9 @@ end
 ```
 # FNV-1a 32-bit (known vectors)
 fnv1a_32(b"")         → 2166136261
-fnv1a_32(b"a")        → 84696351
+fnv1a_32(b"a")        → 3826002220
 fnv1a_32(b"abc")      → 440920331   (0x1a47e90b)
-fnv1a_32(b"foobar")   → 2984838064
+fnv1a_32(b"foobar")   → 3214735720
 
 # FNV-1a 64-bit
 fnv1a_64(b"")         → 14695981039346656037
@@ -726,7 +726,7 @@ djb2(b"abc")          → 193485963
 # MurmurHash3 (known test vectors from reference implementation)
 murmur3_32(b"", seed=0)       → 0
 murmur3_32(b"", seed=1)       → 0x514e28b7
-murmur3_32(b"a", seed=0)      → 0xe40c292c
+murmur3_32(b"a", seed=0)      → 0x3c2569b2
 murmur3_32(b"abc", seed=0)    → 0xb3dd93fa
 
 # SipHash-2-4 (from the reference test vectors in the SipHash paper)

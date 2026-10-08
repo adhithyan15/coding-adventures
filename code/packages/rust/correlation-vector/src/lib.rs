@@ -22,7 +22,7 @@
 //!
 //! ## Core idea: the ID scheme
 //!
-//! Every CV gets a stable ID that encodes its lineage:
+//! By default a CV gets a stable ID that encodes its lineage:
 //!
 //! ```text
 //! a3f1.1       — root CV (born directly, not derived from anything)
@@ -36,6 +36,8 @@
 //! The base (`a3f1`) is an 8-character hex prefix of the SHA-256 hash of the
 //! origin's identifying string. The trailing numbers are per-base and per-parent
 //! sequence counters. You can read parentage directly from the ID.
+//! [`CVLog::new_compact`] opts into fixed-length, per-log identities instead;
+//! ancestry is then represented exclusively by `parent_ids`, not ID spelling.
 //!
 //! ## The `enabled` flag
 //!
@@ -51,11 +53,41 @@
 use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
+mod bounded_json;
+mod canonical;
+mod checked_export;
+pub use checked_export::{SnapshotFormat, SourceFilter, SummaryFormat};
+mod checked;
+#[cfg(test)]
+mod checked_export_tests;
+mod cleanup;
+mod journal;
+use checked::CheckedState;
+pub use checked::GraphLimits;
+pub use journal::{
+    Journal, JournalEntity, JournalEvent, JournalOutcome, JournalPass, JournalPolicy,
+    JournalRecord, JournalScope, JournalSequence, PassOutcome, PipelineOutcome, ScopeError,
+};
 use serde_json::Value;
 
 // Re-export the sha256 function we use for ID generation.
 // We take only the first 8 hex characters of the hash.
 use coding_adventures_sha256::sha256_hex;
+
+/// Dispose of caller-owned metadata without recursive Value destruction.
+///
+/// Use when rejecting a batch of evidence that was never transferred to a log.
+/// This necessarily visits already-owned payloads; graph-operation work limits
+/// cannot bound disposal of arbitrary memory constructed by the caller.
+pub fn dispose_metadata(meta: HashMap<String, Value>) {
+    cleanup::metadata(meta);
+}
+
+#[cfg(test)]
+mod compact_tests;
+
+#[cfg(test)]
+mod checked_tests;
 
 // ===========================================================================
 // Data Types
@@ -167,7 +199,7 @@ pub struct DeletionRecord {
 /// ```
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CVEntry {
-    /// Stable, globally unique identifier. Never changes after creation.
+    /// Stable identifier, unique within its log. Never changes after creation.
     pub id: String,
 
     /// Parent CV IDs. Empty for root CVs. One entry for derived CVs.
@@ -206,15 +238,22 @@ pub struct CVEntry {
 /// when tracing is off.
 pub struct CVLog {
     /// All CV entries, keyed by CV ID.
-    pub entries: HashMap<String, CVEntry>,
+    entries: HashMap<String, CVEntry>,
 
     /// Ordered list of source names that have contributed to the log.
     /// A source name is added when it makes its first contribution to any CV.
-    pub pass_order: Vec<String>,
+    pass_order: Vec<String>,
 
     /// When `false`, all write operations are no-ops (no entries stored).
     /// IDs are still generated and returned.
-    pub enabled: bool,
+    enabled: bool,
+
+    // Keep stage membership O(1); the ordered vector remains the wire contract.
+    pass_sources: std::collections::HashSet<String>,
+    checked: Option<CheckedState>,
+    // Generic typed imports may have discarded/defaulted evidence. Never let
+    // graph shape validation or a later snapshot erase that trust boundary.
+    allocator_only_import: bool,
 
     /// Per-base sequence counters for root CVs.
     /// Key: base string (e.g., "a3f1b2c4").
@@ -225,6 +264,111 @@ pub struct CVLog {
     /// Key: parent CV ID.
     /// Value: last-used child sequence number for that parent.
     child_counters: HashMap<String, u32>,
+
+    /// Compact mode's last allocated sequence, including unstored IDs.
+    /// None retains the original hierarchical API and snapshot format.
+    compact_sequence: Option<u64>,
+    journal: Option<Journal>,
+}
+
+/// Wire-only allocator state. A hex string avoids losing u64 precision in
+/// JSON clients whose numeric type is an IEEE-754 double.
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct CompactIdentityState {
+    scheme: String,
+    last_sequence: String,
+}
+
+// Legacy logs omit allocator state. A present state must be an object: ordinary
+// Option deserialization would erase a null marker and silently select legacy
+// allocation, especially for empty logs whose IDs cannot reveal the scheme.
+fn deserialize_present_identity<'de, D: serde::Deserializer<'de>>(
+    deserializer: D,
+) -> Result<Option<CompactIdentityState>, D::Error> {
+    CompactIdentityState::deserialize(deserializer).map(Some)
+}
+
+// A provenance identity names exactly one record. HashMap's normal JSON loader
+// keeps the last duplicate value, silently replacing earlier evidence. Inspect
+// each decoded key before its value; escaped spellings are already normalized,
+// and a duplicate's potentially malformed payload is never decoded.
+fn deserialize_unique_entries<'de, D: serde::Deserializer<'de>>(
+    deserializer: D,
+) -> Result<HashMap<String, CVEntry>, D::Error> {
+    struct UniqueEntries;
+    impl<'de> serde::de::Visitor<'de> for UniqueEntries {
+        type Value = HashMap<String, CVEntry>;
+
+        fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+            formatter.write_str("a map of unique CV entry identities")
+        }
+
+        fn visit_map<M: serde::de::MapAccess<'de>>(
+            self,
+            mut map: M,
+        ) -> Result<Self::Value, M::Error> {
+            let mut entries = HashMap::new();
+            while let Some(id) = map.next_key::<String>()? {
+                if entries.contains_key(&id) {
+                    return Err(serde::de::Error::custom("duplicate CV entry identity"));
+                }
+                entries.insert(id, map.next_value::<CVEntry>()?);
+            }
+            Ok(entries)
+        }
+    }
+    deserializer.deserialize_map(UniqueEntries)
+}
+
+#[derive(Deserialize)]
+struct LogSnapshot {
+    #[serde(deserialize_with = "deserialize_unique_entries")]
+    entries: HashMap<String, CVEntry>,
+    pass_order: Vec<String>,
+    enabled: bool,
+    #[serde(default, deserialize_with = "deserialize_present_identity")]
+    identity: Option<CompactIdentityState>,
+    #[serde(default, deserialize_with = "deserialize_present_view")]
+    view: Option<Value>,
+    #[serde(default, deserialize_with = "deserialize_present_journal")]
+    journal: Option<Journal>,
+}
+
+fn deserialize_present_journal<'de, D: serde::Deserializer<'de>>(
+    deserializer: D,
+) -> Result<Option<Journal>, D::Error> {
+    Journal::deserialize(deserializer).map(Some)
+}
+
+// Keep field presence distinct from a JSON null marker: even `view: null`
+// declares a view and cannot authorize importing a full compact log.
+fn deserialize_present_view<'de, D: serde::Deserializer<'de>>(
+    deserializer: D,
+) -> Result<Option<Value>, D::Error> {
+    Value::deserialize(deserializer).map(Some)
+}
+
+fn fixed_hex_sequence(text: &str) -> Result<u64, String> {
+    if text.len() != 16
+        || !text
+            .bytes()
+            .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
+    {
+        return Err("compact identity sequence must be sixteen lowercase hex digits".into());
+    }
+    u64::from_str_radix(text, 16).map_err(|_| "invalid compact identity sequence".into())
+}
+
+fn compact_id_sequence(id: &str) -> Result<u64, String> {
+    let sequence = fixed_hex_sequence(
+        id.strip_prefix("cv1.")
+            .ok_or("invalid compact identity prefix")?,
+    )?;
+    if sequence == 0 {
+        return Err("compact identity zero is reserved".into());
+    }
+    Ok(sequence)
 }
 
 // ===========================================================================
@@ -249,8 +393,8 @@ impl CVLog {
     /// use coding_adventures_correlation_vector::CVLog;
     ///
     /// let log = CVLog::new(true);
-    /// assert!(log.enabled);
-    /// assert!(log.entries.is_empty());
+    /// assert!(log.is_enabled());
+    /// assert!(log.entries().is_empty());
     /// ```
     pub fn new(enabled: bool) -> Self {
         CVLog {
@@ -259,7 +403,46 @@ impl CVLog {
             enabled,
             base_counters: HashMap::new(),
             child_counters: HashMap::new(),
+            compact_sequence: None,
+            pass_sources: std::collections::HashSet::new(),
+            checked: None,
+            allocator_only_import: false,
+            journal: None,
         }
+    }
+
+    /// Create an opt-in compact-v1 allocator. IDs are fixed-length and unique
+    /// within this log; actual parent edges carry ancestry. The default
+    /// [`Self::new`] remains hierarchical for existing generic clients.
+    pub fn new_compact(enabled: bool) -> Self {
+        let mut log = Self::new(enabled);
+        log.compact_sequence = Some(0);
+        log
+    }
+
+    fn next_origin_id(&mut self, origin: Option<&Origin>) -> Result<String, String> {
+        if self.compact_sequence.is_some() {
+            return self.next_compact_id();
+        }
+        self.next_root_id(&Self::origin_base(origin))
+    }
+
+    fn next_compact_id(&mut self) -> Result<String, String> {
+        let last = self.compact_sequence.ok_or("compact mode is not enabled")?;
+        let next = last
+            .checked_add(1)
+            .ok_or("compact identity sequence exhausted")?;
+        let id = format!("cv1.{next:016x}");
+        self.check_allocation_collision(&id)?;
+        self.compact_sequence = Some(next);
+        Ok(id)
+    }
+
+    fn check_allocation_collision(&self, id: &str) -> Result<(), String> {
+        if self.entries.contains_key(id) {
+            return Err("identity allocation would overwrite an existing entry".into());
+        }
+        Ok(())
     }
 
     // -----------------------------------------------------------------------
@@ -280,8 +463,8 @@ impl CVLog {
     /// across runs (important for build systems and caches).
     ///
     /// Taking only 8 hex characters gives us 32 bits of collision resistance —
-    /// sufficient for a single pipeline run with millions of entities, while
-    /// keeping the ID human-readable.
+    /// which is only a short origin bucket, not a uniqueness proof. Distinct
+    /// origins can share a bucket; per-bucket counters distinguish allocations.
     fn origin_base(origin: Option<&Origin>) -> String {
         match origin {
             // No natural origin → use the special "no-origin" base.
@@ -304,10 +487,21 @@ impl CVLog {
     ///
     /// Example: if base is `"a3f1b2c4"`, successive calls return
     /// `"a3f1b2c4.1"`, `"a3f1b2c4.2"`, `"a3f1b2c4.3"`, etc.
-    fn next_root_id(&mut self, base: &str) -> String {
-        let counter = self.base_counters.entry(base.to_string()).or_insert(0);
-        *counter += 1;
-        format!("{}.{}", base, counter)
+    fn next_root_id(&mut self, base: &str) -> Result<String, String> {
+        if self.compact_sequence.is_some() {
+            return self.next_compact_id();
+        }
+        let next = self
+            .base_counters
+            .get(base)
+            .copied()
+            .unwrap_or(0)
+            .checked_add(1)
+            .ok_or("root identity sequence exhausted")?;
+        let id = format!("{base}.{next}");
+        self.check_allocation_collision(&id)?;
+        self.base_counters.insert(base.to_string(), next);
+        Ok(id)
     }
 
     /// Allocate the next child ID for a given parent CV ID.
@@ -317,13 +511,21 @@ impl CVLog {
     ///
     /// Example: if parent is `"a3f1.1"`, successive calls return
     /// `"a3f1.1.1"`, `"a3f1.1.2"`, etc.
-    fn next_child_id(&mut self, parent_id: &str) -> String {
-        let counter = self
+    fn next_child_id(&mut self, parent_id: &str) -> Result<String, String> {
+        if self.compact_sequence.is_some() {
+            return self.next_compact_id();
+        }
+        let next = self
             .child_counters
-            .entry(parent_id.to_string())
-            .or_insert(0);
-        *counter += 1;
-        format!("{}.{}", parent_id, counter)
+            .get(parent_id)
+            .copied()
+            .unwrap_or(0)
+            .checked_add(1)
+            .ok_or("child identity sequence exhausted")?;
+        let id = format!("{parent_id}.{next}");
+        self.check_allocation_collision(&id)?;
+        self.child_counters.insert(parent_id.to_string(), next);
+        Ok(id)
     }
 
     // -----------------------------------------------------------------------
@@ -358,8 +560,19 @@ impl CVLog {
     /// assert!(id.contains('.'));  // "xxxxxxxx.1"
     /// ```
     pub fn create(&mut self, origin: Option<Origin>) -> String {
-        let base = Self::origin_base(origin.as_ref());
-        let id = self.next_root_id(&base);
+        self.try_create(origin)
+            .expect("CV identity allocation failed")
+    }
+
+    /// Allocate a root without wrapping or replacing an existing entry.
+    /// Returns an error on sequence exhaustion/collision without changing state.
+    /// The string-returning [`Self::create`] fails fast on these errors.
+    /// Checked logs also validate parents and resource budgets before allocation;
+    /// generic logs retain allocator-only compatibility semantics.
+    pub fn try_create(&mut self, origin: Option<Origin>) -> Result<String, String> {
+        let mut origin = cleanup::OwnedOrigin::new(origin);
+        let usage = self.prospective_node(&[], origin.as_ref())?;
+        let id = self.next_origin_id(origin.as_ref())?;
 
         // When tracing is disabled, we still need to return a valid ID
         // (the entity holds onto it), but we skip storing any entry.
@@ -367,14 +580,18 @@ impl CVLog {
             let entry = CVEntry {
                 id: id.clone(),
                 parent_ids: vec![],
-                origin,
+                origin: origin.take(),
                 contributions: vec![],
                 deleted: None,
             };
             self.entries.insert(id.clone(), entry);
         }
 
-        id
+        self.append_graph_record(|| JournalEvent::Create {
+            entity: JournalEntity(compact_id_sequence(&id).expect("checked compact identity")),
+        });
+        self.commit_usage(usage);
+        Ok(id)
     }
 
     /// Record that a stage processed this entity.
@@ -417,6 +634,8 @@ impl CVLog {
         tag: &str,
         meta: HashMap<String, Value>,
     ) -> Result<(), String> {
+        let mut meta = cleanup::OwnedMetadata::new(meta);
+        let usage = self.prospective_event(cv_id, source, tag, meta.as_ref())?;
         if !self.enabled {
             return Ok(());
         }
@@ -435,16 +654,21 @@ impl CVLog {
             ));
         }
 
+        let index = u64::try_from(entry.contributions.len())
+            .map_err(|_| "CV contribution index exceeds supported width")?;
         entry.contributions.push(Contribution {
             source: source.to_string(),
             tag: tag.to_string(),
-            meta,
+            meta: meta.take(),
         });
 
         // Track pass order — only add the source if it hasn't appeared before.
-        if !self.pass_order.contains(&source.to_string()) {
-            self.pass_order.push(source.to_string());
-        }
+        self.record_source(source);
+        self.append_graph_record(|| JournalEvent::Contribution {
+            entity: JournalEntity(compact_id_sequence(cv_id).expect("checked compact identity")),
+            index: JournalSequence(index),
+        });
+        self.commit_usage(usage);
 
         Ok(())
     }
@@ -467,20 +691,39 @@ impl CVLog {
     /// When `enabled` is `false`, the ID is still generated and returned,
     /// but no entry is stored.
     pub fn derive(&mut self, parent_cv_id: &str, origin: Option<Origin>) -> String {
-        let id = self.next_child_id(parent_cv_id);
+        self.try_derive(parent_cv_id, origin)
+            .expect("CV identity allocation failed")
+    }
+
+    /// Fallible identity allocation for a one-parent child. Allocation failure
+    /// leaves state unchanged. Checked logs require a stored, older parent;
+    /// generic logs permit IDs allocated while storage was disabled.
+    /// [`Self::derive`] fails fast rather than returning an invalid substitute.
+    pub fn try_derive(
+        &mut self,
+        parent_cv_id: &str,
+        origin: Option<Origin>,
+    ) -> Result<String, String> {
+        let mut origin = cleanup::OwnedOrigin::new(origin);
+        let usage = self.prospective_node(&[parent_cv_id], origin.as_ref())?;
+        let id = self.next_child_id(parent_cv_id)?;
 
         if self.enabled {
             let entry = CVEntry {
                 id: id.clone(),
                 parent_ids: vec![parent_cv_id.to_string()],
-                origin,
+                origin: origin.take(),
                 contributions: vec![],
                 deleted: None,
             };
             self.entries.insert(id.clone(), entry);
         }
 
-        id
+        self.append_graph_record(|| JournalEvent::Derive {
+            entity: JournalEntity(compact_id_sequence(&id).expect("checked compact identity")),
+        });
+        self.commit_usage(usage);
+        Ok(id)
     }
 
     /// Create a new CV descended from multiple existing CVs.
@@ -502,22 +745,39 @@ impl CVLog {
     /// When `enabled` is `false`, the ID is still generated and returned,
     /// but no entry is stored.
     pub fn merge(&mut self, parent_cv_ids: &[&str], origin: Option<Origin>) -> String {
+        self.try_merge(parent_cv_ids, origin)
+            .expect("CV identity allocation failed")
+    }
+
+    /// Fallible identity allocation for a merge, preserving parent order and
+    /// duplicates. Checked logs enforce parent validity and resource budgets
+    /// before allocating; errors do not change state. [`Self::merge`] fails fast on allocation error.
+    pub fn try_merge(
+        &mut self,
+        parent_cv_ids: &[&str],
+        origin: Option<Origin>,
+    ) -> Result<String, String> {
+        let mut origin = cleanup::OwnedOrigin::new(origin);
+        let usage = self.prospective_node(parent_cv_ids, origin.as_ref())?;
         // The base for a merge comes from the origin if provided, else "00000000".
-        let base = Self::origin_base(origin.as_ref());
-        let id = self.next_root_id(&base);
+        let id = self.next_origin_id(origin.as_ref())?;
 
         if self.enabled {
             let entry = CVEntry {
                 id: id.clone(),
                 parent_ids: parent_cv_ids.iter().map(|s| s.to_string()).collect(),
-                origin,
+                origin: origin.take(),
                 contributions: vec![],
                 deleted: None,
             };
             self.entries.insert(id.clone(), entry);
         }
 
-        id
+        self.append_graph_record(|| JournalEvent::Merge {
+            entity: JournalEntity(compact_id_sequence(&id).expect("checked compact identity")),
+        });
+        self.commit_usage(usage);
+        Ok(id)
     }
 
     /// Record that an entity was intentionally removed.
@@ -550,17 +810,43 @@ impl CVLog {
         reason: &str,
         meta: HashMap<String, Value>,
     ) {
+        self.try_delete(cv_id, source, reason, meta)
+            .expect("CV deletion failed");
+    }
+
+    /// Fallible tombstone recording. Checked deletion is permanent: a second
+    /// deletion is rejected before it can replace the original reason/history.
+    pub fn try_delete(
+        &mut self,
+        cv_id: &str,
+        source: &str,
+        reason: &str,
+        meta: HashMap<String, Value>,
+    ) -> Result<(), String> {
+        let mut meta = cleanup::OwnedMetadata::new(meta);
+        let usage = self.prospective_event(cv_id, source, reason, meta.as_ref())?;
         if !self.enabled {
-            return;
+            return Ok(());
         }
 
         if let Some(entry) = self.entries.get_mut(cv_id) {
+            if let Some(previous) = entry.deleted.take() {
+                cleanup::metadata(previous.meta);
+            }
             entry.deleted = Some(DeletionRecord {
                 source: source.to_string(),
                 reason: reason.to_string(),
-                meta,
+                meta: meta.take(),
             });
         }
+        if self.checked.is_some() {
+            self.record_source(source);
+        }
+        self.append_graph_record(|| JournalEvent::Deletion {
+            entity: JournalEntity(compact_id_sequence(cv_id).expect("checked compact identity")),
+        });
+        self.commit_usage(usage);
+        Ok(())
     }
 
     /// Record that a stage examined this entity but made no changes.
@@ -587,7 +873,17 @@ impl CVLog {
         // passthrough is a special contribution with tag "passthrough".
         // We don't use the Result — passthrough on a deleted entry is silently
         // ignored (the entity is gone; recording that we saw it is harmless).
-        let _ = self.contribute(cv_id, source, "passthrough", HashMap::new());
+        if self.checked.is_some() {
+            self.try_passthrough(cv_id, source)
+                .expect("CV passthrough failed");
+        } else {
+            let _ = self.try_passthrough(cv_id, source);
+        }
+    }
+
+    /// Fallible no-change event; compiler paths must propagate checked errors.
+    pub fn try_passthrough(&mut self, cv_id: &str, source: &str) -> Result<(), String> {
+        self.contribute(cv_id, source, "passthrough", HashMap::new())
     }
 
     // -----------------------------------------------------------------------
@@ -635,34 +931,10 @@ impl CVLog {
     /// assert_eq!(log.ancestors(&c), vec![b.clone(), a.clone()]);
     /// ```
     pub fn ancestors(&self, cv_id: &str) -> Vec<String> {
-        // BFS: process parents level by level so that "nearest first" holds.
-        let mut result = Vec::new();
-        let mut visited = std::collections::HashSet::new();
-        visited.insert(cv_id.to_string());
-
-        // Seed the queue with the direct parents of cv_id.
-        let mut queue = std::collections::VecDeque::new();
-        if let Some(entry) = self.entries.get(cv_id) {
-            for p in &entry.parent_ids {
-                if visited.insert(p.clone()) {
-                    queue.push_back(p.clone());
-                }
-            }
+        if !self.entries.contains_key(cv_id) {
+            return vec![];
         }
-
-        // BFS over all ancestors.
-        while let Some(current) = queue.pop_front() {
-            result.push(current.clone());
-            if let Some(entry) = self.entries.get(&current) {
-                for p in &entry.parent_ids {
-                    if visited.insert(p.clone()) {
-                        queue.push_back(p.clone());
-                    }
-                }
-            }
-        }
-
-        result
+        self.try_ancestors(cv_id).expect("CV ancestry query failed")
     }
 
     /// Return all CV IDs that have this CV ID anywhere in their ancestor chain.
@@ -687,44 +959,11 @@ impl CVLog {
     /// assert_eq!(desc.len(), 2);
     /// ```
     pub fn descendants(&self, cv_id: &str) -> Vec<String> {
-        // Build a reverse parent→children index for efficient lookup.
-        // Key: parent_id. Value: list of child IDs that have this parent.
-        let mut children_of: HashMap<String, Vec<String>> = HashMap::new();
-        for (id, entry) in &self.entries {
-            for parent in &entry.parent_ids {
-                children_of
-                    .entry(parent.clone())
-                    .or_default()
-                    .push(id.clone());
-            }
+        if !self.entries.contains_key(cv_id) {
+            return vec![];
         }
-
-        // BFS from cv_id through the children index.
-        let mut result = Vec::new();
-        let mut visited = std::collections::HashSet::new();
-        visited.insert(cv_id.to_string());
-
-        let mut queue = std::collections::VecDeque::new();
-        if let Some(children) = children_of.get(cv_id) {
-            for child in children {
-                if visited.insert(child.clone()) {
-                    queue.push_back(child.clone());
-                }
-            }
-        }
-
-        while let Some(current) = queue.pop_front() {
-            result.push(current.clone());
-            if let Some(children) = children_of.get(&current) {
-                for child in children {
-                    if visited.insert(child.clone()) {
-                        queue.push_back(child.clone());
-                    }
-                }
-            }
-        }
-
-        result
+        self.try_descendants(cv_id)
+            .expect("CV descendants query failed")
     }
 
     /// Return the ordered contributions for a CV ID.
@@ -769,9 +1008,10 @@ impl CVLog {
     /// For a linear chain `A → B → C → D`, `lineage("D")` returns
     /// `[entry_A, entry_B, entry_C, entry_D]`.
     ///
-    /// For merged CVs, all branches are included. The ordering is ancestors
-    /// first, entity last — but within the ancestor set, ordering follows BFS
-    /// from nearest to most distant (reversed to oldest-first).
+    /// Shared-ancestor DAGs use deterministic topological order: every parent
+    /// precedes its child. This topology does not encode execution chronology.
+    /// Invalid graphs or exhausted query budgets fail fast; use try_lineage for
+    /// a fallible query returning borrowed entries.
     ///
     /// Returns an empty `Vec` when the entity is not found.
     ///
@@ -792,23 +1032,11 @@ impl CVLog {
         if !self.entries.contains_key(cv_id) {
             return vec![];
         }
-
-        // Get ancestors (nearest first), then reverse to get oldest first.
-        let mut ancestor_ids = self.ancestors(cv_id);
-        ancestor_ids.reverse(); // now oldest first
-
-        // Build the lineage: all ancestors (oldest first) + the entity itself.
-        let mut result = Vec::new();
-        for id in &ancestor_ids {
-            if let Some(entry) = self.entries.get(id) {
-                result.push(entry.clone());
-            }
-        }
-        if let Some(entry) = self.entries.get(cv_id) {
-            result.push(entry.clone());
-        }
-
-        result
+        self.try_lineage(cv_id)
+            .expect("CV lineage query failed")
+            .into_iter()
+            .cloned()
+            .collect()
     }
 
     // -----------------------------------------------------------------------
@@ -828,30 +1056,12 @@ impl CVLog {
     /// }
     /// ```
     ///
-    /// # Implementation note
-    ///
-    /// We use `serde_json` directly here because our data types already use
-    /// `serde_json::Value` for meta fields. Converting the entire structure
-    /// through the internal `JsonValue` pipeline would require a complex
-    /// double-conversion. For the CV package, `serde_json` IS the right tool
-    /// because our data model is inherently JSON-native.
+    /// Object keys are sorted at every level; arrays and numbers are preserved.
+    /// Checked logs validate the entire graph before encoding. Compatibility
+    /// logs retain allocator-only snapshot semantics, with finite payload and
+    /// encoding budgets. Output bytes are limited as they are produced.
     pub fn to_json_string(&self) -> Result<String, String> {
-        // Build a serde-serializable snapshot.
-        // We need a wrapper struct for the top-level shape.
-        #[derive(Serialize)]
-        struct LogSnapshot<'a> {
-            entries: &'a HashMap<String, CVEntry>,
-            pass_order: &'a Vec<String>,
-            enabled: bool,
-        }
-
-        let snap = LogSnapshot {
-            entries: &self.entries,
-            pass_order: &self.pass_order,
-            enabled: self.enabled,
-        };
-
-        serde_json::to_string(&snap).map_err(|e| format!("serialization error: {}", e))
+        canonical::log(self)
     }
 
     /// Reconstruct a CVLog from its JSON representation.
@@ -864,7 +1074,8 @@ impl CVLog {
     /// # Errors
     ///
     /// Returns `Err` if the JSON is malformed or does not match the expected
-    /// CVLog schema.
+    /// CVLog schema. This compatibility import does not establish full graph
+    /// validity; use [`Self::from_checked_json`] for complete checked evidence.
     ///
     /// # Examples
     ///
@@ -878,15 +1089,51 @@ impl CVLog {
     /// assert_eq!(log2.get(&id).unwrap().id, id);
     /// ```
     pub fn from_json_string(s: &str) -> Result<Self, String> {
-        #[derive(Deserialize)]
-        struct LogSnapshot {
-            entries: HashMap<String, CVEntry>,
-            pass_order: Vec<String>,
-            enabled: bool,
+        let (declared, work) = bounded_json::declares_journal(s)?;
+        if declared {
+            return Self::from_checked_json_with_work(s, GraphLimits::default(), work);
         }
-
         let snap: LogSnapshot =
             serde_json::from_str(s).map_err(|e| format!("deserialization error: {}", e))?;
+        Self::from_snapshot(snap)
+    }
+
+    fn from_snapshot(snap: LogSnapshot) -> Result<Self, String> {
+        if snap.view.is_some() {
+            return Err("filtered CV view is not a full reloadable log".into());
+        }
+        let compact_sequence = match &snap.identity {
+            Some(identity) => {
+                if identity.scheme != "compact-v1" {
+                    return Err("unsupported identity scheme".into());
+                }
+                let last = fixed_hex_sequence(&identity.last_sequence)?;
+                for (key, entry) in &snap.entries {
+                    if key != &entry.id {
+                        return Err("compact entry key does not match its identity".into());
+                    }
+                    if compact_id_sequence(key)? > last {
+                        return Err("compact identity exceeds allocation state".into());
+                    }
+                    for parent in &entry.parent_ids {
+                        if compact_id_sequence(parent)? > last {
+                            return Err("compact parent exceeds allocation state".into());
+                        }
+                    }
+                }
+                Some(last)
+            }
+            None => {
+                if snap.entries.iter().any(|(key, entry)| {
+                    key.starts_with("cv1.")
+                        || entry.id.starts_with("cv1.")
+                        || entry.parent_ids.iter().any(|id| id.starts_with("cv1."))
+                }) {
+                    return Err("compact identities require explicit allocation state".into());
+                }
+                None
+            }
+        };
 
         // Reconstruct the sequence counters from the existing IDs.
         // An ID like "a3f1.3" means base "a3f1" has counter ≥ 3.
@@ -897,51 +1144,57 @@ impl CVLog {
         let mut base_counters: HashMap<String, u32> = HashMap::new();
         let mut child_counters: HashMap<String, u32> = HashMap::new();
 
-        for id in snap.entries.keys() {
-            let parts: Vec<&str> = id.splitn(2, '.').collect();
-            if parts.len() < 2 {
-                continue;
-            }
-            let base = parts[0];
+        if compact_sequence.is_none() {
+            for id in snap.entries.keys() {
+                let parts: Vec<&str> = id.splitn(2, '.').collect();
+                if parts.len() < 2 {
+                    continue;
+                }
+                let base = parts[0];
 
-            // Split the suffix "3.2.1" into segments.
-            let suffix_parts: Vec<&str> = id.split('.').collect();
-            // suffix_parts[0] = base, suffix_parts[1] = first N, ...
+                // Split the suffix "3.2.1" into segments.
+                let suffix_parts: Vec<&str> = id.split('.').collect();
+                // suffix_parts[0] = base, suffix_parts[1] = first N, ...
 
-            if suffix_parts.len() >= 2 {
-                // Root or top-level: the first N after the base.
-                if let Ok(n) = suffix_parts[1].parse::<u32>() {
-                    let entry = base_counters.entry(base.to_string()).or_insert(0);
-                    if n > *entry {
-                        *entry = n;
+                if suffix_parts.len() >= 2 {
+                    // Root or top-level: the first N after the base.
+                    if let Ok(n) = suffix_parts[1].parse::<u32>() {
+                        let entry = base_counters.entry(base.to_string()).or_insert(0);
+                        if n > *entry {
+                            *entry = n;
+                        }
                     }
                 }
-            }
 
-            if suffix_parts.len() >= 3 {
-                // Derived: "base.N.M" → parent is "base.N", child sequence is M.
-                // More deeply nested: "base.N.M.K" → parent is "base.N.M", child is K.
-                // We need to update child_counters for EVERY prefix.
-                for split_at in 2..suffix_parts.len() {
-                    let parent_id = suffix_parts[..split_at].join(".");
-                    let child_seq = match suffix_parts[split_at].parse::<u32>() {
-                        Ok(n) => n,
-                        Err(_) => continue,
-                    };
-                    let entry = child_counters.entry(parent_id).or_insert(0);
-                    if child_seq > *entry {
-                        *entry = child_seq;
+                if suffix_parts.len() >= 3 {
+                    // Derived: "base.N.M" → parent is "base.N", child sequence is M.
+                    // More deeply nested: "base.N.M.K" → parent is "base.N.M", child is K.
+                    // We need to update child_counters for EVERY prefix.
+                    for split_at in 2..suffix_parts.len() {
+                        let parent_id = suffix_parts[..split_at].join(".");
+                        let child_seq = match suffix_parts[split_at].parse::<u32>() {
+                            Ok(n) => n,
+                            Err(_) => continue,
+                        };
+                        let entry = child_counters.entry(parent_id).or_insert(0);
+                        if child_seq > *entry {
+                            *entry = child_seq;
+                        }
                     }
                 }
             }
         }
-
         Ok(CVLog {
+            pass_sources: snap.pass_order.iter().cloned().collect(),
+            checked: None,
+            allocator_only_import: true,
             entries: snap.entries,
             pass_order: snap.pass_order,
             enabled: snap.enabled,
             base_counters,
             child_counters,
+            compact_sequence,
+            journal: None,
         })
     }
 }

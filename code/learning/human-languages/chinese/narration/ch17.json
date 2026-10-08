@@ -4,7 +4,7 @@
   "chapter": 17,
   "title": "Language or country?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:8e54dd6017a221a2",
+  "sourceHash": "fnv1a64:ba0da6a3d1e1f4a7",
   "lessons": [
     {
       "id": "ZH-C17-hear-zhongwen",
@@ -294,7 +294,7 @@
         "writing-type",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:7097aad034ac8c5e",
+      "sourceHash": "fnv1a64:1484c55fc5246966",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -318,7 +318,7 @@
             },
             {
               "kind": "speech",
-              "text": "Answer 谢谢 with 不谢. Then look at 文 (wén) for five seconds and cover it."
+              "text": "Answer 谢谢 with 不谢."
             }
           ]
         },
@@ -327,6 +327,10 @@
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at 文 (wén) for five seconds and cover it."
+            },
             {
               "kind": "pause",
               "seconds": 8,
@@ -843,7 +847,7 @@
         "writing-type",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:b719cea53805d4fb",
+      "sourceHash": "fnv1a64:ad6a9a1520effb9d",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -867,7 +871,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say what 女 means. Then look at 国 (guó) for five seconds and cover it."
+              "text": "Say what 女 means."
             }
           ]
         },
@@ -876,6 +880,10 @@
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at 国 (guó) for five seconds and cover it."
+            },
             {
               "kind": "pause",
               "seconds": 10,

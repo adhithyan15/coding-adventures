@@ -862,12 +862,24 @@
               "text": "Chapter 5 gave you the frame ਮੈਂ … -ਦਾ/-ਦੀ ਹਾਂ. Drop the new stems into it:"
             },
             {
-              "kind": "speech",
-              "text": "[YOU SAY (m.): maiṁ panjābī paṛhdā hāṁ, (f.): maiṁ panjābī paṛhdī hāṁ]."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ panjābī paṛhdā hāṁ, (f.): maiṁ panjābī paṛhdī hāṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY (m.): *maiṁ panjābī paṛhdā hāṁ* · (f.): *maiṁ panjābī paṛhdī hāṁ*]",
+              "qualifier": "(m.)"
             },
             {
-              "kind": "speech",
-              "text": "[YOU SAY (m.): maiṁ panjābī likhdā hāṁ, (f.): maiṁ panjābī likhdī hāṁ]."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maiṁ panjābī likhdā hāṁ, (f.): maiṁ panjābī likhdī hāṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY (m.): *maiṁ panjābī likhdā hāṁ* · (f.): *maiṁ panjābī likhdī hāṁ*]",
+              "qualifier": "(m.)"
             },
             {
               "kind": "prompt",

@@ -3197,6 +3197,26 @@ fn emit_widget_tree(
     let mut out = emit_widget_tree_inner(node, indent, part_styles, component, emits, ctx)?;
     let pad = " ".repeat(indent);
 
+    // Leaf widgets do not expose a common width argument, so preserve authored
+    // fixed widths with one wrapper shared by the text, input, and button
+    // paths. Container primitives already lower width themselves, and the
+    // remaining leaf emitters either have geometry-specific sizing or need a
+    // separate constraint-aware design. In particular, percentages are not
+    // read here: marking `100%` handled while emitting no constraint would
+    // hide the exact degradation audit this wrapper is meant to improve.
+    if matches!(
+        node.tag.as_str(),
+        "Text" | "HostInput" | "Input" | "HostButton"
+    ) {
+        if let Some(width) = part_fixed_width(node, part_styles) {
+            let body = out.trim_end_matches('\n');
+            out = format!(
+                "{pad}SizedBox(\n{pad}  width: {width},\n{pad}  child: {},\n{pad})\n",
+                body.trim_start()
+            );
+        }
+    }
+
     // A scroll view only scrolls when its viewport is bounded. Container
     // primitives consume `height` in their own lowering, but HostScroll has
     // no native height argument; wrap it in a SizedBox so authored fixed
@@ -3286,6 +3306,19 @@ fn part_fixed_height(node: &LayoutNode, part_styles: &HashMap<String, String>) -
     let props = part_styles.get(part)?;
     let parsed = parse_style_props(props);
     style_prop(&parsed, "height").and_then(|value| fixed_pixel_length(value))
+}
+
+/// The authored fixed pixel width for a part, recording support only after the
+/// value is proven representable as a finite non-negative Dart length.
+fn part_fixed_width(node: &LayoutNode, part_styles: &HashMap<String, String>) -> Option<String> {
+    let part = node.part_name.as_deref()?;
+    let props = part_styles.get(part)?;
+    let parsed = parse_style_props(props);
+    let width = parsed
+        .get("width")
+        .and_then(|value| fixed_pixel_length(value))?;
+    record_style_read("width");
+    Some(width)
 }
 
 /// The `opacity:` argument for a part, or `None` when none is authored.
@@ -3758,8 +3791,16 @@ fn emit_container(
     } else {
         None
     };
+    let cross_axis_alignment = flutter_cross_axis_alignment(&props, widget);
+    let cross_axis_arg = cross_axis_alignment
+        .map(|alignment| format!("{inner_pad}crossAxisAlignment: {alignment},\n"))
+        .unwrap_or_default();
     let body = if children.is_empty() {
-        format!("{pad}const {widget}(children: [])\n")
+        if let Some(alignment) = cross_axis_alignment {
+            format!("{pad}const {widget}(crossAxisAlignment: {alignment}, children: [])\n")
+        } else {
+            format!("{pad}const {widget}(children: [])\n")
+        }
     } else if let Some(gap) = gap {
         let axis = if widget == "Row" {
             "Axis.horizontal"
@@ -3767,10 +3808,10 @@ fn emit_container(
             "Axis.vertical"
         };
         format!(
-            "{pad}{widget}(\n{inner_pad}children: _mosaicWithGap(<Widget>[\n{children}{inner_pad}], {gap}, {axis}),\n{pad})\n"
+            "{pad}{widget}(\n{cross_axis_arg}{inner_pad}children: _mosaicWithGap(<Widget>[\n{children}{inner_pad}], {gap}, {axis}),\n{pad})\n"
         )
     } else {
-        format!("{pad}{widget}(\n{inner_pad}children: [\n{children}{inner_pad}],\n{pad})\n")
+        format!("{pad}{widget}(\n{cross_axis_arg}{inner_pad}children: [\n{children}{inner_pad}],\n{pad})\n")
     };
 
     // `Row`/`Column`/`Stack` have no decoration mechanism of their own
@@ -3908,6 +3949,20 @@ fn emit_container(
         ));
     }
     Ok(body)
+}
+
+fn flutter_cross_axis_alignment(
+    props: &HashMap<String, String>,
+    widget: &str,
+) -> Option<&'static str> {
+    let value = props.get("align")?.trim();
+    let alignment = match (widget, value) {
+        ("Row", "center-vertical" | "center")
+        | ("Column", "center-horizontal" | "center") => "CrossAxisAlignment.center",
+        _ => return None,
+    };
+    record_style_read("align");
+    Some(alignment)
 }
 
 /// Walk a sibling list with two pieces of sibling-aware behaviour:
@@ -5718,7 +5773,11 @@ fn emit_host_input(
     emits: &[EmitDecl],
     ctx: TableCtx,
 ) -> Result<String, PipelineEmitError> {
-    let direct_row_child = ctx.direct_row_child;
+    // A direct Row child normally expands so a text field receives bounded
+    // constraints. A fixed authored width is already a real bound and must win
+    // over that fallback; the shared leaf wrapper above applies the SizedBox.
+    let fixed_width = part_fixed_width(node, part_styles);
+    let direct_row_child = ctx.direct_row_child && fixed_width.is_none();
     let pad = " ".repeat(indent);
     let field_pad = if direct_row_child {
         " ".repeat(indent + 2)
@@ -5985,6 +6044,7 @@ fn inherits_enclosing_font(node: &LayoutNode, part_styles: &HashMap<String, Stri
 /// | `padding`         | `isDense: true, contentPadding: EdgeInsets`  |
 /// | `border: 0 / none`| `border: InputBorder.none`                   |
 /// | `border: W solid C` | `OutlineInputBorder(borderSide: ..)`       |
+/// | `border-radius`   | `OutlineInputBorder(borderRadius: ..)`       |
 /// | `background`      | `filled: true, fillColor: ..`                |
 ///
 /// Text colour and font are NOT lowered here. They belong on `TextField`'s
@@ -5994,11 +6054,11 @@ fn inherits_enclosing_font(node: &LayoutNode, part_styles: &HashMap<String, Stri
 /// broke Compose (`Color.Transparent`) and Qt (duplicate property) on
 /// #15048. Tracked separately rather than guessed at.
 ///
-/// Anything unrecognised is dropped, which is the same silent loss every
-/// other unlowered Flutter property suffers: this emitter has no style-drop
-/// reporting at all (#12022). Dropping is at least correct-by-omission --
+/// Anything unrecognised is dropped and remains visible in the emitter's
+/// style-degradation report (#12022). Dropping is correct-by-omission:
 /// `css_color_to_dart` returns `None` for `inherit` and `transparent`
-/// rather than inventing a brush.
+/// rather than inventing a brush, and invalid or context-dependent radii
+/// stay unconsumed rather than being misreported as supported.
 fn host_input_decoration_arg(
     node: &LayoutNode,
     part_styles: &HashMap<String, String>,
@@ -6100,10 +6160,22 @@ fn host_input_border_expr(props: &HashMap<String, String>) -> Option<String> {
         side.push(format!("color: {color}"));
     }
     side.push(format!("width: {side_width}"));
-    Some(format!(
-        "OutlineInputBorder(borderSide: BorderSide({}))",
-        side.join(", ")
-    ))
+    let mut outline = vec![format!("borderSide: BorderSide({})", side.join(", "))];
+
+    // Read the property through the recorder only after proving that this
+    // widget occurrence has an outline and that the value is representable.
+    // A direct `style_prop` read before either check would make radius-only
+    // and percentage declarations disappear from #12022's report even though
+    // no Dart consumed them.
+    if let Some(radius) = props
+        .get("border-radius")
+        .and_then(|value| strict_pixel_length(value))
+    {
+        record_style_read("border-radius");
+        outline.push(format!("borderRadius: BorderRadius.circular({radius})"));
+    }
+
+    Some(format!("OutlineInputBorder({})", outline.join(", ")))
 }
 
 /// #15142 -- lower a `HostInput`'s text properties onto `TextField`'s
@@ -11193,6 +11265,91 @@ mod tests {
         assert!(styled.contains("Expanded(flex: 2, child:"), "{styled}");
     }
 
+    #[test]
+    fn fixed_leaf_widths_wrap_text_input_and_button_but_leave_percentages_reported() {
+        fn styled_leaf(tag: &str, part: &str, prop_name: &str, value: &str) -> LayoutNode {
+            LayoutNode {
+                tag: tag.into(),
+                part_name: Some(part.into()),
+                props: vec![LayoutProp {
+                    name: prop_name.into(),
+                    value: LayoutPropValue::String(value.into()),
+                }],
+                children: vec![],
+            }
+        }
+
+        fn width_part(name: &str, value: &str) -> PartStyle {
+            PartStyle {
+                name: name.into(),
+                base: vec![StyleProp {
+                    name: "width".into(),
+                    value: value.into(),
+                }],
+                transitions: vec![],
+                states: vec![],
+            }
+        }
+
+        let m = component("LeafWidths", vec![], vec![]);
+        let l = layout(
+            "LeafWidths",
+            node_with(
+                "Row",
+                vec![],
+                vec![
+                    styled_leaf("Text", "timeline-name", "content", "Task"),
+                    styled_leaf("HostInput", "checklist-input", "value", ""),
+                    styled_leaf("HostButton", "theme-toggle", "label", "Theme"),
+                    styled_leaf("Text", "calendar-day", "content", "Mon"),
+                ],
+            ),
+        );
+        let s = StyleDef {
+            component_name: "LeafWidths".into(),
+            parts: vec![
+                width_part("timeline-name", "150"),
+                width_part("checklist-input", "220px"),
+                width_part("theme-toggle", "34"),
+                width_part("calendar-day", "14.2857%"),
+            ],
+        };
+
+        let out = from_pipeline(&m, &l, &s)
+            .expect("fixed leaf widths emit")
+            .output;
+        assert!(
+            out.contains("width: 150,") && out.contains("child: Text(\"Task\")"),
+            "fixed Text width must wrap the emitted widget:\n{out}"
+        );
+        assert!(
+            out.contains("width: 220,") && out.contains("child: _MosaicInputController("),
+            "fixed HostInput width must replace the Row's Expanded fallback:\n{out}"
+        );
+        assert!(
+            out.contains("width: 34,") && out.contains("child: ElevatedButton("),
+            "fixed HostButton width must wrap the emitted widget:\n{out}"
+        );
+        assert!(
+            !out.contains("Expanded("),
+            "a fixed-width input must not also be expanded by its Row:\n{out}"
+        );
+        assert!(
+            !out.contains("width: 0"),
+            "percentage width collapsed:\n{out}"
+        );
+
+        let dropped = dropped_style_properties(&m, &l, &s);
+        assert_eq!(
+            dropped
+                .iter()
+                .map(|drop| (drop.part.as_str(), drop.name.as_str()))
+                .collect::<Vec<_>>(),
+            vec![("calendar-day", "width")],
+            "only the deliberately unsupported percentage width should remain"
+        );
+    }
+
     /// Regression: `HostInput { onChange: emit: onFormulaChange }`
     /// must lower to a real `dispatch(...)` call, not a literal
     /// `/* TODO: ... */` placeholder.  The dispatched event subclass
@@ -16071,6 +16228,125 @@ mod tests {
         }
     }
 
+    #[test]
+    fn host_input_radius_reaches_dart_and_leaves_no_style_drop() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", flex_node_with_part("HostInput", "field", vec![]));
+        let s = style_with_part(
+            "X",
+            "field",
+            vec![
+                StyleProp {
+                    name: "border".into(),
+                    value: "1px solid #32463b".into(),
+                },
+                StyleProp {
+                    name: "border-radius".into(),
+                    value: "8px".into(),
+                },
+            ],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains("borderRadius: BorderRadius.circular(8)"),
+            "authored HostInput radius must reach OutlineInputBorder, got:\n{out}"
+        );
+        assert!(
+            dropped_style_properties(&m, &l, &s).is_empty(),
+            "implemented HostInput radius was reported dropped"
+        );
+    }
+
+    #[test]
+    fn host_input_radius_stays_reported_when_it_cannot_be_lowered() {
+        for props in [
+            vec![StyleProp {
+                name: "border-radius".into(),
+                value: "8px".into(),
+            }],
+            vec![
+                StyleProp {
+                    name: "border".into(),
+                    value: "1px solid #32463b".into(),
+                },
+                StyleProp {
+                    name: "border-radius".into(),
+                    value: "50%".into(),
+                },
+            ],
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = layout("X", flex_node_with_part("HostInput", "field", vec![]));
+            let s = style_with_part("X", "field", props);
+
+            let out = from_pipeline(&m, &l, &s).expect("ok").output;
+            assert!(!out.contains("borderRadius:"), "got:\n{out}");
+            let drops = dropped_style_properties(&m, &l, &s);
+            assert_eq!(
+                drops
+                    .iter()
+                    .map(|drop| drop.name.as_str())
+                    .collect::<Vec<_>>(),
+                vec!["border-radius"],
+                "only the unlowerable radius should remain: {drops:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn flex_align_lowers_to_cross_axis_alignment() {
+        for (tag, value) in [
+            ("Row", "center-vertical"),
+            ("Column", "center-horizontal"),
+        ] {
+            let m = component("X", vec![], vec![]);
+            let l = layout(
+                "X",
+                flex_node_with_part(tag, "items", vec![text_node("one"), text_node("two")]),
+            );
+            let s = style_with_part(
+                "X",
+                "items",
+                vec![StyleProp {
+                    name: "align".into(),
+                    value: value.into(),
+                }],
+            );
+
+            let out = from_pipeline(&m, &l, &s).expect("ok").output;
+
+            assert!(
+                out.contains("crossAxisAlignment: CrossAxisAlignment.center"),
+                "got:\n{out}"
+            );
+            assert!(dropped_style_properties(&m, &l, &s).is_empty());
+        }
+    }
+
+    #[test]
+    fn unsupported_flutter_align_value_remains_a_reported_drop() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part("Row", "items", vec![text_node("one")]),
+        );
+        let s = style_with_part(
+            "X",
+            "items",
+            vec![StyleProp {
+                name: "align".into(),
+                value: "space-between".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(!out.contains("crossAxisAlignment:"), "got:\n{out}");
+        let drops = dropped_style_properties(&m, &l, &s);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "align");
+    }
+
     // ====================================================================
     // UI85 — Flutter flex gap (#14804)
     // ====================================================================
@@ -17393,10 +17669,47 @@ mod host_input_style_tests {
         );
     }
 
+    /// #16944 -- an outlined input already has the native shape object that
+    /// can carry the authored corner radius. Losing it leaves Flutter's
+    /// Material default in place and makes TaskApp's text fields disagree
+    /// with every other backend.
+    #[test]
+    fn an_outlined_input_keeps_its_authored_border_radius() {
+        let got = host_input_border_expr(&props(&[
+            ("border", "1px solid #32463b"),
+            ("border-radius", "8px"),
+        ]));
+        assert_eq!(
+            got.as_deref(),
+            Some(
+                "OutlineInputBorder(borderSide: BorderSide(color: const Color(0xFF32463B), width: 1), borderRadius: BorderRadius.circular(8))"
+            )
+        );
+    }
+
+    /// A radius cannot be represented without an outline, and percentages
+    /// have no context-independent pixel value. Neither case may invent a
+    /// different input shape merely to silence the degradation reporter.
+    #[test]
+    fn an_unlowerable_input_radius_does_not_invent_an_outline() {
+        assert_eq!(
+            host_input_border_expr(&props(&[("border-radius", "8px")])),
+            None
+        );
+        let got = host_input_border_expr(&props(&[
+            ("border", "1px solid #32463b"),
+            ("border-radius", "50%"),
+        ]));
+        assert_eq!(
+            got.as_deref(),
+            Some("OutlineInputBorder(borderSide: BorderSide(color: const Color(0xFF32463B), width: 1))")
+        );
+    }
+
     /// A style this emitter cannot draw is left to Material's default
-    /// rather than silently redrawn as `solid`. Flutter has no style-drop
-    /// reporting (#12022), so approximating here would be an unrecorded
-    /// lie about what the author asked for.
+    /// rather than silently redrawn as `solid`. The degradation reporter
+    /// keeps that unsupported style visible (#12022), so approximating here
+    /// would be a lie about what the author asked for.
     #[test]
     fn an_undrawable_border_style_is_left_alone() {
         assert_eq!(

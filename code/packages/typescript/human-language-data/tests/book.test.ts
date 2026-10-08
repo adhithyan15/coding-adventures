@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   bookBlockTitle,
   bookVoice,
+  findPrintedDeliveryCues,
   renderBookAnswerKey,
   renderBookChapter,
   renderBookGlossary,
@@ -805,5 +806,268 @@ describe("the book voice", () => {
     expect(generated.tex).not.toMatch(/YOU SAY/);
     expect(generated.tex).not.toMatch(/REPEAT x/);
     expect(generated.tex).toContain("Say these aloud:");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Cues wherever an author's editor left them
+// ---------------------------------------------------------------------------
+//
+// Every case below printed `{[}...{]}` in a shipped chapter before the book and
+// the narration shared one cue grammar (delivery-cue.ts). Each `it` names the
+// shape; the corpus example it stands for is in the comment.
+
+/** A one-lesson chapter whose warm-up is `body`, rendered to LaTeX. */
+function chapterTex(body: string, scripted = false): string {
+  const lesson = parseLesson(
+    source("A", 10, "hello").replace("[PAUSE 2s] Recall **hello**.", body),
+    "test",
+  );
+  const chapterTarget = scripted
+    ? { ...target, unicodeScript: "Devanagari", scriptCommand: "hi" }
+    : target;
+  return renderBookChapter(chapterTarget, [lesson]).tex;
+}
+
+describe("a delivery cue wrapped across source lines", () => {
+  // Each verb the corpus has wrapped, two lines and three: sanskrit ch05's
+  // `[YOU HEAR: the dependent vowel sign vocalic r, which replaces a consonant's
+  // \n built-in *a*]` is the HEAR case, gujarati ch21's is the SAY-then-prose one.
+  const verbs: Array<[string, string]> = [
+    ["WRITE", "Write it"],
+    ["SAY", "Say it"],
+    ["TRACE", "Trace it"],
+    ["HEAR", "Hear"],
+    ["READ", "Read it"],
+    ["ANSWER", "Answer"],
+  ];
+
+  it.each(verbs)("converts a two-line [YOU %s: ...] exactly like a one-line one", (verb, label) => {
+    const wrapped = bookVoice(`[YOU ${verb}: the first half\nand the second half]`);
+    const oneLine = bookVoice(`[YOU ${verb}: the first half and the second half]`);
+    expect(wrapped).toBe(`*${label}:* the first half and the second half`);
+    expect(wrapped).toBe(oneLine);
+  });
+
+  it.each(verbs)("converts a three-line [YOU %s: ...]", (verb, label) => {
+    expect(bookVoice(`[YOU ${verb}: one\n  two\n  three]`)).toBe(`*${label}:* one two three`);
+  });
+
+  it("keeps the prose that follows the cue on the cue's last line", () => {
+    expect(
+      bookVoice(
+        "[YOU SAY: *tamne maḷīne ānand thayo — tamārũ nām shũ\nchhe*] Put the question first,\nanswer second.",
+      ),
+    ).toBe(
+      "*Say it:* *tamne maḷīne ānand thayo — tamārũ nām shũ chhe* Put the question first,\nanswer second.",
+    );
+  });
+
+  it("keeps the prose that precedes it, and the lines that do not wrap", () => {
+    expect(bookVoice("Look first.\nCover it. [YOU WRITE: the word,\nthen its meaning]\nCheck.")).toBe(
+      "Look first.\nCover it. *Write it:* the word, then its meaning\nCheck.",
+    );
+  });
+
+  it("converts a wrapped cue inside a numbered list item", () => {
+    expect(bookVoice("1. Cover the model. [YOU WRITE: the letter\n   once, slowly]\n2. Compare.")).toBe(
+      "1. Cover the model. *Write it:* the letter once, slowly\n2. Compare.",
+    );
+  });
+
+  it("converts a wrapped cue inside a bullet that also holds prose", () => {
+    expect(bookVoice('- "I finish at one." [YOU SAY: *Termino a\n  la una.*]')).toBe(
+      '- "I finish at one." *Say it:* *Termino a la una.*',
+    );
+  });
+
+  it("finishes a bullet's cue on a flush-left line (tamil ch29)", () => {
+    expect(
+      bookVoice("- [YOU SAY: the honest surprise —\n  all, unlike Tamil's\nneighbours]\n- [YOU SAY: two]"),
+    ).toBe("Say these aloud:\n\n- the honest surprise — all, unlike Tamil's neighbours\n- two");
+    // Without an open cue a flush-left line still ends the list, as before.
+    expect(bookVoice("- a plain bullet\nA paragraph.")).toBe("- a plain bullet\nA paragraph.");
+  });
+
+  it("deletes a wrapped pause and voices a wrapped repeat", () => {
+    expect(bookVoice("Cover it. [PAUSE\n5s] Which vowel?")).toBe("Cover it. Which vowel?");
+    expect(bookVoice("Say it slowly. [REPEAT\nx2]")).toBe("Say it slowly. *Twice through.*");
+  });
+
+  it("carries inline markup and script spans through to the LaTeX", () => {
+    const tex = chapterTex("[YOU WRITE: **नमस्ते** — the whole\nword, then *namaste*]", true);
+    expect(tex).toContain(
+      "\\emph{Write it:} \\textbf{\\hi{नमस्ते}} — the whole word, then \\emph{namaste}",
+    );
+    expect(findPrintedDeliveryCues(tex)).toEqual([]);
+  });
+
+  it("typesets a wrapped cue byte-for-byte like the same cue on one line", () => {
+    // Everything but the source-hash header line, which rightly differs: the
+    // two lessons are different files.
+    const body = (tex: string): string =>
+      tex
+        .split("\n")
+        .filter((line) => !line.startsWith("% canonical-source-hash:"))
+        .join("\n");
+    const wrapped = body(chapterTex("Now: [YOU SAY: **hola** and\n*adiós*] — twice."));
+    expect(wrapped).toBe(body(chapterTex("Now: [YOU SAY: **hola** and *adiós*] — twice.")));
+    expect(wrapped).toContain(
+      "Now: \\emph{Say it:} \\textbf{hola} and \\emph{adiós} — twice.",
+    );
+  });
+
+  it("never lets a cue reach across a blank line or into the next numbered item", () => {
+    // Both halves stay as authored: the gate below is what catches them.
+    expect(bookVoice("[YOU SAY: one\n\ntwo]")).toBe("[YOU SAY: one\n\ntwo]");
+    expect(bookVoice("1. [YOU SAY: one\n2. two]")).toBe("1. [YOU SAY: one\n2. two]");
+  });
+
+  it("converts a cue wrapped inside a blockquote, keeping the quote", () => {
+    expect(bookVoice("> Then: [YOU SAY: one\n> two] — done.\n> Next line.")).toBe(
+      "> Then: *Say it:* one two — done.\n> Next line.",
+    );
+    expect(bookVoice("> [PAUSE 2s]\n> After the pause.")).toBe("> After the pause.");
+    // A bare `>` is a paragraph break inside the quote: a cue never crosses it.
+    expect(bookVoice("> [YOU SAY: one\n>\n> two]")).toBe("> [YOU SAY: one\n>\n> two]");
+  });
+});
+
+describe("a delivery cue in the middle of a line", () => {
+  it("deletes a mid-sentence pause and the blank it leaves (hindi ch14)", () => {
+    expect(bookVoice("Cover the model. [PAUSE 5s] Which vowel did you learn?")).toBe(
+      "Cover the model. Which vowel did you learn?",
+    );
+    expect(bookVoice("- **to lift** — [PAUSE 4s] **ਚੁੱਕਣਾ**")).toBe("- **to lift** — **ਚੁੱਕਣਾ**");
+    expect(bookVoice("Ready? [PAUSE 2s]")).toBe("Ready?");
+    expect(bookVoice("the word [PAUSE 2s].")).toBe("the word.");
+  });
+
+  it("says a trailing repeat in words (chinese ch01)", () => {
+    expect(bookVoice("let it creak. [REPEAT x2]")).toBe("let it creak. *Twice through.*");
+    expect(bookVoice("then again. [REPEAT x3] Next.")).toBe("then again. *3 times through.* Next.");
+  });
+
+  it("voices every cue in a bullet, not one greedy span (marwadi ch01)", () => {
+    expect(bookVoice("- [YOU HEAR: *rām-rām sā*] [YOU ANSWER: **rām-rām sā**]")).toBe(
+      "- *Hear:* *rām-rām sā* *Answer:* **rām-rām sā**",
+    );
+  });
+
+  it("voices a cue that follows prose in a bullet (spanish ch409)", () => {
+    expect(bookVoice('- "I want a room." [YOU SAY: *Quiero una habitación.*]')).toBe(
+      '- "I want a room." *Say it:* *Quiero una habitación.*',
+    );
+  });
+
+  it("voices a cue that is followed by punctuation (punjabi ch01)", () => {
+    expect(bookVoice("Return it once: [YOU SAY: *dhannavād*].")).toBe(
+      "Return it once: *Say it:* *dhannavād*.",
+    );
+  });
+
+  it("drops a bullet that was nothing but a pause", () => {
+    expect(bookVoice("- [PAUSE 2s]\n- [YOU SAY: hola]")).toBe("- *Say it:* hola");
+  });
+});
+
+describe("a qualified delivery cue", () => {
+  it("prints the qualifier with the verb (hindi ch05, punjabi ch08)", () => {
+    expect(bookVoice("- [YOU SAY (m.): *boltā hūṁ*  ·  (f.): *boltī hūṁ*]")).toBe(
+      "- *Say it (m.):* *boltā hūṁ*  ·  (f.): *boltī hūṁ*",
+    );
+  });
+
+  it("prints a lower-case object and a comma clause (punjabi ch09, french ch29)", () => {
+    expect(bookVoice("- [YOU RUN the pattern: *kamm karnā*, *gall karnā*]")).toBe(
+      "- *Run through the pattern:* *kamm karnā*, *gall karnā*",
+    );
+    expect(bookVoice('- [YOU READ ALOUD, gathering the words one by one: "le chien"]')).toBe(
+      '- *Read aloud, gathering the words one by one:* "le chien"',
+    );
+  });
+
+  it("does not fold qualified cues under one lead-in that would lose the qualifier", () => {
+    expect(bookVoice("- [YOU SAY (m.): boltā]\n- [YOU SAY (f.): boltī]")).toBe(
+      "- *Say it (m.):* boltā\n- *Say it (f.):* boltī",
+    );
+  });
+});
+
+describe("a tab after a cue keyword", () => {
+  // The parser once wanted exactly one space after YOU / PAUSE / REPEAT while
+  // the keyword filter and the gate disagreed, so a tab printed raw AND passed.
+  it("is a cue like a space is", () => {
+    expect(bookVoice("[YOU\tSAY: hi]")).toBe("*Say it:* hi");
+    expect(bookVoice("[YOU SAY\t(m.): boltā]")).toBe("*Say it (m.):* boltā");
+    expect(bookVoice("Ready. [PAUSE\t2s] Go.")).toBe("Ready. Go.");
+    expect(bookVoice("Once more. [REPEAT\tx2]")).toBe("Once more. *Twice through.*");
+    expect(chapterTex("[YOU\tWRITE: the word]")).toContain("\\emph{Write it:} the word");
+  });
+
+  it("is caught by the gate like a space is", () => {
+    expect(findPrintedDeliveryCues("{[}YOU\tSAY: hi{]}\n[PAUSE\t2s]\nsee {[}REPEAT")).toEqual([
+      { line: 1, opener: "{[}YOU " },
+      { line: 2, opener: "[PAUSE " },
+      { line: 3, opener: "{[}REPEAT " },
+    ]);
+    expect(findPrintedDeliveryCues("{[}YOUR turn{]} [PAUSED] [YOU]")).toEqual([]);
+  });
+});
+
+describe("ordinary brackets", () => {
+  it("are never mistaken for cues", () => {
+    const glosses = "[I am your friend] and [bonjour] and a [link](https://example.test).";
+    expect(bookVoice(glosses)).toBe(glosses);
+    expect(bookVoice("[you: see below]")).toBe("[you: see below]");
+    expect(bookVoice("[YOU think: lower case is prose]")).toBe("[YOU think: lower case is prose]");
+    expect(bookVoice("\\[YOU SAY: escaped]")).toBe("\\[YOU SAY: escaped]");
+  });
+
+  it("cost linear time even when they never close", () => {
+    // Each shape below was quadratic in some draft of this scanner: a bracket
+    // scan per `[`, a re-read of the growing output per cue, a rescan of a
+    // bullet per flush-left line. Each now finishes in well under a second on
+    // a laptop; the ceiling is generous so a loaded CI runner cannot flake it.
+    const hostile = [
+      "[".repeat(200_000),
+      "a [REPEAT x2] ".repeat(40_000),
+      "a [PAUSE 1s]. ".repeat(40_000),
+      `- [YOU \n${"x\n".repeat(100_000)}`,
+    ];
+    for (const text of hostile) {
+      const started = performance.now();
+      bookVoice(text);
+      expect(performance.now() - started, text.slice(0, 20)).toBeLessThan(10_000);
+    }
+    expect(bookVoice("[".repeat(1_000))).toBe("[".repeat(1_000));
+  });
+
+  it("gather a bullet with tens of thousands of open-cue lazy lines, once each", () => {
+    // Every flush-left `[YOU a` line keeps a cue open, so every one joins the
+    // bullet. Re-scanning the growing bullet per line made this quadratic
+    // (28 s at 80,000 lines); the tracker reads each line once. The assertion
+    // is on the output, not the clock: a quadratic gatherer still times out.
+    const lines = 50_000;
+    const voiced = bookVoice(`- [YOU SAY: x\n${"[YOU a\n".repeat(lines)}`);
+    expect(voiced).toBe(`- [YOU SAY: x ${Array.from({ length: lines }, () => "[YOU a").join(" ")}\n`);
+  });
+});
+
+describe("findPrintedDeliveryCues", () => {
+  it("finds the escaped and the bare form of each cue, by line", () => {
+    expect(
+      findPrintedDeliveryCues(
+        "clean\n{[}YOU SAY: a{]}\n{[}PAUSE 2s{]} and [REPEAT x2]\n\\emph{Say it:} fine",
+      ),
+    ).toEqual([
+      { line: 2, opener: "{[}YOU " },
+      { line: 3, opener: "{[}PAUSE " },
+      { line: 3, opener: "[REPEAT " },
+    ]);
+  });
+
+  it("does not flag glosses that merely open with a capital I", () => {
+    expect(findPrintedDeliveryCues("{[}I am your friend{]} and {[}You{]}")).toEqual([]);
   });
 });

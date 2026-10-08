@@ -649,8 +649,14 @@
               "source": "[PAUSE 1s]"
             },
             {
-              "kind": "speech",
-              "text": "[YOU SAY (m.): chaltā hūṁ, (f.): chaltī hūṁ]."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "chaltā hūṁ, (f.): chaltī hūṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY (m.): *chaltā hūṁ*  ·  (f.): *chaltī hūṁ*]",
+              "qualifier": "(m.)"
             },
             {
               "kind": "prompt",

@@ -791,15 +791,41 @@ and lowers as a backend-neutral dark-red four-pixel path.
 
 ### TreeView Native Slice
 
-The initial Mermaid 11.16.1 TreeView slice recognizes `treeView-beta` and
+The complete pinned Mermaid 11.16.1 TreeView corpus recognizes `treeView-beta` and
 parses indentation-based and standard/heavy box-drawing hierarchies into
 dedicated tree IR. File/directory identity, quoted and bare labels, title and
 accessibility metadata, `:::class`, `icon()`, and `##` descriptions survive
 through deterministic row layout and backend-neutral connector, highlight,
 marker, and glyph PaintInstructions with native Metal-to-PNG validation.
-Configuration-driven default and filename/extension icon maps, external icon
-pack artwork, custom row geometry, exact typography, and interactive behavior
-remain unsupported at the partial level.
+Diagram titles remain available in semantic and PaintScene metadata but do not
+reserve layout space or emit a glyph, matching the pinned renderer's behavior.
+The upstream synthetic `/` directory is explicit semantic IR, owns every
+authored top-level node, participates in layout and Paint lowering, and remains
+present for header-only diagrams.
+Box-drawing preprocessing matches the pinned root offset, inferred segment
+width, decoration-line handling, mixed-format rejection, and original-line
+diagnostics. Configuration-driven default and filename/extension icon maps
+resolve into fully qualified semantic icon identities. Exact filename matches
+precede case-insensitive final-extension matches, empty mappings fall through,
+and leading-dot filenames do not count as extensions. The pinned built-in
+folder and file artwork lowers to filled backend-neutral path geometry.
+Integrator-registered external icon glyphs resolve by fully qualified identity
+during layout and lower through backend-neutral shaped glyph instructions;
+unresolved references retain their identity on deterministic placeholders.
+Pinned TreeView theme variables control
+font size, label, connector, icon, description, and highlight Paint styling;
+directory labels lower with bold font weight and descriptions with italic
+style. Layout IR also carries one horizontal connector per row, parent vertical
+spans, and a shared description column before backend-neutral Paint lowering.
+TreeView canvas width is intrinsic to its deepest label or widest description,
+and highlighted rows expand to that content-derived right edge independent of
+the caller's width hint. The inherited `useMaxWidth` setting survives config,
+layout, and PaintScene metadata so embedding backends can choose responsive or
+absolute presentation without coupling that policy to geometry.
+The pinned syntax corpus and native Metal visual corpus cover the upstream
+parser and renderer cases, so TreeView is `full` in the compatibility manifest.
+Automatic Iconify pack loading remains host-owned and exact typography remains
+backend-specific; resolved icon identities and geometry stay backend-neutral.
 
 ### Railroad Native Slice
 
@@ -965,10 +991,15 @@ silently degrading.
 ## Swimlane Partial Compatibility
 
 The native Mermaid 11.16.1 Swimlane slice recognizes `swimlane-beta` with all
-five directions, top-level `subgraph` lanes, common process-node shapes,
-directed/undirected/dotted/thick chained links, link labels, titles, and
-accessibility metadata. It lowers through dedicated ownership IR and stable
-lane geometry before producing backend-neutral paint instructions.
+five directions, top-level `subgraph` lanes, common process-node shapes
+(including storage, subprocess, hexagon, and double-circle nodes),
+directed/undirected/dotted/thick chained links, multiline edge continuations,
+parallel branch and join
+endpoints, pipe-delimited and Flowchart-style link labels, titles, and
+accessibility metadata. It lowers through
+dedicated ownership IR and stable lane geometry before producing
+backend-neutral paint instructions. A pinned visual subset, including parallel
+handoffs, is rendered through Metal-to-PNG.
 
 This is intentionally partial. Nested subgraphs, the complete Flowchart shape
 and link catalog, classes and inline styles, clicks, configuration-driven lane

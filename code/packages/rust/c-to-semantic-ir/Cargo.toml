@@ -9,6 +9,8 @@ semantic-ir = { path = "../semantic-ir" }
 coding-adventures-c-parser = { path = "../c-parser" }
 parser = { path = "../parser" }
 lexer = { path = "../lexer" }
+coding-adventures-c-lexer = { path = "../c-lexer" }
+coding-adventures-source-preprocessor = { path = "../source-preprocessor" }
 
 [dev-dependencies]
 semantic-ir-to-c = { path = "../semantic-ir-to-c" }

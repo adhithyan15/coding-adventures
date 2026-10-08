@@ -3,6 +3,9 @@
 ## Unreleased
 
 ### Fixed
+- Align the documented FNV-1a and MurmurHash3 vectors with the tested
+  algorithms and corrected DT17 contract, including the exact 64-bit `abc`
+  example. Hash behavior is unchanged.
 - Recreate the package virtual environment on every BUILD invocation, pin
   Python 3.13, and run lint, formatting, type checking, and tests through that
   named environment on Unix and Windows.

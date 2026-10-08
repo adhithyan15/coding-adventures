@@ -115,11 +115,8 @@ export class SvgArc {
 
   /** Convert to center form using the W3C algorithm. Returns null if degenerate. */
   toCenterArc(): CenterArc | null {
-    if (
-      Math.abs(this.from.x - this.to.x) < 1e-12 &&
-      Math.abs(this.from.y - this.to.y) < 1e-12
-    ) return null;
-    if (Math.abs(this.rx) < 1e-12 || Math.abs(this.ry) < 1e-12) return null;
+    if (this.from.distanceSquared(this.to) < 1e-20) return null;
+    if (Math.abs(this.rx) < 1e-10 || Math.abs(this.ry) < 1e-10) return null;
 
     const cosR = cos(this.xRotation);
     const sinR = sin(this.xRotation);
@@ -173,11 +170,14 @@ export class SvgArc {
   }
 
   evaluate(t: number): Point | null {
-    return this.toCenterArc()?.evaluate(t) ?? null;
+    return this.toCenterArc()?.evaluate(t) ?? this.from.lerp(this.to, t);
   }
 
   boundingBox(): Rect | null {
-    return this.toCenterArc()?.boundingBox() ?? null;
+    return this.toCenterArc()?.boundingBox() ?? Rect.fromPoints(
+      new Point(Math.min(this.from.x, this.to.x), Math.min(this.from.y, this.to.y)),
+      new Point(Math.max(this.from.x, this.to.x), Math.max(this.from.y, this.to.y))
+    );
   }
 }
 

@@ -10,7 +10,45 @@ every backend reproduces its results.
 
 Implements [SIR27](../../../specs/SIR27-c-to-semantic-ir.md).
 
+The PREP01 C adapter is being built in stages. `dialect::CDialect` can classify
+the core directive shapes and run object and function-like macros, local
+includes, `#ifdef`, `defined`, bounded decimal comparisons, one-operator
+arithmetic and bounded logical conditions in `#if` through the generic engine.
+`compile_preprocessed_file` uses that token stream with declared include roots
+before parsing and lowering.
+The pathless `compile_source` API retains its legacy behavior. Full C `#if`
+expressions, stringize, paste and default frontend routing remain pending.
+
 ## API
+
+For an on-disk translation unit, pass a relative entry name and trusted include
+roots. The entry spelling is bounded before cloning; `RootedFs` resolves and
+reads files under the tightened preprocessor bounds. The result is parsed from
+the preprocessed token stream, without source reconstruction or re-lexing.
+
+```rust
+use c_to_semantic_ir::compile_preprocessed_file;
+use coding_adventures_source_preprocessor::Bounds;
+let module = compile_preprocessed_file(
+    "main.c", [std::path::PathBuf::from("src")], "demo", Bounds::default()
+).unwrap();
+```
+
+Quoted includes search beside the verified including file, then under the
+declared roots. The primary file and system includes search declared roots
+only. Every resolved candidate must remain inside a declared root; an
+unresolved include fails explicitly.
+`#if` currently handles single decimal comparisons, one checked `+`, `-`,
+`*`, `/`, `%`, `<<`, or `>>` within the bounded signed 32-bit subset, `!` on
+one operand and `&&`/`||` chains. Division and remainder reject a zero divisor,
+including inside a logical clause whose value would otherwise be unnecessary. Longer or
+mixed arithmetic and other unsupported C expressions fail explicitly. Shift
+counts must be 0–31, the left operand must be nonnegative, and left-shift
+results must fit signed 32-bit.
+Stringize and paste in macro bodies also fail explicitly.
+
+The pathless `compile_source` API below still uses the legacy C source parser
+path and does not run the generic preprocessor.
 
 ```rust
 use c_to_semantic_ir::compile_source;

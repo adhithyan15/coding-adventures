@@ -157,7 +157,7 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "border-left-color": 2,
         "border-left-style": 5,
         "border-left-width": 2,
-        "border-radius": 26,
+        "border-radius": 15,
         "border-right-style": 6,
         "border-style": 4,
         "border-top-left-radius": 1,

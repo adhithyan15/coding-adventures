@@ -15,7 +15,26 @@
     "lesson": "PT-C01-practice",
     "kind": "task",
     "summary": "Complete PT-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in Portuguese, recognize the reply, and choose an appropriate response.",
-    "assesses": [],
-    "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+    "assesses": [
+      "PT-PHONO-OLA-01",
+      "PT-ETYMON-OLA-02",
+      "PT-PRAGMATIC-OLA-03",
+      "PT-SOUND-BOM-02",
+      "PT-ETYMON-BOM-03",
+      "PT-GRAMMAR-BOM-04",
+      "PT-ETYMON-O-A-02",
+      "PT-GRAMMAR-O-A-03",
+      "PT-ETYMON-DIA-02",
+      "PT-GRAMMAR-DIA-03",
+      "PT-LEX-BOM-DIA-02",
+      "PT-PRAGMATIC-BOM-DIA-03",
+      "PT-ETYMON-TARDE-02",
+      "PT-ETYMON-NOITE-02",
+      "PT-LEX-NOITE-03",
+      "PT-SOUND-OBRIGADO-02",
+      "PT-ETYMON-OBRIGADO-03",
+      "PT-GRAMMAR-OBRIGADO-04"
+    ],
+    "note": "Chapter 1 is schema-v2, so the payoff is atom-scored: PT-C01-practice assesses all eighteen atoms the chapter introduces. The ola writing runway (PT-W01) introduces no atoms of its own — it re-assesses ola's three — so the opener's typed writing evidence is already inside this set."
   }
 }

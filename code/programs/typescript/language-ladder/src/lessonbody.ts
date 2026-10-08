@@ -5,6 +5,12 @@
 export interface LessonSection {
   title: string;
   blocks: LessonViewBlock[];
+  /**
+   * The section's writing stage, from its `<!-- hl-writing-stage: … -->`
+   * directive (HL19), when it declares one. The directive itself is metadata,
+   * never learner copy.
+   */
+  writingStage?: string;
 }
 
 export type LessonViewBlock =
@@ -39,6 +45,12 @@ export function lessonSections(markdown: string): LessonSection[] {
     const line = raw.trim();
     if (/^#\s+/.test(line)) continue; // card already displays the lesson title
     if (/^<!--\s*hl-(?:knowledge|activity):/.test(line)) continue; // canonical AST metadata, not learner copy
+    const stage = /^<!--\s*hl-writing-stage:\s*([a-z][a-z0-9-]*)\s*-->$/.exec(line);
+    if (stage) {
+      current.writingStage = stage[1]!;
+      continue;
+    }
+    if (/^<!--\s*hl-writing-stage:/.test(line)) continue; // malformed: the validator reports it
     const heading = /^##\s+(.+)$/.exec(line);
     const image = /^!\[([^\]]+)\]\(([^)]+)\)$/.exec(line);
     if (heading) {
@@ -61,4 +73,39 @@ export function lessonSections(markdown: string): LessonSection[] {
   }
   flushSection();
   return sections;
+}
+
+// ---------------------------------------------------------------------------
+// Which section a lesson's stroke-order filmstrip goes in
+// ---------------------------------------------------------------------------
+//
+// The same rule as the book (`stripBlockIndex` in human-language-data's
+// figure-targets.ts): the first Writing section, else the first Script
+// section, else the first section whose writing stage SHOWS the learner a
+// model. A dictation, a composition or a timed task never gets a strip, and
+// neither does a section with no stage: a strip there would hand over the
+// answer the lesson is testing. That holds for a Writing or Script section
+// too: "Writing — short dictation" is skipped, so a Marathi letter lesson's
+// strip goes to its Script section (the model the dictation says to cover),
+// and a lesson with nowhere else shows none. A test holds this list equal to
+// the book's.
+
+/** Writing stages whose section shows the learner a model of what to write. */
+export const MODELLED_WRITING_STAGES: ReadonlySet<string> = new Set([
+  "observe-trace",
+  "guided-copy",
+  "delayed-copy",
+]);
+
+/** The index of the section a filmstrip belongs in, or -1 when none fits. */
+export function filmstripSectionIndex(sections: readonly LessonSection[]): number {
+  const showsNoModel = (section: LessonSection): boolean =>
+    section.writingStage !== undefined && !MODELLED_WRITING_STAGES.has(section.writingStage);
+  const letter = sections.findIndex(
+    (section) => /^(?:Writing|Script)\b/.test(section.title.trim()) && !showsNoModel(section),
+  );
+  if (letter !== -1) return letter;
+  return sections.findIndex(
+    (section) => section.writingStage !== undefined && MODELLED_WRITING_STAGES.has(section.writingStage),
+  );
 }

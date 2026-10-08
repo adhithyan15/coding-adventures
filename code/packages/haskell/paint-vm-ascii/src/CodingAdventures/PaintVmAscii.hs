@@ -385,7 +385,7 @@ renderLine options clip line buffer
       foldl (\acc col -> writeTag clip (r1, col) (horizontalFlags col) acc) buffer [minCol .. maxCol]
   | c1 == c2 =
       foldl (\acc row -> writeTag clip (row, c1) (verticalFlags row) acc) buffer [minRow .. maxRow]
-  | otherwise = bresenham buffer r1 c1 0
+  | otherwise = bresenham buffer r1 c1 (deltaCol - deltaRow)
   where
     -- Clamped into the clip's own bounds before use — an out-of-range but
     -- otherwise valid (finite) endpoint can't force iteration/recursion far
@@ -417,6 +417,42 @@ renderLine options clip line buffer
     stepCol = if c1 < c2 then 1 else -1
     diagonalFlags = if deltaCol > deltaRow then flagLeft .|. flagRight else flagUp .|. flagDown
 
+    -- The error term and its invariant (issue #12093)
+    -- -----------------------------------------------
+    -- Measure progress as i = columns stepped, j = rows stepped. The ideal
+    -- line is the zero set of F(i, j) = deltaRow * i - deltaCol * j. Every
+    -- call to 'bresenham' receives
+    --
+    --     errorValue == deltaCol * (j + 1) - deltaRow * (i + 1)
+    --                == -F(i + 1, j + 1)
+    --
+    -- i.e. the signed distance of the DIAGONAL neighbour, the cell we would
+    -- reach by stepping both axes. At i = j = 0 that is deltaCol - deltaRow,
+    -- so that, and nothing else, is the seed passed in above (the standard
+    -- all-octant integer Bresenham "err = dx - dy"). Each step compares
+    -- 2 * errorValue with the two half-cell thresholds:
+    --
+    --     2*err > -deltaRow  -> step col  (err - deltaRow, i + 1)
+    --     2*err <  deltaCol  -> step row  (err + deltaCol, j + 1)
+    --
+    -- With the correct seed the major axis advances exactly once per call
+    -- and the minor axis at most once, so the recursion visits exactly
+    -- max deltaRow deltaCol + 1 cells and bottoms out on (r2, c2).
+    --
+    -- Seeding 0 instead breaks the invariant by a constant offset and makes
+    -- the minor axis step too eagerly. For deltaRow = 1, deltaCol = 3 the
+    -- row cursor reaches r2 on the first call and later steps past it; for
+    -- deltaRow = 3, deltaCol = 1 the column cursor does the same with c2.
+    -- Either way the @row == r2 && col == c2@ base case is never reached
+    -- and 'render' recurses forever -- a hang, not an exception.
+    --
+    -- Worked example, (row 0, col 0) -> (row 1, col 3):
+    --
+    --     cell    err  2*err  col step?    row step?
+    --     (0,0)    2     4    4 > -1 yes   4 < 3 no
+    --     (0,1)    1     2    2 > -1 yes   2 < 3 yes
+    --     (1,2)    3     6    6 > -1 yes   6 < 3 no
+    --     (1,3)  reached p1, stop -- 4 cells = max 1 3 + 1
     bresenham buf row col errorValue =
       let buf' = writeTag clip (row, col) diagonalFlags buf
        in if row == r2 && col == c2

@@ -1,0 +1,20 @@
+# Perl p54rc2 (1997-05-14) tokens: plain-decimal arithmetic-print subset.
+# @version 1
+# PARTIAL: this does not lex all Perl p54rc2 source.
+# Evidence: https://mirrors.develooper.com/perl/historical-perl/perl-p54rc2.tar.gz
+# Archive SHA-256: 973d9cadb2a1efbcdac705fe1eb08e351d746f9480aa806d6b54ecc3344e5f9d.
+# Its tokenizer matches 5.004 and retains the 250-digit decimal bound.
+# Refuse unsupported characters, carriage returns and leading-zero forms.
+
+PRINT     = "print"
+INT       = /0|[1-9][0-9]{0,249}/
+PLUS      = "+"
+DECREMENT = "--"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\n]+/

@@ -59,3 +59,25 @@ The **harness** all `closure-pass-*` crates plug into. Defines the
 
 No `closure-pass-*` deps — those depend on this crate, not the
 other way.
+
+## Checked provenance errors (CV02)
+
+CV02: reject a pass result when its requested program contribution cannot be recorded; preserve pass-specific diagnostics. The caller must propagate the error and reject the compilation result.
+
+Returned contributions transfer metadata into recording before validation,
+and pending/omitted payloads are disposed iteratively if recording fails
+or there is no program identity. They are never recursively cloned first.
+
+Scheduler-owned current and candidate programs are disposed iteratively on errors
+and intermediate replacements, including custom pass candidates. Only accepted
+final output ownership transfers to the caller. This protects cleanup on small
+stacks; it does not establish bounds for arbitrary pass traversal or construction.
+
+With `CVLog::new_checked_chronology`, the scheduler records every actual pipeline
+and pass invocation, including nested runs, repeated OneShot/unchanged passes,
+confirming sweeps and errors. Pass context includes returned-contribution and
+candidate acceptance; a successful callback can still fail acceptance. Begin
+reserves infallible terminal recording before entering callbacks, preserving
+deep owned results. Accepted schedules retain stable selected names/policies
+once, and pass contexts resolve them by sweep/slot. `execution_order` remains
+the distinct schedule inventory; final-sweep stats are not an invocation log.

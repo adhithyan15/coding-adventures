@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Days of the Week",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f523319a7b12f9e4",
+  "sourceHash": "fnv1a64:ad2c1f1eadc83831",
   "lessons": [
     {
       "id": "KA-C10-vaara",
@@ -321,7 +321,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6e852a43461d26ff",
+      "sourceHash": "fnv1a64:bcd2ea660fe8f4c1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -379,15 +379,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ೨ — copy what you see",
+          "title": "Writing: ೨ — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ೨ (2) and follow its line. Copy the shape in front of you — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ೨ (2) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what you can see needs no such source."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },

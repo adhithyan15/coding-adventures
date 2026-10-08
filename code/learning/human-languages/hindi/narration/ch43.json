@@ -95,8 +95,14 @@
               "source": "[YOU SAY: **देख / देखता / देखती / देखते** (*dekh / dekhtā / dekhtī / dekhte*)]"
             },
             {
-              "kind": "speech",
-              "text": "[YOU SAY (m.): मैं देखता हूँ, (f.): मैं देखती हूँ]."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "मैं देखता हूँ, (f.): मैं देखती हूँ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY (m.): **मैं देखता हूँ** · (f.): **मैं देखती हूँ**]",
+              "qualifier": "(m.)"
             },
             {
               "kind": "prompt",

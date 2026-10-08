@@ -85,7 +85,7 @@ matcher, the operation validates every registry entry and preflights the
 complete deduplicated pattern/file cross product against a 50,000,000-unit
 Unicode-scalar work ceiling. Exceeding it returns only
 `CI_GATE_MATCH_LIMIT_EXCEEDED`, never partial gate outputs. Package-local tests
-replay all ten language-neutral CI-gate selection cases. File loading, Git,
+replay every checked-in language-neutral CI-gate selection case. File loading, Git,
 workflow outputs, and an execution adapter remain outside this pure function.
 
 The source registry includes OCaml `.ml`, `.mli`, and `.opam` inputs plus the

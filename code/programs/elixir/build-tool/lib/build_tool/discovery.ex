@@ -34,10 +34,10 @@ defmodule BuildTool.Discovery do
 
   ## Language inference
 
-  We infer a package's language from its directory path. If the path contains
-  "python", "ruby", "go", "rust", "typescript", "elixir", or "lua" as a component
-  under "packages" or "programs", that is the language. The package name is
-  "{language}/{dirname}", e.g., "python/logic-gates" or "go/directed-graph".
+  We infer a package's language from its directory path. Only the exact
+  bucket immediately below "packages" or "programs" counts as a language.
+  Package names use "{language}/{dirname}"; programs preserve an additional
+  "programs/" identity segment.
 
   ## The Package struct
 
@@ -51,6 +51,17 @@ defmodule BuildTool.Discovery do
       }
   """
 
+  defmodule DuplicatePackageIdentityError do
+    @moduledoc """
+    A stable discovery error for two physical roots with one graph identity.
+
+    The paths are relative to the configured code root's parent, never host
+    checkout paths. The CLI catches only this typed error and returns status 2.
+    """
+
+    defexception [:package, :paths, :message, code: "DUPLICATE_PACKAGE_IDENTITY"]
+  end
+
   # ---------------------------------------------------------------------------
   # Skip list
   # ---------------------------------------------------------------------------
@@ -61,26 +72,32 @@ defmodule BuildTool.Discovery do
   # valid packages.
 
   @skip_dirs MapSet.new([
-    ".git",
-    ".hg",
-    ".svn",
-    ".venv",
-    ".tox",
-    ".mypy_cache",
-    ".pytest_cache",
-    ".ruff_cache",
-    "__pycache__",
-    "node_modules",
-    "vendor",
-    "dist",
-    "build",
-    "target",
-    ".claude",
-    "Pods",
-    "_build",
-    "deps",
-    "coverage"
-  ])
+               ".git",
+               ".hg",
+               ".svn",
+               ".venv",
+               ".tox",
+               ".mypy_cache",
+               ".pytest_cache",
+               ".ruff_cache",
+               "__pycache__",
+               "node_modules",
+               "vendor",
+               "dist",
+               "dist-newstyle",
+               "build",
+               "target",
+               ".claude",
+               "specs",
+               ".dart_tool",
+               ".build",
+               ".gradle",
+               "gradle-build",
+               "Pods",
+               "_build",
+               "deps",
+               "coverage"
+             ])
 
   # ---------------------------------------------------------------------------
   # Known languages
@@ -100,7 +117,16 @@ defmodule BuildTool.Discovery do
     "wasm",
     "csharp",
     "fsharp",
-    "dotnet"
+    "dotnet",
+    "ocaml",
+    "c",
+    "cpp",
+    "dart",
+    "java",
+    "kotlin",
+    "mosaic",
+    "starlark",
+    "twig"
   ]
 
   # ---------------------------------------------------------------------------
@@ -122,9 +148,52 @@ defmodule BuildTool.Discovery do
       ["elixir/progress-bar", "go/directed-graph", "python/logic-gates"]
   """
   def discover_packages(root) do
-    root
-    |> walk_dirs([])
-    |> Enum.sort_by(& &1.name)
+    discover_packages(root, current_os())
+  end
+
+  @doc """
+  Discovers packages using an explicit platform selector. The native entry
+  point above delegates here; fixture consumers can exercise each platform
+  without changing the host OS or the directory walk.
+  """
+  def discover_packages(root, os) do
+    packages =
+      root
+      |> walk_dirs([], os)
+      |> Enum.sort_by(&{&1.name, &1.path})
+
+    # Discovery must not silently choose one of two roots with the same graph
+    # identity. Group after sorting so both the first reported collision and
+    # the diagnostic's path order are independent of filesystem walk order.
+    duplicate =
+      packages
+      |> Enum.chunk_by(& &1.name)
+      |> Enum.find(&(length(&1) > 1))
+
+    case duplicate do
+      nil ->
+        packages
+
+      group ->
+        name = hd(group).name
+
+        paths =
+          group
+          |> Enum.map(&repository_package_path(root, &1.path))
+          |> Enum.sort()
+
+        raise DuplicatePackageIdentityError,
+          package: name,
+          paths: paths,
+          message: "DUPLICATE_PACKAGE_IDENTITY: package=#{name} paths=#{Enum.join(paths, ",")}"
+    end
+  end
+
+  # A root supplied as /checkout/code yields code/packages/... regardless of
+  # checkout location. This representation is diagnostic data, not a host path.
+  defp repository_package_path(root, package_path) do
+    Path.join(Path.basename(root), Path.relative_to(package_path, root))
+    |> String.replace("\\", "/")
   end
 
   @doc """
@@ -162,9 +231,9 @@ defmodule BuildTool.Discovery do
   @doc """
   Inspects the directory path to determine the programming language.
 
-  We look for known language names ("python", "ruby", "go", "rust",
-  "typescript", "elixir") as path components. For example,
-  "/repo/code/packages/python/logic-gates" yields "python".
+  The exact component after the last `packages` or `programs` boundary is
+  the sole language candidate. A later `go` in `packages/custom/go` does
+  not turn the unknown `custom` bucket into Go.
 
   ## Example
 
@@ -174,20 +243,15 @@ defmodule BuildTool.Discovery do
       "unknown"
   """
   def infer_language(path) do
-    # Normalize path separators to forward slashes for consistent parsing.
-    parts =
-      path
-      |> String.replace("\\", "/")
-      |> String.split("/")
-
-    Enum.find(@known_languages, "unknown", fn lang ->
-      lang in parts
-    end)
+    case package_boundary(path) do
+      {_kind, bucket} when bucket in @known_languages -> bucket
+      _ -> "unknown"
+    end
   end
 
   @doc """
   Builds a qualified package name like "python/logic-gates" from the
-  language and the directory's basename.
+  language and the directory's basename. Program roots keep `programs/`.
 
   ## Example
 
@@ -195,7 +259,24 @@ defmodule BuildTool.Discovery do
       "python/logic-gates"
   """
   def infer_package_name(path, language) do
-    language <> "/" <> Path.basename(path)
+    case package_boundary(path) do
+      {"programs", _bucket} -> language <> "/programs/" <> Path.basename(path)
+      _ -> language <> "/" <> Path.basename(path)
+    end
+  end
+
+  # Search boundaries from the root and retain the last complete pair. This
+  # mirrors the canonical path-boundary rule while refusing a language word
+  # from a later basename or an unrelated parent directory.
+  defp package_boundary(path) do
+    path
+    |> String.replace("\\", "/")
+    |> String.split("/")
+    |> Enum.chunk_every(2, 1, :discard)
+    |> Enum.reduce(nil, fn
+      [kind, bucket], _previous when kind in ["packages", "programs"] -> {kind, bucket}
+      _pair, previous -> previous
+    end)
   end
 
   # ---------------------------------------------------------------------------
@@ -209,8 +290,10 @@ defmodule BuildTool.Discovery do
   Priority:
     1. `BUILD_mac` on macOS (Darwin)
     2. `BUILD_linux` on Linux
-    3. `BUILD` (cross-platform fallback)
-    4. `nil` if no BUILD file exists
+    3. `BUILD_windows` on Windows
+    4. `BUILD_mac_and_linux` on macOS or Linux
+    5. `BUILD` (cross-platform fallback)
+    6. `nil` if the canonical BUILD file is absent
 
   ## Example
 
@@ -239,30 +322,36 @@ defmodule BuildTool.Discovery do
       # Returns path to BUILD_mac if it exists, else BUILD_mac_and_linux, else BUILD, else nil
   """
   def get_build_file_for_platform(directory, os) do
-    # Step 1: Check for the most specific platform file.
-    platform_file =
-      case os do
-        :darwin -> Path.join(directory, "BUILD_mac")
-        :linux -> Path.join(directory, "BUILD_linux")
-        :windows -> Path.join(directory, "BUILD_windows")
-        _ -> nil
+    canonical_file = Path.join(directory, "BUILD")
+
+    # A variant is only an alternate recipe for an established package. Test
+    # exact canonical membership before considering host-specific overrides,
+    # or the same tree becomes a different package graph on each platform.
+    if not file_exists?(canonical_file) do
+      nil
+    else
+      # Step 1: Check for the most specific platform file.
+      platform_file =
+        case os do
+          :darwin -> Path.join(directory, "BUILD_mac")
+          :linux -> Path.join(directory, "BUILD_linux")
+          :windows -> Path.join(directory, "BUILD_windows")
+          _ -> nil
+        end
+
+      cond do
+        platform_file != nil and file_exists?(platform_file) ->
+          platform_file
+
+        # Step 2: Check for the shared Unix file (macOS + Linux).
+        os in [:darwin, :linux] and
+            file_exists?(Path.join(directory, "BUILD_mac_and_linux")) ->
+          Path.join(directory, "BUILD_mac_and_linux")
+
+        # Step 3: Fall back to the membership-establishing canonical BUILD.
+        true ->
+          canonical_file
       end
-
-    cond do
-      platform_file != nil and file_exists?(platform_file) ->
-        platform_file
-
-      # Step 2: Check for the shared Unix file (macOS + Linux).
-      os in [:darwin, :linux] and
-          file_exists?(Path.join(directory, "BUILD_mac_and_linux")) ->
-        Path.join(directory, "BUILD_mac_and_linux")
-
-      # Step 3: Fall back to the generic BUILD file.
-      file_exists?(Path.join(directory, "BUILD")) ->
-        Path.join(directory, "BUILD")
-
-      true ->
-        nil
     end
   end
 
@@ -280,13 +369,13 @@ defmodule BuildTool.Discovery do
   # look inside it for sub-packages. This keeps the model simple — a
   # package is a leaf in the directory tree.
 
-  defp walk_dirs(directory, packages) do
+  defp walk_dirs(directory, packages, os) do
     dir_name = Path.basename(directory)
 
     if MapSet.member?(@skip_dirs, dir_name) do
       packages
     else
-      case get_build_file(directory) do
+      case get_build_file_for_platform(directory, os) do
         nil ->
           # Not a package — list all subdirectories and recurse into each one.
           case File.ls(directory) do
@@ -297,7 +386,7 @@ defmodule BuildTool.Discovery do
                 subdir = Path.join(directory, entry)
 
                 if File.dir?(subdir) do
-                  walk_dirs(subdir, acc)
+                  walk_dirs(subdir, acc, os)
                 else
                   acc
                 end
@@ -338,8 +427,14 @@ defmodule BuildTool.Discovery do
   # ---------------------------------------------------------------------------
 
   defp file_exists?(path) do
-    case File.stat(path) do
-      {:ok, %File.Stat{type: :regular}} -> true
+    # File.stat alone accepts a wrong-case basename on case-insensitive hosts.
+    # Check the directory entry before stat so package membership and override
+    # selection use the same exact BUILD names on every platform.
+    with {:ok, entries} <- File.ls(Path.dirname(path)),
+         true <- Enum.member?(entries, Path.basename(path)),
+         {:ok, %File.Stat{type: :regular}} <- File.stat(path) do
+      true
+    else
       _ -> false
     end
   end
@@ -348,7 +443,7 @@ defmodule BuildTool.Discovery do
     case :os.type() do
       {:unix, :darwin} -> :darwin
       {:unix, :linux} -> :linux
-      {:win32, _} -> :win32
+      {:win32, _} -> :windows
       _ -> :unknown
     end
   end

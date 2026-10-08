@@ -659,6 +659,71 @@ to start" block now point at the numbered strip, in the wording the earlier
 strip lessons use, so the figure-targets guard against a strip lesson
 disclaiming its stroke order holds.
 
+#### As built — Kannada digits and anusvara from a tracing app; Malayalam ജ and ൈ
+
+Twelve more writing lessons print a strip: the Kannada digit lessons ೧ to ೯
+and the anusvara ಂ (Kannada 47 -> 57), and the Malayalam letter ജ and vowel
+sign ൈ (Malayalam 58 -> 60).
+
+**Kannada: one tracing app, read as one source.** The Bangalore literacy NGO
+Sutara Learning Foundation publishes its Chimple course content on GitHub in
+two repositories: `chimple/chimple-zips` (lesson bundles whose trace pictures
+hold hidden, ordered centre-line paths, which the lesson player walks in
+order; no licence) and `chimple/bahama` (recorded traces; MPL-2.0). They come
+from one organisation, so they count as ONE source, and every record says so.
+Only facts are taken (stroke count, order, start, direction); no path or
+artwork is copied, and every path is fitted to Noto Sans Kannada at the
+default tolerances, with no override.
+
+- **Digits ೧-೯** cite the digit lesson `LIDO_kn2_0318` (its sibling
+  `LIDO_kn2_0319` repeats the same paths). Each digit is one path, and
+  Chimple keeps one path per pen-down run elsewhere (the anusvara is a
+  separate last path on every consonant), so each digit is one stroke. Each
+  loop turns the way Chimple's does, and a test holds every caption that
+  says "clockwise" or "anticlockwise" to the turning of its points. The
+  source is designer-authored, single and unlicensed, and no second source
+  for Kannada digits was found, so confidence is medium. **೦ is not drawn:**
+  Chimple's ೧೦ re-uses the ೧ picture and never draws a zero.
+- **ಂ** is one anticlockwise ring, drawn last, in all 34 of Chimple's
+  consonant + anusvara pictures; it starts at the left in 20 of them, so the
+  path does. The recorded ಅಂ agrees (it starts at the top). The ring gets no
+  written-order row: no Kannada writing lesson has a word with ಂ in it.
+- **ಃ was drawn in the wrong order and is fixed.** Its first ductus labelled
+  the first loop "the upper dot" but drew it round the lower one (font units
+  point up, and the path used the smaller y). Its cited animation and all 35
+  of Chimple's consonant + visarga pictures draw the upper dot first, both
+  loops anticlockwise; the paths now do, from near 8 o'clock, and a test
+  holds the first loop above the second.
+- `validate` now holds a digit row that names its strokes to the same rule as
+  a letter (a lift count only with its source), and script-ductus resolves a
+  cited digit's font as it does a letter's.
+
+**Malayalam: two of the glyphs Moag's batch left out.**
+
+- **ജ** cites Moag's six numbered movements (p. xxvi). Moag's arrow 2 stops
+  above the short stem and arrow 3 starts at its foot; with no lift between
+  them (*hand*: one stroke; *grahyam*: 45 of 45 unique samples in one run),
+  the pen can only reach the foot down the stem, so movement 2 ends with that
+  descent and movement 3 climbs it again. That join is read, not drawn, and
+  the record says its confidence is medium.
+- **ൈ** cites Moag's four movements (p. xxii): two coils of െ, each loop then
+  arch. The two coils are separate pieces of ink, so the pen lifts once
+  between them, and each coil is one run, as recorded writers write െ. No
+  recording of ൈ itself was found, so the record says the lift is reasoned
+  and confidence is medium. Noto composes the standalone sign from two copies
+  of െ, so each run is the cited െ path. Like every Malayalam vowel sign it
+  has no written-order row: it is drawn only alone.
+
+**Still not drawn.** ഠ: this round re-read Moag's arrow as clockwise, but
+Thooval and grahyam still run the ring anticlockwise, and no new source
+breaks the tie. ൊ and ോ: Noto's standalone glyphs put a placeholder dot where
+the consonant goes (`period.mlym` between the two parts), which no source
+says to write; tracing the sign alone leaves about 5% of the printed ink
+untraced, above the default limit, and drawing the dot would teach a mark
+nobody writes. Moag also never places the consonant between the parts. ്:
+Moag gives its position only, with no movements. Kannada ೦ and the Kannada
+vowel signs: no source.
+
 #### Design — the Latin script's first print letters
 
 The six Latin-script tracks (Spanish, French, German, Italian, Portuguese,
@@ -858,6 +923,168 @@ German 2 -> 5. The tallest new strip is Hallo at about 1,510 units (its H
 has three strokes), under the nine-piece Gujarati list's 1,800; buenos días,
 at exactly ten pieces, is about 1,420. Narration, modality and lesson prose
 are unchanged.
+
+#### Design — a strip in modelled practice, when a lesson has no Writing or Script block
+
+**The gap.** A derived strip lands in a lesson's first `## Writing` block,
+else its first `## Script` block, and a writing lesson with neither was never
+a candidate. 64 writing lessons on switched-on tracks have neither: their
+blocks are Warm-up / Guided Practice / Wrap-up Recall (chinese 15, gujarati
+18, hindi 12, marathi 3, punjabi 15, spanish 1). 30 of them have a headword
+whose every piece is cited, among them the Chinese copy pair for each
+character (ZH-W16-han-guided, ZH-W16-han-delayed: 汉 语 国 文 看 书 吗) and the
+Gujarati place words (ઘર, મંદિર, હાથ …). Their -observe sibling prints a
+strip; they print none.
+
+**Not every such lesson should print one.** The same block shape carries
+lessons whose design is that the learner sees no model: a dictation ("write
+家, 汉, 语, 文, 国 without a model"), a "select, do not copy" form card, a timed
+repair. A strip there gives away the answer the lesson is testing.
+
+**The rule: follow the writing stage.** Every practice block that asks for
+writing already declares its stage (`<!-- hl-writing-stage: … -->`, HL19),
+from the seven defined in `core/assessment-policy.json`. Three of them show
+the learner a model, and those blocks take the strip:
+
+| stage | the learner … | strip |
+|---|---|---|
+| observe-trace | traces with the model visible | yes |
+| guided-copy | copies beside the model | yes |
+| delayed-copy | looks, hides the model, writes, then compares and repairs | yes |
+| dictation-transcription | writes from sound, no model | no |
+| controlled-composition | chooses and orders known language | no |
+| connected-composition | writes connected sentences | no |
+| timed-assessment-production | writes under exam timing | no |
+
+Delayed copy is on the "yes" side because its model is shown before and
+compared after ("Study 汉 for five seconds. Cover it. … Reveal the model and
+repair"): a printed book has to give the learner a model to cover, and the
+strip is that model with its route drawn in. A block with no stage directive
+is never chosen, whatever its title: that keeps out the Punjabi selector
+cards ("Guided Practice — decide before writing") and the Hindi concept
+lessons whose Guided Practice is a list of cues (HI-W02-abugida-ka-ta's
+headword is अ, a letter it never asks the learner to write).
+
+So the strip's block is: the first Writing block, else the first Script
+block, else the first block whose writing stage is observe-trace,
+guided-copy or delayed-copy (`stripBlockIndex` in `figure-targets.ts`). The
+fallback only adds lessons; no existing strip moves. Every other rule is
+unchanged: the headword decides letter, list, word or phrase, and the ledger
+decides whether every piece is cited.
+
+**Letter anchoring is not widened.** `letter-anchoring.ts` counts a lesson as
+a letter lesson only when its strip comes from a Writing or Script block
+(`letterBlockIndex`). A copy lesson that gains a strip from its practice
+block practises a letter an earlier lesson taught (ZH-W16-han-observe), so
+counting it would only double-count that letter.
+
+**The app follows the same rule.** language-ladder places a lesson's strip
+itself (the book inserts it from generated targets, so the authored Markdown
+has no image to find). Its `filmstripSectionIndex` applies the same three
+steps, with the same three stages, held equal to the book's by a test. Its
+section parser now reads the stage directive instead of printing it as a line
+of lesson text, which it had been doing for every section with a stage.
+
+**Expected.** Exactly 25 lessons gain a strip: chinese 14 (the seven
+characters' -guided and -delayed lessons), gujarati 10 (GU-C20-ghar,
+GU-C20-mandir, GU-C21-haath, GU-C21-paisa, GU-C22-shaalaa, GU-C22-shahar,
+GU-C23-dukaan, GU-C23-gaam, GU-W20-gha, GU-W21-ai-matra) and hindi 1
+(HI-W01-na-ma, the list न, म). Of the other five cited headwords,
+ZH-R17-writing-five is a dictation and PA-W09-date-select a selector card,
+and HI-W02-abugida-ka-ta, HI-W02-ka-ta-mouth-order and HI-W04-ra-sa-mera-naam
+declare no stage (their letters are taught, with strips, by the HI-S letter
+lessons).
+
+**Prose follows the strip.** None of the 25 disclaims its stroke order. Two
+kinds of prose are moved to agree with it. HI-W01-na-ma numbered म's pieces
+"lower loop, upper loop, spine, bar", while the cited strip draws "descend,
+loop, sweep right / climb the spine / descend it / the headline"; its list
+now follows the strip. Five Chinese delayed-copy lessons (语 国 文 看 书) said
+"look … and cover it" in the Warm-up, so the strip, printed at the top of
+Guided Practice, appeared after the model was meant to be covered; the
+look-and-cover sentence now opens the Guided Practice, under the strip.
+
+#### Design — no strip in a Writing block that shows no model
+
+**The gap.** The stage rule above was applied only to the fallback. A
+`## Writing` or `## Script` block took the strip whatever stage it declared,
+and 37 strip lessons declare a no-model stage on that block: 31 dictations
+and 6 compositions (measured from `resolvedFigureTargets`, 829 strips, by the
+declared stage of the block each strip lands in). The other 792 land in an
+observe-trace, guided-copy or delayed-copy block, or in a Writing or Script
+block that declares no stage (the twelve Kannada and Malayalam strips added
+above are all of this last kind); a scan of those blocks for dictation cues
+("YOU HEAR", "from sound", "without a model", "Cover the …") found only
+presentations and copies ("Keep ਪ in front of you and do not cover it").
+
+**What the reader saw.** The book prints a strip at the top of its block,
+under the heading and above the task. In a dictation that is the answer,
+drawn large, above the cue (Spanish chapter 1, before this change):
+
+> **Writing — short dictation**
+> [strip: *How hola is written, letter by letter, stroke by stroke*]
+> *Hear:* *OH-la*. Write the Spanish greeting from that sound alone. Three
+> sounds reached your ear. Four letters belong on your page. Your pen has to
+> supply a letter that the sound never gave you — and it goes first.
+
+The lesson tests exactly the silent *h*, and the strip draws it first. The
+Warm-up had just said "Cover the answer line lower on this page". The
+single-letter dictations say outright that no model is in view, a few lines
+above the strip: SA-S02-dictation "Cover every **न** on the page. Nothing to
+copy, nothing to uncover, and no stroke order in front of you"; KA-S01 and
+FA-W00 the same. The Gujarati spaced-return lessons (GU-R03 … GU-R19,
+"Writing — from sound") print "Cover every model. Write: ja, ka, ka" under a
+strip of ક and જ. The compositions are no better: ES-W01-frase-propia is
+titled "Your own line — the first writing with no model" and printed a strip
+of *buenos días*, the very greeting its 4 p.m. task rules out.
+
+**Is it a check instead?** No. In these lessons the comparison is a sentence
+after the attempt ("Now uncover and compare: **hola**"), inside the same
+block, or a Wrap-up line ("Uncover the model and compare") that points back
+to the model the previous lesson printed. No lesson has a block that is the
+answer key, so there is no later block a strip could honestly move to, and
+the one it is in is read before the task. The Wrap-up blocks are themselves
+recall ("From the heard cue hā alone, write …") or reflection.
+
+**The rule.** A block whose declared stage shows no model (dictation, either
+composition, timed production) is skipped wherever the strip is looked for:
+the first Writing block that is not one, else the first Script block that is
+not one, else the first modelled practice block (`stripBlockIndex`). A block
+that declares no stage is unchanged.
+
+**Expected.** 33 lessons lose their strip and 4 move:
+
+- removed: arabic 1 (AR-W04-arbaa-sutur), french 2 (FR-W01-salut-dictation,
+  FR-W04-quatre-lignes), german 2 (GE-W01-hallo-dictation,
+  GE-W04-vier-zeilen), gujarati 14 (GU-W01-haa-dictation and the thirteen
+  "Writing — from sound" returns GU-R03 … GU-R19), italian 1, kannada 1
+  (KA-S01-dictation), latin 1 (LA-W04-quattuor-versus, Latin's only strip),
+  malayalam 1, persian 1 (FA-W00-alef-dictation), portuguese 1, sanskrit 4
+  (SA-S02-dictation, SA-W03-mama-dictation, SA-W03-mama-nama-dictation,
+  SA-W05-vocalic-r-dictation), spanish 3 (ES-W00-hola-dictation,
+  ES-W01-frase-propia, ES-W02-cuatro-lineas-ayer), telugu 1
+  (TE-S01-dictation). Every one follows copy lessons of the same headword
+  that keep their strips (ES-W00-hola-delayed-copy, SA-S02-letter-na …).
+- moved: MR-W03-ba, -lla, -va, -ya. Their Script block prints the letter and
+  describes its strokes, and the "Writing — heard cue" after it opens "Cover
+  the model". The strip now sits with that model, and is covered with it.
+
+None of the 37 mentions a strip in its prose, so no lesson text moves.
+Letter anchoring is unchanged: `letter-anchoring.ts` asks whether a lesson
+writes a letter (a single-letter dictation does), not whether it prints a
+strip, and no longer goes through the strip placement to ask it. The app's
+`filmstripSectionIndex` skips the same sections. A converse guard joins the
+disclaimer guard: a lesson with no strip may not say "follow the numbered
+strip" or "the strip shows".
+
+**A mislabelled stage.** PA-W08-digit-recognition declared delayed-copy, but
+its practice is "Hear: zero, one, two, two, five, one. Write one digit after
+each word, then compare with A": a heard item turned into writing, which is
+dictation-transcription. It is relabelled, and now says "Cover A" first and
+"uncover A and compare" after, so value A is not in view while the digits are
+written. It prints no strip either way (its digits are not cited). Punjabi
+keeps delayed-copy evidence in eleven other lessons, the first in chapter 1
+(PA-W01-haan-delayed-copy), so no stage gate moves.
 
 ### Class B — data diagrams (generated)
 

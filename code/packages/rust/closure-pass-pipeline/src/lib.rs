@@ -38,7 +38,9 @@
 use std::collections::HashMap;
 
 use coding_adventures_closure_typechecker::Diagnostic;
-use coding_adventures_correlation_vector::{CVLog, Contribution};
+use coding_adventures_correlation_vector::{
+    dispose_metadata, CVLog, Contribution, JournalPolicy, PassOutcome, PipelineOutcome, ScopeError,
+};
 use coding_adventures_javascript_ast::Program;
 use coding_adventures_type_sidecar::Sidecar;
 
@@ -49,7 +51,7 @@ use coding_adventures_type_sidecar::Sidecar;
 /// How often a pass should run within a single pipeline invocation.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum IterationPolicy {
-    /// Run exactly once. The default.
+    /// Runs once per sweep without requesting another sweep. The default.
     OneShot,
     /// Participate in the pipeline's fixed-point loop: the scheduler
     /// re-runs the whole pass order in sweeps and keeps sweeping while
@@ -150,7 +152,7 @@ pub trait Pass {
         &[]
     }
 
-    /// One-shot vs fixed-point. v1 always executes once regardless.
+    /// Stable policy selected when the pipeline schedule is accepted.
     fn iteration_policy(&self) -> IterationPolicy {
         IterationPolicy::OneShot
     }
@@ -176,11 +178,10 @@ pub struct PipelineOutput {
     pub program: Program,
     /// Diagnostics accumulated from every pass.
     pub diagnostics: Vec<Diagnostic>,
-    /// Per-pass stats, keyed by pass name. Order matches execution.
+    /// Final-sweep per-pass stats, keyed by name; HashMap has no execution order.
     pub stats: HashMap<String, PassStats>,
-    /// The execution order the scheduler actually used. Useful for
-    /// debugging dependency-graph issues without re-running the
-    /// scheduler.
+    /// Distinct topologically sorted schedule, excluding repeated invocations
+    /// and sweeps. Opted-in CV chronology records the actual invocation stream.
     pub execution_order: Vec<String>,
 }
 
@@ -210,6 +211,31 @@ pub struct PassPipeline {
 impl Default for PassPipeline {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+/// The scheduler owns every intermediate AST. Ordinary recursive Rust drop
+/// can overflow a small caller stack even when a pass returned its error safely.
+/// This guard consumes the tree iteratively on all exits and replacements.
+struct OwnedProgram(Option<Program>);
+
+impl OwnedProgram {
+    fn new(program: Program) -> Self {
+        Self(Some(program))
+    }
+    fn as_ref(&self) -> &Program {
+        self.0.as_ref().expect("owned program is present")
+    }
+    fn take(mut self) -> Program {
+        self.0.take().expect("owned program is present")
+    }
+}
+
+impl Drop for OwnedProgram {
+    fn drop(&mut self) {
+        if let Some(program) = self.0.take() {
+            coding_adventures_javascript_ast::dispose_program(program);
+        }
     }
 }
 
@@ -261,11 +287,60 @@ impl PassPipeline {
         sidecar: &Sidecar,
         cv: &mut CVLog,
     ) -> Result<PipelineOutput, PassError> {
-        let order = self.topo_sort()?;
+        let program = OwnedProgram::new(program);
+        // Guard the input before begin admission: rejected tracing capacity must
+        // dispose a deep owned AST iteratively without entering this callback.
+        cv.with_pipeline(|cv| self.run_scoped(program, sidecar, cv))
+            .map_err(|error| match error {
+                ScopeError::Callback(error) => error,
+                ScopeError::Recording(message) => PassError {
+                    pass_name: "<pipeline>".into(),
+                    message: format!("CV pipeline context failed: {message}"),
+                },
+            })
+    }
+
+    fn run_scoped(
+        &self,
+        program: OwnedProgram,
+        sidecar: &Sidecar,
+        cv: &mut CVLog,
+    ) -> Result<(PipelineOutput, PipelineOutcome), (PassError, PipelineOutcome)> {
+        let order = self
+            .topo_sort()
+            .map_err(|error| (error, PipelineOutcome::SchedulingFailure))?;
 
         // Build a lookup so we can fetch passes by name during execution.
-        let by_name: HashMap<&'static str, &dyn Pass> =
-            self.passes.iter().map(|p| (p.name(), p.as_ref())).collect();
+        let by_name: HashMap<&'static str, (&dyn Pass, IterationPolicy)> = self
+            .passes
+            .iter()
+            .map(|p| (p.name(), (p.as_ref(), p.iteration_policy())))
+            .collect();
+        if cv.journal().is_some() {
+            let descriptors: Vec<_> = order
+                .iter()
+                .map(|name| {
+                    let (_, policy) = by_name[name.as_str()];
+                    (
+                        name.as_str(),
+                        match policy {
+                            IterationPolicy::OneShot => JournalPolicy::OneShot,
+                            IterationPolicy::FixedPoint => JournalPolicy::FixedPoint,
+                        },
+                    )
+                })
+                .collect();
+            cv.record_schedule(&descriptors, MAX_SWEEPS as u64)
+                .map_err(|message| {
+                    (
+                        PassError {
+                            pass_name: "<pipeline>".into(),
+                            message: format!("CV schedule failed: {message}"),
+                        },
+                        PipelineOutcome::RecordingFailure,
+                    )
+                })?;
+        }
 
         let mut current = program;
         // Diagnostics + stats describe the FINAL (converged) sweep — an
@@ -275,52 +350,114 @@ impl PassPipeline {
         let mut stats = HashMap::new();
         let mut converged = false;
 
-        for _sweep in 0..MAX_SWEEPS {
+        for sweep in 0..MAX_SWEEPS {
             let mut sweep_diagnostics = Vec::new();
             let mut sweep_stats = HashMap::new();
             let mut fixed_point_changed = false;
 
-            for name in &order {
-                let pass = *by_name
+            for (slot, name) in order.iter().enumerate() {
+                let (pass, policy) = *by_name
                     .get(name.as_str())
                     .expect("topo-sort returns only registered passes");
 
-                let ctx = PassContext {
-                    program: &current,
-                    sidecar,
-                    cv,
-                };
-                let output = pass.run(ctx)?;
+                let slot = u64::try_from(slot).map_err(|_| {
+                    (
+                        PassError {
+                            pass_name: pass.name().into(),
+                            message: "CV pass slot exceeds supported width".into(),
+                        },
+                        PipelineOutcome::RecordingFailure,
+                    )
+                })?;
+                let (candidate, pass_diagnostics, pass_stats, changed) = cv
+                    .with_pass(sweep as u64, slot, |cv| {
+                        let ctx = PassContext {
+                            program: current.as_ref(),
+                            sidecar,
+                            cv,
+                        };
+                        let output = pass.run(ctx).map_err(|error| {
+                            (
+                                (error, PipelineOutcome::CallbackFailure),
+                                PassOutcome::CallbackFailure,
+                            )
+                        })?;
+                        let candidate = OwnedProgram::new(output.program);
 
-                // Append CV contributions the pass returned to the log.
-                // The pass's own name should already match its
-                // contribution.source per the CLOC06 review checklist.
-                // We tag-append against the program root's CV since
-                // that's the durable handle. Contributions accumulate
-                // across sweeps — each is a real transformation in the
-                // provenance record.
-                //
-                // CLOC09 made Program.cv optional. When tracing is
-                // disabled (cv == None), there's no CV id to attach
-                // contributions to — passes shouldn't be emitting them
-                // in that mode anyway, but we skip silently here for
-                // safety.
-                if let Some(ref prog_cv) = current.cv {
-                    for c in &output.contributions {
-                        let _ = cv.contribute(prog_cv, &c.source, &c.tag, c.meta.clone());
-                    }
-                }
+                        // Append CV contributions the pass returned to the log.
+                        // The pass's own name should already match its
+                        // contribution.source per the CLOC06 review checklist.
+                        // We tag-append against the program root's CV since
+                        // that's the durable handle. Contributions accumulate
+                        // across sweeps — each is a real transformation in the
+                        // provenance record.
+                        //
+                        // CLOC09 made Program.cv optional. When tracing is
+                        // disabled (cv == None), there's no CV id to attach
+                        // contributions to — passes shouldn't be emitting them
+                        // in that mode anyway, but we skip silently here for
+                        // safety.
+                        let mut pending = output.contributions.into_iter();
+                        if let Some(ref prog_cv) = current.as_ref().cv {
+                            while let Some(c) = pending.next() {
+                                // Transfer ownership before checked preflight. Cloning
+                                // here would evade limits and recurse into unvalidated
+                                // metadata. Rejected arguments are disposed by CVLog.
+                                if let Err(message) =
+                                    cv.contribute(prog_cv, &c.source, &c.tag, c.meta)
+                                {
+                                    for remaining in pending {
+                                        dispose_metadata(remaining.meta);
+                                    }
+                                    return Err((
+                                        (
+                                            PassError {
+                                                pass_name: pass.name().to_string(),
+                                                message: format!(
+                                                    "CV contribution failed: {message}"
+                                                ),
+                                            },
+                                            PipelineOutcome::AcceptanceFailure,
+                                        ),
+                                        PassOutcome::AcceptanceFailure,
+                                    ));
+                                }
+                            }
+                        } else {
+                            // No program identity means these requested events are
+                            // omitted. Their owned payloads still need safe disposal.
+                            for omitted in pending {
+                                dispose_metadata(omitted.meta);
+                            }
+                        }
+                        Ok((
+                            (candidate, output.diagnostics, output.stats, output.changed),
+                            PassOutcome::Accepted {
+                                changed: output.changed,
+                            },
+                        ))
+                    })
+                    .map_err(|error| match error {
+                        ScopeError::Callback(error) => error,
+                        ScopeError::Recording(message) => (
+                            PassError {
+                                pass_name: pass.name().into(),
+                                message: format!("CV pass context failed: {message}"),
+                            },
+                            PipelineOutcome::RecordingFailure,
+                        ),
+                    })?;
 
                 // Only a FixedPoint pass's change drives another sweep.
                 // A OneShot pass that reports a change does not spin the
                 // loop (it is expected to converge in one application).
-                if output.changed && pass.iteration_policy() == IterationPolicy::FixedPoint {
+                if changed && policy == IterationPolicy::FixedPoint {
                     fixed_point_changed = true;
                 }
 
-                sweep_diagnostics.extend(output.diagnostics);
-                sweep_stats.insert(pass.name().to_string(), output.stats);
-                current = output.program;
+                sweep_diagnostics.extend(pass_diagnostics);
+                sweep_stats.insert(pass.name().to_string(), pass_stats);
+                current = candidate;
             }
 
             // Keep this sweep's diagnostics + stats as the running final.
@@ -340,7 +477,7 @@ impl PassPipeline {
             // hasn't migrated to Option<CvId>); for untraced programs we
             // emit an empty cv to keep the diagnostic shape stable.
             diagnostics.push(Diagnostic {
-                cv: current.cv.clone().unwrap_or_default(),
+                cv: current.as_ref().cv.clone().unwrap_or_default(),
                 severity: coding_adventures_closure_typechecker::Severity::Note,
                 group: coding_adventures_closure_typechecker::DiagnosticGroup::new(
                     "pipeline.fixed-point-cap-reached",
@@ -353,12 +490,19 @@ impl PassPipeline {
             });
         }
 
-        Ok(PipelineOutput {
-            program: current,
-            diagnostics,
-            stats,
-            execution_order: order,
-        })
+        Ok((
+            PipelineOutput {
+                program: current.take(),
+                diagnostics,
+                stats,
+                execution_order: order,
+            },
+            if converged {
+                PipelineOutcome::Converged
+            } else {
+                PipelineOutcome::Cap
+            },
+        ))
     }
 
     /// Topologically sort the registered passes by `depends_on`.
@@ -709,6 +853,130 @@ mod tests {
 
     fn program() -> Program {
         Program::new("prog.1".to_string(), EsVersion::Es2025, SourceType::Module)
+    }
+
+    #[test]
+    fn checked_cv_scheduler_rejects_an_unrecordable_pass_result() {
+        struct RecordedPass;
+        impl Pass for RecordedPass {
+            fn name(&self) -> &'static str {
+                "recorded"
+            }
+            fn run(&self, ctx: PassContext<'_>) -> Result<PassOutput, PassError> {
+                Ok(PassOutput {
+                    program: ctx.program.clone(),
+                    changed: false,
+                    diagnostics: Vec::new(),
+                    stats: PassStats::default(),
+                    contributions: vec![Contribution {
+                        source: "recorded".into(),
+                        tag: "examined".into(),
+                        meta: HashMap::new(),
+                    }],
+                })
+            }
+        }
+        let mut cv = CVLog::new_checked_compact(coding_adventures_correlation_vector::GraphLimits {
+            max_events: 0,
+            ..Default::default()
+        })
+        .unwrap();
+        let id = cv.try_create(None).unwrap();
+        let program = Program::new(id, EsVersion::Es2025, SourceType::Module);
+        let mut pipeline = PassPipeline::new();
+        pipeline.add(Box::new(RecordedPass));
+        let error = pipeline.run(program, &Sidecar::new(), &mut cv).unwrap_err();
+        assert_eq!(error.pass_name, "recorded");
+        assert!(error.message.contains("events limit"), "{error}");
+    }
+
+    #[test]
+    fn checked_cv_returned_metadata_does_not_clone_or_drop_recursively() {
+        const CHILD: &str = "CV02_PENDING_EVENT_CHILD";
+        if std::env::var_os(CHILD).is_none() {
+            let result = std::process::Command::new(std::env::current_exe().unwrap())
+                .args([
+                    "--exact",
+                    "tests::checked_cv_returned_metadata_does_not_clone_or_drop_recursively",
+                    "--nocapture",
+                ])
+                .env(CHILD, "1")
+                .output()
+                .unwrap();
+            assert!(
+                result.status.success(),
+                "isolated scheduler failed: {:?}\n{}",
+                result.status,
+                String::from_utf8_lossy(&result.stderr)
+            );
+            return;
+        }
+        std::thread::Builder::new()
+            .stack_size(128 * 1024)
+            .spawn(|| {
+                struct RecordedPass {
+                    deep_first: bool,
+                }
+                impl Pass for RecordedPass {
+                    fn name(&self) -> &'static str {
+                        "recorded"
+                    }
+                    fn run(&self, ctx: PassContext<'_>) -> Result<PassOutput, PassError> {
+                        let mut value = serde_json::Value::Null;
+                        for _ in 0..65_536 {
+                            value = serde_json::Value::Array(vec![value]);
+                        }
+                        let deep = Contribution {
+                            source: "recorded".into(),
+                            tag: "deep".into(),
+                            meta: HashMap::from([("deep".into(), value)]),
+                        };
+                        let empty = Contribution {
+                            source: "recorded".into(),
+                            tag: "empty".into(),
+                            meta: HashMap::new(),
+                        };
+                        Ok(PassOutput {
+                            program: ctx.program.clone(),
+                            contributions: if self.deep_first {
+                                vec![deep, empty]
+                            } else {
+                                vec![empty, deep]
+                            },
+                            changed: false,
+                            diagnostics: Vec::new(),
+                            stats: PassStats::default(),
+                        })
+                    }
+                }
+                for traced in [true, false] {
+                    for deep_first in [true, false] {
+                        let mut cv = CVLog::new_checked_compact(
+                            coding_adventures_correlation_vector::GraphLimits {
+                                max_events: 0,
+                                ..Default::default()
+                            },
+                        )
+                        .unwrap();
+                        let id = cv.try_create(None).unwrap();
+                        let mut program = Program::new(id, EsVersion::Es2025, SourceType::Module);
+                        if !traced {
+                            program.cv = None;
+                        }
+                        let mut pipeline = PassPipeline::new();
+                        pipeline.add(Box::new(RecordedPass { deep_first }));
+                        let result = pipeline.run(program, &Sidecar::new(), &mut cv);
+                        if traced {
+                            assert!(result.unwrap_err().message.contains("events limit"));
+                        } else {
+                            assert!(result.is_ok());
+                        }
+                    }
+                }
+            })
+            .unwrap()
+            .join()
+            .unwrap();
     }
 
     #[test]
@@ -1202,3 +1470,6 @@ mod tests {
         let _ = e.to_string();
     }
 }
+
+#[cfg(test)]
+mod owned_cleanup_tests;

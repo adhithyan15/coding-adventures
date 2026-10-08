@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:3fafd7af9e9d049b",
+  "sourceHash": "fnv1a64:ca7015d11a9cf221",
   "lessons": [
     {
       "id": "HI-C01-namaste",
@@ -1034,7 +1034,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:65de23c5aa6aea34",
+      "sourceHash": "fnv1a64:ba0ba94885e550d0",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1091,19 +1091,19 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Four pieces — the same spine, with two loops instead of a bowl:"
+              "text": "Four movements — the same spine, but the body starts at the top:"
             },
             {
               "kind": "speech",
-              "text": "a lower loop."
+              "text": "down and round — descend, loop, sweep right."
             },
             {
               "kind": "speech",
-              "text": "an upper loop, sitting above it."
+              "text": "up the right spine, without lifting."
             },
             {
               "kind": "speech",
-              "text": "the right spine."
+              "text": "back down it."
             },
             {
               "kind": "speech",
@@ -1150,7 +1150,7 @@
             },
             {
               "kind": "speech",
-              "text": "Draw न — its three pieces? (Bowl, spine, bar.) Draw म — what makes it different? (Two loops where न has one bowl.) Where does the spine sit in both? (On the right — though a minority of letters have none.) Next: the vowel already hiding inside each consonant."
+              "text": "Draw न — its three pieces? (Bowl, spine, bar.) Draw म — what makes it different? (It starts at the top and runs into the spine.) Where does the spine sit in both? (On the right — though a minority of letters have none.) Next: the vowel already hiding inside each consonant."
             },
             {
               "kind": "activity",

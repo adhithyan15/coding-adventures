@@ -1,7 +1,7 @@
 {
   "language": "kannada",
   "chapter": 17,
-  "sourceHash": "fnv1a64:e1ed053751c5c3b4",
+  "sourceHash": "fnv1a64:9a1380718d87b98f",
   "lessonIds": [
     "KA-C17-madhyaahna-madhyaraatri",
     "KA-S148-digit-nine"
@@ -10,7 +10,7 @@
   "drivablePrefix": 1,
   "text": "kannada/narration/ch17.txt",
   "json": "kannada/narration/ch17.json",
-  "textHash": "fnv1a64:25330df9c1bdce29",
-  "jsonHash": "fnv1a64:dacc091da3fbeb68",
+  "textHash": "fnv1a64:5df6c023f204d4b2",
+  "jsonHash": "fnv1a64:c0e8b5c3a0fa047c",
   "findings": []
 }

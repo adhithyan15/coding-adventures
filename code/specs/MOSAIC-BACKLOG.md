@@ -36,7 +36,7 @@ history, and local test runs. This file is the result: one ordered list.
 ## Order of work
 
 1. **Security and visible breakage.**
-   - EM-1, the XAML `{` literal (*fixed, unpushed*);
+   - EM-1, the XAML `{` literal (*fixed on main, #16883 and #16948*);
    - MB-14, MosaicBook listened on every interface (*fixed, unpushed*);
    - MB-1, apps cannot be previewed (*fixed, unpushed*);
    - SW-2, SpiceWorkbench does not compile on four native backends;
@@ -194,7 +194,7 @@ exist.
 
 | ID | Problem | Status and evidence | Kind | Size |
 |---|---|---|---|---|
-| EM-1 | An authored XAML literal starting with `{` became a markup extension | **fixed** on `claude/brave-ride-edfrqw` (32cd2311a9, unpushed). #15487 | security | S |
+| EM-1 | An authored XAML literal starting with `{` became a markup extension | **fixed on main** by #16883, with the style allow-list in #16948. This branch's parallel fix was dropped in favour of main's, and X-4 then emptied the allow-list. #15487 | security | S |
 | EM-2 | `align` is never read on Qt and Flutter; main-axis and Text `align` semantics are undefined | **real**. #15258 has an open fix, #16297. #16293 needs a design | bug | S/M + M |
 | EM-3 | `HostInput` ignores `multiline` on react, html, webcomponent, Qt and SwiftUI, with no degradation reported | **real**. A probe emits `<input type="text">`, a Qt `TextInput` and a SwiftUI `TextField`. #15930 | bug | S–M |
 | EM-4 | SwiftUI drops `align`, `align-items`, `justify-content`, `flex-grow` and `flex-wrap` | **partly**. Pinned at `engram-app/tests/native_complete_gate.rs:154-161`. #14728 | bug | M |

@@ -1,8 +1,9 @@
 // TaskApp — layout (moslayout).
 //
 // The shell follows code/specs/task-app-ui-design.md: a quiet left RAIL holding the
-// workspace's projects, and a MAIN column with a topbar (title, summary, status,
-// view switch) over the content. Exactly one view shows at a time.
+// workspace's projects, and a MAIN column with a stacked topbar (title, summary,
+// status, and controls), then a view switch over the content. Exactly one view
+// shows at a time.
 //
 // Everything here is a renderer. Grouping, ordering, formatting, scheduling and the
 // status verdict all arrive already decided by the engine; the layout only places them.
@@ -47,7 +48,10 @@ layout TaskApp {
 
     // ── MAIN ────────────────────────────────────────────────────────────────
     Column [ main ] {
-      Row [ topbar ] {
+      // Keep the descriptive title block and the compact action cluster on
+      // separate lines. Backends without flex-wrap (notably Flutter) otherwise
+      // need more than the app's declared 1280px desktop width (#13465).
+      Column [ topbar ] {
         Column [ title-block ] {
           Text [ title ] ( content : slot: app-title , a11y-role : heading )
           Row [ subline ] {
@@ -71,54 +75,56 @@ layout TaskApp {
           }
         }
 
-        // The project-progress ring (task-app-icon-assets-v1.md) — a donut via
-        // one filled circle (its background bound to the host-computed
-        // conic-gradient, UI36) with a smaller same-surface-colour circle
-        // stacked on top to punch the hole. No SVG.
-        Row [ ring-wrap ] {
-          Stack [ ring-circle ] {
-            Box [ ring-fill ] ( background : slot: ring-gradient )
-            Box [ ring-hole ] { }
+        Row [ topbar-controls ] {
+          // The project-progress ring (task-app-icon-assets-v1.md) — a donut via
+          // one filled circle (its background bound to the host-computed
+          // conic-gradient, UI36) with a smaller same-surface-colour circle
+          // stacked on top to punch the hole. No SVG.
+          Row [ ring-wrap ] {
+            Stack [ ring-circle ] {
+              Box [ ring-fill ] ( background : slot: ring-gradient )
+              Box [ ring-hole ] { }
+            }
+            Column [ ring-caption ] {
+              Text [ ring-pct ] ( content : slot: ring-percent )
+              Text [ ring-label ] ( content : "complete" )
+            }
           }
-          Column [ ring-caption ] {
-            Text [ ring-pct ] ( content : slot: ring-percent )
-            Text [ ring-label ] ( content : "complete" )
-          }
-        }
 
-        // The theme toggle (task-app-icon-assets-v1.md) — see `theme-is-dark`'s
-        // doc comment in TaskApp.mil. `HostButton` has no way to render a
-        // child (only its flat `label`, per mosaic-emit-react's
-        // `host_button_label_body`), so the accessible name is intentionally
-        // carried by the `label` text itself here
-        // — kept real (a screen reader announces it), just visually hidden
-        // (`color: transparent` in the .msl part; the button's own box stays
-        // its full clickable size, only the text glyphs vanish). The crescent
-        // (an inset box-shadow cut into a filled circle) or plain filled sun
-        // is drawn entirely by the button's own background/box-shadow — no
-        // SVG, no more `position: fixed` button living outside this component.
-        If ( when: slot: theme-is-dark ) {
-          HostButton [ theme-toggle-sun ] (
-            label : "Switch to the light theme" ,
-            onClick : emit: onToggleTheme
+          // The theme toggle (task-app-icon-assets-v1.md) — see
+          // `theme-is-dark`'s doc comment in TaskApp.mil. `HostButton` has no
+          // way to render a child (only its flat `label`, per
+          // mosaic-emit-react's `host_button_label_body`), so the accessible
+          // name is intentionally carried by the `label` text itself here —
+          // kept real (a screen reader announces it), just visually hidden
+          // (`color: transparent` in the .msl part; the button's own box stays
+          // its full clickable size, only the text glyphs vanish). The crescent
+          // (an inset box-shadow cut into a filled circle) or plain filled sun
+          // is drawn entirely by the button's own background/box-shadow — no
+          // SVG, no more `position: fixed` button living outside this component.
+          If ( when: slot: theme-is-dark ) {
+            HostButton [ theme-toggle-sun ] (
+              label : "Switch to the light theme" ,
+              onClick : emit: onToggleTheme
+            )
+          }
+          Else {
+            HostButton [ theme-toggle-moon ] (
+              label : "Switch to the dark theme" ,
+              onClick : emit: onToggleTheme
+            )
+          }
+
+          // Flips the active project's complexity tier — see
+          // code/specs/task-app-complexity-config-v1.md. Deliberately a single
+          // button here rather than a per-project-row control in the rail:
+          // this acts on whichever project is currently active, same as the
+          // view switcher below it.
+          HostButton [ complexity-toggle ] (
+            label : slot: complexity-label ,
+            onClick : emit: onToggleProjectComplexity
           )
         }
-        Else {
-          HostButton [ theme-toggle-moon ] (
-            label : "Switch to the dark theme" ,
-            onClick : emit: onToggleTheme
-          )
-        }
-
-        // Flips the active project's complexity tier — see
-        // code/specs/task-app-complexity-config-v1.md. Deliberately a single
-        // button here rather than a per-project-row control in the rail:
-        // this acts on whichever project is currently active, same as the
-        // view switcher right next to it.
-        HostButton [ complexity-toggle ] (
-          label : slot: complexity-label ,
-          onClick : emit: onToggleProjectComplexity
-        )
       }
       // Segmented view switch.
       //
@@ -196,22 +202,29 @@ layout TaskApp {
               }
               // The legend — static copy, not data-bound (see TaskApp.mil's doc
               // comment on why this isn't a slot).
-              Row [ tl-legend ] {
-                Row [ tl-legend-item ] {
-                  Box [ tl-legend-swatch ] { }
-                  Text [ tl-legend-label ] ( content : "On track" )
+              // Two explicit lines keep all four meanings visible in the
+              // constrained native card without pretending every backend
+              // supports CSS flex-wrap (#16887).
+              Column [ tl-legend ] {
+                Row [ tl-legend-line ] {
+                  Row [ tl-legend-item ] {
+                    Box [ tl-legend-swatch ] { }
+                    Text [ tl-legend-label ] ( content : "On track" )
+                  }
+                  Row [ tl-legend-item3 ] {
+                    Box [ tl-legend-swatch-milestone ] { }
+                    Text [ tl-legend-label3 ] ( content : "Milestone" )
+                  }
                 }
-                Row [ tl-legend-item2 ] {
-                  Box [ tl-legend-swatch-crit ] { }
-                  Text [ tl-legend-label2 ] ( content : "Critical path" )
-                }
-                Row [ tl-legend-item3 ] {
-                  Box [ tl-legend-swatch-milestone ] { }
-                  Text [ tl-legend-label3 ] ( content : "Milestone" )
-                }
-                Row [ tl-legend-item4 ] {
-                  Box [ tl-legend-swatch-today ] { }
-                  Text [ tl-legend-label4 ] ( content : "Today" )
+                Row [ tl-legend-line2 ] {
+                  Row [ tl-legend-item2 ] {
+                    Box [ tl-legend-swatch-crit ] { }
+                    Text [ tl-legend-label2 ] ( content : "Critical path" )
+                  }
+                  Row [ tl-legend-item4 ] {
+                    Box [ tl-legend-swatch-today ] { }
+                    Text [ tl-legend-label4 ] ( content : "Today" )
+                  }
                 }
               }
               For ( each: slot: timeline-rows , as: t , index: ti ) {

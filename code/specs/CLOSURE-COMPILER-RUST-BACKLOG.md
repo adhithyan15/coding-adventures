@@ -2,10 +2,11 @@
 
 **Status:** active — resumed with provenance as a completion requirement
 **Last reprioritized:** 2026-10-07
-**Current selection:** CCR-065 primitive fold lineage, specified in
-[CLOC31](CLOC31-primitive-fold-lineage.md), branch
-`codex/closurec-fold-lineage-20261007`. No competing Closure PR at selection.
-**Current audit base:** `8ec899e565e2e73eb01c48107acdbe54a66c457a`
+**Current selection:** actual bounded provenance chronology, specified in
+[CV03](CV03-actual-bounded-provenance-chronology.md), branch
+`codex/closurec-chronology-20261007`. CV02 merged and is verified;
+preserve one active Closure/shared-stack PR.
+**Current audit base:** `9e4b8d1ab9b082f4ec027a67d10f97e3827579f2`
 **Upstream audit base:** `google/closure-compiler` at
 `10ca677aff381d2c2e6e1b254ba32861e503173d` (2026-09-17), current release
 `v20260915`
@@ -22,18 +23,221 @@ completion chat and re-audits live PR state rather than hardcoding a head.
 CCR-065's original bridge audit is stale: CLOC27 already propagates token CVs
 onto leaves and shares the real log. Live inspection found its golden trace
 assertion only proves token presence, while primitive folds read absent
-composite CVs and lose replacement lineage. CLOC31 is the selected repair;
+composite CVs and lose replacement lineage. CLOC31 repaired that primitive gap;
 its stronger end-to-end graph assertions failed before implementation.
 A context probe additionally caught CV metadata disabling conditional collapse
-inside primitive, array and call branches. The selected slice includes native
+inside primitive, array and call branches. The merged slice includes native
 recursive AST equality excluding only CVs, preserving signed-zero distinctions
 and both collapsed primitive branch histories. Context regressions failed
 before these safeguards. Composite lineage and the remaining fold families
 still require the broader provenance/tracing-neutrality audit.
 
-Required next slices: audit remaining fold families; stable composite identities
+CLOC31 merged as [#16866](https://github.com/adhithyan15/coding-adventures/pull/16866)
+at `84252d038a9fa2eddb5f92833d0de242969e45c8`. All 34 attached checks were
+terminal and acceptable on reviewed head `3fa64764eef9de761fb198b22ff9e6191a13de2f`,
+including macOS/Ubuntu/Windows builds and both required gates. Fetched-main
+reachability and matching repaired files were verified. Its clean worktree was
+archived after preserving validation artifacts. CI compatibility repairs retained
+the scheduler's atomic test budget and oracle tool's 32 MiB capture limit.
+
+The next foundation is [#16868](https://github.com/adhithyan15/coding-adventures/issues/16868):
+compact IDs, validated/bounded graph operations and canonical serialization.
+Direct-library depth 1024 has a 2,058-byte final ID and 3,258,509-byte JSON log;
+doubling depth nearly quadruples identity overhead. Shared-ancestor lineage can
+put a child before its parent. The library accepts and reserializes dangling
+parents, mismatched entry IDs and cycles. Five identical fresh CLI runs produced
+five different sidecar byte strings despite structurally equal graphs. CV01
+selected compact allocation first; it does not complete those other requirements.
+
+CV01 merged as [#16881](https://github.com/adhithyan15/coding-adventures/pull/16881)
+at `ec1c8d8c733f188c762e1377fe56dc07ecd2faa7`. All 34 checks were terminal and
+acceptable on reviewed head `76f7dc78995dc6c66dfcc1f1952bea0b37efcc21`, including
+all three operating systems and required gates. Fetched main contains that
+squash commit and all 14 changed files match the reviewed head. The clean worktree
+was archived after preserving its compiled baseline and validation/audit artifacts.
+Depth 1024 now serializes to 142,567 bytes and depth 4096 to 569,575 bytes, with
+20-byte IDs throughout. Disabled allocation state survives reload; present null
+state and duplicate decoded entry keys reject rather than downgrading/overwriting.
+Full compiler tests: 1,037 passed; CV49 unit/10 doctests; all other 19 consumers
+2,135 passed (49 existing ignored cases). Strict lint and security review passed.
+
+The compact head still accepts cycles/dangling parents and can allocate a
+self-parent edge when deriving from a future unknown ID. Public mutable maps
+bypass checked invariants; reversed BFS still violates DAG topology. CV02 selects
+controlled graph ownership/mutation, explicit budgets, bounded valid traversal,
+checked import and canonical/fail-closed serialization with artifact publication
+tests. Typed actual chronology and full source/node/output coverage remain open.
+
+CV02 local checkpoints (not yet published/merged): checked/private graph
+ownership, transactional accounting, strict bounded import, iterative borrowed
+topological queries, canonical byte-limited JSON and safe rejected-metadata
+disposal are implemented. Independent review exposed compatibility query gaps,
+discarded projection/stage declarations, pre-budget metadata sorting and
+pre-validation scheduler cloning, caller-stack destruction of rejected folds
+and unchecked-import normalization laundering; each has regression evidence
+and a repair. Allocator-only import status now survives canonical export and
+cannot be upgraded through checked queries/reload.
+Lexer/parser/scheduler, constant-fold and all four current deletion passes
+propagate recording errors before accepting candidates. Historical checkpoint
+09cdb43 passed six affected crates: 878 tests (including 10 CV doctests), with
+10 existing ignored cases. The subsequent key-preflight repair passed all 70 CV
+unit tests and 10 doctests. Independent ownership review passed 4f818174 and its
+corrected dependency-rejection test: scheduler-owned current/candidate trees now
+use iterative disposal on errors and intermediate replacement. Fresh AST and
+pipeline suites pass 145 tests (one existing ignored doctest); four deletion-pass
+suites pass 266 tests (14 existing ignores). The full compiler passes 1,037 tests
+across 176 targets with no ignores. All touched packages and compiler pass strict
+all-target lint; compiler verification explicitly denies unknown lints. There
+are 879 valid lesson shards. These remain local checkpoints, not CI/merge proof.
+Direct checked chains have 4,096/8,192 nodes and 569,436/1,138,780-byte exports;
+a 10,002-node wide graph passes deterministic queries. Isolated small-stack tests
+cover 65,536-level metadata, deep mixed AST families and wide sibling lists.
+The compiler EOF test now checks semantic deletion fields rather than JSON key
+order; it explicitly does not prove currently skipped comment/whitespace origins.
+The checked CLI/stage checkpoint adds the closed nine-field limit override,
+shared programmatic validation, checked compiler log construction and fallible
+direct-stage/whitespace gap and emit recording. Actual-process tests preserve
+existing artifacts on early cap/configuration failure and verify successful
+checked reload with unchanged output at all five compilation levels. Error
+diagnostics now go to stderr; the typed-AST alias-conflict fixture verifies
+empty stdout. Fresh compiler verification passes 1,043 tests across 177 targets
+with no ignores, plus 70 CV unit tests and 10 doctests; both pass strict lint
+including unknown-lint denial. There are 884 valid lesson shards.
+The borrowed checked-export checkpoint validates the complete graph before
+filters/summary and shares work through reference indexes, comparisons, sorting,
+counting and canonical compact/pretty/NDJSON encoding. All summary formats stream
+through a bounded sink. Every filtered view declares partial coverage. CLI export
+failures no longer become `{}`/zero summaries/changed formats; NONE independently
+validates evidence. All payloads are prepared before any JS/map/manifest/sidecar
+write. Real-process regression first reproduced exit 0 under a zero output cap;
+now all views reject and preserve pre-existing destinations and success stdout.
+Seventy-two fresh SIMPLE/ADVANCED processes over twelve configurations produce
+identical sidecar/summary bytes and unchanged JavaScript. Fresh full compiler:
+1,047 passed across 177 targets with no ignores; CV: 76 unit and 10 doctests;
+both strict all-target lint, 885 valid lessons, whitespace clean. A fixture
+selected a random tombstoned map key in the first full run; it now selects a
+live identity explicitly and the complete library suite passes. These are local
+checks. Independent review at 5a220f6e4a passed the implemented security scope
+and found one override-grammar correctness defect: explicit whitespace selected
+defaults. ASCII/mixed/Unicode-whitespace process probes reproduced exit 0 before
+repair; the absent-value check now tests exact emptiness and rejects those pairs.
+All seven critical process tests, 11 surface tests, two typed-AST alias tests and
+35 configuration unit tests pass after repair, with strict compiler lint and
+887 valid lessons. Final checkpoint review remains required before publishing.
+The publication checkpoint preflights the whole artifact set, rejects destination
+aliases/nonregular/read-only outputs, stages complete synced files and installs
+without clobbering, with the sidecar last. Reported pre-commit failure rolls back
+owned files; obstructed restoration preserves recovery copies and unknown files.
+Post-commit cleanup failures warn with complete outputs. Held Unix/Windows object
+identities protect ownership checks; Windows uses the full 128-bit file ID.
+Source roots and JS/map/manifest publication records hash exact consumed/final
+bytes using the existing local SHA-256 crate. Three actual-process tests failed
+before implementation and pass after repair. Native Windows fault/identity/path
+tests pass; Unix symlink cases await native CI. Final local compiler verification
+passed 1,061 tests across 178 targets with zero ignores, including read-only/
+directory rejection. CV passed 76 unit tests and 10 doctests; SHA-256 passed 27
+unit tests and four doctests. All three pass strict all-target lint with unknown
+lints denied. All 889 lesson shards validate.
+Independent exact-head review rejected publication checkpoint `d5df790ba7`:
+`rename` overwrote an unexpected staging backup occupant, and a rollback-removal
+failure for an initially absent destination named a nonexistent original backup.
+Both temp-only probes and native regressions reproduced the defects. Spec
+refinement `4f09b46596` precedes the repair: exclusive backup links, explicit
+backup-path ownership, already-present original recovery and truthful diagnostics.
+All 14 native Windows publication tests pass after repair, including same-inode
+unexpected occupants and failure between backup creation and original removal.
+The 19 shared consumers also pass fresh at the unchanged implementation scope:
+2,147 tests across 80 targets, 49 existing ignores and strict lint. All 893 lesson
+shards validate. The repaired full compiler passes 1,064 tests across 178 targets
+with zero ignores and strict all-target lint; final repaired-head review remains pending.
+Current remaining CV02 work: native CI execution and actual merge verification.
+PR [#16905](https://github.com/adhithyan15/coding-adventures/pull/16905) now publishes
+repaired head `3b7928e241`, with full-scope independent security PASS and 1,079
+Windows tests across 180 all-target targets, zero ignores, and strict lint.
+The older `90010c29de` native probes found output DACL broadening and inherited
+stage readers; specification-first repairs create atomically private objects,
+capture/recheck owner/group/DACL/protection, use distinct always-empty policy
+probes and verified handle routes, and restore privacy before rollback. An
+additional OWNER RIGHTS fresh-open regression first reproduced late original
+mutation; the repair proves production fresh opens before changing originals.
+All 20 Windows publication cases pass. Linux/macOS descriptor-bound UID/GID/mode
+preservation and extended/default ACL rejection are implemented, with seven
+native cases each and strict cross-checks. Published-head CI run `37649573380`
+executed the native Closure package command successfully on Linux and macOS.
+Its Windows general package-test step was skipped; that job is not acceptance.
+
+The initial repaired-head CI plan selected Closure on all platforms but left
+`build-windows-os-suites` false, which skips ordinary Windows package tests.
+The gate repair adds the compiler's affected identity and CV02 specification,
+with real-evaluator regressions that first fail both selection clauses and an
+unrelated Rust negative control. Independent review of local `79643862f1` found
+the specification-only gate still selected no compiler or Rust toolchain.
+Specification-first exact consumer mapping now seeds Closure on all platforms,
+fails on missing consumers, and respects language filters. Emitted-plan tests
+first reproduced the empty selection and now verify the real native command,
+toolchain and gate together. Refresh exact-head review and CI after these
+changes; require non-skipped compiler test commands and successful native package
+results before accepting the draft. Green job labels or older checks cannot
+substitute for execution evidence. The foundation and full compiler/provenance
+goal remain open. Correctly gated head `0e02820565` CI run `37655926931` executed
+the Windows general package-test step but failed the compiler's Rust 1.99
+strict Clippy preflight on constant-size SID `chunks_exact(4)`, before tests.
+Specification `0192308acf` preserves the checked SID range/count and byte order;
+fixed array chunks repair that lint without weakening the gate. Matching
+toolchain validation, independent exact-head review and fresh native CI remain
+required. The chronology draft stays outside the checkout until CV02 merges.
+Chronology and complete source/node/output coverage are not
+established by this foundation.
+Diagnostic short-circuits (empty-input banner and token-only tree dumps) currently
+return before trace construction. Track their provenance policy with the full
+CLI/diagnostics completion audit; normal compile/export tests do not establish
+source/output coverage for those modes.
+
+CV02 final acceptance supersedes its historical local/published checkpoints
+above. [#16905](https://github.com/adhithyan15/coding-adventures/pull/16905)
+merged at `851ce71fc033f11d0c1716ed895b7026e5c64a81` after independently reviewed
+head `7debd2f26bd36ed243b9cf8273c6c576cd59a886`. Native
+[CI 37673154223](https://github.com/adhithyan15/coding-adventures/actions/runs/37673154223)
+executed the actual compiler test command successfully on Linux, macOS and
+Windows; both required gates, Books and CodeQL were terminal and successful on
+that head. Fetched-main reachability and all 120 reviewed file blobs/modes match.
+The tested binary and validation receipts were preserved before archiving the
+managed worktree. Local compiler verification passed 1,086 tests across 180
+targets with zero ignores. Compact/checked graph and publication foundation is
+accepted; #16868, #15830 and the full delivery contract remain open.
+
+CV03 local implementation now retains a separately sequenced typed graph
+journal and actual pipeline/pass begin, accepted schedule and terminal outcomes.
+Terminal capacity is reserved before callbacks; exact replay checks nested
+contexts, schedule slots/sweeps, result classification and contribution/deletion
+source binding. Strict raw import rejects duplicate decoded fields and malformed
+known declarations, and generic valid full import delegates to the bounded
+checked path. Canonical JSON/pretty/NDJSON and declared-partial projections retain
+chronology. The traced compiler opts in from construction; actual process tests
+observe later-sweep inline/fold ordering, tracing-neutral output, deterministic
+bytes and preservation of the entire existing artifact set on cap failures.
+Full compiler validation found three older NDJSON fixture failures; the readers
+now preserve raw records until checked reconstruction, and projection tests use
+the semantic partial-coverage contract. Final local verification passes: 1,093 compiler tests across 181 targets
+with zero ignores, plus 2,279 shared tests/doctests across 91 targets in all 20
+affected packages (49 existing ignores). Compiler and shared strict all-target
+Clippy pass with unknown lints denied; lessons and whitespace checks pass.
+The real production plan selects the actual compiler command on Linux, macOS
+and Windows, Rust toolchain and the Windows general-test gate without force.
+Build-tool uncached tests/vet and 18 Python CI gate contracts pass. Independent exact-head review, publication and native CI/merge
+remain pending. This chronology slice does not establish exact source/output coverage,
+all fold families, composite spans or provenance for every mutating pass.
+
+The remaining-fold inventory is
+[#16875](https://github.com/adhithyan15/coding-adventures/issues/16875).
+Actual SIMPLE/ADVANCED CLI probes fold Math.abs, string case conversion,
+array.join and Object.keys while losing final fold events; the Math.abs input
+retains only the unary child's history. All traced/untraced bytes match. These
+are initial cases requiring result-owned graph tests, not a complete inventory.
+
+Required next slices after CV03: audit remaining fold families; stable composite identities
 and shared source spans on the canonical ESTree boundary; typed lineage events
-with actual pass/sweep ordering; all mutating passes (inline/rename first),
+with complete source/node coverage; all mutating passes (inline/rename first),
 including one-to-many inlining, many-to-one merges, motion and deletion;
 output-range/source-map joins and graph queries. The full compiler delivery
 contract below remains mandatory. No provenance slice alone completes the loop.
@@ -289,7 +493,7 @@ finding is cli-builder local/global same-ID shadowing
 | Rank | ID | Work item | Acceptance evidence | Status |
 |---:|---|---|---|---|
 | 7 | CCR-007 | Wire real VLQ source maps through parser spans, transforms, emitter, wrappers, and output paths. | Upstream source-map vectors plus multi-file, Unicode, wrapper, stdin, and transformed-token end-to-end tests match decoded mappings. | Ready |
-| 7.1 | CCR-065 | **EPIC** — real end-to-end provenance: trace any output byte back through every pass that touched it, including motion, inlining, renaming, and deletion. The bridge writes `cv: None` in 117 places and `cv: Some` nowhere, so no AST node carries an identity; pass contributions attach to the program root, not to nodes; only `constant-fold` records lineage; there is no edge vocabulary for moved/inlined-into/merged/renamed/deleted. | For a program exercising folding, inlining, renaming, motion, and deletion, the sidecar answers: source span of an output byte, every pass that touched it in real order, every call site an inlined body reached, a renamed binding's original name, and a tombstone for deleted code with the responsible pass. | Ready (slice P1 first) — [#15830](https://github.com/adhithyan15/coding-adventures/issues/15830) |
+| 7.1 | CCR-065 | **EPIC** — real end-to-end provenance: trace output bytes through folding, motion, inlining, renaming and deletion. Leaf CVs and CLOC31 primitive lineage are implemented; composite identities, remaining fold families, exact source/output spans, typed chronology and validated bounded graphs remain incomplete. Historical zero-identity bridge counts are superseded by the recovery audit above. | For a program exercising folding, inlining, renaming, motion, and deletion, the sidecar answers: source span of an output byte, every pass that touched it in real order, every call site an inlined body reached, a renamed binding's original name, and a tombstone for deleted code with the responsible pass. | Active: CV01 foundation [#16868](https://github.com/adhithyan15/coding-adventures/issues/16868), remaining folds [#16875](https://github.com/adhithyan15/coding-adventures/issues/16875), epic [#15830](https://github.com/adhithyan15/coding-adventures/issues/15830) |
 | 8 | CCR-008 | Define and enforce `language_in`; stop treating accepted syntax as independent of the selected input mode. | Current upstream accept/reject corpus matches diagnostics and exit status for representative ECMAScript modes. | Ready |
 | 9 | CCR-009 | Implement `language_out` and TRANSPILE_ONLY as real lowering stages rather than identity. Start with optional chaining/nullish coalescing and class features. | Runtime-equivalent output and upstream differential tests across at least two output modes. | Ready |
 | 10 | CCR-010 | Extend binding targets across AST, parser, typed bridge, scope analysis, passes, and emitter for array/object destructuring. | Existing declined conformance cases become value-checked; declaration, assignment, parameter, rest, default, and loop targets pass. | Ready |

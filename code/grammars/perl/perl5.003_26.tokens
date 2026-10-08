@@ -1,0 +1,19 @@
+# Perl 5.003_26 (1997-02-10) tokens: plain-decimal arithmetic-print subset.
+# @version 1
+# PARTIAL: this does not lex all Perl 5.003_26 source.
+# Evidence: https://github.com/Perl/perl5/blob/perl-5.003_26/toke.c
+# Tagged tokenizer explicitly rejects carriage return. Substitution and
+# diagnostic changes are outside this subset. Leading-zero forms stay refused.
+
+PRINT     = "print"
+INT       = /0|[1-9][0-9]*/
+PLUS      = "+"
+DECREMENT = "--"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\n]+/

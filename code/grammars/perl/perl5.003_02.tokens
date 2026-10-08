@@ -1,0 +1,21 @@
+# Perl 5.003_02 (1996-08-10) tokens: verified arithmetic-print subset only.
+# @version 1
+# PARTIAL: this does not lex all Perl 5.003_02 source.
+# Evidence: https://github.com/Perl/perl5/blob/perl-5.003_02/perly.y
+# Evidence: https://github.com/Perl/perl5/blob/perl-5.003_02/toke.c
+# The tagged perly.y matches 5.003_01; toke.c differs in PerlIO and constant
+# subroutine handling, while KEY_print, ADDOP/MULOP and PREDEC/POSTDEC remain.
+
+# Leading-zero multi-digit forms are octal and outside this partial subset.
+PRINT     = "print"
+INT       = /0|[1-9][0-9]*/
+PLUS      = "+"
+DECREMENT = "--"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\r\n]+/

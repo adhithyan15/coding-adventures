@@ -496,9 +496,45 @@ private fun renderLine(
     val stepCol = if (c1 < c2) 1 else -1
     val diagonalFlags = if (deltaCol > deltaRow) FLAG_LEFT or FLAG_RIGHT else FLAG_UP or FLAG_DOWN
 
+    // The error term and its invariant (issue #12093)
+    // -----------------------------------------------
+    // Measure progress as i = columns stepped, j = rows stepped. The ideal
+    // line is the zero set of F(i, j) = deltaRow * i - deltaCol * j. The
+    // loop keeps
+    //
+    //     error == deltaCol * (j + 1) - deltaRow * (i + 1)
+    //           == -F(i + 1, j + 1)
+    //
+    // — the signed distance of the DIAGONAL neighbour, the cell we would
+    // reach by stepping both axes. At i = j = 0 that is deltaCol - deltaRow,
+    // so that, and nothing else, is the seed (the standard all-octant
+    // integer Bresenham "err = dx - dy"). Each iteration compares
+    // 2 * error with the two half-cell thresholds:
+    //
+    //     2*error > -deltaRow  -> step col  (error -= deltaRow, i += 1)
+    //     2*error <  deltaCol  -> step row  (error += deltaCol, j += 1)
+    //
+    // With the correct seed the major axis advances exactly once per
+    // iteration and the minor axis at most once, so the walk visits exactly
+    // max(deltaRow, deltaCol) + 1 cells and stops on (r2, c2).
+    //
+    // Seeding 0 instead breaks the invariant by a constant offset and makes
+    // the minor axis step too eagerly. For deltaRow = 1, deltaCol = 3 the
+    // row cursor reaches r2 on the first iteration and later steps past
+    // it; for deltaRow = 3, deltaCol = 1 the column cursor does the same
+    // with c2. Either way the `row == r2 && col == c2` exit is never seen
+    // and render() hangs — an infinite loop, not an exception.
+    //
+    // Worked example, (row 0, col 0) -> (row 1, col 3):
+    //
+    //     cell    error  2*error  col step?    row step?
+    //     (0,0)     2       4     4 > -1 yes   4 < 3 no
+    //     (0,1)     1       2     2 > -1 yes   2 < 3 yes
+    //     (1,2)     3       6     6 > -1 yes   6 < 3 no
+    //     (1,3)   reached p1, stop — 4 cells = max(1, 3) + 1
     var row = r1
     var col = c1
-    var error = 0
+    var error = deltaCol - deltaRow
     while (true) {
         writeTag(clip, row, col, diagonalFlags, buffer)
         if (row == r2 && col == c2) break

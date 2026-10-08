@@ -4,6 +4,16 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+### Fixed
+
+- `decrement_in_flight` no longer calls `AtomicUsize::fetch_update`. Rust 1.99
+  deprecated it in favour of `try_update`, and CI builds with `-D warnings` on
+  the floating stable toolchain, so the crate stopped compiling on any CI run
+  that rebuilt it. The replacement `try_update` does not exist on older
+  toolchains, so the fix is an explicit `compare_exchange_weak` loop instead,
+  which compiles on both sides of the rename. Same semantics: the counter
+  decrements and saturates at zero.
+
 ### Added
 
 - Added `ExecutorCapabilityFleetSummary` and

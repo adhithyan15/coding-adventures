@@ -1,5 +1,28 @@
 # Changelog
 
+## Fixed — chapter 1's payoff is atom-scored
+
+Chapter 1's lessons, the olá writing runway included, are typed (schema v2),
+but `chapters.d/0001.json` still carried the schema-v1 placeholder
+`payoff.assesses: []` and a note waiting "until migration". The
+representativeness gate scored PT-C01-practice 0/18, which was the only
+chapter debt keeping the track off the clean list (#12301, #12088).
+
+- The payoff now names the eighteen atoms PT-C01-practice assesses — every
+  atom the chapter introduces. The PT-W01 writing lessons introduce none of
+  their own (they re-assess olá's three), so the opener's writing evidence is
+  already inside the set.
+- Portuguese is now a clean track under the chapter gates. No lesson, book or
+  narration changed.
+
+## Fixed — the dictation no longer prints a strip
+
+PT-W01-ola-dictation no longer prints the strip of olá above its heard cue:
+a dictation shows the learner no model (HL06).
+The book printed the strip at the top of the writing block, above the cue,
+so the learner saw the answer before writing it. The lesson's earlier copy
+lessons keep their strips. No lesson prose, narration or duration changes.
+
 ## Writing lessons print their first stroke-order filmstrips
 
 PT-W01-ola-guided-copy, -delayed-copy and -dictation now print a numbered

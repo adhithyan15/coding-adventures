@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- **`-f` / `--file` can no longer read `.cow` files outside the cows directory
+  (issue #12169).** The cow name was interpolated straight into
+  `code/specs/cows/{name}.cow`, so `-f ../../../../some/dir/file` or an
+  absolute path opened (and printed) any readable `*.cow` file on disk. Cow
+  selection now goes through two layers, matching the C#, F#, Java, Kotlin,
+  Perl, Haskell, Dart, Lua and Swift ports:
+  1. `is_safe_cow_name` accepts only a bare file stem — it rejects the empty
+     name and any name containing `/`, `\`, `..`, `:` or NUL (which also covers
+     every absolute or drive-qualified path);
+  2. `resolve_cow_path` canonicalizes both the cows directory and the
+     candidate and requires the candidate to stay inside the cows directory,
+     which also defeats a symlink planted there.
+
+  A rejected name behaves like an unknown cow: `default.cow` is drawn.
+  `load_cow` now takes the cows directory rather than the repository root.
+
 ### Fixed
 
 - **macOS build was broken: `TextContent` was missing its `wrap` field.** The
@@ -50,6 +68,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Eight path-traversal tests (issue #12169): bare-name acceptance, relative
+  (`../`, `..\`), absolute, nested (`dir/name`), percent-encoded and
+  NUL-bearing names, plus a Unix-only symlink-escape test that exercises the
+  canonicalization layer.
 - **First test suite for this package** (6 tests), running on Linux, Windows and
   macOS alike. Includes an explicit regression test, `ascii_art_never_soft_wraps`,
   which pins `wrap == false` and `max_lines == None`, plus coverage of byte-exact

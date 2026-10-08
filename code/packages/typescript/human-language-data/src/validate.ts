@@ -167,6 +167,9 @@ export function validate(input: ValidateInput): Issue[] {
       ...script.letters,
       ...(script.independentVowels ?? []),
       ...(script.finalConsonants ?? []),
+      // A digit row that names its strokes (Kannada ೧-೯) is held to the same
+      // pair: no lift count without a source, no source without a lift count.
+      ...(script.digits ?? []),
     ]) {
       if (letter.strokeOrder.length === 0) continue;
       const hasPenLifts = letter.penLifts !== undefined;
@@ -195,8 +198,9 @@ export function validate(input: ValidateInput): Issue[] {
     }
   }
 
-  // Digit rows are identity rows: they carry no ductus, and `uncoveredGlyphs`
-  // below lets each one cover its glyph in a headword. That trust is only
+  // Digit rows are identity rows first: most carry no ductus (a cited one,
+  // like Kannada ೧-೯, is checked above with the letters), and
+  // `uncoveredGlyphs` below lets each one cover its glyph in a headword. That trust is only
   // safe while a digit row really is one decimal digit. A row whose glyph is
   // a letter (`"ক"`), a two-digit number (`"১০"`) or a letter-like numeral
   // (`"Ⅶ"`) would otherwise quietly widen the covered set and hide a real
@@ -262,10 +266,11 @@ function uncoveredGlyphs(headword: string, sd: ScriptData): string[] {
     if (consonant.strokeOrderSource) add(consonant.glyph);
   }
   // A script's own digits are part of its inventory: a reader meets ৭ the way
-  // they meet ক, and a numbers lesson teaches both. Digit rows carry no ductus,
-  // so they are covered as identity only, like a plain letter row. Only the
-  // Bengali track has digit headwords today; the other inventories that list
-  // `digits` (Kannada, Malayalam, Telugu) have no headword these rows change.
+  // they meet ক, and a numbers lesson teaches both. A digit row is covered as
+  // identity, like a plain letter row, whether or not it carries a ductus.
+  // Only the Bengali track has digit headwords today; the other inventories
+  // that list `digits` (Kannada, Malayalam, Telugu) have no headword these
+  // rows change.
   // A malformed digit row is an error above, and it covers nothing here, so
   // it can never mask an uncovered letter even in a report that keeps going.
   for (const digit of sd.digits ?? []) {

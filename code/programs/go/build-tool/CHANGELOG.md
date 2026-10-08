@@ -6,6 +6,31 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- Exact flat-family native CI selection for shared
+  `ci-gate-selection-*.json` fixture changes. The planner seeds the Go and
+  Python build-tool fronts before affected closure on all platforms, preserving
+  their native CI-gate suites and toolchain flags without forcing unrelated
+  packages. Missing applicable consumers fail planning; detector regressions
+  cover path lookalikes, language filters, renamed/deleted sources, emitted
+  plans, and direct-reader drift.
+
+- Native Windows CI selection for affected `rust/programs/closurec` and its
+  CV02 acceptance specification. The ordinary Windows package-test step no
+  longer skips the compiler's publication/ACL regressions on Rust-only changes.
+  Real-registry evaluator tests reproduce both missing selection clauses and
+  preserve an unrelated Rust negative control.
+  Specification-only CV02 diffs now also seed the compiler on every platform
+  and require Rust; missing consumers fail planning and non-Rust language filters
+  remain bounded. Emitted production-plan regressions reproduce the previously
+  empty selection despite an enabled Windows gate and verify the native command.
+
+- Exact-path native CI selection for changes to the shared
+  `discovery-language-registry.json` fixture. Detect and all platform build-plan
+  overrides now schedule its eleven direct build-tool consumers, including both
+  .NET fronts and Haskell; missing registered roots fail closed and a source-reference test
+  guards future consumer-map drift without forcing all packages. Single-language
+  runs select their own fixture consumer, and rename diffs retain the old path.
+
 - `-validate-build-files` rejects a shared `BUILD` that Windows would run with a
   POSIX environment assignment `cmd /C` cannot execute. Each line is first
   passed through the executor's own Windows rewrite

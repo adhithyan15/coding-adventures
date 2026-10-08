@@ -90,6 +90,48 @@ A package-only gate would skip the D18F job on a PR that changed only the D18F
 manifest — precisely the drift that job exists to catch. The `paths` clause is
 load-bearing, not decoration.
 
+### Native consumers of a shared build-tool fixture
+
+Scheduling the `contracts-build-tool-conformance` job for a shared fixture
+change validates the neutral corpus but does not execute every native build-tool
+consumer. For the exact path
+`code/specs/fixtures/build-tool-v1/cases/discovery-language-registry.json`, the
+build planner MUST seed all direct native consumers as changed package roots
+before affected/prerequisite closure, both on its detect platform and in every
+platform-specific build-plan override. The current direct consumers are
+`dotnet/programs/build-tool-csharp`, `dotnet/programs/build-tool-fsharp`, and
+`<language>/programs/build-tool` for `go`, `haskell`, `lua`, `perl`, `python`,
+`ruby`, `rust`, `swift`, and `typescript`.
+
+This is an exact fixture-to-consumer relation, not a general `code/specs/`
+shared prefix or a forced full build. It applies to additions, modifications,
+deletions, and renames of that path; ordinary changed package roots are united
+with the fixture consumers. If a registered consumer is missing from the
+discovered package set, planning MUST fail rather than silently omit its native
+test. A new direct consumer of this fixture MUST extend the relation and its
+drift test in the same change. The resulting affected plan and toolchain flags,
+not merely the gate verdict, are the evidence that native tests can run.
+For an explicitly single-language invocation, only consumers in that language
+are seeded and checked; all-language CI retains the full twelve-consumer check.
+
+The exact flat case family
+`code/specs/fixtures/build-tool-v1/cases/ci-gate-selection-*.json` has a
+separate direct-native-consumer relation: `go/programs/build-tool` (whose
+`go test ./...` BUILD front runs `internal/cigates`) and
+`python/programs/build-tool` (whose BUILD front runs the Python fixture
+suite), plus `dotnet/programs/build-tool-csharp` and
+`dotnet/programs/build-tool-fsharp` (whose native .NET test fronts replay the
+neutral cases independently). Any changed path matching this family, including
+the deleted source of a rename, MUST seed those four package roots before affected/prerequisite
+closure on detect and every platform override. Ordinary changed roots are
+united with these roots; sibling fixture domains and nested/lookalike paths
+MUST NOT trigger them. Explicit C#, F#, Go, or Python single-language plans
+seed only their own consumer; other single-language plans seed neither. An applicable
+registered consumer absent from discovery MUST fail planning without writing
+an incomplete plan. The emitted affected set and .NET/Go/Python toolchain flags
+MUST demonstrate native scheduling with `force=false`. A new direct reader of
+this family must extend the relation and its drift test together.
+
 ## Evaluation
 
 A gate is **required** when ANY of the following holds:
@@ -110,6 +152,28 @@ the `workflow_changed()` escape hatch already present in the six
 Rule 5 uses the **affected closure** — changed packages plus their transitive
 dependents, as computed by `directedgraph.AffectedNodes` — so listing only the
 packages a job directly exercises is sufficient; the graph supplies the rest.
+
+### Closure compiler native Windows acceptance
+
+The Windows general package-test step is conditional on
+`build-windows-os-suites` (or another native toolchain requirement); a Rust
+toolchain flag alone does not run that step. The gate MUST include affected
+package `rust/programs/closurec` so compiler and dependency changes execute its
+Windows publication and ACL regressions. Its path clause MUST also include
+`code/specs/CV02-checked-bounded-provenance-graphs.md`. That exact specification
+path MUST also seed `rust/programs/closurec` as a changed package root on Linux,
+macOS and Windows, so a specification-only change selects both its native test
+command and the Rust toolchain. Planning MUST fail if that consumer is missing
+from discovered packages. An explicitly non-Rust single-language invocation
+does not seed or require the Rust consumer. Union this root with ordinary package
+edits without forcing unrelated packages; deleted or renamed source paths still
+trigger the exact relation. Near-matching specification paths do not.
+Both gate clauses are exercised through the real evaluator. Emitted-plan tests
+must verify the compiler, Rust toolchain and Windows step gate together for a
+specification-only diff; an unrelated Rust affected set must not enable the gate.
+An OS-labelled green job whose compiler test step was skipped is insufficient
+native acceptance evidence. Linux/macOS ordinary package tests already execute
+on their selected matrix legs.
 
 ### Portable evaluation boundary
 
@@ -193,6 +257,17 @@ The exact-main front-door audit at
 | Swift | no | `build-tool-swift-ci-gate-selection-conformance` |
 | TypeScript | no | `build-tool-typescript-ci-gate-selection-conformance` |
 
+For the C#/F# owner, the portable evaluator lives in the C# build-tool
+assembly, separate from graph/diff selection. The F# build tool exposes an
+explicit language-native facade over that reviewed shared engine; both native
+test projects independently replay the complete neutral `ci_gate_selection`
+corpus and reject result/diagnostic drift. The evaluator accepts only inert
+in-memory records, validates the full registry before any run-all shortcut,
+and never acquires Git, filesystem, process, workflow, or output authority.
+Register both native fixture readers in the Go build-plan selector in the same
+change, so a fixture-only diff schedules their actual package tests on all
+supported CI platforms.
+
 Java/Kotlin, Dart, and OCaml remain owned by their existing build-tool creation
 and promotion items; the final CI gate aggregate depends on those owners as
 well as every explicit current-front-door leaf.
@@ -207,8 +282,8 @@ in ID order, including false verdicts, or one stable
 existing portable `glob_match` implementation, not host path matching. Python
 `len()` counts Unicode scalars for the preflight; the complete operation-wide
 charge is computed before the first matcher invocation, even if an early gate
-or package intersection would otherwise decide the result. The exact ten
-`ci-gate-selection/*.json` neutral cases must be discovered by ID and replayed
+or package intersection would otherwise decide the result. The entire checked-in
+`ci-gate-selection/*.json` neutral case set must be discovered by ID and replayed
 through this production function in package-local tests. Fixture decoding and
 any registry file I/O remain in tests or future reviewed front-door adapters,
 not in the pure operation. This adoption does not mark a neutral execution

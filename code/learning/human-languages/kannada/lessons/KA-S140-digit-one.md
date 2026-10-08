@@ -47,16 +47,17 @@ Kannada writes its numbers with its own ten digits. You will see them on
 bus boards, house plates and price tags all over Karnataka, sitting beside the
 Western digits rather than replacing them. Here is the first.
 
-## Writing: ೧ — copy what you see
+## Writing: ೧ — follow the numbered strip
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-140] -->
 
-Put your pen on ೧ and follow its line. Copy the shape in front of you —
+Follow the numbered strip: start where movement 1 begins, and let each panel
+show you the next movement before your pen makes it. Then write ೧ yourself —
 slowly, and larger than it is printed.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is taught with real variation from school to school, and it is
-> not written down here until it can be written down with a source. Copying what
-> you can see needs no such source.
+> The strip shows **where to start the character and which way to travel**, in
+> one attested order. That is taught with real variation from school to school,
+> so the strip names its source beneath it: treat it as a sound way in, not the
+> only one.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[KA-SCRIPT-RECOG-140, KA-LEX-C07-ONDU-01] -->

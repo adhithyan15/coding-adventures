@@ -1,0 +1,14 @@
+# Perl p54rc1 (1997-05-12) grammar: plain-decimal arithmetic-print subset.
+# @version 1
+# PARTIAL: unsupported Perl p54rc1 syntax is rejected.
+# Evidence: https://mirrors.develooper.com/perl/historical-perl/perl-p54rc1.tar.gz
+# Archive SHA-256: 5a9a9c294931d006007ea471cbc79c94209d181d48a958a2db86cc1a1633e468.
+# Archive yacc matches 5.004; this separate file retains only arithmetic
+# precedence, parentheses and print subset.
+
+program         = print_statement { print_statement } ;
+print_statement = PRINT LPAREN expr RPAREN SEMICOLON ;
+expr            = term { ( PLUS | MINUS ) term } ;
+term            = unary { STAR unary } ;
+unary           = MINUS unary | atom ;
+atom            = INT | LPAREN expr RPAREN ;

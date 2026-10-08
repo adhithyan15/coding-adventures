@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-162-A1-WRITING-RETURN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "assessment",
+  "canDo": "I can retrieve three familiar A1 writing moves after a long gap, preserving timed first attempts and leaving complete mocks for separate evidence.",
+  "prerequisites": [
+    "PA-EXT-157-A1-SHORT-WRITING-CLOCKS",
+    "PA-EXT-161-ACTION-RETURN"
+  ]
+}

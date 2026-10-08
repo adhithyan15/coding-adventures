@@ -63,18 +63,19 @@ jobs:
       # "Package cairo was not found in the pkg-config search path", which
       # reads as a Trestle problem and is not one.
       #
-      # The vendor repositories preinstalled in the runner image are dropped
-      # first: they are unused here, and `apt-get update` exits non-zero if ANY
-      # configured repository fails, so an unrelated packages.microsoft.com
-      # outage would fail this build (#13982).
+      # The shared apt-install.sh drops the vendor repositories preinstalled in
+      # the runner image first: they are unused here, and apt's index refresh
+      # exits non-zero if ANY configured repository fails, so an unrelated
+      # packages.microsoft.com outage would fail this build (#13982). It also
+      # retries and time-boxes each apt call, and the step timeout below is the
+      # backstop, so a stalled Ubuntu mirror fails in minutes instead of
+      # hanging for six hours (#12163, #12181).
       - name: Install Linux build dependencies
         shell: bash
+        timeout-minutes: 10  # apt can stall on a mirror; fail fast, not at 6h (#12163)
         run: |
           set -euo pipefail
-          sudo rm -f /etc/apt/sources.list.d/microsoft*.list \
-                     /etc/apt/sources.list.d/azure-cli.list || true
-          sudo apt-get update
-          sudo apt-get install -y libcairo2-dev
+          bash code/scripts/ci/apt-install.sh libcairo2-dev
 
       - name: Build the production web bundle
         shell: bash

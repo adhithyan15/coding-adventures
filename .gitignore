@@ -28,6 +28,7 @@ uv.lock
 htmlcov/
 coverage.xml
 coverage/
+/code/programs/elixir/build-tool/cover/
 
 # Ruby
 *.gem

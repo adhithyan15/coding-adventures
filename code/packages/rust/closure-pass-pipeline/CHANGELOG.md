@@ -4,7 +4,35 @@ All notable changes to the `coding-adventures-closure-pass-pipeline` crate will 
 
 ## [Unreleased]
 
+### Added - actual scheduler chronology (CV03)
+
+Opted-in logs begin pipeline scopes before topo-sort with guarded input ownership,
+record the accepted schedule once, and scope every actual pass callback AND
+returned-contribution/candidate acceptance. Selected stable iteration policies
+drive both recorded schedules and the loop. Typed ends distinguish convergence,
+cap, scheduling failure, callback failure, acceptance failure and recording
+rejection before invocation. Repeated OneShot, unchanged and confirming sweeps
+are retained. Nested caught/propagated failures restore actual caller contexts.
+Reserved terminal completion preserves deep owned return values; pending metadata
+still drains iteratively. Callback counters reproduce nine/twelve and 200
+invocations, nested exact 33/17 event charges, and small-stack ownership paths.
+execution_order is documented as distinct schedule inventory and stats as final
+sweep metrics, rather than global chronology.
+
+### Fixed - safe disposal of scheduler-owned programs (CV02)
+
+Current and candidate AST guards use shared iterative disposal on contribution
+rejection, pass/dependency errors and successful intermediate replacement. The
+accepted final program is transferred to the caller. An isolated 128 KiB caller
+regression reproduces the prior abort and now covers all four ownership paths.
+
 ### Fixed
+
+- Transfer returned metadata before validation; safely drain remaining/omitted
+  payloads on an error or absent program identity. A small-stack child process
+  covers 65,536-level metadata without recursive cloning/destruction.
+
+- CV02: reject a pass result when its requested program contribution cannot be recorded; preserve pass-specific diagnostics.
 
 - The fixed-point test helper now decrements its atomic change budget with a
   sequentially consistent compare-and-exchange loop. This preserves exhaustion

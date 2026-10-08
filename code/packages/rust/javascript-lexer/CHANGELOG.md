@@ -2,6 +2,12 @@
 
 All notable changes to the `coding-adventures-javascript-lexer` crate will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+
+- CV02: propagate checked token-identity allocation failures as lexer errors, with an exhausted-node-budget regression.
+
 ## [0.9.0] - 2026-06-21 — newline-precedence flag (via `lexer` 0.6.0)
 
 JS tokens now carry `TOKEN_PRECEDED_BY_NEWLINE` when a line terminator preceded

@@ -325,6 +325,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "HI-W01-na-ma",
+      "sourceHash": "fnv1a64:27f5e90f1c122dc6",
+      "svgHash": "fnv1a64:617c2feaa8b8d766",
+      "svg": "hindi/book/figures/HI-W01-na-ma-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "HI-W12-aa",
       "sourceHash": "fnv1a64:f1b2e162d8febbe7",
       "svgHash": "fnv1a64:feefdf6ef9b98be7",

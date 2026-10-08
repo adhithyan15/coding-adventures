@@ -7,7 +7,8 @@ request's required job.
 
 These tests drive the real script through `APT_PRUNE_ONLY`, against fixture
 directories shaped like the runner's, so the pruning is exercised without root
-and without touching a real apt.
+and without touching a real apt. The retry and timeout layers (#12163, #12181)
+are driven the same way, with `APT_GET` pointed at a fake apt-get.
 """
 
 from __future__ import annotations
@@ -257,6 +258,189 @@ class PruneTests(unittest.TestCase):
             self.assertIn("no unused source lists to prune", result.stdout)
 
 
+# A stand-in for apt-get, so the retry and timeout layers can be driven without
+# root, without a network, and without a real apt. It appends one line per
+# invocation to $FAKE_LOG -- the DEBIAN_FRONTEND it saw, then its argv -- and
+# behaves according to $FAKE_MODE:
+#
+#   ok              every call succeeds
+#   flaky-update    `update` fails until it has been called $FAKE_FAILS times
+#   stall-update    `update` hangs (exec'd sleep, so timeout's SIGTERM ends it
+#                   outright rather than orphaning a child that holds the pipe)
+#   missing-package `install` always exits 100, apt's "unable to locate"
+FAKE_APT_GET = """\
+#!/usr/bin/env bash
+echo "DEBIAN_FRONTEND=${DEBIAN_FRONTEND:-} $*" >> "$FAKE_LOG"
+verb=""
+for arg in "$@"; do
+  case "$arg" in update|install) verb="$arg"; break ;; esac
+done
+case "$FAKE_MODE:$verb" in
+  flaky-update:update)
+    count=$(grep -c ' update$' "$FAKE_LOG")
+    [ "$count" -ge "$FAKE_FAILS" ] && exit 0
+    exit 100 ;;
+  stall-update:update) exec sleep 30 ;;
+  missing-package:install) exit 100 ;;
+esac
+exit 0
+"""
+
+
+def _install(root: Path, mode: str, *packages: str, **extra: str):
+    """Run the whole script, update and install, against the fake apt-get."""
+
+    sources_dir, sources_list = _runner_layout(root)
+    fake = root / "apt-get"
+    fake.write_text(FAKE_APT_GET)
+    fake.chmod(0o755)
+    log = root / "apt.log"
+    log.touch()
+    env = {
+        "PATH": "/usr/bin:/bin:/usr/sbin:/sbin",
+        "CI": "true",
+        "APT_SUDO": "",
+        "APT_GET": str(fake),
+        "APT_RETRY_DELAY": "0",
+        "APT_SOURCES_DIR": str(sources_dir),
+        "APT_SOURCES_LIST": str(sources_list),
+        "FAKE_LOG": str(log),
+        "FAKE_MODE": mode,
+    }
+    env.update(extra)
+    result = subprocess.run(
+        ["bash", str(SCRIPT), *packages],
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    return result, log.read_text().splitlines()
+
+
+class BoundedAptTests(unittest.TestCase):
+    """The stall layer (#12163, #12181).
+
+    A mirror that accepted the connection and then went silent hung
+    `build (ubuntu-latest)` for the full six-hour job limit, more than once.
+    These pin the three layers the script now puts around every apt call:
+    apt's own timeouts, a wall-clock cap per attempt, and a retry loop.
+    """
+
+    def test_passes_the_acquire_and_lock_timeouts_to_every_call(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            result, calls = _install(Path(tmp), "ok", "libcairo2-dev")
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(len(calls), 2, calls)
+            for call in calls:
+                for option in (
+                    "-o Acquire::Retries=3",
+                    "-o Acquire::http::Timeout=30",
+                    "-o Acquire::https::Timeout=30",
+                    "-o DPkg::Lock::Timeout=60",
+                ):
+                    self.assertIn(option, call)
+            self.assertTrue(calls[0].endswith(" update"), calls[0])
+            self.assertTrue(calls[1].endswith(" install -y libcairo2-dev"), calls[1])
+
+    def test_apt_runs_noninteractive(self) -> None:
+        # sudo resets the environment, so this has to be set on the far side
+        # of it; a debconf prompt with no terminal is just another hang.
+        with tempfile.TemporaryDirectory() as tmp:
+            result, calls = _install(Path(tmp), "ok", "libcairo2-dev")
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            for call in calls:
+                self.assertTrue(
+                    call.startswith("DEBIAN_FRONTEND=noninteractive "), call
+                )
+
+    def test_retries_a_transient_update_failure(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            result, calls = _install(
+                Path(tmp), "flaky-update", "libcairo2-dev", FAKE_FAILS="2"
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(sum(c.endswith(" update") for c in calls), 2, calls)
+            self.assertIn("attempt 1/3 failed", result.stderr)
+            self.assertTrue(calls[-1].endswith(" install -y libcairo2-dev"))
+
+    def test_a_stalled_update_is_cut_off_and_retried_not_waited_on(self) -> None:
+        # The bug itself, in miniature: `update` never returns. The per-attempt
+        # cap has to turn that into a failed attempt, retry it, and then fail
+        # the script -- in seconds here, minutes on a runner, never hours.
+        with tempfile.TemporaryDirectory() as tmp:
+            result, calls = _install(
+                Path(tmp),
+                "stall-update",
+                "libcairo2-dev",
+                APT_UPDATE_TIMEOUT="1",
+                APT_ATTEMPTS="2",
+            )
+
+            self.assertEqual(result.returncode, 124, result.stderr)
+            self.assertEqual(sum(c.endswith(" update") for c in calls), 2, calls)
+            self.assertIn("stalled mirror", result.stderr)
+            # And install never ran against an index that was never fetched.
+            self.assertFalse(any(" install " in c for c in calls), calls)
+
+    def test_a_non_numeric_knob_is_refused_before_apt_runs(self) -> None:
+        # Bash evaluates `-ge` operands as arithmetic, so a knob like
+        # `a[$(cmd)]` would run cmd. The script refuses anything but digits.
+        with tempfile.TemporaryDirectory() as tmp:
+            result, calls = _install(
+                Path(tmp), "flaky-update", "libcairo2-dev", APT_ATTEMPTS="a[$(true)]"
+            )
+
+            self.assertEqual(result.returncode, 2, result.stderr)
+            self.assertIn("APT_ATTEMPTS must be a non-negative integer", result.stderr)
+            self.assertEqual(calls, [], calls)
+
+    def test_a_missing_package_still_fails_after_its_retries(self) -> None:
+        # Retrying must not become swallowing: the last attempt's status is
+        # the script's status, exactly as it was before the retry loop.
+        with tempfile.TemporaryDirectory() as tmp:
+            result, calls = _install(Path(tmp), "missing-package", "no-such-package")
+
+            self.assertEqual(result.returncode, 100, result.stderr)
+            self.assertEqual(sum(" install " in c for c in calls), 3, calls)
+            self.assertIn("failed on all 3 attempt(s)", result.stderr)
+
+
+# A step starts at a list item whose first key is a step key. Matching only
+# step keys keeps a `- item` line inside a `run: |` script, or under `with:`,
+# from being mistaken for one.
+STEP_START = re.compile(
+    r"^(\s*)- (name|run|uses|id|if|shell|env|with|working-directory"
+    r"|timeout-minutes|continue-on-error):"
+)
+
+
+def _step_around(lines: list[str], index: int) -> tuple[int, list[str]]:
+    """The line number of the step containing lines[index], and its lines."""
+
+    indent = len(lines[index]) - len(lines[index].lstrip())
+    start = index
+    while start >= 0:
+        match = STEP_START.match(lines[start])
+        if match and (start == index or len(match.group(1)) < indent):
+            break
+        start -= 1
+    if start < 0:
+        raise AssertionError(f"no step found around line {index + 1}")
+    dash = len(STEP_START.match(lines[start]).group(1))
+    end = start + 1
+    while end < len(lines):
+        line = lines[end]
+        if line.strip() and not line.lstrip().startswith("#"):
+            if len(line) - len(line.lstrip()) <= dash:
+                break
+        end += 1
+    return start, lines[start:end]
+
+
 class WorkflowConsistencyTests(unittest.TestCase):
     """Every site goes through the wrapper, not just the one that failed.
 
@@ -306,6 +490,44 @@ class WorkflowConsistencyTests(unittest.TestCase):
             "`apt-get install` needs `-y`; without it apt prompts and aborts "
             "in CI, and the step silently does nothing when the packages "
             "happen to be preinstalled:\n  " + "\n  ".join(offenders),
+        )
+
+    def test_every_apt_step_has_its_own_timeout(self) -> None:
+        # The outermost layer of #12163 / #12181. The script bounds itself,
+        # but a step with no `timeout-minutes` inherits the job's -- six hours
+        # when the job sets none -- so a hang anywhere the script's caps do not
+        # reach still burns a runner and reports `cancelled`. Every step that
+        # installs from apt, through the wrapper or directly, carries its own.
+        apt_call = re.compile(r"apt-install\.sh|apt-get\s+install")
+        offenders = []
+        checked = 0
+        for workflow in sorted(WORKFLOWS.glob("*.yml")):
+            lines = workflow.read_text().splitlines()
+            seen = set()
+            for number, line in enumerate(lines):
+                if line.lstrip().startswith("#") or not apt_call.search(line):
+                    continue
+                start, body = _step_around(lines, number)
+                if start in seen:
+                    continue
+                seen.add(start)
+                checked += 1
+                if not any(
+                    re.match(r"^\s*(- )?timeout-minutes:\s*\d+", step_line)
+                    for step_line in body
+                ):
+                    offenders.append(
+                        f"{workflow.name}:{start + 1}: {lines[start].strip()}"
+                    )
+        # Driven by a regex over the workflows: if it ever stops matching,
+        # this would pass by finding nothing. Fail loudly instead.
+        self.assertGreater(checked, 10, "apt-step scan found almost nothing")
+        self.assertEqual(
+            offenders,
+            [],
+            "these steps install from apt with no `timeout-minutes`, so a "
+            "stalled mirror runs them into the job limit:\n  "
+            + "\n  ".join(offenders),
         )
 
     def test_the_wrapper_is_executable_and_present(self) -> None:

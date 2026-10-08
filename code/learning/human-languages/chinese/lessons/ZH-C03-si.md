@@ -34,8 +34,9 @@ reviews_of: [ZH-W03-si, ZH-C03-san]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-NUM-SI, ZH-METHOD-STROKE-COUNT] -->
 
-[PAUSE 2s] Draw the box. Walls, contents, bottom last. Count the strokes: five,
-for the number four.
+[PAUSE 2s] [YOU WRITE: the box — walls, contents, bottom last]
+
+Count the strokes: five, for the number four.
 
 ## Sounds you'll need — and a tone worth respecting
 <!-- hl-knowledge: introduces=[ZH-LEX-NUM-SI]; assesses=[ZH-TONE-LEXICAL] -->
