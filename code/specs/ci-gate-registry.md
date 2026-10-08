@@ -158,7 +158,7 @@ family has three bounded direct-native-consumer relations. The seven
 package-local cases (neither `repository-` nor `shared-input-` after the
 `source-collection-` prefix) MUST seed `dotnet/programs/build-tool-csharp`,
 `dotnet/programs/build-tool-fsharp`, and `<language>/programs/build-tool` for
-Go, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript. Rust
+Elixir, Go, Haskell, Lua, Perl, Python, Ruby, Rust, Swift, and TypeScript. Rust
 currently names only two of those seven cases; selecting its front for the
 whole local subfamily is intentional conservative over-selection. The nine
 `source-collection-repository-*.json` cases MUST seed only C#, F#, and Swift

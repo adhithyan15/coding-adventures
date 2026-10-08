@@ -16638,7 +16638,7 @@ before the next selection. These are backlog records, not completed ports:
 
 | Family | Newly registered pending owner chain | Boundary and leverage |
 | --- | --- | --- |
-| Source-collection fixture CI | `build-tool-source-collection-fixture-native-ci-selection` | Twenty flat cases have eleven native reader fronts; use the verified 7 local / 9 repository / 4 shared-input reader maps, not a blanket all-front fanout. All selector prerequisites are merged. |
+| Source-collection fixture CI | `build-tool-source-collection-fixture-native-ci-selection` | Twenty flat cases have twelve native reader fronts, including Elixir's local-case test; use the 7 local / 9 repository / 4 shared-input reader maps, not a blanket all-front fanout. All selector prerequisites are merged. |
 | Hashing-cache fixture CI | `build-tool-hashing-cache-fixture-native-ci-selection` | Eleven cases have nine native reader fronts; distinguish fixture-only scheduling from existing Lua/Perl evaluator owners. |
 | Validation fixture CI | `build-tool-validation-fixture-native-ci-selection` | Select only native-read subfamilies and two Go one-offs; nine other one-off cases remain neutral-only until readers exist. |
 | D19 actor | `actor-d19-portable-core-neutral-conformance` → `actor-d19-seven-lane-parity` | Eight of fifteen lanes exist; isolate deterministic mailbox/round-robin core from clock, ID, and persistence adapters. |
@@ -16649,7 +16649,7 @@ before the next selection. These are backlog records, not completed ports:
 
 Dependency/leverage ranking favors the source-collection fixture selector next:
 its neutral and CI-selector prerequisites are merged, its 20 checked cases
-have direct tests in eleven native build-tool fronts, and fixture-only edits
+have direct tests in twelve native build-tool fronts, and fixture-only edits
 currently do not schedule those BUILD roots. Existing graph/diff selector,
 new validation/hash selectors, Ruby CI-gate parity, and DT28 neutral
 conformance remain separate owners. Select exactly
