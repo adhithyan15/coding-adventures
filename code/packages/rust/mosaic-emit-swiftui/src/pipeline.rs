@@ -3108,7 +3108,8 @@ pub fn dropped_style_properties(
     layout: &LayoutNode,
 ) -> Vec<DroppedStyleProperty> {
     let part_styles = build_part_style_map(style);
-    let consumed = gap_consuming_parts(layout, &part_styles);
+    let consumed_gap = constructor_consuming_parts(layout, &part_styles, "gap");
+    let consumed_align = constructor_consuming_parts(layout, &part_styles, "align");
     let mut out = Vec::new();
     for part in &style.parts {
         // Scan what the EMITTER sees, not the raw authored props. The
@@ -3120,7 +3121,9 @@ pub fn dropped_style_properties(
         expand_border_shorthand(&mut base);
         let (_, drops) = swiftui_modifier_chain_with_drops(&base, &[], &[], 0, None);
         for drop in drops {
-            if drop.name == "gap" && consumed.contains(part.name.as_str()) {
+            if (drop.name == "gap" && consumed_gap.contains(part.name.as_str()))
+                || (drop.name == "align" && consumed_align.contains(part.name.as_str()))
+            {
                 continue;
             }
             out.push(DroppedStyleProperty {
@@ -3134,15 +3137,16 @@ pub fn dropped_style_properties(
     out
 }
 
-/// The parts whose `gap` a container actually applies.
+/// The parts whose construction-time `property` every container occurrence applies.
 ///
 /// Mirrors the tag-to-view mapping in [`emit_view_tree`] rather than
 /// restating it loosely, because the answer is per-tag and the wrong answer is
 /// silent in both directions: too wide and a real drop goes unreported, too
 /// narrow and the report keeps the false positive it exists to remove.
 ///
-/// - `Column` opens a `VStack` and `Row` an `HStack`, and both consult
-///   [`container_spacing`]. These are the parts whose `gap` lands.
+/// - `Column` opens a `VStack` and `Row` an `HStack`, and both consult the same
+///   constructor helpers as emission. These are the parts whose `gap` or
+///   cross-axis `align` lands.
 /// - `Box` (`Group`), `Stack` (`ZStack`) and `HostScroll` (`ScrollView`) do
 ///   not. `container_spacing` refuses them by name, and deliberately: a
 ///   `ZStack` overlays along the depth axis and a `ScrollView` delegates layout
@@ -3153,8 +3157,9 @@ pub fn dropped_style_properties(
 ///   `HStack(spacing: 0)`, pinning the gap to zero to match
 ///   `border-collapse: collapse`, so its authored `gap` really is discarded.
 ///
-/// [`container_spacing`] decides the last question rather than this function
-/// re-deriving it, so a value it rejects as unparseable is still a real drop.
+/// [`container_spacing`] and [`container_alignment`] decide the last question
+/// rather than this function re-deriving it, so a value either rejects is still
+/// a real drop.
 ///
 /// EVERY occurrence has to consume it, not merely one. A part name can appear
 /// on more than one node — package resolution substitutes a `pkg::` reference
@@ -3169,13 +3174,18 @@ pub fn dropped_style_properties(
 /// `Text`. The first version of this function used `any`, which was the
 /// too-wide direction the doc above warns about; no current layout triggers it,
 /// which is exactly why it would have gone unnoticed.
-fn gap_consuming_parts<'a>(root: &'a LayoutNode, part_styles: &PartStyleMap) -> HashSet<&'a str> {
+fn constructor_consuming_parts<'a>(
+    root: &'a LayoutNode,
+    part_styles: &PartStyleMap,
+    property: &str,
+) -> HashSet<&'a str> {
     fn walk<'a>(
         node: &'a LayoutNode,
         in_table: bool,
         part_styles: &PartStyleMap,
-        // Per part: does every occurrence seen so far apply the gap? One that
-        // does not sets this false, and nothing sets it back.
+        property: &str,
+        // Per part: does every occurrence seen so far apply the property? One
+        // that does not sets this false, and nothing sets it back.
         out: &mut HashMap<&'a str, bool>,
     ) {
         // `HostTable` opens the context and it applies to the whole subtree,
@@ -3190,18 +3200,21 @@ fn gap_consuming_parts<'a>(root: &'a LayoutNode, part_styles: &PartStyleMap) -> 
             _ => None,
         };
         if let Some(part) = node.part_name.as_deref() {
-            let consumes =
-                view.is_some_and(|view| container_spacing(view, node, part_styles).is_some());
+            let consumes = view.is_some_and(|view| match property {
+                "gap" => container_spacing(view, node, part_styles).is_some(),
+                "align" => container_alignment(view, node, part_styles).is_some(),
+                _ => false,
+            });
             let entry = out.entry(part).or_insert(true);
             *entry &= consumes;
         }
         for child in &node.children {
-            walk(child, in_table, part_styles, out);
+            walk(child, in_table, part_styles, property, out);
         }
     }
 
     let mut seen = HashMap::new();
-    walk(root, false, part_styles, &mut seen);
+    walk(root, false, part_styles, property, &mut seen);
     seen.into_iter()
         .filter(|(_, every)| *every)
         .map(|(part, _)| part)
@@ -4937,6 +4950,31 @@ fn container_spacing(
     Some(stripped.to_string())
 }
 
+/// The SwiftUI stack alignment that preserves Mosaic's cross-axis `align`.
+///
+/// `HStack` aligns children vertically and `VStack` horizontally. Values for
+/// the other axis remain unconsumed so the degradation report stays honest.
+fn container_alignment(
+    swiftui_view: &str,
+    node: &LayoutNode,
+    part_styles: &PartStyleMap,
+) -> Option<&'static str> {
+    let part_name = node.part_name.as_deref()?;
+    let entry = part_styles.get(part_name)?;
+    let value = entry
+        .props
+        .iter()
+        .rev()
+        .find(|prop| prop.name == "align")?
+        .value
+        .trim();
+    match (swiftui_view, value) {
+        ("HStack", "center-vertical" | "center")
+        | ("VStack", "center-horizontal" | "center") => Some(".center"),
+        _ => None,
+    }
+}
+
 fn container(
     swiftui_view: &str,
     node: &LayoutNode,
@@ -4947,9 +4985,16 @@ fn container(
     for_payload: Option<ForPayloadScope<'_>>,
 ) -> Result<String, PipelineEmitError> {
     let pad = " ".repeat(indent);
-    let opener = match container_spacing(swiftui_view, node, part_styles) {
-        Some(spacing) => format!("{swiftui_view}(spacing: {spacing})"),
-        None => swiftui_view.to_string(),
+    let opener = match (
+        container_alignment(swiftui_view, node, part_styles),
+        container_spacing(swiftui_view, node, part_styles),
+    ) {
+        (Some(alignment), Some(spacing)) => {
+            format!("{swiftui_view}(alignment: {alignment}, spacing: {spacing})")
+        }
+        (Some(alignment), None) => format!("{swiftui_view}(alignment: {alignment})"),
+        (None, Some(spacing)) => format!("{swiftui_view}(spacing: {spacing})"),
+        (None, None) => swiftui_view.to_string(),
     };
     if node.children.is_empty() {
         // Empty containers still need a body — SwiftUI's trailing-closure
@@ -16603,7 +16648,8 @@ mod tests {
 
     #[test]
     fn a_part_on_two_nodes_needs_every_one_of_them_to_apply_the_gap() {
-        // The case the first version of `gap_consuming_parts` got wrong. It
+        // The case the first version of `constructor_consuming_parts` got
+        // wrong. It
         // used `any`, so one `Column` bearing the part suppressed the report
         // for a `Box` bearing the same part -- where the gap really is lost.
         //
@@ -16682,6 +16728,83 @@ mod tests {
         assert_eq!(drops.len(), 1, "got: {drops:?}");
     }
 
+    // ---- `align` is lowered at stack construction (#17031) ------------
+
+    fn align_drops(tag: &str, value: &str) -> Vec<DroppedStyleProperty> {
+        let style = style_with_part("X", "c", vec![sp("align", value)]);
+        dropped_style_properties(&style, &gap_layout(None, tag, "c"))
+            .into_iter()
+            .filter(|drop| drop.name == "align")
+            .collect()
+    }
+
+    fn aligned_stack(tag: &str, value: &str, gap: Option<&str>) -> String {
+        let model = component("X", vec![], vec![]);
+        let layout = layout_with("X", gap_layout(None, tag, "c"));
+        let mut props = vec![sp("align", value)];
+        if let Some(gap) = gap {
+            props.push(sp("gap", gap));
+        }
+        let style = style_with_part("X", "c", props);
+        from_pipeline(&model, &layout, &style)
+            .expect("emit aligned stack")
+            .output
+    }
+
+    #[test]
+    fn cross_axis_alignment_reaches_swiftui_stack_constructors() {
+        let row = aligned_stack("Row", "center-vertical", None);
+        assert!(row.contains("HStack(alignment: .center) {"), "got:\n{row}");
+
+        let column = aligned_stack("Column", "center-horizontal", None);
+        assert!(
+            column.contains("VStack(alignment: .center) {"),
+            "got:\n{column}"
+        );
+
+        let centered = aligned_stack("Row", "center", Some("8px"));
+        assert!(
+            centered.contains("HStack(alignment: .center, spacing: 8) {"),
+            "got:\n{centered}"
+        );
+    }
+
+    #[test]
+    fn applied_cross_axis_alignment_is_not_reported_as_dropped() {
+        for (tag, value) in [
+            ("Row", "center-vertical"),
+            ("Row", "center"),
+            ("Column", "center-horizontal"),
+            ("Column", "center"),
+        ] {
+            let drops = align_drops(tag, value);
+            assert!(drops.is_empty(), "{tag} {value}: got {drops:?}");
+        }
+    }
+
+    #[test]
+    fn unsupported_or_wrong_axis_alignment_stays_reported() {
+        for (tag, value) in [
+            ("Row", "center-horizontal"),
+            ("Column", "center-vertical"),
+            ("Row", "space-between"),
+            ("Box", "center"),
+        ] {
+            let drops = align_drops(tag, value);
+            assert_eq!(drops.len(), 1, "{tag} {value}: got {drops:?}");
+        }
+    }
+
+    #[test]
+    fn a_table_row_that_bypasses_the_stack_constructor_keeps_its_align_drop() {
+        let style = style_with_part("X", "c", vec![sp("align", "center-vertical")]);
+        let drops: Vec<_> =
+            dropped_style_properties(&style, &gap_layout(Some("HostTable"), "Row", "c"))
+                .into_iter()
+                .filter(|drop| drop.name == "align")
+                .collect();
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+    }
 
     // ---- border-radius and max-width (#12022, #14728) ----------------
 

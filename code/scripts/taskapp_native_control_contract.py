@@ -45,7 +45,6 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "width": 8,
     },
     "swiftui": {
-        "align": 22,
         "border-bottom-style": 3,
         "border-left-style": 5,
         "border-right-style": 6,

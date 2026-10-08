@@ -1,5 +1,14 @@
 ## [Unreleased]
 
+### Fixed — stack constructors preserve Mosaic cross-axis alignment (#17031)
+
+`Row` parts using `align: center-vertical` (or `center`) now open an
+`HStack(alignment: .center)`, while `Column` parts using
+`align: center-horizontal` (or `center`) open a
+`VStack(alignment: .center)`. Unsupported and wrong-axis values remain in
+`styleDegradations`; the reporter derives consumption from the same constructor
+helper as emission so it cannot silently outgrow the generated Swift.
+
 ### Added — native `HostNavigationSplit` lowering (UI29-6, #15481)
 
 `HostNavigationSplit` now emits SwiftUI's `NavigationSplitView`, preserving
@@ -777,4 +786,3 @@ binding, the `Binding(get:set:)` setter for `onToggle`, string label,
 `.disabled(…)` modifier, the radio's `// group:` comment, the
 positive-transition setter for `onSelect`, and the slot-typed
 `value:` flowing into the dispatch payload.
-
