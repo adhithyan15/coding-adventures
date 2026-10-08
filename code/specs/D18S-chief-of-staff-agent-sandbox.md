@@ -1832,6 +1832,63 @@ through S-I3 before two weeks are spent on Windows.
         and routes the channel operations to it. Pending reservations are
         abandoned at launch. `ExactChannelKeyAuthority` leaves the daemon
         path.
+
+        It ships in three parts, each safe on its own.
+
+        **2a, the mechanism, unused in production.**
+        - **`VerifiedExecutable`** (spawn-isolation, Linux):
+          - the broker binary is opened once, by absolute path, and must
+            be a regular file that is not group- or world-writable, owned
+            by root or by the daemon's user;
+          - it is hashed through the descriptor, with its size checked
+            before and after, against the SHA-256 pinned in config;
+          - it is re-hashed before each launch, and that same descriptor
+            is exec'd (`execveat(fd, "", AT_EMPTY_PATH)`). Path-based
+            launch is never an option for it (S-K1).
+        - **`isolate_and_exec`:** `isolate`, then exactly n descriptors
+          placed at 3..3+n.
+          - The sources are first relocated above 3+n with close-on-exec,
+            so no `dup2` can overwrite a source still to be moved.
+          - After the first `dup2`, the hook never returns an error: std's
+            exec-error pipe may sit in a slot. A failure after that point
+            exits 127, which the supervisor sees as a broker that never
+            sent `Ready`.
+        - **`chief-of-staff-broker-launcher`:**
+          - the key-file table, mapping each binding to its slots;
+          - `launch`: open the keys, spawn, Bootstrap, then the `Ready`
+            check. Each public key must match the definition: the
+            receiver's key, or the originator's, for this agent;
+          - abandoning pending reservations on a binding's write channels;
+          - the relay: one thread per broker serving `CallbackServer`, with
+            a broker-time deadline that excludes time spent in callbacks,
+            and a binding resolver *pinned* to the launch identity. A
+            rewired host is not served as a different agent by the old
+            broker.
+
+        **2b, supervisor wiring, behind `[hosts.broker]`.**
+        - The broker launches before its host. The host's end ends the
+          broker; the broker's end, or a violation, ends the host. Both are
+          killed and reaped.
+        - At most one live broker per agent: a relaunch waits until the old
+          relay thread has joined. Only then are pending reservations
+          abandoned.
+        - The relay thread answers the host itself, through a shared host
+          link (the secure channel and the writer behind one lock). So a
+          channel operation does not wait for the next refresh.
+        - Non-channel requests stay with the in-daemon dispatcher.
+        - Without `[hosts.broker]`, today's path is unchanged.
+
+        **2c, the flip.**
+        - `channel_keys` requires `[hosts.broker]`.
+        - `ExactChannelKeyAuthority` and the in-daemon channel operations
+          are removed.
+        - Behaviour change, fail-closed: a host bound to a channel with no
+          configured keys fails to launch, rather than failing each
+          channel request.
+        - **Open decision for the owner before 2c:** the verified launch
+          exists only on Linux. Off Linux, either `channel_keys` is refused
+          at startup (S-P3), or the old in-daemon path stays until the
+          macOS and Windows steps.
      3. **P2.6d-3:** the broker's sandbox plan (Linux, P2.4 applier):
         - its key descriptors and its pipes, nothing else;
         - no network;
