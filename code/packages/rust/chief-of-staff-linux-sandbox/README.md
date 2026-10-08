@@ -1,0 +1,96 @@
+# chief-of-staff-linux-sandbox
+
+The D18S Linux applier: the kernel boundary for a compiled agent, installed
+between fork and exec (D18S build step 4).
+
+`capability-os-sandbox` lowers an agent's manifest to a `SandboxPlan`: what
+the agent may do. This crate makes Linux enforce that plan from the agent's
+first instruction:
+
+| Layer | What the agent gets |
+|---|---|
+| `PR_SET_NO_NEW_PRIVS` | no setuid or file-capability privilege, ever |
+| Landlock | can open only its own executable, the shared libraries, `/dev/null`, `/dev/urandom`, and the files the plan grants; no TCP; no abstract unix sockets or signals outside its own domain |
+| seccomp | an allowlist of syscalls; anything else kills the process (`SIGSYS`) |
+
+It sits on top of `chief-of-staff-spawn-isolation`, which `apply` runs first.
+So the agent also starts with no inherited descriptors, a `/dev/null`
+stderr, and no terminal.
+
+```rust,no_run
+use capability_os_sandbox::{plan_from_json, OsFamily};
+use chief_of_staff_linux_sandbox::LinuxConfinement;
+use std::path::Path;
+use std::process::{Command, Stdio};
+
+# fn main() -> Result<(), Box<dyn std::error::Error>> {
+let manifest = r#"{"version":1,"package":"rust/agent","capabilities":[],
+                   "justification":"Pure computation."}"#;
+let plan = plan_from_json(manifest, OsFamily::Linux)?;
+let agent = Path::new("/opt/agents/agent");
+
+// In the parent: check the plan, build the ruleset and the program.
+let confinement = LinuxConfinement::prepare(&plan, agent)?;
+
+let mut command = Command::new(agent);
+command.stdin(Stdio::piped()).stdout(Stdio::piped());
+// Last: it sets stderr and registers the pre_exec hooks.
+confinement.apply(&mut command);
+let child = command.spawn()?; // a spawn error if any step failed
+# drop(child);
+# Ok(())
+# }
+```
+
+## What is denied, and how
+
+- **Killed by seccomp:**
+  - `socket` and `socketpair`;
+  - `fork`, `vfork`, and `clone` without `CLONE_THREAD`;
+  - `io_uring_*`, `ptrace`, `kill` and its relatives, `bpf`, `mount`,
+    `unshare`, `setns`, the `pidfd` family, SysV and POSIX IPC,
+    `perf_event_open`, `userfaultfd` and `keyctl`;
+  - `ioctl(TIOCSTI)` and `ioctl(TIOCLINUX)`;
+  - every `prctl` except thread names;
+  - `prlimit64` on another process.
+- **`ENOSYS`:** `clone3`. Its flags are in memory, where the filter cannot
+  see them, so libc falls back to `clone`.
+- **`EACCES`:**
+  - opening any path without a Landlock rule;
+  - executing anything but the agent itself;
+  - `readlink`, which Landlock does not mediate, and which would otherwise
+    read `/proc/<supervisor>/fd`.
+
+## What it refuses to launch
+
+Any of these refuses the launch rather than confining "what it can" (S-P3):
+
+- a plan for another OS;
+- a plan that fails `launch_preconditions`;
+- no Landlock;
+- a `Direct` grant below Landlock ABI 3;
+- a `Direct` create or delete grant, which Landlock can express only over a
+  whole directory;
+- a grant on a directory, on a path through a symlink, on a missing file,
+  or on the agent's own executable;
+- an architecture other than x86_64 or aarch64.
+
+## What it does not do
+
+- **Interpreted runtimes.** Deno and Python need the shim (D18S build step 5),
+  which installs the boundary after the runtime's own startup.
+- **Wiring.** `spawn_verified` does not call this yet (step 9). That is also
+  where S-I6's never-grantable paths are checked: only the supervisor knows
+  where the vault and the audit log live.
+- **Metadata.** Landlock mediates opening, not lookup. An agent can still
+  `stat` any path, and learn that a file exists, its size and its times. It
+  cannot read the file.
+
+## Tests
+
+`tests/confinement.rs` runs `linux-sandbox-probe`, a child that makes one
+syscall and reports the outcome. Each denied class is checked twice:
+confined, where the probe must die with `SIGSYS` or report `EACCES`, and
+unconfined, as a control that shows the probe itself works. Every probe is
+harmless when its syscall succeeds, because the controls run unconfined,
+and in CI possibly as root.

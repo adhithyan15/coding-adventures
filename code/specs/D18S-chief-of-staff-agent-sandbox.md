@@ -1285,7 +1285,18 @@ through S-I3 before two weeks are spent on Windows.
      | `/dev/urandom` | read |
      | each `Direct` read or write grant in the plan, an exact existing file | read, or write and truncate, as granted |
 
-   - So `/proc`, `/sys`, `/dev` and every other path are unreachable (S-I1).
+   - So `/proc`, `/sys`, `/dev` and every other path cannot be opened (S-I1).
+   - A grant must be an existing regular file, opened with
+     `openat2(RESOLVE_NO_SYMLINKS)`. It must not be the agent's executable
+     or interpreter. A directory would grant its whole tree, and a symlink
+     anywhere in the path would grant whatever it points at. A writable
+     image would let the agent rewrite the code it runs (S-I6).
+   - The rest of S-I6's never-grantable set (the vault, the audit log, the
+     shim, the broker, the plan files) is checked by the supervisor at step
+     9, which is the only place those paths are known.
+   - Landlock mediates opening, not lookup. `stat` and `access` still answer
+     for any path, so an agent can learn that a file exists, and its size and
+     times, but not its contents.
    - A `Direct` create or delete grant is refused: Landlock can only express
      it as rights over the whole parent directory.
 
@@ -1302,7 +1313,11 @@ through S-I3 before two weeks are spent on Windows.
        are not;
      - `clone3` returns `ENOSYS`, so libc falls back to `clone`;
      - `ioctl` never with `TIOCSTI` or `TIOCLINUX`;
-     - `prctl` only to get or set a thread name.
+     - `prctl` only to get or set a thread name;
+     - `prlimit64` only on the calling process;
+     - `readlink` and `readlinkat` return `EACCES`. Landlock does not mediate
+       them, and through `/proc/<supervisor>/fd` they would name every file
+       the supervisor holds open.
    - Absent from the list, and so a kill: everything S-I1 names. That
      includes `io_uring_*`, `ptrace`, `socket` and `socketpair`, `kill`, SysV
      and POSIX IPC, `bpf`, `mount`, `unshare` and the `pidfd` family.

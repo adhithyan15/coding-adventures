@@ -1,0 +1,19 @@
+[package]
+name = "chief-of-staff-linux-sandbox"
+version = "0.1.0"
+edition = "2021"
+description = "The D18S Linux applier: no_new_privs, Landlock and a seccomp allowlist installed between fork and exec"
+license = "MIT"
+
+[dependencies]
+capability-os-sandbox = { path = "../capability-os-sandbox" }
+capability-cage = { path = "../capability-cage" }
+chief-of-staff-spawn-isolation = { path = "../chief-of-staff-spawn-isolation" }
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[[bin]]
+name = "linux-sandbox-probe"
+path = "src/bin/linux_sandbox_probe.rs"
+test = false

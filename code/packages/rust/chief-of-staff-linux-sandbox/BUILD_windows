@@ -1,0 +1,1 @@
+cargo test -p chief-of-staff-linux-sandbox && cargo clippy -p chief-of-staff-linux-sandbox --all-targets -- -D warnings
