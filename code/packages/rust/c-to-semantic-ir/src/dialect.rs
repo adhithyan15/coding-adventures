@@ -99,6 +99,22 @@ fn condition_operand(token: &Token) -> Result<i64, PpError> {
 }
 
 fn condition_clause(tokens: &[Token]) -> Result<bool, PpError> {
+    // Unwrap at most one pair. Matching only these exact shapes keeps nested
+    // and mixed forms outside the bounded evaluator without recursive parsing.
+    let tokens = match tokens {
+        [open, _, close] if open.value == "(" && close.value == ")" => &tokens[1..2],
+        [open, not, _, close] if open.value == "(" && close.value == ")" && not.value == "!" => {
+            &tokens[1..3]
+        }
+        [open, _, op, _, close]
+            if open.value == "("
+                && close.value == ")"
+                && matches!(op.value.as_str(), "==" | "!=" | "<" | "<=" | ">" | ">=") =>
+        {
+            &tokens[1..4]
+        }
+        _ => tokens,
+    };
     match tokens {
         [token] => Ok(condition_operand(token)? != 0),
         [not, token] if not.value == "!" => Ok(condition_operand(token)? == 0),
@@ -655,16 +671,67 @@ mod tests {
     }
 
     #[test]
-    fn unsupported_or_malformed_logical_conditions_fail() {
-        for condition in [
-            "1 &&",
-            "|| 1",
-            "1 || || 0",
-            "(1)",
-            "!1 == 0",
-            "0 && (1)",
-            "1 || (1)",
+    fn one_outer_parenthesis_pair_groups_only_simple_clauses() {
+        for (condition, expected) in [
+            ("(1)", "1"),
+            ("(0)", "0"),
+            ("(MISSING)", "0"),
+            ("(ANSWER)", "1"),
+            ("(!0)", "1"),
+            ("(!1)", "0"),
+            ("(2 < 3)", "1"),
+            ("(2 >= 3)", "0"),
+            ("(ANSWER == 7)", "1"),
+            ("(1) || 0", "1"),
+            ("0 && (1)", "0"),
+            ("0 || (1)", "1"),
         ] {
+            let source = format!(
+                "#define ANSWER 7\n#if {condition}\nint x = 1;\n#else\nint x = 0;\n#endif\n"
+            );
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+            let values: Vec<_> = result
+                .tokens
+                .iter()
+                .map(|token| token.value.as_str())
+                .collect();
+            assert_eq!(values, ["int", "x", "=", expected, ";"], "{condition}");
+        }
+        for condition in [
+            "((1))",
+            "(1 || 0)",
+            "(1 && 1)",
+            "(1 + 2)",
+            "(1 << 2)",
+            "(1 & 2)",
+            "(1) == 1",
+            "!(1)",
+            "(1",
+            "1)",
+            "(2 < 3",
+            "2 < 3)",
+            "1 || ((1))",
+            "1 || (1 + 2)",
+        ] {
+            let source = format!("#if {condition}\nint x;\n#endif\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            assert!(
+                preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err(),
+                "{condition}"
+            );
+        }
+    }
+
+    #[test]
+    fn unsupported_or_malformed_logical_conditions_fail() {
+        for condition in ["1 &&", "|| 1", "1 || || 0", "!1 == 0"] {
             let source = format!("#if {condition}\nint x = 1;\n#endif\n");
             let mut fs = MemoryFs::new();
             let file = fs.insert("<main>", &source);

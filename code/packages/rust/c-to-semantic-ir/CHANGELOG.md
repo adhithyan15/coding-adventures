@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — PREP01 bounded C #if parentheses
+
+- Accept one outer parenthesis pair around a single operand, negated operand,
+  or comparison clause. Reject nested and mixed expressions while retaining
+  rooted file-input error locations.
+
 ## Unreleased — PREP01 bounded C #if bitwise conditions
 
 - Accept exactly one `&`, `|`, or `^` in each decimal `#if` logical clause,
