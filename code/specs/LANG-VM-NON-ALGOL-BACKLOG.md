@@ -324,16 +324,26 @@ directly to InterpreterIR and Rust vm-core; Node remains an oracle. The next
 selection rotates to LANG82's separate, explicitly partial Perl 5.004_61
 pair.
 
+PR #17094 delivered that distinct, own-archive-backed partial 5.004_61 pair
+and merged as `94ec0e707f9603b6fc111e3ea073b2ff9e5bd879` after exact-head CI,
+CodeQL, and books checks passed. The 776-row inventory now has 106 explicitly
+partial pairs and 670 pending. Neither complete syntax nor exhaustive public
+release coverage is claimed. The next selection rotates to LANG80's bounded
+parenthesized zero-argument Ruby `puts()` stage.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG82 continued (selected):** add a distinct, own-archive-backed partial
-   5.004_61 token/grammar pair. Keep 5.004_01-t1 pending until its own source
-   is found; do not imply complete syntax or an exhaustive release inventory.
-2. **LANG78 JavaScript:** the zero-argument stage is complete; broader native
+1. **LANG80 Ruby (selected):** lower exact parenthesized zero-argument `puts()`
+   from the Ruby grammar AST to InterpreterIR and execute it on Rust vm-core,
+   using host Ruby only as a conformance oracle.
+2. **LANG82 continued:** add the next distinct, own-source-backed partial
+   token/grammar pair. Keep 5.004_01-t1 pending until its own source is found;
+   do not imply complete syntax or an exhaustive release inventory.
+3. **LANG78 JavaScript:** the zero-argument stage is complete; broader native
    frontend semantics remain open, with Node only as a conformance oracle.
-3. **PREP01 C:** continue the bounded conditional ladder. Full C `#if` and
+4. **PREP01 C:** continue the bounded conditional ladder. Full C `#if` and
    stringize/paste remain open.
 
 The following run records the first VM-067 selection.
