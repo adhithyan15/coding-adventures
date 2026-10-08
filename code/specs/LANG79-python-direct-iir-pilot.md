@@ -73,5 +73,8 @@ the existing one-float `print` path. Host Python is a conformance oracle only.
 This stage does not accept multiple arguments, keyword arguments, other
 callees, or new expression forms. Both source parsing and direct AST lowering
 must reject malformed call shapes rather than treating them as an empty call.
+The callee must be a name token in an `atom` node and both delimiters must be
+actual parenthesis tokens; matching token text alone does not validate a
+caller-supplied AST. Apply the same check to the one-argument path.
 `print()\nprint(1.0)\n` must produce `\n1.0\n`; a completed empty print before
 a later float-division failure must remain in the typed run error's output.

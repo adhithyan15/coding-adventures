@@ -5,6 +5,7 @@
 
 use coding_adventures_python_parser::parse_python;
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
+use lexer::token::TokenType;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 use std::sync::{Arc, Mutex};
 use vm_core::{errors::VMError, value::Value, VMCore};
@@ -422,17 +423,34 @@ fn print_argument(expression: &GrammarASTNode) -> Result<Option<PrintCall<'_>>, 
     let [ASTNodeOrToken::Token(callee)] = atom.children.as_slice() else {
         return Ok(None);
     };
-    if callee.value != "print" || suffix.rule_name != "suffix" {
+    if callee.value != "print" {
         return Ok(None);
+    }
+    if atom.rule_name != "atom"
+        || callee.type_ != TokenType::Name
+        || callee.type_name.is_some()
+        || suffix.rule_name != "suffix"
+    {
+        return Err("native Python print requires a name-call shape".into());
     }
     match suffix.children.as_slice() {
         [ASTNodeOrToken::Token(open), ASTNodeOrToken::Token(close)]
-            if open.value == "(" && close.value == ")" =>
+            if open.value == "("
+                && open.type_ == TokenType::LParen
+                && open.type_name.is_none()
+                && close.value == ")"
+                && close.type_ == TokenType::RParen
+                && close.type_name.is_none() =>
         {
             Ok(Some(PrintCall::Empty))
         }
         [ASTNodeOrToken::Token(open), ASTNodeOrToken::Node(args), ASTNodeOrToken::Token(close)]
-            if open.value == "(" && close.value == ")" =>
+            if open.value == "("
+                && open.type_ == TokenType::LParen
+                && open.type_name.is_none()
+                && close.value == ")"
+                && close.type_ == TokenType::RParen
+                && close.type_name.is_none() =>
         {
             let argument = only_node(args, "argument")?;
             Ok(Some(PrintCall::One(only_node(argument, "expression")?)))
@@ -463,6 +481,64 @@ mod tests {
         let error = run_source("print()\nprint(1.0 / 0.0)\n").unwrap_err();
         assert_eq!(error.output, "\n");
         assert!(error.message.contains("ZeroDivisionError"));
+    }
+
+    #[test]
+    fn direct_ast_print_call_rejects_forged_token_kinds() {
+        fn forge_type(node: &mut GrammarASTNode, value: &str, variant: bool) -> bool {
+            for child in &mut node.children {
+                match child {
+                    ASTNodeOrToken::Token(token) if token.value == value => {
+                        if variant {
+                            token.type_ = TokenType::String;
+                        } else {
+                            token.type_name = Some("STRING".into());
+                        }
+                        return true;
+                    }
+                    ASTNodeOrToken::Node(inner) => {
+                        if forge_type(inner, value, variant) {
+                            return true;
+                        }
+                    }
+                    _ => {}
+                }
+            }
+            false
+        }
+
+        for source in ["print()\n", "print(1.0)\n"] {
+            for value in ["print", "(", ")"] {
+                for variant in [false, true] {
+                    let mut ast = parse_python(source, "3.12").unwrap();
+                    assert!(forge_type(&mut ast, value, variant));
+                    assert!(
+                        compile_ast(&ast, "forged").is_err(),
+                        "{source:?} {value:?} {variant:?}"
+                    );
+                }
+            }
+        }
+
+        fn forge_atom_rule(node: &mut GrammarASTNode) -> bool {
+            if node.rule_name == "atom"
+                && matches!(node.children.as_slice(), [ASTNodeOrToken::Token(token)] if token.value == "print")
+            {
+                node.rule_name = "forged_atom".into();
+                return true;
+            }
+            for child in &mut node.children {
+                if let ASTNodeOrToken::Node(inner) = child {
+                    if forge_atom_rule(inner) {
+                        return true;
+                    }
+                }
+            }
+            false
+        }
+        let mut ast = parse_python("print()\n", "3.12").unwrap();
+        assert!(forge_atom_rule(&mut ast));
+        assert!(compile_ast(&ast, "forged").is_err());
     }
 
     #[test]
