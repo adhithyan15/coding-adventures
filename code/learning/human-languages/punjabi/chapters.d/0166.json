@@ -1,0 +1,19 @@
+{
+  "chapter": 166,
+  "title": "Return to Running, Wandering, and Stopping",
+  "label": "ch:pa-three-familiar-actions-r4",
+  "canDo": "I can retrieve three already-taught Punjabi action verbs after a long gap, one at a time, without claiming scored A1 writing or complete mock credit.",
+  "spineNodes": [
+    "SPINE-NAME-EVERYDAY-ACTIONS"
+  ],
+  "payoff": {
+    "lesson": "PA-R166-stop-again",
+    "kind": "recognition",
+    "summary": "Recall running, wandering, and stopping from short familiar cues without introducing new Punjabi.",
+    "assesses": [
+      "PA-LEX-C152-ACT152-01",
+      "PA-LEX-C152-ACT152-02",
+      "PA-LEX-C152-ACT152-03"
+    ]
+  }
+}

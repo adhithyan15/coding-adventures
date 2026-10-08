@@ -1,0 +1,11 @@
+{
+  "language": "punjabi",
+  "chapter": 166,
+  "sourceHash": "fnv1a64:db78e598f0d9a8c4",
+  "lessonIds": [
+    "PA-R166-run-again",
+    "PA-R166-wander-again",
+    "PA-R166-stop-again"
+  ],
+  "tex": "punjabi/book/chapters/ch166-return-to-running-wandering-and-stopping.tex"
+}
