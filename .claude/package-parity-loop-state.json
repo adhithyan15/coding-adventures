@@ -11,15 +11,15 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 17143,
+  "active_pr": null,
   "last_ci_action": {
-    "observed_at": "2026-10-08T15:23:13Z",
+    "observed_at": "2026-10-08T15:34:49Z",
     "pr_number": 17143,
-    "status": "pending",
-    "notes": "Ready-for-review Go Arc2D center-form PR #17143 is open. GitHub reports MERGEABLE but initial CI and CodeQL checks are in progress; do not enable auto-merge before all required checks are terminal and acceptable."
+    "status": "merged",
+    "notes": "PR #17143 reached eight successful and 24 skipped terminal checks without failures. GitHub reported CLEAN/MERGEABLE, guarded squash auto-merge was enabled, and GitHub merged it as 17aca3015e4655dd7202ecde45357747419952b1; no manual merge was used."
   },
   "last_inventory": {
-    "revision": "780fd6bb73e1e5727157d067dcd88d76c6f97e82",
+    "revision": "59d58463222ad2f3589447dd21a7b42870b94e4d",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1499,
@@ -12111,10 +12111,13 @@
     {
       "id": "geometry-2d-neutral-fixture-ci-scheduling",
       "title": "Schedule both neutral geometry and Bezier flattening validators in CI",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-bezier2d-flattening-termination-contract"],
-      "branch": null,
+      "branch": "codex/parity-geometry-neutral-fixture-ci-20261008",
       "pr_number": null,
+      "selected_at": "2026-10-08T15:37:20Z",
+      "selection_revision": "59d58463222ad2f3589447dd21a7b42870b94e4d",
+      "selection_notes": "Selected only after #17143 actually merged and exact fetched-main schema-3 inventory was regenerated. Counts remain 15 established lanes, 1,499 implementation identities, 4,781 occupied slots, 1,541 all-reported identities, 178 high-consensus identities with 250 missing slots, 818 Rust singletons, and zero collisions or unknown buckets. No new identity or lane root appeared; the chief Linux sandbox native-security singleton is already selection-blocked and excluded. This small unconditional neutral-fixture CI gate unlocks the existing 11-lane Arc2D center-form owner, while the newly ready Go endpoint API is one-lane and OCaml native promotion remains upstream-blocked. PR #15723 overlaps ci.yml as a file but its live patch changes action pins outside the intended metadata-command block; no active parity PR or exact-hunk conflict exists.",
       "notes": "The geometry2d-v1 and bezier2d-flattening-v1 validators and their unit tests exist but are absent from the unconditional contracts job. Schedule both exact validators and both test files in that existing Python step; native package readers remain separately owned. Validate workflow syntax, command-presence regression, four focused commands, and live fixture-only CI. Recheck open workflow PR #15723 overlap before editing."
     },
     {
@@ -12171,11 +12174,15 @@
     {
       "id": "geometry-arc2d-go-center-form-spec-reconciliation",
       "title": "Reconcile Go G2D03 center-form extrema and quadrant segmentation",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-arc2d-center-form-bounds-and-sweep-neutral-contract"],
       "branch": "codex/parity-arc2d-go-center-20261008",
       "pr_number": 17143,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/17143",
+      "merged_head_revision": "d8cabb6ab95ec9e0c61bebeff22556012a18e490",
+      "merged_at": "2026-10-08T15:34:49Z",
+      "merge_revision": "17aca3015e4655dd7202ecde45357747419952b1",
+      "merge_notes": "All 32 final-head checks were terminal and acceptable: eight successful and 24 expected skipped. GitHub reported CLEAN/MERGEABLE; guarded squash auto-merge completed without a manual merge. The merge commit was verified on fetched origin/main.",
       "selected_at": "2026-10-08T15:05:19Z",
       "selection_revision": "780fd6bb73e1e5727157d067dcd88d76c6f97e82",
       "selection_notes": "Selected only after #17136 actually merged, the exact-main collision inventory and the newly discovered native-security singleton review were registered. The merged neutral center contract exposes concrete Go analytic-bound, full-turn-segmentation and fail-stop gaps, and fixing Go center form directly unlocks its separate endpoint API. A focused Go-only slice is smaller and higher dependency leverage than the broader existing-lane umbrella or OCaml status-doc repair. No active parity PR or Go Arc2D path overlap exists.",
