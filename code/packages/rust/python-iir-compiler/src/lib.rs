@@ -137,6 +137,7 @@ pub fn run_source(source: &str) -> Result<String, PythonRunError> {
     let output = Arc::new(Mutex::new(String::new()));
     let captured = Arc::clone(&output);
     let captured_empty = Arc::clone(&output);
+    let captured_two = Arc::clone(&output);
     let mut vm = VMCore::new();
     vm.max_instructions = Some(100_000);
     vm.builtins_mut().register("py_float_div", |args| {
@@ -180,6 +181,25 @@ pub fn run_source(source: &str) -> Result<String, PythonRunError> {
         sink.push('\n');
         Ok(Value::Null)
     });
+    vm.builtins_mut()
+        .register("py_print_two_floats", move |args| {
+            let [Value::Float(left), Value::Float(right)] = args else {
+                return Err(VMError::Custom(
+                    "py_print_two_floats expects two floats".into(),
+                ));
+            };
+            let first = format_python_float(*left).map_err(VMError::Custom)?;
+            let second = format_python_float(*right).map_err(VMError::Custom)?;
+            let line = format!("{first} {second}\n");
+            let mut sink = captured_two
+                .lock()
+                .map_err(|_| VMError::Custom("Python output lock poisoned".into()))?;
+            if sink.len() + line.len() > 1_000_000 {
+                return Err(VMError::Custom("Python output limit exceeded".into()));
+            }
+            sink.push_str(&line);
+            Ok(Value::Null)
+        });
     let execution = vm.execute(&mut module, "main", &[]);
     let result = output
         .lock()
@@ -261,6 +281,16 @@ impl Compiler {
                     "call_builtin",
                     None,
                     vec![Operand::Var("py_print_float".into()), value],
+                    "void",
+                );
+            }
+            Some(PrintCall::Two(first, second)) => {
+                let left = self.compile_number(first)?;
+                let right = self.compile_number(second)?;
+                self.emit(
+                    "call_builtin",
+                    None,
+                    vec![Operand::Var("py_print_two_floats".into()), left, right],
                     "void",
                 );
             }
@@ -406,6 +436,14 @@ fn only_node<'a>(node: &'a GrammarASTNode, rule: &str) -> Result<&'a GrammarASTN
 enum PrintCall<'a> {
     Empty,
     One(&'a GrammarASTNode),
+    Two(&'a GrammarASTNode, &'a GrammarASTNode),
+}
+
+fn positional_argument(node: &GrammarASTNode) -> Result<&GrammarASTNode, String> {
+    if node.rule_name != "argument" {
+        return Err("native Python print requires positional expression arguments".into());
+    }
+    only_node(node, "expression")
 }
 
 fn print_argument(expression: &GrammarASTNode) -> Result<Option<PrintCall<'_>>, String> {
@@ -452,10 +490,29 @@ fn print_argument(expression: &GrammarASTNode) -> Result<Option<PrintCall<'_>>, 
                 && close.type_ == TokenType::RParen
                 && close.type_name.is_none() =>
         {
-            let argument = only_node(args, "argument")?;
-            Ok(Some(PrintCall::One(only_node(argument, "expression")?)))
+            if args.rule_name != "arguments" {
+                return Err("native Python print requires positional expression arguments".into());
+            }
+            match args.children.as_slice() {
+                [ASTNodeOrToken::Node(argument)] => {
+                    Ok(Some(PrintCall::One(positional_argument(argument)?)))
+                }
+                [ASTNodeOrToken::Node(first), ASTNodeOrToken::Token(comma), ASTNodeOrToken::Node(second)]
+                    if comma.value == ","
+                        && comma.type_ == TokenType::Comma
+                        && comma.type_name.is_none() =>
+                {
+                    Ok(Some(PrintCall::Two(
+                        positional_argument(first)?,
+                        positional_argument(second)?,
+                    )))
+                }
+                _ => Err(
+                    "native Python print requires at most two positional float expressions".into(),
+                ),
+            }
         }
-        _ => Err("native Python print requires zero or one expression argument".into()),
+        _ => Err("native Python print requires zero to two expression arguments".into()),
     }
 }
 
@@ -481,6 +538,50 @@ mod tests {
         let error = run_source("print()\nprint(1.0 / 0.0)\n").unwrap_err();
         assert_eq!(error.output, "\n");
         assert!(error.message.contains("ZeroDivisionError"));
+    }
+
+    #[test]
+    fn two_float_print_uses_one_space_and_keeps_prior_output_on_error() {
+        assert_eq!(
+            run_source("print(1.0 + 2.0, -0.0)\nprint(1.0, 2.0 / 4.0)\n").unwrap(),
+            "3.0 -0.0\n1.0 0.5\n"
+        );
+        let error = run_source("print(3.0, 4.0)\nprint(2.0, 1.0 / 0.0)\n").unwrap_err();
+        assert_eq!(error.output, "3.0 4.0\n");
+        assert!(error.message.contains("ZeroDivisionError"));
+        let display_error = run_source("print(1.0)\nprint(2.0, 1e20)\n").unwrap_err();
+        assert_eq!(display_error.output, "1.0\n");
+        assert!(display_error.message.contains("display outside"));
+    }
+
+    #[test]
+    fn direct_ast_two_argument_print_requires_actual_comma_token() {
+        fn forge_comma(node: &mut GrammarASTNode, named: bool) -> bool {
+            for child in &mut node.children {
+                match child {
+                    ASTNodeOrToken::Token(token) if token.value == "," => {
+                        if named {
+                            token.type_name = Some("STRING".into());
+                        } else {
+                            token.type_ = TokenType::String;
+                        }
+                        return true;
+                    }
+                    ASTNodeOrToken::Node(inner) => {
+                        if forge_comma(inner, named) {
+                            return true;
+                        }
+                    }
+                    _ => {}
+                }
+            }
+            false
+        }
+        for named in [false, true] {
+            let mut ast = parse_python("print(1.0, 2.0)\n", "3.12").unwrap();
+            assert!(forge_comma(&mut ast, named));
+            assert!(compile_ast(&ast, "forged").is_err());
+        }
     }
 
     #[test]
@@ -547,7 +648,8 @@ mod tests {
             "print(1 + 2)\n",
             "print(1.0 // 2.0)\n",
             "x = 1.0\n",
-            "print(1.0, 2.0)\n",
+            "print(1.0, 2.0, 3.0)\n",
+            "print(1.0, end=2.0)\n",
             "other()\n",
         ] {
             assert!(compile_source(source, "negative").is_err(), "{source}");
