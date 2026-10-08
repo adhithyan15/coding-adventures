@@ -281,6 +281,28 @@ class CIGateRegistryTests(unittest.TestCase):
         self.assertIn("forme-release-platform", final_gate)
         self.assertIn("forme-release-verdict", final_gate)
 
+    def test_neutral_geometry_oracles_run_in_unconditional_contracts_step(self) -> None:
+        body = self._job_body("contracts")
+        self.assertIn("\n    steps:\n", body)
+        job_header = body.split("\n    steps:\n", 1)[0]
+        self.assertNotRegex(job_header, r"(?m)^    if:")
+
+        marker = "      - name: Verify repo-wide metadata contracts\n"
+        self.assertEqual(body.count(marker), 1, "metadata step must be unique")
+        step = body.split(marker, 1)[1].split("\n      - name:", 1)[0]
+        self.assertIn("        run: |\n", step)
+        self.assertNotRegex(step.split("        run: |\n", 1)[0], r"(?m)^        if:")
+        commands = (
+            "python3 code/scripts/geometry2d_conformance.py",
+            "python3 -m unittest discover -s code/scripts/tests -p 'test_geometry2d_conformance.py'",
+            "python3 code/scripts/bezier2d_flattening_conformance.py",
+            "python3 -m unittest discover -s code/scripts/tests -p 'test_bezier2d_flattening_conformance.py'",
+        )
+        lines = step.split("        run: |\n", 1)[1].splitlines()
+        for command in commands:
+            with self.subTest(command=command):
+                self.assertEqual(lines.count(f"          {command}"), 1)
+
     def _job_body(self, job_id: str) -> str:
         """Return the ci.yml text of one job, from its key to the next job key."""
         start = self.jobs_section.index(f"\n  {job_id}:\n")
