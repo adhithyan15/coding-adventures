@@ -25,4 +25,5 @@ libc = "0.2"
 [dev-dependencies]
 chief-of-staff-broker-callbacks = { path = "../chief-of-staff-broker-callbacks" }
 chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }
+chief-of-staff-channel-store = { path = "../chief-of-staff-channel-store" }
 storage-core = { path = "../storage-core" }
