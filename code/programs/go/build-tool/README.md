@@ -35,6 +35,17 @@ single-language runs, and fails if an applicable reader root is missing.
 Some native tests assert only digest slices; this scheduling rule does not
 claim they replay the full neutral cache-decision oracle.
 
+Changes to a flat shared `validation-*.json` case schedule only its direct
+native validator readers alongside the neutral fixture gate. Nine checked
+orphan-crate/tracked-artifact cases have eleven non-Go readers, five
+package-root/Lua-Windows-sibling cases have a Go reader, and eight cases are
+neutral-only. All twenty-two case names are classified explicitly: a newly
+added flat case fails before planning until its reader relation is reviewed.
+Raw-path matching excludes nested, backslash, case-varied, and backup
+lookalikes; renamed/deleted source paths, ordinary package edits, three
+platforms, and single-language plans retain exact selection. The
+[CI-gate registry](../../../specs/ci-gate-registry.md) pins the relation.
+
 ## Portable source hashing
 
 Extension and declared-source collection share the language-neutral v1 rules.

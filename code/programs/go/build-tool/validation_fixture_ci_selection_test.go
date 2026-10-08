@@ -1,15 +1,19 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"reflect"
+	"regexp"
 	"sort"
 	"strings"
 	"testing"
 
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/discovery"
+	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/gitdiff"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/plan"
 	"github.com/adhithyan15/coding-adventures/code/programs/go/build-tool/internal/resolver"
 )
@@ -21,7 +25,7 @@ var validationExpectedReaders = map[string]string{
 	"identity-manifest-ambiguous": "", "missing-build": "", "path-unsafe": "",
 	"starlark-declarations-invalid": "", "toolchain-unsupported": "",
 	"lua-windows-sibling-parity-absent": "G",
-	"orphan-crates-clean": "CFEHLPYBRST", "orphan-crates-unlisted": "CFEHLPYBRST",
+	"orphan-crates-clean":               "CFEHLPYBRST", "orphan-crates-unlisted": "CFEHLPYBRST",
 	"orphan-exemptions-invalid": "CFEHLPYBRST", "orphan-exemptions-stale": "CFEHLPYBRST",
 	"orphan-package-root-exemptions-invalid": "G", "orphan-package-root-exemptions-stale": "G",
 	"orphan-package-roots-clean": "G", "orphan-package-roots-unlisted": "G",
@@ -154,7 +158,9 @@ func TestValidationFixtureCheckedCorpus(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		var envelope struct{ Domain string `json:"domain"` }
+		var envelope struct {
+			Domain string `json:"domain"`
+		}
 		if err := json.Unmarshal(data, &envelope); err != nil || envelope.Domain != "validation" {
 			t.Fatalf("%s domain %q, error %v", name, envelope.Domain, err)
 		}
@@ -167,6 +173,57 @@ func TestValidationFixtureCheckedCorpus(t *testing.T) {
 	sort.Strings(expected)
 	if !reflect.DeepEqual(actual, expected) || len(actual) != 22 {
 		t.Fatalf("checked validation cases %v differ from native-reader relation %v", actual, expected)
+	}
+}
+
+func TestValidationFixtureNativeSourceReferenceDrift(t *testing.T) {
+	root := toolchainFixtureRepoRoot(t)
+	// These are test sources, not implementation files. Go has two distinct
+	// validation test modules; Perl constructs its case filenames from qw lists.
+	readerSources := map[rune][]string{
+		'C': {"dotnet/build-tool-csharp/tests/BuildTool.CSharp.Tests/BuildToolTests.cs"},
+		'F': {"dotnet/build-tool-fsharp/tests/BuildTool.FSharp.Tests/BuildToolTests.fs"},
+		'E': {"elixir/build-tool/test/validator_test.exs"},
+		'G': {"go/build-tool/internal/validator/package_roots_test.go", "go/build-tool/internal/validator/validator_test.go"},
+		'H': {"haskell/build-tool/test/BuildToolSpec.hs"},
+		'L': {"lua/build-tool/tests/test_validator.lua"},
+		'P': {"perl/build-tool/t/11-validator.t"},
+		'Y': {"python/build-tool/tests/test_validator.py"},
+		'B': {"ruby/build-tool/test/test_validator.rb"},
+		'R': {"rust/build-tool/src/validator.rs"},
+		'S': {"swift/build-tool/Tests/BuildToolCoreTests/ValidatorTests.swift"},
+		'T': {"typescript/build-tool/tests/validator.test.ts"},
+	}
+	perlDynamic := regexp.MustCompile(`(?s)for my \$name \(qw\(([^)]*)\)\) \{.*?validation-(orphan|tracked-artifacts)-\$name\.json`)
+	for code, sources := range readerSources {
+		all := []byte{}
+		for _, source := range sources {
+			data, err := os.ReadFile(filepath.Join(root, "code", "programs", filepath.FromSlash(source)))
+			if err != nil {
+				t.Fatal(err)
+			}
+			all = append(all, data...)
+		}
+		found := map[string]bool{}
+		if code == 'P' {
+			for _, match := range perlDynamic.FindAllSubmatch(all, -1) {
+				for _, name := range strings.Fields(string(match[1])) {
+					found[string(match[2])+"-"+name] = true
+				}
+			}
+			if len(found) != 9 {
+				t.Fatalf("Perl dynamic validation roster is %v", found)
+			}
+		} else {
+			for stem := range validationExpectedReaders {
+				found[stem] = bytes.Contains(all, []byte("validation-"+stem+".json"))
+			}
+		}
+		for stem, codes := range validationExpectedReaders {
+			if found[stem] != strings.ContainsRune(codes, code) {
+				t.Errorf("native reader %c case %s: source reference %t, route %t", code, stem, found[stem], strings.ContainsRune(codes, code))
+			}
+		}
 	}
 }
 
@@ -241,5 +298,42 @@ func TestValidationFixturePlanUnforcedToolchainsAndAtomicity(t *testing.T) {
 	}
 	if _, err := os.Stat(unknownPlan); !os.IsNotExist(err) {
 		t.Fatalf("partial unknown-case plan: %v", err)
+	}
+}
+
+func TestValidationFixtureRenameSelectsDeletedSource(t *testing.T) {
+	root := t.TempDir()
+	path := validationTestPath("orphan-package-roots-clean")
+	fixture := filepath.Join(root, filepath.FromSlash(path))
+	if err := os.MkdirAll(filepath.Dir(fixture), 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(fixture, []byte("fixture\n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	git := func(args ...string) {
+		t.Helper()
+		cmd := exec.Command("git", args...)
+		cmd.Dir = root
+		if output, err := cmd.CombinedOutput(); err != nil {
+			t.Fatalf("git %v: %v: %s", args, err, output)
+		}
+	}
+	git("init", "-q")
+	git("-c", "user.name=Fixture Test", "-c", "user.email=fixture@example.invalid", "add", ".")
+	git("-c", "user.name=Fixture Test", "-c", "user.email=fixture@example.invalid", "commit", "-qm", "baseline")
+	git("branch", "base")
+	if err := os.Rename(fixture, filepath.Join(filepath.Dir(fixture), "renamed.json")); err != nil {
+		t.Fatal(err)
+	}
+	git("add", "-A")
+	git("-c", "user.name=Fixture Test", "-c", "user.email=fixture@example.invalid", "commit", "-qm", "rename")
+	changed := gitdiff.GetChangedFiles(root, "base")
+	if !containsPath(changed, path) {
+		t.Fatalf("rename omitted deleted source: %v", changed)
+	}
+	got, err := changedPackageRootsForPlatform(changed, validationTestPackages(root), root, "linux")
+	if err != nil || !reflect.DeepEqual(sortedChangedRoots(got), validationTestNames("orphan-package-roots-clean")) {
+		t.Fatalf("renamed source selected %v, error %v", sortedChangedRoots(got), err)
 	}
 }

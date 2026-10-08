@@ -193,6 +193,7 @@ const graphFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/graph-"
 const diffSelectionFixturePrefix = "code/specs/fixtures/build-tool-v1/cases/diff-selection-"
 const resolutionFixtureCasePrefix = "code/specs/fixtures/build-tool-v1/cases/resolution-"
 const hashingCacheFixtureCasePrefix = "code/specs/fixtures/build-tool-v1/cases/hashing-cache-"
+const validationFixtureCasePrefix = "code/specs/fixtures/build-tool-v1/cases/validation-"
 
 const closureProvenanceSpecPath = "code/specs/CV02-checked-bounded-provenance-graphs.md"
 const closureProvenanceConsumer = "rust/programs/closurec"
@@ -349,6 +350,38 @@ var hashingCacheNativeFixtureCases = map[string]string{
 	"shared-input-sha256-native-before": "CFL",
 }
 
+// Validation's neutral corpus includes cases without a native validator
+// reader. An empty relation is deliberate; a new flat case is still unknown
+// until it is explicitly classified here.
+var validationNativeFixtureReaders = map[rune]struct{ name, language string }{
+	'C': {"dotnet/programs/build-tool-csharp", "csharp"},
+	'F': {"dotnet/programs/build-tool-fsharp", "fsharp"},
+	'E': {"elixir/programs/build-tool", "elixir"},
+	'G': {"go/programs/build-tool", "go"},
+	'H': {"haskell/programs/build-tool", "haskell"},
+	'L': {"lua/programs/build-tool", "lua"},
+	'P': {"perl/programs/build-tool", "perl"},
+	'Y': {"python/programs/build-tool", "python"},
+	'B': {"ruby/programs/build-tool", "ruby"},
+	'R': {"rust/programs/build-tool", "rust"},
+	'S': {"swift/programs/build-tool", "swift"},
+	'T': {"typescript/programs/build-tool", "typescript"},
+}
+
+var validationNativeFixtureCases = map[string]string{
+	"clean-build": "", "clean-full": "", "dependency-oracles": "",
+	"identity-manifest-ambiguous": "", "missing-build": "", "path-unsafe": "",
+	"starlark-declarations-invalid": "", "toolchain-unsupported": "",
+	"lua-windows-sibling-parity-absent": "G",
+	"orphan-crates-clean":               "CFEHLPYBRST", "orphan-crates-unlisted": "CFEHLPYBRST",
+	"orphan-exemptions-invalid": "CFEHLPYBRST", "orphan-exemptions-stale": "CFEHLPYBRST",
+	"orphan-package-root-exemptions-invalid": "G", "orphan-package-root-exemptions-stale": "G",
+	"orphan-package-roots-clean": "G", "orphan-package-roots-unlisted": "G",
+	"tracked-artifacts-aliases": "CFEHLPYBRST", "tracked-artifacts-clean": "CFEHLPYBRST",
+	"tracked-artifacts-forbidden": "CFEHLPYBRST", "tracked-artifacts-invalid": "CFEHLPYBRST",
+	"tracked-artifacts-unicode-boundaries": "CFEHLPYBRST",
+}
+
 // A raw Git path is already slash-separated. Do not clean it: normalizing a
 // nested or backslash lookalike would incorrectly broaden the CI selection.
 func resolutionFixtureCase(changed string) string {
@@ -361,6 +394,14 @@ func resolutionFixtureCase(changed string) string {
 
 func hashingCacheFixtureCase(changed string) string {
 	name, ok := strings.CutPrefix(changed, hashingCacheFixtureCasePrefix)
+	if !ok || !strings.HasSuffix(name, ".json") || len(name) <= len(".json") || strings.ContainsAny(name, "/\\") {
+		return ""
+	}
+	return strings.TrimSuffix(name, ".json")
+}
+
+func validationFixtureCase(changed string) string {
+	name, ok := strings.CutPrefix(changed, validationFixtureCasePrefix)
 	if !ok || !strings.HasSuffix(name, ".json") || len(name) <= len(".json") || strings.ContainsAny(name, "/\\") {
 		return ""
 	}
@@ -524,13 +565,22 @@ func changedPackageRootsForPlatformAndLanguage(
 			hashingCacheCases[caseName] = true
 		}
 	}
+	validationCases := map[string]bool{}
+	for _, path := range changedFiles {
+		if caseName := validationFixtureCase(path); caseName != "" {
+			if _, known := validationNativeFixtureCases[caseName]; !known {
+				return nil, fmt.Errorf("validation fixture case %q has no classified native readers", caseName)
+			}
+			validationCases[caseName] = true
+		}
+	}
 	sourceFixtureFamilies := map[string]bool{}
 	for _, path := range changedFiles {
 		if family := sourceCollectionFixtureFamily(path); family != "" {
 			sourceFixtureFamilies[family] = true
 		}
 	}
-	if !discoveryFixtureChanged && !ciGateFixtureChanged && !toolchainFixtureChanged && !graphDiffFixtureChanged && len(resolutionCases) == 0 && len(hashingCacheCases) == 0 && len(sourceFixtureFamilies) == 0 {
+	if !discoveryFixtureChanged && !ciGateFixtureChanged && !toolchainFixtureChanged && !graphDiffFixtureChanged && len(resolutionCases) == 0 && len(hashingCacheCases) == 0 && len(validationCases) == 0 && len(sourceFixtureFamilies) == 0 {
 		return changed, nil
 	}
 
@@ -604,6 +654,18 @@ func changedPackageRootsForPlatformAndLanguage(
 			}
 			if !available[consumer.name] {
 				return nil, fmt.Errorf("hashing-cache fixture %q consumer %q is missing from discovered packages", caseName, consumer.name)
+			}
+			changed[consumer.name] = true
+		}
+	}
+	for caseName := range validationCases {
+		for _, code := range validationNativeFixtureCases[caseName] {
+			consumer := validationNativeFixtureReaders[code]
+			if language != "all" && consumer.language != language {
+				continue
+			}
+			if !available[consumer.name] {
+				return nil, fmt.Errorf("validation fixture %q consumer %q is missing from discovered packages", caseName, consumer.name)
 			}
 			changed[consumer.name] = true
 		}
