@@ -60,7 +60,10 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "display": 1,
         "elevation": 10,
         "flex-direction": 1,
-        "flex-grow": 6,
+        # Compact TaskApp scroll/name wrappers need flexible sizing in Flutter.
+        # SwiftUI currently preserves the authored structure but reports those
+        # two occurrences as explicit style debt (#16949).
+        "flex-grow": 8,
         "flex-shrink": 9,
         "flex-wrap": 1,
         "font": 1,
@@ -129,7 +132,10 @@ STYLE_DROP_BASELINES: dict[str, dict[str, int]] = {
         "box-sizing": 1,
         "color": 2,
         "elevation": 8,
-        "flex-grow": 5,
+        # The compact task identity uses flexible name sizing in Flutter. Qt
+        # keeps the portable row structure and records that task-name flex
+        # occurrence until the emitter grows an equivalent lowering (#16949).
+        "flex-grow": 6,
         "flex-shrink": 9,
         "flex-wrap": 1,
         "font": 1,

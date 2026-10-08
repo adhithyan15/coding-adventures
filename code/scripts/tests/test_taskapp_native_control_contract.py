@@ -86,9 +86,9 @@ def test_style_drop_baseline_totals_match_measured_main() -> None:
         for backend, properties in STYLE_DROP_BASELINES.items()
     } == {
         "xaml": 77,
-        "swiftui": 142,
+        "swiftui": 144,
         "compose": 89,
-        "qt": 193,
+        "qt": 194,
         "flutter": 229,
     }
 

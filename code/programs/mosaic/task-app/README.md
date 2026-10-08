@@ -88,6 +88,10 @@ Flutter acceptance independently mounts the empty app at the same declared
 1280 x 900 viewport and requires the generated topbar to produce no RenderFlex
 overflow. The title/summary, compact action controls, and view switcher use
 explicit stacked rows because portable Mosaic layouts cannot assume flex-wrap.
+At Flutter's 800 x 600 compact constraint, the view switcher and each task's
+secondary actions scroll horizontally, task identity and actions occupy separate
+rows, and the main content remains vertically scrollable. The fresh and restored
+lifecycle runs both require zero layout exceptions at that size (#16949).
 
 Those gates all assert the **semantics tree**, not appearance, and they can all
 pass while the app is unreadable — see #14798 for the first actual render and

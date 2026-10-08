@@ -243,3 +243,41 @@ checks coverage of those pinned sources only. It does not prove that the
 inventory contains every public release after the snapshot or every
 historical distribution not named there; keep new discoveries explicit and
 never treat a pending or partial row as complete syntax.
+
+Prepare a separate bounded installment for `5.004_04-t1`, `-t2`, `-t3`,
+`-t4`, and final `5.004_04`. Their own historical source archives have
+SHA-256 digests `a159185d580f409b14bd286baca770ef3ca6457c7db851e3663438cb60cb03b0`,
+`c4c806d35feda5dd177880ccf13562610eb32afac64af4dfc86a0e56d2171030`,
+`3337caa03309b6f772dedde87b40600c04911e795cf64c9efa6949a9c2cae744`,
+`57a25365088de1d57a27516b84f39cc10f92403394e537f3405ec3cbfa151968`,
+and `a33e436a815e7dc16ea539eb566d7e5ac4852f2ed16bbcdf4105c6df748bcef0`,
+respectively. All five archives have byte-identical `perly.y` and `toke.c`;
+the final archive's blobs also match the official `perl-5.004_04` tag.
+Relative to 5.004_03, its yacc changes loop source-line construction,
+while its tokenizer changes `glob` classification and quote-delimiter
+whitespace handling. Those changes do not extend the accepted plain-decimal
+`print` arithmetic subset. Give every release a distinct token and grammar
+file; preserve the inherited 250-digit lexical bound and negative probes for
+leading zero, decrement adjacency, carriage returns, and unsupported input.
+Do not claim full Perl syntax or add a release alias.
+
+Prepare a following bounded maintenance installment with four separate,
+explicitly partial pairs for `5.004_04-m1` through `-m4`. Each release has
+its own historical source archive at
+`https://mirrors.develooper.com/perl/historical-perl/perl-<release>.tar.gz`.
+Their respective SHA-256 digests are
+`2782e92619e296052d45c5b9fc565e7c5558530ab37d39b761e8c9dd246c7605`,
+`78e7ef63abec177ae1287ba3d20fc9e079dcbf1401eb3229db5a785bf7ef5827`,
+`ce0c07bd7507cc0664d9da358f895f7bd3b67ea09ed92f432e1b0263ebf2acf0`,
+and `8e883ceed74188b2cf69a8cb6247f80e8e8178c8904b9e1591c0342e20148241`.
+The four `perly.y` blobs are byte-identical to each other. Relative to final
+5.004_04, m1 adds postfix `for` and hash-element scalarization; later yacc
+blobs retain those changes. The tokenizer changes across the four releases
+concern interpolation and lexical state, regex modifiers, input handling,
+subscript disambiguation, threading, and filters. Their comment-stripped
+`scan_num` function remains identical to final 5.004_04, including its
+250-digit decimal scan bound. These changes do not widen the accepted
+plain-decimal `print` arithmetic subset. Retain its negative probes for
+leading zero, decrement adjacency, carriage returns, and unsupported input;
+give each release its own token and grammar files without aliases or a claim
+of complete historical syntax.

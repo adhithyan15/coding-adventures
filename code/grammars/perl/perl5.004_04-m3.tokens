@@ -1,0 +1,21 @@
+# Perl 5.004_04-m3 (1998-05-15) plain-decimal arithmetic-print subset.
+# @version 1
+# PARTIAL: unsupported Perl 5.004_04-m3 syntax is rejected.
+# Evidence: https://mirrors.develooper.com/perl/historical-perl/perl-5.004_04-m3.tar.gz
+# Archive SHA-256: ce0c07bd7507cc0664d9da358f895f7bd3b67ea09ed92f432e1b0263ebf2acf0
+# Input-handle and subscript-disambiguation changes are outside this subset.
+# Comment-stripped scan_num is unchanged from 5.004_04, including its 250-digit bound.
+# Unsupported characters, carriage returns, and leading-zero forms remain refused.
+
+PRINT     = "print"
+INT       = /0|[1-9][0-9]{0,249}/
+PLUS      = "+"
+DECREMENT = "--"
+MINUS     = "-"
+STAR      = "*"
+LPAREN    = "("
+RPAREN    = ")"
+SEMICOLON = ";"
+
+skip:
+  WHITESPACE = /[ \t\n]+/

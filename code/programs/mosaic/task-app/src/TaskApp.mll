@@ -140,17 +140,21 @@ layout TaskApp {
       //
       // It is also the ordinary header shape: title and meta on one line,
       // view tabs on a second.
-      Row [ view-switch ] {
-        // One control instead of a six-way If/Else around 36 HostButton parts
-        // (#14016): the engine supplies the rows -- Timeline only in the Full
-        // tier -- and the selected index, and receives onShowView(index).
-        pkg::mosaic-pkg-toolkit::SegmentedControl (
-          options : slot: nav-options ,
-          selected-index : slot: nav-selected-index ,
-          vertical : false ,
-          disabled : false ,
-          onSelect : emit: onShowView
-        )
+      HostScroll [ view-switch-scroll ] ( axis : horizontal ) {
+        Row [ view-switch ] {
+          // One control instead of a six-way If/Else around 36 HostButton parts
+          // (#14016): the engine supplies the rows -- Timeline only in the Full
+          // tier -- and the selected index, and receives onShowView(index).
+          // The horizontal viewport keeps every option reachable when the
+          // compact native shell is narrower than the intrinsic control row.
+          pkg::mosaic-pkg-toolkit::SegmentedControl (
+            options : slot: nav-options ,
+            selected-index : slot: nav-selected-index ,
+            vertical : false ,
+            disabled : false ,
+            onSelect : emit: onShowView
+          )
+        }
       }
 
       // Persistence is host-owned, so the layout only presents the host's
@@ -704,31 +708,40 @@ layout TaskApp {
                       }
                     }
                     Else {
-                      Row [ task-row ] {
-                        HostButton [ toggle ] (
-                          label : ( row[0] ) ,
-                          a11y-label : ( row[16] ) ,
-                          onClick : emit: onToggleTask
-                        )
-                        // The name is the disclosure control: it opens this row's detail.
-                        HostButton [ task-name ] ( label : ( row[1] ) , onClick : emit: onExpandTask )
-                        If ( when: ( row[2] ) ) {
-                          Text [ chip-due ] ( content : ( row[2] ) )
+                      Column [ task-row ] {
+                        Row [ task-identity ] {
+                          HostButton [ toggle ] (
+                            label : ( row[0] ) ,
+                            a11y-label : ( row[16] ) ,
+                            onClick : emit: onToggleTask
+                          )
+                          // The name is the disclosure control: it opens this row's detail.
+                          HostButton [ task-name ] ( label : ( row[1] ) , onClick : emit: onExpandTask )
                         }
-                        If ( when: ( row[3] ) ) {
-                          Text [ chip-sched ] ( content : ( row[3] ) )
+                        // Metadata and row actions move below the identity at compact
+                        // widths. The horizontal viewport also keeps unusually long
+                        // labels reachable without asking a native Row to wrap.
+                        HostScroll [ task-actions-scroll ] ( axis : horizontal ) {
+                          Row [ task-actions ] {
+                            If ( when: ( row[2] ) ) {
+                              Text [ chip-due ] ( content : ( row[2] ) )
+                            }
+                            If ( when: ( row[3] ) ) {
+                              Text [ chip-sched ] ( content : ( row[3] ) )
+                            }
+                            If ( when: ( row[4] ) ) {
+                              Text [ chip-over ] ( content : ( row[4] ) )
+                            }
+                            If ( when: ( row[10] ) ) {
+                              Text [ chip-priority ] ( content : ( row[10] ) )
+                            }
+                            If ( when: ( row[11] ) ) {
+                              Text [ chip-labels ] ( content : ( row[11] ) )
+                            }
+                            HostButton [ edit-btn ] ( label : "Edit" , onClick : emit: onEditTask )
+                            HostButton [ del-btn ] ( label : "Delete" , onClick : emit: onDeleteTask )
+                          }
                         }
-                        If ( when: ( row[4] ) ) {
-                          Text [ chip-over ] ( content : ( row[4] ) )
-                        }
-                        If ( when: ( row[10] ) ) {
-                          Text [ chip-priority ] ( content : ( row[10] ) )
-                        }
-                        If ( when: ( row[11] ) ) {
-                          Text [ chip-labels ] ( content : ( row[11] ) )
-                        }
-                        HostButton [ edit-btn ] ( label : "Edit" , onClick : emit: onEditTask )
-                        HostButton [ del-btn ] ( label : "Delete" , onClick : emit: onDeleteTask )
                       }
                       // Progressive disclosure: the scheduling detail exists for every
                       // task but is rendered only for the open row.

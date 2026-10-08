@@ -715,6 +715,19 @@ while deliberately declining other valid C forms. Longer or mixed expressions
 remain unsupported. Test true and false
 results, macro-expanded operands, zero-valued undefined names, boundary
 counts, overflow, and rooted file-input diagnostics.
+The following bounded C `#if` stage accepts exactly one bitwise `&`, `|`, or
+`^` between two expanded plain-decimal literals or undefined identifiers in
+each logical clause. Each operand must be a nonnegative signed 32-bit integer;
+an undefined identifier reads as zero. The result is a nonnegative signed
+32-bit integer and is true exactly when nonzero. This deliberately avoids
+signed-representation and width-dependent cases. Longer expressions, mixed
+arithmetic or comparisons, unary signs, and parentheses remain explicit
+errors. Distinguish single `&` and `|` from logical `&&` and `||`: the latter
+continue combining clauses with their existing precedence, and every clause
+is validated even when a logical result is already determined. Tests cover
+each bitwise operator, true and false results, macro-expanded and undefined
+operands, the signed maximum boundary, negative or out-of-range operands,
+longer and mixed forms, and rooted file-input error locations.
 Until stringize and paste are implemented, a `#define` replacement containing
 `#` or `##` must fail explicitly rather than emit those operator tokens as C
 source.

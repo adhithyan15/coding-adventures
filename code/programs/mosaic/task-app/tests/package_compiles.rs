@@ -281,6 +281,37 @@ fn topbar_stacks_title_and_controls() {
     }
 }
 
+/// #16949: compact desktop hosts have only 800 x 600 logical pixels. The
+/// view selector stays reachable through a horizontal viewport, task actions
+/// reflow below the task identity, and the content viewport consumes the
+/// remaining bounded height instead of making the root Column overflow.
+#[test]
+fn compact_controls_reflow_and_scroll() {
+    let layout = read("TaskApp.mll");
+    assert!(layout.contains("HostScroll [ view-switch-scroll ] ( axis : horizontal )"));
+    assert!(layout.contains("Column [ task-row ]"));
+    assert!(layout.contains("Row [ task-identity ]"));
+    assert!(layout.contains("HostScroll [ task-actions-scroll ] ( axis : horizontal )"));
+    assert!(layout.contains("Row [ task-actions ]"));
+
+    for theme in ["light", "dark"] {
+        let style = read(&format!("TaskApp.{theme}.msl"));
+        let content_scroll = style
+            .split("part content-scroll {")
+            .nth(1)
+            .and_then(|rest| rest.split('}').next())
+            .expect("content-scroll style must exist");
+        assert!(content_scroll.contains("flex-grow : 1 ;"));
+
+        for part in ["task-identity", "task-actions"] {
+            assert!(
+                style.contains(&format!("part {part} {{")),
+                "{theme} theme must style compact {part}"
+            );
+        }
+    }
+}
+
 /// #15486: TaskApp delegates narrow-window adaptation and the project-pane
 /// landmark to the kernel primitive instead of freezing a two-column Row.
 #[test]

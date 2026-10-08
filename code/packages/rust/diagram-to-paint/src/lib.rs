@@ -905,7 +905,7 @@ where
         let fill = "#ffffff".to_string();
         let stroke = "#1565c0".to_string();
         let shape = match node.shape {
-            DiagramShape::Ellipse => PaintInstruction::Ellipse(PaintEllipse {
+            DiagramShape::Ellipse | DiagramShape::DoubleCircle => PaintInstruction::Ellipse(PaintEllipse {
                 base: PaintBase::default(),
                 cx: node.x + node.width / 2.0,
                 cy: node.y + node.height / 2.0,
@@ -917,24 +917,46 @@ where
                 stroke_dash: None,
                 stroke_dash_offset: None,
             }),
-            DiagramShape::Diamond => {
+            DiagramShape::Diamond | DiagramShape::Hexagon | DiagramShape::ParallelogramRight
+            | DiagramShape::Asymmetric => {
                 let cx = node.x + node.width / 2.0;
                 let cy = node.y + node.height / 2.0;
-                PaintInstruction::Path(PaintPath {
-                    base: PaintBase::default(),
-                    commands: vec![
-                        PathCommand::MoveTo { x: cx, y: node.y },
-                        PathCommand::LineTo {
-                            x: node.x + node.width,
-                            y: cy,
-                        },
-                        PathCommand::LineTo {
-                            x: cx,
-                            y: node.y + node.height,
-                        },
+                let commands = match node.shape {
+                    DiagramShape::Hexagon => vec![
+                        PathCommand::MoveTo { x: node.x + node.width * 0.2, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width * 0.8, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width, y: cy },
+                        PathCommand::LineTo { x: node.x + node.width * 0.8, y: node.y + node.height },
+                        PathCommand::LineTo { x: node.x + node.width * 0.2, y: node.y + node.height },
                         PathCommand::LineTo { x: node.x, y: cy },
                         PathCommand::Close,
                     ],
+                    DiagramShape::ParallelogramRight => vec![
+                        PathCommand::MoveTo { x: node.x + node.width * 0.16, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width * 0.84, y: node.y + node.height },
+                        PathCommand::LineTo { x: node.x, y: node.y + node.height },
+                        PathCommand::Close,
+                    ],
+                    DiagramShape::Asymmetric => vec![
+                        PathCommand::MoveTo { x: node.x, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width, y: node.y + node.height },
+                        PathCommand::LineTo { x: node.x, y: node.y + node.height },
+                        PathCommand::LineTo { x: node.x + node.width * 0.14, y: cy },
+                        PathCommand::Close,
+                    ],
+                    _ => vec![
+                        PathCommand::MoveTo { x: cx, y: node.y },
+                        PathCommand::LineTo { x: node.x + node.width, y: cy },
+                        PathCommand::LineTo { x: cx, y: node.y + node.height },
+                        PathCommand::LineTo { x: node.x, y: cy },
+                        PathCommand::Close,
+                    ],
+                };
+                PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(),
+                    commands,
                     fill: Some(fill),
                     fill_rule: None,
                     stroke: Some(stroke),
@@ -996,6 +1018,18 @@ where
                 stroke_width: Some(1.5),
                 stroke_cap: None,
                 stroke_join: Some(StrokeJoin::Round),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            })),
+            DiagramShape::DoubleCircle => instructions.push(PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(),
+                cx: node.x + node.width / 2.0,
+                cy: node.y + node.height / 2.0,
+                rx: node.width / 2.0 - 5.0,
+                ry: node.height / 2.0 - 5.0,
+                fill: None,
+                stroke: Some("#1565c0".into()),
+                stroke_width: Some(1.5),
                 stroke_dash: None,
                 stroke_dash_offset: None,
             })),
