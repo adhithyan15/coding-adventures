@@ -120,18 +120,22 @@ def _validate_case(case: Any) -> str:
         if tolerance > 0.0:
             raise ValueError(f"{case_id} does not have invalid tolerance")
     elif disposition in ("chord", "subdivide"):
+        termination = case.get("expected_termination")
+        fields = {
+            "id",
+            "degree",
+            "control_points",
+            "tolerance",
+            "expected_disposition",
+            "witness_t",
+            "expected_witness",
+            "expected_witness_distance",
+        }
+        if termination is not None:
+            fields.add("expected_termination")
         _fields(
             case,
-            {
-                "id",
-                "degree",
-                "control_points",
-                "tolerance",
-                "expected_disposition",
-                "witness_t",
-                "expected_witness",
-                "expected_witness_distance",
-            },
+            fields,
             case_id,
         )
         if tolerance <= 0.0:
@@ -159,6 +163,19 @@ def _validate_case(case: Any) -> str:
             raise ValueError(f"{case_id}.expected_disposition must be {answer}")
         if disposition == "subdivide" and distance <= tolerance:
             raise ValueError(f"{case_id}.witness distance must exceed tolerance")
+        # For this arch, y(x)=2x(1-x). A chord covering parameter width w
+        # has vertical midpoint residual w²/2. Every chord has slope at most
+        # 2 in magnitude, so its Euclidean point-to-segment error is at least
+        # w²/(2*sqrt(5)). At most 65,535 splits yield at most 65,536 chords,
+        # one with w >= 1/65,536.
+        if termination is not None and (
+            termination != "budget-error"
+            or degree != 2
+            or points != [(0.0, 0.0), (0.5, 1.0), (1.0, 0.0)]
+            or disposition != "subdivide"
+            or tolerance >= 1.0 / (2.0 * math.sqrt(5.0) * 65_536**2)
+        ):
+            raise ValueError(f"{case_id}.budget error lacks a lower-bound proof")
     else:
         raise ValueError(f"{case_id} has unsupported expected disposition")
     return case_id

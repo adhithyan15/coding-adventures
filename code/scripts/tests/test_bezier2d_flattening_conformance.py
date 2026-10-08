@@ -35,7 +35,7 @@ class Bezier2DFlatteningConformanceTests(unittest.TestCase):
         self.assertEqual(
             list(Draft202012Validator(schema).iter_errors(self.document)), []
         )
-        self.assertEqual(MODULE.validate_document(self.document), 8)
+        self.assertEqual(MODULE.validate_document(self.document), 9)
         self.assertEqual(
             {case["id"] for case in self.document["cases"]},
             {
@@ -47,6 +47,7 @@ class Bezier2DFlatteningConformanceTests(unittest.TestCase):
                 "cubic-coincident-loop",
                 "zero-tolerance",
                 "negative-tolerance",
+                "quadratic-budget-exhaustion",
             },
         )
 
@@ -101,6 +102,10 @@ class Bezier2DFlatteningConformanceTests(unittest.TestCase):
             MODULE.validate_document(changed)
         with self.assertRaisesRegex(ValueError, "duplicate JSON key"):
             MODULE.parse_json('{"version":1,"version":1}')
+        schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
+        changed = copy.deepcopy(self.document)
+        changed["cases"][0]["id"] += "\n"
+        self.assertNotEqual(list(Draft202012Validator(schema).iter_errors(changed)), [])
 
     def test_invalid_case_shapes_and_witness_boundaries(self) -> None:
         changed = copy.deepcopy(self.document)
@@ -143,8 +148,25 @@ class Bezier2DFlatteningConformanceTests(unittest.TestCase):
         with redirect_stdout(output):
             MODULE.main()
         self.assertEqual(
-            output.getvalue(), "validated 8 neutral G2D02 flattening cases\n"
+            output.getvalue(), "validated 9 neutral G2D02 flattening cases\n"
         )
+
+    def test_budget_error_has_independent_lower_bound(self) -> None:
+        schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
+        for field, value in (
+            ("tolerance", 1e-9),
+            ("expected_termination", "success"),
+            ("control_points", [[0, 0], [0.5, 0.5], [1, 0]]),
+            ("expected_disposition", "chord"),
+        ):
+            with self.subTest(field=field):
+                changed = copy.deepcopy(self.document)
+                changed["cases"][8][field] = value
+                self.assertNotEqual(
+                    list(Draft202012Validator(schema).iter_errors(changed)), []
+                )
+                with self.assertRaises(ValueError):
+                    MODULE.validate_document(changed)
 
 
 if __name__ == "__main__":

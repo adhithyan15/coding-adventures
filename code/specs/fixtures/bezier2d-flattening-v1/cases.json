@@ -11,6 +11,7 @@
     {"id": "cubic-collinear-overshoot", "degree": 3, "control_points": [[0, 0], [4, 0], [4, 0], [1, 0]], "tolerance": 0.1, "expected_disposition": "subdivide", "witness_t": 0.5, "expected_witness": [3.125, 0], "expected_witness_distance": 2.125},
     {"id": "cubic-coincident-loop", "degree": 3, "control_points": [[0, 0], [1, 0], [-1, 0], [0, 0]], "tolerance": 0.1, "expected_disposition": "subdivide", "witness_t": 0.25, "expected_witness": [0.28125, 0], "expected_witness_distance": 0.28125},
     {"id": "zero-tolerance", "degree": 2, "control_points": [[0, 0], [0.5, 0], [1, 0]], "tolerance": 0, "expected_disposition": "invalid-tolerance"},
-    {"id": "negative-tolerance", "degree": 3, "control_points": [[0, 0], [0, 1], [0, -1], [0, 0]], "tolerance": -0.1, "expected_disposition": "invalid-tolerance"}
+    {"id": "negative-tolerance", "degree": 3, "control_points": [[0, 0], [0, 1], [0, -1], [0, 0]], "tolerance": -0.1, "expected_disposition": "invalid-tolerance"},
+    {"id": "quadratic-budget-exhaustion", "degree": 2, "control_points": [[0, 0], [0.5, 1], [1, 0]], "tolerance": 1e-12, "expected_disposition": "subdivide", "expected_termination": "budget-error", "witness_t": 0.5, "expected_witness": [0.5, 0.5], "expected_witness_distance": 0.5}
   ]
 }

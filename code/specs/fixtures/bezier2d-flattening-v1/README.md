@@ -14,6 +14,16 @@ subdivision and return no partial polyline. The corpus pins a recursion depth
 of 32 and at most 65,535 subdivisions; reaching either budget without meeting
 the error bound is an error, not a successful approximation.
 
+The `quadratic-budget-exhaustion` case has a separate
+`expected_termination: budget-error`. Its arch is $y(x)=2x(1-x)$, so the
+vertical midpoint residual of any chord spanning parameter width $w$ is
+$w^2/2$. Every chord has slope at most 2 in magnitude, so its Euclidean
+point-to-segment error is at least $w^2/(2\sqrt{5})$. At most 65,535 splits
+produce at most 65,536 chords; at least one spans $w \geq 1/65{,}536$, with
+error greater than the case's $10^{-12}$ tolerance.
+This proves that no permitted split polyline can succeed, independent of the
+implementation's traversal order.
+
 The symmetric S case defeats a midpoint-only flatness test: its midpoint lies
 on the chord, while its quarter-point is 0.28125 away. The collinear overshoot
 case defeats distance to the infinite chord line: its midpoint lies on that
