@@ -4,7 +4,7 @@
   "chapter": 24,
   "title": "Have, and Count",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:26e097335b545951",
+  "sourceHash": "fnv1a64:f21b744737f91d21",
   "lessons": [
     {
       "id": "ZH-W24-you",
@@ -783,7 +783,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:684a72333fe4148b",
+      "sourceHash": "fnv1a64:e094e09addb3ec61",
       "notice": null,
       "blocks": [
         {
@@ -895,8 +895,13 @@
               "text": "Read. 我有一个名字 (wǒ yǒu yí ge míngzi) — 有人 — 三个学生."
             },
             {
-              "kind": "speech",
-              "text": "Write. 有 (yǒu) — bar, long fall, 月. 个 (gè) — 人, then a line."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "有 (yǒu) — bar, long fall, 月; 个 (gè) — 人, then a line",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 有 — bar, long fall, 月; 个 — 人, then a line]"
             }
           ]
         },

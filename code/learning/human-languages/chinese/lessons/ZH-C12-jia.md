@@ -34,7 +34,7 @@ reviews_of: [ZH-C12-hear-jia, ZH-W12-jia]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-JIA-01, ZH-SCRIPT-ZI-CHAR] -->
 
-[PAUSE 12s] Say **home or family**, then write 宀.
+[PAUSE 12s] Say **home or family**. [YOU WRITE: 宀]
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-JIA-01, ZH-SCRIPT-JIA-01] -->
@@ -48,7 +48,7 @@ character records no tone mark at all.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-JIA-01, ZH-SCRIPT-JIA-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy **家** once from the model. Name the roof before you write the lower body.
+[YOU WRITE: one copy of **家**, from the model — name the roof before you write the lower body]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-JIA-01] -->

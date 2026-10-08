@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "One small step into school",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f2b53fef3e4412ee",
+  "sourceHash": "fnv1a64:a5a3437893117f3a",
   "lessons": [
     {
       "id": "ZH-C14-hear-xiao",
@@ -198,7 +198,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b10fc10a9567cde0",
+      "sourceHash": "fnv1a64:14686e4923983758",
       "notice": null,
       "blocks": [
         {
@@ -239,8 +239,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Copy 小 (xiǎo) once. Keep the side marks shorter than the centre stroke."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of 小 (xiǎo) — keep the side marks shorter than the centre stroke",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **小** — keep the side marks shorter than the centre stroke]"
             }
           ]
         },
@@ -643,7 +648,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c33a9c7f5e2d420",
+      "sourceHash": "fnv1a64:23786c81ee089f86",
       "notice": null,
       "blocks": [
         {
@@ -658,8 +663,13 @@
               "source": "[PAUSE 16s]"
             },
             {
-              "kind": "speech",
-              "text": "Write 小 (xiǎo), 学, and 生 once each from memory."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "小 (xiǎo), 学, and 生 once each from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 小, 学, and 生 once each from memory]"
             }
           ]
         },
@@ -670,7 +680,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear small, primary school, and primary-school student in mixed order. Say, read, and write each. Then contrast 大学 with 小学 and 大学生 with 小学生 (xiǎoxuésheng). Repair only the missed item."
+              "text": "Hear small, primary school, and primary-school student in mixed order. Say and read each."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: each one]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then contrast 大学 with 小学 and 大学生 with 小学生 (xiǎoxuésheng). Repair only the missed item."
             }
           ]
         },
@@ -721,7 +744,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9c025506f7546c4",
+      "sourceHash": "fnv1a64:832afa8950b1acec",
       "notice": null,
       "blocks": [
         {
@@ -736,8 +759,13 @@
               "source": "[PAUSE 16s]"
             },
             {
-              "kind": "speech",
-              "text": "Write 小 (xiǎo), 学, and 生 without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "小 (xiǎo), 学, and 生 without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 小, 学, and 生 without a model]"
             }
           ]
         },
@@ -760,7 +788,16 @@
             },
             {
               "kind": "speech",
-              "text": "Writing: hear all three and write them without a model."
+              "text": "Writing: hear all three."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three without a model]"
             },
             {
               "kind": "speech",

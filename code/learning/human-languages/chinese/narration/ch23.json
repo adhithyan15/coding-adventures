@@ -4,7 +4,7 @@
   "chapter": 23,
   "title": "De — The Hinge",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:bd9a7d8cdeb091f6",
+  "sourceHash": "fnv1a64:81d7d939d9d53ab9",
   "lessons": [
     {
       "id": "ZH-W23-de",
@@ -768,7 +768,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:20d629d7694b2036",
+      "sourceHash": "fnv1a64:be709ceb9ff4318c",
       "notice": null,
       "blocks": [
         {
@@ -880,8 +880,13 @@
               "text": "Read. 我的名字 — 看书的学生 — 书 — 我看."
             },
             {
-              "kind": "speech",
-              "text": "Write. 的 (de) — 白 first, then 勺, and the dot last."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "的 (de) — 白 first, then 勺, and the dot last",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 的 — 白 first, then 勺, and the dot last]"
             }
           ]
         },

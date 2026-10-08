@@ -36,7 +36,9 @@ reviews_of: [ZH-W21-bai, ZH-C21-ershi, ZH-C03-yi]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-NUM-BAI, ZH-LEX-ERSHI] -->
 
-[PAUSE 2s] Write 百, then say twenty.
+[PAUSE 2s] [YOU WRITE: 百]
+
+Then say twenty.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[ZH-LEX-NUM-BAI]; assesses=[ZH-TONE-LEXICAL, ZH-LEX-NUM-SHI] -->

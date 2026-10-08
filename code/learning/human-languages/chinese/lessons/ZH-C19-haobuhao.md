@@ -34,8 +34,9 @@ reviews_of: [ZH-C19-hear-haobuhao, ZH-C19-shima]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-HAOBUHAO-01, ZH-SCRIPT-HAO, ZH-SCRIPT-BU, ZH-GRAMMAR-NEGATE, ZH-LEX-ZHONGXUE-01] -->
 
-[PAUSE 12s] Say **is it good**. Then write 好 and 不, keeping all four strokes of
-不 separate. Say **secondary school**.
+[PAUSE 12s] Say **is it good**. [YOU WRITE: 好 and 不, keeping all four strokes of 不 separate]
+
+Say **secondary school**.
 
 ## Grammar lens — say it, deny it, say it again
 <!-- hl-knowledge: introduces=[ZH-GRAMMAR-V-NOT-V-01]; assesses=[ZH-SCRIPT-HAO, ZH-SCRIPT-BU, ZH-GRAMMAR-MA-QUESTION-01, ZH-SCRIPT-MA-01] -->
@@ -67,8 +68,7 @@ mark is not taught yet, so it is left off here.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-GRAMMAR-V-NOT-V-01, ZH-LEX-HAOBUHAO-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy **好不好** once. Then build one more of your own: take a word you can write,
-put 不 in the middle, and write it again.
+[YOU WRITE: one copy of **好不好**, then one more of your own — take a word you can write, put 不 in the middle, and write it again]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-HAOBUHAO-01, ZH-GRAMMAR-V-NOT-V-01, ZH-GRAMMAR-MA-QUESTION-01] -->

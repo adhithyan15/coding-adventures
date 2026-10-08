@@ -49,7 +49,7 @@ The shared 中 is followed by 国, country: *zhōngguó*, **China**.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-ZHONGGUO-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy **中国** once. In 国, finish the inner 玉 before closing the bottom.
+[YOU WRITE: one copy of **中国** — in 国, finish the inner 玉 before closing the bottom]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZHONGGUO-01, ZH-ORTHO-ZHONGGUO-01] -->

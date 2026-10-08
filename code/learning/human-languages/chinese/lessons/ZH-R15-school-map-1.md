@@ -38,8 +38,10 @@ reviews_of: [ZH-C15-zhong, ZH-C15-zhongxue]
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-ZHONGXUE-01, ZH-LEX-ZHONG-01, ZH-LEX-ZHONGXUE-01, ZH-SCRIPT-ZHONG-01, ZH-SCRIPT-XUE-01] -->
 
-Hear **middle** and **middle school** in mixed order. Say each, read its card,
-then write it once. Repair only the missed item.
+Hear **middle** and **middle school** in mixed order. Say each and read its card.
+[YOU WRITE: each one, once]
+
+Repair only the missed item.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ZHONG-01, ZH-LEX-ZHONGXUE-01] -->

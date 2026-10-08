@@ -49,7 +49,9 @@ It joins Han Chinese + language: *hànyǔ*, **the Chinese language**.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-ORTHO-HANYU-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy **汉语** once. Keep two separate squares and read the whole word aloud.
+[YOU WRITE: one copy of **汉语** — keep two separate squares]
+
+Then read the whole word aloud.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-HANYU-01, ZH-ORTHO-HANYU-01] -->

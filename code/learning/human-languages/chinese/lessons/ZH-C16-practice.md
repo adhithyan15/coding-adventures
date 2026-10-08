@@ -35,7 +35,7 @@ Keep the four checks separate. Repair one missed skill, not the whole set.
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-HAN-01, ZH-SCRIPT-YU-01] -->
 
-[PAUSE 16s] Write 汉 and 语 without a model.
+[PAUSE 16s] [YOU WRITE: 汉 and 语 without a model]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[ZH-PERFORMANCE-LANGUAGE-IDENTITY-THREE-FOUR-SKILL-01]; assesses=[ZH-LEX-ZI-02, ZH-LEX-HANZI-01, ZH-LEX-HANYU-01, ZH-ORTHO-HANZI-01, ZH-ORTHO-HANYU-01] -->
@@ -44,8 +44,8 @@ Keep the four checks separate. Repair one missed skill, not the whole set.
 1. **Listening:** hear the three words in mixed order and choose each meaning.
 2. **Speaking:** produce all three from meaning cards, with tones audible.
 3. **Reading:** read **字, 汉语, 汉字** cold and give each meaning.
-4. **Writing:** hear **Chinese character** and **Chinese language**, then write
-   both without a model.
+4. **Writing:** hear **Chinese character** and **Chinese language**.
+   [YOU WRITE: both without a model]
 
 Pass each skill separately. Check the 字 or 语 ending only after both written
 words are complete.

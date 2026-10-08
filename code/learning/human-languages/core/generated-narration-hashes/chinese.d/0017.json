@@ -1,7 +1,7 @@
 {
   "language": "chinese",
   "chapter": 17,
-  "sourceHash": "fnv1a64:ba0da6a3d1e1f4a7",
+  "sourceHash": "fnv1a64:6bc4eff08fdbf0f1",
   "lessonIds": [
     "ZH-C17-hear-zhongwen",
     "ZH-W17-wen-observe",
@@ -25,7 +25,7 @@
   "drivablePrefix": 1,
   "text": "chinese/narration/ch17.txt",
   "json": "chinese/narration/ch17.json",
-  "textHash": "fnv1a64:b08a5f35bf7c221b",
-  "jsonHash": "fnv1a64:a87a03e13744b907",
+  "textHash": "fnv1a64:bdba518ca1133452",
+  "jsonHash": "fnv1a64:81ad8bcc92ad2b4c",
   "findings": []
 }

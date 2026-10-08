@@ -4,7 +4,7 @@
   "chapter": 22,
   "title": "The Grammar That Is Not There",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:596223e2ea49886a",
+  "sourceHash": "fnv1a64:851087cc6d93e1c7",
   "lessons": [
     {
       "id": "ZH-C22-bubian",
@@ -712,7 +712,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0f4d779b9f83b835",
+      "sourceHash": "fnv1a64:d9dfbc5568f7a82f",
       "notice": null,
       "blocks": [
         {
@@ -828,8 +828,13 @@
               "text": "Read. 我是中国人 — 你是中国人吗."
             },
             {
-              "kind": "speech",
-              "text": "Write. 中国人 (Zhōngguó rén) — every stroke of it is one you have written before."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "中国人 (Zhōngguó rén) — every stroke of it is one you have written before",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 中国人 — every stroke of it is one you have written before]"
             }
           ]
         },

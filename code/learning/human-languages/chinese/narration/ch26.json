@@ -4,7 +4,7 @@
   "chapter": 26,
   "title": "Ne and Dui",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6581976bdaf75c38",
+  "sourceHash": "fnv1a64:7b14773b4aea3a80",
   "lessons": [
     {
       "id": "ZH-W26-ne",
@@ -820,7 +820,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0226eea96966d36",
+      "sourceHash": "fnv1a64:7fad7a648f38ab30",
       "notice": null,
       "blocks": [
         {
@@ -928,8 +928,13 @@
               "text": "Read. 你是学生吗 — 对 (duì) — 你呢."
             },
             {
-              "kind": "speech",
-              "text": "Write. 呢 (ne) — 口 first. 对 (duì) — 又 first, dot last."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "呢 (ne) — 口 first; 对 (duì) — 又 first, dot last",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 呢 — 口 first; 对 — 又 first, dot last]"
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 28,
   "title": "Xihuan — What You Like",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0fb3ab82a7b82534",
+  "sourceHash": "fnv1a64:f56a257c7c4e1a68",
   "lessons": [
     {
       "id": "ZH-W28-xi",
@@ -766,7 +766,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8c9fa1c43759f56c",
+      "sourceHash": "fnv1a64:6d4cddb87f7b3b2a",
       "notice": null,
       "blocks": [
         {
@@ -869,8 +869,13 @@
               "text": "Read. 我喜欢看书 (wǒ xǐhuan kàn shū) — 你喜欢什么 (nǐ xǐhuan shénme)."
             },
             {
-              "kind": "speech",
-              "text": "Write. 喜 (xǐ) — four bands, twelve strokes. 欢 (huān) — 又, then 欠."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "喜 (xǐ) — four bands, twelve strokes; 欢 (huān) — 又, then 欠",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 喜 — four bands, twelve strokes; 欢 — 又, then 欠]"
             }
           ]
         },

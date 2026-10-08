@@ -47,7 +47,7 @@ Read the two-character word without pinyin. Keep the second syllable light.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XUESHENG-01] -->
 <!-- hl-writing-stage: guided-copy -->
 
-Copy **学生** once. Finish all of 学 before beginning 生.
+[YOU WRITE: one copy of **学生** — finish all of 学 before beginning 生]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XUESHENG-01] -->

@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Looking and reading",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:552585703d1c8c77",
+  "sourceHash": "fnv1a64:9f56f6b792310a7e",
   "lessons": [
     {
       "id": "ZH-C18-hear-kan",
@@ -589,7 +589,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a08ad01f803a0ba1",
+      "sourceHash": "fnv1a64:839217c0d2416ced",
       "notice": null,
       "blocks": [
         {
@@ -605,7 +605,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say see as kànjiàn. Write 看, then point to 见 in 再见."
+              "text": "Say see as kànjiàn."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "看 (kàn)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 看]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then point to 见 in 再见."
             }
           ]
         },
@@ -630,8 +643,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Copy 看见 (kànjiàn) once. Leave a clear boundary between the nine-stroke 看 and the four-stroke 见."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of 看见 (kànjiàn) — leave a clear boundary between the nine-stroke 看 and the four-stroke 见",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **看见** — leave a clear boundary between the nine-stroke 看 and the four-stroke 见]"
             }
           ]
         },
@@ -867,7 +885,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ac42c487d97008c0",
+      "sourceHash": "fnv1a64:58275322dfa19498",
       "notice": null,
       "blocks": [
         {
@@ -894,7 +912,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the three meanings in mixed order. Say each Mandarin answer, read its unpointed card, then write it. Check the neighbour of 看 (kàn) before deciding the whole meaning."
+              "text": "Hear the three meanings in mixed order. Say each Mandarin answer and read its unpointed card."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: each one]"
+            },
+            {
+              "kind": "speech",
+              "text": "Check the neighbour of 看 (kàn) before deciding the whole meaning."
             }
           ]
         },
@@ -1322,7 +1353,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:848f3539d335f7f3",
+      "sourceHash": "fnv1a64:5f0bcb5029743f33",
       "notice": null,
       "blocks": [
         {
@@ -1364,7 +1395,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear shū. Wait three seconds, then write 书 once without a model."
+              "text": "Hear shū. Wait three seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "书 (shū) once, without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **书** once, without a model]"
             }
           ]
         },
@@ -1672,7 +1712,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9bc38b09ff62a023",
+      "sourceHash": "fnv1a64:7d223c4c2cf6d76f",
       "notice": null,
       "blocks": [
         {
@@ -1699,7 +1739,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the two meanings in mixed order. Say each answer, read its unpointed card, then write it. Check whether 看 (kàn) is present before deciding noun or activity."
+              "text": "Hear the two meanings in mixed order. Say each answer and read its unpointed card."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "each one",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: each one]"
+            },
+            {
+              "kind": "speech",
+              "text": "Check whether 看 (kàn) is present before deciding noun or activity."
             }
           ]
         },
@@ -1904,7 +1957,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a13e3b99ca5af0db",
+      "sourceHash": "fnv1a64:f4291420d5a87c3f",
       "notice": null,
       "blocks": [
         {
@@ -1919,8 +1972,13 @@
               "source": "[PAUSE 15s]"
             },
             {
-              "kind": "speech",
-              "text": "Write 看 (kàn) and 书 (shū) from their spoken syllables. Check only after both are complete."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "看 (kàn) and 书 (shū) from their spoken syllables — check only after both are complete",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 看 and 书 from their spoken syllables — check only after both are complete]"
             }
           ]
         },
@@ -1931,7 +1989,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the five meanings in mixed order and write all five forms without a model. Score each whole form first. Then repair only the first missed character or ordering choice."
+              "text": "Hear the five meanings in mixed order."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all five forms without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all five forms without a model]"
+            },
+            {
+              "kind": "speech",
+              "text": "Score each whole form first. Then repair only the first missed character or ordering choice."
             }
           ]
         },

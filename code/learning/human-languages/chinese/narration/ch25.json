@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Le — Finished, and Changed",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2a5be139efa18383",
+  "sourceHash": "fnv1a64:601a653f42dd6579",
   "lessons": [
     {
       "id": "ZH-W25-le",
@@ -746,7 +746,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a239649a301f13d9",
+      "sourceHash": "fnv1a64:b3b8a72409a1a5a5",
       "notice": null,
       "blocks": [
         {
@@ -858,8 +858,13 @@
               "text": "Read. 我看了书 (wǒ kàn le shū) — 有人了 — 你看了吗."
             },
             {
-              "kind": "speech",
-              "text": "Write. 了 (le) — the turn, then the hook."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "了 (le) — the turn, then the hook",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: 了 — the turn, then the hook]"
             }
           ]
         },

@@ -33,14 +33,16 @@ reviews_of: [ZH-C12-ren, ZH-C12-nu, ZH-C12-erzi, ZH-C12-nuer, ZH-C12-jia, ZH-C12
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-MINGZI, ZH-SCRIPT-ER-CHAR-01, ZH-SCRIPT-JIA-01] -->
 
-[PAUSE 18s] Say **name**, then write 儿 and 家.
+[PAUSE 18s] Say **name**. [YOU WRITE: 儿 and 家]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-REN-01, ZH-LEX-NU-01, ZH-LEX-ERZI-01, ZH-LEX-NUER-01, ZH-LEX-JIA-01, ZH-LEX-JIAREN-01] -->
 
 Hear the six words in a shuffled order and point to meanings. Then take six
-meaning cards, say each word, read the six character cards, and write only the
-two you missed. Repair one item at a time.
+meaning cards, say each word, and read the six character cards.
+[YOU WRITE: only the two you missed]
+
+Repair one item at a time.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-ERZI-01, ZH-LEX-NUER-01, ZH-LEX-JIAREN-01] -->

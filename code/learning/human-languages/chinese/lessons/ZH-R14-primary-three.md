@@ -33,14 +33,15 @@ reviews_of: [ZH-C14-xiao, ZH-C14-xiaoxue, ZH-C14-xiaoxuesheng, ZH-C13-daxue, ZH-
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-XIAO-01, ZH-SCRIPT-XUE-01, ZH-SCRIPT-SHENG-01] -->
 
-[PAUSE 16s] Write 小, 学, and 生 once each from memory.
+[PAUSE 16s] [YOU WRITE: 小, 学, and 生 once each from memory]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XIAO-01, ZH-LEX-XIAOXUE-01, ZH-LEX-XIAOXUESHENG-01, ZH-LEX-DAXUE-01, ZH-LEX-DAXUESHENG-01] -->
 
 Hear **small**, **primary school**, and **primary-school student** in mixed order.
-Say, read, and write each. Then contrast 大学 with 小学 and 大学生 with
-小学生. Repair only the missed item.
+Say and read each. [YOU WRITE: each one]
+
+Then contrast 大学 with 小学 and 大学生 with 小学生. Repair only the missed item.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-LEX-XIAO-01, ZH-LEX-XIAOXUE-01, ZH-LEX-XIAOXUESHENG-01] -->
