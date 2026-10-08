@@ -274,6 +274,9 @@ remain gated.
 Variable-free exact additive zero terms may surround that nonpositive unit
 range before `exp`; positive, repeated, dynamic, and overridden forms remain
 gated.
+Multiplication by one variable-free exact `-1` may likewise map a nonnegative
+unit sign-rooted range before `exp`; division, extra factors, positive units,
+repeated roots, dynamic factors, and overrides remain gated.
 Built-in `sin`, `cos`, and `arctan` may map a bounded sign-rooted result before
 `entier`, including nested combinations; domain-sensitive or unbounded
 standard functions and non-sign-rooted runtime operands remain conservative.

@@ -4118,6 +4118,35 @@ impl Compiler {
                 }
             }
         }
+        if matches!(node.rule_name.as_str(), "expr_mul" | "term") {
+            let sequence = pieces(node);
+            if sequence.len() == 3
+                && matches!(sequence.get(1), Some(Piece::Op(op)) if op == "*")
+            {
+                let (Some(Piece::Node(left)), Some(Piece::Node(right))) =
+                    (sequence.first(), sequence.get(2))
+                else {
+                    return None;
+                };
+                let is_static_negative_unit = |operand: &GrammarASTNode| {
+                    let mut dependencies = HashSet::new();
+                    collect_expression_dependency_names(operand, "", &mut dependencies);
+                    dependencies.is_empty()
+                        && (self.static_integer_scalar_value(operand) == Some(-1)
+                            || self.static_real_arithmetic_value(operand) == Some(-1.0))
+                };
+                if let Some(operand) = self.builtin_nonnegative_unit_sign_operand(left) {
+                    if is_static_negative_unit(right) {
+                        return Some(operand);
+                    }
+                }
+                if let Some(operand) = self.builtin_nonnegative_unit_sign_operand(right) {
+                    if is_static_negative_unit(left) {
+                        return Some(operand);
+                    }
+                }
+            }
+        }
         if node.rule_name != "proc_call" {
             let children = direct_nodes(node);
             if direct_tokens(node).is_empty() && children.len() == 1 {
@@ -14291,6 +14320,45 @@ mod tests {
         ] {
             let err = compile_source(source, "test").expect_err(
                 "positive, unbounded, and overridden additive exponential cosine mappings under sqrt must remain conservative",
+            );
+            assert!(
+                format!("{err:?}").contains("cannot print a real value"),
+                "{source:?} failed with an unexpected diagnostic: {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn al4_runtime_real_provenance_crosses_sqrt_cos_multiplicative_nonpositive_exp_sign_widening()
+    {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real x; x := entier(sqrt(cos(exp(abs(sign(pick())) * (-1))))); output(x) end",
+            "begin real procedure pick; pick := 0.0; real procedure relay(x); real x; relay := x; output(relay(entier(sqrt(cos(exp((-1.0) * sqrt(abs(sign(pick()))))))))) end",
+        ] {
+            let module = compile_source(source, "test").unwrap_or_else(|error| {
+                panic!(
+                    "sqrt preserves cosine over a multiplicative nonpositive unit exponential for {source:?}: {error}"
+                )
+            });
+            let main = module.get_function("main").expect("has main");
+            assert!(main.instructions.iter().any(|instr| {
+                instr.op == "call"
+                    && instr.srcs.first().and_then(Operand::as_var)
+                        == Some("__basic_print_real")
+            }));
+        }
+    }
+
+    #[test]
+    fn al4_sqrt_cos_multiplicative_nonpositive_exp_sign_widening_rejects_unproven_operands() {
+        for source in [
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp(abs(sign(pick())) * 1)))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real result; result := entier(sqrt(cos(exp(abs(sign(pick())) * abs(sign(pick())))))); output(result) end",
+            "begin real procedure pick; pick := -2.25; integer factor; real result; factor := -1; result := entier(sqrt(cos(exp(abs(sign(pick())) * factor)))); output(result) end",
+            "begin real procedure pick; pick := -2.25; real procedure abs(x); value x; real x; abs := 0.0; real result; result := entier(sqrt(cos(exp(abs(sign(pick())) * (-1))))); output(result) end",
+        ] {
+            let err = compile_source(source, "test").expect_err(
+                "positive, repeated, dynamic, and overridden multiplicative exponential cosine mappings under sqrt must remain conservative",
             );
             assert!(
                 format!("{err:?}").contains("cannot print a real value"),

@@ -76,6 +76,9 @@ already nonnegative and bounded; signed and nested-exponential forms stay conser
 Before cosine and outer `sqrt`, built-in `exp` may map a nonpositive
 unit-bounded sign-rooted range surrounded by variable-free exact additive zero
 terms; positive, repeated, dynamic, and overridden forms remain conservative.
+Multiplication by one variable-free exact `-1` may form that nonpositive range;
+division, extra factors, positive units, repeated roots, dynamic factors, and
+overrides remain conservative.
 One-sided reassignment remains gated. Unary signs, additive
 composition, multiplication, division, and exponentiation over proven
 runtime-real or finite static operands preserve runtime-real provenance. The
