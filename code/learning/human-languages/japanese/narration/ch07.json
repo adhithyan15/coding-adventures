@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "The Doorway Exchange",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0ab64e4757ca41cb",
+  "sourceHash": "fnv1a64:1709bf41c0955699",
   "lessons": [
     {
       "id": "JA-C01-practice",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0e4c71783a8a05b5",
+      "sourceHash": "fnv1a64:0eef038bd29d2817",
       "notice": null,
       "blocks": [
         {
@@ -76,8 +76,13 @@
               "text": "Read: run both voices from Japanese only, with the romanization covered."
             },
             {
-              "kind": "speech",
-              "text": "Write: hear 日本語, wait ten seconds, and write the three kanji with no visible model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the three kanji of 日本語 — hear the word, wait ten seconds, and write with no visible model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the three kanji of **日本語** — hear the word, wait ten seconds, and write with no visible model]"
             },
             {
               "kind": "speech",
@@ -97,8 +102,17 @@
               "source": "[PAUSE 15s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "はい, いいえ, こんにちは, ありがとう, 日本語, and コーヒー from memory, then circle the dakuten",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **はい**, **いいえ**, **こんにちは**, **ありがとう**, **日本語**, and **コーヒー** from memory, then circle the dakuten]"
+            },
+            {
               "kind": "speech",
-              "text": "From memory, write??,???,?????,?????,???, and????. Circle the dakuten and say why the borrowed word uses katakana."
+              "text": "Say why the borrowed word uses katakana."
             }
           ]
         },

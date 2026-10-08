@@ -79,7 +79,9 @@ numbers.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HITORI-FUTARI, JA-LEX-NIN, JA-LEX-ANE, JA-LEX-ANI] -->
 
-Write **ひとり** and **ふたり**. Say *hitori, futari, sannin, yonin* — and hear
+[YOU WRITE: **ひとり** and **ふたり**]
+
+Say *hitori, futari, sannin, yonin* — and hear
 the switch happen between the second and the third.
 
 ## Wrap-up Recall

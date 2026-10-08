@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 134,
-  "sourceHash": "fnv1a64:89e3a6b15c68ce22",
+  "sourceHash": "fnv1a64:a4198a49b57fae20",
   "lessonIds": [
     "JA-C134-denwa",
     "JA-W134-de",
@@ -20,7 +20,7 @@
   "drivablePrefix": 1,
   "text": "japanese/narration/ch134.txt",
   "json": "japanese/narration/ch134.json",
-  "textHash": "fnv1a64:6d9af4591b43e208",
-  "jsonHash": "fnv1a64:7383120fc46a3d69",
+  "textHash": "fnv1a64:64721577172e133b",
+  "jsonHash": "fnv1a64:71461af921f20cf6",
   "findings": []
 }

@@ -74,7 +74,9 @@ You met the plain case at eight. This is the other edge.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KU, JA-LEX-HACHI, JA-LEX-NANA, JA-LEX-YON, JA-LEX-ICHI, JA-LEX-NI, JA-LEX-SAN, JA-LEX-GO] -->
 
-Write **く**. Say what you hold: *ichi, ni, san, yon, go … nana, hachi, ku*. Two
+[YOU WRITE: **く**]
+
+Say what you hold: *ichi, ni, san, yon, go … nana, hachi, ku*. Two
 numbers are missing and you can hear both gaps.
 
 ## Wrap-up Recall

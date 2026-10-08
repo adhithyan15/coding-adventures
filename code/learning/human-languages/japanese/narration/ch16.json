@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "The Other Way to Count",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:22a436e5626947c9",
+  "sourceHash": "fnv1a64:6bb61223ab0a6503",
   "lessons": [
     {
       "id": "JA-W16-hi",
@@ -167,7 +167,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:31a2b55b8759618e",
+      "sourceHash": "fnv1a64:39cf54cb37d882aa",
       "notice": null,
       "blocks": [
         {
@@ -256,8 +256,17 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ひとつ (hitotsu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ひとつ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ひとつ. Say ichi, then hitotsu, and hear that they share nothing — not a beat, not a sound."
+              "text": "Say ichi, then hitotsu, and hear that they share nothing — not a beat, not a sound."
             }
           ]
         },
@@ -460,7 +469,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f962aa24d3449f13",
+      "sourceHash": "fnv1a64:2b15a4ea01ca0f13",
       "notice": null,
       "blocks": [
         {
@@ -536,8 +545,17 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ふたつ (futatsu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ふたつ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ふたつ. Say the pair: hitotsu, futatsu. Then say ichi, ni straight after, and hear two different counts running side by side."
+              "text": "Say the pair: hitotsu, futatsu. Then say ichi, ni straight after, and hear two different counts running side by side."
             }
           ]
         },
@@ -591,7 +609,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ba37621cef8ff757",
+      "sourceHash": "fnv1a64:5fc1f2e5758c83f5",
       "notice": null,
       "blocks": [
         {
@@ -667,8 +685,17 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "みっつ (mittsu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **みっつ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write みっつ. Say the run so far, slowly: hitotsu, futatsu, mittsu. Stop on the silent beat in the third one."
+              "text": "Say the run so far, slowly: hitotsu, futatsu, mittsu. Stop on the silent beat in the third one."
             }
           ]
         },
@@ -887,7 +914,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a8846367e7d4943e",
+      "sourceHash": "fnv1a64:3125b41a5a6261be",
       "notice": null,
       "blocks": [
         {
@@ -959,8 +986,17 @@
           "title": "Guided Practice — read, copy, recall",
           "segments": [
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "いつつ (itsutsu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **いつつ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write いつつ. Say ichi and itsutsu back to back, then go and itsutsu, and fix which pair actually means the same number."
+              "text": "Say ichi and itsutsu back to back, then go and itsutsu, and fix which pair actually means the same number."
             }
           ]
         },

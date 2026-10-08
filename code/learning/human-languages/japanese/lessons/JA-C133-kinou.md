@@ -36,7 +36,9 @@ reviews_of: [JA-W133-ki, JA-W17-no, JA-W03-u, JA-C133-eki, JA-C132-kuruma, JA-C1
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KI-01, JA-LEX-ANCHOR-KURUMA, JA-LEX-C119-THINGS119-05, JA-LEX-ANCHOR-OCHA] -->
 
-[PAUSE 15s] Write **き** — **R1**, one lesson back. Then say *a car* — **R2**, five lessons back.
+[PAUSE 15s] [YOU WRITE: **き** — **R1**, one lesson back]
+
+Then say *a car* — **R2**, five lessons back.
 
 - [YOU RECALL: say *a butcher* — **R4**, eighty lessons back]
 - [YOU RECALL: say *tea* — **R3**, twenty lessons back]

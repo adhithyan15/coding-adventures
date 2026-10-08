@@ -4,7 +4,7 @@
   "chapter": 135,
   "title": "Hospital and Bank: Bi, Gu, Ge and Gi",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:0923c8db5d5d3e63",
+  "sourceHash": "fnv1a64:ca3580fe73db5eb9",
   "lessons": [
     {
       "id": "JA-C135-byouin",
@@ -1754,7 +1754,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:40f9f05cf2b0ab89",
+      "sourceHash": "fnv1a64:ab129636d1299e87",
       "notice": null,
       "blocks": [
         {
@@ -1900,16 +1900,35 @@
           "title": "Guided Practice — write",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write ひ び (bi), く ぐ (gu), け げ (ge) and き ぎ (gi) in pairs."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ひ び (bi), く ぐ (gu), け げ (ge) and き ぎ (gi), in pairs",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ひ び**, **く ぐ**, **け げ** and **き ぎ**, in pairs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "どようび (doyōbi) and げつようび (getsuyōbi) from memory, and say which day comes first in the week",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **どようび** and **げつようび** from memory, and say which day comes first in the week]"
             },
             {
               "kind": "speech",
-              "text": "Write どようび (doyōbi) and げつようび (getsuyōbi) from memory, and say which day comes first in the week."
+              "text": "Say ginkō."
             },
             {
-              "kind": "speech",
-              "text": "Write ぎんこう, and say ginkō."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ぎんこう (ginkō)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ぎんこう**]"
             }
           ]
         },

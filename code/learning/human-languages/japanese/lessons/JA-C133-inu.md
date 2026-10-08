@@ -37,7 +37,8 @@ reviews_of: [JA-C133-kesa, JA-W01-i, JA-W09-me, JA-W133-ki, JA-W131-small-yo, JA
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C133-KESA, JA-SCRIPT-KI-01, JA-LEX-C120-QUAL120-04, JA-SCRIPT-SMALL-YO-01] -->
 
-[PAUSE 15s] Say *this morning* — **R1**, one lesson back. Then write **き** — **R2**, five lessons back.
+[PAUSE 15s] Say *this morning* — **R1**, one lesson back.
+[YOU WRITE: **き** — **R2**, five lessons back]
 
 - [YOU RECALL: say *kind* — **R4**, eighty lessons back]
 - [YOU RECALL: write **ょ**, small, in **ちょっと** — **R3**, twenty lessons back]

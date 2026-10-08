@@ -34,7 +34,9 @@ reviews_of: [JA-W01-ko, JA-C10-wakarimashita, JA-C09-sumimasen]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KO-01, JA-LEX-WAKARIMASHITA, JA-LEX-SUMIMASEN] -->
 
-[PAUSE 12s] Write **こ**, say *wakarimashita*, then retrieve *sumimasen*.
+[PAUSE 12s] [YOU WRITE: **こ**]
+
+Say *wakarimashita*, then retrieve *sumimasen*.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-KOKO]; assesses=[] -->
@@ -50,7 +52,7 @@ speaker-near place: **here**.
 
 1. Point beside yourself and say *koko*.
 2. Read **こ | こ**.
-3. Hear *ko-ko*, wait ten seconds, and write both signs.
+3. Hear *ko-ko* and wait ten seconds. [YOU WRITE: both signs]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KOKO] -->

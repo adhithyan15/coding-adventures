@@ -4,7 +4,7 @@
   "chapter": 137,
   "title": "Pencil and Ticket: Pa, Pi, Pu and Pe",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:4d37343f1a658d5b",
+  "sourceHash": "fnv1a64:1d1daeff7cbebe12",
   "lessons": [
     {
       "id": "JA-C137-ippai",
@@ -1740,7 +1740,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e689a3a823b85221",
+      "sourceHash": "fnv1a64:68f9d2aa3110f5fd",
       "notice": null,
       "blocks": [
         {
@@ -1886,16 +1886,35 @@
           "title": "Guided Practice — write",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write は ぱ, ひ ぴ (pi), ふ ぷ (pu) and へ ぺ (pe) in pairs."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "は ぱ, ひ ぴ (pi), ふ ぷ (pu) and へ ぺ (pe), in pairs",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **は ぱ**, **ひ ぴ**, **ふ ぷ** and **へ ぺ**, in pairs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "えんぴつ (enpitsu) and きっぷ (kippu) from memory, and say which one you show on a train",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **えんぴつ** and **きっぷ** from memory, and say which one you show on a train]"
             },
             {
               "kind": "speech",
-              "text": "Write えんぴつ (enpitsu) and きっぷ (kippu) from memory, and say which one you show on a train."
+              "text": "Say perapera."
             },
             {
-              "kind": "speech",
-              "text": "Write ぺらぺら, and say perapera."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ぺらぺら (perapera)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ぺらぺら**]"
             }
           ]
         },

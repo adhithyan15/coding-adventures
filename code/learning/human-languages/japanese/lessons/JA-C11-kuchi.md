@@ -34,7 +34,9 @@ reviews_of: [JA-W09-ku, JA-W01-chi, JA-C11-mimi, JA-W05-mouth-component]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KU-01, JA-SCRIPT-CHI-01, JA-LEX-MIMI] -->
 
-[PAUSE 12s] Write **く** and **ち** separately. Retrieve **みみ**.
+[PAUSE 12s] [YOU WRITE: **く** and **ち** separately]
+
+Retrieve **みみ**.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-KUCHI]; assesses=[] -->
@@ -50,7 +52,7 @@ morae.
 
 1. Hear *kuchi*; point to the mouth.
 2. Read **口**, then its reading **く | ち**.
-3. Hide it and write **口**, then the two signs in order.
+3. [YOU WRITE: **口**, then the two signs in order, with the word hidden]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KUCHI] -->

@@ -59,9 +59,9 @@ them, the book writes every sign of the *z* row, **ざ じ ず ぜ ぞ**.
 ## Guided Practice — write
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-ZO-01, JA-SCRIPT-ZU-01, JA-SCRIPT-ZE-01, JA-LEX-ANCHOR-KAZOKU, JA-LEX-C136-KAZOERU, JA-LEX-ANCHOR-KAZE] -->
 
-1. Write **そ ぞ**, **す ず** and **せ ぜ** in pairs.
-2. Write **かぞく** and **かぞえる** from memory, and say which one is a verb.
-3. Write **かぜ**, and say *kaze*.
+1. [YOU WRITE: **そ ぞ**, **す ず** and **せ ぜ**, in pairs]
+2. [YOU WRITE: **かぞく** and **かぞえる** from memory, and say which one is a verb]
+3. Say *kaze*. [YOU WRITE: **かぜ**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-ZE-01, JA-LEX-ANCHOR-KAZE, JA-LEX-C136-SUZUSHII] -->

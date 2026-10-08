@@ -34,8 +34,10 @@ reviews_of: [JA-C12-atama, JA-W01-hai-read, JA-W05-hon-kanji, JA-W05-gen-compone
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ATAMA, JA-SCRIPT-HAI-READ-01, JA-SCRIPT-KANJI-HON-01, JA-SCRIPT-KANJI-SPEECH-COMPONENT-01, JA-SCRIPT-YU-01, JA-LEX-KAO] -->
 
-[PAUSE 55s] Write **あたま**, read **はい**, write **本**, sketch the speech
-component, write **ゆ**, and finish with **かお**.
+[PAUSE 55s] [YOU WRITE: **あたま**]
+
+Read **はい**.
+[YOU WRITE: **本**, then sketch the speech component, then **ゆ**, and finish with **かお**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-KAMI-HAIR]; assesses=[] -->
@@ -47,7 +49,7 @@ Two known signs, two morae.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KAMI-HAIR] -->
 
-Hear, point, say, read, then write **かみ** from memory.
+Hear, point, say, and read **かみ**. [YOU WRITE: **かみ** from memory]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KAMI-HAIR] -->

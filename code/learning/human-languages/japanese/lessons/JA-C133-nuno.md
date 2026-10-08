@@ -36,7 +36,9 @@ reviews_of: [JA-W133-nu, JA-W17-no, JA-C133-ike, JA-C133-inu, JA-C131-ocha-o-kud
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-NU-01, JA-LEX-ANCHOR-IKE, JA-GRAMMAR-OBJECT-WO] -->
 
-[PAUSE 15s] Write **ぬ** — **R1**, one lesson back. Then say *a pond* — **R2**, five lessons back.
+[PAUSE 15s] [YOU WRITE: **ぬ** — **R1**, one lesson back]
+
+Then say *a pond* — **R2**, five lessons back.
 
 - [YOU RECALL: ask for tea politely — **R3**, twenty lessons back]
 

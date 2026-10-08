@@ -56,7 +56,9 @@ does.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-MUTTSU, JA-LEX-ROKU, JA-LEX-ITSUTSU] -->
 
-Write **むっつ**. Say *roku* and *muttsu*: same number, two words, no shared
+[YOU WRITE: **むっつ**]
+
+Say *roku* and *muttsu*: same number, two words, no shared
 sound. Then run the count so far: *hitotsu, futatsu, mittsu, yottsu, itsutsu,
 muttsu*.
 

@@ -68,8 +68,9 @@ only one gap left.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ROKU, JA-SCRIPT-RO-01, JA-LEX-KU, JA-LEX-NANA, JA-LEX-HACHI] -->
 
-Read **ろ | く**. Write **ろく**, hide it, write it again from the meaning. Then
-say *roku, nana, hachi, ku* four times, without stopping.
+Read **ろ | く**. [YOU WRITE: **ろく**; then hide it and write it again from the meaning]
+
+Then say *roku, nana, hachi, ku* four times, without stopping.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ROKU, JA-SCRIPT-RO-01, JA-LEX-KU] -->

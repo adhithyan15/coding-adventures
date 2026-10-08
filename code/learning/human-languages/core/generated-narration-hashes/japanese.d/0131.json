@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 131,
-  "sourceHash": "fnv1a64:f3646a0d174edbfe",
+  "sourceHash": "fnv1a64:fb1c21cba41a6a1f",
   "lessonIds": [
     "JA-C131-ocha",
     "JA-W131-small-ya",
@@ -17,7 +17,7 @@
   "drivablePrefix": 1,
   "text": "japanese/narration/ch131.txt",
   "json": "japanese/narration/ch131.json",
-  "textHash": "fnv1a64:6e7a57e227100927",
-  "jsonHash": "fnv1a64:f3a25655d5ed264f",
+  "textHash": "fnv1a64:1f7a6183e171a251",
+  "jsonHash": "fnv1a64:ab6e283737221a5c",
   "findings": []
 }

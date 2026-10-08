@@ -34,8 +34,10 @@ reviews_of: [JA-C01-practice, JA-C01-konnichiwa]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KONNICHIWA, JA-DIALOGUE-DOORWAY, JA-SCRIPT-KATAKANA-KO-01] -->
 
-[PAUSE 10s] Write katakana **コ**, give the daytime greeting, then run one
-doorway exchange aloud. Close the text before the new expression begins.
+[PAUSE 10s] [YOU WRITE: katakana **コ**]
+
+Give the daytime greeting, then run one doorway exchange aloud. Close the text
+before the new expression begins.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-SAYOUNARA, JA-SAYOUNARA-HEARD-01]; assesses=[] -->

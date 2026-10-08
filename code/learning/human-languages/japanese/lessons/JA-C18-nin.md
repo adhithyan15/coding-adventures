@@ -78,7 +78,9 @@ lesson.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-NIN, JA-LEX-KODOMO, JA-LEX-SAN, JA-LEX-JUU] -->
 
-Write **にん**. Say *sannin, yonin, gonin, juunin*. Then say **こども さんにん**.
+[YOU WRITE: **にん**]
+
+Say *sannin, yonin, gonin, juunin*. Then say **こども さんにん**.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-NIN, JA-GRAMMAR-COUNTER-01] -->

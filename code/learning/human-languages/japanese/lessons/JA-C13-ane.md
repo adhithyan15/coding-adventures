@@ -45,7 +45,7 @@ Read the distant block **ございます** once. Hear *a-ne*, say it, then contr
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANE, JA-SCRIPT-A-01, JA-SCRIPT-NE-01] -->
 
-Read **あ | ね**. Copy **あね**, hide it, and write it from the meaning.
+Read **あ | ね**. [YOU WRITE: one copy of **あね**; then hide it and write it from the meaning]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ANE] -->

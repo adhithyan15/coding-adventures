@@ -54,7 +54,9 @@ things*; **いち** is *one*. The ear will try to pair the wrong two.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ITSUTSU, JA-LEX-GO, JA-LEX-ICHI, JA-LEX-YOTTSU] -->
 
-Write **いつつ**. Say *ichi* and *itsutsu* back to back, then *go* and *itsutsu*,
+[YOU WRITE: **いつつ**]
+
+Say *ichi* and *itsutsu* back to back, then *go* and *itsutsu*,
 and fix which pair actually means the same number.
 
 ## Wrap-up Recall

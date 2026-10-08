@@ -34,8 +34,12 @@ reviews_of: [JA-W03-ka, JA-C09-onegaishimasu, JA-C09-mou-ichido-onegaishimasu, J
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KA-01, JA-LEX-ONEGAI-SHIMASU, JA-LEX-MOU-ICHIDO-ONEGAI-SHIMASU, JA-LEX-ASHI, JA-LEX-KOSHI] -->
 
-[PAUSE 85s] Write **か**. Say *onegaishimasu*, then the complete repetition
-request. Write **あし**, then retrieve **こし** after five lessons.
+[PAUSE 85s] [YOU WRITE: **か**]
+
+Say *onegaishimasu*, then the complete repetition request.
+[YOU WRITE: **あし**]
+
+Then retrieve **こし** after five lessons.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KA-01, JA-LEX-ONEGAI-SHIMASU, JA-LEX-MOU-ICHIDO-ONEGAI-SHIMASU, JA-LEX-ASHI, JA-LEX-KOSHI] -->

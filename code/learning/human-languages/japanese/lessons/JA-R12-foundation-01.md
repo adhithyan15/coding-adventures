@@ -34,9 +34,13 @@ reviews_of: [JA-W01-i, JA-C01-gozaimasu, JA-W10-shi]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-HIRAGANA-MORA, JA-SCRIPT-I-01, JA-SCRIPT-SHI-01, JA-PERFORMANCE-BODY-SEVEN-01, JA-LEX-ASHI] -->
 
-[PAUSE 80s] Tap one mora for **い**, then write **い** and **し** from memory.
-Hear, say, read, and write the first seven-word body map; finish by isolating
-**あし**.
+[PAUSE 80s] Tap one mora for **い**.
+[YOU WRITE: **い** and **し** from memory]
+
+Hear, say, and read the first seven-word body map.
+[YOU WRITE: the first seven-word body map]
+
+Finish by isolating **あし**.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ARIGATOU-GOZAIMASU, JA-REGISTER-TEINEIGO] -->

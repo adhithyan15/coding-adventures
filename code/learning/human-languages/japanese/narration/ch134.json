@@ -4,7 +4,7 @@
   "chapter": 134,
   "title": "Phone and Train: De, Ba, Be and Bu",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:89e3a6b15c68ce22",
+  "sourceHash": "fnv1a64:a4198a49b57fae20",
   "lessons": [
     {
       "id": "JA-C134-denwa",
@@ -1740,7 +1740,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:202127e17b20f355",
+      "sourceHash": "fnv1a64:c0073fb1187f8901",
       "notice": null,
       "blocks": [
         {
@@ -1886,16 +1886,35 @@
           "title": "Guided Practice — write",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write て で (de), は ば (ba), へ べ (be) and ふ ぶ (bu) in pairs."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "て で (de), は ば (ba), へ べ (be) and ふ ぶ (bu), in pairs",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **て で**, **は ば**, **へ べ** and **ふ ぶ**, in pairs]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "でんしゃ (densha) and ばしょ (basho) from memory, and say which one you can ride",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **でんしゃ** and **ばしょ** from memory, and say which one you can ride]"
             },
             {
               "kind": "speech",
-              "text": "Write でんしゃ (densha) and ばしょ (basho) from memory, and say which one you can ride."
+              "text": "Say shinbun."
             },
             {
-              "kind": "speech",
-              "text": "Write しんぶん, and say shinbun."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "しんぶん (shinbun)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **しんぶん**]"
             }
           ]
         },

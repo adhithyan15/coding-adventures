@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 12,
-  "sourceHash": "fnv1a64:f110edc8c99be2b4",
+  "sourceHash": "fnv1a64:00735cea272240f2",
   "lessonIds": [
     "JA-R12-foundation-01",
     "JA-C12-atama",
@@ -28,7 +28,7 @@
   "drivablePrefix": 20,
   "text": "japanese/narration/ch12.txt",
   "json": "japanese/narration/ch12.json",
-  "textHash": "fnv1a64:1af7bfd64c4cf208",
-  "jsonHash": "fnv1a64:af30b253df6241b9",
+  "textHash": "fnv1a64:470461228385cd34",
+  "jsonHash": "fnv1a64:6f39de226d8010e0",
   "findings": []
 }

@@ -58,7 +58,9 @@ carries it.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-FUTATSU, JA-LEX-HITOTSU, JA-LEX-NI, JA-SCRIPT-FU-01] -->
 
-Write **ふたつ**. Say the pair: *hitotsu, futatsu*. Then say *ichi, ni* straight
+[YOU WRITE: **ふたつ**]
+
+Say the pair: *hitotsu, futatsu*. Then say *ichi, ni* straight
 after, and hear two different counts running side by side.
 
 ## Wrap-up Recall

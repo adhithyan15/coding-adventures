@@ -34,7 +34,9 @@ reviews_of: [JA-W09-me, JA-C11-kao, JA-C11-mimi]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-ME-01, JA-LEX-KAO, JA-LEX-MIMI] -->
 
-[PAUSE 12s] Write **め**. Retrieve **かお** and **みみ**.
+[PAUSE 12s] [YOU WRITE: **め**]
+
+Retrieve **かお** and **みみ**.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-ME-EYE]; assesses=[] -->
@@ -48,7 +50,7 @@ One learned sign is the complete everyday word.
 
 1. Hear *me*; point to an eye.
 2. See **め**; say the meaning.
-3. Hide it and write the one-sign word.
+3. [YOU WRITE: the one-sign word, with the model hidden]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ME-EYE] -->

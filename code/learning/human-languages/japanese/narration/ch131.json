@@ -4,7 +4,7 @@
   "chapter": 131,
   "title": "Tea, Please: Small Ya, Small Yo and Wo",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:f3646a0d174edbfe",
+  "sourceHash": "fnv1a64:fb1c21cba41a6a1f",
   "lessons": [
     {
       "id": "JA-C131-ocha",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9b6dce065b21c446",
+      "sourceHash": "fnv1a64:efcccf579871b50e",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,16 @@
             },
             {
               "kind": "speech",
-              "text": "Before the new word: write お, then ち, and say each one."
+              "text": "Before the new word, say o, then chi."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "お, then ち",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **お**, then **ち**]"
             },
             {
               "kind": "prompt",
@@ -342,7 +351,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2bb360ce0cd0685b",
+      "sourceHash": "fnv1a64:cb4a23d1a98c5063",
       "notice": null,
       "blocks": [
         {
@@ -357,8 +366,17 @@
               "source": "[PAUSE 15s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ゃ (small ya) — R1, one lesson back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ゃ** — **R1**, one lesson back]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ゃ (small ya) — R1, one lesson back — and say ocha."
+              "text": "Then say ocha."
             },
             {
               "kind": "prompt",
@@ -494,7 +512,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:66f62651680b97b0",
+      "sourceHash": "fnv1a64:3e3a30f21bade614",
       "notice": null,
       "blocks": [
         {
@@ -510,7 +528,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say a doctor — R1, one lesson back — and write the small sign in it."
+              "text": "Say a doctor — R1, one lesson back."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the small sign in it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the small sign in it]"
             },
             {
               "kind": "prompt",
@@ -834,7 +861,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e563e136a5edcdf",
+      "sourceHash": "fnv1a64:fe01b128fa72748b",
       "notice": null,
       "blocks": [
         {
@@ -849,8 +876,17 @@
               "source": "[PAUSE 15s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ょ (small yo) — R1, one lesson back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ょ** — **R1**, one lesson back]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ょ (small yo) — R1, one lesson back. Then say tea — R2, five lessons back."
+              "text": "Then say tea — R2, five lessons back."
             },
             {
               "kind": "prompt",
@@ -977,7 +1013,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:085a10a050ae8f2b",
+      "sourceHash": "fnv1a64:6169817fab1dc723",
       "notice": null,
       "blocks": [
         {
@@ -993,7 +1029,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say a library — R1, one lesson back. Then say please say it, and write ゃ (small ya) — R2, five lessons back."
+              "text": "Say a library — R1, one lesson back. Then say please say it."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ゃ (small ya) — R2, five lessons back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ゃ** — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
@@ -1316,7 +1361,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d0d478407750aed8",
+      "sourceHash": "fnv1a64:a157f7c264bc58ea",
       "notice": null,
       "blocks": [
         {
@@ -1331,8 +1376,17 @@
               "source": "[PAUSE 15s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "を (wo) — R1, one lesson back",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **を** — **R1**, one lesson back]"
+            },
+            {
               "kind": "speech",
-              "text": "Write を (wo) — R1, one lesson back. Then say a little — R2, five lessons back."
+              "text": "Then say a little — R2, five lessons back."
             },
             {
               "kind": "prompt",
@@ -1417,12 +1471,22 @@
           "title": "Guided Practice — write the request",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write おちゃを ください (ocha o kudasai) from memory, and circle the two signs said o."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "おちゃを ください (ocha o kudasai) from memory, and circle the two signs said o",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **おちゃを ください** from memory, and circle the two signs said *o*]"
             },
             {
-              "kind": "speech",
-              "text": "Write ゃ (small ya), ょ (small yo) and を (wo) once each, small signs low and half height."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ゃ (small ya), ょ (small yo) and を (wo) once each — small signs low and half height",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ゃ**, **ょ** and **を** once each — small signs low and half height]"
             },
             {
               "kind": "speech",

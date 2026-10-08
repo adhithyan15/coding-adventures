@@ -34,7 +34,9 @@ reviews_of: [JA-W09-mi, JA-C11-te-hand]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-MI-01, JA-LEX-TE-HAND] -->
 
-[PAUSE 10s] Write **み** once, then retrieve **て** — hand.
+[PAUSE 10s] [YOU WRITE: **み** once]
+
+Then retrieve **て** — hand.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-MIMI]; assesses=[] -->
@@ -48,7 +50,7 @@ No new sign: repeat **み** on two even morae.
 
 1. Hear *mimi*; point to an ear.
 2. Read **み | み** aloud.
-3. Hide it and write the repeated sign twice.
+3. [YOU WRITE: the repeated sign twice, with the word hidden]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-MIMI] -->

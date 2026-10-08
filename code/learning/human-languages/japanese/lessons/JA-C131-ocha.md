@@ -37,7 +37,8 @@ reviews_of: [JA-W10-o, JA-W01-chi, JA-C115-ayu, JA-C127-sawayaka]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-O-01, JA-SCRIPT-CHI-01, JA-LEX-C115-THINGS115-05, JA-LEX-C127-QUAL127-03] -->
 
-[PAUSE 10s] Before the new word: write **お**, then **ち**, and say each one.
+[PAUSE 10s] Before the new word, say *o*, then *chi*.
+[YOU WRITE: **お**, then **ち**]
 
 - [YOU RECALL: say *a sweetfish* — **R4**, eighty lessons back]
 - [YOU RECALL: say *refreshing* — **R3**, twenty lessons back]

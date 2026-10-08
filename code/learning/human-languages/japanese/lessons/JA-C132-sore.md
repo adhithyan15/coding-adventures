@@ -36,7 +36,9 @@ reviews_of: [JA-W132-re, JA-W132-so, JA-C132-kore, JA-C132-soko, JA-C118-wata, J
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-RE-01, JA-LEX-ANCHOR-SOKO, JA-LEX-C118-THINGS118-04, JA-LEX-C130-QUAL130-02] -->
 
-[PAUSE 15s] Write **れ** — **R1**, one lesson back. Then say *there*, near the listener — **R2**, five lessons back.
+[PAUSE 15s] [YOU WRITE: **れ** — **R1**, one lesson back]
+
+Then say *there*, near the listener — **R2**, five lessons back.
 
 - [YOU RECALL: say *cotton wool* — **R4**, eighty lessons back]
 - [YOU RECALL: say *pitch black* — **R3**, twenty lessons back]

@@ -39,9 +39,11 @@ Say **つま** once without looking back.
 ## Guided Practice — size carries sound
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-TSUMA, JA-LEX-OTTO, JA-SCRIPT-TSU-01, JA-SCRIPT-SMALL-TSU-01, JA-SCRIPT-CHOUON, JA-SCRIPT-KATAKANA-LONG-MARK-01] -->
 
-[PAUSE 35s] Add distant **ー** after **コ** and state that it holds the vowel for
-one more beat. Then hear, read, and write **つま・おっと** with a clear size
-contrast.
+[PAUSE 35s] [YOU WRITE: **コ**, then add distant **ー** after it]
+
+State that the bar holds the vowel for one more beat. Then hear and read
+**つま・おっと**.
+[YOU WRITE: **つま・おっと**, with a clear size contrast]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-TSUMA, JA-LEX-OTTO] -->

@@ -58,7 +58,9 @@ yattsu.* Eight of ten, and two signs left to buy.
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-YATTSU, JA-LEX-HACHI, JA-LEX-NANATSU] -->
 
-Write **やっつ**. Say *hachi*, then *yattsu*. Then run the eight in order without
+[YOU WRITE: **やっつ**]
+
+Say *hachi*, then *yattsu*. Then run the eight in order without
 stopping.
 
 ## Wrap-up Recall

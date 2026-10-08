@@ -39,13 +39,15 @@ Retrieve **つま** once from its meaning.
 ## You'll Want to Know — hear and say
 <!-- hl-knowledge: introduces=[JA-LEX-KODOMO]; assesses=[JA-LEX-TSUMA, JA-LEX-ANE, JA-SCRIPT-KANJI-MOUTH-COMPONENT-01] -->
 
-Write distant **口** once. Hear *ko-do-mo*, choose “child,” then say the three
+[YOU WRITE: distant **口** once]
+
+Hear *ko-do-mo*, choose “child,” then say the three
 even morae.
 
 ## Guided Practice — read, copy, recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KODOMO, JA-SCRIPT-KO-01, JA-SCRIPT-DO-01, JA-SCRIPT-MO-01] -->
 
-Read **こ | ど | も**. Copy **こども**, hide it, and write it once.
+Read **こ | ど | も**. [YOU WRITE: one copy of **こども**; then hide it and write it once]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KODOMO] -->

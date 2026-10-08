@@ -34,8 +34,12 @@ reviews_of: [JA-W01-wa, JA-C08-hear-sayounara, JA-W08-ra, JA-W11-ta, JA-C12-kata
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-WA-01, JA-PARTICLE-WA-SPELLING, JA-SAYOUNARA-HEARD-01, JA-SCRIPT-RA-01, JA-SCRIPT-TA-01, JA-LEX-KATA-SHOULDER] -->
 
-[PAUSE 70s] Write **わ**, then explain why topic **は** can sound *wa*. Hear
-*sayōnara*, write its **ら**, write **た**, and retrieve **かた**.
+[PAUSE 70s] [YOU WRITE: **わ**]
+
+Explain why topic **は** can sound *wa*. Hear *sayōnara*.
+[YOU WRITE: its **ら**, then **た**]
+
+Retrieve **かた**.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[JA-LEX-KOSHI]; assesses=[] -->
@@ -47,7 +51,7 @@ Two signs, two morae.
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KOSHI] -->
 
-Hear, point, say, read, then write **こし**.
+Hear, point, say, and read **こし**. [YOU WRITE: **こし**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KOSHI] -->

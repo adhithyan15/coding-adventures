@@ -61,9 +61,9 @@ each of those signs is one you already wrote, with the voicing mark added.
 ## Guided Practice — write
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-DE-01, JA-SCRIPT-BA-01, JA-SCRIPT-BE-01, JA-SCRIPT-BU-01, JA-LEX-C134-DENSHA, JA-LEX-C134-BASHO, JA-LEX-ANCHOR-SHINBUN] -->
 
-1. Write **て で**, **は ば**, **へ べ** and **ふ ぶ** in pairs.
-2. Write **でんしゃ** and **ばしょ** from memory, and say which one you can ride.
-3. Write **しんぶん**, and say *shinbun*.
+1. [YOU WRITE: **て で**, **は ば**, **へ べ** and **ふ ぶ**, in pairs]
+2. [YOU WRITE: **でんしゃ** and **ばしょ** from memory, and say which one you can ride]
+3. Say *shinbun*. [YOU WRITE: **しんぶん**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-BU-01, JA-LEX-ANCHOR-SHINBUN, JA-LEX-ANCHOR-TABERU] -->
