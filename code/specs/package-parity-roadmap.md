@@ -17025,7 +17025,7 @@ PR or package-path overlap remained after #17109 merged.
 
 PR #17117 passed eight required checks (24 skipped), was enabled for squash
 auto-merge, and merged as `dd0f1b255108a7d8de7d1d7137ce0e74b909c565`.
-The fetched-main schema-3 inventory at `17d883c68bc59c4e51c5cebb94fdadec97aa2924`
+The fetched-main schema-3 inventory at `93e0c01985e4d2a0bca600792dd07ff0896f6acd`
 has 15 established lanes, 1,498 implementation identities, 4,777 occupied
 slots, 1,540 all-reported identities, 178 high-consensus identities with 253
 missing slots, zero canonical collisions, and zero unknown buckets. Six slots

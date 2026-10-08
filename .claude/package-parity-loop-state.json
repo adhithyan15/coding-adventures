@@ -19,7 +19,7 @@
     "notes": "PR #17117 completed eight successful and 24 skipped terminal checks with no failure or conflict. Guarded squash auto-merge completed as dd0f1b255108a7d8de7d1d7137ce0e74b909c565 and was verified on fetched origin/main; it was not manually merged. No parity PR remains open."
   },
   "last_inventory": {
-    "revision": "17d883c68bc59c4e51c5cebb94fdadec97aa2924",
+    "revision": "93e0c01985e4d2a0bca600792dd07ff0896f6acd",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1498,
@@ -12126,6 +12126,8 @@
       "pr_number": null,
       "selected_at": "2026-10-08T13:37:50Z",
       "selection_revision": "17d883c68bc59c4e51c5cebb94fdadec97aa2924",
+      "rebase_revision": "93e0c01985e4d2a0bca600792dd07ff0896f6acd",
+      "rebase_notes": "Rebased conflict-free over merged unrelated ALGOL PR #17116. Re-ran the exact-main schema-3 inventory: all package, slot, band, OCaml, collision, and unknown-bucket counts remain unchanged. No other open parity PR exists.",
       "selection_notes": "Selected only after #17117 merged, exact-main inventory refresh and new gap registration. This spec/fixture prerequisite prevents the downstream Java/Kotlin/Dart Arc2D port from inheriting sampled off-grid bounds or unbounded center-form cubic allocation. No active parity PR exists; the Go and existing-lane implementation owners remain separate.",
       "notes": "New post-#17117 cross-lane contract gap: G2D03's raw candidate-angle quotient omits extrema across 2π and negative sweeps, while direct CenterArc cubic conversion has no finite or one-turn bound before allocating. Add a closed additive neutral corpus/schema with two off-grid wrapped analytic bounds, zero/full/over-turn segment cases, an independent analytic validator, native nonfinite guidance, and explicit 1-4 cubic fail-stop contract. Preserve existing Go implementation ownership separately."
     },
