@@ -29,6 +29,10 @@
     {
       "name": "hexagon-and-double-circle-shapes",
       "source": "swimlane-beta LR\nsubgraph Review\n  decide{{Evaluate options}}\nend\nsubgraph Complete\n  finish(((Finished)))\nend\ndecide --> finish"
+    },
+    {
+      "name": "input-output-and-asymmetric-shapes",
+      "source": "swimlane-beta LR\nsubgraph Intake\n  input[/Receive payload/]\nend\nsubgraph Review\n  flag>Manual review]\nend\ninput --> flag"
     }
   ]
 }
