@@ -302,13 +302,21 @@ call; grammar-AST lowering also validates real callee and delimiter token
 kinds for both supported print forms. The next fresh selection rotates to
 LANG82's separate, explicitly partial Perl 5.004_60 pair.
 
+PR #17075 delivered that distinct Perl 5.004_60 token/grammar pair and merged
+as `ad5feccf15b0ae3e62a77592e21d3c145dca2e4d` after exact-head CI,
+CodeQL, and books checks passed. The 776-row inventory now has 105
+explicitly partial pairs and 671 pending, without a full-syntax or
+exhaustive-release claim. The next selection rotates to PREP01's bounded
+conditional alternatives: generic `Elif`, C `#elif`, and duplicate-`else`
+rejection.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG82 historical 5.004_60 (selected):** land its own-archive-backed,
-   distinct token/grammar pair for the bounded plain-decimal print subset.
-   Keep it explicitly partial and exclude CR from its accepted subset.
+1. **PREP01 conditional alternatives (selected):** select the first true
+   `if`/`elif`/`else` branch through the generic bounded engine, expose the
+   current C `#if` subset through `#elif`, and reject duplicate `else`.
 2. **LANG82 continued:** continue distinct source-backed partial pairs. Keep
    5.004_01-t1 pending until its own source is found; do not imply complete
    syntax or an exhaustive release inventory.

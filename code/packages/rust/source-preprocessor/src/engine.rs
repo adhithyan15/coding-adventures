@@ -65,8 +65,8 @@ struct Frame {
 
 /// One open conditional group.
 struct Cond {
-    /// Whether any branch of this group has already been taken, so a later
-    /// `@else` knows to stay dark.
+    /// Whether any branch of this group has already been taken, so later
+    /// alternatives stay dark.
     branch_taken: bool,
     /// An `else` closes the chain to further alternatives.
     else_seen: bool,
@@ -411,7 +411,15 @@ fn apply_directive(
             }
             let parent_emitting = emitting;
             let value = evaluate_condition_if_active(
-                condition, parent_emitting, current_file, here, dialect, macros, hides, map, bounds,
+                condition,
+                parent_emitting,
+                current_file,
+                here,
+                dialect,
+                macros,
+                hides,
+                map,
+                bounds,
                 spend,
             )?;
             conds.push(Cond {
@@ -433,7 +441,16 @@ fn apply_directive(
             }
             let active = c.parent_emitting && !c.branch_taken;
             let value = evaluate_condition_if_active(
-                condition, active, current_file, here, dialect, macros, hides, map, bounds, spend,
+                condition,
+                active,
+                current_file,
+                here,
+                dialect,
+                macros,
+                hides,
+                map,
+                bounds,
+                spend,
             )?;
             c.emitting = value;
             c.branch_taken |= value;
