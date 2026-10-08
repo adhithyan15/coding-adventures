@@ -1,0 +1,699 @@
+//! # Launching and relaying to one agent's broker (D18S S-K1, S-K7; P2.6d-2a)
+//!
+//! The supervisor-side half of a broker's life, holding no key itself:
+//!
+//! ```text
+//!   BrokerKeyFiles::slots_for(binding)   which key file goes on which descriptor
+//!   abandon_pending_on_write_channels    give back what a dead broker reserved
+//!   launch(program, binding, keys, ..)   open the key files, exec the verified
+//!                                        binary with them on 3..3+n, Bootstrap,
+//!                                        and check Ready's public keys against
+//!                                        the channel definitions
+//!   start_relay(broker, ..)              one thread: relay each channel request,
+//!                                        answer each callback with the daemon's
+//!                                        CallbackServer, deliver the response
+//! ```
+//!
+//! Nothing here decides *when* a broker runs; the supervisor does (2b).
+//! This crate makes each step correct on its own, and testable.
+//!
+//! ## The deadline counts only the broker's time
+//!
+//! A broker gets [`RelayConfig::deadline`] to answer a request. The clock
+//! runs only while the relay waits on the broker. Time spent serving the
+//! broker's callbacks, which is storage work in the daemon, is not charged
+//! to it, so a slow disk never ends an honest broker.
+//!
+//! ## The binding is pinned
+//!
+//! Callbacks re-resolve the binding every time (S-K2). The resolver here
+//! also requires the result to name the same pipeline and agent the broker
+//! was launched for. A host rewired to another identity must not have its
+//! old broker's callbacks authorized as the new agent.
+
+#![forbid(unsafe_code)]
+
+use std::collections::BTreeMap;
+use std::path::PathBuf;
+use std::process::{Child, ChildStdin};
+use std::sync::mpsc::{self, Receiver, RecvTimeoutError, SyncSender, TrySendError};
+use std::sync::Arc;
+use std::thread::JoinHandle;
+use std::time::{Duration, Instant};
+
+use chief_of_staff_broker_callbacks::{BindingResolver, CallbackServer, InFlight, Violation};
+use chief_of_staff_broker_protocol::{
+    encode_to_broker, write_frame, FromBroker, KeyKind, KeySlot, ProtocolError, PublicKey, ToBroker,
+};
+use chief_of_staff_channel_crypto::ChannelId;
+use chief_of_staff_channel_endpoints::{
+    AgentId, ChannelDefinitionStore, ChannelLifecycle, MessageMetadataSource,
+};
+use chief_of_staff_channel_store::{ChannelStore, ChannelStoreError};
+use chief_of_staff_host_control_protocol::{
+    validate_data_plane_response, ChannelBindingAccess, DataPlaneRequest, DataPlaneResponse,
+};
+use chief_of_staff_pipeline_bindings::{HostPipelineBinding, PipelineId};
+use storage_core::StorageBackend;
+
+/// A broker binary verified against its pinned digest (Linux).
+#[cfg(target_os = "linux")]
+pub use chief_of_staff_spawn_isolation::{VerifiedExecutable, VerifyError};
+
+/// Off Linux there is no verified launch yet (S-P3), so no value of this
+/// type can exist, and [`launch`] cannot be reached.
+#[cfg(not(target_os = "linux"))]
+#[derive(Debug)]
+pub enum VerifiedExecutable {}
+
+// ---------------------------------------------------------------------------
+// Errors
+// ---------------------------------------------------------------------------
+
+/// Why a broker did not launch. Payload-blind: no path or key appears.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum LaunchError {
+    /// Two declarations for one key, or a channel declared in both
+    /// directions.
+    DuplicateKey,
+    /// A bound channel has no key file declared for it.
+    MissingKey,
+    /// A key file could not be opened under the owner-only policy.
+    KeyFile,
+    /// The binary failed re-verification, or could not be spawned.
+    Spawn,
+    /// The broker did not send `Ready` in time, or exited first.
+    NotReady,
+    /// `Ready`'s public keys do not match the slots or the definitions.
+    WrongKeys,
+    /// Storage failed while checking or abandoning.
+    Storage,
+    /// No verified launch on this platform yet (S-P3).
+    Unsupported,
+}
+
+impl std::fmt::Display for LaunchError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            Self::DuplicateKey => "broker key declared twice",
+            Self::MissingKey => "a bound channel has no broker key",
+            Self::KeyFile => "a broker key file was refused",
+            Self::Spawn => "the broker could not be started",
+            Self::NotReady => "the broker did not become ready",
+            Self::WrongKeys => "the broker's keys do not match the channel definitions",
+            Self::Storage => "storage failed during broker launch",
+            Self::Unsupported => "verified broker launch is not supported on this platform",
+        })
+    }
+}
+
+impl std::error::Error for LaunchError {}
+
+// ---------------------------------------------------------------------------
+// Key files
+// ---------------------------------------------------------------------------
+
+/// One configured key file: whose, for which channel, which key.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct KeyFileDeclaration {
+    pub pipeline_id: PipelineId,
+    pub agent_id: AgentId,
+    pub channel_id: ChannelId,
+    pub kind: KeyKind,
+    pub path: PathBuf,
+}
+
+type AgentKey = (PipelineId, Vec<u8>);
+
+/// Every configured key file, indexed by agent. It holds paths only.
+#[derive(Clone, Debug, Default)]
+pub struct BrokerKeyFiles {
+    by_agent: BTreeMap<AgentKey, BTreeMap<(ChannelId, KeyKind), PathBuf>>,
+}
+
+impl BrokerKeyFiles {
+    /// Index `declarations`, refusing a key declared twice, or a channel
+    /// with keys for both directions.
+    pub fn new(declarations: Vec<KeyFileDeclaration>) -> Result<Self, LaunchError> {
+        let mut by_agent: BTreeMap<AgentKey, BTreeMap<(ChannelId, KeyKind), PathBuf>> =
+            BTreeMap::new();
+        for declaration in declarations {
+            let keys = by_agent
+                .entry((
+                    declaration.pipeline_id,
+                    declaration.agent_id.as_bytes().to_vec(),
+                ))
+                .or_default();
+            let reading = declaration.kind == KeyKind::ReceiverPrivateKey;
+            let crosses = keys.keys().any(|(channel, kind)| {
+                *channel == declaration.channel_id
+                    && (*kind == KeyKind::ReceiverPrivateKey) != reading
+            });
+            if crosses
+                || keys
+                    .insert((declaration.channel_id, declaration.kind), declaration.path)
+                    .is_some()
+            {
+                return Err(LaunchError::DuplicateKey);
+            }
+        }
+        Ok(Self { by_agent })
+    }
+
+    /// The slots for `binding`'s channels, in channel order, each with its
+    /// key file. A bound channel without its keys is refused here, before
+    /// anything is spawned. Keys for channels the binding does not bind are
+    /// not passed.
+    pub fn slots_for(
+        &self,
+        binding: &HostPipelineBinding,
+    ) -> Result<Vec<(KeySlot, PathBuf)>, LaunchError> {
+        let keys = self.by_agent.get(&(
+            binding.pipeline_id(),
+            binding.agent_id().as_bytes().to_vec(),
+        ));
+        let mut channels: Vec<_> = binding
+            .launch_bindings()
+            .channels()
+            .iter()
+            .map(|channel| (ChannelId(channel.channel_id()), channel.access()))
+            .collect();
+        channels.sort();
+        let mut slots = Vec::new();
+        for (channel, access) in channels {
+            let kinds: &[KeyKind] = match access {
+                ChannelBindingAccess::Read => &[KeyKind::ReceiverPrivateKey],
+                ChannelBindingAccess::Write => {
+                    &[KeyKind::OriginatorSigningSeed, KeyKind::ChannelMasterKey]
+                }
+            };
+            for kind in kinds {
+                let path = keys
+                    .and_then(|keys| keys.get(&(channel, *kind)))
+                    .ok_or(LaunchError::MissingKey)?;
+                slots.push((
+                    KeySlot {
+                        channel_id: channel,
+                        kind: *kind,
+                    },
+                    path.clone(),
+                ));
+            }
+        }
+        Ok(slots)
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Abandoning what a previous broker reserved
+// ---------------------------------------------------------------------------
+
+/// Abandon any pending append on `binding`'s write channels.
+///
+/// Call this only once the previous broker for the agent is killed and
+/// reaped, and its relay thread joined. Commits run on that thread, so after
+/// the join nothing can commit late against a reservation abandoned here.
+/// Returns the channels where something was abandoned.
+pub fn abandon_pending_on_write_channels(
+    backend: &dyn StorageBackend,
+    binding: &HostPipelineBinding,
+) -> Result<Vec<ChannelId>, LaunchError> {
+    let mut abandoned = Vec::new();
+    for channel in binding.launch_bindings().channels() {
+        if channel.access() != ChannelBindingAccess::Write {
+            continue;
+        }
+        let id = ChannelId(channel.channel_id());
+        match ChannelStore::new(backend, id).abandon_pending() {
+            Ok(Some(_)) => abandoned.push(id),
+            Ok(None) | Err(ChannelStoreError::NotInitialized) => {}
+            Err(_) => return Err(LaunchError::Storage),
+        }
+    }
+    Ok(abandoned)
+}
+
+// ---------------------------------------------------------------------------
+// The Ready check
+// ---------------------------------------------------------------------------
+
+/// `Ready`'s public keys must be exactly the slots' public halves, in slot
+/// order, and each must be the key the channel definition names for this
+/// agent: a receiver's for a read channel, the originator's for a write
+/// channel.
+pub fn check_ready(
+    backend: &dyn StorageBackend,
+    binding: &HostPipelineBinding,
+    slots: &[KeySlot],
+    public_keys: &[PublicKey],
+) -> Result<(), LaunchError> {
+    let expected: Vec<(ChannelId, KeyKind)> = slots
+        .iter()
+        .filter(|slot| slot.kind != KeyKind::ChannelMasterKey)
+        .map(|slot| (slot.channel_id, slot.kind))
+        .collect();
+    let reported: Vec<(ChannelId, KeyKind)> = public_keys
+        .iter()
+        .map(|key| (key.channel_id, key.kind))
+        .collect();
+    if expected != reported {
+        return Err(LaunchError::WrongKeys);
+    }
+    let definitions = ChannelDefinitionStore::new(backend);
+    let agent = binding.agent_id();
+    for key in public_keys {
+        let definition = definitions
+            .load(key.channel_id)
+            .map_err(|_| LaunchError::Storage)?
+            .ok_or(LaunchError::WrongKeys)?;
+        if definition.lifecycle() != ChannelLifecycle::Active {
+            return Err(LaunchError::WrongKeys);
+        }
+        let matches = match key.kind {
+            KeyKind::ReceiverPrivateKey => definition
+                .receiver(agent)
+                .is_some_and(|receiver| receiver.public_key == key.public_key),
+            KeyKind::OriginatorSigningSeed => {
+                definition.originator().agent_id == *agent
+                    && definition.originator().public_key == key.public_key
+            }
+            KeyKind::ChannelMasterKey => false,
+        };
+        if !matches {
+            return Err(LaunchError::WrongKeys);
+        }
+    }
+    Ok(())
+}
+
+// ---------------------------------------------------------------------------
+// Launch
+// ---------------------------------------------------------------------------
+
+/// A broker that has started and passed the `Ready` check.
+pub struct LaunchedBroker {
+    child: Child,
+    stdin: ChildStdin,
+    frames: Frames,
+    reader: Option<JoinHandle<()>>,
+}
+
+impl LaunchedBroker {
+    /// The broker process, for the supervisor to watch, kill and reap.
+    pub fn child(&mut self) -> &mut Child {
+        &mut self.child
+    }
+
+    /// Split into the process and the relay's I/O.
+    fn into_parts(self) -> (Child, BrokerIo) {
+        (
+            self.child,
+            BrokerIo {
+                stdin: self.stdin,
+                frames: self.frames,
+                reader: self.reader,
+            },
+        )
+    }
+}
+
+/// The broker's decoded output frames, as the reader thread delivers them.
+type Frames = Receiver<Result<FromBroker, ProtocolError>>;
+
+struct BrokerIo {
+    stdin: ChildStdin,
+    frames: Frames,
+    reader: Option<JoinHandle<()>>,
+}
+
+impl BrokerIo {
+    /// Close the broker's stdin and wait, bounded, for its reader. Call
+    /// after the broker is killed: its stdout then closes, and the reader
+    /// ends.
+    fn close(mut self) {
+        drop(self.stdin);
+        drop(self.frames);
+        if let Some(reader) = self.reader.take() {
+            let _ = join_bounded(reader);
+        }
+    }
+}
+
+/// Join `thread`, giving up after two seconds. A thread still blocked then
+/// is left to finish on its own; it holds nothing that outlives it.
+/// Returns whether it joined.
+fn join_bounded(thread: JoinHandle<()>) -> bool {
+    let deadline = Instant::now() + Duration::from_secs(2);
+    while !thread.is_finished() {
+        if Instant::now() >= deadline {
+            return false;
+        }
+        std::thread::sleep(Duration::from_millis(5));
+    }
+    let _ = thread.join();
+    true
+}
+
+#[cfg(target_os = "linux")]
+/// Read the broker's frames on a thread of their own, so the relay can wait
+/// on them with a deadline. The channel closes when the broker's stdout
+/// does.
+fn spawn_reader(
+    mut stdout: std::process::ChildStdout,
+) -> std::io::Result<(Frames, JoinHandle<()>)> {
+    use chief_of_staff_broker_protocol::{decode_from_broker, read_frame};
+    let (frames, receiver) = mpsc::sync_channel(4);
+    let reader = std::thread::Builder::new()
+        .name("broker-out".into())
+        .spawn(move || loop {
+            let frame = read_frame(&mut stdout).and_then(|body| decode_from_broker(&body));
+            let failed = frame.is_err();
+            if frames.send(frame).is_err() || failed {
+                return;
+            }
+        })?;
+    Ok((receiver, reader))
+}
+
+/// Kill and reap a broker that will not be used.
+#[cfg(target_os = "linux")]
+fn discard(mut child: Child) {
+    let _ = chief_of_staff_spawn_isolation::kill_session(&child);
+    let _ = child.kill();
+    let _ = child.wait();
+}
+
+/// Open `binding`'s key files, start `program` holding them at 3..3+n, send
+/// Bootstrap, and wait up to `ready_timeout` for a `Ready` that passes
+/// [`check_ready`]. On any failure the broker is killed and reaped.
+#[cfg(target_os = "linux")]
+pub fn launch(
+    program: &VerifiedExecutable,
+    binding: &HostPipelineBinding,
+    keys: &BrokerKeyFiles,
+    backend: &dyn StorageBackend,
+    ready_timeout: Duration,
+) -> Result<LaunchedBroker, LaunchError> {
+    use std::os::fd::OwnedFd;
+    use std::process::{Command, Stdio};
+
+    let slotted = keys.slots_for(binding)?;
+    let descriptors = slotted
+        .iter()
+        .map(|(_, path)| {
+            chief_of_staff_daemon_secret_file::open_owner_only_secret(path)
+                .map(OwnedFd::from)
+                .map_err(|_| LaunchError::KeyFile)
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+    let slots: Vec<KeySlot> = slotted.into_iter().map(|(slot, _)| slot).collect();
+
+    let mut command = Command::new("chief-of-staff-agent-broker");
+    command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .env_clear();
+    chief_of_staff_spawn_isolation::isolate_and_exec(&mut command, program, descriptors)
+        .map_err(|_| LaunchError::Spawn)?;
+    let spawned = command.spawn();
+    // The command holds the relocated key descriptors; dropping it closes
+    // this process's last copies.
+    drop(command);
+    let mut child = spawned.map_err(|_| LaunchError::Spawn)?;
+    let (Some(stdin), Some(stdout)) = (child.stdin.take(), child.stdout.take()) else {
+        discard(child);
+        return Err(LaunchError::Spawn);
+    };
+    let Ok((frames, reader)) = spawn_reader(stdout) else {
+        discard(child);
+        return Err(LaunchError::Spawn);
+    };
+    let broker = LaunchedBroker {
+        child,
+        stdin,
+        frames,
+        reader: Some(reader),
+    };
+    let bootstrap = encode_to_broker(&ToBroker::Bootstrap {
+        binding: binding.clone(),
+        slots: slots.clone(),
+    })
+    .map_err(|_| LaunchError::Spawn);
+    let mut broker = broker;
+    let ready = bootstrap
+        .and_then(|body| write_frame(&mut broker.stdin, &body).map_err(|_| LaunchError::NotReady))
+        .and_then(|()| match broker.frames.recv_timeout(ready_timeout) {
+            Ok(Ok(FromBroker::Ready { public_keys })) => {
+                check_ready(backend, binding, &slots, &public_keys)
+            }
+            _ => Err(LaunchError::NotReady),
+        });
+    if let Err(error) = ready {
+        let (child, io) = broker.into_parts();
+        discard(child);
+        io.close();
+        return Err(error);
+    }
+    Ok(broker)
+}
+
+/// Verified launch needs `execveat`; elsewhere there is none yet, and no
+/// [`VerifiedExecutable`] can exist to call this with.
+#[cfg(not(target_os = "linux"))]
+pub fn launch(
+    program: &VerifiedExecutable,
+    _binding: &HostPipelineBinding,
+    _keys: &BrokerKeyFiles,
+    _backend: &dyn StorageBackend,
+    _ready_timeout: Duration,
+) -> Result<LaunchedBroker, LaunchError> {
+    match *program {}
+}
+
+// ---------------------------------------------------------------------------
+// The relay
+// ---------------------------------------------------------------------------
+
+/// The host could not be given a response: it is gone.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct HostGone;
+
+/// Where a broker's response goes: the host's secure channel, in the
+/// supervisor.
+pub trait ResponseSink: Send {
+    /// Deliver `response` to the host.
+    fn deliver(&mut self, response: DataPlaneResponse) -> Result<(), HostGone>;
+}
+
+/// A [`BindingResolver`] that answers only with the binding the broker was
+/// launched for: the same pipeline and the same agent, freshly resolved.
+pub struct PinnedBindingResolver<F> {
+    resolve: F,
+    pipeline_id: PipelineId,
+    agent_id: AgentId,
+}
+
+impl<F: Fn() -> Option<HostPipelineBinding>> PinnedBindingResolver<F> {
+    /// Pin `resolve` to `launched`'s identity.
+    pub fn new(resolve: F, launched: &HostPipelineBinding) -> Self {
+        Self {
+            resolve,
+            pipeline_id: launched.pipeline_id(),
+            agent_id: launched.agent_id().clone(),
+        }
+    }
+}
+
+impl<F: Fn() -> Option<HostPipelineBinding>> BindingResolver for PinnedBindingResolver<F> {
+    fn current_binding(&self) -> Option<HostPipelineBinding> {
+        (self.resolve)().filter(|binding| {
+            binding.pipeline_id() == self.pipeline_id && binding.agent_id() == &self.agent_id
+        })
+    }
+}
+
+/// Why a relay ended. Every one ends the broker, and with it the agent.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum RelayEnd {
+    /// The broker made a callback an honest broker never makes.
+    Violation(Violation),
+    /// It took longer than the deadline, counting only its own time.
+    Deadline,
+    /// Its response did not answer the request, or failed validation.
+    BadResponse,
+    /// It sent a frame out of order, or one that did not decode.
+    Protocol,
+    /// Its output closed: it exited.
+    Exited,
+    /// Writing to it failed.
+    Write,
+    /// The host could not be given the response.
+    HostGone,
+}
+
+/// The relay's settings.
+#[derive(Clone, Copy, Debug)]
+pub struct RelayConfig {
+    /// How long a broker may take over one request, not counting time spent
+    /// serving its callbacks.
+    pub deadline: Duration,
+}
+
+impl Default for RelayConfig {
+    fn default() -> Self {
+        Self {
+            deadline: Duration::from_secs(10),
+        }
+    }
+}
+
+/// Why a request could not be handed to the relay.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum RelayRefused {
+    /// A request is already in flight. A host has one at a time, so an
+    /// honest host never causes this.
+    Busy,
+    /// The relay has ended.
+    Gone,
+}
+
+/// The running relay for one broker.
+pub struct BrokerRelay {
+    commands: Option<SyncSender<DataPlaneRequest>>,
+    ended: Receiver<RelayEnd>,
+    thread: Option<JoinHandle<()>>,
+}
+
+impl BrokerRelay {
+    /// Hand a channel request to the relay, without waiting.
+    pub fn relay(&self, request: DataPlaneRequest) -> Result<(), RelayRefused> {
+        let commands = self.commands.as_ref().ok_or(RelayRefused::Gone)?;
+        commands.try_send(request).map_err(|error| match error {
+            TrySendError::Full(_) => RelayRefused::Busy,
+            TrySendError::Disconnected(_) => RelayRefused::Gone,
+        })
+    }
+
+    /// Why the relay ended, once it has.
+    pub fn ended(&self) -> Option<RelayEnd> {
+        self.ended.try_recv().ok()
+    }
+
+    /// Whether the relay thread has finished.
+    pub fn is_finished(&self) -> bool {
+        self.thread.as_ref().is_none_or(JoinHandle::is_finished)
+    }
+
+    /// Stop the relay and join it, bounded. Kill the broker first: a relay
+    /// waiting on a live broker's output only ends when that output closes.
+    /// Returns whether the thread joined.
+    pub fn stop(mut self) -> bool {
+        self.commands = None;
+        self.thread.take().is_none_or(join_bounded)
+    }
+}
+
+/// Start relaying for `broker`. Returns its process, which the supervisor
+/// keeps to watch, kill and reap, and the relay.
+pub fn start_relay(
+    broker: LaunchedBroker,
+    backend: Arc<dyn StorageBackend>,
+    metadata: Arc<dyn MessageMetadataSource>,
+    resolver: Box<dyn BindingResolver + Send>,
+    sink: Box<dyn ResponseSink>,
+    config: RelayConfig,
+) -> std::io::Result<(Child, BrokerRelay)> {
+    let (child, io) = broker.into_parts();
+    let (commands, requests) = mpsc::sync_channel(1);
+    let (report, ended) = mpsc::sync_channel(1);
+    let thread = std::thread::Builder::new()
+        .name("broker-relay".into())
+        .spawn(move || {
+            let server = CallbackServer::new(&*backend, &*metadata, &*resolver);
+            let mut io = io;
+            let mut sink = sink;
+            let end = relay_loop(&server, &mut io, &requests, sink.as_mut(), config);
+            io.close();
+            if let Some(end) = end {
+                let _ = report.send(end);
+            }
+        })?;
+    Ok((
+        child,
+        BrokerRelay {
+            commands: Some(commands),
+            ended,
+            thread: Some(thread),
+        },
+    ))
+}
+
+/// Serve requests until told to stop (`None`) or until something ends the
+/// broker (`Some`).
+fn relay_loop(
+    server: &CallbackServer<'_>,
+    io: &mut BrokerIo,
+    requests: &Receiver<DataPlaneRequest>,
+    sink: &mut dyn ResponseSink,
+    config: RelayConfig,
+) -> Option<RelayEnd> {
+    while let Ok(request) = requests.recv() {
+        let Some(mut in_flight) = InFlight::for_request(&request) else {
+            // Not a channel operation: the supervisor never sends one here.
+            return Some(RelayEnd::Protocol);
+        };
+        let Ok(body) = encode_to_broker(&ToBroker::Request(request.clone())) else {
+            return Some(RelayEnd::Protocol);
+        };
+        if write_frame(&mut io.stdin, &body).is_err() {
+            return Some(RelayEnd::Write);
+        }
+        let mut remaining = config.deadline;
+        let response = loop {
+            let waited = Instant::now();
+            let frame = match io.frames.recv_timeout(remaining) {
+                Ok(Ok(frame)) => frame,
+                Ok(Err(_)) => return Some(RelayEnd::Protocol),
+                Err(RecvTimeoutError::Timeout) => return Some(RelayEnd::Deadline),
+                Err(RecvTimeoutError::Disconnected) => return Some(RelayEnd::Exited),
+            };
+            // Charged: only the time spent waiting on the broker.
+            remaining = remaining.saturating_sub(waited.elapsed());
+            match frame {
+                FromBroker::Callback {
+                    callback_id,
+                    request_id,
+                    call,
+                } => {
+                    let outcome = match server.serve(&mut in_flight, request_id, call) {
+                        Ok(outcome) => outcome,
+                        Err(violation) => return Some(RelayEnd::Violation(violation)),
+                    };
+                    let Ok(body) = encode_to_broker(&ToBroker::CallbackResult {
+                        callback_id,
+                        outcome,
+                    }) else {
+                        return Some(RelayEnd::Protocol);
+                    };
+                    if write_frame(&mut io.stdin, &body).is_err() {
+                        return Some(RelayEnd::Write);
+                    }
+                }
+                FromBroker::Response(response) => break response,
+                FromBroker::Ready { .. } => return Some(RelayEnd::Protocol),
+            }
+        };
+        let answers = response.id() == request.id()
+            && response
+                .operation()
+                .is_none_or(|operation| operation == request.operation())
+            && validate_data_plane_response(&response).is_ok();
+        if !answers {
+            return Some(RelayEnd::BadResponse);
+        }
+        if sink.deliver(response).is_err() {
+            return Some(RelayEnd::HostGone);
+        }
+    }
+    None
+}

@@ -1225,6 +1225,7 @@ members = [
   "chief-of-staff-broker-protocol",
   "chief-of-staff-broker-callbacks",
   "chief-of-staff-agent-broker",
+  "chief-of-staff-broker-launcher",
   "chief-of-staff-daemon-authority-provisioning",
   "chief-of-staff-daemon",
   "chief-of-staff-daemon-service-files",
