@@ -105,5 +105,7 @@ The compiler validates the callee, both parentheses, the comma token, and
 both `call_arg` wrappers by token kind, effective grammar type, and rule shape
 before lowering. Each expression must satisfy the existing `i64` proof and
 resource bounds. The output builtin checks the combined size before appending
-either value, so a failed second argument or output limit leaves this call's
-output absent while earlier completed calls remain in order.
+either value, so an output-limit failure does not partially append this call.
+Expression errors reject the program before execution or stop VM execution
+before this call's output builtin runs. The runner returns an error without
+exposing buffered output on any failure.
