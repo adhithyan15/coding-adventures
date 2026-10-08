@@ -391,6 +391,24 @@ impl<'a> ChannelStore<'a> {
     ///
     /// Returns the abandoned header, or `None` when no append was pending.
     pub fn abandon_pending(&self) -> Result<Option<MessageHeader>, ChannelStoreError> {
+        self.abandon_pending_if(|_| true)
+    }
+
+    /// Abandon the pending append only if it is at `sequence` (D18S P2.6d).
+    ///
+    /// A broker abandons the reservation it made, and no other: if another
+    /// append is pending by the time this runs, it is left alone. Returns
+    /// whether a reservation was abandoned.
+    pub fn abandon_pending_at(&self, sequence: Sequence) -> Result<bool, ChannelStoreError> {
+        Ok(self
+            .abandon_pending_if(|header| header.fields().sequence() == sequence)?
+            .is_some())
+    }
+
+    fn abandon_pending_if(
+        &self,
+        matches: impl Fn(&MessageHeader) -> bool,
+    ) -> Result<Option<MessageHeader>, ChannelStoreError> {
         for _ in 0..MAX_CAS_ATTEMPTS {
             let record = self
                 .state_record()?
@@ -399,6 +417,9 @@ impl<'a> ChannelStore<'a> {
             let Some(header) = state.pending_header else {
                 return Ok(None);
             };
+            if !matches(&header) {
+                return Ok(None);
+            }
             let updated = ChannelState {
                 next_sequence: state.next_sequence,
                 pending_header: None,
@@ -930,6 +951,25 @@ mod tests {
             .collect();
         out.sort();
         out
+    }
+
+    #[test]
+    fn abandoning_at_a_sequence_leaves_any_other_reservation_alone() {
+        let backend = InMemoryStorageBackend::new();
+        let store = ChannelStore::new(&backend, channel_id());
+        store.initialize().unwrap();
+        assert!(
+            !store.abandon_pending_at(Sequence(0)).unwrap(),
+            "nothing pending"
+        );
+        let header = store.reserve_append(request(1), b"pending").unwrap();
+        assert!(!store.abandon_pending_at(Sequence(7)).unwrap());
+        assert_eq!(store.state().unwrap().pending_header, Some(header));
+        assert!(store.abandon_pending_at(Sequence(0)).unwrap());
+        let state = store.state().unwrap();
+        assert_eq!(state.pending_header, None);
+        // The abandoned sequence stays consumed.
+        assert_eq!(state.next_sequence, Sequence(1));
     }
 
     #[test]

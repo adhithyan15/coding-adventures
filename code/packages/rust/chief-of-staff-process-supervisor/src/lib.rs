@@ -1316,11 +1316,24 @@ mod tests {
         let started = Instant::now();
         let frame = vec![7u8; MAX_RECORD_BYTES];
         // The pipe holds well under one frame, so the thread blocks on the
-        // first, and the queue then takes MAX_QUEUED_FRAMES more.
-        let accepted = (0..MAX_QUEUED_FRAMES + 8)
-            .take_while(|_| writer.send(frame.clone()).is_ok())
-            .count();
-        assert!(accepted <= MAX_QUEUED_FRAMES + 1, "accepted {accepted}");
+        // first it takes, for good, and the queue then holds
+        // MAX_QUEUED_FRAMES more: exactly MAX_QUEUED_FRAMES + 1 are ever
+        // accepted.
+        //
+        // When the thread takes that first frame is up to the scheduler.
+        // Asserting a refusal right after the queue first fills raced it
+        // (macOS CI: the thread took its frame in between, freeing a slot).
+        // So keep refilling until the count is reached, which can only
+        // happen once the thread holds its one frame and is stuck on it.
+        let mut accepted = 0;
+        while accepted < MAX_QUEUED_FRAMES + 1 {
+            assert!(started.elapsed() < Duration::from_secs(5), "never filled");
+            accepted += (0..MAX_QUEUED_FRAMES + 8)
+                .take_while(|_| writer.send(frame.clone()).is_ok())
+                .count();
+            thread::sleep(Duration::from_millis(5));
+        }
+        assert_eq!(accepted, MAX_QUEUED_FRAMES + 1);
         assert_eq!(
             writer.send(frame.clone()),
             Err(ProcessSupervisorError::ProcessIo)

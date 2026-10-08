@@ -24,8 +24,11 @@ traceback showed in the output. The commit was still local, and
 
 **What to do instead:**
 
-1. Start any block that edits and then commits with `set -e`, or join the
-   commit to the edit with `&&`.
+1. Join the commit to the edit with `&&`. **Do not rely on `set -e`**:
+   bash ignores it inside any compound command that is followed by `||`
+   or used as a condition, and a tool harness may wrap your block exactly
+   that way. That happened here: a block starting with `set -e` committed
+   anyway after its edit script failed.
 2. Remember that a `| tail` in the chain hides failures unless `pipefail`
    is set. The sibling lesson on `&&` chains covers this.
 3. Read the output before trusting the commit: `git show --stat HEAD` must

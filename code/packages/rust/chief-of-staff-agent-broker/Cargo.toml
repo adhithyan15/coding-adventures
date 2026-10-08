@@ -1,0 +1,30 @@
+[package]
+name = "chief-of-staff-agent-broker"
+version = "0.1.0"
+edition = "2021"
+description = "D18S P2.6d: one agent's broker, holding only that agent's channel keys"
+license = "MIT"
+
+[[bin]]
+name = "chief-of-staff-agent-broker"
+path = "src/main.rs"
+
+[dependencies]
+chief-of-staff-broker-protocol = { path = "../chief-of-staff-broker-protocol" }
+chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
+chief-of-staff-channel-endpoints = { path = "../chief-of-staff-channel-endpoints" }
+chief-of-staff-daemon-secret-file = { path = "../chief-of-staff-daemon-secret-file" }
+chief-of-staff-host-control-protocol = { path = "../chief-of-staff-host-control-protocol" }
+chief-of-staff-pipeline-bindings = { path = "../chief-of-staff-pipeline-bindings" }
+chief-of-staff-process-hardening = { path = "../chief-of-staff-process-hardening" }
+coding_adventures_zeroize = { path = "../zeroize" }
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[dev-dependencies]
+libc = "0.2"
+chief-of-staff-broker-callbacks = { path = "../chief-of-staff-broker-callbacks" }
+chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }
+chief-of-staff-channel-store = { path = "../chief-of-staff-channel-store" }
+storage-core = { path = "../storage-core" }

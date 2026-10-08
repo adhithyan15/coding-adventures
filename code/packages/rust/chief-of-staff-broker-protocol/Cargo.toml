@@ -1,0 +1,16 @@
+[package]
+name = "chief-of-staff-broker-protocol"
+version = "0.1.0"
+edition = "2021"
+description = "D18S P2.6d: the bounded, total frame protocol between the Chief supervisor and one agent's broker"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
+chief-of-staff-channel-endpoints = { path = "../chief-of-staff-channel-endpoints" }
+chief-of-staff-host-control-protocol = { path = "../chief-of-staff-host-control-protocol" }
+chief-of-staff-pipeline-bindings = { path = "../chief-of-staff-pipeline-bindings" }
+coding_adventures_sha256 = { path = "../sha256" }
+
+[dev-dependencies]
+chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }

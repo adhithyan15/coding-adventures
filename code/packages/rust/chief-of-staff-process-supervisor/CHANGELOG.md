@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- The stalled-host queue test no longer races the writer thread. It used
+  to assert a refusal right after the queue first filled, but the thread
+  could take its first frame in between, which freed a slot (seen on macOS
+  CI). It now refills until exactly `MAX_QUEUED_FRAMES + 1` frames are
+  accepted, which can only happen once the thread is stuck on its first.
 - **Per-host request budgets** (D18S S-K5; #13980 P2.6b). Every supervised
   host gets a token bucket, by default a burst of 128 refilled at 64/s.
   It is checked on the injected monotonic clock before a request reaches the

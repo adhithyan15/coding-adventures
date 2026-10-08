@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `abandon_pending_at(sequence)` (D18S P2.6d-1): abandons the pending
+  append only if it is at that sequence, so a broker gives back the
+  reservation it made, and no other.
 - Add `reserve_append_with_hash` and `commit_encrypted` (D18S P2.6d): the
   storage half of an append, needing no secret key. `commit_encrypted`
   takes the originator's public key and refuses a message whose signature
