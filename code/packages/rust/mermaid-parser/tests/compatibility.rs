@@ -1616,6 +1616,17 @@ request -->|"Priority \"A\""| done"#,
 }
 
 #[test]
+fn swimlane_label_entities_decode_into_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph intake[Request &amp; Review]\n  request[Input&nbsp;#1]\nend\nsubgraph done[Completion]\n  finish[Done]\nend\nrequest -->|Ready&#32;&check;| finish",
+    ).expect("Swimlane label entities should parse");
+
+    assert_eq!(diagram.lanes[0].label, "Request & Review");
+    assert_eq!(diagram.nodes[0].label, "Input\u{a0}#1");
+    assert_eq!(diagram.edges[0].label.as_deref(), Some("Ready ✓"));
+}
+
+#[test]
 fn swimlane_flowchart_endpoint_markers_lower_to_semantic_ir() {
     use diagram_ir::EdgeMarker;
 

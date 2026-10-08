@@ -57,6 +57,10 @@
     {
       "name": "quoted-unicode-lane-labels",
       "source": "swimlane-beta LR\nsubgraph intake[\"Request \\\"priority\\\" team ✓\"]\n  request[Request]\nend\nsubgraph \"Completion \\\"crew\\\"\"\n  done[Done]\nend\nrequest --> done"
+    },
+    {
+      "name": "html-entity-labels",
+      "source": "swimlane-beta LR\nsubgraph intake[Request &amp; Review]\n  request[Input&nbsp;#1]\nend\nsubgraph done[Completion]\n  finish[Done]\nend\nrequest -->|Ready&#32;&check;| finish"
     }
   ]
 }
