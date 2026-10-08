@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Lower exactly two positional integer arguments in a parenthesized `puts`
+  call to a bounded Rust VM builtin, emitting two newline-terminated values
+  atomically after both expressions execute. Validate direct-AST comma and
+  statement/argument wrapper shapes before lowering.
+
 - Lower an exact zero-argument `puts()` grammar call directly to a bounded
   Rust VM builtin that emits one newline; validate direct-AST delimiters by
   token kind and effective grammar type on both parenthesized call forms.
