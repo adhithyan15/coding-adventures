@@ -1356,6 +1356,57 @@ hardware_key_timeout = 60
     }
 
     #[test]
+    fn wiping_the_vault_directory_is_a_clean_reset() {
+        // VLT01 F12: a reset is wiping the storage directory. The KEK and its
+        // anchor stay. Before F12 the anchor still held the old vault's
+        // epochs, so the new vault's first index read as Tamper, and the old
+        // vault's files would open under the same KEK.
+        let (directory, config) = vault_home("vault-reset");
+        vault_run(
+            &directory,
+            &config,
+            PUT,
+            &mut FakeInput::piped(b"old-vault-key"),
+        )
+        .unwrap();
+        vault_run(
+            &directory,
+            &config,
+            PUT,
+            &mut FakeInput::piped(b"old-vault-key-2"),
+        )
+        .unwrap();
+        let loaded = load_config_file(&config).unwrap();
+        let vault_dir = loaded.vault().storage_path().resolve(&directory.0).unwrap();
+        let old_vault = directory.0.join("old-vault");
+        copy_tree(&vault_dir, &old_vault);
+
+        fs::remove_dir_all(&vault_dir).unwrap();
+        vault_run(
+            &directory,
+            &config,
+            PUT,
+            &mut FakeInput::piped(b"new-vault-key"),
+        )
+        .unwrap();
+        assert!(
+            chief_of_staff_daemon::load_chief_vault_runtime(&loaded, &directory.0)
+                .unwrap()
+                .is_some()
+        );
+
+        // The old vault put back whole, manifest included, is refused.
+        fs::remove_dir_all(&vault_dir).unwrap();
+        copy_tree(&old_vault, &vault_dir);
+        match chief_of_staff_daemon::load_chief_vault_runtime(&loaded, &directory.0) {
+            Err(ChiefDaemonError::ChiefVault(error)) => {
+                assert!(error.to_string().contains("tamper"), "{error}");
+            }
+            other => panic!("expected a tamper refusal, got {:?}", other.map(|_| ())),
+        }
+    }
+
+    #[test]
     fn one_corrupt_record_stops_the_daemon_vault_load() {
         let (directory, config) = vault_home("vault-corrupt");
         vault_run(

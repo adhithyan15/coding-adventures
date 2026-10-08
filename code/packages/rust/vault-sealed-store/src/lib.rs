@@ -31,7 +31,7 @@
 mod anchor;
 mod freshness;
 
-pub use anchor::{AnchorError, FileFreshnessAnchor, FreshnessAnchor};
+pub use anchor::{AnchorError, FileFreshnessAnchor, FreshnessAnchor, VAULT_ID_BYTES};
 
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
@@ -95,6 +95,10 @@ const FRESHNESS_AAD_DOMAIN: &[u8] = b"vault-freshness-v1";
 
 /// How many times an index compare-and-swap is retried before giving up (F8).
 const INDEX_CAS_ATTEMPTS: usize = 8;
+
+/// How many times a manifest write (F12 rebind) re-reads and retries after
+/// a CAS conflict.
+const MANIFEST_CAS_ATTEMPTS: usize = 8;
 
 /// The 16 zero bytes that the verifier AEADs under the KEK. Chosen over
 /// hashing the KEK because a known-plaintext verifier cannot leak the KEK.
@@ -315,6 +319,10 @@ pub struct SealedStore {
     indexes: Mutex<HashMap<String, (Revision, FreshnessIndex)>>,
     /// The external epoch floor (F11), if this store was given one.
     anchor: Option<Arc<dyn FreshnessAnchor>>,
+    /// Tests only: behave as the release before F12 did (unbound KEK ids,
+    /// no rebind, no anchor vault check), to build pre-F12 vaults.
+    #[cfg(test)]
+    pre_f12: bool,
 }
 
 /// In-memory unseal state. Held under a mutex so `seal()` from one thread
@@ -346,7 +354,19 @@ impl SealedStore {
             state: Mutex::new(State { unsealed: None }),
             indexes: Mutex::new(HashMap::new()),
             anchor: None,
+            #[cfg(test)]
+            pre_f12: false,
         }
+    }
+
+    /// Whether this store writes and checks vault ids (F12). Always true
+    /// outside tests.
+    fn binds_vaults(&self) -> bool {
+        #[cfg(test)]
+        if self.pre_f12 {
+            return false;
+        }
+        true
     }
 
     /// Wrap a backend, with a freshness anchor kept outside it (VLT01 F11).
@@ -530,18 +550,49 @@ impl SealedStore {
         memory_kib: u32,
         parallelism: u32,
     ) -> Result<(), SealedStoreError> {
-        // Produce the verifier (known-plaintext AEAD under the KEK).
-        let verifier_nonce: [u8; NONCE_LEN] =
+        // F12: a manifest that is missing while the rest of the vault's own
+        // records remain was deleted, not never written. Initializing over it
+        // would start a new vault, reset the anchor, and silently make every
+        // existing secret unreadable. Refuse, so the loss is visible and the
+        // manifest can be put back. A real reset wipes the whole directory.
+        let leftovers = self.backend.list(
+            RESERVED_NAMESPACE,
+            StorageListOptions {
+                prefix: None,
+                recursive: true,
+                page_size: Some(1),
+                cursor: None,
+            },
+        )?;
+        if !leftovers.records.is_empty() {
+            return Err(tamper(RESERVED_NAMESPACE, MANIFEST_KEY));
+        }
+
+        // F12: a new vault gets a new id, and its first KEK id names it.
+        let vault_id: [u8; VAULT_ID_BYTES] =
             random_array().map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
-        let (verifier_ct, verifier_tag) = xchacha20_poly1305_aead_encrypt(
-            &VERIFIER_PLAINTEXT,
-            &kek,
-            &verifier_nonce,
-            b"vault-verifier",
-        );
+        let kek_id = if self.binds_vaults() {
+            kek_id_for(1, Some(&vault_id))
+        } else {
+            kek_id_for(1, None)
+        };
+
+        // The verifier (known-plaintext AEAD under the KEK), bound to the id.
+        let (verifier_nonce, verifier_ct, verifier_tag) = make_verifier(&kek, &kek_id)?;
+        // F12: reset the anchor *before* the manifest exists. Its epochs
+        // belonged to whatever vault was here before, and this vault's
+        // history starts from nothing. A crash after this and before the
+        // manifest write leaves no manifest, so the next start runs `init`
+        // again and resets again.
+        if let (Some(anchor), true) = (&self.anchor, self.binds_vaults()) {
+            anchor.bind_vault(&vault_id, true).map_err(anchor_error)?;
+            self.indexes
+                .lock()
+                .expect("vault index cache poisoned")
+                .clear();
+        }
 
         // Assemble and persist the manifest.
-        let kek_id = "kek-1".to_string();
         let manifest = build_manifest_json(
             MANIFEST_VERSION,
             time_cost,
@@ -557,6 +608,7 @@ impl SealedStore {
                 verifier_ct,
             }],
             now_ms_from_wallclock(),
+            None,
         );
 
         let put = StoragePutInput::new(
@@ -566,9 +618,17 @@ impl SealedStore {
             manifest,
             Vec::new(),
         )
-        .map_err(SealedStoreError::Storage)?;
+        .map_err(SealedStoreError::Storage)?
+        // Create-only: a concurrent `init` that wrote first keeps its
+        // manifest. This one then reports `AlreadyInitialized` instead of
+        // overwriting it.
+        .with_if_absent();
 
-        self.backend.put(put)?;
+        match self.backend.put(put) {
+            Ok(_) => {}
+            Err(StorageError::Conflict { .. }) => return Err(SealedStoreError::AlreadyInitialized),
+            Err(error) => return Err(SealedStoreError::Storage(error)),
+        }
 
         // Install the KEK in memory. We move the `Zeroizing<[u8;32]>`
         //    directly into the state so no extra stack copy is ever created.
@@ -602,7 +662,7 @@ impl SealedStore {
         // NB: each entry has its own salt, so we re-derive per entry. That's
         // O(len(keks)) Argon2 runs per bad unseal attempt — acceptable for
         // any realistic key history (≤ a handful of entries).
-        for entry in &manifest.keks {
+        for entry in manifest.unseal_candidates() {
             if entry.source != KekSource::PasswordDerived {
                 continue;
             }
@@ -621,30 +681,8 @@ impl SealedStore {
                 manifest.memory_kib,
                 manifest.parallelism,
             )?;
-            let decrypted = xchacha20_poly1305_aead_decrypt(
-                &entry.verifier_ct,
-                &candidate,
-                &entry.verifier_nonce,
-                b"vault-verifier",
-                &entry.verifier_tag,
-            );
-            // Constant-time compare defensively. If the AEAD produced a
-            // cleartext (Some), XChaCha20-Poly1305's tag check already
-            // authenticates it, so the value equality *should* be
-            // cryptographically implied — but we still route it through
-            // `ct_eq` rather than `==` so the review trail is consistent
-            // with the spec's "constant-time compares" guarantee.
-            let bytes = decrypted.as_deref().unwrap_or(&[]);
-            if ct_eq(bytes, &VERIFIER_PLAINTEXT) {
-                // Move the matching KEK into state.
-                self.state
-                    .lock()
-                    .expect("vault state mutex poisoned")
-                    .unsealed = Some(UnsealedKey {
-                    id: entry.id.clone(),
-                    key: candidate,
-                });
-                return Ok(());
+            if verifier_opens(entry, &candidate) {
+                return self.complete_unseal(entry.id.clone(), candidate);
             }
             // `candidate` falls out of scope here and Zeroizing wipes it.
         }
@@ -664,29 +702,304 @@ impl SealedStore {
 
         let mut candidate = Zeroizing::new([0u8; KEY_LEN]);
         candidate.copy_from_slice(kek);
-        for entry in &manifest.keks {
+        for entry in manifest.unseal_candidates() {
             if entry.source != KekSource::Injected {
                 continue;
             }
-            let decrypted = xchacha20_poly1305_aead_decrypt(
-                &entry.verifier_ct,
-                &candidate,
-                &entry.verifier_nonce,
-                b"vault-verifier",
-                &entry.verifier_tag,
-            );
-            if ct_eq(decrypted.as_deref().unwrap_or(&[]), &VERIFIER_PLAINTEXT) {
-                self.state
-                    .lock()
-                    .expect("vault state mutex poisoned")
-                    .unsealed = Some(UnsealedKey {
-                    id: entry.id.clone(),
-                    key: candidate,
-                });
-                return Ok(());
+            if verifier_opens(entry, &candidate) {
+                return self.complete_unseal(entry.id.clone(), candidate);
             }
         }
         Err(SealedStoreError::InvalidKek)
+    }
+
+    // ---- vault identity (VLT01 F12) ----------------------------------------
+
+    /// The last step of every unseal: check the vault against the anchor,
+    /// rebind a vault made before F12, and only then hold the key.
+    ///
+    /// The key is installed last, so a refused or failed check leaves the
+    /// store sealed.
+    fn complete_unseal(
+        &self,
+        entry_id: String,
+        key: Zeroizing<[u8; KEY_LEN]>,
+    ) -> Result<(), SealedStoreError> {
+        let id = if self.binds_vaults() {
+            self.bind_vault(entry_id, &key)?
+        } else {
+            entry_id
+        };
+        self.state
+            .lock()
+            .expect("vault state mutex poisoned")
+            .unsealed = Some(UnsealedKey { id, key });
+        Ok(())
+    }
+
+    /// F12 at unseal: returns the KEK id the store should run under.
+    ///
+    /// The manifest is plain data in the storage directory, so nothing in it
+    /// is taken on trust. Every id the store may run under carries a
+    /// verifier bound to that id, and `rebind_from` carries a tag only the
+    /// key could have made.
+    ///
+    /// ```text
+    ///   manifest                   key opens        what happens
+    ///   ------------------------   --------------   -------------------------------
+    ///   bound, no marker           the active one   anchor check; run as active
+    ///   bound, no marker           a retired one    anchor check; run as it (an old
+    ///                                               password resuming a rotation)
+    ///   bound, rebind marker       the active one   marker tag check; refused if
+    ///                                               the anchor already records the
+    ///                                               vault; resume, then adopt
+    ///   pre-F12 (no vault id)      the active one   anchor check; rebind
+    ///   pre-F12 (no vault id)      a retired one    anchor check; no rebind
+    /// ```
+    fn bind_vault(
+        &self,
+        entry_id: String,
+        key: &Zeroizing<[u8; KEY_LEN]>,
+    ) -> Result<String, SealedStoreError> {
+        let mut entry_id = entry_id;
+        let mut rechecked_marker = false;
+        for _ in 0..MANIFEST_CAS_ATTEMPTS {
+            let record = self
+                .backend
+                .get(RESERVED_NAMESPACE, MANIFEST_KEY)?
+                .ok_or(SealedStoreError::NotInitialized)?;
+            let manifest = Manifest::parse(&record.metadata)?;
+            let active = manifest
+                .active()
+                .ok_or_else(|| SealedStoreError::Validation {
+                    field: "keks".to_string(),
+                    message: "no active entry".to_string(),
+                })?
+                .clone();
+            // Whatever entry the key was matched against, if it opens the
+            // active entry the store runs as the active entry. After a
+            // concurrent rebind, that is how the loser moves to the new id.
+            if verifier_opens(&active, key) {
+                entry_id = active.id.clone();
+            }
+            if let Some(vault) = manifest.vault_id() {
+                if !manifest.keks.iter().any(|entry| entry.id == entry_id) {
+                    // The id this key matched is gone, and the key does not
+                    // open the active entry: nothing safe to run as.
+                    return Err(SealedStoreError::InvalidKek);
+                }
+                match &manifest.rebind {
+                    Some(marker) if entry_id == active.id => {
+                        if !marker.authentic(key, &active.id) {
+                            return Err(tamper(RESERVED_NAMESPACE, MANIFEST_KEY));
+                        }
+                        // The anchor adopts the vault only once a rebind is
+                        // complete. An anchor that already records it means
+                        // this marker is an old copy put back, to re-open
+                        // the window in which pre-F12 files are adopted.
+                        if let Some(anchor) = &self.anchor {
+                            if anchor.vault_id().map_err(anchor_error)?.is_some() {
+                                // A concurrent rebinder may have finished
+                                // between our read and the anchor check. Read
+                                // the manifest once more before calling it a
+                                // replay.
+                                if !rechecked_marker {
+                                    rechecked_marker = true;
+                                    continue;
+                                }
+                                return Err(tamper(RESERVED_NAMESPACE, MANIFEST_KEY));
+                            }
+                        }
+                        self.rewrap_vault(&marker.from, &active.id, key)?;
+                        self.finish_rebind(&marker.from)?;
+                    }
+                    _ => {}
+                }
+                self.check_anchor_vault(Some(vault))?;
+                return Ok(entry_id);
+            }
+            // A vault made before F12. Under an anchor that already records
+            // a vault, this is an older directory put back: refuse.
+            self.check_anchor_vault(None)?;
+            if entry_id != active.id {
+                return Ok(entry_id);
+            }
+            let vault: [u8; VAULT_ID_BYTES] =
+                random_array().map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
+            let new_id = next_kek_id(&manifest.keks, Some(&vault))?;
+            let mut rebound = manifest.clone();
+            // The active entry is renamed, not copied, and gets a verifier
+            // bound to its new id. Its salt and source stay. Once the
+            // manifest no longer lists the old id, nothing but the re-wrap
+            // below ever opens an envelope under it, and a planted file
+            // naming it is junk like any unknown id.
+            let (verifier_nonce, verifier_ct, verifier_tag) = make_verifier(key, &new_id)?;
+            for entry in rebound.keks.iter_mut() {
+                if entry.id == active.id {
+                    entry.id = new_id.clone();
+                    entry.verifier_nonce = verifier_nonce;
+                    entry.verifier_ct = verifier_ct.clone();
+                    entry.verifier_tag = verifier_tag;
+                }
+            }
+            rebound.rebind = Some(RebindMarker::new(key, &active.id, &new_id)?);
+            let put = StoragePutInput::new(
+                RESERVED_NAMESPACE.to_string(),
+                MANIFEST_KEY.to_string(),
+                MANIFEST_CONTENT_TYPE.to_string(),
+                rebound.to_json(),
+                Vec::new(),
+            )
+            .map_err(SealedStoreError::Storage)?
+            .with_if_revision(Some(record.revision));
+            match self.backend.put(put) {
+                Ok(_) => {}
+                // Another process rebound first. Re-read, and resume theirs.
+                Err(StorageError::Conflict { .. }) => continue,
+                Err(error) => return Err(SealedStoreError::Storage(error)),
+            }
+            self.rewrap_vault(&active.id, &new_id, key)?;
+            self.finish_rebind(&active.id)?;
+            // Only now does the anchor learn the vault (see the marker case).
+            self.check_anchor_vault(Some(vault))?;
+            return Ok(new_id);
+        }
+        Err(SealedStoreError::Storage(StorageError::Backend {
+            message: "vault manifest: too many CAS conflicts".to_string(),
+        }))
+    }
+
+    /// Hold the vault id against the anchor (F12). `None` is a vault made
+    /// before F12. Without an anchor there is nothing to check.
+    fn check_anchor_vault(
+        &self,
+        vault: Option<[u8; VAULT_ID_BYTES]>,
+    ) -> Result<(), SealedStoreError> {
+        let Some(anchor) = &self.anchor else {
+            return Ok(());
+        };
+        match (anchor.vault_id().map_err(anchor_error)?, vault) {
+            (None, None) => Ok(()),
+            // Trust on first use: adopt the vault this anchor first meets.
+            (None, Some(vault)) => anchor.bind_vault(&vault, false).map_err(anchor_error),
+            (Some(anchored), Some(vault)) if anchored == vault => Ok(()),
+            // Another vault, or one that went back to unbound: an older
+            // storage directory put back in this one's place.
+            _ => Err(tamper(RESERVED_NAMESPACE, MANIFEST_KEY)),
+        }
+    }
+
+    /// Step 4 of the rebind: re-wrap every record and index still under
+    /// `old_id` to `new_id`, with the same key. Each write is a CAS on the
+    /// envelope's revision; one that loses re-reads the envelope and tries
+    /// again, so a concurrent write under the old id is not stranded. An
+    /// envelope that does not unwrap is left as it is, and `get` refuses it.
+    fn rewrap_vault(
+        &self,
+        old_id: &str,
+        new_id: &str,
+        key: &Zeroizing<[u8; KEY_LEN]>,
+    ) -> Result<(), SealedStoreError> {
+        let rewrap = |namespace: &str, record_key: &str, content_type: &str| {
+            for _ in 0..INDEX_CAS_ATTEMPTS {
+                let Some(record) = self.backend.get(namespace, record_key)? else {
+                    return Ok(());
+                };
+                let Ok(meta) = SealedRecordMeta::parse(&record.metadata) else {
+                    return Ok(());
+                };
+                if meta.kek_id != old_id {
+                    return Ok(());
+                }
+                let Ok(metadata) = rewrapped_metadata(
+                    meta,
+                    &record.namespace,
+                    &record.key,
+                    key,
+                    old_id,
+                    key,
+                    new_id,
+                ) else {
+                    return Ok(());
+                };
+                let put = StoragePutInput::new(
+                    record.namespace,
+                    record.key,
+                    content_type.to_string(),
+                    metadata,
+                    record.body,
+                )
+                .map_err(SealedStoreError::Storage)?
+                .with_if_revision(Some(record.revision));
+                match self.backend.put(put) {
+                    Ok(_) => return Ok(()),
+                    Err(StorageError::Conflict { .. }) => continue,
+                    Err(error) => return Err(SealedStoreError::Storage(error)),
+                }
+            }
+            Err(SealedStoreError::Storage(StorageError::Backend {
+                message: "vault rebind: too many CAS conflicts".to_string(),
+            }))
+        };
+        for namespace in self.list_registered_namespaces()? {
+            let mut cursor: Option<String> = None;
+            loop {
+                let page = self.backend.list(
+                    &namespace,
+                    StorageListOptions {
+                        prefix: None,
+                        recursive: true,
+                        page_size: Some(128),
+                        cursor: cursor.clone(),
+                    },
+                )?;
+                for record in page.records {
+                    rewrap(&namespace, &record.key, SEALED_CONTENT_TYPE)?;
+                }
+                match page.next_cursor {
+                    Some(next) => cursor = Some(next),
+                    None => break,
+                }
+            }
+            rewrap(
+                RESERVED_NAMESPACE,
+                &freshness_key(&namespace),
+                FRESHNESS_CONTENT_TYPE,
+            )?;
+        }
+        Ok(())
+    }
+
+    /// Step 5 of the rebind: remove the marker, if it still names `old_id`.
+    fn finish_rebind(&self, old_id: &str) -> Result<(), SealedStoreError> {
+        for _ in 0..MANIFEST_CAS_ATTEMPTS {
+            let record = self
+                .backend
+                .get(RESERVED_NAMESPACE, MANIFEST_KEY)?
+                .ok_or(SealedStoreError::NotInitialized)?;
+            let mut manifest = Manifest::parse(&record.metadata)?;
+            if manifest.rebind.as_ref().map(|marker| marker.from.as_str()) != Some(old_id) {
+                return Ok(());
+            }
+            manifest.rebind = None;
+            let put = StoragePutInput::new(
+                RESERVED_NAMESPACE.to_string(),
+                MANIFEST_KEY.to_string(),
+                MANIFEST_CONTENT_TYPE.to_string(),
+                manifest.to_json(),
+                Vec::new(),
+            )
+            .map_err(SealedStoreError::Storage)?
+            .with_if_revision(Some(record.revision));
+            match self.backend.put(put) {
+                Ok(_) => return Ok(()),
+                Err(StorageError::Conflict { .. }) => continue,
+                Err(error) => return Err(SealedStoreError::Storage(error)),
+            }
+        }
+        Err(SealedStoreError::Storage(StorageError::Backend {
+            message: "vault manifest: too many CAS conflicts".to_string(),
+        }))
     }
 
     // ---- data plane -------------------------------------------------------
@@ -1105,16 +1418,10 @@ impl SealedStore {
             manifest.parallelism,
         )?;
 
-        // Step 5: build the new verifier and manifest entry.
-        let new_kek_id = next_kek_id(&manifest.keks)?;
-        let verifier_nonce: [u8; NONCE_LEN] =
-            random_array().map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
-        let (verifier_ct, verifier_tag) = xchacha20_poly1305_aead_encrypt(
-            &VERIFIER_PLAINTEXT,
-            &new_kek,
-            &verifier_nonce,
-            b"vault-verifier",
-        );
+        // Step 5: build the new verifier and manifest entry. The new id keeps
+        // the vault id (F12).
+        let new_kek_id = next_kek_id(&manifest.keks, manifest.vault_id().as_ref())?;
+        let (verifier_nonce, verifier_ct, verifier_tag) = make_verifier(&new_kek, &new_kek_id)?;
         for e in manifest.keks.iter_mut() {
             if e.id == old_kek_id {
                 e.status = "retired";
@@ -1132,19 +1439,11 @@ impl SealedStore {
 
         // Step 6: persist manifest first (CAS on its revision) — the
         // moment this returns, both old and new KEKs are valid for unseal.
-        let new_manifest_json = build_manifest_json(
-            MANIFEST_VERSION,
-            manifest.time_cost,
-            manifest.memory_kib,
-            manifest.parallelism,
-            &manifest.keks,
-            now_ms_from_wallclock(),
-        );
         let put_in = StoragePutInput::new(
             RESERVED_NAMESPACE.to_string(),
             MANIFEST_KEY.to_string(),
             MANIFEST_CONTENT_TYPE.to_string(),
-            new_manifest_json,
+            manifest.to_json(),
             Vec::new(),
         )
         .map_err(SealedStoreError::Storage)?
@@ -1179,37 +1478,16 @@ impl SealedStore {
                         continue;
                     }
 
-                    // Unwrap under old KEK.
-                    let old_wrap_aad = wrap_aad(&rec.namespace, &rec.key, &old_kek_id);
-                    let dek = unwrap_dek(
-                        &meta.wrapped_dek,
-                        &old_kek,
-                        &meta.wrap_nonce,
-                        &old_wrap_aad,
-                        &meta.wrap_tag,
+                    // Unwrap under the old KEK, re-wrap under the new one.
+                    let new_meta = rewrapped_metadata(
+                        meta,
                         &rec.namespace,
                         &rec.key,
-                    )?;
-
-                    // Rewrap under new KEK.
-                    let new_wrap_nonce: [u8; NONCE_LEN] = random_array()
-                        .map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
-                    let new_wrap_aad = wrap_aad(&rec.namespace, &rec.key, &new_kek_id);
-                    let (new_wrapped_dek, new_wrap_tag) = xchacha20_poly1305_aead_encrypt(
-                        &*dek,
+                        &old_kek,
+                        &old_kek_id,
                         &new_kek,
-                        &new_wrap_nonce,
-                        &new_wrap_aad,
-                    );
-                    // `dek` drops at end of this loop iteration.
-
-                    let new_meta = build_sealed_metadata(&SealedRecordMeta {
-                        wrapped_dek: new_wrapped_dek,
-                        wrap_nonce: new_wrap_nonce,
-                        wrap_tag: new_wrap_tag,
-                        kek_id: new_kek_id.clone(),
-                        ..meta
-                    });
+                        &new_kek_id,
+                    )?;
                     let rewrite = StoragePutInput::new(
                         rec.namespace.clone(),
                         rec.key.clone(),
@@ -1234,30 +1512,15 @@ impl SealedStore {
             if let Some(rec) = self.backend.get(RESERVED_NAMESPACE, &index_key)? {
                 let meta = SealedRecordMeta::parse(&rec.metadata)?;
                 if meta.kek_id == old_kek_id {
-                    let dek = unwrap_dek(
-                        &meta.wrapped_dek,
-                        &old_kek,
-                        &meta.wrap_nonce,
-                        &wrap_aad(RESERVED_NAMESPACE, &index_key, &old_kek_id),
-                        &meta.wrap_tag,
+                    let new_meta = rewrapped_metadata(
+                        meta,
                         RESERVED_NAMESPACE,
                         &index_key,
-                    )?;
-                    let new_wrap_nonce: [u8; NONCE_LEN] = random_array()
-                        .map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
-                    let (new_wrapped_dek, new_wrap_tag) = xchacha20_poly1305_aead_encrypt(
-                        &*dek,
+                        &old_kek,
+                        &old_kek_id,
                         &new_kek,
-                        &new_wrap_nonce,
-                        &wrap_aad(RESERVED_NAMESPACE, &index_key, &new_kek_id),
-                    );
-                    let new_meta = build_sealed_metadata(&SealedRecordMeta {
-                        wrapped_dek: new_wrapped_dek,
-                        wrap_nonce: new_wrap_nonce,
-                        wrap_tag: new_wrap_tag,
-                        kek_id: new_kek_id.clone(),
-                        ..meta
-                    });
+                        &new_kek_id,
+                    )?;
                     let rewrite = StoragePutInput::new(
                         RESERVED_NAMESPACE.to_string(),
                         index_key.clone(),
@@ -1692,10 +1955,17 @@ impl SealedStore {
             .backend
             .get(RESERVED_NAMESPACE, MANIFEST_KEY)?
             .ok_or(SealedStoreError::NotInitialized)?;
-        Ok(Manifest::parse(&manifest.metadata)?
-            .keks
-            .iter()
-            .any(|entry| entry.id == kek_id && entry.status == "retired"))
+        let manifest = Manifest::parse(&manifest.metadata)?;
+        // In a bound vault, only this vault's entries count (F12). A pre-F12
+        // retired id there can never be unsealed again, so a record under it
+        // can never be recovered by resuming a rotation; stopping migration
+        // for it would block the namespace for good. It is skipped as junk.
+        let vault = manifest.vault_id();
+        Ok(manifest.keks.iter().any(|entry| {
+            entry.id == kek_id
+                && entry.status == "retired"
+                && (vault.is_none() || parse_kek_id(&entry.id).and_then(|(_, v)| v) == vault)
+        }))
     }
 
     /// Bring one legacy key to v2 generation 1, and return the tag of its
@@ -2096,22 +2366,24 @@ fn now_ms_from_wallclock() -> u64 {
 /// Pick the next stable KEK id. Rejects the (extraordinarily unlikely)
 /// case of u64 overflow and also guards against an already-used id
 /// (which would indicate a corrupted manifest).
-fn next_kek_id(existing: &[KekEntry]) -> Result<String, SealedStoreError> {
-    let mut max_n: u64 = 0;
-    for e in existing {
-        if let Some(rest) = e.id.strip_prefix("kek-") {
-            if let Ok(n) = rest.parse::<u64>() {
-                if n > max_n {
-                    max_n = n;
-                }
-            }
-        }
-    }
+/// The next KEK id: one past the highest number in use, naming `vault`
+/// (F12) when the vault has one. Both id formats count towards the number,
+/// so a rebind or a rotation never reuses one.
+fn next_kek_id(
+    existing: &[KekEntry],
+    vault: Option<&[u8; VAULT_ID_BYTES]>,
+) -> Result<String, SealedStoreError> {
+    let max_n = existing
+        .iter()
+        .filter_map(|entry| parse_kek_id(&entry.id))
+        .map(|(number, _)| number)
+        .max()
+        .unwrap_or(0);
     let next = max_n.checked_add(1).ok_or(SealedStoreError::Validation {
         field: "keks".to_string(),
         message: "kek id counter overflow".to_string(),
     })?;
-    let candidate = format!("kek-{next}");
+    let candidate = kek_id_for(next, vault);
     if existing.iter().any(|e| e.id == candidate) {
         return Err(SealedStoreError::Validation {
             field: "keks".to_string(),
@@ -2119,6 +2391,47 @@ fn next_kek_id(existing: &[KekEntry]) -> Result<String, SealedStoreError> {
         });
     }
     Ok(candidate)
+}
+
+/// The metadata of `meta` with its DEK re-wrapped from `(old_key, old_id)`
+/// to `(new_key, new_id)`. The body, its AAD and its generation are
+/// untouched. Used by rotation (new key) and the F12 rebind (same key, new
+/// id).
+#[allow(clippy::too_many_arguments)]
+fn rewrapped_metadata(
+    meta: SealedRecordMeta,
+    namespace: &str,
+    key: &str,
+    old_key: &[u8; KEY_LEN],
+    old_id: &str,
+    new_key: &[u8; KEY_LEN],
+    new_id: &str,
+) -> Result<JsonValue, SealedStoreError> {
+    let dek = unwrap_dek(
+        &meta.wrapped_dek,
+        old_key,
+        &meta.wrap_nonce,
+        &wrap_aad(namespace, key, old_id),
+        &meta.wrap_tag,
+        namespace,
+        key,
+    )?;
+    let wrap_nonce: [u8; NONCE_LEN] =
+        random_array().map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
+    let (wrapped_dek, wrap_tag) = xchacha20_poly1305_aead_encrypt(
+        &*dek,
+        new_key,
+        &wrap_nonce,
+        &wrap_aad(namespace, key, new_id),
+    );
+    // `dek` drops here, wiping the cleartext DEK bytes.
+    Ok(build_sealed_metadata(&SealedRecordMeta {
+        wrapped_dek,
+        wrap_nonce,
+        wrap_tag,
+        kek_id: new_id.to_string(),
+        ..meta
+    }))
 }
 
 fn validate_argon2_params(
@@ -2191,6 +2504,186 @@ struct Manifest {
     memory_kib: u32,
     parallelism: u32,
     keks: Vec<KekEntry>,
+    /// Set while an F12 rebind runs: the pre-F12 id it is moving envelopes
+    /// away from. A crash leaves it set, and the next unseal resumes.
+    rebind: Option<RebindMarker>,
+}
+
+/// The F12 rebind marker: `from`, plus a tag only the key could have made,
+/// over `from` and the id it is moving to.
+///
+/// The manifest is plain data in the storage directory. Without the tag,
+/// anyone who can write there could name any id as `from` and have the next
+/// unseal re-wrap every envelope under it, another vault's included, into
+/// this vault.
+#[derive(Debug, Clone)]
+struct RebindMarker {
+    from: String,
+    nonce: [u8; NONCE_LEN],
+    ct: Vec<u8>,
+    tag: [u8; TAG_LEN],
+}
+
+impl RebindMarker {
+    fn aad(from: &str, to: &str) -> Vec<u8> {
+        let mut aad = b"vault-rebind".to_vec();
+        aad.push(0);
+        aad.extend_from_slice(from.as_bytes());
+        aad.push(0);
+        aad.extend_from_slice(to.as_bytes());
+        aad
+    }
+
+    fn new(key: &[u8; KEY_LEN], from: &str, to: &str) -> Result<Self, SealedStoreError> {
+        let nonce: [u8; NONCE_LEN] =
+            random_array().map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
+        let (ct, tag) =
+            xchacha20_poly1305_aead_encrypt(&VERIFIER_PLAINTEXT, key, &nonce, &Self::aad(from, to));
+        Ok(Self {
+            from: from.to_string(),
+            nonce,
+            ct,
+            tag,
+        })
+    }
+
+    /// Whether `key` made this marker for a move to `to`.
+    fn authentic(&self, key: &[u8; KEY_LEN], to: &str) -> bool {
+        let opened = xchacha20_poly1305_aead_decrypt(
+            &self.ct,
+            key,
+            &self.nonce,
+            &Self::aad(&self.from, to),
+            &self.tag,
+        );
+        ct_eq(opened.as_deref().unwrap_or(&[]), &VERIFIER_PLAINTEXT)
+    }
+}
+
+/// The verifier's AAD. A vault-bound entry (F12) binds its own id, so its
+/// verifier opens under no other id: an entry cannot be renamed, and a copy
+/// of another vault's entry keeps naming that vault. A pre-F12 entry keeps
+/// the original AAD.
+fn verifier_aad(kek_id: &str) -> Vec<u8> {
+    let mut aad = b"vault-verifier".to_vec();
+    if parse_kek_id(kek_id).is_some_and(|(_, vault)| vault.is_some()) {
+        aad.push(0);
+        aad.extend_from_slice(kek_id.as_bytes());
+    }
+    aad
+}
+
+/// A verifier's nonce, ciphertext and tag, as a KEK entry stores them.
+type VerifierParts = ([u8; NONCE_LEN], Vec<u8>, [u8; TAG_LEN]);
+
+/// A fresh verifier for `kek_id`: 16 zero bytes AEAD'd under `key`.
+fn make_verifier(key: &[u8; KEY_LEN], kek_id: &str) -> Result<VerifierParts, SealedStoreError> {
+    let nonce: [u8; NONCE_LEN] =
+        random_array().map_err(|_| SealedStoreError::Crypto("csprng failure".into()))?;
+    let (ct, tag) =
+        xchacha20_poly1305_aead_encrypt(&VERIFIER_PLAINTEXT, key, &nonce, &verifier_aad(kek_id));
+    Ok((nonce, ct, tag))
+}
+
+/// Whether `key` opens `entry`'s verifier, under the AAD for its id.
+fn verifier_opens(entry: &KekEntry, key: &[u8; KEY_LEN]) -> bool {
+    let opened = xchacha20_poly1305_aead_decrypt(
+        &entry.verifier_ct,
+        key,
+        &entry.verifier_nonce,
+        &verifier_aad(&entry.id),
+        &entry.verifier_tag,
+    );
+    // Constant-time compare defensively. If the AEAD produced a cleartext,
+    // its tag check already authenticates it, but routing it through
+    // `ct_eq` keeps the review trail consistent with the spec's
+    // "constant-time compares" guarantee.
+    ct_eq(opened.as_deref().unwrap_or(&[]), &VERIFIER_PLAINTEXT)
+}
+
+impl Manifest {
+    /// The one entry new envelopes are wrapped under.
+    fn active(&self) -> Option<&KekEntry> {
+        self.keks.iter().find(|entry| entry.status == "active")
+    }
+
+    /// The vault id (F12): the suffix of the active entry's id. `None` for a
+    /// vault made before F12, which the first unseal rebinds.
+    fn vault_id(&self) -> Option<[u8; VAULT_ID_BYTES]> {
+        self.active()
+            .and_then(|entry| parse_kek_id(&entry.id))
+            .and_then(|(_, vault)| vault)
+    }
+
+    /// The entries unseal may run under, active first (F12).
+    ///
+    /// If the key opens the active entry, the store runs as the active
+    /// entry, whatever else is listed. In a bound vault, only entries of
+    /// this vault are candidates: a pre-F12 id left over from an earlier
+    /// rotation is never run as, because its verifier does not bind its id
+    /// and so proves nothing about which vault it belongs to.
+    fn unseal_candidates(&self) -> impl Iterator<Item = &KekEntry> {
+        let vault = self.vault_id();
+        let eligible = move |entry: &&KekEntry| {
+            vault.is_none() || parse_kek_id(&entry.id).and_then(|(_, v)| v) == vault
+        };
+        self.keks
+            .iter()
+            .filter(|entry| entry.status == "active")
+            .chain(self.keks.iter().filter(|entry| entry.status != "active"))
+            .filter(eligible)
+    }
+
+    fn to_json(&self) -> JsonValue {
+        build_manifest_json(
+            MANIFEST_VERSION,
+            self.time_cost,
+            self.memory_kib,
+            self.parallelism,
+            &self.keks,
+            now_ms_from_wallclock(),
+            self.rebind.as_ref(),
+        )
+    }
+}
+
+/// A KEK id (F12): `kek-<n>` before F12, `kek-<n>.<vault id as 32 lowercase
+/// hex digits>` after. Returns the number and, if present, the vault id.
+///
+/// ```text
+///   kek-3                                     (3, None)
+///   kek-4.00112233445566778899aabbccddeeff    (4, Some(00 11 .. ff))
+///   kek-4.0011  /  kek-x  /  key-1            not a KEK id this store wrote
+/// ```
+fn parse_kek_id(id: &str) -> Option<(u64, Option<[u8; VAULT_ID_BYTES]>)> {
+    let rest = id.strip_prefix("kek-")?;
+    let (number, vault) = match rest.split_once('.') {
+        None => (rest, None),
+        Some((number, vault)) => (number, Some(vault)),
+    };
+    if number.is_empty() || !number.bytes().all(|b| b.is_ascii_digit()) {
+        return None;
+    }
+    let number = number.parse().ok()?;
+    let vault = match vault {
+        None => None,
+        Some(hex) => {
+            let lower = hex.bytes().all(|b| matches!(b, b'0'..=b'9' | b'a'..=b'f'));
+            if hex.len() != 2 * VAULT_ID_BYTES || !lower {
+                return None;
+            }
+            Some(hex_decode_fixed::<VAULT_ID_BYTES>(hex, "kek_id").ok()?)
+        }
+    };
+    Some((number, vault))
+}
+
+/// The id for KEK number `n`, naming `vault` when the vault has one.
+fn kek_id_for(number: u64, vault: Option<&[u8; VAULT_ID_BYTES]>) -> String {
+    match vault {
+        None => format!("kek-{number}"),
+        Some(vault) => format!("kek-{number}.{}", hex_encode(vault)),
+    }
 }
 
 struct SealedRecordMeta {
@@ -2214,6 +2707,7 @@ fn build_manifest_json(
     parallelism: u32,
     keks: &[KekEntry],
     created_at_ms: u64,
+    rebind: Option<&RebindMarker>,
 ) -> JsonValue {
     let keks_json: Vec<JsonValue> = keks
         .iter()
@@ -2247,7 +2741,7 @@ fn build_manifest_json(
             JsonValue::Object(fields)
         })
         .collect();
-    JsonValue::Object(vec![
+    let mut fields = vec![
         (
             "vault_manifest_version".to_string(),
             JsonValue::Number(JsonNumber::Integer(version as i64)),
@@ -2278,7 +2772,18 @@ fn build_manifest_json(
             "created_at_ms".to_string(),
             JsonValue::Number(JsonNumber::Integer(created_at_ms as i64)),
         ),
-    ])
+    ];
+    if let Some(marker) = rebind {
+        for (name, value) in [
+            ("rebind_from", marker.from.clone()),
+            ("rebind_nonce", hex_encode(&marker.nonce)),
+            ("rebind_ct", hex_encode(&marker.ct)),
+            ("rebind_tag", hex_encode(&marker.tag)),
+        ] {
+            fields.push((name.to_string(), JsonValue::String(value)));
+        }
+    }
+    JsonValue::Object(fields)
 }
 
 /// Serialize a record's envelope metadata.
@@ -2484,6 +2989,82 @@ impl Manifest {
                 verifier_ct,
             });
         }
+        // F12: every id is one this store writes, at most one entry is
+        // active, and in a bound vault every vault-bound id names the same
+        // vault. A copy of another vault's entry is refused here.
+        let invalid_keks = |message: &str| SealedStoreError::Validation {
+            field: "keks".to_string(),
+            message: message.to_string(),
+        };
+        let mut parsed_ids = Vec::with_capacity(keks.len());
+        for entry in &keks {
+            parsed_ids.push(parse_kek_id(&entry.id).ok_or_else(|| invalid_keks("invalid id"))?);
+        }
+        let mut active = keks
+            .iter()
+            .zip(&parsed_ids)
+            .filter(|(e, _)| e.status == "active");
+        let active_vault = active.next().and_then(|(_, (_, vault))| *vault);
+        if active.next().is_some() {
+            return Err(invalid_keks("more than one active entry"));
+        }
+        match active_vault {
+            Some(vault) => {
+                if parsed_ids
+                    .iter()
+                    .any(|(_, other)| other.is_some_and(|other| other != vault))
+                {
+                    return Err(invalid_keks("entries name more than one vault"));
+                }
+            }
+            // A pre-F12 manifest never holds a vault-bound entry: only a
+            // rebind makes one, and it renames the active entry. A bound
+            // entry here is another vault's, planted to be run as.
+            None => {
+                if parsed_ids.iter().any(|(_, vault)| vault.is_some()) {
+                    return Err(invalid_keks("a pre-F12 manifest holds a vault-bound entry"));
+                }
+            }
+        }
+        let rebind = match obj.iter().find(|(key, _)| key == "rebind_from") {
+            None => None,
+            Some((_, JsonValue::String(from))) => {
+                // Only a pre-F12 id is ever moved away from.
+                if !parse_kek_id(from).is_some_and(|(_, vault)| vault.is_none()) {
+                    return Err(SealedStoreError::Validation {
+                        field: "rebind_from".to_string(),
+                        message: "not a pre-F12 id".to_string(),
+                    });
+                }
+                let ct = hex_decode(get_string(obj, "rebind_ct")?).map_err(|_| {
+                    SealedStoreError::Validation {
+                        field: "rebind_ct".to_string(),
+                        message: "invalid hex".to_string(),
+                    }
+                })?;
+                if ct.len() != VERIFIER_PLAINTEXT.len() {
+                    return Err(SealedStoreError::Validation {
+                        field: "rebind_ct".to_string(),
+                        message: "length mismatch".to_string(),
+                    });
+                }
+                Some(RebindMarker {
+                    from: from.clone(),
+                    nonce: hex_decode_fixed::<NONCE_LEN>(
+                        get_string(obj, "rebind_nonce")?,
+                        "rebind_nonce",
+                    )?,
+                    ct,
+                    tag: hex_decode_fixed::<TAG_LEN>(get_string(obj, "rebind_tag")?, "rebind_tag")?,
+                })
+            }
+            Some(_) => {
+                return Err(SealedStoreError::Validation {
+                    field: "rebind_from".to_string(),
+                    message: "not a string".to_string(),
+                })
+            }
+        };
         // Disallow duplicate ids — a tampered manifest could otherwise put
         // two entries with the same id and confuse rotation.
         for i in 0..keks.len() {
@@ -2501,6 +3082,7 @@ impl Manifest {
             memory_kib,
             parallelism,
             keks,
+            rebind,
         })
     }
 }
@@ -2729,6 +3311,24 @@ mod tests {
         (store, backend)
     }
 
+    /// The KEK id the store is unsealed under.
+    fn active_id(store: &SealedStore) -> String {
+        store
+            .state
+            .lock()
+            .unwrap()
+            .unsealed
+            .as_ref()
+            .unwrap()
+            .id
+            .clone()
+    }
+
+    /// The vault id a KEK id names (F12); panics on a pre-F12 id.
+    fn vault_of(kek_id: &str) -> [u8; VAULT_ID_BYTES] {
+        parse_kek_id(kek_id).unwrap().1.unwrap()
+    }
+
     fn valid_manifest_metadata() -> JsonValue {
         build_manifest_json(
             MANIFEST_VERSION,
@@ -2745,6 +3345,7 @@ mod tests {
                 verifier_ct: vec![0; VERIFIER_PLAINTEXT.len()],
             }],
             0,
+            None,
         )
     }
 
@@ -2935,12 +3536,14 @@ mod tests {
         );
 
         store.init(b"pw", &fast_opts()).unwrap();
+        let first = active_id(&store);
+        assert_eq!(parse_kek_id(&first).unwrap().0, 1);
         assert_eq!(
             store.status().unwrap(),
             SealedStoreStatus {
                 initialized: true,
                 sealed: false,
-                active_kek_id: Some("kek-1".to_string()),
+                active_kek_id: Some(first.clone()),
                 kek_entries: 1,
                 retired_keks: 0,
                 registered_namespaces: 0,
@@ -2955,7 +3558,7 @@ mod tests {
             SealedStoreStatus {
                 initialized: true,
                 sealed: true,
-                active_kek_id: Some("kek-1".to_string()),
+                active_kek_id: Some(first.clone()),
                 kek_entries: 1,
                 retired_keks: 0,
                 registered_namespaces: 2,
@@ -3204,7 +3807,7 @@ mod tests {
             .unwrap();
         assert_eq!(stats.len(), 2);
         for s in &stats {
-            assert_eq!(s.kek_id, "kek-1");
+            assert_eq!(s.kek_id, active_id(&store));
             assert!(s.ciphertext_len > 0);
         }
     }
@@ -3265,7 +3868,7 @@ mod tests {
         assert_eq!(summary.wrapped_dek_len, KEY_LEN);
         assert_eq!(summary.wrap_nonce_len, NONCE_LEN);
         assert_eq!(summary.wrap_tag_len, TAG_LEN);
-        assert_eq!(summary.kek_id, "kek-1");
+        assert_eq!(summary.kek_id, active_id(&store));
 
         let record = backend.get("ns", "k").unwrap().unwrap();
         let debug = format!("{summary:?}");
@@ -3527,8 +4130,14 @@ mod tests {
                 verifier_ct: vec![],
             },
         ];
-        assert_eq!(next_kek_id(&e).unwrap(), "kek-8");
-        assert_eq!(next_kek_id(&[]).unwrap(), "kek-1");
+        assert_eq!(next_kek_id(&e, None).unwrap(), "kek-8");
+        assert_eq!(next_kek_id(&[], None).unwrap(), "kek-1");
+        // F12: the vault id rides along, and both formats count.
+        let vault = [0xab; VAULT_ID_BYTES];
+        assert_eq!(
+            next_kek_id(&e, Some(&vault)).unwrap(),
+            format!("kek-8.{}", "ab".repeat(VAULT_ID_BYTES))
+        );
 
         // Overflow case.
         let overflow = [KekEntry {
@@ -3541,7 +4150,7 @@ mod tests {
             verifier_ct: vec![],
         }];
         assert!(matches!(
-            next_kek_id(&overflow),
+            next_kek_id(&overflow, None),
             Err(SealedStoreError::Validation { .. })
         ));
     }
@@ -3621,9 +4230,11 @@ mod tests {
         store.put("ns1", "a", b"A", None).unwrap();
         store.put("ns2", "b", b"B", None).unwrap();
 
+        let vault = vault_of(&active_id(&store));
         let report = store.rotate_kek(b"old-pw", b"new-pw").unwrap();
         assert_eq!(report.records_rewrapped, 2);
-        assert_eq!(report.new_kek_id, "kek-2");
+        // F12: rotation moves to KEK 2 and keeps the vault id.
+        assert_eq!(parse_kek_id(&report.new_kek_id), Some((2, Some(vault))));
 
         // Reads under new KEK (just unsealed in-place by rotate) must succeed.
         assert_eq!(&*store.get("ns1", "a").unwrap().unwrap().plaintext, b"A");
@@ -4352,7 +4963,10 @@ mod tests {
 
     /// An anchor in memory, shared across "restarts" of the store.
     #[derive(Default)]
-    struct MemoryAnchor(Mutex<HashMap<String, u64>>);
+    struct MemoryAnchor(
+        Mutex<HashMap<String, u64>>,
+        Mutex<Option<[u8; VAULT_ID_BYTES]>>,
+    );
 
     impl FreshnessAnchor for MemoryAnchor {
         fn load(&self, namespace: &str) -> Result<Option<u64>, AnchorError> {
@@ -4362,6 +4976,19 @@ mod tests {
             let mut map = self.0.lock().unwrap();
             let entry = map.entry(namespace.to_string()).or_insert(epoch);
             *entry = (*entry).max(epoch);
+            Ok(())
+        }
+        fn vault_id(&self) -> Result<Option<[u8; VAULT_ID_BYTES]>, AnchorError> {
+            Ok(*self.1.lock().unwrap())
+        }
+        fn bind_vault(&self, id: &[u8; VAULT_ID_BYTES], reset: bool) -> Result<(), AnchorError> {
+            let mut vault = self.1.lock().unwrap();
+            if reset {
+                self.0.lock().unwrap().clear();
+            } else if vault.is_some_and(|existing| existing != *id) {
+                return Err(AnchorError::Invalid);
+            }
+            *vault = Some(*id);
             Ok(())
         }
     }
@@ -4493,5 +5120,621 @@ mod tests {
         restore(&backend, old_index);
         restore(&backend, old_record);
         assert_tamper(anchored(&backend, &anchor).get("ns", "k"));
+    }
+
+    // ---- vault identity (VLT01 F12) ----------------------------------------
+
+    const KEK: [u8; KEY_LEN] = [0x5a; KEY_LEN];
+
+    fn fresh_backend() -> Arc<dyn StorageBackend> {
+        let backend: Arc<dyn StorageBackend> = Arc::new(InMemoryStorageBackend::new());
+        backend.initialize().unwrap();
+        backend
+    }
+
+    /// Open (initializing if needed) an injected-KEK vault, as the Chief
+    /// daemon does.
+    fn injected(
+        backend: &Arc<dyn StorageBackend>,
+        anchor: Option<&Arc<MemoryAnchor>>,
+    ) -> SealedStore {
+        let store = match anchor {
+            Some(anchor) => SealedStore::with_anchor(Arc::clone(backend), anchor.clone()),
+            None => SealedStore::new(Arc::clone(backend)),
+        };
+        if store.status().unwrap().initialized {
+            store.unseal_with_kek(&KEK).unwrap();
+        } else {
+            store.init_with_kek(&KEK).unwrap();
+        }
+        store
+    }
+
+    /// The same, but written the way the release before F12 wrote it.
+    fn pre_f12_injected(backend: &Arc<dyn StorageBackend>) -> SealedStore {
+        let mut store = SealedStore::new(Arc::clone(backend));
+        store.pre_f12 = true;
+        if store.status().unwrap().initialized {
+            store.unseal_with_kek(&KEK).unwrap();
+        } else {
+            store.init_with_kek(&KEK).unwrap();
+        }
+        store
+    }
+
+    fn manifest_of(backend: &Arc<dyn StorageBackend>) -> Manifest {
+        Manifest::parse(
+            &backend
+                .get(RESERVED_NAMESPACE, MANIFEST_KEY)
+                .unwrap()
+                .unwrap()
+                .metadata,
+        )
+        .unwrap()
+    }
+
+    fn kek_id_of(backend: &Arc<dyn StorageBackend>, namespace: &str, key: &str) -> String {
+        let record = backend.get(namespace, key).unwrap().unwrap();
+        SealedRecordMeta::parse(&record.metadata).unwrap().kek_id
+    }
+
+    #[test]
+    fn a_new_vault_names_itself_in_its_kek_id() {
+        let first = injected(&fresh_backend(), None);
+        let second = injected(&fresh_backend(), None);
+        let (number, vault) = parse_kek_id(&active_id(&first)).unwrap();
+        assert_eq!(number, 1);
+        // Two vaults, one key: different ids.
+        assert_ne!(vault, parse_kek_id(&active_id(&second)).unwrap().1);
+        assert!(vault.is_some());
+    }
+
+    #[test]
+    fn another_vault_under_the_same_kek_is_refused() {
+        // A reset that keeps the KEK: the old vault's files must not open
+        // in the new one.
+        let old = fresh_backend();
+        let before = injected(&old, None);
+        before.put("ns", "k", b"old-credential", None).unwrap();
+        let old_record = snapshot(&old, "ns", "k");
+        let old_index = snapshot(&old, RESERVED_NAMESPACE, &freshness_key("ns"));
+
+        let new = fresh_backend();
+        let after = injected(&new, None);
+        after.put("ns", "other", b"current", None).unwrap();
+
+        // Absent from this vault's index, which F3 accepts for a record
+        // this vault wrote. This one names the old vault in its wrap AAD.
+        restore(&new, old_record);
+        assert_tamper(after.get("ns", "k"));
+
+        // Relabelling it with this vault's KEK id does not help: the AAD it
+        // was wrapped with still names the old vault.
+        let planted = new.get("ns", "k").unwrap().unwrap();
+        let mut metadata = planted.metadata.clone();
+        set_object_field(
+            &mut metadata,
+            "kek_id",
+            JsonValue::String(active_id(&after)),
+        );
+        restore(
+            &new,
+            StoragePutInput::new(
+                "ns".to_string(),
+                "k".to_string(),
+                SEALED_CONTENT_TYPE.to_string(),
+                metadata,
+                planted.body,
+            )
+            .unwrap(),
+        );
+        assert_tamper(after.get("ns", "k"));
+
+        // The next write's reconcile does not absorb it either.
+        after.put("ns", "z", b"z", None).unwrap();
+        assert!(!index_of(&after, "ns").unwrap().entries.contains_key("k"));
+        assert_tamper(after.get("ns", "k"));
+
+        // The old vault's index in place of this one's: every key refuses.
+        restore(&new, old_index);
+        let restarted = injected(&new, None);
+        assert_tamper(restarted.get("ns", "other"));
+    }
+
+    #[test]
+    fn a_reset_keeps_the_anchor_and_refuses_the_old_vault() {
+        let anchor = Arc::new(MemoryAnchor::default());
+        let old = fresh_backend();
+        let before = injected(&old, Some(&anchor));
+        before.put("ns", "k", b"one", None).unwrap();
+        before.put("ns", "k", b"two", None).unwrap();
+        let old_vault = vault_of(&active_id(&before));
+        assert_eq!(anchor.vault_id().unwrap(), Some(old_vault));
+        let old_files: Vec<StoragePutInput> = [
+            (RESERVED_NAMESPACE, MANIFEST_KEY.to_string()),
+            (RESERVED_NAMESPACE, NAMESPACES_KEY.to_string()),
+            (RESERVED_NAMESPACE, freshness_key("ns")),
+            ("ns", "k".to_string()),
+        ]
+        .iter()
+        .map(|(namespace, key)| snapshot(&old, namespace, key))
+        .collect();
+        drop(before);
+
+        // The reset: the storage directory is wiped, and the KEK and the
+        // anchor stay as they are.
+        let wiped = fresh_backend();
+        let after = injected(&wiped, Some(&anchor));
+        let new_vault = vault_of(&active_id(&after));
+        assert_eq!(anchor.vault_id().unwrap(), Some(new_vault));
+        // The new vault's first index is epoch 1. Without the reset, the
+        // anchor would still hold the old vault's epochs and refuse it.
+        after.put("ns", "k", b"fresh", None).unwrap();
+        assert_eq!(read(&after, "ns", "k"), b"fresh");
+        drop(after);
+
+        // The whole old vault put back, manifest included. Its epochs are
+        // higher than the new vault's, so only the vault id catches it.
+        for file in old_files {
+            restore(&wiped, file);
+        }
+        let restored = SealedStore::with_anchor(Arc::clone(&wiped), anchor.clone());
+        assert!(matches!(
+            restored.unseal_with_kek(&KEK),
+            Err(SealedStoreError::Tamper { .. })
+        ));
+        assert!(restored.is_sealed(), "a refused unseal holds no key");
+    }
+
+    #[test]
+    fn a_vault_made_before_f12_is_rebound_on_first_unseal() {
+        let backend = fresh_backend();
+        let old = pre_f12_injected(&backend);
+        assert_eq!(active_id(&old), "kek-1");
+        old.put("other", "k", b"v1", None).unwrap();
+        old.put("other", "x", b"x", None).unwrap();
+        // A namespace never written since F1: a format-1 record, no index.
+        // The release that wrote it registered the namespace, as every put
+        // does; the rebind walks the registry, as rotation does.
+        put_v1(&old, &backend, "legacy", b"format-1");
+        old.register_namespace("ns").unwrap();
+        drop(old);
+
+        let store = injected(&backend, None);
+        let id = active_id(&store);
+        assert_eq!(
+            parse_kek_id(&id).map(|(n, v)| (n, v.is_some())),
+            Some((2, true))
+        );
+        assert_eq!(read(&store, "other", "k"), b"v1");
+        assert_eq!(read(&store, "other", "x"), b"x");
+        assert_eq!(read(&store, "ns", "legacy"), b"format-1");
+        // Every envelope moved to the new id, records and indexes alike.
+        for (namespace, key) in [
+            ("other", "k".to_string()),
+            ("other", "x".to_string()),
+            ("ns", "legacy".to_string()),
+            (RESERVED_NAMESPACE, freshness_key("other")),
+        ] {
+            assert_eq!(
+                kek_id_of(&backend, namespace, &key),
+                id,
+                "{namespace}/{key}"
+            );
+        }
+        // The entry was renamed, not copied, and the marker is gone.
+        let manifest = manifest_of(&backend);
+        assert_eq!(manifest.keks.len(), 1);
+        assert_eq!(manifest.keks[0].id, id);
+        assert!(manifest.rebind.is_none());
+        // A second unseal does not rebind again.
+        assert_eq!(active_id(&injected(&backend, None)), id);
+    }
+
+    #[test]
+    fn an_interrupted_rebind_is_resumed() {
+        let backend = fresh_backend();
+        let old = pre_f12_injected(&backend);
+        old.put("ns", "k", b"v", None).unwrap();
+        old.put("ns", "j", b"w", None).unwrap();
+        drop(old);
+        let id = active_id(&injected(&backend, None));
+
+        // Put the vault back in the state a crash during step 4 leaves: the
+        // marker still set, and one record still under the old id.
+        let record = backend.get("ns", "k").unwrap().unwrap();
+        let back = rewrapped_metadata(
+            SealedRecordMeta::parse(&record.metadata).unwrap(),
+            "ns",
+            "k",
+            &KEK,
+            &id,
+            &KEK,
+            "kek-1",
+        )
+        .unwrap();
+        restore(
+            &backend,
+            StoragePutInput::new(
+                "ns".to_string(),
+                "k".to_string(),
+                SEALED_CONTENT_TYPE.to_string(),
+                back,
+                record.body,
+            )
+            .unwrap(),
+        );
+        let manifest_record = backend
+            .get(RESERVED_NAMESPACE, MANIFEST_KEY)
+            .unwrap()
+            .unwrap();
+        let mut manifest = Manifest::parse(&manifest_record.metadata).unwrap();
+        manifest.rebind = Some(RebindMarker::new(&KEK, "kek-1", &id).unwrap());
+        restore(
+            &backend,
+            StoragePutInput::new(
+                RESERVED_NAMESPACE.to_string(),
+                MANIFEST_KEY.to_string(),
+                MANIFEST_CONTENT_TYPE.to_string(),
+                manifest.to_json(),
+                Vec::new(),
+            )
+            .unwrap(),
+        );
+
+        let resumed = injected(&backend, None);
+        assert_eq!(active_id(&resumed), id);
+        assert_eq!(read(&resumed, "ns", "k"), b"v");
+        assert_eq!(kek_id_of(&backend, "ns", "k"), id);
+        assert!(manifest_of(&backend).rebind.is_none());
+    }
+
+    #[test]
+    fn a_vault_made_before_f12_under_a_bound_anchor_is_refused() {
+        // An anchor that records a vault never accepts one that went back
+        // to unbound: that is an older directory put back.
+        let backend = fresh_backend();
+        drop(pre_f12_injected(&backend));
+        let anchor = Arc::new(MemoryAnchor::default());
+        anchor.bind_vault(&[7; VAULT_ID_BYTES], false).unwrap();
+        let store = SealedStore::with_anchor(Arc::clone(&backend), anchor.clone());
+        assert!(matches!(
+            store.unseal_with_kek(&KEK),
+            Err(SealedStoreError::Tamper { .. })
+        ));
+        // Refused before anything was rebound.
+        assert_eq!(manifest_of(&backend).keks[0].id, "kek-1");
+    }
+
+    #[test]
+    fn an_anchor_adopts_the_vault_it_first_meets() {
+        let backend = fresh_backend();
+        drop(pre_f12_injected(&backend));
+        let anchor = Arc::new(MemoryAnchor::default());
+        let store = injected(&backend, Some(&anchor));
+        assert_eq!(
+            anchor.vault_id().unwrap(),
+            Some(vault_of(&active_id(&store)))
+        );
+
+        // A bound vault first opened under an anchor later on.
+        let bound = fresh_backend();
+        let vault = vault_of(&active_id(&injected(&bound, None)));
+        let late = Arc::new(MemoryAnchor::default());
+        drop(injected(&bound, Some(&late)));
+        assert_eq!(late.vault_id().unwrap(), Some(vault));
+    }
+
+    #[test]
+    fn a_password_vault_is_rebound_and_unseals_after() {
+        let backend = fresh_backend();
+        let mut old = SealedStore::new(Arc::clone(&backend));
+        old.pre_f12 = true;
+        old.init(b"pw", &fast_opts()).unwrap();
+        old.put("ns", "k", b"v", None).unwrap();
+        drop(old);
+
+        let store = SealedStore::new(Arc::clone(&backend));
+        store.unseal(b"pw").unwrap();
+        let id = active_id(&store);
+        assert!(parse_kek_id(&id).unwrap().1.is_some());
+        assert_eq!(read(&store, "ns", "k"), b"v");
+        // The renamed entry kept its salt, so the password still unseals.
+        let again = SealedStore::new(Arc::clone(&backend));
+        again.unseal(b"pw").unwrap();
+        assert_eq!(active_id(&again), id);
+    }
+
+    #[test]
+    fn unsealing_under_a_retired_entry_does_not_rebind() {
+        // A pre-F12 vault, rotated, opened with the old password: that is a
+        // rotation being resumed, not the active key.
+        let backend = fresh_backend();
+        let mut old = SealedStore::new(Arc::clone(&backend));
+        old.pre_f12 = true;
+        old.init(b"old", &fast_opts()).unwrap();
+        old.rotate_kek(b"old", b"new").unwrap();
+        drop(old);
+
+        let store = SealedStore::new(Arc::clone(&backend));
+        store.unseal(b"old").unwrap();
+        assert_eq!(active_id(&store), "kek-1");
+        assert!(manifest_of(&backend).vault_id().is_none());
+        store.unseal(b"new").unwrap();
+        assert!(manifest_of(&backend).vault_id().is_some());
+    }
+
+    #[test]
+    fn kek_ids_parse_strictly() {
+        let hex = "00112233445566778899aabbccddeeff";
+        assert_eq!(parse_kek_id("kek-3"), Some((3, None)));
+        assert_eq!(
+            parse_kek_id(&format!("kek-4.{hex}")).map(|(n, v)| (n, v.is_some())),
+            Some((4, true))
+        );
+        for bad in [
+            "kek-",
+            "kek-x",
+            "key-1",
+            "kek-1.",
+            "kek-1.0011",
+            &format!("kek-1.{}", hex.to_uppercase()),
+            &format!("kek-1.{hex}00"),
+            &format!("kek-+1.{hex}"),
+        ] {
+            assert_eq!(parse_kek_id(bad), None, "{bad}");
+        }
+        assert_eq!(kek_id_for(9, None), "kek-9");
+    }
+
+    fn write_manifest(backend: &Arc<dyn StorageBackend>, manifest: &Manifest) {
+        restore(
+            backend,
+            StoragePutInput::new(
+                RESERVED_NAMESPACE.to_string(),
+                MANIFEST_KEY.to_string(),
+                MANIFEST_CONTENT_TYPE.to_string(),
+                manifest.to_json(),
+                Vec::new(),
+            )
+            .unwrap(),
+        );
+    }
+
+    #[test]
+    fn a_planted_entry_from_another_vault_is_never_run_as() {
+        // Review HIGH-1. The manifest is plain data: someone who can write
+        // the storage directory can add entries to it.
+        let anchor = Arc::new(MemoryAnchor::default());
+        let old = fresh_backend();
+        let before = injected(&old, Some(&anchor));
+        before.put("ns", "k", b"old-secret", None).unwrap();
+        let old_entry = manifest_of(&old).keks[0].clone();
+        let old_record = snapshot(&old, "ns", "k");
+        let old_index = snapshot(&old, RESERVED_NAMESPACE, &freshness_key("ns"));
+        drop(before);
+
+        let new = fresh_backend();
+        let after = injected(&new, Some(&anchor));
+        after.put("ns", "other", b"current", None).unwrap();
+        drop(after);
+        restore(&new, old_record);
+        restore(&new, old_index);
+
+        // The old vault's own entry, verifier and all, planted as retired.
+        let clean = manifest_of(&new);
+        let mut manifest = clean.clone();
+        manifest.keks.insert(
+            0,
+            KekEntry {
+                status: "retired",
+                ..old_entry
+            },
+        );
+        write_manifest(&new, &manifest);
+        let store = SealedStore::with_anchor(Arc::clone(&new), anchor.clone());
+        assert!(matches!(
+            store.unseal_with_kek(&KEK),
+            Err(SealedStoreError::Validation { .. })
+        ));
+
+        // A pre-F12 entry under the same key: its verifier binds no id, so
+        // it could be copied from any pre-F12 vault. It is never run as.
+        let legacy = fresh_backend();
+        let legacy_entry = {
+            drop(pre_f12_injected(&legacy));
+            manifest_of(&legacy).keks[0].clone()
+        };
+        let mut manifest = clean;
+        manifest.keks.insert(
+            0,
+            KekEntry {
+                status: "retired",
+                ..legacy_entry
+            },
+        );
+        write_manifest(&new, &manifest);
+        let store = SealedStore::with_anchor(Arc::clone(&new), anchor.clone());
+        store.unseal_with_kek(&KEK).unwrap();
+        assert_eq!(parse_kek_id(&active_id(&store)).unwrap().0, 1);
+        assert!(parse_kek_id(&active_id(&store)).unwrap().1.is_some());
+        assert_tamper(store.get("ns", "k"));
+    }
+
+    #[test]
+    fn a_renamed_active_entry_does_not_unseal() {
+        // The verifier binds the id, so the active entry cannot be relabelled
+        // to name another vault, or to look pre-F12 and force a rebind.
+        let backend = fresh_backend();
+        drop(injected(&backend, None));
+        for renamed in [
+            format!("kek-1.{}", "ab".repeat(VAULT_ID_BYTES)),
+            "kek-1".to_string(),
+        ] {
+            let mut manifest = manifest_of(&backend);
+            let original = manifest.keks[0].id.clone();
+            manifest.keks[0].id = renamed.clone();
+            write_manifest(&backend, &manifest);
+            assert!(
+                matches!(
+                    SealedStore::new(Arc::clone(&backend)).unseal_with_kek(&KEK),
+                    Err(SealedStoreError::InvalidKek)
+                ),
+                "{renamed}"
+            );
+            manifest.keks[0].id = original;
+            write_manifest(&backend, &manifest);
+        }
+    }
+
+    #[test]
+    fn a_forged_or_replayed_rebind_marker_is_refused() {
+        // Review HIGH-2: an unauthenticated marker would re-wrap any id's
+        // envelopes into this vault.
+        let backend = fresh_backend();
+        let store = injected(&backend, None);
+        let id = active_id(&store);
+        drop(store);
+        let clean = manifest_of(&backend);
+        let with_marker = |marker: RebindMarker| {
+            let mut manifest = clean.clone();
+            manifest.rebind = Some(marker);
+            write_manifest(&backend, &manifest);
+            SealedStore::new(Arc::clone(&backend)).unseal_with_kek(&KEK)
+        };
+
+        // Moving away from another vault's id is not a rebind at all.
+        let mut other_vault = RebindMarker::new(&KEK, "kek-1", &id).unwrap();
+        other_vault.from = format!("kek-1.{}", "cd".repeat(VAULT_ID_BYTES));
+        assert!(matches!(
+            with_marker(other_vault),
+            Err(SealedStoreError::Validation { .. })
+        ));
+        // A tag made for another move, or by another key.
+        let wrong_move = RebindMarker::new(&KEK, "kek-1", "kek-9").unwrap();
+        assert!(matches!(
+            with_marker(wrong_move),
+            Err(SealedStoreError::Tamper { .. })
+        ));
+        let wrong_key = RebindMarker::new(&[0x11; KEY_LEN], "kek-1", &id).unwrap();
+        assert!(matches!(
+            with_marker(wrong_key),
+            Err(SealedStoreError::Tamper { .. })
+        ));
+
+        // A genuine marker put back after the rebind finished, under an
+        // anchor that has since learned the vault.
+        let anchored = fresh_backend();
+        drop(pre_f12_injected(&anchored));
+        let anchor = Arc::new(MemoryAnchor::default());
+        let rebound = injected(&anchored, Some(&anchor));
+        let rebound_id = active_id(&rebound);
+        drop(rebound);
+        assert!(anchor.vault_id().unwrap().is_some());
+        let mut manifest = manifest_of(&anchored);
+        manifest.rebind = Some(RebindMarker::new(&KEK, "kek-1", &rebound_id).unwrap());
+        write_manifest(&anchored, &manifest);
+        assert!(matches!(
+            SealedStore::with_anchor(Arc::clone(&anchored), anchor.clone()).unseal_with_kek(&KEK),
+            Err(SealedStoreError::Tamper { .. })
+        ));
+    }
+
+    #[test]
+    fn the_loser_of_a_concurrent_rebind_moves_to_the_new_id() {
+        // Review MEDIUM-1: a process that matched the old entry, then lost
+        // the manifest CAS, must not keep running under the old id.
+        let backend = fresh_backend();
+        drop(pre_f12_injected(&backend));
+        let winner = active_id(&injected(&backend, None));
+        let loser = SealedStore::new(Arc::clone(&backend));
+        loser
+            .complete_unseal("kek-1".to_string(), Zeroizing::new(KEK))
+            .unwrap();
+        assert_eq!(active_id(&loser), winner);
+        loser.put("fresh", "k", b"v", None).unwrap();
+        assert_eq!(kek_id_of(&backend, "fresh", "k"), winner);
+    }
+
+    #[test]
+    fn deleting_only_the_manifest_does_not_start_a_new_vault() {
+        // Review MEDIUM-3: before, `init` would have run over the rest of
+        // the vault, reset the anchor, and made every secret unreadable
+        // without an error.
+        let anchor = Arc::new(MemoryAnchor::default());
+        let backend = fresh_backend();
+        let store = injected(&backend, Some(&anchor));
+        store.put("ns", "k", b"v", None).unwrap();
+        let vault = anchor.vault_id().unwrap();
+        drop(store);
+        let manifest = snapshot(&backend, RESERVED_NAMESPACE, MANIFEST_KEY);
+        backend
+            .delete(RESERVED_NAMESPACE, MANIFEST_KEY, None)
+            .unwrap();
+
+        let reopened = SealedStore::with_anchor(Arc::clone(&backend), anchor.clone());
+        assert!(!reopened.status().unwrap().initialized);
+        assert!(matches!(
+            reopened.init_with_kek(&KEK),
+            Err(SealedStoreError::Tamper { .. })
+        ));
+        assert_eq!(anchor.vault_id().unwrap(), vault, "the anchor is untouched");
+        // Putting the manifest back recovers the vault.
+        restore(&backend, manifest);
+        let recovered = injected(&backend, Some(&anchor));
+        assert_eq!(read(&recovered, "ns", "k"), b"v");
+    }
+
+    #[test]
+    fn a_pre_f12_manifest_cannot_carry_a_vault_bound_entry() {
+        // Second-review LOW-A: a bound entry in a pre-F12 manifest can only
+        // be another vault's, planted to be run as.
+        let bound = fresh_backend();
+        drop(injected(&bound, None));
+        let foreign = manifest_of(&bound).keks[0].clone();
+        let legacy = fresh_backend();
+        drop(pre_f12_injected(&legacy));
+        let mut manifest = manifest_of(&legacy);
+        // With the active verifier broken, the planted entry is the only one
+        // the key opens, so without the parse rule the store would run as it.
+        manifest.keks[0].verifier_tag[0] ^= 1;
+        manifest.keks.push(KekEntry {
+            status: "retired",
+            ..foreign
+        });
+        write_manifest(&legacy, &manifest);
+        assert!(matches!(
+            SealedStore::new(Arc::clone(&legacy)).unseal_with_kek(&KEK),
+            Err(SealedStoreError::Validation { .. })
+        ));
+    }
+
+    #[test]
+    fn a_record_under_a_pre_f12_retired_id_does_not_block_a_bound_namespace() {
+        // Second-review LOW-C: a bound vault can never run as a pre-F12 id
+        // again, so a v1 record under one is junk, not a rotation to resume.
+        let backend = fresh_backend();
+        let mut old = SealedStore::new(Arc::clone(&backend));
+        old.pre_f12 = true;
+        old.init(b"old", &fast_opts()).unwrap();
+        put_v1(&old, &backend, "stranded", b"under kek-1");
+        old.register_namespace("ns").unwrap();
+        old.rotate_kek(b"old", b"new").unwrap();
+        // Put the record back under the retired id, as an interrupted
+        // rotation would have left it.
+        drop(old);
+        let mut legacy = SealedStore::new(Arc::clone(&backend));
+        legacy.pre_f12 = true;
+        legacy.unseal(b"old").unwrap();
+        put_v1(&legacy, &backend, "stranded", b"under kek-1");
+        drop(legacy);
+
+        let store = SealedStore::new(Arc::clone(&backend));
+        store.unseal(b"new").unwrap();
+        assert!(manifest_of(&backend).vault_id().is_some());
+        // The first write migrates the namespace and skips the record.
+        store.put("ns", "k", b"v", None).unwrap();
+        assert_eq!(read(&store, "ns", "k"), b"v");
+        assert_tamper(store.get("ns", "stranded"));
     }
 }
