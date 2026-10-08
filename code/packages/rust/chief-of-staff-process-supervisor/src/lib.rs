@@ -833,6 +833,18 @@ impl ProcessHostSupervisor {
         self
     }
 
+    /// The process id of a host's broker, while it runs: for the audit
+    /// record and for tests.
+    pub fn broker_process_id(&self, host_name: &HostName) -> Option<u32> {
+        self.instances
+            .get(host_name.as_str())?
+            .broker
+            .as_ref()?
+            .child
+            .as_ref()
+            .map(Child::id)
+    }
+
     /// Automatically answer authenticated child requests through one injected dispatcher.
     pub fn with_data_plane_dispatcher(
         mut self,
