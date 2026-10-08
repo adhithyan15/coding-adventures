@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Cheap and Goods: No New Signs",
   "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:ec8142c7f0232d21",
+  "sourceHash": "fnv1a64:5f435cac140a60e2",
   "lessons": [
     {
       "id": "MW-C14-hear-sasta",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d25f07cc6be786a4",
+      "sourceHash": "fnv1a64:8f489562be9b1a7c",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,20 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the three-word shopping payoff, say price, write ु, दुकान, वस्तु, भाव, and भाई, then say heat."
+              "text": "Recall the three-word shopping payoff and say price."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ु, दुकान, वस्तु, भाव, and भाई",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ु**, **दुकान**, **वस्तु**, **भाव**, and **भाई**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then say heat."
             }
           ]
         },
@@ -100,7 +113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fb240590ba20b00b",
+      "sourceHash": "fnv1a64:1b07e787a3ff26df",
       "notice": null,
       "blocks": [
         {
@@ -116,7 +129,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say cheap and price. Write भाव, वस्तु, बरसात, and पति, say sister, then recall ् and त."
+              "text": "Say cheap and price."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "भाव, वस्तु, बरसात, and पति",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **भाव**, **वस्तु**, **बरसात**, and **पति**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say sister, then recall ् and त."
             }
           ]
         },
@@ -138,7 +164,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write सस्ता (sastā). Check the middle consonant join and final long ा."
+              "text": "Look, cover, and wait five seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "सस्ता (sastā) — check the middle consonant join and final long ा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **सस्ता** — check the middle consonant join and final long **ा**]"
             }
           ]
         },
@@ -188,7 +223,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a3fb5ae81461fc0",
+      "sourceHash": "fnv1a64:712614439eb8026a",
       "notice": null,
       "blocks": [
         {
@@ -204,7 +239,29 @@
             },
             {
               "kind": "speech",
-              "text": "Say and write cheap and shop, recall item and price, then write home, sister, and गर्मी."
+              "text": "Say cheap and shop."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both words]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall item and price."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for home and sister, then गर्मी",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for home and sister, then **गर्मी**]"
             }
           ]
         },
@@ -269,7 +326,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1a5f92f681d787ac",
+      "sourceHash": "fnv1a64:c575c9171bce347c",
       "notice": null,
       "blocks": [
         {
@@ -285,7 +342,29 @@
             },
             {
               "kind": "speech",
-              "text": "Say goods and cheap. Write सस्ता (sastā), दुकान, वस्तु, मौसम, and नाम, retrieve the four-word family payoff, then form ा once."
+              "text": "Say goods and cheap."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "सस्ता (sastā), दुकान, वस्तु, मौसम, and नाम",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **सस्ता**, **दुकान**, **वस्तु**, **मौसम**, and **नाम**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve the four-word family payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ा once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ा** once]"
             }
           ]
         },
@@ -307,7 +386,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write सामान (sāmān). Check both long ा marks and the final न."
+              "text": "Look, cover, and wait five seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "सामान (sāmān) — check both long ा marks and the final न",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **सामान** — check both long **ा** marks and the final **न**]"
             }
           ]
         },
@@ -357,7 +445,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a9663b86b645f8b5",
+      "sourceHash": "fnv1a64:d51af4f2d05faa71",
       "notice": null,
       "blocks": [
         {
@@ -373,7 +461,20 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the three-word shopping payoff, then write ु, ौ, ग, and ड, then say paternal grandfather and cold."
+              "text": "Recall the three-word shopping payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ु, ौ, ग, and ड",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ु**, **ौ**, **ग**, and **ड**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then say paternal grandfather and cold."
             }
           ]
         },
@@ -384,7 +485,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the two words in both orders, give each meaning, read two cards, then write both from sound."
+              "text": "Hear the two words in both orders, give each meaning, and read two cards."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both from sound",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both from sound]"
             }
           ]
         },
@@ -434,7 +544,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33c4690dae90610b",
+      "sourceHash": "fnv1a64:0cb2379cd13cd55d",
       "notice": null,
       "blocks": [
         {
@@ -450,7 +560,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the earlier shopping and weather payoffs, say money, then write द and ड."
+              "text": "Recall the earlier shopping and weather payoffs and say money."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "द and ड",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **द** and **ड**]"
             }
           ]
         },
@@ -472,8 +591,13 @@
               "text": "Match five printed cards to meanings."
             },
             {
-              "kind": "speech",
-              "text": "Write all five heard words without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all five heard words without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all five heard words without a model]"
             },
             {
               "kind": "speech",
@@ -530,7 +654,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:437d75cdd3fa8013",
+      "sourceHash": "fnv1a64:92e2f9f9b9ccec51",
       "notice": null,
       "blocks": [
         {
@@ -545,8 +669,26 @@
               "source": "[PAUSE 24s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "short ु",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: short **ु**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write short ु, then ask and answer the known name and wellbeing exchanges, then write दादा and ठंडी."
+              "text": "Then ask and answer the known name and wellbeing exchanges."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "दादा and ठंडी",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **दादा** and **ठंडी**]"
             }
           ]
         },
@@ -557,7 +699,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Without a model, hear two words, say two from meaning cues, read the fifth, then write all five in a fresh mixed order."
+              "text": "Without a model, hear two words, say two from meaning cues, and read the fifth."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all five, in a fresh mixed order",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all five, in a fresh mixed order]"
             }
           ]
         },

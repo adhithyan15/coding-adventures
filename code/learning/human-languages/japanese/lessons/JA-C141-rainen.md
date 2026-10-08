@@ -40,8 +40,8 @@ reviews_of: [JA-C141-raigetsu, JA-C140-kyonen, JA-W137-pe, JA-W132-re]
 
 - [YOU RECALL: say *next month* — **R1**, one lesson back]
 - [YOU RECALL: say *last year* — **R2**, five lessons back]
-- [YOU RECALL: write **ぺ** — **R3**, twenty lessons back]
-- [YOU RECALL: write **れ** — **R4**, eighty lessons back]
+- [YOU WRITE: **ぺ** from memory — **R3**, twenty lessons back]
+- [YOU WRITE: **れ** from memory — **R4**, eighty lessons back]
 
 ## You'll want to know: らいねん
 <!-- hl-knowledge: introduces=[JA-LEX-C141-RAINEN]; assesses=[] -->

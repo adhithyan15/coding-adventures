@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Shop, Item, and Price: One New Vowel Mark",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2364b3d013c389ef",
+  "sourceHash": "fnv1a64:bde05cd2dfe65125",
   "lessons": [
     {
       "id": "MW-C13-hear-dukan",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c35db5d173137329",
+      "sourceHash": "fnv1a64:89d3a063d7eed41d",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the six-word weather payoff, say market, then write मौसम, गर्मी, and ठंडी, then form ि once."
+              "text": "Recall the six-word weather payoff and say market."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "मौसम, गर्मी, and ठंडी, then form ि once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **मौसम**, **गर्मी**, and **ठंडी**, then form **ि** once]"
             }
           ]
         },
@@ -197,7 +206,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:da22a03e74b3c0c2",
+      "sourceHash": "fnv1a64:a3ec8db9125dca20",
       "notice": null,
       "blocks": [
         {
@@ -213,7 +222,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say shop and market, write बाजार, बरसात, and कांई, then write पाछे मिलसू, then form दु, का, and न."
+              "text": "Say shop and market."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "बाजार, बरसात, and कांई, then पाछे मिलसू, then form दु, का, and न",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **बाजार**, **बरसात**, and **कांई**, then **पाछे मिलसू**, then form **दु**, **का**, and **न**]"
             }
           ]
         },
@@ -235,7 +253,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write दुकान (dukān). Check short ु below the first sign and long ा in the second chunk."
+              "text": "Look, cover, and wait five seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "दुकान (dukān) — check short ु below the first sign and long ा in the second chunk",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **दुकान** — check short **ु** below the first sign and long **ा** in the second chunk]"
             }
           ]
         },
@@ -285,7 +312,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f85d65e97605560d",
+      "sourceHash": "fnv1a64:00df9ecd373f6b7d",
       "notice": null,
       "blocks": [
         {
@@ -301,7 +328,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say and write shop, form short ु, then recall money, temple, and cold, then retrieve the see-you-later line from its cue."
+              "text": "Say shop."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for shop, then form short ु (u)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for shop, then form short **ु**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then recall money, temple, and cold, then retrieve the see-you-later line from its cue."
             }
           ]
         },
@@ -366,7 +406,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7c513dcad1a57ccc",
+      "sourceHash": "fnv1a64:4f7ebc506605d678",
       "notice": null,
       "blocks": [
         {
@@ -382,7 +422,29 @@
             },
             {
               "kind": "speech",
-              "text": "Say item and shop, write दुकान (dukān), गर्मी, and हाथ, then say mother, then form short ु and the familiar vowel-off mark ्."
+              "text": "Say item and shop."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "दुकान (dukān), गर्मी, and हाथ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **दुकान**, **गर्मी**, and **हाथ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then say mother."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "short ु (u) and the familiar vowel-off mark ्",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: short **ु** and the familiar vowel-off mark **्**]"
             }
           ]
         },
@@ -404,7 +466,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write वस्तु (vastu). Check the middle consonant join and the final short ु."
+              "text": "Look, cover, and wait five seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "वस्तु (vastu) — check the middle consonant join and the final short ु",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **वस्तु** — check the middle consonant join and the final short **ु**]"
             }
           ]
         },
@@ -454,7 +525,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e04a78bdd90c769",
+      "sourceHash": "fnv1a64:1643fcc6a1ced0f3",
       "notice": null,
       "blocks": [
         {
@@ -470,7 +541,29 @@
             },
             {
               "kind": "speech",
-              "text": "Say and write item and shop, then recall market and write money and cloud, then write मां."
+              "text": "Say item and shop."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both words]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then recall market."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for money and cloud, then मां",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for money and cloud, then **मां**]"
             }
           ]
         },
@@ -533,7 +626,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1ace0076d9333b71",
+      "sourceHash": "fnv1a64:8bbeba80162690c5",
       "notice": null,
       "blocks": [
         {
@@ -549,7 +642,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say price, item, shop, and father. Write वस्तु (vastu), बाप, and हवा, then form familiar भ, ा, and व."
+              "text": "Say price, item, shop, and father."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "वस्तु (vastu), बाप, and हवा, then form familiar भ, ा, and व",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **वस्तु**, **बाप**, and **हवा**, then form familiar **भ**, **ा**, and **व**]"
             }
           ]
         },
@@ -571,7 +673,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write भाव (bhāv). Hold the long vowel in speech and keep ा after भ in writing."
+              "text": "Look, cover, and wait five seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "भाव (bhāv) — keep ा after भ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **भाव** — keep **ा** after **भ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hold the long vowel in speech."
             }
           ]
         },
@@ -620,7 +735,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7eac70288c87050d",
+      "sourceHash": "fnv1a64:a24a4b451777896d",
       "notice": null,
       "blocks": [
         {
@@ -635,8 +750,17 @@
               "source": "[PAUSE 24s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ु (u), ौ, ग, ड, and ब",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ु**, **ौ**, **ग**, **ड**, and **ब**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ु (u), ौ, ग, ड, and ब, then recall the six-word weather payoff."
+              "text": "Then recall the six-word weather payoff."
             }
           ]
         },
@@ -647,7 +771,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear the three words in mixed order, say each from its meaning, match three printed cards, then write all three from sound."
+              "text": "Hear the three words in mixed order, say each from its meaning, and match three printed cards."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three from sound",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three from sound]"
             }
           ]
         },
@@ -698,7 +831,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bb58d79f35186108",
+      "sourceHash": "fnv1a64:a327122d4289b888",
       "notice": null,
       "blocks": [
         {
@@ -714,7 +847,29 @@
             },
             {
               "kind": "speech",
-              "text": "Say market, write money, recall the weather payoff, then ask and answer the known wellbeing exchange, then write बाप."
+              "text": "Say market."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for money",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for money]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall the weather payoff, then ask and answer the known wellbeing exchange."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "बाप",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **बाप**]"
             }
           ]
         },
@@ -736,8 +891,13 @@
               "text": "Match three printed cards to meanings."
             },
             {
-              "kind": "speech",
-              "text": "Write all three heard words without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three heard words without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three heard words without a model]"
             },
             {
               "kind": "speech",
@@ -792,7 +952,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ab33d14130ccdb7d",
+      "sourceHash": "fnv1a64:de44a7a1a8f2d51d",
       "notice": null,
       "blocks": [
         {
@@ -807,8 +967,30 @@
               "source": "[PAUSE 70s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ु (u), घ, ज, and त",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ु**, **घ**, **ज**, and **त**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write ु, घ, ज, and त; say brother; retrieve cloud, rain, weather, heat, and cold; write ड, गर्मी, and ठंडी; then recall the three-word weather payoff and name the four shopping-payoff skills."
+              "text": "Say brother, and retrieve cloud, rain, weather, heat, and cold."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ड, गर्मी, and ठंडी",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ड**, **गर्मी**, and **ठंडी**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then recall the three-word weather payoff and name the four shopping-payoff skills."
             }
           ]
         },
@@ -819,7 +1001,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Without a model, hear one word, say its meaning, read the other two in mixed order, then write all three from meaning cues."
+              "text": "Without a model, hear one word, say its meaning, and read the other two in mixed order."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all three from meaning cues",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all three from meaning cues]"
             }
           ]
         },

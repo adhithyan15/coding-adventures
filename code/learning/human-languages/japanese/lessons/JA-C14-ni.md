@@ -38,7 +38,7 @@ reviews_of: [JA-C14-go, JA-C12-body-map-two, JA-W08-yo]
 
 - [YOU RECALL: say *five* — **R1**, one lesson back]
 - [YOU RECALL: run the fourteen body words — **R3**, twenty lessons back]
-- [YOU RECALL: write **よ** — **R4**, eighty lessons back]
+- [YOU WRITE: **よ** from memory — **R4**, eighty lessons back]
 
 ## You'll Want to Know — hear and say
 <!-- hl-knowledge: introduces=[JA-LEX-NI]; assesses=[JA-SCRIPT-NI-01, JA-LEX-ICHI, JA-LEX-GO] -->

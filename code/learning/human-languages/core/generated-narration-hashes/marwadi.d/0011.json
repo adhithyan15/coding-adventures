@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 11,
-  "sourceHash": "fnv1a64:175ca27757bb21e2",
+  "sourceHash": "fnv1a64:82c2e814e083f765",
   "lessonIds": [
     "MW-C08-hear-dada",
     "MW-W08-da",
@@ -20,7 +20,7 @@
   "drivablePrefix": 1,
   "text": "marwadi/narration/ch11.txt",
   "json": "marwadi/narration/ch11.json",
-  "textHash": "fnv1a64:9ed1bd32ff94f393",
-  "jsonHash": "fnv1a64:0aaf4cba072248ee",
+  "textHash": "fnv1a64:edbc0182260f013a",
+  "jsonHash": "fnv1a64:8845b7b8df2be9ed",
   "findings": []
 }

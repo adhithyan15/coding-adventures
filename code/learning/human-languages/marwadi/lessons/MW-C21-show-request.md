@@ -37,7 +37,7 @@ reviews_of: [MW-C21-hear-show-request, MW-C21-ye, MW-C15-kapda, MW-C21-dikhavo, 
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-SHOW-REQUEST-01]; assesses=[MW-LEX-SHOW-REQUEST-01, MW-LEX-MAHANGO-01, MW-SCRIPT-MAHANGO-01] -->
 
-[PAUSE 18s] Say *show me this cloth*, then write expensive.
+[PAUSE 18s] Say *show me this cloth*. [YOU WRITE: the word for expensive]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-YE-01, MW-SCRIPT-KAPDA-01, MW-SCRIPT-DIKHAVO-01, MW-SCRIPT-NUKTA-01, MW-SCRIPT-RRA-01] -->
@@ -52,8 +52,8 @@ but the joining, which is the point of the chapter.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-SHOW-REQUEST-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Read the line once. Cover it for ten seconds and write all three words. Open the
-model and repair only the word that changed, then rewrite that word alone.
+Read the line once and cover it for ten seconds.
+[YOU WRITE: all three words — then open the model, repair only the word that changed, and rewrite that word alone]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-SHOW-REQUEST-01, MW-LEX-SHOW-REQUEST-01] -->

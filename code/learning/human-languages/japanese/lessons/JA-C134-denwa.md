@@ -39,8 +39,8 @@ reviews_of: [JA-R133-last-four, JA-W01-n, JA-W01-wa, JA-W133-nu, JA-W132-so, JA-
 
 [PAUSE 15s] Three recalls before the new word.
 
-- [YOU RECALL: write **ぬ** — **R2**, five lessons back]
-- [YOU RECALL: write **そ** — **R3**, twenty lessons back]
+- [YOU WRITE: **ぬ** from memory — **R2**, five lessons back]
+- [YOU WRITE: **そ** from memory — **R3**, twenty lessons back]
 - [YOU RECALL: say *grey* — **R4**, eighty lessons back]
 
 ## You'll want to know: でんわ

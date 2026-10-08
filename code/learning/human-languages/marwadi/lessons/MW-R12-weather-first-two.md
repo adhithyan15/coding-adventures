@@ -36,13 +36,13 @@ reviews_of: [MW-C12-mausam, MW-C12-garmi, MW-W12-au-matra, MW-W12-ga, MW-C11-baa
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-AU-MATRA-01, MW-SCRIPT-GA-01, MW-SCRIPT-BAADAL-01, MW-SCRIPT-HAI-01, MW-SCRIPT-UU-MATRA-01, MW-LEX-PAISA-01] -->
 
-[PAUSE 25s] Say money, then write **मौ**, **ग**, **बादल**, **है**, and **ू**.
+[PAUSE 25s] Say money. [YOU WRITE: **मौ**, **ग**, **बादल**, **है**, and **ू**]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAUSAM-01, MW-SCRIPT-MAUSAM-01, MW-LEX-GARMI-01, MW-SCRIPT-GARMI-01] -->
 
-Hear the two words in mixed order, give each meaning, read both cards, then
-write both from sound.
+Hear the two words in mixed order, give each meaning, and read both cards.
+[YOU WRITE: both from sound]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAUSAM-01, MW-LEX-GARMI-01] -->

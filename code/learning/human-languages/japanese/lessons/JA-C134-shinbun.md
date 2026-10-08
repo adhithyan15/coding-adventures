@@ -40,8 +40,8 @@ reviews_of: [JA-C134-benkyou, JA-W10-shi, JA-W01-n, JA-W134-ba, JA-W133-ki, JA-C
 [PAUSE 20s] Four recalls before the new word.
 
 - [YOU RECALL: say *study* — **R1**, one lesson back]
-- [YOU RECALL: write **ば** — **R2**, five lessons back]
-- [YOU RECALL: write **き** — **R3**, twenty lessons back]
+- [YOU WRITE: **ば** from memory — **R2**, five lessons back]
+- [YOU WRITE: **き** from memory — **R3**, twenty lessons back]
 - [YOU RECALL: say *dear and missed*, of something from the past — **R4**, eighty lessons back]
 
 ## You'll want to know: しんぶん

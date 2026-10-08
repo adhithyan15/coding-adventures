@@ -58,7 +58,7 @@ anywhere beyond the walls, out of doors.
 [PAUSE 1s]
 - [YOU SAY: *soto*]
 - [YOU SAY: *soto*, pointing at a window or a door]
-- [YOU RECALL: write **そと**, one stroke for the first sign and two for the second]
+- [YOU WRITE: **そと** from memory, one stroke for the first sign and two for the second]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C132-SOTO, JA-SCRIPT-SO-01] -->

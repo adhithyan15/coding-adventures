@@ -4,7 +4,7 @@
   "chapter": 38,
   "title": "Which One in the Line",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:1822ec09c4530b66",
+  "sourceHash": "fnv1a64:3b4a95858073f6c2",
   "lessons": [
     {
       "id": "BN-C27-ditiyo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eed736ed921ae9e5",
+      "sourceHash": "fnv1a64:80b70193df0eb79b",
       "notice": null,
       "blocks": [
         {
@@ -39,12 +39,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write থ — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "থ from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **থ** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: **থ** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
@@ -989,7 +989,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e6122f0e6fcbdda",
+      "sourceHash": "fnv1a64:5c555d866a2d009e",
       "notice": null,
       "blocks": [
         {
@@ -1009,12 +1009,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ঞ (nyô), and say where it is made — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ঞ (nyô) from memory, and say where it is made — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ঞ**, and say where it is made — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ঞ** from memory, and say where it is made — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",

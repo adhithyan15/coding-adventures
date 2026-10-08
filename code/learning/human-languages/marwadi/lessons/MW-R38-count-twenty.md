@@ -36,8 +36,8 @@ reviews_of: [MW-C38-ughanis, MW-C38-athara, MW-R37-count-fifteen, MW-C33-count-t
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-UGHANIS-01, MW-SCRIPT-ATHARA-01, MW-PERFORMANCE-COUNTER-EXCHANGE-FOUR-SKILL-01] -->
 
 [PAUSE 22s]
-- [YOU RECALL: write **उघणीस** — **R1**]
-- [YOU RECALL: write **अठारा**, four lessons back — **R2**]
+- [YOU WRITE: **उघणीस** from memory — **R1**]
+- [YOU WRITE: **अठारा** from memory, four lessons back — **R2**]
 - [YOU RECALL: run the five-turn counter exchange, with no figures in it — **R4**]
 
 ## Guided Practice
@@ -49,9 +49,8 @@ The count is complete for the first time. Run it four ways.
 1. Say one to twenty straight through, out loud, once slowly and once fast.
 2. Hear six of the twenty named out of order; say each back and say the one
    above it.
-3. Write four of the nine teens from dictation.
-4. Write the four signs this run of numbers added — **इ**, **ळ**, **अ**, **उ** —
-   and beside each write the number that needed it.
+3. [YOU WRITE: four of the nine teens from dictation]
+4. [YOU WRITE: the four signs this run of numbers added — **इ**, **ळ**, **अ**, **उ** — and beside each, the number that needed it]
 
 Then answer aloud: which of the twenty is not built on a smaller number, and
 what is it built on instead?

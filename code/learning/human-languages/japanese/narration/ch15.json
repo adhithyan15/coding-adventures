@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "The Two Signs the Rest of the Run Cost",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:2f5043bfab4cd534",
+  "sourceHash": "fnv1a64:b00ac5feb7e09c00",
   "lessons": [
     {
       "id": "JA-C15-nana",
@@ -330,7 +330,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1eedb86438296ad1",
+      "sourceHash": "fnv1a64:ae583d187e707f2b",
       "notice": null,
       "blocks": [
         {
@@ -368,12 +368,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write み — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "み from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **み** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **み** from memory — **R4**, eighty lessons back]"
             }
           ]
         },
@@ -648,7 +648,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:190f122ac67e90fe",
+      "sourceHash": "fnv1a64:7db6d4e9545c0f44",
       "notice": null,
       "blocks": [
         {
@@ -668,12 +668,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ろ (ro) — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ろ from memory — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ろ** — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ろ** from memory — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -974,7 +974,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8251b4a4a9681df8",
+      "sourceHash": "fnv1a64:438c32bc4dead044",
       "notice": null,
       "blocks": [
         {
@@ -994,12 +994,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ゅ (small yu), and say what it does to the sign before it — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ゅ (small yu) from memory, and say what it does to the sign before it — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ゅ**, and say what it does to the sign before it — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ゅ** from memory, and say what it does to the sign before it — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -1139,7 +1139,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ce92acf335b8718e",
+      "sourceHash": "fnv1a64:7d181382f83c23c4",
       "notice": null,
       "blocks": [
         {
@@ -1186,12 +1186,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ど — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ど from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ど** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **ど** from memory — **R4**, eighty lessons back]"
             },
             {
               "kind": "speech",

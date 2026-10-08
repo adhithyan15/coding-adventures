@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Five Numbers, No New Signs",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:530e6187928ee82c",
+  "sourceHash": "fnv1a64:fadbf9d99e887c7d",
   "lessons": [
     {
       "id": "JA-C14-ichi",
@@ -290,7 +290,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:63dadff23a935a25",
+      "sourceHash": "fnv1a64:563c51cecae27b07",
       "notice": null,
       "blocks": [
         {
@@ -328,12 +328,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write よ — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "よ from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **よ** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **よ** from memory — **R4**, eighty lessons back]"
             }
           ]
         },
@@ -431,7 +431,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0c5eaec0ea891317",
+      "sourceHash": "fnv1a64:e5961f2c8dbbb843",
       "notice": null,
       "blocks": [
         {
@@ -469,21 +469,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write full-size つ — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "full-size つ from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write full-size **つ** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: full-size **つ** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write な — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "な from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **な** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **な** from memory — **R4**, eighty lessons back]"
             }
           ]
         },
@@ -580,7 +580,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b900aeb3f30c835b",
+      "sourceHash": "fnv1a64:9063ec19be9b7fe7",
       "notice": null,
       "blocks": [
         {
@@ -627,12 +627,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ら — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ら from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ら** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **ら** from memory — **R4**, eighty lessons back]"
             }
           ]
         },

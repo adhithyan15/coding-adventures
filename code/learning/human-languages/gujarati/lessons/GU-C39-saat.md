@@ -41,7 +41,7 @@ reviews_of: [GU-C39-chha, GU-C38-biju, GU-C35-jo-write, GU-C06-number-histories]
 
 - [YOU RECALL: say *six*, and name the one letter it is — **R1**, one lesson back]
 - [YOU RECALL: say *second*, and the shape it shares with *third* — **R2**, five lessons back]
-- [YOU RECALL: write **જો** — **R3**, twenty lessons back]
+- [YOU WRITE: **જો** from memory — **R3**, twenty lessons back]
 
 **જો** is two signs. **સાત** is three, and you own all three: **સ**, the
 attached **ા**, and **ત**.

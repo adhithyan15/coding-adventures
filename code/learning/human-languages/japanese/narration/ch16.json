@@ -4,7 +4,7 @@
   "chapter": 16,
   "title": "The Other Way to Count",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6bb61223ab0a6503",
+  "sourceHash": "fnv1a64:e789cf04560443a6",
   "lessons": [
     {
       "id": "JA-W16-hi",
@@ -167,7 +167,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:39cf54cb37d882aa",
+      "sourceHash": "fnv1a64:6bc699d08c4cbee2",
       "notice": null,
       "blocks": [
         {
@@ -187,12 +187,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ひ (hi) — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ひ (hi) from memory — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ひ** — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ひ** from memory — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -205,12 +205,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write も — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "も from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **も** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **も** from memory — **R4**, eighty lessons back]"
             }
           ]
         },
@@ -469,7 +469,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2b15a4ea01ca0f13",
+      "sourceHash": "fnv1a64:126758e8664f19b9",
       "notice": null,
       "blocks": [
         {
@@ -489,12 +489,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ふ (fu), all four strokes — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ふ (fu) from memory, all four strokes — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ふ**, all four strokes — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ふ** from memory, all four strokes — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -914,7 +914,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3125b41a5a6261be",
+      "sourceHash": "fnv1a64:37be744da748b8e0",
       "notice": null,
       "blocks": [
         {
@@ -952,12 +952,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write お — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "お from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **お** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **お** from memory — **R4**, eighty lessons back]"
             }
           ]
         },

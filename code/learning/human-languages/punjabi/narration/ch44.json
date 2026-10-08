@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Which One in the Line",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8cfc1f962a9ff1cb",
+  "sourceHash": "fnv1a64:01e3c5f6e672161a",
   "lessons": [
     {
       "id": "PA-C44-duja",
@@ -387,7 +387,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d87740e1f64069ba",
+      "sourceHash": "fnv1a64:b0a527424d58ea42",
       "notice": null,
       "blocks": [
         {
@@ -416,21 +416,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ਥ — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ਥ from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ਥ** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: **ਥ** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ਕਿ — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ਕਿ from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ਕਿ** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **ਕਿ** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
@@ -572,7 +572,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b4c57b41b4bf57c4",
+      "sourceHash": "fnv1a64:b77e2b3c47ff56da",
       "notice": null,
       "blocks": [
         {
@@ -601,12 +601,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "ask kitthe? and write it — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "kitthe? from memory, saying the question aloud as you write it — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: ask *kitthe?* and write it — **R2**, five lessons back]"
+              "source": "[YOU WRITE: *kitthe?* from memory, saying the question aloud as you write it — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",

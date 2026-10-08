@@ -36,14 +36,14 @@ reviews_of: [MW-C18-food-three, MW-C18-daal, MW-C18-ghee, MW-C18-sabji, MW-C16-t
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-PLACES-THREE-FOUR-SKILL-01, MW-SCRIPT-THELA-01] -->
 
-[PAUSE 18s] Recall the three-place payoff, then write cart.
+[PAUSE 18s] Recall the three-place payoff. [YOU WRITE: the word for cart]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-FOOD-THREE-FOUR-SKILL-01, MW-LEX-DAAL-01, MW-SCRIPT-DAAL-01, MW-LEX-GHEE-01, MW-SCRIPT-GHEE-01, MW-LEX-SABJI-01, MW-SCRIPT-SABJI-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-With every model hidden, identify, say, read, and write **दाल**, **घी**, and
-**सबजी** in a shuffled order.
+With every model hidden, identify, say, and read **दाल**, **घी**, and **सबजी**
+in a shuffled order. [YOU WRITE: all three, in a shuffled order]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-FOOD-THREE-FOUR-SKILL-01] -->

@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 136,
-  "sourceHash": "fnv1a64:3f4aa2133eb86edf",
+  "sourceHash": "fnv1a64:4440c9facf7e32b1",
   "lessonIds": [
     "JA-C136-kazoku",
     "JA-W136-zo",
@@ -17,7 +17,7 @@
   "drivablePrefix": 1,
   "text": "japanese/narration/ch136.txt",
   "json": "japanese/narration/ch136.json",
-  "textHash": "fnv1a64:1850a0e1963f5e3b",
-  "jsonHash": "fnv1a64:e35407065ee3152c",
+  "textHash": "fnv1a64:9765c5b366bc4af0",
+  "jsonHash": "fnv1a64:570173738a638b83",
   "findings": []
 }

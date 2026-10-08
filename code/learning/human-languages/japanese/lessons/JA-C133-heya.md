@@ -40,7 +40,7 @@ reviews_of: [JA-C133-nuno, JA-W17-ya, JA-W18-ho, JA-W133-ke, JA-W131-wo]
 [PAUSE 15s] Say *cloth* — **R1**, one lesson back.
 [YOU WRITE: **け** — **R2**, five lessons back]
 
-- [YOU RECALL: write **を** — **R3**, twenty lessons back]
+- [YOU WRITE: **を** from memory — **R3**, twenty lessons back]
 
 ## You'll want to know: へや
 <!-- hl-knowledge: introduces=[JA-LEX-ANCHOR-HEYA]; assesses=[JA-SCRIPT-YA-01, JA-SCRIPT-HO-01] -->

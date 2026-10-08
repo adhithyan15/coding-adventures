@@ -37,7 +37,8 @@ reviews_of: [MW-C16-gaadi, MW-W06-ttha]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-GAADI-01, MW-LEX-BAS-01, MW-SCRIPT-TTHA-01, MW-SCRIPT-NANI-01] -->
 
-[PAUSE 16s] Say vehicle and bus, then write **ठ** and maternal grandmother.
+[PAUSE 16s] Say vehicle and bus.
+[YOU WRITE: **ठ** and the word for maternal grandmother]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-THELA-01]; assesses=[] -->

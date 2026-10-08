@@ -37,8 +37,10 @@ reviews_of: [MW-C09-nana, MW-C08-dadi]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-NANA-01, MW-LEX-DADI-01, MW-SCRIPT-BAAP-01] -->
 
-[PAUSE 12s] Say *nānā*, write **बाप**, and say the known paternal-grandmother
-word. Listen for the final long *ī* in the new word.
+[PAUSE 12s] Say *nānā*. [YOU WRITE: **बाप**]
+
+Then say the known paternal-grandmother word. Listen for the final long *ī* in
+the new word.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-NANI-01]; assesses=[] -->

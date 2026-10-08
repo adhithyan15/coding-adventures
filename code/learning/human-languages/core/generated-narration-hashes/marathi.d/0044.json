@@ -1,7 +1,7 @@
 {
   "language": "marathi",
   "chapter": 44,
-  "sourceHash": "fnv1a64:6d8cb1ede440e2a2",
+  "sourceHash": "fnv1a64:26c15bfbdd297773",
   "lessonIds": [
     "MR-C44-ujva",
     "MR-C44-daava",
@@ -11,7 +11,7 @@
   "drivablePrefix": 3,
   "text": "marathi/narration/ch44.txt",
   "json": "marathi/narration/ch44.json",
-  "textHash": "fnv1a64:926e1eae02ee6261",
-  "jsonHash": "fnv1a64:71ee477e38871796",
+  "textHash": "fnv1a64:547519555660b43d",
+  "jsonHash": "fnv1a64:1ace716718359c81",
   "findings": []
 }

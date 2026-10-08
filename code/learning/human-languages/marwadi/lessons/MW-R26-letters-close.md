@@ -36,8 +36,8 @@ reviews_of: [MW-R26-food-counter, MW-W21-kha, MW-W19-tta, MW-W17-sha, MW-W15-nuk
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-WEATHER-SIX-FOUR-SKILL-01, MW-LEX-MAUSAM-01, MW-SCRIPT-MAUSAM-01, MW-LEX-GARMI-01, MW-SCRIPT-GARMI-01, MW-LEX-THANDI-01, MW-SCRIPT-THANDI-01] -->
 
-[PAUSE 24s] Recall the six-word weather payoff, then write weather, heat, and
-cold.
+[PAUSE 24s] Recall the six-word weather payoff.
+[YOU WRITE: the words for weather, heat, and cold]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-KHA-01, MW-SCRIPT-TTA-01, MW-SCRIPT-SHA-01, MW-SCRIPT-RRA-01, MW-SCRIPT-AU-MATRA-01, MW-SCRIPT-NUKTA-01, MW-SCRIPT-GA-01, MW-SCRIPT-DDA-01, MW-SCRIPT-U-MATRA-01, MW-SCRIPT-II-INDEPENDENT-01, MW-SCRIPT-GHEE-01, MW-SCRIPT-AAKHRI-01, MW-SCRIPT-RIKSHA-01, MW-SCRIPT-THODU-01] -->
@@ -47,11 +47,9 @@ Some signs in this track have been read a hundred times inside words and asked
 for on their own only once. This lesson asks for them alone, which is the only
 way to know whether they were learned.
 
-Write each from a spoken cue, with nothing else on the line: **ख**, **ट**,
-**श**, **ड़**, **ौ**, **ग**, **ड**, **ु**, **ई**. Then write one word that
-carries each: **आखरी**, **रोटी**, **रिक्शा**, **थोड़ु**, **मौसम**, **गर्मी**,
-**ठंडी**, **दुकान**, **घी**. Repair only the missed sign and rewrite its word
-once.
+[YOU WRITE: each from a spoken cue, with nothing else on the line — **ख**, **ट**, **श**, **ड़**, **ौ**, **ग**, **ड**, **ु**, **ई**]
+
+[YOU WRITE: one word that carries each — **आखरी**, **रोटी**, **रिक्शा**, **थोड़ु**, **मौसम**, **गर्मी**, **ठंडी**, **दुकान**, **घी**; repair only the missed sign and rewrite its word once]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-SHA-01, MW-SCRIPT-AU-MATRA-01, MW-LEX-GHEE-01] -->

@@ -39,8 +39,8 @@ reviews_of: [JA-R134-phone-and-train, JA-W131-small-yo, JA-W03-u, JA-W01-i, JA-W
 
 [PAUSE 15s] Three recalls before the new word.
 
-- [YOU RECALL: write **べ** — **R2**, five lessons back]
-- [YOU RECALL: write **け** — **R3**, twenty lessons back]
+- [YOU WRITE: **べ** from memory — **R2**, five lessons back]
+- [YOU WRITE: **け** from memory — **R3**, twenty lessons back]
 - [YOU RECALL: say *detailed* — **R4**, eighty lessons back]
 
 ## You'll want to know: びょういん

@@ -36,7 +36,7 @@ reviews_of: [MW-R36-food-numbered, MW-C17-transport-five, MW-C23-counter-four]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-TRANSPORT-FIVE-FOUR-SKILL-01, MW-PERFORMANCE-BARGAIN-FOUR-SKILL-01, MW-SCRIPT-BAS-01] -->
 
 [PAUSE 22s] Recall the five-word transport payoff and the four-skill bargaining
-payoff, then write bus.
+payoff. [YOU WRITE: the word for bus]
 
 - [YOU RECALL: **१००** and **सो**, and which of the two is longer]
 
@@ -50,7 +50,7 @@ Take the five transport words one at a time.
    *pāṅch*.
 3. Offer a lower one with **करो।**, and say the amount aloud twice so the
    driver hears the same figure you meant.
-4. Write both figures down, the asked and the offered.
+4. [YOU WRITE: both figures, the asked and the offered]
 
 Say why this exchange has to be finished before the journey and not after it.
 

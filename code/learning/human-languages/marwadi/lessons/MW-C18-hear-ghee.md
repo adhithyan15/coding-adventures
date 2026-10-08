@@ -37,7 +37,8 @@ reviews_of: [MW-C18-daal, MW-C10-bajar, MW-C15-shopping-seven]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-SHOPPING-SEVEN-FOUR-SKILL-01, MW-SCRIPT-DAAL-01, MW-SCRIPT-BAJAR-01] -->
 
-[PAUSE 20s] Recall the seven-word shopping payoff, then write lentils and market.
+[PAUSE 20s] Recall the seven-word shopping payoff.
+[YOU WRITE: the words for lentils and market]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-GHEE-01]; assesses=[] -->

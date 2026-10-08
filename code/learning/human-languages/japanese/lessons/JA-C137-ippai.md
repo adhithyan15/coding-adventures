@@ -39,8 +39,8 @@ reviews_of: [JA-R136-family-and-water, JA-W01-i, JA-W11-small-tsu, JA-W136-zu, J
 
 [PAUSE 15s] Three recalls before the new word.
 
-- [YOU RECALL: write **ず** — **R2**, five lessons back]
-- [YOU RECALL: write **び** — **R3**, twenty lessons back]
+- [YOU WRITE: **ず** from memory — **R2**, five lessons back]
+- [YOU WRITE: **び** from memory — **R3**, twenty lessons back]
 - [YOU RECALL: say *clever* — **R4**, eighty lessons back]
 
 ## You'll want to know: いっぱい

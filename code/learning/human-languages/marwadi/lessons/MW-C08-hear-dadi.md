@@ -37,8 +37,9 @@ reviews_of: [MW-C08-bahan, MW-C08-dada]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DADA-01, MW-SCRIPT-DADA-01, MW-LEX-BAHAN-01, MW-SCRIPT-BAHAN-01, MW-FAREWELL-LATER-HEARD-01, MW-LEX-PACHHE-01, MW-LEX-MILSOO-01] -->
 
-[PAUSE 22s] Say and write paternal grandfather and sister, then give the known
-see-you-later line and its two meaning parts.
+[PAUSE 22s] Say paternal grandfather and sister. [YOU WRITE: both words]
+
+Then give the known see-you-later line and its two meaning parts.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-DADI-01]; assesses=[] -->

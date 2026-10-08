@@ -52,8 +52,8 @@ the long **ा** used since the first greeting.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-CHURMA-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **चूरमा**. Check that the **ू** hangs
-below **च** and not below **र**.
+Look, cover, and wait five seconds.
+[YOU WRITE: **चूरमा** — check that the **ू** hangs below **च** and not below **र**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-CHURMA-01, MW-SCRIPT-CHURMA-01] -->

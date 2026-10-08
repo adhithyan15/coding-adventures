@@ -37,8 +37,9 @@ reviews_of: [MW-C09-hear-nani, MW-C09-nana, MW-W04-ii-matra]
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-NANI-01]; assesses=[MW-LEX-NANI-01, MW-SCRIPT-NANA-01, MW-SCRIPT-II-MATRA-01, MW-PERFORMANCE-FAMILY-SEVEN-FOUR-SKILL-01] -->
 
-[PAUSE 12s] Write **नाना**, write familiar **ी** separately, then recall the
-seven-label four-skill payoff.
+[PAUSE 12s] [YOU WRITE: **नाना**, then familiar **ी** separately]
+
+Then recall the seven-label four-skill payoff.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-NANI-01, MW-SCRIPT-NANI-01] -->
@@ -49,7 +50,8 @@ seven-label four-skill payoff.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-NANI-01, MW-SCRIPT-NANA-01, MW-LEX-NANA-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Cover **नानी**, wait five seconds, write it, and circle only the final **ी**.
+Cover **नानी** and wait five seconds.
+[YOU WRITE: the word, and circle only the final **ी**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-NANI-01, MW-SCRIPT-NANI-01] -->

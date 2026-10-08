@@ -36,7 +36,7 @@ reviews_of: [JA-W15-ro, JA-C13-imouto, JA-C09-yoku]
 
 [PAUSE 25s] Three recalls, then the word the last lesson bought a sign for.
 
-- [YOU RECALL: write **ろ** — **R1**, one lesson back]
+- [YOU WRITE: **ろ** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *my younger sister* — **R3**, twenty lessons back]
 - [YOU RECALL: say *well, fully* — **R4**, eighty lessons back]
 

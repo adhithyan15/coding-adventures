@@ -62,7 +62,7 @@ it a thing, as in **これ**. Put side by side, the four words line up:
 [PAUSE 1s]
 - [YOU SAY: *sore*]
 - [YOU SAY: *kore*, touching something in front of you, then *sore*, pointing at something by the listener]
-- [YOU RECALL: write **それ**; you write every sign in it now]
+- [YOU WRITE: **それ** from memory; you write every sign in it now]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C132-SORE, JA-SCRIPT-RE-01] -->

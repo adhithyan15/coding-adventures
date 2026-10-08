@@ -40,8 +40,8 @@ reviews_of: [JA-C139-nanimo, JA-C138-nemasu, JA-W137-pa, JA-W131-small-yo]
 
 - [YOU RECALL: say *nothing*, with a negative verb — **R1**, one lesson back]
 - [YOU RECALL: say *I go to bed*, politely — **R2**, five lessons back]
-- [YOU RECALL: write **ぱ** — **R3**, twenty lessons back]
-- [YOU RECALL: write small **ょ** — **R4**, eighty lessons back]
+- [YOU WRITE: **ぱ** from memory — **R3**, twenty lessons back]
+- [YOU WRITE: small **ょ** from memory — **R4**, eighty lessons back]
 
 ## You'll want to know: だれも
 <!-- hl-knowledge: introduces=[JA-LEX-C139-DAREMO]; assesses=[] -->

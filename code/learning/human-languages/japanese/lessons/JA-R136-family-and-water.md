@@ -37,7 +37,7 @@ reviews_of: [JA-C136-kazoku, JA-W136-zo, JA-C136-kazoeru, JA-C136-mizu, JA-W136-
 
 [PAUSE 20s] Four recalls, then the review.
 
-- [YOU RECALL: write **ぜ** — **R1**, one lesson back]
+- [YOU WRITE: **ぜ** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *water* — **R2**, five lessons back]
 - [YOU RECALL: say *a hospital* — **R3**, twenty lessons back]
 - [YOU RECALL: say *honest*, *straightforward* — **R4**, eighty lessons back]

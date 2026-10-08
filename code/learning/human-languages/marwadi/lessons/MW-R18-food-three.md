@@ -36,13 +36,15 @@ reviews_of: [MW-C18-daal, MW-C18-ghee, MW-C18-sabji, MW-C16-gaadi, MW-C10-hear-m
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-GAADI-01, MW-LEX-MANDIR-01, MW-LEX-GHAR-01] -->
 
-[PAUSE 18s] Write vehicle, then say temple and home.
+[PAUSE 18s] [YOU WRITE: the word for vehicle]
+
+Then say temple and home.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DAAL-01, MW-SCRIPT-DAAL-01, MW-LEX-GHEE-01, MW-SCRIPT-GHEE-01, MW-LEX-SABJI-01, MW-SCRIPT-SABJI-01] -->
 
-Hear the three words in a mixed order, give each meaning, read three shuffled
-cards, then write all three from sound.
+Hear the three words in a mixed order, give each meaning, and read three
+shuffled cards. [YOU WRITE: all three from sound]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DAAL-01, MW-LEX-GHEE-01, MW-LEX-SABJI-01] -->

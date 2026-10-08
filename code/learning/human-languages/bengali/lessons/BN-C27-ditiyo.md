@@ -37,7 +37,7 @@ reviews_of: [BN-W05-tha, BN-C23-she, BN-C13-sbagotom, BN-C06-numbers-1-5]
 [PAUSE 2s] A second kind of number word starts here, so the recalls come first,
 at the three growing distances this book can measure.
 
-- [YOU RECALL: write **থ** — **R2**, five lessons back]
+- [YOU WRITE: **থ** from memory — **R2**, five lessons back]
 - [YOU RECALL: say *he, she* — **R3**, twenty lessons back]
 - [YOU RECALL: say *welcome* — **R4**, eighty lessons back]
 

@@ -37,8 +37,8 @@ reviews_of: [MW-C13-hear-dukan, MW-W13-u-matra, MW-C10-bajar, MW-C11-barsaat, MW
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-DUKAN-01]; assesses=[MW-LEX-DUKAN-01, MW-SCRIPT-U-MATRA-01, MW-SCRIPT-KA-01, MW-SCRIPT-NA-01, MW-LEX-BAJAR-01, MW-SCRIPT-BAJAR-01, MW-SCRIPT-BARSAAT-01, MW-SCRIPT-KAIN-01, MW-SCRIPT-PACHHE-MILSOO-01] -->
 
-[PAUSE 25s] Say shop and market, write **बाजार**, **बरसात**, and **कांई**, then
-write **पाछे मिलसू**, then form **दु**, **का**, and **न**.
+[PAUSE 25s] Say shop and market.
+[YOU WRITE: **बाजार**, **बरसात**, and **कांई**, then **पाछे मिलसू**, then form **दु**, **का**, and **न**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DUKAN-01, MW-SCRIPT-DUKAN-01] -->
@@ -49,8 +49,8 @@ write **पाछे मिलसू**, then form **दु**, **का**, and **
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-DUKAN-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **दुकान**. Check short **ु** below
-the first sign and long **ा** in the second chunk.
+Look, cover, and wait five seconds.
+[YOU WRITE: **दुकान** — check short **ु** below the first sign and long **ा** in the second chunk]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DUKAN-01, MW-SCRIPT-DUKAN-01] -->

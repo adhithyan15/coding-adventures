@@ -37,7 +37,7 @@ reviews_of: [MW-W38-u, MW-C38-hear-satara, MW-C34-hear-bees]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-U-INDEPENDENT-01, MW-LEX-SATARA-01, MW-LEX-IGYAARA-01] -->
 
 [PAUSE 16s]
-- [YOU RECALL: write **उ** — **R1**]
+- [YOU WRITE: **उ** from memory — **R1**]
 - [YOU RECALL: say *satarā*, five lessons back — **R2**]
 - [YOU RECALL: say **igyārā** — **R3**]
 

@@ -28,7 +28,7 @@ Lesson 2 of 13.
 
 Warm-up.
 [pause 18 seconds]
-Write य, write ए, then write four.
+[once you have stopped driving — write: य, then ए, then the word for four]
 
 You'll want to know.
 छ — chha — six.
@@ -36,7 +36,8 @@ One sign, made in chapter 9, and nothing added to it.
 The other printed spelling is छे, and it is worth a moment. That is छ (chha) with the mark of the letter chapter 32 taught — the same vowel, riding on a consonant instead of standing alone. It is also, exactly, the second syllable of पाछे. A chunk the hand has been writing since chapter 9 turns out to be a number.
 
 Guided Practice.
-Write छ (chha), then write छे beneath it, then write ए beside both. Say which of the three stands alone and which two need something under them.
+[once you have stopped driving — write: छ (chha), then छे beneath it, then ए beside both]
+Say which of the three stands alone and which two need something under them.
 
 Wrap-up Recall.
 Sources: Omniglot, Numbers in Rajasthani; Unicode Devanagari chart.
@@ -221,14 +222,16 @@ Ten words, shuffled — the second five, shuffled, and the first five brought ba
 
 Warm-up.
 [pause 22 seconds]
-Write the show-request word, recall the counting payoff from the last chapter, then write ए.
+[once you have stopped driving — write: the show-request word]
+Recall the counting payoff from the last chapter.
+[once you have stopped driving — write: ए]
 
 Guided Practice.
 Two runs of five are still two runs until they are mixed.
 Hear ten numbers named singly, drawn from across the whole set, and say each.
 Count backwards from ten to one.
 Read आठ (āṭh), तीन, दस (das), छ (chha), एक, नो (no) printed in that order and say each.
-Write सात (sāt), पांच, नो (no), दो, दस (das) from dictation.
+[once you have stopped driving — write: सात (sāt), पांच, नो (no), दो, दस (das) from dictation]
 Then say which pairs share a sign: two and nine, seven and ten, four and five.
 
 Wrap-up Recall.
@@ -242,14 +245,17 @@ Payoff — counting to ten.
 
 Warm-up.
 [pause 18 seconds]
-Recall the five-number payoff, then write the letter that made it possible.
+Recall the five-number payoff.
+[once you have stopped driving — write: the letter that made it possible]
 
 Guided Practice.
 Four skills, scored separately.
-Listening. Hear ten numbers named singly and out of order; write each in figures of your own language.
+Listening. Hear ten numbers named singly and out of order.
+[once you have stopped driving — write: each in figures of your own language]
 Speaking. Count one to ten, then ten to one, with no model.
 Reading. Read all ten printed in Devanagari, shuffled, and say each.
-Writing. Write all ten from dictation, shuffled, with no model in view.
+Writing.
+[once you have stopped driving — write: all ten from dictation, shuffled, with no model in view]
 Pass each one separately.
 Look back at what the hand had to learn for this: one letter, ए. Every other sign in all ten words was already in the book. A reader who felt the numbers were going to be a wall of new writing has the evidence in front of them that they were not.
 
@@ -264,11 +270,12 @@ Close the writing loop for छ (chha), ठ and स — delayed closure for the t
 
 Warm-up.
 [pause 22 seconds]
-Recall the ten-number payoff, say the show request, then write market.
+Recall the ten-number payoff and say the show request.
+[once you have stopped driving — write: the word for market]
 
 Guided Practice.
-Write three single signs from sound cues: छ (chha), ठ, स. Then write च beside छ (chha) and mark which of the two carries the breath.
-Then write छ (chha), सात (sāt), आठ (āṭh), नो (no), दस (das) from dictation. Repair only the missed sign and rewrite its word once.
+[once you have stopped driving — write: three single signs from sound cues — छ (chha), ठ, स; then च beside छ (chha), and mark which of the two carries the breath]
+[once you have stopped driving — write: छ (chha), सात (sāt), आठ (āṭh), नो (no), दस (das) from dictation — repair only the missed sign and rewrite its word once]
 
 Wrap-up Recall.
 Sources: Omniglot, Numbers in Rajasthani; Unicode Devanagari chart.

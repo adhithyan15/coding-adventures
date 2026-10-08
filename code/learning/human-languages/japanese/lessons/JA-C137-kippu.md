@@ -40,8 +40,8 @@ reviews_of: [JA-C137-ippiki, JA-W133-ki, JA-W11-small-tsu, JA-W137-pa, JA-W135-g
 [PAUSE 20s] Four recalls before the new word.
 
 - [YOU RECALL: say *one small animal*, one cat — **R1**, one lesson back]
-- [YOU RECALL: write **ぱ** — **R2**, five lessons back]
-- [YOU RECALL: write **げ** — **R3**, twenty lessons back]
+- [YOU WRITE: **ぱ** from memory — **R2**, five lessons back]
+- [YOU WRITE: **げ** from memory — **R3**, twenty lessons back]
 - [YOU RECALL: say *persistent* — **R4**, eighty lessons back]
 
 ## You'll want to know: きっぷ

@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Aabhaar: Formal Thanks, Two New Signs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:595ab8097b8e6e08",
+  "sourceHash": "fnv1a64:1346365474d107fc",
   "lessons": [
     {
       "id": "MW-W02-aa-independent",
@@ -395,7 +395,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1945e8230819625d",
+      "sourceHash": "fnv1a64:91b452f80c7656a1",
       "notice": null,
       "blocks": [
         {
@@ -411,7 +411,16 @@
             },
             {
               "kind": "speech",
-              "text": "Give the respectful Chapter 1 greeting from memory. Then, with the new word covered, write आ (ā), then भ (bha). Uncover and check."
+              "text": "Give the respectful Chapter 1 greeting from memory."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "आ (ā), then भ (bha), with the new word covered — then uncover it and check",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **आ**, then **भ**, with the new word covered — then uncover it and check]"
             }
           ]
         },
@@ -452,8 +461,13 @@
               "text": "Read: choose the thanks word from राम, आभार (ābhār), सा."
             },
             {
-              "kind": "speech",
-              "text": "Write: close the book for fifteen seconds, then write आभार (ābhār) from memory."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "आभार (ābhār) from memory, after fifteen seconds with the book closed",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **आभार** from memory, after fifteen seconds with the book closed]"
             },
             {
               "kind": "speech",

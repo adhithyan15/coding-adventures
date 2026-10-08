@@ -36,7 +36,7 @@ reviews_of: [JA-W17-mu, JA-C15-roku, JA-C10-sukoshi]
 
 [PAUSE 25s] Three recalls, then six.
 
-- [YOU RECALL: write **む**, all three strokes — **R1**, one lesson back]
+- [YOU WRITE: **む** from memory, all three strokes — **R1**, one lesson back]
 - [YOU RECALL: say *two* — **R3**, twenty lessons back]
 - [YOU RECALL: say *a little* — **R4**, eighty lessons back]
 

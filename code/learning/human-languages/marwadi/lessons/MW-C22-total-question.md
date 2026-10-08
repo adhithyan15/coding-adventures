@@ -37,8 +37,7 @@ reviews_of: [MW-C22-hear-total-question, MW-W03-ha, MW-W13-u-matra, MW-W02-aa-in
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-TOTAL-QUESTION-01]; assesses=[MW-LEX-TOTAL-QUESTION-01, MW-SCRIPT-AABHAAR-01, MW-SCRIPT-AA-INDEPENDENT-01, MW-SCRIPT-PRICE-QUESTION-01] -->
 
-[PAUSE 22s] Write **आ** on its own, then write formal thanks, then write the
-price question from the last lesson.
+[PAUSE 22s] [YOU WRITE: **आ** on its own, then the word for formal thanks, then the price question from the last lesson]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-YE-01, MW-SCRIPT-KITNO-01, MW-SCRIPT-HA-01, MW-SCRIPT-U-MATRA-01] -->
@@ -54,8 +53,8 @@ word rather than starting one.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-TOTAL-QUESTION-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Read the line once. Cover it for ten seconds and write the three words. Check
-that **हुआ** keeps its **ु** below the first sign and its **आ** at full height.
+Read the line once and cover it for ten seconds.
+[YOU WRITE: the three words — check that **हुआ** keeps its **ु** below the first sign and its **आ** at full height]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-TOTAL-QUESTION-01, MW-LEX-TOTAL-QUESTION-01] -->

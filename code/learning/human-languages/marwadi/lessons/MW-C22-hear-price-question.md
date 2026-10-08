@@ -37,8 +37,8 @@ reviews_of: [MW-C22-kitno, MW-C05-hear-hai, MW-C13-vastu, MW-C12-thandi, MW-W12-
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-VASTU-01, MW-SCRIPT-VASTU-01, MW-LEX-THANDI-01, MW-SCRIPT-THANDI-01, MW-SCRIPT-DDA-01, MW-SCRIPT-HAI-01] -->
 
-[PAUSE 24s] Say item and cold and write both, then write **ड** and **है** on
-their own.
+[PAUSE 24s] Say item and cold.
+[YOU WRITE: both words, then **ड** and **है** on their own]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-PRICE-QUESTION-01]; assesses=[MW-LEX-KITNO-01, MW-LEX-YE-01, MW-LEX-HAI-01] -->

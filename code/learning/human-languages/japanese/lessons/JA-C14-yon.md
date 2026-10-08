@@ -39,7 +39,7 @@ reviews_of: [JA-C14-san, JA-C13-chichi, JA-W08-ra, JA-C13-family-check]
 - [YOU RECALL: say *three* — **R1**, one lesson back]
 - [YOU RECALL: run the nine family words — **R2**, five lessons back]
 - [YOU RECALL: say *my father* — **R3**, twenty lessons back]
-- [YOU RECALL: write **ら** — **R4**, eighty lessons back]
+- [YOU WRITE: **ら** from memory — **R4**, eighty lessons back]
 
 ## You'll Want to Know — hear and say
 <!-- hl-knowledge: introduces=[JA-LEX-YON]; assesses=[JA-SCRIPT-YO-01, JA-SCRIPT-N-01, JA-SCRIPT-SHI-01, JA-LEX-SAN] -->

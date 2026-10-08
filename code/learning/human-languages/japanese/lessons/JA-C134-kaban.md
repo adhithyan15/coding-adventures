@@ -40,8 +40,8 @@ reviews_of: [JA-C134-densha, JA-W03-ka, JA-W01-n, JA-W133-he, JA-W132-re, JA-C12
 [PAUSE 20s] Four recalls before the new word.
 
 - [YOU RECALL: say *a train* — **R1**, one lesson back]
-- [YOU RECALL: write **へ** — **R2**, five lessons back]
-- [YOU RECALL: write **れ** — **R3**, twenty lessons back]
+- [YOU WRITE: **へ** from memory — **R2**, five lessons back]
+- [YOU WRITE: **れ** from memory — **R3**, twenty lessons back]
 - [YOU RECALL: say *deep* — **R4**, eighty lessons back]
 
 ## You'll want to know: かばん

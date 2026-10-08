@@ -37,7 +37,7 @@ reviews_of: [MW-C18-hear-daal, MW-C17-ghodo, MW-W10-ja]
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-DAAL-01]; assesses=[MW-LEX-DAAL-01, MW-SCRIPT-GHODO-01, MW-SCRIPT-JA-01] -->
 
-[PAUSE 18s] Say lentils, then write horse and **ज**.
+[PAUSE 18s] Say lentils. [YOU WRITE: the word for horse, then **ज**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DAAL-01, MW-SCRIPT-DAAL-01] -->
@@ -50,8 +50,8 @@ Three units, all of them met before: **द**, the long **ा**, and **ल**.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-DAAL-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **दाल**. Check that the **ा** sits
-after **द** and not after **ल**.
+Look, cover, and wait five seconds.
+[YOU WRITE: **दाल** — check that the **ा** sits after **द** and not after **ल**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DAAL-01, MW-SCRIPT-DAAL-01] -->

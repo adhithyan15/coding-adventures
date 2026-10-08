@@ -4,7 +4,7 @@
   "chapter": 60,
   "title": "Which One in the Line",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:9e96c6bae8d758ce",
+  "sourceHash": "fnv1a64:fb5684cb758997b9",
   "lessons": [
     {
       "id": "MR-C60-dusra-ordinal",
@@ -214,7 +214,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4abb76b6bd0db5e8",
+      "sourceHash": "fnv1a64:5c5dde2a7bbb9f9e",
       "notice": null,
       "blocks": [
         {
@@ -243,12 +243,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write the ai sign on क — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "the ai sign on क from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write the *ai* sign on **क** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: the *ai* sign on **क** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",

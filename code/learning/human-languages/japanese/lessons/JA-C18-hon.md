@@ -36,7 +36,7 @@ reviews_of: [JA-W18-ho, JA-C12-kami, JA-C11-ashi, JA-W11-te]
 
 [PAUSE 25s] Three recalls, then a counter chosen by shape.
 
-- [YOU RECALL: write **ほ** — **R1**, one lesson back]
+- [YOU WRITE: **ほ** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *hand* — **R4**, eighty lessons back]
 - [YOU RECALL: say what ~つ is for, and what it is not for — **R2**, five lessons back]
 

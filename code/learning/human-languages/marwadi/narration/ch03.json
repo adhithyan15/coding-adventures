@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Haan Sa: A Respectful Yes, Sign by Sign",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4fbceec68899aa4e",
+  "sourceHash": "fnv1a64:08507ec20d72ecf7",
   "lessons": [
     {
       "id": "MW-W03-ha",
@@ -371,7 +371,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1227c5bf6af59385",
+      "sourceHash": "fnv1a64:595e046cbca392e9",
       "notice": null,
       "blocks": [
         {
@@ -386,8 +386,17 @@
               "source": "[PAUSE 6s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the first sign of आभार, then the first sign of हां सा (hā(n) sā)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the first sign of **आभार**, then the first sign of **हां सा**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write the first sign of आभार, then the first sign of हां सा (hā(n) sā). Say which belongs to formal thanks and which begins a yes answer."
+              "text": "Say which belongs to formal thanks and which begins a yes answer."
             }
           ]
         },
@@ -420,8 +429,13 @@
               "text": "Read: choose हां सा (hā(n) sā) from आभार, हां सा (hā(n) sā), राम."
             },
             {
-              "kind": "speech",
-              "text": "Write: cover all models and write only हां."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "only हां, with all models covered",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: only **हां**, with all models covered]"
             }
           ]
         },
@@ -432,7 +446,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Close the page. Say हां सा (hā(n) sā), then write हां from memory."
+              "text": "Close the page. Say हां सा (hā(n) sā)."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "हां from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **हां** from memory]"
             },
             {
               "kind": "activity",
@@ -472,7 +495,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a615ff20d6b70f8",
+      "sourceHash": "fnv1a64:e381e197ddfed05c",
       "notice": null,
       "blocks": [
         {
@@ -487,8 +510,17 @@
               "source": "[PAUSE 7s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "भ, then हां, with the page covered",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **भ**, then **हां**, with the page covered]"
+            },
+            {
               "kind": "speech",
-              "text": "With the page covered, write भ, then हां. Say आभार for formal thanks; say हां सा (hā(n) sā) for a respectful yes."
+              "text": "Say आभार for formal thanks; say हां सा (hā(n) sā) for a respectful yes."
             }
           ]
         },
@@ -510,8 +542,13 @@
               "text": "Read: cover the English and explain हां सा (hā(n) sā)."
             },
             {
-              "kind": "speech",
-              "text": "Write: hear hā(n) sā, wait fifteen seconds, then write the complete phrase."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the complete phrase, fifteen seconds after hearing hā(n) sā",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the complete phrase, fifteen seconds after hearing *hā(n) sā*]"
             },
             {
               "kind": "speech",

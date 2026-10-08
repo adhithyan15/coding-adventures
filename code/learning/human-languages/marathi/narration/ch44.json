@@ -4,7 +4,7 @@
   "chapter": 44,
   "title": "Right and Left",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:6d8cb1ede440e2a2",
+  "sourceHash": "fnv1a64:26c15bfbdd297773",
   "lessons": [
     {
       "id": "MR-C44-ujva",
@@ -312,7 +312,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:06bea1b254bc65ad",
+      "sourceHash": "fnv1a64:12601b43908c78c9",
       "notice": null,
       "blocks": [
         {
@@ -373,11 +373,20 @@
             {
               "kind": "prompt",
               "action": "RECALL",
-              "instruction": "answer kuṭhe? with ithe, then tithe, and write तिथे once",
+              "instruction": "answer kuṭhe? with ithe, then tithe",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: answer *kuṭhe?* with *ithe*, then *tithe*, and write **तिथे** once]"
+              "source": "[YOU RECALL: answer *kuṭhe?* with *ithe*, then *tithe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "तिथे once, from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **तिथे** once, from memory]"
             },
             {
               "kind": "activity",

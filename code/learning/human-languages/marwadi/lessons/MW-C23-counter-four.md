@@ -36,8 +36,8 @@ reviews_of: [MW-R23-bargain-two, MW-C22-price-three, MW-C23-price-answer, MW-C23
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-PRICE-FOUR-SKILL-01, MW-PERFORMANCE-SHOPPING-SEVEN-FOUR-SKILL-01, MW-LEX-KAPDA-01, MW-SCRIPT-KAPDA-01] -->
 
-[PAUSE 24s] Recall the price payoff and the seven-word shopping payoff, then
-write clothes.
+[PAUSE 24s] Recall the price payoff and the seven-word shopping payoff.
+[YOU WRITE: the word for clothes]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[MW-PERFORMANCE-BARGAIN-FOUR-SKILL-01]; assesses=[MW-LEX-PRICE-QUESTION-01, MW-SCRIPT-PRICE-QUESTION-01, MW-LEX-PRICE-ANSWER-01, MW-SCRIPT-PRICE-ANSWER-01, MW-LEX-BARGAIN-REQUEST-01, MW-SCRIPT-BARGAIN-REQUEST-01, MW-LEX-GHANO-01, MW-SCRIPT-GHANO-01, MW-LEX-THODU-01, MW-SCRIPT-THODU-01, MW-LEX-KARO-01, MW-SCRIPT-KARO-01] -->
@@ -47,7 +47,7 @@ Three turns, in this order and no other.
 1. Hear the three lines shuffled and put them back in order.
 2. Produce all three from meaning cues, as one continuous exchange.
 3. Read the three printed lines and say who speaks which.
-4. Write all three from dictation, without a model.
+4. [YOU WRITE: all three from dictation, without a model]
 
 Pass each skill separately. You can now open a price, react to it, and make one
 counter-offer. Hearing a number in reply, agreeing a final price, and paying are

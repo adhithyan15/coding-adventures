@@ -36,13 +36,14 @@ reviews_of: [MW-C21-ye, MW-C21-dikhavo, MW-W21-kha, MW-C20-chaay, MW-C20-food-se
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-FOOD-SEVEN-FOUR-SKILL-01, MW-LEX-CHAAY-01, MW-SCRIPT-CHAAY-01, MW-SCRIPT-YA-01] -->
 
-[PAUSE 20s] Recall the seven-word food payoff, then write tea and **य**.
+[PAUSE 20s] Recall the seven-word food payoff.
+[YOU WRITE: the word for tea, and **य**]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-YE-01, MW-SCRIPT-YE-01, MW-LEX-DIKHAVO-01, MW-SCRIPT-DIKHAVO-01, MW-SCRIPT-KHA-01] -->
 
-Hear both words in both orders and give each meaning. Read two cards. Write
-both from sound, then circle the one sign in them that is new this chapter.
+Hear both words in both orders and give each meaning. Read two cards.
+[YOU WRITE: both from sound, then circle the one sign in them that is new this chapter]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-YE-01, MW-LEX-DIKHAVO-01] -->

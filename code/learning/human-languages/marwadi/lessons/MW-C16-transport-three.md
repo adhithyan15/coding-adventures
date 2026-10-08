@@ -36,7 +36,9 @@ reviews_of: [MW-R16-transport-three]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PATI-01, MW-LEX-SAMAAN-01] -->
 
-[PAUSE 16s] Write husband, then say goods.
+[PAUSE 16s] [YOU WRITE: the word for husband]
+
+Then say goods.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[MW-PERFORMANCE-TRANSPORT-THREE-FOUR-SKILL-01]; assesses=[MW-LEX-BAS-01, MW-SCRIPT-BAS-01, MW-LEX-GAADI-01, MW-SCRIPT-GAADI-01, MW-LEX-THELA-01, MW-SCRIPT-THELA-01] -->
@@ -44,7 +46,7 @@ reviews_of: [MW-R16-transport-three]
 1. Identify three heard words.
 2. Produce three words from meaning cues.
 3. Match three printed cards to meanings.
-4. Write all three heard words without a model.
+4. [YOU WRITE: all three heard words without a model]
 
 Pass each skill separately. Timetables, tickets, and location phrases remain
 later work.

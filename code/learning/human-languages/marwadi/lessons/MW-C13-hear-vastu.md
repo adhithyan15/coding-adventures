@@ -37,8 +37,10 @@ reviews_of: [MW-C13-dukan, MW-W13-u-matra, MW-C10-paisa, MW-C10-mandir, MW-C12-t
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-DUKAN-01, MW-SCRIPT-DUKAN-01, MW-SCRIPT-U-MATRA-01, MW-LEX-PAISA-01, MW-SCRIPT-MANDIR-01, MW-LEX-THANDI-01, MW-PERFORMANCE-FAREWELL-LATER-FOUR-SKILL-01] -->
 
-[PAUSE 22s] Say and write shop, form short **ु**, then recall money, temple,
-and cold, then retrieve the see-you-later line from its cue.
+[PAUSE 22s] Say shop. [YOU WRITE: the word for shop, then form short **ु**]
+
+Then recall money, temple, and cold, then retrieve the see-you-later line from
+its cue.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-VASTU-01]; assesses=[] -->

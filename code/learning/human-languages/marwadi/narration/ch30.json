@@ -4,7 +4,7 @@
   "chapter": 30,
   "title": "Bring It Over: The Food Counter's Own Word",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:5389be5f15c6f3f9",
+  "sourceHash": "fnv1a64:27dbf9afe13537bf",
   "lessons": [
     {
       "id": "MW-C25-hear-lavo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45625813e76d9b85",
+      "sourceHash": "fnv1a64:d58ebbf2e3c8953f",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the closing payoff and the three-word transport payoff, then write bus and make it."
+              "text": "Recall the closing payoff and the three-word transport payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for bus and make it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for bus and *make it*]"
             }
           ]
         },
@@ -202,7 +211,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42559ab1f8e53042",
+      "sourceHash": "fnv1a64:d54ea2302b0c319e",
       "notice": null,
       "blocks": [
         {
@@ -218,7 +227,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the seven-word food payoff, say the request from Chapter 26, then write the sweet crumbled wheat dessert, tea, and bring it."
+              "text": "Recall the seven-word food payoff and say the request from Chapter 26."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for the sweet crumbled wheat dessert, tea, and bring it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for the sweet crumbled wheat dessert, tea, and *bring it*]"
             }
           ]
         },
@@ -287,7 +305,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8dce477c533d6bf3",
+      "sourceHash": "fnv1a64:3eff19a78ff17abb",
       "notice": null,
       "blocks": [
         {
@@ -302,8 +320,13 @@
               "source": "[PAUSE 24s]"
             },
             {
-              "kind": "speech",
-              "text": "Write ट, then write flatbread and hard wheat rolls."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ट, then the words for flatbread and hard wheat rolls",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ट**, then the words for flatbread and hard wheat rolls]"
             }
           ]
         },
@@ -318,7 +341,20 @@
             },
             {
               "kind": "speech",
-              "text": "Two written words and a stop. Now write the same line twice more, replacing चाय with रोटी and then with बाटी. Only the first word changes, and you have written all three of those words before."
+              "text": "Two written words and a stop."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the same line twice more, replacing चाय with रोटी and then with बाटी",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the same line twice more, replacing **चाय** with **रोटी** and then with **बाटी**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Only the first word changes, and you have written all three of those words before."
             }
           ]
         },
@@ -329,7 +365,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Read the line once. Cover it for ten seconds and write it. Then write the two variants from memory and check that लावो (lāvo) is identical in all three."
+              "text": "Read the line once and cover it for ten seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the line; then the two variants from memory — check that लावो (lāvo) is identical in all three",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the line; then the two variants from memory — check that **लावो** is identical in all three]"
             }
           ]
         },
@@ -377,7 +422,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84cbd1d8f0309ae0",
+      "sourceHash": "fnv1a64:ce0a5a6bd4c5a27e",
       "notice": null,
       "blocks": [
         {
@@ -392,8 +437,17 @@
               "source": "[PAUSE 22s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for very and a little",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for *very* and *a little*]"
+            },
+            {
               "kind": "speech",
-              "text": "Write very and a little, then say which one makes a description stronger."
+              "text": "Then say which one makes a description stronger."
             }
           ]
         },
@@ -404,7 +458,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Five asking words are now in play. Hear them shuffled and give each meaning. Read five cards: दिखावो, करो, लो, दो, लावो (lāvo). Write all five from sound, then write the tea order and say which of the five it uses."
+              "text": "Five asking words are now in play. Hear them shuffled and give each meaning. Read five cards: दिखावो, करो, लो, दो, लावो (lāvo)."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all five from sound, then the tea order",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all five from sound, then the tea order]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say which of the five the tea order uses."
             }
           ]
         },
@@ -454,7 +521,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:006ffaa79de5ca2a",
+      "sourceHash": "fnv1a64:c113e4d6e11e48b2",
       "notice": null,
       "blocks": [
         {
@@ -470,7 +537,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the three-counter request payoff and write the request itself."
+              "text": "Recall the three-counter request payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the request itself",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the request itself]"
             }
           ]
         },
@@ -496,8 +572,13 @@
               "text": "Read five cards and match each to one line you already know."
             },
             {
-              "kind": "speech",
-              "text": "Write all five from dictation, then write the tea order, the counter-offer, and the closing question that asks for a final price."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all five from dictation, then the tea order, the counter-offer, and the closing question that asks for a final price",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all five from dictation, then the tea order, the counter-offer, and the closing question that asks for a final price]"
             },
             {
               "kind": "speech",
@@ -549,7 +630,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:29d0fa7c473ca540",
+      "sourceHash": "fnv1a64:b422fcb455d63246",
       "notice": null,
       "blocks": [
         {
@@ -565,7 +646,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the five-word asking payoff, then write child and wind."
+              "text": "Recall the five-word asking payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for child and wind",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for child and wind]"
             }
           ]
         },
@@ -575,12 +665,26 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write five single signs from sound cues: ल, व, च, छ, ख. Two of those five are breathed partners of the two before them; say all five and mark which two carry the breath."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "five single signs from sound cues, ल, व, च, छ, ख, and mark which two carry the breath",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: five single signs from sound cues, **ल**, **व**, **च**, **छ**, **ख**, and mark which two carry the breath]"
             },
             {
               "kind": "speech",
-              "text": "Then write लावो, लो, दिखावो, चाय लावो। (chāy lāvo.), and पाछे मिलसू from dictation. Repair only the missed sign and rewrite its word once."
+              "text": "Two of those five are breathed partners of the two before them. Say all five."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "लावो, लो, दिखावो, चाय लावो। (chāy lāvo.), and पाछे मिलसू from dictation — repair only the missed sign and rewrite its word once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **लावो**, **लो**, **दिखावो**, **चाय लावो।**, and **पाछे मिलसू** from dictation — repair only the missed sign and rewrite its word once]"
             }
           ]
         },

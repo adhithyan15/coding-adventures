@@ -36,7 +36,7 @@ reviews_of: [MW-C34-hear-price-number, MW-C22-price-question, MW-C34-bees]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PRICE-QUESTION-01, MW-SCRIPT-DAS-01, MW-SCRIPT-SO-01] -->
 
-[PAUSE 18s] Say the price question, then write ten and a hundred.
+[PAUSE 18s] Say the price question. [YOU WRITE: the words for ten and a hundred]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-SCRIPT-PRICE-NUMBER-01]; assesses=[MW-SCRIPT-PRICE-QUESTION-01, MW-SCRIPT-BEES-01, MW-LEX-PRICE-NUMBER-01] -->
@@ -53,8 +53,7 @@ long, and Devanagari closes it the same way it closes a sentence.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PRICE-NUMBER-01, MW-SCRIPT-DAS-01, MW-SCRIPT-BEES-01, MW-SCRIPT-SO-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Write the question and answer as two lines. Then rewrite the answer line three
-times with **दस**, **बीस** and **सो** in turn, and read each pair aloud.
+[YOU WRITE: the question and answer as two lines; then the answer line three more times, with **दस**, **बीस** and **सो** in turn, and read each pair aloud]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PRICE-NUMBER-01] -->

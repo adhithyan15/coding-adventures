@@ -55,6 +55,11 @@
 // (`drivable-writing-cues.test.ts`) runs all four over every drivable lesson
 // in every track.
 //
+// One kind of cue is not safe either. `[YOU RECALL: write **ば** — **R1**]` is
+// a cue, but RECALL is a spoken action, so the narration reads it to a driver
+// as "recall: write ば". The last section of this module, "Inside a recall
+// cue", reads those, and `drivableWritingInstructions` runs both.
+//
 // "Not inside a cue" is decided by the narration renderer's own cue splitter,
 // `splitNarrationCues`, not by a second bracket regex. The question being asked
 // is "will the narration hedge this sentence?", and the only honest answer
@@ -104,6 +109,7 @@
 // opens its narration with a spoken notice that it needs hands and eyes, so a
 // bare "Write it" inside one has already been hedged at the lesson level.
 
+import { parseDeliveryCue } from "../src/delivery-cue.js";
 import { splitNarrationCues } from "../src/narration.js";
 
 /**
@@ -197,6 +203,22 @@ export function withoutHtmlComments(markdown: string): string {
  * what lets "[PAUSE 2s] Draw the shape" be seen as opening with "Draw".
  */
 export function narratedProseSpans(markdown: string): string[] {
+  const spans: string[] = [];
+  for (const part of narratedParts(markdown)) {
+    if (!("text" in part)) continue;
+    const prose = part.text.trim();
+    if (prose !== "") spans.push(prose);
+  }
+  return spans;
+}
+
+/**
+ * The same walk as {@link narratedProseSpans}, keeping the cues as well as the
+ * prose between them: each paragraph, list item, table row and heading, cut by
+ * the narration renderer's own splitter. `narratedProseSpans` keeps the prose;
+ * {@link writingRecallCues} keeps the cues.
+ */
+function narratedParts(markdown: string): ReturnType<typeof splitNarrationCues> {
   const text = withoutHtmlComments(markdown).replace(/^```[\s\S]*?^```/gm, "");
   const units: string[] = [];
   let current: string[] = [];
@@ -214,16 +236,7 @@ export function narratedProseSpans(markdown: string): string[] {
     current.push(line.trim());
   }
   flush();
-
-  const spans: string[] = [];
-  for (const unit of units) {
-    for (const part of splitNarrationCues(unit)) {
-      if (!("text" in part)) continue;
-      const prose = part.text.trim();
-      if (prose !== "") spans.push(prose);
-    }
-  }
-  return spans;
+  return units.flatMap((unit) => splitNarrationCues(unit));
 }
 
 /**
@@ -394,4 +407,126 @@ export function bareWritingImperatives(markdown: string): string[] {
     if (BARE_WRITING_IMPERATIVE.test(span)) return true;
     return clausesOf(span).some(opensChainedOrFrontedWriting);
   });
+}
+
+// ---------------------------------------------------------------------------
+// Inside a recall cue
+// ---------------------------------------------------------------------------
+//
+// Everything above judges prose, and treats a cue as already safe. For
+// `[YOU WRITE: …]` that is right: WRITE is one of the narration's
+// `MANUAL_CUE_ACTIONS`, so the cue is deferred ("once you have stopped
+// driving — write: …"). It is not right for every cue. RECALL is not a manual
+// action — recalling is something a driver can do — so the narration reads a
+// recall cue out as an ordinary turn:
+//
+//     authored                                  narrated
+//     ---------------------------------------   ----------------------------------------
+//     [YOU RECALL: write **ば** — **R1**]        "your turn — recall: write ば — R1"
+//     [YOU WRITE: **ば** from memory — **R1**]   "once you have stopped driving —
+//                                                 write: ば from memory — R1"
+//
+// The first tells a driver to write, with nothing to say "not now". About a
+// hundred and fifty spaced-recall cues across the drivable lessons had that
+// shape — the spacing plan names a sign to retrieve, and the retrieval it asks
+// for is a written one. The cue verb is the only thing the narration reads to
+// decide whether to defer, so the fix is the verb: `[YOU WRITE: … from
+// memory]`, keeping the spacing tag and saying in words what RECALL said in
+// its name.
+//
+// Only RECALL is read inside. Its content is an instruction ("write **ば**",
+// "say the Japanese for to write, then …"), so the prose rules apply to it
+// as written. The content of `[YOU SAY: …]` and `[YOU ANSWER: …]` is not an
+// instruction but the material to be spoken — "[YOU SAY: I write letters]" in
+// a target language — and reading a writing verb in it would flag what the
+// learner is meant to say.
+//
+// The content is judged three ways:
+//
+//   shape                                           example from the corpus
+//   ---------------------------------------------   --------------------------------------------
+//   it opens with a writing verb (the prose regex,  [YOU RECALL: write **け** — **R4**, eighty …]
+//     anchored at the start of the content)         [YOU RECALL: draw the **।** and say what …]
+//   a clause of it does (fronted or chained, the    [YOU RECALL: …; with the page covered, write …]
+//     prose clause test)
+//   a writing verb is chained on anywhere           [YOU RECALL: ask *kitthe?* and write it — **R2**]
+//                                                   [YOU RECALL: answer *kuṭhe?* with *ithe*, then
+//                                                     *tithe*, and write **तिथे** once]
+//
+// The third is the one prose does not get. A chain in prose counts only when a
+// step verb from `CHAIN_OPENER` opens its clause, because prose is full of
+// subjects ("wine is what you buy, ship, tax and write down"). A recall cue
+// has no subject: RECALL is itself the step verb, and every clause inside the
+// cue hangs off it. So ", and write …" anywhere in the cue is a step. The
+// last example above is why that matters — the "?" inside *kuṭhe?* ends a
+// clause for `clausesOf`, and the clause after it opens with "with", which
+// the prose test rightly cannot treat as an instruction.
+//
+// The controls, all corpus cues that mention writing and ask for none:
+//
+//   [YOU RECALL: say the Japanese for to write, then the Japanese for to speak, …]
+//                                       "to write" is a gloss: the verb is the
+//                                       word being recalled, not the task
+//   [YOU RECALL: point to the sign in **これ** you can already write, and the one you cannot]
+//                                       "you can already write" describes the
+//                                       learner; a chain link must PRECEDE the verb
+//   [YOU RECALL: say how much space a written answer needs on a form — **R4**]
+//                                       "written" is not an imperative
+//   [YOU RECALL: *ek* and the letter **ए** you had to learn to write it]
+//                                       a memory of writing, not a request for it
+//   [YOU RECALL: the first letters you wrote — **р с н б д е т** — …]
+//                                       the past tense never matches
+
+/** Cue verbs whose content is an instruction the narration speaks unhedged. */
+const INSTRUCTION_CUE_ACTIONS: ReadonlySet<string> = new Set(["RECALL"]);
+
+/**
+ * Does the content of a recall cue (the Markdown after its colon) ask for
+ * writing? See the table above for the three shapes and the controls.
+ *
+ * Whitespace runs are collapsed in one pass and quotations are blanked with
+ * the opener-excluding patterns of `withoutQuotations`. One step is NOT
+ * linear on its own: `BARE_WRITING_IMPERATIVE` carries the prose test's
+ * `NOT_A_MENTION` lookahead, which scans to the end of the sentence from every
+ * candidate, so a sentence of N writing verbs with no stop costs O(N²) (the
+ * prose path, `bareWritingImperatives`, has the same shape). What keeps it
+ * cheap here is the cue bound: `closingBracket` gives up after
+ * `MAX_CUE_LENGTH` (4,096) characters, so no cue content is longer than that,
+ * and a maximal adversarial cue costs well under a millisecond.
+ */
+export function recallCueAsksForWriting(content: string): boolean {
+  const text = content.replace(/\s+/g, " ").trim();
+  BARE_WRITING_IMPERATIVE.lastIndex = 0;
+  if (BARE_WRITING_IMPERATIVE.test(text)) return true;
+  if (clausesOf(text).some(opensChainedOrFrontedWriting)) return true;
+  return CHAIN_LINK.test(withoutQuotations(text));
+}
+
+/**
+ * Every `[YOU RECALL: …]` cue in `markdown` that a narrator would read as a
+ * spoken instruction to write. Returns the cues as authored (`source`), so a
+ * failure message can quote them.
+ */
+export function writingRecallCues(markdown: string): string[] {
+  const cues: string[] = [];
+  for (const part of narratedParts(markdown)) {
+    if (!("cue" in part) || part.cue.kind !== "prompt") continue;
+    if (!INSTRUCTION_CUE_ACTIONS.has(part.cue.action)) continue;
+    // The narration cue keeps only the Markdown-stripped instruction; the
+    // patterns need the Markdown (`**`, `*`) they were written against, so the
+    // authored cue is parsed again for its raw content.
+    const raw = parseDeliveryCue(part.cue.source.slice(1, -1));
+    if (raw?.kind !== "prompt") continue;
+    if (recallCueAsksForWriting(raw.content)) cues.push(part.cue.source);
+  }
+  return cues;
+}
+
+/**
+ * Everything in a drivable lesson that the narration would read to a driver as
+ * an instruction to write: bare prose imperatives, then recall cues that ask
+ * for writing.
+ */
+export function drivableWritingInstructions(markdown: string): string[] {
+  return [...bareWritingImperatives(markdown), ...writingRecallCues(markdown)];
 }

@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Ram-Ram Sa: A Greeting the Hand Can Make",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:30cc055dd88b61e7",
+  "sourceHash": "fnv1a64:66d46253e531d365",
   "lessons": [
     {
       "id": "MW-W01-ra",
@@ -579,7 +579,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:84954cff2d1ec19e",
+      "sourceHash": "fnv1a64:08eddc233e1d14a0",
       "notice": null,
       "blocks": [
         {
@@ -681,7 +681,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hide the line. Say the greeting once; then write as much as you can remember."
+              "text": "Hide the line. Say the greeting once."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "as much of it as you can remember",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: as much of it as you can remember]"
             },
             {
               "kind": "speech",
@@ -725,7 +734,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9a0e67d50d167f5c",
+      "sourceHash": "fnv1a64:13360c21ea23d772",
       "notice": null,
       "blocks": [
         {
@@ -740,8 +749,13 @@
               "source": "[PAUSE 5s]"
             },
             {
-              "kind": "speech",
-              "text": "With the page covered, write राम (rām) and सा (sā) separately. Check only after both are down."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "राम (rām) and सा (sā) separately, with the page covered — check only after both are down",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **राम** and **सा** separately, with the page covered — check only after both are down]"
             }
           ]
         },
@@ -778,8 +792,13 @@
               "text": "Read: read राम-राम सा (rām-rām sā) without romanization."
             },
             {
-              "kind": "speech",
-              "text": "Write: close the book for fifteen seconds, then write राम-राम सा (rām-rām sā) from memory. Check the repeated word, hyphen, space, and final सा."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "राम-राम सा (rām-rām sā) from memory, after fifteen seconds with the book closed — check the repeated word, hyphen, space, and final सा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **राम-राम सा** from memory, after fifteen seconds with the book closed — check the repeated word, hyphen, space, and final **सा**]"
             },
             {
               "kind": "speech",
@@ -794,7 +813,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "If one sign stalled, mark that sign and repeat only its short lesson tomorrow."
+              "text": "If one sign stalled, note which one and repeat only its short lesson tomorrow."
             },
             {
               "kind": "activity",

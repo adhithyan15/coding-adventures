@@ -37,8 +37,11 @@ reviews_of: [MW-C08-hear-baap, MW-W08-ba, MW-C08-maa]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAAP-01, MW-SCRIPT-BA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-PA-01, MW-LEX-MAA-01, MW-PERFORMANCE-FAREWELL-LATER-FOUR-SKILL-01, MW-SCRIPT-KAIN-01] -->
 
-[PAUSE 20s] Write **ब**, **ा**, and **प** separately. Say mother and father,
-write **कांई**, then give the earlier see-you-later four-skill response once.
+[PAUSE 20s] [YOU WRITE: **ब**, **ा**, and **प** separately]
+
+Say mother and father. [YOU WRITE: **कांई**]
+
+Then give the earlier see-you-later four-skill response once.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-SCRIPT-BAAP-01]; assesses=[MW-LEX-BAAP-01, MW-SCRIPT-BA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-PA-01] -->
@@ -51,8 +54,8 @@ Only the first sign is newly learned. Read the whole word without romanization.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAAP-01, MW-SCRIPT-BAAP-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look for five seconds, cover **बाप**, wait five seconds, and write it. Check
-that **ब** did not turn into **प**.
+Look for five seconds, cover **बाप**, and wait five seconds.
+[YOU WRITE: the word — check that **ब** did not turn into **प**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAAP-01, MW-SCRIPT-BAAP-01, MW-LEX-MAA-01] -->

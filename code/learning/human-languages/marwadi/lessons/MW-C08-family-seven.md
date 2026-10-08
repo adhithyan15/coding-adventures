@@ -53,7 +53,7 @@ family structure. Regional and household choices remain valid when documented.
 1. **Listen:** identify four randomly heard labels.
 2. **Speak:** produce four different labels from relation cues.
 3. **Read:** match all seven printed words to meanings.
-4. **Write:** write three heard labels without a model.
+4. [YOU WRITE: three heard labels without a model]
 
 Score all four skills separately. A perfect spoken map does not replace missing
 reading or writing.

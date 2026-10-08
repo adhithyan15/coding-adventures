@@ -37,8 +37,10 @@ reviews_of: [MW-C23-ghano, MW-C15-mahango, MW-C22-hear-price-question, MW-C20-ch
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-CHURMA-01, MW-SCRIPT-CHURMA-01, MW-LEX-PRICE-QUESTION-01, MW-SCRIPT-GHANO-01, MW-SCRIPT-MAHANGO-01] -->
 
-[PAUSE 24s] Say the price question, write *very* and expensive, then say and
-write the sweet crumbled wheat dessert.
+[PAUSE 24s] Say the price question.
+[YOU WRITE: the words for *very* and expensive]
+
+Then say the sweet crumbled wheat dessert. [YOU WRITE: that word too]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-PRICE-ANSWER-01]; assesses=[MW-LEX-GHANO-01, MW-LEX-MAHANGO-01, MW-LEX-YE-01, MW-LEX-HAI-01] -->

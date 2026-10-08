@@ -37,8 +37,7 @@ reviews_of: [MW-C23-hear-bargain-request, MW-C23-thodu, MW-C14-sasta, MW-C23-kar
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-BARGAIN-REQUEST-01]; assesses=[MW-LEX-BARGAIN-REQUEST-01, MW-SCRIPT-PATNI-01, MW-SCRIPT-VASTU-01, MW-SCRIPT-VIRAMA-01] -->
 
-[PAUSE 22s] Write **्** on its own, then write wife and item, and point to the
-vowel-killer in each.
+[PAUSE 22s] [YOU WRITE: **्** on its own, then the words for wife and item — point to the vowel-killer in each]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-THODU-01, MW-SCRIPT-SASTA-01, MW-SCRIPT-KARO-01, MW-SCRIPT-O-MATRA-01] -->
@@ -53,9 +52,8 @@ the end is the **।** you have written since Chapter 9.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BARGAIN-REQUEST-01, MW-SCRIPT-VIRAMA-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Read the line once. Cover it for ten seconds and write all three words. Open the
-model and check two marks first: the dot under **ड़** and the vowel-killer inside
-**सस्तो**. Repair only the word that changed.
+Read the line once and cover it for ten seconds.
+[YOU WRITE: all three words — then open the model and check two marks first, the dot under **ड़** and the vowel-killer inside **सस्तो**, and repair only the word that changed]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BARGAIN-REQUEST-01, MW-LEX-BARGAIN-REQUEST-01] -->

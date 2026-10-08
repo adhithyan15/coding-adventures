@@ -36,8 +36,9 @@ reviews_of: [MW-C11-weather-three, MW-R12-weather-new-three, MW-W07-chha]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-WEATHER-THREE-FOUR-SKILL-01, MW-SCRIPT-CHHA-01] -->
 
-[PAUSE 18s] Write **छ**, then recall the earlier wind-cloud-rain payoff before
-adding three words.
+[PAUSE 18s] [YOU WRITE: **छ**]
+
+Then recall the earlier wind-cloud-rain payoff before adding three words.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[MW-PERFORMANCE-WEATHER-SIX-FOUR-SKILL-01]; assesses=[MW-LEX-HAWA-01, MW-SCRIPT-HAWA-01, MW-LEX-BAADAL-01, MW-SCRIPT-BAADAL-01, MW-LEX-BARSAAT-01, MW-SCRIPT-BARSAAT-01, MW-LEX-MAUSAM-01, MW-SCRIPT-MAUSAM-01, MW-LEX-GARMI-01, MW-SCRIPT-GARMI-01, MW-LEX-THANDI-01, MW-SCRIPT-THANDI-01] -->
@@ -45,7 +46,7 @@ adding three words.
 1. Identify six heard words.
 2. Produce six words from meaning cues.
 3. Match six printed cards to meanings.
-4. Write three heard words from each half without a model.
+4. [YOU WRITE: three heard words from each half without a model]
 
 Pass each skill separately.
 

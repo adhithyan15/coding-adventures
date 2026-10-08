@@ -37,7 +37,8 @@ reviews_of: [MW-C20-churma, MW-C11-baadal, MW-C18-hear-daal]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-CHURMA-01, MW-SCRIPT-BAADAL-01, MW-LEX-DAAL-01] -->
 
-[PAUSE 18s] Say lentils, then write the sweet crumbled wheat dessert and cloud.
+[PAUSE 18s] Say lentils.
+[YOU WRITE: the words for the sweet crumbled wheat dessert and cloud]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-CHAAY-01]; assesses=[] -->

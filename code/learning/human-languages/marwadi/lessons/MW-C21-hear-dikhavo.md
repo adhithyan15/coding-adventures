@@ -37,7 +37,9 @@ reviews_of: [MW-C21-ye, MW-C13-dukan, MW-C13-vastu]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-YE-01, MW-SCRIPT-YE-01, MW-LEX-DUKAN-01, MW-SCRIPT-DUKAN-01, MW-LEX-VASTU-01] -->
 
-[PAUSE 20s] Write **ये**, then say shop and item and write shop.
+[PAUSE 20s] [YOU WRITE: **ये**]
+
+Then say shop and item. [YOU WRITE: the word for shop]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-DIKHAVO-01]; assesses=[] -->

@@ -37,7 +37,7 @@ reviews_of: [MW-C18-ghee, MW-C16-bas, MW-W10-gha]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-GHEE-01, MW-SCRIPT-BAS-01, MW-SCRIPT-GHA-01] -->
 
-[PAUSE 18s] Write clarified butter, bus, and **घ**.
+[PAUSE 18s] [YOU WRITE: the words for clarified butter and bus, then **घ**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-SABJI-01]; assesses=[] -->

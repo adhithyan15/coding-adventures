@@ -36,19 +36,16 @@ reviews_of: [MW-C24-final-four, MW-W07-e-matra, MW-W05-o-matra, MW-W04-ii-matra,
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-FINAL-PRICE-FOUR-SKILL-01, MW-LEX-DADI-01, MW-SCRIPT-DADI-01, MW-SCRIPT-NANI-01, MW-LEX-THELA-01, MW-SCRIPT-THELA-01] -->
 
-[PAUSE 24s] Recall the closing payoff, then write paternal grandmother, maternal
-grandmother, and cart.
+[PAUSE 24s] Recall the closing payoff.
+[YOU WRITE: the words for paternal grandmother, maternal grandmother, and cart]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-E-MATRA-01, MW-SCRIPT-O-MATRA-01, MW-SCRIPT-II-MATRA-01, MW-SCRIPT-LO-01, MW-SCRIPT-DO-01, MW-SCRIPT-PAY-01, MW-SCRIPT-AAKHRI-01, MW-SCRIPT-FINAL-PRICE-01, MW-SCRIPT-KHA-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Write the three marks on their own from spoken cues: above the headstroke,
-after the stem, and reaching above the line. Add **ख** from its breath cue.
+[YOU WRITE: the three marks on their own from spoken cues — above the headstroke, after the stem, and reaching above the line; then add **ख** from its breath cue]
 
-Then write **लो**, **दो**, **ले**, **आखरी**, and both lines of this chapter
-from dictation. In this chapter a mark rather than a letter often carries the
-meaning, so check every mark before you check any letter.
+[YOU WRITE: **लो**, **दो**, **ले**, **आखरी**, and both lines of this chapter from dictation — in this chapter a mark rather than a letter often carries the meaning, so check every mark before you check any letter]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-E-MATRA-01, MW-SCRIPT-O-MATRA-01] -->

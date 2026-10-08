@@ -36,8 +36,8 @@ reviews_of: [MW-R39-refuse-price, MW-C38-ughanis, MW-C07-read-later, MW-C32-ek]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-UGHANIS-01, MW-SCRIPT-EK-01, MW-LEX-CHAUDA-01] -->
 
 [PAUSE 18s]
-- [YOU RECALL: write **उघणीस**, five lessons back — **R2**]
-- [YOU RECALL: write **एक**, the first number this book taught — **R4**]
+- [YOU WRITE: **उघणीस** from memory, five lessons back — **R2**]
+- [YOU WRITE: **एक** from memory, the first number this book taught — **R4**]
 - [YOU RECALL: say **caudā** — **R3**]
 
 ## You'll want to know
@@ -67,8 +67,7 @@ Four skills, one exchange.
    two branches sit side by side.
 3. **Read.** Read the three-turn refusal printed, and say the walk-away line
    aloud without looking.
-4. **Write.** Write **कोनी।** and **पाछे मिलसू।** as two lines, and above them
-   write the figure you were offered in words.
+4. [YOU WRITE: **कोनी।** and **पाछे मिलसू।** as two lines, and above them the figure you were offered, in words]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-REFUSAL-FOUR-SKILL-01, MW-SCRIPT-KONI-01, MW-SCRIPT-PACHHE-MILSOO-01] -->

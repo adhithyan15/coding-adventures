@@ -36,8 +36,7 @@ reviews_of: [MW-C08-maa, MW-C08-baap, MW-C08-dadi, MW-C08-parivaar, MW-W08-ba]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PARIVAAR-01, MW-SCRIPT-PARIVAAR-01, MW-SCRIPT-BA-01, MW-SCRIPT-PACHHE-MILSOO-01] -->
 
-[PAUSE 20s] Say and write family, then write **ब** and the known
-**पाछे मिलसू** once.
+[PAUSE 20s] Say family. [YOU WRITE: the word for family, then **ब** and the known **पाछे मिलसू** once]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAA-01, MW-LEX-BAAP-01, MW-LEX-DADI-01] -->
@@ -45,7 +44,7 @@ reviews_of: [MW-C08-maa, MW-C08-baap, MW-C08-dadi, MW-C08-parivaar, MW-W08-ba]
 1. **Listen:** identify *mā̃*, *bāp*, or *dādī* from sound alone.
 2. **Speak:** say the word from one relation cue.
 3. **Read:** match **मां**, **बाप**, and **दादी** to their meanings.
-4. **Write:** write one heard word without a model.
+4. [YOU WRITE: one heard word without a model]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAA-01, MW-LEX-BAAP-01, MW-LEX-DADI-01] -->

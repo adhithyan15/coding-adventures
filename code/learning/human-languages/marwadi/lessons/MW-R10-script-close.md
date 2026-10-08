@@ -36,13 +36,14 @@ reviews_of: [MW-W10-ja, MW-W10-gha, MW-C10-bajar, MW-C10-ghar, MW-C10-travel-fiv
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-TA-01, MW-SCRIPT-CHA-01, MW-PERFORMANCE-TRAVEL-FIVE-FOUR-SKILL-01, MW-SCRIPT-NA-01, MW-SCRIPT-HAATH-01] -->
 
-[PAUSE 18s] Write earlier **त**, **च**, **न**, and **हाथ**, then name the four
-scored skills.
+[PAUSE 18s] [YOU WRITE: earlier **त**, **च**, **न**, and **हाथ**]
+
+Then name the four scored skills.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-JA-01, MW-SCRIPT-GHA-01, MW-SCRIPT-BAJAR-01, MW-SCRIPT-GHAR-01, MW-LEX-BAJAR-01, MW-LEX-GHAR-01] -->
 
-From sound alone, write **ज**, **घ**, **बाजार**, and **घर**.
+[YOU WRITE: **ज**, **घ**, **बाजार**, and **घर**, from sound alone]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-JA-01, MW-SCRIPT-GHA-01, MW-SCRIPT-BAJAR-01, MW-SCRIPT-GHAR-01] -->

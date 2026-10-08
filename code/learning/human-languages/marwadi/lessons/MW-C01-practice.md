@@ -35,8 +35,7 @@ reviews_of: [MW-W01-ra, MW-W01-aa-matra, MW-W01-raam, MW-W01-sa, MW-W01-saa, MW-
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-RAAM-01, MW-LEX-RAAM-01, MW-SCRIPT-SAA-01] -->
 
-[PAUSE 5s] With the page covered, write **राम** and **सा** separately. Check
-only after both are down.
+[PAUSE 5s] [YOU WRITE: **राम** and **सा** separately, with the page covered — check only after both are down]
 
 ## The exchange
 <!-- hl-knowledge: introduces=[MW-DIALOGUE-GREETING-01]; assesses=[] -->
@@ -54,8 +53,7 @@ Run both voices once. Then cover B and answer A aloud. Switch roles.
    showing the text; identify it as a greeting.
 2. **Speak:** give the greeting without reading.
 3. **Read:** read **राम-राम सा** without romanization.
-4. **Write:** close the book for fifteen seconds, then write **राम-राम सा** from
-   memory. Check the repeated word, hyphen, space, and final **सा**.
+4. [YOU WRITE: **राम-राम सा** from memory, after fifteen seconds with the book closed — check the repeated word, hyphen, space, and final **सा**]
 
 Writing counts only if the model was hidden. Copying was the ramp; this is recall.
 
@@ -64,4 +62,4 @@ Writing counts only if the model was hidden. Copying was the ramp; this is recal
 <!-- hl-writing-stage: dictation-transcription -->
 <!-- hl-activity: {"id":"MW-C01-practice-answer","kind":"text","assesses":["MW-DIALOGUE-GREETING-01"],"prompt":"You hear rām-rām sā. Write the respectful reply from memory.","answer":"राम-राम सा","accepted":["राम राम सा","rām-rām sā","ram-ram sa"],"feedback":{"correct":"You completed the chapter payoff in writing.","incorrect":"Build राम, repeat it, then add respectful सा: राम-राम सा."},"response_seconds":18} -->
 
-If one sign stalled, mark that sign and repeat only its short lesson tomorrow.
+If one sign stalled, note which one and repeat only its short lesson tomorrow.

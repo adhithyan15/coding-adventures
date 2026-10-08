@@ -58,7 +58,7 @@ You write every sign in it now.
 [PAUSE 1s]
 - [YOU SAY: *kinō*]
 - [YOU SAY: *eki*, then *kinō*, and listen for the *ki* in both]
-- [YOU RECALL: write **きのう**, four strokes for the first sign]
+- [YOU WRITE: **きのう** from memory, four strokes for the first sign]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C133-KINOU, JA-SCRIPT-KI-01] -->

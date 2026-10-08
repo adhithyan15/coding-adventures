@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Counting To Five, And The One New Sign",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f5cf558d084f5116",
+  "sourceHash": "fnv1a64:f9e4da92e7923827",
   "lessons": [
     {
       "id": "MW-W32-e",
@@ -128,7 +128,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:38e3bb57148d0e92",
+      "sourceHash": "fnv1a64:bf8632df3b2784a2",
       "notice": null,
       "blocks": [
         {
@@ -144,7 +144,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say final, say the final-price question, say bring it. Then write the letter from the last lesson."
+              "text": "Say final, say the final-price question, say bring it."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the letter from the last lesson",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the letter from the last lesson]"
             }
           ]
         },
@@ -404,7 +413,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1dde523bdc1cee30",
+      "sourceHash": "fnv1a64:fdf590e5c9588956",
       "notice": null,
       "blocks": [
         {
@@ -449,8 +458,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write एक (ek) and दो (do) one under the other. Then write पाणी दो (do)। underneath and mark which दो (do) counts."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "एक (ek) and दो (do) one under the other; then पाणी दो (do)। underneath, and mark which दो (do) counts",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **एक** and **दो** one under the other; then **पाणी दो।** underneath, and mark which **दो** counts]"
             }
           ]
         },
@@ -1061,7 +1075,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c27fd629066f51cb",
+      "sourceHash": "fnv1a64:3de94eba0ffadaeb",
       "notice": null,
       "blocks": [
         {
@@ -1077,7 +1091,16 @@
             },
             {
               "kind": "speech",
-              "text": "Run the five-turn counter exchange, ask the price question aloud, write the bring-it word, then write ए."
+              "text": "Run the five-turn counter exchange and ask the price question aloud."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the bring-it word, then ए",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the bring-it word, then **ए**]"
             }
           ]
         },
@@ -1103,12 +1126,22 @@
               "text": "Read the five printed shuffled and say each."
             },
             {
-              "kind": "speech",
-              "text": "Write तीन (tīn), पांच (pāṅch), एक (ek), चार (chār), दो (do) from dictation in that order."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "तीन (tīn), पांच (pāṅch), एक (ek), चार (chār), दो (do) from dictation, in that order",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **तीन**, **पांच**, **एक**, **चार**, **दो** from dictation, in that order]"
             },
             {
-              "kind": "speech",
-              "text": "Repair only the one that missed, and write it once more."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "once more, only the one that missed",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: once more, only the one that missed]"
             }
           ]
         },
@@ -1158,7 +1191,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fa7c96ae63c422ed",
+      "sourceHash": "fnv1a64:7f3dfa596af0f51d",
       "notice": null,
       "blocks": [
         {
@@ -1174,7 +1207,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say the crumbled wheat sweet, say the bring request, then write the one letter this chapter added."
+              "text": "Say the crumbled wheat sweet, and say the bring request."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the one letter this chapter added",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the one letter this chapter added]"
             }
           ]
         },
@@ -1189,7 +1231,16 @@
             },
             {
               "kind": "speech",
-              "text": "Listening. Hear five numbers named singly and out of order; write down which was said each time, in figures of your own language."
+              "text": "Listening. Hear five numbers named singly and out of order."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "which was said each time, in figures of your own language",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: which was said each time, in figures of your own language]"
             },
             {
               "kind": "speech",
@@ -1201,7 +1252,16 @@
             },
             {
               "kind": "speech",
-              "text": "Writing. Write all five from dictation, shuffled, with no model in view."
+              "text": "Writing."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all five from dictation, shuffled, with no model in view",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all five from dictation, shuffled, with no model in view]"
             },
             {
               "kind": "speech",
@@ -1258,7 +1318,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2af9b5e79b78ebeb",
+      "sourceHash": "fnv1a64:7df7636af5d14a1f",
       "notice": null,
       "blocks": [
         {
@@ -1274,7 +1334,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the counting payoff and the five-word asking payoff, then write the crumbled wheat sweet."
+              "text": "Recall the counting payoff and the five-word asking payoff."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for the crumbled wheat sweet",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for the crumbled wheat sweet]"
             }
           ]
         },
@@ -1284,12 +1353,26 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Write three single signs from sound cues: ए, क, च. Then write the mark े beside ए and say which of the two can stand at the front of a word."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "three single signs from sound cues — ए, क, च; then the mark े beside ए",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: three single signs from sound cues — **ए**, **क**, **च**; then the mark **े** beside **ए**]"
             },
             {
               "kind": "speech",
-              "text": "Then write एक (ek), दो (do), तीन (tīn), चार (chār), पांच (pāṅch) from dictation, shuffled. Repair only the missed sign and rewrite its word once."
+              "text": "Say which of the two can stand at the front of a word."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "एक (ek), दो (do), तीन (tīn), चार (chār), पांच (pāṅch) from dictation, shuffled — repair only the missed sign and rewrite its word once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **एक**, **दो**, **तीन**, **चार**, **पांच** from dictation, shuffled — repair only the missed sign and rewrite its word once]"
             }
           ]
         },

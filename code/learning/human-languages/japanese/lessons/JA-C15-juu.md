@@ -36,7 +36,7 @@ reviews_of: [JA-W15-small-yu, JA-C13-tsuma, JA-C09-wakarimasen]
 
 [PAUSE 25s] Three recalls, then the last number.
 
-- [YOU RECALL: write **ゅ**, and say what it does to the sign before it — **R1**, one lesson back]
+- [YOU WRITE: **ゅ** from memory, and say what it does to the sign before it — **R1**, one lesson back]
 - [YOU RECALL: say *my wife* — **R3**, twenty lessons back]
 - [YOU RECALL: say *I do not understand* — **R4**, eighty lessons back]
 

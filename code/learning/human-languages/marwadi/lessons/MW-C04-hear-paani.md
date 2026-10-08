@@ -37,7 +37,9 @@ reviews_of: [MW-C02-aabhaar, MW-C03-haan-saa, MW-C03-practice]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-AABHAAR-01, MW-LEX-HAAN-01, MW-RESPONSE-HAAN-SAA-POLITE-01, MW-PERFORMANCE-HAAN-SAA-FOUR-SKILL-01] -->
 
 [PAUSE 15s] Give the Chapter 3 four-skill response once: hear *hā(n) sā* and
-identify a respectful yes; say it; read **हां सा**; then cover and write it.
+identify a respectful yes; say it; read **हां सा**; then cover it.
+[YOU WRITE: the phrase]
+
 Say *ābhār* for formal thanks. Now set writing aside: today's new word begins
 with the ear and voice.
 

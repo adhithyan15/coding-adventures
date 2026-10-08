@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 13,
-  "sourceHash": "fnv1a64:a60fc439da0a79f5",
+  "sourceHash": "fnv1a64:d0b06f05828406e8",
   "lessonIds": [
     "MW-C09-hear-patni",
     "MW-C09-patni",
@@ -16,7 +16,7 @@
   "drivablePrefix": 3,
   "text": "marwadi/narration/ch13.txt",
   "json": "marwadi/narration/ch13.json",
-  "textHash": "fnv1a64:0a22373f86472011",
-  "jsonHash": "fnv1a64:51d7fbdd841ed016",
+  "textHash": "fnv1a64:934fec5775c8b9dc",
+  "jsonHash": "fnv1a64:70d86da098e3eea7",
   "findings": []
 }

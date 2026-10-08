@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Wife and Child: One New Sign",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:a60fc439da0a79f5",
+  "sourceHash": "fnv1a64:d0b06f05828406e8",
   "lessons": [
     {
       "id": "MW-C09-hear-patni",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6ddb9cb5e43cb778",
+      "sourceHash": "fnv1a64:e63f52fe21658b62",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say husband and maternal grandmother, write सा, then recall the last three-word four-skill checkpoint."
+              "text": "Say husband and maternal grandmother."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "सा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **सा**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then recall the last three-word four-skill checkpoint."
             }
           ]
         },
@@ -99,7 +112,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec80d950ff0ce945",
+      "sourceHash": "fnv1a64:4e49258bfbd6f785",
       "notice": null,
       "blocks": [
         {
@@ -115,7 +128,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say patnī. Write पति, ्, न, and ी separately; write नानी, then say the respectful राम राम सा greeting."
+              "text": "Say patnī."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "पति, ्, न, and ी separately; then नानी",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **पति**, **्**, **न**, and **ी** separately; then **नानी**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Then say the respectful राम राम सा greeting."
             }
           ]
         },
@@ -136,8 +162,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Copy once. Cover it, wait five seconds, then write it. Check the virama join before checking the final long-ī sign."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of पत्नी (patnī); then cover it, wait five seconds, and write it again — check the virama join before checking the final long-ī sign",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **पत्नी**; then cover it, wait five seconds, and write it again — check the virama join before checking the final long-ī sign]"
             }
           ]
         },
@@ -186,7 +217,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:48ad22dba3aae43f",
+      "sourceHash": "fnv1a64:3e4ec2cb5e467219",
       "notice": null,
       "blocks": [
         {
@@ -202,7 +233,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say wife, husband, and maternal grandfather, complete the familiar greeting exchange, then write दादा."
+              "text": "Say wife, husband, and maternal grandfather, and complete the familiar greeting exchange."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "दादा",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **दादा**]"
             }
           ]
         },
@@ -362,7 +402,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5ab783a8e9fc33e0",
+      "sourceHash": "fnv1a64:0bbafa152141094e",
       "notice": null,
       "blocks": [
         {
@@ -378,7 +418,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say child and wife. Write ब, च (cha), ्, ा, familiar भ, then write पत्नी (patnī) and दादी from memory."
+              "text": "Say child and wife."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ब, च (cha), ्, ा, familiar भ, then पत्नी (patnī) and दादी from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ब**, **च**, **्**, **ा**, familiar **भ**, then **पत्नी** and **दादी** from memory]"
             }
           ]
         },
@@ -399,8 +448,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Copy once. Cover it, wait five seconds, and write it. Check the doubled middle before checking the final vowel mark."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one copy of बच्चा (bachchā); then cover it, wait five seconds, and write it again — check the doubled middle before checking the final vowel mark",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one copy of **बच्चा**; then cover it, wait five seconds, and write it again — check the doubled middle before checking the final vowel mark]"
             }
           ]
         },
@@ -449,7 +503,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6e25e033fd4a01aa",
+      "sourceHash": "fnv1a64:7c7adf2473cf2b4e",
       "notice": null,
       "blocks": [
         {
@@ -464,8 +518,17 @@
               "source": "[PAUSE 18s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "त, च (cha), and आभार",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **त**, **च**, and **आभार**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write त, च (cha), and आभार, give the gratitude meaning, then recall the earlier three-word payoff."
+              "text": "Give the gratitude meaning, then recall the earlier three-word payoff."
             }
           ]
         },
@@ -476,7 +539,20 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear all five in a mixed order, say each from meaning, read the five cards, then write the two cards named aloud. Repair only a missed card."
+              "text": "Hear all five in a mixed order, say each from meaning, and read the five cards."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the two cards named aloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the two cards named aloud]"
+            },
+            {
+              "kind": "speech",
+              "text": "Repair only a missed card."
             }
           ]
         },
@@ -529,7 +605,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4f37dd4e85cb3809",
+      "sourceHash": "fnv1a64:87f05e88b2c81b89",
       "notice": null,
       "blocks": [
         {
@@ -567,8 +643,13 @@
               "text": "Read: match all twelve printed labels to meanings."
             },
             {
-              "kind": "speech",
-              "text": "Write: write four heard labels without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "four heard labels without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: four heard labels without a model]"
             },
             {
               "kind": "speech",
@@ -625,7 +706,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:948474289e9d25c2",
+      "sourceHash": "fnv1a64:2f9f895e58fc1c30",
       "notice": null,
       "blocks": [
         {
@@ -640,8 +721,17 @@
               "source": "[PAUSE 18s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "earlier द, व, ह, and परिवार",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: earlier **द**, **व**, **ह**, and **परिवार**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write earlier द, व, ह, and परिवार, then name the four skills in the twelve-label payoff."
+              "text": "Then name the four skills in the twelve-label payoff."
             }
           ]
         },
@@ -651,8 +741,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "From sound alone, write त, च (cha), पत्नी (patnī), and बच्चा (bachchā). Check each new sign before checking the complete word."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "त, च (cha), पत्नी (patnī), and बच्चा (bachchā), from sound alone — check each new sign before checking the complete word",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **त**, **च**, **पत्नी**, and **बच्चा**, from sound alone — check each new sign before checking the complete word]"
             }
           ]
         },

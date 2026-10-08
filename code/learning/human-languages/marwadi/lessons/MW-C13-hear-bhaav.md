@@ -37,8 +37,9 @@ reviews_of: [MW-C13-vastu, MW-C13-dukan, MW-C10-bajar, MW-C10-paisa, MW-C11-baad
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-VASTU-01, MW-SCRIPT-VASTU-01, MW-LEX-DUKAN-01, MW-SCRIPT-DUKAN-01, MW-LEX-BAJAR-01, MW-SCRIPT-PAISA-01, MW-SCRIPT-BAADAL-01, MW-SCRIPT-MAA-01] -->
 
-[PAUSE 24s] Say and write item and shop, then recall market and write money
-and cloud, then write **मां**.
+[PAUSE 24s] Say item and shop. [YOU WRITE: both words]
+
+Then recall market. [YOU WRITE: the words for money and cloud, then **मां**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-BHAAV-01]; assesses=[] -->

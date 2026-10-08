@@ -35,8 +35,9 @@ reviews_of: [MW-W01-aa-matra, MW-W02-bha, MW-C02-practice, MW-W03-ha, MW-W03-anu
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-BHA-01, MW-LEX-AABHAAR-01, MW-COURTESY-AABHAAR-FORMAL-01, MW-SCRIPT-HA-01, MW-SCRIPT-ANUSVARA-01] -->
 
-[PAUSE 7s] With the page covered, write **भ**, then **हां**. Say **आभार** for
-formal thanks; say **हां सा** for a respectful yes.
+[PAUSE 7s] [YOU WRITE: **भ**, then **हां**, with the page covered]
+
+Say **आभार** for formal thanks; say **हां सा** for a respectful yes.
 
 ## Guided Practice — independent four-skill check
 <!-- hl-knowledge: introduces=[MW-PERFORMANCE-HAAN-SAA-FOUR-SKILL-01]; assesses=[MW-SCRIPT-HAAN-01, MW-LEX-HAAN-01, MW-RESPONSE-HAAN-SAA-POLITE-01] -->
@@ -44,7 +45,7 @@ formal thanks; say **हां सा** for a respectful yes.
 1. **Listen:** hear *hā(n) sā* and identify an affirmative answer, without text.
 2. **Speak:** hear “Will you come?” and answer yes respectfully, without notes.
 3. **Read:** cover the English and explain **हां सा**.
-4. **Write:** hear *hā(n) sā*, wait fifteen seconds, then write the complete phrase.
+4. [YOU WRITE: the complete phrase, fifteen seconds after hearing *hā(n) sā*]
 
 Score each line separately. A missed line is the one to repeat; three stronger
 skills do not erase a writing or listening miss.

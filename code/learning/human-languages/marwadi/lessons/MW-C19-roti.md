@@ -37,7 +37,7 @@ reviews_of: [MW-W19-tta, MW-C10-hear-paisa]
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-ROTI-01]; assesses=[MW-LEX-ROTI-01, MW-SCRIPT-TTA-01, MW-LEX-PAISA-01] -->
 
-[PAUSE 16s] Say flatbread and money, then write **ट**.
+[PAUSE 16s] Say flatbread and money. [YOU WRITE: **ट**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-ROTI-01, MW-SCRIPT-ROTI-01] -->
@@ -50,8 +50,8 @@ The **ो** on **र** and the **ी** on **ट** are both long vowels met earli
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-ROTI-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **रोटी**. Check that the second
-consonant has no inner ring.
+Look, cover, and wait five seconds.
+[YOU WRITE: **रोटी** — check that the second consonant has no inner ring]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-ROTI-01, MW-SCRIPT-ROTI-01] -->

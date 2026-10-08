@@ -4,7 +4,7 @@
   "chapter": 140,
   "title": "Last Week, Last Month, Last Year: the Past",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:20524bb6e0fd716d",
+  "sourceHash": "fnv1a64:9e8b499b637adf99",
   "lessons": [
     {
       "id": "JA-C140-senshuu",
@@ -190,7 +190,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7fd8398c5bfac209",
+      "sourceHash": "fnv1a64:187a700d34476479",
       "notice": null,
       "blocks": [
         {
@@ -228,21 +228,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぴ — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぴ from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぴ** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **ぴ** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write を — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "を from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **を** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **を** from memory — **R4**, eighty lessons back]"
             }
           ]
         },
@@ -686,7 +686,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7f047eb07b180807",
+      "sourceHash": "fnv1a64:52930dacaa0a3e73",
       "notice": null,
       "blocks": [
         {
@@ -724,21 +724,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぷ — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぷ from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぷ** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **ぷ** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write そ — R4, eighty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "そ from memory — R4, eighty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **そ** — **R4**, eighty lessons back]"
+              "source": "[YOU WRITE: **そ** from memory — **R4**, eighty lessons back]"
             }
           ]
         },

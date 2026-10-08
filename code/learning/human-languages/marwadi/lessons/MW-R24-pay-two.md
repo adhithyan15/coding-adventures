@@ -36,15 +36,17 @@ reviews_of: [MW-C24-lo, MW-C24-pay, MW-C21-show-request, MW-C22-kitno, MW-C21-sh
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-PERFORMANCE-SHOW-FOUR-SKILL-01, MW-LEX-SHOW-REQUEST-01, MW-SCRIPT-SHOW-REQUEST-01, MW-LEX-GHEE-01, MW-SCRIPT-GHEE-01, MW-LEX-KITNO-01, MW-SCRIPT-KITNO-01] -->
 
-[PAUSE 24s] Recall the three-counter request payoff. Write the request itself,
-then write *how much* and clarified butter.
+[PAUSE 24s] Recall the three-counter request payoff.
+[YOU WRITE: the request itself, then the words for *how much* and clarified butter]
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-LO-01, MW-SCRIPT-LO-01, MW-LEX-PAY-01, MW-SCRIPT-PAY-01] -->
 
 Hear the word alone and the whole line, in both orders, and give each meaning.
-Read two cards. Write both from sound, then say the line at speaking pace with
-your hand out as if the money were in it.
+Read two cards. [YOU WRITE: both from sound]
+
+Then say the line at speaking pace with your hand out as if the money were in
+it.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-LO-01, MW-LEX-PAY-01] -->

@@ -37,8 +37,9 @@ reviews_of: [MW-C08-hear-bahan, MW-W08-ba, MW-W03-ha, MW-W05-na, MW-C08-bhai]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAHAN-01, MW-SCRIPT-BA-01, MW-SCRIPT-HA-01, MW-SCRIPT-NA-01, MW-LEX-BHAI-01, MW-ANSWER-WELLBEING-HEARD-01, MW-LEX-HOON-01, MW-LEX-THIK-01] -->
 
-[PAUSE 20s] Write **ब**, **ह**, and **न** separately. Say brother, then give the
-heard wellbeing answer with *hū̃* and *ṭhīk*.
+[PAUSE 20s] [YOU WRITE: **ब**, **ह**, and **न** separately]
+
+Say brother, then give the heard wellbeing answer with *hū̃* and *ṭhīk*.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-SCRIPT-BAHAN-01]; assesses=[MW-LEX-BAHAN-01, MW-SCRIPT-BA-01, MW-SCRIPT-HA-01, MW-SCRIPT-NA-01] -->
@@ -51,8 +52,8 @@ All three signs are earned. Read the word as two sound groups: *ba-han*.
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAHAN-01, MW-SCRIPT-BAHAN-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 
-Hear *bahan*, wait five seconds, and write **बहन** without a visible model.
-Check the middle **ह** rather than guessing from the meaning.
+Hear *bahan* and wait five seconds.
+[YOU WRITE: **बहन** without a visible model — check the middle **ह** rather than guessing from the meaning]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAHAN-01, MW-SCRIPT-BAHAN-01, MW-LEX-BHAI-01] -->

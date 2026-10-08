@@ -35,8 +35,7 @@ reviews_of: [MW-W35-digits-six-seven-eight, MW-C34-bees, MW-C34-price-number]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PRICE-NUMBER-01, MW-SCRIPT-DIGIT-SIX-01, MW-SCRIPT-DIGIT-SEVEN-01] -->
 
-[PAUSE 20s] Write the price question with its answer, then write the digits for
-six and seven.
+[PAUSE 20s] [YOU WRITE: the price question with its answer, then the digits for six and seven]
 
 - [YOU RECALL: the danda that closes a one-word price, two chapters back]
 
@@ -52,9 +51,9 @@ six and seven.
 its name is a word with no two and no ten inside it.
 
 1. Read **६**, **७**, **८** aloud, then **१०** and **२०**.
-2. Write the word under each of the five.
-3. Hear *sāt*, *chha*, *bīs* and write the FIGURE each time.
-4. Write **२०** and **८** from dictation, given out of order.
+2. [YOU WRITE: the word under each of the five]
+3. Hear *sāt*, *chha*, *bīs*. [YOU WRITE: the FIGURE each time]
+4. [YOU WRITE: **२०** and **८** from dictation, given out of order]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-DIGIT-TWO-01, MW-SCRIPT-DIGIT-ZERO-01, MW-LEX-BEES-01] -->

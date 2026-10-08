@@ -37,8 +37,7 @@ reviews_of: [MW-C05-hear-mharo, MW-W05-virama, MW-W05-o-matra]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MHARO-01, MW-SCRIPT-VIRAMA-01, MW-SCRIPT-O-MATRA-01, MW-REGISTER-SAA, MW-SCRIPT-PAANI-01] -->
 
 [PAUSE 15s] Say the Marwadi word for **my** and recall what respectful **सा**
-does. From the heard cue *pāṇī*, write **पाणी**. Then write the vowel-off
-mark and **रो** from memory.
+does. [YOU WRITE: **पाणी** from the heard cue *pāṇī*; then the vowel-off mark and **रो** from memory]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-SCRIPT-MHARO-01]; assesses=[MW-LEX-MHARO-01, MW-SCRIPT-MA-01, MW-SCRIPT-HA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-RA-01] -->
@@ -52,9 +51,8 @@ Every piece is known. The virāma removes the vowel from **म** so **म्ह*
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-MHARO-01, MW-LEX-MHARO-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look for five seconds, cover **म्हारो**, wait five seconds, then write it.
-Uncover and compare **म्ह**, **ा**, and **रो** separately. Repair only the
-piece that differs.
+Look for five seconds, cover **म्हारो**, and wait five seconds.
+[YOU WRITE: the word — then uncover it, compare **म्ह**, **ा**, and **रो** separately, and repair only the piece that differs]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-MHARO-01, MW-LEX-MHARO-01] -->

@@ -36,8 +36,9 @@ reviews_of: [MW-C09-nana, MW-C09-nani, MW-C09-pati, MW-C08-maa, MW-C08-baap]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-MAA-01, MW-LEX-BAAP-01, MW-SCRIPT-SA-01, MW-PERFORMANCE-FAMILY-FOUR-FOUR-SKILL-01] -->
 
-[PAUSE 16s] Say and write mother and father, write **स**, and recall the earlier
-four-label payoff before extending the map.
+[PAUSE 16s] Say mother and father. [YOU WRITE: both words, then **स**]
+
+Recall the earlier four-label payoff before extending the map.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[MW-PERFORMANCE-FAMILY-TEN-FOUR-SKILL-01]; assesses=[MW-LEX-NANA-01, MW-SCRIPT-NANA-01, MW-LEX-NANI-01, MW-SCRIPT-NANI-01, MW-LEX-PATI-01, MW-SCRIPT-PATI-01, MW-SCRIPT-TA-01] -->
@@ -45,7 +46,7 @@ four-label payoff before extending the map.
 1. Hear and identify all three labels.
 2. Produce each from a meaning cue.
 3. Read **नाना — नानी — पति**.
-4. Cover the line and write all three.
+4. Cover the line. [YOU WRITE: all three]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-NANA-01, MW-LEX-NANI-01, MW-LEX-PATI-01, MW-PERFORMANCE-FAMILY-TEN-FOUR-SKILL-01] -->

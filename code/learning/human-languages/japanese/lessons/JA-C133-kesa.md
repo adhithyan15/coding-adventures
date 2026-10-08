@@ -58,7 +58,7 @@ today.
 [PAUSE 1s]
 - [YOU SAY: *kesa*]
 - [YOU SAY: *kinō*, yesterday, then *kesa*, this morning]
-- [YOU RECALL: write **けさ**, three strokes for the first sign and three for the second]
+- [YOU WRITE: **けさ** from memory, three strokes for the first sign and three for the second]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C133-KESA, JA-SCRIPT-KE-01] -->

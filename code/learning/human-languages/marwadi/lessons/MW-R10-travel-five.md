@@ -36,14 +36,15 @@ reviews_of: [MW-C10-bajar, MW-C10-ghar, MW-C10-mandir, MW-C10-haath, MW-C10-pais
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-JA-01, MW-SCRIPT-GHA-01, MW-PERFORMANCE-PLACES-THREE-FOUR-SKILL-01, MW-SCRIPT-MHARO-01, MW-SCRIPT-PATNI-01] -->
 
-[PAUSE 18s] Write **ज**, **घ**, **म्हारो**, and **पत्नी**, then recall the
-three-place payoff.
+[PAUSE 18s] [YOU WRITE: **ज**, **घ**, **म्हारो**, and **पत्नी**]
+
+Then recall the three-place payoff.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAJAR-01, MW-SCRIPT-BAJAR-01, MW-LEX-GHAR-01, MW-SCRIPT-GHAR-01, MW-LEX-MANDIR-01, MW-SCRIPT-MANDIR-01, MW-LEX-HAATH-01, MW-SCRIPT-HAATH-01, MW-LEX-PAISA-01, MW-SCRIPT-PAISA-01] -->
 
-Hear all five in mixed order, say each from meaning, read the five cards, then
-write the two named aloud.
+Hear all five in mixed order, say each from meaning, and read the five cards.
+[YOU WRITE: the two named aloud]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAJAR-01, MW-LEX-GHAR-01, MW-LEX-MANDIR-01, MW-LEX-HAATH-01, MW-LEX-PAISA-01] -->

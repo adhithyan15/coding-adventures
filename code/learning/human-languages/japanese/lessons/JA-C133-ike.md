@@ -41,7 +41,7 @@ reviews_of: [JA-C133-kinou, JA-W01-i, JA-W132-ru, JA-W131-small-ya, JA-C120-kata
 [YOU WRITE: **る** — **R2**, five lessons back]
 
 - [YOU RECALL: say *hard* — **R4**, eighty lessons back]
-- [YOU RECALL: write **ゃ**, small, in **おちゃ** — **R3**, twenty lessons back]
+- [YOU WRITE: **ゃ** from memory, small, in **おちゃ** — **R3**, twenty lessons back]
 
 ## You'll want to know: いけ
 <!-- hl-knowledge: introduces=[JA-LEX-ANCHOR-IKE]; assesses=[JA-SCRIPT-I-01] -->

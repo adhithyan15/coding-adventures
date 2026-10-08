@@ -37,8 +37,8 @@ reviews_of: [MW-C23-karo, MW-C14-sasta, MW-C23-hear-price-answer, MW-C13-vastu]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-VASTU-01, MW-SCRIPT-VASTU-01, MW-LEX-PRICE-ANSWER-01, MW-SCRIPT-SASTA-01] -->
 
-[PAUSE 24s] Say *this is very expensive*, then say item and cheap and write
-both.
+[PAUSE 24s] Say *this is very expensive*, then say item and cheap.
+[YOU WRITE: both words]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[MW-LEX-BARGAIN-REQUEST-01]; assesses=[MW-LEX-THODU-01, MW-LEX-KARO-01, MW-LEX-SASTA-01] -->

@@ -37,7 +37,7 @@ reviews_of: [MW-W21-kha, MW-W08-da, MW-W07-i-matra, MW-W08-va, MW-W05-o-matra, M
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-DIKHAVO-01]; assesses=[MW-LEX-DIKHAVO-01, MW-SCRIPT-KHA-01, MW-SCRIPT-HAWA-01] -->
 
-[PAUSE 18s] Say *show it*, write **ख**, then write wind.
+[PAUSE 18s] Say *show it*. [YOU WRITE: **ख**, then the word for wind]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-DA-01, MW-SCRIPT-I-MATRA-01, MW-SCRIPT-VA-01, MW-SCRIPT-O-MATRA-01] -->
@@ -52,8 +52,8 @@ Three groups, one for each beat you already hear. **ि** is written before
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-DIKHAVO-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Read the three groups once. Cover the word, wait five seconds, and write it.
-Check the **ि** stands to the left of **द** and that **ख** carries **ा**.
+Read the three groups once. Cover the word and wait five seconds.
+[YOU WRITE: the word — check the **ि** stands to the left of **द** and that **ख** carries **ा**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-DIKHAVO-01, MW-LEX-DIKHAVO-01] -->

@@ -37,7 +37,8 @@ reviews_of: [MW-C16-hear-bas]
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-BAS-01]; assesses=[MW-LEX-BAS-01, MW-SCRIPT-MAHANGO-01, MW-LEX-NANA-01, MW-SCRIPT-BHAAV-01] -->
 
-[PAUSE 20s] Say bus and maternal grandfather, then write expensive and price.
+[PAUSE 20s] Say bus and maternal grandfather.
+[YOU WRITE: the words for expensive and price]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAS-01, MW-SCRIPT-BAS-01] -->
@@ -48,7 +49,7 @@ reviews_of: [MW-C16-hear-bas]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-BAS-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **बस**.
+Look, cover, and wait five seconds. [YOU WRITE: **बस**]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-BAS-01, MW-SCRIPT-BAS-01] -->

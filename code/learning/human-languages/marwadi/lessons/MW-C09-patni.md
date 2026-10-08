@@ -37,8 +37,10 @@ reviews_of: [MW-C09-hear-patni, MW-C09-pati, MW-W05-virama, MW-C09-nani]
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-PATNI-01]; assesses=[MW-LEX-PATNI-01, MW-SCRIPT-PATI-01, MW-SCRIPT-VIRAMA-01, MW-SCRIPT-NA-01, MW-SCRIPT-II-MATRA-01, MW-SCRIPT-NANI-01, MW-LEX-RAAM-RAAM-SAA, MW-REGISTER-SAA] -->
 
-[PAUSE 20s] Say *patnī*. Write **पति**, **्**, **न**, and **ी** separately;
-write **नानी**, then say the respectful **राम राम सा** greeting.
+[PAUSE 20s] Say *patnī*.
+[YOU WRITE: **पति**, **्**, **न**, and **ी** separately; then **नानी**]
+
+Then say the respectful **राम राम सा** greeting.
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PATNI-01, MW-SCRIPT-PATNI-01] -->
@@ -49,8 +51,7 @@ write **नानी**, then say the respectful **राम राम सा** g
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PATNI-01, MW-LEX-PATI-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Copy once. Cover it, wait five seconds, then write it. Check the virama join
-before checking the final long-ī sign.
+[YOU WRITE: one copy of **पत्नी**; then cover it, wait five seconds, and write it again — check the virama join before checking the final long-ī sign]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PATNI-01, MW-SCRIPT-PATNI-01] -->

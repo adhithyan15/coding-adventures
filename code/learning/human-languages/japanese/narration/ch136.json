@@ -4,7 +4,7 @@
   "chapter": 136,
   "title": "Family and Water: Zo, Zu and Ze",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:3f4aa2133eb86edf",
+  "sourceHash": "fnv1a64:4440c9facf7e32b1",
   "lessons": [
     {
       "id": "JA-C136-kazoku",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a1865dda5960ba4",
+      "sourceHash": "fnv1a64:011e132d9deb23d4",
       "notice": null,
       "blocks": [
         {
@@ -39,21 +39,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write げ — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "げ from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **げ** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: **げ** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ば — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ば from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ば** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **ば** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
@@ -326,7 +326,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:442fb7baee9cb2a3",
+      "sourceHash": "fnv1a64:30774e1d3a82192f",
       "notice": null,
       "blocks": [
         {
@@ -346,12 +346,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぞ (zo) — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぞ (zo) from memory — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぞ** — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ぞ** from memory — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",
@@ -428,12 +428,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write かぞえる (kazoeru), four signs for four beats",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "かぞえる (kazoeru) from memory, four signs for four beats",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **かぞえる**, four signs for four beats]"
+              "source": "[YOU WRITE: **かぞえる** from memory, four signs for four beats]"
             }
           ]
         },
@@ -487,7 +487,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9f5581a3c0f291c6",
+      "sourceHash": "fnv1a64:445fdf72994399be",
       "notice": null,
       "blocks": [
         {
@@ -516,21 +516,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぎ — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぎ from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぎ** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: **ぎ** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write べ — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "べ from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **べ** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **べ** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
@@ -962,7 +962,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:235a1a46281ca9bd",
+      "sourceHash": "fnv1a64:76dd23a590a1d861",
       "notice": null,
       "blocks": [
         {
@@ -991,21 +991,21 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぞ (zo) — R2, five lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぞ (zo) from memory — R2, five lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぞ** — **R2**, five lessons back]"
+              "source": "[YOU WRITE: **ぞ** from memory — **R2**, five lessons back]"
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぶ — R3, twenty lessons back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぶ from memory — R3, twenty lessons back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぶ** — **R3**, twenty lessons back]"
+              "source": "[YOU WRITE: **ぶ** from memory — **R3**, twenty lessons back]"
             },
             {
               "kind": "prompt",
@@ -1269,7 +1269,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3e0a1dcd53a46569",
+      "sourceHash": "fnv1a64:5e5694b32168b58b",
       "notice": null,
       "blocks": [
         {
@@ -1289,12 +1289,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write ぜ (ze) — R1, one lesson back",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ぜ (ze) from memory — R1, one lesson back",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **ぜ** — **R1**, one lesson back]"
+              "source": "[YOU WRITE: **ぜ** from memory — **R1**, one lesson back]"
             },
             {
               "kind": "prompt",

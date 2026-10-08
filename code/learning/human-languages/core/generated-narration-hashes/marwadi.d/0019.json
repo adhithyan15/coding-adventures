@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
   "chapter": 19,
-  "sourceHash": "fnv1a64:ec8142c7f0232d21",
+  "sourceHash": "fnv1a64:5f435cac140a60e2",
   "lessonIds": [
     "MW-C14-hear-sasta",
     "MW-C14-sasta",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "marwadi/narration/ch19.txt",
   "json": "marwadi/narration/ch19.json",
-  "textHash": "fnv1a64:9a4fa3c9be9b8ec5",
-  "jsonHash": "fnv1a64:2ef42ffecf28c6e3",
+  "textHash": "fnv1a64:49cfae8deb8af59e",
+  "jsonHash": "fnv1a64:e4eca576a9e12d20",
   "findings": []
 }

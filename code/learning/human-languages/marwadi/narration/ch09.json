@@ -4,7 +4,7 @@
   "chapter": 9,
   "title": "Pachhe Milsu: See You Later",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e9abd588eb05ac8b",
+  "sourceHash": "fnv1a64:9ca85357abd11b26",
   "lessons": [
     {
       "id": "MW-C07-hear-later",
@@ -646,7 +646,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f6856aa773fa72a",
+      "sourceHash": "fnv1a64:75f00e0a100a4ea6",
       "notice": null,
       "blocks": [
         {
@@ -661,8 +661,17 @@
               "source": "[PAUSE 12s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "थ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **थ**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write थ, then say राम राम सा once as the common farewell."
+              "text": "Then say राम राम सा once as the common farewell."
             }
           ]
         },
@@ -699,8 +708,13 @@
               "text": "Read: match both printed lines to their meanings."
             },
             {
-              "kind": "speech",
-              "text": "Write: hear pāchhe milsū, wait ten seconds, and write it without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the line without a model, ten seconds after hearing pāchhe milsū",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the line without a model, ten seconds after hearing *pāchhe milsū*]"
             },
             {
               "kind": "speech",

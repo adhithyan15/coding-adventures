@@ -37,8 +37,8 @@ reviews_of: [MW-C09-hear-pati, MW-W09-ta, MW-W07-i-matra, MW-C09-nana]
 ## Warm-up
 <!-- hl-knowledge: introduces=[MW-SCRIPT-PATI-01]; assesses=[MW-LEX-PATI-01, MW-SCRIPT-PA-01, MW-SCRIPT-TA-01, MW-SCRIPT-I-MATRA-01, MW-LEX-NANA-01, MW-LEX-RAAM-01, MW-SCRIPT-MA-01, MW-SCRIPT-RAAM-01, MW-SCRIPT-BAHAN-01] -->
 
-[PAUSE 20s] Say husband and maternal grandfather. Write **प**, **त**, **ि**,
-**राम**, and **बहन**; point to **म** inside **राम**.
+[PAUSE 20s] Say husband and maternal grandfather.
+[YOU WRITE: **प**, **त**, **ि**, **राम**, and **बहन** — point to **म** inside **राम**]
 
 ## You'll want to know
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PATI-01, MW-SCRIPT-PATI-01] -->
@@ -49,8 +49,8 @@ reviews_of: [MW-C09-hear-pati, MW-W09-ta, MW-W07-i-matra, MW-C09-nana]
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-PATI-01] -->
 <!-- hl-writing-stage: delayed-copy -->
 
-Look, cover, wait five seconds, and write **पति**. Check that **ि** appears
-before **त** on the page but is read after it.
+Look, cover, and wait five seconds.
+[YOU WRITE: **पति** — check that **ि** appears before **त** on the page but is read after it]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-LEX-PATI-01, MW-SCRIPT-PATI-01] -->

@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "The Sweet and the Tea: One New Consonant",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:7cd0163cf6e20ced",
+  "sourceHash": "fnv1a64:1f144c769e0deb5e",
   "lessons": [
     {
       "id": "MW-C20-hear-churma",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3a7c64c6223a14cb",
+      "sourceHash": "fnv1a64:5e48550e98dcdc97",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,16 @@
             },
             {
               "kind": "speech",
-              "text": "Recall the five-word food payoff, say hard wheat rolls, then write wind."
+              "text": "Recall the five-word food payoff and say hard wheat rolls."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for wind",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for wind]"
             }
           ]
         },
@@ -99,7 +108,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b8f10c13e384ff32",
+      "sourceHash": "fnv1a64:db5b5d477a0c3840",
       "notice": null,
       "blocks": [
         {
@@ -141,7 +150,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write चूरमा (chūrmā). Check that the ू hangs below च and not below र."
+              "text": "Look, cover, and wait five seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "चूरमा (chūrmā) — check that the ू hangs below च and not below र",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **चूरमा** — check that the **ू** hangs below **च** and not below **र**]"
             }
           ]
         },
@@ -190,7 +208,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e16e95ed525b311b",
+      "sourceHash": "fnv1a64:3dd8de78a847dd41",
       "notice": null,
       "blocks": [
         {
@@ -206,7 +224,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say lentils, then write the sweet crumbled wheat dessert and cloud."
+              "text": "Say lentils."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the words for the sweet crumbled wheat dessert and cloud",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the words for the sweet crumbled wheat dessert and cloud]"
             }
           ]
         },
@@ -370,7 +397,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:37408e7899cf5c7e",
+      "sourceHash": "fnv1a64:464455bb62675772",
       "notice": null,
       "blocks": [
         {
@@ -386,7 +413,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say tea, then write य (ya) and rain."
+              "text": "Say tea."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "य (ya), then the word for rain",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **य**, then the word for rain]"
             }
           ]
         },
@@ -412,7 +448,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look, cover, wait five seconds, and write चाय (chāy). Check that the ा sits after च and that य (ya) ends the word bare."
+              "text": "Look, cover, and wait five seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "चाय (chāy) — check that the ा sits after च and that य (ya) ends the word bare",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **चाय** — check that the **ा** sits after **च** and that **य** ends the word bare]"
             }
           ]
         },
@@ -461,7 +506,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3edd8e61f8fe338c",
+      "sourceHash": "fnv1a64:cfbaccebd4c8d3d4",
       "notice": null,
       "blocks": [
         {
@@ -476,8 +521,26 @@
               "source": "[PAUSE 16s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "य (ya)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **य**]"
+            },
+            {
               "kind": "speech",
-              "text": "Write य (ya), then say rain and write it."
+              "text": "Then say rain."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word for rain",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word for rain]"
             }
           ]
         },
@@ -488,7 +551,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Hear both words in both orders, give each meaning, read two cards, then write both from sound."
+              "text": "Hear both words in both orders, give each meaning, and read two cards."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both from sound",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both from sound]"
             }
           ]
         },
@@ -538,7 +610,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:164325f37acc288e",
+      "sourceHash": "fnv1a64:f065bb6a98c599d0",
       "notice": null,
       "blocks": [
         {
@@ -576,8 +648,13 @@
               "text": "Match seven printed cards to meanings."
             },
             {
-              "kind": "speech",
-              "text": "Write all seven heard words without a model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "all seven heard words without a model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: all seven heard words without a model]"
             },
             {
               "kind": "speech",
@@ -629,7 +706,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:86fae0668d404541",
+      "sourceHash": "fnv1a64:390b5f72512a5935",
       "notice": null,
       "blocks": [
         {
@@ -655,8 +732,13 @@
           "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Without a model, write य (ya) and ट from sound cues. Then write चाय (chāy), रोटी, बाटी, चूरमा (chūrmā), and सबजी from dictation. Repair only the missed unit and repeat that word once."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "य (ya) and ट from sound cues, without a model; then चाय (chāy), रोटी, बाटी, चूरमा (chūrmā), and सबजी from dictation — repair only the missed unit and repeat that word once",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **य** and **ट** from sound cues, without a model; then **चाय**, **रोटी**, **बाटी**, **चूरमा**, and **सबजी** from dictation — repair only the missed unit and repeat that word once]"
             }
           ]
         },

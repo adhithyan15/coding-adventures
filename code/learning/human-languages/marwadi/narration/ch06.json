@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Tharo Naam: Ask One Name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e21a3191c76b045d",
+  "sourceHash": "fnv1a64:1a79af5a09e1196b",
   "lessons": [
     {
       "id": "MW-C05-hear-tharo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:90f2928507b13cf9",
+      "sourceHash": "fnv1a64:988077bc70336501",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,20 @@
             },
             {
               "kind": "speech",
-              "text": "Say mhāro nām rām hai once. Write न, then है, from memory. Point to yourself on mhāro."
+              "text": "Say mhāro nām rām hai once."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "न, then है, from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **न**, then **है**, from memory]"
+            },
+            {
+              "kind": "speech",
+              "text": "Point to yourself on mhāro."
             }
           ]
         },
@@ -213,7 +226,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e34182adedcb433",
+      "sourceHash": "fnv1a64:b2d5a0fe9184e64f",
       "notice": null,
       "blocks": [
         {
@@ -255,7 +268,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look for five seconds, cover थारो (thāro), wait five seconds, then write it. Uncover and compare थ (tha), ा, and रो separately."
+              "text": "Look for five seconds, cover थारो (thāro), and wait five seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word — then uncover it and compare थ (tha), ा, and रो separately",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word — then uncover it and compare **थ**, **ा**, and **रो** separately]"
             }
           ]
         },
@@ -600,7 +622,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3c88e64064c5b245",
+      "sourceHash": "fnv1a64:e8213731893a14f3",
       "notice": null,
       "blocks": [
         {
@@ -615,8 +637,30 @@
               "source": "[PAUSE 12s]"
             },
             {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "known ण and new थ (tha), once each",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: known **ण** and new **थ**, once each]"
+            },
+            {
               "kind": "speech",
-              "text": "Write known ण and new थ (tha) once each. Say kāĩ and its meaning, then write क (ka) and independent ई (ī). Point to the known nasal dot in हां."
+              "text": "Say kāĩ and its meaning."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "क (ka) and independent ई (ī)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **क** and independent **ई**]"
+            },
+            {
+              "kind": "speech",
+              "text": "Point to the known nasal dot in हां."
             }
           ]
         },
@@ -642,7 +686,16 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Look for five seconds, cover कांई (kāĩ), wait five seconds, and write it. Uncover and compare क (ka), ा, ं, and ई (ī) separately."
+              "text": "Look for five seconds, cover कांई (kāĩ), and wait five seconds."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the word — then uncover it and compare क (ka), ा, ं, and ई (ī) separately",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the word — then uncover it and compare **क**, **ा**, **ं**, and **ई** separately]"
             }
           ]
         },
@@ -692,7 +745,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6feab596b08448f8",
+      "sourceHash": "fnv1a64:5b16255a9da04c64",
       "notice": null,
       "blocks": [
         {
@@ -708,7 +761,16 @@
             },
             {
               "kind": "speech",
-              "text": "Say the four older meanings as you hear rām-rām sā, ābhār, hā(n) sā, and pāṇī. Write only पाणी from the last cue."
+              "text": "Say the four older meanings as you hear rām-rām sā, ābhār, hā(n) sā, and pāṇī."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "only पाणी, from the last cue",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: only **पाणी**, from the last cue]"
             }
           ]
         },
@@ -745,8 +807,13 @@
               "text": "Read: match the printed question to the printed answer."
             },
             {
-              "kind": "speech",
-              "text": "Write: hear the question, wait ten seconds, and write it with no model."
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the question with no model, ten seconds after hearing it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the question with no model, ten seconds after hearing it]"
             },
             {
               "kind": "speech",

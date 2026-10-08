@@ -57,7 +57,7 @@ and both signs are ones you write. In **いぬ** the new sign comes last; in
 [PAUSE 1s]
 - [YOU SAY: *nuno*]
 - [YOU SAY: *inu*, then *nuno*, and listen for the *nu* in both]
-- [YOU RECALL: write **ぬの**, two strokes for the first sign and one for the second]
+- [YOU WRITE: **ぬの** from memory, two strokes for the first sign and one for the second]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C133-NUNO, JA-SCRIPT-NU-01] -->

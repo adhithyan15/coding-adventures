@@ -38,7 +38,7 @@ reviews_of: [JA-C15-hachi, JA-C13-ane, JA-W09-mi]
 
 - [YOU RECALL: say *eight* — **R1**, one lesson back]
 - [YOU RECALL: say *my elder sister* — **R3**, twenty lessons back]
-- [YOU RECALL: write **み** — **R4**, eighty lessons back]
+- [YOU WRITE: **み** from memory — **R4**, eighty lessons back]
 
 ## You'll Want to Know — hear and say
 <!-- hl-knowledge: introduces=[JA-LEX-KU]; assesses=[JA-SCRIPT-KU-01, JA-LEX-HACHI] -->

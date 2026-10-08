@@ -37,9 +37,9 @@ reviews_of: [MW-C37-tera, MW-C37-igyaara, MW-W35-digits-six-seven-eight, MW-C24-
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-TERA-01, MW-SCRIPT-IGYAARA-01, MW-SCRIPT-DIGIT-SIX-01, MW-SCRIPT-DIGIT-SEVEN-01, MW-SCRIPT-DIGIT-EIGHT-01, MW-LEX-FINAL-PRICE-01] -->
 
 [PAUSE 22s]
-- [YOU RECALL: write **तेरा** — **R1**]
-- [YOU RECALL: write **इग्यारा**, five lessons back — **R2**]
-- [YOU RECALL: write the figures **६**, **७** and **८** — **R3**]
+- [YOU WRITE: **तेरा** from memory — **R1**]
+- [YOU WRITE: **इग्यारा** from memory, five lessons back — **R2**]
+- [YOU WRITE: the figures **६**, **७** and **८** from memory — **R3**]
 - [YOU RECALL: ask *kitṇo ākhrī bhāv doge?* — **R4**]
 
 ## You'll want to know

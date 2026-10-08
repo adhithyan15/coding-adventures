@@ -37,7 +37,7 @@ reviews_of: [JA-C135-byouin, JA-W135-bi, JA-C135-doyoubi, JA-C135-iriguchi, JA-W
 
 [PAUSE 20s] Four recalls, then the review.
 
-- [YOU RECALL: write **ぎ** — **R1**, one lesson back]
+- [YOU WRITE: **ぎ** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *Monday* — **R2**, five lessons back]
 - [YOU RECALL: say *a bag*, the one you carry to work — **R3**, twenty lessons back]
 - [YOU RECALL: say *happy* — **R4**, eighty lessons back]

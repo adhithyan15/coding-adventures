@@ -4,7 +4,7 @@
   "chapter": 132,
   "title": "This and That: So, Re and Ru",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d8d440444c6e8542",
+  "sourceHash": "fnv1a64:f8feaefd56ec5b37",
   "lessons": [
     {
       "id": "JA-C132-soko",
@@ -347,7 +347,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5a8e435966012fc0",
+      "sourceHash": "fnv1a64:be447e3ce0342de8",
       "notice": null,
       "blocks": [
         {
@@ -440,12 +440,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write そと (soto), one stroke for the first sign and two for the second",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "そと (soto) from memory, one stroke for the first sign and two for the second",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **そと**, one stroke for the first sign and two for the second]"
+              "source": "[YOU WRITE: **そと** from memory, one stroke for the first sign and two for the second]"
             }
           ]
         },
@@ -832,7 +832,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:f1ea91fd9dd512b2",
+      "sourceHash": "fnv1a64:0eb7d5c34f54ac32",
       "notice": null,
       "blocks": [
         {
@@ -938,12 +938,12 @@
             },
             {
               "kind": "prompt",
-              "action": "RECALL",
-              "instruction": "write それ (sore); you write every sign in it now",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "それ (sore) from memory; you write every sign in it now",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU RECALL: write **それ**; you write every sign in it now]"
+              "source": "[YOU WRITE: **それ** from memory; you write every sign in it now]"
             }
           ]
         },

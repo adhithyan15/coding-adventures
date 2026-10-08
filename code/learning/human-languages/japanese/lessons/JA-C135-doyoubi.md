@@ -38,7 +38,7 @@ reviews_of: [JA-W135-bi, JA-W09-do, JA-W08-yo, JA-W03-u, JA-C134-shinbun, JA-C13
 
 [PAUSE 20s] Four recalls before the new word.
 
-- [YOU RECALL: write **び** — **R1**, one lesson back]
+- [YOU WRITE: **び** from memory — **R1**, one lesson back]
 - [YOU RECALL: say *a newspaper* — **R2**, five lessons back]
 - [YOU RECALL: say *a dog* — **R3**, twenty lessons back]
 - [YOU RECALL: say *smelly* — **R4**, eighty lessons back]
@@ -59,7 +59,7 @@ it. You write every sign in it now.
 [PAUSE 1s]
 - [YOU SAY: *doyōbi*]
 - [YOU SAY: *doyōbi*, clapping four beats]
-- [YOU RECALL: write **どようび**, and point to the two signs that carry the mark]
+- [YOU WRITE: **どようび** from memory, and point to the two signs that carry the mark]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-C135-DOYOUBI] -->
