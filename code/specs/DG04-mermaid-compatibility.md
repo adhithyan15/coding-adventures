@@ -995,8 +995,8 @@ five directions, top-level `subgraph` lanes, common process-node shapes
 (including storage, subprocess, hexagon, double-circle, input/output, and
 asymmetric, parallelogram, and trapezoid nodes), expanded `cloud`, `bang`,
 hourglass/collate, triangle/extract, flipped-triangle/manual-file, and
-notched-rectangle/card shape attributes, and aliases for the classic shapes
-represented by the shared IR.
+notched-rectangle/card and lined/shaded-process shape attributes, and aliases
+for the classic shapes represented by the shared IR.
 Normalized quoted Unicode lane
 and node labels, named and numeric label entities,
 directed/undirected/dotted/thick chained links, point/circle/cross endpoint

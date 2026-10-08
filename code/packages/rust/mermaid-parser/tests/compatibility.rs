@@ -1607,6 +1607,15 @@ fn swimlane_notched_rectangle_and_card_attributes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_lined_process_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Process\n  first@{ shape: lin-rect, label: \"First\" }\n  second@{ shape: lined-process, label: \"Second\" }\n  third@{ shape: shaded-process, label: \"Third\" }\nend\nfirst --> second --> third",
+    ).expect("Swimlane lined-process aliases should parse");
+
+    assert!(diagram.nodes.iter().all(|node| node.shape == diagram_ir::DiagramShape::LinedRect));
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",
