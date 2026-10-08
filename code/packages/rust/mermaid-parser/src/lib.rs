@@ -6607,6 +6607,7 @@ fn parse_swimlane_node(
             format!("unsupported Swimlane node syntax {value:?}"),
         ));
     };
+    let label = normalize_swimlane_node_label(&label);
     if label.trim().is_empty() {
         return Err(swimlane_error(
             line,
@@ -6619,6 +6620,17 @@ fn parse_swimlane_node(
         lane_id,
         shape,
     })
+}
+
+fn normalize_swimlane_node_label(value: &str) -> String {
+    let value = value.trim();
+    if value.len() >= 2 && value.starts_with('"') && value.ends_with('"') {
+        value[1..value.len() - 1]
+            .replace("\\\"", "\"")
+            .replace("\\\\", "\\")
+    } else {
+        value.to_string()
+    }
 }
 
 fn upsert_swimlane_node(diagram: &mut SwimlaneDiagram, node: SwimlaneNode, lane: Option<usize>) {

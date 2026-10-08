@@ -37,6 +37,10 @@
     {
       "name": "sloped-flowchart-shapes",
       "source": "swimlane-beta LR\nsubgraph Inputs\n  left[\\Inbound\\]\nend\nsubgraph Work\n  wide[/Expand\\]\n  narrow[\\Contract/]\nend\nleft --> wide --> narrow"
+    },
+    {
+      "name": "quoted-unicode-node-labels",
+      "source": "swimlane-beta LR\nsubgraph intake [Intake team]\n  request[\"Request \\\"priority\\\" service\"]\nend\nsubgraph support [Support team]\n  triage{\"Ready for review?\"}\n  done((\"Complete ✓\"))\nend\nrequest --> triage --> done"
     }
   ]
 }
