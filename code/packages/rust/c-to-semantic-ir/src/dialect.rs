@@ -741,6 +741,55 @@ mod tests {
     }
 
     #[test]
+    fn one_negated_parenthesized_operand_keeps_bounded_shapes() {
+        for (condition, expected) in [
+            ("!(0)", "1"),
+            ("!(2)", "0"),
+            ("!(MISSING)", "1"),
+            ("!(ZERO)", "1"),
+            ("!(ANSWER)", "0"),
+            ("0 || !(0) && 1", "1"),
+            ("1 && !(ANSWER)", "0"),
+        ] {
+            let source = format!(
+                "#define ZERO 0\n#define ANSWER 7\n#if {condition}\nint x = 1;\n#else\nint x = 0;\n#endif\n"
+            );
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+            let values: Vec<_> = result
+                .tokens
+                .iter()
+                .map(|token| token.value.as_str())
+                .collect();
+            assert_eq!(values, ["int", "x", "=", expected, ";"], "{condition}");
+        }
+        for condition in [
+            "!((0))",
+            "!(!0)",
+            "!(1 + 2)",
+            "!(1 << 2)",
+            "!(1 && 0)",
+            "!(0) == 1",
+            "!(010)",
+            "!(-1)",
+            "1 || !(1 + 2)",
+        ] {
+            let source = format!("#if {condition}\nint x;\n#endif\n");
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", &source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(&source, file).unwrap();
+            assert!(
+                preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err(),
+                "{condition}"
+            );
+        }
+    }
+
+    #[test]
     fn one_negated_comparison_clause_keeps_the_bounded_shapes() {
         for (condition, expected) in [
             ("!(1 == 2)", "1"),
