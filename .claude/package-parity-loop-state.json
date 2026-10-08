@@ -12218,10 +12218,13 @@
     {
       "id": "geometry-arc2d-java-kotlin-dart-lane-parity",
       "title": "Implement arc2d parity in Java, Kotlin, and Dart",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["geometry-affine2d-bezier2d-java-kotlin-dart-lane-parity", "geometry-arc2d-center-form-bounds-and-sweep-neutral-contract"],
-      "branch": null,
+      "branch": "codex/parity-arc2d-java-kotlin-dart-20261008",
       "pr_number": null,
+      "selected_at": "2026-10-08T14:13:15Z",
+      "selection_revision": "8b9dbfc487fea50e8c2d2ad22c9385a0b4e02452",
+      "selection_notes": "Selected only after #17127 actually merged, exact-main collision inventory and newly discovered owner registrations. The merged Point2D/Bezier2D/Trig foundations and 23-case G2D03 neutral corpus make one dependency-shaped Java/Kotlin/Dart port ready, filling three high-consensus slots. No active parity PR or exact package-path overlap exists. Preserve the separate Go and existing-lane center-form conformance owners, and do not select native/security work.",
       "notes": "Complete the G2D03 arc layer after point, affine, and Bezier foundations, using neutral vectors and native coverage without native drawing authority."
     },
     {
