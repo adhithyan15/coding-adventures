@@ -214,8 +214,9 @@ describe("what the measurement cannot see", () => {
   });
 });
 
-// The whole corpus, loaded and measured once, at import. Both snapshot cases
-// below read the same immutable checkout, and each used to load it afresh:
+// The whole corpus, loaded and measured once, at import. The two snapshot
+// cases below and the four script-ramp cases further down read the same
+// immutable checkout, and each used to load it afresh:
 // loading is most of their cost (about 10s each on an idle machine), and on a
 // loaded full-suite run the first case crossed its 30s budget while every
 // assertion held. Import time has no per-test budget, the pattern book-cli and
@@ -410,8 +411,7 @@ describe("the cousin layer", () => {
 
 describe("the script ramp against the real corpus", () => {
   it("pins the script ramp, which no gate had ever measured", () => {
-    const { lessons } = loadEverything();
-    const report = measureRamp(lessons, loadChapterPolicy()).script;
+    const report = corpusReport.script;
 
     expect(report.policy).toEqual({ maxNewGlyphsPerLesson: 3, maxNewScriptSystemsPerLesson: 1 });
 
@@ -468,8 +468,7 @@ describe("the script ramp against the real corpus", () => {
   });
 
   it("names the steepest lesson: one atom, twelve glyphs", () => {
-    const { lessons } = loadEverything();
-    const report = measureRamp(lessons, loadChapterPolicy()).script;
+    const report = corpusReport.script;
     expect(report.summary.steepestLesson).toMatchObject({
       lessonId: "RU-C01-privet", // HL-C251: the record changes hands, and it gets WORSE -- 14 glyphs against a budget of 3. RU-C01-privet was invisible to this measure while it was schema v1; migrating it did not make the lesson steeper, it made an existing steepness measurable. Expect more of these as #12072 proceeds, and treat each as a finding about the lesson rather than a number to bump. // HL11: Hindi lost this title by having its order fixed. HI-W01 still shows twelve glyphs, but Hindi's WORDS now come before it, so it is no longer the first place those glyphs appear. Marathi inherits the record with the same twelve -- and Marathi still has no declared order, which is why
       glyphs: 14,
@@ -481,8 +480,7 @@ describe("the script ramp against the real corpus", () => {
     // Gujarati had no LANGUAGE_SCRIPT entry and silently resolved to `latin`, so its
     // 39 lessons read as having no script to learn — and `romanization` fell back to
     // the Gujarati headword, handing a voice assistant Gujarati in a Latin field.
-    const { lessons } = loadEverything();
-    const report = measureRamp(lessons, loadChapterPolicy()).script;
+    const report = corpusReport.script;
     const gujarati = report.tracks.find((t) => t.language === "gujarati");
     expect(gujarati).toMatchObject({ script: "gujarati", latinScript: false });
     expect(gujarati!.totalGlyphs).toBeGreaterThan(0);
@@ -566,8 +564,7 @@ describe("the script-system map", () => {
   // worth asserting is that each real track's matcher actually MATCHES its own script,
   // since a name can be valid Unicode and still be the wrong script for the track.
   it("gives every non-Latin track a matcher that finds its own glyphs", () => {
-    const { lessons } = loadEverything();
-    const report = measureRamp(lessons, loadChapterPolicy()).script;
+    const report = corpusReport.script;
     const nonLatin = report.tracks.filter((t) => !t.latinScript);
 
     expect(nonLatin.length).toBe(17);
