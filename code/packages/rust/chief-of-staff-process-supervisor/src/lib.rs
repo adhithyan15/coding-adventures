@@ -89,6 +89,9 @@ pub enum ProcessSupervisorError {
     BrokerLaunch,
     /// The agent's previous broker has not finished yet; try again later.
     BrokerBusy,
+    /// The host's previous incarnation still has a dispatch running; try
+    /// again later (D18S P2.6d-4).
+    DispatchBusy,
     /// The agent's broker ended or misbehaved; its host was ended with it.
     Broker,
 }
@@ -112,6 +115,7 @@ impl Display for ProcessSupervisorError {
             Self::HostNotFound => "process-supervisor: host not found",
             Self::BrokerLaunch => "process-supervisor: broker launch failed",
             Self::BrokerBusy => "process-supervisor: previous broker still finishing",
+            Self::DispatchBusy => "process-supervisor: previous dispatch still finishing",
             Self::Broker => "process-supervisor: broker ended",
         })
     }
@@ -437,7 +441,11 @@ fn respond_on(
 /// one outstanding request per host, so the queue holds one) and answers
 /// through the shared link, as a broker's relay does.
 struct DispatchWorker {
-    requests: mpsc::SyncSender<DataPlaneRequest>,
+    /// `None` once the host has ended: nothing more is handed over.
+    requests: Option<mpsc::SyncSender<DataPlaneRequest>>,
+    /// Kept so a restart can wait for a dispatch still running (review
+    /// round 1, L3): one host never has two workers at once.
+    thread: JoinHandle<()>,
 }
 
 impl DispatchWorker {
@@ -447,32 +455,63 @@ impl DispatchWorker {
         link: SharedLink,
     ) -> Result<Self, ProcessSupervisorError> {
         let (requests, queue) = mpsc::sync_channel::<DataPlaneRequest>(1);
-        thread::Builder::new()
+        let thread = thread::Builder::new()
             .name("host-dispatch".into())
             .spawn(move || {
+                let fail = |error| {
+                    // The supervisor's thread ends the host on its next
+                    // refresh, as the synchronous path did.
+                    if let Ok(mut link) = link.lock() {
+                        link.fault.get_or_insert(error);
+                    }
+                };
                 // Ends when the host's end drops the sender. A dispatch
                 // already running finishes first, bounded by the
                 // dispatcher's own timeouts, and then finds the link closed.
                 for request in queue {
-                    let response = dispatcher.dispatch(&registration, &request);
+                    // A request queued just before its host ended is not
+                    // run for a host that is gone (review round 1, L4).
+                    if link.lock().map_or(true, |link| link.control.is_none()) {
+                        break;
+                    }
+                    // A dispatcher that panics must not leave the host
+                    // waiting forever for an answer (review round 1, M1).
+                    let response = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                        dispatcher.dispatch(&registration, &request)
+                    }));
+                    let Ok(response) = response else {
+                        fail(ProcessSupervisorError::Control);
+                        break;
+                    };
                     if let Err(error) = respond_on(&link, response) {
-                        // The supervisor's thread ends the host on its
-                        // next refresh, as the synchronous path did.
-                        if let Ok(mut link) = link.lock() {
-                            link.fault.get_or_insert(error);
-                        }
+                        fail(error);
                         break;
                     }
                 }
             })
             .map_err(|_| ProcessSupervisorError::ProcessIo)?;
-        Ok(Self { requests })
+        Ok(Self {
+            requests: Some(requests),
+            thread,
+        })
+    }
+
+    /// Stop handing over requests. A dispatch already running finishes.
+    fn close(&mut self) {
+        self.requests = None;
+    }
+
+    /// Whether a dispatch may still be running.
+    fn is_busy(&self) -> bool {
+        !self.thread.is_finished()
     }
 
     /// Hand over one request. Refused only if the worker has stopped: the
     /// queue cannot be full while the protocol allows one request at a time.
     fn dispatch(&self, request: DataPlaneRequest) -> Result<(), ProcessSupervisorError> {
         self.requests
+            .as_ref()
+            .ok_or(ProcessSupervisorError::ProcessIo)?
             .try_send(request)
             .map_err(|_| ProcessSupervisorError::ProcessIo)
     }
@@ -606,7 +645,9 @@ impl OwnedInstance {
         if let Some(broker) = self.broker.as_mut() {
             broker.end();
         }
-        self.worker.take();
+        if let Some(worker) = self.worker.as_mut() {
+            worker.close();
+        }
         self.phase = InstancePhase::Exited {
             exit_code: status.code(),
         };
@@ -645,15 +686,9 @@ impl OwnedInstance {
         // supervisor decrypts would otherwise keep this loop running, and
         // with it the one thread that drives every host. The rest waits for
         // the next refresh.
+        self.end_on_fault()?;
         self.drain_records(Some(MAX_RECORDS_PER_DRAIN))?;
-
-        // A response the dispatch worker could not deliver ends the host,
-        // as it did when dispatch ran here (D18S P2.6d-4).
-        let fault = lock(&self.link)?.fault.take();
-        if let Some(fault) = fault {
-            let _ = self.hard_kill_and_reap();
-            return Err(fault);
-        }
+        self.end_on_fault()?;
 
         // The broker's end, or misbehaviour, ends its host.
         // The broker is ended here, whatever happens to the host: if
@@ -796,6 +831,22 @@ impl OwnedInstance {
         }
 
         Ok(())
+    }
+
+    /// A response the dispatch worker could not deliver ends the host, as
+    /// it did when dispatch ran here (D18S P2.6d-4). The fault stays latched
+    /// on the link, so if ending the host fails now, the next refresh tries
+    /// again (review round 1, L2); once the host has exited, refresh no
+    /// longer looks.
+    fn end_on_fault(&mut self) -> Result<(), ProcessSupervisorError> {
+        let fault = lock(&self.link)?.fault;
+        match fault {
+            Some(fault) => {
+                let _ = self.hard_kill_and_reap();
+                Err(fault)
+            }
+            None => Ok(()),
+        }
     }
 
     fn send_data_plane_response(
@@ -1276,6 +1327,21 @@ impl ProcessHostSupervisor {
         Ok(link.pending.clone().filter(|_| !link.delegated))
     }
 
+    /// Whether a host has a request awaiting its answer, wherever it is being
+    /// answered: for the audit record and for tests.
+    pub fn data_plane_request_in_flight(
+        &mut self,
+        host_name: &HostName,
+    ) -> Result<bool, ProcessSupervisorError> {
+        let instance = self
+            .instances
+            .get_mut(host_name.as_str())
+            .ok_or(ProcessSupervisorError::HostNotFound)?;
+        instance.refresh()?;
+        let in_flight = lock(&instance.link)?.pending.is_some();
+        Ok(in_flight)
+    }
+
     /// Send the exact correlated response for a host's pending request.
     pub fn respond_data_plane(
         &mut self,
@@ -1323,6 +1389,16 @@ impl HostSupervisor for ProcessHostSupervisor {
                 } else {
                     Err(ProcessSupervisorError::ActivePackageMismatch)
                 };
+            }
+            // One worker per host at a time: a restart waits until the
+            // previous incarnation's dispatch has finished (review round 1,
+            // L3). The reconciler retries.
+            if instance
+                .worker
+                .as_ref()
+                .is_some_and(DispatchWorker::is_busy)
+            {
+                return Err(ProcessSupervisorError::DispatchBusy);
             }
         }
         let instance = self.spawn_verified(registration)?;
@@ -1996,6 +2072,10 @@ mod tests {
             (
                 ProcessSupervisorError::BrokerBusy,
                 "previous broker still finishing",
+            ),
+            (
+                ProcessSupervisorError::DispatchBusy,
+                "previous dispatch still finishing",
             ),
             (ProcessSupervisorError::Broker, "broker ended"),
         ];

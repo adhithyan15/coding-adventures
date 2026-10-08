@@ -14,6 +14,15 @@
     and refused by `respond_data_plane`.
   - Tests: one host's held dispatch does not hold another's seven
     answers; a misdirected response ends its host with `Control`.
+  - Review round 1:
+    - a dispatcher that panics ends its host (`Control`) instead of
+      leaving it waiting forever;
+    - the worker's fault stays latched until the host has exited, so a
+      failed kill is retried;
+    - a restart waits for the previous incarnation's dispatch to finish
+      (`DispatchBusy`), so one host never has two workers;
+    - a request queued just before its host ended is not dispatched;
+    - `data_plane_request_in_flight`, for the audit record and tests.
 - **Each agent can have its own channel broker** (D18S P2.6d-2b; #13980).
   `with_channel_brokers(ChannelBrokers)` is opt-in; without it nothing
   changes.

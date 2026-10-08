@@ -561,7 +561,14 @@ fn injected_dispatcher_answers_authenticated_requests_automatically() {
     let deadline = Instant::now() + Duration::from_secs(5);
     loop {
         supervisor.inspect(&registration).unwrap();
-        if dispatcher.operations.lock().unwrap().len() == 7 {
+        // The seventh operation is recorded inside `dispatch`, before its
+        // answer is sent: wait for the answer too, or stopping now would
+        // race it (P2.6d-4 review round 1).
+        if dispatcher.operations.lock().unwrap().len() == 7
+            && !supervisor
+                .data_plane_request_in_flight(registration.host_name())
+                .unwrap()
+        {
             break;
         }
         assert!(Instant::now() < deadline, "timed out waiting for dispatch");
@@ -724,6 +731,105 @@ fn a_response_the_worker_cannot_deliver_ends_its_host() {
         SupervisorObservation::Instance(instance)
             if matches!(instance.phase(), SupervisorPhase::Exited { .. })
     ));
+}
+
+/// A dispatcher with a bug a host can reach.
+struct PanickingDispatcher;
+
+impl HostDataPlaneDispatcher for PanickingDispatcher {
+    fn dispatch(
+        &self,
+        _registration: &HostRegistration,
+        _request: &DataPlaneRequest,
+    ) -> DataPlaneResponse {
+        panic!("a dispatcher bug");
+    }
+}
+
+#[test]
+fn a_panicking_dispatcher_ends_its_host_instead_of_wedging_it() {
+    // P2.6d-4 review round 1, M1: the worker used to die silently, and the
+    // host waited forever for an answer while still reporting Running.
+    let package = TestPackage::new("panicking", Some("DATA_PLANE"));
+    let registration = package.registration("panicking-host");
+    let mut supervisor = new_supervisor(
+        Arc::new(keyring()),
+        Arc::new(generate_identity_keypair()),
+        Duration::from_secs(2),
+        Duration::from_secs(2),
+    )
+    .with_data_plane_dispatcher(Arc::new(PanickingDispatcher));
+    supervisor.start(&registration).unwrap();
+    let deadline = Instant::now() + Duration::from_secs(5);
+    let error = loop {
+        if let Err(error) = supervisor.inspect(&registration) {
+            break error;
+        }
+        assert!(Instant::now() < deadline, "the host was left waiting");
+        thread::sleep(Duration::from_millis(10));
+    };
+    assert_eq!(error, ProcessSupervisorError::Control);
+}
+
+#[test]
+fn a_restart_waits_for_the_previous_dispatch_to_finish() {
+    // P2.6d-4 review round 1, L3: one worker per host at a time.
+    let package = TestPackage::new("restart-gated", Some("DATA_PLANE"));
+    let registration = package.registration("restart-gated-host");
+    let dispatcher = Arc::new(GatedDispatcher {
+        gated_host: "restart-gated-host",
+        released: Mutex::new(false),
+        release: std::sync::Condvar::new(),
+        inner: TestDataPlaneDispatcher::default(),
+    });
+    let mut supervisor = new_supervisor(
+        Arc::new(keyring()),
+        Arc::new(generate_identity_keypair()),
+        Duration::from_secs(2),
+        Duration::from_millis(200),
+    )
+    .with_data_plane_dispatcher(dispatcher.clone());
+    supervisor.start(&registration).unwrap();
+    // Its first request is now held in the dispatcher.
+    let deadline = Instant::now() + Duration::from_secs(5);
+    while !supervisor
+        .data_plane_request_in_flight(registration.host_name())
+        .unwrap()
+    {
+        assert!(Instant::now() < deadline, "no request arrived");
+        thread::sleep(Duration::from_millis(10));
+    }
+    supervisor.stop(registration.host_name()).unwrap();
+    await_exited(&mut supervisor, &registration);
+    assert_eq!(
+        supervisor.start(&registration),
+        Err(ProcessSupervisorError::DispatchBusy)
+    );
+    // Released, the old dispatch finishes, and the host starts again.
+    dispatcher.open();
+    loop {
+        match supervisor.start(&registration) {
+            Ok(()) => break,
+            Err(ProcessSupervisorError::DispatchBusy) => {}
+            Err(error) => panic!("{error}"),
+        }
+        assert!(Instant::now() < deadline, "the restart never happened");
+        thread::sleep(Duration::from_millis(10));
+    }
+    supervisor.stop(registration.host_name()).unwrap();
+}
+
+fn await_exited(supervisor: &mut ProcessHostSupervisor, registration: &HostRegistration) {
+    let deadline = Instant::now() + Duration::from_secs(5);
+    loop {
+        if let Ok(SupervisorObservation::Instance(instance)) = supervisor.inspect(registration) {
+            if matches!(instance.phase(), SupervisorPhase::Exited { .. }) {
+                return;
+            }
+        }
+        assert!(Instant::now() < deadline, "timed out waiting for the exit");
+        thread::sleep(Duration::from_millis(10));
+    }
 }
 
 #[test]

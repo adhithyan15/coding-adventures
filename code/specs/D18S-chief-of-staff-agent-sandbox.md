@@ -2019,7 +2019,13 @@ through S-I3 before two weeks are spent on Windows.
           ends the host with that error, as the synchronous path did.
         - The host's end drops the worker's queue. A dispatch already
           running finishes on its own (it is bounded by the dispatcher's
-          own timeouts) and then finds the link closed.
+          own timeouts) and then finds the link closed. A request queued
+          just before the end is not dispatched.
+        - A restart waits until the previous incarnation's dispatch has
+          finished (`DispatchBusy`; the reconciler retries), so a host
+          restarted while its dispatcher hangs cannot pile up workers.
+        - A dispatcher that panics ends its host rather than leaving it
+          waiting forever.
 
         **Status: done.** A host waiting on a slow dispatch no longer
         holds the supervisor: another host's requests and heartbeats are
