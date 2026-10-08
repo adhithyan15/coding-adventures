@@ -3863,12 +3863,13 @@ fn emit_container(
         .get("font-size")
         .and_then(|value| strict_pixel_length(value))
         .inspect(|_| record_style_read("font-size"));
+    let base_font_weight = flutter_font_weight(&props);
     let base_padding = style_prop(&props, "padding").map(|value| parse_pixel_value(value));
     let has_background =
         base_background.is_some() || state_layers.iter().any(|layer| layer.background.is_some());
     let has_foreground =
         base_foreground.is_some() || state_layers.iter().any(|layer| layer.text_color.is_some());
-    let has_typography = has_foreground || base_font_size.is_some();
+    let has_typography = has_foreground || base_font_size.is_some() || base_font_weight.is_some();
     let has_border = flutter_has_border(&props, &state_layers);
     // Asks about the SHORTHAND, the longhands and the state layers. It used
     // to ask only about the shorthand, so a part authoring nothing but
@@ -3958,6 +3959,9 @@ fn emit_container(
             }
             if let Some(size) = base_font_size {
                 text_style_parts.push(format!("fontSize: {size}"));
+            }
+            if let Some(weight) = base_font_weight {
+                text_style_parts.push(format!("fontWeight: {weight}"));
             }
             format!(
                 "DefaultTextStyle.merge(style: TextStyle({}), child: {body_trimmed})",
@@ -5577,6 +5581,31 @@ fn authored_font_size(node: &LayoutNode, part_styles: &HashMap<String, String>) 
         .map(|s| s.to_string())
 }
 
+/// Lower the conservative CSS font-weight subset supported by Flutter.
+///
+/// The degradation recorder is updated only after a value successfully
+/// lowers. Unsupported weights therefore remain visible instead of being
+/// mistaken for native coverage merely because this code inspected them.
+fn flutter_font_weight(props: &HashMap<String, String>) -> Option<&'static str> {
+    let weight = match props.get("font-weight")?.trim() {
+        "bold" | "700" => "FontWeight.w700",
+        "600" => "FontWeight.w600",
+        "500" => "FontWeight.w500",
+        "normal" | "400" => "FontWeight.w400",
+        _ => return None,
+    };
+    record_style_read("font-weight");
+    Some(weight)
+}
+
+fn authored_font_weight(
+    node: &LayoutNode,
+    part_styles: &HashMap<String, String>,
+) -> Option<&'static str> {
+    let props = parse_style_props(part_styles.get(node.part_name.as_deref()?)?);
+    flutter_font_weight(&props)
+}
+
 fn effective_font_size(
     node: &LayoutNode,
     part_styles: &HashMap<String, String>,
@@ -6323,13 +6352,7 @@ fn host_input_text_style_arg(
     }) {
         fields.push(format!("fontFamily: {family}"));
     }
-    if let Some(weight) = style_prop(&props, "font-weight").and_then(|v| match v.trim() {
-        "bold" | "700" => Some("FontWeight.w700"),
-        "600" => Some("FontWeight.w600"),
-        "500" => Some("FontWeight.w500"),
-        "normal" | "400" => Some("FontWeight.w400"),
-        _ => None,
-    }) {
+    if let Some(weight) = flutter_font_weight(&props) {
         fields.push(format!("fontWeight: {weight}"));
     }
 
@@ -6474,19 +6497,30 @@ fn emit_host_button(
     };
 
     let part_font_size = authored_font_size(node, part_styles);
-    let label_expr = match (font_size_expression(node)?, part_font_size) {
-        (Some(size), _) => {
-            let base = host_input_text_style_arg(node, part_styles)
-                .unwrap_or_else(|| "const TextStyle()".into());
+    let part_font_weight = authored_font_weight(node, part_styles);
+    let part_text_style = if part_font_size.is_some() || part_font_weight.is_some() {
+        let mut fields = Vec::new();
+        if let Some(size) = part_font_size {
+            fields.push(format!("fontSize: {size}"));
+        }
+        if let Some(weight) = part_font_weight {
+            fields.push(format!("fontWeight: {weight}"));
+        }
+        Some(format!("TextStyle({})", fields.join(", ")))
+    } else {
+        None
+    };
+    let label_expr = match (font_size_expression(node)?, part_text_style) {
+        (Some(size), base) => {
+            let base = base.unwrap_or_else(|| "const TextStyle()".into());
             format!(
                 "{}, style: ({base}).copyWith(fontSize: {size}))",
                 label_expr.strip_suffix(')').unwrap()
             )
         }
-        (None, Some(size)) => format!(
-            "{}, style: TextStyle(fontSize: {size}))",
-            label_expr.strip_suffix(')').unwrap()
-        ),
+        (None, Some(style)) => {
+            format!("{}, style: {style})", label_expr.strip_suffix(')').unwrap())
+        }
         (None, None) => label_expr,
     };
 
@@ -16321,6 +16355,85 @@ mod tests {
             dropped_style_properties(&m, &l, &s).is_empty(),
             "implemented container font size was reported dropped"
         );
+    }
+
+    #[test]
+    fn host_button_part_font_weight_reaches_its_text_label() {
+        let m = component("X", vec![], vec![]);
+        let l = layout("X", flex_node_with_part("HostButton", "action", vec![]));
+        let s = style_with_part(
+            "X",
+            "action",
+            vec![StyleProp {
+                name: "font-weight".into(),
+                value: "bold".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains("child: Text(\"\", style: TextStyle(fontWeight: FontWeight.w700))"),
+            "authored HostButton font weight must reach its Text label, got:\n{out}"
+        );
+        assert!(
+            dropped_style_properties(&m, &l, &s).is_empty(),
+            "implemented HostButton font weight was reported dropped"
+        );
+    }
+
+    #[test]
+    fn container_part_normal_font_weight_reaches_descendant_text() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part("Row", "pill", vec![text_node("Status")]),
+        );
+        let s = style_with_part(
+            "X",
+            "pill",
+            vec![StyleProp {
+                name: "font-weight".into(),
+                value: "normal".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            out.contains(
+                "DefaultTextStyle.merge(style: TextStyle(fontWeight: FontWeight.w400), child: Row("
+            ),
+            "container font weight must be inherited by descendant Text widgets, got:\n{out}"
+        );
+        assert!(
+            dropped_style_properties(&m, &l, &s).is_empty(),
+            "implemented container font weight was reported dropped"
+        );
+    }
+
+    #[test]
+    fn unsupported_container_font_weight_remains_dropped() {
+        let m = component("X", vec![], vec![]);
+        let l = layout(
+            "X",
+            flex_node_with_part("Row", "pill", vec![text_node("Status")]),
+        );
+        let s = style_with_part(
+            "X",
+            "pill",
+            vec![StyleProp {
+                name: "font-weight".into(),
+                value: "350".into(),
+            }],
+        );
+
+        let out = from_pipeline(&m, &l, &s).expect("ok").output;
+        assert!(
+            !out.contains("fontWeight:"),
+            "got unsupported weight:\n{out}"
+        );
+        let drops = dropped_style_properties(&m, &l, &s);
+        assert_eq!(drops.len(), 1, "got: {drops:?}");
+        assert_eq!(drops[0].name, "font-weight");
     }
 
     #[test]

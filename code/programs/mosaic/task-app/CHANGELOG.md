@@ -7,6 +7,15 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.1` accumulate here until the next version is
 cut.
 
+### Fixed — Qt and Flutter preserve authored font weights (#17073)
+
+Qt layout containers now pass supported `font-weight` values to descendant
+text without imposing table-cell anchors, and Flutter carries them through
+container `DefaultTextStyle` and button-label `TextStyle`. Fresh strict
+generation retires all 18 font-weight allowances, reducing the measured style
+debt from 140 to 138 on Qt and from 174 to 158 on Flutter. Explicit `normal`
+weights remain normal, and unsupported values stay visible as degradations.
+
 ### Fixed — native text preserves authored uppercase transforms (#17052)
 
 XAML, SwiftUI, Compose, Qt, and Flutter now lower TaskApp's supported
