@@ -9,9 +9,9 @@
 
 use chief_of_staff_channel_crypto::ChannelId;
 use chief_of_staff_host_control_protocol::{
-    ChildControl, ChildEvent, CompletionCall, DataPlaneRequest, DataPlaneResponse, LaunchBindings,
-    ModelToolCall, OrchestratorControl, OrchestratorEvent, PackageTrust, PackageTrustType,
-    ToolCompletionCall,
+    ChildControl, ChildEvent, CompletionCall, DataPlaneFailure, DataPlaneRequest,
+    DataPlaneResponse, LaunchBindings, ModelToolCall, OrchestratorControl, OrchestratorEvent,
+    PackageTrust, PackageTrustType, ToolCompletionCall,
 };
 use chief_of_staff_host_data_plane::HostDataPlaneDispatcher;
 use chief_of_staff_host_runtime::{
@@ -36,6 +36,10 @@ use std::sync::Arc;
 use std::thread::{self, JoinHandle};
 use std::time::{Duration, Instant};
 use storage_core::StorageBackend;
+
+mod request_budget;
+pub use request_budget::RequestBudget;
+use request_budget::TokenBucket;
 
 const MAX_RECORD_BYTES: usize = 1024 * 1024;
 const MAX_FIXED_ARGUMENTS: usize = 128;
@@ -320,6 +324,10 @@ struct OwnedInstance {
     last_heartbeat_ns: Option<u64>,
     channel_id: ChannelId,
     pending_data_plane_request: Option<DataPlaneRequest>,
+    /// This host's request budget (D18S S-K5, P2.6b).
+    requests: TokenBucket,
+    /// How many of this host's requests the budget refused.
+    rate_limited: u64,
 }
 
 impl OwnedInstance {
@@ -433,6 +441,21 @@ impl OwnedInstance {
                             self.last_heartbeat_ns = Some(received_at_ns);
                         }
                         Ok(ChildEvent::Request(request)) => {
+                            // Over budget: answered at once, never queued or
+                            // dispatched. Hosts treat Unavailable as "idle,
+                            // retry later", so a polite host never notices.
+                            if !self.requests.take(received_at_ns) {
+                                self.rate_limited = self.rate_limited.saturating_add(1);
+                                let refusal = DataPlaneResponse::Failed {
+                                    id: request.id(),
+                                    failure: DataPlaneFailure::Unavailable,
+                                };
+                                if let Err(error) = self.send_data_plane_response(refusal) {
+                                    let _ = self.hard_kill_and_reap();
+                                    return Err(error);
+                                }
+                                continue;
+                            }
                             self.pending_data_plane_request = Some(request.clone());
                             if let Some(dispatcher) = dispatcher {
                                 let response = dispatcher.dispatch(&self.registration, &request);
@@ -522,6 +545,7 @@ pub struct ProcessHostSupervisor {
     clock: Arc<dyn MonotonicClock>,
     sessions: Box<dyn SessionIdSource>,
     data_plane_dispatcher: Option<Arc<dyn HostDataPlaneDispatcher>>,
+    request_budget: RequestBudget,
     instances: BTreeMap<String, OwnedInstance>,
 }
 
@@ -543,8 +567,28 @@ impl ProcessHostSupervisor {
             clock,
             sessions,
             data_plane_dispatcher: None,
+            request_budget: RequestBudget::DEFAULT,
             instances: BTreeMap::new(),
         }
+    }
+
+    /// Set the per-host request budget (D18S S-K5). Applies to hosts
+    /// started afterwards; the default is [`RequestBudget::DEFAULT`].
+    pub fn with_request_budget(mut self, budget: RequestBudget) -> Self {
+        self.request_budget = budget;
+        self
+    }
+
+    /// How many of a host's data-plane requests its budget has refused,
+    /// for the audit record.
+    pub fn rate_limited_requests(
+        &self,
+        host_name: &HostName,
+    ) -> Result<u64, ProcessSupervisorError> {
+        self.instances
+            .get(host_name.as_str())
+            .map(|instance| instance.rate_limited)
+            .ok_or(ProcessSupervisorError::HostNotFound)
     }
 
     /// Automatically answer authenticated child requests through one injected dispatcher.
@@ -560,6 +604,7 @@ impl ProcessHostSupervisor {
         &mut self,
         registration: &HostRegistration,
     ) -> Result<OwnedInstance, ProcessSupervisorError> {
+        let request_budget = self.request_budget;
         let package_path = Path::new(registration.package_path().as_str());
         let package = verify_agent_package(package_path, self.keyring.as_ref())
             .map_err(|_| ProcessSupervisorError::PackageVerification)?;
@@ -691,6 +736,8 @@ impl ProcessHostSupervisor {
                 process_id,
                 started_at_ns,
                 last_heartbeat_ns: None,
+                requests: TokenBucket::new(request_budget),
+                rate_limited: 0,
             }),
             Err(error) => {
                 drop(stdin);

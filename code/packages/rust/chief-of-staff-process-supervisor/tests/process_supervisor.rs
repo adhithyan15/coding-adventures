@@ -11,7 +11,7 @@ use chief_of_staff_host_runtime::{
 use chief_of_staff_process_supervisor::{
     DenyHostLaunchBindings, HostLaunchBindingProvider, HostProgram, LaunchBindingProviderError,
     MonotonicClock, ProcessHostSupervisor, ProcessSupervisorConfig, ProcessSupervisorError,
-    SessionIdSource,
+    RequestBudget, SessionIdSource,
 };
 use chief_of_staff_secure_host_channel::SessionId;
 use chief_of_staff_service_reconciler::{HostSupervisor, SupervisorObservation, SupervisorPhase};
@@ -138,6 +138,7 @@ fn package_digest(path: &Path) -> [u8; 32] {
     for marker in [
         "DATA_PLANE",
         "EXIT_BEFORE_READY",
+        "FLOOD",
         "IGNORE_TERMINATE",
         "NO_HEARTBEAT",
         "OVERSIZED_BOOTSTRAP",
@@ -589,6 +590,44 @@ fn injected_dispatcher_answers_authenticated_requests_automatically() {
         SupervisorPhase::Exited { exit_code: Some(0) },
     );
     assert_eq!(exited.process_id(), None);
+}
+
+#[test]
+fn a_host_over_its_request_budget_is_refused_not_dispatched() {
+    // D18S S-K5: a per-host token bucket in front of the dispatcher. With a
+    // burst of 5 and no refill, the first 5 of 20 back-to-back requests are
+    // dispatched and the other 15 are answered Unavailable at once.
+    let package = TestPackage::new("flood", Some("FLOOD"));
+    let registration = package.registration("flood-host");
+    let dispatcher = Arc::new(TestDataPlaneDispatcher::default());
+    let mut supervisor = new_supervisor(
+        Arc::new(keyring()),
+        Arc::new(generate_identity_keypair()),
+        Duration::from_secs(2),
+        Duration::from_secs(2),
+    )
+    .with_data_plane_dispatcher(dispatcher.clone())
+    .with_request_budget(RequestBudget {
+        burst: 5,
+        per_second: 0,
+    });
+    supervisor.start(&registration).unwrap();
+    let result = package.path.join("FLOOD_RESULT");
+    let deadline = Instant::now() + Duration::from_secs(5);
+    while !result.exists() {
+        supervisor.inspect(&registration).unwrap();
+        assert!(Instant::now() < deadline, "timed out waiting for the flood");
+        thread::sleep(Duration::from_millis(10));
+    }
+    assert_eq!(fs::read_to_string(&result).unwrap(), "served=5 refused=15");
+    assert_eq!(dispatcher.operations.lock().unwrap().len(), 5);
+    assert_eq!(
+        supervisor
+            .rate_limited_requests(registration.host_name())
+            .unwrap(),
+        15
+    );
+    supervisor.stop(registration.host_name()).unwrap();
 }
 
 #[test]

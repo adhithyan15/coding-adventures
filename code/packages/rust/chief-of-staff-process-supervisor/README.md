@@ -25,6 +25,13 @@ If graceful termination arrives while the child is blocked on an exchange, the
 child helper returns a distinct termination condition so a concrete host can exit
 successfully instead of misclassifying shutdown as a protocol failure.
 
+Every host has its own request budget (D18S S-K5): a token bucket, by
+default a burst of 128 requests refilled at 64 a second on the injected
+monotonic clock. A request over budget is answered at once with
+`Failed { Unavailable }`, which hosts already treat as "idle, retry later".
+It is never queued or dispatched. `with_request_budget` sets the budget, and
+`rate_limited_requests` reports how many of a host's requests were refused.
+
 Its keyring and X3DH identity are shared through owned `Arc` handles, and its
 session source is `Send`, so the complete supervisor can move with the daemon's
 threaded control plane without copying secret key material.

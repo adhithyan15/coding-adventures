@@ -23,6 +23,26 @@ fn uuid_v7(last: u8) -> [u8; 16] {
     bytes
 }
 
+/// Send 20 receive requests back to back and record how many were served
+/// and how many the supervisor's request budget refused (D18S S-K5).
+fn flood(
+    control: &mut ChildProcessControl<impl io::Read, impl Write>,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let (mut served, mut refused) = (0, 0);
+    for _ in 0..20 {
+        match control.request_receive(uuid_v7(1), 1)? {
+            DataPlaneResponse::Received { .. } => served += 1,
+            DataPlaneResponse::Failed {
+                failure: chief_of_staff_host_control_protocol::DataPlaneFailure::Unavailable,
+                ..
+            } => refused += 1,
+            _ => return Err("unexpected flood response".into()),
+        }
+    }
+    std::fs::write("FLOOD_RESULT", format!("served={served} refused={refused}"))?;
+    Ok(())
+}
+
 fn exercise_data_plane(
     control: &mut ChildProcessControl<impl io::Read, impl Write>,
 ) -> Result<(), Box<dyn std::error::Error>> {
@@ -176,6 +196,9 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     }
     if has_marker("DATA_PLANE") {
         exercise_data_plane(&mut control)?;
+    }
+    if has_marker("FLOOD") {
+        flood(&mut control)?;
     }
     control.receive_terminate()?;
     if has_marker("IGNORE_TERMINATE") {

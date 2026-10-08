@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- **Per-host request budgets** (D18S S-K5; #13980 P2.6b). Every supervised
+  host gets a token bucket, by default a burst of 128 refilled at 64/s.
+  It is checked on the injected monotonic clock before a request reaches the
+  dispatcher or the pending slot. A request over budget is answered at once
+  with `Failed { Unavailable }`, so the wire protocol is unchanged.
+  - New API: `RequestBudget` (with `DEFAULT`), `with_request_budget`, and
+    `rate_limited_requests(host)` for the audit record.
+  - Tests:
+    - bucket unit tests: the burst, the exact refill, the cap, a backwards
+      clock, a flat-out loop held to the rate, and extreme values;
+    - an end-to-end test where the test child's new `FLOOD` mode sends 20
+      requests against a budget of 5: 5 are dispatched and 15 refused.
+  - Mutation-checked: disabling the bucket fails the flood test.
+
 - **Descriptor isolation at the production agent spawn** (D18S S-I2, S-I3;
   #13980 P2.2). `spawn_verified` now calls
   `chief_of_staff_spawn_isolation::isolate`:
