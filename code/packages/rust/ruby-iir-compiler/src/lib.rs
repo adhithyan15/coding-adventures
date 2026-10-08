@@ -43,17 +43,20 @@ pub fn compile_ast(ast: &GrammarASTNode, module_name: &str) -> Result<IIRModule,
         let ASTNodeOrToken::Node(statement) = child else {
             return Err("unsupported Ruby program item".into());
         };
+        if statement.rule_name != "statement" {
+            return Err("unsupported Ruby statement rule".into());
+        }
         let [ASTNodeOrToken::Node(call)] = statement.children.as_slice() else {
             return Err("unsupported Ruby statement shape".into());
         };
-        let expression = match call.rule_name.as_str() {
+        let expressions = match call.rule_name.as_str() {
             "method_call"
                 if call.children.len() == 3
                     && is_puts_callee(&call.children[0])
                     && is_parenthesis(&call.children[1], true)
                     && is_parenthesis(&call.children[2], false) =>
             {
-                None
+                vec![]
             }
             "method_call"
                 if call.children.len() == 4
@@ -64,7 +67,30 @@ pub fn compile_ast(ast: &GrammarASTNode, module_name: &str) -> Result<IIRModule,
                 let ASTNodeOrToken::Node(argument) = &call.children[2] else {
                     return Err("unsupported Ruby puts argument".into());
                 };
-                Some(only_node(argument, "expression")?)
+                if argument.rule_name != "call_arg" {
+                    return Err("unsupported Ruby puts argument".into());
+                }
+                vec![only_node(argument, "expression")?]
+            }
+            "method_call"
+                if call.children.len() == 6
+                    && is_puts_callee(&call.children[0])
+                    && is_parenthesis(&call.children[1], true)
+                    && is_comma(&call.children[3])
+                    && is_parenthesis(&call.children[5], false) =>
+            {
+                let (ASTNodeOrToken::Node(first), ASTNodeOrToken::Node(second)) =
+                    (&call.children[2], &call.children[4])
+                else {
+                    return Err("unsupported Ruby puts arguments".into());
+                };
+                if first.rule_name != "call_arg" || second.rule_name != "call_arg" {
+                    return Err("unsupported Ruby puts arguments".into());
+                }
+                vec![
+                    only_node(first, "expression")?,
+                    only_node(second, "expression")?,
+                ]
             }
             "method_call_no_paren" => {
                 let [callee, ASTNodeOrToken::Node(expression)] = call.children.as_slice() else {
@@ -73,25 +99,37 @@ pub fn compile_ast(ast: &GrammarASTNode, module_name: &str) -> Result<IIRModule,
                 if !is_puts_callee(callee) || expression.rule_name != "expression" {
                     return Err("native Ruby pilot requires puts one expression".into());
                 }
-                Some(expression)
+                vec![expression]
             }
             _ => return Err("native Ruby pilot requires puts one expression".into()),
         };
-        if let Some(expression) = expression {
-            let compiled = compiler.compile_expression(expression)?;
-            compiler.emit(
-                "call_builtin",
-                None,
-                vec![Operand::Var("rb_puts_int".into()), compiled.operand],
-                "void",
-            );
-        } else {
-            compiler.emit(
+        match expressions.as_slice() {
+            [] => compiler.emit(
                 "call_builtin",
                 None,
                 vec![Operand::Var("rb_puts_empty".into())],
                 "void",
-            );
+            ),
+            [expression] => {
+                let compiled = compiler.compile_expression(expression)?;
+                compiler.emit(
+                    "call_builtin",
+                    None,
+                    vec![Operand::Var("rb_puts_int".into()), compiled.operand],
+                    "void",
+                );
+            }
+            [first, second] => {
+                let first = compiler.compile_expression(first)?.operand;
+                let second = compiler.compile_expression(second)?.operand;
+                compiler.emit(
+                    "call_builtin",
+                    None,
+                    vec![Operand::Var("rb_puts_two_ints".into()), first, second],
+                    "void",
+                );
+            }
+            _ => return Err("unsupported Ruby puts argument count".into()),
         }
     }
     compiler.emit("ret_void", None, vec![], "void");
@@ -163,6 +201,33 @@ pub fn run_source(source: &str) -> Result<String, String> {
         {
             return Err(VMError::Custom("Ruby output limit exceeded".into()));
         }
+        sink.push('\n');
+        Ok(Value::Null)
+    });
+    let captured_two = Arc::clone(&output);
+    vm.builtins_mut().register("rb_puts_two_ints", move |args| {
+        let [Value::Int(first), Value::Int(second)] = args else {
+            return Err(VMError::Custom(
+                "rb_puts_two_ints expects two integers".into(),
+            ));
+        };
+        let first = first.to_string();
+        let second = second.to_string();
+        let mut sink = captured_two
+            .lock()
+            .map_err(|_| VMError::Custom("Ruby output lock poisoned".into()))?;
+        if sink
+            .len()
+            .checked_add(first.len())
+            .and_then(|size| size.checked_add(second.len()))
+            .and_then(|size| size.checked_add(2))
+            .is_none_or(|size| size > MAX_OUTPUT_BYTES)
+        {
+            return Err(VMError::Custom("Ruby output limit exceeded".into()));
+        }
+        sink.push_str(&first);
+        sink.push('\n');
+        sink.push_str(&second);
         sink.push('\n');
         Ok(Value::Null)
     });
@@ -261,6 +326,13 @@ fn is_parenthesis(child: &ASTNodeOrToken, left: bool) -> bool {
             && token.type_ == TokenType::RParen
             && token.effective_type_name() == "RPAREN"
     }
+}
+
+fn is_comma(child: &ASTNodeOrToken) -> bool {
+    let ASTNodeOrToken::Token(token) = child else {
+        return false;
+    };
+    token.value == "," && token.type_ == TokenType::Comma && token.effective_type_name() == "COMMA"
 }
 
 fn only_node<'a>(parent: &'a GrammarASTNode, rule: &str) -> Result<&'a GrammarASTNode, String> {
@@ -487,7 +559,7 @@ mod tests {
     fn empty_parenthesized_puts_emits_newline_in_source_order() {
         assert_eq!(run_source("puts()\nputs(7)\nputs()").unwrap(), "\n7\n\n");
         assert!(run_source("puts").is_err());
-        assert!(run_source("puts(1, 2)").is_err());
+        assert!(run_source("puts(1, 2, 3)").is_err());
 
         let module = compile_source("puts()", "empty").unwrap();
         let calls: Vec<_> = module.functions[0]
@@ -500,9 +572,96 @@ mod tests {
     }
 
     #[test]
+    fn two_parenthesized_puts_arguments_emit_two_lines_in_order() {
+        assert_eq!(
+            run_source("puts(1 + 2, 7 / 2)\nputs()\nputs(9)").unwrap(),
+            "3\n3\n\n9\n"
+        );
+        assert!(compile_source("puts(1, 2, 3)", "too-many").is_err());
+        assert!(compile_source("puts 1, 2", "bare-two").is_err());
+        assert!(compile_source("puts(1, 2 / 0)", "bad-second").is_err());
+        assert!(compile_source("puts(1, 9223372036854775808)", "wide-second").is_err());
+
+        let module = compile_source("puts(1, 2)", "two").unwrap();
+        let calls: Vec<_> = module.functions[0]
+            .instructions
+            .iter()
+            .filter(|instruction| instruction.op == "call_builtin")
+            .collect();
+        assert_eq!(calls.len(), 1);
+        assert_eq!(calls[0].srcs.len(), 3);
+    }
+
+    #[test]
+    fn direct_ast_rejects_forged_two_puts_argument_shape() {
+        let mut parser = try_create_ruby_parser("puts(1, 2)").unwrap();
+        let ast = parser.parse().unwrap();
+        let ASTNodeOrToken::Node(statement) = &ast.children[0] else {
+            panic!("expected statement");
+        };
+        let ASTNodeOrToken::Node(call) = &statement.children[0] else {
+            panic!("expected call");
+        };
+        assert_eq!(call.children.len(), 6);
+
+        let mut forged = ast.clone();
+        let ASTNodeOrToken::Node(statement) = &mut forged.children[0] else {
+            unreachable!();
+        };
+        statement.rule_name = "expression_stmt".into();
+        assert!(compile_ast(&forged, "forged-statement").is_err());
+
+        let mut forged = ast.clone();
+        let ASTNodeOrToken::Node(statement) = &mut forged.children[0] else {
+            unreachable!();
+        };
+        let ASTNodeOrToken::Node(call) = &mut statement.children[0] else {
+            unreachable!();
+        };
+        let ASTNodeOrToken::Token(comma) = &mut call.children[3] else {
+            panic!("expected comma");
+        };
+        comma.type_ = TokenType::String;
+        assert!(compile_ast(&forged, "forged-comma").is_err());
+
+        let mut forged = ast.clone();
+        let ASTNodeOrToken::Node(statement) = &mut forged.children[0] else {
+            unreachable!();
+        };
+        let ASTNodeOrToken::Node(call) = &mut statement.children[0] else {
+            unreachable!();
+        };
+        let ASTNodeOrToken::Token(comma) = &mut call.children[3] else {
+            unreachable!();
+        };
+        comma.type_name = Some("STRING".into());
+        assert!(compile_ast(&forged, "forged-comma-type").is_err());
+
+        for argument_index in [2, 4] {
+            let mut forged = ast.clone();
+            let ASTNodeOrToken::Node(statement) = &mut forged.children[0] else {
+                unreachable!();
+            };
+            let ASTNodeOrToken::Node(call) = &mut statement.children[0] else {
+                unreachable!();
+            };
+            let ASTNodeOrToken::Node(argument) = &mut call.children[argument_index] else {
+                panic!("expected argument");
+            };
+            argument.rule_name = "expression".into();
+            assert!(compile_ast(&forged, "forged-argument").is_err());
+        }
+    }
+
+    #[test]
     fn direct_ast_rejects_forged_empty_puts_delimiters() {
-        for source in ["puts()", "puts(1)"] {
-            for delimiter_index in [1, if source == "puts()" { 2 } else { 3 }] {
+        for source in ["puts()", "puts(1)", "puts(1, 2)"] {
+            let right_index = match source {
+                "puts()" => 2,
+                "puts(1)" => 3,
+                _ => 5,
+            };
+            for delimiter_index in [1, right_index] {
                 let mut parser = try_create_ruby_parser(source).unwrap();
                 let mut ast = parser.parse().unwrap();
                 let ASTNodeOrToken::Node(statement) = &mut ast.children[0] else {
@@ -539,7 +698,7 @@ mod tests {
 
     #[test]
     fn direct_ast_rejects_a_forged_puts_callee() {
-        for source in ["puts 1", "puts(1)", "puts()"] {
+        for source in ["puts 1", "puts(1)", "puts()", "puts(1, 2)"] {
             let mut parser = try_create_ruby_parser(source).unwrap();
             let mut ast = parser.parse().unwrap();
             let ASTNodeOrToken::Node(statement) = &mut ast.children[0] else {
@@ -585,7 +744,7 @@ mod tests {
     fn unsupported_and_out_of_range_inputs_are_rejected() {
         for source in [
             "puts(x)",
-            "puts(1, 2)",
+            "puts(1, 2, 3)",
             "x = 1",
             "puts('hello')",
             "puts('123')",

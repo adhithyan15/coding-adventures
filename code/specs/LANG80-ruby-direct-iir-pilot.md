@@ -90,3 +90,22 @@ matching effective grammar types; matching delimiter text alone is
 insufficient. The existing source, AST, VM instruction, and output bounds
 still apply, including a checked output-length increment before appending the
 newline.
+
+## Follow-on bounded two-argument call: `puts(a, b)`
+
+An exact parenthesized `puts` call with two positional integer expressions
+lowers through the Ruby grammar AST directly to IIR. The Rust VM evaluates
+both expressions in source order, then a Ruby-specific builtin appends their
+decimal forms with a newline after each value. Host Ruby is a conformance
+oracle only. Zero- and one-argument behavior remains as specified above;
+bare multi-argument calls, three or more arguments, splats, keyword arguments,
+blocks, and unsupported expressions remain outside this stage.
+
+The compiler validates the callee, both parentheses, the comma token, and
+both `call_arg` wrappers by token kind, effective grammar type, and rule shape
+before lowering. Each expression must satisfy the existing `i64` proof and
+resource bounds. The output builtin checks the combined size before appending
+either value, so an output-limit failure does not partially append this call.
+Expression errors reject the program before execution or stop VM execution
+before this call's output builtin runs. The runner returns an error without
+exposing buffered output on any failure.

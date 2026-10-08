@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-08 — re-audited after PREP01 logical short-circuiting
+Status date: 2026-10-08 — re-audited after partial Perl 5.004_65
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -378,22 +378,29 @@ CI, CodeQL, and books checks passed. Direct-AST budgets now visit every
 call argument and callee subtree. The next selection rotates to LANG82's
 separate, own-archive-backed partial Perl 5.004_65 pair.
 
+PR #17133 delivered that distinct, own-archive-backed partial 5.004_65 pair
+and merged as `829012a4df92b057fbe4f1ba011ab0b0c29839ba` after exact-head
+CI, CodeQL, and books checks passed. The 776-row inventory now has 110
+explicitly partial pairs and 666 pending. Neither complete syntax nor an
+exhaustive public-release inventory is claimed. The next selection rotates
+to LANG80's bounded parenthesized two-argument integer `puts` stage.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG82 continued (selected):** add the separate, explicitly partial
-   Perl 5.004_65 token/grammar pair from its own historical source archive.
-   Keep 5.004_01-t1 pending until its own source is found; do not imply
-   complete syntax or an exhaustive release inventory.
+1. **LANG80 Ruby (selected):** add exactly two positional integer arguments
+   to parenthesized `puts` through the Ruby grammar AST and Rust VM. Host Ruby
+   remains only a conformance oracle.
 2. **LANG78 JavaScript:** the two-argument numeric `console.log` stage is
    complete; broader native frontend semantics remain open, with Node only
    as a conformance oracle.
 3. **LANG79 Python:** the two-argument float `print` stage is complete;
    broader native frontend semantics remain open, with host Python only as
    a conformance oracle.
-4. **LANG80 Ruby:** the zero-argument parenthesized stage is complete; broader
-   native frontend semantics remain open, with host Ruby only as an oracle.
+4. **LANG82 continued:** the separate, explicitly partial Perl 5.004_65
+   pair is complete. Keep 5.004_01-t1 pending until its own source is found;
+   do not imply complete syntax or an exhaustive release inventory.
 5. **PREP01 C:** the bounded logical short-circuit stage is complete. Full C
    `#if` and stringize/paste remain open.
 
