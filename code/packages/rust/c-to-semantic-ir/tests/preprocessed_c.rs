@@ -126,6 +126,41 @@ fn rooted_elif_selects_macro_branch_and_reports_active_condition_error() {
 }
 
 #[test]
+fn rooted_logical_conditions_skip_unneeded_values_but_keep_syntax_errors() {
+    let root = std::env::temp_dir().join(format!(
+        "prep01_c_short_circuit_{}_{}",
+        std::process::id(),
+        SEQ.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::create_dir(&root).unwrap();
+    write_fresh(
+        &root.join("good.c"),
+        b"#if 0 && 1 / 0\nint value(void) { return 0; }\n#elif 1 || 1 / 0\nint value(void) { return 7; }\n#endif\n",
+    );
+    write_fresh(
+        &root.join("bad.c"),
+        b"#if 1 || (1 + 2)\nint value(void) { return 7; }\n#endif\n",
+    );
+    let module = c_to_semantic_ir::compile_preprocessed_file(
+        "good.c",
+        [root.clone()],
+        "short_circuit_good",
+        Bounds::default(),
+    )
+    .unwrap();
+    assert!(semantic_ir::print_module(&module).contains("(block (int 7))"));
+    let error = c_to_semantic_ir::compile_preprocessed_file(
+        "bad.c",
+        [root.clone()],
+        "short_circuit_bad",
+        Bounds::default(),
+    )
+    .unwrap_err();
+    std::fs::remove_dir_all(&root).unwrap();
+    assert_eq!((error.line, error.column), (1, 1), "{error}");
+}
+
+#[test]
 fn quoted_nested_header_prefers_its_own_directory() {
     let root = std::env::temp_dir().join(format!(
         "prep01_c_nested_{}_{}",

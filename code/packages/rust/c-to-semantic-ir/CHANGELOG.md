@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — PREP01 bounded C logical short-circuiting
+
+- Validate every expanded `#if` and `#elif` clause against the existing finite
+  grammar and operand bounds, then skip value-dependent arithmetic and shift
+  evaluation after a decisive `&&` or `||`. Needed invalid operations and
+  unsupported skipped syntax still fail with a directive location.
+
 ## Unreleased — PREP01 bounded C `#elif`
 
 - Recognize nonempty `#elif` expressions and use the generic conditional

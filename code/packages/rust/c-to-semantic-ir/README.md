@@ -43,9 +43,12 @@ only. Every resolved candidate must remain inside a declared root; an
 unresolved include fails explicitly.
 `#if` currently handles single decimal comparisons, one checked `+`, `-`,
 `*`, `/`, `%`, `<<`, `>>`, `&`, `|`, or `^` within the bounded signed 32-bit subset, `!` on
-one operand and `&&`/`||` chains. Division and remainder reject a zero divisor,
-including inside a logical clause whose value would otherwise be unnecessary. Longer or
-mixed arithmetic and other unsupported C expressions fail explicitly. Shift
+one operand and `&&`/`||` chains. Every clause must match the bounded grammar
+and operand ranges after expansion. Logical `&&` and `||` skip value computation
+once the result is determined, so an unneeded zero divisor, arithmetic overflow,
+or invalid shift does not fail the directive. Those operations still fail when
+their clause is needed. Longer or mixed arithmetic and other unsupported C
+expressions fail explicitly. Shift
 counts must be 0–31, the left operand must be nonnegative, and left-shift
 results must fit signed 32-bit.
 Bitwise conditions accept only nonnegative signed 32-bit operands; longer or
