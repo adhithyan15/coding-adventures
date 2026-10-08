@@ -1,0 +1,21 @@
+[package]
+name = "chief-of-staff-broker-launcher"
+version = "0.1.0"
+edition = "2021"
+description = "D18S P2.6d-2a: launch one agent's broker by verified digest, check its keys, and relay its channel requests and callbacks"
+license = "MIT"
+
+[dependencies]
+chief-of-staff-broker-callbacks = { path = "../chief-of-staff-broker-callbacks" }
+chief-of-staff-broker-protocol = { path = "../chief-of-staff-broker-protocol" }
+chief-of-staff-channel-crypto = { path = "../chief-of-staff-channel-crypto" }
+chief-of-staff-channel-endpoints = { path = "../chief-of-staff-channel-endpoints" }
+chief-of-staff-channel-store = { path = "../chief-of-staff-channel-store" }
+chief-of-staff-daemon-secret-file = { path = "../chief-of-staff-daemon-secret-file" }
+chief-of-staff-host-control-protocol = { path = "../chief-of-staff-host-control-protocol" }
+chief-of-staff-pipeline-bindings = { path = "../chief-of-staff-pipeline-bindings" }
+chief-of-staff-spawn-isolation = { path = "../chief-of-staff-spawn-isolation" }
+storage-core = { path = "../storage-core" }
+
+[dev-dependencies]
+chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }

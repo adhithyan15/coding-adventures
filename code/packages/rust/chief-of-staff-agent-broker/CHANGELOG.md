@@ -4,6 +4,11 @@
 
 ### Added
 
+- `tests/launched.rs` (Linux): the real binary, launched through
+  `chief-of-staff-broker-launcher`, verified by digest and exec'd by
+  descriptor, publishes end to end through the relay. Launch catches a key
+  file whose public half is not the definition's, and refuses a key file
+  open to others before spawning.
 - The agent broker (D18S P2.6d-1):
   - `LoadedKeys`: slot-table validation against the binding, then key
     loading with the old authority's rules;

@@ -4,6 +4,20 @@
 
 ### Added
 
+- `VerifiedExecutable` and `isolate_and_exec` (Linux; D18S S-K1, S-I3;
+  #13980 P2.6d-2a): launch the per-agent broker, holding exactly its key
+  descriptors.
+  - `VerifiedExecutable::open(path, sha256)` opens the binary once and
+    hashes it through that descriptor, with its size checked before and
+    after. It must be a regular file, not group- or world-writable, owned
+    by root or this user. `verify()` re-hashes it.
+  - `isolate_and_exec` re-verifies, does what `isolate` does, places the
+    given descriptors at 3..3+n, and `execveat`s the verified descriptor
+    itself. A failure after the descriptors are placed exits the child
+    with status 127, since std's exec-error pipe may sit in a slot.
+  - argv and envp are exactly the command's; an interior NUL is refused,
+    never cut.
+  - The probe now also reports inodes, arguments and environment.
 - `kill_session(&Child)`: `SIGKILL` to an isolated child's process group.
   An isolated child leads its own session, so this ends whatever it left
   behind as well (D18S S-K5; #13980 P2.6b). On Windows it does nothing.

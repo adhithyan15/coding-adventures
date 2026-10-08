@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/chief-of-staff-broker-launcher",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "configured broker key files",
+      "justification": "Opens each agent key file under the owner-only policy, without reading it, to pass the descriptor to that agent's broker."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "the digest-pinned broker binary",
+      "justification": "Starts one broker per agent by executing the verified descriptor (D18S S-K1); never by path."
+    }
+  ],
+  "justification": "Launches and relays to per-agent brokers (D18S P2.6d), holding no channel key itself."
+}

@@ -64,6 +64,11 @@
 
 use std::process::{Command, Stdio};
 
+#[cfg(target_os = "linux")]
+mod exec;
+#[cfg(target_os = "linux")]
+pub use exec::{isolate_and_exec, VerifiedExecutable, VerifyError, MAX_EXECUTABLE_BYTES};
+
 /// Isolate `command`'s descriptors for an agent spawn.
 ///
 /// Call it last, after stdin and stdout are set: it sets stderr itself, and
@@ -176,7 +181,7 @@ mod unix {
         }
     }
 
-    fn descriptor_limit() -> libc::c_int {
+    pub(crate) fn descriptor_limit() -> libc::c_int {
         let mut limit = MaybeUninit::<libc::rlimit>::uninit();
         // SAFETY: `getrlimit` writes one `rlimit` through the pointer and
         // returns 0, or returns -1 and writes nothing.
@@ -196,7 +201,7 @@ mod unix {
 
     /// Between fork and exec: refuse a terminal, leave the supervisor's
     /// session, then mark everything above fd 2 close-on-exec.
-    fn isolate_in_child(limit: libc::c_int) -> io::Result<()> {
+    pub(crate) fn isolate_in_child(limit: libc::c_int) -> io::Result<()> {
         for fd in 0..=2 {
             if is_terminal(fd) {
                 // S-I2: a channel descriptor that is a terminal grants

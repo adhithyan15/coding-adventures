@@ -23,6 +23,9 @@ coding_adventures_zeroize = { path = "../zeroize" }
 libc = "0.2"
 
 [dev-dependencies]
+chief-of-staff-broker-launcher = { path = "../chief-of-staff-broker-launcher" }
+chief-of-staff-spawn-isolation = { path = "../chief-of-staff-spawn-isolation" }
+coding_adventures_sha256 = { path = "../sha256" }
 libc = "0.2"
 chief-of-staff-broker-callbacks = { path = "../chief-of-staff-broker-callbacks" }
 chief-of-staff-service-registry = { path = "../chief-of-staff-service-registry" }
