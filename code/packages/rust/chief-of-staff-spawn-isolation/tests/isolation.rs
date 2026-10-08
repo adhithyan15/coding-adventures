@@ -101,13 +101,15 @@ fn a_terminal_on_a_standard_descriptor_refuses_the_spawn() {
     let mut slave = -1;
     // SAFETY: `openpty` writes two descriptors through the pointers, or
     // fails; the null name, termios and winsize arguments are allowed.
+    // `null_mut` for all three: macOS declares the last two `*mut`, Linux
+    // `*const`, and a `*mut` coerces to either.
     let opened = unsafe {
         libc::openpty(
             &mut master,
             &mut slave,
             std::ptr::null_mut(),
-            std::ptr::null(),
-            std::ptr::null(),
+            std::ptr::null_mut(),
+            std::ptr::null_mut(),
         )
     };
     assert_eq!(opened, 0, "openpty failed");
