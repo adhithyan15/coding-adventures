@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-08 — re-audited after PREP01 C bitwise conditions
+Status date: 2026-10-08 — re-audited after Perl 5.004_53 and 5.004_54 pairs
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -233,17 +233,28 @@ CodeQL, and books checks passed. The next fresh selection rotates to LANG82's
 prepared source-backed Perl 5.004_53 and 5.004_54 partial pairs. Full C
 `#if`, stringize/paste, and default frontend routing remain open.
 
+PR #17022 delivered those two distinct, explicitly partial, own-archive-backed
+Perl 5.004_53 and 5.004_54 token/grammar pairs and merged as
+`bf05e8d9a6c186140074b90eef37eff7b29498a4` after exact-head CI,
+CodeQL, and books checks passed. The 776-row inventory now has 99 partial
+pairs and 677 pending; neither full historical syntax nor exhaustive public
+release coverage is claimed. The next fresh selection rotates to LANG80's
+bounded bare `puts` call form on direct Ruby-to-IIR execution.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG82 Perl release grammars (selected):** add distinct source-backed
-   partial 5.004_53 and 5.004_54 pairs. Keep 5.004_01-t1 pending until its
-   own source is found; do not imply complete syntax or an exhaustive release
-   inventory.
-2. **PREP01 C:** continue the bounded conditional ladder. Full C `#if`,
+1. **LANG80 Ruby (selected):** accept the existing parser's one-argument bare
+   `puts expression` AST shape on the direct Rust IIR and `vm-core` path, with
+   the parenthesized form's integer bounds and explicit unsupported-form
+   rejection.
+2. **LANG82 Perl release grammars:** continue distinct source-backed partial
+   pairs. Keep 5.004_01-t1 pending until its own source is found; do not imply
+   complete syntax or an exhaustive release inventory.
+3. **PREP01 C:** continue the bounded conditional ladder. Full C `#if`,
    stringize/paste, and default frontend routing remain open.
-3. **LANG78 JavaScript:** the completed output repair leaves the broader
+4. **LANG78 JavaScript:** the completed output repair leaves the broader
    source/AST-to-IIR frontend subset open; Node remains a conformance oracle.
 
 The following run records the first VM-067 selection.
