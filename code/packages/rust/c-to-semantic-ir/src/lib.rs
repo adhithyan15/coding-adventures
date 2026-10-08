@@ -188,6 +188,38 @@ mod tests {
     }
 
     #[test]
+    fn parenthesized_if_reaches_the_rooted_c_frontend_and_locates_errors() {
+        let root = uniq("_parenthesized_if");
+        std::fs::create_dir(&root).unwrap();
+        write_fresh(
+            &root.join("main.c"),
+            b"#define FLAG 7\n#if (FLAG >= 7) && (!0)\nint value(void) { return 7; }\n#else\nint value(void) { return 0; }\n#endif\n",
+        );
+        let module = compile_preprocessed_file(
+            "main.c",
+            [root.clone()],
+            "parenthesized_if",
+            Bounds::default(),
+        )
+        .unwrap();
+        let text = semantic_ir::print_module(&module);
+        assert!(text.contains("(block (int 7))"), "{text}");
+        assert!(semantic_ir::validate(&module).is_ok());
+
+        write_fresh(&root.join("invalid.c"), b"#if ((1))\nint x;\n#endif\n");
+        let error = compile_preprocessed_file(
+            "invalid.c",
+            [root.clone()],
+            "invalid_parenthesized_if",
+            Bounds::default(),
+        )
+        .unwrap_err();
+        assert!(error.message.contains("conditional expression"), "{error}");
+        assert_eq!((error.line, error.column), (1, 1));
+        std::fs::remove_dir_all(&root).unwrap();
+    }
+
+    #[test]
     fn overlong_entry_is_refused_before_copy_or_filesystem_access() {
         let entry = "x".repeat(65_537);
         let error = compile_preprocessed_file(&entry, [], "oversized", Bounds::default())

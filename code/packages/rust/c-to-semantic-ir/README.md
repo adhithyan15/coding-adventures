@@ -47,6 +47,9 @@ counts must be 0–31, the left operand must be nonnegative, and left-shift
 results must fit signed 32-bit.
 Bitwise conditions accept only nonnegative signed 32-bit operands; longer or
 mixed expressions remain unsupported.
+One outer parenthesis pair may surround a single operand, negated operand,
+or comparison clause. Nested parentheses and grouping a logical chain or
+arithmetic, shift, or bitwise operation remain unsupported.
 Stringize and paste in macro bodies also fail explicitly.
 
 The pathless `compile_source` API below still uses the legacy C source parser
