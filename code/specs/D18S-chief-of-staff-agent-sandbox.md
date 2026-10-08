@@ -1571,6 +1571,96 @@ through S-I3 before two weeks are spent on Windows.
    - **P2.6d, one contained broker per agent (S-K7).** The dispatcher moves
      out of the daemon into one process per agent. Each holds only that
      agent's channel keys and runs under its own sandbox plan.
+
+     **Where things stand.** `DurableHostDataPlaneDispatcher` runs inside
+     the daemon. It serves Receive, Publish, Acknowledge, Complete,
+     CompleteWithTools, ListModelTools and ExecuteTool for every host, out
+     of these shared structures:
+     - `ExactChannelKeyAuthority`: one map holding every agent's channel
+       keys;
+     - one delivery-receipt map;
+     - one tool-surface map.
+
+     It runs synchronously on whichever thread refreshes the supervisor,
+     while that thread holds the control-plane lock. So one slow
+     `net.fetch` or model completion stalls every host.
+
+     **Topology.** The host protocol does not change: a host still speaks
+     the secure host channel to the supervisor. What changes is behind the
+     supervisor:
+
+     ```text
+       host A ──secure channel──┐                  ┌── broker A (A's keys only)
+                                ├─ supervisor ─────┤
+       host B ──secure channel──┘   relays opaque  └── broker B (B's keys only)
+                                    requests;
+                                    serves callbacks
+     ```
+
+     - The supervisor launches one broker per agent, before that agent's
+       host, through the same verified-object path as agents (S-K1): the
+       digest is checked on a descriptor and that descriptor is exec'd.
+     - The supervisor tells the broker which `agent_id` it serves (S-K2).
+       No identity travels in a request.
+     - The supervisor stops dispatching. For each data-plane request it has
+       verified and rate-limited (P2.6b), it forwards the request to that
+       agent's broker. Later refreshes collect the response and relay it.
+       Nothing on the refresh path waits on a broker, so one agent's slow
+       operation no longer stalls the others.
+     - A broker that exits, misbehaves, or exceeds its response deadline
+       ends its agent, as a host that does so ends today.
+
+     **Key custody.** The broker holds the agent's channel keys, and no
+     other process does:
+     - The supervisor opens the agent's owner-only key files and passes
+       the descriptors to the broker at launch. It never reads them, so
+       the daemon no longer builds a map of every agent's secrets.
+     - The broker reads the keys, closes the descriptors, and from then on
+       holds only that one agent's keys.
+
+     **Callbacks: what stays in the daemon.** Some state is shared by
+     nature. The broker reaches it through a narrow callback interface on
+     its own pipe, and the daemon checks every callback against the
+     broker's bound identity (the pipe it arrived on), never against a
+     field:
+     - **Channel stores** hold ciphertext only. The broker encrypts and
+       decrypts; the daemon appends and reads opaque records for the
+       channels in that agent's launch bindings, and refuses any other
+       channel.
+     - **The vault** issues and redeems leases, as today. A broker may
+       redeem only a lease issued to its own agent, so the vault's
+       per-secret `allowed_agents` keeps meaning what it says.
+     - **Model providers** stay in the daemon for now, because the
+       sandbox cannot yet restrict outbound network to one endpoint
+       without privilege. A completion is a callback, served on a worker
+       thread, never on the refresh path.
+     - **Tool execution** (`net.fetch` and the smart-home tools) moves
+       into the broker, and runs under the broker's own plan. That plan
+       carries the network the agent's manifest declares (S-K7: the union
+       of its agents' declared capabilities).
+
+     **Containment.** On Linux, the broker runs under the P2.4 applier
+     with a broker plan:
+     - its own minimum: the inherited key descriptors, its pipes, and any
+       pre-opened roots (P2.6c);
+     - plus its agent's declared capabilities;
+     - no exec, ever (S-K6: a brokered exec is a request to the
+       supervisor).
+
+     At start, the broker refuses to serve unless every never-grantable
+     directory is mode 0700, which is what P2.6c's link check relies on.
+
+     **Increments**, each its own pull request:
+     1. **P2.6d-1:** the broker protocol crate (frames, length bounds, the
+        callback set) and the broker binary. It serves Receive, Publish
+        and Acknowledge for one agent, against a fake supervisor in
+        tests.
+     2. **P2.6d-2:** the supervisor launches a broker per agent and
+        relays; the daemon serves the channel-store callbacks;
+        `ExactChannelKeyAuthority` leaves the daemon path.
+     3. **P2.6d-3:** tools: `net.fetch` and the vault lease callbacks.
+     4. **P2.6d-4:** model completions and the smart-home tools.
+     5. **P2.6d-5:** the broker's sandbox plan, and the 0700 check.
 7. **macOS Seatbelt** (Tier A).
 8. **Windows AppContainer** (Tier A). The expensive one; schedule accordingly.
 9. **Wire into `spawn_verified`.** Deno becomes one supported runtime rather
