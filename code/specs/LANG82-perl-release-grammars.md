@@ -329,3 +329,16 @@ including the comment-stripped numeric scanner and 250-digit decimal bound.
 It still requires its own token and grammar files and the same negative probes;
 shared source blobs do not make the two public releases aliases or complete
 syntax implementations.
+
+Continue the development-release installment with a separate, explicitly
+partial `5.004_52` token/grammar pair. Its own historical archive is
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_52.tar.gz`
+with SHA-256
+`f5edcffd4bf28db7bad95562470e37d57da65503822abb77de049b4d18cddd09`.
+Its `perly.y` is byte-identical to 5.004_51, while `toke.c` changes input
+handling and diagnostics outside the plain-decimal `print` arithmetic subset.
+The comment-and-whitespace-stripped `scan_num` body remains identical to
+5.004_51, retaining the 250-digit decimal scan bound. Accept at most 250
+digits and reject 251, leading-zero literals, adjacent decrement, carriage
+returns, and unsupported characters. Keep both files distinct and labeled
+partial; source continuity does not establish full historical syntax.
