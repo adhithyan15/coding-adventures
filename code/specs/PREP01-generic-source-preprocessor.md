@@ -731,6 +731,16 @@ longer and mixed forms, and rooted file-input error locations.
 Until stringize and paste are implemented, a `#define` replacement containing
 `#` or `##` must fail explicitly rather than emit those operator tokens as C
 source.
+The next bounded C `#if` stage permits one outer parenthesis pair around a
+single already-supported decimal or identifier operand, `!` operand, or
+comparison clause. The inner comparison uses the existing two-operand
+operators and numeric checks; parentheses do not add new integer forms.
+Logical `&&` and `||` may still combine clauses with their existing
+precedence, including a parenthesized clause. Reject nested parentheses,
+parentheses around logical chains or arithmetic/shift/bitwise clauses,
+unmatched delimiters, and mixed forms such as `!(1)` or `(1) == 1`.
+Validate every clause even when a logical result is already determined, and
+retain the directive location on errors through the rooted C frontend.
 *Acceptance:* a C program using `#define` (object- and function-like), `#if`/
 `#ifdef`/`#else`/`#endif` and a real project-local `#include` compiles through
 `c-to-semantic-ir` and executes with the expected result — the first C program

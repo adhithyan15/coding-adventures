@@ -187,16 +187,25 @@ PR #16985 delivered exactly one `&`, `|`, or `^` per bounded logical C
 after exact-head CI, CodeQL, and books checks passed. The next fresh
 selection rotates to four separate, explicitly partial historical Perl
 5.004_04 maintenance token/grammar pairs. Full C `#if` remains open.
+PR #16991 delivered those four distinct, explicitly partial source-backed
+Perl 5.004_04-m1 through -m4 token and grammar pairs and merged as
+`f7a0ff895c3ac18170ff48f02f57bc57a886277e` after exact-head CI,
+CodeQL, and books checks passed. The 776-row inventory now has 88 partial
+pairs and 688 pending; neither complete syntax nor exhaustive public-release
+coverage is claimed. The next fresh selection rotates to the prepared bounded
+PREP01 parenthesized C conditional-expression slice.
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG82 Perl release grammars (selected):** add separate, source-backed,
-   explicitly partial token and grammar files for 5.004_04-m1 through -m4.
-   Keep 5.004_01-t1 pending until its own source is found; do not imply
-   complete syntax or an exhaustive release inventory.
-2. **PREP01 C:** continue the bounded `#if` expression ladder. Full C `#if`,
-   stringize/paste, and default frontend routing remain open.
+1. **PREP01 C (selected):** accept one outer parenthesis pair around a single
+   operand, negated operand, or comparison in a bounded `#if` clause. Reject
+   nested or mixed unsupported forms. Full C `#if`, stringize/paste, and
+   default frontend routing remain open.
+2. **LANG82 Perl release grammars:** continue separate source-backed partial
+   files, with six 5.004_05 maintenance pairs prepared locally. Keep
+   5.004_01-t1 pending until its own source is found; do not imply complete
+   syntax or an exhaustive release inventory.
 
 The following run records the first VM-067 selection.
 
