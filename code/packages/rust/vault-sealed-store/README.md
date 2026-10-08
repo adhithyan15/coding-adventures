@@ -92,6 +92,20 @@ See the spec for the full argument. In short:
   who sees the storage at rest but not the unsealed process's memory.
 - Integrity is enforced via AEAD; AAD binds each ciphertext to its
   storage address so records cannot be swapped.
+- **Freshness (rollback protection, VLT01 F1-F10).** Each namespace has a
+  sealed index recording the newest generation and AEAD tag of every key.
+  Each record binds its generation into its AAD.
+  - Putting back an older record file, a deleted one, or a pre-migration
+    one reads as `Tamper`, and so does deleting the index.
+  - Every write first reconciles the index forward to the authentic records
+    on disk, so an old copy of the index cannot be laundered into the newest
+    one.
+  - A running process also refuses any index older than one it has seen
+    (the epoch floor).
+  - Not detected: an old index restored **with** an old record it pins,
+    after a restart and before any write. That needs an anchor outside the
+    storage directory (P1.20b), so the storage directory must still be
+    writable only by its owner.
 - The only key-derived persisted artifact is a verifier AEAD of 16 zero
   bytes. For password-derived KEKs, an attacker's only path is offline
   brute force against Argon2id at the configured parameters.

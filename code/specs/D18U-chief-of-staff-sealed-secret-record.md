@@ -53,19 +53,29 @@ decrypt every secret in the vault and so gains nothing by widening a policy
 that they could not get by reading the payload directly. The cost would be a
 second owner key to provision, rotate, and lose. Not worth it.
 
-**What the AEAD does not stop: rollback.** The AAD carries no revision, so a
-party who can *write* the storage directory but holds no KEK can restore an
-older ciphertext file for the same name — from a backup, a filesystem
-snapshot, a sync folder — and it still verifies. On the next restart the
-daemon registers the old policy and the old value. Within one KEK epoch that
-undoes a narrowed allow-list, the rotation of a leaked secret, or a delete.
-(After a KEK rotation old records fail as `Tamper`, so the window is bounded by
-the epoch.) A second *signature* would not fix this either — an old record is
-just as validly signed. What fixes it is freshness: a sealed per-namespace
-manifest of name → revision checked at load, or the revision bound into the
-AAD. That is logged as backlog item **P1.20**. Until it lands, the operating
-requirement is that **the vault storage directory is writable only by the
-owner**, which is also what the KEK file's owner-only check already assumes.
+**What the AEAD does not stop: rollback.** The AEAD proves a record was
+written by a KEK holder, but not that it is the latest record. A party who can
+*write* the storage directory but holds no KEK could once restore an older
+ciphertext file for the same name, from a backup, a filesystem snapshot or a
+sync folder, and it still verified. On the next restart the daemon would
+register the old policy and the old value. That undoes a narrowed allow-list,
+the rotation of a leaked secret, or a delete. A second *signature* would not
+fix this either, because an old record is just as validly signed.
+
+`vault-sealed-store` now binds freshness (VLT01 F1-F10, P1.20). A sealed
+per-namespace index records each key's newest generation and AEAD tag, and
+each record binds its generation into its AAD. These now read as `Tamper`,
+and `register_all` fails closed on them:
+
+- restoring one record file;
+- resurrecting a deleted one;
+- deleting the index.
+
+What remains (VLT01 F10) is restoring an old index together with an old
+record it pins, from a pair the attacker holds, after a restart and before
+any write. That needs an anchor outside the storage directory (P1.20b). Until then, the operating requirement
+stands: **the vault storage directory is writable only by the owner**, which
+is also what the KEK file's owner-only check already assumes.
 
 ### Why startup-only (U-D4, U-D5)
 

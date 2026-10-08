@@ -29,13 +29,15 @@
 //! *forge* a record already holds the KEK — and so can already read every
 //! secret in the vault — which is why there is no second signature.
 //!
-//! **The AEAD does not stop rollback.** Nothing binds a record to its revision,
-//! so a party who can write the storage directory but has no KEK can restore
-//! an *older* valid file for the same name — from a backup, a snapshot, a sync
-//! folder — and on the next restart the daemon serves the old policy and the
-//! old value. Within one KEK epoch that undoes a narrowed policy, a rotation
-//! of a leaked secret, or a delete. The storage directory must therefore be
-//! writable only by the owner; freshness binding is backlog item P1.20.
+//! **The AEAD alone does not stop rollback.** An *older* valid file for the
+//! same name still verifies. Restored from a backup, a snapshot or a sync
+//! folder, it would have the daemon serve the old policy and the old value
+//! on the next restart. `vault-sealed-store`'s freshness index (VLT01 F1-F10)
+//! now catches a stale or resurrected record: it reads as `Tamper`, and
+//! [`ChiefSecretStore::register_all`] fails closed. An old index restored
+//! together with an old record it pins is still accepted after a restart
+//! (VLT01 F10, P1.20b), so the storage directory must stay writable only by
+//! the owner.
 //!
 //! ## The envelope, version 2
 //!

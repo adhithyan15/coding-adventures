@@ -464,6 +464,47 @@ fn put_overwrites_which_is_rotation() {
 }
 
 #[test]
+fn restoring_a_rotated_secrets_old_file_stops_the_load() {
+    // The attack the AEAD alone cannot see (D18U, VLT01 F9): copy the record
+    // file aside, rotate, put the old file back. Without freshness the old
+    // value and the old policy would load on the next restart.
+    let (backend, store) = fresh();
+    store
+        .put(&name("weather"), &weather_policy(), b"leaked-key")
+        .expect("put");
+    let old = backend.get(NAMESPACE, "weather").unwrap().unwrap();
+    let mut rotated = weather_policy();
+    rotated.rotated_at_ms += 1;
+    store
+        .put(&name("weather"), &rotated, b"rotated-key")
+        .expect("rotate");
+
+    backend
+        .put(
+            StoragePutInput::new(
+                old.namespace,
+                old.key,
+                old.content_type,
+                old.metadata,
+                old.body,
+            )
+            .unwrap(),
+        )
+        .unwrap();
+
+    // What the daemon does at startup, from a fresh handle.
+    let daemon = store_over(backend);
+    let runtime = ChiefVaultRuntime::new();
+    assert!(matches!(
+        daemon.register_all(&runtime),
+        Err(StoreError::Sealed(
+            coding_adventures_vault_sealed_store::SealedStoreError::Tamper { .. }
+        ))
+    ));
+    assert!(runtime.secret_policy("weather").is_none());
+}
+
+#[test]
 fn put_refuses_an_unstorable_record_before_writing() {
     let (_, store) = fresh();
     let err = store
@@ -565,6 +606,10 @@ fn a_short_page_with_a_cursor_does_not_end_the_listing() {
             .put(&name(&format!("s{i:03}")), &weather_policy(), b"k")
             .expect("put");
     }
+    // Every put lists the namespace too (the sealed store reconciles its
+    // freshness index before writing, VLT01 F4), so forget those drops and
+    // count only the listing under test.
+    backend.dropped.lock().unwrap().clear();
     let names = store.names().expect("names");
     let dropped = backend.dropped.lock().unwrap().clone();
     assert_eq!(dropped.len(), 2, "two non-final pages");
