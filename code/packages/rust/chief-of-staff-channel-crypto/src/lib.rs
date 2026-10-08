@@ -664,9 +664,27 @@ pub fn encrypt_message(
 /// Durable channel stores use this to persist a sequence reservation before
 /// any ciphertext is produced with that sequence's nonce.
 pub fn prepare_message_header(fields: MessageFields, plaintext: &[u8]) -> MessageHeader {
+    prepare_message_header_with_hash(fields, plaintext_hash(plaintext))
+}
+
+/// The SHA-256 a message header carries for `plaintext`.
+pub fn plaintext_hash(plaintext: &[u8]) -> [u8; 32] {
+    sha256(plaintext)
+}
+
+/// Prepare a header from the plaintext's hash alone (D18S P2.6d).
+///
+/// The broker holding the keys hashes the plaintext and sends only the hash
+/// to the daemon, which reserves the sequence and returns this header. The
+/// daemon never sees the plaintext, and the broker encrypts under a header
+/// whose hash [`encrypt_message_with_header`] still checks.
+pub fn prepare_message_header_with_hash(
+    fields: MessageFields,
+    plaintext_hash: [u8; 32],
+) -> MessageHeader {
     MessageHeader {
         fields,
-        plaintext_hash: sha256(plaintext),
+        plaintext_hash,
     }
 }
 
@@ -696,6 +714,29 @@ pub fn encrypt_message_with_header(
     })
 }
 
+/// Check a message's originator signature, without any key but the public
+/// one (D18S P2.6d).
+///
+/// The signature covers the canonical header, so this proves who wrote the
+/// header: its channel, sequence, epoch and plaintext hash. It cannot prove
+/// the ciphertext decrypts. Only the AEAD tag can, and checking it needs the
+/// channel master key.
+pub fn verify_message_signature(
+    message: &EncryptedMessage,
+    originator_public_key: &[u8; 32],
+) -> Result<(), ChannelCryptoError> {
+    let authenticated_header = canonical_message_header(&message.header);
+    if verify(
+        &authenticated_header,
+        &message.originator_signature,
+        originator_public_key,
+    ) {
+        Ok(())
+    } else {
+        Err(ChannelCryptoError::InvalidMessageSignature)
+    }
+}
+
 /// Verify and decrypt one channel-log message.
 ///
 /// Any mutation to the outer header invalidates both the signature and the
@@ -705,14 +746,8 @@ pub fn decrypt_message(
     cmk: &ChannelMasterKey,
     originator_public_key: &[u8; 32],
 ) -> Result<Vec<u8>, ChannelCryptoError> {
+    verify_message_signature(message, originator_public_key)?;
     let authenticated_header = canonical_message_header(&message.header);
-    if !verify(
-        &authenticated_header,
-        &message.originator_signature,
-        originator_public_key,
-    ) {
-        return Err(ChannelCryptoError::InvalidMessageSignature);
-    }
     let nonce = message_nonce(
         message.header.fields.channel_id,
         message.header.fields.sequence,
@@ -933,6 +968,55 @@ mod tests {
         assert_ne!(message.ciphertext(), b"payload");
         assert_eq!(message.authentication_tag().len(), 16);
         assert_eq!(message.originator_signature().len(), 64);
+    }
+
+    #[test]
+    fn a_header_prepared_from_the_hash_equals_one_prepared_from_the_plaintext() {
+        let plaintext = b"turn on the porch light";
+        let from_plaintext = prepare_message_header(message_fields(4, 1), plaintext);
+        let from_hash =
+            prepare_message_header_with_hash(message_fields(4, 1), plaintext_hash(plaintext));
+        assert_eq!(from_plaintext, from_hash);
+        let cmk = ChannelMasterKey::from_bytes([0x5a; 32]);
+        let originator = signing_key(7);
+        // Encryption still checks the hash against the plaintext it is given.
+        assert!(
+            encrypt_message_with_header(from_hash.clone(), plaintext, &cmk, &originator).is_ok()
+        );
+        assert!(matches!(
+            encrypt_message_with_header(from_hash, b"something else", &cmk, &originator),
+            Err(ChannelCryptoError::PlaintextHashMismatch)
+        ));
+    }
+
+    #[test]
+    fn the_signature_check_needs_only_the_public_key_and_proves_only_the_header() {
+        let cmk = ChannelMasterKey::from_bytes([0x5a; 32]);
+        let originator = signing_key(7);
+        let message = encrypt_message(message_fields(4, 1), b"hello", &cmk, &originator);
+        let public_key = originator.public_key();
+        assert_eq!(verify_message_signature(&message, &public_key), Ok(()));
+        assert_eq!(
+            verify_message_signature(&message, &signing_key(8).public_key()),
+            Err(ChannelCryptoError::InvalidMessageSignature)
+        );
+
+        let mut moved = message.clone();
+        moved.header.fields.sequence = Sequence(5);
+        assert_eq!(
+            verify_message_signature(&moved, &public_key),
+            Err(ChannelCryptoError::InvalidMessageSignature)
+        );
+
+        // Garbage ciphertext under a valid signature passes the check: only
+        // the AEAD tag, which needs the channel key, catches it.
+        let mut garbage = message.clone();
+        garbage.ciphertext[0] ^= 1;
+        assert_eq!(verify_message_signature(&garbage, &public_key), Ok(()));
+        assert_eq!(
+            decrypt_message(&garbage, &cmk, &public_key),
+            Err(ChannelCryptoError::AuthenticationFailed)
+        );
     }
 
     #[test]
