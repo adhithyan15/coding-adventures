@@ -1541,6 +1541,19 @@ fn swimlane_hexagon_and_double_circle_shapes_reach_semantic_ir() {
 }
 
 #[test]
+fn swimlane_cloud_and_bang_attributes_reach_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Runtime\n  hosted@{ shape: cloud, label: \"Hosted service\" }\n  alert@{ label: \"Failure alert\", shape: bang }\nend\nhosted --> alert",
+    ).expect("expanded Swimlane shapes should parse");
+
+    assert_eq!(diagram.nodes[0].label, "Hosted service");
+    assert_eq!(diagram.nodes[0].shape, diagram_ir::DiagramShape::Cloud);
+    assert_eq!(diagram.nodes[1].label, "Failure alert");
+    assert_eq!(diagram.nodes[1].shape, diagram_ir::DiagramShape::Bang);
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one@{ shape: hourglass }\nend").is_err());
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",

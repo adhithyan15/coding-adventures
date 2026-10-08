@@ -989,6 +989,18 @@ where
                     stroke_dash_offset: None,
                 })
             }
+            DiagramShape::Cloud | DiagramShape::Bang => {
+                let commands = if node.shape == DiagramShape::Cloud {
+                    cloud_path_commands(node.x, node.y, node.width, node.height)
+                } else {
+                    polygon_path_commands(&bang_polygon_points(node.x, node.y, node.width, node.height))
+                };
+                PaintInstruction::Path(PaintPath {
+                    base: PaintBase::default(), commands, fill: Some(fill.clone()), fill_rule: None,
+                    stroke: Some(stroke.clone()), stroke_width: Some(stroke_width), stroke_cap: None,
+                    stroke_join: Some(StrokeJoin::Round), stroke_dash: stroke_dash.clone(), stroke_dash_offset: None,
+                })
+            }
             _ => PaintInstruction::Rect(PaintRect {
                 base: PaintBase::default(),
                 x: node.x,
@@ -1762,67 +1774,9 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
             ])
         }
         DiagramShape::Cloud => {
-            let x = node.x;
-            let y = node.y;
-            let w = node.width;
-            let h = node.height;
             PaintInstruction::Path(PaintPath {
                 base: PaintBase::default(),
-                commands: vec![
-                    PathCommand::MoveTo {
-                        x: x + 0.18 * w,
-                        y: y + 0.78 * h,
-                    },
-                    PathCommand::CubicTo {
-                        cx1: x + 0.02 * w,
-                        cy1: y + 0.78 * h,
-                        cx2: x - 0.02 * w,
-                        cy2: y + 0.52 * h,
-                        x: x + 0.14 * w,
-                        y: y + 0.46 * h,
-                    },
-                    PathCommand::CubicTo {
-                        cx1: x + 0.10 * w,
-                        cy1: y + 0.27 * h,
-                        cx2: x + 0.31 * w,
-                        cy2: y + 0.16 * h,
-                        x: x + 0.43 * w,
-                        y: y + 0.30 * h,
-                    },
-                    PathCommand::CubicTo {
-                        cx1: x + 0.52 * w,
-                        cy1: y + 0.06 * h,
-                        cx2: x + 0.80 * w,
-                        cy2: y + 0.10 * h,
-                        x: x + 0.81 * w,
-                        y: y + 0.35 * h,
-                    },
-                    PathCommand::CubicTo {
-                        cx1: x + 1.00 * w,
-                        cy1: y + 0.34 * h,
-                        cx2: x + 1.04 * w,
-                        cy2: y + 0.63 * h,
-                        x: x + 0.87 * w,
-                        y: y + 0.72 * h,
-                    },
-                    PathCommand::CubicTo {
-                        cx1: x + 0.78 * w,
-                        cy1: y + 0.91 * h,
-                        cx2: x + 0.54 * w,
-                        cy2: y + 0.90 * h,
-                        x: x + 0.47 * w,
-                        y: y + 0.78 * h,
-                    },
-                    PathCommand::CubicTo {
-                        cx1: x + 0.38 * w,
-                        cy1: y + 0.94 * h,
-                        cx2: x + 0.20 * w,
-                        cy2: y + 0.92 * h,
-                        x: x + 0.18 * w,
-                        y: y + 0.78 * h,
-                    },
-                    PathCommand::Close,
-                ],
+                commands: cloud_path_commands(node.x, node.y, node.width, node.height),
                 fill: Some(node.style.fill.clone()),
                 fill_rule: None,
                 stroke: Some(node.style.stroke.clone()),
@@ -1834,24 +1788,7 @@ fn node_shape_geometry_instruction(node: &LayoutedGraphNode) -> PaintInstruction
             })
         }
         DiagramShape::Bang => {
-            let cx = node.x + node.width / 2.0;
-            let cy = node.y + node.height / 2.0;
-            let outer_x = node.width / 2.0;
-            let outer_y = node.height / 2.0;
-            let inner_x = outer_x * 0.68;
-            let inner_y = outer_y * 0.68;
-            let points = (0..16)
-                .map(|index| {
-                    let angle = -std::f64::consts::FRAC_PI_2
-                        + index as f64 * std::f64::consts::PI / 8.0;
-                    let (rx, ry) = if index % 2 == 0 {
-                        (outer_x, outer_y)
-                    } else {
-                        (inner_x, inner_y)
-                    };
-                    (cx + rx * angle.cos(), cy + ry * angle.sin())
-                })
-                .collect::<Vec<_>>();
+            let points = bang_polygon_points(node.x, node.y, node.width, node.height);
             polygon_node_instruction(node, &points)
         }
         DiagramShape::ParallelogramRight => {
@@ -2076,14 +2013,9 @@ fn block_arrow_instruction(
 }
 
 fn polygon_node_instruction(node: &LayoutedGraphNode, points: &[(f64, f64)]) -> PaintInstruction {
-    let mut commands = Vec::with_capacity(points.len() + 1);
-    let (x, y) = points[0];
-    commands.push(PathCommand::MoveTo { x, y });
-    commands.extend(points[1..].iter().map(|&(x, y)| PathCommand::LineTo { x, y }));
-    commands.push(PathCommand::Close);
     PaintInstruction::Path(PaintPath {
         base: PaintBase::default(),
-        commands,
+        commands: polygon_path_commands(points),
         fill: Some(node.style.fill.clone()),
         fill_rule: None,
         stroke: Some(node.style.stroke.clone()),
@@ -2093,6 +2025,52 @@ fn polygon_node_instruction(node: &LayoutedGraphNode, points: &[(f64, f64)]) -> 
         stroke_dash: node.style.stroke_dash.clone(),
         stroke_dash_offset: None,
     })
+}
+
+fn polygon_path_commands(points: &[(f64, f64)]) -> Vec<PathCommand> {
+    let mut commands = Vec::with_capacity(points.len() + 1);
+    let (x, y) = points[0];
+    commands.push(PathCommand::MoveTo { x, y });
+    commands.extend(points[1..].iter().map(|&(x, y)| PathCommand::LineTo { x, y }));
+    commands.push(PathCommand::Close);
+    commands
+}
+
+fn bang_polygon_points(x: f64, y: f64, width: f64, height: f64) -> Vec<(f64, f64)> {
+    let cx = x + width / 2.0;
+    let cy = y + height / 2.0;
+    let outer_x = width / 2.0;
+    let outer_y = height / 2.0;
+    (0..16).map(|index| {
+        let angle = -std::f64::consts::FRAC_PI_2 + index as f64 * std::f64::consts::PI / 8.0;
+        let scale = if index % 2 == 0 { 1.0 } else { 0.68 };
+        (cx + outer_x * scale * angle.cos(), cy + outer_y * scale * angle.sin())
+    }).collect()
+}
+
+fn cloud_path_commands(x: f64, y: f64, width: f64, height: f64) -> Vec<PathCommand> {
+    vec![
+        PathCommand::MoveTo { x: x + 0.18 * width, y: y + 0.78 * height },
+        PathCommand::CubicTo { cx1: x + 0.02 * width, cy1: y + 0.78 * height,
+            cx2: x - 0.02 * width, cy2: y + 0.52 * height,
+            x: x + 0.14 * width, y: y + 0.46 * height },
+        PathCommand::CubicTo { cx1: x + 0.10 * width, cy1: y + 0.27 * height,
+            cx2: x + 0.31 * width, cy2: y + 0.16 * height,
+            x: x + 0.43 * width, y: y + 0.30 * height },
+        PathCommand::CubicTo { cx1: x + 0.52 * width, cy1: y + 0.06 * height,
+            cx2: x + 0.80 * width, cy2: y + 0.10 * height,
+            x: x + 0.81 * width, y: y + 0.35 * height },
+        PathCommand::CubicTo { cx1: x + width, cy1: y + 0.34 * height,
+            cx2: x + 1.04 * width, cy2: y + 0.63 * height,
+            x: x + 0.87 * width, y: y + 0.72 * height },
+        PathCommand::CubicTo { cx1: x + 0.78 * width, cy1: y + 0.91 * height,
+            cx2: x + 0.54 * width, cy2: y + 0.90 * height,
+            x: x + 0.47 * width, y: y + 0.78 * height },
+        PathCommand::CubicTo { cx1: x + 0.38 * width, cy1: y + 0.94 * height,
+            cx2: x + 0.20 * width, cy2: y + 0.92 * height,
+            x: x + 0.18 * width, y: y + 0.78 * height },
+        PathCommand::Close,
+    ]
 }
 
 fn node_rect_instruction(node: &LayoutedGraphNode) -> PaintInstruction {
