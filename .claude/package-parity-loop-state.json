@@ -11,12 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 17028,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/17028",
+    "branch": "codex/parity-resolution-fixture-ci-20261008",
+    "implementation_revision": "7f125c656d7a87fb07bdf01a8761d49cd2e87121",
+    "status": "checks-pending"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-08T03:39:31Z",
-    "pr_number": 17013,
-    "status": "merged",
-    "notes": "Final-head PR #17013 completed 29 successful, seven skipped, and one neutral checks with no failures. GitHub reported MERGEABLE/CLEAN; guarded squash auto-merge merged it as a5d44bd45dcb37980d4c2717bd0b4f4af97c48b1. No manual merge was performed."
+    "observed_at": "2026-10-08T04:21:17Z",
+    "pr_number": 17028,
+    "status": "checks-pending",
+    "notes": "Ready-for-review PR #17028 opened after focused and full Go tests, vet/build/coverage, eight additional native reader suites plus Lua, neutral corpus/schema, 5,305-package BUILD plan, parity/lessons/diff checks, and independent security review. GitHub reports MERGEABLE with initial CI and CodeQL checks pending; no auto-merge until every required final-head check is terminal acceptable and conflict-free. Previous PR #17013 merged through guarded auto-merge as a5d44bd45dcb37980d4c2717bd0b4f4af97c48b1."
   },
   "last_inventory": {
     "revision": "a8c62232a3e5dd6d405db62c2cf8d61ac6e3310a",
@@ -13675,7 +13681,7 @@
       "notes": "New Rust-only canonical chief-of-staff-net-fetch root arrived on main def09f02. D18V specifies signed-manifest HTTPS/TLS authorization and vault lease redemption; the capability manifest declares net:dns and net:connect. This is a credential-bearing host operation, not a portable package lane target. Exclude from parity delivery pending a separate native-security review."
     },
     {
-      "id": "build-tool-resolution-fixture-native-ci-selection", "title": "Gate native resolution fixture readers", "status": "in-progress", "depends_on": ["build-tool-fixtures", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-resolution-fixture-ci-20261008", "pr_number": null,
+      "id": "build-tool-resolution-fixture-native-ci-selection", "title": "Gate native resolution fixture readers", "status": "pr-open", "depends_on": ["build-tool-fixtures", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-resolution-fixture-ci-20261008", "pr_number": 17028,
       "notes": "Twenty-six flat resolution cases have direct but heterogeneous native readers in Go/Haskell/Lua/Perl/Python/Ruby/Rust/Swift/TypeScript. Haskell constructs some field-aware case names dynamically; freeze an exact per-case/subfamily reader map and source-reference drift check before fixture-only CI selection. Keep neutral fallback and test three platforms, language filtering, missing-root atomicity, rename source, plans, and toolchains. Rank after graph/diff, ahead of hashing-cache subject to mapping complexity."
     },
     {
