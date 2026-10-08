@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-08 — re-audited after partial Perl 5.004_66
+Status date: 2026-10-08 — re-audited after bounded C stringize
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -398,22 +398,29 @@ explicitly partial pairs and 665 pending. Neither complete syntax nor an
 exhaustive public-release inventory is claimed. The next selection rotates
 to PREP01's bounded C stringize stage.
 
+PR #17152 delivered that bounded C raw-token stringize stage and merged as
+`ecd67616d5c2bcb15198823488c7b9b058c3a8dc` after exact-head CI,
+CodeQL, and books checks passed. Stringized arguments retain raw spelling
+and provenance within generic expansion budgets. Full C `#if`, broader
+stringize, and token paste remain open. The next selection rotates to
+LANG82's separate, own-archive-backed partial Perl 5.004_67 pair.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **PREP01 C (selected):** support one raw identifier or plain-decimal token
-   argument to function-like `#parameter` while ordinary parameter uses keep
-   pre-expansion. Full C `#if`, broader stringize, and token paste remain open.
+1. **LANG82 continued (selected):** add a separate, explicitly partial Perl
+   5.004_67 pair from its own historical archive. Keep 5.004_01-t1 pending
+   until its own source is found; do not imply complete syntax or an
+   exhaustive release inventory.
 2. **LANG78 JavaScript:** the two-argument numeric `console.log` stage is
    complete; broader native frontend semantics remain open, with Node only
    as a conformance oracle.
 3. **LANG79 Python:** the two-argument float `print` stage is complete;
    broader native frontend semantics remain open, with host Python only as
    a conformance oracle.
-4. **LANG82 continued:** the separate, explicitly partial Perl 5.004_66
-   pair is complete. Keep 5.004_01-t1 pending until its own source is found;
-   do not imply complete syntax or an exhaustive release inventory.
+4. **PREP01 C:** bounded raw-token stringize is complete. Full C `#if`,
+   broader stringize, and token paste remain open.
 5. **LANG80 Ruby:** the bounded two-argument integer `puts` stage is complete;
    broader native frontend semantics remain open, with host Ruby only as a
    conformance oracle.
