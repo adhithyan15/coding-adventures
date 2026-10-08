@@ -7,6 +7,13 @@ All notable changes to the `task-app` web program are documented here.
 Entries added after `task-app-v0.5.1` accumulate here until the next version is
 cut.
 
+### Fixed — SwiftUI stacks preserve cross-axis alignment (#17031)
+
+TaskApp's `Row` parts now carry authored `align: center-vertical` through to
+SwiftUI's `HStack(alignment:)` constructor. The shared native contract retires
+all 22 SwiftUI `align` allowances, reducing the fresh SwiftUI style-drop
+inventory from 132 to 110 without hiding unsupported or wrong-axis values.
+
 ### Fixed — native text preserves authored letter spacing (#17010)
 
 XAML, SwiftUI, Compose, Qt, and Flutter now lower TaskApp's `em`-based letter

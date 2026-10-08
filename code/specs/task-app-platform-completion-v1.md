@@ -159,6 +159,9 @@ rather than letting them read as silent gaps.
     #17010 then preserves TaskApp's authored letter spacing through each native
     text API, retiring another 60 allowances and reducing the inventories to 65
     XAML, 132 SwiftUI, 77 Compose, 151 Qt, and 185 Flutter drops.
+    #17031 lowers TaskApp's cross-axis alignment through SwiftUI stack
+    constructors, retiring all 22 SwiftUI `align` allowances and reducing that
+    backend's fresh inventory to 110.
     Keep the per-property maxima in the shared TaskApp contract so no new
     property or increased occurrence count can enter while fixes drive those
     inventories toward #12022's zero-drop hard fail. Do not call the existing

@@ -151,7 +151,9 @@ const ALLOWED_STYLE_DROPS: &[(Backend, &str)] = &[
     //
     // A `gap` that a `Box`, `Stack` or `HostScroll` really does discard is
     // still reported, so this entry would come back if one appeared here.
-    (Backend::SwiftUI, "align"),
+    // `align` is gone too (#17031): Row and Column now pass their supported
+    // cross-axis values through the HStack/VStack constructor, and the report
+    // keeps wrong-axis or unsupported values visible.
     (Backend::SwiftUI, "align-items"),
     (Backend::SwiftUI, "justify-content"),
     (Backend::SwiftUI, "flex-grow"),

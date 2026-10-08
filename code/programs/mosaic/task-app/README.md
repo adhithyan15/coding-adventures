@@ -94,7 +94,7 @@ rows, and the main content remains vertically scrollable. The fresh and restored
 lifecycle runs both require zero layout exceptions at that size (#16949).
 
 The same native contract ratchets the remaining style debt per backend and per
-property. Fresh `native-complete` reports currently contain 65 XAML, 132 SwiftUI,
+property. Fresh `native-complete` reports currently contain 65 XAML, 110 SwiftUI,
 77 Compose, 151 Qt, and 185 Flutter drops; any new property or increase above
 those measured maxima fails CI. These inventories are explicit debt on the path
 to #12022's zero-drop gate, not a claim of visual completeness. Native text
