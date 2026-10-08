@@ -1,8 +1,8 @@
 //! C's directive syntax for the shared PREP01 engine.
 //!
 //! The rooted C file-input frontend composes this dialect with `preprocess`.
-//! Its condition evaluator remains bounded, and C's `#`/`##` macro operators
-//! remain unsupported. The pathless source compiler retains its legacy path.
+//! Its condition evaluator remains bounded. A single raw-token `#` stringize
+//! subset is supported; `##` remains unsupported.
 
 use coding_adventures_c_lexer::try_tokenize_c;
 use coding_adventures_source_preprocessor::{
@@ -262,7 +262,7 @@ fn define(rest: &[Token]) -> Result<Directive, PpError> {
                 .is_some_and(|column| next.column == column)
     });
     if !touching_paren {
-        reject_unsupported_macro_operators(remaining)?;
+        reject_unsupported_macro_operators(remaining, None)?;
         return Ok(Directive::Define {
             name: name.value.clone(),
             params: None,
@@ -311,7 +311,7 @@ fn define(rest: &[Token]) -> Result<Directive, PpError> {
             }
         }
     }
-    reject_unsupported_macro_operators(&remaining[cursor..])?;
+    reject_unsupported_macro_operators(&remaining[cursor..], Some(&params))?;
     Ok(Directive::Define {
         name: name.value.clone(),
         params: Some(params),
@@ -319,20 +319,54 @@ fn define(rest: &[Token]) -> Result<Directive, PpError> {
     })
 }
 
-fn reject_unsupported_macro_operators(body: &[Token]) -> Result<(), PpError> {
-    if body
-        .iter()
-        .any(|token| matches!(token.value.as_str(), "#" | "##"))
-    {
-        return Err(directive_error(
-            "define",
-            "stringize and paste operators are not supported by this handoff yet",
-        ));
+fn reject_unsupported_macro_operators(
+    body: &[Token],
+    params: Option<&[String]>,
+) -> Result<(), PpError> {
+    for (index, token) in body.iter().enumerate() {
+        if token.value == "##" {
+            return Err(directive_error(
+                "define",
+                "token paste is not supported yet",
+            ));
+        }
+        if token.value == "#"
+            && !params.is_some_and(|names| {
+                body.get(index + 1)
+                    .is_some_and(|next| names.iter().any(|name| name == &next.value))
+            })
+        {
+            return Err(directive_error(
+                "define",
+                "stringize requires a following parameter",
+            ));
+        }
     }
     Ok(())
 }
 
 impl Dialect for CDialect {
+    fn stringize(&self, tokens: &[Token]) -> Option<Token> {
+        let [raw] = tokens else { return None };
+        let allowed = match raw.type_ {
+            TokenType::Name => identifier(&raw.value),
+            TokenType::Number => {
+                !raw.value.is_empty()
+                    && (raw.value == "0" || !raw.value.starts_with('0'))
+                    && raw.value.bytes().all(|byte| byte.is_ascii_digit())
+            }
+            _ => false,
+        };
+        if !allowed {
+            return None;
+        }
+        let mut result = raw.clone();
+        result.type_ = TokenType::String;
+        result.type_name = Some("STR_LIT".to_string());
+        result.value = format!("\"{}\"", raw.value);
+        Some(result)
+    }
+
     fn classify(&self, line: &[Token]) -> Option<Result<Directive, PpError>> {
         let line = without_eof(line);
         let (marker, rest) = line.split_first()?;
@@ -559,20 +593,96 @@ mod tests {
     }
 
     #[test]
-    fn unsupported_stringize_and_paste_definitions_fail() {
+    fn bounded_stringize_uses_raw_argument_and_plain_use_pre_expands() {
+        let source = "#define WORD expanded\n#define S(x) #x\n#define BOTH(x) x #x\nS(WORD)\nBOTH(WORD)\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        let values: Vec<_> = result.tokens.iter().map(|token| token.value.as_str()).collect();
+        assert_eq!(values, ["\"WORD\"", "expanded", "\"WORD\""]);
+    }
+
+    #[test]
+    fn stringize_preserves_forwarded_argument_provenance() {
+        let source = "#define H WORD\n#define S(x) #x\n#define OUTER(x) S(x)\nOUTER(H)\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let result = preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).unwrap();
+        assert_eq!(result.tokens[0].value, "\"WORD\"");
+        let mut names = Vec::new();
+        let mut cursor = result.map.locus(0).unwrap().expansion;
+        while let Some(id) = cursor {
+            names.push(result.map.expansion_site(id).unwrap().0);
+            cursor = result.map.expansion_parent(id);
+        }
+        assert_eq!(names, ["H", "S", "OUTER"]);
+    }
+
+    #[test]
+    fn stringize_only_does_not_pre_expand_its_argument() {
+        let source = "#define WORD expanded\n#define S(x) #x\nS(WORD)\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        let bounds = Bounds { expansion_rounds: 1, ..Bounds::default() };
+        let result = preprocess(tokens, file, &dialect, &mut fs, bounds).unwrap();
+        assert_eq!(result.tokens[0].value, "\"WORD\"");
+    }
+
+    #[test]
+    fn bounded_stringize_rejects_unhandled_shapes_and_tight_spelling() {
         for source in [
-            "#define STR(x) #x\nint x;\n",
-            "#define JOIN(a,b) a ## b\nint x;\n",
+            "#define S(x) #x\nS()\n",
+            "#define S(x) #x\nS(a+b)\n",
+            "#define S(x) #x\nS(a,b)\n",
+            "#define S(x) #x\nS(\"hello\")\n",
+            "#define S(x) #x\nS('a')\n",
+            "#define S(x) #x\nS(0x10)\n",
+            "#define S(x) #x\nS(012)\n",
+            "#define S(x) #x\nS(8u)\n",
+            "#define S(x) #x\nS(WORD)\n",
         ] {
             let mut fs = MemoryFs::new();
             let file = fs.insert("<main>", source);
             let dialect = CDialect::default();
             let tokens = dialect.lex(source, file).unwrap();
-            assert!(
-                preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err(),
-                "{source}"
-            );
+            let bounds = if source.contains("S(WORD)") {
+                Bounds { token_spelling_bytes: 5, ..Bounds::default() }
+            } else {
+                Bounds::default()
+            };
+            let error = match preprocess(tokens, file, &dialect, &mut fs, bounds) {
+                Ok(_) => panic!("expected a stringize refusal: {source}"),
+                Err(error) => error,
+            };
+            assert_eq!(error.position().map(|position| position.line), Some(2), "{source}");
         }
+        for source in [
+            "#define S(x) # y\n",
+            "#define S(x) #\n",
+            "#define S #x\n",
+        ] {
+            let mut fs = MemoryFs::new();
+            let file = fs.insert("<main>", source);
+            let dialect = CDialect::default();
+            let tokens = dialect.lex(source, file).unwrap();
+            assert!(preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err(), "{source}");
+        }
+    }
+
+    #[test]
+    fn unsupported_paste_definition_fails() {
+        let source = "#define JOIN(a,b) a ## b\nint x;\n";
+        let mut fs = MemoryFs::new();
+        let file = fs.insert("<main>", source);
+        let dialect = CDialect::default();
+        let tokens = dialect.lex(source, file).unwrap();
+        assert!(preprocess(tokens, file, &dialect, &mut fs, Bounds::default()).is_err());
     }
 
     #[test]

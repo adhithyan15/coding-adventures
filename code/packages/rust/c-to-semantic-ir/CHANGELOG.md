@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — PREP01 bounded C stringize
+
+- Accept `#parameter` in a function-like macro when the raw argument is one
+  identifier or plain-decimal token. Preserve raw spelling alongside ordinary
+  argument pre-expansion, and reject broader forms and token paste.
+
 ## Unreleased — PREP01 bounded C logical short-circuiting
 
 - Validate every expanded `#if` and `#elif` clause against the existing finite

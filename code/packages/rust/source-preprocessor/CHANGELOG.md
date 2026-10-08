@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — PREP01 bounded stringize
+
+- Route function-like macro `#parameter` through the dialect hook with raw
+  argument spelling while ordinary parameter uses retain pre-expansion.
+- Precharge token and byte output, check spelling and provenance, and reject
+  unsupported argument shapes. Tighten the measured 1 MiB-stack macro-depth
+  default from 200 to 128 after the added bookkeeping widened recursive frames.
+
 ## Unreleased — PREP01 conditional alternatives
 
 - Add `Directive::Elif` to select the first true branch of one conditional

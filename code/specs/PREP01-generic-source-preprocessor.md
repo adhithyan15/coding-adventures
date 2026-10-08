@@ -167,9 +167,9 @@ Instead the engine keeps a **side table**, the design GCC's line maps and LLVM's
 
 **The expansion chain must be interned, not owned per token.** A `Locus` that
 owns its chain makes the map `O(tokens × expansion_depth)`, so with the §6
-macro-depth bound of 200 a token cap of N still admits 200N chain entries — any
+macro-depth bound of 128 a token cap of N still admits 128N chain entries — any
 operator who sets the token cap believing it bounds memory would under-count by
-up to 200×. The chain is therefore a shared immutable structure in a side
+up to 128×. The chain is therefore a shared immutable structure in a side
 arena: each entry is an expansion id naming its parent expansion id, exactly as
 LLVM's `SourceManager` does. That makes the map `O(tokens + expansions)`. This
 is normative, because §6's memory bounds depend on it.
@@ -358,7 +358,7 @@ grow the token count, and fan-out that is never a cycle.
 | **Total source bytes processed** | 256 MiB | Many small files rather than deep ones. |
 | **Maximum bytes per included file** | 16 MiB | Checked from the opened handle's metadata before reading. |
 | Path containment, regular-files-only, encoding | always on | See §5. Enforced in `RootedFs`. |
-| Macro expansion depth | 200 | Mutually recursive function-like macros. |
+| Macro expansion depth | 128 | Mutually recursive function-like macros; tightened from 200 after the bounded stringize frame exceeded a measured 1 MiB stack. |
 | **Total tokens produced** | 2 M | Expansion bombs. Counts every token the expander *creates* — emitted, consumed by `eval_condition`, or discarded. Counting only *emitted* tokens leaves a hole: `#define A0 1` / `A1 A0 A0` / … / `A40 A39 A39` inside `#if A40` produces 2⁴⁰ tokens that are consumed by the condition and never emitted, against a depth of only 40. The counter is shared across directive evaluation and body expansion and is never reset mid-translation-unit. |
 | **Maximum token spelling length** | 64 KiB | `stringize` and `paste` grow *bytes* while holding the token count flat, so a token counter is structurally blind to them. Nested pasting via an indirection layer yields identifier text exponential in source length from ~1 token. |
 | **Total bytes of synthesised token text** | 64 MiB | Same class, aggregate. Charged in `charge()` **before** each substitution is built, not after: a function-like body using its parameter N times, called with N argument tokens, produces N-squared tokens while the source costs 2N, so inspecting the finished vector charges honestly and far too late. Both byte bounds are also checked at the engine's `stringize`/`paste` call sites, not delegated to the dialect — a dialect's `paste` that allocates before returning is already past the bound. |
@@ -872,3 +872,40 @@ variadic macros, `__has_include`, and a minimal in-VFS `stdint.h`/`stdio.h`.
    containment, regular-file and byte-cap rules, opened read-only, with no
    implicit fallback to an undeclared host path.** The containment property
    does not get weakened to accommodate the answer.
+
+## 10. Bounded C stringize stage
+
+The next C handoff stage accepts `#parameter` only in a function-like macro
+replacement list and only when the corresponding argument contains exactly
+one identifier or plain-decimal preprocessing token. It emits one C string
+literal token containing that argument's original spelling, including quotes.
+For example, with `#define WORD expanded` and `#define S(x) #x`, `S(WORD)`
+emits `"WORD"`; ordinary `x` substitution still pre-expands to `expanded`.
+This follows WG14 N843 §6.10.3.2's distinction between the spelling of the
+argument and macro-expanded substitution. Source:
+<https://open-std.org/jtc1/sc22/wg14/www/docs/n843.htm>.
+
+The generic engine preserves each collected argument before pre-expansion and
+passes the raw token to the dialect's `stringize` hook only for a parameter
+immediately preceded by `#`. An argument used only for stringizing is not
+pre-expanded. A parameter used elsewhere in the same replacement list still
+gets its separately pre-expanded form there. MacroOct and MacroNib keep their
+default unsupported hook and reject the operator. The C dialect rejects `#`
+outside that exact shape, rejects `##`, and rejects empty, multi-token,
+string-literal, character-literal, non-decimal, or malformed arguments in this
+stage. Multi-digit leading-zero integer spellings are treated as C octal and
+rejected; the single token `0` is accepted. These are explicit subset limits,
+not claims about all C preprocessing.
+
+Before constructing the quoted token, the engine projects its maximum bytes
+from the bounded raw token spelling, checks token-spelling and aggregate
+synthesized-byte limits, and charges the produced token. The returned token
+must be a C string literal with source and expansion provenance; a hook that
+returns an oversized or malformed result fails closed. Definition and
+invocation errors retain directive or call-site positions. Tests cover raw
+versus pre-expanded spelling, mixed raw/plain parameter use, literal and
+malformed operator rejection, non-C rejection, provenance, and tight byte
+bounds through the rooted C frontend and generic engine. The existing fuel
+budget also charges the new parameter scan. Token paste and broader
+stringizing, including whitespace collapse and escaping within literals,
+remain pending.

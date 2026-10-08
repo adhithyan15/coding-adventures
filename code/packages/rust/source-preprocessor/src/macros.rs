@@ -46,9 +46,10 @@
 
 use crate::bounds::{Bounds, Spend};
 use crate::diag::PpError;
+use crate::dialect::Dialect;
 use crate::hideset::{HideId, HideSets, NameId};
 use crate::source_map::{ExpansionId, FileId, Position, SourceMap};
-use lexer::token::Token;
+use lexer::token::{Token, TokenType};
 use std::collections::HashMap;
 
 /// A token paired with the set of macros that must not be expanded for it.
@@ -196,7 +197,23 @@ pub fn expand(
     // the other entry point. A guarantee enforced at one of two doors is not
     // enforced.
     let bounds = bounds.tighten(Bounds::default());
-    expand_at(input, table, hides, map, &bounds, spend, 0)
+    expand_at(input, table, hides, map, &bounds, spend, 0, None)
+}
+
+/// Expand with a dialect's optional macro operators. The public plain
+/// expansion entry point remains available to clients without a dialect.
+#[allow(clippy::too_many_arguments)]
+pub fn expand_with_dialect(
+    input: Vec<MToken>,
+    table: &MacroTable,
+    hides: &mut HideSets,
+    map: &mut SourceMap,
+    bounds: &Bounds,
+    spend: &mut Spend,
+    dialect: &dyn Dialect,
+) -> Result<Vec<MToken>, PpError> {
+    let bounds = bounds.tighten(Bounds::default());
+    expand_at(input, table, hides, map, &bounds, spend, 0, Some(dialect))
 }
 
 /// The real expander. `depth` counts nested ARGUMENT pre-expansion, which is
@@ -210,6 +227,7 @@ fn expand_at(
     bounds: &Bounds,
     spend: &mut Spend,
     depth: u32,
+    dialect: Option<&dyn Dialect>,
 ) -> Result<Vec<MToken>, PpError> {
     // The bound that makes `macro_depth` mean what `bounds.rs` says it means.
     //
@@ -303,17 +321,56 @@ fn expand_at(
                     out.push(cur);
                     continue;
                 }
-                let (args, close_hide) = collect_args(&mut work, params.len(), bounds, spend, &cur)?;
+                let (args, close_hide) =
+                    collect_args(&mut work, params.len(), bounds, spend, &cur)?;
+                if dialect.is_some()
+                    && def.body.iter().any(|token| token.value == "#")
+                    && args.len() != params.len()
+                {
+                    return Err(
+                        PpError::new("stringize invocation has the wrong argument count")
+                            .at(cur.position),
+                    );
+                }
                 let expansion = intern_invocation(map, &name, &cur, def.defined_at, bounds)?;
                 let args = attach_arguments(args, cur.expansion, expansion, map, bounds)?;
+                // A stringized parameter sees its original spelling. Only
+                // parameters used elsewhere need recursive pre-expansion.
+                // Two bits per parameter: raw stringize and plain use.
+                // Keep one compact vector live across recursive expansion:
+                // this frame repeats at the macro-depth limit.
+                let mut use_flags = vec![0u8; params.len()];
+                for (body_index, token) in def.body.iter().enumerate() {
+                    spend.fuel_used = spend.fuel_used.saturating_add(1);
+                    if spend.fuel_used > bounds.fuel {
+                        return Err(PpError::new(
+                            "exhausted the preprocessing budget inspecting macro parameters",
+                        )
+                        .at(cur.position));
+                    }
+                    if let Some(&i) = stored.param_index.get(&token.value) {
+                        if dialect.is_some()
+                            && body_index > 0
+                            && def.body[body_index - 1].value == "#"
+                        {
+                            use_flags[i] |= 1;
+                        } else {
+                            // A plain occurrence wins even if another copy
+                            // of the parameter is stringized.
+                            use_flags[i] |= 2;
+                        }
+                    }
+                }
                 let expanded_args = pre_expand_args(
-                    args,
+                    &args,
+                    &use_flags,
                     table,
                     hides,
                     map,
                     bounds,
                     spend,
                     depth + 1,
+                    dialect,
                 )?;
                 // The intersection of the NAME token's hide set and the
                 // CLOSING PAREN's: the invocation spans both, so a name hidden
@@ -324,6 +381,7 @@ fn expand_at(
                 substitute_function_like(
                     def,
                     &stored.param_index,
+                    &args,
                     &expanded_args,
                     base,
                     name_id,
@@ -331,7 +389,9 @@ fn expand_at(
                     hides,
                     bounds,
                     spend,
-                )?
+                    dialect,
+                )
+                .map_err(|error| error.at(cur.position))?
             }
         };
 
@@ -492,18 +552,26 @@ fn collect_args(
 }
 
 /// Expand each argument in its own right, before substitution.
+#[inline(never)]
+#[allow(clippy::too_many_arguments)]
 fn pre_expand_args(
-    args: Vec<Vec<MToken>>,
+    args: &[Vec<MToken>],
+    use_flags: &[u8],
     table: &MacroTable,
     hides: &mut HideSets,
     map: &mut SourceMap,
     bounds: &Bounds,
     spend: &mut Spend,
     depth: u32,
+    dialect: Option<&dyn Dialect>,
 ) -> Result<Vec<Vec<MToken>>, PpError> {
     let mut out = Vec::with_capacity(args.len());
-    for a in args {
-        out.push(expand_at(a, table, hides, map, bounds, spend, depth)?);
+    for (i, argument) in args.iter().enumerate() {
+        if use_flags.get(i).copied().unwrap_or(0) != 1 {
+            out.push(expand_at(argument.clone(), table, hides, map, bounds, spend, depth, dialect)?);
+        } else {
+            out.push(Vec::new());
+        }
     }
     Ok(out)
 }
@@ -546,6 +614,7 @@ fn substitute_function_like(
     // The precomputed index replaces the parameter slice entirely: nothing
     // here needs the names in order any more, only name -> position.
     param_index: &HashMap<String, usize>,
+    raw_args: &[Vec<MToken>],
     args: &[Vec<MToken>],
     base_hide: HideId,
     name: NameId,
@@ -553,6 +622,7 @@ fn substitute_function_like(
     hides: &mut HideSets,
     bounds: &Bounds,
     spend: &mut Spend,
+    dialect: Option<&dyn Dialect>,
 ) -> Result<Vec<MToken>, PpError> {
     // PROJECT the cost before building anything.
     //
@@ -589,7 +659,9 @@ fn substitute_function_like(
 
     let mut projected_tokens: u64 = 0;
     let mut projected_bytes: u64 = 0;
-    for token in &def.body {
+    let mut cursor = 0;
+    while cursor < def.body.len() {
+        let token = &def.body[cursor];
         // Charged per body token, so even the estimate is inside the fuel
         // budget rather than outside it. `bounds.rs` says every loop in the
         // engine needs a finite budget; this one used to be the exception.
@@ -598,6 +670,25 @@ fn substitute_function_like(
             return Err(PpError::new(
                 "exhausted the preprocessing budget projecting a substitution",
             ));
+        }
+        if dialect.is_some() && token.value == "#" {
+            let parameter = def
+                .body
+                .get(cursor + 1)
+                .and_then(|next| param_index.get(&next.value));
+            let Some(&i) = parameter else {
+                return Err(PpError::new("stringize requires a following macro parameter"));
+            };
+            let raw = raw_args
+                .get(i)
+                .ok_or_else(|| PpError::new("stringize argument is missing"))?;
+            if raw.len() != 1 {
+                return Err(PpError::new("bounded stringize requires one raw argument token"));
+            }
+            projected_tokens = projected_tokens.saturating_add(1);
+            projected_bytes = projected_bytes.saturating_add(raw[0].token.value.len() as u64 + 2);
+            cursor += 2;
+            continue;
         }
         match param_index.get(&token.value).copied() {
             Some(i) => {
@@ -611,13 +702,51 @@ fn substitute_function_like(
                 projected_bytes = projected_bytes.saturating_add(token.value.len() as u64);
             }
         }
+        cursor += 1;
     }
     charge(projected_tokens, projected_bytes, bounds, spend)?;
 
     let hide = hides.insert(base_hide, name);
     let mut out = Vec::new();
 
-    for token in &def.body {
+    let mut cursor = 0;
+    while cursor < def.body.len() {
+        let token = &def.body[cursor];
+        if let Some(dialect) = dialect {
+            if token.value == "#" {
+                let i = def
+                    .body
+                    .get(cursor + 1)
+                    .and_then(|next| param_index.get(&next.value))
+                    .copied()
+                    .ok_or_else(|| PpError::new("stringize requires a following macro parameter"))?;
+                let raw = raw_args
+                    .get(i)
+                    .ok_or_else(|| PpError::new("stringize argument is missing"))?;
+                let token = dialect.stringize(std::slice::from_ref(&raw[0].token))
+                    .ok_or_else(|| PpError::new("dialect does not support this stringize argument"))?;
+                if token.type_ != TokenType::String
+                    || !token.value.starts_with('"')
+                    || !token.value.ends_with('"')
+                    || token.value.len() as u64 > raw[0].token.value.len() as u64 + 2
+                {
+                    return Err(PpError::new(
+                        "dialect returned an invalid bounded stringize token",
+                    ));
+                }
+                spelling_ok(&token, bounds)?;
+                out.push(MToken {
+                    token,
+                    hide,
+                    position: raw[0].position,
+                    // attach_arguments already reparents any incoming macro
+                    // chain beneath this invocation. Keep that full chain.
+                    expansion: raw[0].expansion,
+                });
+                cursor += 2;
+                continue;
+            }
+        }
         match param_index.get(&token.value).copied() {
             Some(i) => {
                 // Substituted argument tokens keep THEIR OWN hide sets. They
@@ -645,6 +774,7 @@ fn substitute_function_like(
                 });
             }
         }
+        cursor += 1;
     }
     Ok(out)
 }
@@ -949,11 +1079,10 @@ mod tests {
         // or it hides behind whatever the runner happened to provide.
         //
         // 1 MiB rather than something smaller because it is MEASURED, not
-        // guessed: the default depth of 200 fits here with room to spare and
-        // overflows at 256 KiB, so a frame costs somewhere between 1.3 and
-        // 5 KiB. That measurement is why `Bounds::macro_depth` documents a
-        // minimum stack requirement -- a host on a smaller stack must tighten
-        // the bound, and now knows to.
+        // guessed: the former default depth of 200 overflowed here after
+        // stringize bookkeeping widened the recursive frame. The tightened
+        // default of 128 returns a diagnostic with room to spare. A host on a
+        // smaller stack must tighten the bound further.
         let handle = std::thread::Builder::new()
             .stack_size(1024 * 1024)
             .spawn(|| {

@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-08 — re-audited after partial Perl 5.004_65
+Status date: 2026-10-08 — re-audited after partial Perl 5.004_66
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -385,30 +385,38 @@ explicitly partial pairs and 666 pending. Neither complete syntax nor an
 exhaustive public-release inventory is claimed. The next selection rotates
 to LANG80's bounded parenthesized two-argument integer `puts` stage.
 
-PR #17138 delivered that bounded parenthesized two-argument integer `puts`
-stage and merged as `088afa0c0a22bcec36ae00b742396480d88497c8` after
-exact-head CI, CodeQL, and books checks passed. The next selection rotates
-to LANG82's separate, own-archive-backed partial Perl 5.004_66 pair.
+PR #17138 delivered that bounded parenthesized two-argument Ruby `puts` stage
+and merged as `088afa0c0a22bcec36ae00b742396480d88497c8` after its unchanged
+reviewed head passed latest-head CI, CodeQL, and books checks. A macOS runner
+abandoned its first job without executing steps; the failed jobs were rerun.
+The next selection rotated to LANG82's own-archive-backed partial 5.004_66 pair.
+
+PR #17145 delivered that distinct, explicitly partial 5.004_66 pair and
+merged as `3e6f33a24771c1562dcec93e2851b422da0aca4c` after exact-head
+CI, CodeQL, and books checks passed. The 776-row inventory now has 111
+explicitly partial pairs and 665 pending. Neither complete syntax nor an
+exhaustive public-release inventory is claimed. The next selection rotates
+to PREP01's bounded C stringize stage.
 
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG82 continued (selected):** add the distinct, explicitly partial
-   Perl 5.004_66 token/grammar pair from its own historical source archive.
-   Keep 5.004_01-t1 pending until its own source is found; do not imply
-   complete syntax or an exhaustive release inventory.
+1. **PREP01 C (selected):** support one raw identifier or plain-decimal token
+   argument to function-like `#parameter` while ordinary parameter uses keep
+   pre-expansion. Full C `#if`, broader stringize, and token paste remain open.
 2. **LANG78 JavaScript:** the two-argument numeric `console.log` stage is
    complete; broader native frontend semantics remain open, with Node only
    as a conformance oracle.
 3. **LANG79 Python:** the two-argument float `print` stage is complete;
    broader native frontend semantics remain open, with host Python only as
    a conformance oracle.
-4. **LANG80 Ruby:** the two-argument parenthesized integer `puts` stage is
-   complete; broader native frontend semantics remain open, with host Ruby
-   only as a conformance oracle.
-5. **PREP01 C:** the bounded logical short-circuit stage is complete. Full C
-   `#if` and stringize/paste remain open.
+4. **LANG82 continued:** the separate, explicitly partial Perl 5.004_66
+   pair is complete. Keep 5.004_01-t1 pending until its own source is found;
+   do not imply complete syntax or an exhaustive release inventory.
+5. **LANG80 Ruby:** the bounded two-argument integer `puts` stage is complete;
+   broader native frontend semantics remain open, with host Ruby only as a
+   conformance oracle.
 
 The following run records the first VM-067 selection.
 

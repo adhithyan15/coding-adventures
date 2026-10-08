@@ -6,6 +6,31 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 
 static SEQ: AtomicUsize = AtomicUsize::new(0);
 
+#[test]
+fn rooted_stringize_preserves_raw_macro_spelling() {
+    let root = std::env::temp_dir().join(format!(
+        "prep01_c_stringize_{}_{}",
+        std::process::id(),
+        SEQ.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::create_dir(&root).unwrap();
+    write_fresh(
+        &root.join("main.c"),
+        b"#define WORD expanded\n#define S(x) #x\nint main(void) { printf(S(WORD)); return 0; }\n",
+    );
+    let module = c_to_semantic_ir::compile_preprocessed_file(
+        "main.c",
+        [root.clone()],
+        "stringize_c",
+        Bounds::default(),
+    )
+    .unwrap();
+    std::fs::remove_dir_all(&root).unwrap();
+    let text = semantic_ir::print_module(&module);
+    assert!(text.contains("WORD"), "{text}");
+    assert!(!text.contains("expanded"), "{text}");
+}
+
 fn write_fresh(path: &std::path::Path, contents: &[u8]) {
     std::fs::OpenOptions::new()
         .write(true)
