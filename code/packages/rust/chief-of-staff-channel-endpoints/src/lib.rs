@@ -733,7 +733,7 @@ impl<'a> DurableReceiver<'a> {
 /// Check and decrypt one stored message for a receiver, with no storage
 /// access of its own (D18S P2.6d).
 ///
-/// These are every per-message check a receiver makes:
+/// These are the checks a receiver makes on each message by itself:
 ///
 /// | check | refusal |
 /// |---|---|
@@ -743,9 +743,15 @@ impl<'a> DurableReceiver<'a> {
 /// | the signature verifies and the ciphertext decrypts | the message's crypto error |
 /// | the message id is a UUID v7 | `InvalidMessageId` |
 ///
+/// One check spans messages and is not here: a message id must not come
+/// back at a different sequence. That needs the receiver's record of what it
+/// delivered, which [`DurableReceiver`] keeps. A caller without one must make
+/// that check itself; when the daemon mints message ids, it is the
+/// receiver's only defence against a duplicate.
+///
 /// [`DurableReceiver`] calls it with grants read from its store. A broker
 /// holding the receiver's key calls it with grants the daemon fetched for
-/// it, so the checks exist once.
+/// it, so the per-message checks exist once.
 pub fn open_delivered_message(
     definition: &ChannelDefinition,
     epoch_keys: &mut ReceiverEpochKeys,

@@ -19,8 +19,8 @@ use chief_of_staff_channel_crypto::wire::{
 };
 use chief_of_staff_channel_crypto::{
     encrypt_message_with_header, plaintext_hash, prepare_message_header_with_hash,
-    ChannelCryptoError, ChannelId, ChannelMasterKey, EncryptedMessage, KeyEpoch, MessageFields,
-    MessageHeader, OriginatorSigningKey, SealedChannelKeyGrant, Sequence,
+    verify_message_signature, ChannelCryptoError, ChannelId, ChannelMasterKey, EncryptedMessage,
+    KeyEpoch, MessageFields, MessageHeader, OriginatorSigningKey, SealedChannelKeyGrant, Sequence,
 };
 use coding_adventures_json_value::JsonValue;
 use storage_core::{
@@ -318,25 +318,30 @@ impl<'a> ChannelStore<'a> {
         // first and comparing bytes on recovery is the same check as
         // re-encrypting inside the recovery path.
         let message = encrypt_message_with_header(header.clone(), plaintext, cmk, signing_key)?;
-        self.commit_encrypted(&message)
+        self.commit_encrypted(&message, &signing_key.public_key())
     }
 
     /// Idempotently persist an already-encrypted message for the pending
     /// reservation its header names (D18S P2.6d).
     ///
-    /// This needs no key. It checks only what the store can: the header must
-    /// be the pending one, byte for byte, and a retry after the message write
-    /// must find exactly these bytes stored. Whether the ciphertext decrypts
-    /// is for the caller to have ensured; a key-free caller checks the
-    /// originator signature with `verify_message_signature` first.
+    /// This needs no secret key. It checks what can be checked without one:
+    /// - the header is the pending one, byte for byte;
+    /// - the originator signature verifies under `originator_public_key`;
+    /// - a retry after the message write finds exactly these bytes stored.
+    ///
+    /// It cannot check that the ciphertext decrypts: only the AEAD tag can,
+    /// under the channel key. A correctly signed message with a bad body
+    /// stops every receiver at it (D18S P2.6d records this).
     pub fn commit_encrypted(
         &self,
         message: &EncryptedMessage,
+        originator_public_key: &[u8; 32],
     ) -> Result<EncryptedMessage, ChannelStoreError> {
         let header = message.header();
         if header.fields().channel_id() != self.channel_id {
             return Err(ChannelStoreError::PendingHeaderMismatch);
         }
+        verify_message_signature(message, originator_public_key)?;
         let encoded = encode_message(message)?;
         let state = self.state()?;
         match state.pending_header {
@@ -951,7 +956,9 @@ mod tests {
             let message =
                 encrypt_message_with_header(header, plaintext, &cmk, &signing_key).unwrap();
             // Daemon side again: opaque bytes.
-            daemon.commit_encrypted(&message).unwrap();
+            daemon
+                .commit_encrypted(&message, &signing_key.public_key())
+                .unwrap();
         }
         // The state record and two messages, at least.
         assert!(records(&together).len() >= 3);
@@ -983,7 +990,7 @@ mod tests {
         );
         let swapped = encrypt_message_with_header(other, b"swapped", &cmk, &signing_key).unwrap();
         assert!(matches!(
-            store.commit_encrypted(&swapped),
+            store.commit_encrypted(&swapped, &signing_key.public_key()),
             Err(ChannelStoreError::PendingHeaderMismatch)
         ));
 
@@ -993,7 +1000,7 @@ mod tests {
         let message =
             encrypt_message_with_header(pending.clone(), b"reserved", &cmk, &signing_key).unwrap();
         assert!(matches!(
-            elsewhere.commit_encrypted(&message),
+            elsewhere.commit_encrypted(&message, &signing_key.public_key()),
             Err(ChannelStoreError::PendingHeaderMismatch)
         ));
         // Nothing was written, and the reservation still stands.
@@ -1011,15 +1018,28 @@ mod tests {
             .unwrap();
         let message =
             encrypt_message_with_header(header.clone(), b"once", &cmk, &signing_key).unwrap();
-        let first = store.commit_encrypted(&message).unwrap();
-        assert!(store.commit_encrypted(&message).unwrap() == first);
+        let public_key = signing_key.public_key();
+        // Signed by anyone else: refused before anything is written.
+        let impostor = OriginatorSigningKey::from_seed([0x38; 32]);
+        let unsigned =
+            encrypt_message_with_header(header.clone(), b"once", &cmk, &impostor).unwrap();
+        assert!(matches!(
+            store.commit_encrypted(&unsigned, &public_key),
+            Err(ChannelStoreError::Crypto(
+                ChannelCryptoError::InvalidMessageSignature
+            ))
+        ));
+        assert_eq!(store.state().unwrap().pending_header, Some(header.clone()));
+
+        let first = store.commit_encrypted(&message, &public_key).unwrap();
+        assert!(store.commit_encrypted(&message, &public_key).unwrap() == first);
 
         // The same header under another key: same sequence, other bytes.
         let other_key = ChannelMasterKey::from_bytes([0x5b; 32]);
         let forged =
             encrypt_message_with_header(header, b"once", &other_key, &signing_key).unwrap();
         assert!(matches!(
-            store.commit_encrypted(&forged),
+            store.commit_encrypted(&forged, &public_key),
             Err(ChannelStoreError::ConflictingRecord("message"))
         ));
     }

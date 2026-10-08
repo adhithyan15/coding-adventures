@@ -3,7 +3,9 @@
 ## Unreleased
 
 - Add `reserve_append_with_hash` and `commit_encrypted` (D18S P2.6d): the
-  storage half of an append, needing no keys.
+  storage half of an append, needing no secret key. `commit_encrypted`
+  takes the originator's public key and refuses a message whose signature
+  does not verify, before anything is written.
   - `reserve_append` delegates to `reserve_append_with_hash`.
   - `commit_reserved` now encrypts first, then delegates to
     `commit_encrypted`. Crash recovery there is a byte comparison, which is

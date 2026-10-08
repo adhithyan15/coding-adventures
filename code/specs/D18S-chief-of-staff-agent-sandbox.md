@@ -1617,7 +1617,14 @@ through S-I3 before two weeks are spent on Windows.
 
      What P2.6d does gain:
      - a compromised broker exposes only its own agent's keys;
-     - storage holds only ciphertext and public signed records;
+     - storage holds ciphertext and public signed records. One qualifier:
+       every message header carries an *unsalted* SHA-256 of its plaintext,
+       in the clear. So anyone who reads storage or a backup can confirm a
+       guessable message ("yes", "turn on the porch light") by hashing
+       candidates. This predates P2.6d. The fix is a keyed hash, derived
+       from the epoch key, which the broker computes and the daemon only
+       copies. That changes the D18F and D18P wire formats, so it is
+       follow-up work with new fixture versions, not part of P2.6d;
      - receipts become per agent, so one agent's unacknowledged messages
        block only itself.
 
@@ -1650,6 +1657,7 @@ through S-I3 before two weeks are spent on Windows.
        check the header; refuse
        a sequence at or below
        the last one it used
+       (per broker lifetime)
        encrypt and sign         ── commit(message) ────────►  check: pending header,
                                                                originator, signature;
                                 ◄── sequence ─────────────    store; clear pending
@@ -1666,9 +1674,19 @@ through S-I3 before two weeks are spent on Windows.
        channel stuck behind the pending header. So, before a new broker
        serves an agent, the daemon abandons any pending reservation on
        that agent's write channels. There is at most one live broker per
-       agent.
+       agent. The order matters: the old broker is killed *and reaped*
+       (P2.6b's kill-before-reap) before the abandon. A slow old broker
+       must not commit after its reservation was abandoned.
      - The daemon still mints message ids and timestamps, so timestamps
-       share one origin.
+       share one origin. That makes the receiver's duplicate-id check (a
+       message id must not come back at another sequence) the broker's own
+       job: `open_delivered_message` does not make it.
+     - The sequence guard lasts one broker lifetime. After a restart, a
+       daemon that replays an old header could get the broker to encrypt a
+       second plaintext under a used nonce. This is accepted: the daemon
+       already sees every plaintext, and the Ed25519 header signature stops
+       a forged message. To close it, the broker would seed its floor at
+       start from the newest message it committed and signed.
      - **Remaining risk.** The daemon can check a committed message's
        signature, but not its AEAD tag. A compromised originator broker
        can commit a correctly signed message with garbage ciphertext. A
@@ -1698,7 +1716,16 @@ through S-I3 before two weeks are spent on Windows.
        channels get originator callbacks;
      - the binding, re-resolved on every callback, still names the
        channel, so unwiring a pipeline revokes a running broker;
-     - the request has callbacks left in its budget (16).
+     - the request has callbacks left in its budget (16). A Publish gets at
+       most one `ReserveAppend`, followed by one `CommitAppend` or one
+       `AbandonAppend`, so a budget cannot be spent looping reservations.
+
+     `ReadReceiverPage` returns the receiver's grants for every epoch in the
+     page along with the messages. So Receive needs no separate grant
+     callback, and `open_delivered_message` gets its grants from that
+     reply. `SaveGrants` is write-once per epoch and receiver: a grant
+     already stored is never replaced. Otherwise an originator broker could
+     swap a valid grant for a signed but useless one.
 
      Grants and messages are checked without keys before they are stored:
      - the signature;
@@ -1733,6 +1760,17 @@ through S-I3 before two weeks are spent on Windows.
      - "The supervisor never reads them" is about which address space holds
        the keys. It is not an authority boundary, because the daemon can
        still open every key file.
+     - Three consequences for launch:
+       - The slot descriptors must survive the broker's exec. Today
+         spawn-isolation marks everything above fd 2 close-on-exec, and
+         the P2.5 shim's survivor check accepts only 0 to 2. Both need a
+         broker variant that keeps exactly the slots and nothing else.
+       - The supervisor closes its own copies of the key descriptors once
+         the broker is spawned.
+       - The descriptor check requires the file's owner to be the broker's
+         effective uid. That ties brokers to the daemon's uid. Moving them
+         to a distinct uid (S-I5's recommended separation) needs an
+         expected-owner parameter, or a different handover.
 
      **Launch (S-K1).** The supervisor execs the broker by a digest pinned
      in config, through the verified-object exec path (digest the
