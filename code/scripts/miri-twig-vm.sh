@@ -25,9 +25,8 @@
 # Exit code 0 = all twig-vm Miri tests pass.
 # Exit non-zero = UB detected; do not push without fixing.
 #
-# Wallclock budget: ~30 min on a fast Mac, ~60 min on a typical
-# Linux/WSL development machine.  Run it overnight or in a
-# separate terminal during code review.
+# Wallclock can exceed two hours on Windows; the full instruction-budget
+# control alone performs 33554432 ticks. Run it in a separate terminal.
 #
 # Requirements:
 #   - rustup with nightly toolchain installed
@@ -62,7 +61,7 @@ fi
 # ── Configuration ────────────────────────────────────────────────────
 
 # See `.github/workflows/lang-runtime-safety.yml` for the full
-# rationale behind these flags.  Same flags as CI.
+# rationale behind these substrate flags. Keep those two suites isolated.
 export MIRIFLAGS="-Zmiri-ignore-leaks"
 export CARGO_INCREMENTAL="0"
 export RUST_BACKTRACE="1"
@@ -72,8 +71,9 @@ export RUST_BACKTRACE="1"
 echo "═══════════════════════════════════════════════════════════════════"
 echo "  Running Miri on twig-vm + dynval-runtime + lang-runtime-core"
 echo "  Working directory: ${PACKAGES_RUST}"
-echo "  MIRIFLAGS: ${MIRIFLAGS}"
-echo "  This typically takes 30-90 min.  Press Ctrl-C to abort."
+echo "  Substrate MIRIFLAGS: ${MIRIFLAGS}"
+echo "  Twig adds host access with closed stdin; all UB checks stay enabled."
+echo "  This can exceed two hours.  Press Ctrl-C to abort."
 echo "═══════════════════════════════════════════════════════════════════"
 echo
 
@@ -90,8 +90,13 @@ echo "→ Miri dynval-runtime (fast, ~13s)..."
 cargo +nightly miri test -p dynval-runtime --no-fail-fast
 
 echo
-echo "→ Miri twig-vm (slow, 30-90 min)..."
-cargo +nightly miri test -p twig-vm --no-fail-fast
+echo "→ Miri twig-vm (slow; host IO enabled, stdin is EOF)..."
+# The real host/read_byte control must execute, but isolated Miri rejects
+# stdin reads. Allow host IO only for this trusted VM suite and supply EOF
+# instead of consuming a caller's terminal. This does not disable Miri's UB,
+# aliasing, alignment or data-race checks. Keep every test selected.
+MIRIFLAGS="${MIRIFLAGS} -Zmiri-disable-isolation" \
+    cargo +nightly miri test -p twig-vm --no-fail-fast < /dev/null
 
 echo
 echo "═══════════════════════════════════════════════════════════════════"

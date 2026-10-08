@@ -16,3 +16,11 @@ verify controlled noninteractive stdin plus the supported host-access Miri mode
 before changing the canonical runner. Scope host access to the VM suite, retain
 the substrate's existing isolation and all UB detection, and require a full new
 terminal script pass. Do not skip the offending test or accept a partial run.
+
+Runner controls observed both the missing flag and consumed invoking stdin before
+repair. The same actual host test then passed with host access and closed stdin.
+The Python fixture initially failed Ruff import ordering; use the formatter's
+exact result instead of guessing blank-line policy. Keep subprocess exit codes
+separate: a later shell check succeeding does not make an earlier failed lint or
+an aborted Miri target green. Main-merge whitespace warnings were in unchanged
+upstream Markdown hard breaks; candidate-versus-main diff checks remain clean.
