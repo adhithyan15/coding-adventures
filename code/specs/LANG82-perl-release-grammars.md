@@ -342,3 +342,16 @@ The comment-and-whitespace-stripped `scan_num` body remains identical to
 digits and reject 251, leading-zero literals, adjacent decrement, carriage
 returns, and unsupported characters. Keep both files distinct and labeled
 partial; source continuity does not establish full historical syntax.
+
+Add a separate, explicitly partial `5.004_53` token/grammar pair. Its own
+historical archive is
+`https://mirrors.develooper.com/perl/historical-perl/perl-5.004_53.tar.gz`
+with SHA-256
+`6c8cc39262bc4134be38db1782d6a745bd45b1b6d605084f76c43eeaa3584c7e`.
+Compared with `5.004_52`, its `perly.y` changes loop actions and `toke.c`
+changes `glob` keyword classification and delimiter whitespace handling;
+none widens the bounded plain-decimal `print` arithmetic subset. The
+`scan_num` body is byte-identical to `5.004_52`, retaining its 250-digit
+decimal scan bound. Accept 250 digits, reject 251, leading-zero forms,
+adjacent decrement, carriage returns, and unsupported characters. Keep
+release-specific files and do not claim complete Perl syntax.
