@@ -95,7 +95,7 @@ metadata  = {
   "kdf_parallelism": <u32>,
   "kdf_tag_length": 32,
   "keks": [
-    { "id": "kek-1", "status": "active"|"retired",
+    { "id": "kek-1.<vault id, 32 hex>", "status": "active"|"retired",
       "source": "password-derived"|"injected",
       "salt": "<base16 ≥8 bytes from CSPRNG; password-derived only>",
       "verifier_nonce": "<base16 24>",
@@ -103,10 +103,14 @@ metadata  = {
       "verifier_ct":    "<base16 16 bytes of AEAD'd zeros>" }
     , …
   ],
-  "created_at_ms": <u64>
+  "created_at_ms": <u64>,
+  "rebind_from": "<old KEK id>"           (only while an F12 rebind runs)
 }
 body = (empty)
 ```
+
+A KEK id is `kek-<n>.<vault id>` (F12). A vault made before F12 has ids
+`kek-<n>`, and its first unseal rebinds it.
 
 Each password-derived KEK entry carries its own salt. This is the salt
 that was used with the Argon2id parameters above to derive *that* KEK
@@ -454,18 +458,11 @@ One file per namespace means two processes writing different namespaces of
 the same store never contend, for example the CLI writing the Chief vault
 while the daemon writes a pairing vault.
 
-**Same KEK, different vault.** Indexes and records are bound to their
-namespace and key, but not to a particular vault. A vault reinitialized
-under the same KEK accepts another vault's authentic files. Under an anchor,
-those files then raise it, so the real index reads as `Tamper` from then on.
-**When resetting a vault, rotate the KEK, and remove its anchor.** The
-anchor is found by the KEK's *path*, not by the key. So a storage directory
-wiped and reinitialized under a new key at the same `kek_path` reads every
-remembered namespace as `Tamper`, because the index is missing. That fails
-closed, but it is an outage. A reset therefore removes
-`<kek_path>.freshness/` together with the storage directory, or uses a new
-`kek_path`. Binding a random per-vault id
-into the AADs would remove this requirement (backlog P1.20d).
+**Same KEK, different vault** is F12's subject. Before F12, records and
+indexes were bound to their namespace and key but not to a particular vault,
+so a vault reinitialized under the same KEK accepted another vault's
+authentic files. A reset also had to remove the anchor by hand. F12 removes
+both requirements.
 
 **Who is anchored today.** Every vault the Chief daemon opens.
 - The Chief vault and the six smart-home pairing vaults share one storage
@@ -492,6 +489,86 @@ into the AADs would remove this requirement (backlog P1.20d).
 - Pointing a `kek_path` at a new file, even with the same key, starts an
   empty anchor. Protection for that opener's namespaces restarts as trust
   on first use: a snapshot already in place at that restart is accepted.
+- Resetting the vault is wiping the storage directory (F12). The daemon's
+  next start runs `init`, which resets the shared anchor for the new
+  vault id.
+
+**F12: vault identity (P1.20d).** Every vault has a random 16-byte vault id,
+created by `init`. It is carried in every KEK entry id:
+`kek-<n>.<32 lowercase hex digits>`. The vault id is the suffix of the
+**active** entry's id, so there is no separate field to fall out of step
+with it.
+
+The KEK id is already part of the wrap AAD of every record and every index
+(`namespace || 0x00 || key || 0x00 || kek_id`). An envelope is also only
+opened under the unsealed entry's id. So an envelope from another vault
+fails to unwrap even when that vault used the same key, because its wrap
+AAD names the other vault. Editing its plaintext `kek_id` does not help: the
+AAD it was wrapped with stays the same. No record or index format changes,
+and F1 to F11 hold as written. Their "only a KEK holder can write a v2
+record" now reads "only a KEK holder writing **this** vault".
+
+- **Another vault's files are refused.** A record or index from an earlier
+  vault under the same KEK is `Tamper` on `get` and on index load.
+  Reconcile and migration never absorb such a record.
+- **The anchor records the vault id.** `FreshnessAnchor` gains
+  `vault_id()` and `bind_vault(id, reset)`.
+  - `init` calls `bind_vault(new_id, reset: true)` **before** it writes the
+    manifest. That forgets every epoch, then records the new id. A crash
+    before the manifest write leaves no manifest, so the next start runs
+    `init` again.
+  - Unsealing a vault whose id differs from the anchor's is `Tamper`. So is
+    unsealing a vault with no id while the anchor records one. That catches
+    a whole earlier storage directory put back after a reset, manifest
+    included, which the epochs alone would not when its epochs happen to
+    be higher.
+  - An anchor that records no id adopts the vault's id on the first unseal
+    (trust on first use, as with epochs).
+- **A reset is now just "wipe the storage directory".** The next `init`
+  starts a new vault id and a new anchor history in place. Neither the KEK
+  nor the anchor directory has to change, and the files of the old vault
+  never open in the new one.
+- **Rotation keeps the vault id.** `rotate_kek` names its new entry
+  `kek-<n+1>.<vault id>`.
+- **Unseal prefers the active entry.** It tries the active entry first, then
+  the retired ones. After a rebind (below), a retired entry holds the same
+  key as the active one, and a store must never run under the retired id.
+
+`FileFreshnessAnchor` keeps the vault id in a file named `vault-id`. The file
+holds the 32 hex digits and a newline. It is written and read like an epoch
+file: temporary file, sync, rename, under the `.lock`, and refused unless it
+is a regular file with exactly that content. Epoch file names are pure hex,
+so `vault-id` cannot collide with one. A reset deletes every epoch file
+before it writes `vault-id`.
+
+**Rebinding a vault made before F12.** A vault whose active entry id has no
+vault-id suffix is rebound by the first unseal under that active entry:
+
+1. Under an anchor that records an id: `Tamper`. A vault that was bound
+   never goes back to unbound.
+2. Write the manifest with a CAS. It gets a fresh vault id, and a new active
+   entry `kek-<n+1>.<id>` holding the **same** key. The salt, source and
+   verifier are copied; the verifier does not depend on the id. The old
+   entry is retired, and the manifest gets a `rebind_from: <old id>` field.
+3. The anchor adopts the id.
+4. Every record and index still wrapped under the old id is re-wrapped
+   under the new id, each with a CAS on its revision. Only the DEK wrap
+   changes. Bodies, generations and body AADs stay the same. An envelope
+   that does not unwrap is left alone, and `get` refuses it.
+5. Write the manifest with a CAS that removes `rebind_from`.
+
+A crash anywhere is resumed by the next unseal, which finds `rebind_from`.
+Until then, envelopes still under the old id read as `Tamper`, exactly as
+during an interrupted rotation. Two processes rebinding at once is safe.
+The step 2 CAS lets one vault id win, and the loser re-reads the manifest
+and resumes. A re-wrap that loses its CAS re-reads the envelope and skips it
+if it is already under the new id. Unsealing under a *retired* entry does
+not rebind, because that is a rotation being resumed.
+
+The rebind is trust on first use too. Whatever is wrapped under the old id
+at that first unseal is adopted, including an older file of another
+pre-F12 vault under the same key, if one was planted before then. After
+the rebind, such files are refused.
 
 **Library constructors are the caller's job.** `oauth-credential-sealed-store`
 takes a `SealedStore` from its caller rather than opening one. No production
@@ -726,7 +803,7 @@ Not guaranteed:
 3. Build a new manifest in memory: mark the old KEK entry `retired`
    (preserving its original salt + verifier so old-password unseal
    keeps working for crash-recovery), and append a new entry
-   `{ id: "kek-<n>", status: "active", salt: <new salt>,
+   `{ id: "kek-<n>.<vault id>", status: "active", salt: <new salt>,
    verifier = AEAD(KEK_new, zeros16) }`.
 4. **Persist the manifest first** (CAS on its revision). After this
    point, both `KEK_old` and `KEK_new` are valid for unseal.
