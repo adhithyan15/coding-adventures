@@ -199,9 +199,9 @@ fn serve(parent_end: OwnedFd) {
         match receive(parent_end.as_raw_fd()) {
             Received::Closed => return,
             Received::Nothing => continue,
-            Received::Descriptor(fd) => {
+            Received::Descriptor(fd, sender) => {
                 if is_listener(&fd) {
-                    continue_first_exec(fd);
+                    continue_first_exec(fd, sender);
                 }
             }
         }
@@ -213,16 +213,17 @@ enum Received {
     Closed,
     /// A message without exactly one descriptor: ignore it.
     Nothing,
-    Descriptor(OwnedFd),
+    /// One descriptor, and the pid its sender put in the payload.
+    Descriptor(OwnedFd, libc::pid_t),
 }
 
 /// `recvmsg` one message. Every descriptor it carries is taken into an
 /// `OwnedFd`, so any beyond the first is closed, not leaked.
 fn receive(socket: RawFd) -> Received {
-    let mut byte = [0u8; 1];
+    let mut payload = [0u8; 4];
     let mut iov = libc::iovec {
-        iov_base: byte.as_mut_ptr().cast(),
-        iov_len: 1,
+        iov_base: payload.as_mut_ptr().cast(),
+        iov_len: payload.len(),
     };
     // Room for several descriptors, so extras arrive (and are closed)
     // rather than being truncated into the void.
@@ -268,10 +269,16 @@ fn receive(socket: RawFd) -> Received {
         // SAFETY: advances within `message`'s control buffer, or to null.
         header = unsafe { libc::CMSG_NXTHDR(&message, header) };
     }
-    if message.msg_flags & libc::MSG_CTRUNC != 0 || descriptors.len() != 1 {
+    if message.msg_flags & libc::MSG_CTRUNC != 0
+        || descriptors.len() != 1
+        || received as usize != payload.len()
+    {
         return Received::Nothing;
     }
-    Received::Descriptor(descriptors.pop().unwrap())
+    Received::Descriptor(
+        descriptors.pop().unwrap(),
+        libc::pid_t::from_ne_bytes(payload),
+    )
 }
 
 /// Whether `fd` is a seccomp listener. `NOTIF_ID_VALID` on an id that was
@@ -293,7 +300,7 @@ const EXEC_WAIT_MS: libc::c_int = 30_000;
 /// Answer the first notification on `listener` with CONTINUE, then drop
 /// it. If anything fails, the listener is dropped all the same, and the
 /// child's exec fails with ENOSYS: the spawn errors rather than hangs.
-fn continue_first_exec(listener: OwnedFd) {
+fn continue_first_exec(listener: OwnedFd, sender: libc::pid_t) {
     let mut poll = libc::pollfd {
         fd: listener.as_raw_fd(),
         events: libc::POLLIN,
@@ -318,11 +325,15 @@ fn continue_first_exec(listener: OwnedFd) {
     {
         return;
     }
-    let exec = notification.data.nr == libc::SYS_execveat as i32;
+    // Only the sender's own execveat is let through (review round 5, L1):
+    // a listener from anywhere else gets no CONTINUE.
+    let exec = notification.data.nr == libc::SYS_execveat as i32
+        && notification.pid as libc::pid_t == sender;
     let response = libc::seccomp_notif_resp {
         id: notification.id,
         val: 0,
-        // Only execveat is routed here; anything else is refused.
+        // Only execveat is routed here, from the sender; anything else is
+        // refused.
         error: if exec { 0 } else { -libc::EPERM },
         flags: if exec {
             libc::SECCOMP_USER_NOTIF_FLAG_CONTINUE as u32
@@ -345,12 +356,14 @@ fn continue_first_exec(listener: OwnedFd) {
 // The child's side: no allocation from here down
 // ---------------------------------------------------------------------------
 
-/// Send `listener` over `socket` with `SCM_RIGHTS`.
+/// Send `listener` over `socket` with `SCM_RIGHTS`, and this process's pid
+/// as the payload, so the service answers only this process's exec.
 pub(crate) fn send_listener(socket: RawFd, listener: RawFd) -> io::Result<()> {
-    let mut byte = [0u8; 1];
+    // SAFETY: getpid cannot fail.
+    let mut payload = unsafe { libc::getpid() }.to_ne_bytes();
     let mut iov = libc::iovec {
-        iov_base: byte.as_mut_ptr().cast(),
-        iov_len: 1,
+        iov_base: payload.as_mut_ptr().cast(),
+        iov_len: payload.len(),
     };
     let mut control = [0u64; 4];
     // SAFETY: as in `receive_descriptor`; the control buffer is 32 bytes,
@@ -371,7 +384,7 @@ pub(crate) fn send_listener(socket: RawFd, listener: RawFd) -> io::Result<()> {
     // SAFETY: a valid socket and message.
     // MSG_NOSIGNAL (review round 4, L2): a dead service is an EPIPE the
     // spawn reports, never a SIGPIPE that kills the child unreported.
-    if unsafe { libc::sendmsg(socket, &message, libc::MSG_NOSIGNAL) } != 1 {
+    if unsafe { libc::sendmsg(socket, &message, libc::MSG_NOSIGNAL) } != payload.len() as isize {
         return Err(io::Error::last_os_error());
     }
     Ok(())

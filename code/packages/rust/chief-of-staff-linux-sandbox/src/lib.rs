@@ -158,6 +158,8 @@ pub enum ConfinementError {
     /// The command sets an environment variable outside the closed set
     /// (S-I4a).
     Environment(String),
+    /// The exec-once service (its socketpair or thread) could not start.
+    ExecOnce(String),
 }
 
 impl fmt::Display for ConfinementError {
@@ -186,6 +188,7 @@ impl fmt::Display for ConfinementError {
             Self::Executable(why) => write!(f, "agent executable unreadable: {why}"),
             Self::Landlock(why) => write!(f, "Landlock ruleset failed: {why}"),
             Self::Environment(why) => write!(f, "agent environment refused: {why}"),
+            Self::ExecOnce(why) => write!(f, "exec-once service failed to start: {why}"),
         }
     }
 }
@@ -281,8 +284,8 @@ impl LinuxConfinement {
     /// starts the exec-once service for the spawns of that command.
     pub fn apply<'a>(&self, command: &'a mut Command) -> Result<&'a mut Command, ConfinementError> {
         // On Linux, `install` checks everything before it touches the
-        // command, and isolates it itself (review round 4, M2): an `Err`
-        // leaves the command exactly as it was.
+        // command, and isolates it itself (review round 4, M2): on `Err`
+        // the command is untouched by it, and then poisoned below.
         #[cfg(target_os = "linux")]
         if let Err(error) = linux::install(std::sync::Arc::clone(&self.prepared), command) {
             // And the command is poisoned: spawning it anyway fails, so an

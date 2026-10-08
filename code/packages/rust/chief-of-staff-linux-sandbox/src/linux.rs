@@ -200,7 +200,7 @@ pub(crate) fn install(
     )?;
     // Exec once: the socket and the thread that lets one exec through.
     let exec_once = crate::shim::ExecOnce::start()
-        .map_err(|error| ConfinementError::Landlock(format!("exec-once service: {error}")))?;
+        .map_err(|error| ConfinementError::ExecOnce(error.to_string()))?;
     let filter = seccomp::program(prepared.binary.as_raw_fd(), exec_once.child_end.as_raw_fd())?;
     let seal = seccomp::seal()?;
     // argv and envp are built here, in the parent: the child must not

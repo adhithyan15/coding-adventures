@@ -83,3 +83,7 @@
   - Bounds-checked `getdents64` parsing (L3).
   - Environment values must be names, not paths (L4).
   - An availability note for `EBUSY` and missing `/proc` (L5).
+- Security review round 5, PASS. Its LOWs are fixed too:
+  - the listener's payload carries the sender's pid, and CONTINUE is
+    answered only for that pid's `execveat`;
+  - exec-once start failures are `ConfinementError::ExecOnce`.
