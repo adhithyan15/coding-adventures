@@ -628,6 +628,12 @@ It never resolves a host path. The rooted file API retains `RootedFs` and its
 declared-root include behavior. Tests cover pathless macro and condition
 selection, an active include failure with directive location, a skipped
 include, and ordinary C input compatibility.
+The three-way C/SIR/Ruby conformance corpus supplies `<stdio.h>` and
+`<stdint.h>` only to its native C compiler oracle. Its pathless frontend leg
+removes exactly those two leading oracle headers before calling
+`compile_source`; any other directive is retained and must face the pathless
+preprocessor's ordinary rejection policy. This keeps the executable C oracle
+well-formed without granting the pathless API ambient system headers.
 The file-input API checks the entry spelling against the tightened token
 spelling budget before cloning it into an include request. Its search roots
 come from the embedding host, not C source text.
