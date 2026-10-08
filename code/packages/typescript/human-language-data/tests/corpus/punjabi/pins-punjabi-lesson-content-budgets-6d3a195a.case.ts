@@ -107,8 +107,8 @@ it("pins Punjabi lesson-content budgets", () =>
     // taught atom with no new idiom, sense, or culture claim.
     // 908 -> 910: two short Chapter 169 returns for the already-taught A/B
     // fictional dates, with no new idiom, sense, or culture claim.
-    // 910 -> 911: one short Chapter 170 return for their old selector map.
-    lessons: 911,
+    // 911 -> 912: one short Chapter 171 return for their old date repair.
+    lessons: 912,
     idioms: 6,
     senses: 3,
     cultureClaims: 9,

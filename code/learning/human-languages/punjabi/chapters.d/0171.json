@@ -1,0 +1,17 @@
+{
+  "chapter": 171,
+  "title": "Return to One Fictional Date Repair",
+  "label": "ch:pa-date-repair-r4",
+  "canDo": "I can retrieve the already-taught one-mark date-form repair after a long gap, with the fictional bank visible and without claiming scored A1 writing.",
+  "spineNodes": [
+    "SPINE-EXCHANGE-NAMES"
+  ],
+  "payoff": {
+    "lesson": "PA-R171-date-repair-again",
+    "kind": "recognition",
+    "summary": "Locate and repair only the missing slash or label dot in two familiar fictional dates without adding new Punjabi.",
+    "assesses": [
+      "PA-FORM-DATE-REPAIR-01"
+    ]
+  }
+}

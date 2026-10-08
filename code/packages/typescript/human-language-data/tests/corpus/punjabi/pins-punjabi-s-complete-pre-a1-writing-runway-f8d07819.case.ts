@@ -195,5 +195,7 @@ it("pins Punjabi's complete pre-A1 writing runway", () => {
     "guided-copy",
     // Chapter 170 returns the taught selector map with the two-card bank visible.
     "guided-copy",
+    // Chapter 171 returns the taught date repair with a familiar visible model.
+    "guided-copy",
   ]);
 });
