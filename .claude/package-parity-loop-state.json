@@ -11,12 +11,17 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 17148,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/17148",
+    "branch": "codex/parity-geometry-neutral-fixture-ci-20261008",
+    "item_id": "geometry-2d-neutral-fixture-ci-scheduling"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-08T15:34:49Z",
-    "pr_number": 17143,
-    "status": "merged",
-    "notes": "PR #17143 reached eight successful and 24 skipped terminal checks without failures. GitHub reported CLEAN/MERGEABLE, guarded squash auto-merge was enabled, and GitHub merged it as 17aca3015e4655dd7202ecde45357747419952b1; no manual merge was used."
+    "observed_at": "2026-10-08T15:54:53Z",
+    "pr_number": 17148,
+    "status": "pr-open",
+    "notes": "Ready-for-review PR #17148 opened from locally validated head c8e9bf0754824e45f811e93e7a745228e1c3dcaa. GitHub reports MERGEABLE but its CI, CodeQL, and book-detection checks are queued; do not enable auto-merge until every required check is terminal and acceptable."
   },
   "last_inventory": {
     "revision": "59d58463222ad2f3589447dd21a7b42870b94e4d",
@@ -12111,10 +12116,13 @@
     {
       "id": "geometry-2d-neutral-fixture-ci-scheduling",
       "title": "Schedule both neutral geometry and Bezier flattening validators in CI",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["geometry-2d-language-neutral-contract-and-fixture-repair", "geometry-bezier2d-flattening-termination-contract"],
       "branch": "codex/parity-geometry-neutral-fixture-ci-20261008",
-      "pr_number": null,
+      "pr_number": 17148,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/17148",
+      "opened_at": "2026-10-08T15:54:47Z",
+      "opened_revision": "c8e9bf0754824e45f811e93e7a745228e1c3dcaa",
       "selected_at": "2026-10-08T15:37:20Z",
       "selection_revision": "59d58463222ad2f3589447dd21a7b42870b94e4d",
       "validation_notes": "Spec-first and tests-first commits pin both neutral fixture validators and their unit suites in the existing unconditional contracts metadata step; the regression failed on missing commands before workflow implementation and now passes 19 tests. Exact local validators pass 23 geometry cases and nine Bezier flattening cases; their unit suites pass 11 and seven tests. The package-parity reporter and ten tests pass with 15 established lanes, 1,499 identities, 4,781 slots, and zero collisions or unknown buckets. Ruby YAML parse, Ruff lint, git diff hygiene, independent read-only security review, full Go build-tool tests and vet, and a real Go build-tool dry-run validating 45 Starlark BUILD files and 5,319 packages pass. Whole-file Ruff formatting reports only pre-existing unrelated drift in the CI registry test file; new lines are clean. No native package source changed, so coverage is not a direct acceptance gate for this CI-only tranche.",
