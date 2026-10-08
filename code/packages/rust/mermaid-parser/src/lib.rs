@@ -6222,6 +6222,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
     };
     let mut current_lane: Option<usize> = None;
     let mut last_edge_targets: Option<Vec<String>> = None;
+    let mut pending_styles = Vec::new();
     for (index, raw) in prepared.lines().enumerate() {
         let line_number = index + 1;
         let line = raw.trim();
@@ -6279,6 +6280,10 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             }
             continue;
         }
+        if let Some(value) = line.strip_prefix("style ") {
+            pending_styles.push(parse_swimlane_style(value, line_number)?);
+            continue;
+        }
         if is_edge {
             last_edge_targets = Some(parse_swimlane_edge_chain(
                 line,
@@ -6308,7 +6313,49 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             "Swimlane diagrams require at least one lane and one node",
         ));
     }
+    for (node_id, style, line) in pending_styles {
+        let node = diagram.nodes.iter_mut().find(|node| node.id == node_id).ok_or_else(|| {
+            swimlane_error(line, format!("Swimlane style references unknown node {node_id:?}"))
+        })?;
+        merge_state_style(&mut node.style, &style);
+    }
     Ok(diagram)
+}
+
+fn parse_swimlane_style(value: &str, line: usize) -> Result<(String, DiagramStyle, usize), ParseError> {
+    let Some((node_id, declarations)) = value.trim().split_once(char::is_whitespace) else {
+        return Err(swimlane_error(line, "Swimlane style requires a node id and declarations"));
+    };
+    let mut style = DiagramStyle::default();
+    for declaration in split_style_declarations(declarations) {
+        let (property, value) = declaration.split_once(':').ok_or_else(|| {
+            swimlane_error(line, format!("invalid Swimlane style {declaration:?}"))
+        })?;
+        let value = value.trim().trim_matches(['\'', '"']);
+        match property.trim().to_ascii_lowercase().as_str() {
+            "fill" => style.fill = Some(value.into()),
+            "stroke" => style.stroke = Some(value.into()),
+            "color" => style.text_color = Some(value.into()),
+            "stroke-width" => style.stroke_width = Some(parse_swimlane_style_number(value, line)?),
+            "stroke-dasharray" => {
+                let values = value.split_whitespace()
+                    .map(|value| parse_swimlane_style_number(value, line))
+                    .collect::<Result<Vec<_>, _>>()?;
+                if values.is_empty() || values.iter().any(|value| *value <= 0.0) {
+                    return Err(swimlane_error(line, "Swimlane stroke dasharray requires positive lengths"));
+                }
+                style.stroke_dash = Some(values);
+            }
+            property => return Err(swimlane_error(line, format!("unsupported Swimlane style property {property:?}"))),
+        }
+    }
+    Ok((node_id.to_string(), style, line))
+}
+
+fn parse_swimlane_style_number(value: &str, line: usize) -> Result<f64, ParseError> {
+    value.strip_suffix("px").unwrap_or(value).trim().parse::<f64>().ok()
+        .filter(|value| value.is_finite() && *value >= 0.0)
+        .ok_or_else(|| swimlane_error(line, format!("invalid Swimlane style number {value:?}")))
 }
 
 fn parse_swimlane_direction(
@@ -6640,6 +6687,7 @@ fn parse_swimlane_node(
         label,
         lane_id,
         shape,
+        style: DiagramStyle::default(),
     })
 }
 

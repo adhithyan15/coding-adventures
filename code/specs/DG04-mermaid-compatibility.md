@@ -999,7 +999,8 @@ directed/undirected/dotted/thick chained links, point/circle/cross endpoint
 markers and bidirectional arrows, multiline edge continuations,
 parallel branch and join
 endpoints, normalized quoted pipe-delimited and Flowchart-style link labels, titles, and
-accessibility metadata with named and numeric entity decoding. It lowers through
+accessibility metadata with named and numeric entity decoding, plus direct node
+styles for fill, stroke, text color, stroke width, and dash patterns. It lowers through
 dedicated ownership IR and stable lane geometry before producing
 backend-neutral paint instructions. Horizontal nodes expand deterministically
 for long labels while remaining bounded by their ownership lane. A pinned
@@ -1007,6 +1008,6 @@ visual subset, including parallel
 handoffs, is rendered through Metal-to-PNG.
 
 This is intentionally partial. Nested subgraphs, the complete Flowchart shape
-and link catalog beyond the documented marker forms, classes and inline styles, clicks, configuration-driven lane
+and link catalog beyond the documented marker forms, named classes, clicks, configuration-driven lane
 ordering and line hops, and exact upstream routing or typography remain
 unsupported rather than being counted as compatible.

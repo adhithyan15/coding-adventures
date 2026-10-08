@@ -1638,6 +1638,21 @@ fn swimlane_metadata_entities_decode_into_semantic_ir() {
 }
 
 #[test]
+fn swimlane_inline_node_styles_lower_to_semantic_ir() {
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nstyle request fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px,stroke-dasharray:5 3\nrequest --> done",
+    ).expect("Swimlane inline node styles should parse");
+
+    let style = &diagram.nodes[0].style;
+    assert_eq!(style.fill.as_deref(), Some("#fef3c7"));
+    assert_eq!(style.stroke.as_deref(), Some("#b45309"));
+    assert_eq!(style.text_color.as_deref(), Some("#78350f"));
+    assert_eq!(style.stroke_width, Some(4.0));
+    assert_eq!(style.stroke_dash.as_deref(), Some([5.0, 3.0].as_slice()));
+    assert!(parse_swimlane("swimlane-beta\nsubgraph A\n  one[One]\nend\nstyle missing fill:red").is_err());
+}
+
+#[test]
 fn swimlane_flowchart_endpoint_markers_lower_to_semantic_ir() {
     use diagram_ir::EdgeMarker;
 

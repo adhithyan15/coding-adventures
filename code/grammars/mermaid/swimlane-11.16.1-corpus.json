@@ -65,6 +65,10 @@
     {
       "name": "metadata-entities",
       "source": "swimlane-beta LR\ntitle Request &amp; Delivery\naccTitle: Accessible&#32;handoff\naccDescr: Intake &lt; Support\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nrequest --> done"
+    },
+    {
+      "name": "inline-node-styles",
+      "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Support\n  done[Done]\nend\nstyle request fill:#fef3c7,stroke:#b45309,color:#78350f,stroke-width:4px,stroke-dasharray:5 3\nstyle done fill:#dcfce7,stroke:#166534,color:#14532d\nrequest --> done"
     }
   ]
 }

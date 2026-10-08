@@ -1900,7 +1900,10 @@ pub struct LayoutedCynefinDiagram { pub width: f64, pub height: f64, pub title: 
 
 // PROCESS OWNERSHIP FAMILY
 #[derive(Clone, Debug, PartialEq)]
-pub struct SwimlaneNode { pub id: String, pub label: String, pub lane_id: Option<String>, pub shape: DiagramShape }
+pub struct SwimlaneNode {
+    pub id: String, pub label: String, pub lane_id: Option<String>, pub shape: DiagramShape,
+    pub style: DiagramStyle,
+}
 #[derive(Clone, Debug, PartialEq)]
 pub struct SwimlaneLane { pub id: String, pub label: String, pub node_ids: Vec<String> }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -1919,7 +1922,10 @@ pub struct SwimlaneDiagram {
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneLane { pub id: String, pub label: String, pub x: f64, pub y: f64, pub width: f64, pub height: f64 }
 #[derive(Clone, Debug, PartialEq)]
-pub struct LayoutedSwimlaneNode { pub id: String, pub label: String, pub shape: DiagramShape, pub x: f64, pub y: f64, pub width: f64, pub height: f64 }
+pub struct LayoutedSwimlaneNode {
+    pub id: String, pub label: String, pub shape: DiagramShape, pub style: DiagramStyle,
+    pub x: f64, pub y: f64, pub width: f64, pub height: f64,
+}
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneEdge {
     pub from: Point, pub to: Point, pub label: Option<String>, pub kind: SwimlaneEdgeKind,
