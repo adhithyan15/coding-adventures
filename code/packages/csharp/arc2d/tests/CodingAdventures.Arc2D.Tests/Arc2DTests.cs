@@ -117,7 +117,8 @@ public sealed class Arc2DTests
             valid with { StartAngle = double.NaN },
             valid with { SweepAngle = double.PositiveInfinity },
             valid with { XRotation = double.NaN },
-            valid with { Center = new Point(double.MaxValue, 0), Rx = double.MaxValue },
+            valid with { Center = new Point(double.MaxValue, 0), Rx = double.MaxValue,
+                Ry = double.MaxValue, StartAngle = TrigPackage.PI / 4.0 },
         };
         foreach (var arc in invalid)
         {

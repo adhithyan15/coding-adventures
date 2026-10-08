@@ -102,7 +102,8 @@ module Arc2DTests =
             { valid with StartAngle = Double.NaN }
             { valid with SweepAngle = Double.PositiveInfinity }
             { valid with XRotation = Double.NaN }
-            { valid with Center = Point.New(Double.MaxValue, 0.0); Rx = Double.MaxValue }
+            { valid with Center = Point.New(Double.MaxValue, 0.0); Rx = Double.MaxValue;
+                         Ry = Double.MaxValue; StartAngle = Trig.PI / 4.0 }
         ]
         for arc in invalid do
             Assert.Throws<ArgumentException>(fun () -> arc.Evaluate 0.0 |> ignore) |> ignore
