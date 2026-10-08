@@ -189,5 +189,9 @@ it("pins Punjabi's complete pre-A1 writing runway", () => {
     "guided-copy",
     "guided-copy",
     "guided-copy",
+    // Chapter 169 returns the two fictional dates separately with supported
+    // copying, not another scored or timed A1 writing claim.
+    "guided-copy",
+    "guided-copy",
   ]);
 });
