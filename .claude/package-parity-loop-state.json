@@ -11,12 +11,17 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": {
+    "number": 17000,
+    "url": "https://github.com/adhithyan15/coding-adventures/pull/17000",
+    "branch": "codex/parity-source-collection-fixture-ci-20261008",
+    "item_id": "build-tool-source-collection-fixture-native-ci-selection"
+  },
   "last_ci_action": {
-    "observed_at": "2026-10-08T01:11:07Z",
-    "pr_number": 16989,
-    "status": "merged",
-    "notes": "Final-head #16989 completed 29 successful, seven skipped, and one neutral checks with no failure. GitHub reported MERGEABLE/CLEAN; guarded squash auto-merge merged it as 52b53049ecb38094d0c93b6f59a767884032b63e. No manual merge was performed."
+    "observed_at": "2026-10-08T01:38:00Z",
+    "pr_number": 17000,
+    "status": "pending",
+    "notes": "Ready-for-review PR #17000 is open and mergeable. Initial CI and CodeQL checks are queued; no auto-merge requested while checks are pending."
   },
   "last_inventory": {
     "revision": "def09f02d44cef3dfdd5a4b3e3cf9b7b4efd7eec",
@@ -13611,7 +13616,7 @@
       "notes": "Read-only security review of the registry slice observed pre-existing File.dir?/1 recursion through directory symlinks without canonical-root or visited-inode checks. This is host filesystem authority, not portable language-registry behavior; review an explicit no-follow/boundary policy and applicable native tests separately. Excluded from this portable parity delivery loop pending host-security review."
     },
     {
-      "id": "build-tool-source-collection-fixture-native-ci-selection", "title": "Gate native source-collection fixture readers", "status": "in-progress", "depends_on": ["build-tool-pure-domain-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-site-authored-resource-source-input-extension", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-source-collection-fixture-ci-20261008", "pr_number": null,
+      "id": "build-tool-source-collection-fixture-native-ci-selection", "title": "Gate native source-collection fixture readers", "status": "pr-open", "depends_on": ["build-tool-pure-domain-corpus", "build-tool-language-source-input-registry-corpus-and-engine-audit", "build-tool-repository-source-input-boundary-reverse-diff-and-digest-conformance-corpus", "build-tool-shared-input-multiconsumer-digest-evidence-fixture", "build-tool-site-authored-resource-source-input-extension", "build-tool-ci-gate-fixture-native-ci-selection"], "branch": "codex/parity-source-collection-fixture-ci-20261008", "pr_number": 17000,
       "notes": "Selected after #16989 merged and all newly discovered owners were registered. Twenty exact flat source-collection cases have direct native readers in twelve build-tool fronts, including an Elixir local-case reader found during independent source review; fixture-only diffs seed only the neutral gate. Map seven local cases to twelve fronts, nine repository cases to C#/F#/Swift, and four shared-input cases to C#/F#; verify dynamic and explicit reader drift, three-platform/single-language selection, rename source, and missing-root atomicity. Do not change production collectors or claim every reader replays every case."
     },
     {
