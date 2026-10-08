@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Require a distinct, own-archive-backed partial Perl 5.004_59 token/grammar
+  pair with the established plain-decimal, CR, unsupported-input, and
+  250-digit boundary probes.
+
 - Require separate, explicitly partial Perl 5.004_56 and 5.004_57
   token/grammar pairs and apply the established decimal-boundary and
   unsupported-input probes to each.
