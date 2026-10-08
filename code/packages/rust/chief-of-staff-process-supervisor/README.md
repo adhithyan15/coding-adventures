@@ -32,6 +32,13 @@ monotonic clock. A request over budget is answered at once with
 It is never queued or dispatched. `with_request_budget` sets the budget, and
 `rate_limited_requests` reports how many of a host's requests were refused.
 
+When a host is ended for cause, the call that noticed it returns that error
+once: `inspect`, `start` or the data-plane calls. The causes are a framing
+or control error, a full write queue, or a host still `Starting` past the
+bootstrap timeout. The host is already `Exited` by then. The next `start`
+spawns a fresh instance. Ending a host also kills its process group, which
+it leads. The kill always runs before the host is reaped.
+
 Its keyring and X3DH identity are shared through owned `Arc` handles, and its
 session source is `Send`, so the complete supervisor can move with the daemon's
 threaded control plane without copying secret key material.

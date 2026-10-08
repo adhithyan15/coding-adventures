@@ -349,8 +349,18 @@ impl OwnedInstance {
         let Some(child) = self.child.as_mut() else {
             return Ok(None);
         };
-        if chief_of_staff_spawn_isolation::has_exited(child).unwrap_or(false) {
-            let _ = chief_of_staff_spawn_isolation::kill_session(child);
+        // On Unix, reap only an exit `has_exited` saw, so no reap can slip
+        // in between the check and the kill (review round 10). An error
+        // means the child was already reaped (ECHILD), and `try_wait`
+        // returns its cached status. On Windows `has_exited` is always
+        // false, and `try_wait` decides alone.
+        #[cfg(unix)]
+        match chief_of_staff_spawn_isolation::has_exited(child) {
+            Ok(false) => return Ok(None),
+            Ok(true) => {
+                let _ = chief_of_staff_spawn_isolation::kill_session(child);
+            }
+            Err(_) => {}
         }
         child
             .try_wait()

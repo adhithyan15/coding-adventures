@@ -47,6 +47,10 @@
     timeout has passed since its spawn is ended, with `BootstrapTimeout`.
     Before this, a host that never sent Ready stayed `Starting` forever.
     Test: the test host's new `NEVER_READY` mode. Mutation-checked.
+- **Review round 10:** on Unix, `try_reap` reaps only an exit that
+  `has_exited` saw, so no reap can slip in between the check and the
+  session kill. The README says how a host ended for cause is reported
+  (one error, then `Exited`).
 
 - **Descriptor isolation at the production agent spawn** (D18S S-I2, S-I3;
   #13980 P2.2). `spawn_verified` now calls
