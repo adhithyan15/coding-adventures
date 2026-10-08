@@ -1,4 +1,4 @@
-//! # The Linux applier (D18S build step 4)
+//! # The Linux applier and shim (D18S build steps 4 and 5)
 //!
 //! `capability-os-sandbox` says what an agent may do. This crate makes the
 //! Linux kernel enforce it, for a compiled agent, from the instant it
@@ -13,30 +13,43 @@
 //!     builds the Landlock ruleset (an fd)      no terminal, setsid,
 //!     builds the seccomp program (a Vec)       fds above 2 close-on-exec
 //!   apply(&mut command)                      this crate, in order:
-//!     builds argv, registers the hooks         1. PR_SET_NO_NEW_PRIVS
-//!   command.spawn()  ──── fork ────────►       2. landlock_restrict_self
-//!                                              3. seccomp(SET_MODE_FILTER)
-//!                                              4. execveat(B, "", AT_EMPTY_PATH)
+//!     checks the environment                   1. PR_SET_NO_NEW_PRIVS
+//!     starts the exec-once thread              2. one thread? only 0-2 survive?
+//!     builds argv, envp, the program           3. landlock_restrict_self
+//!   command.spawn()  ──── fork ────────►       4. seccomp(NEW_LISTENER),
+//!                                                 listener sent to the thread
+//!                                              5. launch probes (S-P4)
+//!                                              6. execveat(B, "", AT_EMPTY_PATH)
+//!     thread: CONTINUE, close listener ──►      the one exec
 //!                                            the agent's first instruction:
-//!                                            already confined
+//!                                            already confined, and no exec left
 //! ```
 //!
-//! Everything that can fail or allocate happens in the parent. The child
-//! makes four syscalls and checks each one; a failure refuses the spawn
-//! (S-P3), so an agent never runs half-confined.
+//! Everything that can allocate happens in the parent. The child makes raw
+//! syscalls into stack buffers and checks each one; a failure refuses the
+//! spawn (S-P3), so an agent never runs half-confined.
 //!
 //! The exec is the hook's own, by descriptor, not `std`'s by path. Filters
 //! survive exec, so whatever exec the filter allows stays allowed to the
-//! agent (S-I4d). It allows only `execveat` on descriptor B with
-//! `AT_EMPTY_PATH`, and B, being close-on-exec, is gone once the agent runs.
-//! It also means the file that runs is the one that was parsed and given its
+//! agent (S-I4d). So `execve` is killed, and `execveat` on descriptor B with
+//! `AT_EMPTY_PATH` goes to a listener the supervisor holds (`shim`): it lets
+//! exactly that first exec through, then closes, and every later exec gets
+//! `ENOSYS`. The file that runs is the one that was parsed and given its
 //! Landlock rule, even if its path is replaced in between.
+//!
+//! The shim's other duties (D18S step 5) sit around the install: one
+//! thread and exactly fds 0-2 surviving the exec, checked before Landlock
+//! hides `/proc`; the environment's closed set (`GRANTABLE_ENVIRONMENT`),
+//! checked at `apply`; and the launch probes, which confirm that seccomp
+//! and Landlock each answer `EACCES` where they should
+//! (`LinuxConfinement::launch_verification`).
 //!
 //! The child is single-threaded at that point, which is what S-I4b
 //! requires: a seccomp filter or a Landlock domain applies only to the
 //! thread that installs it and to what it creates afterwards. A compiled
 //! agent therefore gets deny-all at `exec` (S-I4c). An interpreted runtime
-//! needs the shim (D18S build step 5); that is not this crate.
+//! also needs a runtime profile (its syscalls, and read access to its
+//! image), which is D18S step 9.
 //!
 //! ## Landlock: which paths exist at all
 //!
@@ -92,7 +105,9 @@
 //!   readlink   EACCES: Landlock does not mediate it, and through
 //!              /proc/<supervisor>/fd it would name the supervisor's files
 //!   execve     never: the agent's own exec is the execveat below
-//!   execveat   only on the prepared descriptor, with AT_EMPTY_PATH
+//!   execveat   only on the prepared descriptor, with AT_EMPTY_PATH, and
+//!              then only through the listener: exec once
+//!   sendmsg    only on the exec-once socket, for the hook itself
 //! ```
 //!
 //! Not on the list, so a kill: `socket`, `socketpair`, `io_uring_*`,
@@ -111,6 +126,10 @@ use std::process::Command;
 
 #[cfg(target_os = "linux")]
 mod linux;
+#[cfg(target_os = "linux")]
+mod shim;
+#[cfg(target_os = "linux")]
+pub use shim::{LaunchVerification, GRANTABLE_ENVIRONMENT};
 
 /// Why an agent cannot be confined. Every one of these refuses the launch
 /// (S-P3): there is no "confine what we can" mode.
@@ -136,6 +155,11 @@ pub enum ConfinementError {
     Executable(String),
     /// A Landlock call failed while building the ruleset.
     Landlock(String),
+    /// The command sets an environment variable outside the closed set
+    /// (S-I4a).
+    Environment(String),
+    /// The exec-once service (its socketpair or thread) could not start.
+    ExecOnce(String),
 }
 
 impl fmt::Display for ConfinementError {
@@ -163,6 +187,8 @@ impl fmt::Display for ConfinementError {
             Self::Path(path) => write!(f, "cannot open a path the ruleset needs: {path}"),
             Self::Executable(why) => write!(f, "agent executable unreadable: {why}"),
             Self::Landlock(why) => write!(f, "Landlock ruleset failed: {why}"),
+            Self::Environment(why) => write!(f, "agent environment refused: {why}"),
+            Self::ExecOnce(why) => write!(f, "exec-once service failed to start: {why}"),
         }
     }
 }
@@ -252,10 +278,38 @@ impl LinuxConfinement {
     /// program is only argv\[0\]. argv and the environment are taken when
     /// `apply` runs: arguments or variables added afterwards are not
     /// passed, and `CommandExt::arg0` is ignored.
-    pub fn apply<'a>(&self, command: &'a mut Command) -> &'a mut Command {
-        chief_of_staff_spawn_isolation::isolate(command);
+    ///
+    /// It refuses (S-I4a) a command whose environment names anything
+    /// outside the grantable set (`GRANTABLE_ENVIRONMENT`). Each call
+    /// starts the exec-once service for the spawns of that command.
+    pub fn apply<'a>(&self, command: &'a mut Command) -> Result<&'a mut Command, ConfinementError> {
+        // On Linux, `install` checks everything before it touches the
+        // command, and isolates it itself (review round 4, M2): on `Err`
+        // the command is untouched by it, and then poisoned below.
         #[cfg(target_os = "linux")]
-        linux::install(std::sync::Arc::clone(&self.prepared), command);
-        command
+        if let Err(error) = linux::install(std::sync::Arc::clone(&self.prepared), command) {
+            // And the command is poisoned: spawning it anyway fails, so an
+            // ignored `Err` can never launch an unconfined agent.
+            linux::poison(command);
+            return Err(error);
+        }
+        #[cfg(not(target_os = "linux"))]
+        chief_of_staff_spawn_isolation::isolate(command);
+        Ok(command)
+    }
+
+    /// Which enforcement classes each launch confirms, and which only CI
+    /// does (S-P4), for the audit record.
+    #[cfg(target_os = "linux")]
+    pub fn launch_verification(&self) -> LaunchVerification {
+        shim::VERIFICATION
+    }
+
+    /// The descriptor number the agent is exec'd from. Diagnostic: it lets
+    /// a test show that the agent cannot reuse it.
+    #[cfg(target_os = "linux")]
+    #[doc(hidden)]
+    pub fn exec_descriptor(&self) -> i32 {
+        self.prepared.exec_descriptor()
     }
 }

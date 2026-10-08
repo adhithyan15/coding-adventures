@@ -1359,9 +1359,9 @@ through S-I3 before two weeks are spent on Windows.
        already, and it runs in the same seccomp and Landlock domain, with
        no syscall the agent did not already have.
      - For an interpreted agent it is not bounded: re-exec'ing the runtime
-       with chosen argv defeats S-K6's digest pinning. Step 5 must use
-       S-I4d's second option there, `SECCOMP_FILTER_FLAG_NEW_LISTENER` with
-       the supervisor permitting exactly one exec.
+       with chosen argv defeats S-K6's digest pinning. Step 5 therefore moves
+       every agent to S-I4d's second option, exec once (below), which closes
+       this residual for compiled agents too.
    - The S-P4 launch-time probes are the shim's (step 5).
    - Here, the full negative coverage runs in CI as the probe tests: each
      denied class kills the probe with `SIGSYS`, and each Landlock denial
@@ -1369,6 +1369,94 @@ through S-I3 before two weeks are spent on Windows.
 5. **The shim** (S-I4, S-P4): single-thread precondition, env deny-list,
    `close_range`, negative self-test. Required before any interpreted agent
    gets true deny-all.
+   **Status (P2.5, Linux):** the shim is the same `pre_exec` hook in
+   `chief-of-staff-linux-sandbox`.
+   - *Why the hook can be the wrapper.* S-I4d asks for a supervisor-owned
+     wrapper running in its own process. The hook is exactly that: the
+     supervisor's own code, in the forked child, which is single-threaded
+     by construction (`fork` copies only the calling thread), before
+     anything of the agent's exists. This skips a second exec, and with it
+     passing the agent binary across that exec as an inherited descriptor.
+   - *Exec once (S-I4d's second option).* The seccomp program returns
+     `SECCOMP_RET_USER_NOTIF` for `execveat` on the pinned descriptor with
+     `AT_EMPTY_PATH`, and kills `execve` and any other `execveat`. It is
+     installed with `SECCOMP_FILTER_FLAG_NEW_LISTENER`.
+     - The hook sends the listener descriptor to the parent over a
+       socketpair made for that `apply` (`SCM_RIGHTS`; the first filter
+       allows `sendmsg` only on that socket's descriptor number), then
+       closes its own copy.
+     - **The seal.** The hook then stacks a second filter that kills
+       `sendmsg` and `seccomp`. Stacked filters only tighten, so the agent
+       never has either. The first filter allows `seccomp` only as
+       `SET_MODE_FILTER` with no flags, so not even the hook can open a
+       second listener. (Without the seal, a pinned descriptor number is not
+       an object: with a socket for a channel, which S-I2 permits, the agent
+       could `dup2` it onto that number and pass descriptors.)
+     - A thread in the parent receives it, answers the first notification
+       with `SECCOMP_USER_NOTIF_FLAG_CONTINUE`, then closes the listener.
+       With no listener, every later `execveat` fails with `ENOSYS`.
+     - The thread is started before `spawn`, because `spawn` blocks until
+       the exec completes.
+     - The thread trusts nothing it receives. A message that is not exactly
+       one descriptor, or a descriptor that is not a seccomp listener
+       (checked with `SECCOMP_IOCTL_NOTIF_ID_VALID`), is closed and skipped.
+       The wait for the exec is bounded, at 30 s. On any failure the
+       listener is dropped, so the spawn errors with `ENOSYS` and never
+       hangs.
+     - The exec it continues is always the hook's own. No agent code runs
+       before it, so `CONTINUE`'s documented weakness (the target can change
+       its arguments in memory after the check) has nothing to exploit: the
+       answer does not depend on the arguments.
+     - So once the agent runs, it cannot exec anything at all, and the step
+       4 residual (re-running the binary or the loader) is gone.
+   - *Exactly the survivors (S-I4d step 2).* Before Landlock, while `/proc`
+     is still reachable, the hook lists `/proc/self/fd` with `getdents64`.
+     Fds 0, 1 and 2 must be open, and every other descriptor must be
+     close-on-exec, or the spawn is refused. The exceptions are the pinned
+     binary and the listener socket, which are close-on-exec too.
+   - *Single thread (S-I4b).* At the same point the hook requires
+     `/proc/self/task` to list exactly one thread.
+   - *The environment's closed set (S-I4a).* These are the grantable names,
+     enumerated as S-I4a requires:
+     `TZ`, `LANG`, `LANGUAGE`, `LC_ALL`, `LC_COLLATE`, `LC_CTYPE`,
+     `LC_MESSAGES`, `LC_MONETARY`, `LC_NUMERIC`, `LC_TIME`, `NO_COLOR`.
+     - A command setting any other name is refused at `apply`.
+     - A value must be a name, not a path: letters, digits and `._+-@,`,
+       with `/` only inside (`America/New_York`), and never `..`. Otherwise
+       glibc would read the path it names at start.
+     - A refused `apply` also poisons the command, with a hook that refuses
+       every spawn, so an ignored error cannot launch an unconfined agent.
+     - The deny-list is checked as well, redundantly: the `LD_`, `DYLD_`,
+       `PYTHON`, `COMPlus_` and `DOTNET_` prefixes, and every exact name
+       S-I4a lists.
+     - Adding a name requires amending this list.
+     - A manifest's `env:read` grants must name members of this set.
+       Choosing values is the supervisor's job (step 9).
+   - *The launch probes (S-P4).* After all three installs, before the exec,
+     the hook makes two probes. Each must fail with `EACCES`, or the spawn
+     is refused:
+
+     | Class | Probe | Without the sandbox |
+     |---|---|---|
+     | seccomp (`SECCOMP_RET_ERRNO`) | `readlinkat(AT_FDCWD, "/proc/self/exe")` | succeeds, or `ENOENT` without `/proc`; never `EACCES` |
+     | Landlock | `openat(AT_FDCWD, "/", O_RDONLY \| O_DIRECTORY)` | succeeds |
+
+     - The CI tests check the right-hand column.
+     - Exec once cannot be probed at launch without spending the one exec,
+       and every kill class cannot be probed without dying. Both are covered
+       in CI only.
+     - `LinuxConfinement::launch_verification()` reports which classes were
+       verified at launch and which only in CI, for the audit record.
+   - *Availability.* `NEW_LISTENER` returns `EBUSY` under an ancestor filter
+     that already has a listener, as some container runtimes install, and
+     the shim's checks need `/proc`. Both refuse every launch (S-P3); they
+     never degrade.
+   - *Not done here:*
+     - runtime profiles for interpreted agents: the syscall allowlist and
+       the runtime-image read rules Deno or CPython (`-S -I`) need;
+     - their wiring into `spawn_verified`.
+
+     Both are step 9.
 6. **Broker hardening** (S-K5) and principal separation (S-I5, S-I7).
 7. **macOS Seatbelt** (Tier A).
 8. **Windows AppContainer** (Tier A). The expensive one; schedule accordingly.

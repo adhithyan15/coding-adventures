@@ -35,7 +35,7 @@ let confinement = LinuxConfinement::prepare(&plan, agent)?;
 let mut command = Command::new(agent);
 command.stdin(Stdio::piped()).stdout(Stdio::piped());
 // Last: it sets stderr and registers the pre_exec hooks.
-confinement.apply(&mut command);
+confinement.apply(&mut command)?;
 let child = command.spawn()?; // a spawn error if any step failed
 # drop(child);
 # Ok(())
@@ -60,13 +60,30 @@ let child = command.spawn()?; // a spawn error if any step failed
   - executing anything but the agent itself;
   - `readlink`, which Landlock does not mediate, and which would otherwise
     read `/proc/<supervisor>/fd`.
-- **Exec.** The agent is started by the hook itself, with
+- **Exec, once.** The agent is started by the hook itself, with
   `execveat(fd, "", AT_EMPTY_PATH)` on the descriptor `prepare` opened.
-  Seccomp filters survive exec, so the filter kills `execve` and allows
-  `execveat` only on that descriptor number. The descriptor closes at the
-  exec, so the agent never holds it.
+  Seccomp filters survive exec, so the filter kills `execve`, and routes
+  that `execveat` to a seccomp listener (`SECCOMP_FILTER_FLAG_NEW_LISTENER`).
+  The hook sends the listener to a thread in the supervisor. That thread lets
+  the first exec through, then closes the listener, so every later exec gets
+  `ENOSYS` (D18S S-I4d, second option). The agent cannot exec anything at
+  all: not another program, not itself, not the loader. The hook then stacks
+  a second filter, the seal, that kills `sendmsg` and `seccomp`. The agent
+  never has either, even with a socket for a channel.
 - **Environment.** The agent gets exactly the variables set on the command
-  with `env`, and nothing inherited, with or without `env_clear` (S-I4a).
+  with `env`, and nothing inherited, with or without `env_clear`. Every name
+  must be in `GRANTABLE_ENVIRONMENT` (`TZ`, `LANG`, `LANGUAGE`, the `LC_*`
+  categories, `NO_COLOR`). Anything else refuses at `apply`, `LD_PRELOAD`
+  and the rest of S-I4a's deny-list above all. Values must be names, not
+  paths (`America/New_York` yes, `/etc/passwd` or `../x` no). A refused
+  `apply` poisons the command: spawning it anyway fails with `EPERM`.
+- **The shim's checks** (D18S step 5), in the child before Landlock: exactly
+  one thread (`/proc/self/task`), and every descriptor but 0-2
+  close-on-exec (`/proc/self/fd`).
+- **Launch probes** (S-P4), after the install and before the exec: a
+  `readlinkat` must get seccomp's `EACCES`, and opening `/` must get
+  Landlock's. `launch_verification()` lists what each launch confirms and
+  what only CI does, for the audit record.
 
 ## What it refuses to launch
 
@@ -84,15 +101,23 @@ Any of these refuses the launch rather than confining "what it can" (S-P3):
 - an executable whose interpreter (`PT_INTERP`, chosen by the agent's
   author) does not resolve to a loader in a system library directory, or whose ELF
   headers are malformed;
-- an architecture other than x86_64 or aarch64.
+- an architecture other than x86_64 or aarch64;
+- at `apply`: an environment name outside the grantable set;
+- at spawn: a second thread, a descriptor that would survive the exec, or a
+  launch probe that does not answer as installed.
 
 ## What it does not do
 
-- **Interpreted runtimes.** Deno and Python need the shim (D18S build step 5),
-  which installs the boundary after the runtime's own startup.
+- **Interpreted runtime profiles.** The shim's mechanics are here. What Deno
+  or CPython (`-S -I`) also needs is a profile: more syscalls, and read
+  access to the runtime image. That is D18S step 9.
 - **Wiring.** `spawn_verified` does not call this yet (step 9). That is also
   where S-I6's never-grantable paths are checked: only the supervisor knows
   where the vault and the audit log live.
+- **Every environment.** `SECCOMP_FILTER_FLAG_NEW_LISTENER` fails with
+  `EBUSY` under an ancestor filter that already has a listener, as some
+  container runtimes install, and the shim's checks need `/proc`. Either
+  refuses every launch rather than running unconfined.
 - **Metadata.** Landlock mediates opening, not lookup. An agent can still
   `stat` any path, and learn that a file exists, its size and its times. It
   cannot read the file.

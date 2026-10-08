@@ -51,7 +51,7 @@ fn run(confinement: Option<&LinuxConfinement>, args: &[&str]) -> Output {
     let mut command = Command::new(PROBE);
     command.args(args).stdin(Stdio::null());
     if let Some(confinement) = confinement {
-        confinement.apply(&mut command);
+        confinement.apply(&mut command).expect("apply");
     }
     command.output().expect("the probe spawns")
 }
@@ -93,6 +93,7 @@ fn each_denied_syscall_class_kills_the_agent() {
     let confined = confinement(&[]);
     for mode in [
         "socket", "unix", "fork", "io_uring", "ptrace", "kill", "tiocsti", "mount", "bpf",
+        "seccomp", "sendmsg",
     ] {
         let control = run(None, &[mode]);
         assert_eq!(
@@ -193,16 +194,16 @@ fn the_agent_gets_the_commands_arguments_and_exactly_its_environment() {
     let confined = confinement(&[]);
     for clear in [true, false] {
         let mut command = Command::new(PROBE);
-        command.args(["env", "AGENT_TOKEN", "second arg"]);
+        command.args(["env", "TZ", "second arg"]);
         if clear {
             command.env_clear();
         }
-        command.env("AGENT_TOKEN", "granted").stdin(Stdio::null());
-        confined.apply(&mut command);
+        command.env("TZ", "UTC").stdin(Stdio::null());
+        confined.apply(&mut command).expect("apply");
         let output = command.output().unwrap();
         assert_eq!(
             stdout(&output),
-            "names=AGENT_TOKEN\nargs=AGENT_TOKEN,second arg\nAGENT_TOKEN=granted\nsecond arg=",
+            "names=TZ\nargs=TZ,second arg\nTZ=UTC\nsecond arg=",
             "env_clear={clear}: {output:?}"
         );
     }
@@ -226,7 +227,7 @@ fn what_runs_is_the_file_prepared_not_whatever_the_path_names_later() {
     std::fs::write(&agent, b"#!/bin/sh\necho swapped\n").unwrap();
     let mut command = Command::new(&agent);
     command.arg("hello").stdin(Stdio::null());
-    confined.apply(&mut command);
+    confined.apply(&mut command).expect("apply");
     let output = command.output().unwrap();
     assert_eq!(stdout(&output), "hello\nthread=4", "{output:?}");
     std::fs::remove_file(agent).unwrap();
@@ -430,5 +431,119 @@ fn an_interpreter_outside_the_library_directories_is_refused() {
             "{interpreter}: {error:?}"
         );
         std::fs::remove_file(hostile).unwrap();
+    }
+}
+
+#[test]
+fn an_environment_outside_the_closed_set_refuses_the_launch() {
+    // S-I4a: the grantable names are enumerated; anything else, and every
+    // deny-listed loader variable above all, refuses at apply.
+    let confined = confinement(&[]);
+    for (name, value) in [
+        ("LD_PRELOAD", "/tmp/evil.so"),
+        ("GLIBC_TUNABLES", "glibc.malloc.check=3"),
+        ("HOME", "/root"),
+        ("SECRET_TOKEN", "x"),
+    ] {
+        let mut command = Command::new(PROBE);
+        command.env(name, value);
+        let error = confined
+            .apply(&mut command)
+            .err()
+            .unwrap_or_else(|| panic!("{name} must refuse the launch"));
+        assert!(
+            matches!(error, ConfinementError::Environment(_)),
+            "{name}: {error:?}"
+        );
+    }
+}
+
+#[test]
+fn exec_once_leaves_the_agent_no_exec_at_all() {
+    // S-I4d's second option. The filter routes execveat on the pinned
+    // descriptor to the supervisor's listener, which continues only the
+    // hook's own exec and then closes. The agent can put a file on that
+    // number (dup2) or name an absolute path, and the exec still fails:
+    // ENOSYS, with no listener left. In P2.4 both re-ran the binary.
+    let confined = confinement(&[]);
+    let pinned = confined.exec_descriptor().to_string();
+    for (mode, program) in [("execveat-on", PROBE), ("execveat-path", PROBE)] {
+        let control = run(None, &[mode, &pinned, program, "hello"]);
+        assert!(control.status.success(), "control {mode}: {control:?}");
+        assert!(
+            stdout(&control).ends_with("thread=4"),
+            "control {mode}: {control:?}"
+        );
+        let output = run(Some(&confined), &[mode, &pinned, program, "hello"]);
+        assert_eq!(stdout(&output), "errno=38", "{mode}: {output:?}");
+    }
+}
+
+#[test]
+fn the_launch_probes_answer_differently_without_the_sandbox() {
+    // S-P4: each launch probe's outcome without the sandbox must be
+    // success, so a probe cannot pass by an ambient denial.
+    assert_eq!(stdout(&run(None, &["readlink", "/proc/self/exe"])), "ok");
+    assert_eq!(stdout(&run(None, &["opendir", "/"])), "ok");
+    let confined = confinement(&[]);
+    assert_eq!(stdout(&run(Some(&confined), &["opendir", "/"])), "errno=13");
+    let report = confined.launch_verification();
+    assert!(report
+        .at_launch
+        .iter()
+        .any(|class| class.starts_with("seccomp")));
+    assert!(report
+        .at_launch
+        .iter()
+        .any(|class| class.starts_with("landlock")));
+    assert!(report
+        .ci_only
+        .iter()
+        .any(|class| class.starts_with("exec once")));
+}
+
+#[test]
+fn every_spawn_of_one_command_gets_its_own_exec() {
+    // The exec-once thread serves each spawn of the command in turn.
+    let confined = confinement(&[]);
+    let mut command = Command::new(PROBE);
+    command.arg("hello").stdin(Stdio::null());
+    confined.apply(&mut command).expect("apply");
+    for _ in 0..3 {
+        let output = command.output().unwrap();
+        assert_eq!(stdout(&output), "hello\nthread=4", "{output:?}");
+    }
+}
+
+#[test]
+fn a_failed_apply_leaves_a_command_that_cannot_spawn() {
+    // Review round 4, M2: an Err from apply must not leave a command that
+    // spawns unconfined if the caller ignores it.
+    let confined = confinement(&[]);
+    let mut command = Command::new(PROBE);
+    command
+        .args(["read", "/etc/passwd"])
+        .env("HOME", "/root")
+        .stdin(Stdio::null());
+    assert!(confined.apply(&mut command).is_err());
+    let error = command
+        .output()
+        .expect_err("a poisoned command must not spawn");
+    assert_eq!(error.kind(), std::io::ErrorKind::PermissionDenied);
+}
+
+#[test]
+fn an_environment_value_must_be_a_name_not_a_path() {
+    let confined = confinement(&[]);
+    for value in ["/etc/passwd", ":/vault", "../x"] {
+        let mut command = Command::new(PROBE);
+        command.env("TZ", value);
+        assert!(
+            matches!(
+                confined.apply(&mut command),
+                Err(ConfinementError::Environment(_))
+            ),
+            "TZ={value}"
+        );
     }
 }

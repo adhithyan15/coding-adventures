@@ -17,7 +17,6 @@ use std::sync::Arc;
 /// What the parent built, shared with every child that installs it.
 pub(crate) struct Prepared {
     ruleset: OwnedFd,
-    filter: Vec<libc::sock_filter>,
     /// The agent executable, opened `O_RDONLY | O_CLOEXEC` here in the
     /// parent. The child execs this descriptor, never a path (S-I4d), so
     /// what runs is the file that was parsed and given the Landlock rule,
@@ -32,7 +31,9 @@ impl Prepared {
             ConfinementError::Executable(format!("{}: {error}", executable.display()))
         })?;
         let binary = high_descriptor(binary);
-        let filter = seccomp::program(binary.as_raw_fd())?;
+        // The program is built per `apply`, around that spawn's socket; this
+        // only refuses an architecture it is not built for, early.
+        seccomp::program(binary.as_raw_fd(), binary.as_raw_fd())?;
         let abi = landlock::abi().ok_or(ConfinementError::LandlockUnavailable)?;
         if !grants.is_empty() && abi < landlock::ABI_TRUNCATE {
             return Err(ConfinementError::LandlockTooOld {
@@ -92,7 +93,6 @@ impl Prepared {
         }
         Ok(Self {
             ruleset: ruleset.into_fd(),
-            filter,
             binary,
             landlock_abi: abi,
         })
@@ -160,6 +160,20 @@ fn in_library_directory(resolved: &Path) -> bool {
     })
 }
 
+impl Prepared {
+    pub(crate) fn exec_descriptor(&self) -> RawFd {
+        self.binary.as_raw_fd()
+    }
+}
+
+/// Make `command` unspawnable: a hook that refuses every spawn with EPERM.
+pub(crate) fn poison(command: &mut Command) {
+    // SAFETY: the closure only builds a non-allocating io::Error.
+    unsafe {
+        command.pre_exec(|| Err(io::Error::from_raw_os_error(libc::EPERM)));
+    }
+}
+
 /// Register the hook that installs `prepared` in the child, and then execs
 /// the prepared binary from there.
 ///
@@ -174,7 +188,21 @@ fn in_library_directory(resolved: &Path) -> bool {
 /// `env_clear` was called. (An earlier version passed the child's
 /// `environ`, which `std` has not yet replaced when the hook runs: the
 /// agent got the supervisor's whole environment, tokens included.)
-pub(crate) fn install(prepared: Arc<Prepared>, command: &mut Command) {
+pub(crate) fn install(
+    prepared: Arc<Prepared>,
+    command: &mut Command,
+) -> Result<(), ConfinementError> {
+    // S-I4a: only names from the closed set reach the agent.
+    crate::shim::check_environment(
+        command
+            .get_envs()
+            .filter_map(|(name, value)| Some((name.as_bytes(), value?.as_bytes()))),
+    )?;
+    // Exec once: the socket and the thread that lets one exec through.
+    let exec_once = crate::shim::ExecOnce::start()
+        .map_err(|error| ConfinementError::ExecOnce(error.to_string()))?;
+    let filter = seccomp::program(prepared.binary.as_raw_fd(), exec_once.child_end.as_raw_fd())?;
+    let seal = seccomp::seal()?;
     // argv and envp are built here, in the parent: the child must not
     // allocate.
     let argv = Argv::new(
@@ -187,18 +215,25 @@ pub(crate) fn install(prepared: Arc<Prepared>, command: &mut Command) {
         entry.extend_from_slice(value?.as_bytes());
         Some(entry)
     }));
+    // Everything above can fail; nothing below can. Only now is the command
+    // touched (review round 4, M2): a failed `apply` must leave nothing a
+    // caller could spawn half-configured. spawn-isolation's hook goes first,
+    // then this one.
+    chief_of_staff_spawn_isolation::isolate(command);
     // SAFETY: the closure runs in the forked child, before exec. It makes
-    // three syscalls (prctl, landlock_restrict_self, seccomp), builds one
-    // `sock_fprog` on the stack, then execs. It allocates nothing: the
-    // ruleset fd, the program, the binary and argv were built in the
-    // parent and are only read here. The only errors it builds,
-    // `last_os_error`, do not allocate.
+    // raw syscalls only (prctl, open, getdents64, fcntl, landlock, seccomp,
+    // sendmsg, readlinkat, close, execveat), with stack buffers. It
+    // allocates nothing: the ruleset fd, the program, the binary, the
+    // socket, argv and envp were built in the parent and are only read
+    // here. The only errors it builds, `last_os_error` and
+    // `from_raw_os_error`, do not allocate.
     unsafe {
         command.pre_exec(move || {
-            install_in_child(&prepared)?;
+            install_in_child(&prepared, &filter, &seal, exec_once.child_end.as_raw_fd())?;
             exec_in_child(&prepared, &argv, &envp)
         });
     }
+    Ok(())
 }
 
 /// argv or envp for the child: the strings, and the NULL-terminated
@@ -252,7 +287,12 @@ fn exec_in_child(prepared: &Prepared, argv: &Argv, envp: &Argv) -> io::Result<()
     Err(io::Error::last_os_error())
 }
 
-fn install_in_child(prepared: &Prepared) -> io::Result<()> {
+fn install_in_child(
+    prepared: &Prepared,
+    filter: &[libc::sock_filter],
+    seal: &[libc::sock_filter],
+    exec_once: RawFd,
+) -> io::Result<()> {
     // 1. No setuid binary, and no file capability, can ever raise this
     //    process's privileges again. Unprivileged seccomp and Landlock both
     //    require it.
@@ -260,7 +300,11 @@ fn install_in_child(prepared: &Prepared) -> io::Result<()> {
     if unsafe { libc::prctl(libc::PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0) } != 0 {
         return Err(io::Error::last_os_error());
     }
-    // 2. The filesystem the agent can see.
+    // 2. The shim's checks, while /proc is still reachable: one thread
+    //    (S-I4b), and nothing but 0-2 survives the exec (S-I4d).
+    crate::shim::assert_single_thread()?;
+    crate::shim::assert_survivors()?;
+    // 3. The filesystem the agent can see.
     // SAFETY: integer arguments; the fd is the parent's ruleset.
     let restricted = unsafe {
         libc::syscall(
@@ -272,26 +316,51 @@ fn install_in_child(prepared: &Prepared) -> io::Result<()> {
     if restricted != 0 {
         return Err(io::Error::last_os_error());
     }
-    // 3. The syscalls the agent can make. Last, because it denies the two
-    //    calls above.
+    // 4. The syscalls the agent can make, after the calls above, which it
+    //    denies. NEW_LISTENER returns the listener that exec once needs.
     let program = libc::sock_fprog {
-        len: prepared.filter.len() as libc::c_ushort,
-        filter: prepared.filter.as_ptr() as *mut libc::sock_filter,
+        len: filter.len() as libc::c_ushort,
+        filter: filter.as_ptr() as *mut libc::sock_filter,
     };
     // SAFETY: `program` points at the parent's filter, which outlives this
     // call; the kernel copies it.
-    let installed = unsafe {
+    let listener = unsafe {
+        libc::syscall(
+            libc::SYS_seccomp,
+            libc::SECCOMP_SET_MODE_FILTER,
+            libc::SECCOMP_FILTER_FLAG_NEW_LISTENER,
+            &program as *const libc::sock_fprog,
+        )
+    };
+    if listener < 0 {
+        return Err(io::Error::last_os_error());
+    }
+    let listener = listener as RawFd;
+    // 5. Hand the listener to the parent's exec-once thread, and keep no
+    //    copy: the agent must never hold it.
+    let sent = crate::shim::send_listener(exec_once, listener);
+    // SAFETY: the listener this hook just received.
+    unsafe { libc::close(listener) };
+    sent?;
+    // 6. The seal: no more sendmsg, and no more seccomp.
+    let sealing = libc::sock_fprog {
+        len: seal.len() as libc::c_ushort,
+        filter: seal.as_ptr() as *mut libc::sock_filter,
+    };
+    // SAFETY: as for the first program.
+    let sealed = unsafe {
         libc::syscall(
             libc::SYS_seccomp,
             libc::SECCOMP_SET_MODE_FILTER,
             0u32,
-            &program as *const libc::sock_fprog,
+            &sealing as *const libc::sock_fprog,
         )
     };
-    if installed != 0 {
+    if sealed != 0 {
         return Err(io::Error::last_os_error());
     }
-    Ok(())
+    // 7. The launch probes (S-P4): each layer must answer as installed.
+    crate::shim::probe()
 }
 
 pub(crate) mod landlock {
@@ -608,6 +677,7 @@ pub(crate) mod seccomp {
     const RET: u16 = (libc::BPF_RET | libc::BPF_K) as u16;
 
     const KILL: u32 = libc::SECCOMP_RET_KILL_PROCESS;
+    const USER_NOTIF: u32 = libc::SECCOMP_RET_USER_NOTIF;
     const ALLOW: u32 = libc::SECCOMP_RET_ALLOW;
     const ENOSYS: u32 = libc::SECCOMP_RET_ERRNO | (libc::ENOSYS as u32 & libc::SECCOMP_RET_DATA);
     const EACCES: u32 = libc::SECCOMP_RET_ERRNO | (libc::EACCES as u32 & libc::SECCOMP_RET_DATA);
@@ -720,9 +790,37 @@ pub(crate) mod seccomp {
         calls
     }
 
+    /// The seal: a second, stacked filter that kills `sendmsg` and
+    /// `seccomp` and allows everything else, leaving the first filter to
+    /// decide. Stacked filters only tighten (the strictest answer wins),
+    /// so once it is in, neither call exists for the agent.
+    pub(crate) fn seal() -> Result<Vec<libc::sock_filter>, ConfinementError> {
+        let arch = if cfg!(target_arch = "x86_64") {
+            AUDIT_ARCH_X86_64
+        } else if cfg!(target_arch = "aarch64") {
+            AUDIT_ARCH_AARCH64
+        } else {
+            return Err(ConfinementError::Unsupported("architecture"));
+        };
+        let nr = |call: libc::c_long| call as u32;
+        Ok(vec![
+            op(LD, ARCH),
+            jump(JEQ, arch, 1, 0),
+            op(RET, KILL),
+            op(LD, NR),
+            jump(JEQ, nr(libc::SYS_sendmsg), 1, 0),
+            jump(JEQ, nr(libc::SYS_seccomp), 0, 1),
+            op(RET, KILL),
+            op(RET, ALLOW),
+        ])
+    }
+
     /// Build the program. An architecture this module does not know is
     /// refused here, rather than run with a filter for another table.
-    pub(crate) fn program(binary: RawFd) -> Result<Vec<libc::sock_filter>, ConfinementError> {
+    pub(crate) fn program(
+        binary: RawFd,
+        exec_once: RawFd,
+    ) -> Result<Vec<libc::sock_filter>, ConfinementError> {
         let arch = if cfg!(target_arch = "x86_64") {
             AUDIT_ARCH_X86_64
         } else if cfg!(target_arch = "aarch64") {
@@ -749,15 +847,41 @@ pub(crate) mod seccomp {
             op(RET, ALLOW),
             op(RET, KILL),
         ]);
-        // execveat: only `binary`, by descriptor (AT_EMPTY_PATH). S-I4d:
-        // the hook's own exec needs it, and filters survive exec, so an
-        // unconstrained exec would stay granted to the agent for good.
+        // execveat: only `binary`, by descriptor (AT_EMPTY_PATH), and then
+        // only through the listener (exec once, S-I4d). Filters survive
+        // exec, so the hook's own exec must not stay granted to the agent:
+        // the supervisor lets the first through and closes the listener,
+        // after which this returns ENOSYS.
         program.extend([
             jump(JEQ, nr(libc::SYS_execveat), 0, 6),
             op(LD, argument(0)),
             jump(JEQ, binary as u32, 0, 3),
             op(LD, argument(4)),
             jump(JEQ, libc::AT_EMPTY_PATH as u32, 0, 1),
+            op(RET, USER_NOTIF),
+            op(RET, KILL),
+        ]);
+        // sendmsg: only on the exec-once socket, for the hook to send the
+        // listener. The seal below then kills it outright, so the agent
+        // never has it (review round 4, M1: a pinned number is not an
+        // object; with a socket for a channel, the agent could dup2 it
+        // there and pass descriptors).
+        program.extend([
+            jump(JEQ, nr(libc::SYS_sendmsg), 0, 4),
+            op(LD, argument(0)),
+            jump(JEQ, exec_once as u32, 0, 1),
+            op(RET, ALLOW),
+            op(RET, KILL),
+        ]);
+        // seccomp: only to stack a plain filter (SET_MODE_FILTER, no flags:
+        // no second listener, no TSYNC), for the hook to install the seal.
+        // The seal kills seccomp too.
+        program.extend([
+            jump(JEQ, nr(libc::SYS_seccomp), 0, 6),
+            op(LD, argument(0)),
+            jump(JEQ, libc::SECCOMP_SET_MODE_FILTER, 0, 3),
+            op(LD, argument(1)),
+            jump(JEQ, 0, 0, 1),
             op(RET, ALLOW),
             op(RET, KILL),
         ]);
@@ -840,12 +964,46 @@ pub(crate) mod seccomp {
             }
         }
 
+        #[test]
+        fn the_seal_leaves_the_agent_no_sendmsg_and_no_seccomp() {
+            // Stacked filters: the strictest answer wins. The first program
+            // lets the hook send its listener and stack the seal; the seal
+            // then takes both away for good (review round 4, M1).
+            let first = program(BINARY, SOCKET).unwrap();
+            let seal = seal().unwrap();
+            let socket = SOCKET as u32;
+            let mode = libc::SECCOMP_SET_MODE_FILTER;
+            for (nr, args, before) in [
+                (libc::SYS_sendmsg, [socket, 0, 0, 0, 0, 0], ALLOW),
+                (libc::SYS_seccomp, [mode, 0, 0, 0, 0, 0], ALLOW),
+            ] {
+                assert_eq!(run(&first, arch(), nr as u32, args), before);
+                assert_eq!(run(&seal, arch(), nr as u32, args), KILL);
+            }
+            // A listener or TSYNC is never allowed, even before the seal.
+            let listener = libc::SECCOMP_FILTER_FLAG_NEW_LISTENER as u32;
+            assert_eq!(
+                run(
+                    &first,
+                    arch(),
+                    libc::SYS_seccomp as u32,
+                    [mode, listener, 0, 0, 0, 0]
+                ),
+                KILL
+            );
+            // Everything else, the seal leaves to the first program.
+            assert_eq!(run(&seal, arch(), libc::SYS_read as u32, [0; 6]), ALLOW);
+            assert_eq!(run(&seal, arch() ^ 1, libc::SYS_read as u32, [0; 6]), KILL);
+        }
+
         /// A descriptor number for the program to pin execveat to.
         const BINARY: RawFd = 7;
+        /// And one for the exec-once socket.
+        const SOCKET: RawFd = 9;
 
         #[test]
         fn the_program_decides_what_the_spec_says() {
-            let program = program(BINARY).unwrap();
+            let program = program(BINARY, SOCKET).unwrap();
             let decide = |nr: libc::c_long, args: [u32; 6]| run(&program, arch(), nr as u32, args);
             let none = [0; 6];
             assert_eq!(decide(libc::SYS_read, none), ALLOW);
@@ -855,8 +1013,11 @@ pub(crate) mod seccomp {
             assert_eq!(decide(libc::SYS_execve, none), KILL);
             assert_eq!(
                 decide(libc::SYS_execveat, [binary, 0, 0, 0, empty, 0]),
-                ALLOW
+                USER_NOTIF
             );
+            let socket = SOCKET as u32;
+            assert_eq!(decide(libc::SYS_sendmsg, [socket, 0, 0, 0, 0, 0]), ALLOW);
+            assert_eq!(decide(libc::SYS_sendmsg, [socket + 1, 0, 0, 0, 0, 0]), KILL);
             assert_eq!(
                 decide(libc::SYS_execveat, [binary + 1, 0, 0, 0, empty, 0]),
                 KILL
