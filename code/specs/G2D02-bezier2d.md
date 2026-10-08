@@ -567,6 +567,18 @@ without returning a partial approximation.
 
 ## Required Test Coverage
 
+The version-1 `geometry2d-v1` neutral corpus also carries closed
+`bezier-quadratic` and `bezier-cubic` records. Each record supplies exactly
+three or four finite `[x,y]` control points, a sample parameter in `[0,1]`,
+the expected evaluation and derivative vectors, both de Casteljau split
+control polygons, and a tight ordered `[x,y,width,height]` bounding box.
+The independent oracle recomputes Bernstein evaluation, analytic derivative,
+de Casteljau splits, and derivative-root extrema without importing any native
+Bezier implementation. The fixed absolute output tolerance is `1e-12`, with
+zero relative tolerance; array shape and split join are exact structural
+requirements. These polynomial cases do not replace the separate nine-case
+safe-flattening corpus or imply that existing lanes already conform to it.
+
 1. **Quadratic evaluate at endpoints**: `q.evaluate(0.0) == p0`, `q.evaluate(1.0) == p2`.
 2. **Quadratic evaluate at midpoint**: known value for a specific control polygon.
 3. **Quadratic split consistency**: the two halves rejoin at the split point.
