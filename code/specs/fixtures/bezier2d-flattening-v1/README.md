@@ -40,6 +40,10 @@ python -B code/scripts/bezier2d_flattening_conformance.py
 python -B -m unittest discover -s code/scripts/tests -p test_bezier2d_flattening_conformance.py
 ```
 
+Both commands are scheduled in the unconditional repo-wide metadata-contracts
+CI step for every pull request. Passing the neutral oracle does not imply that
+each native Bezier2D reader already satisfies the flattening contract.
+
 Adapters should report the observed root disposition and validate the full
 flattened polyline against the G2D02 error and termination contract. They
 should not compare exact subdivision vertices across languages: many safe

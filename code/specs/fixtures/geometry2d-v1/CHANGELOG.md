@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Schedule the neutral geometry validator and its focused tests in the
+  unconditional repo-wide metadata-contracts CI step, alongside the separate
+  Bezier flattening oracle. Native reader adoption remains separately owned.
 - Add seven closed G2D03 center-form cases: positive/negative wrapped analytic
   extrema, zero-sweep point bounds, rotated interior extrema, zero/full-turn
   cubic segment counts, and over-turn fail-stop. The validator derives extrema
