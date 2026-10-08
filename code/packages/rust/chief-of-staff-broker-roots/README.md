@@ -36,6 +36,7 @@ root.open_beneath("2026/october.md", Access::Read)?
 | Asked for | Answer |
 |---|---|
 | a root inside, equal to, or containing a never-grantable path, including through a symlink, or a vault path that does not exist yet | `Overlap` |
+| a never-grantable path with `..` after its last existing directory (it cannot be compared exactly) | `Overlap`: the proof fails closed |
 | a name that is empty, absolute, longer than 4 KiB, contains NUL, or has a `.`, `..` or empty component | `InvalidName`, before any system call |
 | a symlink anywhere on the way, even one that points inside the root | `Refused` |
 | a `/proc` magic link, or a mount point (Linux) | `Refused` |

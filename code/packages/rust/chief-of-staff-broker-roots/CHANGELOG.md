@@ -8,7 +8,9 @@
   (#13980 P2.6c). It canonicalizes the root and each never-grantable path,
   and refuses the root when either contains the other. A never-grantable
   path that does not exist yet is compared through its nearest existing
-  ancestor.
+  ancestor. A relative path is made absolute first. A path with `..` in its
+  missing tail cannot be compared exactly, so it is refused as an overlap:
+  the proof fails closed.
 - `BrokerRoot::open_beneath(name, Read | Write)`. The kernel resolves the
   agent-supplied name beneath the root's descriptor, in one step:
   - on Linux, `openat2` with `RESOLVE_BENEATH | RESOLVE_NO_SYMLINKS |
@@ -30,6 +32,7 @@
   - a hard link to a file outside the root;
   - a FIFO, under a deadline;
   - the handle's access, close-on-exec and blocking flags;
-  - root overlap in both directions, through symlinks, and with a
-    not-yet-existing vault path;
+  - root overlap in both directions, through symlinks, with a
+    not-yet-existing vault path, with a relative one, and with a `..` the
+    proof cannot resolve;
   - a sibling that only shares a name prefix with the root.

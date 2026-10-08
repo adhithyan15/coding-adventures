@@ -66,7 +66,9 @@ pub enum BrokerRootError {
     Unsupported,
     /// The root is not an existing directory.
     RootNotDirectory(PathBuf),
-    /// The root and a never-grantable path overlap: one contains the other.
+    /// The root and a never-grantable path overlap: one contains the other,
+    /// or the never-grantable path cannot be compared exactly (see
+    /// `canonical_or_nearest`).
     Overlap {
         root: PathBuf,
         never_grantable: PathBuf,
@@ -135,8 +137,15 @@ impl BrokerRoot {
         }
         let not_directory = || BrokerRootError::RootNotDirectory(root.to_path_buf());
         let canonical = std::fs::canonicalize(root).map_err(|_| not_directory())?;
-        for forbidden in never_grantable {
-            let forbidden = canonical_or_nearest(forbidden);
+        for &given in never_grantable {
+            // A path that cannot be compared exactly is treated as an
+            // overlap: the proof fails closed.
+            let Some(forbidden) = canonical_or_nearest(given) else {
+                return Err(BrokerRootError::Overlap {
+                    root: canonical,
+                    never_grantable: given.to_path_buf(),
+                });
+            };
             if canonical.starts_with(&forbidden) || forbidden.starts_with(&canonical) {
                 return Err(BrokerRootError::Overlap {
                     root: canonical,
@@ -174,28 +183,39 @@ impl BrokerRoot {
     }
 }
 
-/// `path` canonicalized; if it does not exist, its nearest existing
-/// ancestor canonicalized, with the missing tail appended.
-fn canonical_or_nearest(path: &Path) -> PathBuf {
+/// `path` canonicalized. If it does not exist yet, its nearest existing
+/// ancestor is canonicalized and the missing tail appended:
+///
+/// ```text
+///   /home/me/.chief/vault/sealed.bin    (vault/ not created yet)
+///   └──────┬──────┘└──────┬───────┘
+///    exists: canonical   missing: appended as plain names
+/// ```
+///
+/// The tail must be plain names. A `..` in it cannot be resolved without the
+/// directories it climbs out of (`missing/../x` might be anywhere once
+/// `missing` is a symlink), so such a path is `None`, and the caller treats
+/// it as an overlap. A relative path is made absolute first, against the
+/// current directory, so it is never compared as a bare relative string.
+fn canonical_or_nearest(path: &Path) -> Option<PathBuf> {
+    let absolute = std::path::absolute(path).ok()?;
     let mut tail = Vec::new();
-    let mut current = path.to_path_buf();
+    let mut current = absolute.as_path();
     loop {
-        if let Ok(canonical) = std::fs::canonicalize(&current) {
-            return tail
-                .iter()
-                .rev()
-                .fold(canonical, |path, part| path.join(part));
+        if let Ok(canonical) = std::fs::canonicalize(current) {
+            return Some(
+                tail.iter()
+                    .rev()
+                    .fold(canonical, |path, part| path.join(part)),
+            );
         }
-        match (
-            current.file_name().map(|name| name.to_owned()),
-            current.parent(),
-        ) {
-            (Some(name), Some(parent)) => {
+        match current.components().next_back() {
+            Some(Component::Normal(name)) => {
                 tail.push(name);
-                current = parent.to_path_buf();
+                current = current.parent()?;
             }
-            // Nothing of it exists: compare it as given.
-            _ => return path.to_path_buf(),
+            // `..`, `.`, or a root that will not canonicalize.
+            _ => return None,
         }
     }
 }

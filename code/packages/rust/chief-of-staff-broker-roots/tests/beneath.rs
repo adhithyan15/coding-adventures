@@ -329,6 +329,32 @@ mod supported {
     }
 
     #[test]
+    fn a_never_grantable_path_that_cannot_be_compared_exactly_fails_closed() {
+        // "missing/../../elsewhere" resolves outside the root, but "missing"
+        // does not exist, so where ".." leads is unknown. The proof refuses
+        // rather than guesses.
+        let scratch = Scratch::new();
+        assert!(overlap(
+            &scratch.path("root"),
+            &[&scratch.path("outside/missing/../../elsewhere")]
+        ));
+    }
+
+    #[test]
+    fn a_relative_never_grantable_path_is_compared_from_the_current_directory() {
+        // A relative vault path none of which exists yet must still be
+        // compared as the absolute path it will become, not as a bare
+        // string that matches nothing. The root here is the current
+        // directory, opened read-only and never written.
+        let here = std::env::current_dir().unwrap();
+        assert!(overlap(
+            &here,
+            &[Path::new("not-created-yet/vault/sealed.bin")]
+        ));
+        assert!(BrokerRoot::open(&here, &[Path::new("../../not-created-yet/vault")]).is_ok());
+    }
+
+    #[test]
     fn a_sibling_sharing_a_name_prefix_is_not_an_overlap() {
         // Containment is by whole path components: root2 is not inside root.
         let scratch = Scratch::new();
