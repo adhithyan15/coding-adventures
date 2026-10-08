@@ -80,6 +80,74 @@ pub fn isolate(command: &mut Command) -> &mut Command {
     command
 }
 
+/// Kill everything in an isolated child's session: the child and any
+/// process it left behind.
+///
+/// An isolated child leads its own session and process group (`setsid`), so
+/// its pid is the group id. Killing only the child leaves its descendants
+/// running. A descendant holding the child's stdout keeps the supervisor's
+/// reader from seeing end-of-file, and one holding its stdin keeps a writer
+/// blocked. `SIGKILL` to the group ends them all.
+///
+/// Call it before reaping the child: until then the pid, and so the group
+/// id, cannot be anyone else's. [`has_exited`] tells an exit without
+/// reaping. On Windows it does nothing; job objects are D18S step 8.
+///
+/// It reaches the session's process group. A descendant that called
+/// `setsid` or `setpgid` itself has left that group and survives. The
+/// sandbox denies agents the syscalls to create processes at all (D18S
+/// S-I1); this is the backstop for what an unsandboxed host leaves behind.
+pub fn kill_session(child: &std::process::Child) -> std::io::Result<()> {
+    #[cfg(unix)]
+    {
+        let group = libc::pid_t::try_from(child.id())
+            .map_err(|_| std::io::Error::from(std::io::ErrorKind::InvalidInput))?;
+        // SAFETY: integer arguments only. A group that no longer exists
+        // is ESRCH, which is success here.
+        if unsafe { libc::killpg(group, libc::SIGKILL) } != 0 {
+            let error = std::io::Error::last_os_error();
+            if error.raw_os_error() != Some(libc::ESRCH) {
+                return Err(error);
+            }
+        }
+    }
+    #[cfg(not(unix))]
+    let _ = child;
+    Ok(())
+}
+
+/// Whether `child` has exited, without reaping it, so that its pid stays
+/// reserved for a following [`kill_session`]. `waitid(WNOWAIT)` on Unix.
+/// On Windows it answers `false`, and the caller reaps as usual.
+pub fn has_exited(child: &std::process::Child) -> std::io::Result<bool> {
+    #[cfg(unix)]
+    {
+        let pid = libc::id_t::from(child.id());
+        let mut info = std::mem::MaybeUninit::<libc::siginfo_t>::zeroed();
+        // SAFETY: `waitid` writes one siginfo_t, or fails. WNOWAIT leaves
+        // the child waitable; WNOHANG returns at once.
+        let waited = unsafe {
+            libc::waitid(
+                libc::P_PID,
+                pid,
+                info.as_mut_ptr(),
+                libc::WEXITED | libc::WNOHANG | libc::WNOWAIT,
+            )
+        };
+        if waited != 0 {
+            return Err(std::io::Error::last_os_error());
+        }
+        // SAFETY: zero-initialized, and written by a successful waitid.
+        // With WNOHANG and nothing to report, si_pid stays zero.
+        Ok(unsafe { info.assume_init().si_pid() } != 0)
+    }
+    #[cfg(not(unix))]
+    {
+        let _ = child;
+        Ok(false)
+    }
+}
+
 #[cfg(unix)]
 mod unix {
     use std::io;

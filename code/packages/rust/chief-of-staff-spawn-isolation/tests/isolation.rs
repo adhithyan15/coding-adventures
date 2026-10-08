@@ -122,3 +122,56 @@ fn a_terminal_on_a_standard_descriptor_refuses_the_spawn() {
         .expect_err("a terminal on stdin must refuse the spawn");
     assert_eq!(error.kind(), std::io::ErrorKind::PermissionDenied);
 }
+
+#[test]
+fn kill_session_ends_what_the_child_left_behind() {
+    // The child starts a grandchild that holds the child's stdout, then
+    // exits. Killing the session ends the grandchild too, so the pipe
+    // reaches end-of-file at once instead of when the grandchild exits.
+    use std::io::Read;
+    let mut command = Command::new("/bin/sh");
+    command
+        .args(["-c", "sleep 30 & echo started"])
+        .stdin(Stdio::null())
+        .stdout(Stdio::piped());
+    isolate(&mut command);
+    let mut child = command.spawn().unwrap();
+    let mut stdout = child.stdout.take().unwrap();
+    let mut first = [0u8; 8];
+    stdout.read_exact(&mut first).unwrap();
+    assert_eq!(&first, b"started\n");
+    // The shell has exited; the sleep still holds the pipe.
+    child.wait().unwrap();
+    let started = std::time::Instant::now();
+    chief_of_staff_spawn_isolation::kill_session(&child).unwrap();
+    let mut rest = Vec::new();
+    stdout.read_to_end(&mut rest).unwrap();
+    assert!(
+        started.elapsed() < std::time::Duration::from_secs(5),
+        "the grandchild kept the pipe open"
+    );
+}
+
+#[test]
+fn has_exited_tells_an_exit_without_reaping_it() {
+    let mut child = Command::new("/bin/sh")
+        .args(["-c", "exit 3"])
+        .spawn()
+        .unwrap();
+    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(5);
+    while !chief_of_staff_spawn_isolation::has_exited(&child).unwrap() {
+        assert!(std::time::Instant::now() < deadline, "never exited");
+        std::thread::sleep(std::time::Duration::from_millis(5));
+    }
+    // Still waitable: has_exited did not reap it, so its pid was still ours.
+    assert!(chief_of_staff_spawn_isolation::has_exited(&child).unwrap());
+    assert_eq!(child.wait().unwrap().code(), Some(3));
+}
+
+#[test]
+fn has_exited_is_false_for_a_running_child() {
+    let mut child = Command::new("sleep").arg("5").spawn().unwrap();
+    assert!(!chief_of_staff_spawn_isolation::has_exited(&child).unwrap());
+    child.kill().unwrap();
+    child.wait().unwrap();
+}

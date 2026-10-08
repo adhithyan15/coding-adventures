@@ -9,9 +9,9 @@
 
 use chief_of_staff_channel_crypto::ChannelId;
 use chief_of_staff_host_control_protocol::{
-    ChildControl, ChildEvent, CompletionCall, DataPlaneRequest, DataPlaneResponse, LaunchBindings,
-    ModelToolCall, OrchestratorControl, OrchestratorEvent, PackageTrust, PackageTrustType,
-    ToolCompletionCall,
+    ChildControl, ChildEvent, CompletionCall, DataPlaneFailure, DataPlaneRequest,
+    DataPlaneResponse, LaunchBindings, ModelToolCall, OrchestratorControl, OrchestratorEvent,
+    PackageTrust, PackageTrustType, ToolCompletionCall,
 };
 use chief_of_staff_host_data_plane::HostDataPlaneDispatcher;
 use chief_of_staff_host_runtime::{
@@ -36,6 +36,10 @@ use std::sync::Arc;
 use std::thread::{self, JoinHandle};
 use std::time::{Duration, Instant};
 use storage_core::StorageBackend;
+
+mod request_budget;
+pub use request_budget::RequestBudget;
+use request_budget::TokenBucket;
 
 const MAX_RECORD_BYTES: usize = 1024 * 1024;
 const MAX_FIXED_ARGUMENTS: usize = 128;
@@ -310,7 +314,7 @@ struct OwnedInstance {
     registration: HostRegistration,
     package_hash: [u8; 32],
     child: Option<Child>,
-    stdin: Option<BufWriter<ChildStdin>>,
+    stdin: Option<RecordWriter>,
     reader: Option<JoinHandle<()>>,
     records: Receiver<ReaderEvent>,
     control: Option<OrchestratorControl>,
@@ -320,6 +324,13 @@ struct OwnedInstance {
     last_heartbeat_ns: Option<u64>,
     channel_id: ChannelId,
     pending_data_plane_request: Option<DataPlaneRequest>,
+    /// This host's request budget (D18S S-K5, P2.6b).
+    requests: TokenBucket,
+    /// When a host still `Starting` is ended: it has had the bootstrap
+    /// timeout to say it is ready (review round 9).
+    ready_deadline: Instant,
+    /// How many of this host's requests the budget refused.
+    rate_limited: u64,
 }
 
 impl OwnedInstance {
@@ -327,11 +338,40 @@ impl OwnedInstance {
         !matches!(self.phase, InstancePhase::Exited { .. })
     }
 
+    /// Reap the host if it has exited, killing its session first.
+    ///
+    /// Whatever the host left behind dies with it (review round 8): a
+    /// descendant holding its stdout would keep the reader from end-of-file,
+    /// and one holding its stdin would keep the writer blocked. The exit is
+    /// seen with `has_exited`, which does not reap, so the session kill runs
+    /// while the pid, and so the group id, is still the host's (round 9).
+    fn try_reap(&mut self) -> Result<Option<ExitStatus>, ProcessSupervisorError> {
+        let Some(child) = self.child.as_mut() else {
+            return Ok(None);
+        };
+        // On Unix, reap only an exit `has_exited` saw, so no reap can slip
+        // in between the check and the kill (review round 10). An error
+        // means the child was already reaped (ECHILD), and `try_wait`
+        // returns its cached status. On Windows `has_exited` is always
+        // false, and `try_wait` decides alone.
+        #[cfg(unix)]
+        match chief_of_staff_spawn_isolation::has_exited(child) {
+            Ok(false) => return Ok(None),
+            Ok(true) => {
+                let _ = chief_of_staff_spawn_isolation::kill_session(child);
+            }
+            Err(_) => {}
+        }
+        child
+            .try_wait()
+            .map_err(|_| ProcessSupervisorError::ProcessIo)
+    }
+
     fn finish_exit(&mut self, status: ExitStatus) {
         self.child.take();
         self.stdin.take();
         if let Some(reader) = self.reader.take() {
-            let _ = reader.join();
+            join_bounded(reader);
         }
         self.control.take();
         self.pending_data_plane_request = None;
@@ -342,23 +382,22 @@ impl OwnedInstance {
 
     fn hard_kill_and_reap(&mut self) -> Result<(), ProcessSupervisorError> {
         self.stdin.take();
-        let status = if let Some(child) = self.child.as_mut() {
-            match child
-                .try_wait()
-                .map_err(|_| ProcessSupervisorError::ProcessIo)?
-            {
-                Some(status) => status,
-                None => {
-                    child
-                        .kill()
-                        .map_err(|_| ProcessSupervisorError::ProcessIo)?;
-                    child
-                        .wait()
-                        .map_err(|_| ProcessSupervisorError::ProcessIo)?
-                }
+        let status = match self.try_reap()? {
+            Some(status) => status,
+            None => {
+                let Some(child) = self.child.as_mut() else {
+                    return Ok(());
+                };
+                // The whole session, then the child itself (a no-op if the
+                // group kill already reached it), both before the reap.
+                let _ = chief_of_staff_spawn_isolation::kill_session(child);
+                child
+                    .kill()
+                    .map_err(|_| ProcessSupervisorError::ProcessIo)?;
+                child
+                    .wait()
+                    .map_err(|_| ProcessSupervisorError::ProcessIo)?
             }
-        } else {
-            return Ok(());
         };
         self.finish_exit(status);
         Ok(())
@@ -371,39 +410,50 @@ impl OwnedInstance {
         if matches!(self.phase, InstancePhase::Exited { .. }) {
             return Ok(());
         }
-        self.drain_records(dispatcher)?;
+        // Capped (review round 7): a host writing faster than the
+        // supervisor decrypts would otherwise keep this loop running, and
+        // with it the one thread that drives every host. The rest waits for
+        // the next refresh.
+        self.drain_records(dispatcher, Some(MAX_RECORDS_PER_DRAIN))?;
 
-        if let Some(child) = self.child.as_mut() {
-            if let Some(status) = child
-                .try_wait()
-                .map_err(|_| ProcessSupervisorError::ProcessIo)?
-            {
-                // The child can exit between the drain above and this
-                // `try_wait`, while the reader thread is still on its way to
-                // delivering the child's last records or the end-of-stream
-                // failure.  Once the phase is `Exited`, `refresh` never looks
-                // at the channel again, so settling now would silently turn
-                // "exited before ready" into a clean exit:
-                //
-                //   supervisor                 reader thread
-                //   ----------                 -------------
-                //   drain: channel empty
-                //                              read_record -> EOF
-                //   try_wait: exited
-                //   finish_exit -> Exited      send(Failure)   <- never read
-                //
-                // Joining the reader first means every event it will ever
-                // send is already queued, and the second drain surfaces it.
-                // This is the same join `finish_exit` always performed, just
-                // moved ahead of the drain, so it waits no longer than before.  A failure found here reaps through
-                // `hard_kill_and_reap`, which sees the exit status and
-                // finishes the exit itself.
-                if let Some(reader) = self.reader.take() {
-                    let _ = reader.join();
-                }
-                self.drain_records(dispatcher)?;
-                self.finish_exit(status);
+        if let Some(status) = self.try_reap()? {
+            // `try_reap` has already killed the host's session, so the
+            // reader sees end-of-file.
+            //
+            // The child can exit between the drain above and this
+            // `try_wait`, while the reader thread is still on its way to
+            // delivering the child's last records or the end-of-stream
+            // failure.  Once the phase is `Exited`, `refresh` never looks
+            // at the channel again, so settling now would silently turn
+            // "exited before ready" into a clean exit:
+            //
+            //   supervisor                 reader thread
+            //   ----------                 -------------
+            //   drain: channel empty
+            //                              read_record -> EOF
+            //   try_wait: exited
+            //   finish_exit -> Exited      send(Failure)   <- never read
+            //
+            // Joining the reader first means every event it will ever
+            // send is already queued, and the second drain surfaces it.
+            // This is the same join `finish_exit` always performed, just
+            // moved ahead of the drain, so it waits no longer than before.  A failure found here reaps through
+            // `hard_kill_and_reap`, which sees the exit status and
+            // finishes the exit itself.
+            if let Some(reader) = self.reader.take() {
+                join_bounded(reader);
             }
+            // Uncapped: the reader is joined, so the queue is final, and
+            // bounded by the reader channel's capacity.
+            self.drain_records(dispatcher, None)?;
+            self.finish_exit(status);
+            return Ok(());
+        }
+        // A host that never becomes ready is ended (review round 9). It has
+        // had the bootstrap timeout to send Ready since its spawn.
+        if self.phase == InstancePhase::Starting && Instant::now() >= self.ready_deadline {
+            let _ = self.hard_kill_and_reap();
+            return Err(ProcessSupervisorError::BootstrapTimeout);
         }
         Ok(())
     }
@@ -413,8 +463,14 @@ impl OwnedInstance {
     fn drain_records(
         &mut self,
         dispatcher: Option<&dyn HostDataPlaneDispatcher>,
+        limit: Option<usize>,
     ) -> Result<(), ProcessSupervisorError> {
+        let mut handled = 0usize;
         loop {
+            if limit.is_some_and(|limit| handled >= limit) {
+                break;
+            }
+            handled += 1;
             match self.records.try_recv() {
                 Ok(ReaderEvent::Record {
                     bytes,
@@ -433,6 +489,21 @@ impl OwnedInstance {
                             self.last_heartbeat_ns = Some(received_at_ns);
                         }
                         Ok(ChildEvent::Request(request)) => {
+                            // Over budget: answered at once, never queued or
+                            // dispatched. Hosts treat Unavailable as "idle,
+                            // retry later", so a polite host never notices.
+                            if !self.requests.take(received_at_ns) {
+                                self.rate_limited = self.rate_limited.saturating_add(1);
+                                let refusal = DataPlaneResponse::Failed {
+                                    id: request.id(),
+                                    failure: DataPlaneFailure::Unavailable,
+                                };
+                                if let Err(error) = self.send_data_plane_response(refusal) {
+                                    let _ = self.hard_kill_and_reap();
+                                    return Err(error);
+                                }
+                                continue;
+                            }
                             self.pending_data_plane_request = Some(request.clone());
                             if let Some(dispatcher) = dispatcher {
                                 let response = dispatcher.dispatch(&self.registration, &request);
@@ -469,11 +540,10 @@ impl OwnedInstance {
             .ok_or(ProcessSupervisorError::Control)?
             .respond(response)
             .map_err(|_| ProcessSupervisorError::Control)?;
-        let stdin = self
-            .stdin
-            .as_mut()
-            .ok_or(ProcessSupervisorError::ProcessIo)?;
-        write_record(stdin, &frame)?;
+        self.stdin
+            .as_ref()
+            .ok_or(ProcessSupervisorError::ProcessIo)?
+            .send(frame)?;
         self.pending_data_plane_request = None;
         Ok(())
     }
@@ -522,6 +592,7 @@ pub struct ProcessHostSupervisor {
     clock: Arc<dyn MonotonicClock>,
     sessions: Box<dyn SessionIdSource>,
     data_plane_dispatcher: Option<Arc<dyn HostDataPlaneDispatcher>>,
+    request_budget: RequestBudget,
     instances: BTreeMap<String, OwnedInstance>,
 }
 
@@ -543,8 +614,31 @@ impl ProcessHostSupervisor {
             clock,
             sessions,
             data_plane_dispatcher: None,
+            request_budget: RequestBudget::DEFAULT,
             instances: BTreeMap::new(),
         }
+    }
+
+    /// Set the per-host request budget (D18S S-K5). Applies to hosts
+    /// started afterwards; the default is [`RequestBudget::DEFAULT`].
+    /// A zero `burst` refuses every request, and a zero `per_second` refuses
+    /// every request after the first burst: both are fail-closed
+    /// misconfigurations, not unlimited.
+    pub fn with_request_budget(mut self, budget: RequestBudget) -> Self {
+        self.request_budget = budget;
+        self
+    }
+
+    /// How many of a host's data-plane requests its budget has refused,
+    /// for the audit record.
+    pub fn rate_limited_requests(
+        &self,
+        host_name: &HostName,
+    ) -> Result<u64, ProcessSupervisorError> {
+        self.instances
+            .get(host_name.as_str())
+            .map(|instance| instance.rate_limited)
+            .ok_or(ProcessSupervisorError::HostNotFound)
     }
 
     /// Automatically answer authenticated child requests through one injected dispatcher.
@@ -560,6 +654,8 @@ impl ProcessHostSupervisor {
         &mut self,
         registration: &HostRegistration,
     ) -> Result<OwnedInstance, ProcessSupervisorError> {
+        let request_budget = self.request_budget;
+        let ready_timeout = self.config.bootstrap_timeout;
         let package_path = Path::new(registration.package_path().as_str());
         let package = verify_agent_package(package_path, self.keyring.as_ref())
             .map_err(|_| ProcessSupervisorError::PackageVerification)?;
@@ -620,7 +716,20 @@ impl ProcessHostSupervisor {
                 return Err(ProcessSupervisorError::Spawn);
             }
         };
-        let mut stdin = BufWriter::new(child_stdin);
+        // From the first byte, the host's stdin is written by its own thread
+        // (review round 8, L2): a host that sends its hello and then stops
+        // reading cannot block the supervisor in startup either. A frame it
+        // never reads leaves the bootstrap timeout (no hello) or the
+        // readiness deadline in `refresh` (no Ready) to end it.
+        let stdin = match RecordWriter::start(BufWriter::new(child_stdin)) {
+            Ok(stdin) => stdin,
+            Err(error) => {
+                let _ = chief_of_staff_spawn_isolation::kill_session(&child);
+                let _ = child.kill();
+                let _ = child.wait();
+                return Err(error);
+            }
+        };
         let (sender, records) = mpsc::sync_channel(MAX_PENDING_RECORDS);
         let clock = Arc::clone(&self.clock);
         let reader = thread::spawn(move || {
@@ -648,7 +757,7 @@ impl ProcessHostSupervisor {
         });
 
         let startup = (|| {
-            write_record(&mut stdin, offer.as_bytes())?;
+            stdin.send(offer.as_bytes().to_vec())?;
             let hello = match records.recv_timeout(self.config.bootstrap_timeout) {
                 Ok(ReaderEvent::Record { bytes, .. }) => ClientHello::from_bytes(&bytes)
                     .map_err(|_| ProcessSupervisorError::Bootstrap)?,
@@ -668,11 +777,11 @@ impl ProcessHostSupervisor {
             let trust = control
                 .provide_package_trust(package_trust)
                 .map_err(|_| ProcessSupervisorError::Control)?;
-            write_record(&mut stdin, &trust)?;
+            stdin.send(trust)?;
             let bindings = control
                 .provide_launch_bindings(launch_bindings)
                 .map_err(|_| ProcessSupervisorError::Control)?;
-            write_record(&mut stdin, &bindings)?;
+            stdin.send(bindings)?;
             Ok(control)
         })();
 
@@ -691,12 +800,16 @@ impl ProcessHostSupervisor {
                 process_id,
                 started_at_ns,
                 last_heartbeat_ns: None,
+                requests: TokenBucket::new(request_budget),
+                ready_deadline: Instant::now() + ready_timeout,
+                rate_limited: 0,
             }),
             Err(error) => {
                 drop(stdin);
+                let _ = chief_of_staff_spawn_isolation::kill_session(&child);
                 let _ = child.kill();
                 let _ = child.wait();
-                let _ = reader.join();
+                join_bounded(reader);
                 Err(error)
             }
         }
@@ -802,11 +915,11 @@ impl HostSupervisor for ProcessHostSupervisor {
             .terminate()
             .map_err(|_| ProcessSupervisorError::Control);
         let write_result = terminate.and_then(|frame| {
-            let stdin = instance
+            instance
                 .stdin
-                .as_mut()
-                .ok_or(ProcessSupervisorError::ProcessIo)?;
-            write_record(stdin, &frame)
+                .as_ref()
+                .ok_or(ProcessSupervisorError::ProcessIo)?
+                .send(frame)
         });
         if let Err(error) = write_result {
             let _ = instance.hard_kill_and_reap();
@@ -815,13 +928,10 @@ impl HostSupervisor for ProcessHostSupervisor {
 
         let deadline = Instant::now() + self.config.graceful_stop_timeout;
         loop {
-            if let Some(status) = instance
-                .child
-                .as_mut()
-                .ok_or(ProcessSupervisorError::ProcessIo)?
-                .try_wait()
-                .map_err(|_| ProcessSupervisorError::ProcessIo)?
-            {
+            if instance.child.is_none() {
+                return Err(ProcessSupervisorError::ProcessIo);
+            }
+            if let Some(status) = instance.try_reap()? {
                 instance.finish_exit(status);
                 return Ok(());
             }
@@ -1092,6 +1202,69 @@ fn validate_runtime_bindings(
     }
 }
 
+/// How long the supervisor waits for a host's reader thread to finish once
+/// the host is gone. The session kill normally ends it at once; if
+/// something still holds the pipe, the thread is left to finish on its own
+/// rather than hold the supervisor (review round 8, L1).
+const READER_JOIN_DEADLINE: Duration = Duration::from_secs(2);
+
+fn join_bounded(reader: JoinHandle<()>) {
+    let deadline = Instant::now() + READER_JOIN_DEADLINE;
+    while !reader.is_finished() {
+        if Instant::now() >= deadline {
+            return;
+        }
+        thread::sleep(Duration::from_millis(5));
+    }
+    let _ = reader.join();
+}
+
+/// Most records one `refresh` handles for a host; the rest wait for the
+/// next one (D18S S-K5, review round 7).
+const MAX_RECORDS_PER_DRAIN: usize = MAX_PENDING_RECORDS;
+
+/// Most response frames queued for a host that is not reading them.
+const MAX_QUEUED_FRAMES: usize = 8;
+
+/// A host's stdin, written by a thread of its own (D18S S-K5, review round
+/// 7). A blocking write on the supervisor's thread would let a host that
+/// stops reading its stdin stall every host. Here the supervisor only
+/// queues: when a host lets `MAX_QUEUED_FRAMES` pile up, the queue is full,
+/// `send` fails, and the caller ends the host. Ending it breaks the pipe,
+/// which ends a write the thread is blocked in.
+struct RecordWriter {
+    queue: mpsc::SyncSender<Vec<u8>>,
+}
+
+impl RecordWriter {
+    fn start(stdin: BufWriter<ChildStdin>) -> Result<Self, ProcessSupervisorError> {
+        let (queue, frames) = mpsc::sync_channel::<Vec<u8>>(MAX_QUEUED_FRAMES);
+        thread::Builder::new()
+            .name("host-stdin".into())
+            .spawn(move || {
+                let mut stdin = stdin;
+                for frame in frames {
+                    if write_record(&mut stdin, &frame).is_err() {
+                        break;
+                    }
+                }
+            })
+            .map_err(|_| ProcessSupervisorError::ProcessIo)?;
+        Ok(Self { queue })
+    }
+
+    /// Queue one frame. The length is checked here, so a bad frame is the
+    /// caller's error at once; a full or closed queue is `ProcessIo`.
+    fn send(&self, frame: Vec<u8>) -> Result<(), ProcessSupervisorError> {
+        if frame.is_empty() || frame.len() > MAX_RECORD_BYTES {
+            return Err(ProcessSupervisorError::Framing);
+        }
+        self.queue
+            .try_send(frame)
+            .map_err(|_| ProcessSupervisorError::ProcessIo)
+    }
+}
+
 fn write_record(writer: &mut impl Write, payload: &[u8]) -> Result<(), ProcessSupervisorError> {
     if payload.is_empty() || payload.len() > MAX_RECORD_BYTES {
         return Err(ProcessSupervisorError::Framing);
@@ -1127,6 +1300,58 @@ fn map_read_error(error: io::Error) -> ProcessSupervisorError {
 mod tests {
     use super::*;
     use chief_of_staff_host_control_protocol::ControlState;
+
+    /// Review round 7: a host that never reads its stdin must not block the
+    /// supervisor. Queueing fails once the writer is stuck and the queue is
+    /// full, within a bounded number of sends, and quickly.
+    #[cfg(unix)]
+    #[test]
+    fn a_host_that_stops_reading_fills_its_queue_instead_of_blocking() {
+        let mut child = Command::new("sleep")
+            .arg("30")
+            .stdin(Stdio::piped())
+            .spawn()
+            .expect("sleep runs");
+        let writer = RecordWriter::start(BufWriter::new(child.stdin.take().unwrap())).unwrap();
+        let started = Instant::now();
+        let frame = vec![7u8; MAX_RECORD_BYTES];
+        // The pipe holds well under one frame, so the thread blocks on the
+        // first, and the queue then takes MAX_QUEUED_FRAMES more.
+        let accepted = (0..MAX_QUEUED_FRAMES + 8)
+            .take_while(|_| writer.send(frame.clone()).is_ok())
+            .count();
+        assert!(accepted <= MAX_QUEUED_FRAMES + 1, "accepted {accepted}");
+        assert_eq!(
+            writer.send(frame.clone()),
+            Err(ProcessSupervisorError::ProcessIo)
+        );
+        assert!(started.elapsed() < Duration::from_secs(5), "send blocked");
+        // Ending the host breaks the pipe, which ends the blocked write.
+        child.kill().unwrap();
+        child.wait().unwrap();
+        drop(writer);
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn a_frame_out_of_bounds_is_refused_before_it_is_queued() {
+        let mut child = Command::new("sleep")
+            .arg("5")
+            .stdin(Stdio::piped())
+            .spawn()
+            .expect("sleep runs");
+        let writer = RecordWriter::start(BufWriter::new(child.stdin.take().unwrap())).unwrap();
+        assert_eq!(
+            writer.send(Vec::new()),
+            Err(ProcessSupervisorError::Framing)
+        );
+        assert_eq!(
+            writer.send(vec![0; MAX_RECORD_BYTES + 1]),
+            Err(ProcessSupervisorError::Framing)
+        );
+        child.kill().unwrap();
+        child.wait().unwrap();
+    }
     use coding_adventures_x3dh::generate_identity_keypair;
     use std::sync::mpsc::{channel, Receiver, Sender};
 
