@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/chief-of-staff-linux-sandbox",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "*",
+      "justification": "Reads the agent executable's ELF program headers to find its interpreter (PT_INTERP), which the Landlock ruleset must allow."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "libc syscall landlock_create_ruleset, landlock_add_rule, openat2, open, fstat and read in the parent; prctl, landlock_restrict_self and seccomp in the forked child before exec",
+      "justification": "Builds a Landlock ruleset and a seccomp-BPF program for an agent, and installs both, with no_new_privs, between fork and exec (D18S build step 4). Neither has a safe std API."
+    }
+  ],
+  "justification": "The D18S Linux applier. The unsafe syscalls and the pre_exec hook live here, so the supervisor crates keep forbid(unsafe_code)."
+}

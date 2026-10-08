@@ -1254,6 +1254,118 @@ through S-I3 before two weeks are spent on Windows.
    the most advisory in the tree.
 4. **Linux `seccomp` + Landlock** (Tier A): arch check, io_uring denial,
    allowlist filter, ABI-negotiated Landlock. Covers CI and most deployment.
+   **Status (P2.4):** the applier exists, in `chief-of-staff-linux-sandbox`,
+   for compiled agents. It is not yet wired into `spawn_verified`: that is
+   step 9, and it needs the shim (step 5) for interpreted runtimes.
+
+   *Where it runs.* It is a `pre_exec` hook installed after
+   `chief-of-staff-spawn-isolation`'s, so it runs in the forked child, while
+   that child is still single-threaded (S-I4b). Nothing of the agent's runs
+   before the boundary is in place. Compiled agents get deny-all at `exec`
+   (S-I4c). The child takes these steps in order, and any failure refuses
+   the spawn (S-P3):
+   1. `prctl(PR_SET_NO_NEW_PRIVS)`.
+   2. `landlock_restrict_self`, with a ruleset built in the parent.
+   3. `seccomp(SECCOMP_SET_MODE_FILTER)`, with a program built in the parent.
+
+   *Landlock.*
+   - The ABI is read with `LANDLOCK_CREATE_RULESET_VERSION`, and the ruleset
+     handles every filesystem right that ABI knows.
+   - From ABI 4 it also handles TCP bind and connect. From ABI 6 it adds
+     abstract-unix and signal scoping. Neither gets a rule, so both deny.
+   - Landlock unavailable is a launch failure. A plan with a `Direct`
+     filesystem grant needs ABI 3 or later (`FS_TRUNCATE`), per S-P1.
+   - The only rules are these:
+
+     | Path | Access |
+     |---|---|
+     | the agent executable and its ELF interpreter | read and execute |
+     | the shared-library directories (`/lib`, `/lib64`, `/usr/lib`, `/usr/lib64`) and `/etc/ld.so.cache` | read only |
+     | `/dev/null` | read and write |
+     | `/dev/urandom` | read |
+     | each `Direct` read or write grant in the plan, an exact existing file | read, or write and truncate, as granted |
+
+   - So `/proc`, `/sys`, `/dev` and every other path cannot be opened (S-I1).
+   - A grant must be an existing regular file, opened with
+     `openat2(RESOLVE_NO_SYMLINKS)`. It must not be the agent's executable
+     or interpreter. A directory would grant its whole tree, and a symlink
+     anywhere in the path would grant whatever it points at. A writable
+     image would let the agent rewrite the code it runs (S-I6).
+   - The interpreter comes from the executable's `PT_INTERP`, so the agent's
+     author chooses it. It is resolved, must lie under one of the library
+     directories with a loader's name (`ld-*.so*`), and is then opened like
+     a grant (no symlinks, a regular file). Otherwise a directory there would become a whole-tree read rule,
+     and any file a read-and-execute rule.
+   - The ELF parse that finds it checks all of its arithmetic. A malformed
+     header refuses the launch; it never panics the supervisor.
+   - A write grant inside a library directory is refused. The libraries
+     are the runtime image of every agent and of the host (S-I6).
+   - The rest of S-I6's never-grantable set (the vault, the audit log, the
+     shim, the broker, the plan files) is checked by the supervisor at step
+     9, which is the only place those paths are known.
+   - Landlock mediates opening, not lookup. `stat` and `access` still answer
+     for any path, so an agent can learn that a file exists, and its size and
+     times, but not its contents.
+   - A `Direct` create or delete grant is refused: Landlock can only express
+     it as rights over the whole parent directory.
+
+   *seccomp.*
+   - The program starts with the arch check: x86_64 and aarch64 are built,
+     and any other architecture is refused when the filter is built. x86_64
+     also refuses x32 syscall numbers.
+   - It is an allowlist of syscall numbers, with `SECCOMP_RET_KILL_PROCESS` as
+     the default (S-P1). The list covers what a compiled program needs:
+     memory, signals, futexes, time, reading and writing its descriptors,
+     opening files (which Landlock then decides), and exiting.
+   - Argument filters:
+     - `clone` only with `CLONE_THREAD`, so threads are allowed but processes
+       are not;
+     - `clone3` returns `ENOSYS`, so libc falls back to `clone`;
+     - `ioctl` never with `TIOCSTI` or `TIOCLINUX`;
+     - `prctl` only to get or set a thread name;
+     - `prlimit64` only on the calling process;
+     - `readlink` and `readlinkat` return `EACCES`. Landlock does not mediate
+       them, and through `/proc/<supervisor>/fd` they would name every file
+       the supervisor holds open.
+   - Absent from the list, and so a kill: everything S-I1 names. That
+     includes `io_uring_*`, `ptrace`, `socket` and `socketpair`, `kill`, SysV
+     and POSIX IPC, `bpf`, `mount`, `unshare` and the `pidfd` family.
+
+   *What it does not do.*
+   - *The exec (S-I4d).* The parent opens the agent `O_RDONLY | O_CLOEXEC`
+     at prepare time, moved to a descriptor number at 512 or above. The
+     hook execs it itself: `execveat(fd, "", argv, envp, AT_EMPTY_PATH)`,
+     never `std`'s exec by path. The seccomp program kills `execve`, and
+     allows `execveat` only when its descriptor argument is that number and
+     its flags are `AT_EMPTY_PATH`. The Landlock rule is added from the same
+     descriptor, so the file that runs is the one that was parsed and given
+     its rule, even if its path is replaced after prepare.
+   - The envp passed to that exec is built in the parent from exactly the
+     variables set on the command. Nothing is inherited (S-I4a's closed set).
+     `std` installs the command's environment only for its own exec, so the
+     child's `environ` at hook time is still the supervisor's.
+   - **Amendment to S-I4d's first option.** That option withholds
+     `LANDLOCK_ACCESS_FS_EXECUTE` from every path rule, but Landlock checks
+     `EXECUTE` on the file being exec'd, and on its `PT_INTERP` loader, when
+     the kernel opens them for the exec. A domain installed before the exec
+     must therefore grant `EXECUTE` on exactly those two files, and this
+     applier grants it on nothing else. What remains is this:
+     - An `AT_EMPTY_PATH` exec with an absolute path ignores the descriptor
+       argument, so the agent can still exec its own binary or the loader.
+       So can a `dup2` onto the pinned number.
+     - The loader can run any readable ELF named in its argv, mapping it
+       itself, and Landlock does not mediate `mmap`.
+     - For a compiled agent this is bounded. The code that runs is readable
+       already, and it runs in the same seccomp and Landlock domain, with
+       no syscall the agent did not already have.
+     - For an interpreted agent it is not bounded: re-exec'ing the runtime
+       with chosen argv defeats S-K6's digest pinning. Step 5 must use
+       S-I4d's second option there, `SECCOMP_FILTER_FLAG_NEW_LISTENER` with
+       the supervisor permitting exactly one exec.
+   - The S-P4 launch-time probes are the shim's (step 5).
+   - Here, the full negative coverage runs in CI as the probe tests: each
+     denied class kills the probe with `SIGSYS`, and each Landlock denial
+     returns `EACCES`.
 5. **The shim** (S-I4, S-P4): single-thread precondition, env deny-list,
    `close_range`, negative self-test. Required before any interpreted agent
    gets true deny-all.
