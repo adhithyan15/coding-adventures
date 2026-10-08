@@ -14,7 +14,7 @@
   cannot be resolved (`EACCES`, `ELOOP`, `ENOTDIR`); only `ENOENT` counts as
   missing. After the open, the descriptor's own path (`/proc/self/fd`,
   `F_GETPATH`) must equal the path that was proved; otherwise the result is
-  `RootMoved`. On macOS, `O_NOFOLLOW_ANY` is proved honored first, or the
+  `RootMoved`, or `RootUnverifiable` when the kernel cannot report it. On macOS, `O_NOFOLLOW_ANY` is proved honored first, or the
   result is `Unsupported`.
 - `BrokerRoot::open_beneath(name, Read | Write)`. The kernel resolves the
   agent-supplied name beneath the root's descriptor, in one step:

@@ -74,6 +74,10 @@ pub enum BrokerRootError {
     /// The directory opened is not the one checked: the root's path changed
     /// between the disjointness proof and the open.
     RootMoved(PathBuf),
+    /// The kernel could not say which directory the root's descriptor is
+    /// (no `/proc` on Linux, `F_GETPATH` failed on macOS), so the proof
+    /// cannot be tied to it.
+    RootUnverifiable(PathBuf),
     /// The root and a never-grantable path overlap: one contains the other,
     /// or the never-grantable path cannot be compared exactly (see
     /// `canonical_or_nearest`).
@@ -100,6 +104,11 @@ impl fmt::Display for BrokerRootError {
             Self::RootNotDirectory(root) => {
                 write!(f, "broker root {} is not a directory", root.display())
             }
+            Self::RootUnverifiable(root) => write!(
+                f,
+                "cannot confirm which directory broker root {} opened",
+                root.display()
+            ),
             Self::RootMoved(root) => write!(
                 f,
                 "broker root {} changed between its check and its open",
@@ -174,8 +183,10 @@ impl BrokerRoot {
         // descriptor naming a directory nobody checked. So ask the kernel
         // what the descriptor actually is, and refuse unless it is the
         // directory the proof was about.
-        if platform::descriptor_path(&directory).as_deref() != Some(canonical.as_path()) {
-            return Err(BrokerRootError::RootMoved(canonical));
+        match platform::descriptor_path(&directory) {
+            Some(opened) if opened == canonical => {}
+            Some(_) => return Err(BrokerRootError::RootMoved(canonical)),
+            None => return Err(BrokerRootError::RootUnverifiable(canonical)),
         }
         Ok(Self {
             path: canonical,
