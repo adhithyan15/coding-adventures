@@ -1,6 +1,6 @@
 # LANG VM non-ALGOL completion backlog
 
-Status date: 2026-10-08 — re-audited after Perl 5.004_53 and 5.004_54 pairs
+Status date: 2026-10-08 — re-audited after bounded Ruby bare `puts` calls
 
 This is the execution backlog for completing the shared LANG VM platform while
 the ALGOL campaign is owned separately. It complements
@@ -241,15 +241,23 @@ pairs and 677 pending; neither full historical syntax nor exhaustive public
 release coverage is claimed. The next fresh selection rotates to LANG80's
 bounded bare `puts` call form on direct Ruby-to-IIR execution.
 
+PR #17029 delivered that bounded bare `puts` form and merged as
+`d2837f66bf58cdc1cee81dcd318e52b8df984b14` after exact-head CI,
+CodeQL, and books checks passed. The source/AST-to-IIR path still executes
+on Rust `vm-core`; Ruby is a conformance oracle. Both bare and parenthesized
+calls require a literal `puts` callee with the expected token and grammar
+types. The next fresh selection rotates to LANG82's prepared, separate,
+explicitly partial Perl 5.004_55 source-backed token/grammar pair.
+
 The separately owned ALGOL campaign remains outside this backlog.
 
 The refreshed queue is:
 
-1. **LANG80 Ruby (selected):** accept the existing parser's one-argument bare
-   `puts expression` AST shape on the direct Rust IIR and `vm-core` path, with
-   the parenthesized form's integer bounds and explicit unsupported-form
-   rejection.
-2. **LANG82 Perl release grammars:** continue distinct source-backed partial
+1. **LANG82 Perl release grammars (selected):** add the distinct, explicitly
+   partial 5.004_55 token/grammar pair backed by its own historical archive.
+   Keep carriage returns outside the bounded accepted subset and avoid a
+   platform-wide historical rejection claim.
+2. **LANG82 continued:** continue distinct source-backed partial
    pairs. Keep 5.004_01-t1 pending until its own source is found; do not imply
    complete syntax or an exhaustive release inventory.
 3. **PREP01 C:** continue the bounded conditional ladder. Full C `#if`,
