@@ -32,12 +32,12 @@ class Geometry2DConformanceTests(unittest.TestCase):
         self.assertEqual(
             list(Draft202012Validator(schema).iter_errors(self.document)), []
         )
-        self.assertEqual(MODULE.validate_document(self.document), 16)
+        self.assertEqual(MODULE.validate_document(self.document), 21)
         self.assertEqual(
             MODULE.validate_document(
                 MODULE.parse_json(CORPUS.read_text(encoding="utf-8"))
             ),
-            16,
+            21,
         )
 
     def test_complete_operation_and_case_roster(self) -> None:
@@ -58,6 +58,11 @@ class Geometry2DConformanceTests(unittest.TestCase):
             "bezier-quadratic-quarter",
             "bezier-cubic-quarter",
             "bezier-cubic-x-overshoot",
+            "arc-center-bounds-positive-wrap",
+            "arc-center-bounds-negative-wrap",
+            "arc-center-cubics-zero",
+            "arc-center-cubics-full-turn",
+            "arc-center-cubics-over-turn",
         }
         self.assertEqual({case["id"] for case in self.document["cases"]}, expected)
 
@@ -84,6 +89,20 @@ class Geometry2DConformanceTests(unittest.TestCase):
                 "bezier-cubic-x-overshoot",
                 lambda c: c["expected_bounds"].__setitem__(2, 4),
             ),
+            (
+                "arc-center-bounds-positive-wrap",
+                lambda c: c["expected_bounds"].__setitem__(2, 0.58),
+            ),
+            (
+                "arc-center-bounds-negative-wrap",
+                lambda c: c["expected_bounds"].__setitem__(1, -0.5),
+            ),
+            ("arc-center-cubics-zero", lambda c: c.update(expected_count=0)),
+            ("arc-center-cubics-full-turn", lambda c: c.update(expected_count=5)),
+            (
+                "arc-center-cubics-over-turn",
+                lambda c: c.update(expected_error="none"),
+            ),
         ]
         for case_id, edit in edits:
             with self.subTest(case_id=case_id):
@@ -100,6 +119,9 @@ class Geometry2DConformanceTests(unittest.TestCase):
             ("bezier-quadratic-quarter", lambda c: c.update(control_points=[[0, 0]])),
             ("bezier-cubic-quarter", lambda c: c.update(t=2)),
             ("bezier-cubic-quarter", lambda c: c.update(unreviewed=True)),
+            ("arc-center-bounds-positive-wrap", lambda c: c.update(rx=-1)),
+            ("arc-center-cubics-zero", lambda c: c.update(sweep_angle=float("nan"))),
+            ("arc-center-cubics-over-turn", lambda c: c.update(expected_count=5)),
         ]:
             with self.subTest(case_id=case_id):
                 changed = copy.deepcopy(self.document)
