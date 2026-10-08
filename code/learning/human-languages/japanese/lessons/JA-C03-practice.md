@@ -101,7 +101,7 @@ ever learn arrives with a voiced twin already attached.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-ETYMON-ARIGATASHI, JA-LEX-ARIGATOU, JA-SCRIPT-DAKUTEN, JA-LEX-ARIGATOU-GOZAIMASU, JA-REGISTER-TEINEIGO] -->
 
-[PAUSE 15s] Give plain thanks, then polite thanks. Name the dakuten and the ?hard to exist? memory hook.
+[PAUSE 15s] Give plain thanks, then polite thanks. Name the dakuten and the “hard to exist” memory hook.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-GOZAIMASU-READ-01] -->

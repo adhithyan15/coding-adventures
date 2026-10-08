@@ -62,7 +62,7 @@ to mean **origin**. In the word ahead, read it *hon*, one beat ending in *n*.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-MA-01] -->
 
-[PAUSE 15s] Write ? once from memory before beginning the new kanji.
+[PAUSE 15s] Write **ま** once from memory before beginning the new kanji.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KANJI-HON-01] -->

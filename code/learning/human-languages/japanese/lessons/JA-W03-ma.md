@@ -62,7 +62,7 @@ Read **ma**: as in English *mother*, shortened. One beat.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-TO-01] -->
 
-[PAUSE 15s] Write ? from memory before tracing ?.
+[PAUSE 15s] Write **と** from memory before tracing **ま**.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-MA-01] -->

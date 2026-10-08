@@ -76,7 +76,7 @@ are in the word this chapter is building.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KONNICHIWA-READ-01] -->
 
-[PAUSE 15s] Write ????? from its five signs before adding any voice marks.
+[PAUSE 15s] Write **こんにちは** from its five signs before adding any voice marks.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-DAKUTEN-01] -->

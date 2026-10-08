@@ -75,7 +75,7 @@ this script is never more than the signs you already own, in a row.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-WA-01] -->
 
-[PAUSE 15s] Write ? once, then set it beside ? and name which one closes the greeting.
+[PAUSE 15s] Write **わ** once, then set it beside **は** and name which one closes the greeting.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KONNICHIWA-READ-01, JA-SCRIPT-HIRAGANA-MORA] -->
