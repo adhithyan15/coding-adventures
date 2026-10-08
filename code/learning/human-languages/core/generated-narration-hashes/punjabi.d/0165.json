@@ -1,0 +1,18 @@
+{
+  "language": "punjabi",
+  "chapter": 165,
+  "sourceHash": "fnv1a64:83b68fc3499fb01d",
+  "lessonIds": [
+    "PA-R165-live-again",
+    "PA-R165-spend-again",
+    "PA-R165-save-again",
+    "PA-R165-sow-again"
+  ],
+  "voiceLessons": 4,
+  "drivablePrefix": 4,
+  "text": "punjabi/narration/ch165.txt",
+  "json": "punjabi/narration/ch165.json",
+  "textHash": "fnv1a64:98672f73e33ff58a",
+  "jsonHash": "fnv1a64:16e01f60d5f661ff",
+  "findings": []
+}

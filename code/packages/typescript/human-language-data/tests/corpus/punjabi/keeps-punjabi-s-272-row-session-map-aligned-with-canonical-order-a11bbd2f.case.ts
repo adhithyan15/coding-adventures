@@ -53,8 +53,9 @@ it("keeps Punjabi's session map aligned with canonical order", () => {
   // 886 -> 889: three short Chapter 162 A1 writing returns.
   // 889 -> 893: four separate Chapter 163 action-word returns.
   // 893 -> 896: three separate Chapter 164 action-word returns.
-  expect(rows).toHaveLength(896);
-  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 896 }, (_, index) => index + 1));
+  // 896 -> 900: four separate Chapter 165 action-word returns.
+  expect(rows).toHaveLength(900);
+  expect(rows.map((row) => row.session)).toEqual(Array.from({ length: 900 }, (_, index) => index + 1));
   expect(rows.map((row) => row.lessonId)).toEqual(
     ordered.map((lesson) => lesson.realization.lessonId),
   );

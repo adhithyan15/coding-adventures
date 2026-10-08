@@ -1,0 +1,11 @@
+{
+  "id": "PA-EXT-165-ACTION-RETURN",
+  "stage": "A1",
+  "kind": "required",
+  "category": "vocabulary",
+  "canDo": "I can retrieve four familiar verbs for living, spending, saving, and sowing after a long interval, one at a time.",
+  "prerequisites": [
+    "PA-EXT-151-ACT151",
+    "PA-EXT-164-ACTION-RETURN"
+  ]
+}

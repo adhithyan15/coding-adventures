@@ -184,5 +184,8 @@ it("closes Chapter 3's oral R1-R4 windows without inventing script credit", () =
   // #16915 and four later action R4 pairs in #16916.
   // Chapter 162 retrieves the three writing R3 pairs from #16915. Its
   // longer tail exposes two R3 pairs in #16937 and three R4 pairs in #16938.
-  expect(report.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 515, R4: 579 });
+  // Chapters 163-165 return the old action words separately. The Chapter 165
+  // boundary closes four Chapter 151 R4 pairs and exposes two later Chapter
+  // 152 pairs in #17006; the earlier three are tracked in #16974.
+  expect(report.summary.missedByWindow).toEqual({ R1: 56, R2: 566, R3: 515, R4: 577 });
 });
