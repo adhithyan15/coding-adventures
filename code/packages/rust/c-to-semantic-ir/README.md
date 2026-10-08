@@ -19,9 +19,10 @@ second `#else` or `#elif` after `#else`.
 `compile_preprocessed_file` uses that token stream with declared include roots
 before parsing and lowering. Pathless `compile_source` uses the same bounded
 preprocessor with an in-memory primary source. Every active include fails
-closed because that API has no include roots. Full C `#if` expressions and
-token paste remain pending. Function-like macros can stringize one raw
-identifier or plain-decimal argument token; broader C stringizing is pending.
+closed because that API has no include roots. Full C `#if` expressions remain
+pending. Function-like macros can stringize one raw identifier or plain-decimal
+argument token and paste one raw identifier after a literal identifier prefix.
+Broader C stringizing and token paste remain pending.
 
 ## API
 
