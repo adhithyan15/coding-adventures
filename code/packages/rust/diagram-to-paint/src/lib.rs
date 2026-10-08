@@ -866,24 +866,22 @@ where
         ));
     }
     for edge in &diagram.edges {
+        let stroke_width = if edge.kind == SwimlaneEdgeKind::Thick { 3.5 } else { 1.8 };
         let mut path = line_path(
             &[edge.from.clone(), edge.to.clone()],
             "#455a64",
-            if edge.kind == SwimlaneEdgeKind::Thick {
-                3.5
-            } else {
-                1.8
-            },
+            stroke_width,
         );
         if edge.kind == SwimlaneEdgeKind::Dotted {
             path.stroke_dash = Some(vec![5.0, 5.0]);
         }
         instructions.push(PaintInstruction::Path(path));
-        if edge.kind != SwimlaneEdgeKind::Undirected {
-            instructions.push(PaintInstruction::Path(simple_arrowhead(
-                &edge.from, &edge.to, "#455a64",
-            )));
-        }
+        instructions.extend(swimlane_endpoint_marker(
+            edge.start_marker, &edge.to, &edge.from, "#455a64", stroke_width,
+        ));
+        instructions.extend(swimlane_endpoint_marker(
+            edge.end_marker, &edge.from, &edge.to, "#455a64", stroke_width,
+        ));
         if let Some(label) = &edge.label {
             text_children.push(text_node(
                 label,
@@ -1132,6 +1130,33 @@ where
         instructions,
         id: None,
         metadata: (!metadata.is_empty()).then_some(metadata),
+    }
+}
+
+fn swimlane_endpoint_marker(
+    marker: EdgeMarker, previous: &Point, tip: &Point, stroke: &str, stroke_width: f64,
+) -> Vec<PaintInstruction> {
+    match marker {
+        EdgeMarker::None => Vec::new(),
+        EdgeMarker::Point => vec![PaintInstruction::Path(simple_arrowhead(previous, tip, stroke))],
+        EdgeMarker::Circle => vec![PaintInstruction::Ellipse(PaintEllipse {
+            base: PaintBase::default(), cx: tip.x, cy: tip.y, rx: 5.0, ry: 5.0,
+            fill: Some("#ffffff".into()), stroke: Some(stroke.into()), stroke_width: Some(stroke_width),
+            stroke_dash: None, stroke_dash_offset: None,
+        })],
+        EdgeMarker::Cross => {
+            let radius = 5.0;
+            vec![
+                PaintInstruction::Path(line_path(
+                    &[Point { x: tip.x - radius, y: tip.y - radius }, Point { x: tip.x + radius, y: tip.y + radius }],
+                    stroke, stroke_width,
+                )),
+                PaintInstruction::Path(line_path(
+                    &[Point { x: tip.x - radius, y: tip.y + radius }, Point { x: tip.x + radius, y: tip.y - radius }],
+                    stroke, stroke_width,
+                )),
+            ]
+        }
     }
 }
 /// Lower Railroad rules into backend-neutral paths, markers, boxes, and glyphs.

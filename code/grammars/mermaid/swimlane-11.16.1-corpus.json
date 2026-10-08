@@ -49,6 +49,10 @@
     {
       "name": "quoted-edge-labels",
       "source": "swimlane-beta LR\nsubgraph Intake\n  request[Request]\nend\nsubgraph Complete\n  done[Done]\nend\nrequest -->|\"Priority \\\"A\\\"\"| done"
+    },
+    {
+      "name": "flowchart-endpoint-markers",
+      "source": "swimlane-beta LR\nsubgraph Workflow\n  request[Request]\n  review[Review]\n  approve[Approve]\n  deliver[Deliver]\n  archive[Archive]\nend\nrequest <--> review\nreview o--x approve\napprove x--> deliver\ndeliver --o archive"
     }
   ]
 }

@@ -12,6 +12,7 @@
     "sloped-flowchart-shapes",
     "quoted-unicode-node-labels",
     "long-process-labels",
-    "quoted-edge-labels"
+    "quoted-edge-labels",
+    "flowchart-endpoint-markers"
   ]
 }

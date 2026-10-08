@@ -6228,10 +6228,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         if line.is_empty() || line.starts_with("%%") {
             continue;
         }
-        let is_edge = line.contains("-->")
-            || line.contains("---")
-            || line.contains("-.->")
-            || line.contains("==>");
+        let is_edge = next_swimlane_operator(line).is_some();
         if !is_edge {
             last_edge_targets = None;
         }
@@ -6398,6 +6395,8 @@ fn parse_swimlane_edge_chain(
     };
     let mut remainder = &line[operator.at + operator.len..];
     let mut edge_kind = operator.kind;
+    let mut start_marker = operator.start_marker;
+    let mut end_marker = operator.end_marker;
     let mut inline_label = operator.label;
     loop {
         let trimmed = remainder.trim_start();
@@ -6435,6 +6434,8 @@ fn parse_swimlane_edge_chain(
                     to: to.clone(),
                     label: label.clone(),
                     kind: edge_kind,
+                    start_marker,
+                    end_marker,
                 });
             }
         }
@@ -6447,6 +6448,8 @@ fn parse_swimlane_edge_chain(
         };
         remainder = &after_label[next_operator.at + next_operator.len..];
         edge_kind = next_operator.kind;
+        start_marker = next_operator.start_marker;
+        end_marker = next_operator.end_marker;
         inline_label = next_operator.label;
     }
     Ok(previous)
@@ -6483,21 +6486,36 @@ struct SwimlaneOperator {
     at: usize,
     len: usize,
     kind: SwimlaneEdgeKind,
+    start_marker: EdgeMarker,
+    end_marker: EdgeMarker,
     label: Option<String>,
 }
 
 fn next_swimlane_operator(value: &str) -> Option<SwimlaneOperator> {
     let standard = [
-        ("-.->", SwimlaneEdgeKind::Dotted),
-        ("-->", SwimlaneEdgeKind::Directed),
-        ("---", SwimlaneEdgeKind::Undirected),
-        ("==>", SwimlaneEdgeKind::Thick),
+        ("<-.->", SwimlaneEdgeKind::Dotted, EdgeMarker::Point, EdgeMarker::Point),
+        ("<-->", SwimlaneEdgeKind::Directed, EdgeMarker::Point, EdgeMarker::Point),
+        ("<==>", SwimlaneEdgeKind::Thick, EdgeMarker::Point, EdgeMarker::Point),
+        ("o--o", SwimlaneEdgeKind::Undirected, EdgeMarker::Circle, EdgeMarker::Circle),
+        ("x--x", SwimlaneEdgeKind::Undirected, EdgeMarker::Cross, EdgeMarker::Cross),
+        ("o--x", SwimlaneEdgeKind::Undirected, EdgeMarker::Circle, EdgeMarker::Cross),
+        ("x--o", SwimlaneEdgeKind::Undirected, EdgeMarker::Cross, EdgeMarker::Circle),
+        ("o-->", SwimlaneEdgeKind::Directed, EdgeMarker::Circle, EdgeMarker::Point),
+        ("x-->", SwimlaneEdgeKind::Directed, EdgeMarker::Cross, EdgeMarker::Point),
+        ("-.->", SwimlaneEdgeKind::Dotted, EdgeMarker::None, EdgeMarker::Point),
+        ("-->", SwimlaneEdgeKind::Directed, EdgeMarker::None, EdgeMarker::Point),
+        ("---", SwimlaneEdgeKind::Undirected, EdgeMarker::None, EdgeMarker::None),
+        ("==>", SwimlaneEdgeKind::Thick, EdgeMarker::None, EdgeMarker::Point),
+        ("--o", SwimlaneEdgeKind::Undirected, EdgeMarker::None, EdgeMarker::Circle),
+        ("--x", SwimlaneEdgeKind::Undirected, EdgeMarker::None, EdgeMarker::Cross),
     ]
     .into_iter()
-    .filter_map(|(operator, kind)| value.find(operator).map(|at| SwimlaneOperator {
+    .filter_map(|(operator, kind, start_marker, end_marker)| value.find(operator).map(|at| SwimlaneOperator {
         at,
         len: operator.len(),
         kind,
+        start_marker,
+        end_marker,
         label: None,
     }))
     .min_by_key(|operator| operator.at);
@@ -6509,6 +6527,8 @@ fn next_swimlane_operator(value: &str) -> Option<SwimlaneOperator> {
             at,
             len: 2 + arrow_at + 3,
             kind: SwimlaneEdgeKind::Directed,
+            start_marker: EdgeMarker::None,
+            end_marker: EdgeMarker::Point,
             label: Some(label.to_string()),
         })
     });

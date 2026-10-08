@@ -994,7 +994,8 @@ The native Mermaid 11.16.1 Swimlane slice recognizes `swimlane-beta` with all
 five directions, top-level `subgraph` lanes, common process-node shapes
 (including storage, subprocess, hexagon, double-circle, input/output, and
 asymmetric, parallelogram, and trapezoid nodes), quoted Unicode node labels,
-directed/undirected/dotted/thick chained links, multiline edge continuations,
+directed/undirected/dotted/thick chained links, point/circle/cross endpoint
+markers and bidirectional arrows, multiline edge continuations,
 parallel branch and join
 endpoints, normalized quoted pipe-delimited and Flowchart-style link labels, titles, and
 accessibility metadata. It lowers through
@@ -1005,6 +1006,6 @@ visual subset, including parallel
 handoffs, is rendered through Metal-to-PNG.
 
 This is intentionally partial. Nested subgraphs, the complete Flowchart shape
-and link catalog, classes and inline styles, clicks, configuration-driven lane
+and link catalog beyond the documented marker forms, classes and inline styles, clicks, configuration-driven lane
 ordering and line hops, and exact upstream routing or typography remain
 unsupported rather than being counted as compatible.

@@ -220,15 +220,12 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
             horizontal_cursor += resolved_node_width + node_gap;
         }
     }
-    let centers = nodes
+    let bounds = nodes
         .iter()
         .map(|node| {
             (
                 node.id.as_str(),
-                Point {
-                    x: node.x + node.width / 2.0,
-                    y: node.y + node.height / 2.0,
-                },
+                (Point { x: node.x + node.width / 2.0, y: node.y + node.height / 2.0 }, node.width, node.height),
             )
         })
         .collect::<HashMap<_, _>>();
@@ -236,11 +233,18 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         .edges
         .iter()
         .filter_map(|edge| {
+            let (from_center, from_width, from_height) = bounds.get(edge.from.as_str())?;
+            let (to_center, to_width, to_height) = bounds.get(edge.to.as_str())?;
+            let (from, to) = swimlane_edge_endpoints(
+                from_center, *from_width, *from_height, to_center, *to_width, *to_height,
+            );
             Some(LayoutedSwimlaneEdge {
-                from: centers.get(edge.from.as_str())?.clone(),
-                to: centers.get(edge.to.as_str())?.clone(),
+                from,
+                to,
                 label: edge.label.clone(),
                 kind: edge.kind,
+                start_marker: edge.start_marker,
+                end_marker: edge.end_marker,
             })
         })
         .collect();
@@ -255,6 +259,24 @@ pub fn layout_swimlane(diagram: &SwimlaneDiagram) -> LayoutedSwimlaneDiagram {
         nodes,
         edges,
     }
+}
+
+fn swimlane_edge_endpoints(
+    from: &Point, from_width: f64, from_height: f64,
+    to: &Point, to_width: f64, to_height: f64,
+) -> (Point, Point) {
+    fn boundary(center: &Point, toward: &Point, width: f64, height: f64) -> Point {
+        let dx = toward.x - center.x;
+        let dy = toward.y - center.y;
+        let scale_x = if dx.abs() < 1e-9 { f64::INFINITY } else { width / 2.0 / dx.abs() };
+        let scale_y = if dy.abs() < 1e-9 { f64::INFINITY } else { height / 2.0 / dy.abs() };
+        let scale = scale_x.min(scale_y);
+        Point { x: center.x + dx * scale, y: center.y + dy * scale }
+    }
+    (
+        boundary(from, to, from_width, from_height),
+        boundary(to, from, to_width, to_height),
+    )
 }
 
 fn swimlane_node_width(label: &str) -> f64 {
@@ -618,7 +640,7 @@ mod tests {
 
     #[test]
     fn swimlane_layout_keeps_nodes_inside_ownership_bands() {
-        use diagram_ir::{DiagramShape, SwimlaneDiagram, SwimlaneLane, SwimlaneNode};
+        use diagram_ir::{DiagramShape, EdgeMarker, SwimlaneDiagram, SwimlaneEdge, SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode};
         let diagram = SwimlaneDiagram {
             direction: DiagramDirection::Lr, title: Some("Handoff".into()), accessibility_title: None,
             accessibility_description: None,
@@ -629,7 +651,12 @@ mod tests {
             nodes: vec![
                 SwimlaneNode { id: "choose".into(), label: "Choose".into(), lane_id: Some("buyer".into()), shape: DiagramShape::Rect },
                 SwimlaneNode { id: "ship".into(), label: "Ship".into(), lane_id: Some("store".into()), shape: DiagramShape::RoundedRect },
-            ], edges: Vec::new(),
+            ],
+            edges: vec![SwimlaneEdge {
+                from: "choose".into(), to: "ship".into(), label: None,
+                kind: SwimlaneEdgeKind::Directed,
+                start_marker: EdgeMarker::Circle, end_marker: EdgeMarker::Point,
+            }],
         };
         let layout = layout_swimlane(&diagram);
         assert!(layout.lanes[1].y > layout.lanes[0].y);
@@ -637,6 +664,9 @@ mod tests {
             assert!(node.x >= lane.x && node.x + node.width <= lane.x + lane.width);
             assert!(node.y >= lane.y && node.y + node.height <= lane.y + lane.height);
         }
+        assert_eq!(layout.edges[0].start_marker, EdgeMarker::Circle);
+        assert_eq!(layout.edges[0].end_marker, EdgeMarker::Point);
+        assert_ne!(layout.edges[0].from.y, layout.nodes[0].y + layout.nodes[0].height / 2.0);
     }
 
     #[test]
