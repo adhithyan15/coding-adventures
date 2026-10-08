@@ -1626,6 +1626,21 @@ fn swimlane_text_block_attribute_reaches_semantic_ir() {
 }
 
 #[test]
+fn swimlane_start_and_stop_control_shapes_reach_semantic_ir() {
+    use diagram_ir::DiagramShape;
+
+    let diagram = parse_swimlane(
+        "swimlane-beta LR\nsubgraph Control\n  first@{ shape: sm-circ }\n  second@{ shape: start }\n  third@{ shape: small-circle }\n  fourth@{ shape: fr-circ }\n  fifth@{ shape: stop }\n  sixth@{ shape: framed-circle }\nend\nfirst --> fourth",
+    ).expect("Swimlane start and stop control shapes should parse");
+
+    let shapes = diagram.nodes.iter().map(|node| node.shape.clone()).collect::<Vec<_>>();
+    assert_eq!(shapes, [
+        DiagramShape::SmallCircle, DiagramShape::SmallCircle, DiagramShape::SmallCircle,
+        DiagramShape::FramedCircle, DiagramShape::FramedCircle, DiagramShape::FramedCircle,
+    ]);
+}
+
+#[test]
 fn swimlane_input_output_and_asymmetric_shapes_reach_semantic_ir() {
     let diagram = parse_swimlane(
         "swimlane-beta LR\nsubgraph Intake\n  input[/Payload/]\n  flag>Review]\nend\ninput --> flag",

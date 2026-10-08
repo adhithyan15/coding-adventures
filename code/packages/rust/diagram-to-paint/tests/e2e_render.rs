@@ -3564,6 +3564,13 @@ line "Target" [35, 50, 68, 82]"##,
                     PaintInstruction::Rect(rect) if rect.fill.is_none() && rect.stroke.is_none()
                 )), "text block must lower without visible container geometry");
             }
+            if fixture_name == "start-stop-control-shapes" {
+                assert!(layout.nodes.iter().all(|node| node.width == 14.0 && node.height == 14.0),
+                    "control circles must use compact upstream dimensions");
+                assert!(scene.instructions.iter().filter(|instruction| matches!(instruction,
+                    PaintInstruction::Ellipse(_)
+                )).count() >= 3, "start and stop controls must lower to three ellipse instructions");
+            }
             let pixels = render(&scene);
             let path = format!("/tmp/mermaid_swimlane_visual_{index}_e2e.png");
             write_png(&pixels, &path).unwrap_or_else(|error| panic!("failed to write {fixture_name}: {error}"));

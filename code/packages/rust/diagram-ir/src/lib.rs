@@ -34,6 +34,8 @@ pub enum DiagramShape {
     NotchedRect,
     LinedRect,
     TextBlock,
+    SmallCircle,
+    FramedCircle,
     Cloud,
     Bang,
     Stadium,

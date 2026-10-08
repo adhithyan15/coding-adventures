@@ -6892,6 +6892,8 @@ fn parse_swimlane_shape_attributes(
                     "notch-rect" | "card" | "notched-rectangle" => DiagramShape::NotchedRect,
                     "lin-rect" | "lined-rectangle" | "lined-process" | "lin-proc" | "shaded-process" => DiagramShape::LinedRect,
                     "text" => DiagramShape::TextBlock,
+                    "sm-circ" | "start" | "small-circle" => DiagramShape::SmallCircle,
+                    "fr-circ" | "stop" | "framed-circle" => DiagramShape::FramedCircle,
                     "cloud" => DiagramShape::Cloud,
                     "bang" => DiagramShape::Bang,
                     "stadium" | "pill" | "terminal" => DiagramShape::Stadium,
