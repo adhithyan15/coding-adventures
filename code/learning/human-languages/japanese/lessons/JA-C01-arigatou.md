@@ -79,7 +79,7 @@ and inventing one would be worse than admitting that.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KA-01] -->
 
-[PAUSE 15s] Write ? once from memory, then add the two dakuten strokes.
+[PAUSE 15s] Write **か** once from memory, then add the two dakuten strokes.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ARIGATOU, JA-SCRIPT-DAKUTEN, JA-ETYMON-ARIGATASHI, JA-SCRIPT-ARIGATOU-READ-01, JA-SCRIPT-A-01, JA-SCRIPT-RI-01, JA-SCRIPT-KA-01, JA-SCRIPT-DAKUTEN-01, JA-SCRIPT-TO-01, JA-SCRIPT-U-01] -->

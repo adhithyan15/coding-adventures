@@ -76,7 +76,7 @@ you have already learned.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-N-01] -->
 
-[PAUSE 15s] Write ? from memory and give it one full mora.
+[PAUSE 15s] Write **ん** from memory and give it one full mora.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KONNICHIWA, JA-PARTICLE-WA-SPELLING, JA-SCRIPT-HIRAGANA-MORA, JA-SCRIPT-KONNICHIWA-READ-01, JA-SCRIPT-KO-01, JA-SCRIPT-N-01, JA-SCRIPT-NI-01, JA-SCRIPT-CHI-01, JA-SCRIPT-WA-01] -->

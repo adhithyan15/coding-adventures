@@ -73,7 +73,7 @@ voiced sign you have got for free. It will return in the polite ending ahead.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-ETYMON-ARIGATASHI, JA-LEX-ARIGATOU, JA-SCRIPT-DAKUTEN] -->
 
-[PAUSE 15s] Say ?????, add the dakuten to ?, and recall how ?hard to exist? became thanks.
+[PAUSE 15s] Say **ありがとう**, add the dakuten to **か**, and recall how “hard to exist” became thanks.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-SA-01] -->

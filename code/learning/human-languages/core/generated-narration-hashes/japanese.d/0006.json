@@ -1,7 +1,7 @@
 {
   "language": "japanese",
   "chapter": 6,
-  "sourceHash": "fnv1a64:d325c6e7d898be8a",
+  "sourceHash": "fnv1a64:3d0114d7947f3c1b",
   "lessonIds": [
     "JA-W06-ko-katakana",
     "JA-W06-long-mark",
@@ -12,7 +12,7 @@
   "drivablePrefix": 0,
   "text": "japanese/narration/ch06.txt",
   "json": "japanese/narration/ch06.json",
-  "textHash": "fnv1a64:5dabb2955e2d1dc0",
-  "jsonHash": "fnv1a64:71dde0d5171a3893",
+  "textHash": "fnv1a64:709a23a27f0ebb06",
+  "jsonHash": "fnv1a64:74f07d8baee4c953",
   "findings": []
 }

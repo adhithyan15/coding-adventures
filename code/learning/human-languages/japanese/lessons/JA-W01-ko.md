@@ -61,7 +61,7 @@ it and you have a different sign.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-IIE, JA-SCRIPT-MORA-LENGTH] -->
 
-[PAUSE 15s] Say ??? and tap all three morae before writing the new sign.
+[PAUSE 15s] Say **いいえ** and tap all three morae before writing the new sign.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KO-01] -->

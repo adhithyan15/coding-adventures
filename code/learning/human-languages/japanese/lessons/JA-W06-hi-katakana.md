@@ -61,7 +61,7 @@ Now every distinct sign in the word ahead is known: コ, ー, and ヒ.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KANJI-MOUTH-COMPONENT-01] -->
 
-[PAUSE 15s] Write ? once from memory before switching back to katakana.
+[PAUSE 15s] Write **口** once from memory before switching back to katakana.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KATAKANA-HI-01] -->

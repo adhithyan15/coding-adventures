@@ -83,7 +83,7 @@ that anchor a European language. English has no share in it.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KANJI-GO-01] -->
 
-[PAUSE 15s] Build ? once from ?, ?, and ? before joining the full word.
+[PAUSE 15s] Build **語** once from **言**, **五**, and **口** before joining the full word.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-NIHONGO, JA-SCRIPT-KANJI-READINGS] -->

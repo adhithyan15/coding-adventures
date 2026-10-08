@@ -439,6 +439,14 @@ export {
   type LiteralMarkupReport,
 } from "./literal-markup.js";
 export {
+  measureLostScript,
+  renderLostScript,
+  SPACED_QUESTION_MARK_LANGUAGES,
+  type LostScriptFinding,
+  type LostScriptReport,
+  type LostScriptRule,
+} from "./lost-script.js";
+export {
   buildCompletionPlan,
   renderCompletionPlan,
   CERTIFIABLE_LEVELS,

@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Two Answers, Sign by Sign",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:4ed70fe52854e901",
+  "sourceHash": "fnv1a64:7f5a19f68832a57e",
   "lessons": [
     {
       "id": "JA-W01-i",
@@ -167,7 +167,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:bd1e2a174cd43c4c",
+      "sourceHash": "fnv1a64:5033684fa8b5e2f8",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -275,7 +275,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say? and tap its one mora before adding another sign."
+              "text": "Say い and tap its one mora before adding another sign."
             }
           ]
         },
@@ -785,7 +785,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:be3de3c917443851",
+      "sourceHash": "fnv1a64:dfff42319871f6dd",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -896,7 +896,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say??, then write? once from memory before learning the contrasting answer."
+              "text": "Say はい (hai), then write い once from memory before learning the contrasting answer."
             }
           ]
         },

@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Nihongo, Built in Small Blocks",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c82891f8e89c9b65",
+  "sourceHash": "fnv1a64:ffb098d8faa44b82",
   "lessons": [
     {
       "id": "JA-W05-nichi-kanji",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bc9bcf20c5b9db2d",
+      "sourceHash": "fnv1a64:62c9df7471633a05",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -137,7 +137,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read????? once and write its base sign? without a model."
+              "text": "Read ございます once and write its base sign さ without a model."
             }
           ]
         },
@@ -191,7 +191,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f410753d9ac7e65a",
+      "sourceHash": "fnv1a64:b1686ef03b86eaa6",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -308,7 +308,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write? once from memory before beginning the new kanji."
+              "text": "Write ま once from memory before beginning the new kanji."
             }
           ]
         },
@@ -364,7 +364,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4566d09ba88a8331",
+      "sourceHash": "fnv1a64:af6c684e0fe49e21",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -461,7 +461,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write? once from memory before building the speech component."
+              "text": "Write す once from memory before building the speech component."
             }
           ]
         },
@@ -650,7 +650,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:41e23e2b05cdd380",
+      "sourceHash": "fnv1a64:4f634b0f719a76c4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -759,7 +759,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read????? from memory before drawing the new box component."
+              "text": "Read ございます from memory before drawing the new box component."
             }
           ]
         },
@@ -959,7 +959,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:89902cbc7dd1c0ae",
+      "sourceHash": "fnv1a64:cd3b8bf975184550",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1078,7 +1078,7 @@
             },
             {
               "kind": "speech",
-              "text": "Build? once from?,?, and? before joining the full word."
+              "text": "Build 語 once from 言 (gen), 五 (go), and 口 (kuchi) before joining the full word."
             }
           ]
         },

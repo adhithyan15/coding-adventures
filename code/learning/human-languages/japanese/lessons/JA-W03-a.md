@@ -66,7 +66,7 @@ Read **a**: the *a* of English *father*, kept short. One beat.
 ## Guided Practice — review pulse
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KONNICHIWA, JA-SCRIPT-NI-01] -->
 
-[PAUSE 15s] Give the daytime greeting, then write ? from memory.
+[PAUSE 15s] Give the daytime greeting, then write **に** from memory.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-A-01] -->
