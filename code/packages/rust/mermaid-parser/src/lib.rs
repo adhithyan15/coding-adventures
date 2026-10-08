@@ -14,7 +14,7 @@ use std::collections::{HashMap, HashSet};
 use diagram_ir::{
     BlockArrowDirections, BoardCard, BoardColumn, BoardConfig, BoardDiagram, DiagramDirection, DiagramLabel,
     DiagramShape, DiagramTextSpan, EdgeMarker,
-    DiagramStyle, EdgeKind, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell, GridColumns,
+    DiagramStyle, EdgeKind, GraphCallback, GraphDiagram, GraphEdge, GraphGroup, GraphLink, GraphNode, GridCell, GridColumns,
     GridConnection, GridDiagram, GridEdgeStyle, GridGroup, InfoDiagram, PacketConfig, PacketDiagram, PacketField,
     PacketTheme, RailroadDiagram, RailroadExpression, RailroadRule, SwimlaneDiagram, SwimlaneEdge,
     SwimlaneEdgeKind, SwimlaneLane, SwimlaneNode,
@@ -6220,6 +6220,7 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
         nodes: Vec::new(),
         edges: Vec::new(),
         links: Vec::new(),
+        callbacks: Vec::new(),
     };
     let mut current_lane: Option<usize> = None;
     let mut last_edge_targets: Option<Vec<String>> = None;
@@ -6284,9 +6285,16 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             continue;
         }
         if let Some(value) = line.strip_prefix("click ") {
-            let link = parse_swimlane_click(value, line_number)?;
-            diagram.links.retain(|existing| existing.node_id != link.node_id);
-            diagram.links.push(link);
+            match parse_swimlane_click(value, line_number)? {
+                SwimlaneInteraction::Link(link) => {
+                    diagram.links.retain(|existing| existing.node_id != link.node_id);
+                    diagram.links.push(link);
+                }
+                SwimlaneInteraction::Callback(callback) => {
+                    diagram.callbacks.retain(|existing| existing.node_id != callback.node_id);
+                    diagram.callbacks.push(callback);
+                }
+            }
             continue;
         }
         if let Some(value) = line.strip_prefix("classDef ") {
@@ -6345,6 +6353,11 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
             return Err(swimlane_error(1, format!("Swimlane click references unknown node {:?}", link.node_id)));
         }
     }
+    for callback in &diagram.callbacks {
+        if !diagram.nodes.iter().any(|node| node.id == callback.node_id) {
+            return Err(swimlane_error(1, format!("Swimlane callback references unknown node {:?}", callback.node_id)));
+        }
+    }
     if let Some(style) = class_styles.get("default") {
         for node in &mut diagram.nodes {
             merge_state_style(&mut node.style, style);
@@ -6384,11 +6397,37 @@ pub fn parse_swimlane(source: &str) -> Result<SwimlaneDiagram, ParseError> {
     Ok(diagram)
 }
 
-fn parse_swimlane_click(value: &str, line: usize) -> Result<GraphLink, ParseError> {
+enum SwimlaneInteraction { Link(GraphLink), Callback(GraphCallback) }
+
+fn parse_swimlane_click(value: &str, line: usize) -> Result<SwimlaneInteraction, ParseError> {
     let Some((node_id, rest)) = value.trim().split_once(char::is_whitespace) else {
-        return Err(swimlane_error(line, "Swimlane click requires a node and URL"));
+        return Err(swimlane_error(line, "Swimlane click requires a node and action"));
     };
     let rest = rest.trim_start();
+    if let Some(rest) = rest.strip_prefix("call").map(str::trim_start) {
+        let open = rest.find('(').ok_or_else(|| swimlane_error(line, "Swimlane callback requires parentheses"))?;
+        let close = rest[open + 1..].find(')').map(|index| open + 1 + index)
+            .ok_or_else(|| swimlane_error(line, "unterminated Swimlane callback arguments"))?;
+        let name = rest[..open].trim();
+        if name.is_empty() || !name.chars().all(|character| character.is_ascii_alphanumeric() || matches!(character, '_' | '.')) {
+            return Err(swimlane_error(line, "invalid Swimlane callback name"));
+        }
+        let arguments = rest[open + 1..close].trim();
+        let trailing = rest[close + 1..].trim_start();
+        let (tooltip, trailing) = if trailing.starts_with('"') {
+            let (tooltip, trailing) = take_swimlane_quoted_value(trailing, line, "tooltip")?;
+            (Some(tooltip), trailing)
+        } else {
+            (None, trailing)
+        };
+        if !trailing.trim().is_empty() {
+            return Err(swimlane_error(line, "unsupported trailing Swimlane callback syntax"));
+        }
+        return Ok(SwimlaneInteraction::Callback(GraphCallback {
+            node_id: node_id.to_string(), name: name.to_string(),
+            arguments: (!arguments.is_empty()).then(|| arguments.to_string()), tooltip,
+        }));
+    }
     let rest = rest.strip_prefix("href").map(str::trim_start).unwrap_or(rest);
     let (url, rest) = take_swimlane_quoted_value(rest, line, "URL")?;
     let rest = rest.trim_start();
@@ -6403,7 +6442,7 @@ fn parse_swimlane_click(value: &str, line: usize) -> Result<GraphLink, ParseErro
         target @ ("_blank" | "_self" | "_parent" | "_top") => Some(target.to_string()),
         _ => return Err(swimlane_error(line, "unsupported Swimlane click link target")),
     };
-    Ok(GraphLink { node_id: node_id.to_string(), url, tooltip, target })
+    Ok(SwimlaneInteraction::Link(GraphLink { node_id: node_id.to_string(), url, tooltip, target }))
 }
 
 fn take_swimlane_quoted_value<'a>(value: &'a str, line: usize, kind: &str) -> Result<(String, &'a str), ParseError> {

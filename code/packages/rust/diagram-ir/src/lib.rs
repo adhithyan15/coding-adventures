@@ -197,6 +197,14 @@ pub struct GraphLink {
 }
 
 #[derive(Clone, Debug, PartialEq)]
+pub struct GraphCallback {
+    pub node_id: String,
+    pub name: String,
+    pub arguments: Option<String>,
+    pub tooltip: Option<String>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct GraphGroup {
     pub id: String,
     pub label: DiagramLabel,
@@ -1918,7 +1926,7 @@ pub struct SwimlaneEdge {
 pub struct SwimlaneDiagram {
     pub direction: DiagramDirection, pub title: Option<String>, pub accessibility_title: Option<String>,
     pub accessibility_description: Option<String>, pub lanes: Vec<SwimlaneLane>, pub nodes: Vec<SwimlaneNode>,
-    pub edges: Vec<SwimlaneEdge>, pub links: Vec<GraphLink>,
+    pub edges: Vec<SwimlaneEdge>, pub links: Vec<GraphLink>, pub callbacks: Vec<GraphCallback>,
 }
 #[derive(Clone, Debug, PartialEq)]
 pub struct LayoutedSwimlaneLane { pub id: String, pub label: String, pub x: f64, pub y: f64, pub width: f64, pub height: f64 }
@@ -1937,7 +1945,7 @@ pub struct LayoutedSwimlaneDiagram {
     pub width: f64, pub height: f64, pub direction: DiagramDirection, pub title: Option<String>,
     pub accessibility_title: Option<String>, pub accessibility_description: Option<String>,
     pub lanes: Vec<LayoutedSwimlaneLane>, pub nodes: Vec<LayoutedSwimlaneNode>, pub edges: Vec<LayoutedSwimlaneEdge>,
-    pub links: Vec<GraphLink>,
+    pub links: Vec<GraphLink>, pub callbacks: Vec<GraphCallback>,
 }
 
 // GRAMMAR VISUALIZATION FAMILY
