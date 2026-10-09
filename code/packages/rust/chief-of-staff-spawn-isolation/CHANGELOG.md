@@ -4,6 +4,8 @@
 
 ### Added
 
+- `VerifiedExecutable` is built on macOS too, for the Seatbelt shim and
+  the agents it launches (D18S step 7, P2.7a). Its checks are the same.
 - `VerifiedExecutable::descriptor`: a duplicate of the descriptor that was
   hashed, for the confinement to execute (P2.6d-3).
 

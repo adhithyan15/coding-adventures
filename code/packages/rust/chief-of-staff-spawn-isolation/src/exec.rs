@@ -12,6 +12,11 @@
 //! execs a duplicate of its descriptor under the broker's confinement
 //! (`execveat(fd, "", AT_EMPTY_PATH)`), with the keys on 3..3+n.
 //!
+//! macOS has no `execveat`, so there a binary is executed by path
+//! (`chief-of-staff-macos-sandbox`, D18S step 7). That confinement checks
+//! that the path still names the inode of this descriptor, before the
+//! spawn and again in its shim just before the exec.
+//!
 //! (P2.6d-2a had a second launcher here, `isolate_and_exec`, which placed
 //! the descriptors and exec'd without a sandbox. P2.6d-3 replaced it: there
 //! is one way to start a broker, and it is confined.)
@@ -95,8 +100,9 @@ impl VerifiedExecutable {
         Ok(verified)
     }
 
-    /// The path it was opened from, for messages only: it is never
-    /// executed by path.
+    /// The path it was opened from. On Linux it is for messages only and
+    /// is never executed. On macOS it is what runs, after the confinement
+    /// has checked that it still names this descriptor's inode.
     pub fn path(&self) -> &Path {
         &self.path
     }
