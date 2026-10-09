@@ -2,9 +2,10 @@
 
 - **Every Dependabot alert a safe bump can close is closed.**
   - `npm audit fix --package-lock-only` (npm 11.13.0, as CI pins) was run over
-    the 486 `package-lock.json` files that audited dirty. The main fix is
-    `source-map-js` 1.2.1 → 1.2.2 (GHSA-68fv-2mgg-jv7q, high) in 479
-    lockfiles.
+    485 of the 486 `package-lock.json` files that audited dirty. The main fix is
+    `source-map-js` 1.2.1 → 1.2.2 (GHSA-68fv-2mgg-jv7q, high) in 478
+    lockfiles. `typescript/barcode-layout-1d` is held back because its
+    fixture registry pins the package tree; see the backlog.
   - The three Electron apps also move `electron` 43.4 → 43.7.9, `undici`,
     `brace-expansion`, `fast-uri`, `http-cache-semantics` and the
     electron-builder 26.17 chain.

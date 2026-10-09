@@ -61,7 +61,7 @@ package on the status date.
 | EXT-005 | `esbuild` | GHSA-g7r4-m6w7-qqqr and others (#5693, #4947) | high | 23 | vite; direct in 3 packages | Cleared |
 | EXT-006 | `postcss` | GHSA-r28c-9q8g-f849, GHSA-fxqj-rqcc-2cmp | high | 495 | vite | Cleared |
 | EXT-007 | `nanoid` | GHSA-2v37-7h3g-55p8, GHSA-28wg-ghj8-5hjv | high | 495 | postcss | Cleared |
-| EXT-008 | `source-map-js` | GHSA-68fv-2mgg-jv7q | high | 495 | postcss | Cleared |
+| EXT-008 | `source-map-js` | GHSA-68fv-2mgg-jv7q | high | 495 | postcss | Cleared except `typescript/barcode-layout-1d` (**open, evidence pin**, see below) |
 | EXT-009 | `picomatch` | unknown (2.3.1→2.3.2, 4.0.3→4.0.4) | — | 501 | vite, tinyglobby, anymatch | Cleared |
 | EXT-010 | `electron` | GHSA-hq2x-r82h-9wj4, -gr2m-v5gq-v685, -j84w-jfhq-vhvj, -9qh4-3jw8-366w, -qmv3-fv6v-rmhq, -r4w5-6pfg-jxp5, plus 18 earlier alerts (#4947) | high | 5 | direct (Electron apps, Engram) | Cleared |
 | EXT-011 | `extract-zip` | GHSA-jmr9-qjv8-65gv | high | 0 | electron < 42.4 | Cleared (electron dropped it) |
@@ -118,6 +118,30 @@ least seven days old (`scripts/npm-lock.sh`). `concurrently` 10.0.4 pins
   electron, kill both on exit". That is a few lines of Node, or a
   `mosaic-dev` subcommand (see `code/programs/rust/mosaic-dev`), with no
   third-party dependency at all.
+
+### EXT-008: `source-map-js` (high), `typescript/barcode-layout-1d` only
+
+This lockfile was left at 1.2.1 on purpose.
+`code/specs/fixtures/barcode-layout-1d-v1/targets.json` pins the package's git
+tree (`package_tree`) to the conformance-verified revision, and
+`code/scripts/tests/test_barcode_layout_1d_fixtures.py` requires
+`HEAD:<package_root>` to equal that tree. Any change to the directory, a
+lockfile-only bump included, breaks the "Repo-wide metadata contracts" check.
+
+Re-pinning to the bump PR's own head commit breaks main as soon as that PR is
+squash-merged (see
+`lessons.d/evidence-pinned-to-a-pr-s-head-commit-breaks-main-once-the.md`).
+
+- **Do:** in a dedicated follow-up PR:
+  1. Run `npm audit fix --package-lock-only` (npm 11) in the package.
+  2. Re-run its conformance test.
+  3. Update `package_tree` together with the loop state's revisions, following
+     the squash-merge procedure that lesson describes.
+- **Or:** change the registry check to exclude `package-lock.json` from the
+  pinned tree. That is a change to the evidence contract, so it is the
+  registry owner's call.
+- **Exposure:** dev-only. `source-map-js` is reached through vite/postcss in
+  the test toolchain and is not shipped.
 
 ### EXT-026 / EXT-027: `sprintf-js` (moderate), 9 lockfiles, no upstream fix
 
