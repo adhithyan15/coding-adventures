@@ -17,8 +17,10 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 
 /// Parked inherited descriptors sit at this number or above until the
-/// shim moves them, clear of the low numbers std uses in the child.
-const PARK_FLOOR: i32 = 256;
+/// shim moves them. Any free number will do: the shim stages them above
+/// every source and target before placing them. A higher floor would fail
+/// under macOS's default soft `RLIMIT_NOFILE` of 256.
+const PARK_FLOOR: i32 = 3;
 
 /// A prepared confinement: the profile and the shim's instructions, built
 /// and checked in the supervisor, ready for each spawn.
@@ -119,11 +121,12 @@ impl MacosConfinement {
     /// descriptors 3, 4, ... in order, and nothing else above stderr
     /// (D18S S-I3: a broker's keys). At most 64.
     ///
-    /// They are parked now, close-on-exec, at 256 and up, and the caller's
+    /// They are parked now, as close-on-exec duplicates, and the caller's
     /// copies closed. In the forked child, after spawn isolation, the hook
     /// clears close-on-exec on exactly the parked ones, so they reach the
     /// shim, which moves them into place. The command holds them until it
-    /// is dropped.
+    /// is dropped: spawn it once, since every spawn of it would receive
+    /// them.
     pub fn apply_inheriting<'a>(
         &self,
         command: &'a mut Command,

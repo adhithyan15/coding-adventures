@@ -31,7 +31,7 @@
 //!     checks the environment
 //!     takes argv and envp, with the
 //!     shim's instructions, now
-//!     parks inherited fds at 256 and up
+//!     parks inherited fds close-on-exec
 //!   spawn ── fork, isolate, execve(shim) ►  places inherited fds
 //!                                        checks its environment
 //!                                        RLIMIT_CORE = 0
@@ -416,9 +416,9 @@ fn check_ancestors(path: &Path) -> Result<(), String> {
                 directory.display()
             ));
         }
-        if !sticky {
-            no_shared_write_access(directory)?;
-        }
+        // Sticky or not: an ACL `delete_child` entry is honoured before
+        // the sticky bit is consulted.
+        no_shared_write_access(directory)?;
     }
     Ok(())
 }
@@ -526,30 +526,49 @@ fn no_shared_write_access(_path: &Path) -> Result<(), String> {
 
 /// The first entry of an `acl_to_text` listing that allows a change, if
 /// any. Each entry line is
-/// `<tag>:<uuid>:<name>:<id>:<allow|deny>:<perm>,<perm>,...`; the header
-/// line (`!#acl 1`) has no such fields. A deny entry only takes access
-/// away, so it is never a reason to refuse.
+///
+/// ```text
+///   <tag>:<uuid>:<name>:<id>:<allow|deny>[,<flag>...]:<perm>,<perm>,...
+/// ```
+///
+/// for example `user:…:b:502:allow,file_inherit,directory_inherit:add_file`.
+/// The last two fields are read from the right, so a name holding `:`
+/// cannot shift them, and only the first token of the kind is the kind:
+/// inherited and inheritable entries carry flags after it. The header line
+/// (`!#acl 1`) has no such fields. A deny entry only takes access away, so
+/// it is never a reason to refuse. Any line that cannot be read as an
+/// entry refuses too.
 pub fn acl_allows_writing(listing: &str) -> Option<String> {
-    const WRITES: [&str; 8] = [
+    const WRITES: [&str; 10] = [
         "write",
         "append",
         "add_file",
         "add_subdirectory",
         "delete",
         "delete_child",
+        "writeattr",
+        "writeextattr",
         "writesecurity",
         "chown",
     ];
     listing
         .lines()
-        .filter(|line| !line.starts_with("!#acl"))
+        .filter(|line| !line.starts_with("!#acl") && !line.trim().is_empty())
         .find(|line| {
-            let fields: Vec<&str> = line.split(':').collect();
-            fields.len() >= 6
-                && fields[4] == "allow"
-                && fields[5]
+            let mut fields = line.rsplitn(3, ':');
+            let (Some(permissions), Some(kind), Some(_)) =
+                (fields.next(), fields.next(), fields.next())
+            else {
+                return true;
+            };
+            let kind = kind.split(',').next().unwrap_or("");
+            match kind {
+                "deny" => false,
+                "allow" => permissions
                     .split(',')
-                    .any(|permission| WRITES.contains(&permission.trim()))
+                    .any(|permission| WRITES.contains(&permission.trim())),
+                _ => true,
+            }
         })
         .map(str::to_string)
 }
@@ -932,6 +951,20 @@ mod tests {
             );
         }
         assert_eq!(acl_allows_writing(""), None);
+        // Inherited and inheritable entries carry flags after the kind.
+        let inherited = "user:AB:b:502:allow,file_inherit,directory_inherit:add_file,delete_child";
+        assert_eq!(
+            acl_allows_writing(&format!("!#acl 1\n{inherited}\n")),
+            Some(inherited.to_string())
+        );
+        let denied = "group:AB:everyone:12:deny,inherited:delete";
+        assert_eq!(acl_allows_writing(&format!("!#acl 1\n{denied}\n")), None);
+        // A name with a colon cannot shift the fields read from the right.
+        let colon = "user:AB:odd:name:502:allow:write";
+        assert_eq!(acl_allows_writing(colon), Some(colon.to_string()));
+        // An entry that cannot be read refuses.
+        assert!(acl_allows_writing("garbage").is_some());
+        assert!(acl_allows_writing("user:AB:b:502:maybe:read").is_some());
     }
 
     #[test]

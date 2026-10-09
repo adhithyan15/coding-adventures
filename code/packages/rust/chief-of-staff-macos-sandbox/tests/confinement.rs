@@ -430,6 +430,26 @@ fn an_access_control_entry_that_lets_others_write_is_refused() {
         confinement_for(&[("read", &granted)]),
         Err(ConfinementError::Grant(why)) if why.contains("ACL")
     ));
+
+    // An inheritable entry, as shared folders are set up, carries flags
+    // after "allow"; it is refused just the same.
+    let inheriting = scratch.0.join("inheriting");
+    fs::create_dir(&inheriting).unwrap();
+    let inside = inheriting.join("granted");
+    fs::write(&inside, "g").unwrap();
+    let status = Command::new("/bin/chmod")
+        .args([
+            "+a",
+            "everyone allow add_file,delete_child,file_inherit,directory_inherit",
+        ])
+        .arg(&inheriting)
+        .status()
+        .unwrap();
+    assert!(status.success());
+    assert!(matches!(
+        confinement_for(&[("read", &inside)]),
+        Err(ConfinementError::Grant(why)) if why.contains("ACL")
+    ));
 }
 
 fn confinement_for(grants: &[(&str, &Path)]) -> Result<MacosConfinement, ConfinementError> {

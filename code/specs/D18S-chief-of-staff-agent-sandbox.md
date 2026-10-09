@@ -2125,8 +2125,10 @@ through S-I3 before two weeks are spent on Windows.
    - the path names the same `(dev, ino)` as the hashed descriptor;
    - every directory above it is owned by root or the supervisor's user
      and is writable by no one else, unless it is sticky. "Writable" is
-     judged by the mode bits and by the ACL: an `allow` entry granting
-     `add_file`, `delete_child` or any other change refuses;
+     judged by the mode bits and by the ACL, on sticky directories too
+     (an ACL `delete_child` is honoured before the sticky bit): an
+     `allow` entry, inherited or not, granting `add_file`,
+     `delete_child` or any other change refuses;
    - it lies on a local APFS or HFS volume that honours ownership. On a
      volume that ignores ownership, every file reads as the caller's; on
      FAT-family volumes a replaced file can reuse an inode number.
@@ -2150,8 +2152,9 @@ through S-I3 before two weeks are spent on Windows.
      command afterwards do not reach the shim. A refused command is
      poisoned, so spawning it anyway fails.
    - Spawn isolation (step 2) marks every descriptor above 2 close-on-exec.
-   - For a broker, `apply_inheriting` parks the key descriptors
-     close-on-exec at 256 and up, and closes the caller's copies. The
+   - For a broker, `apply_inheriting` parks the key descriptors as
+     close-on-exec duplicates, and closes the caller's copies. (Not at a
+     high floor: macOS's default soft descriptor limit is 256.) The
      hook clears close-on-exec on exactly the parked ones. The shim moves
      them to 3..3+n and closes the parked copies.
    - Just before the exec, the shim lists its open descriptors

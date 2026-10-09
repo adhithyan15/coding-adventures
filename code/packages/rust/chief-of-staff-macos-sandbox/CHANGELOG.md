@@ -17,7 +17,7 @@
     `apply_inheriting(&mut command, descriptors)`:
     - check the environment against the closed set;
     - capture argv and envp, passing only what was set on the command;
-    - park inherited descriptors close-on-exec at 256 and up;
+    - park inherited descriptors as close-on-exec duplicates;
     - isolate the descriptors, then exec the shim from the hook, with its
       instructions in `CHIEF_OF_STAFF_SEATBELT_SHIM`;
     - poison the command on any refusal.
