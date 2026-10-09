@@ -12,7 +12,13 @@ import {
   type LetterDuctus,
   type Point,
 } from "../../src/strokes";
-import { registerStrokeHonestyTests } from "../support/stroke-honesty";
+import {
+  fontForDuctus,
+  insideExcused,
+  registerStrokeHonestyTests,
+  untracedShare,
+  type ExcusedInk,
+} from "../support/stroke-honesty";
 
 const DEVANAGARI_A = DUCTUS[ductusKey("devanagari", "अ")];
 const DEVANAGARI_AA = DUCTUS[ductusKey("devanagari", "आ")];
@@ -63,8 +69,54 @@ const letters = (Object.values(DUCTUS) as LetterDuctus[]).filter((letter) =>
   OWNER_SCRIPTS.has(letter.script),
 );
 
+// ---------------------------------------------------------------------------
+// The headline-stub exception: three signs whose printed glyph carries a
+// piece of the WORD's headline.
+//
+// Noto Sans Devanagari prints ी, ो and ः with a short bar at the headline's
+// height (the "stub", x 0 to 273, or 217 for ः), so that a typeset word's
+// shirorekhā runs on unbroken across the sign:
+//
+//     typeset word:   ━━━━━━━━━━━━━━━━━━━━   one headline across every letter
+//
+//     ी by itself:      ╭────╮
+//                       │     ╲
+//                       ╵   ┏━━╋━━┓   <- the stub: a piece of that headline,
+//                           ┗━━╋━━┛      printed on the sign by itself
+//                              ┃
+//                              ┃      the stem the sign hangs from it
+//
+// Native writers do not draw it as part of the sign. HP Labs India's LipiTk
+// traces, the cited source, were written one sign at a time WITHOUT a
+// headline, and most writers draw no top stroke at all (62 of 91 for ी, 43 of
+// 83 for ो, none of the 77 two-dot visargas). In a word the stub IS the
+// headline, and native writers draw that headline last, once, across the
+// whole word (82% of the recognizer's 2,706 consonant prototypes). So each
+// path follows the writers and the strip shows the stub in grey; the mark
+// records say so in their variation and stroke-order note.
+//
+// The coverage check ("the strokes trace the WHOLE letter") would count the
+// stub as a part the pen never reached: 4.6% of ी, 4.2% of ो and 37% of ः,
+// over the 2% it allows. Rather than raise those glyphs' ceilings (which
+// would excuse ANY ink up to the new share), each excuses exactly the
+// stub's rectangle, read from the font's own outline; everything outside it
+// must still be traced at the default 2%. The cases below pin which glyphs
+// carry the exception, that each rectangle is the printed stub and nothing
+// more, and that it is needed.
+//
+// ā (ा) is NOT here: its stub is the piece a composed word's headline is
+// built from (headline-word.ts), so its own second stroke draws it.
+// ---------------------------------------------------------------------------
+const STUB_WHY =
+  "the piece of the word's headline Noto prints on the sign; native writers draw the headline last, across the whole word";
+const HEADLINE_STUBS: Readonly<Record<string, ExcusedInk>> = {
+  "ी": { x0: 0, x1: 273, y0: 551, y1: 622, why: STUB_WHY },
+  "ो": { x0: 0, x1: 273, y0: 551, y1: 622, why: STUB_WHY },
+  "ः": { x0: 0, x1: 217, y0: 551, y1: 622, why: STUB_WHY },
+};
+
 describe("handwriting ductus", () => {
-  registerStrokeHonestyTests(letters, { ख: 0.95 });
+  registerStrokeHonestyTests(letters, { ख: 0.95 }, {}, HEADLINE_STUBS);
 
   beforeAll(() => {
     expect(verifiedLetterFont("अ", DEVANAGARI_A.source.url)).toBe(
@@ -1748,4 +1800,62 @@ describe("handwriting ductus", () => {
       /22-frame animation.*three ordered pen-down runs.*gray guide.*frames 2–12.*right stem's headline junction.*descend top-to-bottom.*sweep left through the shoulder.*curve clockwise around the hooked body.*lower-right tip.*without lifting.*frames 13–16.*body's left junction.*sweep down-left around the outer curve.*continue diagonally down-right through the tail.*frames 17–21.*headline's left edge.*shirorekhā left-to-right.*two intervening lifts.*230 ms hold.*frame 12.*250 ms hold.*frame 16.*one-second completed frame 21.*Central Hindi Directorate.*2019 Deskbook on Orthography of Devanagari Script.*Lesson 2.*Unit IX.*p\. 48.*right stem.*leftward shoulder.*hooked body.*outer curve and tail.*headline buildup.*stages the joined first body.*more component steps.*three-run lift count.*animation.*Noto Sans Devanagari.*divide or simplify the body/i,
     );
   });
+});
+
+describe("the headline-stub coverage exception", () => {
+  const sign = (glyph: string) => DUCTUS[ductusKey("devanagari", glyph)];
+  const contourOf = (glyph: string) => fontForDuctus(sign(glyph)).glyphFor(glyph)!.contours;
+
+  it("is carried by exactly ी, ो and ः", () => {
+    expect(Object.keys(HEADLINE_STUBS)).toEqual(["ी", "ो", "ः"]);
+    // ā draws its stub (its second stroke), so it needs no exception.
+    expect(HEADLINE_STUBS["ा"]).toBeUndefined();
+  });
+
+  for (const [glyph, stub] of Object.entries(HEADLINE_STUBS)) {
+    it(`${glyph}: the excused rectangle is the printed stub, at the headline's height`, () => {
+      // All four corners are on-curve points of the font's own outline, so the
+      // rectangle is the bar Noto draws, not a box drawn round something else.
+      const onCurve = contourOf(glyph).flat().filter((point) => point.on);
+      for (const [x, y] of [
+        [stub.x0, stub.y0],
+        [stub.x0, stub.y1],
+        [stub.x1, stub.y1],
+        [stub.x1, stub.y0],
+      ]) {
+        expect(onCurve.some((point) => point.x === x && point.y === y), `${x},${y}`).toBe(true);
+      }
+      // It spans the headline every Devanagari letter draws at y = 585, and
+      // is a bar: much wider than it is tall.
+      expect(stub.y0).toBeLessThan(585);
+      expect(stub.y1).toBeGreaterThan(585);
+      expect(stub.x1 - stub.x0).toBeGreaterThan(3 * (stub.y1 - stub.y0));
+      expect(stub.why).toBe(STUB_WHY);
+    });
+
+    it(`${glyph}: without the exception the stub fails the default check; with it, nothing else is left`, () => {
+      // The control: the exception is needed (the stub really is undrawn) ...
+      expect(untracedShare(sign(glyph))).toBeGreaterThan(0.02);
+      // ... and it excuses only the stub: every ink sample outside it is traced.
+      expect(untracedShare(sign(glyph), stub)).toBe(0);
+    });
+
+    it(`${glyph}: the pen still crosses the stub only where the sign's own body does`, () => {
+      // Excusing the stub must not hide a stroke drawn ALONG it: no point of
+      // any path runs inside the rectangle more than the stem's width from
+      // the stem (x 89 to 170), and ः, whose dots sit below it, never enters.
+      const inside = sign(glyph)
+        .strokes.flatMap((stroke) => penPath(stroke))
+        .filter((point) => insideExcused([point.x, point.y], stub));
+      if (glyph === "ः") expect(inside).toEqual([]);
+      else for (const point of inside) expect(point.x, `${point.x},${point.y}`).toBeGreaterThanOrEqual(89);
+      for (const point of inside) expect(point.x).toBeLessThanOrEqual(170);
+    });
+
+    it(`${glyph}: its mark record says the stub is left undrawn, and why`, () => {
+      const source = sign(glyph).source;
+      expect(source.variation).toContain("The path leaves that piece undrawn, so the strip shows it in grey");
+      expect(source.variation).toContain("which native writers draw last, across the whole word");
+    });
+  }
 });

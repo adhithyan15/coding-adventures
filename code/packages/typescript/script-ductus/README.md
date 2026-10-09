@@ -303,13 +303,20 @@ sign's mark record (`gujaratiMarkSource`): order, start, direction and lifts
 from KanoAI's hand-made barakhadi templates, paths fitted to Noto Sans
 Gujarati. `tests/strokes/gujarati-marks.test.ts` and
 `tests/ductusview/gujarati-marks.test.ts` hold their evidence.
-Eight Devanagari signs (ु ू े ं ़ ् ृ ँ) sit at the end of the Devanagari
-owner the same way, sourced through `devanagariMarkSource` to native writers'
-pen traces in HP Labs India's LipiTk Devanagari recognizer (counts and shares
-only). Those writers wrote each sign alone, so the entries draw the sign by
-itself and say nothing about its order against a consonant or the headline;
-ा ि ी ो ौ ै and ः are left out because Noto prints a headline piece the traces
-never draw, or the traces split. `tests/strokes/devanagari-marks.test.ts` and
+Twelve Devanagari signs (ा ु ू े ं ़ ् ृ ँ ी ो ः) sit at the end of the
+Devanagari owner the same way, sourced through `devanagariMarkSource` to
+native writers' pen traces in HP Labs India's LipiTk Devanagari recognizer
+(counts and shares only). Those writers wrote each sign alone, so the entries
+draw the sign by itself and say nothing about its order against a consonant
+or the headline (ā's place in a word is cited separately). Noto prints ी, ो
+and ः with a short piece of headline that the writers do not draw: in a word
+it is the one headline drawn last across the whole word. Their paths leave
+it undrawn, and the coverage check excuses exactly that rectangle on exactly
+those three glyphs (`ExcusedInk` in `tests/support/stroke-honesty.ts`,
+`HEADLINE_STUBS` in `tests/strokes/devanagari.test.ts`): narrower than
+raising a glyph's untraced ceiling, because every other part of the sign must
+still be traced. ि ै and ौ are left out because the traces split.
+`tests/strokes/devanagari-marks.test.ts` and
 `tests/ductusview/devanagari-marks.test.ts` hold their evidence.
 
 More than 2,200 tests cover the registry, paths, font fit, provenance, and

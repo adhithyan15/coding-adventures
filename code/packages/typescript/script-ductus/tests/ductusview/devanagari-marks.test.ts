@@ -1,8 +1,10 @@
-// How the nine Devanagari signs print as filmstrips: one frame per movement,
+// How the twelve Devanagari signs print as filmstrips: one frame per movement,
 // a lift exactly where HP Labs India's native writers lift the pen, and each
 // sign drawn over the bundled Noto Sans Devanagari outline of the sign by
 // itself — no consonant, and no headline the printed sign does not carry (ā
-// carries a piece of one, so its strip draws it, last).
+// carries a piece of one, so its strip draws it, last). ी, ो and ः carry one
+// too, but it is the word's headline, which native writers draw last across
+// the whole word, so their strips leave it in the grey outline, undrawn.
 import { describe, expect, it } from "vitest";
 import { DUCTUS, ductusKey, penPathD } from "../../src/strokes";
 import { ductusFilmstrip, ductusFor, ductusSteps } from "../../src/ductusview";
@@ -20,6 +22,9 @@ const VIEWS: Record<string, { lifts: boolean[]; summary: string }> = {
   "्": { lifts: [false], summary: "one unbroken stroke · 1 movement" },
   "ृ": { lifts: [false, false, false], summary: "one unbroken stroke · 3 movements" },
   "ँ": { lifts: [false, false, true], summary: "2 strokes · 1 pen lift · 3 movements" },
+  "ी": { lifts: [false, false, false], summary: "one unbroken stroke · 3 movements" },
+  "ो": { lifts: [false, true, false], summary: "2 strokes · 1 pen lift · 3 movements" },
+  "ः": { lifts: [false, false, true, false], summary: "2 strokes · 1 pen lift · 4 movements" },
 };
 
 for (const [glyph, view] of Object.entries(VIEWS)) {

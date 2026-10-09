@@ -1,7 +1,7 @@
 {
   "language": "persian",
   "chapter": 139,
-  "sourceHash": "fnv1a64:1e926609345a52ea",
+  "sourceHash": "fnv1a64:26153c112c645c52",
   "lessonIds": [
     "FA-C139-jadval-e-zamani",
     "FA-C139-tablo",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "persian/narration/ch139.txt",
   "json": "persian/narration/ch139.json",
-  "textHash": "fnv1a64:13cfe85bd18b552b",
-  "jsonHash": "fnv1a64:0039cc85f71a3be6",
+  "textHash": "fnv1a64:d9e88958ee91d62e",
+  "jsonHash": "fnv1a64:90b524f750f78377",
   "findings": []
 }

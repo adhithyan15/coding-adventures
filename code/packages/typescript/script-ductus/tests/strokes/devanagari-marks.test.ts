@@ -25,6 +25,18 @@
 //     ्      61     1 (80/82)         upper-left end           down (79/82); the slant is the printed one
 //     ृ      52     1 (81/83)         upper tip                left, round the bottom (anticlockwise), out right
 //     ँ      59     2 (79/82)         crescent's left tip      crescent left to right, lift, then the dot (76/82)
+//     ी      49     1 body (55/91)    lower tip of the hook    up, over the top, down the stem: arch first
+//                                                              (49/91), and of those in one run (44/49)
+//     ो      55     2 (42/83)         top of the stem          down; lift (58/83 stem down, then a lift);
+//                                                              the flag from its upper-left tip (41/58), as े
+//     ः      60     2 (77/81)         top of the upper dot     anticlockwise loop; lift; the lower dot the
+//                                                              same way (upper first 76/77, both anticlockwise 66/77)
+//
+// ी, ो and ः are printed with a short piece of headline (a stub) that the
+// writers, who wrote each sign without a headline, do not draw: it is the
+// word's headline, which they draw last across the whole word. Their paths
+// leave it undrawn, and the coverage check excuses exactly that rectangle
+// (HEADLINE_STUBS in devanagari.test.ts).
 //
 // ā is the one sign whose PLACE in a word is cited too (its mark record's
 // compositionSource: the cited आ draws the same bar after its body and before
@@ -32,13 +44,11 @@
 // (headline-word.ts). Its path draws the piece of headline the printed sign
 // carries, so nothing of the printed sign is left untraced.
 //
-// Left out, so their lessons stay undrawn:
+// Left out, so their lessons stay undrawn — no form wins a majority:
 //
-//   * ि, ी, ो and ः: Noto Sans Devanagari prints each with a short piece of
-//     headline that the native traces do not draw (they were written without
-//     one), so a path fitted to the traces leaves 3.5% to 37% of the printed ink
-//     untraced, over the 2% the honesty check allows. ी and ो are also weak
-//     majorities (43% and 51% for the drawn form).
+//   * ि: of 75 prototypes, 31 draw the stem down, lift and add the arch; 22
+//     draw one run from the arch's right tip, over and down the stem; 20 draw
+//     one run up the stem and over to the right tip.
 //   * ै and ौ: the traces split. ै is two strokes in 92%, but each flag's
 //     direction is a coin toss (34% draw both flags upper-left to lower-right);
 //     ौ's most common form is three strokes in only 42%.
@@ -83,14 +93,19 @@ const HASHES: Record<string, string> = {
   "्": "a00b10150ac4dc00cd148ee3b48132c41cc63bf3ac26c21bcef809032cb27c9e",
   "ृ": "85540d72eb0058ca7ab8d7b9a65aa5c50357d9b29366bd57d350152aff67da31",
   "ँ": "524adfe04ec18814a5505893f7d97091b73cc95e91b5e9b8e6e89e584865ef0d",
+  "ी": "25c57ed2f5beead731c6838e9ed6f90566e046b9842f4e0d86a5bb98f5f01376",
+  "ो": "5669ec37768dc82b0ad412cb188ad9cfe77a109006c0b122331cbb038b5d3a8c",
+  "ः": "ac7d75993c235a73df7e095c817df3a4f20857e174e818ee4d81985e84cf72bc",
 };
 
 const CLASSES: Record<string, number> = {
   "ा": 47, "ु": 50, "ू": 51, "े": 53, "ं": 57, "़": 62, "्": 61, "ृ": 52, "ँ": 59,
+  "ी": 49, "ो": 55, "ः": 60,
 };
 
 const LIFTS: Record<string, number> = {
   "ा": 1, "ु": 0, "ू": 0, "े": 0, "ं": 0, "़": 0, "्": 0, "ृ": 0, "ँ": 1,
+  "ी": 0, "ो": 1, "ः": 1,
 };
 
 describe("Devanagari sign ductus records", () => {
@@ -120,8 +135,8 @@ describe("Devanagari sign ductus records", () => {
     });
   }
 
-  it("leaves out the signs whose evidence or printed form does not fit", () => {
-    for (const glyph of ["ि", "ी", "ै", "ो", "ौ", "ः"]) {
+  it("leaves out the signs whose traces have no majority form", () => {
+    for (const glyph of ["ि", "ै", "ौ"]) {
       expect(DUCTUS[ductusKey("devanagari", glyph)], glyph).toBeUndefined();
     }
   });
@@ -183,6 +198,29 @@ describe("one-stroke signs", () => {
     expect(last(virama).y).toBe(Math.min(...ys(virama)));
   });
 
+  it("ी starts at the hook's lower tip, arches over the top and runs down the stem, leaving the stub undrawn", () => {
+    const ii = sign("ी");
+    expect(labels(ii)).toEqual([
+      ["start at the hook's lower tip and climb", "arch over the top and down to the right", "draw the stem straight down"],
+    ]);
+    // Starts at the hook's lower tip — the lowest point left of the stem — and
+    // ends at the foot of the stem.
+    const hook = penPath(ii.strokes[0]).filter((point) => point.x < 0);
+    expect(first(ii).y).toBe(Math.min(...hook.map((point) => point.y)));
+    expect(first(ii).x).toBeLessThan(-100);
+    expect(last(ii).y).toBe(Math.min(...ys(ii)));
+    // The arch: up the left side before it turns right, and its top is the
+    // run's highest point.
+    expect(ii.strokes[0].segments[0].path.at(-1)!.y).toBeGreaterThan(first(ii).y + 150);
+    expect(Math.max(...ys(ii))).toBeGreaterThan(850);
+    // Clockwise on the page (over the top from left to right): negative signed area.
+    expect(signedArea(penPath(ii.strokes[0]))).toBeLessThan(0);
+    // The stem is straight down; no movement runs along the headline stub.
+    const stem = ii.strokes[0].segments[2].path;
+    expect(Math.max(...stem.map((p) => p.x)) - Math.min(...stem.map((p) => p.x))).toBeLessThanOrEqual(2);
+    expect(Math.max(...xs(ii))).toBeLessThan(170);
+  });
+
   it("ृ starts at its upper tip, curls left round the bottom, and runs out to the right", () => {
     const r = sign("ृ");
     expect(labels(r)).toEqual([
@@ -208,6 +246,42 @@ describe("signs written in two strokes", () => {
     expect(xs(aa, 1)).toEqual([...xs(aa, 1)].sort((a, b) => a - b));
   });
 
+
+  it("ो draws its stem down, then lifts for the flag from its upper-left tip, as े is drawn", () => {
+    const o = sign("ो");
+    expect(labels(o)).toEqual([
+      ["draw the stem straight down"],
+      ["lift, then arc to the right along the top", "curve down to the top of the stem"],
+    ]);
+    expect(new Set(xs(o, 0)).size).toBe(1);
+    expect(first(o, 0).y).toBe(Math.max(...ys(o, 0)));
+    expect(last(o, 0).y).toBe(Math.min(...ys(o, 0)));
+    // The flag: from its upper-left tip, right and down to where the stem began.
+    expect(first(o, 1).x).toBe(Math.min(...xs(o, 1)));
+    expect(last(o, 1).y).toBe(Math.min(...ys(o, 1)));
+    expect(Math.hypot(last(o, 1).x - first(o, 0).x, last(o, 1).y - first(o, 0).y)).toBeLessThan(15);
+    // Like े's run: it ends lower and to the right of where it began.
+    expect(last(o, 1).x).toBeGreaterThan(first(o, 1).x);
+    expect(last(o, 1).y).toBeLessThan(first(o, 1).y);
+    // No movement runs along the headline stub.
+    expect(Math.max(...xs(o, 0), ...xs(o, 1))).toBeLessThan(170);
+  });
+
+  it("ः draws the upper dot, lifts, then the lower dot, each a loop from its top, anticlockwise", () => {
+    const visarga = sign("ः");
+    expect(labels(visarga)).toEqual([
+      ["start at the top and curve down the left side", "round the bottom and up the right side to close the loop"],
+      ["lift, then down the lower dot's left side", "round the bottom and up the right side to close the loop"],
+    ]);
+    for (const stroke of [0, 1]) {
+      expect(first(visarga, stroke).y).toBe(Math.max(...ys(visarga, stroke)));
+      expect(last(visarga, stroke)).toEqual(first(visarga, stroke));
+      expect(signedArea(penPath(visarga.strokes[stroke]))).toBeGreaterThan(0);
+    }
+    expect(Math.min(...ys(visarga, 0))).toBeGreaterThan(Math.max(...ys(visarga, 1)));
+    // Neither loop reaches the headline stub above the dots.
+    expect(Math.max(...ys(visarga, 0))).toBeLessThan(551);
+  });
 
   it("ँ draws the crescent left to right, then lifts for the dot above it", () => {
     const candrabindu = sign("ँ");

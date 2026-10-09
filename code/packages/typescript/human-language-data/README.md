@@ -1006,8 +1006,10 @@ Two kinds exist:
   22 consonants that take a stem form; જ and ૹ with ા, ી, ો, ૌ). Each group
   of fused pairs carries its citation in `FUSED_SIGN_PAIR_SOURCES`, and a
   test fails if a pair is added or dropped without its source.
-  Devanagari has no table on purpose: its nine cited signs (ा ु ू े ं ़ ् ृ ँ)
-  come from native writers who wrote each sign alone, which says nothing about
+  Devanagari has no table on purpose: its twelve cited signs (ा ु ू े ं ़ ् ृ ँ
+  ी ो ः; the last three drawn without the piece of headline the font prints
+  on them, which is the word's headline) come from native writers who wrote
+  each sign alone, which says nothing about
   its order against a consonant or the headline, so a lesson whose headword
   is the bare sign prints a one-glyph strip, and कि stays refused. A
   Devanagari WORD is one composed entry (its letters' bodies, then one shared
