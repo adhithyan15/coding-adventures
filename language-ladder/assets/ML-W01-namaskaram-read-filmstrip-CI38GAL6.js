@@ -1,0 +1,1 @@
+var e=``+new URL(`ML-W01-namaskaram-read-filmstrip-BSil20iA.svg`,import.meta.url).href;export{e as default};
