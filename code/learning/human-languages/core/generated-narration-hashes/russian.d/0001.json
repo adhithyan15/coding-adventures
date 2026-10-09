@@ -1,7 +1,7 @@
 {
   "language": "russian",
   "chapter": 1,
-  "sourceHash": "fnv1a64:1cb92c9eb355e839",
+  "sourceHash": "fnv1a64:e0c13efd9cb73d60",
   "lessonIds": [
     "RU-C01-privet",
     "RU-C01-zdravstvuyte",
@@ -18,13 +18,14 @@
     "RU-W05-privet-observe",
     "RU-W05-privet-guided-copy",
     "RU-W05-privet-delayed-copy",
-    "RU-W05-privet-dictation"
+    "RU-W05-privet-dictation",
+    "RU-C01-checkpoint"
   ],
   "voiceLessons": 0,
   "drivablePrefix": 0,
   "text": "russian/narration/ch01.txt",
   "json": "russian/narration/ch01.json",
-  "textHash": "fnv1a64:c73e9b1631fc7efd",
-  "jsonHash": "fnv1a64:f7b2395a7000a777",
+  "textHash": "fnv1a64:f672293c51d79bff",
+  "jsonHash": "fnv1a64:d0c0faf4a712fcb8",
   "findings": []
 }

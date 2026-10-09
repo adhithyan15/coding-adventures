@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings and courtesy",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:1cb92c9eb355e839",
+  "sourceHash": "fnv1a64:e0c13efd9cb73d60",
   "lessons": [
     {
       "id": "RU-C01-privet",
@@ -2550,6 +2550,261 @@
                 "correct": "привет — six known letters retrieved from sound.",
                 "incorrect": "The word is привет. Compare one letter at a time and repair only the differing place."
               }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C01-checkpoint",
+      "sequence": 66,
+      "title": "Chapter 1 checkpoint — say it, know the letters, write it",
+      "headword": "(practice)",
+      "romanization": "",
+      "gloss": "Chapter 1 checkpoint — the spoken exchange, the ten written letters, and two words from sound alone",
+      "script": "cyrillic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:feb775fe208d3d43",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — ten letters, three kinds",
+          "Writing — from sound alone"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — ten letters, three kinds and Writing — from sound alone until you have stopped, and I will say so again when we reach them."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new arrives here. This checks what the chapter built: the spoken exchange, ten letters, and two words from sound alone. First: which greeting goes to a friend, and which to a stranger? (Привет; здравствуйте (zdrávstvuyte).)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange — formal, then informal",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "With a stranger:"
+            },
+            {
+              "kind": "speech",
+              "text": "Здравствуйте! (Zdrávstvuyte!) — and it comes back to you."
+            },
+            {
+              "kind": "speech",
+              "text": "Спасибо! (Spasíbo!) — Пожалуйста! (Pozhálusta!)"
+            },
+            {
+              "kind": "speech",
+              "text": "With a friend:"
+            },
+            {
+              "kind": "speech",
+              "text": "Привет! (Privét!)"
+            },
+            {
+              "kind": "speech",
+              "text": "Да! (Da!) or Нет. (Nyet.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Only the greeting changes between the scenes. That one choice is the whole of the register so far."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the stranger's scene, both voices — Здравствуйте! … Спасибо! … Пожалуйста!",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the stranger's scene, both voices — *Здравствуйте!* … *Спасибо!* … *Пожалуйста!*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the friend's scene — Привет! — then yes, then no: Да! … Нет.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the friend's scene — *Привет!* — then yes, then no: *Да!* … *Нет.*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "script",
+          "title": "Script — ten letters, three kinds",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "False friends: в р с н look like Latin B, P, C, H and say v, r, s, n."
+            },
+            {
+              "kind": "speech",
+              "text": "A quiet false friend: и looks like a reversed N and says ee."
+            },
+            {
+              "kind": "speech",
+              "text": "New shapes: б (a flag on top) says b; д (two feet below the line) says d."
+            },
+            {
+              "kind": "speech",
+              "text": "Honest letters: п е т say p, ye, t."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "the ten letters aloud by their sounds — в р с н и б д п е т",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: the ten letters aloud by their sounds — в р с н и б д п е т]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing — from sound alone",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the letter list above and the key below, so no model and no romanization stays in view",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the letter list above and the key below, so no model and no romanization stays in view]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "v, r, s, n, ee — b, d — p, ye, t",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *v, r, s, n, ee* — *b, d* — *p, ye, t*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one Cyrillic letter for each sound, ten in all",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one Cyrillic letter for each sound, ten in all]"
+            },
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "privét — \"hi\" — and nyet — \"no\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *privét* — \"hi\" — and *nyet* — \"no\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "both words",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: both words]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "against the key — в р с н и, б д, п е т, привет (privét), нет (nyet)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: against the key — **в р с н и**, **б д**, **п е т**, **привет**, **нет**]"
+            },
+            {
+              "kind": "speech",
+              "text": "The usual slip is the Latin hand taking over: r for р, n for н, i for и."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one repaired letter, then stop",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one repaired letter, then stop]"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-C01-checkpoint-net",
+              "prompt": "From the heard cue nyet alone, write the Russian word for no.",
+              "assesses": [
+                "RU-LEX-NET",
+                "RU-SCRIPT-N-01",
+                "RU-SCRIPT-E-01",
+                "RU-SCRIPT-T-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "нет"
+              ],
+              "feedback": {
+                "correct": "нет — н, е, т, three known letters retrieved from sound.",
+                "incorrect": "The word is нет. The usual slip is a Latin n where н belongs: н has a middle bar, like a Latin H."
+              }
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word answers спасибо (spasíbo)? (Пожалуйста.) Name the four false friends by their real sounds. (v, r, s, n.) Which letter wears a flag on top, and which stands on two feet? (б; д.) That is the chapter: a greeting for each kind of person, the courtesy after it, and ten letters on demand."
             }
           ]
         }
