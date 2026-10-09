@@ -1,0 +1,1 @@
+var e=``+new URL(`TA-W05-write-aam-filmstrip-BZMC42Gc.svg`,import.meta.url).href;export{e as default};
