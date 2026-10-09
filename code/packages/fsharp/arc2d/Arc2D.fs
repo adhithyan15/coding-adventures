@@ -9,6 +9,20 @@ module private ArcHelpers =
     let angleBetween ux uy vx vy =
         Trig.atan2 (ux * vy - uy * vx) (ux * vx + uy * vy)
 
+    let requireFinite value =
+        if not (Double.IsFinite value) then
+            raise (ArgumentException("Center arc produced a non-finite value."))
+        value
+
+    let requirePoint (point: Point) =
+        requireFinite point.X |> ignore
+        requireFinite point.Y |> ignore
+        point
+
+    let positiveMod value modulus =
+        let remainder = value % modulus
+        if remainder < 0.0 then remainder + modulus else remainder
+
 type CenterArc =
     {
         Center: Point
@@ -29,45 +43,89 @@ type CenterArc =
             XRotation = xRotation
         }
 
+    member private this.Validate() =
+        if not (Double.IsFinite this.Center.X && Double.IsFinite this.Center.Y
+                && Double.IsFinite this.Rx && Double.IsFinite this.Ry
+                && Double.IsFinite this.StartAngle && Double.IsFinite this.SweepAngle
+                && Double.IsFinite this.XRotation)
+            || this.Rx <= 0.0 || this.Ry <= 0.0 then
+            raise (ArgumentException("Center arc requires finite coordinates, angles and positive radii."))
+
+        if abs this.SweepAngle > 2.0 * Trig.PI then
+            raise (ArgumentOutOfRangeException("SweepAngle", "Center arc sweep exceeds one turn."))
+
+    member private this.ContainsAngle(angle: float) =
+        let turn = 2.0 * Trig.PI
+        if this.SweepAngle > 0.0 then
+            ArcHelpers.positiveMod (angle - this.StartAngle) turn <= this.SweepAngle
+        elif this.SweepAngle < 0.0 then
+            ArcHelpers.positiveMod (this.StartAngle - angle) turn <= -this.SweepAngle
+        else
+            false
+
+    member private this.AtAngle(angle: float) =
+        let cosineRotation = Trig.cos this.XRotation
+        let sineRotation = Trig.sin this.XRotation
+        let localX = this.Rx * Trig.cos angle
+        let localY = this.Ry * Trig.sin angle
+        ArcHelpers.requirePoint (Point.New(
+            cosineRotation * localX - sineRotation * localY + this.Center.X,
+            sineRotation * localX + cosineRotation * localY + this.Center.Y))
+
     member this.Evaluate(t: float) =
+        this.Validate()
+        ArcHelpers.requireFinite t |> ignore
         let angle = this.StartAngle + t * this.SweepAngle
         let xp = this.Rx * Trig.cos angle
         let yp = this.Ry * Trig.sin angle
         let cosineRotation = Trig.cos this.XRotation
         let sineRotation = Trig.sin this.XRotation
 
-        Point.New(
+        ArcHelpers.requirePoint (Point.New(
             cosineRotation * xp - sineRotation * yp + this.Center.X,
-            sineRotation * xp + cosineRotation * yp + this.Center.Y)
+            sineRotation * xp + cosineRotation * yp + this.Center.Y))
 
     member this.Tangent(t: float) =
+        this.Validate()
+        ArcHelpers.requireFinite t |> ignore
         let angle = this.StartAngle + t * this.SweepAngle
         let dxp = -this.Rx * Trig.sin angle * this.SweepAngle
         let dyp = this.Ry * Trig.cos angle * this.SweepAngle
         let cosineRotation = Trig.cos this.XRotation
         let sineRotation = Trig.sin this.XRotation
 
-        Point.New(
+        ArcHelpers.requirePoint (Point.New(
             cosineRotation * dxp - sineRotation * dyp,
-            sineRotation * dxp + cosineRotation * dyp)
+            sineRotation * dxp + cosineRotation * dyp))
 
     member this.BoundingBox() =
-        let samples = 100
-        let mutable minX = Double.PositiveInfinity
-        let mutable minY = Double.PositiveInfinity
-        let mutable maxX = Double.NegativeInfinity
-        let mutable maxY = Double.NegativeInfinity
+        this.Validate()
+        let cosineRotation = Trig.cos this.XRotation
+        let sineRotation = Trig.sin this.XRotation
+        let xExtremum = Trig.atan2 (-this.Ry * sineRotation) (this.Rx * cosineRotation)
+        let yExtremum = Trig.atan2 (this.Ry * cosineRotation) (this.Rx * sineRotation)
+        let first = this.AtAngle(this.StartAngle)
+        let last = this.AtAngle(this.StartAngle + this.SweepAngle)
+        let mutable minX = min first.X last.X
+        let mutable minY = min first.Y last.Y
+        let mutable maxX = max first.X last.X
+        let mutable maxY = max first.Y last.Y
 
-        for index in 0 .. samples do
-            let point = this.Evaluate(float index / float samples)
-            minX <- min minX point.X
-            maxX <- max maxX point.X
-            minY <- min minY point.Y
-            maxY <- max maxY point.Y
+        // Periodic stationary angles only contribute when inside the signed sweep.
+        for angle in [ xExtremum; xExtremum + Trig.PI; yExtremum; yExtremum + Trig.PI ] do
+            if this.ContainsAngle(angle) then
+                let point = this.AtAngle(angle)
+                minX <- min minX point.X
+                maxX <- max maxX point.X
+                minY <- min minY point.Y
+                maxY <- max maxY point.Y
 
-        Rect.New(minX, minY, maxX - minX, maxY - minY)
+        let width = ArcHelpers.requireFinite (maxX - minX)
+        let height = ArcHelpers.requireFinite (maxY - minY)
+        Rect.New(minX, minY, width, height)
 
     member this.ToCubicBeziers() =
+        this.Validate()
         let maxSegment = Trig.PI / 2.0
         let segmentCount = max 1 (int (Math.Ceiling(abs this.SweepAngle / maxSegment)))
         let segmentSweep = this.SweepAngle / float segmentCount
@@ -76,9 +134,9 @@ type CenterArc =
         let k = (4.0 / 3.0) * Trig.tan (segmentSweep / 4.0)
 
         let rotateTranslate localX localY =
-            Point.New(
+            ArcHelpers.requirePoint (Point.New(
                 cosineRotation * localX - sineRotation * localY + this.Center.X,
-                sineRotation * localX + cosineRotation * localY + this.Center.Y)
+                sineRotation * localX + cosineRotation * localY + this.Center.Y))
 
         [ for index in 0 .. segmentCount - 1 do
             let alpha = this.StartAngle + float index * segmentSweep

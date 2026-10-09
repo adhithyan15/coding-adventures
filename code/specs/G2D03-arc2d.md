@@ -432,6 +432,18 @@ derived output, and `ErrInvalidSweep` for a finite sweep outside one turn.
 Validate before converting a segment count to `int` or allocating. This
 Go-specific convention does not change the separate SVG endpoint API.
 
+In the existing C# and F# lanes, `CenterArc` is a directly constructible value.
+Each `Evaluate`, `Tangent`, `BoundingBox`, and `ToCubicBeziers` call therefore
+checks finite center coordinates, radii, angles and rotation, positive radii,
+and a finite sweep no longer than one turn before trigonometry or segment-count
+conversion. Evaluation and tangent also reject a non-finite parameter `t`.
+These lanes preserve their value-returning APIs and use
+`ArgumentOutOfRangeException` for a finite over-turn sweep and
+`ArgumentException` for other invalid/non-finite inputs or derived points.
+This is a recoverable fail-stop, not a silent clamp or a conversion to an
+unbounded integer allocation. The seven neutral center-form records are read
+at test runtime in both lanes, with additional native NaN/infinity cases.
+
 For each 90°-or-less segment, the four cubic bezier control points are:
 
 ```
