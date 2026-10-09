@@ -1,0 +1,1 @@
+var e=``+new URL(`FR-W02-cedille-filmstrip-CjG--GOl.svg`,import.meta.url).href;export{e as default};

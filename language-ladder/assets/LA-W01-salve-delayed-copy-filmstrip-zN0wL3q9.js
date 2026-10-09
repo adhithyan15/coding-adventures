@@ -1,0 +1,1 @@
+var e=``+new URL(`LA-W01-salve-delayed-copy-filmstrip-DtGzNg5f.svg`,import.meta.url).href;export{e as default};

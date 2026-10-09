@@ -1,0 +1,1 @@
+var e=``+new URL(`FR-W03-trema-filmstrip-C2LkhakB.svg`,import.meta.url).href;export{e as default};

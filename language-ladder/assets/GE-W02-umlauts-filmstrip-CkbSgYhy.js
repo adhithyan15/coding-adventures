@@ -1,0 +1,1 @@
+var e=``+new URL(`GE-W02-umlauts-filmstrip-CwdNbd0f.svg`,import.meta.url).href;export{e as default};
