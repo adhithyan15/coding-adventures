@@ -367,6 +367,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "ML-W01-namaskaram-read",
+      "sourceHash": "fnv1a64:4cc4d9a1ffcc71a5",
+      "svgHash": "fnv1a64:19968747c4aaae11",
+      "svg": "malayalam/book/figures/ML-W01-namaskaram-read-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "ML-W01-sa-chandrakkala-ka",
       "sourceHash": "fnv1a64:352aa98b4e215a48",
       "svgHash": "fnv1a64:d2750e717f67b00b",
@@ -420,6 +427,13 @@
       "sourceHash": "fnv1a64:bd4b6bdebd197d6f",
       "svgHash": "fnv1a64:67f1402c0abb094f",
       "svg": "malayalam/book/figures/ML-W07-numbers-1-5-guided-copy-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "ML-W07-numbers-6-10-delayed-copy",
+      "sourceHash": "fnv1a64:0a3f05cfe593836e",
+      "svgHash": "fnv1a64:ce6b790946b11fd7",
+      "svg": "malayalam/book/figures/ML-W07-numbers-6-10-delayed-copy-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
