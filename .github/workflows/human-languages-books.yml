@@ -477,6 +477,20 @@ jobs:
       # recommended font collection supplies Hyperref's Zapf Dingbats metric.
       - name: Install focused TeX toolchain
         timeout-minutes: 20  # apt can stall on a mirror; fail fast, not at 6h (#12163)
+        env:
+          # apt-install.sh retries a stalled `update` and `install` up to three
+          # times each, capping every attempt at APT_UPDATE_TIMEOUT /
+          # APT_INSTALL_TIMEOUT seconds (+15s kill grace) with 10s then 20s of
+          # backoff. Its defaults (120 / 600) are sized for the largest install
+          # anywhere; here three 600s install attempts alone outlast this
+          # step's 20 minutes, so a trickling mirror used up the step before
+          # the retry could reach a healthy one (#17184, #17186). Worst case
+          # with these values, every attempt stalling:
+          #   update  3 x (60 + 15)  + 30 =  255s   (normally 2-15s)
+          #   install 3 x (270 + 15) + 30 =  885s   (normally ~120s)
+          #   total                        = 1140s  < 1200s
+          APT_UPDATE_TIMEOUT: "60"
+          APT_INSTALL_TIMEOUT: "270"
         run: |
           setup_started_at=$(date +%s)
           bash code/scripts/ci/apt-install.sh --no-install-recommends \
