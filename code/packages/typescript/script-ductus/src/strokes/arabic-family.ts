@@ -52,6 +52,30 @@ const persianAlphabetSource = (glyph: string): StrokeSource => {
   return letter.strokeOrderSource;
 };
 
+// The Persian digits ۰-۹ keep their cited stroke order on their digit row
+// (perso-arabic.d/digits/), as the Kannada and Malayalam digits do on theirs.
+// Urdu cites only ۰ ۱ ۲ ۳, the four it writes in the same shapes; its other
+// digit rows carry no ductus (see URDU_SHARED_DIGITS below).
+const persianDigitSource = (glyph: string): StrokeSource => {
+  const digit = (persoArabic.digits ?? []).find(
+    (candidate) => candidate.glyph === glyph,
+  );
+  if (!digit?.strokeOrderSource) {
+    throw new Error(`Persian digit ${glyph} has no verified source`);
+  }
+  return digit.strokeOrderSource;
+};
+
+const urduDigitSource = (glyph: string): StrokeSource => {
+  const digit = (urduNastaliq.digits ?? []).find(
+    (candidate) => candidate.glyph === glyph,
+  );
+  if (!digit?.strokeOrderSource) {
+    throw new Error(`Urdu digit ${glyph} has no verified source`);
+  }
+  return digit.strokeOrderSource;
+};
+
 const urduAlphabetSource = (glyph: string): StrokeSource => {
   const letter = urduNastaliq.letters.find(
     (candidate) => candidate.glyph === glyph,
@@ -4243,6 +4267,669 @@ const urduGafStrokes = lookup("urdu-nastaliq:گ").strokes;
 const [sharedZayBody, sharedZayDot] = lookup("arabic:ز").strokes;
 
 // These derived identities historically followed every other owner block.
+// ---------------------------------------------------------------------------
+// The Persian digits ۰-۹, counted from native writers' recorded handwriting.
+//
+// Source: POH-Db, the Persian Online Handwriting Database (SLT Lab, Amirkabir
+// University of Technology; github.com/SLTLabAUT/POH-Db at commit 018b039).
+// Its NumberGroup writepads are lines of Persian numbers that native writers
+// wrote on FarsiHandwriting.ir with a pen, a finger or a stylus, recorded as
+// InkML, where every <trace> is one pen-down stroke in time order. So, like a
+// recording and unlike a textbook's numbered arrows, it shows the LIFTS
+// directly, and for every digit it shows many writers rather than one.
+//
+// The database is licensed AGPL-3.0. Nothing from it is copied: the records
+// cite only counts and shares (how many samples are one stroke, where they
+// start, which way they first move, where they end), counted for this record.
+// The pen paths below are fitted by hand to the bundled Noto Naskh Arabic
+// outline, the font the Persian and Urdu strips print, at the default
+// tolerances (every stroke on the ink, nothing over 2% untraced, no override).
+//
+// What the writers do, and what the paths therefore draw (y-up font units):
+//
+//     digit   one stroke     starts          then                    ends
+//     -----   ------------   -------------   ---------------------   ------------
+//     ۰       670/676 99%    no settled      a dot; no settled       anywhere
+//                            place           direction (53% / 47%)
+//     ۱       562/562 100%   top left 85%    down 90%                bottom right
+//     ۲       447/447 100%   top right 96%   left over the top, to   bottom
+//                                            the top left (97%),
+//                                            then down the stem
+//     ۳       490/494 99%    top right 97%   over both teeth to the  bottom
+//                                            top left (96%), down
+//     ۴       462/465 99%    top right 68%,  over the curl, out to   bottom
+//                            top centre 29%  the right and back
+//                                            (71%), down the stem
+//     ۵       491/493 100%   top 99%         down the RIGHT side     the top
+//                                            first (95%), round      again (73%)
+//     ۶       469/471 100%   top 100%        down the left, up to    bottom
+//                                            the right (95%)         left
+//     ۷       487/487 100%   top left 74%    down to the point,      top right
+//                                            then up (99%)           93%
+//     ۸       479/479 100%   bottom left 78% up to the peak, then    bottom right
+//                                            down (97%)              95%
+//     ۹       452/452 100%   right half 84%  left round the loop     bottom right
+//                                            first (99%)             97%
+//
+// Every digit is one stroke, so every penLifts is 0. Numbered movements are
+// places where the hand changes direction, not lifts.
+//
+// Two shape notes, both visible in the font. ۲, ۳ and ۴ hang from a stem
+// whose head is at the top LEFT, so after the pen crosses the top from the
+// right it climbs into that head and then comes down the stem: the climb and
+// the first stretch of the descent run over the same ink. ۶'s printed curl
+// reaches further right than most writers begin; its path starts at the top
+// centre (29% of writers; 67% begin further left) so that the curl's right
+// end is still traced.
+// ---------------------------------------------------------------------------
+const PERSIAN_DIGIT_STROKES: Readonly<Record<string, Stroke[]>> = {
+  "۰": [
+    {
+      segments: [
+        {
+          label: "draw the small dot",
+          path: [
+            { x: 226, y: 270 },
+            { x: 212, y: 263 },
+            { x: 196, y: 252 },
+            { x: 186, y: 226 },
+            { x: 191, y: 211 },
+            { x: 200, y: 198 },
+            { x: 213, y: 190 },
+            { x: 228, y: 186 },
+            { x: 244, y: 190 },
+            { x: 258, y: 198 },
+            { x: 267, y: 211 },
+            { x: 270, y: 226 },
+            { x: 266, y: 241 },
+            { x: 256, y: 254 },
+            { x: 240, y: 264 },
+            { x: 226, y: 270 },
+          ],
+        },
+      ],
+    },
+  ],
+  "۱": [
+    {
+      segments: [
+        {
+          label: "draw down from the top left",
+          path: [
+            { x: 160, y: 540 },
+            { x: 178, y: 500 },
+            { x: 186, y: 476 },
+            { x: 195, y: 450 },
+            { x: 205, y: 425 },
+            { x: 215, y: 400 },
+            { x: 224, y: 375 },
+            { x: 232, y: 350 },
+            { x: 239, y: 325 },
+            { x: 246, y: 300 },
+            { x: 252, y: 275 },
+            { x: 257, y: 250 },
+            { x: 261, y: 225 },
+            { x: 264, y: 200 },
+            { x: 266, y: 175 },
+            { x: 267, y: 150 },
+            { x: 267, y: 125 },
+            { x: 267, y: 100 },
+            { x: 266, y: 74 },
+            { x: 265, y: 50 },
+            { x: 262, y: 12 },
+          ],
+        },
+      ],
+    },
+  ],
+  "۲": [
+    {
+      segments: [
+        {
+          label: "curve down and left from the top right",
+          path: [
+            { x: 387, y: 550 },
+            { x: 387, y: 528 },
+            { x: 385, y: 500 },
+            { x: 380, y: 475 },
+            { x: 373, y: 452 },
+            { x: 350, y: 418 },
+            { x: 315, y: 400 },
+            { x: 293, y: 397 },
+            { x: 270, y: 396 },
+            { x: 228, y: 402 },
+          ],
+        },
+        {
+          label: "rise into the top left",
+          path: [
+            { x: 228, y: 402 },
+            { x: 207, y: 411 },
+            { x: 180, y: 425 },
+            { x: 159, y: 441 },
+            { x: 140, y: 460 },
+            { x: 124, y: 481 },
+            { x: 112, y: 500 },
+            { x: 100, y: 525 },
+          ],
+        },
+        {
+          label: "come down the stem",
+          path: [
+            { x: 100, y: 525 },
+            { x: 106, y: 505 },
+            { x: 115, y: 480 },
+            { x: 135, y: 440 },
+            { x: 145, y: 416 },
+            { x: 155, y: 390 },
+            { x: 164, y: 365 },
+            { x: 172, y: 340 },
+            { x: 179, y: 315 },
+            { x: 185, y: 290 },
+            { x: 190, y: 265 },
+            { x: 193, y: 240 },
+            { x: 196, y: 215 },
+            { x: 198, y: 190 },
+            { x: 199, y: 165 },
+            { x: 200, y: 140 },
+            { x: 200, y: 115 },
+            { x: 200, y: 90 },
+            { x: 200, y: 64 },
+            { x: 199, y: 40 },
+            { x: 197, y: 10 },
+          ],
+        },
+      ],
+    },
+  ],
+  "۳": [
+    {
+      segments: [
+        {
+          label: "dip and rise from the top right",
+          path: [
+            { x: 390, y: 552 },
+            { x: 391, y: 531 },
+            { x: 391, y: 505 },
+            { x: 385, y: 465 },
+            { x: 362, y: 436 },
+            { x: 330, y: 426 },
+            { x: 302, y: 440 },
+            { x: 284, y: 478 },
+            { x: 277, y: 520 },
+            { x: 274, y: 553 },
+          ],
+        },
+        {
+          label: "dip again and rise to the top left",
+          path: [
+            { x: 274, y: 553 },
+            { x: 274, y: 530 },
+            { x: 272, y: 500 },
+            { x: 269, y: 474 },
+            { x: 264, y: 450 },
+            { x: 240, y: 415 },
+            { x: 205, y: 405 },
+            { x: 165, y: 425 },
+            { x: 144, y: 442 },
+            { x: 125, y: 460 },
+            { x: 109, y: 478 },
+            { x: 95, y: 495 },
+            { x: 75, y: 515 },
+          ],
+        },
+        {
+          label: "come down the stem",
+          path: [
+            { x: 75, y: 515 },
+            { x: 81, y: 495 },
+            { x: 90, y: 470 },
+            { x: 100, y: 448 },
+            { x: 110, y: 425 },
+            { x: 120, y: 401 },
+            { x: 130, y: 375 },
+            { x: 140, y: 348 },
+            { x: 148, y: 320 },
+            { x: 155, y: 293 },
+            { x: 160, y: 265 },
+            { x: 164, y: 238 },
+            { x: 167, y: 210 },
+            { x: 169, y: 183 },
+            { x: 171, y: 155 },
+            { x: 172, y: 128 },
+            { x: 172, y: 100 },
+            { x: 171, y: 71 },
+            { x: 170, y: 45 },
+            { x: 168, y: 10 },
+          ],
+        },
+      ],
+    },
+  ],
+  "۴": [
+    {
+      segments: [
+        {
+          label: "curl over from the top right",
+          path: [
+            { x: 370, y: 506 },
+            { x: 350, y: 535 },
+            { x: 310, y: 550 },
+            { x: 287, y: 546 },
+            { x: 265, y: 537 },
+            { x: 246, y: 523 },
+            { x: 232, y: 505 },
+            { x: 222, y: 465 },
+            { x: 236, y: 432 },
+            { x: 262, y: 410 },
+          ],
+        },
+        {
+          label: "out to the right and back",
+          path: [
+            { x: 262, y: 410 },
+            { x: 300, y: 393 },
+            { x: 323, y: 390 },
+            { x: 345, y: 390 },
+            { x: 383, y: 405 },
+            { x: 405, y: 420 },
+            { x: 393, y: 406 },
+            { x: 372, y: 388 },
+            { x: 348, y: 378 },
+            { x: 322, y: 372 },
+            { x: 296, y: 371 },
+            { x: 270, y: 374 },
+            { x: 244, y: 381 },
+            { x: 225, y: 388 },
+          ],
+        },
+        {
+          label: "rise into the top left",
+          path: [
+            { x: 225, y: 388 },
+            { x: 185, y: 405 },
+            { x: 165, y: 423 },
+            { x: 145, y: 445 },
+            { x: 127, y: 468 },
+            { x: 112, y: 490 },
+            { x: 92, y: 522 },
+          ],
+        },
+        {
+          label: "come down the stem",
+          path: [
+            { x: 92, y: 522 },
+            { x: 108, y: 480 },
+            { x: 125, y: 440 },
+            { x: 134, y: 418 },
+            { x: 142, y: 395 },
+            { x: 149, y: 370 },
+            { x: 156, y: 345 },
+            { x: 162, y: 320 },
+            { x: 168, y: 295 },
+            { x: 173, y: 270 },
+            { x: 178, y: 245 },
+            { x: 181, y: 220 },
+            { x: 184, y: 195 },
+            { x: 186, y: 170 },
+            { x: 187, y: 145 },
+            { x: 187, y: 120 },
+            { x: 187, y: 95 },
+            { x: 186, y: 69 },
+            { x: 185, y: 45 },
+            { x: 183, y: 10 },
+          ],
+        },
+      ],
+    },
+  ],
+  "۵": [
+    {
+      segments: [
+        {
+          label: "go down the right side from the top",
+          path: [
+            { x: 175, y: 560 },
+            { x: 188, y: 533 },
+            { x: 205, y: 500 },
+            { x: 224, y: 477 },
+            { x: 245, y: 455 },
+            { x: 268, y: 431 },
+            { x: 290, y: 405 },
+            { x: 311, y: 378 },
+            { x: 330, y: 350 },
+            { x: 347, y: 320 },
+            { x: 362, y: 290 },
+            { x: 374, y: 260 },
+            { x: 382, y: 230 },
+            { x: 387, y: 200 },
+            { x: 388, y: 170 },
+            { x: 385, y: 139 },
+            { x: 378, y: 110 },
+            { x: 366, y: 86 },
+            { x: 350, y: 68 },
+            { x: 328, y: 56 },
+            { x: 305, y: 50 },
+            { x: 262, y: 62 },
+          ],
+        },
+        {
+          label: "round the bottom to the left",
+          path: [
+            { x: 262, y: 62 },
+            { x: 228, y: 90 },
+            { x: 195, y: 62 },
+            { x: 173, y: 54 },
+            { x: 150, y: 50 },
+            { x: 126, y: 53 },
+            { x: 105, y: 62 },
+            { x: 89, y: 82 },
+            { x: 78, y: 100 },
+          ],
+        },
+        {
+          label: "go up the left side to the top",
+          path: [
+            { x: 78, y: 100 },
+            { x: 72, y: 121 },
+            { x: 66, y: 150 },
+            { x: 64, y: 179 },
+            { x: 66, y: 210 },
+            { x: 71, y: 240 },
+            { x: 80, y: 270 },
+            { x: 92, y: 300 },
+            { x: 105, y: 330 },
+            { x: 120, y: 358 },
+            { x: 135, y: 385 },
+            { x: 151, y: 408 },
+            { x: 165, y: 430 },
+            { x: 175, y: 452 },
+            { x: 180, y: 475 },
+            { x: 180, y: 503 },
+            { x: 178, y: 530 },
+            { x: 175, y: 560 },
+          ],
+        },
+      ],
+    },
+  ],
+  "۶": [
+    {
+      segments: [
+        {
+          label: "curve down the left from the top",
+          path: [
+            { x: 242, y: 533 },
+            { x: 200, y: 530 },
+            { x: 179, y: 523 },
+            { x: 158, y: 513 },
+            { x: 138, y: 500 },
+            { x: 120, y: 483 },
+            { x: 107, y: 463 },
+            { x: 98, y: 440 },
+            { x: 94, y: 415 },
+            { x: 95, y: 390 },
+            { x: 101, y: 366 },
+            { x: 112, y: 345 },
+            { x: 129, y: 327 },
+            { x: 150, y: 312 },
+            { x: 177, y: 301 },
+            { x: 200, y: 295 },
+          ],
+        },
+        {
+          label: "swing up to the right",
+          path: [
+            { x: 200, y: 295 },
+            { x: 222, y: 296 },
+            { x: 250, y: 300 },
+            { x: 275, y: 311 },
+            { x: 300, y: 325 },
+            { x: 325, y: 339 },
+            { x: 350, y: 352 },
+            { x: 376, y: 364 },
+            { x: 395, y: 372 },
+          ],
+        },
+        {
+          label: "slant down to the bottom left",
+          path: [
+            { x: 395, y: 372 },
+            { x: 376, y: 350 },
+            { x: 350, y: 322 },
+            { x: 326, y: 301 },
+            { x: 300, y: 282 },
+            { x: 273, y: 267 },
+            { x: 245, y: 250 },
+            { x: 218, y: 226 },
+            { x: 193, y: 200 },
+            { x: 170, y: 173 },
+            { x: 149, y: 145 },
+            { x: 131, y: 118 },
+            { x: 115, y: 92 },
+            { x: 99, y: 63 },
+            { x: 88, y: 40 },
+          ],
+        },
+      ],
+    },
+  ],
+  "۷": [
+    {
+      segments: [
+        {
+          label: "slant down from the top left",
+          path: [
+            { x: 45, y: 515 },
+            { x: 56, y: 491 },
+            { x: 70, y: 460 },
+            { x: 83, y: 430 },
+            { x: 96, y: 400 },
+            { x: 107, y: 374 },
+            { x: 118, y: 350 },
+            { x: 128, y: 325 },
+            { x: 137, y: 300 },
+            { x: 147, y: 275 },
+            { x: 157, y: 250 },
+            { x: 166, y: 225 },
+            { x: 175, y: 200 },
+            { x: 183, y: 175 },
+            { x: 190, y: 150 },
+            { x: 197, y: 125 },
+            { x: 203, y: 100 },
+            { x: 208, y: 76 },
+            { x: 212, y: 55 },
+            { x: 218, y: 22 },
+          ],
+        },
+        {
+          label: "turn and go up to the top right",
+          path: [
+            { x: 218, y: 22 },
+            { x: 238, y: 60 },
+            { x: 252, y: 100 },
+            { x: 259, y: 124 },
+            { x: 266, y: 150 },
+            { x: 272, y: 175 },
+            { x: 278, y: 200 },
+            { x: 286, y: 225 },
+            { x: 294, y: 250 },
+            { x: 302, y: 275 },
+            { x: 310, y: 300 },
+            { x: 319, y: 325 },
+            { x: 328, y: 350 },
+            { x: 337, y: 375 },
+            { x: 347, y: 400 },
+            { x: 358, y: 425 },
+            { x: 369, y: 450 },
+            { x: 380, y: 476 },
+            { x: 390, y: 500 },
+            { x: 400, y: 535 },
+          ],
+        },
+      ],
+    },
+  ],
+  "۸": [
+    {
+      segments: [
+        {
+          label: "go up from the bottom left",
+          path: [
+            { x: 38, y: 38 },
+            { x: 48, y: 66 },
+            { x: 60, y: 100 },
+            { x: 71, y: 126 },
+            { x: 82, y: 150 },
+            { x: 92, y: 175 },
+            { x: 102, y: 200 },
+            { x: 112, y: 225 },
+            { x: 121, y: 250 },
+            { x: 130, y: 275 },
+            { x: 139, y: 300 },
+            { x: 147, y: 325 },
+            { x: 154, y: 350 },
+            { x: 161, y: 375 },
+            { x: 168, y: 400 },
+            { x: 175, y: 426 },
+            { x: 182, y: 450 },
+            { x: 195, y: 490 },
+            { x: 205, y: 520 },
+          ],
+        },
+        {
+          label: "turn and come down to the right",
+          path: [
+            { x: 205, y: 520 },
+            { x: 213, y: 497 },
+            { x: 225, y: 465 },
+            { x: 238, y: 432 },
+            { x: 250, y: 400 },
+            { x: 258, y: 374 },
+            { x: 266, y: 350 },
+            { x: 275, y: 325 },
+            { x: 284, y: 300 },
+            { x: 293, y: 275 },
+            { x: 303, y: 250 },
+            { x: 314, y: 225 },
+            { x: 325, y: 200 },
+            { x: 336, y: 175 },
+            { x: 348, y: 150 },
+            { x: 361, y: 125 },
+            { x: 372, y: 100 },
+            { x: 379, y: 76 },
+            { x: 384, y: 55 },
+            { x: 390, y: 28 },
+          ],
+        },
+      ],
+    },
+  ],
+  "۹": [
+    {
+      segments: [
+        {
+          label: "loop left, up and over the top",
+          path: [
+            { x: 295, y: 330 },
+            { x: 276, y: 324 },
+            { x: 250, y: 318 },
+            { x: 225, y: 317 },
+            { x: 200, y: 318 },
+            { x: 175, y: 321 },
+            { x: 150, y: 328 },
+            { x: 127, y: 340 },
+            { x: 108, y: 358 },
+            { x: 95, y: 383 },
+            { x: 88, y: 410 },
+            { x: 88, y: 435 },
+            { x: 95, y: 460 },
+            { x: 108, y: 486 },
+            { x: 125, y: 510 },
+            { x: 146, y: 528 },
+            { x: 170, y: 540 },
+            { x: 195, y: 546 },
+            { x: 220, y: 545 },
+            { x: 244, y: 536 },
+            { x: 265, y: 520 },
+            { x: 281, y: 499 },
+            { x: 292, y: 475 },
+            { x: 298, y: 448 },
+            { x: 300, y: 420 },
+            { x: 301, y: 387 },
+            { x: 300, y: 360 },
+          ],
+        },
+        {
+          label: "draw the stem down to the right",
+          path: [
+            { x: 300, y: 360 },
+            { x: 300, y: 333 },
+            { x: 301, y: 300 },
+            { x: 304, y: 274 },
+            { x: 308, y: 250 },
+            { x: 312, y: 225 },
+            { x: 316, y: 200 },
+            { x: 323, y: 175 },
+            { x: 331, y: 150 },
+            { x: 339, y: 124 },
+            { x: 347, y: 100 },
+            { x: 362, y: 60 },
+            { x: 368, y: 38 },
+          ],
+        },
+      ],
+    },
+  ],
+};
+
+/** One digit's strokes, as a fresh copy the registry entry owns. */
+const persianDigitStrokes = (glyph: string): Stroke[] => {
+  const strokes = PERSIAN_DIGIT_STROKES[glyph];
+  if (strokes === undefined) throw new Error(`no Persian digit ${glyph}`);
+  return strokes.map((stroke) => ({
+    segments: stroke.segments.map((segment) => ({
+      label: segment.label,
+      path: segment.path.map((point) => ({ ...point })),
+    })),
+  }));
+};
+
+const PERSIAN_DIGITS = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+
+// Urdu writes U+06F0-U+06F3 in the same shapes as Persian: a dot, a slanting
+// stroke, and the stem with one and two teeth. Its ۴, ۶ and ۷ are different
+// shapes (Noto Naskh Arabic and Noto Nastaliq Urdu both carry Urdu forms for
+// some of them), so Persian writers' counts say nothing about them. Only these
+// four are claimed: they are the digits of the two Urdu lessons that hold no
+// ۴, ۶ or ۷, and every Urdu record says its counts come from Persian writers.
+const URDU_SHARED_DIGITS = ["۰", "۱", "۲", "۳"];
+
+const digitEntries: DuctusEntry[] = [
+  ...PERSIAN_DIGITS.map(
+    (glyph): DuctusEntry => [
+      `perso-arabic:${glyph}`,
+      {
+        script: "perso-arabic",
+        glyph,
+        strokes: persianDigitStrokes(glyph),
+        source: persianDigitSource(glyph),
+      },
+    ],
+  ),
+  ...URDU_SHARED_DIGITS.map(
+    (glyph): DuctusEntry => [
+      `urdu-nastaliq:${glyph}`,
+      {
+        script: "urdu-nastaliq",
+        glyph,
+        strokes: persianDigitStrokes(glyph),
+        source: urduDigitSource(glyph),
+      },
+    ],
+  ),
+];
+
 export const tailEntries: DuctusEntry[] = [
   [
     "perso-arabic:ط",
@@ -4554,4 +5241,6 @@ export const tailEntries: DuctusEntry[] = [
       source: urduAlphabetSource("ض"),
     },
   ],
+  // The digits join last, so every earlier key keeps its position.
+  ...digitEntries,
 ];

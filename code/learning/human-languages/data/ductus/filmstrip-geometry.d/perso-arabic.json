@@ -876,6 +876,350 @@
           "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M249 -262Q164 -262 116 -213Q68 -164 68 -74Q68 -54 69.5 -37Q71 -20 75 1.5Q79 23 87 56L124 47Q113 1 113 -24Q113 -97 149.5 -138Q186 -179 251 -179Q287 -179 329 -170.5Q371 -162 412 -146.5Q453 -131 484 -111Q508 -96 524 -80Q540 -64 547 -48Q534 -46 521.5 -44Q509 -42 495 -41Q419 -35 382 -22.5Q345 -10 325 18Q306 46 306 91Q306 122 320.5 159Q335 196 361 232.5Q387 269 419 297Q468 340 507 340Q541 340 558 317Q575 294 584 253L548 243Q541 253 534.5 255.5Q528 258 516 258Q499 258 474.5 245.5Q450 233 425.5 211.5Q401 190 380 164Q349 122 342 87Q356 74 384 64.5Q412 55 452 49Q488 44 513 37.5Q538 31 553 21Q570 9 576.5 -7.5Q583 -24 583 -47Q583 -77 557.5 -111Q532 -145 489.5 -176Q447 -207 394 -229Q316 -262 249 -262Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M548 285 L510 288 L472 270 L430 238 L395 205 L365 168 L345 125 L330 82 L340 45 L375 25 L420 8 L470 -2 L520 -24 L555 -55 L555 -55\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M555 -55 L535 -98 L495 -145 L445 -188 L390 -218 L325 -238 L255 -238 L190 -218 L140 -180 L105 -130 L90 -78 L94 -25 L105 28\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"105\" cy=\"28\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"326\" y=\"454.6\" text-anchor=\"middle\" font-size=\"52.6\" fill=\"#6b7280\"><tspan x=\"326\" y=\"454.6\">2. continue around the</tspan><tspan x=\"326\" y=\"518.8\">below-baseline bowl and</tspan><tspan x=\"326\" y=\"582.9\">finish at its rising</tspan><tspan x=\"326\" y=\"647.1\">tip without lifting</tspan></text>"
         }
       ]
+    },
+    {
+      "script": "perso-arabic",
+      "glyph": "۰",
+      "font": "_fonts/NotoNaskhArabic-Static.ttf",
+      "source": {
+        "citation": "POH-Db, Persian Online Handwriting Database (SLT Lab, Amirkabir University of Technology; github.com/SLTLabAUT/POH-Db at commit 018b039, Writepads/NumberGroup; AGPL-3.0, facts only): 676 aligned samples of ۰ from 30 native writers; one stroke in 670 (99%); no settled start (the most common zone holds 120, 18%)",
+        "url": "https://github.com/SLTLabAUT/POH-Db/tree/018b039c0f80d84da16fc9c0f7f629c746a5b3c8/Writepads/NumberGroup",
+        "variation": "Counted for this record from POH-Db's NumberGroup writepads: lines of Persian numbers that native writers wrote on FarsiHandwriting.ir with a pen, a finger or a stylus (112 writepads by 30 writers; the mouse writepads were left out), recorded as InkML, where each trace is one pen-down stroke. Each line was split into characters by horizontal overlap; of the 1,046 lines whose character count matched their label, the 1,005 whose characters ran left to right were used (which also shows that the numbers are written left to right). Zones are thirds of each character's box, and the split is heuristic, so the shares are approximate. Of 676 samples of ۰, 670 (99%) are one stroke. It is a small mark, a median 0.31 of the height of the tallest digit in its line, so a dot, not a ring. It has no settled start or direction: the most common start zone holds only 120 (18%), and 356 (53%) turn anticlockwise against 320 (47%) clockwise. The path draws a small anticlockwise ring, the majority by a few points; either direction is a dot. POH-Db is licensed AGPL-3.0, so only these counts and shares are taken; no coordinate or trace is copied, and the pen path is fitted to the bundled Noto Naskh Arabic outline rather than to any sample. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 1 movement",
+      "viewBox": {
+        "minX": 84,
+        "minY": -384,
+        "width": 302,
+        "height": 416.7
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "draw the small dot",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M261 140Q243 153 225.5 165Q208 177 190 188.5Q172 200 154 209Q162 223 169.5 236.5Q177 250 184 263Q191 276 198.5 288.5Q206 301 215 314Q242 298 261.5 285.5Q281 273 293 262Q316 242 316 234Q316 223 261 140Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M226 270 L226 270\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"14.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M226 270 L212 263 L196 252 L186 226 L191 211 L200 198 L213 190 L228 186 L244 190 L258 198 L267 211 L270 226 L266 241 L256 254 L240 264 L226 270\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"14.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"226\" cy=\"270\" r=\"19\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"235\" y=\"24.2\" text-anchor=\"middle\" font-size=\"24.2\" fill=\"#6b7280\"><tspan x=\"235\" y=\"24.2\">1. draw the small dot</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "perso-arabic",
+      "glyph": "۱",
+      "font": "_fonts/NotoNaskhArabic-Static.ttf",
+      "source": {
+        "citation": "POH-Db, Persian Online Handwriting Database (SLT Lab, Amirkabir University of Technology; github.com/SLTLabAUT/POH-Db at commit 018b039, Writepads/NumberGroup; AGPL-3.0, facts only): 562 aligned samples of ۱ from 30 native writers; one stroke in 562 (100%); starts at the top left in 480 (85%)",
+        "url": "https://github.com/SLTLabAUT/POH-Db/tree/018b039c0f80d84da16fc9c0f7f629c746a5b3c8/Writepads/NumberGroup",
+        "variation": "Counted for this record from POH-Db's NumberGroup writepads: lines of Persian numbers that native writers wrote on FarsiHandwriting.ir with a pen, a finger or a stylus (112 writepads by 30 writers; the mouse writepads were left out), recorded as InkML, where each trace is one pen-down stroke. Each line was split into characters by horizontal overlap; of the 1,046 lines whose character count matched their label, the 1,005 whose characters ran left to right were used (which also shows that the numbers are written left to right). Zones are thirds of each character's box, and the split is heuristic, so the shares are approximate. Of 562 samples of ۱, 562 (100%) are one stroke. 480 (85%) start at the top left, 508 (90%) first move down, and 489 (87%) end at the bottom right, below and to the right of the start: one slanting stroke, top to bottom. POH-Db is licensed AGPL-3.0, so only these counts and shares are taken; no coordinate or trace is copied, and the pen path is fitted to the bundled Noto Naskh Arabic outline rather than to any sample. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 1 movement",
+      "viewBox": {
+        "minX": 62,
+        "minY": -638,
+        "width": 303,
+        "height": 840.5
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "draw down from the top left",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M281 0L243 9Q242 78 238.5 128.5Q235 179 227 222.5Q219 266 204 313Q194 349 177.5 387Q161 425 140 466Q132 479 132 495Q132 515 146.5 534Q161 553 186 568Q219 509 243.5 441.5Q268 374 281.5 309Q295 244 295 191Q295 142 291.5 94.5Q288 47 281 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M160 540 L160 540\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M160 540 L178 500 L186 476 L195 450 L205 425 L215 400 L224 375 L232 350 L239 325 L246 300 L252 275 L257 250 L261 225 L264 200 L266 175 L267 150 L267 125 L267 100 L266 74 L265 50 L262 12\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"262\" cy=\"12\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"213.5\" y=\"164.3\" text-anchor=\"middle\" font-size=\"24.3\" fill=\"#6b7280\"><tspan x=\"213.5\" y=\"164.3\">1. draw down from the</tspan><tspan x=\"213.5\" y=\"193.9\">top left</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "perso-arabic",
+      "glyph": "۲",
+      "font": "_fonts/NotoNaskhArabic-Static.ttf",
+      "source": {
+        "citation": "POH-Db, Persian Online Handwriting Database (SLT Lab, Amirkabir University of Technology; github.com/SLTLabAUT/POH-Db at commit 018b039, Writepads/NumberGroup; AGPL-3.0, facts only): 447 aligned samples of ۲ from 30 native writers; one stroke in 447 (100%); starts at the top right in 427 (96%)",
+        "url": "https://github.com/SLTLabAUT/POH-Db/tree/018b039c0f80d84da16fc9c0f7f629c746a5b3c8/Writepads/NumberGroup",
+        "variation": "Counted for this record from POH-Db's NumberGroup writepads: lines of Persian numbers that native writers wrote on FarsiHandwriting.ir with a pen, a finger or a stylus (112 writepads by 30 writers; the mouse writepads were left out), recorded as InkML, where each trace is one pen-down stroke. Each line was split into characters by horizontal overlap; of the 1,046 lines whose character count matched their label, the 1,005 whose characters ran left to right were used (which also shows that the numbers are written left to right). Zones are thirds of each character's box, and the split is heuristic, so the shares are approximate. Of 447 samples of ۲, 447 (100%) are one stroke. 427 (96%) start at the top right. Of the 447 one-stroke samples, 433 (97%) reach the top left after leaving the start, so the pen crosses the top from right to left and climbs into the stem's head, and 445 (100%) end in the bottom third: the stem comes last, downward. POH-Db is licensed AGPL-3.0, so only these counts and shares are taken; no coordinate or trace is copied, and the pen path is fitted to the bundled Noto Naskh Arabic outline rather than to any sample. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 3 movements",
+      "viewBox": {
+        "minX": -3,
+        "minY": -638,
+        "width": 480,
+        "height": 876.9
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "curve down and left from the top right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M216 0L178 9Q177 103 169 171.5Q161 240 145 296Q132 341 115 382Q98 423 75 466Q67 482 67 495Q67 515 81.5 535Q96 555 121 568Q136 542 148.5 516Q161 490 171 461Q210 437 268 437Q312 437 336.5 469.5Q361 502 367 567L407 559Q407 501 396.5 459.5Q386 418 364 392Q347 373 323 363Q299 353 269 353Q230 353 203 365Q212 329 218 297.5Q224 266 227 239.5Q230 213 230 191Q230 160 229 133.5Q228 107 225 76Q222 45 216 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M387 550 L387 550\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M387 550 L387 528 L385 500 L380 475 L373 452 L350 418 L315 400 L293 397 L270 396 L228 402\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"228\" cy=\"402\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"237\" y=\"178.5\" text-anchor=\"middle\" font-size=\"38.5\" fill=\"#6b7280\"><tspan x=\"237\" y=\"178.5\">1. curve down and left</tspan><tspan x=\"237\" y=\"225.5\">from the top right</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "rise into the top left",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M216 0L178 9Q177 103 169 171.5Q161 240 145 296Q132 341 115 382Q98 423 75 466Q67 482 67 495Q67 515 81.5 535Q96 555 121 568Q136 542 148.5 516Q161 490 171 461Q210 437 268 437Q312 437 336.5 469.5Q361 502 367 567L407 559Q407 501 396.5 459.5Q386 418 364 392Q347 373 323 363Q299 353 269 353Q230 353 203 365Q212 329 218 297.5Q224 266 227 239.5Q230 213 230 191Q230 160 229 133.5Q228 107 225 76Q222 45 216 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M387 550 L387 528 L385 500 L380 475 L373 452 L350 418 L315 400 L293 397 L270 396 L228 402 L228 402\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M228 402 L207 411 L180 425 L159 441 L140 460 L124 481 L112 500 L100 525\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"100\" cy=\"525\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"237\" y=\"178.5\" text-anchor=\"middle\" font-size=\"38.5\" fill=\"#6b7280\"><tspan x=\"237\" y=\"178.5\">2. rise into the top</tspan><tspan x=\"237\" y=\"225.5\">left</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "come down the stem",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M216 0L178 9Q177 103 169 171.5Q161 240 145 296Q132 341 115 382Q98 423 75 466Q67 482 67 495Q67 515 81.5 535Q96 555 121 568Q136 542 148.5 516Q161 490 171 461Q210 437 268 437Q312 437 336.5 469.5Q361 502 367 567L407 559Q407 501 396.5 459.5Q386 418 364 392Q347 373 323 363Q299 353 269 353Q230 353 203 365Q212 329 218 297.5Q224 266 227 239.5Q230 213 230 191Q230 160 229 133.5Q228 107 225 76Q222 45 216 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M387 550 L387 528 L385 500 L380 475 L373 452 L350 418 L315 400 L293 397 L270 396 L228 402 L207 411 L180 425 L159 441 L140 460 L124 481 L112 500 L100 525 L100 525\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M100 525 L106 505 L115 480 L135 440 L145 416 L155 390 L164 365 L172 340 L179 315 L185 290 L190 265 L193 240 L196 215 L198 190 L199 165 L200 140 L200 115 L200 90 L200 64 L199 40 L197 10\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"197\" cy=\"10\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"237\" y=\"178.5\" text-anchor=\"middle\" font-size=\"38.5\" fill=\"#6b7280\"><tspan x=\"237\" y=\"178.5\">3. come down the stem</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "perso-arabic",
+      "glyph": "۳",
+      "font": "_fonts/NotoNaskhArabic-Static.ttf",
+      "source": {
+        "citation": "POH-Db, Persian Online Handwriting Database (SLT Lab, Amirkabir University of Technology; github.com/SLTLabAUT/POH-Db at commit 018b039, Writepads/NumberGroup; AGPL-3.0, facts only): 494 aligned samples of ۳ from 30 native writers; one stroke in 490 (99%); starts at the top right in 480 (97%)",
+        "url": "https://github.com/SLTLabAUT/POH-Db/tree/018b039c0f80d84da16fc9c0f7f629c746a5b3c8/Writepads/NumberGroup",
+        "variation": "Counted for this record from POH-Db's NumberGroup writepads: lines of Persian numbers that native writers wrote on FarsiHandwriting.ir with a pen, a finger or a stylus (112 writepads by 30 writers; the mouse writepads were left out), recorded as InkML, where each trace is one pen-down stroke. Each line was split into characters by horizontal overlap; of the 1,046 lines whose character count matched their label, the 1,005 whose characters ran left to right were used (which also shows that the numbers are written left to right). Zones are thirds of each character's box, and the split is heuristic, so the shares are approximate. Of 494 samples of ۳, 490 (99%) are one stroke. 480 (97%) start at the top right. Of the 490 one-stroke samples, 472 (96%) reach the top left after leaving the start, so the pen crosses both teeth from right to left and climbs into the stem's head, and 488 (100%) end in the bottom third: the stem comes last, downward. POH-Db is licensed AGPL-3.0, so only these counts and shares are taken; no coordinate or trace is copied, and the pen path is fitted to the bundled Noto Naskh Arabic outline rather than to any sample. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 3 movements",
+      "viewBox": {
+        "minX": -32,
+        "minY": -638,
+        "width": 515,
+        "height": 884.1
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "dip and rise from the top right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M187 0L149 9Q149 74 145.5 121.5Q142 169 134 212Q126 255 112 303Q105 327 95.5 353Q86 379 73.5 407.5Q61 436 46 466Q38 479 38 495Q38 515 52 534Q66 553 92 568Q106 541 119.5 512.5Q133 484 144 455Q168 437 200 437Q256 437 256 512Q256 523 255.5 534.5Q255 546 253 558L283 568Q291 542 294 519.5Q297 497 297 474Q305 471 312.5 469.5Q320 468 326 468Q370 468 370 538Q370 547 369.5 554.5Q369 562 368 566L409 562Q411 546 412 533Q413 520 413 509Q413 454 388.5 419.5Q364 385 327 385Q303 385 279 399Q269 379 251 366Q233 353 209 353Q202 353 193 354.5Q184 356 173 360Q186 313 192.5 270.5Q199 228 199 191Q199 142 196 94.5Q193 47 187 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M390 552 L390 552\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M390 552 L391 531 L391 505 L385 465 L362 436 L330 426 L302 440 L284 478 L277 520 L274 553\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"274\" cy=\"553\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"225.5\" y=\"181.3\" text-anchor=\"middle\" font-size=\"41.3\" fill=\"#6b7280\"><tspan x=\"225.5\" y=\"181.3\">1. dip and rise from</tspan><tspan x=\"225.5\" y=\"231.7\">the top right</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "dip again and rise to the top left",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M187 0L149 9Q149 74 145.5 121.5Q142 169 134 212Q126 255 112 303Q105 327 95.5 353Q86 379 73.5 407.5Q61 436 46 466Q38 479 38 495Q38 515 52 534Q66 553 92 568Q106 541 119.5 512.5Q133 484 144 455Q168 437 200 437Q256 437 256 512Q256 523 255.5 534.5Q255 546 253 558L283 568Q291 542 294 519.5Q297 497 297 474Q305 471 312.5 469.5Q320 468 326 468Q370 468 370 538Q370 547 369.5 554.5Q369 562 368 566L409 562Q411 546 412 533Q413 520 413 509Q413 454 388.5 419.5Q364 385 327 385Q303 385 279 399Q269 379 251 366Q233 353 209 353Q202 353 193 354.5Q184 356 173 360Q186 313 192.5 270.5Q199 228 199 191Q199 142 196 94.5Q193 47 187 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M390 552 L391 531 L391 505 L385 465 L362 436 L330 426 L302 440 L284 478 L277 520 L274 553 L274 553\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M274 553 L274 530 L272 500 L269 474 L264 450 L240 415 L205 405 L165 425 L144 442 L125 460 L109 478 L95 495 L75 515\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"75\" cy=\"515\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"225.5\" y=\"181.3\" text-anchor=\"middle\" font-size=\"41.3\" fill=\"#6b7280\"><tspan x=\"225.5\" y=\"181.3\">2. dip again and rise</tspan><tspan x=\"225.5\" y=\"231.7\">to the top left</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "come down the stem",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M187 0L149 9Q149 74 145.5 121.5Q142 169 134 212Q126 255 112 303Q105 327 95.5 353Q86 379 73.5 407.5Q61 436 46 466Q38 479 38 495Q38 515 52 534Q66 553 92 568Q106 541 119.5 512.5Q133 484 144 455Q168 437 200 437Q256 437 256 512Q256 523 255.5 534.5Q255 546 253 558L283 568Q291 542 294 519.5Q297 497 297 474Q305 471 312.5 469.5Q320 468 326 468Q370 468 370 538Q370 547 369.5 554.5Q369 562 368 566L409 562Q411 546 412 533Q413 520 413 509Q413 454 388.5 419.5Q364 385 327 385Q303 385 279 399Q269 379 251 366Q233 353 209 353Q202 353 193 354.5Q184 356 173 360Q186 313 192.5 270.5Q199 228 199 191Q199 142 196 94.5Q193 47 187 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M390 552 L391 531 L391 505 L385 465 L362 436 L330 426 L302 440 L284 478 L277 520 L274 553 L274 530 L272 500 L269 474 L264 450 L240 415 L205 405 L165 425 L144 442 L125 460 L109 478 L95 495 L75 515 L75 515\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M75 515 L81 495 L90 470 L100 448 L110 425 L120 401 L130 375 L140 348 L148 320 L155 293 L160 265 L164 238 L167 210 L169 183 L171 155 L172 128 L172 100 L171 71 L170 45 L168 10\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"168\" cy=\"10\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"225.5\" y=\"181.3\" text-anchor=\"middle\" font-size=\"41.3\" fill=\"#6b7280\"><tspan x=\"225.5\" y=\"181.3\">3. come down the stem</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "perso-arabic",
+      "glyph": "۴",
+      "font": "_fonts/NotoNaskhArabic-Static.ttf",
+      "source": {
+        "citation": "POH-Db, Persian Online Handwriting Database (SLT Lab, Amirkabir University of Technology; github.com/SLTLabAUT/POH-Db at commit 018b039, Writepads/NumberGroup; AGPL-3.0, facts only): 465 aligned samples of ۴ from 30 native writers; one stroke in 462 (99%); starts at the top right in 315 (68%) and at the top centre in 134 (29%)",
+        "url": "https://github.com/SLTLabAUT/POH-Db/tree/018b039c0f80d84da16fc9c0f7f629c746a5b3c8/Writepads/NumberGroup",
+        "variation": "Counted for this record from POH-Db's NumberGroup writepads: lines of Persian numbers that native writers wrote on FarsiHandwriting.ir with a pen, a finger or a stylus (112 writepads by 30 writers; the mouse writepads were left out), recorded as InkML, where each trace is one pen-down stroke. Each line was split into characters by horizontal overlap; of the 1,046 lines whose character count matched their label, the 1,005 whose characters ran left to right were used (which also shows that the numbers are written left to right). Zones are thirds of each character's box, and the split is heuristic, so the shares are approximate. Of 465 samples of ۴, 462 (99%) are one stroke. 315 (68%) start at the top right and 134 (29%) at the top centre, on the upper curl. Of the 462 one-stroke samples, 326 (71%) reach the middle of the right side and then come back to the left third, the trip out along the lower arm and back; 374 (81%) reach the top left after leaving the start; and 460 (100%) end in the bottom third: the stem comes last, downward. POH-Db is licensed AGPL-3.0, so only these counts and shares are taken; no coordinate or trace is copied, and the pen path is fitted to the bundled Noto Naskh Arabic outline rather than to any sample. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 4 movements",
+      "viewBox": {
+        "minX": -17,
+        "minY": -646,
+        "width": 502,
+        "height": 889.3
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "curl over from the top right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M202 0L164 9Q163 98 157 156Q151 214 138 263Q131 296 121.5 325.5Q112 355 97.5 388.5Q83 422 61 466Q53 481 53 496Q53 538 107 568Q126 534 141.5 499Q157 464 169 428Q181 421 195.5 417Q210 413 226 411Q202 429 202 460Q202 486 216 514Q230 542 252 559Q277 576 302 576Q343 576 389 511L366 488Q334 510 304 510Q291 510 279 505.5Q267 501 248 491Q248 459 269 441Q290 423 330 419Q350 425 370 433Q390 441 409 451Q415 433 415 419Q415 394 394.5 375.5Q374 357 340.5 347.5Q307 338 267 338Q230 338 192 350Q215 256 215 192Q215 146 212 98Q209 50 202 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M370 506 L370 506\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M370 506 L350 535 L310 550 L287 546 L265 537 L246 523 L232 505 L222 465 L236 432 L262 410\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"262\" cy=\"410\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"234\" y=\"180.2\" text-anchor=\"middle\" font-size=\"40.2\" fill=\"#6b7280\"><tspan x=\"234\" y=\"180.2\">1. curl over from the</tspan><tspan x=\"234\" y=\"229.2\">top right</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "out to the right and back",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M202 0L164 9Q163 98 157 156Q151 214 138 263Q131 296 121.5 325.5Q112 355 97.5 388.5Q83 422 61 466Q53 481 53 496Q53 538 107 568Q126 534 141.5 499Q157 464 169 428Q181 421 195.5 417Q210 413 226 411Q202 429 202 460Q202 486 216 514Q230 542 252 559Q277 576 302 576Q343 576 389 511L366 488Q334 510 304 510Q291 510 279 505.5Q267 501 248 491Q248 459 269 441Q290 423 330 419Q350 425 370 433Q390 441 409 451Q415 433 415 419Q415 394 394.5 375.5Q374 357 340.5 347.5Q307 338 267 338Q230 338 192 350Q215 256 215 192Q215 146 212 98Q209 50 202 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M370 506 L350 535 L310 550 L287 546 L265 537 L246 523 L232 505 L222 465 L236 432 L262 410 L262 410\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M262 410 L300 393 L323 390 L345 390 L383 405 L405 420 L393 406 L372 388 L348 378 L322 372 L296 371 L270 374 L244 381 L225 388\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"225\" cy=\"388\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"234\" y=\"180.2\" text-anchor=\"middle\" font-size=\"40.2\" fill=\"#6b7280\"><tspan x=\"234\" y=\"180.2\">2. out to the right and</tspan><tspan x=\"234\" y=\"229.2\">back</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "rise into the top left",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M202 0L164 9Q163 98 157 156Q151 214 138 263Q131 296 121.5 325.5Q112 355 97.5 388.5Q83 422 61 466Q53 481 53 496Q53 538 107 568Q126 534 141.5 499Q157 464 169 428Q181 421 195.5 417Q210 413 226 411Q202 429 202 460Q202 486 216 514Q230 542 252 559Q277 576 302 576Q343 576 389 511L366 488Q334 510 304 510Q291 510 279 505.5Q267 501 248 491Q248 459 269 441Q290 423 330 419Q350 425 370 433Q390 441 409 451Q415 433 415 419Q415 394 394.5 375.5Q374 357 340.5 347.5Q307 338 267 338Q230 338 192 350Q215 256 215 192Q215 146 212 98Q209 50 202 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M370 506 L350 535 L310 550 L287 546 L265 537 L246 523 L232 505 L222 465 L236 432 L262 410 L300 393 L323 390 L345 390 L383 405 L405 420 L393 406 L372 388 L348 378 L322 372 L296 371 L270 374 L244 381 L225 388 L225 388\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M225 388 L185 405 L165 423 L145 445 L127 468 L112 490 L92 522\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"92\" cy=\"522\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"234\" y=\"180.2\" text-anchor=\"middle\" font-size=\"40.2\" fill=\"#6b7280\"><tspan x=\"234\" y=\"180.2\">3. rise into the top</tspan><tspan x=\"234\" y=\"229.2\">left</tspan></text>"
+        },
+        {
+          "number": 4,
+          "label": "come down the stem",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M202 0L164 9Q163 98 157 156Q151 214 138 263Q131 296 121.5 325.5Q112 355 97.5 388.5Q83 422 61 466Q53 481 53 496Q53 538 107 568Q126 534 141.5 499Q157 464 169 428Q181 421 195.5 417Q210 413 226 411Q202 429 202 460Q202 486 216 514Q230 542 252 559Q277 576 302 576Q343 576 389 511L366 488Q334 510 304 510Q291 510 279 505.5Q267 501 248 491Q248 459 269 441Q290 423 330 419Q350 425 370 433Q390 441 409 451Q415 433 415 419Q415 394 394.5 375.5Q374 357 340.5 347.5Q307 338 267 338Q230 338 192 350Q215 256 215 192Q215 146 212 98Q209 50 202 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M370 506 L350 535 L310 550 L287 546 L265 537 L246 523 L232 505 L222 465 L236 432 L262 410 L300 393 L323 390 L345 390 L383 405 L405 420 L393 406 L372 388 L348 378 L322 372 L296 371 L270 374 L244 381 L225 388 L185 405 L165 423 L145 445 L127 468 L112 490 L92 522 L92 522\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M92 522 L108 480 L125 440 L134 418 L142 395 L149 370 L156 345 L162 320 L168 295 L173 270 L178 245 L181 220 L184 195 L186 170 L187 145 L187 120 L187 95 L186 69 L185 45 L183 10\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"183\" cy=\"10\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"234\" y=\"180.2\" text-anchor=\"middle\" font-size=\"40.2\" fill=\"#6b7280\"><tspan x=\"234\" y=\"180.2\">4. come down the stem</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "perso-arabic",
+      "glyph": "۵",
+      "font": "_fonts/NotoNaskhArabic-Static.ttf",
+      "source": {
+        "citation": "POH-Db, Persian Online Handwriting Database (SLT Lab, Amirkabir University of Technology; github.com/SLTLabAUT/POH-Db at commit 018b039, Writepads/NumberGroup; AGPL-3.0, facts only): 493 aligned samples of ۵ from 29 native writers; one stroke in 491 (100%); starts in the top third in 487 (99%; top left 320, 65%; top centre 145, 29%)",
+        "url": "https://github.com/SLTLabAUT/POH-Db/tree/018b039c0f80d84da16fc9c0f7f629c746a5b3c8/Writepads/NumberGroup",
+        "variation": "Counted for this record from POH-Db's NumberGroup writepads: lines of Persian numbers that native writers wrote on FarsiHandwriting.ir with a pen, a finger or a stylus (112 writepads by 30 writers; the mouse writepads were left out), recorded as InkML, where each trace is one pen-down stroke. Each line was split into characters by horizontal overlap; of the 1,046 lines whose character count matched their label, the 1,005 whose characters ran left to right were used (which also shows that the numbers are written left to right). Zones are thirds of each character's box, and the split is heuristic, so the shares are approximate. Of 493 samples of ۵, 491 (100%) are one stroke. 487 (99%) start in the top third, at the loop's point (top left 320, 65%; top centre 145, 29%), and 385 (78%) first move down and to the right. Of the 491 one-stroke samples, 468 (95%) are moving leftward at their lowest point, so the pen goes down the right side first and comes back up the left, and 356 (73%) end in the top third again, closing the loop where it began. POH-Db is licensed AGPL-3.0, so only these counts and shares are taken; no coordinate or trace is copied, and the pen path is fitted to the bundled Noto Naskh Arabic outline rather than to any sample. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 3 movements",
+      "viewBox": {
+        "minX": -23,
+        "minY": -655,
+        "width": 500,
+        "height": 891.1
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "go down the right side from the top",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M159 7Q106 7 76.5 52Q47 97 47 178Q47 222 60 270.5Q73 319 100 371Q106 384 112 394Q118 404 129 422Q140 440 161 475Q154 488 154 511Q154 531 159 550Q164 569 174 585Q241 524 283 478Q325 432 349 394Q373 356 387 317Q407 257 407 190Q407 141 393.5 98.5Q380 56 355 31Q330 7 298 7Q277 7 258.5 16.5Q240 26 226 44Q213 26 196 16.5Q179 7 159 7ZM156 92Q180 92 193.5 110Q207 128 210 165L246 184Q246 141 260 116.5Q274 92 305 92Q331 92 349 113.5Q367 135 367 165Q367 200 346.5 245.5Q326 291 289.5 340.5Q253 390 203 436Q170 398 143.5 353Q117 308 101.5 263.5Q86 219 86 181Q86 146 106 119Q126 92 156 92Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M175 560 L175 560\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M175 560 L188 533 L205 500 L224 477 L245 455 L268 431 L290 405 L311 378 L330 350 L347 320 L362 290 L374 260 L382 230 L387 200 L388 170 L385 139 L378 110 L366 86 L350 68 L328 56 L305 50 L262 62\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"262\" cy=\"62\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"227\" y=\"173.1\" text-anchor=\"middle\" font-size=\"40.1\" fill=\"#6b7280\"><tspan x=\"227\" y=\"173.1\">1. go down the right</tspan><tspan x=\"227\" y=\"222\">side from the top</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "round the bottom to the left",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M159 7Q106 7 76.5 52Q47 97 47 178Q47 222 60 270.5Q73 319 100 371Q106 384 112 394Q118 404 129 422Q140 440 161 475Q154 488 154 511Q154 531 159 550Q164 569 174 585Q241 524 283 478Q325 432 349 394Q373 356 387 317Q407 257 407 190Q407 141 393.5 98.5Q380 56 355 31Q330 7 298 7Q277 7 258.5 16.5Q240 26 226 44Q213 26 196 16.5Q179 7 159 7ZM156 92Q180 92 193.5 110Q207 128 210 165L246 184Q246 141 260 116.5Q274 92 305 92Q331 92 349 113.5Q367 135 367 165Q367 200 346.5 245.5Q326 291 289.5 340.5Q253 390 203 436Q170 398 143.5 353Q117 308 101.5 263.5Q86 219 86 181Q86 146 106 119Q126 92 156 92Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M175 560 L188 533 L205 500 L224 477 L245 455 L268 431 L290 405 L311 378 L330 350 L347 320 L362 290 L374 260 L382 230 L387 200 L388 170 L385 139 L378 110 L366 86 L350 68 L328 56 L305 50 L262 62 L262 62\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M262 62 L228 90 L195 62 L173 54 L150 50 L126 53 L105 62 L89 82 L78 100 L78 100\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"78\" cy=\"100\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"227\" y=\"173.1\" text-anchor=\"middle\" font-size=\"40.1\" fill=\"#6b7280\"><tspan x=\"227\" y=\"173.1\">2. round the bottom to</tspan><tspan x=\"227\" y=\"222\">the left</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "go up the left side to the top",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M159 7Q106 7 76.5 52Q47 97 47 178Q47 222 60 270.5Q73 319 100 371Q106 384 112 394Q118 404 129 422Q140 440 161 475Q154 488 154 511Q154 531 159 550Q164 569 174 585Q241 524 283 478Q325 432 349 394Q373 356 387 317Q407 257 407 190Q407 141 393.5 98.5Q380 56 355 31Q330 7 298 7Q277 7 258.5 16.5Q240 26 226 44Q213 26 196 16.5Q179 7 159 7ZM156 92Q180 92 193.5 110Q207 128 210 165L246 184Q246 141 260 116.5Q274 92 305 92Q331 92 349 113.5Q367 135 367 165Q367 200 346.5 245.5Q326 291 289.5 340.5Q253 390 203 436Q170 398 143.5 353Q117 308 101.5 263.5Q86 219 86 181Q86 146 106 119Q126 92 156 92Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M175 560 L188 533 L205 500 L224 477 L245 455 L268 431 L290 405 L311 378 L330 350 L347 320 L362 290 L374 260 L382 230 L387 200 L388 170 L385 139 L378 110 L366 86 L350 68 L328 56 L305 50 L262 62 L228 90 L195 62 L173 54 L150 50 L126 53 L105 62 L89 82 L78 100 L78 100\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M78 100 L72 121 L66 150 L64 179 L66 210 L71 240 L80 270 L92 300 L105 330 L120 358 L135 385 L151 408 L165 430 L175 452 L180 475 L180 503 L178 530 L175 560\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"175\" cy=\"560\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"227\" y=\"173.1\" text-anchor=\"middle\" font-size=\"40.1\" fill=\"#6b7280\"><tspan x=\"227\" y=\"173.1\">3. go up the left side</tspan><tspan x=\"227\" y=\"222\">to the top</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "perso-arabic",
+      "glyph": "۶",
+      "font": "_fonts/NotoNaskhArabic-Static.ttf",
+      "source": {
+        "citation": "POH-Db, Persian Online Handwriting Database (SLT Lab, Amirkabir University of Technology; github.com/SLTLabAUT/POH-Db at commit 018b039, Writepads/NumberGroup; AGPL-3.0, facts only): 471 aligned samples of ۶ from 30 native writers; one stroke in 469 (100%); starts in the top third in 469 (100%; top left 314, 67%; top centre 135, 29%)",
+        "url": "https://github.com/SLTLabAUT/POH-Db/tree/018b039c0f80d84da16fc9c0f7f629c746a5b3c8/Writepads/NumberGroup",
+        "variation": "Counted for this record from POH-Db's NumberGroup writepads: lines of Persian numbers that native writers wrote on FarsiHandwriting.ir with a pen, a finger or a stylus (112 writepads by 30 writers; the mouse writepads were left out), recorded as InkML, where each trace is one pen-down stroke. Each line was split into characters by horizontal overlap; of the 1,046 lines whose character count matched their label, the 1,005 whose characters ran left to right were used (which also shows that the numbers are written left to right). Zones are thirds of each character's box, and the split is heuristic, so the shares are approximate. Of 471 samples of ۶, 469 (100%) are one stroke. 469 (100%) start in the top third (top left 314, 67%; top centre 135, 29%), and 304 (65%) first move down. Of the 469 one-stroke samples, 444 (95%) reach the upper right before they reach the bottom third, and 464 (99%) end in the bottom third: down the left, a swing up to the right, then the long slant down to the lower left. The printed curl of Noto Naskh reaches further right than most writers begin, so the path starts at the top centre, where 29% begin, and its first movement runs down and to the left rather than straight down; that keeps the printed curl traced. POH-Db is licensed AGPL-3.0, so only these counts and shares are taken; no coordinate or trace is copied, and the pen path is fitted to the bundled Noto Naskh Arabic outline rather than to any sample. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 3 movements",
+      "viewBox": {
+        "minX": -10,
+        "minY": -637,
+        "width": 494,
+        "height": 878.8
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "curve down the left from the top",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M89 0L60 48Q80 86 94.5 112.5Q109 139 122.5 160.5Q136 182 152.5 203.5Q169 225 191 252Q136 266 102 300.5Q68 335 68 378Q68 425 86.5 469.5Q105 514 137 540Q170 567 210 567Q244 567 275 551Q306 535 354 494L336 459Q306 471 289.5 476Q273 481 262 482Q251 483 236 483Q170 483 121 448Q121 373 185 345Q221 329 273 328Q291 341 311 352.5Q331 364 354 375.5Q377 387 403 399Q407 394 410.5 379Q414 364 414 355Q414 346 407.5 335.5Q401 325 388 313.5Q375 302 356 289Q311 259 275.5 231Q240 203 210.5 171.5Q181 140 151.5 98.5Q122 57 89 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M242 533 L242 533\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M242 533 L200 530 L179 523 L158 513 L138 500 L120 483 L107 463 L98 440 L94 415 L95 390 L101 366 L112 345 L129 327 L150 312 L177 301 L200 295\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"200\" cy=\"295\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"237\" y=\"179.6\" text-anchor=\"middle\" font-size=\"39.6\" fill=\"#6b7280\"><tspan x=\"237\" y=\"179.6\">1. curve down the left</tspan><tspan x=\"237\" y=\"227.9\">from the top</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "swing up to the right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M89 0L60 48Q80 86 94.5 112.5Q109 139 122.5 160.5Q136 182 152.5 203.5Q169 225 191 252Q136 266 102 300.5Q68 335 68 378Q68 425 86.5 469.5Q105 514 137 540Q170 567 210 567Q244 567 275 551Q306 535 354 494L336 459Q306 471 289.5 476Q273 481 262 482Q251 483 236 483Q170 483 121 448Q121 373 185 345Q221 329 273 328Q291 341 311 352.5Q331 364 354 375.5Q377 387 403 399Q407 394 410.5 379Q414 364 414 355Q414 346 407.5 335.5Q401 325 388 313.5Q375 302 356 289Q311 259 275.5 231Q240 203 210.5 171.5Q181 140 151.5 98.5Q122 57 89 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M242 533 L200 530 L179 523 L158 513 L138 500 L120 483 L107 463 L98 440 L94 415 L95 390 L101 366 L112 345 L129 327 L150 312 L177 301 L200 295 L200 295\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M200 295 L222 296 L250 300 L275 311 L300 325 L325 339 L350 352 L376 364 L395 372\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"395\" cy=\"372\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"237\" y=\"179.6\" text-anchor=\"middle\" font-size=\"39.6\" fill=\"#6b7280\"><tspan x=\"237\" y=\"179.6\">2. swing up to the</tspan><tspan x=\"237\" y=\"227.9\">right</tspan></text>"
+        },
+        {
+          "number": 3,
+          "label": "slant down to the bottom left",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M89 0L60 48Q80 86 94.5 112.5Q109 139 122.5 160.5Q136 182 152.5 203.5Q169 225 191 252Q136 266 102 300.5Q68 335 68 378Q68 425 86.5 469.5Q105 514 137 540Q170 567 210 567Q244 567 275 551Q306 535 354 494L336 459Q306 471 289.5 476Q273 481 262 482Q251 483 236 483Q170 483 121 448Q121 373 185 345Q221 329 273 328Q291 341 311 352.5Q331 364 354 375.5Q377 387 403 399Q407 394 410.5 379Q414 364 414 355Q414 346 407.5 335.5Q401 325 388 313.5Q375 302 356 289Q311 259 275.5 231Q240 203 210.5 171.5Q181 140 151.5 98.5Q122 57 89 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M242 533 L200 530 L179 523 L158 513 L138 500 L120 483 L107 463 L98 440 L94 415 L95 390 L101 366 L112 345 L129 327 L150 312 L177 301 L200 295 L222 296 L250 300 L275 311 L300 325 L325 339 L350 352 L376 364 L395 372 L395 372\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M395 372 L376 350 L350 322 L326 301 L300 282 L273 267 L245 250 L218 226 L193 200 L170 173 L149 145 L131 118 L115 92 L99 63 L88 40\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"88\" cy=\"40\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"237\" y=\"179.6\" text-anchor=\"middle\" font-size=\"39.6\" fill=\"#6b7280\"><tspan x=\"237\" y=\"179.6\">3. slant down to the</tspan><tspan x=\"237\" y=\"227.9\">bottom left</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "perso-arabic",
+      "glyph": "۷",
+      "font": "_fonts/NotoNaskhArabic-Static.ttf",
+      "source": {
+        "citation": "POH-Db, Persian Online Handwriting Database (SLT Lab, Amirkabir University of Technology; github.com/SLTLabAUT/POH-Db at commit 018b039, Writepads/NumberGroup; AGPL-3.0, facts only): 487 aligned samples of ۷ from 30 native writers; one stroke in 487 (100%); starts at the top left in 360 (74%)",
+        "url": "https://github.com/SLTLabAUT/POH-Db/tree/018b039c0f80d84da16fc9c0f7f629c746a5b3c8/Writepads/NumberGroup",
+        "variation": "Counted for this record from POH-Db's NumberGroup writepads: lines of Persian numbers that native writers wrote on FarsiHandwriting.ir with a pen, a finger or a stylus (112 writepads by 30 writers; the mouse writepads were left out), recorded as InkML, where each trace is one pen-down stroke. Each line was split into characters by horizontal overlap; of the 1,046 lines whose character count matched their label, the 1,005 whose characters ran left to right were used (which also shows that the numbers are written left to right). Zones are thirds of each character's box, and the split is heuristic, so the shares are approximate. Of 487 samples of ۷, 487 (100%) are one stroke. 360 (74%) start at the top left (and 91, 19%, at the middle left); the lowest point comes in the middle of the stroke in 482 (99%), and 451 (93%) end at the top right: down to the point, then up. POH-Db is licensed AGPL-3.0, so only these counts and shares are taken; no coordinate or trace is copied, and the pen path is fitted to the bundled Noto Naskh Arabic outline rather than to any sample. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 2 movements",
+      "viewBox": {
+        "minX": -61,
+        "minY": -636,
+        "width": 558,
+        "height": 890.9
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "slant down from the top left",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M204 0Q183 70 166 123Q149 176 132.5 219Q116 262 99 300.5Q82 339 61.5 379.5Q41 420 15 468Q9 479 9 490Q9 509 22.5 529.5Q36 550 58 566Q81 531 107 475Q133 419 158 353.5Q183 288 203 223.5Q223 159 233 108Q244 168 261 232.5Q278 297 299 359.5Q320 422 342 475.5Q364 529 385 566L427 494Q386 411 355.5 337.5Q325 264 302 192Q279 120 258 40Q242 27 228.5 17.5Q215 8 204 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M45 515 L45 515\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M45 515 L56 491 L70 460 L83 430 L96 400 L107 374 L118 350 L128 325 L137 300 L147 275 L157 250 L166 225 L175 200 L183 175 L190 150 L197 125 L203 100 L208 76 L212 55 L218 22\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"218\" cy=\"22\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"218\" y=\"184.7\" text-anchor=\"middle\" font-size=\"44.7\" fill=\"#6b7280\"><tspan x=\"218\" y=\"184.7\">1. slant down from the</tspan><tspan x=\"218\" y=\"239.2\">top left</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "turn and go up to the top right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M204 0Q183 70 166 123Q149 176 132.5 219Q116 262 99 300.5Q82 339 61.5 379.5Q41 420 15 468Q9 479 9 490Q9 509 22.5 529.5Q36 550 58 566Q81 531 107 475Q133 419 158 353.5Q183 288 203 223.5Q223 159 233 108Q244 168 261 232.5Q278 297 299 359.5Q320 422 342 475.5Q364 529 385 566L427 494Q386 411 355.5 337.5Q325 264 302 192Q279 120 258 40Q242 27 228.5 17.5Q215 8 204 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M45 515 L56 491 L70 460 L83 430 L96 400 L107 374 L118 350 L128 325 L137 300 L147 275 L157 250 L166 225 L175 200 L183 175 L190 150 L197 125 L203 100 L208 76 L212 55 L218 22 L218 22\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M218 22 L238 60 L252 100 L259 124 L266 150 L272 175 L278 200 L286 225 L294 250 L302 275 L310 300 L319 325 L328 350 L337 375 L347 400 L358 425 L369 450 L380 476 L390 500 L400 535\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"400\" cy=\"535\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"218\" y=\"184.7\" text-anchor=\"middle\" font-size=\"44.7\" fill=\"#6b7280\"><tspan x=\"218\" y=\"184.7\">2. turn and go up to the</tspan><tspan x=\"218\" y=\"239.2\">top right</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "perso-arabic",
+      "glyph": "۸",
+      "font": "_fonts/NotoNaskhArabic-Static.ttf",
+      "source": {
+        "citation": "POH-Db, Persian Online Handwriting Database (SLT Lab, Amirkabir University of Technology; github.com/SLTLabAUT/POH-Db at commit 018b039, Writepads/NumberGroup; AGPL-3.0, facts only): 479 aligned samples of ۸ from 29 native writers; one stroke in 479 (100%); starts at the bottom left in 373 (78%)",
+        "url": "https://github.com/SLTLabAUT/POH-Db/tree/018b039c0f80d84da16fc9c0f7f629c746a5b3c8/Writepads/NumberGroup",
+        "variation": "Counted for this record from POH-Db's NumberGroup writepads: lines of Persian numbers that native writers wrote on FarsiHandwriting.ir with a pen, a finger or a stylus (112 writepads by 30 writers; the mouse writepads were left out), recorded as InkML, where each trace is one pen-down stroke. Each line was split into characters by horizontal overlap; of the 1,046 lines whose character count matched their label, the 1,005 whose characters ran left to right were used (which also shows that the numbers are written left to right). Zones are thirds of each character's box, and the split is heuristic, so the shares are approximate. Of 479 samples of ۸, 479 (100%) are one stroke. 373 (78%) start at the bottom left and 324 (68%) first move up; the highest point comes in the middle of the stroke in 463 (97%), and 453 (95%) end at the bottom right: up to the peak, then down. POH-Db is licensed AGPL-3.0, so only these counts and shares are taken; no coordinate or trace is copied, and the pen path is fitted to the bundled Noto Naskh Arabic outline rather than to any sample. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 2 movements",
+      "viewBox": {
+        "minX": -62,
+        "minY": -636,
+        "width": 559,
+        "height": 891.1
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "go up from the bottom left",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M51 0L8 71Q41 136 65.5 191.5Q90 247 109.5 300Q129 353 145.5 408Q162 463 178 526L232 566Q251 500 268 448Q285 396 301.5 352.5Q318 309 335.5 269.5Q353 230 374 188.5Q395 147 422 98Q427 86 427 76Q427 57 414 37Q401 17 378 0Q357 32 332.5 82.5Q308 133 285 192.5Q262 252 242 312Q229 352 219 389.5Q209 427 203 458Q192 396 175 332Q158 268 137.5 207Q117 146 95 93Q73 40 51 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M38 38 L38 38\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M38 38 L48 66 L60 100 L71 126 L82 150 L92 175 L102 200 L112 225 L121 250 L130 275 L139 300 L147 325 L154 350 L161 375 L168 400 L175 426 L182 450 L195 490 L205 520\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"205\" cy=\"520\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"217.5\" y=\"184.8\" text-anchor=\"middle\" font-size=\"44.8\" fill=\"#6b7280\"><tspan x=\"217.5\" y=\"184.8\">1. go up from the</tspan><tspan x=\"217.5\" y=\"239.5\">bottom left</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "turn and come down to the right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M51 0L8 71Q41 136 65.5 191.5Q90 247 109.5 300Q129 353 145.5 408Q162 463 178 526L232 566Q251 500 268 448Q285 396 301.5 352.5Q318 309 335.5 269.5Q353 230 374 188.5Q395 147 422 98Q427 86 427 76Q427 57 414 37Q401 17 378 0Q357 32 332.5 82.5Q308 133 285 192.5Q262 252 242 312Q229 352 219 389.5Q209 427 203 458Q192 396 175 332Q158 268 137.5 207Q117 146 95 93Q73 40 51 0Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M38 38 L48 66 L60 100 L71 126 L82 150 L92 175 L102 200 L112 225 L121 250 L130 275 L139 300 L147 325 L154 350 L161 375 L168 400 L175 426 L182 450 L195 490 L205 520 L205 520\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M205 520 L213 497 L225 465 L238 432 L250 400 L258 374 L266 350 L275 325 L284 300 L293 275 L303 250 L314 225 L325 200 L336 175 L348 150 L361 125 L372 100 L379 76 L384 55 L390 28\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"390\" cy=\"28\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"217.5\" y=\"184.8\" text-anchor=\"middle\" font-size=\"44.8\" fill=\"#6b7280\"><tspan x=\"217.5\" y=\"184.8\">2. turn and come down</tspan><tspan x=\"217.5\" y=\"239.5\">to the right</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "perso-arabic",
+      "glyph": "۹",
+      "font": "_fonts/NotoNaskhArabic-Static.ttf",
+      "source": {
+        "citation": "POH-Db, Persian Online Handwriting Database (SLT Lab, Amirkabir University of Technology; github.com/SLTLabAUT/POH-Db at commit 018b039, Writepads/NumberGroup; AGPL-3.0, facts only): 452 aligned samples of ۹ from 30 native writers; one stroke in 452 (100%); starts in the right half in 379 (84%)",
+        "url": "https://github.com/SLTLabAUT/POH-Db/tree/018b039c0f80d84da16fc9c0f7f629c746a5b3c8/Writepads/NumberGroup",
+        "variation": "Counted for this record from POH-Db's NumberGroup writepads: lines of Persian numbers that native writers wrote on FarsiHandwriting.ir with a pen, a finger or a stylus (112 writepads by 30 writers; the mouse writepads were left out), recorded as InkML, where each trace is one pen-down stroke. Each line was split into characters by horizontal overlap; of the 1,046 lines whose character count matched their label, the 1,005 whose characters ran left to right were used (which also shows that the numbers are written left to right). Zones are thirds of each character's box, and the split is heuristic, so the shares are approximate. Of 452 samples of ۹, 452 (100%) are one stroke. 379 (84%) start in the right half, most often at the middle right (151, 33%), and 334 (74%) first move left. 449 (99%) reach the top left after leaving the start, so the loop comes first, and 439 (97%) end at the bottom right: the stem comes last, downward. The loop turns clockwise in 277 (61%). POH-Db is licensed AGPL-3.0, so only these counts and shares are taken; no coordinate or trace is copied, and the pen path is fitted to the bundled Noto Naskh Arabic outline rather than to any sample. Handwriting varies by writer."
+      },
+      "penLifts": 0,
+      "summary": "one unbroken stroke · 2 movements",
+      "viewBox": {
+        "minX": -3,
+        "minY": -655,
+        "width": 477,
+        "height": 894.2
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "loop left, up and over the top",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M345 -1Q321 62 306.5 111Q292 160 284.5 204Q277 248 275 294Q236 280 202 280Q144 280 105.5 318.5Q67 357 67 417Q67 454 88.5 495Q110 536 142 561Q174 585 208 585Q265 585 295 535Q325 485 325 375Q325 322 333.5 270.5Q342 219 359.5 167.5Q377 116 404 62L345 -1ZM230 364Q239 364 249.5 365.5Q260 367 272 369L273 370Q267 434 244.5 466Q222 498 183 498Q166 498 149 488Q132 478 121 462.5Q110 447 110 430Q110 402 143.5 383Q177 364 230 364Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M295 330 L295 330\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M295 330 L276 324 L250 318 L225 317 L200 318 L175 321 L150 328 L127 340 L108 358 L95 383 L88 410 L88 435 L95 460 L108 486 L125 510 L146 528 L170 540 L195 546 L220 545 L244 536 L265 520 L281 499 L292 475 L298 448 L300 420 L301 387 L300 360\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"300\" cy=\"360\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"235.5\" y=\"179.2\" text-anchor=\"middle\" font-size=\"38.2\" fill=\"#6b7280\"><tspan x=\"235.5\" y=\"179.2\">1. loop left, up and</tspan><tspan x=\"235.5\" y=\"225.8\">over the top</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "draw the stem down to the right",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M345 -1Q321 62 306.5 111Q292 160 284.5 204Q277 248 275 294Q236 280 202 280Q144 280 105.5 318.5Q67 357 67 417Q67 454 88.5 495Q110 536 142 561Q174 585 208 585Q265 585 295 535Q325 485 325 375Q325 322 333.5 270.5Q342 219 359.5 167.5Q377 116 404 62L345 -1ZM230 364Q239 364 249.5 365.5Q260 367 272 369L273 370Q267 434 244.5 466Q222 498 183 498Q166 498 149 488Q132 478 121 462.5Q110 447 110 430Q110 402 143.5 383Q177 364 230 364Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M295 330 L276 324 L250 318 L225 317 L200 318 L175 321 L150 328 L127 340 L108 358 L95 383 L88 410 L88 435 L95 460 L108 486 L125 510 L146 528 L170 540 L195 546 L220 545 L244 536 L265 520 L281 499 L292 475 L298 448 L300 420 L301 387 L300 360 L300 360\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M300 360 L300 333 L301 300 L304 274 L308 250 L312 225 L316 200 L323 175 L331 150 L339 124 L347 100 L362 60 L368 38\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"368\" cy=\"38\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"235.5\" y=\"179.2\" text-anchor=\"middle\" font-size=\"38.2\" fill=\"#6b7280\"><tspan x=\"235.5\" y=\"179.2\">2. draw the stem down to</tspan><tspan x=\"235.5\" y=\"225.8\">the right</tspan></text>"
+        }
+      ]
     }
   ]
 }

@@ -394,19 +394,38 @@ export function scriptEntryId(glyph: unknown): string {
     .join("-");
 }
 
-const SCRIPT_SECTIONS = [
+// A script inventory has up to three sections, one directory each:
+//
+//     section   directory   identity field   present in
+//     --------  ----------  ---------------  ---------------------------------
+//     letters   letters/    glyph            every inventory
+//     marks     marks/      mark             every inventory
+//     digits    digits/     glyph            only a script with its own numerals
+//                                            whose digit rows have been authored
+//                                            (Perso-Arabic ۰-۹, Urdu ۰-۹)
+//
+// `digits` is OPTIONAL: an inventory with no `digits/` shard reassembles with
+// no `digits` key at all, exactly as it did before the section existed, so the
+// Japanese and Tamil inventories are byte-for-byte what they were. A digit row
+// has the same shape as a letter row (the monolithic Kannada and Malayalam
+// inventories already keep theirs in a top-level `digits` array), so it is
+// identified by its `glyph`.
+const SCRIPT_SECTIONS: readonly MergeSection[] = [
   { key: "letters", dir: "letters" },
   { key: "marks", dir: "marks" },
-] as const;
+  { key: "digits", dir: "digits", optional: true },
+];
+
+type ScriptSectionKind = "letters" | "marks" | "digits";
 
 const SCRIPT_ENTRY_NAME =
-  /^(letters|marks)\/(\d{4})-(U-[0-9A-F]+(?:-U-[0-9A-F]+)*)\.json$/;
+  /^(letters|marks|digits)\/(\d{4})-(U-[0-9A-F]+(?:-U-[0-9A-F]+)*)\.json$/;
 
-function scriptEntryGlyph(kind: "letters" | "marks", value: unknown, name: string): string {
+function scriptEntryGlyph(kind: ScriptSectionKind, value: unknown, name: string): string {
   if (typeof value !== "object" || value === null || Array.isArray(value)) {
     throw new Error(`script shard '${name}': must contain one JSON object`);
   }
-  const field = kind === "letters" ? "glyph" : "mark";
+  const field = kind === "marks" ? "mark" : "glyph";
   const glyph = (value as Record<string, unknown>)[field];
   if (typeof glyph !== "string" || glyph.length === 0) {
     throw new Error(`script shard '${name}': must carry one non-empty '${field}'`);
@@ -423,6 +442,7 @@ export function mergeScriptInventoryShards<T = Record<string, unknown>>(shards: 
   const ordinals = new Map<string, Set<string>>([
     ["letters", new Set<string>()],
     ["marks", new Set<string>()],
+    ["digits", new Set<string>()],
   ]);
   const glyphOwners = new Map<string, string>();
 
@@ -432,10 +452,11 @@ export function mergeScriptInventoryShards<T = Record<string, unknown>>(shards: 
     if (match === null) {
       throw new Error(
         `script shard '${shard.name}': expected ` +
-          `letters/NNNN-U-<CODEPOINT>.json or marks/NNNN-U-<CODEPOINT>.json`,
+          `letters/NNNN-U-<CODEPOINT>.json, marks/NNNN-U-<CODEPOINT>.json ` +
+          `or digits/NNNN-U-<CODEPOINT>.json`,
       );
     }
-    const kind = match[1] as "letters" | "marks";
+    const kind = match[1] as ScriptSectionKind;
     const ordinal = match[2];
     const id = match[3];
     const seenOrdinals = ordinals.get(kind)!;
@@ -737,6 +758,14 @@ export interface MergeSection {
   readonly dir?: string;
   /** `"object"` rebuilds `{id: value}` from the filenames. Default `"array"`. */
   readonly kind?: "array" | "object";
+  /**
+   * When true and no shard belongs to this section, the rebuilt document has
+   * NO such key, rather than an empty array or object. That lets a section be
+   * added to a ledger family (a script inventory's `digits/`) without changing
+   * one byte of the members that have nothing in it. A section with even one
+   * shard is rebuilt exactly as a required one.
+   */
+  readonly optional?: boolean;
 }
 
 /**
@@ -1044,6 +1073,11 @@ function idFromShardName(name: string): string | undefined {
   return /^\d+-(.+)$/.exec(base)?.[1];
 }
 
+/** Whether a shard file sits in this section's directory (or at the root). */
+function claimsShard(section: MergeSection, name: string): boolean {
+  return section.dir === undefined ? !name.includes("/") : name.startsWith(`${section.dir}/`);
+}
+
 /**
  * Fold `_meta.json` plus several sections' shards back into one document.
  *
@@ -1083,6 +1117,14 @@ export function mergeSectionedShards(
   delete meta[KEY_ORDER_FIELD];
 
   const assembled = new Map<string, unknown>();
+  // An optional section with no shards is left out entirely (see
+  // `MergeSection.optional`), so it neither appears in the document nor takes
+  // a place in the recorded key order.
+  const present = sections.filter(
+    (section) =>
+      section.optional !== true ||
+      shards.some((shard) => shard.name !== META_SHARD && claimsShard(section, shard.name)),
+  );
   for (const section of sections) {
     if (Object.hasOwn(meta, section.key)) {
       // Otherwise the merge order silently decides whether the meta copy or the
@@ -1092,11 +1134,9 @@ export function mergeSectionedShards(
           `that section lives in the sibling shards`,
       );
     }
-    const prefix = section.dir === undefined ? "" : `${section.dir}/`;
+    if (!present.includes(section)) continue;
     const mine = shards.filter(
-      (shard) =>
-        shard.name !== META_SHARD &&
-        (section.dir === undefined ? !shard.name.includes("/") : shard.name.startsWith(prefix)),
+      (shard) => shard.name !== META_SHARD && claimsShard(section, shard.name),
     );
     if ((section.kind ?? "array") === "object") {
       const value: Record<string, unknown> = {};
@@ -1162,7 +1202,7 @@ export function mergeSectionedShards(
   const order = keyOrderFrom(
     recorded,
     meta,
-    sections.map((section) => section.key),
+    present.map((section) => section.key),
     metaShard.path,
   );
 

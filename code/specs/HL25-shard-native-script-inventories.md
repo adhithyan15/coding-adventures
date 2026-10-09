@@ -21,10 +21,21 @@ data/scripts/urdu-nastaliq.d/
   _meta.json
   letters/NNNN-U-<CODEPOINT>[-U-<CODEPOINT>...].json
   marks/NNNN-U-<CODEPOINT>[-U-<CODEPOINT>...].json
+  digits/NNNN-U-<CODEPOINT>.json        (optional)
 ```
 
-`_meta.json` owns every non-entry field. Each entry file owns one `letters`
-or `marks` element. Raw Unicode glyphs do not appear in filenames because
+`_meta.json` owns every non-entry field. Each entry file owns one `letters`,
+`marks` or `digits` element.
+
+`digits/` is optional. It holds a script's own numerals (Perso-Arabic and
+Urdu-Nastaliq ۰-۹), one digit row per file, identified by its `glyph` exactly
+as a letter row is; a row has the shape the monolithic Kannada and Malayalam
+inventories already use in their top-level `digits` arrays. An inventory with
+no `digits/` directory reassembles with no `digits` key at all, so adding the
+section changed no byte of the Japanese or Tamil inventory. The independent
+owner declarations (`data/script-owner-declarations/<script>/`) mirror it: an
+optional `digits/` directory of `kind: "digit"` declarations, which `--check`
+compares with the inventory's digit identities as it does letters and marks. Raw Unicode glyphs do not appear in filenames because
 filesystem normalization differs across APFS, ext4, and NTFS; uppercase code
 point ids are the stable identity.
 
@@ -44,13 +55,14 @@ one entry shard plus any owned evidence/changelog shard, never an aggregate.
 The shard merge refuses data before exposing an inventory when any of these
 conditions is false:
 
-1. only `_meta.json`, `letters/*.json`, and `marks/*.json` participate;
+1. only `_meta.json`, `letters/*.json`, `marks/*.json`, and `digits/*.json`
+   participate;
 2. every entry filename is `NNNN-U-<CODEPOINT>[-U-<CODEPOINT>...].json`;
 3. the filename code-point id exactly matches `glyph` or `mark`;
 4. one section cannot reuse an ordinal;
 5. one glyph cannot be owned twice, including once as a letter and once as a
-   mark;
-6. `_meta.json` contains neither `letters` nor `marks`; and
+   mark or a digit;
+6. `_meta.json` contains none of `letters`, `marks` or `digits`; and
 7. sorted filename order reconstructs the pre-migration array order exactly.
 
 Tools resolve an existing shard by code-point id, not by a hard-coded ordinal.

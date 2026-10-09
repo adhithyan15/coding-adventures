@@ -1,0 +1,18 @@
+{
+  "glyph": "۱",
+  "sound": "1",
+  "role": "digit",
+  "components": [
+    "۱  1 — Urdu digit"
+  ],
+  "strokeOrder": [
+    "draw down from the top left"
+  ],
+  "strokeOrderNote": "One pen-down movement; 562 of 562 POH-Db samples (100%) are one stroke.",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "POH-Db, Persian Online Handwriting Database (SLT Lab, Amirkabir University of Technology; github.com/SLTLabAUT/POH-Db at commit 018b039, Writepads/NumberGroup; AGPL-3.0, facts only): 562 aligned samples of ۱ from 30 native Persian writers; one stroke in 562 (100%); starts at the top left in 480 (85%)",
+    "url": "https://github.com/SLTLabAUT/POH-Db/tree/018b039c0f80d84da16fc9c0f7f629c746a5b3c8/Writepads/NumberGroup",
+    "variation": "Counted for this record from POH-Db's NumberGroup writepads: lines of Persian numbers that native writers wrote on FarsiHandwriting.ir with a pen, a finger or a stylus (112 writepads by 30 writers; the mouse writepads were left out), recorded as InkML, where each trace is one pen-down stroke. Each line was split into characters by horizontal overlap; of the 1,046 lines whose character count matched their label, the 1,005 whose characters ran left to right were used (which also shows that the numbers are written left to right). Zones are thirds of each character's box, and the split is heuristic, so the shares are approximate. Of 562 samples of ۱, 562 (100%) are one stroke. 480 (85%) start at the top left, 508 (90%) first move down, and 489 (87%) end at the bottom right, below and to the right of the start: one slanting stroke, top to bottom. POH-Db is licensed AGPL-3.0, so only these counts and shares are taken; no coordinate or trace is copied, and the pen path is fitted to the bundled Noto Naskh Arabic outline rather than to any sample. Handwriting varies by writer. These writers wrote Persian. Urdu writes ۰ ۱ ۲ ۳ (the same code points, U+06F0 to U+06F3) in the same shapes, while its ۴, ۶ and ۷ differ, so only these four Urdu digits cite the Persian counts; they are evidence by shared form, not an Urdu sample, and confidence is medium."
+  }
+}

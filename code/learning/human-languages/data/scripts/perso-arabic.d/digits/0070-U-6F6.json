@@ -1,0 +1,20 @@
+{
+  "glyph": "۶",
+  "sound": "6",
+  "role": "digit",
+  "components": [
+    "۶  6 — Persian digit"
+  ],
+  "strokeOrder": [
+    "curve down the left from the top",
+    "without lifting, swing up to the right",
+    "without lifting, slant down to the bottom left"
+  ],
+  "strokeOrderNote": "Three movements in one continuous pen-down run; 469 of 471 POH-Db samples (100%) are one stroke.",
+  "penLifts": 0,
+  "strokeOrderSource": {
+    "citation": "POH-Db, Persian Online Handwriting Database (SLT Lab, Amirkabir University of Technology; github.com/SLTLabAUT/POH-Db at commit 018b039, Writepads/NumberGroup; AGPL-3.0, facts only): 471 aligned samples of ۶ from 30 native writers; one stroke in 469 (100%); starts in the top third in 469 (100%; top left 314, 67%; top centre 135, 29%)",
+    "url": "https://github.com/SLTLabAUT/POH-Db/tree/018b039c0f80d84da16fc9c0f7f629c746a5b3c8/Writepads/NumberGroup",
+    "variation": "Counted for this record from POH-Db's NumberGroup writepads: lines of Persian numbers that native writers wrote on FarsiHandwriting.ir with a pen, a finger or a stylus (112 writepads by 30 writers; the mouse writepads were left out), recorded as InkML, where each trace is one pen-down stroke. Each line was split into characters by horizontal overlap; of the 1,046 lines whose character count matched their label, the 1,005 whose characters ran left to right were used (which also shows that the numbers are written left to right). Zones are thirds of each character's box, and the split is heuristic, so the shares are approximate. Of 471 samples of ۶, 469 (100%) are one stroke. 469 (100%) start in the top third (top left 314, 67%; top centre 135, 29%), and 304 (65%) first move down. Of the 469 one-stroke samples, 444 (95%) reach the upper right before they reach the bottom third, and 464 (99%) end in the bottom third: down the left, a swing up to the right, then the long slant down to the lower left. The printed curl of Noto Naskh reaches further right than most writers begin, so the path starts at the top centre, where 29% begin, and its first movement runs down and to the left rather than straight down; that keeps the printed curl traced. POH-Db is licensed AGPL-3.0, so only these counts and shares are taken; no coordinate or trace is copied, and the pen path is fitted to the bundled Noto Naskh Arabic outline rather than to any sample. Handwriting varies by writer."
+  }
+}
