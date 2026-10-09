@@ -11,13 +11,21 @@
   "payoff": {
     "lesson": "TA-C01-practice",
     "kind": "task",
-    "summary": "Hold the whole exchange out loud, then copy வ once beside the visible model and compare only that shape.",
+    "summary": "Hold the whole exchange out loud, say back where vaṇakkam and naṉṟi come from and how Tamil answers yes, then copy வ once beside the visible model and compare only that shape.",
     "assesses": [
       "TA-PHONO-VANAKKAM-01",
       "TA-ETYMON-VANAKKAM-02",
       "TA-PRAGMATIC-VANAKKAM-03",
-      "TA-SCRIPT-FIRST-VISIBLE-SHAPE-00"
+      "TA-SCRIPT-FIRST-VISIBLE-SHAPE-00",
+      "TA-ROOT-C01-VANAKKAM-FAMILY-REGISTER-01",
+      "TA-LEX-C01-AAM-01",
+      "TA-LEX-C01-ILLAI-01",
+      "TA-LEX-C01-NANDRI-01",
+      "TA-ROOT-C01-NANDRI-FAMILY-REGISTER-01",
+      "TA-LEX-C01-SARI-01",
+      "TA-LEX-C01-ANSWERING-01",
+      "TA-LEX-C01-PRACTICE-01"
     ],
-    "note": "The schema-v2 opener and its two-minute writing bridge introduce four measurable atoms. TA-C01-practice remains the terminal chapter payoff: it revisits the spoken greeting and its cultural meaning, then requires one supported copy of வ with the model visible. The other eight legacy lessons remain untyped debt; the payoff does not pretend to assess atoms they do not yet declare."
+    "note": "TA-C01-practice assesses all twelve atoms the chapter introduces: the five spoken words and the greeting's sound and two-way use, a say-it-back of the vaṇakkam and naṉṟi origins and family register, emphatic āmām and the echoed-verb yes, the farewell recap it introduces itself, and one supported copy of வ with the model visible."
   }
 }

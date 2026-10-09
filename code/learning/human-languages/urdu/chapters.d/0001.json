@@ -11,15 +11,23 @@
   "payoff": {
     "lesson": "UR-C01-nahin",
     "kind": "task",
-    "summary": "Complete UR-C01-nahin, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in Urdu, respond courteously, and close the exchange naturally.",
+    "summary": "Complete UR-C01-nahin, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in Urdu, respond courteously, and close the exchange naturally, then pick out shīn, kāf and re and write one sīn.",
     "assesses": [
+      "UR-LEX-SALAM",
+      "UR-SCRIPT-SHIN-RECOGNITION-01",
+      "UR-SCRIPT-KAF-RECOGNITION-01",
+      "UR-SCRIPT-RE-RECOGNITION-01",
+      "UR-SCRIPT-YE-RECOGNITION-01",
+      "UR-SCRIPT-HE-RECOGNITION-01",
+      "UR-LEX-SHUKRIYA",
       "UR-LEX-JI-HAN",
       "UR-REGISTER-JI-RESPECT",
-      "UR-LEX-SHUKRIYA",
+      "UR-SCRIPT-NUN-GHUNNA-01",
+      "UR-SCRIPT-SIN-01",
       "UR-LEX-NAHIN",
       "UR-GRAMMAR-NAHIN-NEGATION",
       "UR-SCRIPT-NUN-RECOGNITION-01"
     ],
-    "note": "The terminal lesson retrieves the courteous yes-and-thank-you exchange before contrasting it with nahin, then closes by recalling the new word, its negating job, and its opening nun."
+    "note": "UR-C01-nahin assesses all fourteen atoms the chapter introduces: it retrieves the courteous yes-and-thank-you exchange, rebuilds nahin from ye, he and nasal nūn ghunna plus the new nūn, contrasts it with jī hā̃, then a closing say-it-back recalls salām, picks out shīn, kāf and re out of order, and writes one sīn."
   }
 }

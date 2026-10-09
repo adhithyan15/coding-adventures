@@ -9,20 +9,20 @@ spine_node: SPINE-MEET-GREET
 chapter: 1
 type: practice-mix
 headword: (practice)
-gloss: read and use the Hindi greetings
+gloss: use the Hindi greetings and write the first four letters
 concept_tag: CH1-PRACTICE
-prerequisites: [HI-C01-namaste, HI-C01-namaskar, HI-C01-dhanyavad, HI-C01-shukriya, HI-C01-alvida]
+prerequisites: [HI-C01-namaste, HI-C01-namaskar, HI-C01-dhanyavad, HI-C01-shukriya, HI-C01-alvida, HI-W02-ka-ta-mouth-order]
 sounds: []
 roots: []
 duration:
-  max_seconds: 240
+  max_seconds: 280
 requires:
-  knowledge: [HI-CONCEPT-C01-NAMASTE-01, HI-CONCEPT-C01-NAMASKAR-01, HI-CONCEPT-C01-DHANYAVAD-01, HI-CONCEPT-C01-SHUKRIYA-01, HI-CONCEPT-C01-ALVIDA-01]
+  knowledge: [HI-CONCEPT-C01-NAMASTE-01, HI-CONCEPT-C01-NAMASKAR-01, HI-CONCEPT-C01-DHANYAVAD-01, HI-CONCEPT-C01-SHUKRIYA-01, HI-CONCEPT-C01-ALVIDA-01, HI-CONCEPT-W01-SHIROREKHA-NA-MA-01, HI-CONCEPT-W01-NA-MA-01, HI-CONCEPT-W01-NA-MA-02, HI-CONCEPT-W01-NA-MA-03, HI-CONCEPT-W02-ABUGIDA-KA-TA-01, HI-CONCEPT-W02-ABUGIDA-KA-TA-02, HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-01, HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-02, HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-03]
 introduces:
   knowledge: [HI-CONCEPT-C01-PRACTICE-01]
 practises:
-  knowledge: [HI-CONCEPT-C01-ALVIDA-01, HI-CONCEPT-C01-DHANYAVAD-01, HI-CONCEPT-C01-NAMASKAR-01, HI-CONCEPT-C01-NAMASTE-01, HI-CONCEPT-C01-PRACTICE-01, HI-CONCEPT-C01-SHUKRIYA-01]
-skills: [listening, speaking, reading]
+  knowledge: [HI-CONCEPT-C01-ALVIDA-01, HI-CONCEPT-C01-DHANYAVAD-01, HI-CONCEPT-C01-NAMASKAR-01, HI-CONCEPT-C01-NAMASTE-01, HI-CONCEPT-C01-PRACTICE-01, HI-CONCEPT-C01-SHUKRIYA-01, HI-CONCEPT-W01-SHIROREKHA-NA-MA-01, HI-CONCEPT-W01-NA-MA-01, HI-CONCEPT-W01-NA-MA-02, HI-CONCEPT-W01-NA-MA-03, HI-CONCEPT-W02-ABUGIDA-KA-TA-01, HI-CONCEPT-W02-ABUGIDA-KA-TA-02, HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-01, HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-02, HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-03]
+skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
@@ -30,7 +30,7 @@ variety: standard-hindi
 reviews_of: [HI-C01-namaste, HI-C01-namaskar, HI-C01-dhanyavad, HI-C01-shukriya, HI-C01-alvida]
 ---
 
-# Practice — the Hindi greetings, read and understood
+# Practice — the Hindi greetings and the first four letters
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-NAMASTE-01] -->
@@ -53,6 +53,23 @@ carry *a*; a *mātrā* changes the vowel; a *halant* removes it and makes a
 conjunct), and **Hindi's double heritage** — a Sanskrit layer (*namaste,
 dhanyavād*) and a Perso-Arabic layer (*shukriyā, alvidā*), often the formal
 vs. the everyday word for the same thing.
+
+## Guided Practice — the first letters, by hand
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W01-SHIROREKHA-NA-MA-01, HI-CONCEPT-W01-NA-MA-01, HI-CONCEPT-W01-NA-MA-02, HI-CONCEPT-W01-NA-MA-03, HI-CONCEPT-W02-ABUGIDA-KA-TA-01, HI-CONCEPT-W02-ABUGIDA-KA-TA-02, HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-01, HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-02, HI-CONCEPT-W02-KA-TA-MOUTH-ORDER-03] -->
+
+[YOU WRITE: न, म, क, त — each body first, the bar last — then compare with
+the shapes in this chapter and repair one]
+
+- The line on top: its name, and when is it drawn?
+  (**Shirorekhā**, "head-line"; **last**, one line across the word.)
+- What frame do the four share?
+  (**Spine right**, shape left, **bar on top** — **म** starts at the top,
+  **क** with a loop, **त** with a curl.)
+- What does **क** say alone?
+  (**Ka**, not *k*: the **inherent vowel** is built in — the mark of an
+  **abugida**, a name from Ge'ez.)
+- What orders **क** … **त**?
+  (**Where the mouth closes**, from the soft palate forward to the lips.)
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C01-PRACTICE-01, HI-CONCEPT-C01-NAMASTE-01, HI-CONCEPT-C01-NAMASKAR-01, HI-CONCEPT-C01-DHANYAVAD-01, HI-CONCEPT-C01-SHUKRIYA-01, HI-CONCEPT-C01-ALVIDA-01] -->

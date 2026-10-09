@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings and responses",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:525e8cd000e075b5",
+  "sourceHash": "fnv1a64:3534f022b937372d",
   "lessons": [
     {
       "id": "UR-C01-salam",
@@ -621,16 +621,17 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3fb16db14e2d097c",
+      "sourceHash": "fnv1a64:41207b2b5549fba5",
       "notice": {
         "modality": "sight",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script — recombine known shapes"
+          "Script — recombine known shapes",
+          "Script — the chapter's shapes, from memory"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — recombine known shapes until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — recombine known shapes and Script — the chapter's shapes, from memory until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -701,6 +702,58 @@
         },
         {
           "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — say it back",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is the chapter's last lesson, so gather the rest of it without the earlier pages."
+            },
+            {
+              "kind": "speech",
+              "text": "Greet someone. (salām.) What does the word itself mean? (Peace.)"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "script",
+          "title": "Script — the chapter's shapes, from memory",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ر, ش, ک."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "sh, then k, then r — the three shapes out of their usual order",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: *sh*, then *k*, then *r* — the three shapes out of their usual order]"
+            },
+            {
+              "kind": "speech",
+              "text": "(ش wears the three dots, ک the long slash, ر is the falling curve.)"
+            },
+            {
+              "kind": "speech",
+              "text": "What letter is ش without its three dots, and what does it say? (س, sīn — it says s.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "س (sīn) once — three teeth from the rightmost, flowing into the bowl with no lift",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **س** once — three teeth from the rightmost, flowing into the bowl with no lift]"
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
