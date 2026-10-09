@@ -78,14 +78,14 @@ The narrow upright person — draw it once. Short slant, long vertical.
 Script — the other kind of component.
 So far a component has meant something: the person piece says this is about a person. Here is a component that works the other way.
 尔 (ěr).
-尔 ěr. Five strokes: a short slant across the top, a broad cover beneath it, then a small stroke each side of a central vertical that finishes with a hook.
+尔 ěr. Five strokes: a short slant across the top, a broad cover beneath it, a central vertical that finishes with a hook, then a small stroke each side of it, left first.
 Now the part that matters, and it is the single most useful fact about Chinese writing:
 Most characters are built from one component pointing at the MEANING and another pointing at the SOUND. When 尔 turns up inside a character, it is usually there because the word sounds something like ěr — not because the word has anything to do with what 尔 means on its own.
 That is a strange idea when your reading habits come from an alphabet, where every piece is sound and none is meaning. It is also a relief: it means characters are not arbitrary pictures to be memorised whole. They are built, from a small stock of pieces, and once you know the pieces you can often guess both halves of a character you have never seen.
 The pitch is third tone: ěr dips low.
 
 Guided Practice.
-[once you have stopped driving — write: 尔 (ěr) — top slant, cover, then the middle with its hook last]
+[once you have stopped driving — write: 尔 (ěr) — top slant, cover, the middle and its hook, then the two dots]
 [your turn — say: ěr, low and dipping]
 [pause 8 seconds for the answer]
 

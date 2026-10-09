@@ -494,6 +494,33 @@
       "notes": "Carries first tone as a standalone character, but the second syllable of 学生 is taught in its common neutral-tone form. The lesson introduces 生 only after the spoken word 学生 is secure."
     },
     {
+      "glyph": "尔",
+      "sound": "ěr",
+      "role": "logograph",
+      "tone": "3",
+      "components": [
+        "a short left-falling stroke across the top",
+        "a horizontal that hooks down-left",
+        "a central vertical that hooks left at its foot",
+        "a short stroke on each side of the vertical"
+      ],
+      "strokeOrder": [
+        "draw the upper left-falling stroke",
+        "lift, then draw the upper horizontal from left to right and hook down-left without lifting",
+        "lift, then draw the central vertical and hook left without lifting",
+        "lift, then draw the lower-left dot down-left",
+        "lift, then draw the lower-right dot down-right"
+      ],
+      "strokeOrderNote": "source-verified PRC stroke order",
+      "penLifts": 4,
+      "strokeOrderSource": {
+        "citation": "Hanzi Writer Data 尔.json, ordered stroke paths and medians 1–5 (Hanzi Writer Data snapshot 68d10a4, updated from Make Me a Hanzi, 22 June 2019)",
+        "url": "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%B0%94.json",
+        "variation": "The cited PRC-order dataset supplies five ordered strokes for 尔, the same five that close 你. Median 1 starts at the top and falls down-left; median 2 restarts below it, crosses rightward, then hooks down-left without lifting; median 3 restarts at the centre, descends, then hooks left without lifting; medians 4-5 separately draw the lower-left dot down-left and the lower-right dot down-right. Make Me a Hanzi documents that its stroke paths are ordered in proper stroke order, its medians use the same coordinate system for stroke-order animation, and the project follows People's Republic of China stroke order. This learner path adapts those five ordered medians to the vendored Noto Sans SC outline while preserving their directions, the two unbroken hooks and the four intervening pen lifts; stroke widths and proportions differ between the Arphic-derived source graphics and Noto Sans SC."
+      },
+      "notes": "The sound component of 你 (ěr). Taught alone first so that 你 can be read as 亻 for the meaning plus 尔 for the sound. Keep each hook in the same pen-down run as the stroke it ends."
+    },
+    {
       "glyph": "你",
       "sound": "nǐ",
       "role": "logograph",

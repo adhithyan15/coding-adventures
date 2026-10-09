@@ -196,13 +196,39 @@ describe("handwriting ductus", () => {
     // high-value free points whose writing rows the course now verifies.
     // `complete` means the inventory covers the current lesson corpus, so the
     // source-verified inventory and authored ductus must grow together.
-    expect(chinese.letters).toHaveLength(60);
+    // 60 -> 61: 尔, the sound half of 你, which ZH-W01-er teaches alone.
+    expect(chinese.letters).toHaveLength(61);
     expect(new Set(chinese.letters.map((letter) => letter.glyph)).size).toBe(
-      60,
+      61,
     );
     expect(
       chinese.letters.every((letter) => letter.strokeOrderSource !== undefined),
     ).toBe(true);
+  });
+
+  it("Chinese 尔 draws the five strokes that close 你, in the same order and directions", () => {
+    // 尔 alone and 尔 inside 你 cite the same Hanzi Writer medians, so the
+    // standalone character must keep 你's last five runs: the same captions,
+    // the same two hooks, and every run heading the same way.
+    const er = DUCTUS[ductusKey("chinese", "尔")];
+    const ni = DUCTUS[ductusKey("chinese", "你")];
+    expect(penLifts(er)).toBe(4);
+    const labels = (strokes: typeof er.strokes) =>
+      strokes.map((stroke) => stroke.segments.map((segment) => segment.label));
+    expect(labels(er.strokes).slice(1)).toEqual(labels(ni.strokes.slice(3)));
+    expect(labels(er.strokes)[0]).toEqual(["draw the upper left-falling stroke"]);
+    const heading = (stroke: (typeof er.strokes)[number]) => {
+      const path = penPath(stroke);
+      const [a, b] = [path[0], path[path.length - 1]];
+      return [Math.sign(b.x - a.x), Math.sign(b.y - a.y)];
+    };
+    expect(er.strokes.map(heading)).toEqual(ni.strokes.slice(2).map(heading));
+    expect(er.source.url).toBe(
+      "https://raw.githubusercontent.com/chanind/hanzi-writer-data/68d10a4b21150cae5e1ebbd223eed289cf32d90c/data/%E5%B0%94.json",
+    );
+    expect(verifiedLetterFont("尔", er.source.url)).toBe(
+      "_fonts/NotoSansSC-Subset.ttf",
+    );
   });
 
   it("Chinese 人 draws the left-falling stroke before the lifted right-falling stroke", () => {

@@ -783,6 +783,74 @@ nobody writes. Moag also never places the consonant between the parts. ്:
 Moag gives its position only, with no movements. Kannada ೦ and the Kannada
 vowel signs: no source.
 
+#### As built — Malayalam ്, ഠ, ൊ, ോ and digits from a handwriting recording; Kannada ಞ; Chinese 尔
+
+Twelve more writing lessons print a strip: Malayalam 59 -> 69 (ML-S02 ്,
+ML-S119 ോ, ML-S143 ൊ, ML-S147 ഠ, the സ ് ക list in ML-W01, and the ML-W07 digit lists ൧-൩, ൪-൫, ൬-൮ and
+the two ൧-൫ copies), Kannada 56 -> 57 (KA-S133 ಞ) and Chinese 72 -> 73
+(ZH-W01-er 尔).
+
+**Malayalam: a recording.** Jayasree (`sachn1/jayasree` at commit `e0c9d57`,
+Sachin Nandakumar) animates Malayalam handwriting from about 300 centre lines
+that one recorder traced over the Manjari typeface, one gesture per pen-down
+stroke. Unlike Moag's numbered arrows or Thooval's formation images, a
+recording shows lifts directly, so the stroke count needs no second source.
+The stroke data is CC BY 4.0 (`LICENSE-DATA`), which permits adaptation with
+credit: each record names "Jayasree" by Sachin Nandakumar, links the data file
+at the pinned commit and the licence, and says the path is an adaptation, and
+that citation is printed under every strip. Only the facts are taken (count,
+start, order, direction, end). Manjari is rounder and wider than Noto, and its
+൪ ends in a straight rise where Noto curls, so every path is fitted to the
+bundled Noto Sans Malayalam outline at the default tolerances, with no
+override (on ink 1.0000 on every stroke, joins closed, nothing untraced), and
+the captions are the package's own. One recorder, so confidence is medium.
+
+- **്** is one stroke from the left tip, round the bottom of the cup, to the
+  right tip. Moag gave its position only; the Unicode composition source
+  still owns where it goes against its carrier, and no written-order row is
+  added, so words with ് stay refused.
+- **ഠ** is one anticlockwise ring from the top. Jayasree breaks the earlier
+  tie: Thooval and grahyam (as read before) run anticlockwise too, and Moag's
+  arrow alone runs clockwise. The record names the disagreement.
+- **൧-൯** are one stroke each; stems the stroke goes down and back up (൩, ൬,
+  ൮, ൯) are retraced, as the recording retraces them.
+
+- **ൊ and ോ** are two recorded strokes: the left sign (െ or േ), a lift, then
+  ാ clockwise. Noto builds each standalone glyph from exactly the cited
+  left-sign outline, a placeholder dot, and the ാ outline shifted 923 (ൊ) or
+  788 (ോ) units right, so each run is the cited path of its part.
+
+**The consonant-placeholder exception.** The dot between the parts (Noto's
+`period.mlym` component) marks where the consonant would sit. It is not ink a
+writer draws, and skipping it leaves 4.9% (ൊ) and 5.2% (ോ) of the printed ink
+untraced, over the default 2%. Drawing it would teach a mark nobody writes.
+So the coverage check skips exactly that contour for exactly these two
+glyphs: `NOTO_PLACEHOLDER_CONTOURS` (script-ductus test support), keyed per
+glyph by ductus key, names the contour's index and its pinned bounds, and
+refuses to skip a contour with other bounds. The 2% limit is not loosened,
+and the on-ink and join checks still see the whole glyph. Tests pin the table
+to exactly ൊ and ോ, prove the kept contours are exactly the cited parts and
+the skipped one the dot standing alone between them (the same contour in both
+signs), and show, as a control, that without the exception the dot alone
+breaks the limit. The strip still prints the dot in grey, and both lessons
+tell the learner it only marks where the consonant goes. Neither record
+claims a written order against a consonant, so words with ോ stay refused.
+
+**Still not drawn.** ൦: recorded, but no lesson draws it. ൰: Jayasree has no
+൰, so the ൯-൰ and ൬-൰ lists stay undrawn.
+
+**Kannada ಞ** cites Chimple's consonant lesson `LIDO_kn2_0304`, whose
+`data.json` pairs the trace image with the question ಞ: two hidden paths, so
+two strokes (the body, its loop clockwise, then the hook at the top right).
+Chimple's recorded `bahama` trace agrees; the two count as one source, facts
+only, medium confidence.
+
+**Chinese 尔** cites Hanzi Writer Data's `尔.json` at the commit the other
+characters use: the five strokes that already close 你, in the same order,
+directions and lifts, fitted to the standalone Noto Sans SC 尔. ZH-W01-er's
+cue "the middle with its hook last" contradicted that order (the two dots come
+last) and now reads "the middle and its hook, then the two dots".
+
 #### Design — the Latin script's first print letters
 
 The six Latin-script tracks (Spanish, French, German, Italian, Portuguese,
