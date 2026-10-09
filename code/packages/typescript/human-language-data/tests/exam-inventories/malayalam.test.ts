@@ -141,7 +141,10 @@ describe("the committed Malayalam A1 inventory", () => {
     // direct script-owner count.
     // 1684 -> 1685: the connected A2 composition likewise gives instructions
     // without a Malayalam model, preserving all 69 direct script owners.
-    expect(lessons).toHaveLength(1685);
+    // 1685 -> 1686: ML-C13-checkpoint, chapter 13's closing checkpoint. Its
+    // headword is "(practice)" and its body shows only തല and രണ്ട്, glyphs the
+    // track already owns, so `shown` and the overlap hold at 69.
+    expect(lessons).toHaveLength(1686);
     expect(shown.size).toBe(69);
     expect([...shown].filter((glyph) => directlyOwned.has(glyph))).toHaveLength(69);
     expect(open).toEqual([]);

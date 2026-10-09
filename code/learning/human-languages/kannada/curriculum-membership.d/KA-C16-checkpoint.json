@@ -1,0 +1,11 @@
+{
+  "id": "KA-C16-checkpoint",
+  "pathSegment": "KA-PATH-019",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "KA-EXT-019-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

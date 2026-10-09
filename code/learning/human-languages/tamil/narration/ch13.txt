@@ -1,8 +1,8 @@
 Tamil, chapter 13: Body Parts.
-4 lessons. You can do the first one in the car; after that you will want to have stopped.
+5 lessons. You can do the first one in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 தலை, கை — head and hand, both Tamil's own.
 
 Warm-up.
@@ -28,7 +28,7 @@ Wrap-up Recall.
 What are Tamil's words for head and hand? (தலை talai, கை kai.) Are either of these Sanskrit loans? (No — both native Dravidian, unlike Hindi's Sanskrit-descended sir and hāth.)
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 க (ka) — the letter that is three bowls.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: க and Guided Practice until you have stopped, and I will say so again when we reach them.
@@ -70,7 +70,7 @@ Wrap-up Recall.
 How many pen lifts does க (ka) take? (None — it is one continuous stroke.) What are the three parts? (Upper frame, lower-left bowl, lower-right bowl.)
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
 ி and நன்றி — replace the vowel, then hear ndr.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: The first vowel sign, Script you'll notice: Assemble நன்றி and Guided Practice until you have stopped, and I will say so again when we reach them.
@@ -110,7 +110,7 @@ Wrap-up Recall.
 What are a consonant's three vowel choices? (Keep inherent a, remove it with puḷḷi, or replace it with a vowel sign.) Where does ி attach? (Above and right.) Why is naṉṟi often written nandri? (ன் + ற is pronounced ndr because a nasal voices the following stop.)
 
 
-Lesson 4 of 4.
+Lesson 4 of 5.
 ர — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ர and Guided Practice until you have stopped, and I will say so again when we reach them.
@@ -144,3 +144,40 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which character is this — ர? What sound does it carry? (ra.) Name one word you already say that contains it.
+
+
+Lesson 5 of 5.
+Chapter 13 checkpoint — head, hand, and நன்றி from sound.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — க, ர and the i-sign and Writing — from sound until you have stopped, and I will say so again when we reach them.
+
+Warm-up.
+[pause 2 seconds]
+Nothing new here. The two body words out loud first, then two letters, a vowel sign and the word thank you on the page.
+
+Guided Practice — head and hand.
+[pause 1 second]
+[your turn — say: "head", then "hand", in Tamil]
+[pause 8 seconds for the answer]
+(Talai; kai.)
+Are either of them Sanskrit loans, the way Hindi's sir and hāth are? (No: both are native Dravidian.)
+Why do people spell thank you as nandri when no d is written? (The nasal voices the stop after it: ṉ plus ṟ is said close to ndr.)
+
+Script — க, ர and the i-sign.
+What are the three parts of க (ka), and how many times does the pen lift? (An upper frame, a lower-left bowl, a lower-right bowl; no lift at all.)
+Where does ி attach, and what does it do to the consonant's a? (Above and to the right; it replaces the a, so ற becomes றி.)
+Which three pieces build நன்றி? (ந, ன், றி.)
+சரி is okay. Which letter in it carries ra? (ர.)
+[once you have stopped driving — read: நன்றி and சரி aloud, and point to the ர (ra)]
+
+Writing — from sound.
+[once you have stopped driving — cover: the Script block above, so no model stays in view]
+[once you have stopped driving — write: the letter for ka, then the letter for ra]
+[once you have stopped driving — write: ṟi, then the whole of naṉṟi, "thank you"]
+[once you have stopped driving — check: against the key — க (ka), ர (ra), றி, நன்றி]
+[once you have stopped driving — write: one repaired shape, then stop]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Touch your head and say its word, then your hand and say its word. That is the chapter: two native words, and thank you written from its pieces.
+Next chapter: the seasons.

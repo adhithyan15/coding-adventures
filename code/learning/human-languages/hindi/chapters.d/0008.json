@@ -7,13 +7,16 @@
     "SPINE-POLITE-REQUEST-REPAIR"
   ],
   "payoff": {
-    "lesson": "HI-C08-kripaya",
-    "kind": "production",
-    "summary": "Say कृपया with its vocalic ऋ, unpack it as 'of your compassion', then switch to the everyday बैठिए, 'please sit'.",
+    "lesson": "HI-C08-checkpoint",
+    "kind": "task",
+    "summary": "Complete HI-C08-checkpoint, the chapter's closing checkpoint: say कृपया and unpack it as 'of your compassion', switch to the everyday बैठिए, say why कृ is read kri, find अ and ◌े in words you already say, then write कृ, अ and मे from sound.",
     "assesses": [
       "HI-CONCEPT-C08-KRIPAYA-01",
-      "HI-CONCEPT-C08-KRIPAYA-02"
+      "HI-CONCEPT-C08-KRIPAYA-02",
+      "HI-SCRIPT-RECOG-144",
+      "HI-SCRIPT-RECOG-03",
+      "HI-SCRIPT-RECOG-112"
     ],
-    "note": "Left at 2/5, below the floor, because no honest repair exists without reordering lessons. HI-C08-kripaya (sequence 510) is the chapter's first lesson by sequence, but its last on the curriculum path (HI-PATH-012). The chapter's three one-character segments, HI-S144-vowel-sign-vocalic-r, HI-S03-letter-a and HI-S112-vowel-sign-e (sequence 511-516), all sit in the early script segment HI-PATH-100. So each is later than कृपया by sequence and earlier by path. A prerequisite must be earlier on both, so कृपया cannot assess them, and none of them can take कृपया's atoms as a payoff (HI-S144, which writes कृ out of कृपया, was tried and fails curriculum-prerequisite-order). The repair needs the sequence and the path to agree for this chapter."
+    "note": "HI-C08-checkpoint (sequence 517, HI-PATH-012 order 1, after HI-S112-vowel-sign-e and before chapter 9's HI-C09-maaf-kijiye) assesses all five atoms the chapter introduces (5/5). The chapter's sequence and its path disagreed: HI-C08-kripaya (510) is first by sequence but last on the path, because its three one-character segments, HI-S144-vowel-sign-vocalic-r, HI-S03-letter-a and HI-S112-vowel-sign-e (511-516), sit in the early HI-PATH-100 segment. So कृपया could not assess them, and none of them could take कृपया's atoms. The checkpoint comes after all four lessons on both orders, so it can honestly assess every atom; HI-C08-kripaya stays as the chapter's spoken lesson (2/5 on its own)."
   }
 }

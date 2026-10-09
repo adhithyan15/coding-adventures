@@ -1,18 +1,19 @@
 {
   "language": "tamil",
   "chapter": 16,
-  "sourceHash": "fnv1a64:d2fb482ed1cf4beb",
+  "sourceHash": "fnv1a64:5caa8fd774fff83e",
   "lessonIds": [
     "TA-C16-thamizh-maadangal",
     "TA-S07-ma",
     "TA-W05-write-aam",
-    "TA-S120-letter-aa"
+    "TA-S120-letter-aa",
+    "TA-C16-checkpoint"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "tamil/narration/ch16.txt",
   "json": "tamil/narration/ch16.json",
-  "textHash": "fnv1a64:e557a07f3f9c1b78",
-  "jsonHash": "fnv1a64:008e1707ce3fb5af",
+  "textHash": "fnv1a64:89baeab3a34e2df9",
+  "jsonHash": "fnv1a64:4e8f266be7b15c34",
   "findings": []
 }

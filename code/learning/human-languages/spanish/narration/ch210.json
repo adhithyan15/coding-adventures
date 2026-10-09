@@ -4,7 +4,7 @@
   "chapter": 210,
   "title": "Synthesis --- Supposing Out Loud",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f26f69e4f50f30d9",
+  "sourceHash": "fnv1a64:f2fce94458cbde86",
   "lessons": [
     {
       "id": "ES-C56-sintesis-condiciones",
@@ -229,7 +229,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c1a5d4fcb1659a11",
+      "sourceHash": "fnv1a64:0fa276079b976646",
       "notice": null,
       "blocks": [
         {
@@ -343,6 +343,47 @@
         },
         {
           "index": 6,
+          "type": "guided-production",
+          "title": "Guided Practice — an open condition and a closed one",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "an answer whose condition is still open — depende",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: an answer whose condition is still open — *depende*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a sentence about a world that does not exist — Si tuviera tiempo, comería en casa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a sentence about a world that does not exist — *Si tuviera tiempo, comería en casa*]"
+            },
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the two already gives the answer? (The second: si tuviera says there is no time. Depende leaves it hanging.)"
+            }
+          ]
+        },
+        {
+          "index": 7,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

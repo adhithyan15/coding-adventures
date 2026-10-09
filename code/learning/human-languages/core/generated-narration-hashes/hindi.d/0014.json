@@ -1,19 +1,20 @@
 {
   "language": "hindi",
   "chapter": 14,
-  "sourceHash": "fnv1a64:2319359f456a4303",
+  "sourceHash": "fnv1a64:2075d2f0c625f93f",
   "lessonIds": [
     "HI-C14-ghee",
     "HI-C14-ritu",
     "HI-S118-sign-candrabindu",
     "HI-S136-letter-gha",
-    "HI-S125-letter-vocalic-r"
+    "HI-S125-letter-vocalic-r",
+    "HI-C14-checkpoint"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 0,
   "text": "hindi/narration/ch14.txt",
   "json": "hindi/narration/ch14.json",
-  "textHash": "fnv1a64:02fa885779873e0a",
-  "jsonHash": "fnv1a64:a2d14e66a3f60421",
+  "textHash": "fnv1a64:25962e33f2cecb46",
+  "jsonHash": "fnv1a64:476b63d7e85ed010",
   "findings": []
 }

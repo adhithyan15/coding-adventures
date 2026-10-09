@@ -4,7 +4,7 @@
   "chapter": 27,
   "title": "Evening",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b8c0b71ee497f847",
+  "sourceHash": "fnv1a64:5c0f3040102e7392",
   "lessons": [
     {
       "id": "TA-C27-maalai",
@@ -312,6 +312,195 @@
             {
               "kind": "speech",
               "text": "Read நீங்கள் (nīṅgaḷ), then find the shorter நீ inside it. Why does the க in the middle sound like g? (ங் stands in front of it — a nasal.) How many l-letters does Tamil keep, and which is ள? (Three — ல ள ழ; the retroflex one.) What are the two dots doing? (Removing the built-in a from ங and ள.) Next: the afternoon word."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C27-checkpoint",
+      "sequence": 817,
+      "title": "Chapter 27 checkpoint — evening, and நீங்கள் (nīṅgaḷ) from sound",
+      "headword": "(practice)",
+      "romanization": "",
+      "gloss": "Chapter 27 checkpoint — the evening word out loud, then நீங்கள் and மாலை on the page",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ee96625e493c5442",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — ங, ள and ◌ீ",
+          "Writing — from sound"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — ங, ள and ◌ீ and Writing — from sound until you have stopped, and I will say so again when we reach them."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new here. The evening word out loud first, then the respectful you and the evening word on the page."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice — the evening word",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"evening\" in Tamil",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"evening\" in Tamil]"
+            },
+            {
+              "kind": "speech",
+              "text": "(Mālai.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Is the garland mālai the same word with a second meaning? (No: two separate etymologies that happen to be spelled alike.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which way did the garland word likely travel? (From Dravidian into Sanskrit mālā: a loan in the reverse of the usual direction.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Is it certain that evening mālai comes from māl's \"darkness\" sense? (No: it is plausible, but the source only says \"compare māl\".)"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "script",
+          "title": "Script — ங, ள and ◌ீ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which four pieces build நீங்கள் (nīṅgaḷ)? (நீ, ங், க, ள்.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Why does the க in the middle sound like g? (ங், a nasal, stands in front of it.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which of the three l-letters is ள? (The retroflex one, tongue curled back.)"
+            },
+            {
+              "kind": "speech",
+              "text": "How does ◌ீ differ from ◌ி? (It is the long ī: நீ is nī, where றி is ṟi.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "நீங்கள் (nīṅgaḷ) aloud, then find நீ inside it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **நீங்கள்** aloud, then find **நீ** inside it]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "writing",
+          "title": "Writing — from sound",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the Script block above, so no model stays in view",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the Script block above, so no model stays in view]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "nī, then nīṅgaḷ, the respectful \"you\"",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: *nī*, then *nīṅgaḷ*, the respectful \"you\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "mālai, \"evening\" — the ai sign goes before its letter on the page",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: *mālai*, \"evening\" — the ai sign goes before its letter on the page]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "against the key — நீ, நீங்கள் (nīṅgaḷ), மாலை (mālai)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: against the key — **நீ**, **நீங்கள்**, **மாலை**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one repaired shape, then stop",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one repaired shape, then stop]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You have written மாலை (mālai). Can the page alone tell you whether it means evening or garland? (No: only the context can.) That is the chapter: one spelling, two words, and the respectful you read from its pieces."
+            },
+            {
+              "kind": "speech",
+              "text": "Next chapter: the afternoon word."
             }
           ]
         }

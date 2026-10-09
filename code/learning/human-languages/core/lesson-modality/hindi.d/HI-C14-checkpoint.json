@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "HI-C14-checkpoint",
+    "language": "hindi",
+    "chapter": 14,
+    "sequence": 614,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:f9faaa10f20e18a7",
+    "detachableSegments": [
+      "Script — ◌ँ, घ and ऋ",
+      "Writing — from memory"
+    ]
+  },
+  "findings": []
+}

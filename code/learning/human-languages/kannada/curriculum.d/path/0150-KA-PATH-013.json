@@ -3,7 +3,8 @@
   "spine_node": "SPINE-TIME-OF-DAY",
   "before": [],
   "inline": [
-    "KA-EXT-013-LANGUAGE-SPECIFIC"
+    "KA-EXT-013-LANGUAGE-SPECIFIC",
+    "KA-EXT-013-CONSOLIDATION"
   ],
   "after": []
 }

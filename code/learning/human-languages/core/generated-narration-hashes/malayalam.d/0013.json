@@ -1,17 +1,18 @@
 {
   "language": "malayalam",
   "chapter": 13,
-  "sourceHash": "fnv1a64:d78120b95484b6ab",
+  "sourceHash": "fnv1a64:34f426d9556cb3bd",
   "lessonIds": [
     "ML-C13-shareera-bhaagangal",
     "ML-S08-letter-ta",
-    "ML-S117-letter-tta"
+    "ML-S117-letter-tta",
+    "ML-C13-checkpoint"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "malayalam/narration/ch13.txt",
   "json": "malayalam/narration/ch13.json",
-  "textHash": "fnv1a64:3d471a43a6d984c5",
-  "jsonHash": "fnv1a64:c0546fd0d0a94128",
+  "textHash": "fnv1a64:c473b459266a3577",
+  "jsonHash": "fnv1a64:0fdba243a30f719d",
   "findings": []
 }

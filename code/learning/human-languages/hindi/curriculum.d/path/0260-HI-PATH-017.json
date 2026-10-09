@@ -3,7 +3,8 @@
   "spine_node": "SPINE-TIME-OF-DAY",
   "before": [],
   "inline": [
-    "HI-EXT-017-LANGUAGE-SPECIFIC"
+    "HI-EXT-017-LANGUAGE-SPECIFIC",
+    "HI-EXT-017-CONSOLIDATION"
   ],
   "after": []
 }

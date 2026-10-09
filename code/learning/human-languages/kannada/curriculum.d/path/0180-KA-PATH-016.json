@@ -3,7 +3,8 @@
   "spine_node": "SPINE-CHECK-WELLBEING",
   "before": [],
   "inline": [
-    "KA-EXT-016-LANGUAGE-SPECIFIC"
+    "KA-EXT-016-LANGUAGE-SPECIFIC",
+    "KA-EXT-016-CONSOLIDATION"
   ],
   "after": []
 }

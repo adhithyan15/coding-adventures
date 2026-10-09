@@ -1,11 +1,12 @@
 {
   "language": "kannada",
   "chapter": 13,
-  "sourceHash": "fnv1a64:a37d8fda9a892b30",
+  "sourceHash": "fnv1a64:3d0c762c8b96dd80",
   "lessonIds": [
     "KA-C13-dehada-bhagagalu",
     "KA-S122-letter-ca",
-    "KA-S144-digit-five"
+    "KA-S144-digit-five",
+    "KA-C13-checkpoint"
   ],
   "tex": "kannada/book/chapters/ch13-head-and-hand.tex"
 }

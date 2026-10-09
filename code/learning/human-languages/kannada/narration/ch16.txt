@@ -1,8 +1,8 @@
 Kannada, chapter 16: The Traditional Months.
-4 lessons. You can do the first one in the car; after that you will want to have stopped.
+5 lessons. You can do the first one in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 4.
+Lesson 1 of 5.
 ಚೈತ್ರ to ಫಾಲ್ಗುಣ — the calendar Kannada shares with Hindi, not with Tamil.
 
 Warm-up.
@@ -31,7 +31,7 @@ Wrap-up Recall.
 Does Kannada use its own solar calendar, like Tamil and Malayalam? (No — it uses the same pan-Indian lunisolar calendar as Hindi's Vikram Samvat.) What is Kannada's New Year called, and when does it fall? (Ugadi, on Chaitra Śukla Pratipada.)
 
 
-Lesson 2 of 4.
+Lesson 2 of 5.
 ಉತ್ತರ (uttara) — an answer; north.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -56,7 +56,7 @@ Wrap-up Recall.
 What is "an answer; north"? (ಉತ್ತರ, uttara.)
 
 
-Lesson 3 of 4.
+Lesson 3 of 5.
 ಉ — one character, the standing half of a sign you already read.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script you'll notice: ಉ and Guided Practice until you have stopped, and I will say so again when we reach them.
@@ -96,7 +96,7 @@ Wrap-up Recall.
 Which character is this — ಉ? What sound does it carry? (u.) What is the difference between ಉ and ು? (One stands alone at the start of a word; the other rides on the consonant before it.) Name a word you already say that ends in the riding one.
 
 
-Lesson 4 of 4.
+Lesson 4 of 5.
 ೮ (8) — the digit for eṇṭu.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ೮ and Guided Practice until you have stopped, and I will say so again when we reach them.
@@ -125,3 +125,42 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which number is ೮? (8 — eṇṭu, ಎಂಟು.) Name every digit you have met so far, in order.
+
+
+Lesson 5 of 5.
+Chapter 16 checkpoint — the months, Ugadi, ಉ (u) and ೮ (8).
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — ಉ and ೮ and Writing — from sound until you have stopped, and I will say so again when we reach them.
+
+Warm-up.
+[pause 2 seconds]
+Nothing new here. The months and the new year out loud first, then one word, one letter and one digit on the page.
+
+Guided Practice — the months.
+[pause 1 second]
+[your turn — say: the twelve months, from the first]
+[pause 8 seconds for the answer]
+(Caitra, Vaiśākha, Jyēṣṭha, Āṣāḍha, Śrāvaṇa, Bhādrapada, Āśvayuja, Kārtīka, Mārgaśira, Puṣya, Māgha, Phālguṇa.)
+Is this calendar Kannada's own, the way Tamil's and Malayalam's are theirs? (No: it is the pan-Indian lunisolar calendar Hindi uses too.)
+When does Ugadi fall? (On Chaitra Śukla Pratipada, the first day of the bright fortnight of Chaitra.)
+
+Guided Practice — one more word from this chapter.
+What is "an answer", and also "north"? (Uttara.)
+
+Script — ಉ and ೮.
+ಉತ್ತರ is uttara. Which character opens it, and why does it stand on its own there? (ಉ, u: the word starts on a vowel, so the vowel takes its standing shape.)
+Where would the same u take its riding shape, ು? (After a consonant, as at the end of ಹೌದು.)
+Which number is ೮, and which word does it stand for? (8, eṇṭu.)
+[once you have stopped driving — read: ಉತ್ತರ (uttara) aloud, and point to the ಉ in it]
+[once you have stopped driving — read: ೮ (8) aloud as eṇṭu]
+
+Writing — from sound.
+[once you have stopped driving — cover: the Script block above, so no model stays in view]
+[once you have stopped driving — write: u as it stands at the start of a word, then the digit for eṇṭu]
+[once you have stopped driving — check: against the key — ಉ (u), ೮ (8)]
+[once you have stopped driving — write: one repaired shape, then stop]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which month opens the year, and which festival opens it? (Caitra; Ugadi.) That is the chapter: a calendar shared with Hindi, a word that means both answer and north, and the vowel and the digit that sit inside it.
+Next chapter: noon and midnight.

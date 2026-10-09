@@ -1,16 +1,17 @@
 {
   "language": "tamil",
   "chapter": 27,
-  "sourceHash": "fnv1a64:b8c0b71ee497f847",
+  "sourceHash": "fnv1a64:5c0f3040102e7392",
   "lessonIds": [
     "TA-C27-maalai",
-    "TA-W11-read-niingal"
+    "TA-W11-read-niingal",
+    "TA-C27-checkpoint"
   ],
   "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "tamil/narration/ch27.txt",
   "json": "tamil/narration/ch27.json",
-  "textHash": "fnv1a64:224769bca453e49c",
-  "jsonHash": "fnv1a64:aca491b4a6c2cc8e",
+  "textHash": "fnv1a64:6ae0d7234ab09a7c",
+  "jsonHash": "fnv1a64:3e22645ca777d706",
   "findings": []
 }

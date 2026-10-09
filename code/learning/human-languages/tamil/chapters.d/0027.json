@@ -7,14 +7,16 @@
     "SPINE-TIME-OF-DAY"
   ],
   "payoff": {
-    "lesson": "TA-C27-maalai",
+    "lesson": "TA-C27-checkpoint",
     "kind": "task",
-    "summary": "Say mālai for evening, name the garland mālai as a distinct homonym, and mark the \"darkness\" link as plausible but not spelled out.",
+    "summary": "Complete TA-C27-checkpoint, the chapter's closing checkpoint: say mālai for evening, keep the garland mālai apart as a separate etymology and mark the darkness link as unproven, read நீங்கள் from its pieces, then write நீ, நீங்கள் and மாலை from sound.",
     "assesses": [
-      "TA-ETYMON-KAALAI-01",
       "TA-ETYMON-MAALAI-01",
-      "TA-ETYMON-MAALAI-02"
+      "TA-ETYMON-MAALAI-02",
+      "TA-SCRIPT-NGA-LLA-01",
+      "TA-SCRIPT-II-SIGN-01",
+      "TA-SCRIPT-READ-NIINGAL-03"
     ],
-    "note": "Below the 0.5 floor by sequence, not by omission: TA-C27-maalai (810) is the chapter's only spoken lesson and assesses both of its own atoms. The other three — ங and ள, the ீ sign, and reading நீங்கள் (TA-SCRIPT-NGA-LLA-01, TA-SCRIPT-II-SIGN-01, TA-SCRIPT-READ-NIINGAL-03) — are taught by TA-W11-read-niingal (815), sequenced after it, so the payoff cannot honestly assess them and that script lesson is not a fitting payoff for the evening word."
+    "note": "TA-C27-checkpoint (sequence 817, TA-PATH-027 order 8, after TA-W11-read-niingal and before chapter 28's first lesson) assesses all five atoms the chapter introduces (5/5). It is the payoff because three of them, ங and ள, the ◌ீ sign and reading நீங்கள் (TA-W11-read-niingal, 815), are taught after the spoken lesson TA-C27-maalai (810), which could honestly assess only its own two atoms (2/5); that lesson stays as the chapter's spoken lesson. TA-W11-read-niingal sits on the earlier TA-PATH-003 segment, so the checkpoint comes after both lessons on the sequence and on the path."
   }
 }

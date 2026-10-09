@@ -1,0 +1,8 @@
+{
+  "id": "TA-EXT-022-CONSOLIDATION",
+  "stage": "A1",
+  "kind": "required",
+  "category": "consolidation",
+  "canDo": "I can retrieve the Chapter 16 Tamil months and write ம, ஆ and ஆம் from sound.",
+  "prerequisites": []
+}

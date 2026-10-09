@@ -1,8 +1,8 @@
 Tamil, chapter 27: Evening.
-2 lessons. You can do the first one in the car; after that you will want to have stopped.
+3 lessons. You can do the first one in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 2.
+Lesson 1 of 3.
 மாலை (mālai) — "evening," and a garland that only looks like the same word.
 
 Warm-up.
@@ -29,7 +29,7 @@ Wrap-up Recall.
 Are evening-mālai and garland-mālai the same word with two meanings? (No — Wiktionary treats them as two entirely separate etymologies; a genuine homonym, not one word stretched.) Which direction did the garland sense's Sanskrit connection likely travel? (Dravidian into Sanskrit — a reverse-direction loan, per Wiktionary's own "probably borrowed from Dravidian languages" note.) Is it fully certain that "evening" derives from māl's "darkness" sense specifically? (No — plausible and natural, but Wiktionary only says "compare māl," without spelling out that exact mechanism.)
 
 
-Lesson 2 of 2.
+Lesson 2 of 3.
 நீங்கள் (nīṅgaḷ) — two old promises, paid.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ங and ள, Script you'll notice: the ீ sign, Script you'll notice: build the word and Guided Practice until you have stopped, and I will say so again when we reach them.
@@ -73,3 +73,41 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Read நீங்கள் (nīṅgaḷ), then find the shorter நீ inside it. Why does the க in the middle sound like g? (ங் stands in front of it — a nasal.) How many l-letters does Tamil keep, and which is ள? (Three — ல ள ழ; the retroflex one.) What are the two dots doing? (Removing the built-in a from ங and ள.) Next: the afternoon word.
+
+
+Lesson 3 of 3.
+Chapter 27 checkpoint — evening, and நீங்கள் (nīṅgaḷ) from sound.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — ங, ள and ◌ீ and Writing — from sound until you have stopped, and I will say so again when we reach them.
+
+Warm-up.
+[pause 2 seconds]
+Nothing new here. The evening word out loud first, then the respectful you and the evening word on the page.
+
+Guided Practice — the evening word.
+[pause 1 second]
+[your turn — say: "evening" in Tamil]
+[pause 8 seconds for the answer]
+(Mālai.)
+Is the garland mālai the same word with a second meaning? (No: two separate etymologies that happen to be spelled alike.)
+Which way did the garland word likely travel? (From Dravidian into Sanskrit mālā: a loan in the reverse of the usual direction.)
+Is it certain that evening mālai comes from māl's "darkness" sense? (No: it is plausible, but the source only says "compare māl".)
+
+Script — ங, ள and ◌ீ.
+Which four pieces build நீங்கள் (nīṅgaḷ)? (நீ, ங், க, ள்.)
+Why does the க in the middle sound like g? (ங், a nasal, stands in front of it.)
+Which of the three l-letters is ள? (The retroflex one, tongue curled back.)
+How does ◌ீ differ from ◌ி? (It is the long ī: நீ is nī, where றி is ṟi.)
+[once you have stopped driving — read: நீங்கள் (nīṅgaḷ) aloud, then find நீ inside it]
+
+Writing — from sound.
+[once you have stopped driving — cover: the Script block above, so no model stays in view]
+[once you have stopped driving — write: nī, then nīṅgaḷ, the respectful "you"]
+[once you have stopped driving — write: mālai, "evening" — the ai sign goes before its letter on the page]
+[once you have stopped driving — check: against the key — நீ, நீங்கள் (nīṅgaḷ), மாலை (mālai)]
+[once you have stopped driving — write: one repaired shape, then stop]
+
+Wrap-up Recall.
+[pause 3 seconds]
+You have written மாலை (mālai). Can the page alone tell you whether it means evening or garland? (No: only the context can.) That is the chapter: one spelling, two words, and the respectful you read from its pieces.
+Next chapter: the afternoon word.

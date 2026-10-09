@@ -1,8 +1,8 @@
 Kannada, chapter 10: Days of the Week.
-3 lessons. You can do the first one in the car; after that you will want to have stopped.
+4 lessons. You can do the first one in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 3.
+Lesson 1 of 4.
 ಸೋಮವಾರ to ಭಾನುವಾರ — the Sanskrit week.
 
 Warm-up.
@@ -37,7 +37,7 @@ Wrap-up Recall.
 What ending does every Kannada weekday share, and where's it from? (‑ವಾರ -vāra, Sanskrit "day.") Which day differs from Hindi's version, and how? (Sunday — Kannada's Bhānuvāra ("light") uses a different Sanskrit sun-name than Hindi's Ravivār ("Ravi").)
 
 
-Lesson 2 of 3.
+Lesson 2 of 4.
 ◌ೋ (ō) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ೋ and Guided Practice until you have stopped, and I will say so again when we reach them.
@@ -73,7 +73,7 @@ Wrap-up Recall.
 Which character is this — ◌ೋ? What vowel does it put on the consonant it attaches to — and what does it take off? (Puts ō on; takes the built-in a off.) Name one word you already say that contains it.
 
 
-Lesson 3 of 3.
+Lesson 3 of 4.
 ೨ (2) — the digit for eraḍu.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ೨ and Guided Practice until you have stopped, and I will say so again when we reach them.
@@ -102,3 +102,38 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which number is ೨? (2 — eraḍu, ಎರಡು.) Name every digit you have met so far, in order.
+
+
+Lesson 4 of 4.
+Chapter 10 checkpoint — the week, ◌ೋ (ō) and ೨ (2).
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — ◌ೋ and ೨ and Writing — from sound until you have stopped, and I will say so again when we reach them.
+
+Warm-up.
+[pause 2 seconds]
+Nothing new here. The week out loud first, then the two shapes this chapter put on the page.
+
+Guided Practice — the week.
+[pause 1 second]
+[your turn — say: the seven days, Monday to Sunday]
+[pause 8 seconds for the answer]
+(Sōmavāra, maṅgaḷavāra, budhavāra, guruvāra, śukravāra, śanivāra, bhānuvāra.)
+What ending does every day share, and what does it mean? (-vāra, "day.")
+Which day takes a different Sanskrit sun-name from Hindi's, and what are the two names? (Sunday: Kannada bhānuvāra, "light"; Hindi ravivār.)
+
+Script — ◌ೋ and ೨.
+ಸೋಮವಾರ is Monday. Which mark in it gives its first consonant the ō, and what does that mark take away? (◌ೋ: it puts ō on and takes the built-in a off.)
+Which number is ೨, and which word does it stand for? (2, eraḍu.)
+[once you have stopped driving — read: ಸೋಮವಾರ aloud, and point to the ◌ೋ (ō) in it]
+[once you have stopped driving — read: ೨ (2) aloud as eraḍu]
+
+Writing — from sound.
+[once you have stopped driving — cover: the Script block above, so no model stays in view]
+[once you have stopped driving — write: the digit for eraḍu, then the sign that turns a consonant's a into ō]
+[once you have stopped driving — check: against the key — ೨ (2), ◌ೋ (ō)]
+[once you have stopped driving — write: one repaired shape, then stop]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say today's day in Kannada, then Sunday's. That is the chapter: the week by name, and two shapes that sit inside it on the page.
+Next chapter: the colours.

@@ -1,8 +1,8 @@
 Kannada, chapter 13: Head and Hand.
-3 lessons. You can do the first one in the car; after that you will want to have stopped.
+4 lessons. You can do the first one in the car; after that you will want to have stopped.
 
 
-Lesson 1 of 3.
+Lesson 1 of 4.
 ತಲೆ, ಕೈ — head and hand, the shared Dravidian core.
 
 Warm-up.
@@ -29,7 +29,7 @@ Wrap-up Recall.
 What are Kannada's words for head and hand? (ತಲೆ tale, ಕೈ kai.) How closely do they match Tamil and Malayalam? (Very closely — all three share essentially the same native Dravidian words.)
 
 
-Lesson 2 of 3.
+Lesson 2 of 4.
 ಚ (ca) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ಚ and Guided Practice until you have stopped, and I will say so again when we reach them.
@@ -73,7 +73,7 @@ Wrap-up Recall.
 Which character is this — ಚ? What sound does it carry? (ca.) Name one word you already say that contains it.
 
 
-Lesson 3 of 3.
+Lesson 3 of 4.
 ೫ (5) — the digit for aidu.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ೫ and Guided Practice until you have stopped, and I will say so again when we reach them.
@@ -102,3 +102,37 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which number is ೫? (5 — aidu, ಐದು.) Name every digit you have met so far, in order.
+
+
+Lesson 4 of 4.
+Chapter 13 checkpoint — head, hand, ಚ (ca) and ೫ (5).
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — ಚ and ೫ and Writing — from sound until you have stopped, and I will say so again when we reach them.
+
+Warm-up.
+[pause 2 seconds]
+Nothing new here. The two body words out loud first, then the letter and the digit this chapter put on the page.
+
+Guided Practice — head and hand.
+[pause 1 second]
+[your turn — say: "head", then "hand", in Kannada]
+[pause 8 seconds for the answer]
+(Tale; kai.)
+How close are they to Tamil's and Malayalam's words? (Very close: Tamil talai and kai, Malayalam tala and kai; all three kept the native Dravidian pair.)
+
+Script — ಚ and ೫.
+ಚೆನ್ನಾಗಿ is "well". Which letter opens it, and what sound does that letter carry on its own? (ಚ, ca: a consonant with its a built in.)
+Which number is ೫, and which word does it stand for? (5, aidu.)
+[once you have stopped driving — read: ಚೆನ್ನಾಗಿ aloud, and point to the ಚ (ca) in it]
+[once you have stopped driving — read: ೫ (5) aloud as aidu]
+
+Writing — from sound.
+[once you have stopped driving — cover: the Script block above, so no model stays in view]
+[once you have stopped driving — write: the letter for ca, then the digit for aidu]
+[once you have stopped driving — check: against the key — ಚ (ca), ೫ (5)]
+[once you have stopped driving — write: one repaired shape, then stop]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Touch your head and say its word, then your hand and say its word. That is the chapter: two native words, one letter and one digit.
+Next chapter: the seasons.

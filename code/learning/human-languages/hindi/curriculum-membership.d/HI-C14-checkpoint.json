@@ -1,0 +1,11 @@
+{
+  "id": "HI-C14-checkpoint",
+  "pathSegment": "HI-PATH-017",
+  "pathOrder": 1,
+  "extensions": [
+    {
+      "id": "HI-EXT-017-CONSOLIDATION",
+      "order": 0
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 Hindi, chapter 14: Seasons.
-5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 5.
+Lesson 1 of 6.
 घी (ghī) — ghee, clarified butter.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -27,7 +27,7 @@ Wrap-up Recall.
 What is "ghee, clarified butter"? (घी, ghī.)
 
 
-Lesson 2 of 5.
+Lesson 2 of 6.
 वसंत, ग्रीष्म, वर्षा, शरद्, हेमंत, शिशिर — six seasons, not four.
 
 Warm-up.
@@ -64,7 +64,7 @@ Wrap-up Recall.
 How many seasons does Hindi's traditional ऋतु calendar recognize? (Six, not four.) Which season has no clean Western equivalent, and why? (वर्षा varṣā, the monsoon — a real, distinct season central to the subcontinent's climate.) Is this just extra vocabulary added to a four-season frame? (No — it's a genuinely different structural division of the year.)
 
 
-Lesson 3 of 5.
+Lesson 3 of 6.
 ◌ँ (candrabindu) — one character, met inside words you already say.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ◌ँ and Guided Practice until you have stopped, and I will say so again when we reach them.
@@ -100,7 +100,7 @@ Wrap-up Recall.
 Which character is this — ◌ँ (candrabindu)? What does it add to the syllable before it? (A nasal.) Name one word you already say that contains it.
 
 
-Lesson 4 of 5.
+Lesson 4 of 6.
 घ (gha) — a letter arriving before its words.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: घ, Script: ahead of its words, on purpose and Guided Practice until you have stopped, and I will say so again when we reach them.
@@ -145,7 +145,7 @@ Wrap-up Recall.
 What sound does घ carry? (gha, with breath.) Have you met a word that uses it yet? (No — it arrived first.) How many pen lifts? (One.)
 
 
-Lesson 5 of 5.
+Lesson 5 of 6.
 ऋ (ṛ (Hindi ri)) — the independent vowel waiting inside ऋतु.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script you'll notice: ऋ and its Hindi value and Writing: ऋ — supported formation until you have stopped, and I will say so again when we reach them.
@@ -184,3 +184,42 @@ Close the model again. You have met the word ritu, “season.” Write its first
 What is the careful transliteration of ऋ (ṛ (Hindi ri))? (ṛ.) How is it normally pronounced in Hindi ऋतु? (ri.) Write ऋ (ṛ (Hindi ri)) once more without looking.
 [question — say your answer, then pause 25 seconds]
 With no model or character bank, write the independent vowel at the start of ritu.
+
+
+Lesson 6 of 6.
+Chapter 14 checkpoint — six seasons, and ऋ (ṛ (Hindi ri)) from memory.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — ◌ँ, घ and ऋ and Writing — from memory until you have stopped, and I will say so again when we reach them.
+
+Warm-up.
+[pause 2 seconds]
+Nothing new here. The seasons out loud first, then a mark and two letters on the page.
+
+Guided Practice — the six seasons.
+[pause 1 second]
+[your turn — say: the six seasons, in order]
+[pause 8 seconds for the answer]
+(Vasant, grīṣma, varṣā, śarad, hemant, śiśir.)
+Which one has no Western match? (Varṣā, the monsoon.)
+Is this a four-season frame with two extras? (No: six seasons is a different way of dividing the year, with the cold split into hemant and śiśir.)
+
+Guided Practice — one more word from this chapter.
+What is "ghee, clarified butter"? (Ghī.)
+
+Script — ◌ँ, घ and ऋ.
+What does ◌ँ (candrabindu) do in पाँच? (The vowel under it is said through the nose.)
+Which letter opens घी (ghī), and what sound does it carry? (घ, gha, with a puff of breath.)
+ऋ (ṛ (Hindi ri)) opens ऋतु. Is it the consonant र? (No: it is an independent vowel, written ṛ and said ri in Hindi.)
+[once you have stopped driving — read: घी (ghī) and ऋतु aloud, and point to the घ (gha) and the ऋ (ṛ (Hindi ri))]
+
+Writing — from memory.
+[once you have stopped driving — cover: the Script block above, so no model stays in view]
+[once you have stopped driving — write: the first letter of ritu, then the letter for gha]
+[once you have stopped driving — write: the mark that sends a vowel through the nose]
+[once you have stopped driving — check: against the key — ऋ (ṛ (Hindi ri)), घ (gha), ◌ँ (candrabindu)]
+[once you have stopped driving — write: one repaired stroke, then stop]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which season follows the monsoon, and which two split the cold? (Śarad; hemant and śiśir.) That is the chapter: six seasons, and the vowel letter that opens their name.
+Next chapter: water and bread.

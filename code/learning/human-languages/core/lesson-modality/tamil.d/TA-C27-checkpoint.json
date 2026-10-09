@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "TA-C27-checkpoint",
+    "language": "tamil",
+    "chapter": 27,
+    "sequence": 817,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:ee96625e493c5442",
+    "detachableSegments": [
+      "Script — ங, ள and ◌ீ",
+      "Writing — from sound"
+    ]
+  },
+  "findings": []
+}

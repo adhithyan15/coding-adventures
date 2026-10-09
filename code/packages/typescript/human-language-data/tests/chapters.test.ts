@@ -390,6 +390,17 @@ describe("corpus snapshot", () => {
     // sanskrit JOINS. Chapters 2-6 and 16-20 now recall every atom their chapter
     // introduces that comes before the payoff (ch6's payoff moves to its
     // continuation lesson SA-C06-pancha-travels-more, which teaches the punch caution).
+    //
+    // hindi, kannada, malayalam, spanish and tamil JOIN, and with them every track is
+    // clean. Their last thirteen indebted chapters each had a payoff placed before
+    // lessons that taught the rest of the chapter. Kannada 10, 13, 16, Malayalam 13,
+    // Tamil 10, 13, 16, 19, 27 and Hindi 8, 14 now end on a closing checkpoint, after
+    // every lesson of the chapter on both the sequence and the curriculum path, that
+    // assesses all the chapter's atoms (the RU-C01-checkpoint pattern). In Hindi 8
+    // and 14 the sequence and the path had disagreed, which is why no existing lesson
+    // could take the role. Spanish 210 and 266 move the payoff to the chapter's last
+    // lesson (ES-C56-depende, ES-C67-tercera-lectura), which recalls what the
+    // can-do promised, and each can-do now names what the chapter ends on.
     expect(report.tracks.filter((t) => t.clean).map((t) => t.language).sort()).toEqual([
       "arabic",
       "bengali",
@@ -397,9 +408,12 @@ describe("corpus snapshot", () => {
       "french",
       "german",
       "gujarati",
+      "hindi",
       "italian",
       "japanese",
+      "kannada",
       "latin",
+      "malayalam",
       "marathi",
       "marwadi",
       "persian",
@@ -407,6 +421,8 @@ describe("corpus snapshot", () => {
       "punjabi",
       "russian",
       "sanskrit",
+      "spanish",
+      "tamil",
       "telugu",
       "urdu",
     ]);
