@@ -67,17 +67,19 @@ You met this mark before you could name a single letter:
 word. Look at it and the two pieces are easy to separate — the upright bar to
 the right of **द**, and the short stroke riding on top.
 
-## Writing: ◌ो — copy what you see
+## Writing: ◌ो — follow the numbered strip
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-150] -->
 
-Put your pen on **◌ो** and follow its line. Copy the shape you can see — slowly,
-and larger than it is printed.
+Follow the numbered strip: start where movement 1 begins, and let each panel
+show you the next movement before your pen makes it. Then write **◌ो** yourself —
+slowly, and larger than it is printed.
+The short bar on top stays grey in the strip: in a word it is part of the
+headline, which you draw last, once, across the whole word.
 
-> This book does not yet tell you **where to start the character or which way to
-> travel**. That is a real thing, taught with real variation from school to
-> school, and it is not written down here until it can be written down with a
-> source. Copying what is in front of you needs no such source, and it is how the
-> shape gets into your hand in the meantime.
+> The strip shows **where to start the character and which way to travel**, in
+> one attested order. That is taught with real variation from school to school,
+> so the strip names its source beneath it: treat it as a sound way in, not the
+> only one.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[HI-SCRIPT-RECOG-150, HI-SCRIPT-RECOG-149] -->

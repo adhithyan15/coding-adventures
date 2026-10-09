@@ -41,10 +41,53 @@ export const fontForDuctus = (letter: LetterDuctus) => {
 };
 
 
+/**
+ * A rectangle of PRINTED ink, in font units (y up), that a glyph's coverage
+ * check leaves out of its count, and why.
+ *
+ * This is the narrowest exception the coverage check knows. Raising a glyph's
+ * `maximumUntracedOverrides` ceiling would excuse ANY untraced ink up to the
+ * new share — a dropped bowl as readily as the part meant. An excused
+ * rectangle excuses only the ink inside it: every sample outside it must still
+ * be traced at the default 2%, and the ink inside it still counts against
+ * nothing else (the on-ink check of every stroke is unchanged).
+ *
+ * It exists for one case so far: a sign whose printed glyph carries ink that
+ * belongs to something the sign is not — the short piece of headline Noto
+ * Sans Devanagari prints on ी, ो and ः, which in handwriting is part of the
+ * word's one headline (see HEADLINE_STUBS in tests/strokes/devanagari.test.ts).
+ */
+export interface ExcusedInk {
+  readonly x0: number;
+  readonly x1: number;
+  readonly y0: number;
+  readonly y1: number;
+  readonly why: string;
+}
+
+/** Whether an ink sample lies inside an excused rectangle (edges included). */
+export const insideExcused = ([x, y]: readonly [number, number], box: ExcusedInk): boolean =>
+  x >= box.x0 && x <= box.x1 && y >= box.y0 && y <= box.y1;
+
+/**
+ * The share of a glyph's ink samples that no stroke comes within 100 font
+ * units of — the number the coverage check bounds — counting only samples
+ * outside `excused`, if given.
+ */
+export const untracedShare = (letter: LetterDuctus, excused?: ExcusedInk): number => {
+  const all = inkPoints(fontForDuctus(letter).glyphFor(letter.glyph)!.contours);
+  const pts = excused ? all.filter((point) => !insideExcused(point, excused)) : all;
+  const paths = letter.strokes.map((stroke) => penPath(stroke));
+  const nearest = (x: number, y: number) =>
+    Math.min(...paths.map((path) => distanceToPath(x, y, path)));
+  return pts.filter(([x, y]) => nearest(x, y) > 100).length / pts.length;
+};
+
 export const registerStrokeHonestyTests = (
   letters: LetterDuctus[],
   minimumInkFitOverrides: Readonly<Record<string, number>> = {},
   maximumUntracedOverrides: Readonly<Record<string, number>> = {},
+  excusedInk: Readonly<Record<string, ExcusedInk>> = {},
 ): void => {
   for (const letter of letters) {
     describe(`${letter.glyph}`, () => {
@@ -69,14 +112,9 @@ export const registerStrokeHonestyTests = (
       });
 
       it("the strokes trace the WHOLE letter, not just part of it", () => {
-        const pts = inkPoints(glyph().contours);
-        const paths = letter.strokes.map((stroke) => penPath(stroke));
-        const nearest = (x: number, y: number) =>
-          Math.min(...paths.map((path) => distanceToPath(x, y, path)));
-        const strayed = pts.filter(([x, y]) => nearest(x, y) > 100);
         const maximumUntraced = maximumUntracedOverrides[letter.glyph] ?? 0.02;
         expect(
-          strayed.length / pts.length,
+          untracedShare(letter, excusedInk[letter.glyph]),
           "large parts of the letter are never traced",
         ).toBeLessThan(maximumUntraced);
       });

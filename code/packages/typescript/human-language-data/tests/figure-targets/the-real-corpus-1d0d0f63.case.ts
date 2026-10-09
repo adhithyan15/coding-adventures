@@ -163,9 +163,9 @@ describe("the real corpus", () => {
   });
 
   it("draws a Devanagari sign only where a lesson teaches it alone", () => {
-    // 35 Hindi, Marathi, Sanskrit and Marwadi lessons teach one of nine
-    // signs by itself (ा ु ू े ं ़ ् ृ ँ), each cited to native writers who
-    // wrote it alone. Each is one glyph, never a sequence: Devanagari has no
+    // 46 Hindi, Marathi, Sanskrit and Marwadi lessons teach one of twelve
+    // signs by itself (ा ु ू े ं ़ ् ृ ँ ी ो ः), each cited to native writers
+    // who wrote it alone. Each is one glyph, never a sequence: Devanagari has no
     // written-order table, so no sign is placed against a consonant here
     // (ā joins its consonant only inside a composed word, next cases).
     const devanagari = targets.filter((target) => target.script === "devanagari");
@@ -175,24 +175,32 @@ describe("the real corpus", () => {
       "HI-S05-sign-virama": "्",
       "HI-S06-vowel-sign-aa": "ा",
       "HI-S112-vowel-sign-e": "े",
+      "HI-S116-vowel-sign-ii": "ी",
       "HI-S118-sign-candrabindu": "ँ",
       "HI-S120-vowel-sign-u": "ु",
       "HI-S140-nuqta": "़",
       "HI-S144-vowel-sign-vocalic-r": "ृ",
       "HI-S148-sign-anusvara": "ं",
       "HI-S149-vowel-sign-uu": "ू",
+      "HI-S150-vowel-sign-o": "ो",
       "HI-W12-chandrabindu": "ँ",
+      "HI-W12-ii-matra": "ी",
       "HI-W12-u-matra": "ु",
       "MR-W01-aa-matra": "ा",
+      "MR-W01-ii-matra": "ी",
+      "MR-W01-o-matra": "ो",
       "MR-W01-virama": "्",
       "MR-W02-anusvara": "ं",
       "MR-W02-e-matra": "े",
+      "MR-W02-visarga": "ः",
       "MR-W05-candrabindu": "ँ",
       "MR-W05-ru-matra": "ृ",
       "MR-W05-u-matra": "ु",
       "MR-W05-uu-matra": "ू",
       "MW-W01-aa-matra": "ा",
       "MW-W03-anusvara": "ं",
+      "MW-W04-ii-matra": "ी",
+      "MW-W05-o-matra": "ो",
       "MW-W05-virama": "्",
       "MW-W06-uu-matra": "ू",
       "MW-W07-e-matra": "े",
@@ -201,27 +209,32 @@ describe("the real corpus", () => {
       "SA-S05-sign-virama": "्",
       "SA-S06-vowel-sign-aa": "ा",
       "SA-S112-vowel-sign-e": "े",
+      "SA-S201-sign-visarga": "ः",
       "SA-S203-vowel-sign-u": "ु",
       "SA-S205-vowel-sign-vocalic-r": "ृ",
       "SA-S209-sign-anusvara": "ं",
+      "SA-S210-vowel-sign-ii": "ी",
+      "SA-S214-vowel-sign-o": "ो",
       "SA-S222-vowel-sign-uu": "ू",
       "SA-W05-vocalic-r-delayed-copy": "ृ",
       "SA-W05-vocalic-r-guided-copy": "ृ",
     });
-    // Left undrawn: the signs Noto prints with a piece of headline the traces
-    // never draw (ि ी ो ः), the signs whose traces split (ै ौ), a sign
+    // ी, ो and ः are drawn without the piece of headline Noto prints on
+    // them: it is the word's headline, which native writers draw last across
+    // the whole word (script-ductus excuses exactly that stub in its coverage
+    // check). Left undrawn: the signs whose traces split (ि ै ौ), a sign
     // lesson with no Writing or Script block and no modelled practice stage
     // (HI-W03-preposed-i), and every word or list that puts a sign on a
     // consonant.
     const lessonIds = new Set(targets.map((target) => target.lessonId));
     for (const id of [
       "HI-W128-vowel-sign-i",
-      "HI-S116-vowel-sign-ii",
-      "HI-S150-vowel-sign-o",
+      "MR-W05-i-matra",
+      "SA-S109-vowel-sign-i",
       "HI-S134-vowel-sign-au",
       "HI-W12-ai-matra",
-      "MR-W02-visarga",
-      "SA-S201-sign-visarga",
+      "MR-W56-au-matra",
+      "SA-S223-vowel-sign-ai",
       "HI-W03-preposed-i",
       "HI-W03-matras-naam",
     ]) {
