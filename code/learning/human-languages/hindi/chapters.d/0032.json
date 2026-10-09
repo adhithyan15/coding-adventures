@@ -9,9 +9,14 @@
   "payoff": {
     "lesson": "HI-C32-evening-register",
     "kind": "task",
-    "summary": "Pick शुभ संध्या for a written evening card and नमस्ते for a casual 7 p.m. hello, treating the split as a tendency, not a ban.",
+    "summary": "Unpack संध्या as 'holding together' and साँझ as its doublet, pick out श and झ, then pick शुभ संध्या for a written evening card and नमस्ते for a casual 7 p.m. hello, treating the split as a tendency, not a ban.",
     "assesses": [
+      "HI-CONCEPT-C32-SHUBH-SANDHYA-01",
+      "HI-CONCEPT-C32-SHUBH-SANDHYA-02",
+      "HI-SCRIPT-RECOG-133",
+      "HI-SCRIPT-RECOG-145",
       "HI-CONCEPT-C32-EVENING-REGISTER-01"
-    ]
+    ],
+    "note": "HI-C32-evening-register is the chapter's last lesson (sequence 840) and assesses all 5 atoms it introduces: संध्या's meaning and its doublet साँझ, the letters झ and श, and the evening register choice."
   }
 }

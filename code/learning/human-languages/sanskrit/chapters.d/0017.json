@@ -9,10 +9,16 @@
   "payoff": {
     "lesson": "SA-C17-time-words",
     "kind": "production",
-    "summary": "Complete SA-C17-time-words and demonstrate the chapter promise.",
+    "summary": "Complete SA-C17-time-words: name day, night, today, yesterday and always, say which three keep one shape, and place sadā on either side of the verb; then pick out श and छ.",
     "assesses": [
       "SA-LEX-C17-TIME-01",
-      "SA-GRAMMAR-C17-TIME-WORDS"
+      "SA-LEX-C17-TIME-02",
+      "SA-LEX-C17-TIME-03",
+      "SA-LEX-C17-TIME-04",
+      "SA-LEX-C17-TIME-05",
+      "SA-GRAMMAR-C17-TIME-WORDS",
+      "SA-SCRIPT-RECOG-219",
+      "SA-SCRIPT-RECOG-220"
     ]
   }
 }

@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Dative Case and Dative Subjects",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:299c8a22caf89099",
+  "sourceHash": "fnv1a64:fccf85cd1815cb16",
   "lessons": [
     {
       "id": "TA-C06-dative-ukku",
@@ -785,13 +785,23 @@
       "romanization": "enakku / nāku / nanage / enikku",
       "gloss": "all four Dravidian sisters put the experiencer in visibly related dative forms",
       "script": "tamil",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:1cd137b1bc68e176",
-      "notice": null,
+      "sourceHash": "fnv1a64:b70734e0a97f919c",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Script — வ, ம and ண"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Guided Practice and Script — வ, ம and ண until you have stopped, and I will say so again when we reach them."
+      },
       "blocks": [
         {
           "index": 0,
@@ -883,6 +893,58 @@
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — the ending underneath",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say \"for the name\", then \"for work\". (peyarukku, vēlaikku — one case, two shapes, picked by the noun's ending.) And \"to me\"? (enakku — nāṉ changes its body to en- first.)"
+            },
+            {
+              "kind": "speech",
+              "text": "How is -ukku unlike Latin -īs? (One meaning, seam visible — Tamil stacks; Latin fuses case, number and class.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Why the dative for knowing? (Knowing happens to you; speaking you do.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "script",
+          "title": "Script — வ, ம and ண",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வணக்கம்."
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "வ (va), then ண (ṇa), then ம",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: வ, then ண, then ம]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "plain n, then curl the tongue back — ṇ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: plain *n*, then curl the tongue back — **ṇ**]"
+            },
+            {
+              "kind": "speech",
+              "text": "(வ: va, one motion, no pen lift. ம: upright on the left, arch on the right. ண (ṇa): two arches; its dot-ṇ is retroflex, tongue curled back.)"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

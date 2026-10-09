@@ -17,13 +17,13 @@ sounds: [devanagari-long-aa, retroflex-la-vs-dental]
 roots: [laal-persian, sanskrit-nila]
 etymology_hook: "लाल laal 'red' comes from a Persian word for a RUBY; नीला niilaa 'blue' is Sanskrit for the indigo plant — and India's indigo trade is why English says 'indigo' at all"
 duration:
-  max_seconds: 205
+  max_seconds: 270
 requires:
   knowledge: [HI-CONCEPT-C11-KAALAA-SAFED-01, HI-CONCEPT-C11-KAALAA-SAFED-02]
 introduces:
   knowledge: [HI-CONCEPT-C11-LAAL-NIILA-01, HI-CONCEPT-C11-LAAL-NIILA-02]
 practises:
-  knowledge: [HI-CONCEPT-C11-LAAL-NIILA-01, HI-CONCEPT-C11-LAAL-NIILA-02]
+  knowledge: [HI-CONCEPT-C11-KAALAA-SAFED-01, HI-CONCEPT-C11-KAALAA-SAFED-02, HI-CONCEPT-C11-LAAL-NIILA-01, HI-CONCEPT-C11-LAAL-NIILA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -71,6 +71,15 @@ and trade**, not of sound.
 - [YOU SAY: "nīlā" — blue, from Sanskrit nīla]
 - [YOU SAY: the honest distinction — nīla and "indigo" are two different
   words linked by trade, not by sound]
+
+## Guided Practice — black and white, from memory
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C11-KAALAA-SAFED-01, HI-CONCEPT-C11-KAALAA-SAFED-02] -->
+
+- What else does **काला**'s root **काल** *kāla* name, besides black? (**Time**
+  — and through it the goddess **Kālī**; one root or two fused is still
+  debated.)
+- Where is *safed*, "white", from, and what does the *nuqtā* dot in its
+  spelling do? (**Persian** *safēd*; it turns *pha* into **fa**.)
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C11-LAAL-NIILA-01, HI-CONCEPT-C11-LAAL-NIILA-02] -->

@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Yes and No",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f13093f622f35845",
+  "sourceHash": "fnv1a64:6c60c0799a681209",
   "lessons": [
     {
       "id": "HI-C07-haan",
@@ -145,7 +145,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:bd3abb8c926f1e2f",
+      "sourceHash": "fnv1a64:01811ddc778e8bed",
       "notice": null,
       "blocks": [
         {
@@ -270,6 +270,25 @@
         },
         {
           "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice — yes, then no",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Kyā āp ṭhīk haiṁ? Answer yes, then no. (Hāṃ … nahīṃ.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which mark makes hāṃ hum through the nose? (The moon-dot, the chandrabindu.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Now say yes to an elder. (Jī hāṃ — जी makes it courteous.)"
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

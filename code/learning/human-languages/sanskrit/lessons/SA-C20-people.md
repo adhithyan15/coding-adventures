@@ -18,11 +18,11 @@ roots: []
 duration:
   max_seconds: 210
 requires:
-  knowledge: [SA-LEX-C20-PERSON-04]
+  knowledge: [SA-LEX-C20-PERSON-04, SA-LEX-C20-PERSON-01, SA-LEX-C20-PERSON-02, SA-LEX-C20-PERSON-03]
 introduces:
   knowledge: [SA-LEX-C20-PERSON-05]
 practises:
-  knowledge: [SA-LEX-C20-PERSON-04, SA-LEX-C20-PERSON-05, SA-LEX-C19-NUM-05]
+  knowledge: [SA-LEX-C20-PERSON-04, SA-LEX-C20-PERSON-05, SA-LEX-C19-NUM-05, SA-LEX-C20-PERSON-01, SA-LEX-C20-PERSON-02, SA-LEX-C20-PERSON-03]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -65,6 +65,15 @@ its ending legible and a European cousin attached.
 - [YOU SAY: three English words from its Latin cousin]
 - [YOU SAY: all five people, in order]
 - [YOU RECALL: say *daśa*]
+
+## Guided Practice — man, woman, child
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C20-PERSON-01, SA-LEX-C20-PERSON-02, SA-LEX-C20-PERSON-03] -->
+
+[PAUSE 1s each]
+- [YOU SAY: "man", and the English word built on its Greek cousin (*naraḥ*; **android**)]
+- [YOU SAY: "woman", and the piece it shares with "man" (*nārī*; *nar-*)]
+- [YOU SAY: "child", and "girl" (*bālaḥ*; *bālā*)]
+- [YOU SAY: the family each ending marks (*naraḥ*, *bālaḥ*: *-aḥ*, masculine; *nārī*: *-ī*, feminine; *bālā*: *-ā*, a second feminine)]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C20-PERSON-04, SA-LEX-C20-PERSON-05] -->

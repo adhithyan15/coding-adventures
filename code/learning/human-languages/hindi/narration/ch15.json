@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Water and Bread",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c0a3aa77b904ed6a",
+  "sourceHash": "fnv1a64:fe58844ba3a27705",
   "lessons": [
     {
       "id": "HI-C15-dhol",
@@ -124,7 +124,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1f708474a0e1b7fb",
+      "sourceHash": "fnv1a64:fb0ea537782ae1c6",
       "notice": null,
       "blocks": [
         {
@@ -208,6 +208,17 @@
         },
         {
           "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — the drum",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One more word from this chapter: what is \"a drum\"? (Ḍhol.)"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

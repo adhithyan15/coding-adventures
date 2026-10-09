@@ -4,18 +4,21 @@
     "language": "tamil",
     "chapter": 18,
     "sequence": 660,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "script-block"
     ],
     "coreModality": "voice",
     "coreReasons": [
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:039a838086a43398"
+    "sourceHash": "fnv1a64:5f1e5e5d294240f7",
+    "detachableSegments": [
+      "Script — the puḷḷi and இல்லை"
+    ]
   },
   "findings": []
 }

@@ -16,13 +16,13 @@ prerequisites: [SA-C19-ten, SA-C06-number-cognates-more, SA-C06-number-cognates-
 sounds: []
 roots: []
 duration:
-  max_seconds: 210
+  max_seconds: 230
 requires:
-  knowledge: [SA-LEX-C19-NUM-05, SA-HISTORY-FOUR-FIVE-ANALOGY, SA-SOUND-PIE-KW-OUTCOMES]
+  knowledge: [SA-LEX-C19-NUM-05, SA-HISTORY-FOUR-FIVE-ANALOGY, SA-SOUND-PIE-KW-OUTCOMES, SA-LEX-C19-NUM-02, SA-LEX-C19-NUM-03, SA-LEX-C19-NUM-04]
 introduces:
   knowledge: [SA-GRAMMAR-C19-NUMBER-FAMILY]
 practises:
-  knowledge: [SA-LEX-C19-NUM-01, SA-LEX-C19-NUM-05, SA-GRAMMAR-C19-NUMBER-FAMILY, SA-HISTORY-FOUR-FIVE-ANALOGY, SA-SOUND-PIE-KW-OUTCOMES]
+  knowledge: [SA-LEX-C19-NUM-01, SA-LEX-C19-NUM-05, SA-GRAMMAR-C19-NUMBER-FAMILY, SA-HISTORY-FOUR-FIVE-ANALOGY, SA-SOUND-PIE-KW-OUTCOMES, SA-LEX-C19-NUM-02, SA-LEX-C19-NUM-03, SA-LEX-C19-NUM-04]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output]
@@ -71,6 +71,14 @@ founded historical linguistics.
 - [YOU SAY: all ten, in order]
 - [YOU SAY: the English cousin of each]
 - [YOU SAY: what the regularity proves — inheritance, not borrowing]
+
+## Guided Practice — seven, eight, nine
+<!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C19-NUM-02, SA-LEX-C19-NUM-03, SA-LEX-C19-NUM-04] -->
+
+[PAUSE 1s each]
+- [YOU SAY: "seven", and whether it is the parent of Latin *septem* (*sapta*; no — cousins from a shared parent nobody wrote down)]
+- [YOU SAY: "eight", and the old idea about its shape (*aṣṭa*; it behaves like a dual, "two fours" — a hypothesis, not a fact)]
+- [YOU SAY: "nine", and the word it must not be mistaken for (*navan*; *nava*, "new")]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[SA-LEX-C19-NUM-01, SA-LEX-C19-NUM-05, SA-GRAMMAR-C19-NUMBER-FAMILY] -->

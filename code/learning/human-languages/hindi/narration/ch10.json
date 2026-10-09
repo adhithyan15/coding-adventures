@@ -4,7 +4,7 @@
   "chapter": 10,
   "title": "Days of the Week",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5f977bc8cf4d4ccc",
+  "sourceHash": "fnv1a64:7eb9fd96d5aa17d6",
   "lessons": [
     {
       "id": "HI-C10-somavaar-shukravaar",
@@ -155,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:335828d52556bf5c",
+      "sourceHash": "fnv1a64:06868495b5fe8d4d",
       "notice": null,
       "blocks": [
         {
@@ -243,6 +243,25 @@
         },
         {
           "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — the first five, from memory",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What is every weekday built from? (A deity's name + वार vār, \"day.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "Whose days are somavār and śukravār? (The Moon's; Venus's.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Did India copy its planet-week from Rome? (No — the two are cousins, both traced to Babylonian astronomy, most likely through Hellenistic Greece.)"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

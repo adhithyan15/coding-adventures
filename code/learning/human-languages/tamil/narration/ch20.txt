@@ -43,7 +43,7 @@ You'll want to know: வானிலை — vaanam + nilai.
 வானிலை (vāṉilai) = "weather" — built from:
 வானம் (vāṉam, "sky") — most likely a native Dravidian word, with confirmed cognates in Kannada ಬಾನು (bānu, "sky") and Telugu వాన (vāna, "rain," from the same sky/rain-cloud root) — distinct from the Sanskrit sky word ākāśa that those same two languages use elsewhere.
 நிலை (nilai, "state, standing, condition") — from நில் (nil, "to stand"), one of Tamil's most basic native verb roots.
-So vāṉilai literally means "the standing of the sky" or "the sky's state" — and unlike its three Dravidian cousins, neither piece here is a Sanskrit or Persian/Arabic loan. (Treat "native" as the best current account rather than a fully settled fact, the same hedge every native-word claim here deserves — but both pieces are independently well-attested as old, native Dravidian vocabulary.)
+So vāṉilai literally means "the standing of the sky" — and unlike its three Dravidian cousins, neither piece is a Sanskrit or Persian/Arabic loan. ("Native" is the best current account, not a settled fact — but both pieces are well-attested as old Dravidian vocabulary.)
 
 You'll want to know: மழை பெய்கிறது — "rain is falling".
 மழை பெய்கிறது. — "It's raining." — literally "rain is falling." (mazhai peykiRathu — from பெய் pey, "to fall/pour," specifically used for rain.)
@@ -56,6 +56,11 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: "mazhai peykiRathu" — it's raining, "rain is falling"]
 [pause 8 seconds for the answer]
+
+Guided Practice — eleven to twenty.
+Say 11, then 12. (patiṉoṉḏṟu, paṉṉiraṇḍu — பத்து, ten, echoed plus a digit.)
+Say twenty and take it apart. (irupathu — iru, an older "two," + பத்து, "ten": "two-tens.")
+Do Sanskrit, Latin or Arabic build twenty that way? (No — each has its own special word; all four Dravidian sisters compose it.)
 
 Wrap-up Recall.
 [pause 3 seconds]

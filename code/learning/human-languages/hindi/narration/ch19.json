@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Asking Someone's Age",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:d82c617748f78f70",
+  "sourceHash": "fnv1a64:e043f1a4b385291f",
   "lessons": [
     {
       "id": "HI-C19-umr",
@@ -113,7 +113,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7dd5516decbc278d",
+      "sourceHash": "fnv1a64:2bddb2dc9508b94e",
       "notice": null,
       "blocks": [
         {
@@ -198,6 +198,17 @@
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — the word for age",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which word for \"age\" is everyday talk, and where is it from? (Umr — Arabic ʿumr, via Persian.) And the formal, native one? (आयु āyu.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

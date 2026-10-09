@@ -4,7 +4,7 @@
   "chapter": 18,
   "title": "Telling Time",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d6ba3733d9a7a211",
+  "sourceHash": "fnv1a64:d7757954fddbc959",
   "lessons": [
     {
       "id": "TA-C18-mani",
@@ -461,13 +461,22 @@
       "romanization": "maṇi / maṇi",
       "gloss": "the hour-word and Sanskrit gem-word are likely homophones, then maṇi tells clock time",
       "script": "tamil",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:039a838086a43398",
-      "notice": null,
+      "sourceHash": "fnv1a64:5f1e5e5d294240f7",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the puḷḷi and இல்லை"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the puḷḷi and இல்லை until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -558,6 +567,35 @@
         },
         {
           "index": 4,
+          "type": "script",
+          "title": "Script — the puḷḷi and இல்லை",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "இல்லை (illai) — இ, then ல், then லை",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **இல்லை** — **இ**, then **ல்**, then **லை**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the puḷḷi, then the ai hook",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the puḷḷi, then the ai hook]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the puḷḷi do to ல? (Removes its built-in a — bare l.) Why open on இ? (The word starts on a vowel.) Which side does ை sit on? (The left — written first, spoken second.)"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

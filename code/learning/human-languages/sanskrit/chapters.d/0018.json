@@ -9,9 +9,12 @@
   "payoff": {
     "lesson": "SA-C18-k-words",
     "kind": "production",
-    "summary": "Complete SA-C18-k-words and demonstrate the chapter promise.",
+    "summary": "Complete SA-C18-k-words: ask when, why, how many and from where, line up all seven k- question words, and say what the k- became in Latin and English.",
     "assesses": [
       "SA-LEX-C18-ASK-01",
+      "SA-LEX-C18-ASK-02",
+      "SA-LEX-C18-ASK-03",
+      "SA-LEX-C18-ASK-04",
       "SA-GRAMMAR-C18-K-QUESTIONS"
     ]
   }
