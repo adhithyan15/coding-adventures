@@ -3,6 +3,13 @@
   "figures": [
     {
       "kind": "script-filmstrip",
+      "lessonId": "FR-W01-accents",
+      "sourceHash": "fnv1a64:03d9122debf2464d",
+      "svgHash": "fnv1a64:b0858dc9b0189af9",
+      "svg": "french/book/figures/FR-W01-accents-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "FR-W01-salut-delayed-copy",
       "sourceHash": "fnv1a64:08d3748aaa193bed",
       "svgHash": "fnv1a64:20756dd11753e15d",
@@ -21,6 +28,20 @@
       "sourceHash": "fnv1a64:02bd4f56dad5f6ab",
       "svgHash": "fnv1a64:20756dd11753e15d",
       "svg": "french/book/figures/FR-W01-salut-observe-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "FR-W02-cedille",
+      "sourceHash": "fnv1a64:0e682f538a68f60d",
+      "svgHash": "fnv1a64:76deb369b304abd5",
+      "svg": "french/book/figures/FR-W02-cedille-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "FR-W03-trema",
+      "sourceHash": "fnv1a64:825ad586deb1c863",
+      "svgHash": "fnv1a64:ad1b9756898e920f",
+      "svg": "french/book/figures/FR-W03-trema-filmstrip.svg"
     }
   ]
 }

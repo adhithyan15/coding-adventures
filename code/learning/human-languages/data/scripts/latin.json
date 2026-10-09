@@ -7,7 +7,7 @@
   "signature": "The alphabet this book is written in: round and straight letters standing apart, with accents above (á è ê ü), a tilde (ñ) or a cedilla below (ç).",
   "complete": false,
   "combination": "A true alphabet: letters are written left to right and each spells a sound. Each language adds marks of its own to the 26 letters: accents and the diaeresis above a vowel, the tilde on ñ, the cedilla under ç, and German ß. In print every letter stands apart; a joined hand links them.",
-  "notes": "The Latin-script tracks' own inventory (Spanish, French, German, Italian, Portuguese, Latin): exactly the Latin characters their headwords use once decomposed (NFD): the 26 small letters, the 24 capitals in use (no X or Y), ß, œ, the precomposed ñ, á, é, í, ó, ú and ü that the cited ductus draws, the ordinal indicators ª and º, the opening marks ¿ and ¡, and seven combining marks. complete is false. Stroke order is source-gated: only rows with penLifts and strokeOrderSource carry a cited order. Letters follow the Grundschrift-App (Laborschule at Bielefeld University with the Grundschulverband; no licence, facts only), with native Spanish writers' counts from UJIpenchars2 (CC BY 4.0) as corroboration; the marks of ñ, á é í ó ú and ü, and ¿ and ¡, follow UJIpenchars2. Every path is fitted to LatinPrint-Subset.ttf, a renamed subset of SIL Global's literacy typeface Andika 7.000 (OFL-1.1), chosen because it prints the one-storey a the sources teach; the books' own text face is a different font. Rows without a source are recognition-only: strokeOrder [] means NOT VERIFIED, never none. The grave, circumflex, cedilla, macron, æ and œ have no source; ä, ö, ë, ï and ÿ would follow ü only by analogy.",
+  "notes": "The Latin-script tracks' own inventory (Spanish, French, German, Italian, Portuguese, Latin): exactly the Latin characters their headwords use once decomposed (NFD): the 26 small letters, the 24 capitals in use (no X or Y), ß, œ, the precomposed ñ, á, é, í, ó, ú, ü, è, ê, ë, ï, ä, ö, ē and ç that the ductus draws, the ordinal indicators ª and º, the opening marks ¿ and ¡, and seven combining marks. complete is false. Stroke order is source-gated: only rows with penLifts and strokeOrderSource carry a cited order. Letters follow the Grundschrift-App (Laborschule at Bielefeld University with the Grundschulverband; no licence, facts only), with native Spanish writers' counts from UJIpenchars2 (CC BY 4.0) as corroboration; the marks of ñ, á é í ó ú and ü, and ¿ and ¡, follow UJIpenchars2. Every path is fitted to LatinPrint-Subset.ttf, a renamed subset of SIL Global's literacy typeface Andika 7.000 (OFL-1.1), chosen because it prints the one-storey a the sources teach; the books' own text face is a different font. Rows without a source are recognition-only: strokeOrder [] means NOT VERIFIED, never none. The grave, circumflex, cedilla, macron, æ and œ have no source of their own, and ä, ö, ë and ï none either. So è, ê, ë, ï, ä, ö, ē and ç are drawn BY ANALOGY, not separately sourced: the cited base letter, then the mark last, as the cited ü (the left dot first) and the cited acute and tilde are drawn. A mark no cited record covers runs left to right and top to bottom. Each of those records says so. æ, œ, ÿ and the capitals with marks are not drawn.",
   "letters": [
     {
       "glyph": "a",
@@ -221,10 +221,22 @@
       "sound": "m",
       "role": "letter",
       "components": [
-        "m  m — letter"
+        "a short stem",
+        "two arches",
+        "the middle and right sides"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "draw the stem down",
+        "back up, over and down",
+        "back up, over and down"
+      ],
+      "strokeOrderNote": "One pen-down stroke, the teaching order of the Grundschrift-App, fitted to the bundled printed outline",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Grundschrift-App (Laborschule Bielefeld, Bielefeld University, with the Grundschulverband), level kleinbuchstaben/m, ordered stroke paths for m (assets/levels/kleinbuchstaben/m/metadata.json, commit f6dbd80; no licence, facts only)",
+        "url": "https://github.com/Medien-Treibhaus/grundschrift-app-source/blob/f6dbd807adbb3fc2f94207fe578def439f6e9c49/assets/levels/kleinbuchstaben/m/metadata.json",
+        "variation": "The Grundschrift-App was made in a research project of the Laborschule at Bielefeld University with the Grundschulverband, on its Grundschrift school model, with a teacher advisory team. Each letter is an ordered list of paths, one per pen-down stroke, which the app makes a child trace in order. It writes m in one stroke: down the stem from the top, back up it, over the first arch and down the middle side, back up that side, then over the second arch and down the right side. Grundschrift ends the stroke with a small hook to the right that the bundled outline does not print, so the path ends where the printed letter ends. UJIpenchars2 (Prat, Castro, Llorens, Marzal and Vilar; UCI Machine Learning Repository dataset 177, CC BY 4.0), the native-writer corroboration of the earlier letters, could not be reached when m was added, so no native-writer count is cited for it. The app's repository has no licence, so only the order, the start, the direction and the lifts are taken from it; no point is copied, and the path is fitted to the m of the bundled LatinPrint-Subset.ttf, a renamed subset of SIL Global's literacy typeface Andika 7.000, which prints the one-storey a the school model teaches; the book's own text face is a different font. Handwriting varies by writer."
+      }
     },
     {
       "glyph": "n",
@@ -389,10 +401,18 @@
       "sound": "v",
       "role": "letter",
       "components": [
-        "v  v — letter"
+        "two slanting lines meeting at a point on the line"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "down to the point, then up"
+      ],
+      "strokeOrderNote": "One pen-down stroke, the teaching order of the Grundschrift-App, fitted to the bundled printed outline",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Grundschrift-App (Laborschule Bielefeld, Bielefeld University, with the Grundschulverband), level kleinbuchstaben/v, ordered stroke paths for v (assets/levels/kleinbuchstaben/v/metadata.json, commit f6dbd80; no licence, facts only)",
+        "url": "https://github.com/Medien-Treibhaus/grundschrift-app-source/blob/f6dbd807adbb3fc2f94207fe578def439f6e9c49/assets/levels/kleinbuchstaben/v/metadata.json",
+        "variation": "The Grundschrift-App was made in a research project of the Laborschule at Bielefeld University with the Grundschulverband, on its Grundschrift school model, with a teacher advisory team. Each letter is an ordered list of paths, one per pen-down stroke, which the app makes a child trace in order. It writes v in one stroke from the top left: down to the point on the line, then up to the top right. UJIpenchars2 (Prat, Castro, Llorens, Marzal and Vilar; UCI Machine Learning Repository dataset 177, CC BY 4.0), the native-writer corroboration of the earlier letters, could not be reached when v was added, so no native-writer count is cited for it. The app's repository has no licence, so only the order, the start, the direction and the lifts are taken from it; no point is copied, and the path is fitted to the v of the bundled LatinPrint-Subset.ttf, a renamed subset of SIL Global's literacy typeface Andika 7.000, which prints the one-storey a the school model teaches; the book's own text face is a different font. Handwriting varies by writer."
+      }
     },
     {
       "glyph": "w",
@@ -620,6 +640,175 @@
       }
     },
     {
+      "glyph": "è",
+      "sound": "open e (French, Italian)",
+      "role": "letter",
+      "components": [
+        "an e",
+        "a grave accent above it"
+      ],
+      "strokeOrder": [
+        "draw the bar to the right",
+        "curve up, round and down",
+        "lift, then the grave, down to the right"
+      ],
+      "strokeOrderNote": "Two pen-down strokes: the Grundschrift-App's e, then the grave last, BY ANALOGY with the cited é and ñ (not separately sourced), fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "By analogy with the cited é and ñ, not separately sourced: the e after the Grundschrift-App, level kleinbuchstaben/e (assets/levels/kleinbuchstaben/e/metadata.json, commit f6dbd80; no licence, facts only), then the grave last, as UJIpenchars2's native Spanish writers draw the marks of é and ñ (UCI Machine Learning Repository dataset 177, CC BY 4.0)",
+        "url": "https://github.com/Medien-Treibhaus/grundschrift-app-source/blob/f6dbd807adbb3fc2f94207fe578def439f6e9c49/assets/levels/kleinbuchstaben/e/metadata.json",
+        "variation": "ORDER BY ANALOGY, NOT SEPARATELY SOURCED. No source reachable here records how è is written: the Grundschrift-App has no letter with this mark, and UJIpenchars2 holds Spanish characters only. So its order is drawn by analogy with the cited é and ñ. UJIpenchars2 (Prat, Castro, Llorens, Marzal and Vilar; UCI Machine Learning Repository dataset 177, CC BY 4.0) finds the accent of é drawn last, after the e, in all 120 of its traces, and the tilde of ñ last, after the n, in all 108 where it is a separate mark (104 of them from left to right). è is therefore the Grundschrift-App's e (level kleinbuchstaben/e, commit f6dbd80; no licence, facts only), then the grave after it. No source reachable here records the direction of this mark, so it is drawn left to right and top to bottom, the direction these records give every mark no cited record covers. The grave falls to the right, so it runs down to the right from its upper left end. Only the order, the start, the direction and the lifts are claimed, and only by analogy; no point is copied, and the path is fitted to the è of the bundled LatinPrint-Subset.ttf, a renamed subset of SIL Global's literacy typeface Andika 7.000, which prints the one-storey a the school model teaches; the book's own text face is a different font. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ê",
+      "sound": "e with a circumflex (French forêt; Portuguese closed e)",
+      "role": "letter",
+      "components": [
+        "an e",
+        "a circumflex above it"
+      ],
+      "strokeOrder": [
+        "draw the bar to the right",
+        "curve up, round and down",
+        "lift, then the circumflex, up and down to the right"
+      ],
+      "strokeOrderNote": "Two pen-down strokes: the Grundschrift-App's e, then the circumflex last, BY ANALOGY with the cited é and ñ (not separately sourced), fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "By analogy with the cited é and ñ, not separately sourced: the e after the Grundschrift-App, level kleinbuchstaben/e (assets/levels/kleinbuchstaben/e/metadata.json, commit f6dbd80; no licence, facts only), then the circumflex last, as UJIpenchars2's native Spanish writers draw the marks of é and ñ (UCI Machine Learning Repository dataset 177, CC BY 4.0)",
+        "url": "https://github.com/Medien-Treibhaus/grundschrift-app-source/blob/f6dbd807adbb3fc2f94207fe578def439f6e9c49/assets/levels/kleinbuchstaben/e/metadata.json",
+        "variation": "ORDER BY ANALOGY, NOT SEPARATELY SOURCED. No source reachable here records how ê is written: the Grundschrift-App has no letter with this mark, and UJIpenchars2 holds Spanish characters only. So its order is drawn by analogy with the cited é and ñ. UJIpenchars2 (Prat, Castro, Llorens, Marzal and Vilar; UCI Machine Learning Repository dataset 177, CC BY 4.0) finds the accent of é drawn last, after the e, in all 120 of its traces, and the tilde of ñ last, after the n, in all 108 where it is a separate mark (104 of them from left to right). ê is therefore the Grundschrift-App's e (level kleinbuchstaben/e, commit f6dbd80; no licence, facts only), then the circumflex after it. No source reachable here records the direction of this mark, so it is drawn left to right and top to bottom, the direction these records give every mark no cited record covers. The circumflex is one stroke, up from its left foot to the peak and down to its right foot. Only the order, the start, the direction and the lifts are claimed, and only by analogy; no point is copied, and the path is fitted to the ê of the bundled LatinPrint-Subset.ttf, a renamed subset of SIL Global's literacy typeface Andika 7.000, which prints the one-storey a the school model teaches; the book's own text face is a different font. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ë",
+      "sound": "e said apart from the vowel before it (French Noël)",
+      "role": "letter",
+      "components": [
+        "an e",
+        "two dots above it"
+      ],
+      "strokeOrder": [
+        "draw the bar to the right",
+        "curve up, round and down",
+        "lift, then the left dot",
+        "lift, then the right dot"
+      ],
+      "strokeOrderNote": "Three pen-down strokes: the Grundschrift-App's e, then the two dots last, BY ANALOGY with the cited ü (not separately sourced), fitted to the bundled printed outline",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "By analogy with the cited ü, not separately sourced: the e after the Grundschrift-App, level kleinbuchstaben/e (assets/levels/kleinbuchstaben/e/metadata.json, commit f6dbd80; no licence, facts only), then the two dots last, as UJIpenchars2's native Spanish writers draw the marks of ü (UCI Machine Learning Repository dataset 177, CC BY 4.0)",
+        "url": "https://github.com/Medien-Treibhaus/grundschrift-app-source/blob/f6dbd807adbb3fc2f94207fe578def439f6e9c49/assets/levels/kleinbuchstaben/e/metadata.json",
+        "variation": "ORDER BY ANALOGY, NOT SEPARATELY SOURCED. No source reachable here records how ë is written: the Grundschrift-App has no letter with this mark, and UJIpenchars2 holds Spanish characters only. So its order is drawn by analogy with the cited ü. UJIpenchars2 (Prat, Castro, Llorens, Marzal and Vilar; UCI Machine Learning Repository dataset 177, CC BY 4.0) finds the two dots of ü drawn last in 119 of its 120 traces, and the left dot first in 116 of the 118 where both are found. ë is therefore the Grundschrift-App's e (level kleinbuchstaben/e, commit f6dbd80; no licence, facts only), then the two dots after it, the left dot first, as ü's are. Only the order, the start, the direction and the lifts are claimed, and only by analogy; no point is copied, and the path is fitted to the ë of the bundled LatinPrint-Subset.ttf, a renamed subset of SIL Global's literacy typeface Andika 7.000, which prints the one-storey a the school model teaches; the book's own text face is a different font. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ï",
+      "sound": "i said apart from the vowel before it (French naïf)",
+      "role": "letter",
+      "components": [
+        "a stem without its dot",
+        "two dots above it"
+      ],
+      "strokeOrder": [
+        "draw the stem down",
+        "lift, then the left dot",
+        "lift, then the right dot"
+      ],
+      "strokeOrderNote": "Three pen-down strokes: the stem of the Grundschrift-App's i, whose dot the two dots replace, then the two dots last, BY ANALOGY with the cited ü (not separately sourced), fitted to the bundled printed outline",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "By analogy with the cited ü, not separately sourced: the stem of the i after the Grundschrift-App, level kleinbuchstaben/i (assets/levels/kleinbuchstaben/i/metadata.json, commit f6dbd80; no licence, facts only), then the two dots last, as UJIpenchars2's native Spanish writers draw the marks of ü (UCI Machine Learning Repository dataset 177, CC BY 4.0)",
+        "url": "https://github.com/Medien-Treibhaus/grundschrift-app-source/blob/f6dbd807adbb3fc2f94207fe578def439f6e9c49/assets/levels/kleinbuchstaben/i/metadata.json",
+        "variation": "ORDER BY ANALOGY, NOT SEPARATELY SOURCED. No source reachable here records how ï is written: the Grundschrift-App has no letter with this mark, and UJIpenchars2 holds Spanish characters only. So its order is drawn by analogy with the cited ü. UJIpenchars2 (Prat, Castro, Llorens, Marzal and Vilar; UCI Machine Learning Repository dataset 177, CC BY 4.0) finds the two dots of ü drawn last in 119 of its 120 traces, and the left dot first in 116 of the 118 where both are found. ï is therefore the stem of the Grundschrift-App's i, whose dot the two dots replace (level kleinbuchstaben/i, commit f6dbd80; no licence, facts only), then the two dots after it, the left dot first, as ü's are. Only the order, the start, the direction and the lifts are claimed, and only by analogy; no point is copied, and the path is fitted to the ï of the bundled LatinPrint-Subset.ttf, a renamed subset of SIL Global's literacy typeface Andika 7.000, which prints the one-storey a the school model teaches; the book's own text face is a different font. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ä",
+      "sound": "German ä (an open e sound)",
+      "role": "letter",
+      "components": [
+        "an a",
+        "two dots above it"
+      ],
+      "strokeOrder": [
+        "round the bowl from the top right",
+        "back up, then down to the foot",
+        "lift, then the left dot",
+        "lift, then the right dot"
+      ],
+      "strokeOrderNote": "Three pen-down strokes: the Grundschrift-App's a, then the two dots last, BY ANALOGY with the cited ü (not separately sourced), fitted to the bundled printed outline",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "By analogy with the cited ü, not separately sourced: the a after the Grundschrift-App, level kleinbuchstaben/a (assets/levels/kleinbuchstaben/a/metadata.json, commit f6dbd80; no licence, facts only), then the two dots last, as UJIpenchars2's native Spanish writers draw the marks of ü (UCI Machine Learning Repository dataset 177, CC BY 4.0)",
+        "url": "https://github.com/Medien-Treibhaus/grundschrift-app-source/blob/f6dbd807adbb3fc2f94207fe578def439f6e9c49/assets/levels/kleinbuchstaben/a/metadata.json",
+        "variation": "ORDER BY ANALOGY, NOT SEPARATELY SOURCED. No source reachable here records how ä is written: the Grundschrift-App has no letter with this mark, and UJIpenchars2 holds Spanish characters only. So its order is drawn by analogy with the cited ü. UJIpenchars2 (Prat, Castro, Llorens, Marzal and Vilar; UCI Machine Learning Repository dataset 177, CC BY 4.0) finds the two dots of ü drawn last in 119 of its 120 traces, and the left dot first in 116 of the 118 where both are found. ä is therefore the Grundschrift-App's a (level kleinbuchstaben/a, commit f6dbd80; no licence, facts only), then the two dots after it, the left dot first, as ü's are. Only the order, the start, the direction and the lifts are claimed, and only by analogy; no point is copied, and the path is fitted to the ä of the bundled LatinPrint-Subset.ttf, a renamed subset of SIL Global's literacy typeface Andika 7.000, which prints the one-storey a the school model teaches; the book's own text face is a different font. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ö",
+      "sound": "German ö (e said with rounded lips)",
+      "role": "letter",
+      "components": [
+        "an o",
+        "two dots above it"
+      ],
+      "strokeOrder": [
+        "round to the left, back to the top",
+        "lift, then the left dot",
+        "lift, then the right dot"
+      ],
+      "strokeOrderNote": "Three pen-down strokes: the Grundschrift-App's o, then the two dots last, BY ANALOGY with the cited ü (not separately sourced), fitted to the bundled printed outline",
+      "penLifts": 2,
+      "strokeOrderSource": {
+        "citation": "By analogy with the cited ü, not separately sourced: the o after the Grundschrift-App, level kleinbuchstaben/o (assets/levels/kleinbuchstaben/o/metadata.json, commit f6dbd80; no licence, facts only), then the two dots last, as UJIpenchars2's native Spanish writers draw the marks of ü (UCI Machine Learning Repository dataset 177, CC BY 4.0)",
+        "url": "https://github.com/Medien-Treibhaus/grundschrift-app-source/blob/f6dbd807adbb3fc2f94207fe578def439f6e9c49/assets/levels/kleinbuchstaben/o/metadata.json",
+        "variation": "ORDER BY ANALOGY, NOT SEPARATELY SOURCED. No source reachable here records how ö is written: the Grundschrift-App has no letter with this mark, and UJIpenchars2 holds Spanish characters only. So its order is drawn by analogy with the cited ü. UJIpenchars2 (Prat, Castro, Llorens, Marzal and Vilar; UCI Machine Learning Repository dataset 177, CC BY 4.0) finds the two dots of ü drawn last in 119 of its 120 traces, and the left dot first in 116 of the 118 where both are found. ö is therefore the Grundschrift-App's o (level kleinbuchstaben/o, commit f6dbd80; no licence, facts only), then the two dots after it, the left dot first, as ü's are. Only the order, the start, the direction and the lifts are claimed, and only by analogy; no point is copied, and the path is fitted to the ö of the bundled LatinPrint-Subset.ttf, a renamed subset of SIL Global's literacy typeface Andika 7.000, which prints the one-storey a the school model teaches; the book's own text face is a different font. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ē",
+      "sound": "long e (Latin)",
+      "role": "letter",
+      "components": [
+        "an e",
+        "a macron above it"
+      ],
+      "strokeOrder": [
+        "draw the bar to the right",
+        "curve up, round and down",
+        "lift, then the macron, left to right"
+      ],
+      "strokeOrderNote": "Two pen-down strokes: the Grundschrift-App's e, then the macron last, BY ANALOGY with the cited é and ñ (not separately sourced), fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "By analogy with the cited é and ñ, not separately sourced: the e after the Grundschrift-App, level kleinbuchstaben/e (assets/levels/kleinbuchstaben/e/metadata.json, commit f6dbd80; no licence, facts only), then the macron last, as UJIpenchars2's native Spanish writers draw the marks of é and ñ (UCI Machine Learning Repository dataset 177, CC BY 4.0)",
+        "url": "https://github.com/Medien-Treibhaus/grundschrift-app-source/blob/f6dbd807adbb3fc2f94207fe578def439f6e9c49/assets/levels/kleinbuchstaben/e/metadata.json",
+        "variation": "ORDER BY ANALOGY, NOT SEPARATELY SOURCED. No source reachable here records how ē is written: the Grundschrift-App has no letter with this mark, and UJIpenchars2 holds Spanish characters only. So its order is drawn by analogy with the cited é and ñ. UJIpenchars2 (Prat, Castro, Llorens, Marzal and Vilar; UCI Machine Learning Repository dataset 177, CC BY 4.0) finds the accent of é drawn last, after the e, in all 120 of its traces, and the tilde of ñ last, after the n, in all 108 where it is a separate mark (104 of them from left to right). ē is therefore the Grundschrift-App's e (level kleinbuchstaben/e, commit f6dbd80; no licence, facts only), then the macron after it. No source reachable here records the direction of this mark, so it is drawn left to right and top to bottom, the direction these records give every mark no cited record covers. The macron is a level bar, so it runs from left to right, as ñ's cited tilde does. Only the order, the start, the direction and the lifts are claimed, and only by analogy; no point is copied, and the path is fitted to the ē of the bundled LatinPrint-Subset.ttf, a renamed subset of SIL Global's literacy typeface Andika 7.000, which prints the one-storey a the school model teaches; the book's own text face is a different font. Handwriting varies by writer."
+      }
+    },
+    {
+      "glyph": "ç",
+      "sound": "s before a, o or u (French, Portuguese)",
+      "role": "letter",
+      "components": [
+        "a c",
+        "a cedilla below it"
+      ],
+      "strokeOrder": [
+        "curve round to the left and down",
+        "lift, then the cedilla, down and round to the left"
+      ],
+      "strokeOrderNote": "Two pen-down strokes: the Grundschrift-App's c, then the cedilla last, BY ANALOGY with the cited é and ñ (not separately sourced), fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "By analogy with the cited é and ñ, not separately sourced: the c after the Grundschrift-App, level kleinbuchstaben/c (assets/levels/kleinbuchstaben/c/metadata.json, commit f6dbd80; no licence, facts only), then the cedilla last, as UJIpenchars2's native Spanish writers draw the marks of é and ñ (UCI Machine Learning Repository dataset 177, CC BY 4.0)",
+        "url": "https://github.com/Medien-Treibhaus/grundschrift-app-source/blob/f6dbd807adbb3fc2f94207fe578def439f6e9c49/assets/levels/kleinbuchstaben/c/metadata.json",
+        "variation": "ORDER BY ANALOGY, NOT SEPARATELY SOURCED. No source reachable here records how ç is written: the Grundschrift-App has no letter with this mark, and UJIpenchars2 holds Spanish characters only. So its order is drawn by analogy with the cited é and ñ. UJIpenchars2 (Prat, Castro, Llorens, Marzal and Vilar; UCI Machine Learning Repository dataset 177, CC BY 4.0) finds the accent of é drawn last, after the e, in all 120 of its traces, and the tilde of ñ last, after the n, in all 108 where it is a separate mark (104 of them from left to right). ç is therefore the Grundschrift-App's c (level kleinbuchstaben/c, commit f6dbd80; no licence, facts only), then the cedilla after it. No source reachable here records the direction of this mark, so it is drawn left to right and top to bottom, the direction these records give every mark no cited record covers. The cedilla hangs from the foot of the c, so it runs down from there and round to the left, along the printed hook. Only the order, the start, the direction and the lifts are claimed, and only by analogy; no point is copied, and the path is fitted to the ç of the bundled LatinPrint-Subset.ttf, a renamed subset of SIL Global's literacy typeface Andika 7.000, which prints the one-storey a the school model teaches; the book's own text face is a different font. Handwriting varies by writer."
+      }
+    },
+    {
       "glyph": "A",
       "sound": "a",
       "role": "capital",
@@ -816,10 +1005,22 @@
       "sound": "r",
       "role": "capital",
       "components": [
-        "R  r — capital letter"
+        "a tall stem",
+        "a bowl at the top right",
+        "a leg slanting down to the right"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "draw the stem down",
+        "lift, then over the top and round the bowl",
+        "back along the foot of the bowl and down the leg"
+      ],
+      "strokeOrderNote": "Two pen-down strokes, the teaching order of the Grundschrift-App, fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Grundschrift-App (Laborschule Bielefeld, Bielefeld University, with the Grundschulverband), level GROSSBUCHSTABEN/R, ordered stroke paths for R (assets/levels/GROSSBUCHSTABEN/R/metadata.json, commit f6dbd80; no licence, facts only)",
+        "url": "https://github.com/Medien-Treibhaus/grundschrift-app-source/blob/f6dbd807adbb3fc2f94207fe578def439f6e9c49/assets/levels/GROSSBUCHSTABEN/R/metadata.json",
+        "variation": "The Grundschrift-App was made in a research project of the Laborschule at Bielefeld University with the Grundschulverband, on its Grundschrift school model, with a teacher advisory team. Each letter is an ordered list of paths, one per pen-down stroke, which the app makes a child trace in order. It writes R in two strokes: the stem down from the top, then a lift and, from the top of the stem, over the top and clockwise round the bowl back to the stem, and on down the leg to the lower right. The bundled outline starts the leg at the foot of the bowl, not at the stem, so the path runs back along the foot of the bowl to the leg instead of lifting, because the source draws the bowl and the leg in one stroke. UJIpenchars2 (Prat, Castro, Llorens, Marzal and Vilar; UCI Machine Learning Repository dataset 177, CC BY 4.0), the native-writer corroboration of the earlier letters, could not be reached when R was added, so no native-writer count is cited for it. The app's repository has no licence, so only the order, the start, the direction and the lifts are taken from it; no point is copied, and the path is fitted to the R of the bundled LatinPrint-Subset.ttf, a renamed subset of SIL Global's literacy typeface Andika 7.000, which prints the one-storey a the school model teaches; the book's own text face is a different font. Handwriting varies by writer."
+      }
     },
     {
       "glyph": "S",
