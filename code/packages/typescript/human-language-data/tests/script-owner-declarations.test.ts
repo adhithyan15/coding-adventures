@@ -63,7 +63,9 @@ const CONFIGS = [
   // are the separately sourced Arabic ones, which its own entries say must not
   // be borrowed. They enter closure when a Persian-scoped citation exists.
   { language: "persian", script: "perso-arabic", letters: 26, marks: 1 },
-  { language: "tamil", script: "tamil", letters: 29, marks: 9 },
+  // 29 -> 30: ஸ (U+0BB8), taught alone in TA-S129 and read inside நமஸ்காரம்,
+  // gets its row once its order is cited to LipiTk's Tamil recognizer.
+  { language: "tamil", script: "tamil", letters: 30, marks: 9 },
   { language: "urdu", script: "urdu-nastaliq", letters: 31, marks: 2 },
 ] as const;
 

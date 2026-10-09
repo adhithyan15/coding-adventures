@@ -27,8 +27,10 @@ export const scriptInventoryEvidence = {
     expect(candrakkala.compositionSource?.citation).toMatch(
       /Unicode Standard.*Version 17\.0.*12\.9\.3.*Candrakkala.*U\+0D4D/i,
     );
+    // The Unicode source still claims placement only; the sign's own ductus,
+    // drawn alone, is a separate claim cited to Jayasree (checked below).
     expect(candrakkala.compositionSource?.variation).toMatch(
-      /encoded composition.*not a universal handwriting direction.*no standalone ductus claim/i,
+      /encoded composition.*not a universal handwriting direction.*own ductus, drawn alone, is cited separately in strokeOrderSource/i,
     );
     const malayalamAnusvara = scripts.malayalam!.marks!.find(
       (mark) => mark.mark === "ം",
@@ -506,8 +508,63 @@ export const scriptInventoryEvidence = {
       /only these facts .* are cited; no drawing is copied.*No recording of ൈ itself.*confidence is medium.*claims no written order/,
     );
     expect(ai.compositionOrder).toBeUndefined();
+    // Jayasree (github.com/sachn1/jayasree, CC BY 4.0) is a recording: one
+    // recorder's pen-down gestures over the Manjari typeface. It cites the
+    // candrakkala drawn alone, ഠ (breaking the earlier tie on its direction)
+    // and the digits ൧-൯. Every one is a single recorded stroke, so no lift,
+    // and every record credits the work by name and licence. ൦ is recorded
+    // too but no lesson draws it, so its row stays recognition only.
+    const jayasree =
+      "https://github.com/sachn1/jayasree/blob/e0c9d57dd32031c948da4d5f8432aae3e22c5bba/js/src/stroke-data.raw.json";
+    const jayasreeRows: Record<string, number> = {
+      "്": 2, "ഠ": 2, "൧": 4, "൨": 3, "൩": 5, "൪": 4, "൫": 5, "൬": 6, "൭": 3,
+      "൮": 5, "൯": 6,
+    };
+    for (const [glyph, movements] of Object.entries(jayasreeRows)) {
+      const row = [
+        ...scripts.malayalam!.letters,
+        ...(scripts.malayalam!.digits ?? []),
+        ...(scripts.malayalam!.marks ?? []).map((mark) => ({ ...mark, glyph: mark.mark })),
+      ].find((entry) => entry.glyph === glyph)!;
+      expect(row.penLifts, glyph).toBe(0);
+      expect(row.strokeOrder, glyph).toHaveLength(movements);
+      expect(row.strokeOrder.slice(1).every((s) => s.startsWith("without lifting, ")), glyph).toBe(true);
+      expect(row.strokeOrderSource?.url, glyph).toBe(jayasree);
+      expect(row.strokeOrderSource?.citation, glyph).toMatch(
+        new RegExp(`^Sachin Nandakumar, Jayasree: .*commit e0c9d57.*centre-line stroke for ${glyph}.*"Jayasree" by Sachin Nandakumar, CC BY 4\\.0$`),
+      );
+      expect(row.strokeOrderSource?.variation, glyph).toMatch(
+        /one stroke means the recorder did not lift.*no recorded coordinate is copied.*CC BY 4\.0 \(https:\/\/creativecommons\.org\/licenses\/by\/4\.0\/\).*Noto Sans Malayalam.*confidence is medium/,
+      );
+    }
+    expect(
+      scripts.malayalam!.letters.find((entry) => entry.glyph === "ഠ")!.strokeOrderSource?.variation,
+    ).toMatch(/Thooval .*grahyam .*anticlockwise too, while Moag's Table IV arrow .*clockwise.*three sources to one/);
+    expect(candrakkala.compositionOrder).toBeDefined();
+    const zero = scripts.malayalam!.digits!.find((entry) => entry.glyph === "൦")!;
+    expect(zero.strokeOrder).toEqual([]);
+    expect(zero.strokeOrderSource).toBeUndefined();
+    // ൊ and ോ are two recorded strokes each: the left sign, a lift, then ാ.
+    // The placeholder dot Noto prints between the parts is not written, and
+    // each record says so; neither claims a written order against a consonant.
+    for (const [sign, leftMovements] of [["ൊ", 2], ["ോ", 3]] as const) {
+      const mark = scripts.malayalam!.marks!.find((entry) => entry.mark === sign)!;
+      expect(mark.role, sign).toBe("vowel-sign");
+      expect(mark.penLifts, sign).toBe(1);
+      expect(mark.strokeOrder, sign).toHaveLength(leftMovements + 1);
+      expect(mark.strokeOrder.at(-1), sign).toBe("lift, then draw ാ clockwise");
+      expect(mark.strokeOrderSource?.url, sign).toBe(jayasree);
+      expect(mark.strokeOrderSource?.citation, sign).toMatch(
+        new RegExp(`strokes for ${sign}, drawn alone; "Jayasree" by Sachin Nandakumar, CC BY 4\\.0$`),
+      );
+      expect(mark.strokeOrderSource?.variation, sign).toMatch(
+        /placeholder dot where the consonant would sit.*not written.*claims no written order.*CC BY 4\.0.*confidence is medium/,
+      );
+      expect(mark.compositionOrder, sign).toBeUndefined();
+      expect(missingByScript.get("malayalam.json")?.has(sign) ?? false, sign).toBe(false);
+    }
     expect(scripts.malayalam!.marks!.map((mark) => mark.mark)).toEqual([
-      "ം", "്", "ാ", "ി", "ീ", "ു", "ൂ", "ൃ", "െ", "േ", "ൈ",
+      "ം", "്", "ാ", "ി", "ീ", "ു", "ൂ", "ൃ", "െ", "േ", "ൈ", "ൊ", "ോ",
     ]);
   },
 };

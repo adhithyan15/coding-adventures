@@ -35,6 +35,38 @@
     },
     {
       "script": "bengali",
+      "glyph": "ং",
+      "font": "_fonts/NotoSansBengali-Static.ttf",
+      "source": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 46 (ং, anusvar; the recognizer's unicodeMapfile_bangla.ini): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. 183 of the 189 stored prototypes of the anusvar (97%) are two pen-down strokes, a ring and a tail. Whichever comes first, 138 of the 183 (75%) turn the ring counterclockwise and 166 (91%) draw the tail from its upper-left end down to the right. The order is the least settled part: 103 of the 183 (56%) draw the ring first. Ring first, counterclockwise, then the tail down to the right is the commonest form, 71 of the 183 (39%), ahead of the tail first and then a counterclockwise ring (54); 71 of the 103 ring-first writers start the ring in its upper half, so the path starts at the top. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Handwriting varies by writer."
+      },
+      "penLifts": 1,
+      "summary": "2 strokes · 1 pen lift · 2 movements",
+      "viewBox": {
+        "minX": 3,
+        "minY": -692,
+        "width": 491,
+        "height": 1021.9
+      },
+      "frames": [
+        {
+          "number": 1,
+          "label": "draw the ring counterclockwise from its top",
+          "startsAfterLift": false,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M219 349Q159 349 118.5 386.5Q78 424 78 486Q78 548 118.5 585Q159 622 219 622Q279 622 319.5 585Q360 548 360 486Q360 424 319.5 386.5Q279 349 219 349ZM219 414Q251 414 271 433.5Q291 453 291 486Q291 519 271 538Q251 557 219 557Q188 557 167.5 537.5Q147 518 147 486Q147 453 167.5 433.5Q188 414 219 414ZM359 -41Q318 22 277.5 72.5Q237 123 188.5 166Q140 209 73 250L123 314Q186 276 242.5 223.5Q299 171 345.5 111Q392 51 424 -8L359 -41Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M219 590 L219 590\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M219 590 L181 579 L149 557 L127 525 L120 486 L127 448 L149 415 L181 394 L219 386 L257 394 L289 415 L311 448 L319 486 L311 525 L289 557 L257 579 L219 590\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"219\" cy=\"590\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"248.5\" y=\"220.3\" text-anchor=\"middle\" font-size=\"39.3\" fill=\"#6b7280\"><tspan x=\"248.5\" y=\"220.3\">1. draw the ring</tspan><tspan x=\"248.5\" y=\"268.2\">counterclockwise from</tspan><tspan x=\"248.5\" y=\"316.2\">its top</tspan></text>"
+        },
+        {
+          "number": 2,
+          "label": "lift, then draw the tail from its upper-left end down to the right",
+          "startsAfterLift": true,
+          "markup": "<g transform=\"scale(1,-1)\"><path class=\"ductus__glyph\" d=\"M219 349Q159 349 118.5 386.5Q78 424 78 486Q78 548 118.5 585Q159 622 219 622Q279 622 319.5 585Q360 548 360 486Q360 424 319.5 386.5Q279 349 219 349ZM219 414Q251 414 271 433.5Q291 453 291 486Q291 519 271 538Q251 557 219 557Q188 557 167.5 537.5Q147 518 147 486Q147 453 167.5 433.5Q188 414 219 414ZM359 -41Q318 22 277.5 72.5Q237 123 188.5 166Q140 209 73 250L123 314Q186 276 242.5 223.5Q299 171 345.5 111Q392 51 424 -8L359 -41Z\" fill=\"#e0ddd6\" fill-rule=\"nonzero\"/><path class=\"ductus__done\" d=\"M219 590 L181 579 L149 557 L127 525 L120 486 L127 448 L149 415 L181 394 L219 386 L257 394 L289 415 L311 448 L319 486 L311 525 L289 557 L257 579 L219 590\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__done\" d=\"M98 282 L98 282\" fill=\"none\" stroke=\"#9aa1ad\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path class=\"ductus__pen\" d=\"M98 282 L127 263 L160 238 L195 206 L229 170 L261 135 L289 100 L315 67 L341 34 L368 3 L392 -25\" fill=\"none\" stroke=\"#3b5bdb\" stroke-width=\"26\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle class=\"ductus__tip\" cx=\"392\" cy=\"-25\" r=\"34\" fill=\"#3b5bdb\"/></g><text class=\"ductus__caption\" x=\"248.5\" y=\"220.3\" text-anchor=\"middle\" font-size=\"39.3\" fill=\"#6b7280\"><tspan x=\"248.5\" y=\"220.3\">2. lift, then draw the</tspan><tspan x=\"248.5\" y=\"268.2\">tail from its upper-left</tspan><tspan x=\"248.5\" y=\"316.2\">end down to the right</tspan></text>"
+        }
+      ]
+    },
+    {
+      "script": "bengali",
       "glyph": "ঃ",
       "font": "_fonts/NotoSansBengali-Static.ttf",
       "source": {

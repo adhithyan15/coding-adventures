@@ -155,6 +155,43 @@ digit row with a cited ductus resolves its font like a letter
 (`verifiedLetterFont`). The same source corrected ಃ, whose first path drew
 the lower dot first.
 
+### A recording as a source, with a licence that asks for credit (Malayalam ് ഠ ൊ ോ ൧-൯)
+
+The candrakkala ്, the consonant ഠ, the digits ൧-൯ and the two-part vowel
+signs ൊ and ോ (`strokes/malayalam.ts`, after ൈ) cite Jayasree
+(`sachn1/jayasree`, Sachin Nandakumar), a Malayalam handwriting animator built
+on about 300 centre lines that one recorder traced over the Manjari typeface,
+one gesture per pen-down stroke. Because it is a recording, it shows lifts
+directly, not only order and direction; every glyph here is one recorded
+stroke except ൊ and ോ, which are two: the left sign, a lift, then ാ. Its stroke data is CC BY 4.0, which allows
+adaptation with credit, so each record names the work, its author, the commit
+and the licence, and the citation printed under each strip carries that
+credit. Even so, only the facts are taken (stroke count, start, order,
+direction, end): Manjari is rounder and wider than Noto, so every path is
+fitted to the bundled Noto Sans Malayalam outline at the default tolerances,
+and the captions are this package's own. One recorder, so confidence is
+medium. Jayasree breaks the earlier tie on ഠ's direction (anticlockwise, with
+Thooval and grahyam, against Moag's clockwise arrow) and supplies the movements
+Moag never gave ്.
+
+**The one coverage exception: a consonant placeholder.** Printed alone, ൊ and
+ോ still leave room for the consonant they are written around, and Noto marks
+it with a small dot between the two parts. The dot shows where a consonant
+would sit; nobody writes it, and a path that skips it leaves about 5% of the
+glyph untraced, over the 2% limit. So the coverage check skips exactly that
+contour for exactly these two glyphs (`NOTO_PLACEHOLDER_CONTOURS` in
+`tests/support/stroke-honesty.ts`, keyed by ductus key, each naming the
+contour's index and pinned bounds). The limit itself is unchanged, the on-ink
+and join checks still see the whole glyph, and the tests prove the skipped
+contour is the dot and nothing else: the rest of each glyph is exactly the
+cited left sign's outline and ാ's outline shifted. ൦ is recorded but no lesson
+draws it.
+
+The same batch adds two one-offs from sources already cited here: Kannada ಞ
+from Chimple's consonant lesson `LIDO_kn2_0304` (two paths, so one lift; the
+recorded trace agrees), and Chinese 尔 from Hanzi Writer Data, the five strokes
+that already close 你.
+
 ### A school model and native writers as sources (Latin print letters)
 
 Latin (`strokes/latin.ts`, keys `latin:<glyph>`) draws 31 print glyphs: a b
@@ -296,7 +333,9 @@ is drawn in a word (`human-language-data`'s `WRITTEN_SIGN_SIDES`). The pulli ்
 (`U-BCD`) is the last Tamil owner: one short dab inside the font's disc, its
 order (body first, then the dot, one lift) cited to Abhinaya Rajarajan's
 *Varai* recordings of the 18 consonants with pulli (one writer, facts only,
-confidence medium).
+confidence medium). The Grantha ஸ (`U-BB8`) follows it: one continuous stroke
+cited straight to LipiTk's Tamil recognizer (150 of 153 prototypes), going
+back up its stem once before the second arch.
 Gujarati's eleven signs (ા િ ી ુ ૂ ે ૈ ો ૌ ં ઃ) sit at the end of the Gujarati
 owner, keyed `gujarati:<sign>` like its letters, and take their source from the
 sign's mark record (`gujaratiMarkSource`): order, start, direction and lifts
@@ -318,6 +357,19 @@ raising a glyph's untraced ceiling, because every other part of the sign must
 still be traced. ि ै and ौ are left out because the traces split.
 `tests/strokes/devanagari-marks.test.ts` and
 `tests/ductusview/devanagari-marks.test.ts` hold their evidence.
+Eleven Telugu signs (ం ా ి ీ ు ూ ె ే ొ ో ్) sit at the end of the Telugu owner,
+keyed `telugu:<sign>` and sourced through `teluguMarkSource` to native
+writers' pen traces in HP Labs India's LipiTk Telugu recognizer (counts and
+shares only). They too are drawn by themselves, with no consonant; Telugu has
+no written-order row. The loops of ా and ూ are the least settled claims (62%
+and 57% of writers turn them clockwise, as the font's tucked-in tip implies),
+and each record says so. ై is left out: its recognizer class stores only the
+length mark below, never the e hook above, so the order of its two parts is
+unattested. `tests/strokes/telugu-marks.test.ts` and
+`tests/ductusview/telugu-marks.test.ts` hold their evidence. Bengali ং joins
+ঃ and ঁ at the end of the Bengali owner, from the same Bangla recognizer:
+ring first (the commonest order, 103 of 183) and counterclockwise, then the
+tail down to the right.
 
 More than 2,200 tests cover the registry, paths, font fit, provenance, and
 rendering. `jsdom` is a devDependency for exactly two of them: the SVG

@@ -1031,8 +1031,12 @@ before XeLaTeX runs.
   Single-letter writing lessons on the tracks in `DERIVED_FILMSTRIP_SCRIPTS`
   (`figure-targets.ts`) need no declaration: each becomes a candidate, and it
   is drawn when its letter has a cited ledger entry. Bengali is the latest
-  track switched on; nine of its letter lessons print a strip, cited to native
-  writers' pen traces in HP Labs India's LipiTk Bangla recognizer.
+  track switched on; ten of its letter lessons print a strip, cited to native
+  writers' pen traces in HP Labs India's LipiTk Bangla recognizer. Eleven
+  Telugu sign lessons (ం ా ి ీ ు ూ ె ే ొ ో ్) and Tamil's ஸ cite the same
+  kind of evidence from LipiTk's Telugu and Tamil recognizers; Telugu, like
+  Devanagari, has no written-order row, so each sign is drawn by itself and
+  no Telugu word is composed from it.
   Malayalam's seventeen cited consonants (ന മ സ ര ത ഷ പ വ ണ ട ദ ഹ ഗ റ ല ശ ബ)
   draw 21 strips: their letter lessons and the four chapter-1 നമ lessons,
   drawn letter by letter. Their order cites SPACE Kerala's Thooval formation
@@ -1045,7 +1049,12 @@ before XeLaTeX runs.
   ജ and the vowel sign ൈ follow (60 Malayalam strips). Kannada's digit
   lessons ೧-೯ and the anusvara ಂ print strips cited to Chimple's tracing
   lessons (57 Kannada strips); a digit row that names its strokes must carry
-  its lift count and source together, as a letter row must.
+  its lift count and source together, as a letter row must. The candrakkala
+  ്, ഠ, the two-part signs ൊ and ോ and the digits ൧-൯ cite Jayasree, a CC BY
+  4.0 handwriting recording credited by name and licence under each strip (69
+  Malayalam strips: the three signs, ഠ, the സ ് ക list and five digit lists;
+  ൊ and ോ draw both parts and not Noto's consonant-placeholder dot); Kannada
+  ಞ (57) and Chinese 尔 (73) follow from Chimple and Hanzi Writer Data.
 
   Script inventories (`data/scripts/<script>.json`) close a track's headwords:
   `validate` warns about any script character no row covers. Letters, marks,

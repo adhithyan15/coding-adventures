@@ -4,7 +4,7 @@
   "chapter": 103,
   "title": "School",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d290846668cb30fb",
+  "sourceHash": "fnv1a64:a1bb96589904cd8d",
   "lessons": [
     {
       "id": "ML-C103-pallikkoodam",
@@ -151,7 +151,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4c953b1b9bcfa4e2",
+      "sourceHash": "fnv1a64:3819b6469ed15084",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -218,15 +218,15 @@
         {
           "index": 2,
           "type": "writing",
-          "title": "Writing: ഠ — copy what you see",
+          "title": "Writing: ഠ — follow the numbered strip",
           "segments": [
             {
               "kind": "speech",
-              "text": "Put your pen on ഠ (ṭha) and follow its line. Copy the shape you can see — slowly, and larger than it is printed."
+              "text": "Follow the numbered strip: start where movement 1 begins, and let each panel show you the next movement before your pen makes it. Then write ഠ (ṭha) yourself — slowly, and larger than it is printed."
             },
             {
               "kind": "speech",
-              "text": "This book does not yet tell you where to start the character or which way to travel. That is a real thing, taught with real variation from school to school, and it is not written down here until it can be written down with a source. Copying what is in front of you needs no such source, and it is how the shape gets into your hand in the meantime."
+              "text": "The strip shows where to start the character and which way to travel, in one attested order. That is taught with real variation from school to school, so the strip names its source beneath it: treat it as a sound way in, not the only one."
             }
           ]
         },

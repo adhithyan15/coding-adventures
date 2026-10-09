@@ -178,6 +178,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "KA-S133-letter-nya",
+      "sourceHash": "fnv1a64:b57d4919570a5e2a",
+      "svgHash": "fnv1a64:bd71811fe4b3cbfa",
+      "svg": "kannada/book/figures/KA-S133-letter-nya-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "KA-S134-letter-ma",
       "sourceHash": "fnv1a64:f5b0a5d63639bdf9",
       "svgHash": "fnv1a64:c9849857e6d0d0e1",

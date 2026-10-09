@@ -1305,6 +1305,50 @@ describe("handwriting ductus", () => {
     );
   });
 
+  it("Kannada ಞ draws its body in one run, loop clockwise, then lifts once for the right hook", () => {
+    // Chimple's LIDO_kn2_0304 holds two ordered paths for ಞ (body, then the
+    // hook at the top right), and its recorded bahama trace agrees.
+    const nya = DUCTUS[ductusKey("kannada", "ಞ")];
+    expect(penLifts(nya)).toBe(1);
+    expect(
+      nya.strokes.map((stroke) => stroke.segments.map((segment) => segment.label)),
+    ).toEqual([
+      [
+        "arch over the left hump",
+        "arch over the middle and down the right",
+        "sweep clockwise round the bottom",
+        "come over the top and down the tail",
+      ],
+      ["lift, then arch over the right hook"],
+    ]);
+    for (const stroke of nya.strokes) {
+      for (const gap of joinGaps(stroke)) expect(gap).toBe(0);
+    }
+    // The loop the third caption names turns clockwise (y points up).
+    expect(signedArea(nya.strokes[0].segments[2].path)).toBeLessThan(0);
+    // The body ends at the foot of the tail, below the line; the hook is drawn
+    // after it, to the right of the middle hump, from left to right.
+    const body = penPath(nya.strokes[0]);
+    const hook = penPath(nya.strokes[1]);
+    expect(body[body.length - 1].y).toBeLessThan(0);
+    expect(Math.min(...hook.map((point) => point.x))).toBeGreaterThan(
+      Math.max(...body.slice(0, 20).map((point) => point.x)),
+    );
+    expect(hook[0].x).toBeLessThan(hook[hook.length - 1].x);
+    expect(nya.source.url).toBe(
+      "https://github.com/chimple/chimple-zips/blob/5b137ab1bbd8516f9b4813f23c0e8e9c99f26156/LIDO_kn2_0304.zip",
+    );
+    expect(nya.source.citation).toMatch(
+      /^Chimple \(Sutara Learning Foundation, Bangalore\), LIDO tracing lesson LIDO_kn2_0304.*paths for ಞ, trace image file-p3fr4091\.svg$/,
+    );
+    expect(nya.source.variation).toMatch(
+      /two paths.*no licence, so only facts are cited.*two paths here mean two strokes and one lift.*bahama.*MPL-2\.0.*one source, not two.*confidence is medium.*Noto Sans Kannada/,
+    );
+    expect(verifiedLetterFont("ಞ", nya.source.url)).toBe(
+      "_fonts/NotoSansKannada-Static.ttf",
+    );
+  });
+
   it("Kannada digits ೧-೯ are one unbroken run each, cited to Chimple's digit lesson; ೦ stays undrawn", () => {
     const kannada = SCRIPTS.find((script) => script.script === "kannada")!;
     for (const [digit, movements] of Object.entries(KANNADA_DIGIT_MOVEMENTS)) {

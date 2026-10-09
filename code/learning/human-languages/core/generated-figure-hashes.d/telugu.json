@@ -24,6 +24,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S02-vowel-sign-u",
+      "sourceHash": "fnv1a64:9f75182114549d65",
+      "svgHash": "fnv1a64:5a57b925d4c9fef2",
+      "svg": "telugu/book/figures/TE-S02-vowel-sign-u-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S03-letter-ka",
       "sourceHash": "fnv1a64:b8b7a3d093256e04",
       "svgHash": "fnv1a64:c8a68de1b3d7f5e6",
@@ -31,10 +38,38 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S04-sign-anusvara",
+      "sourceHash": "fnv1a64:832121b610416222",
+      "svgHash": "fnv1a64:abd72ed038b0f35a",
+      "svg": "telugu/book/figures/TE-S04-sign-anusvara-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TE-S05-sign-virama",
+      "sourceHash": "fnv1a64:8002ecde18c41853",
+      "svgHash": "fnv1a64:c0659ebec3efaf12",
+      "svg": "telugu/book/figures/TE-S05-sign-virama-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S06-letter-ra",
       "sourceHash": "fnv1a64:dcb023e898627a2f",
       "svgHash": "fnv1a64:f91e39c91f7426a7",
       "svg": "telugu/book/figures/TE-S06-letter-ra-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TE-S07-vowel-sign-aa",
+      "sourceHash": "fnv1a64:7bd8656dcd237d7f",
+      "svgHash": "fnv1a64:859d38a4b53344f1",
+      "svg": "telugu/book/figures/TE-S07-vowel-sign-aa-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TE-S08-vowel-sign-i",
+      "sourceHash": "fnv1a64:65952c0d48b0bb3b",
+      "svgHash": "fnv1a64:c16b4b8f550b0465",
+      "svg": "telugu/book/figures/TE-S08-vowel-sign-i-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -80,6 +115,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S115-vowel-sign-e",
+      "sourceHash": "fnv1a64:10c4032c2d91de62",
+      "svgHash": "fnv1a64:252e920ced5e4df2",
+      "svg": "telugu/book/figures/TE-S115-vowel-sign-e-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S116-letter-da",
       "sourceHash": "fnv1a64:d697ed8d3a83ace2",
       "svgHash": "fnv1a64:37903bfe15208111",
@@ -98,6 +140,20 @@
       "sourceHash": "fnv1a64:422e82bc6d2c02c4",
       "svgHash": "fnv1a64:c67b79298954c905",
       "svg": "telugu/book/figures/TE-S118-letter-ga-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TE-S119-vowel-sign-ii",
+      "sourceHash": "fnv1a64:55414c72d7d50f56",
+      "svgHash": "fnv1a64:7c79d830955df43d",
+      "svg": "telugu/book/figures/TE-S119-vowel-sign-ii-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TE-S120-vowel-sign-ee",
+      "sourceHash": "fnv1a64:9acddd699a065bb0",
+      "svgHash": "fnv1a64:e70ced92ff0ed6dc",
+      "svg": "telugu/book/figures/TE-S120-vowel-sign-ee-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
@@ -178,6 +234,13 @@
     },
     {
       "kind": "script-filmstrip",
+      "lessonId": "TE-S134-vowel-sign-uu",
+      "sourceHash": "fnv1a64:77d42f6076f14796",
+      "svgHash": "fnv1a64:2fbcd41ad58114ad",
+      "svg": "telugu/book/figures/TE-S134-vowel-sign-uu-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
       "lessonId": "TE-S135-letter-i",
       "sourceHash": "fnv1a64:64de34822471aeb6",
       "svgHash": "fnv1a64:c5428c86b33d8ea6",
@@ -224,6 +287,20 @@
       "sourceHash": "fnv1a64:213506927d77717d",
       "svgHash": "fnv1a64:73f43d143c6d9c17",
       "svg": "telugu/book/figures/TE-S152-letter-tta-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TE-S153-vowel-sign-oo",
+      "sourceHash": "fnv1a64:4777be0fb9127b4e",
+      "svgHash": "fnv1a64:07ca258929c218b2",
+      "svg": "telugu/book/figures/TE-S153-vowel-sign-oo-filmstrip.svg"
+    },
+    {
+      "kind": "script-filmstrip",
+      "lessonId": "TE-S154-vowel-sign-o",
+      "sourceHash": "fnv1a64:51c4e2cb6be2da9f",
+      "svgHash": "fnv1a64:1c76802aaf2720eb",
+      "svg": "telugu/book/figures/TE-S154-vowel-sign-o-filmstrip.svg"
     },
     {
       "kind": "script-filmstrip",
