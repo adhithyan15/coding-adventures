@@ -1,0 +1,26 @@
+{
+  "lesson": {
+    "id": "AR-C02-checkpoint",
+    "language": "arabic",
+    "chapter": 2,
+    "sequence": 265,
+    "modality": "pen",
+    "derived": "pen",
+    "drivable": false,
+    "reasons": [
+      "writing-block",
+      "script-block"
+    ],
+    "coreModality": "voice",
+    "coreReasons": [
+      "no-visual-dependency"
+    ],
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:255ed177646c25f3",
+    "detachableSegments": [
+      "Script — the bowl, the dial and the marks",
+      "Writing — from sound alone"
+    ]
+  },
+  "findings": []
+}

@@ -35,6 +35,7 @@ greetings, plus the root engine and the attached *al-*.
 | 14 | maa-ismuka | ما اسمك؟ | **"what's your name?"**; the *-ka/-ki* "your" suffix, gendered |
 | 15 | tasharrafna | تشرفنا | "pleased to meet you" ("we are honoured"; root sh-r-f → *sharīf/sheriff*) |
 | 16 | practice | (dialogue) | the whole exchange |
+| 17 | checkpoint | (practice-mix) | after the writing lessons W04–W06 and the *thaman*, *mudarris*, *ahlan* anchors: the exchange again, then the bowl letters, the marks and hamza, written from sound — the chapter's payoff |
 
 ## Chapters 37–42 — the present tense, joining, repair, and reading
 

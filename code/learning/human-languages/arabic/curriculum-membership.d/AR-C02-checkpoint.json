@@ -1,11 +1,11 @@
 {
-  "id": "AR-W07-hook-family-ha-kha",
+  "id": "AR-C02-checkpoint",
   "pathSegment": "AR-PATH-008",
-  "pathOrder": 10,
+  "pathOrder": 8,
   "extensions": [
     {
       "id": "AR-EXT-008-SCRIPT",
-      "order": 10
+      "order": 8
     }
   ]
 }
