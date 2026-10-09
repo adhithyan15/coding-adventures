@@ -327,7 +327,8 @@ describe("the real corpus", () => {
     // strips may land in a modelled practice block), and the Malayalam
     // word നമ twice, once ന and മ gained their Thooval-cited ductus
     // (its fourth lesson, ML-W01-na-ma-trace, lists "ന മ" and is not a
-    // word). A Tamil word
+    // word), and നമസ്കാരം, once ാ and ് gained rows and the font was shown
+    // to print its സ്ക apart (its typed order is its written order). A Tamil word
     // with a sign written before its consonant is drawn in written order,
     // which does not spell it back (see above). The Arabic family (سلام)
     // and Cyrillic (привет) have fully cited words that are deliberately
@@ -376,6 +377,7 @@ describe("the real corpus", () => {
       "LA-W01-salve-delayed-copy",
       "ML-W01-na-ma-delayed-copy",
       "ML-W01-na-ma-guided-copy",
+      "ML-W01-namaskaram-read",
       "PT-W01-ola-delayed-copy",
       "PT-W01-ola-guided-copy",
       "TA-W03-write-vanakkam",

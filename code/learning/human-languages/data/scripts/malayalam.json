@@ -6522,9 +6522,9 @@
         "add the candrakkala to suppress its inherent vowel or prepare the following conjunct"
       ],
       "compositionSource": {
-        "citation": "The Unicode Consortium, The Unicode Standard, Version 17.0, Core Specification, §12.9.3 ‘Rendering Malayalam’, ‘Candrakkala’, U+0D4D MALAYALAM SIGN VIRAMA (2025)",
-        "url": "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-12/",
-        "variation": "The standard identifies U+0D4D as Malayalam's candrakkala, shows consonant-plus-virama-plus-consonant sequences forming conjuncts, and explains that a visible candrakkala either suppresses the preceding vowel or replaces it with the neutral half-u sound. It specifies encoded composition and placement, not a universal handwriting direction or pen-lift count; the carrier-first instruction is therefore a transparent learner composition convention, and the sign's own ductus, drawn alone, is cited separately in strokeOrderSource."
+        "citation": "Sachin Nandakumar, Jayasree: Malayalam handwriting, animated stroke by stroke (github.com/sachn1/jayasree, commit e0c9d57, October 2026), js/src/index.js, applyMarkStroke: a consonant with ് is animated as the consonant’s recorded strokes, then the candrakkala’s; \"Jayasree\" by Sachin Nandakumar (code MIT, stroke data CC BY 4.0)",
+        "url": "https://github.com/sachn1/jayasree/blob/e0c9d57dd32031c948da4d5f8432aae3e22c5bba/js/src/index.js",
+        "variation": "Jayasree’s glyph data (js/src/glyph-data.json) classes ് as a suffix mark, printed after its base; its composer attaches a candrakkala to the segment just before it (resolveSegments) and animates that consonant’s recorded strokes first and the candrakkala’s after them (applyMarkStroke). The order is the composer’s, which follows the sign’s printed place; it is not a recording of a consonant with ്, and only one source gives it, so confidence is medium. The course teaches the same order: ML-W01-sa-chandrakkala-ka traces സ, then ്, then ക. Where the bundled font prints a cluster with a visible candrakkala (സ്ക as സ, ്, ക), the candrakkala is written with its own consonant, before the next one, as the Tamil puḷḷi is. The Unicode Standard, Version 17.0, §12.9.3 ‘Rendering Malayalam’, ‘Candrakkala’, identifies U+0D4D as the candrakkala, encoded after its consonant, and specifies encoded composition and placement, not a universal handwriting direction or pen-lift count. Shaped with HarfBuzz, Noto Sans Malayalam prints each of the 38 consonants with a word-final ് as the consonant’s own glyph and the sign’s own glyph, unmoved. The sign’s own ductus, drawn alone, is cited separately in strokeOrderSource. Only the order is cited; no code or recorded coordinate is copied."
       },
       "components": [
         "a small cup, open at the top"
@@ -6550,6 +6550,15 @@
         "base": "ക",
         "combined": "കാ",
         "sound": "kā"
+      },
+      "compositionOrder": [
+        "write the Malayalam consonant first",
+        "add ാ after it, to its right"
+      ],
+      "compositionSource": {
+        "citation": "Sachin Nandakumar, Jayasree: Malayalam handwriting, animated stroke by stroke (github.com/sachn1/jayasree, commit e0c9d57, October 2026), js/src/index.js, applyMarkStroke: a consonant with ാ is animated as the consonant’s recorded strokes, then ാ’s; \"Jayasree\" by Sachin Nandakumar (code MIT, stroke data CC BY 4.0)",
+        "url": "https://github.com/sachn1/jayasree/blob/e0c9d57dd32031c948da4d5f8432aae3e22c5bba/js/src/index.js",
+        "variation": "Jayasree’s glyph data (js/src/glyph-data.json) classes ാ as a suffix mark, printed after its base, and its composer animates a consonant with a suffix mark as the consonant’s own recorded strokes first and the mark’s recorded stroke after them (applyMarkStroke); ോ and ൊ are split into േ or െ, the consonant, then ാ (SPLIT_VOWEL_PARTS). The recorder’s own strokes for ോ and ൊ drawn alone also end with ാ, after the left part (js/src/stroke-data.raw.json). The order inside a syllable is the composer’s, which follows each sign’s printed place; it is not a recording of a consonant with ാ, and only one source gives it, so confidence is medium. Moag’s Table III (p. xx) draws ാ to the right of the dash that stands for the consonant, which agrees, and no source read here writes ാ before its consonant. Shaped with HarfBuzz, Noto Sans Malayalam prints each of the 38 consonants with ാ as the consonant’s own glyph and the sign’s own glyph, unmoved, so the two parts a strip draws are the two parts the page prints. Only the order is cited; no code or recorded coordinate is copied."
       },
       "components": [
         "an open curve, like a reversed C"

@@ -21,16 +21,19 @@ export const scriptInventoryEvidence = {
       "write the Malayalam carrier first",
       "add the candrakkala to suppress its inherent vowel or prepare the following conjunct",
     ]);
+    // The written order (carrier first, then the candrakkala) now cites
+    // Jayasree's composer, which animates a consonant's recorded strokes
+    // before the candrakkala's; figure-targets' WRITTEN_SIGN_SIDES is held to
+    // this record. Unicode is kept in the variation for what it does say (the
+    // sign is encoded after its consonant) and what it does not (when).
     expect(candrakkala.compositionSource?.url).toBe(
-      "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-12/",
+      "https://github.com/sachn1/jayasree/blob/e0c9d57dd32031c948da4d5f8432aae3e22c5bba/js/src/index.js",
     );
     expect(candrakkala.compositionSource?.citation).toMatch(
-      /Unicode Standard.*Version 17\.0.*12\.9\.3.*Candrakkala.*U\+0D4D/i,
+      /^Sachin Nandakumar, Jayasree: .*commit e0c9d57.*applyMarkStroke: a consonant with ് is animated as the consonant’s recorded strokes, then the candrakkala’s/,
     );
-    // The Unicode source still claims placement only; the sign's own ductus,
-    // drawn alone, is a separate claim cited to Jayasree (checked below).
     expect(candrakkala.compositionSource?.variation).toMatch(
-      /encoded composition.*not a universal handwriting direction.*own ductus, drawn alone, is cited separately in strokeOrderSource/i,
+      /not a recording of a consonant with ്.*confidence is medium.*Unicode Standard, Version 17\.0, §12\.9\.3.*not a universal handwriting direction.*own ductus, drawn alone, is cited separately in strokeOrderSource/i,
     );
     const malayalamAnusvara = scripts.malayalam!.marks!.find(
       (mark) => mark.mark === "ം",
@@ -482,8 +485,13 @@ export const scriptInventoryEvidence = {
         new RegExp(`Table III 'How to Write Internal Vowel Symbols'.* for ${sign}, written by hand by Thomas Joseph$`),
       );
       // Moag never numbers the consonant against a vowel sign, so no sign
-      // record claims a written order.
-      expect(mark.compositionOrder, sign).toBeUndefined();
+      // record claims a written order from Moag. Only ാ claims one, cited to
+      // Jayasree's composer (malayalam-signs-after-their-letter).
+      if (sign === "ാ") {
+        expect(mark.compositionOrder, sign).toEqual(["write the Malayalam consonant first", "add ാ after it, to its right"]);
+      } else {
+        expect(mark.compositionOrder, sign).toBeUndefined();
+      }
       expect(missingByScript.get("malayalam.json")?.has(sign) ?? false, sign).toBe(false);
     }
     // ൈ is the one two-run sign: two coils of െ, the gap between them a lift.

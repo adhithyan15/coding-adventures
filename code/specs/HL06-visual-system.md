@@ -966,6 +966,52 @@ directions and lifts, fitted to the standalone Noto Sans SC 尔. ZH-W01-er's
 cue "the middle with its hook last" contradicted that order (the two dots come
 last) and now reads "the middle and its hook, then the two dots".
 
+#### As built — Malayalam ാ and ് in words, a cluster the font prints apart, and a digit beside a word
+
+Two Malayalam writing lessons whose glyphs were all cited still printed no
+strip, because no row said where ാ or the candrakkala ് is written against its
+consonant: ML-W01-namaskaram-read (നമസ്കാരം) and
+ML-W07-numbers-6-10-delayed-copy (ഏഴ് ൭). Malayalam 69 -> 71 (855 of 1,367).
+
+**Two written-order rows.** `WRITTEN_SIGN_SIDES.malayalam` gains ാ "after" and
+് "after", beside ം. Each is cited on its mark record's `compositionSource` to
+Jayasree's composer (`js/src/index.js` at `e0c9d57`): its glyph data classes
+both signs as suffix marks, and `applyMarkStroke` animates a consonant with one
+as the consonant's recorded strokes, then the sign's; the recorder's own ോ and
+ൊ, drawn alone, end with ാ. That order is the composer's, which follows each
+sign's printed place, not a recording of a consonant with the sign, so both
+records say confidence is medium. Moag's Table III places ാ to the right of the
+consonant dash, which agrees, and the course already traces സ, then ്, then ക
+(ML-W01-sa-chandrakkala-ka). Shaped with HarfBuzz, every one of the 38
+consonants prints with ാ, and with a word-final ്, as its own glyph and the
+sign's own glyph, unmoved, so no pair is fused. The ് record's Unicode source
+moves into its variation, as the anusvara's did.
+
+**A cluster inside one grapheme.** Unicode's GB9c keeps a consonant, ് and the
+next consonant in one grapheme (സ്കാ), so `writtenPiecesOf` sees the cluster
+whole. Noto Sans Malayalam 2.104, under the 'mlm2' script fontspec selects,
+prints 174 of the 1,444 two-consonant clusters as glyphs of their own (ന്ത,
+മ്മ, ക്ക, ...) and the rest as their parts, a visible candrakkala between
+them. A cluster is drawn as its parts only when `APART_CLUSTER_SOURCES` lists
+it with that shaping cited; it holds only സ്ക (samlym, viramamlym, kamlym, each
+the glyph it is alone; the 'akhn' lookup 35 joins സ and ് only with ല, സ, ഥ
+and റ്റ). Its pieces are the consonant, its candrakkala, then the next
+consonant with its signs, as the Tamil puḷḷi is placed. A listed cluster with
+a sign written before its consonant (സ്കോ, where the font prints േ between ്
+and ക) is refused: no source orders it against the cluster.
+
+**A digit is one piece.** `writtenPiecesOf` takes a decimal digit as one piece,
+like a base letter: a digit stands apart from the letters beside it, and the
+ledger still decides whether it has a cited ductus. This is a rule change, not
+a row: before it, ഏഴ് ൭ was refused for its ൭ even once ് had a row. No other
+lesson changes (Tamil ஏழு ௭ still waits for ு).
+
+**Still not drawn.** സന്തോഷം (ML-W02 guided copy, ML-W03 delayed copy): Noto
+fuses ന്ത into one glyph ('akhn'), which no cited ductus draws; Jayasree
+records ന്ത, but as Manjari's form, and it would also need a row for the
+left part of ോ. No row is added for െ, േ, ൈ or the left parts of ൊ and ോ,
+since no word they would unlock prints its letters apart.
+
 #### Design — the Latin script's first print letters
 
 The six Latin-script tracks (Spanish, French, German, Italian, Portuguese,

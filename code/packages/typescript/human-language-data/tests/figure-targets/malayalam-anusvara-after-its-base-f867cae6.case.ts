@@ -2,11 +2,12 @@
 // ring to the right of it: Rodney F. Moag's Malayalam: A University Course and
 // Reference Grammar numbers the ring of അം as movement 9, after the eight of
 // അ, and draws ം by itself to the right of a dash standing for the consonant.
-// That is the composer's only Malayalam row. Moag draws the vowel signs beside
-// the same dash but never numbers the consonant against them, so every
-// Malayalam vowel sign (and the candrakkala ്) stays refused inside a word,
-// and is drawn only when a lesson teaches it alone. This file holds the row to
-// the anusvara's mark record.
+// Moag draws the vowel signs beside the same dash but never numbers the
+// consonant against them. ാ and the candrakkala ് have rows of their own,
+// cited to Jayasree's composer (malayalam-signs-after-their-letter); every
+// other Malayalam vowel sign stays refused inside a word, and is drawn only
+// when a lesson teaches it alone. This file holds the anusvara's row to its
+// mark record.
 import { describe, expect, it } from "vitest";
 import {
   filmstripImageMarkdown,
@@ -30,8 +31,10 @@ describe("where the Malayalam anusvara is written", () => {
     expect(writtenPiecesOf("ണം", "malayalam")).toEqual(["ണ", "ം"]);
   });
 
-  it("refuses every vowel sign and the candrakkala, alone or before ം", () => {
-    for (const grapheme of ["കാ", "കി", "കു", "കെ", "കേ", "കൊ", "കോ", "കൈ", "ക്", "കാം", "കോം", "ക്ക"]) {
+  it("refuses every vowel sign without a row, and any second sign before ം", () => {
+    // ാ and ് have rows (malayalam-signs-after-their-letter), but no source
+    // orders either against a ring after the same letter.
+    for (const grapheme of ["കി", "കു", "കെ", "കേ", "കൊ", "കോ", "കൈ", "കാം", "കോം", "ക്ക"]) {
       expect(writtenPiecesOf(grapheme, "malayalam"), grapheme).toBeUndefined();
     }
     // A sign taught by itself is a one-glyph strip, not a sequence: the
@@ -57,15 +60,17 @@ describe("where the Malayalam anusvara is written", () => {
         output: "malayalam/book/figures/ML-W1-filmstrip.svg",
       }),
     ).toBe("![How പണം is written, part by part, stroke by stroke](figures/ML-W1-filmstrip.svg)");
-    // A word with any other sign, or a conjunct, stays refused.
+    // A word with a sign that has no row, or a cluster the font fuses, stays
+    // refused (നമസ്കാരം, whose സ്ക the font prints apart, is drawn: see
+    // malayalam-signs-after-their-letter).
     expect(writingSequenceOf(malayalam("ML-W2", "സന്തോഷം"), "malayalam")).toBeUndefined();
-    expect(writingSequenceOf(malayalam("ML-W3", "നമസ്കാരം"), "malayalam")).toBeUndefined();
+    expect(writingSequenceOf(malayalam("ML-W3", "കെട്ടിടം"), "malayalam")).toBeUndefined();
     // A list keeps each item as it is: ാ has no row, so it stays one piece.
     expect(writingSequenceOf(malayalam("ML-W4", "ാ ര ം"), "malayalam")).toEqual(["ാ", "ര", "ം"]);
   });
 
-  it("holds the one row to the anusvara's cited mark record", () => {
-    expect(WRITTEN_SIGN_SIDES.malayalam).toEqual({ "ം": "after" });
+  it("holds the anusvara's row to its cited mark record", () => {
+    expect(WRITTEN_SIGN_SIDES.malayalam!["ം"]).toBe("after");
     // The bundled font fuses no base with ം: its GSUB lookups that mention
     // the anusvara only reorder it against Vedic signs.
     expect(FUSED_SIGN_PAIRS.malayalam).toBeUndefined();
@@ -84,7 +89,7 @@ describe("where the Malayalam anusvara is written", () => {
     );
     // No vowel-sign record claims a written order the table leaves out.
     for (const mark of script.marks ?? []) {
-      if (mark.mark === "ം" || mark.mark === "്") continue;
+      if (mark.mark in WRITTEN_SIGN_SIDES.malayalam!) continue;
       expect(mark.compositionOrder, mark.mark).toBeUndefined();
       expect(mark.compositionSource, mark.mark).toBeUndefined();
     }
