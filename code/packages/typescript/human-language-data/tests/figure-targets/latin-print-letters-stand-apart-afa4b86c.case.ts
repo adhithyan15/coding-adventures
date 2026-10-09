@@ -3,8 +3,8 @@
 // mark by mark, and ñ is one precomposed letter with a ductus of its own.
 // What is refused, and why: a word with punctuation inside it (¿ and ? are not
 // base letters); ñ typed as n plus a combining tilde (Latin has no written-order
-// table); and every lesson with a letter no source covers (è ê ç ä ö ...; the
-// ledger, not this module, says which letters are cited). The a was refused
+// table); and every lesson with a letter the ledger has no ductus for (œ ...;
+// the ledger, not this module, says which letters are drawn). The a was refused
 // too until the strips moved to an outline that prints the one-storey a every
 // source teaches (LatinPrint-Subset.ttf, from SIL's Andika).
 import { describe, expect, it } from "vitest";
@@ -21,7 +21,7 @@ import {
 } from "../../src/figure-targets.js";
 import { lesson } from "./fixture.js";
 
-/** The 31 glyphs the Latin owner cites. */
+/** The 31 glyphs the Latin owner cited first (this case predates v m R and the analogy letters). */
 const CITED = new Set([..."bceghilnorsuwßñG¿¡adpqtyHáéíóúü"]);
 const hasDuctus = (script: string, glyph: string) => script === "latin" && CITED.has(glyph);
 
@@ -82,7 +82,7 @@ describe("Latin print letters", () => {
     expect(candidates.map((candidate) => candidate.lessonId)).toEqual([
       "ES-W6", "ES-W7", "FR-W1", "FR-W2", "FR-W3", "GE-W8", "GE-W9",
     ]);
-    // ä ö, è ê and ç have no source, so those lessons print no strip.
+    // This fixture's ledger has no ductus for ä ö, è ê or ç, so those lessons print no strip.
     const drawn = withDerivedFilmstrips([], candidates, hasDuctus);
     expect(drawn.map((target) => (target.kind === "script-filmstrip" ? target.lessonId : ""))).toEqual([
       "ES-W6",

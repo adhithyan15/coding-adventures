@@ -203,8 +203,8 @@ that already close 你.
 
 ### A school model and native writers as sources (Latin print letters)
 
-Latin (`strokes/latin.ts`, keys `latin:<glyph>`) draws 31 print glyphs: a b
-c d e g h i l n o p q r s t u w y ß, G and H cite the Grundschrift-App, made in
+Latin (`strokes/latin.ts`, keys `latin:<glyph>`) draws 42 print glyphs: a b
+c d e g h i l m n o p q r s t u v w y ß, G, H and R cite the Grundschrift-App, made in
 a research project of the Laborschule at Bielefeld University with the
 Grundschulverband, whose ordered paths (one per pen-down stroke) a child traces
 in order. Its repository has no licence, so only the order, start, direction
@@ -217,8 +217,14 @@ as about six in ten writers draw it), ü's dots (left first), and ¿ and ¡ (dot
 last). Each precomposed letter is its own entry whose first stroke is its base
 letter's. The outlines are `LatinPrint-Subset.ttf`, a renamed subset of SIL's
 literacy typeface Andika, chosen because its a is the one-storey a every
-source teaches (Noto Sans prints a two-storey a). The grave, circumflex,
-cedilla, macron, æ and œ have no source; ä ö ë ï ÿ would be analogy only.
+source teaches (Noto Sans prints a two-storey a). No reachable source records
+the grave, circumflex, macron or cedilla, or the diaeresis on any letter but
+ü, so è ê ë ï ä ö ē and ç are drawn BY ANALOGY, not separately sourced, and
+each record says so: the cited base letter, then the mark last, as the cited
+ü (left dot first), acute and tilde are drawn; a mark no cited record gives a
+direction runs left to right and top to bottom. v, m and R cite no
+native-writer count (UJIpenchars2 was out of reach when they were added). æ,
+œ and ÿ are not drawn.
 
 ## Usage
 

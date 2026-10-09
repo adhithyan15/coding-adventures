@@ -103,8 +103,9 @@ export const DERIVED_FILMSTRIP_SCRIPTS: Readonly<Record<string, string>> = {
   // first outline (Noto Sans) printed a two-storey a that no source draws.
   // The Latin strips are now drawn on LatinPrint-Subset.ttf, a renamed subset
   // of SIL's literacy typeface Andika, whose a is the one-storey a the school
-  // model teaches. Lessons with an uncited mark (è ê ç ï ë ä ö ē, œ) still
-  // print no strip: the ledger has no ductus for them.
+  // model teaches. è ê ç ï ë ä ö and ē are drawn by analogy with the cited
+  // ü, acute and tilde (their records say so); œ still prints no strip: the
+  // ledger has no ductus for it.
   french: "latin",
   italian: "latin",
   portuguese: "latin",
@@ -283,13 +284,16 @@ const SIGNS_ONLY = /^\p{M}+$/u;
 //   * The virama ્ and the vocalic-r sign ૃ have no row: no Gujarati source
 //     gives their pen path or place, so every word with one stays refused.
 //
-// Malayalam has a table with one row. Its anusvara ം is written AFTER its
-// base, to the right of it:
+// Malayalam has a table with three rows. Its anusvara ം, its vowel sign ാ
+// and its candrakkala ് are each written AFTER the letter they follow, on
+// the side they are printed:
 //
 //     typed (code points)      written (by hand)        looks like
 //     ----------------------   ----------------------   ----------
 //     അ + ം                    അ, then the ring         അം
 //     ക + ം                    ക, then the ring         കം
+//     ക + ാ                    ക, then ാ                കാ
+//     ഴ + ്                    ഴ, then the cup above    ഴ്
 //
 //   * The anusvara's mark record (data/scripts/malayalam.json) cites it as
 //     its `compositionSource`: in Rodney F. Moag's Malayalam: A University
@@ -299,17 +303,41 @@ const SIGNS_ONLY = /^\p{M}+$/u;
 //     to that record. Dumping every GSUB lookup of Noto Sans Malayalam that
 //     mentions the anusvara glyph finds only Vedic-sign reorderings, so no
 //     consonant + ം pair is fused.
-//   * Moag draws each vowel sign beside that dash too, but never numbers the
-//     consonant against the sign, so no Malayalam vowel sign has a row: a
-//     sign is drawn only by itself, in a lesson that teaches it alone, and a
-//     word with a vowel sign stays refused. So does every word with the
-//     candrakkala ്, whose Moag table gives no movements at all.
+//   * ാ and ് cite Jayasree (github.com/sachn1/jayasree, commit e0c9d57),
+//     the Malayalam handwriting animator whose recorded strokes already give
+//     both signs' own ductus. Its glyph data classes both as SUFFIX marks,
+//     printed after their base, and its composer (`applyMarkStroke`) animates
+//     a consonant with one as the consonant's recorded strokes first and the
+//     sign's after them. Its recorder's own ോ and ൊ, drawn alone, end with
+//     ാ too. That order comes from the composer, not from a recording of a
+//     consonant with the sign, so each record says confidence is medium. A
+//     test holds the rows to those records. Shaped with HarfBuzz, every one
+//     of the 38 consonants prints with ാ, and with a word-final ്, as its
+//     own glyph and the sign's own glyph, unmoved, so no pair is fused.
+//   * Moag draws the other vowel signs beside the same dash but never
+//     numbers the consonant against them, and Jayasree's composer is the
+//     only source read here that does; no lesson needs the left-hand signs
+//     (െ േ ൈ, and so ൊ ോ) inside a word yet whose letters the font prints
+//     apart, so they have no row, and a word with one stays refused.
+//
+// The candrakkala also joins two consonants inside ONE grapheme (Unicode
+// counts സ്കാ as a single grapheme in Malayalam). Most such clusters are
+// printed as one new shape (ന്ത, ക്ക), but the bundled font prints some as
+// the first consonant, a visible candrakkala and the next consonant, each
+// glyph unchanged. Only a cluster cited in `APART_CLUSTER_SOURCES` is drawn
+// that way, its candrakkala after its own consonant and before the next one
+// (as Tamil's puḷḷi is); every other cluster stays refused:
+//
+//     typed                    printed as                written as
+//     ----------------------   -----------------------   ----------------
+//     സ ് ക ാ                  സ, ്, ക, ാ  (four glyphs)  സ, ്, ക, ാ
+//     ന ് ത ോ                  േ, ന്ത, ാ  (ന്ത fused)     refused
 //
 // Everything without a row is refused: the Tamil signs ு and ூ (no cited
 // ductus, and they fuse with their consonant into shapes of their own),
-// Gujarati ્ and ૃ, every Malayalam sign but ം, and every sign in every
-// other script (Devanagari ि, the kana voicing mark ゙), because no other
-// script has a table yet.
+// Gujarati ્ and ૃ, every Malayalam sign but ം, ാ and ്, and every sign in
+// every other script (Devanagari ि, the kana voicing mark ゙), because no
+// other script has a table yet.
 //
 // Two signs on the same side of one consonant (Gujarati ાં, a vowel sign and
 // then the anusvara) are refused as well: each sign's own place is cited, but
@@ -365,6 +393,8 @@ export const WRITTEN_SIGN_SIDES: Readonly<Record<string, Readonly<Record<string,
   },
   malayalam: {
     "\u0D02": "after", //  ം  anusvara (a ring to the right, after its base)
+    "\u0D3E": "after", //  ാ  ā (to the right, after its consonant)
+    "\u0D4D": "after", //  ്  candrakkala (the cup above, after its consonant)
   },
 };
 
@@ -495,23 +525,108 @@ export function hasFusedLetterSequence(word: string, script: string): boolean {
   );
 }
 
+// A candrakkala is NOT a grapheme boundary in Malayalam. Unicode's rule GB9c
+// keeps a consonant, the candrakkala ് and the next consonant in ONE grapheme,
+// so നമസ്കാരം is the four graphemes ന, മ, സ്കാ and രം, and `writtenPiecesOf`
+// sees each cluster whole. The bundled font prints most clusters as a shape of
+// their own, which no cited ductus draws; it prints a few as their parts, each
+// part the very glyph it is alone:
+//
+//     typed              printed as (HarfBuzz, the font's 'mlm2' rules)
+//     ----------------   -------------------------------------------------
+//     സ ് ക              സ, ്, ക: three glyphs, each the one it is alone
+//     ന ് ത              ന്ത: one glyph of its own ('akhn')
+//
+// So a cluster is drawn as its parts only when it is listed here with the
+// source that shows the font printing it that way. It is written consonant by
+// consonant: each candrakkala after its own consonant (its row in
+// `WRITTEN_SIGN_SIDES`) and before the next consonant, as Tamil's puḷḷi is,
+// and a sign after the last consonant follows that consonant as usual. No
+// source places a sign written BEFORE its consonant against a whole cluster,
+// so a listed cluster with one is still refused. Every unlisted cluster is
+// refused, whatever its letters' ductus.
+
+/** One cited source for clusters the bundled font prints as their unchanged parts. */
+export interface ApartClusterSource {
+  /** Where the parts are shown, specific enough to check. */
+  readonly citation: string;
+  /** An HTTPS URL for the source. */
+  readonly url: string;
+  /** The NFD clusters (consonant, virama, consonant) the source shows printed as their parts. */
+  readonly clusters: readonly string[];
+}
+
+/** Clusters inside one grapheme that the bundled font prints as their parts, per script. */
+export const APART_CLUSTER_SOURCES: Readonly<Record<string, readonly ApartClusterSource[]>> = {
+  malayalam: [
+    {
+      citation:
+        "Noto Sans Malayalam Version 2.104, bundled as learning/human-languages/_fonts/NotoSansMalayalam-Static.ttf, " +
+        "shaped with HarfBuzz 14.6.0 under the font's 'mlm2' script, the one fontspec's Script=Malayalam selects: " +
+        "സ, ് and ക (സ്ക) print as the glyphs samlym, viramamlym and kamlym, the ones each prints alone, " +
+        "unmoved; the 'mlm2' 'akhn' ligature lookup 35 joins സ and ് only with ല, സ, ഥ and റ്റ",
+      url: "https://github.com/notofonts/malayalam",
+      clusters: ["\u0D38\u0D4D\u0D15"], // സ്ക
+    },
+  ],
+};
+
+/**
+ * A cited cluster at the start of an NFD grapheme, split into the consonants
+ * and candrakkalas before its last consonant (`heads`) and the last consonant
+ * with every sign that follows it (`tail`), or `undefined` when none is there.
+ */
+function apartClusterOf(nfd: string, script: string): { heads: string[]; tail: string } | undefined {
+  for (const source of APART_CLUSTER_SOURCES[script] ?? []) {
+    for (const cluster of source.clusters) {
+      if (!nfd.startsWith(cluster)) continue;
+      const parts = [...cluster];
+      return { heads: parts.slice(0, -1), tail: parts.at(-1)! + nfd.slice(cluster.length) };
+    }
+  }
+  return undefined;
+}
+
+/** A decimal digit (൭, ௭, 7): it stands apart from the letters beside it. */
+const DIGIT = /^\p{Nd}$/u;
+
 /**
  * The pieces one grapheme is written as, in written order, or `undefined`
  * when this module will not draw it.
  *
- *   * a base letter is one piece, itself, in every script;
+ *   * a base letter is one piece, itself, in every script, and so is a
+ *     decimal digit, which stands apart from its neighbours ("ഏഴ് ൭" ends
+ *     with the piece ൭);
  *   * in a script with a `WRITTEN_SIGN_SIDES` table, a base letter with signs
  *     is its before-signs, the letter, then its after-signs ("கை" -> ை, க);
  *     a grapheme of signs alone (a sign lesson's headword, "ோ") is its
  *     before-signs then its after-signs (ே, ா);
+ *   * a cluster cited in `APART_CLUSTER_SOURCES` is its consonants in turn,
+ *     each candrakkala after its own consonant, then the last consonant's
+ *     signs ("സ്കാ" -> സ, ്, ക, ാ);
  *   * anything else (a sign with no row, two signs on the same side of one
- *     consonant, a fused pair, a digit, a mark in a script with no table) is
- *     `undefined`.
+ *     consonant, a fused pair, an unlisted cluster, a mark in a script with
+ *     no table) is `undefined`.
  */
 export function writtenPiecesOf(grapheme: string, script: string): string[] | undefined {
-  if (BASE_LETTER.test(grapheme)) return [grapheme];
+  if (BASE_LETTER.test(grapheme) || DIGIT.test(grapheme)) return [grapheme];
   const sides = WRITTEN_SIGN_SIDES[script];
   if (sides === undefined) return undefined;
+  const cluster = apartClusterOf(grapheme.normalize("NFD"), script);
+  if (cluster !== undefined) {
+    const heads: string[] = [];
+    for (let i = 0; i < cluster.heads.length; i += 2) {
+      // A consonant and its candrakkala, placed by the candrakkala's row.
+      const pieces = writtenPiecesOf(cluster.heads.slice(i, i + 2).join(""), script);
+      if (pieces === undefined) return undefined;
+      heads.push(...pieces);
+    }
+    const tail = writtenPiecesOf(cluster.tail, script);
+    // A sign written before its consonant would come before the whole cluster:
+    // no source says so, so the cluster is refused.
+    if (tail === undefined || tail[0] !== [...cluster.tail][0]) return undefined;
+    return [...heads, ...tail];
+  }
   const [first, ...rest] = [...grapheme.normalize("NFD")];
   if (first === undefined) return undefined;
   const base = BASE_LETTER.test(first) ? first : undefined;
@@ -538,8 +653,9 @@ export function writtenPiecesOf(grapheme: string, script: string): string[] | un
  *
  *   * a LIST of two or more items, each exactly one grapheme, in any script; or
  *   * one or more WORDS in a `SEPARATE_LETTER_SCRIPTS` script, two or more
- *     pieces in all, where every grapheme is a single base letter or, in a
- *     script with a written-order table, a base letter with cited signs; or
+ *     pieces in all, where every grapheme is a single base letter or digit or,
+ *     in a script with a written-order table, a base letter with cited signs
+ *     or a cited cluster (`writtenPiecesOf`); or
  *   * in a script with a written-order table, ONE grapheme that is written in
  *     two or more pieces: a two-part sign taught by itself ("ோ" -> ே, ா).
  *

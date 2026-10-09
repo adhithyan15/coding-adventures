@@ -966,6 +966,52 @@ directions and lifts, fitted to the standalone Noto Sans SC 尔. ZH-W01-er's
 cue "the middle with its hook last" contradicted that order (the two dots come
 last) and now reads "the middle and its hook, then the two dots".
 
+#### As built — Malayalam ാ and ് in words, a cluster the font prints apart, and a digit beside a word
+
+Two Malayalam writing lessons whose glyphs were all cited still printed no
+strip, because no row said where ാ or the candrakkala ് is written against its
+consonant: ML-W01-namaskaram-read (നമസ്കാരം) and
+ML-W07-numbers-6-10-delayed-copy (ഏഴ് ൭). Malayalam 69 -> 71 (855 of 1,367).
+
+**Two written-order rows.** `WRITTEN_SIGN_SIDES.malayalam` gains ാ "after" and
+് "after", beside ം. Each is cited on its mark record's `compositionSource` to
+Jayasree's composer (`js/src/index.js` at `e0c9d57`): its glyph data classes
+both signs as suffix marks, and `applyMarkStroke` animates a consonant with one
+as the consonant's recorded strokes, then the sign's; the recorder's own ോ and
+ൊ, drawn alone, end with ാ. That order is the composer's, which follows each
+sign's printed place, not a recording of a consonant with the sign, so both
+records say confidence is medium. Moag's Table III places ാ to the right of the
+consonant dash, which agrees, and the course already traces സ, then ്, then ക
+(ML-W01-sa-chandrakkala-ka). Shaped with HarfBuzz, every one of the 38
+consonants prints with ാ, and with a word-final ്, as its own glyph and the
+sign's own glyph, unmoved, so no pair is fused. The ് record's Unicode source
+moves into its variation, as the anusvara's did.
+
+**A cluster inside one grapheme.** Unicode's GB9c keeps a consonant, ് and the
+next consonant in one grapheme (സ്കാ), so `writtenPiecesOf` sees the cluster
+whole. Noto Sans Malayalam 2.104, under the 'mlm2' script fontspec selects,
+prints 174 of the 1,444 two-consonant clusters as glyphs of their own (ന്ത,
+മ്മ, ക്ക, ...) and the rest as their parts, a visible candrakkala between
+them. A cluster is drawn as its parts only when `APART_CLUSTER_SOURCES` lists
+it with that shaping cited; it holds only സ്ക (samlym, viramamlym, kamlym, each
+the glyph it is alone; the 'akhn' lookup 35 joins സ and ് only with ല, സ, ഥ
+and റ്റ). Its pieces are the consonant, its candrakkala, then the next
+consonant with its signs, as the Tamil puḷḷi is placed. A listed cluster with
+a sign written before its consonant (സ്കോ, where the font prints േ between ്
+and ക) is refused: no source orders it against the cluster.
+
+**A digit is one piece.** `writtenPiecesOf` takes a decimal digit as one piece,
+like a base letter: a digit stands apart from the letters beside it, and the
+ledger still decides whether it has a cited ductus. This is a rule change, not
+a row: before it, ഏഴ് ൭ was refused for its ൭ even once ് had a row. No other
+lesson changes (Tamil ஏழு ௭ still waits for ு).
+
+**Still not drawn.** സന്തോഷം (ML-W02 guided copy, ML-W03 delayed copy): Noto
+fuses ന്ത into one glyph ('akhn'), which no cited ductus draws; Jayasree
+records ന്ത, but as Manjari's form, and it would also need a row for the
+left part of ോ. No row is added for െ, േ, ൈ or the left parts of ൊ and ോ,
+since no word they would unlock prints its letters apart.
+
 #### Design — the Latin script's first print letters
 
 The six Latin-script tracks (Spanish, French, German, Italian, Portuguese,
@@ -1165,6 +1211,63 @@ German 2 -> 5. The tallest new strip is Hallo at about 1,510 units (its H
 has three strokes), under the nine-piece Gujarati list's 1,800; buenos días,
 at exactly ten pieces, is about 1,420. Narration, modality and lesson prose
 are unchanged.
+
+#### Design — Latin v, m and R, and the marked letters by analogy
+
+**The gap.** After the one-storey a, six Latin-script writing lessons that
+show a model still printed no strip, all for want of data: FR-W01-accents
+(é è ê), FR-W02-cedille (ç), FR-W03-trema (ï ë ü), FR-C10-oe (œ),
+GE-W02-umlauts (ä ö ü) and LA-W01-salve-delayed-copy (salvē). `v` had no
+ductus, and no reachable source records the grave, the circumflex, the
+macron, the cedilla, or the diaeresis on any letter but ü (the
+Grundschrift-App has no marked letter; UJIpenchars2 holds Spanish characters
+only, and its host is no longer reachable from the build container).
+
+**v, m and R** follow the Grundschrift-App at the pinned commit, like every
+other Latin letter: v one stroke from the top left, down to the point and up
+to the top right; m one stroke, the stem, back up, the first arch and down,
+back up, the second arch and down; R two strokes, the stem, then from the top
+of the stem over the top and clockwise round the bowl, back along the bowl's
+foot (the outline starts the leg there, not at the stem) and down the leg.
+UJIpenchars2 could not be reached, so their records cite no native-writer
+count and say so. m and R unlock no lesson yet (their lessons are no-model
+stages, or also need a rule: `¿cómo?`, `Roberto, ¿cómo estás?`, and
+`mañana, español` at 14 pieces), but the lessons they feed are ready once the
+rules move.
+
+**By analogy (decision).** The marked letters a lesson draws are drawn BY
+ANALOGY with the cited records, and each record says so in its citation
+("By analogy with the cited …, not separately sourced"), its note ("BY
+ANALOGY … (not separately sourced)") and the first words of its variation
+("ORDER BY ANALOGY, NOT SEPARATELY SOURCED."):
+
+| letter | base (cited) | mark, last | analogy with |
+|---|---|---|---|
+| è | e | grave, down to the right | é (accent last, 120 of 120) |
+| ê | e | circumflex, one stroke up to the peak and down | é |
+| ē | e | macron, left to right | é; ñ's tilde left to right (104 of 108) |
+| ç | c | cedilla, down from the c's foot and round to the left | é, ñ |
+| ë ï ä ö | e, i's stem, a, o | left dot, then right dot | ü (dots last 119 of 120; left first 116 of 118) |
+
+The base letter's first stroke is exactly its cited letter's (ï takes i's
+stem, as í does), and its record's url is that letter's Grundschrift level:
+the only part of the letter that is sourced. A mark no cited record gives a
+direction runs left to right and top to bottom. Only the letters a lesson
+draws are added; œ (a ligature, not a base letter plus a mark), æ, ÿ, à and
+the capitals with marks are not.
+
+**Not unlocked, and why.** FR-C10-oe (œ, not covered by the analogy);
+LA-W01-salve-guided-copy (`salvē / salvēte`: a slash is not a list
+separator); ES-C03-como-acento and ES-W03-question-span (¿ is cited, but `?`
+and `,` have no ductus and a word with punctuation inside it is refused);
+ES-W02-enye-formas and GE-W03-capitalization (over `MAX_SEQUENCE_PIECES`).
+The rest of the Latin-script lessons without a strip are no-model stages.
+
+**As built.** As designed. All eleven glyphs are 1.000 on ink with nothing
+untraced at the default tolerances, no override. Exactly five lessons gain a
+strip: French 3 -> 6 (FR-W01-accents, FR-W02-cedille, FR-W03-trema), German
+3 -> 4 (GE-W02-umlauts), Latin 0 -> 1 (LA-W01-salve-delayed-copy). Lesson
+prose, narration and modality are unchanged.
 
 #### Design — a strip in modelled practice, when a lesson has no Writing or Script block
 

@@ -327,7 +327,8 @@ describe("the real corpus", () => {
     // strips may land in a modelled practice block), and the Malayalam
     // word നമ twice, once ന and മ gained their Thooval-cited ductus
     // (its fourth lesson, ML-W01-na-ma-trace, lists "ന മ" and is not a
-    // word). A Tamil word
+    // word), and നമസ്കാരം, once ാ and ് gained rows and the font was shown
+    // to print its സ്ക apart (its typed order is its written order). A Tamil word
     // with a sign written before its consonant is drawn in written order,
     // which does not spell it back (see above). The Arabic family (سلام)
     // and Cyrillic (привет) have fully cited words that are deliberately
@@ -344,6 +345,7 @@ describe("the real corpus", () => {
       // headwords weil, quia and ayer, print none: a dictation or composition
       // block shows no model. Großschreibung is cited letter for letter too,
       // but at 14 pieces it is past MAX_SEQUENCE_PIECES and prints none.
+      // salvē waited for v and for ē (drawn by analogy with the cited acute).
       "ES-W00-hola-delayed-copy",
       "ES-W00-hola-guided-copy",
       "ES-W00-hola-observe",
@@ -372,8 +374,10 @@ describe("the real corpus", () => {
       "JA-W01-konnichiwa-read",
       "JA-W03-arigatou-read",
       "JA-W08-sayounara-read",
+      "LA-W01-salve-delayed-copy",
       "ML-W01-na-ma-delayed-copy",
       "ML-W01-na-ma-guided-copy",
+      "ML-W01-namaskaram-read",
       "PT-W01-ola-delayed-copy",
       "PT-W01-ola-guided-copy",
       "TA-W03-write-vanakkam",
@@ -438,10 +442,12 @@ describe("the real corpus", () => {
   });
 
   it("draws the Latin lessons whose every letter is cited, one-storey a included", () => {
-    // 16 lessons over five Latin-script tracks (Latin's one, a composition,
-    // prints none now that a composition block takes no strip). The a waited for an outline
+    // 21 lessons over all six Latin-script tracks. The a waited for an outline
     // that prints the one-storey a every source teaches (LatinPrint-Subset.ttf,
-    // from SIL's Andika); the acute vowels follow UJIpenchars2's writers.
+    // from SIL's Andika); the acute vowels follow UJIpenchars2's writers; v
+    // follows the Grundschrift-App; è ê ç ï ë ä ö and ē are drawn BY ANALOGY
+    // with the cited ü, acute and tilde (base letter, then the mark last), and
+    // their records say they are not separately sourced.
     const latin = targets.filter((target) => target.script === "latin");
     expect(
       Object.fromEntries(latin.map((target) => [target.lessonId, (target.letters ?? [target.glyph]).join(" ")])),
@@ -455,25 +461,26 @@ describe("the real corpus", () => {
       "FR-W01-salut-delayed-copy": "s a l u t",
       "FR-W01-salut-guided-copy": "s a l u t",
       "FR-W01-salut-observe": "s a l u t",
+      "FR-W01-accents": "é è ê",
+      "FR-W02-cedille": "ç",
+      "FR-W03-trema": "ï ë ü",
       "GE-W01-eszett": "ß",
       "GE-W01-hallo-delayed-copy": "H a l l o",
       "GE-W01-hallo-guided-copy": "H a l l o",
+      "GE-W02-umlauts": "ä ö ü",
       "IT-W01-ciao-delayed-copy": "c i a o",
       "IT-W01-ciao-guided-copy": "c i a o",
+      "LA-W01-salve-delayed-copy": "s a l v ē",
       "PT-W01-ola-delayed-copy": "o l á",
       "PT-W01-ola-guided-copy": "o l á",
     });
-    // Still undrawn: an uncited mark (è ê ç ï ë ä ö ē œ), punctuation inside
-    // a word, a slash between two words, or more than MAX_SEQUENCE_PIECES.
+    // Still undrawn: œ (a ligature, not a marked letter, so not covered by the
+    // analogy), punctuation inside a word, a slash between two words, or more
+    // than MAX_SEQUENCE_PIECES.
     const lessonIds = new Set(targets.map((target) => target.lessonId));
     for (const id of [
-      "FR-W01-accents",
-      "FR-W02-cedille",
-      "FR-W03-trema",
       "FR-C10-oe",
-      "GE-W02-umlauts",
       "GE-W03-capitalization",
-      "LA-W01-salve-delayed-copy",
       "LA-W01-salve-guided-copy",
       "ES-C03-como-acento",
       "ES-W01-tilde-diacritica",
