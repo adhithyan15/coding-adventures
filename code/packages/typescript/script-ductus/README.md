@@ -402,7 +402,11 @@ and 57% of writers turn them clockwise, as the font's tucked-in tip implies),
 and each record says so. ై is left out: its recognizer class stores only the
 length mark below, never the e hook above, so the order of its two parts is
 unattested. `tests/strokes/telugu-marks.test.ts` and
-`tests/ductusview/telugu-marks.test.ts` hold their evidence. Bengali ং joins
+`tests/ductusview/telugu-marks.test.ts` hold their evidence. The Telugu vowels
+ఆ, ఇ and ఏ keep their demonstration or tracing-guide citation, but are drawn on
+the same recognizer's counts (one stroke for 99% of ఆ's and 98% of ఇ's
+prototypes, two for 89% of ఏ's), and each variation note says where the
+writers' order, direction or count overrides the earlier source. Bengali ং joins
 ঃ and ঁ at the end of the Bengali owner, from the same Bangla recognizer:
 ring first (the commonest order, 103 of 183) and counterclockwise, then the
 tail down to the right.

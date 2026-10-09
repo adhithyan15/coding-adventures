@@ -909,9 +909,12 @@ describe("handwriting ductus", () => {
     ]);
   });
 
-  it("Telugu ఆ keeps its two source-verified components in separate pen-down runs", () => {
-    expect(penLifts(TELUGU_AA)).toBe(1);
-    expect(TELUGU_AA.strokes).toHaveLength(2);
+  it("Telugu ఆ draws its bowl and right lobe in one pen-down run, the lobe clockwise", () => {
+    // HP Labs India: one stroke for 99% of native writers (104 of 105); 91 of
+    // those 104 cross the right lobe's top moving right, and all 104 finish
+    // moving left along the bar. The demonstration's two runs become one.
+    expect(penLifts(TELUGU_AA)).toBe(0);
+    expect(TELUGU_AA.strokes).toHaveLength(1);
     expect(
       TELUGU_AA.strokes.map((stroke) =>
         stroke.segments.map((segment) => segment.label),
@@ -919,25 +922,54 @@ describe("handwriting ductus", () => {
     ).toEqual([
       [
         "turn round the left lobe and lower bowl",
-      ],
-      [
-        "turn the right lobe, then left along the bar",
+        "cross up into the right lobe and round it",
+        "then left along the bar",
       ],
     ]);
+    // Font units have y UP, so a positive shoelace area is a counterclockwise
+    // turn on the page. The left lobe turns counterclockwise (positive), as
+    // the demonstration draws it; the right lobe turns clockwise (negative).
+    const area = (points: Point[]) =>
+      points.reduce((sum, a, i) => {
+        const b = points[(i + 1) % points.length];
+        return sum + a.x * b.y - b.x * a.y;
+      }, 0) / 2;
+    const [leftAndBowl, rightLobe, bar] = TELUGU_AA.strokes[0].segments;
+    expect(area(leftAndBowl.path.slice(0, 10))).toBeGreaterThan(0);
+    expect(area(rightLobe.path)).toBeLessThan(0);
+    // The bar runs leftward and ends at its free left end.
+    expect(bar.path.at(-1)!.x).toBeLessThan(bar.path[0].x - 300);
   });
 
-  it("Telugu ఇ keeps its three source-verified components in separate pen-down runs", () => {
-    expect(penLifts(TELUGU_I)).toBe(2);
-    expect(TELUGU_I.strokes).toHaveLength(3);
+  it("Telugu ఇ draws its upper parts left to right, then the bowl, in one run", () => {
+    // HP Labs India: one stroke for 98% of native writers (104 of 106). All
+    // 104 top the upper-left lobe before the upper-right one; 96 go round the
+    // bowl along its bottom before its top; 102 end at the tail's foot.
+    expect(penLifts(TELUGU_I)).toBe(0);
+    expect(TELUGU_I.strokes).toHaveLength(1);
     expect(
       TELUGU_I.strokes.map((stroke) =>
         stroke.segments.map((segment) => segment.label),
       ),
     ).toEqual([
-      ["turn around the broad outer bowl"],
-      ["form the compact upper-left lobe"],
-      ["form the angled upper-right shoulder"],
+      [
+        "curl up over the upper-left lobe",
+        "arch over the right shoulder and down",
+        "sweep left under the broad bowl",
+        "back right along its top, down the tail",
+      ],
     ]);
+    const path = penPath(TELUGU_I.strokes[0]);
+    // Starts at the free tip of the upper-left lobe, ends at the tail's foot.
+    expect(path[0].x).toBeLessThan(120);
+    expect(path[0].y).toBeGreaterThan(280);
+    expect(path.at(-1)!.y).toBeLessThan(0);
+    // The bowl's bottom comes before its top: the sweep left runs lower
+    // than the return right.
+    const [, , under, back] = TELUGU_I.strokes[0].segments;
+    const meanY = (points: Point[]) =>
+      points.reduce((sum, point) => sum + point.y, 0) / points.length;
+    expect(meanY(under.path)).toBeLessThan(meanY(back.path.slice(0, 7)));
   });
 
   it("Telugu ఉ groups five source-verified movements into three pen-down runs", () => {
@@ -976,9 +1008,12 @@ describe("handwriting ductus", () => {
     ]);
   });
 
-  it("Telugu ఏ groups four source-verified movements into three pen-down runs", () => {
-    expect(penLifts(TELUGU_EE)).toBe(2);
-    expect(TELUGU_EE.strokes).toHaveLength(3);
+  it("Telugu ఏ draws ఎ's body in one run, then lifts once for the hook", () => {
+    // HP Labs India: two strokes for 89% of native writers (91 of 102), the
+    // body first and the hook last in all 91; 90 end the body at the arch's
+    // upper end. Noto prints ఏ's body with ఎ's outline, so the body is ఎ's run.
+    expect(penLifts(TELUGU_EE)).toBe(1);
+    expect(TELUGU_EE.strokes).toHaveLength(2);
     expect(
       TELUGU_EE.strokes.map((stroke) =>
         stroke.segments.map((segment) => segment.label),
@@ -987,12 +1022,14 @@ describe("handwriting ductus", () => {
       [
         "turn down and left round the lower loop",
         "round its base and back to the junction",
+        "sweep up the broad outer arch",
       ],
-      [
-        "restart at the tail, sweep up the outer arch",
-      ],
-      ["restart and sweep up the upper-left hook"],
+      ["lift, then sweep up the upper-left hook"],
     ]);
+    expect(TELUGU_EE.strokes[0]).toEqual(TELUGU_E.strokes[0]);
+    // The hook is drawn from its lower end up.
+    const hook = penPath(TELUGU_EE.strokes[1]);
+    expect(hook.at(-1)!.y).toBeGreaterThan(hook[0].y);
   });
 
   it("Telugu ఋ groups six source-verified movements into three pen-down runs", () => {

@@ -57,15 +57,18 @@ You already say these, and every one of them has ళ somewhere inside it:
 <!-- hl-writing-stage: observe-trace -->
 
 Watch the guide once before your hand moves. ళ arrives in **four calm
-movements**, with a small lift between each one:
+movements**, all in one unbroken stroke:
 
 1. Loop counterclockwise around the small inner bowl.
-2. Sweep down around the broad left body and loop the lower bowl.
-3. Sweep right and up around the broad outer body.
-4. Lift once more, then draw down and up through the separate chevron above.
+2. Without lifting, sweep down around the broad left body and loop the lower bowl.
+3. Without lifting, sweep right and up around the broad outer body.
+4. Climb a short way up the chevron's left arm, then draw down and up through
+   the chevron above.
 
-Trace the filmstrip slowly. Let every movement finish before you lift, then
-copy the whole shape once without rushing.
+The strip gives the short climb in movement 4 a panel of its own, so it numbers
+five panels for these four movements. Trace the filmstrip slowly, keeping the
+pen on the paper until the chevron is finished, then copy the whole shape once
+without rushing.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-121] -->

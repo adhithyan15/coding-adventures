@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:0d7377230bf083bb",
+  "sourceHash": "fnv1a64:de7d9b44939ecb8b",
   "lessons": [
     {
       "id": "TE-C33-anuko",
@@ -397,7 +397,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:82f83e962b447716",
+      "sourceHash": "fnv1a64:b850972c2ddf11ce",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -484,11 +484,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Watch the numbered filmstrip once before your pen moves. Movements 1–4 build the round body in four short curves: upper left, lower left, lower right, then upper right. Lift between each curve. Movement 5 adds the rising top flourish. Lift again for movement 6, the short lower stem, and once more for movement 7, the dot inside."
+              "text": "Watch the numbered filmstrip once before your pen moves. Movements 1–4 build the round body in four short curves: upper left, lower left, lower right, then upper right. The pen stays down from one curve to the next. Movement 5 climbs a short way up the flourish's left arm, and movement 6 curls up through the top flourish. Lift for movement 7, the short lower stem, and lift once more for movement 8, the dot inside. The strip gives the short climb a panel of its own, so the seven movements are numbered as eight."
             },
             {
               "kind": "speech",
-              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, so preserve the seven clear movements rather than trying to join the gaps."
+              "text": "Trace the same route slowly. This is one attested school-style order fitted to the printed shape here; Telugu handwriting varies, so keep the body and flourish as one unbroken run, lifting only before the stem and the dot."
             }
           ]
         },

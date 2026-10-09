@@ -56,13 +56,14 @@ You already say these, and every one of them has ప somewhere inside it:
 <!-- hl-writing-stage: observe-trace -->
 
 Watch the numbered filmstrip once before your pen moves. Movement 1 sweeps left
-across the upper part of the small bowl. Lift, then movement 2 turns around its
-lower half. Movement 3 makes the broad bowl on the right. Lift once more for
-movement 4, the small rising flourish above.
+across the upper part of the small bowl. Without lifting, movement 2 turns
+around its lower half, and movement 3 carries on round the broad bowl on the
+right. Lift once, for movement 4, the small rising flourish above.
 
 Trace the same route slowly. This is one attested school-style order fitted to
 the printed shape here; Telugu handwriting varies, so keep the four clear
-movements instead of closing the small gaps.
+movements, with the body as one unbroken run and the single lift before the
+flourish.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-113] -->

@@ -58,12 +58,14 @@ shape gets into your eye.
 
 Watch the numbered filmstrip once before your pen moves. Movements 1–4 build
 the round body in four short curves: upper left, lower left, lower right, then
-upper right. Lift between each curve. Movement 5 adds the rising top flourish.
-Lift once more for movement 6, the short lower stem.
+upper right. The pen stays down from one curve to the next. Movement 5 climbs a
+short way up the flourish's left arm, and movement 6 curls up through the top
+flourish. Lift once, for movement 7, the short lower stem. The strip gives the
+short climb a panel of its own, so the six movements are numbered as seven.
 
 Trace the same route slowly. This is one attested school-style order fitted to
-the printed shape here; Telugu handwriting varies, so preserve the six clear
-movements rather than trying to join the gaps.
+the printed shape here; Telugu handwriting varies, so keep the body and
+flourish as one unbroken run and make the single lift before the stem.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-151, TE-SCRIPT-RECOG-150] -->

@@ -68,12 +68,16 @@ family, opposite decision.
 <!-- hl-writing-stage: observe-trace -->
 
 Watch the numbered filmstrip once before your pen moves. Movement 1 loops
-around the broad lower-left bowl. Lift, then movement 2 sweeps around the tall
-lower and right body. Lift once more for movement 3, the separate chevron above.
+around the broad lower-left bowl. Without lifting, movement 2 sweeps around the
+tall lower and right body. Keep the pen down: movement 3 climbs a short way up
+the chevron's left arm, and movement 4 draws the chevron down and up. The strip
+gives that short climb a panel of its own, so the three movements are numbered
+as four.
 
 Trace the same route slowly. This is one attested school-style order fitted to
-the printed shape here; Telugu handwriting varies, so keep the three movements
-clear instead of closing the two pen lifts. Then write స and ష beside it.
+the printed shape here; Telugu handwriting varies, but nearly all native
+writers draw శ as one unbroken stroke, so keep the pen on the paper until the
+chevron is finished. Then write స and ష beside it.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-159, TE-SCRIPT-RECOG-111, TE-SCRIPT-RECOG-158] -->

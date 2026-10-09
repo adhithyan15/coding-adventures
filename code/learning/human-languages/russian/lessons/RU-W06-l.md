@@ -46,8 +46,9 @@ kinds it is.
 
 **l**, the *l* of English *love*. A **new shape**: nothing in Latin looks like it.
 
-Two strokes meeting at a peak, with the left leg kicking out. Written quickly it
-leans, and in some fonts it is nearly a triangle with an open base.
+Two legs meeting at a peak, with the left leg kicking out; the hand draws both
+without lifting the pen. Written quickly it leans, and in some fonts it is
+nearly a triangle with an open base.
 
 Careful with one thing. In handwriting **л** and **м** are close relatives, and
 you are about to meet **м**. The difference is the top: **л** comes to a **point**,

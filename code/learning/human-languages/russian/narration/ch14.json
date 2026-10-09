@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Eleven Letters, Sorted Into Three Kinds",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ba270fd6a6c5b60a",
+  "sourceHash": "fnv1a64:a4960d4b6aec705d",
   "lessons": [
     {
       "id": "RU-W06-u",
@@ -384,7 +384,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:209183415fd19595",
+      "sourceHash": "fnv1a64:085ee2a9dc1bafb3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -430,7 +430,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two strokes meeting at a peak, with the left leg kicking out. Written quickly it leans, and in some fonts it is nearly a triangle with an open base."
+              "text": "Two legs meeting at a peak, with the left leg kicking out; the hand draws both without lifting the pen. Written quickly it leans, and in some fonts it is nearly a triangle with an open base."
             },
             {
               "kind": "speech",
@@ -740,7 +740,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:eaadb5ab65f2c9d8",
+      "sourceHash": "fnv1a64:5a199b7f82fe8d18",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -782,7 +782,7 @@
             },
             {
               "kind": "speech",
-              "text": "zh, the sound in the middle of English measure or vision. A new shape, and the most recognisable one in Cyrillic: three strokes radiating from a central spine, symmetrical, often called the beetle."
+              "text": "zh, the sound in the middle of English measure or vision. A new shape, and the most recognisable one in Cyrillic: three lines radiating from a central spine, symmetrical, often called the beetle. The hand draws all of it without lifting the pen."
             },
             {
               "kind": "speech",

@@ -4,7 +4,7 @@
   "chapter": 43,
   "title": "The Letter That Ends Ram",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:8fcfa4e806f02ef9",
+  "sourceHash": "fnv1a64:9d20a4be2851745f",
   "lessons": [
     {
       "id": "MW-W43-ma",
@@ -21,7 +21,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:672141cf56f68adc",
+      "sourceHash": "fnv1a64:2d9123a693ef59cc",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -84,19 +84,27 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "1. start here: descend the left stem, circle clockwise through the loop, and sweep right."
+              "text": "1. start here: descend the left stem, curl left and clockwise around the lower loop, and continue right through the crossbar without lifting."
             },
             {
               "kind": "speech",
-              "text": "2. lift, then descend the right stem."
+              "text": "2. without lifting, climb up the right stem to the headline."
             },
             {
               "kind": "speech",
-              "text": "3. lift, then draw the shirorekha left-to-right — and only now lift."
+              "text": "3. descend the right stem top-to-bottom."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 2."
+              "text": "4. lift, then draw the shirorekha left-to-right — and only now lift."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 1."
+            },
+            {
+              "kind": "speech",
+              "text": "The source shows three movements; most native writers draw म (ma) in two strokes (80% of HP Labs India's native-writer samples). This path keeps every movement in order and direction, and lifts only before the headline."
             },
             {
               "kind": "speech",

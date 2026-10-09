@@ -64,13 +64,17 @@ this family, and you are meeting it on a page from chapter three.
 <!-- hl-writing-stage: observe-trace -->
 
 Watch the numbered filmstrip once before your pen moves. Movement 1 rises around
-the upper-left curve. Lift, then movement 2 turns around the lower-left bowl.
-Movement 3 sweeps right and rises around the lower-right bowl. Lift once more;
-movement 4 curves left around the upper-right shoulder.
+the upper-left curve. Without lifting, movement 2 curves down through the
+shoulder that joins it to the lower-left bowl, and movement 3 turns around that
+bowl. Movement 4 sweeps right and rises around the lower-right bowl, and
+movement 5 curves left around the upper-right shoulder. The strip gives the
+short joining curve a panel of its own, so the four movements are numbered as
+five.
 
 Trace the same route slowly. This is one attested school-style order fitted to
-the printed shape here; Telugu handwriting varies, so keep the four calm
-movements and the small spaces between them.
+the printed shape here; Telugu handwriting varies, but nearly every native
+writer draws బ as one unbroken stroke, so keep the pen on the paper from the
+first curve to the last.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-157] -->

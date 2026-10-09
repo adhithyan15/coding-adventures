@@ -44,8 +44,8 @@ Keep the dental voiced position ready; this sign adds breath.
 > ध
 
 Say *da*, then add a puff: *dha*. Curl around the upper spiral and sweep through
-its shoulder; lift for the lower bowl; descend the right stem; finish the
-headline.
+its shoulder; without lifting, turn back along the shoulder and sweep round the
+lower bowl; climb the right stem and descend it; lift and finish the headline.
 
 ## Writing — delayed copy and a wider return
 <!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-DHA-01] -->

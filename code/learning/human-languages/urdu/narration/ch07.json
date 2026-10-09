@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Four Verbs of the Mind",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:21c0e243d3f39a5a",
+  "sourceHash": "fnv1a64:865647ac59ff00c5",
   "lessons": [
     {
       "id": "UR-W07-alif-madda",
@@ -573,7 +573,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ed9afa03948f7161",
+      "sourceHash": "fnv1a64:b613f6edd61da5c9",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -616,11 +616,11 @@
             },
             {
               "kind": "speech",
-              "text": "A shallow open curve lying along the baseline, like a small flat-bottomed boat — and then a lift, and three dots placed underneath it, arranged as a triangle with its point downward."
+              "text": "A shallow open curve lying along the baseline, like a small flat-bottomed boat — and then three dots placed underneath it, arranged as a triangle with its point downward, each after its own lift."
             },
             {
               "kind": "speech",
-              "text": "Two parts, one lift. Its name is پ pe and it says p."
+              "text": "Two parts, three lifts. Its name is پ pe and it says p."
             },
             {
               "kind": "speech",
@@ -679,11 +679,11 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "پ (pe) — the boat, then a lift, then three dots beneath",
+              "instruction": "پ (pe) — the boat, then three dots beneath, lifting before each one",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU WRITE: پ — the boat, then a lift, then three dots beneath]"
+              "source": "[YOU WRITE: پ — the boat, then three dots beneath, lifting before each one]"
             },
             {
               "kind": "prompt",

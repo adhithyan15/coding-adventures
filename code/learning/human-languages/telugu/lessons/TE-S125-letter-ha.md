@@ -60,15 +60,15 @@ that came in from Sanskrit.
 <!-- hl-writing-stage: observe-trace -->
 
 Watch the guide once before your hand moves. హ arrives in **four calm
-movements**, with a small lift between each one:
+movements**, with one lift, before the last:
 
 1. Loop around the small bowl at the lower left.
-2. Sweep around the broad lower and right body.
-3. Draw right across the middle bar and curl around its far end.
-4. Lift once more, then draw down and up through the separate chevron above.
+2. Without lifting, sweep around the broad lower and right body.
+3. Without lifting, draw right across the middle bar and curl around its far end.
+4. Lift once, then draw down and up through the separate chevron above.
 
-Trace the filmstrip slowly. Let every movement finish before you lift, then
-copy the whole shape once without rushing.
+Trace the filmstrip slowly. Let the first three movements run on as one stroke
+and lift only for the chevron, then copy the whole shape once without rushing.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[TE-SCRIPT-RECOG-125] -->

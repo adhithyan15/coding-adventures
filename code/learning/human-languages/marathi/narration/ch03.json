@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Six More Signs Make Thank You Readable",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:68e9b68a4348c902",
+  "sourceHash": "fnv1a64:46ae5fadb77a94fb",
   "lessons": [
     {
       "id": "MR-W03-da",
@@ -22,7 +22,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:65b07dd1dbb20014",
+      "sourceHash": "fnv1a64:e38a6d190938b492",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -58,7 +58,7 @@
             },
             {
               "kind": "speech",
-              "text": "Keep the tongue at the teeth and add voice: da. Descend the short stem; lift for the outer body, inward curl, and down-right tail; finish the headline."
+              "text": "Keep the tongue at the teeth and add voice: da. Descend the short stem; without lifting, sweep round the outer body, inward curl, and down-right tail; lift and finish the headline."
             }
           ]
         },
@@ -121,7 +121,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d02c9ea636c18b5b",
+      "sourceHash": "fnv1a64:8ea7d6c275e80dd1",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -156,7 +156,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say da, then add a puff: dha. Curl around the upper spiral and sweep through its shoulder; lift for the lower bowl; descend the right stem; finish the headline."
+              "text": "Say da, then add a puff: dha. Curl around the upper spiral and sweep through its shoulder; without lifting, turn back along the shoulder and sweep round the lower bowl; climb the right stem and descend it; lift and finish the headline."
             }
           ]
         },
@@ -327,7 +327,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:510ca3164a0c50fb",
+      "sourceHash": "fnv1a64:e08fc5fbc08b1553",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -362,7 +362,7 @@
             },
             {
               "kind": "speech",
-              "text": "Curve around the small inner curl; lift for the lower bowl; descend the right stem; finish the headline. The sound is the y at the start of English yes."
+              "text": "Curve around the small inner curl; without lifting, sweep round the lower bowl; climb the right stem and descend it; lift and finish the headline. The sound is the y at the start of English yes."
             }
           ]
         },

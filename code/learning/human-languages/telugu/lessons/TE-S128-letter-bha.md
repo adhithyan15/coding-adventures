@@ -64,8 +64,10 @@ You already say these, and every one of them has భ somewhere inside it:
 Watch the numbered filmstrip once before your pen moves. Movement 1 rises around
 the upper-left curve; movement 2 comes down and left through its inner shoulder.
 Movement 3 turns around the lower-left bowl. Movement 4 rises around the broad
-lower-right bowl. Lift for movement 5, the separate flourish above, then draw
-movement 6, the short straight stem below.
+lower-right bowl. Keep the pen down: movement 5 climbs a short way up the
+flourish's left arm, and movement 6 curls up through the flourish above. Lift
+once, then draw movement 7, the short straight stem below. The strip gives the
+short climb a panel of its own, so the six movements are numbered as seven.
 
 Trace the same route slowly. This is one attested school-style order fitted to
 the printed shape here; Telugu handwriting varies, so keep the six clear
