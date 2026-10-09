@@ -41,4 +41,9 @@ describe("generated lesson figures", () => {
       "How these letters are written, stroke by stroke: ن, ت, ث",
     );
   });
+
+  it("captions a list of digits as digits, not letters", () => {
+    expect(filmstripCaption("۰ ۱")).toBe("How these digits are written, stroke by stroke: ۰, ۱");
+    expect(filmstripCaption("൧ ൨ ൩")).toBe("How these digits are written, stroke by stroke: ൧, ൨, ൩");
+  });
 });

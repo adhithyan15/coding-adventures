@@ -70,6 +70,18 @@ describe("the printed filmstrip", () => {
     );
   });
 
+  it("describes a digit drawn alone as a digit, not a letter", () => {
+    // Kannada ೧ is taught on its own; a screen reader reads this desc aloud.
+    const digit = renderScriptFilmstripFigure(
+      "KA-S140",
+      entry({ script: "kannada", glyph: "೧", font: "_fonts/NotoSansKannada-Static.ttf" }),
+    );
+    expect(digit.svg).toContain(
+      "of ೧ (kannada), the movement being added drawn in ink over the finished digit, ",
+    );
+    expect(digit.svg).not.toContain("finished letter");
+  });
+
   it("lays every frame out in the letter's one shared box", () => {
     const figure = renderScriptFilmstripFigure("TA-S119-letter-a", entry());
 
