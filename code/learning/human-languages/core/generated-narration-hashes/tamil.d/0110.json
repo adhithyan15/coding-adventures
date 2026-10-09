@@ -1,7 +1,7 @@
 {
   "language": "tamil",
   "chapter": 110,
-  "sourceHash": "fnv1a64:c05d6881ce7f026c",
+  "sourceHash": "fnv1a64:093872daa3c46311",
   "lessonIds": [
     "TA-S130-letter-nga",
     "TA-S131-letter-lla",
@@ -12,7 +12,7 @@
   "drivablePrefix": 0,
   "text": "tamil/narration/ch110.txt",
   "json": "tamil/narration/ch110.json",
-  "textHash": "fnv1a64:e252d195a55f8d35",
-  "jsonHash": "fnv1a64:d7ef91ba1fda84ed",
+  "textHash": "fnv1a64:cabacf7b7bb6407d",
+  "jsonHash": "fnv1a64:c374e207b72f381f",
   "findings": []
 }

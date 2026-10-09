@@ -1,4 +1,5 @@
 import inspect
+import json
 import os
 import runpy
 import unittest
@@ -13,9 +14,24 @@ def script_namespace(name):
 
 class TamilShardedConsumerTest(unittest.TestCase):
     def test_drizzle_reads_the_shard_native_inventory(self):
+        # What this pins: the drizzle author loads Tamil from the shard
+        # directory (tamil.d/letters/*.json, tamil.d/marks/*.json), one entry
+        # per shard file, in shard order. The expected entries are read from
+        # those files themselves, so adding a letter shard (the inventory grew
+        # from 25 to 30 letters) moves both sides together instead of leaving
+        # a stale literal count behind; a loader that dropped, duplicated or
+        # reordered a shard would still fail.
         namespace = script_namespace("author_drizzle_segments.py")
-        self.assertEqual(len(namespace["SCRIPT"]["letters"]), 25)
-        self.assertEqual(len(namespace["SCRIPT"]["marks"]), 9)
+        for section, key in (("letters", "glyph"), ("marks", "mark")):
+            shard_dir = os.path.join(HERE, "tamil.d", section)
+            expected = []
+            for name in sorted(os.listdir(shard_dir)):
+                if name.endswith(".json"):
+                    with open(os.path.join(shard_dir, name), encoding="utf-8") as handle:
+                        expected.append(json.load(handle)[key])
+            self.assertTrue(expected, section)
+            loaded = [entry[key] for entry in namespace["SCRIPT"][section]]
+            self.assertEqual(loaded, expected, section)
 
     def test_recognition_builder_reads_the_shard_native_inventory(self):
         namespace = script_namespace("author_recognition_segments.py")

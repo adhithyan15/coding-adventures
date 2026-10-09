@@ -194,24 +194,15 @@ have authored pen paths today.**
 `DUCTUS` admits no letter without a citation
 for its stroke order, and hand-drawing a letter is forbidden
 outright (a subtly wrong Tamil ண looks perfect to exactly the audience that
-cannot yet read Tamil, so the error would ship *as the lesson*). அ and ஆ exercise
-real two-stroke paths with one lift; ஆ keeps its upright and long-vowel loop in
-the same pen-down run. இ keeps five inner-and-lower movements together, lifts
-once, then joins its outer-left climb to the final arch; ம remains one unbroken
-stroke. க exercises a real three-stroke path: its upper frame and two lower bowls
-are separated by two verified lifts. வ joins its spiral body, bottom bar, and
-right upright in one five-movement run with no lift. ல carries its outward
-spiral through a middle descent and deep right-hand turn to the open tip in one
-four-movement run with no lift. ற uses three pen-down runs: its left arch joins
-the first middle descent, the adjacent descent restarts after one lift, and a
-second lift precedes the right arch's joined sweep and descender. ன joins its
-left spiral, single inner arch, and top bar through five movements before one
-lift precedes its separate right upright. ண follows the same two-run pattern,
-keeping its extra inner arch joined to the rest of the body and top bar before
-the sole lift. ந uses three runs: its opening three movements stay joined, the
-middle rise joins the top bar after one lift, and a second lift precedes its
-right-hand descent and tail. Frame 12's looped handwritten form differs from
-Noto's straighter typographic form, so the source records that adaptation while
+cannot yet read Tamil, so the error would ship *as the lesson*). அ and ஆ are
+each one unbroken stroke, as native writers draw them (LipiTk's Tamil
+recognizer: 104 of 114 and 28 of 29 prototypes): the pen climbs the right
+upright from the end of the horizontal and draws it down, and ஆ runs on into its
+long-vowel loop. The other nine starter letters — இ, க, ம, வ, ல, ற, ன, ண,
+and ந — are likewise one unbroken stroke each, matching the LipiTk majority for every one
+of them (85% or more of the prototypes per letter); earlier multi-run paths
+for இ, க, ற, ன, ண, and ந were refitted when that evidence arrived. For ந, Frame 12's looped
+handwritten form differs from Noto's straighter typographic form, so the source records that adaptation while
 the mechanical gates keep every authored point on the actual font. Persian ا is
 the first right-to-left-script filmstrip: UT Austin's freehand lesson shows its
 isolated Naskh stem descending in one continuous movement, and the same gates

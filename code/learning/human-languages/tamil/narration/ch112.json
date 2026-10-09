@@ -4,7 +4,7 @@
   "chapter": 112,
   "title": "Letters From Days, Towns and Gladness",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6e36275a55afa231",
+  "sourceHash": "fnv1a64:c76ecd691f6214c7",
   "lessons": [
     {
       "id": "TA-S137-letter-nya",
@@ -563,7 +563,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:1f1f4b302c0fb31a",
+      "sourceHash": "fnv1a64:f12d360821be0a5e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -626,27 +626,35 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "1. start here: curl around the inner-left loop and descend to the lower-left join, then lift."
+              "text": "1. start at the tip inside the small loop and curl clockwise round it."
             },
             {
               "kind": "speech",
-              "text": "2. put the pen down again and climb around the rounded outer-left body and descend to the lower join, then lift."
+              "text": "2. without lifting, go on round the bottom and up the outer left side."
             },
             {
               "kind": "speech",
-              "text": "3. put the pen down again and draw the lower joining bar from the left body to the right, then lift."
+              "text": "3. without lifting, arch over the top and come down to the bar."
             },
             {
               "kind": "speech",
-              "text": "4. put the pen down again and loop around the right body and finish with its descending tail — and only now lift."
+              "text": "4. without lifting, carry the bar to the right."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 3."
+              "text": "5. without lifting, go up the bar's right end and back over to the right loop."
             },
             {
               "kind": "speech",
-              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Ratnakar Narale, Learn Tamil Through English/Hindi, Reading and Writing Tamil Granthakshars, Third Tamil Granthakshar ஷ (ṣa), Sanskrit Hindi Research Institute, p. 13."
+              "text": "6. without lifting, go round the loop and down the tail — and only now lift."
+            },
+            {
+              "kind": "speech",
+              "text": "Pen lifts: 0. The pen never leaves the paper."
+            },
+            {
+              "kind": "speech",
+              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Ratnakar Narale, Learn Tamil Through English/Hindi, Reading and Writing Tamil Granthakshars, Third Tamil Granthakshar ஷ (ṣa), Sanskrit Hindi Research Institute, p. 13. The chart numbers four parts; native writers draw them without lifting the pen (HP Labs India's LipiTk Tamil recognizer: most of its pen traces of ஷ (ṣa) are one stroke)."
             }
           ]
         },

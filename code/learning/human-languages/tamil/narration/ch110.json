@@ -4,7 +4,7 @@
   "chapter": 110,
   "title": "Letters From You and Your Name",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c05d6881ce7f026c",
+  "sourceHash": "fnv1a64:093872daa3c46311",
   "lessons": [
     {
       "id": "TA-S130-letter-nga",
@@ -21,7 +21,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ed3ec3124353b648",
+      "sourceHash": "fnv1a64:845632da8a68025a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -84,35 +84,35 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "1. start here: draw the detached upright down, then lift."
+              "text": "1. start at the top of the left upright and draw it straight down."
             },
             {
               "kind": "speech",
-              "text": "2. put the pen down again and climb the tall left body."
+              "text": "2. without lifting, climb back up it and carry the top bar to its right end."
             },
             {
               "kind": "speech",
-              "text": "3. without lifting, carry the top bar right and return inward."
+              "text": "3. without lifting, come back along the bar to the inner stem and draw it down to its foot."
             },
             {
               "kind": "speech",
-              "text": "4. without lifting, descend into the rounded inner turn."
+              "text": "4. without lifting, go back up the stem and round the bowl down to the low bar."
             },
             {
               "kind": "speech",
-              "text": "5. without lifting, carry the low bar to the right."
+              "text": "5. without lifting, run left along the low bar to its end."
             },
             {
               "kind": "speech",
-              "text": "6. without lifting, return left and finish up the inner stem — and only now lift."
+              "text": "6. without lifting, come back along the low bar and climb the right upright — and only now lift."
             },
             {
               "kind": "speech",
-              "text": "Pen lifts: 1."
+              "text": "Pen lifts: 0. The pen never leaves the paper."
             },
             {
               "kind": "speech",
-              "text": "Stroke order is one attested teaching order, not a national standard — Tamil handwriting is taught with school-to-school variation. Source: Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 2, ங (ṅa) (University of Texas at Austin), p. 191."
+              "text": "Stroke order is one attested order, not a national standard — Tamil handwriting is taught with school-to-school variation. The order and the stroke count follow native writers' pen traces in HP Labs India's LipiTk Tamil recognizer: most of them write ங (ṅa) without lifting the pen, and draw its right upright last, upward. Sankaran Radhakrishnan, Tamil Script Learners Manual, Appendix I: Hand-movements, Frame 2, ங (ṅa) (University of Texas at Austin), p. 191, draws that upright first, as a separate part."
             }
           ]
         },

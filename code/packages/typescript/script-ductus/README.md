@@ -367,7 +367,11 @@ order (body first, then the dot, one lift) cited to Abhinaya Rajarajan's
 *Varai* recordings of the 18 consonants with pulli (one writer, facts only,
 confidence medium). The Grantha ஸ (`U-BB8`) follows it: one continuous stroke
 cited straight to LipiTk's Tamil recognizer (150 of 153 prototypes), going
-back up its stem once before the second arch.
+back up its stem once before the second arch. அ, ஆ, எ, ங and ஷ keep their
+manual or chart citation, but each is one stroke on the same recognizer's
+counts (85% to 97% of their prototypes), and its variation note says where the
+native writers' order or count overrides the earlier source; ஊ is the one Tamil
+letter that still lifts, once, as 93% of its prototypes do.
 Gujarati's eleven signs (ા િ ી ુ ૂ ે ૈ ો ૌ ં ઃ) sit at the end of the Gujarati
 owner, keyed `gujarati:<sign>` like its letters, and take their source from the
 sign's mark record (`gujaratiMarkSource`): order, start, direction and lifts
