@@ -38,10 +38,7 @@ permissions:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  # A run on main always finishes, so main's state is always known; a
-  # newer push queues behind it (GitHub keeps only the newest waiting).
-  # Pull requests and other branches still cancel superseded runs.
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+  cancel-in-progress: true
 
 env:
   OPAM_VERSION: '2.5.2'
