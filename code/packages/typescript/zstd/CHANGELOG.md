@@ -3,6 +3,14 @@
 All notable changes to this package will be documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## Unreleased
+
+- The TC-9 `zstd` CLI interop cases get an explicit 30s budget. Each case
+  starts the external `zstd` binary; on a Windows CI runner under a
+  full-repository rebuild, one case spent 7.1s waiting for the child process
+  to launch (its sibling took 126ms) and hit vitest's 5s default. The codec
+  work is a few KB. The in-process tests keep the default budget.
+
 ## [0.1.3] — 2026-08-05
 
 ### Fixed
