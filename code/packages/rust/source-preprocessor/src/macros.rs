@@ -24,13 +24,13 @@
 //! is why this is worth a table of cases rather than a single smoke test: the
 //! failure mode is a quietly different program, not a crash.
 //!
-//! ## What is deliberately absent
+//! ## Dialect-specific operators
 //!
-//! Stringize and token paste are **not** implemented here. They are dialect
-//! hooks ([`crate::dialect::Dialect::stringize`] and `paste`), defaulting to
-//! "unsupported", and MacroOct declines both — which is itself a test that the
-//! engine does not quietly assume every language is C. They get their first
-//! real implementation when C arrives.
+//! Bounded stringize and paste use dialect hooks
+//! ([`crate::dialect::Dialect::stringize`] and `paste`), defaulting to
+//! "unsupported". MacroOct declines both, so the engine does not assume every
+//! language uses C operators. The C dialect limits each operator to a small
+//! raw-argument subset and rejects other shapes before expansion.
 //!
 //! ## Bounds
 //!
@@ -324,19 +324,19 @@ fn expand_at(
                 let (args, close_hide) =
                     collect_args(&mut work, params.len(), bounds, spend, &cur)?;
                 if dialect.is_some()
-                    && def.body.iter().any(|token| token.value == "#")
+                    && def.body.iter().any(|token| token.value == "#" || token.value == "##")
                     && args.len() != params.len()
                 {
                     return Err(
-                        PpError::new("stringize invocation has the wrong argument count")
+                        PpError::new("macro operator invocation has the wrong argument count")
                             .at(cur.position),
                     );
                 }
                 let expansion = intern_invocation(map, &name, &cur, def.defined_at, bounds)?;
                 let args = attach_arguments(args, cur.expansion, expansion, map, bounds)?;
-                // A stringized parameter sees its original spelling. Only
-                // parameters used elsewhere need recursive pre-expansion.
-                // Two bits per parameter: raw stringize and plain use.
+                // A stringized or pasted parameter sees its original spelling.
+                // Only parameters used plainly need recursive pre-expansion.
+                // Two bits per parameter: raw operator use and plain use.
                 // Keep one compact vector live across recursive expansion:
                 // this frame repeats at the macro-depth limit.
                 let mut use_flags = vec![0u8; params.len()];
@@ -351,7 +351,7 @@ fn expand_at(
                     if let Some(&i) = stored.param_index.get(&token.value) {
                         if dialect.is_some()
                             && body_index > 0
-                            && def.body[body_index - 1].value == "#"
+                            && matches!(def.body[body_index - 1].value.as_str(), "#" | "##")
                         {
                             use_flags[i] |= 1;
                         } else {
@@ -671,6 +671,34 @@ fn substitute_function_like(
                 "exhausted the preprocessing budget projecting a substitution",
             ));
         }
+        if dialect.is_some()
+            && def.body.get(cursor + 1).is_some_and(|next| next.value == "##")
+        {
+            let i = def
+                .body
+                .get(cursor + 2)
+                .and_then(|next| param_index.get(&next.value))
+                .copied()
+                .ok_or_else(|| PpError::new("paste requires a following macro parameter"))?;
+            let raw = raw_args
+                .get(i)
+                .ok_or_else(|| PpError::new("paste argument is missing"))?;
+            if raw.len() != 1 {
+                return Err(PpError::new("bounded paste requires one raw argument token"));
+            }
+            let pasted_bytes =
+                (token.value.len() as u64).saturating_add(raw[0].token.value.len() as u64);
+            if pasted_bytes > bounds.token_spelling_bytes {
+                return Err(PpError::new("pasted token exceeds the spelling budget"));
+            }
+            projected_tokens = projected_tokens.saturating_add(1);
+            projected_bytes = projected_bytes.saturating_add(pasted_bytes);
+            cursor += 3;
+            continue;
+        }
+        if dialect.is_some() && token.value == "##" {
+            return Err(PpError::new("unsupported token paste shape"));
+        }
         if dialect.is_some() && token.value == "#" {
             let parameter = def
                 .body
@@ -713,6 +741,40 @@ fn substitute_function_like(
     while cursor < def.body.len() {
         let token = &def.body[cursor];
         if let Some(dialect) = dialect {
+            if def.body.get(cursor + 1).is_some_and(|next| next.value == "##") {
+                let i = def
+                    .body
+                    .get(cursor + 2)
+                    .and_then(|next| param_index.get(&next.value))
+                    .copied()
+                    .ok_or_else(|| PpError::new("paste requires a following macro parameter"))?;
+                let raw = raw_args
+                    .get(i)
+                    .and_then(|arg| arg.first())
+                    .ok_or_else(|| PpError::new("paste argument is missing"))?;
+                let pasted = dialect
+                    .paste(token, &raw.token)
+                    .ok_or_else(|| PpError::new("dialect does not support this paste"))?;
+                if pasted.type_ != TokenType::Name
+                    || pasted.value.len() != token.value.len() + raw.token.value.len()
+                    || !pasted.value.starts_with(&token.value)
+                    || !pasted.value.ends_with(&raw.token.value)
+                {
+                    return Err(PpError::new("dialect returned an invalid bounded paste token"));
+                }
+                spelling_ok(&pasted, bounds)?;
+                out.push(MToken {
+                    token: pasted,
+                    hide,
+                    position: raw.position,
+                    expansion: raw.expansion,
+                });
+                cursor += 3;
+                continue;
+            }
+            if token.value == "##" {
+                return Err(PpError::new("unsupported token paste shape"));
+            }
             if token.value == "#" {
                 let i = def
                     .body

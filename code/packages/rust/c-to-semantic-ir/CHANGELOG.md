@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased — PREP01 bounded C identifier-prefix paste
+
+- Accept one literal identifier `##` parameter in a function-like macro when
+  the raw argument is one identifier. Rescan the resulting identifier while
+  retaining raw argument provenance and ordinary pre-expansion at other uses.
+- Reject unsupported paste shapes and arguments, including empty and
+  multi-token arguments, and reject concatenations that the C lexer classifies
+  as keywords through a cached grammar-derived lookup. Keep the output
+  spelling bound without rebuilding the lexer per paste.
+
 ## Unreleased — PREP01 bounded C stringize
 
 - Accept `#parameter` in a function-like macro when the raw argument is one
