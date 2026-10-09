@@ -364649,7 +364649,7 @@
             "language": "sanskrit",
             "lessonId": "SA-S201-sign-visarga",
             "blockIndex": 2,
-            "blockTitle": "Writing: ◌ः — copy what you see",
+            "blockTitle": "Writing: ◌ः — follow the numbered strip",
             "stage": "observe-trace",
             "level": "pre-A1",
             "sequence": 81
@@ -364858,7 +364858,7 @@
             "language": "sanskrit",
             "lessonId": "SA-S201-sign-visarga",
             "blockIndex": 2,
-            "blockTitle": "Writing: ◌ः — copy what you see",
+            "blockTitle": "Writing: ◌ः — follow the numbered strip",
             "stage": "observe-trace",
             "level": "pre-A1",
             "sequence": 81
@@ -453765,7 +453765,7 @@
     "terms": 54,
     "termsUsed": 54,
     "lessonsUsingTerms": 28620,
-    "usesBeforeIntroduction": 46875,
+    "usesBeforeIntroduction": 46880,
     "technicalUsesBeforeIntroduction": 6584,
     "technicalLessons": 3787,
     "worstTerms": [
