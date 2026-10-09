@@ -8,23 +8,23 @@ type: etymology
 headword: நல்ல இரவு / இரவு வணக்கம்
 romanization: "nalla iravu / iravu vaṇakkam"
 gloss: Tamil repeats its native greeting loyalty with good-night alternatives built from known roots
-prerequisites: [TA-C25-iniya-iravu]
+prerequisites: [TA-C25-iniya-iravu, TA-W10-read-naan]
 sounds: [tamil-geminate-lla]
 roots: [tamil-nal-good, vaṇaṅku]
 duration:
   max_seconds: 240
 requires:
-  knowledge: [TA-ETYMON-INIYA-IRAVU-01]
+  knowledge: [TA-ETYMON-INIYA-IRAVU-01, TA-PRAGMATICS-INIYA-IRAVU-02, TA-SCRIPT-AA-SIGN-01, TA-SCRIPT-READ-NAAN-02]
 introduces:
   knowledge: [TA-LEX-GOODNIGHT-ALTERNATIVES-01]
 practises:
-  knowledge: [TA-ETYMON-INIYA-IRAVU-01, TA-LEX-GOODNIGHT-ALTERNATIVES-01]
+  knowledge: [TA-ETYMON-INIYA-IRAVU-01, TA-PRAGMATICS-INIYA-IRAVU-02, TA-SCRIPT-AA-SIGN-01, TA-SCRIPT-READ-NAAN-02, TA-LEX-GOODNIGHT-ALTERNATIVES-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-colloquial
-reviews_of: [TA-C25-iniya-iravu, TA-C01-vanakkam-family-register, TA-C01-nandri]
+reviews_of: [TA-C25-iniya-iravu, TA-W10-read-naan, TA-C01-vanakkam-family-register, TA-C01-nandri]
 ---
 
 # நல்ல இரவு and இரவு வணக்கம் — old roots recombined
@@ -59,6 +59,22 @@ The learner does not memorize isolated formulas; known roots generate options.
 - [YOU SAY: "nalla iravu" — good night]
 - [YOU SAY: "iravu vaṇakkam" — night greetings]
 - [YOU TRACE: *nal-* → *nalam / naṉṟi / nalla*]
+
+## Guided Practice — the pattern it breaks
+<!-- hl-knowledge: introduces=[]; assesses=[TA-PRAGMATICS-INIYA-IRAVU-02] -->
+
+- Hindi, Kannada, Telugu and Malayalam share one "good night." Which? (***śubha
+  rātri*** — Sanskrit *śubh* + *rātri*.) Does Tamil's standard phrase use it?
+  (**No** — none turned up in the sources checked; Tamil built its own.)
+
+## Script — ா and நான்
+<!-- hl-knowledge: introduces=[]; assesses=[TA-SCRIPT-AA-SIGN-01, TA-SCRIPT-READ-NAAN-02] -->
+
+- [YOU READ: **மா** — then **நா** — then **நான்**]
+- [YOU POINT: the ா sign, then the puḷḷi]
+
+Where does **ா** sit? (**After** its consonant.) Which *n* closes **நான்**?
+(**ன**, the alveolar one, its *a* removed by the puḷḷi.)
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[TA-ETYMON-INIYA-IRAVU-01, TA-LEX-GOODNIGHT-ALTERNATIVES-01] -->

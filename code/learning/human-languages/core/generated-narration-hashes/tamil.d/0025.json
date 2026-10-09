@@ -1,17 +1,17 @@
 {
   "language": "tamil",
   "chapter": 25,
-  "sourceHash": "fnv1a64:db74fa568b022a95",
+  "sourceHash": "fnv1a64:60c84e91393417c1",
   "lessonIds": [
     "TA-C25-iniya-iravu",
     "TA-W10-read-naan",
     "TA-C25-goodnight-alternatives"
   ],
-  "voiceLessons": 2,
+  "voiceLessons": 1,
   "drivablePrefix": 1,
   "text": "tamil/narration/ch25.txt",
   "json": "tamil/narration/ch25.json",
-  "textHash": "fnv1a64:bad727ed829126d7",
-  "jsonHash": "fnv1a64:26f3f89ac93f2d25",
+  "textHash": "fnv1a64:e975241ba72a9ec6",
+  "jsonHash": "fnv1a64:c1cec2054b64540d",
   "findings": []
 }

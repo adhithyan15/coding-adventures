@@ -4,18 +4,21 @@
     "language": "tamil",
     "chapter": 25,
     "sequence": 790,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "script-block"
     ],
     "coreModality": "voice",
     "coreReasons": [
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:7c5fc07b96c0cf76"
+    "sourceHash": "fnv1a64:41487a61933d7087",
+    "detachableSegments": [
+      "Script — ா and நான்"
+    ]
   },
   "findings": []
 }

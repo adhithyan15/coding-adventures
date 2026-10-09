@@ -17,13 +17,13 @@ sounds: [devanagari-long-aa, aspirated-tha]
 roots: [hasta-sanskrit]
 etymology_hook: "हाथ hāth comes from Sanskrit हस्त hasta — the -st- cluster simplified through Prakrit into a geminate (doubled) aspirated consonant, which later simplified again, lengthening the vowel before it to make up for the lost sound"
 duration:
-  max_seconds: 180
+  max_seconds: 220
 requires:
   knowledge: [HI-CONCEPT-C13-SIR-01]
 introduces:
   knowledge: [HI-CONCEPT-C13-HAATH-01, HI-CONCEPT-C13-HAATH-02]
 practises:
-  knowledge: [HI-CONCEPT-C13-HAATH-01, HI-CONCEPT-C13-HAATH-02]
+  knowledge: [HI-CONCEPT-C13-SIR-01, HI-CONCEPT-C13-HAATH-01, HI-CONCEPT-C13-HAATH-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -69,6 +69,14 @@ Hindi, not a one-off coincidence for this word alone.
 - [YOU SAY: the Sanskrit source — "hasta"]
 - [YOU SAY: the shape of the change — "‑st‑ cluster → simplified consonant +
   longer vowel"]
+
+## Guided Practice — the head, from memory
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C13-SIR-01] -->
+
+- What is "head", and which Sanskrit word wore down to it? (**सिर** *sir*,
+  from **शिरस्** *śiras*.)
+- Where does the fuller root still live? (In **yoga and anatomical** terms
+  built on the related *śīrṣa*.)
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C13-HAATH-01, HI-CONCEPT-C13-HAATH-02] -->

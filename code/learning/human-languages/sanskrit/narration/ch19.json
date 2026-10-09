@@ -4,7 +4,7 @@
   "chapter": 19,
   "title": "Counting On --- Six to Ten, and What They Prove",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:8a90f932e1d84234",
+  "sourceHash": "fnv1a64:731aa0613ab2d8b2",
   "lessons": [
     {
       "id": "SA-C19-six",
@@ -643,7 +643,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d8ba1790c6d2e274",
+      "sourceHash": "fnv1a64:f569bad4e8704efe",
       "notice": null,
       "blocks": [
         {
@@ -749,6 +749,46 @@
         },
         {
           "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — seven, eight, nine",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": true,
+              "source": "[PAUSE 1s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"seven\", and whether it is the parent of Latin septem (sapta; no — cousins from a shared parent nobody wrote down)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"seven\", and whether it is the parent of Latin *septem* (*sapta*; no — cousins from a shared parent nobody wrote down)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"eight\", and the old idea about its shape (aṣṭa; it behaves like a dual, \"two fours\" — a hypothesis, not a fact)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"eight\", and the old idea about its shape (*aṣṭa*; it behaves like a dual, \"two fours\" — a hypothesis, not a fact)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"nine\", and the word it must not be mistaken for (navan; nava, \"new\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"nine\", and the word it must not be mistaken for (*navan*; *nava*, \"new\")]"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

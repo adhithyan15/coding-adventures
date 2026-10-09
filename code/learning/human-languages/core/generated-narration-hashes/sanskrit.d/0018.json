@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 18,
-  "sourceHash": "fnv1a64:11e1232a02f09d61",
+  "sourceHash": "fnv1a64:94663e180261c622",
   "lessonIds": [
     "SA-C18-when",
     "SA-C18-why",
@@ -13,7 +13,7 @@
   "drivablePrefix": 5,
   "text": "sanskrit/narration/ch18.txt",
   "json": "sanskrit/narration/ch18.json",
-  "textHash": "fnv1a64:ed2efa5811ba0f10",
-  "jsonHash": "fnv1a64:df5e150473fd6256",
+  "textHash": "fnv1a64:902dd6214a3377cc",
+  "jsonHash": "fnv1a64:cbb41bb16fc607fe",
   "findings": []
 }

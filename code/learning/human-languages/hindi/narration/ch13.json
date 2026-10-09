@@ -4,7 +4,7 @@
   "chapter": 13,
   "title": "Head and Hand",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:e46e78b496b4a0b6",
+  "sourceHash": "fnv1a64:117c1c2930e98793",
   "lessons": [
     {
       "id": "HI-C13-sir",
@@ -126,7 +126,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6a9b47f78b7ac018",
+      "sourceHash": "fnv1a64:65293674550b6520",
       "notice": null,
       "blocks": [
         {
@@ -210,6 +210,21 @@
         },
         {
           "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — the head, from memory",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What is \"head\", and which Sanskrit word wore down to it? (सिर sir, from शिरस् śiras.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does the fuller root still live? (In yoga and anatomical terms built on the related śīrṣa.)"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

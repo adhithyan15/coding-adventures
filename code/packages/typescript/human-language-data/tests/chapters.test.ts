@@ -386,6 +386,10 @@ describe("corpus snapshot", () => {
     // german JOINS. Its one indebted chapter (30) named GE-C17-hand as payoff while
     // the chapter's closing practice, GE-R17-wie-geht-es-wirklich, came after every
     // lesson it teaches; the payoff moves there and assesses all twelve atoms.
+    //
+    // sanskrit JOINS. Chapters 2-6 and 16-20 now recall every atom their chapter
+    // introduces that comes before the payoff (ch6's payoff moves to its
+    // continuation lesson SA-C06-pancha-travels-more, which teaches the punch caution).
     expect(report.tracks.filter((t) => t.clean).map((t) => t.language).sort()).toEqual([
       "arabic",
       "bengali",
@@ -402,6 +406,7 @@ describe("corpus snapshot", () => {
       "portuguese",
       "punjabi",
       "russian",
+      "sanskrit",
       "telugu",
       "urdu",
     ]);

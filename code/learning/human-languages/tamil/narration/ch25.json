@@ -4,7 +4,7 @@
   "chapter": 25,
   "title": "Good Night",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:db74fa568b022a95",
+  "sourceHash": "fnv1a64:60c84e91393417c1",
   "lessons": [
     {
       "id": "TA-C25-iniya-iravu",
@@ -305,13 +305,23 @@
       "romanization": "nalla iravu / iravu vaṇakkam",
       "gloss": "Tamil repeats its native greeting loyalty with good-night alternatives built from known roots",
       "script": "tamil",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:7c5fc07b96c0cf76",
-      "notice": null,
+      "sourceHash": "fnv1a64:41487a61933d7087",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Script — ா and நான்"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Guided Practice and Script — ா and நான் until you have stopped, and I will say so again when we reach them."
+      },
       "blocks": [
         {
           "index": 0,
@@ -399,6 +409,46 @@
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — the pattern it breaks",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hindi, Kannada, Telugu and Malayalam share one \"good night.\" Which? (śubha rātri — Sanskrit śubh + rātri.) Does Tamil's standard phrase use it? (No — none turned up in the sources checked; Tamil built its own.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "script",
+          "title": "Script — ா and நான்",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "மா — then நா — then நான் (nāṉ)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **மா** — then **நா** — then **நான்**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the ா sign, then the puḷḷi",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the ா sign, then the puḷḷi]"
+            },
+            {
+              "kind": "speech",
+              "text": "Where does ா sit? (After its consonant.) Which n closes நான் (nāṉ)? (ன, the alveolar one, its a removed by the puḷḷi.)"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -9,9 +9,11 @@
   "payoff": {
     "lesson": "HI-C19-age-grammar",
     "kind": "dialogue",
-    "summary": "Ask तुम कितने साल के हो? and answer मैं बीस साल का हूँ, with के/का carrying the 'belonging to' work.",
+    "summary": "Name उम्र as the everyday Perso-Arabic word for age beside formal आयु, then ask तुम कितने साल के हो? and answer मैं बीस साल का हूँ, with के/का carrying the 'belonging to' work.",
     "assesses": [
+      "HI-CONCEPT-C19-UMR-01",
       "HI-CONCEPT-C19-AGE-GRAMMAR-01"
-    ]
+    ],
+    "note": "HI-C19-age-grammar now recalls उम्र and आयु as well as its own grammar: 2 of the chapter's 3 atoms. HI-S123-letter-da (sequence 671) comes after the payoff in reading order, so it cannot honestly assess that segment."
   }
 }

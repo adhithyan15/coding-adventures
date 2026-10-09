@@ -9,11 +9,17 @@
   "payoff": {
     "lesson": "HI-C22-gyarah-bees",
     "kind": "production",
-    "summary": "Count ग्यारह to बीस, then read उन्नीस as 'one less than twenty', the same logic as Latin's ūndēvīgintī.",
+    "summary": "Say ओस and ऊन, pick out उ, ऊ and ओ, count ग्यारह to बीस, then read उन्नीस as 'one less than twenty', the same logic as Latin's ūndēvīgintī.",
     "assesses": [
+      "HI-LEX-ANCHOR-UUN",
+      "HI-LEX-ANCHOR-OS",
+      "HI-SCRIPT-RECOG-127",
+      "HI-SCRIPT-RECOG-128",
+      "HI-SCRIPT-RECOG-129",
       "HI-CONCEPT-C22-GYARAH-BEES-01",
       "HI-CONCEPT-C22-GYARAH-BEES-03",
       "HI-CONCEPT-C22-GYARAH-BEES-04"
-    ]
+    ],
+    "note": "HI-C22-gyarah-bees is the chapter's last lesson (sequence 710) and assesses all 8 atoms it introduces: ओस and ऊन in the warm-up, the three independent vowels उ, ऊ and ओ in a pointing section, and the teens, उन्नीस and बीस."
   }
 }
