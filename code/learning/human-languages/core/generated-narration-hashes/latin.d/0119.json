@@ -1,7 +1,7 @@
 {
   "language": "latin",
   "chapter": 119,
-  "sourceHash": "fnv1a64:f6772e445c7394fe",
+  "sourceHash": "fnv1a64:9ab132261d6a98ce",
   "lessonIds": [
     "LA-C119-area",
     "LA-C119-miliarium",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "latin/narration/ch119.txt",
   "json": "latin/narration/ch119.json",
-  "textHash": "fnv1a64:4a04208e267357fc",
-  "jsonHash": "fnv1a64:b4d4b2f32cb73cd9",
+  "textHash": "fnv1a64:6952b3245da0f97a",
+  "jsonHash": "fnv1a64:44e1f37a5906655f",
   "findings": []
 }

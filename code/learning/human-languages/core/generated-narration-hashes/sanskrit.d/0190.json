@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 190,
-  "sourceHash": "fnv1a64:6d472c07e5bff60b",
+  "sourceHash": "fnv1a64:e7996fb6d04a654e",
   "lessonIds": [
     "SA-C190-masah",
     "SA-C190-yavah",
@@ -15,7 +15,7 @@
   "drivablePrefix": 7,
   "text": "sanskrit/narration/ch190.txt",
   "json": "sanskrit/narration/ch190.json",
-  "textHash": "fnv1a64:bb0046cfb39d1caf",
-  "jsonHash": "fnv1a64:791f4be7b2c6ecd6",
+  "textHash": "fnv1a64:ff9a662990bf081b",
+  "jsonHash": "fnv1a64:68b777ec0f0e5efb",
   "findings": []
 }
