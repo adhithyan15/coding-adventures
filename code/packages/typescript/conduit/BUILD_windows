@@ -1,0 +1,6 @@
+# Windows: the conduit_native_node N-API addon needs node.lib to link
+# against (rust-lld otherwise fails on every unresolved napi_* symbol), and
+# ext/conduit_native_node/build.rs only supplies link flags for macOS and
+# Linux. Providing node.lib on Windows CI is not configured, so this package
+# is covered by the Linux and macOS runners, like the other *-native addons.
+echo Skipping typescript/conduit on Windows — Node.js import library not configured for CI

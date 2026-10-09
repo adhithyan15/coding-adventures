@@ -1035,6 +1035,7 @@ import base64
 import os
 import pathlib
 import sys
+import tempfile
 
 root = pathlib.Path(sys.argv[1])
 if not root.is_absolute():
@@ -1069,6 +1070,39 @@ try:
                 raise
             missing_parts.insert(0, current_root.name)
             current_root = parent
+
+    if not (os.open in os.supports_dir_fd and os.mkdir in os.supports_dir_fd):
+        # Windows has no dir_fd support, and os.open() cannot open a bare
+        # directory there, so the descriptor walk below is impossible. Same
+        # fallback as the Python port: reject a symlink at every component
+        # (the existing-ancestor check above already ran), then write a
+        # sibling temp file and os.replace() it into place. Replacing the
+        # directory entry never follows a symlink swapped in after the check.
+        # It is not fully TOCTOU-proof the way the dir_fd walk is; it is what
+        # the platform's filesystem API allows.
+        current = canonical_root
+        for component in [*missing_parts, *relative_path.parts[:-1]]:
+            current = current / component
+            if current.is_symlink():
+                raise RuntimeError("Refusing to write through symlinked or invalid directory")
+            current.mkdir(exist_ok=True)
+            if not current.is_dir() or current.is_symlink():
+                raise RuntimeError("Refusing to write through symlinked or invalid directory")
+        target = current / relative_path.name
+        if target.is_symlink():
+            raise RuntimeError("Refusing to write through symlinked or invalid output file")
+        tmp_fd, tmp_name = tempfile.mkstemp(dir=current)
+        try:
+            with os.fdopen(tmp_fd, "wb") as handle:
+                handle.write(payload)
+            os.replace(tmp_name, target)
+        except BaseException:
+            try:
+                os.remove(tmp_name)
+            except FileNotFoundError:
+                pass
+            raise
+        sys.exit(0)
 
     current_fd = os.open(canonical_root, open_directory_flags)
     directory_fds.append(current_fd)

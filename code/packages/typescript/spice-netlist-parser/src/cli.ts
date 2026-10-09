@@ -2,6 +2,7 @@
 
 import { readFile } from "node:fs/promises";
 import { stdin, stderr, stdout } from "node:process";
+import { pathToFileURL } from "node:url";
 
 import { CLI_ERROR_CODE, inspectNetlistJson, runNetlistJson } from "./index.js";
 
@@ -32,7 +33,11 @@ export async function main(argv: readonly string[]): Promise<number> {
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Run only when executed directly, not when imported by the tests.
+// `pathToFileURL` matters on Windows: `file://${argv[1]}` would compare
+// `file:///D:/.../cli.js` against `file://D:\...\cli.js` and never match, so
+// the bundled CLI exited 0 with no output.
+if (process.argv[1] !== undefined && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main(process.argv.slice(2)).then((status) => {
     process.exitCode = status;
   });
