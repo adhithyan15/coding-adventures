@@ -5,6 +5,7 @@ import io
 import os
 import subprocess
 import sys
+import threading
 import time
 from pathlib import Path
 from typing import Any
@@ -14,7 +15,7 @@ import pytest
 from forme_plugin_runner import define_stage
 from forme_plugin_runner.peer import Peer, ProtocolError, RpcFault, _rpc_error
 from forme_plugin_runner.runner import RunnerState, StreamInput, _validate_stage
-from forme_plugin_runner.wire import encode_frame
+from forme_plugin_runner.wire import FrameDecoder, encode_frame
 
 
 async def _request(_request_id: int, _method: str, _params: Any) -> Any:
@@ -292,6 +293,33 @@ def test_unexpected_errors_are_redacted() -> None:
     }
 
 
+def _await_response(process: subprocess.Popen[bytes], response_id: int) -> None:
+    """Block until the runner answers `response_id` on stdout.
+
+    The runner installs its SIGINT/SIGTERM handlers before it reads any input,
+    so a reply proves the handlers are live. A fixed sleep before
+    `terminate()` used to race interpreter start-up: on a loaded CI runner the
+    signal could land before `add_signal_handler` ran, and the default action
+    killed the process with -15 instead of the runner shutting down cleanly.
+    """
+    assert process.stdout is not None
+    stdout = process.stdout
+    decoder = FrameDecoder(1 << 20, 4096)
+    seen = threading.Event()
+
+    def pump() -> None:
+        while not seen.is_set():
+            chunk = stdout.read1(4096)
+            if not chunk:
+                return
+            if any(message.get("id") == response_id for message in decoder.push(chunk)):
+                seen.set()
+
+    reader = threading.Thread(target=pump, daemon=True)
+    reader.start()
+    assert seen.wait(timeout=30), f"runner never answered request {response_id}"
+
+
 @pytest.mark.parametrize("active", [False, True])
 def test_runner_exits_after_termination_signal(active: bool) -> None:
     fixture = Path(__file__).with_name("fixture.py")
@@ -302,19 +330,26 @@ def test_runner_exits_after_termination_signal(active: bool) -> None:
         stderr=subprocess.PIPE,
     )
     try:
+        # Both cases handshake first and wait for the reply, so SIGTERM only
+        # arrives once the handlers exist. "Inactive" still means no stage is
+        # running when the signal lands.
+        handshake = {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "handshake",
+            "params": {
+                "pluginName": "@forme/conformance",
+                "pluginVersion": "1.0.0",
+                "apiVersion": 2,
+                "protocolVersion": 1,
+            },
+        }
+        assert process.stdin is not None
+        process.stdin.write(encode_frame(handshake, 4096))
+        process.stdin.flush()
+        _await_response(process, 1)
         if active:
             messages = [
-                {
-                    "jsonrpc": "2.0",
-                    "id": 1,
-                    "method": "handshake",
-                    "params": {
-                        "pluginName": "@forme/conformance",
-                        "pluginVersion": "1.0.0",
-                        "apiVersion": 2,
-                        "protocolVersion": 1,
-                    },
-                },
                 {"jsonrpc": "2.0", "id": 2, "method": "announce", "params": {}},
                 {
                     "jsonrpc": "2.0",
@@ -333,10 +368,10 @@ def test_runner_exits_after_termination_signal(active: bool) -> None:
                     },
                 },
             ]
-            assert process.stdin is not None
             process.stdin.write(b"".join(encode_frame(message, 4096) for message in messages))
             process.stdin.flush()
-        time.sleep(0.1)
+            # Give stage.run a moment to start waiting for cancellation.
+            time.sleep(0.1)
         process.terminate()
         process.wait(timeout=2)
         if os.name != "nt":
