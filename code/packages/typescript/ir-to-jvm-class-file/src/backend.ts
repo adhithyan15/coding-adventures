@@ -1022,12 +1022,23 @@ function asLabel(operand: IrOperand): IrLabel {
   return operand;
 }
 
+// Returns a "/"-joined path whatever the host OS. `classFilename` is a
+// separate field from `className`, so it gets its own checks. A backslash or a
+// colon in a component is rejected outright: on Windows either one would turn a
+// single "/"-delimited component into a traversal (`..\..\x.class`) or a
+// drive-absolute path (`C:\x.class`) once the writer joins it to the root.
 function validatedOutputRelativePath(classFilename: string): string {
   const parts = classFilename.split("/").filter(Boolean);
-  if (parts.length === 0 || parts.some((component) => component === "." || component === "..")) {
+  if (
+    parts.length === 0 ||
+    parts.some(
+      (component) =>
+        component === "." || component === ".." || component.includes("\\") || component.includes(":"),
+    )
+  ) {
     throw new JvmBackendError("Resolved class-file path escapes the requested classpath root");
   }
-  return join(...parts);
+  return parts.join("/");
 }
 
 const SECURE_CLASS_WRITER = `
@@ -1042,6 +1053,19 @@ if not root.is_absolute():
     root = pathlib.Path.cwd() / root
 relative_path = pathlib.PurePosixPath(sys.argv[2])
 payload = base64.b64decode(sys.argv[3])
+# Defence in depth behind the TypeScript validator: a component holding a
+# backslash or a drive colon is a traversal on Windows.
+if not relative_path.parts or any(
+    part in (".", "..") or "\\\\" in part or ":" in part for part in relative_path.parts
+):
+    raise RuntimeError("Resolved class-file path escapes the requested classpath root")
+
+def is_link_like(path):
+    # NTFS junctions are reparse points that is_symlink() does not report.
+    if path.is_symlink():
+        return True
+    isjunction = getattr(os.path, "isjunction", None)
+    return bool(isjunction and isjunction(path))
 
 open_directory_flags = os.O_RDONLY
 if hasattr(os, "O_DIRECTORY"):
@@ -1083,14 +1107,18 @@ try:
         current = canonical_root
         for component in [*missing_parts, *relative_path.parts[:-1]]:
             current = current / component
-            if current.is_symlink():
+            if is_link_like(current):
                 raise RuntimeError("Refusing to write through symlinked or invalid directory")
             current.mkdir(exist_ok=True)
-            if not current.is_dir() or current.is_symlink():
+            if not current.is_dir() or is_link_like(current):
                 raise RuntimeError("Refusing to write through symlinked or invalid directory")
         target = current / relative_path.name
-        if target.is_symlink():
+        if is_link_like(target):
             raise RuntimeError("Refusing to write through symlinked or invalid output file")
+        # The resolved parent must still be inside the canonical root.
+        resolved_parent = pathlib.Path(os.path.realpath(current))
+        if resolved_parent != canonical_root and canonical_root not in resolved_parent.parents:
+            raise RuntimeError("Resolved class-file path escapes the requested classpath root")
         tmp_fd, tmp_name = tempfile.mkstemp(dir=current)
         try:
             with os.fdopen(tmp_fd, "wb") as handle:
