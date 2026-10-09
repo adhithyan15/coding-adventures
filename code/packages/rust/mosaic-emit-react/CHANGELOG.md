@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-10-09 (Dependabot)
+
+- **The emitted React project pins `vitest` 4.1.11 instead of 3.2.7.** 3.2.7 carries GHSA-82fw-gwwq-j7x9, an arbitrary file read through `@vitest/mocker`, and the 3.x line has no fix. It also pulls in `tinypool`, which has two critical prototype-pollution advisories (GHSA-5gmw-xhrv-c9v3, GHSA-85c8-ppgw-ccpr). vitest 4.1.11 peers on `vite ^6 || ^7 || ^8`, which covers the pinned `vite` 7.3.6. The `vitest run --environment jsdom` test script is unchanged.
+
 ## 2026-09-25 (checkbox row index)
 
 - **`HostCheckbox` in a list reports which row changed (UI29-2 §2.1.1).** Inside a `For`, an `onToggle` that targets `( index : number )` now carries the row index, exactly as a `HostButton` click does. Before, it carried only the new checked value, so a list of checkboxes could not say which item was toggled, and `mosaic-pkg-checklist` had to draw a toggle button beside a "☐" glyph. Any other single parameter still receives the checked value.
