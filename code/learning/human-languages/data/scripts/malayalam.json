@@ -1828,8 +1828,17 @@
       "components": [
         "ഠ  ṭha — base consonant (inherent “a”)"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "circle anticlockwise down the left",
+        "without lifting, climb the right side back to the top"
+      ],
+      "strokeOrderNote": "One recorded stroke, so no lift: from the top, anticlockwise round the ring and back to the top.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Sachin Nandakumar, Jayasree: Malayalam handwriting, animated stroke by stroke (github.com/sachn1/jayasree, commit e0c9d57, October 2026), js/src/stroke-data.raw.json: the hand-recorded centre-line stroke for ഠ; \"Jayasree\" by Sachin Nandakumar, CC BY 4.0",
+        "url": "https://github.com/sachn1/jayasree/blob/e0c9d57dd32031c948da4d5f8432aae3e22c5bba/js/src/stroke-data.raw.json",
+        "variation": "Jayasree records ഠ as one stroke that starts at the top of the ring and runs anticlockwise: down the left side first, round the bottom, up the right side and closed at the top. The sources disagree on the direction. SPACE Kerala's Thooval (GPL-3.0, facts only) and the grahyam samples (no licence, counts only) were read in an earlier round as anticlockwise too, while Moag's Table IV arrow (CC BY-NC-SA 4.0, facts only) runs the ring clockwise; Jayasree breaks that tie, three sources to one, and a learner taught the clockwise ring is not wrong. Jayasree keeps one recorded gesture per pen-down stroke, so one stroke means the recorder did not lift. Only these facts (stroke count, start, order, direction and end) are taken; no recorded coordinate is copied. The stroke data is licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) as \"Jayasree\" by Sachin Nandakumar, https://github.com/sachn1/jayasree; this record adapts it, and the pen path is fitted to the bundled Noto Sans Malayalam outline rather than to the recording, which was drawn over the Manjari typeface. One recorder, so confidence is medium."
+      }
     },
     {
       "glyph": "ഠാ",
@@ -6515,7 +6524,21 @@
       "compositionSource": {
         "citation": "The Unicode Consortium, The Unicode Standard, Version 17.0, Core Specification, §12.9.3 ‘Rendering Malayalam’, ‘Candrakkala’, U+0D4D MALAYALAM SIGN VIRAMA (2025)",
         "url": "https://www.unicode.org/versions/Unicode17.0.0/core-spec/chapter-12/",
-        "variation": "The standard identifies U+0D4D as Malayalam's candrakkala, shows consonant-plus-virama-plus-consonant sequences forming conjuncts, and explains that a visible candrakkala either suppresses the preceding vowel or replaces it with the neutral half-u sound. It specifies encoded composition and placement, not a universal handwriting direction or pen-lift count; the carrier-first instruction is therefore a transparent learner composition convention, and this entry deliberately makes no standalone ductus claim."
+        "variation": "The standard identifies U+0D4D as Malayalam's candrakkala, shows consonant-plus-virama-plus-consonant sequences forming conjuncts, and explains that a visible candrakkala either suppresses the preceding vowel or replaces it with the neutral half-u sound. It specifies encoded composition and placement, not a universal handwriting direction or pen-lift count; the carrier-first instruction is therefore a transparent learner composition convention, and the sign's own ductus, drawn alone, is cited separately in strokeOrderSource."
+      },
+      "components": [
+        "a small cup, open at the top"
+      ],
+      "strokeOrder": [
+        "start at the left tip and dip down",
+        "without lifting, round the bottom and rise to the right"
+      ],
+      "strokeOrderNote": "One recorded stroke, so no lift: down from the left tip and round the cup to the right tip.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Sachin Nandakumar, Jayasree: Malayalam handwriting, animated stroke by stroke (github.com/sachn1/jayasree, commit e0c9d57, October 2026), js/src/stroke-data.raw.json: the hand-recorded centre-line stroke for ്, drawn alone; \"Jayasree\" by Sachin Nandakumar, CC BY 4.0",
+        "url": "https://github.com/sachn1/jayasree/blob/e0c9d57dd32031c948da4d5f8432aae3e22c5bba/js/src/stroke-data.raw.json",
+        "variation": "Jayasree records the candrakkala drawn alone as one stroke: it starts at the left tip, dips round the bottom of the cup and rises to the right tip (start upper left, end upper right). This is the sign's own ductus only; where it goes against its carrier stays the compositionSource's claim, and no written order against a carrier is claimed. Jayasree keeps one recorded gesture per pen-down stroke, so one stroke means the recorder did not lift. Only these facts (stroke count, start, order, direction and end) are taken; no recorded coordinate is copied. The stroke data is licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) as \"Jayasree\" by Sachin Nandakumar, https://github.com/sachn1/jayasree; this record adapts it, and the pen path is fitted to the bundled Noto Sans Malayalam outline rather than to the recording, which was drawn over the Manjari typeface. One recorder, so confidence is medium."
       }
     },
     {
@@ -6755,6 +6778,61 @@
         "url": "https://github.com/matjic/malayalam/blob/7141acd2f310bc8928822a7aec61d1149efa6fa3/docs/assets/images/front-writing-032.jpg",
         "variation": "Moag's Table III (p. xxii) draws it as four movements to the left of the dash that stands for the consonant: the inner loop of the first coil (1), its arch over the top and down to the lower right (2), the inner loop of the second coil (3) and its arch (4). Each coil is the e sign െ, drawn the way the same page numbers െ. Moag's book is CC BY-NC-SA 4.0, so only these facts (order, start, direction and end) are cited; no drawing is copied. The page is read from the scan in Mathew Jacob's digital edition (github.com/matjic/malayalam, commit 7141acd, and again at commit 2844253), which notes that the numbers mark drawing movements that can belong to one continuous stroke, not pen lifts. No recording of ൈ itself was found, so the lift count is reasoned rather than observed and confidence is medium: the two coils are separate pieces of ink, so the pen must lift once between them, and each coil is written in one run, as recorded writers write െ (Santhosh Thottingal's hand curves, gitlab.com/santhoshtr/hand, MIT, record െ as one stroke; none of grahyam's 43 unique െ samples, github.com/bluebottlewize/grahyam, no licence, counts only, jumps the way a lift would). Moag does not number the consonant against the sign, so this record claims no written order against it: the sign is drawn only by itself, and a word with it stays refused. Noto Sans Malayalam builds the standalone sign from two copies of െ side by side, so each run follows the outline of one copy."
       }
+    },
+    {
+      "mark": "ൊ",
+      "sound": "o",
+      "role": "vowel-sign",
+      "attachesAs": "the Malayalam vowel sign o, printed in two parts around its consonant: െ to its left and ാ to its right",
+      "example": {
+        "base": "ക",
+        "combined": "കൊ",
+        "sound": "ko"
+      },
+      "components": [
+        "the left part, െ",
+        "the right part, ാ"
+      ],
+      "strokeOrder": [
+        "circle the small inner loop",
+        "without lifting, arch over and down to the foot",
+        "lift, then draw ാ clockwise"
+      ],
+      "strokeOrderNote": "Two recorded strokes, so one lift: െ first, then ാ to its right. The placeholder dot Noto prints between them marks where the consonant would go and is not drawn.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Sachin Nandakumar, Jayasree: Malayalam handwriting, animated stroke by stroke (github.com/sachn1/jayasree, commit e0c9d57, October 2026), js/src/stroke-data.raw.json: the hand-recorded centre-line strokes for ൊ, drawn alone; \"Jayasree\" by Sachin Nandakumar, CC BY 4.0",
+        "url": "https://github.com/sachn1/jayasree/blob/e0c9d57dd32031c948da4d5f8432aae3e22c5bba/js/src/stroke-data.raw.json",
+        "variation": "Jayasree records ൊ drawn alone as two strokes: first the left sign െ, the same way its own record draws it (its small loop, then over and down to the foot), then, after a lift, ാ from its upper tip clockwise round to the lower tip. Noto Sans Malayalam prints the standalone sign as the െ outline, a placeholder dot where the consonant would sit, and the ാ outline 923 units to the right; the dot is not written, so no stroke draws it, and the coverage check skips exactly that contour for this glyph. The paths are the cited െ and ാ paths, the second shifted with its outline. This is the sign's own ductus only; it claims no written order against a consonant. Jayasree keeps one recorded gesture per pen-down stroke, so two strokes mean one lift. Only these facts (stroke count, start, order, direction and end) are taken; no recorded coordinate is copied. The stroke data is licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) as \"Jayasree\" by Sachin Nandakumar, https://github.com/sachn1/jayasree; this record adapts it, and the pen path is fitted to the bundled Noto Sans Malayalam outline rather than to the recording, which was drawn over the Manjari typeface. One recorder, so confidence is medium."
+      }
+    },
+    {
+      "mark": "ോ",
+      "sound": "ō",
+      "role": "vowel-sign",
+      "attachesAs": "the Malayalam vowel sign ō, printed in two parts around its consonant: േ to its left and ാ to its right",
+      "example": {
+        "base": "ക",
+        "combined": "കോ",
+        "sound": "kō"
+      },
+      "components": [
+        "the left part, േ",
+        "the right part, ാ"
+      ],
+      "strokeOrder": [
+        "circle the small top loop",
+        "without lifting, sweep left and round the bottom",
+        "without lifting, curl up round the lower loop",
+        "lift, then draw ാ clockwise"
+      ],
+      "strokeOrderNote": "Two recorded strokes, so one lift: േ first, then ാ to its right. The placeholder dot Noto prints between them marks where the consonant would go and is not drawn.",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "Sachin Nandakumar, Jayasree: Malayalam handwriting, animated stroke by stroke (github.com/sachn1/jayasree, commit e0c9d57, October 2026), js/src/stroke-data.raw.json: the hand-recorded centre-line strokes for ോ, drawn alone; \"Jayasree\" by Sachin Nandakumar, CC BY 4.0",
+        "url": "https://github.com/sachn1/jayasree/blob/e0c9d57dd32031c948da4d5f8432aae3e22c5bba/js/src/stroke-data.raw.json",
+        "variation": "Jayasree records ോ drawn alone as two strokes: first the left sign േ, the same way its own record draws it (its top loop, left round the bottom, then up round the lower loop), then, after a lift, ാ from its upper tip clockwise round to the lower tip. Noto Sans Malayalam prints the standalone sign as the േ outline, a placeholder dot where the consonant would sit, and the ാ outline 788 units to the right; the dot is not written, so no stroke draws it, and the coverage check skips exactly that contour for this glyph. The paths are the cited േ and ാ paths, the second shifted with its outline. This is the sign's own ductus only; it claims no written order against a consonant. Jayasree keeps one recorded gesture per pen-down stroke, so two strokes mean one lift. Only these facts (stroke count, start, order, direction and end) are taken; no recorded coordinate is copied. The stroke data is licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) as \"Jayasree\" by Sachin Nandakumar, https://github.com/sachn1/jayasree; this record adapts it, and the pen path is fitted to the bundled Noto Sans Malayalam outline rather than to the recording, which was drawn over the Manjari typeface. One recorder, so confidence is medium."
+      }
     }
   ],
   "digits": [
@@ -6775,8 +6853,19 @@
       "components": [
         "൧  1 — Malayalam digit"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "climb the left stem",
+        "without lifting, arch clockwise over and down the right",
+        "without lifting, run left along the baseline",
+        "without lifting, curl down and back to the right"
+      ],
+      "strokeOrderNote": "Four movements in one continuous pen-down run, as the one recorded stroke draws them; Jayasree's recorder did not lift.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Sachin Nandakumar, Jayasree: Malayalam handwriting, animated stroke by stroke (github.com/sachn1/jayasree, commit e0c9d57, October 2026), js/src/stroke-data.raw.json: the hand-recorded centre-line stroke for ൧; \"Jayasree\" by Sachin Nandakumar, CC BY 4.0",
+        "url": "https://github.com/sachn1/jayasree/blob/e0c9d57dd32031c948da4d5f8432aae3e22c5bba/js/src/stroke-data.raw.json",
+        "variation": "Jayasree records ൧ as one stroke: up the left stem from its foot, clockwise over the arch and down the right side, back left along the baseline past the stem, then a curl below the line that ends heading right (start at the stem's foot, end at the lower tip). Jayasree keeps one recorded gesture per pen-down stroke, so one stroke means the recorder did not lift. Only these facts (stroke count, start, order, direction and end) are taken; no recorded coordinate is copied. The stroke data is licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) as \"Jayasree\" by Sachin Nandakumar, https://github.com/sachn1/jayasree; this record adapts it, and the pen path is fitted to the bundled Noto Sans Malayalam outline rather than to the recording, which was drawn over the Manjari typeface. One recorder, so confidence is medium."
+      }
     },
     {
       "glyph": "൨",
@@ -6785,8 +6874,18 @@
       "components": [
         "൨  2 — Malayalam digit"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "climb the left side",
+        "without lifting, arch clockwise over and down to the foot",
+        "without lifting, run right along the baseline"
+      ],
+      "strokeOrderNote": "Three movements in one continuous pen-down run, as the one recorded stroke draws them; Jayasree's recorder did not lift.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Sachin Nandakumar, Jayasree: Malayalam handwriting, animated stroke by stroke (github.com/sachn1/jayasree, commit e0c9d57, October 2026), js/src/stroke-data.raw.json: the hand-recorded centre-line stroke for ൨; \"Jayasree\" by Sachin Nandakumar, CC BY 4.0",
+        "url": "https://github.com/sachn1/jayasree/blob/e0c9d57dd32031c948da4d5f8432aae3e22c5bba/js/src/stroke-data.raw.json",
+        "variation": "Jayasree records ൨ as one stroke: up the left side from its lower tip, clockwise over the top and down to the foot of the right side, then right along the baseline (start lower left, end lower right). Jayasree keeps one recorded gesture per pen-down stroke, so one stroke means the recorder did not lift. Only these facts (stroke count, start, order, direction and end) are taken; no recorded coordinate is copied. The stroke data is licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) as \"Jayasree\" by Sachin Nandakumar, https://github.com/sachn1/jayasree; this record adapts it, and the pen path is fitted to the bundled Noto Sans Malayalam outline rather than to the recording, which was drawn over the Manjari typeface. One recorder, so confidence is medium."
+      }
     },
     {
       "glyph": "൩",
@@ -6795,8 +6894,20 @@
       "components": [
         "൩  3 — Malayalam digit"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "climb the left side",
+        "without lifting, arch clockwise and run down the stem",
+        "without lifting, climb back up the stem",
+        "without lifting, arch clockwise over and down",
+        "without lifting, run right along the baseline"
+      ],
+      "strokeOrderNote": "Five movements in one continuous pen-down run, as the one recorded stroke draws them; Jayasree's recorder did not lift.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Sachin Nandakumar, Jayasree: Malayalam handwriting, animated stroke by stroke (github.com/sachn1/jayasree, commit e0c9d57, October 2026), js/src/stroke-data.raw.json: the hand-recorded centre-line stroke for ൩; \"Jayasree\" by Sachin Nandakumar, CC BY 4.0",
+        "url": "https://github.com/sachn1/jayasree/blob/e0c9d57dd32031c948da4d5f8432aae3e22c5bba/js/src/stroke-data.raw.json",
+        "variation": "Jayasree records ൩ as one stroke: up the left side, clockwise over the first arch and down the stem to its foot, back up the stem, clockwise over the second arch, then right along the baseline (start lower left, end lower right). The climb back up the stem retraces ink the stroke has just drawn. Jayasree keeps one recorded gesture per pen-down stroke, so one stroke means the recorder did not lift. Only these facts (stroke count, start, order, direction and end) are taken; no recorded coordinate is copied. The stroke data is licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) as \"Jayasree\" by Sachin Nandakumar, https://github.com/sachn1/jayasree; this record adapts it, and the pen path is fitted to the bundled Noto Sans Malayalam outline rather than to the recording, which was drawn over the Manjari typeface. One recorder, so confidence is medium."
+      }
     },
     {
       "glyph": "൪",
@@ -6805,8 +6916,19 @@
       "components": [
         "൪  4 — Malayalam digit"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "climb the left side and over the top",
+        "without lifting, cross down the right and round the bottom",
+        "without lifting, climb back up through the crossing",
+        "without lifting, curl up to the top right"
+      ],
+      "strokeOrderNote": "Four movements in one continuous pen-down run, as the one recorded stroke draws them; Jayasree's recorder did not lift.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Sachin Nandakumar, Jayasree: Malayalam handwriting, animated stroke by stroke (github.com/sachn1/jayasree, commit e0c9d57, October 2026), js/src/stroke-data.raw.json: the hand-recorded centre-line stroke for ൪; \"Jayasree\" by Sachin Nandakumar, CC BY 4.0",
+        "url": "https://github.com/sachn1/jayasree/blob/e0c9d57dd32031c948da4d5f8432aae3e22c5bba/js/src/stroke-data.raw.json",
+        "variation": "Jayasree records ൪ as one stroke: up the left side and over the top, down through the crossing and round the bottom of the bowl, back up through the crossing, and on to the top (start lower left, end upper right). Manjari ends the stroke with a straight rise where Noto curls to the upper right; the order and turning are the same, so the path follows Noto's curl. Jayasree keeps one recorded gesture per pen-down stroke, so one stroke means the recorder did not lift. Only these facts (stroke count, start, order, direction and end) are taken; no recorded coordinate is copied. The stroke data is licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) as \"Jayasree\" by Sachin Nandakumar, https://github.com/sachn1/jayasree; this record adapts it, and the pen path is fitted to the bundled Noto Sans Malayalam outline rather than to the recording, which was drawn over the Manjari typeface. One recorder, so confidence is medium."
+      }
     },
     {
       "glyph": "൫",
@@ -6815,8 +6937,20 @@
       "components": [
         "൫  5 — Malayalam digit"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "climb the small inner curve",
+        "without lifting, round it into the notch",
+        "without lifting, turn back and round the right bowl",
+        "without lifting, round the bottom and up the left",
+        "without lifting, arch over and down the right"
+      ],
+      "strokeOrderNote": "Five movements in one continuous pen-down run, as the one recorded stroke draws them; Jayasree's recorder did not lift.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Sachin Nandakumar, Jayasree: Malayalam handwriting, animated stroke by stroke (github.com/sachn1/jayasree, commit e0c9d57, October 2026), js/src/stroke-data.raw.json: the hand-recorded centre-line stroke for ൫; \"Jayasree\" by Sachin Nandakumar, CC BY 4.0",
+        "url": "https://github.com/sachn1/jayasree/blob/e0c9d57dd32031c948da4d5f8432aae3e22c5bba/js/src/stroke-data.raw.json",
+        "variation": "Jayasree records ൫ as one stroke: up the small inner curve from its lower tip, round its top into the notch in the middle, back out and round the right bowl, along the bottom and up the outer left side, then over the top and down the right (start at the inner lower tip, end at the outer lower right). The turn out of the notch retraces a short stretch of ink. Jayasree keeps one recorded gesture per pen-down stroke, so one stroke means the recorder did not lift. Only these facts (stroke count, start, order, direction and end) are taken; no recorded coordinate is copied. The stroke data is licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) as \"Jayasree\" by Sachin Nandakumar, https://github.com/sachn1/jayasree; this record adapts it, and the pen path is fitted to the bundled Noto Sans Malayalam outline rather than to the recording, which was drawn over the Manjari typeface. One recorder, so confidence is medium."
+      }
     },
     {
       "glyph": "൬",
@@ -6825,8 +6959,21 @@
       "components": [
         "൬  6 — Malayalam digit"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "climb the left side",
+        "without lifting, arch over and down the first stem",
+        "without lifting, climb back up the stem",
+        "without lifting, arch over and down the second stem",
+        "without lifting, climb back up it",
+        "without lifting, arch over and curl down to the left"
+      ],
+      "strokeOrderNote": "Six movements in one continuous pen-down run, as the one recorded stroke draws them; Jayasree's recorder did not lift.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Sachin Nandakumar, Jayasree: Malayalam handwriting, animated stroke by stroke (github.com/sachn1/jayasree, commit e0c9d57, October 2026), js/src/stroke-data.raw.json: the hand-recorded centre-line stroke for ൬; \"Jayasree\" by Sachin Nandakumar, CC BY 4.0",
+        "url": "https://github.com/sachn1/jayasree/blob/e0c9d57dd32031c948da4d5f8432aae3e22c5bba/js/src/stroke-data.raw.json",
+        "variation": "Jayasree records ൬ as one stroke: up the left side, over the first arch and down the first stem to its foot, back up it, over the second arch and down the second stem, back up it, then over the third arch, down the right side and round below the line to the left (start lower left, end below the line in the middle). Each climb retraces its stem. Jayasree keeps one recorded gesture per pen-down stroke, so one stroke means the recorder did not lift. Only these facts (stroke count, start, order, direction and end) are taken; no recorded coordinate is copied. The stroke data is licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) as \"Jayasree\" by Sachin Nandakumar, https://github.com/sachn1/jayasree; this record adapts it, and the pen path is fitted to the bundled Noto Sans Malayalam outline rather than to the recording, which was drawn over the Manjari typeface. One recorder, so confidence is medium."
+      }
     },
     {
       "glyph": "൭",
@@ -6835,8 +6982,18 @@
       "components": [
         "൭  7 — Malayalam digit"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "curl clockwise round the small loop",
+        "without lifting, climb the left side to the top",
+        "without lifting, sweep down the right and curl left below"
+      ],
+      "strokeOrderNote": "Three movements in one continuous pen-down run, as the one recorded stroke draws them; Jayasree's recorder did not lift.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Sachin Nandakumar, Jayasree: Malayalam handwriting, animated stroke by stroke (github.com/sachn1/jayasree, commit e0c9d57, October 2026), js/src/stroke-data.raw.json: the hand-recorded centre-line stroke for ൭; \"Jayasree\" by Sachin Nandakumar, CC BY 4.0",
+        "url": "https://github.com/sachn1/jayasree/blob/e0c9d57dd32031c948da4d5f8432aae3e22c5bba/js/src/stroke-data.raw.json",
+        "variation": "Jayasree records ൭ as one stroke: from the inner end of the small loop, clockwise round it, up the left side and over the top, then down the right and round below the line to the left (start at the inner loop, end below the line at the left). Noto joins the loop's inner end to the outer stroke, so the path starts at that join. Jayasree keeps one recorded gesture per pen-down stroke, so one stroke means the recorder did not lift. Only these facts (stroke count, start, order, direction and end) are taken; no recorded coordinate is copied. The stroke data is licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) as \"Jayasree\" by Sachin Nandakumar, https://github.com/sachn1/jayasree; this record adapts it, and the pen path is fitted to the bundled Noto Sans Malayalam outline rather than to the recording, which was drawn over the Manjari typeface. One recorder, so confidence is medium."
+      }
     },
     {
       "glyph": "൮",
@@ -6845,8 +7002,20 @@
       "components": [
         "൮  8 — Malayalam digit"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "climb the left side",
+        "without lifting, arch clockwise over and down to the foot",
+        "without lifting, run right along the baseline",
+        "without lifting, climb the right stem",
+        "without lifting, come back down and curl left below"
+      ],
+      "strokeOrderNote": "Five movements in one continuous pen-down run, as the one recorded stroke draws them; Jayasree's recorder did not lift.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Sachin Nandakumar, Jayasree: Malayalam handwriting, animated stroke by stroke (github.com/sachn1/jayasree, commit e0c9d57, October 2026), js/src/stroke-data.raw.json: the hand-recorded centre-line stroke for ൮; \"Jayasree\" by Sachin Nandakumar, CC BY 4.0",
+        "url": "https://github.com/sachn1/jayasree/blob/e0c9d57dd32031c948da4d5f8432aae3e22c5bba/js/src/stroke-data.raw.json",
+        "variation": "Jayasree records ൮ as one stroke: up the left side, clockwise over the top and down to the foot, right along the baseline, up the right stem to its top, then back down it and round below the line to the left (start lower left, end below the line at the left). The descent retraces the stem. Jayasree keeps one recorded gesture per pen-down stroke, so one stroke means the recorder did not lift. Only these facts (stroke count, start, order, direction and end) are taken; no recorded coordinate is copied. The stroke data is licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) as \"Jayasree\" by Sachin Nandakumar, https://github.com/sachn1/jayasree; this record adapts it, and the pen path is fitted to the bundled Noto Sans Malayalam outline rather than to the recording, which was drawn over the Manjari typeface. One recorder, so confidence is medium."
+      }
     },
     {
       "glyph": "൯",
@@ -6855,8 +7024,21 @@
       "components": [
         "൯  9 — Malayalam digit"
       ],
-      "strokeOrder": [],
-      "strokeOrderNote": ""
+      "strokeOrder": [
+        "climb the left side",
+        "without lifting, arch over and down the stem",
+        "without lifting, climb back up the stem",
+        "without lifting, arch over and down the right side",
+        "without lifting, round the bottom up to the crossing",
+        "without lifting, sweep up to the top right"
+      ],
+      "strokeOrderNote": "Six movements in one continuous pen-down run, as the one recorded stroke draws them; Jayasree's recorder did not lift.",
+      "penLifts": 0,
+      "strokeOrderSource": {
+        "citation": "Sachin Nandakumar, Jayasree: Malayalam handwriting, animated stroke by stroke (github.com/sachn1/jayasree, commit e0c9d57, October 2026), js/src/stroke-data.raw.json: the hand-recorded centre-line stroke for ൯; \"Jayasree\" by Sachin Nandakumar, CC BY 4.0",
+        "url": "https://github.com/sachn1/jayasree/blob/e0c9d57dd32031c948da4d5f8432aae3e22c5bba/js/src/stroke-data.raw.json",
+        "variation": "Jayasree records ൯ as one stroke: up the left side, over the arch and down the stem, back up it, over the second arch and down the right side through the crossing, round the bottom, then up through the crossing to the top right (start lower left, end upper right). The climb back up the stem retraces it. Jayasree keeps one recorded gesture per pen-down stroke, so one stroke means the recorder did not lift. Only these facts (stroke count, start, order, direction and end) are taken; no recorded coordinate is copied. The stroke data is licensed CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) as \"Jayasree\" by Sachin Nandakumar, https://github.com/sachn1/jayasree; this record adapts it, and the pen path is fitted to the bundled Noto Sans Malayalam outline rather than to the recording, which was drawn over the Manjari typeface. One recorder, so confidence is medium."
+      }
     }
   ]
 }

@@ -18,16 +18,17 @@ describe("the real corpus", () => {
   );
 
   it("draws a filmstrip for every Tamil letter lesson whose letter has a cited ductus", () => {
-    // 38 one-glyph lessons, 36 glyphs. வ has both TA-S01-va and the guided
+    // 39 one-glyph lessons, 37 glyphs. வ has both TA-S01-va and the guided
     // copy TA-W00, and the puḷḷi ் both TA-S08-pulli and TA-W03-pulli-vanakkam,
     // while a letter lesson without cited ductus remains an undrawn
-    // candidate. Seven of the 36 are signs taught by themselves (ா ி ீ ெ ே ை
+    // candidate. Seven of the 37 are signs taught by themselves (ா ி ீ ெ ே ை
     // and the puḷḷi ்); the signs ு and ூ have no cited ductus and stay
-    // undrawn.
+    // undrawn. The Grantha ஸ (TA-S129) is cited to LipiTk's Tamil recognizer.
     const tamil = targets.filter((target) => target.lessonId.startsWith("TA-"));
     const single = tamil.filter((target) => target.letters === undefined);
-    expect(single).toHaveLength(38);
-    expect(new Set(single.map((target) => target.glyph)).size).toBe(36);
+    expect(single).toHaveLength(39);
+    expect(new Set(single.map((target) => target.glyph)).size).toBe(37);
+    expect(single.find((target) => target.lessonId === "TA-S129-letter-sa")?.glyph).toBe("ஸ");
     expect(
       Object.fromEntries(
         single
@@ -240,6 +241,43 @@ describe("the real corpus", () => {
     ]) {
       expect(lessonIds.has(id), id).toBe(false);
     }
+  });
+
+  it("draws a Telugu sign only where a lesson teaches it alone", () => {
+    // Eleven Telugu sign lessons teach one of eleven signs by itself, each
+    // cited to native writers in LipiTk's Telugu recognizer who wrote it
+    // alone. Each is one glyph, never a sequence: Telugu has no written-order
+    // table, so no sign is placed against a consonant.
+    const signs = targets.filter(
+      (target) => target.script === "telugu" && /^\p{M}+$/u.test(target.glyph),
+    );
+    expect(Object.fromEntries(signs.map((target) => [target.lessonId, target.glyph]))).toEqual({
+      "TE-S02-vowel-sign-u": "ు",
+      "TE-S04-sign-anusvara": "ం",
+      "TE-S05-sign-virama": "్",
+      "TE-S07-vowel-sign-aa": "ా",
+      "TE-S08-vowel-sign-i": "ి",
+      "TE-S115-vowel-sign-e": "ె",
+      "TE-S119-vowel-sign-ii": "ీ",
+      "TE-S120-vowel-sign-ee": "ే",
+      "TE-S134-vowel-sign-uu": "ూ",
+      "TE-S153-vowel-sign-oo": "ో",
+      "TE-S154-vowel-sign-o": "ొ",
+    });
+    expect(signs.every((target) => target.letters === undefined)).toBe(true);
+    // Left undrawn: ై, whose recognizer class holds only the length mark
+    // below, and ృ and ౌ, which the recognizer lacks.
+    const lessonIds = new Set(targets.map((target) => target.lessonId));
+    for (const id of ["TE-S136-vowel-sign-ai", "TE-S131-vowel-sign-vocalic-r", "TE-S133-vowel-sign-au"]) {
+      expect(lessonIds.has(id), id).toBe(false);
+    }
+  });
+
+  it("draws Bengali ং where its lesson teaches it", () => {
+    const anusvar = targets.find((target) => target.lessonId === "BN-W41-anusvar");
+    expect(anusvar?.script).toBe("bengali");
+    expect(anusvar?.glyph).toBe("ং");
+    expect(anusvar?.letters).toBeUndefined();
   });
 
   it("composes words only in scripts whose letters stand apart", () => {

@@ -167,8 +167,9 @@ export function validate(input: ValidateInput): Issue[] {
       ...script.letters,
       ...(script.independentVowels ?? []),
       ...(script.finalConsonants ?? []),
-      // A digit row that names its strokes (Kannada ೧-೯) is held to the same
-      // pair: no lift count without a source, no source without a lift count.
+      // A digit row that names its strokes (Kannada ೧-೯, Malayalam ൧-൯) is
+      // held to the same pair: no lift count without a source, no source
+      // without a lift count.
       ...(script.digits ?? []),
     ]) {
       if (letter.strokeOrder.length === 0) continue;
@@ -199,7 +200,7 @@ export function validate(input: ValidateInput): Issue[] {
   }
 
   // Digit rows are identity rows first: most carry no ductus (a cited one,
-  // like Kannada ೧-೯, is checked above with the letters), and
+  // like Kannada ೧-೯ or Malayalam ൧-൯, is checked above with the letters), and
   // `uncoveredGlyphs` below lets each one cover its glyph in a headword. That trust is only
   // safe while a digit row really is one decimal digit. A row whose glyph is
   // a letter (`"ক"`), a two-digit number (`"১০"`) or a letter-like numeral

@@ -500,7 +500,22 @@
       "mark": "ং",
       "sound": "anusvar",
       "role": "anusvara",
-      "attachesAs": "written after the syllable it closes with ng, as in বাংলা"
+      "attachesAs": "written after the syllable it closes with ng, as in বাংলা",
+      "components": [
+        "a ring on top",
+        "a tail slanting down to the right below it"
+      ],
+      "strokeOrder": [
+        "draw the ring counterclockwise from its top",
+        "lift, then draw the tail from its upper-left end down to the right"
+      ],
+      "strokeOrderNote": "two pen-down strokes, the commonest order in HP Labs India's native-writer traces, fitted to the bundled printed outline",
+      "penLifts": 1,
+      "strokeOrderSource": {
+        "citation": "HP Labs India, Lipi Toolkit, Lipi Indic Character Recognizers 4.0, Bangla recognizer, class 46 (ং, anusvar; the recognizer's unicodeMapfile_bangla.ini): stored online-handwriting prototypes from native Bengali writers (MIT licence, 2012)",
+        "url": "https://lipitk.sourceforge.net/lipi-reco.htm",
+        "variation": "The recognizer stores native Bengali writers' tablet pen traces, each resampled to 60 points. 183 of the 189 stored prototypes of the anusvar (97%) are two pen-down strokes, a ring and a tail. Whichever comes first, 138 of the 183 (75%) turn the ring counterclockwise and 166 (91%) draw the tail from its upper-left end down to the right. The order is the least settled part: 103 of the 183 (56%) draw the ring first. Ring first, counterclockwise, then the tail down to the right is the commonest form, 71 of the 183 (39%), ahead of the tail first and then a counterclockwise ring (54); 71 of the 103 ring-first writers start the ring in its upper half, so the path starts at the top. The traces are scaled to a square, so they fix the start, the order, the turning and the pen lifts, not the proportions: the path is fitted to the bundled Noto Sans Bengali outline. The underlying HP Labs data is licensed for research use only, so only counts and shares are cited here, and no trace was copied. Handwriting varies by writer."
+      }
     },
     {
       "mark": "ঃ",

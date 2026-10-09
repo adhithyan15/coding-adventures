@@ -20,6 +20,15 @@ const teluguLetterSource = (glyph: string): StrokeSource => {
 
 const teluguIndependentVowelSource = teluguLetterSource;
 
+/** The same lookup for a sign, which lives in the inventory's `marks`. */
+const teluguMarkSource = (mark: string): StrokeSource => {
+  const sign = telugu.marks.find((candidate) => candidate.mark === mark);
+  if (!sign || !("strokeOrderSource" in sign) || !sign.strokeOrderSource) {
+    throw new Error(`Telugu sign ${mark} has no verified source`);
+  }
+  return sign.strokeOrderSource;
+};
+
 export const entries: DuctusEntry[] = [
   [
     "telugu:త",
@@ -3292,6 +3301,810 @@ export const entries: DuctusEntry[] = [
         },
       ],
       source: teluguIndependentVowelSource("ఋ"),
+    },
+  ],
+  // ---------------------------------------------------------------------
+  // Vowel signs, the anusvara and the virama, drawn alone (no consonant).
+  // Their start, direction and pen lifts follow native writers' pen traces
+  // in HP Labs India's LipiTk Telugu recognizer (lipi-reco-indic-char 4.0.0,
+  // MIT model), counted from its stored prototypes and cited on each mark
+  // record in data/scripts/telugu.json; counts and shares only, no trace was
+  // copied. The writers wrote each sign by itself, so the traces say how the
+  // SIGN is written, not when it is written against its consonant: these
+  // signs are drawn only by themselves (human-language-data's
+  // WRITTEN_SIGN_SIDES has no Telugu row). Each path is fitted to the bundled
+  // Noto Sans Telugu outline of the sign on its own, in font units, y up.
+  //
+  // ై is left out: the recognizer's ai class stores only the length mark
+  // below (ౖ), never the e hook above it, so nothing says in which order the
+  // two parts are written. ృ and ౌ are not in the recognizer at all.
+  // ---------------------------------------------------------------------
+  // ం (anusvara): one ring from its top, anticlockwise (103 of 104 one
+  // stroke; all 103 anticlockwise, 101 from the upper half).
+  [
+    "telugu:ం",
+    {
+      script: "telugu",
+      glyph: "ం",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "start at the top of the ring and curve down its left side",
+              path: [
+                { x: 253, y: 389 },
+                { x: 223, y: 385 },
+                { x: 191, y: 376 },
+                { x: 159, y: 361 },
+                { x: 132, y: 339 },
+                { x: 110, y: 311 },
+                { x: 93, y: 279 },
+                { x: 81, y: 244 },
+                { x: 77, y: 208 },
+                { x: 81, y: 172 },
+                { x: 93, y: 137 },
+                { x: 110, y: 105 },
+                { x: 132, y: 77 },
+                { x: 159, y: 55 },
+                { x: 191, y: 40 },
+                { x: 223, y: 31 },
+                { x: 253, y: 27 },
+              ],
+            },
+            {
+              label: "round the bottom and come up the right side to close the ring",
+              path: [
+                { x: 253, y: 27 },
+                { x: 283, y: 31 },
+                { x: 315, y: 40 },
+                { x: 347, y: 55 },
+                { x: 374, y: 77 },
+                { x: 396, y: 105 },
+                { x: 413, y: 137 },
+                { x: 425, y: 172 },
+                { x: 430, y: 208 },
+                { x: 425, y: 244 },
+                { x: 413, y: 279 },
+                { x: 396, y: 311 },
+                { x: 374, y: 339 },
+                { x: 347, y: 361 },
+                { x: 315, y: 376 },
+                { x: 283, y: 385 },
+                { x: 253, y: 389 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguMarkSource("ం"),
+    },
+  ],
+  // ా: the bar from its left end, then the loop clockwise, down its right
+  // side and up its left to the tip under the bar (308 of 312 one stroke;
+  // 302 start at the left; the loop's turn splits 190 to 117).
+  [
+    "telugu:ా",
+    {
+      script: "telugu",
+      glyph: "ా",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "start at the left end of the bar and draw it to the right",
+              path: [
+                { x: -525, y: 462 },
+                { x: -490, y: 462 },
+                { x: -447, y: 462 },
+                { x: -403, y: 462 },
+                { x: -364, y: 462 },
+                { x: -326, y: 462 },
+                { x: -288, y: 462 },
+                { x: -250, y: 462 },
+                { x: -212, y: 462 },
+                { x: -174, y: 462 },
+                { x: -137, y: 462 },
+                { x: -99, y: 462 },
+                { x: -61, y: 464 },
+                { x: -22, y: 467 },
+                { x: 12, y: 468 },
+                { x: 40, y: 462 },
+              ],
+            },
+            {
+              label: "curve down the right side of the loop",
+              path: [
+                { x: 40, y: 462 },
+                { x: 84, y: 466 },
+                { x: 127, y: 456 },
+                { x: 162, y: 439 },
+                { x: 186, y: 416 },
+                { x: 202, y: 385 },
+                { x: 208, y: 353 },
+              ],
+            },
+            {
+              label: "round the bottom and come up the left side to the tip under the bar",
+              path: [
+                { x: 208, y: 353 },
+                { x: 200, y: 320 },
+                { x: 181, y: 288 },
+                { x: 150, y: 265 },
+                { x: 111, y: 256 },
+                { x: 72, y: 261 },
+                { x: 39, y: 278 },
+                { x: 16, y: 306 },
+                { x: 7, y: 339 },
+                { x: 10, y: 371 },
+                { x: 25, y: 400 },
+                { x: 50, y: 432 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguMarkSource("ా"),
+    },
+  ],
+  // ి: from the tail's lower-left tip, anticlockwise round the loop, curling
+  // in to end inside it (204 of 205 one stroke; 164 start lower left, 201
+  // anticlockwise).
+  [
+    "telugu:ి",
+    {
+      script: "telugu",
+      glyph: "ి",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "start at the tail's lower-left tip and run right along the bottom",
+              path: [
+                { x: -392, y: 488 },
+                { x: -346, y: 475 },
+                { x: -310, y: 468 },
+                { x: -279, y: 467 },
+                { x: -245, y: 470 },
+                { x: -215, y: 478 },
+              ],
+            },
+            {
+              label: "climb the right side and arch over the top to the left",
+              path: [
+                { x: -215, y: 478 },
+                { x: -184, y: 498 },
+                { x: -160, y: 527 },
+                { x: -146, y: 561 },
+                { x: -147, y: 596 },
+                { x: -155, y: 638 },
+                { x: -165, y: 681 },
+                { x: -192, y: 712 },
+                { x: -231, y: 729 },
+                { x: -266, y: 738 },
+                { x: -300, y: 737 },
+                { x: -333, y: 728 },
+                { x: -360, y: 712 },
+              ],
+            },
+            {
+              label: "come down the left side and curl in to the tip inside the loop",
+              path: [
+                { x: -360, y: 712 },
+                { x: -372, y: 686 },
+                { x: -373, y: 652 },
+                { x: -358, y: 617 },
+                { x: -332, y: 596 },
+                { x: -300, y: 590 },
+                { x: -266, y: 590 },
+                { x: -234, y: 599 },
+                { x: -203, y: 613 },
+                { x: -175, y: 632 },
+                { x: -158, y: 666 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguMarkSource("ి"),
+    },
+  ],
+  // ీ: ి's loop, then back along its top to the hook's foot and up over the
+  // hook (180 of 213 one stroke; every two-stroke writer draws the loop
+  // first; 150 reach the top on the hook, in the second half).
+  [
+    "telugu:ీ",
+    {
+      script: "telugu",
+      glyph: "ీ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "start at the tail's lower-left tip and run right along the bottom",
+              path: [
+                { x: -392, y: 488 },
+                { x: -346, y: 475 },
+                { x: -310, y: 468 },
+                { x: -279, y: 467 },
+                { x: -245, y: 470 },
+                { x: -215, y: 478 },
+              ],
+            },
+            {
+              label: "climb the right side and arch over the top to the left",
+              path: [
+                { x: -215, y: 478 },
+                { x: -185, y: 495 },
+                { x: -161, y: 522 },
+                { x: -146, y: 555 },
+                { x: -138, y: 593 },
+                { x: -140, y: 634 },
+                { x: -160, y: 671 },
+                { x: -194, y: 694 },
+                { x: -230, y: 707 },
+                { x: -266, y: 718 },
+                { x: -303, y: 723 },
+                { x: -335, y: 712 },
+                { x: -360, y: 690 },
+              ],
+            },
+            {
+              label: "come down the left side and curl in to the tip inside the loop",
+              path: [
+                { x: -360, y: 690 },
+                { x: -370, y: 644 },
+                { x: -357, y: 606 },
+                { x: -328, y: 586 },
+                { x: -296, y: 581 },
+                { x: -264, y: 582 },
+                { x: -223, y: 587 },
+                { x: -180, y: 605 },
+                { x: -165, y: 650 },
+              ],
+            },
+            {
+              label: "run back along the top of the loop to the foot of the hook",
+              path: [
+                { x: -165, y: 650 },
+                { x: -195, y: 688 },
+                { x: -227, y: 706 },
+                { x: -262, y: 718 },
+                { x: -299, y: 721 },
+                { x: -330, y: 700 },
+              ],
+            },
+            {
+              label: "climb the hook's left side, over the top and down to its tip",
+              path: [
+                { x: -330, y: 700 },
+                { x: -352, y: 745 },
+                { x: -337, y: 791 },
+                { x: -296, y: 822 },
+                { x: -245, y: 831 },
+                { x: -195, y: 821 },
+                { x: -160, y: 797 },
+                { x: -140, y: 767 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguMarkSource("ీ"),
+    },
+  ],
+  // ు: from the lower-left tip, down round the bowl and up to the upper tip
+  // (405 of 416 one stroke; 403 start on the left, 370 end at the top).
+  [
+    "telugu:ు",
+    {
+      script: "telugu",
+      glyph: "ు",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "start at the lower-left tip and curve down to the right",
+              path: [
+                { x: -71, y: 143 },
+                { x: -46, y: 116 },
+                { x: -19, y: 88 },
+                { x: 11, y: 63 },
+                { x: 46, y: 44 },
+                { x: 84, y: 33 },
+                { x: 120, y: 28 },
+              ],
+            },
+            {
+              label: "round the bowl and climb its right side",
+              path: [
+                { x: 120, y: 28 },
+                { x: 160, y: 35 },
+                { x: 200, y: 53 },
+                { x: 233, y: 82 },
+                { x: 255, y: 119 },
+                { x: 266, y: 159 },
+                { x: 268, y: 201 },
+                { x: 262, y: 243 },
+                { x: 250, y: 280 },
+              ],
+            },
+            {
+              label: "curve up and to the left, to the upper tip",
+              path: [
+                { x: 250, y: 280 },
+                { x: 236, y: 317 },
+                { x: 212, y: 355 },
+                { x: 181, y: 389 },
+                { x: 146, y: 419 },
+                { x: 109, y: 443 },
+                { x: 72, y: 460 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguMarkSource("ు"),
+    },
+  ],
+  // ూ: ు, then the bar and the loop on the right, clockwise (482 of 517
+  // one stroke; 474 start on the left; the loop's turn splits 273 to 200).
+  [
+    "telugu:ూ",
+    {
+      script: "telugu",
+      glyph: "ూ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "start at the lower-left tip and curve down to the right",
+              path: [
+                { x: -71, y: 143 },
+                { x: -46, y: 116 },
+                { x: -19, y: 88 },
+                { x: 11, y: 63 },
+                { x: 46, y: 44 },
+                { x: 84, y: 33 },
+                { x: 120, y: 28 },
+              ],
+            },
+            {
+              label: "round the bowl and climb its right side",
+              path: [
+                { x: 120, y: 28 },
+                { x: 160, y: 35 },
+                { x: 200, y: 53 },
+                { x: 233, y: 82 },
+                { x: 255, y: 119 },
+                { x: 266, y: 159 },
+                { x: 268, y: 201 },
+                { x: 262, y: 243 },
+                { x: 250, y: 280 },
+              ],
+            },
+            {
+              label: "curve up and to the left, to the top of the bowl",
+              path: [
+                { x: 250, y: 280 },
+                { x: 233, y: 316 },
+                { x: 208, y: 352 },
+                { x: 174, y: 382 },
+                { x: 143, y: 410 },
+                { x: 120, y: 439 },
+                { x: 95, y: 455 },
+              ],
+            },
+            {
+              label: "draw the bar to the right along the top",
+              path: [
+                { x: 95, y: 455 },
+                { x: 124, y: 459 },
+                { x: 160, y: 467 },
+                { x: 200, y: 466 },
+                { x: 243, y: 462 },
+                { x: 286, y: 462 },
+                { x: 330, y: 462 },
+                { x: 374, y: 464 },
+                { x: 415, y: 467 },
+                { x: 448, y: 462 },
+              ],
+            },
+            {
+              label: "round the loop on the right, down, under and up, to the tip under the bar",
+              path: [
+                { x: 448, y: 462 },
+                { x: 493, y: 466 },
+                { x: 536, y: 456 },
+                { x: 571, y: 439 },
+                { x: 594, y: 417 },
+                { x: 609, y: 387 },
+                { x: 614, y: 353 },
+                { x: 607, y: 318 },
+                { x: 589, y: 287 },
+                { x: 558, y: 265 },
+                { x: 519, y: 256 },
+                { x: 480, y: 261 },
+                { x: 447, y: 278 },
+                { x: 424, y: 306 },
+                { x: 415, y: 339 },
+                { x: 418, y: 371 },
+                { x: 433, y: 400 },
+                { x: 458, y: 432 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguMarkSource("ూ"),
+    },
+  ],
+  // ె: from the lower tip, round the right and back left along the top bar
+  // (210 of 210 one stroke; 175 start low, turn anticlockwise and end at
+  // the bar's left end).
+  [
+    "telugu:ె",
+    {
+      script: "telugu",
+      glyph: "ె",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "start at the lower tip and curve to the right",
+              path: [
+                { x: -255, y: 462 },
+                { x: -206, y: 463 },
+                { x: -170, y: 465 },
+                { x: -136, y: 474 },
+                { x: -100, y: 495 },
+                { x: -79, y: 523 },
+                { x: -73, y: 553 },
+              ],
+            },
+            {
+              label: "curve up and back to the left along the top bar",
+              path: [
+                { x: -73, y: 553 },
+                { x: -79, y: 581 },
+                { x: -94, y: 608 },
+                { x: -119, y: 629 },
+                { x: -149, y: 640 },
+                { x: -183, y: 645 },
+                { x: -219, y: 645 },
+                { x: -259, y: 645 },
+                { x: -302, y: 645 },
+                { x: -349, y: 645 },
+                { x: -397, y: 645 },
+                { x: -446, y: 645 },
+                { x: -491, y: 645 },
+                { x: -528, y: 645 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguMarkSource("ె"),
+    },
+  ],
+  // ే: ె, then (after a lift) the hook from its foot on the bar, clockwise
+  // to its tip (163 of 206 two strokes; 159 draw ె first; 153 the whole
+  // form).
+  [
+    "telugu:ే",
+    {
+      script: "telugu",
+      glyph: "ే",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "start at the lower tip and curve to the right",
+              path: [
+                { x: -255, y: 462 },
+                { x: -206, y: 463 },
+                { x: -170, y: 465 },
+                { x: -136, y: 474 },
+                { x: -100, y: 495 },
+                { x: -79, y: 523 },
+                { x: -73, y: 553 },
+              ],
+            },
+            {
+              label: "curve up and back to the left along the top bar",
+              path: [
+                { x: -73, y: 553 },
+                { x: -79, y: 581 },
+                { x: -94, y: 608 },
+                { x: -119, y: 629 },
+                { x: -149, y: 640 },
+                { x: -183, y: 645 },
+                { x: -219, y: 645 },
+                { x: -259, y: 645 },
+                { x: -302, y: 645 },
+                { x: -349, y: 645 },
+                { x: -397, y: 645 },
+                { x: -446, y: 645 },
+                { x: -491, y: 645 },
+                { x: -528, y: 645 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then start at the hook's foot on the bar and climb to the left",
+              path: [
+                { x: -195, y: 634 },
+                { x: -227, y: 667 },
+                { x: -242, y: 715 },
+              ],
+            },
+            {
+              label: "arch over the top and down to the hook's tip",
+              path: [
+                { x: -242, y: 715 },
+                { x: -217, y: 761 },
+                { x: -180, y: 788 },
+                { x: -136, y: 796 },
+                { x: -93, y: 787 },
+                { x: -57, y: 762 },
+                { x: -35, y: 728 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguMarkSource("ే"),
+    },
+  ],
+  // ొ: from the foot of the left bowl, up and over, down into the dip, over
+  // the second arch and clockwise round the loop (294 of 303 one stroke;
+  // 286 start on the left; 278 turn the loop clockwise).
+  [
+    "telugu:ొ",
+    {
+      script: "telugu",
+      glyph: "ొ",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "start at the foot of the left bowl and curve round its left side",
+              path: [
+                { x: -272, y: 462 },
+                { x: -316, y: 466 },
+                { x: -350, y: 473 },
+                { x: -378, y: 488 },
+                { x: -398, y: 511 },
+                { x: -410, y: 541 },
+                { x: -413, y: 572 },
+                { x: -410, y: 600 },
+              ],
+            },
+            {
+              label: "climb over the top and down into the dip",
+              path: [
+                { x: -410, y: 600 },
+                { x: -374, y: 636 },
+                { x: -338, y: 655 },
+                { x: -301, y: 661 },
+                { x: -266, y: 659 },
+                { x: -235, y: 651 },
+                { x: -209, y: 634 },
+                { x: -185, y: 608 },
+                { x: -155, y: 572 },
+              ],
+            },
+            {
+              label: "rise over the second arch and along the top",
+              path: [
+                { x: -155, y: 572 },
+                { x: -120, y: 607 },
+                { x: -94, y: 633 },
+                { x: -68, y: 650 },
+                { x: -35, y: 659 },
+                { x: 0, y: 664 },
+                { x: 34, y: 667 },
+                { x: 64, y: 662 },
+              ],
+            },
+            {
+              label: "round the loop on the right, down, under and up, to the tip under the bar",
+              path: [
+                { x: 64, y: 662 },
+                { x: 106, y: 668 },
+                { x: 149, y: 663 },
+                { x: 187, y: 648 },
+                { x: 217, y: 625 },
+                { x: 238, y: 592 },
+                { x: 245, y: 554 },
+                { x: 240, y: 518 },
+                { x: 221, y: 487 },
+                { x: 190, y: 465 },
+                { x: 151, y: 456 },
+                { x: 113, y: 460 },
+                { x: 81, y: 477 },
+                { x: 58, y: 505 },
+                { x: 48, y: 539 },
+                { x: 50, y: 571 },
+                { x: 64, y: 601 },
+                { x: 84, y: 635 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguMarkSource("ొ"),
+    },
+  ],
+  // ో: ొ, then up out of the loop into the hook and down to its tip (301
+  // of 320 one stroke; 299 start on the left; 222 end at the top).
+  [
+    "telugu:ో",
+    {
+      script: "telugu",
+      glyph: "ో",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "start at the foot of the left bowl and curve round its left side",
+              path: [
+                { x: -272, y: 462 },
+                { x: -316, y: 466 },
+                { x: -350, y: 473 },
+                { x: -378, y: 488 },
+                { x: -398, y: 511 },
+                { x: -410, y: 541 },
+                { x: -413, y: 572 },
+                { x: -410, y: 600 },
+              ],
+            },
+            {
+              label: "climb over the top and down into the dip",
+              path: [
+                { x: -410, y: 600 },
+                { x: -374, y: 636 },
+                { x: -338, y: 655 },
+                { x: -301, y: 661 },
+                { x: -266, y: 659 },
+                { x: -235, y: 651 },
+                { x: -209, y: 634 },
+                { x: -185, y: 608 },
+                { x: -155, y: 572 },
+              ],
+            },
+            {
+              label: "rise over the second arch and along the top",
+              path: [
+                { x: -155, y: 572 },
+                { x: -120, y: 607 },
+                { x: -94, y: 633 },
+                { x: -68, y: 650 },
+                { x: -35, y: 659 },
+                { x: 0, y: 664 },
+                { x: 34, y: 667 },
+                { x: 64, y: 662 },
+              ],
+            },
+            {
+              label: "round the loop on the right, down, under and up its left side",
+              path: [
+                { x: 64, y: 662 },
+                { x: 104, y: 662 },
+                { x: 146, y: 650 },
+                { x: 185, y: 641 },
+                { x: 217, y: 625 },
+                { x: 238, y: 592 },
+                { x: 245, y: 554 },
+                { x: 240, y: 518 },
+                { x: 221, y: 487 },
+                { x: 190, y: 465 },
+                { x: 151, y: 456 },
+                { x: 113, y: 460 },
+                { x: 81, y: 477 },
+                { x: 58, y: 505 },
+                { x: 47, y: 539 },
+                { x: 49, y: 571 },
+                { x: 54, y: 606 },
+                { x: 64, y: 639 },
+                { x: 100, y: 645 },
+              ],
+            },
+            {
+              label: "climb into the hook, over its top and down to its tip",
+              path: [
+                { x: 100, y: 645 },
+                { x: 71, y: 689 },
+                { x: 72, y: 740 },
+                { x: 98, y: 785 },
+                { x: 133, y: 808 },
+                { x: 169, y: 814 },
+                { x: 202, y: 811 },
+                { x: 237, y: 797 },
+                { x: 269, y: 772 },
+                { x: 280, y: 744 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguMarkSource("ో"),
+    },
+  ],
+  // ్ (virama): from the lower bar, clockwise round the lower bowl, out
+  // along the middle prong and back, round the upper bowl and out along the
+  // top bar (101 of 104 one stroke; 96 start low, turn clockwise and end
+  // top right).
+  [
+    "telugu:్",
+    {
+      script: "telugu",
+      glyph: "్",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "start at the right end of the lower bar and curve left round the lower bowl",
+              path: [
+                { x: -170, y: 462 },
+                { x: -198, y: 462 },
+                { x: -235, y: 468 },
+                { x: -277, y: 489 },
+                { x: -304, y: 530 },
+                { x: -296, y: 574 },
+                { x: -262, y: 610 },
+              ],
+            },
+            {
+              label: "run out along the middle prong and back",
+              path: [
+                { x: -262, y: 610 },
+                { x: -235, y: 626 },
+                { x: -201, y: 631 },
+                { x: -165, y: 631 },
+                { x: -128, y: 630 },
+                { x: -98, y: 630 },
+                { x: -87, y: 630 },
+                { x: -98, y: 630 },
+                { x: -128, y: 630 },
+                { x: -165, y: 631 },
+                { x: -201, y: 631 },
+                { x: -234, y: 634 },
+                { x: -262, y: 645 },
+              ],
+            },
+            {
+              label: "curve up round the upper bowl",
+              path: [
+                { x: -262, y: 645 },
+                { x: -301, y: 684 },
+                { x: -311, y: 730 },
+                { x: -289, y: 772 },
+                { x: -254, y: 793 },
+                { x: -220, y: 800 },
+              ],
+            },
+            {
+              label: "draw the top bar to the right",
+              path: [
+                { x: -220, y: 800 },
+                { x: -185, y: 800 },
+                { x: -144, y: 800 },
+                { x: -102, y: 800 },
+                { x: -66, y: 800 },
+                { x: -33, y: 800 },
+                { x: 1, y: 800 },
+                { x: 37, y: 800 },
+                { x: 71, y: 800 },
+                { x: 100, y: 800 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: teluguMarkSource("్"),
     },
   ],
 ];

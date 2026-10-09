@@ -22,7 +22,7 @@
 // assumed: a letter is authored only where one placement wins a majority and
 // that placement covers the printed bar. ব and র draw it first; খ and থ, whose
 // printed bar is only a flag beside the stem, finish with a short move right
-// into it; এ ও ঞ ঃ ঁ have none.
+// into it; এ ও ঞ ঃ ঁ ং have none.
 //
 // Letters whose traces split (ন ক ম ল য ত and others) are deliberately absent.
 // ---------------------------------------------------------------------------
@@ -40,7 +40,7 @@ const bengaliLetterSource = (glyph: string): StrokeSource => {
   return letter.strokeOrderSource;
 };
 
-/** The same lookup for a sign (ঃ, ঁ), which lives in `marks`. */
+/** The same lookup for a sign (ঃ, ঁ, ং), which lives in `marks`. */
 const bengaliMarkSource = (mark: string): StrokeSource => {
   const sign = bengali.marks.find((candidate) => candidate.mark === mark);
   if (!sign || !("strokeOrderSource" in sign) || !sign.strokeOrderSource) {
@@ -636,6 +636,63 @@ export const entries: DuctusEntry[] = [
         },
       ],
       source: bengaliMarkSource("ঁ"),
+    },
+  ],
+  // ং (anusvar). The ring counterclockwise from its top, then a lift and the tail down to the right.
+  [
+    "bengali:ং",
+    {
+      script: "bengali",
+      glyph: "ং",
+      strokes: [
+        {
+          segments: [
+            {
+              label: "draw the ring counterclockwise from its top",
+              path: [
+                { x: 219, y: 590 },
+                { x: 181, y: 579 },
+                { x: 149, y: 557 },
+                { x: 127, y: 525 },
+                { x: 120, y: 486 },
+                { x: 127, y: 448 },
+                { x: 149, y: 415 },
+                { x: 181, y: 394 },
+                { x: 219, y: 386 },
+                { x: 257, y: 394 },
+                { x: 289, y: 415 },
+                { x: 311, y: 448 },
+                { x: 319, y: 486 },
+                { x: 311, y: 525 },
+                { x: 289, y: 557 },
+                { x: 257, y: 579 },
+                { x: 219, y: 590 },
+              ],
+            },
+          ],
+        },
+        {
+          segments: [
+            {
+              label: "lift, then draw the tail from its upper-left end down to the right",
+              path: [
+                { x: 98, y: 282 },
+                { x: 127, y: 263 },
+                { x: 160, y: 238 },
+                { x: 195, y: 206 },
+                { x: 229, y: 170 },
+                { x: 261, y: 135 },
+                { x: 289, y: 100 },
+                { x: 315, y: 67 },
+                { x: 341, y: 34 },
+                { x: 368, y: 3 },
+                { x: 392, y: -25 },
+              ],
+            },
+          ],
+        },
+      ],
+      source: bengaliMarkSource("ং"),
     },
   ],
 ];

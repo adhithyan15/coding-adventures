@@ -1142,3 +1142,27 @@ describe("Kannada digits ೧-೯ — one unbroken run each", () => {
     });
   }
 });
+
+// ಞ is two Chimple paths: the body in four movements, then the hook after a lift.
+describe("Kannada ಞ — the body, one lift, then the hook", () => {
+  const nya = DUCTUS[ductusKey("kannada", "ಞ")];
+  const steps = ductusSteps(nya);
+  const strip = ductusFilmstrip(nya, kannadaOutline("ಞ"));
+
+  it("starts the hook only after the lift", () => {
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0, 1]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([
+      false,
+      false,
+      false,
+      false,
+      true,
+    ]);
+  });
+
+  it("reports 5 movements across 2 strokes", () => {
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 5 movements");
+  });
+});

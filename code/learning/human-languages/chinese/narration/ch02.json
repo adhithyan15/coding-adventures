@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Reading the Greeting — One Piece at a Time",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f6536c2a08dff0b2",
+  "sourceHash": "fnv1a64:6f4a53db1f1083e9",
   "lessons": [
     {
       "id": "ZH-W01-ren",
@@ -316,7 +316,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:94379c1c7524b6d0",
+      "sourceHash": "fnv1a64:3979606eaab28654",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -362,7 +362,7 @@
             },
             {
               "kind": "speech",
-              "text": "尔 ěr. Five strokes: a short slant across the top, a broad cover beneath it, then a small stroke each side of a central vertical that finishes with a hook."
+              "text": "尔 ěr. Five strokes: a short slant across the top, a broad cover beneath it, a central vertical that finishes with a hook, then a small stroke each side of it, left first."
             },
             {
               "kind": "speech",
@@ -390,11 +390,11 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "尔 (ěr) — top slant, cover, then the middle with its hook last",
+              "instruction": "尔 (ěr) — top slant, cover, the middle and its hook, then the two dots",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU WRITE: 尔 — top slant, cover, then the middle with its hook last]"
+              "source": "[YOU WRITE: 尔 — top slant, cover, the middle and its hook, then the two dots]"
             },
             {
               "kind": "prompt",

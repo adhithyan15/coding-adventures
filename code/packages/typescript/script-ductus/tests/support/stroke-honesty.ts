@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { SCRIPTS } from "../../src/scriptdata";
-import { joinGaps, penPath, type LetterDuctus } from "../../src/strokes";
+import { ductusKey, joinGaps, penPath, type LetterDuctus } from "../../src/strokes";
 import { parsedFont } from "./font-fixtures";
+import { boundsOf, type Contour } from "../../src/truetype";
 import { distanceToPath, fractionOnInk, inkPoints, makeInInk } from "../../src/ink";
 
 // The ink measurements live in src/ink.ts (a word's headline is checked with
@@ -14,7 +15,7 @@ export const fontForDuctus = (letter: LetterDuctus) => {
     (candidate) => candidate.script === letter.script,
   );
   if (!script) throw new Error(`no verified script/font owns ${letter.glyph}`);
-  // Digits with a cited ductus (Kannada ೧-೯) are claimed like letters.
+  // Digits with a cited ductus (Kannada ೧-೯, Malayalam ൧-൯) are claimed like letters.
   const letterClaim = [
     ...script.letters,
     ...(script.independentVowels ?? []),
@@ -75,12 +76,67 @@ export const insideExcused = ([x, y]: readonly [number, number], box: ExcusedInk
  * outside `excused`, if given.
  */
 export const untracedShare = (letter: LetterDuctus, excused?: ExcusedInk): number => {
-  const all = inkPoints(fontForDuctus(letter).glyphFor(letter.glyph)!.contours);
+  const all = inkPoints(tracedContours(letter, fontForDuctus(letter).glyphFor(letter.glyph)!.contours));
   const pts = excused ? all.filter((point) => !insideExcused(point, excused)) : all;
   const paths = letter.strokes.map((stroke) => penPath(stroke));
   const nearest = (x: number, y: number) =>
     Math.min(...paths.map((path) => distanceToPath(x, y, path)));
   return pts.filter(([x, y]) => nearest(x, y) > 100).length / pts.length;
+};
+
+// ---------------------------------------------------------------------------
+// The second thing the coverage check may skip (ExcusedInk above is the
+// first): a font's consonant placeholder. untracedShare applies both.
+//
+// A two-part Malayalam vowel sign is written around its consonant: ോ is േ to
+// the consonant's left and ാ to its right, ൊ is െ and ാ. Printed alone, with no
+// consonant, Noto Sans Malayalam still leaves room for one and marks it with a
+// small placeholder dot (its `period.mlym` component) between the two parts.
+// That dot shows WHERE A CONSONANT WOULD SIT. It is not ink a writer draws:
+// nobody writing ോ puts a dot in the middle of it. A pen path that draws only
+// what is written therefore leaves the dot untraced, about 5% of the glyph,
+// over the 2% the check below allows, and drawing the dot to pass would teach
+// a mark nobody makes.
+//
+// So the coverage check, and only the coverage check, leaves out exactly that
+// one contour, for exactly these glyphs, keyed per glyph. The contour is named
+// by its index AND its bounds in font units: if the font ever changes so that
+// index no longer holds that dot, the check fails instead of silently skipping
+// some other part of the letter. The 2% limit itself is unchanged, and the
+// on-ink and join checks still see the whole glyph. tests/strokes/malayalam
+// pins this table's exact contents and shows the skipped contour is the
+// placeholder and nothing else.
+export const NOTO_PLACEHOLDER_CONTOURS: Readonly<
+  Record<
+    string,
+    { contour: number; bounds: { x0: number; y0: number; x1: number; y1: number } }
+  >
+> = {
+  [ductusKey("malayalam", "ൊ")]: {
+    contour: 1,
+    bounds: { x0: 760, y0: 232, x1: 884, y1: 368 },
+  },
+  [ductusKey("malayalam", "ോ")]: {
+    contour: 1,
+    bounds: { x0: 626, y0: 232, x1: 750, y1: 368 },
+  },
+};
+
+/** The contours whose ink must be traced: all of them but a pinned placeholder. */
+export const tracedContours = (letter: LetterDuctus, contours: Contour[]): Contour[] => {
+  const placeholder = NOTO_PLACEHOLDER_CONTOURS[ductusKey(letter.script, letter.glyph)];
+  if (placeholder === undefined) return contours;
+  const skipped = contours[placeholder.contour];
+  if (skipped === undefined) {
+    throw new Error(`${letter.glyph}: no contour ${placeholder.contour} to skip`);
+  }
+  const bounds = boundsOf([skipped]);
+  if (JSON.stringify(bounds) !== JSON.stringify(placeholder.bounds)) {
+    throw new Error(
+      `${letter.glyph}: contour ${placeholder.contour} is ${JSON.stringify(bounds)}, not the pinned placeholder`,
+    );
+  }
+  return contours.filter((_, index) => index !== placeholder.contour);
 };
 
 export const registerStrokeHonestyTests = (

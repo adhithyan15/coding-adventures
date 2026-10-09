@@ -612,6 +612,61 @@ stays empty only if digits count, so `validate.ts` now counts a script's
 remain undrawn: there is no composer on this branch, and a Bengali word shares
 one headline across its letters.
 
+#### As built — Telugu signs, Bengali ং and Tamil ஸ, from LipiTk's recognizers
+
+The same kind of evidence as Bengali and the Devanagari signs: the stored
+prototypes of HP Labs India's LipiTk 4.0 Telugu, Bangla and Tamil recognizers
+(`lipi-reco-indic-char` 4.0.0, MIT model), counted for stroke count, start,
+order and turn; counts and shares only, no trace copied, every path fitted to
+the bundled Noto outline of the glyph by itself at the default tolerances (no
+override and no excused ink). A glyph is drawn only where its count, start,
+order and turn each win a majority.
+
+**Telugu signs, drawn alone.** The writers wrote each sign by itself, so, as
+for Devanagari, Telugu gets no `WRITTEN_SIGN_SIDES` row: a sign is drawn only
+in a lesson that teaches it alone, and no Telugu word is composed from it.
+
+| sign | class | drawn as | share |
+|---|---|---|---|
+| ం | 14 | one ring from its top, anticlockwise | one stroke 103/104; anticlockwise 103/103; from the upper half 101/103 |
+| ా | 52 | the bar from its left end, then the loop clockwise to the tip under the bar | one stroke 308/312; start in the left third 302/308; loop clockwise 190/308 (117 the other way) |
+| ి | 53 | from the tail's lower-left tip, anticlockwise round the loop, curling in | one stroke 204/205; lower-left start 164/204; anticlockwise 201/204 |
+| ీ | 54 | ి's loop, back along its top, then up over the hook to its tip | one stroke 180/213 (the 32 two-stroke writers all draw the loop first); lower-left start 157/180; highest point in the second half 150/180 |
+| ు | 55 | from the lower-left tip, down round the bowl, up to the upper tip | one stroke 405/416; start on the left 403/405; end in the top third 370/405 |
+| ూ | 56 | ు, then the bar and the loop on the right, clockwise | one stroke 482/517; start on the left 474/482; rightmost point in the last third 467/482; loop clockwise 273/482 (200 the other way) |
+| ె | 57 | from the lower tip, round the right, back left along the top bar | one stroke 210/210; all four of start low, anticlockwise, end top and end left 175/210 |
+| ే | 58 | ె; lift; the hook from its foot on the bar, clockwise to its tip | two strokes 163/206; ె part first 159/163; the whole form 153/163 |
+| ొ | 60 | from the foot of the left bowl, up and over, the dip, the second arch, the loop clockwise | one stroke 294/303; start in the left third 286/294; loop clockwise 278/294 |
+| ో | 61 | ొ, then up out of the loop into the hook and down to its tip | one stroke 301/320; start in the left third 299/301; loop clockwise 199/301 (27 the other way); end in the top third 222/301 |
+| ్ | 62 | from the lower bar, clockwise round both bowls (out along the middle prong and back), out along the top bar | one stroke 101/104; start low, clockwise and end top right 96/101 |
+
+The loops of ా and ూ are the weakest claims (62% and 57%); the font's tip
+tucked under the bar on the loop's left is where the clockwise form ends, and
+both records say the turn splits.
+
+**Bengali ং** (class 46): the ring counterclockwise from its top, a lift, then
+the tail from its upper-left end down to the right. Two strokes 183/189; ring
+counterclockwise 138/183; tail down to the right 166/183; ring first 103/183,
+the weakest claim; ring first, counterclockwise, then the tail is the
+commonest form (71/183, ahead of the tail first and then the ring, 54).
+
+**Tamil ஸ** (class 30): one stroke 150/153, from the tip inside the small left
+loop, clockwise round it (147/150), over the big arch, down the stem and back
+up it, over the second arch, round the bowl and up the tail to the top right
+(142/150 end top right; 87/150 come down to the foot three times). Its
+inventory row is new (`tamil.d/letters/0270-U-BB8.json`, the thirtieth
+letter).
+
+**Left out.** ై: the recognizer's ai class (59, 105 prototypes, all one
+stroke) stores only the length mark below (ౖ), never the e hook above it, so
+the order of the two parts is unattested; this is an identification by eye
+from rendered prototypes. ృ and ౌ have no class in the recognizer, and the
+Telugu digits none either.
+
+**Unlocked:** 13 lessons. Telugu TE-S02, TE-S04, TE-S05, TE-S07, TE-S08,
+TE-S115, TE-S119, TE-S120, TE-S134, TE-S153, TE-S154 (45 -> 56 strips);
+Bengali BN-W41-anusvar (9 -> 10); Tamil TA-S129-letter-sa (65 -> 66).
+
 #### As built — Punjabi (Gurmukhi), cited to a tracing lesson
 
 Punjabi joins the derived filmstrips (`DERIVED_FILMSTRIP_SCRIPTS.punjabi =
@@ -782,6 +837,74 @@ untraced, above the default limit, and drawing the dot would teach a mark
 nobody writes. Moag also never places the consonant between the parts. ്:
 Moag gives its position only, with no movements. Kannada ೦ and the Kannada
 vowel signs: no source.
+
+#### As built — Malayalam ്, ഠ, ൊ, ോ and digits from a handwriting recording; Kannada ಞ; Chinese 尔
+
+Twelve more writing lessons print a strip: Malayalam 59 -> 69 (ML-S02 ്,
+ML-S119 ോ, ML-S143 ൊ, ML-S147 ഠ, the സ ് ക list in ML-W01, and the ML-W07 digit lists ൧-൩, ൪-൫, ൬-൮ and
+the two ൧-൫ copies), Kannada 56 -> 57 (KA-S133 ಞ) and Chinese 72 -> 73
+(ZH-W01-er 尔).
+
+**Malayalam: a recording.** Jayasree (`sachn1/jayasree` at commit `e0c9d57`,
+Sachin Nandakumar) animates Malayalam handwriting from about 300 centre lines
+that one recorder traced over the Manjari typeface, one gesture per pen-down
+stroke. Unlike Moag's numbered arrows or Thooval's formation images, a
+recording shows lifts directly, so the stroke count needs no second source.
+The stroke data is CC BY 4.0 (`LICENSE-DATA`), which permits adaptation with
+credit: each record names "Jayasree" by Sachin Nandakumar, links the data file
+at the pinned commit and the licence, and says the path is an adaptation, and
+that citation is printed under every strip. Only the facts are taken (count,
+start, order, direction, end). Manjari is rounder and wider than Noto, and its
+൪ ends in a straight rise where Noto curls, so every path is fitted to the
+bundled Noto Sans Malayalam outline at the default tolerances, with no
+override (on ink 1.0000 on every stroke, joins closed, nothing untraced), and
+the captions are the package's own. One recorder, so confidence is medium.
+
+- **്** is one stroke from the left tip, round the bottom of the cup, to the
+  right tip. Moag gave its position only; the Unicode composition source
+  still owns where it goes against its carrier, and no written-order row is
+  added, so words with ് stay refused.
+- **ഠ** is one anticlockwise ring from the top. Jayasree breaks the earlier
+  tie: Thooval and grahyam (as read before) run anticlockwise too, and Moag's
+  arrow alone runs clockwise. The record names the disagreement.
+- **൧-൯** are one stroke each; stems the stroke goes down and back up (൩, ൬,
+  ൮, ൯) are retraced, as the recording retraces them.
+
+- **ൊ and ോ** are two recorded strokes: the left sign (െ or േ), a lift, then
+  ാ clockwise. Noto builds each standalone glyph from exactly the cited
+  left-sign outline, a placeholder dot, and the ാ outline shifted 923 (ൊ) or
+  788 (ോ) units right, so each run is the cited path of its part.
+
+**The consonant-placeholder exception.** The dot between the parts (Noto's
+`period.mlym` component) marks where the consonant would sit. It is not ink a
+writer draws, and skipping it leaves 4.9% (ൊ) and 5.2% (ോ) of the printed ink
+untraced, over the default 2%. Drawing it would teach a mark nobody writes.
+So the coverage check skips exactly that contour for exactly these two
+glyphs: `NOTO_PLACEHOLDER_CONTOURS` (script-ductus test support), keyed per
+glyph by ductus key, names the contour's index and its pinned bounds, and
+refuses to skip a contour with other bounds. The 2% limit is not loosened,
+and the on-ink and join checks still see the whole glyph. Tests pin the table
+to exactly ൊ and ോ, prove the kept contours are exactly the cited parts and
+the skipped one the dot standing alone between them (the same contour in both
+signs), and show, as a control, that without the exception the dot alone
+breaks the limit. The strip still prints the dot in grey, and both lessons
+tell the learner it only marks where the consonant goes. Neither record
+claims a written order against a consonant, so words with ോ stay refused.
+
+**Still not drawn.** ൦: recorded, but no lesson draws it. ൰: Jayasree has no
+൰, so the ൯-൰ and ൬-൰ lists stay undrawn.
+
+**Kannada ಞ** cites Chimple's consonant lesson `LIDO_kn2_0304`, whose
+`data.json` pairs the trace image with the question ಞ: two hidden paths, so
+two strokes (the body, its loop clockwise, then the hook at the top right).
+Chimple's recorded `bahama` trace agrees; the two count as one source, facts
+only, medium confidence.
+
+**Chinese 尔** cites Hanzi Writer Data's `尔.json` at the commit the other
+characters use: the five strokes that already close 你, in the same order,
+directions and lifts, fitted to the standalone Noto Sans SC 尔. ZH-W01-er's
+cue "the middle with its hook last" contradicted that order (the two dots come
+last) and now reads "the middle and its hook, then the two dots".
 
 #### Design — the Latin script's first print letters
 

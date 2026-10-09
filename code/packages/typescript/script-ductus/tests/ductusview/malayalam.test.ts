@@ -570,3 +570,59 @@ describe("Malayalam ൈ — two coils, one lift between them", () => {
     expect(strip.summary).toBe("2 strokes · 1 pen lift · 4 movements");
   });
 });
+
+// The Jayasree-cited glyphs: one recorded stroke each, so every movement
+// stays in stroke zero and the strip reports one unbroken stroke.
+const JAYASREE_MOVEMENTS: ReadonlyArray<readonly [glyph: string, movements: number]> = [
+  ["്", 2],
+  ["ഠ", 2],
+  ["൧", 4],
+  ["൨", 3],
+  ["൩", 5],
+  ["൪", 4],
+  ["൫", 5],
+  ["൬", 6],
+  ["൭", 3],
+  ["൮", 5],
+  ["൯", 6],
+];
+
+describe("Malayalam glyphs cited to Jayasree — one recorded stroke each", () => {
+  for (const [glyph, movements] of JAYASREE_MOVEMENTS) {
+    it(`${glyph} draws ${movements} movements without a lift`, () => {
+      const letter = DUCTUS[ductusKey("malayalam", glyph)];
+      const steps = ductusSteps(letter);
+      const strip = ductusFilmstrip(letter, malayalamOutline(glyph));
+      expect(steps.every((step) => !step.startsAfterLift)).toBe(true);
+      expect(steps.every((step) => step.strokeIndex === 0)).toBe(true);
+      expect(strip.frames).toHaveLength(movements);
+      expect(strip.penLifts).toBe(0);
+      expect(strip.summary).toBe(`one unbroken stroke · ${movements} movements`);
+    });
+  }
+});
+
+// The two-part signs: the left sign's run, one lift, then ാ.
+describe("Malayalam ൊ and ോ — the left sign, one lift, then ാ", () => {
+  for (const [glyph, leftMovements] of [
+    ["ൊ", 2],
+    ["ോ", 3],
+  ] as const) {
+    it(`${glyph} reports ${leftMovements + 1} movements across 2 strokes`, () => {
+      const sign = DUCTUS[ductusKey("malayalam", glyph)];
+      const steps = ductusSteps(sign);
+      expect(steps.map((step) => step.strokeIndex)).toEqual([
+        ...Array(leftMovements).fill(0),
+        1,
+      ]);
+      expect(steps.map((step) => step.startsAfterLift)).toEqual([
+        ...Array(leftMovements).fill(false),
+        true,
+      ]);
+      const strip = ductusFilmstrip(sign, malayalamOutline(glyph));
+      expect(strip.frames).toHaveLength(leftMovements + 1);
+      expect(strip.penLifts).toBe(1);
+      expect(strip.summary).toBe(`2 strokes · 1 pen lift · ${leftMovements + 1} movements`);
+    });
+  }
+});

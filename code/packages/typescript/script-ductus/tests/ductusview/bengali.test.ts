@@ -16,6 +16,7 @@ const EXPECTED: Record<string, { frames: number; lifts: number; summary: string 
   "র": { frames: 5, lifts: 1, summary: "2 strokes · 1 pen lift · 5 movements" },
   "ঃ": { frames: 2, lifts: 1, summary: "2 strokes · 1 pen lift · 2 movements" },
   "ঁ": { frames: 2, lifts: 1, summary: "2 strokes · 1 pen lift · 2 movements" },
+  "ং": { frames: 2, lifts: 1, summary: "2 strokes · 1 pen lift · 2 movements" },
 };
 
 describe("Bengali filmstrips", () => {
