@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5dea0c110535830e",
+  "sourceHash": "fnv1a64:6b304328b29f0b60",
   "lessons": [
     {
       "id": "AR-C03-haajj",
@@ -1432,18 +1432,19 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:d9581a608a683218",
+      "sourceHash": "fnv1a64:4d37e358fd17cf98",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
+          "Script — the letters, from memory",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the letters, from memory and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1459,7 +1460,7 @@
             },
             {
               "kind": "speech",
-              "text": "Chapter 1 let you greet. Chapter 2 let you introduce yourself. This chapter closes the loop: you can ask after someone and answer back."
+              "text": "Now close the loop: ask after someone, and answer back."
             }
           ]
         },
@@ -1487,7 +1488,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read down the right-hand column. Not one line contains a verb \"to be.\" Arabic just puts the two things next to each other."
+              "text": "No line has a verb \"to be.\""
             }
           ]
         },
@@ -1503,46 +1504,39 @@
                 "built from"
               ],
               "columns": 2,
-              "rowCount": 4,
+              "rowCount": 3,
               "utterances": [
                 "phrase: kayfa ḥāluka. built from: kayfa + ḥāl + -ka/-ki.",
-                "phrase: bi-khayr. built from: bi- + khayr (already inside ṣabāḥ al-khayr).",
-                "phrase: al-ḥamdu lillāh. built from: al- + ḥamd + li- + allāh.",
-                "phrase: ismuka. built from: ism + -ka/-ki — the same suffix as ḥāluka."
+                "phrase: bi-khayr. built from: bi- + khayr.",
+                "phrase: al-ḥamdu lillāh. built from: al- + ḥamd + li- + allāh."
               ]
             },
             {
               "kind": "speech",
-              "text": "Three attaching pieces — al-, bi-, li- — and two suffixes, -ī and -ka/-ki. That is most of the chapter."
+              "text": "Three attaching pieces — al-, bi-, li- — and -ka/-ki, whose one vowel mark, fatḥa or kasra, sets the gender."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens — gender",
+          "type": "script",
+          "title": "Script — the letters, from memory",
           "segments": [
             {
               "kind": "speech",
-              "text": "Every \"you\" here splits. Say the pair aloud:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "to a man",
-                "to a woman"
-              ],
-              "columns": 2,
-              "rowCount": 3,
-              "utterances": [
-                "to a man: kayfa ḥāluka? to a woman: kayfa ḥāluki?",
-                "to a man: mā ismuka? to a woman: mā ismuki?",
-                "to a man: anta. to a woman: anti."
-              ]
+              "text": "What tells ح خ ج apart? (The dot on one hook-and-tail body: none, above, below; ḥēth gave H, gīml C/G.)"
             },
             {
               "kind": "speech",
-              "text": "One vowel mark decides — the fatḥa / kasra pair."
+              "text": "Describe ك and ر. (Angular, with an inner stroke; a short curve below the line that, like alif, never joins forward.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Spell خير (khayr, bi-khayr) right to left. (khāʾ, yāʾ, rā — and the pen lifts.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter of كيف (kayfa) حالك is new, and which of بخير (bi-khayr) and الحمد لله (al-ḥamdu lillāh)? (ف; none.) Where does حال (ḥāl) break? (After the alif.)"
             }
           ]
         },
@@ -1578,20 +1572,20 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "بخير (bi-khayr) — you have every letter",
+              "instruction": "بخير (bi-khayr), bi- into khāʾ",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU WRITE: **بخير** — you have every letter]"
+              "source": "[YOU WRITE: **بخير**, *bi-* into *khāʾ*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the roots met so far — \"s-l-m peace, ḥ-w-l turn, kh-y-r good, ḥ-m-d praise\"",
+              "instruction": "the roots — \"s-l-m peace, ḥ-w-l turn, kh-y-r good, ḥ-m-d praise\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the roots met so far — \"**s-l-m** peace · **ḥ-w-l** turn · **kh-y-r** good · **ḥ-m-d** praise\"]"
+              "source": "[YOU SAY: the roots — \"**s-l-m** peace · **ḥ-w-l** turn · **kh-y-r** good · **ḥ-m-d** praise\"]"
             }
           ]
         },
@@ -1608,7 +1602,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ask \"how are you?\" to a woman. (Kayfa ḥāluki?) Give both answers. (Bi-khayr / al-ḥamdu lillāh.) What do al-, bi- and li- have in common? (All attach to the next word — they never stand alone.) What single word is absent from every line of the dialogue? (\"Is\" — the zero copula.) Which root gave both a common phrase and a common name? (ḥ–m–d — al-ḥamdu lillāh and Muḥammad.) Next chapter: farewells — and the root that started it all comes back."
+              "text": "Ask \"how are you?\" to a woman. (Kayfa ḥāluki? — \"how your state?\") Give both answers, literally. (Bi-khayr, \"in goodness\"; al-ḥamdu lillāh, \"the praise to God.\") What is a \"state,\" and kayfiyya? (How things have turned; \"how-ness.\") What is a pilgrim? (Ḥājj.) Which root gave a phrase and a name? (ḥ–m–d — Muḥammad.)"
             }
           ]
         }

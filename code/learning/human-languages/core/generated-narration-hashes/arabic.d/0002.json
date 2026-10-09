@@ -1,7 +1,7 @@
 {
   "language": "arabic",
   "chapter": 2,
-  "sourceHash": "fnv1a64:f1e3fd0897f92215",
+  "sourceHash": "fnv1a64:340dbb3bb69130d2",
   "lessonIds": [
     "AR-C02-ism",
     "AR-C02-ii-my",
@@ -20,11 +20,11 @@
     "AR-W06-sukun-shadda-tanwin",
     "AR-W06-hamza"
   ],
-  "voiceLessons": 3,
+  "voiceLessons": 2,
   "drivablePrefix": 0,
   "text": "arabic/narration/ch02.txt",
   "json": "arabic/narration/ch02.json",
-  "textHash": "fnv1a64:451e1f406006f095",
-  "jsonHash": "fnv1a64:3264e2e678ae2433",
+  "textHash": "fnv1a64:f5b4f5604341c658",
+  "jsonHash": "fnv1a64:0590adffcfcf0341",
   "findings": []
 }

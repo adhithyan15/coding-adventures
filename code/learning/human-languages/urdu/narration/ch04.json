@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "How Are You?",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:043c37d3def3ab76",
+  "sourceHash": "fnv1a64:dd772b03429ee0a9",
   "lessons": [
     {
       "id": "UR-C04-kaise-kaisi",
@@ -1251,13 +1251,22 @@
       "romanization": "āp kaise haiṅ? — maiṅ ṭhīk hūṅ, shukriyā",
       "gloss": "a respectful Urdu wellbeing exchange",
       "script": "urdu-nastaliq",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:d3f0b3683de69a59",
-      "notice": null,
+      "sourceHash": "fnv1a64:717d7b7c913a98ca",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the shapes in both lines"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the shapes in both lines until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -1305,6 +1314,67 @@
         {
           "index": 3,
           "type": "guided-production",
+          "title": "Guided Practice — the pieces of the exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "\"How,\" to a man? (Kaise.) To a woman? (Kaisī.) What decides? (The person addressed.)"
+            },
+            {
+              "kind": "speech",
+              "text": "\"I\"? (Maiṅ.) \"Am\"? (Hūṅ.) Which comes last? (Hūṅ, closing the frame maiṅ... hūṅ.)"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ṭhīk mean? (Fine, well, correct.) The same word in Hindi? (Yes, ṭhīk: one Hindustani word, two scripts.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "script",
+          "title": "Script — the shapes in both lines",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "کیسے, کیسی, میں, ٹھیک (ṭhīk), ہوں."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each word from the right — kaise, kaisī, maiṅ, ṭhīk, hūṅ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each word from the right — *kaise*, *kaisī*, *maiṅ*, *ṭhīk*, *hūṅ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the broad final ے of کیسے, the long-ī ی of کیسی, and the nasal ں closing میں and ہوں",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the broad final **ے** of **کیسے**, the long-*ī* **ی** of **کیسی**, and the nasal **ں** closing **میں** and **ہوں**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "سلام (salām), falling and breaking after alif; then ک (kāf), slash after one lift; then ن (nūn), dot low in its deep bowl",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **سلام**, falling and breaking after alif; then **ک**, slash after one lift; then **ن**, dot low in its deep bowl]"
+            },
+            {
+              "kind": "speech",
+              "text": "(Alif joins on its right only; ھ marks the puff in ٹھیک (ṭhīk).)"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
             {
@@ -1337,7 +1407,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

@@ -9,16 +9,18 @@
     "drivable": false,
     "reasons": [
       "writing-type",
-      "writing-block"
+      "writing-block",
+      "script-block"
     ],
     "coreModality": "pen",
     "coreReasons": [
       "writing-type"
     ],
     "coreDrivable": false,
-    "sourceHash": "fnv1a64:16bd55915b871284",
+    "sourceHash": "fnv1a64:bbf6f418f076ddff",
     "detachableSegments": [
-      "Writing — independent delayed checkpoint"
+      "Writing — independent delayed checkpoint",
+      "Script — the pieces you wrote"
     ],
     "delivery": "script"
   },

@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f1e3fd0897f92215",
+  "sourceHash": "fnv1a64:340dbb3bb69130d2",
   "lessons": [
     {
       "id": "AR-C02-ism",
@@ -821,13 +821,23 @@
       "romanization": "",
       "gloss": "Chapter 2 recap — the introduction exchange",
       "script": "arabic",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:bf9c6038b1407cd6",
-      "notice": null,
+      "sourceHash": "fnv1a64:bc9593f78ff60274",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The exchange",
+          "Script — the letters, from memory"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called The exchange and Script — the letters, from memory until you have stopped, and I will say so again when we reach them."
+      },
       "blocks": [
         {
           "index": 0,
@@ -842,7 +852,7 @@
             },
             {
               "kind": "speech",
-              "text": "You could already greet someone. Every lesson since has been building one short exchange: give your name, ask for theirs, close warmly. Here it is whole."
+              "text": "Every lesson since the greetings built one short exchange: give your name, ask for theirs, close warmly."
             }
           ]
         },
@@ -884,28 +894,50 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Every piece from the root-and-suffix engine:"
-            },
-            {
-              "kind": "speech",
-              "text": "ism from root s–m–w (Hebrew shem, not English name)."
-            },
-            {
-              "kind": "speech",
-              "text": "the glued -ī (\"my\") and -ka/-ki (\"your\")."
-            },
-            {
-              "kind": "speech",
-              "text": "tasharrafnā from root sh–r–f (\"honour\"; sharīf, sheriff)."
-            },
-            {
-              "kind": "speech",
-              "text": "Two Arabic habits: it drops \"is\" entirely (the zero copula, shared with the Dravidian languages), and it marks \"you\" by gender (anta/anti), not register."
+              "text": "Every piece comes from the root-and-suffix engine: two roots (s–m–w, sh–r–f), two glued suffixes, no word for \"is,\" and a \"you\" split by gender, not register."
             }
           ]
         },
         {
           "index": 3,
+          "type": "script",
+          "title": "Script — the letters, from memory",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which letters build اسم and ما, and what does the ي (yāʾ) of اسمي add? (ا س م, م ا, none new; \"my.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letters of أنت and تشرفنا are new? (أ, alif on a hamza seat; ت, two dots above; ف. A final vowel mark splits anta / anti.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — from memory",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Is ism kin to English name? (No: Semitic, cousin of Hebrew shem.)"
+            },
+            {
+              "kind": "speech",
+              "text": "How are \"my\" and \"your\" built? (Glued on, like al-: -ī; -ka / -ki.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Who hears anta, who anti, and which Hebrew pair shares the t? (A man; a woman; atta / att.) Before a noun, mā or māḏā? (Mā.)"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tasharrafnā literally say? (\"We have been honoured\" — sh–r–f.)"
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -945,7 +977,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -961,7 +993,7 @@
             },
             {
               "kind": "speech",
-              "text": "Next chapter: kayfa ḥāluka? (\"how are you?\") and al-ḥamdu lillāh — the responding cycle."
+              "text": "Next chapter: asking how someone is — and al-ḥamdu lillāh, the answer."
             }
           ]
         }

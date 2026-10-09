@@ -8,14 +8,17 @@
     "derived": "sight",
     "drivable": false,
     "reasons": [
-      "sight-cue"
+      "script-block"
     ],
-    "coreModality": "sight",
+    "coreModality": "voice",
     "coreReasons": [
-      "sight-cue"
+      "no-visual-dependency"
     ],
-    "coreDrivable": false,
-    "sourceHash": "fnv1a64:d9581a608a683218"
+    "coreDrivable": true,
+    "sourceHash": "fnv1a64:4d37e358fd17cf98",
+    "detachableSegments": [
+      "Script — the letters, from memory"
+    ]
   },
   "findings": []
 }

@@ -9,7 +9,7 @@
   "payoff": {
     "lesson": "SA-C05-practice",
     "kind": "task",
-    "summary": "Complete SA-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Sanskrit sentences with the chapter's first verbs.",
+    "summary": "Complete SA-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Sanskrit sentences with the chapter's first verbs; then name the roots vad, vas and kṛ, unpack saṁskṛta, hear sandhi, and pick out य and ◌ृ.",
     "assesses": [
       "SA-LEX-VADAMI",
       "SA-PATTERN-I-SPEAK-SANSKRIT",
@@ -17,7 +17,15 @@
       "SA-LEX-KAROMI",
       "SA-GRAMMAR-SINGULAR-DUAL-PLURAL",
       "SA-GRAMMAR-LOCATIVE-CASE",
-      "SA-HISTORY-VERB-ROOTS-BOTH-WAYS"
-    ]
+      "SA-HISTORY-VERB-ROOTS-BOTH-WAYS",
+      "SA-ETYMON-SAMSKRTA-PERFECTED",
+      "SA-GRAMMAR-SANDHI-JOINS-WORDS",
+      "SA-ETYMON-KR-TO-DO",
+      "SA-ETYMON-VAD-TO-SPEAK",
+      "SA-ETYMON-VAS-TO-DWELL",
+      "SA-SCRIPT-RECOG-204",
+      "SA-SCRIPT-RECOG-205"
+    ],
+    "note": "SA-C05-practice assesses fourteen of the chapter's fifteen atoms, including य and ◌ृ (reached through SA-S205-vowel-sign-vocalic-r, sequence 281). The letter अ (SA-SCRIPT-RECOG-03) is introduced by SA-S03-letter-a at sequence 301, after this checkpoint, so it is not assessed here."
   }
 }

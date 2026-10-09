@@ -1,7 +1,7 @@
 {
   "language": "sanskrit",
   "chapter": 3,
-  "sourceHash": "fnv1a64:14144ae285c57d76",
+  "sourceHash": "fnv1a64:7a943b55c71b80f6",
   "lessonIds": [
     "SA-C03-katham",
     "SA-C03-bhavan-katham-asti",
@@ -23,11 +23,11 @@
     "SA-C03-practice",
     "SA-S203-vowel-sign-u"
   ],
-  "voiceLessons": 7,
+  "voiceLessons": 6,
   "drivablePrefix": 2,
   "text": "sanskrit/narration/ch03.txt",
   "json": "sanskrit/narration/ch03.json",
-  "textHash": "fnv1a64:ec3bc5744c77bd22",
-  "jsonHash": "fnv1a64:d236c2b2053033a2",
+  "textHash": "fnv1a64:871687c9ddac6886",
+  "jsonHash": "fnv1a64:49ae780aeb7d7406",
   "findings": []
 }

@@ -9,11 +9,31 @@
   "payoff": {
     "lesson": "HI-W06-two-sentence-no-model",
     "kind": "task",
-    "summary": "With no visible model, greet a new classmate and give the practice name in two complete Devanagari sentences, then repair one dimension if needed.",
+    "summary": "With no visible model, greet a new classmate and give the practice name in two complete Devanagari sentences and repair one dimension; then hold the introduction exchange aloud, name the cousins of nām, merā, hai and kyā, and say what mātrās, the virama and conjuncts do to the letters you just wrote.",
     "assesses": [
       "HI-CONCEPT-W05-WRITE-NAMASTE-01",
       "HI-CONCEPT-W05-WRITE-NAMASTE-02",
-      "HI-CONCEPT-C02-MERANAAMHAI-01"
-    ]
+      "HI-CONCEPT-C02-MERANAAMHAI-01",
+      "HI-SCRIPT-DANDA-01",
+      "HI-CONCEPT-C02-NAAM-01",
+      "HI-CONCEPT-C02-MERAA-01",
+      "HI-CONCEPT-C02-HAI-01",
+      "HI-CONCEPT-C02-AAPTUM-01",
+      "HI-CONCEPT-C02-KYA-01",
+      "HI-CONCEPT-C02-AAPKANAAMKYAHAI-01",
+      "HI-CONCEPT-C02-KHUSHI-01",
+      "HI-CONCEPT-C02-PRACTICE-01",
+      "HI-CONCEPT-W03-MATRAS-NAAM-01",
+      "HI-CONCEPT-W03-MATRAS-NAAM-02",
+      "HI-CONCEPT-W03-MATRAS-NAAM-03",
+      "HI-CONCEPT-W03-PREPOSED-I-01",
+      "HI-CONCEPT-W04-RA-SA-MERA-NAAM-01",
+      "HI-CONCEPT-W04-RA-SA-MERA-NAAM-02",
+      "HI-CONCEPT-W04-WRITE-MERA-NAAM-01",
+      "HI-CONCEPT-W05-VIRAMA-NAMASTE-01",
+      "HI-CONCEPT-W05-CONJUNCTS-01",
+      "HI-CONCEPT-W05-CONJUNCTS-02"
+    ],
+    "note": "HI-W06-two-sentence-no-model is the chapter's last lesson (sequence 266, after HI-C02-practice at 260 and the whole W06 writing runway), and the only one that reaches the danda and the independent two-sentence card the can-do names, so it keeps the payoff. After the no-model attempt is checked, a spoken say-it-back covers the introduction exchange and its eight word atoms, and a Script recall covers mātrās, the preposed ि, spineless र against स, the virama and conjuncts; the spacing pass covers the two head-lines of मेरा नाम. It now assesses all twenty-two atoms the chapter introduces."
   }
 }

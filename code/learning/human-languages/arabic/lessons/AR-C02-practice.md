@@ -12,16 +12,16 @@ prerequisites: [AR-C02-ismii, AR-C02-maa-ismuka, AR-C02-tasharrafna]
 sounds: []
 roots: []
 duration:
-  max_seconds: 240
+  max_seconds: 290
 requires:
-  knowledge: []
+  knowledge: [AR-CONCEPT-C02-ISM-01, AR-CONCEPT-C02-ISM-02, AR-CONCEPT-C02-II-MY-01, AR-CONCEPT-C02-II-MY-02, AR-CONCEPT-C02-ISMII-01, AR-CONCEPT-C02-ISMII-02, AR-CONCEPT-C02-ANTA-ANTI-01, AR-CONCEPT-C02-ANTA-ANTI-02, AR-CONCEPT-C02-ANTA-ANTI-03, AR-CONCEPT-C02-MAA-01, AR-CONCEPT-C02-MAA-02, AR-CONCEPT-C02-MAA-ISMUKA-01, AR-CONCEPT-C02-MAA-ISMUKA-02, AR-CONCEPT-C02-TASHARRAFNA-01, AR-CONCEPT-C02-TASHARRAFNA-02]
 introduces:
   knowledge: [AR-CONCEPT-C02-PRACTICE-01, AR-CONCEPT-C02-PRACTICE-02]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [AR-CONCEPT-C02-PRACTICE-01, AR-CONCEPT-C02-PRACTICE-02]
+  knowledge: [AR-CONCEPT-C02-PRACTICE-01, AR-CONCEPT-C02-PRACTICE-02, AR-CONCEPT-C02-ISM-01, AR-CONCEPT-C02-ISM-02, AR-CONCEPT-C02-II-MY-01, AR-CONCEPT-C02-II-MY-02, AR-CONCEPT-C02-ISMII-01, AR-CONCEPT-C02-ISMII-02, AR-CONCEPT-C02-ANTA-ANTI-01, AR-CONCEPT-C02-ANTA-ANTI-02, AR-CONCEPT-C02-ANTA-ANTI-03, AR-CONCEPT-C02-MAA-01, AR-CONCEPT-C02-MAA-02, AR-CONCEPT-C02-MAA-ISMUKA-01, AR-CONCEPT-C02-MAA-ISMUKA-02, AR-CONCEPT-C02-TASHARRAFNA-01, AR-CONCEPT-C02-TASHARRAFNA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,9 +35,8 @@ reviews_of: [AR-C02-ism, AR-C02-ii-my, AR-C02-ismii, AR-C02-anta-anti, AR-C02-ma
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] You could already greet someone. Every lesson since has been building
-one short exchange: give your name, ask for theirs, close warmly. Here it is
-whole.
+[PAUSE 2s] Every lesson since the greetings built one short exchange: give
+your name, ask for theirs, close warmly.
 
 ## The exchange
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C02-PRACTICE-01]; assesses=[] -->
@@ -54,18 +53,29 @@ whole.
 ## You'll want to know — the pieces
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C02-PRACTICE-02]; assesses=[] -->
 
-Every piece from the root-and-suffix engine:
+Every piece comes from the root-and-suffix engine: two roots (*s–m–w*,
+*sh–r–f*), two glued suffixes, no word for "is," and a "you" split by
+**gender**, not register.
 
-- **ism** ← root *s–m–w* (Hebrew *shem*, *not* English *name*)
-- the glued **-ī** ("my") and **-ka/-ki** ("your")
-- **tasharrafnā** ← root *sh–r–f* ("honour"; *sharīf*, *sheriff*)
+## Script — the letters, from memory
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C02-ISM-01, AR-CONCEPT-C02-II-MY-01, AR-CONCEPT-C02-ANTA-ANTI-01, AR-CONCEPT-C02-MAA-01, AR-CONCEPT-C02-TASHARRAFNA-01] -->
 
-Two Arabic habits: it drops "is" entirely (the **zero copula**, shared with the
-Dravidian languages), and it marks "you" by **gender** (*anta*/*anti*), not
-register.
+- Which letters build **اسم** and **ما**, and what does the **ي** of **اسمي**
+  add? (**ا س م**, **م ا**, none new; "my.")
+- Which letters of **أنت** and **تشرفنا** are new? (**أ**, *alif* on a *hamza*
+  seat; **ت**, two dots above; **ف**. A final vowel mark splits *anta* / *anti*.)
+
+## Guided Practice — from memory
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C02-ISM-02, AR-CONCEPT-C02-II-MY-02, AR-CONCEPT-C02-ANTA-ANTI-02, AR-CONCEPT-C02-MAA-02, AR-CONCEPT-C02-MAA-ISMUKA-02, AR-CONCEPT-C02-TASHARRAFNA-02] -->
+
+- Is *ism* kin to English *name*? (No: Semitic, cousin of Hebrew *shem*.)
+- How are "my" and "your" built? (Glued on, like *al-*: *-ī*; *-ka* / *-ki*.)
+- Who hears *anta*, who *anti*, and which Hebrew pair shares the *t*? (A man; a
+  woman; *atta* / *att*.) Before a noun, *mā* or *māḏā*? (*Mā*.)
+- What does *tasharrafnā* literally say? ("We have been honoured" — *sh–r–f*.)
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C02-PRACTICE-01, AR-CONCEPT-C02-PRACTICE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C02-PRACTICE-01, AR-CONCEPT-C02-PRACTICE-02, AR-CONCEPT-C02-ISMII-01, AR-CONCEPT-C02-MAA-ISMUKA-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: the whole exchange, right to left]
@@ -73,12 +83,11 @@ register.
 - [YOU SAY: ask it back — "mā ismuka?" (to a man) / "mā ismuki?" (to a woman)]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C02-PRACTICE-01, AR-CONCEPT-C02-PRACTICE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C02-PRACTICE-01, AR-CONCEPT-C02-PRACTICE-02, AR-CONCEPT-C02-ISMII-01, AR-CONCEPT-C02-ISMII-02, AR-CONCEPT-C02-ANTA-ANTI-03, AR-CONCEPT-C02-MAA-ISMUKA-01] -->
 
 [PAUSE 3s] Give your name, ask someone else's, say you're pleased. (*Ismī …. /
 Mā ismuka? / Tasharrafnā.*) Two things Arabic does differently from the European
 tracks? (No word for "is" — zero copula; and "you" split by *gender*, not
 register.)
 
-Next chapter: *kayfa ḥāluka?* ("how are you?") and *al-ḥamdu lillāh* — the
-responding cycle.
+Next chapter: asking how someone is — and *al-ḥamdu lillāh*, the answer.

@@ -3,8 +3,8 @@
   "language": "persian",
   "chapter": 4,
   "title": "How Are You?",
-  "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:24b63b9e3d046939",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:9e86ec2ae39a7c57",
   "lessons": [
     {
       "id": "FA-C04-hal",
@@ -684,13 +684,22 @@
       "romanization": "hâl-e shomâ chetor ast? — khubam, mamnun",
       "gloss": "a respectful Persian wellbeing exchange",
       "script": "perso-arabic",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:01caf82258c39f6b",
-      "notice": null,
+      "sourceHash": "fnv1a64:660a1da6cdfefa2a",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the four words on the page"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the four words on the page until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -738,6 +747,62 @@
         {
           "index": 3,
           "type": "guided-production",
+          "title": "Guided Practice — the words inside the exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Take the two lines apart without the page."
+            },
+            {
+              "kind": "speech",
+              "text": "What does hâl name? (A state or condition.) Where is it from? (Arabic, now used inside Persian ezafe grammar.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which word asks \"how?\" (Chetor.) Its two parts? (Persian che, \"what,\" plus the Arabic loan tor, \"manner\": \"in what manner?\")"
+            },
+            {
+              "kind": "speech",
+              "text": "What does khub mean? (Good, well.) Which layer is it from? (The inherited Persian layer, beside borrowed hâl and tor.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "script",
+          "title": "Script — the four words on the page",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "حال (hâl), چطور (chetor), خوب (khub), خوبم."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "each word from the right edge — hâl, chetor, khub, khubam",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: each word from the right edge — *hâl*, *chetor*, *khub*, *khubam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "the چ opening چطور (chetor), the long-u و in خوب (khub), and the final م that makes خوبم",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: the **چ** opening **چطور**, the long-*u* **و** in **خوب**, and the final **م** that makes **خوبم**]"
+            },
+            {
+              "kind": "speech",
+              "text": "(ح h, ا long â, ل l spell حال (hâl); in چطور (chetor) the short e is not written.)"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
             {
@@ -770,7 +835,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
