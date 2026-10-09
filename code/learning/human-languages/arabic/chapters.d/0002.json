@@ -10,10 +10,26 @@
   "payoff": {
     "lesson": "AR-C02-practice",
     "kind": "dialogue",
-    "summary": "The whole introduction exchange, run once to a man and once to a woman: give a name, ask for one back, and close with tasharrafna.",
+    "summary": "The whole introduction exchange, run once to a man and once to a woman: give a name, ask for one back, and close with tasharrafna; then recall the letters and the pieces each word is built from.",
     "assesses": [
+      "AR-CONCEPT-C02-ISM-01",
+      "AR-CONCEPT-C02-ISM-02",
+      "AR-CONCEPT-C02-II-MY-01",
+      "AR-CONCEPT-C02-II-MY-02",
+      "AR-CONCEPT-C02-ISMII-01",
+      "AR-CONCEPT-C02-ISMII-02",
+      "AR-CONCEPT-C02-ANTA-ANTI-01",
+      "AR-CONCEPT-C02-ANTA-ANTI-02",
+      "AR-CONCEPT-C02-ANTA-ANTI-03",
+      "AR-CONCEPT-C02-MAA-01",
+      "AR-CONCEPT-C02-MAA-02",
+      "AR-CONCEPT-C02-MAA-ISMUKA-01",
+      "AR-CONCEPT-C02-MAA-ISMUKA-02",
+      "AR-CONCEPT-C02-TASHARRAFNA-01",
+      "AR-CONCEPT-C02-TASHARRAFNA-02",
       "AR-CONCEPT-C02-PRACTICE-01",
       "AR-CONCEPT-C02-PRACTICE-02"
-    ]
+    ],
+    "note": "AR-C02-practice (path segment AR-PATH-007) assesses all seventeen atoms of the conversational lessons it follows: the exchange, the letters of ism, mā, anta and tasharrafnā, -ī and -ka/-ki, ism's Semitic kin, mā before a noun, the gendered you and the zero copula. The chapter's other sixteen atoms (the thaman, mudarris and ahlan anchors and the W04-W06 script lessons) come after it in AR-PATH-008, so the payoff cannot honestly require them: 17/33."
   }
 }

@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 5,
-  "sourceHash": "fnv1a64:e123d64b9a2dbc65",
+  "sourceHash": "fnv1a64:484010c771bc2576",
   "lessonIds": [
     "UR-C05-khuda",
     "UR-W05-ye",
@@ -11,11 +11,11 @@
     "UR-W05-he",
     "UR-C05-practice"
   ],
-  "voiceLessons": 4,
+  "voiceLessons": 3,
   "drivablePrefix": 1,
   "text": "urdu/narration/ch05.txt",
   "json": "urdu/narration/ch05.json",
-  "textHash": "fnv1a64:3414ecd3fb80286a",
-  "jsonHash": "fnv1a64:611f7b69ddad154c",
+  "textHash": "fnv1a64:7adb2d936c271bf3",
+  "jsonHash": "fnv1a64:8c53cbb749ff0018",
   "findings": []
 }

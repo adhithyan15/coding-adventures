@@ -9,13 +9,24 @@
   "payoff": {
     "lesson": "UR-C05-practice",
     "kind": "dialogue",
-    "summary": "A four-line interaction with a beginning and an end: salām, the wellbeing check, then khudā hāfiz from both voices.",
+    "summary": "A four-line interaction with a beginning and an end: salām, the wellbeing check, then khudā hāfiz from both voices; then the farewell taken apart into khudā and hāfiz, read with its Urdu space, and choṭī ye and gol he written by hand.",
     "assesses": [
       "UR-DIALOGUE-WELLBEING",
       "UR-LEX-KHUDA-HAFIZ",
       "UR-SCRIPT-KHUDA-HAFIZ-SPACED",
       "UR-PRAGMATICS-STANDARD-FAREWELL",
-      "UR-DIALOGUE-TAKE-LEAVE"
-    ]
+      "UR-DIALOGUE-TAKE-LEAVE",
+      "UR-LEX-KHUDA",
+      "UR-SCRIPT-KHUDA",
+      "UR-ETYMON-KHUDA-PERSIAN",
+      "UR-LEX-HAFIZ",
+      "UR-SCRIPT-HAFIZ",
+      "UR-ETYMON-HAFIZ-ARABIC",
+      "UR-GRAMMAR-KHUDA-HAFIZ-ELLIPSIS",
+      "UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING",
+      "UR-SCRIPT-YE-01",
+      "UR-SCRIPT-HE-01"
+    ],
+    "note": "UR-C05-practice is the chapter's last lesson (sequence 200, after UR-W05-he, now a prerequisite) and assesses all fourteen atoms the chapter introduces: the complete interaction, a spoken recall of khudā and hāfiz with their Persian and Arabic origins and the verbless 'God [be] guardian' formula, and a script section reading خدا, حافظ and spaced خدا حافظ against Persian's joined spelling, then writing ی and ہ."
   }
 }

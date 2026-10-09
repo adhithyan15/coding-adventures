@@ -374,7 +374,16 @@ describe("corpus snapshot", () => {
     // representativeness gate scored 0/20 and 0/18. That one chapter was the only thing
     // keeping each track off this list, and it was paperwork, not teaching: naming the
     // atoms the checkpoint really assesses scores it 20/20 and 18/18.
+    //
+    // arabic, persian and urdu JOIN. Their early chapter payoffs (Arabic 1-4, Persian
+    // 1, 4, 5, Urdu 1, 4, 5) assessed a fraction of what the chapter taught -- often
+    // only the spoken greeting, never the letters or the word stories. Each payoff
+    // lesson now recalls every atom its chapter introduces (Arabic 2 reaches 17/33:
+    // the rest of that chapter is taught after its practice lesson on the path).
+    // russian JOINS too: chapter 1 gained its terminal checkpoint (RU-C01-checkpoint)
+    // and chapter 3's RU-C03-idti now recalls all six verbs.
     expect(report.tracks.filter((t) => t.clean).map((t) => t.language).sort()).toEqual([
+      "arabic",
       "bengali",
       "chinese",
       "french",
@@ -384,9 +393,12 @@ describe("corpus snapshot", () => {
       "latin",
       "marathi",
       "marwadi",
+      "persian",
       "portuguese",
       "punjabi",
+      "russian",
       "telugu",
+      "urdu",
     ]);
   });
 

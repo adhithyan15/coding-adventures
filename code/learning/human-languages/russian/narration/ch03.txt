@@ -225,25 +225,23 @@ Lesson 7 of 7.
 
 Warm-up.
 [pause 2 seconds]
-English has one verb for going. Russian has two, and picks between them on a distinction English hides inside its tenses.
+English has one verb for going. Russian has two.
 
 You'll want to know first — идти.
 идти — idtí — to go (on foot, and under way right now).
-No new letters, and only four of them. The дт in the middle is not really pronounced as two sounds — Russians say it-TEE, with the stress at the end.
-The endings are ones you already have:
+No new letters. The дт blurs into one sound — it-TEE, stress at the end.
 Я иду. — ya idú — I'm going. Ты идёшь. — ty idyósh — you're going.
-An -у for I, and an -ешь ending for you, so идти (idtí) sits with знать (znat'), not with говорить (govorít').
+-у for I, -ешь for you: идти (idtí) sits with знать (znat'), not говорить (govorít').
 
 Grammar Lens: going now against going often.
 Russian keeps a second verb for the same activity:
 Я иду — I am on my way, now, in one direction. Я хожу — ya khazhú — I go, as a habit, back and forth.
-That is not a tense difference. They are two separate verbs, and Russian makes you choose one before you can open your mouth.
-English draws the same line with grammar instead: I'm going against I go. You know the distinction perfectly — you have just never had to choose a verb for it. Every Russian verb of motion comes in such a pair, so this one teaches the pattern.
+Not two tenses: two verbs. English draws the line with tense — I'm going, I go — and every Russian verb of motion comes in such a pair.
 
 The word, taken apart — go and went, again.
-идти (idtí) is PIE h₁ei-, "to go" — the same root as Latin īre, which gave English exit ("he goes out"), transit, initial, itinerary, ambition (ambīre, "to go around" canvassing votes) and perish (perīre, "to go through, to be lost").
-Now the good part. The past of идти (idtí) is шёл — shol — which shares no root with it at all. A verb this common wears out and patches the hole with a second verb; that is called suppletion.
-English does exactly this. Go has no past of its own either: went was taken from wend and kept. So идти (idtí) becomes шёл is go becomes went, in two languages, for one reason — the words we use most wear out fastest.
+идти (idtí) is PIE h₁ei-, "to go" — the root of Latin īre, which gave English exit, transit and itinerary.
+Its past, шёл — shol — shares no root with it: a verb this common wears out and patches the hole with another verb. That is suppletion.
+English did the same: go took went from wend. So идти (idtí) becomes шёл is go becomes went — the words we use most wear out fastest.
 
 Guided Practice.
 [pause 1 second]
@@ -256,6 +254,13 @@ Guided Practice.
 [your turn — say: the two broken verbs — "идти (idtí) … шёл", "go … went"]
 [pause 8 seconds for the answer]
 
+Guided Practice — the chapter, said back.
+"I am a student"? (Я студент — быть (byt'), cousin of be, stays silent.)
+"I live"? (Я живу.) What did quick once mean? (Alive, like жить (zhit').)
+"I don't know"? (Я не знаю — only не; знать (znat') is know.)
+"I speak"? (Я говорю — г is gamma, a hard g.) Kin to govern? (No.)
+"I see"? (Я вижу — д turns ж, I form only.) English kin? (Wit.)
+
 Wrap-up Recall.
 [pause 3 seconds]
-Say "I'm on my way." (Я иду.) And "I go there regularly"? (Я хожу — a different verb, not a different tense.) What is the past of идти (idtí)? (Шёл — another root altogether, like English went.) Name two English cousins of h₁ei-. (Exit, transit — or itinerary.) That is six Russian verbs, and one of them you will spend your life not saying.
+Say "I'm on my way." (Я иду.) And "I go there regularly"? (Я хожу — another verb, not a tense.) What is the past of идти (idtí)? (Шёл — another root, like went.) Name two English cousins of h₁ei-. (Exit, transit — or itinerary.) That is six Russian verbs, and one of them you will spend your life not saying.

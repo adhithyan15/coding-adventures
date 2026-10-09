@@ -8,20 +8,20 @@ type: practice
 headword: (dialogue)
 gloss: Chapter 4 recap — a whole conversation, hello to goodbye
 concept_tag: REVIEW
-prerequisites: [AR-C04-maa-salama, AR-C04-ila-liqaa]
+prerequisites: [AR-W12-maa-salama, AR-C04-maa-salama, AR-C04-ila-liqaa]
 sounds: []
 roots: []
 duration:
-  max_seconds: 240
+  max_seconds: 290
 requires:
-  knowledge: []
+  knowledge: [AR-CONCEPT-W10-AYN-01, AR-CONCEPT-W10-AYN-02, AR-CONCEPT-W11-HA-AND-TA-MARBUTA-01, AR-CONCEPT-W11-HA-AND-TA-MARBUTA-02, AR-CONCEPT-W12-MAA-SALAMA-01, AR-CONCEPT-W12-MAA-SALAMA-02, AR-CONCEPT-C04-MAA-WITH-01, AR-CONCEPT-C04-MAA-WITH-02, AR-CONCEPT-C04-AL-SALAMA-01, AR-CONCEPT-C04-AL-SALAMA-02, AR-CONCEPT-C04-MAA-SALAMA-01, AR-CONCEPT-C04-MAA-SALAMA-02, AR-CONCEPT-C04-ILA-LIQAA-01, AR-CONCEPT-C04-ILA-LIQAA-02]
 introduces:
   knowledge: [AR-CONCEPT-C04-PRACTICE-01, AR-CONCEPT-C04-PRACTICE-02]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [AR-CONCEPT-C04-PRACTICE-01, AR-CONCEPT-C04-PRACTICE-02]
+  knowledge: [AR-CONCEPT-C04-PRACTICE-01, AR-CONCEPT-C04-PRACTICE-02, AR-CONCEPT-W10-AYN-01, AR-CONCEPT-W10-AYN-02, AR-CONCEPT-W11-HA-AND-TA-MARBUTA-01, AR-CONCEPT-W11-HA-AND-TA-MARBUTA-02, AR-CONCEPT-W12-MAA-SALAMA-01, AR-CONCEPT-W12-MAA-SALAMA-02, AR-CONCEPT-C04-MAA-WITH-01, AR-CONCEPT-C04-MAA-WITH-02, AR-CONCEPT-C04-AL-SALAMA-01, AR-CONCEPT-C04-AL-SALAMA-02, AR-CONCEPT-C04-MAA-SALAMA-01, AR-CONCEPT-C04-MAA-SALAMA-02, AR-CONCEPT-C04-ILA-LIQAA-01, AR-CONCEPT-C04-ILA-LIQAA-02]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -35,8 +35,7 @@ reviews_of: [AR-C04-maa-with, AR-C04-al-salama, AR-C04-maa-salama, AR-C04-ila-li
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Four chapters. Greet, introduce, ask after someone, part. Here it all
-is in one piece.
+[PAUSE 2s] Four chapters: greet, introduce, ask after someone, part.
 
 ## You'll want to know — The full exchange
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C04-PRACTICE-01]; assesses=[] -->
@@ -52,53 +51,44 @@ is in one piece.
 | A | **مع السلامة** (*maʿa s-salāma*) | with safety |
 | B | **إلى اللقاء** (*ilā l-liqāʾ*) | until the meeting |
 
-Read the right-hand column top to bottom. **Not one line contains a verb "to
-be."** The zero copula has held for four chapters.
-
 ## Why it's said this way — The root ledger
 <!-- hl-knowledge: introduces=[AR-CONCEPT-C04-PRACTICE-02]; assesses=[] -->
 
-Everything you have learned sits on a handful of three-consonant roots:
+Six roots:
 
-| root | meaning | words you know |
+| root | meaning | word |
 |---|---|---|
-| **s–l–m** | peace, safety | *salām*, *as-salāmu ʿalaykum*, *salāma*, *maʿa s-salāma* |
-| **s–m–w** | name | *ism*, *ismī*, *ismuka* |
-| **ḥ–w–l** | to turn | *ḥāl*, *kayfa ḥāluka* |
-| **kh–y–r** | good | *ṣabāḥ al-khayr*, *bi-khayr* |
-| **ḥ–m–d** | to praise | *al-ḥamdu lillāh*, *Muḥammad* |
-| **l–q–y** | to meet | *liqāʾ*, *ilā l-liqāʾ* |
+| **s–l–m** | peace, safety | *salāma* |
+| **s–m–w** | name | *ism* |
+| **ḥ–w–l** | to turn | *ḥāl* |
+| **kh–y–r** | good | *bi-khayr* |
+| **ḥ–m–d** | to praise | *Muḥammad* |
+| **l–q–y** | to meet | *liqāʾ* |
 
-Six roots. A whole conversation.
+## Script — the new letters, from memory
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-W10-AYN-01, AR-CONCEPT-W10-AYN-02, AR-CONCEPT-W11-HA-AND-TA-MARBUTA-01, AR-CONCEPT-W11-HA-AND-TA-MARBUTA-02, AR-CONCEPT-W12-MAA-SALAMA-01, AR-CONCEPT-W12-MAA-SALAMA-02, AR-CONCEPT-C04-MAA-WITH-01, AR-CONCEPT-C04-AL-SALAMA-01, AR-CONCEPT-C04-ILA-LIQAA-01] -->
 
-## Grammar Lens — The small attaching pieces
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
-
-| piece | job | example |
-|---|---|---|
-| **الـ** *al-* | the | *al-khayr* |
-| **بـ** *bi-* | in / by | *bi-khayr* |
-| **لـ** *li-* | to | *lillāh* |
-| **ـي** *-ī* | my | *ismī* |
-| **ـك** *-ka / -ki* | your (m./f.) | *ismuka, ḥāluki* |
-
-And **مع** *maʿa*, the one that **doesn't** attach.
+- What shapes are **ع** and **ه**? (Curve over bowl, **غ** its dotted twin; a
+  loop that shifts shape by position.)
+- What is **ة**, and what builds **مع** and **السلامة**? (That loop plus
+  *tāʾ*'s two dots, word-final, feminine; **م** + throat **ع**; **ال** +
+  **سلام** + **ة**.)
+- Which two shapes in **إلى اللقاء** are unwritten? (**ق**, a deeper *k*;
+  **ى**, dotless *yāʾ*, said *ā*.)
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C04-PRACTICE-01, AR-CONCEPT-C04-PRACTICE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C04-PRACTICE-01, AR-CONCEPT-C04-PRACTICE-02, AR-CONCEPT-W12-MAA-SALAMA-01, AR-CONCEPT-W12-MAA-SALAMA-02] -->
 
 [PAUSE 1s]
-- [YOU SAY: the full dialogue, both parts, addressing a **man**]
+- [YOU SAY: the dialogue, both parts, to a **man**]
 - [YOU SAY: it again to a **woman** — every *-ka* becomes *-ki*]
-- [YOU WRITE: **مع السلامة** — every letter is one you have drawn]
-- [YOU SAY: the bookend — "**السلام** to open, **السلامة** to close"]
+- [YOU WRITE: **مع السلامة** — every letter already drawn]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C04-PRACTICE-01, AR-CONCEPT-C04-PRACTICE-02] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-C04-PRACTICE-01, AR-CONCEPT-C04-PRACTICE-02, AR-CONCEPT-C04-MAA-WITH-02, AR-CONCEPT-C04-AL-SALAMA-02, AR-CONCEPT-C04-MAA-SALAMA-01, AR-CONCEPT-C04-MAA-SALAMA-02, AR-CONCEPT-C04-ILA-LIQAA-02] -->
 
-[PAUSE 3s] Give a complete greeting-to-farewell exchange. (The dialogue above.)
-Which root opens **and** closes it? (**s–l–m**.) Which piece of the chapter
-doesn't glue onto the next word? (**مع** *maʿa*.) What single word is absent from
-every literal translation? (**"Is"** — the zero copula.) Which Spanish word came
-from Arabic *ḥattā*? (***Hasta***.) You can now hold — and hand-write — a short
-Arabic conversation from beginning to end.
+[PAUSE 3s] Which root opens **and** closes it all? (**s–l–m**.) What did the
+*faʿāla* pattern make of *salām*? (*Salāma*, being at peace: safety.) Is
+*maʿa s-salāma* a plain sign-off? (No — a wish: go in safety.) Does *maʿa*
+glue on like *bi-*? (**No**; Hebrew *ʿim*.) What does *ilā l-liqāʾ* say, from
+which root? ("Until the meeting"; **l–q–y**.)

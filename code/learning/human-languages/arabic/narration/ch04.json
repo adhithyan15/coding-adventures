@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:266b570390ad5dd4",
+  "sourceHash": "fnv1a64:22914d6b5ec6674d",
   "lessons": [
     {
       "id": "AR-W10-ayn",
@@ -1283,18 +1283,19 @@
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
-        "sight-cue"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:bef796c5f5af3150",
+      "sourceHash": "fnv1a64:b65cee9628b9320b",
       "notice": {
         "modality": "sight",
         "needs": [
-          "your eyes, because the lesson points at something written down"
+          "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
+          "Script — the new letters, from memory",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the new letters, from memory and Guided Practice until you have stopped, and I will say so again when we reach them."
       },
       "blocks": [
         {
@@ -1310,7 +1311,7 @@
             },
             {
               "kind": "speech",
-              "text": "Four chapters. Greet, introduce, ask after someone, part. Here it all is in one piece."
+              "text": "Four chapters: greet, introduce, ask after someone, part."
             }
           ]
         },
@@ -1338,10 +1339,6 @@
                 "A. Arabic: مع السلامة (as-salāma) (maʿa s-salāma). literally: with safety.",
                 "B. Arabic: إلى اللقاء (ilā l-liqāʾ). literally: until the meeting."
               ]
-            },
-            {
-              "kind": "speech",
-              "text": "Read the right-hand column top to bottom. Not one line contains a verb \"to be.\" The zero copula has held for four chapters."
             }
           ]
         },
@@ -1352,57 +1349,44 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Everything you have learned sits on a handful of three-consonant roots:"
+              "text": "Six roots:"
             },
             {
               "kind": "table",
               "headers": [
                 "root",
                 "meaning",
-                "words you know"
+                "word"
               ],
               "columns": 3,
               "rowCount": 6,
               "utterances": [
-                "root: s–l–m. meaning: peace, safety. words you know: salām, as-salāmu ʿalaykum, salāma, maʿa s-salāma.",
-                "root: s–m–w. meaning: name. words you know: ism, ismī, ismuka.",
-                "root: ḥ–w–l. meaning: to turn. words you know: ḥāl, kayfa ḥāluka.",
-                "root: kh–y–r. meaning: good. words you know: ṣabāḥ al-khayr, bi-khayr.",
-                "root: ḥ–m–d. meaning: to praise. words you know: al-ḥamdu lillāh, Muḥammad.",
-                "root: l–q–y. meaning: to meet. words you know: liqāʾ, ilā l-liqāʾ."
+                "root: s–l–m. meaning: peace, safety. word: salāma.",
+                "root: s–m–w. meaning: name. word: ism.",
+                "root: ḥ–w–l. meaning: to turn. word: ḥāl.",
+                "root: kh–y–r. meaning: good. word: bi-khayr.",
+                "root: ḥ–m–d. meaning: to praise. word: Muḥammad.",
+                "root: l–q–y. meaning: to meet. word: liqāʾ."
               ]
-            },
-            {
-              "kind": "speech",
-              "text": "Six roots. A whole conversation."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens — The small attaching pieces",
+          "type": "script",
+          "title": "Script — the new letters, from memory",
           "segments": [
             {
-              "kind": "table",
-              "headers": [
-                "piece",
-                "job",
-                "example"
-              ],
-              "columns": 3,
-              "rowCount": 5,
-              "utterances": [
-                "piece: الـ al-. job: the. example: al-khayr.",
-                "piece: بـ bi-. job: in / by. example: bi-khayr.",
-                "piece: لـ li-. job: to. example: lillāh.",
-                "piece: ـي -ī. job: my. example: ismī.",
-                "piece: ـك -ka / -ki. job: your (m./f.) example: ismuka, ḥāluki."
-              ]
+              "kind": "speech",
+              "text": "What shapes are ع (ʿayn) and ه? (Curve over bowl, غ its dotted twin; a loop that shifts shape by position.)"
             },
             {
               "kind": "speech",
-              "text": "And مع maʿa, the one that doesn't attach."
+              "text": "What is ة, and what builds مع (maʿa) and السلامة (as-salāma)? (That loop plus tāʾ's two dots, word-final, feminine; م + throat ع (ʿayn); ال + سلام + ة.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two shapes in إلى اللقاء (ilā l-liqāʾ) are unwritten? (ق, a deeper k; ى, dotless yāʾ, said ā.)"
             }
           ]
         },
@@ -1420,11 +1404,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the full dialogue, both parts, addressing a man",
+              "instruction": "the dialogue, both parts, to a man",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the full dialogue, both parts, addressing a **man**]"
+              "source": "[YOU SAY: the dialogue, both parts, to a **man**]"
             },
             {
               "kind": "prompt",
@@ -1438,20 +1422,11 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "مع السلامة (as-salāma) (maʿa s-salāma) — every letter is one you have drawn",
+              "instruction": "مع السلامة (as-salāma) (maʿa s-salāma) — every letter already drawn",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU WRITE: **مع السلامة** — every letter is one you have drawn]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the bookend — \"السلام to open, السلامة (as-salāma) to close\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the bookend — \"**السلام** to open, **السلامة** to close\"]"
+              "source": "[YOU WRITE: **مع السلامة** — every letter already drawn]"
             }
           ]
         },
@@ -1468,7 +1443,7 @@
             },
             {
               "kind": "speech",
-              "text": "Give a complete greeting-to-farewell exchange. (The dialogue above.) Which root opens and closes it? (s–l–m.) Which piece of the chapter doesn't glue onto the next word? (مع maʿa.) What single word is absent from every literal translation? (\"Is\" — the zero copula.) Which Spanish word came from Arabic ḥattā? (Hasta.) You can now hold — and hand-write — a short Arabic conversation from beginning to end."
+              "text": "Which root opens and closes it all? (s–l–m.) What did the faʿāla pattern make of salām? (Salāma, being at peace: safety.) Is maʿa s-salāma a plain sign-off? (No — a wish: go in safety.) Does maʿa glue on like bi-? (No; Hebrew ʿim.) What does ilā l-liqāʾ say, from which root? (\"Until the meeting\"; l–q–y.)"
             }
           ]
         }

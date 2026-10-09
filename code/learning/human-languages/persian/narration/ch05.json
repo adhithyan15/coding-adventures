@@ -3,8 +3,8 @@
   "language": "persian",
   "chapter": 5,
   "title": "Take Leave",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:5dbca3cfc29a8d15",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:68a6288eeedb7925",
   "lessons": [
     {
       "id": "FA-C05-khoda",
@@ -545,13 +545,22 @@
       "romanization": "salâm ... khodâ hâfez",
       "gloss": "open and close a short Persian interaction",
       "script": "perso-arabic",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:8e2b56a5c13f0980",
-      "notice": null,
+      "sourceHash": "fnv1a64:7c2968a491f8798d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the halves, then the whole"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the halves, then the whole until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
@@ -588,6 +597,53 @@
         {
           "index": 2,
           "type": "guided-production",
+          "title": "Guided Practice — the two halves of goodbye",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Take the farewell apart without the page."
+            },
+            {
+              "kind": "speech",
+              "text": "What does khodâ mean? (God.) Where is it from? (Inherited Persian: Middle Persian xwadây, \"lord.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "What does hâfez mean? (Guardian, protector.) Where is it from? (Arabic ḥāfiẓ, from the root ḥ-f-ẓ, \"guard, preserve.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "The pieces picture \"God [be] guardian.\" Is a verb needed to say goodbye? (No: the whole formula means goodbye.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "script",
+          "title": "Script — the halves, then the whole",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خدا, حافظ, خداحافظ (khodâ hâfez)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "خدا, then حافظ, then the joined خداحافظ (khodâ hâfez), each from the right edge",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **خدا**, then **حافظ**, then the joined **خداحافظ**, each from the right edge]"
+            },
+            {
+              "kind": "speech",
+              "text": "(خ kh, د d, ا long â spell خدا (khodâ); the final ظ of حافظ (hâfez) is said z.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
             {
@@ -620,7 +676,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

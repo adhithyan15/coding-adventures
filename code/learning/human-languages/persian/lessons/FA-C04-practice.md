@@ -14,16 +14,16 @@ sounds: [rtl, ezafe-e, long-u, persian-question-mark]
 roots: []
 etymology_hook: The exchange joins inherited Persian khub, Arabic-rooted hâl and tor, and Persian ezafe and copula grammar without adding a hidden new form.
 duration:
-  max_seconds: 220
+  max_seconds: 260
 requires:
-  knowledge: [FA-LEX-WELLBEING-QUESTION, FA-GRAMMAR-HAL-E-SHOMA, FA-PRAGMATICS-WELLBEING-FORMAL, FA-LEX-KHUBAM-REPLY, FA-GRAMMAR-PERSONAL-COPULA-AM, FA-DIALOGUE-NAME-EXCHANGE]
+  knowledge: [FA-LEX-WELLBEING-QUESTION, FA-GRAMMAR-HAL-E-SHOMA, FA-PRAGMATICS-WELLBEING-FORMAL, FA-LEX-KHUBAM-REPLY, FA-GRAMMAR-PERSONAL-COPULA-AM, FA-DIALOGUE-NAME-EXCHANGE, FA-LEX-HAL, FA-SCRIPT-HAL, FA-ETYMON-HAL, FA-LEX-CHETOR, FA-SCRIPT-CHETOR, FA-ETYMON-CHE-TOR, FA-LEX-KHUB, FA-SCRIPT-KHUB, FA-ETYMON-KHUB, FA-SCRIPT-KHUBAM]
 introduces:
   knowledge: [FA-DIALOGUE-WELLBEING]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [FA-LEX-WELLBEING-QUESTION, FA-GRAMMAR-HAL-E-SHOMA, FA-PRAGMATICS-WELLBEING-FORMAL, FA-LEX-KHUBAM-REPLY, FA-GRAMMAR-PERSONAL-COPULA-AM, FA-DIALOGUE-NAME-EXCHANGE, FA-DIALOGUE-WELLBEING]
+  knowledge: [FA-LEX-WELLBEING-QUESTION, FA-GRAMMAR-HAL-E-SHOMA, FA-PRAGMATICS-WELLBEING-FORMAL, FA-LEX-KHUBAM-REPLY, FA-GRAMMAR-PERSONAL-COPULA-AM, FA-DIALOGUE-NAME-EXCHANGE, FA-DIALOGUE-WELLBEING, FA-LEX-HAL, FA-SCRIPT-HAL, FA-ETYMON-HAL, FA-LEX-CHETOR, FA-SCRIPT-CHETOR, FA-ETYMON-CHE-TOR, FA-LEX-KHUB, FA-SCRIPT-KHUB, FA-ETYMON-KHUB, FA-SCRIPT-KHUBAM]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, fluency]
@@ -58,6 +58,29 @@ is hiding between the lines.
 Use this careful question in a first meeting. You may hear shorter conversational
 forms, but producing one stable respectful line first prevents script, register,
 and contraction from arriving as one oversized step.
+
+## Guided Practice — the words inside the exchange
+<!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-HAL, FA-ETYMON-HAL, FA-LEX-CHETOR, FA-ETYMON-CHE-TOR, FA-LEX-KHUB, FA-ETYMON-KHUB] -->
+
+Take the two lines apart without the page.
+
+- What does **hâl** name? (**A state or condition.**) Where is it from?
+  (**Arabic**, now used inside Persian ezafe grammar.)
+- Which word asks "how?" (***Chetor.***) Its two parts? (Persian **che**,
+  "what," plus the Arabic loan **tor**, "manner": "in what manner?")
+- What does **khub** mean? (**Good, well.**) Which layer is it from? (**The
+  inherited Persian layer**, beside borrowed **hâl** and **tor**.)
+
+## Script — the four words on the page
+<!-- hl-knowledge: introduces=[]; assesses=[FA-SCRIPT-HAL, FA-SCRIPT-CHETOR, FA-SCRIPT-KHUB, FA-SCRIPT-KHUBAM] -->
+
+> حال · چطور · خوب · خوبم
+
+- [YOU READ: each word from the right edge — *hâl*, *chetor*, *khub*, *khubam*]
+- [YOU POINT: the **چ** opening **چطور**, the long-*u* **و** in **خوب**, and the final **م** that makes **خوبم**]
+
+(**ح** *h*, **ا** long *â*, **ل** *l* spell **حال**; in **چطور** the short *e*
+is not written.)
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-WELLBEING-QUESTION, FA-LEX-KHUBAM-REPLY, FA-DIALOGUE-WELLBEING] -->

@@ -1,7 +1,7 @@
 {
   "language": "urdu",
   "chapter": 4,
-  "sourceHash": "fnv1a64:043c37d3def3ab76",
+  "sourceHash": "fnv1a64:dd772b03429ee0a9",
   "lessonIds": [
     "UR-C04-kaise-kaisi",
     "UR-W04-joining",
@@ -14,11 +14,11 @@
     "UR-W04-nun",
     "UR-C04-practice"
   ],
-  "voiceLessons": 7,
+  "voiceLessons": 6,
   "drivablePrefix": 1,
   "text": "urdu/narration/ch04.txt",
   "json": "urdu/narration/ch04.json",
-  "textHash": "fnv1a64:0494e2759d655c36",
-  "jsonHash": "fnv1a64:a22149e0c146cad2",
+  "textHash": "fnv1a64:fe836d0cb9475d84",
+  "jsonHash": "fnv1a64:3a9d75da12439291",
   "findings": []
 }

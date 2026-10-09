@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Take Leave",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:e123d64b9a2dbc65",
+  "sourceHash": "fnv1a64:484010c771bc2576",
   "lessons": [
     {
       "id": "UR-C05-khuda",
@@ -888,13 +888,23 @@
       "romanization": "salām ... khudā hāfiz",
       "gloss": "open and close a short Urdu interaction",
       "script": "urdu-nastaliq",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:a3bc426a6f965d87",
-      "notice": null,
+      "sourceHash": "fnv1a64:1075c7edea46f8ee",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice",
+          "Script — the farewell and two new letters"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Guided Practice and Script — the farewell and two new letters until you have stopped, and I will say so again when we reach them."
+      },
       "blocks": [
         {
           "index": 0,
@@ -977,6 +987,58 @@
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — the two halves of goodbye",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What does khudā mean? (God.) Where did Urdu get it? (From Persian khodā, whose Middle Persian ancestor xwadāy meant \"lord.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "What does hāfiz mean? (Guardian, protector.) Its root? (Arabic ḥ-f-ẓ, \"guard, preserve.\")"
+            },
+            {
+              "kind": "speech",
+              "text": "The pieces picture \"God [be] guardian.\" Is a verb needed to say goodbye? (No: the formula means goodbye.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "script",
+          "title": "Script — the farewell and two new letters",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "خدا, حافظ, خدا حافظ (khudā hāfiz)."
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "خدا, then حافظ, then خدا حافظ (khudā hāfiz) with its space, each from the right",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: **خدا**, then **حافظ**, then **خدا حافظ** with its space, each from the right]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ی (ye), one S-curve with no dots; then ہ (gol he) alone, the loop and its falling tail",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **ی**, one S-curve with no dots; then **ہ** alone, the loop and its falling tail]"
+            },
+            {
+              "kind": "speech",
+              "text": "How does Persian spell the same farewell? (Joined: خداحافظ.) The final ظ of حافظ (hāfiz) is said z; mid-word, ہ (gol he) splits into two small loops."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

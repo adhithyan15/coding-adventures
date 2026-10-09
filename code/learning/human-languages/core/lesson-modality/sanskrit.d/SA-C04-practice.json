@@ -4,18 +4,21 @@
     "language": "sanskrit",
     "chapter": 4,
     "sequence": 250,
-    "modality": "voice",
-    "derived": "voice",
-    "drivable": true,
+    "modality": "sight",
+    "derived": "sight",
+    "drivable": false,
     "reasons": [
-      "no-visual-dependency"
+      "script-block"
     ],
     "coreModality": "voice",
     "coreReasons": [
       "no-visual-dependency"
     ],
     "coreDrivable": true,
-    "sourceHash": "fnv1a64:2704a46770075ecc"
+    "sourceHash": "fnv1a64:acb1329b05edbfe7",
+    "detachableSegments": [
+      "Script — the chapter's two shapes"
+    ]
   },
   "findings": []
 }

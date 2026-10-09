@@ -9,14 +9,22 @@
   "payoff": {
     "lesson": "SA-C04-practice",
     "kind": "task",
-    "summary": "Complete SA-C04-practice, the canonical closing checkpoint, and demonstrate the chapter promise: end a Sanskrit conversation politely and choose a farewell that fits the situation.",
+    "summary": "Complete SA-C04-practice, the canonical closing checkpoint, and demonstrate the chapter promise: end a Sanskrit conversation politely and choose a farewell that fits the situation; then unpack punar-darśanāya and śvaḥ, and pick out र and प.",
     "assesses": [
       "SA-LEX-GACCHAMI",
       "SA-PATTERN-PUNAR-DARSHANAYA",
       "SA-LEX-SHVAH",
       "SA-LEX-PUNAH",
       "SA-ETYMON-GAM-TO-GO",
-      "SA-HISTORY-LEAVE-TAKING-ROOTS"
-    ]
+      "SA-HISTORY-LEAVE-TAKING-ROOTS",
+      "SA-ETYMON-PUNAR-AGAIN",
+      "SA-ETYMON-DARSHANA-SEEING",
+      "SA-GRAMMAR-DATIVE-OF-PURPOSE",
+      "SA-ETYMON-SHVAH-TOMORROW",
+      "SA-GRAMMAR-ONE-WORD-ONE-DAY",
+      "SA-SCRIPT-RECOG-110",
+      "SA-SCRIPT-RECOG-113"
+    ],
+    "note": "SA-C04-practice assesses all thirteen atoms the chapter introduces: the farewells, the roots of gam, punar-, darśana and śvaḥ, the dative of purpose, Sanskrit's one-word-one-day precision, and र and प (reached through SA-S113-letter-pa, sequence 241)."
   }
 }

@@ -9,22 +9,22 @@ headword: سلام ... خدا حافظ
 romanization: salām ... khudā hāfiz
 gloss: open and close a short Urdu interaction
 concept_tag: UR-C05-PRACTICE
-prerequisites: [UR-C05-khuda-hafiz, UR-C05-khuda-hafiz-more]
+prerequisites: [UR-C05-khuda-hafiz, UR-C05-khuda-hafiz-more, UR-W05-he]
 sounds: [rtl, kh, long-a]
 roots: []
 etymology_hook: The dialogue contrasts Arabic-rooted salām at the opening with Persian-plus-Arabic khudā hāfiz at the close, placing etymology inside communicative sequence.
 duration:
-  max_seconds: 220
+  max_seconds: 260
 requires:
-  knowledge: [UR-DIALOGUE-WELLBEING, UR-LEX-KHUDA-HAFIZ, UR-SCRIPT-KHUDA-HAFIZ-SPACED, UR-PRAGMATICS-STANDARD-FAREWELL]
+  knowledge: [UR-DIALOGUE-WELLBEING, UR-LEX-KHUDA-HAFIZ, UR-SCRIPT-KHUDA-HAFIZ-SPACED, UR-PRAGMATICS-STANDARD-FAREWELL, UR-LEX-KHUDA, UR-SCRIPT-KHUDA, UR-ETYMON-KHUDA-PERSIAN, UR-LEX-HAFIZ, UR-SCRIPT-HAFIZ, UR-ETYMON-HAFIZ-ARABIC, UR-GRAMMAR-KHUDA-HAFIZ-ELLIPSIS, UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING, UR-SCRIPT-YE-01, UR-SCRIPT-HE-01]
 introduces:
   knowledge: [UR-DIALOGUE-TAKE-LEAVE]
 introduces_idioms: []
 introduces_senses: []
 introduces_culture_claims: []
 practises:
-  knowledge: [UR-DIALOGUE-WELLBEING, UR-LEX-KHUDA-HAFIZ, UR-SCRIPT-KHUDA-HAFIZ-SPACED, UR-PRAGMATICS-STANDARD-FAREWELL, UR-DIALOGUE-TAKE-LEAVE]
-skills: [listening, speaking, reading]
+  knowledge: [UR-DIALOGUE-WELLBEING, UR-LEX-KHUDA-HAFIZ, UR-SCRIPT-KHUDA-HAFIZ-SPACED, UR-PRAGMATICS-STANDARD-FAREWELL, UR-DIALOGUE-TAKE-LEAVE, UR-LEX-KHUDA, UR-SCRIPT-KHUDA, UR-ETYMON-KHUDA-PERSIAN, UR-LEX-HAFIZ, UR-SCRIPT-HAFIZ, UR-ETYMON-HAFIZ-ARABIC, UR-GRAMMAR-KHUDA-HAFIZ-ELLIPSIS, UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING, UR-SCRIPT-YE-01, UR-SCRIPT-HE-01]
+skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, fluency]
 register: broadly-polite
@@ -65,6 +65,27 @@ is new to say, only new to see.
 - [YOU CHOOSE: interaction ends → **khudā hāfiz**]
 - [YOU RUN: both voices once from the romanization]
 - [YOU READ: the closing line off the script alone]
+
+## Guided Practice — the two halves of goodbye
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-KHUDA, UR-ETYMON-KHUDA-PERSIAN, UR-LEX-HAFIZ, UR-ETYMON-HAFIZ-ARABIC, UR-GRAMMAR-KHUDA-HAFIZ-ELLIPSIS] -->
+
+- What does **khudā** mean? (**God.**) Where did Urdu get it?
+  (**From Persian** *khodā*, whose Middle Persian ancestor *xwadāy* meant "lord.")
+- What does **hāfiz** mean? (**Guardian, protector.**) Its root?
+  (**Arabic** **ḥ-f-ẓ**, "guard, preserve.")
+- The pieces picture "God [be] guardian." Is a verb needed to say goodbye?
+  (**No**: the formula means *goodbye*.)
+
+## Script — the farewell and two new letters
+<!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-KHUDA, UR-SCRIPT-HAFIZ, UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING, UR-SCRIPT-YE-01, UR-SCRIPT-HE-01] -->
+
+> خدا · حافظ · خدا حافظ
+
+- [YOU READ: **خدا**, then **حافظ**, then **خدا حافظ** with its space, each from the right]
+- [YOU WRITE: **ی**, one S-curve with no dots; then **ہ** alone, the loop and its falling tail]
+
+How does Persian spell the same farewell? (**Joined**: **خداحافظ**.) The final
+**ظ** of **حافظ** is said *z*; mid-word, **ہ** splits into two small loops.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[UR-DIALOGUE-WELLBEING, UR-LEX-KHUDA-HAFIZ, UR-SCRIPT-KHUDA-HAFIZ-SPACED, UR-PRAGMATICS-STANDARD-FAREWELL, UR-DIALOGUE-TAKE-LEAVE] -->
