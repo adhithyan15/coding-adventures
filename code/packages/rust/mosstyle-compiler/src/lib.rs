@@ -2485,6 +2485,20 @@ mod tests {
                 "{src}: {errs:?}"
             );
         }
+        // Through a token: a palette value is resolved before validation, so
+        // a token cannot carry markup in either (refused by the palette
+        // itself, or by PlatformValue once resolved).
+        let mut values = HashMap::new();
+        values.insert("color-accent".to_string(), "{ThemeResource SystemAccentColor}".to_string());
+        match TokenOverrides::try_from_values(values) {
+            // The palette itself refused the value: markup never got in.
+            Err(_) => {}
+            Ok(tokens) => {
+                let src = r#"style Card { part root { background: $color-accent ; } }"#;
+                let errs = compile_with_tokens(src, None, &tokens).expect_err("token markup");
+                assert!(errs.iter().any(|e| e.kind == ErrorKind::PlatformValue), "{errs:?}");
+            }
+        }
         // A brace anywhere but the start is not markup, and ordinary CSS passes.
         let ok = r##"style Card { part root { font-family: "a {b}" ; background: "#0d6efd" ; } }"##;
         assert!(compile(ok, None).is_ok());

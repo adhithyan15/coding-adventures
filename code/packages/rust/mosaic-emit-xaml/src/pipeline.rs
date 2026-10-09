@@ -2198,9 +2198,9 @@ fn emit_visual_state_groups(groups: &[XamlVisualStateGroup], indent: usize) -> S
             .unwrap();
             writeln!(out, "{pad4}</VisualState.StateTriggers>").unwrap();
             // A `translate_xaml_value` result. Style-derived, so it goes
-            // through the style allow-list: only `{ThemeResource …}` /
-            // `{StaticResource …}` stay markup, and anything else omits the
-            // `<Setter>` entirely (#15487 follow-up). `translate_xaml_value`
+            // through the style allow-list, which is empty (X-4): any
+            // brace-led value omits the `<Setter>` entirely (#15487
+            // follow-up). `translate_xaml_value`
             // already refused such values, so this arm is defence in depth.
             if let Some(value) = escape_style_attr(&state.value) {
                 writeln!(out, "{pad4}<VisualState.Setters>").unwrap();
@@ -2569,9 +2569,9 @@ fn build_style_fragment_with_drops(
         // when the whole property must be dropped (e.g. a percentage
         // `Width="100%"` — WinUI's `Width` is a `Double`, not a
         // percentage). A brace-led value is never px-stripped or
-        // case-mangled: it is an allow-listed `{ThemeResource …}` /
-        // `{StaticResource …}` lookup, or the property is dropped and
-        // reported with `REFUSED_STYLE_MARKUP_REASON` (#15487 follow-up).
+        // case-mangled: the property is dropped and reported with
+        // `REFUSED_STYLE_MARKUP_REASON` (#15487 follow-up; X-4 emptied the
+        // allow-list).
         let value = match translate_xaml_value(&key, &p.value) {
             Some(v) => v,
             None if is_refused_style_markup(&p.value) => {
@@ -2627,9 +2627,9 @@ fn build_style_fragment_with_drops(
     let fragment = parts
         .into_iter()
         .filter_map(|(key, value)| {
-            // #15487 follow-up: the style allow-list, not plain
-            // `escape_xaml_attr` -- an allow-listed `{ThemeResource …}`
-            // must stay markup -- and not bare `escape_xml_attr` either,
+            // #15487 follow-up: the style allow-list (empty since X-4), not
+            // plain `escape_xaml_attr` -- a style value is not text -- and
+            // not bare `escape_xml_attr` either,
             // which would let a third-party stylesheet emit `{Binding …}`
             // or `{x:Bind …}` into the consumer's page. Every non-brace
             // value is escaped exactly as before. Every producer above has
@@ -2859,11 +2859,11 @@ fn has_unsupported_length_unit(value: &str) -> bool {
 /// | `background: red`     | `Background`    | `Red`         |
 ///
 /// A value that starts with `{` is the one place a *stylesheet* could
-/// speak XAML markup, so it is not translated at all: only the two
-/// resource lookups on the allow-list (`{ThemeResource Name}`,
-/// `{StaticResource Name}`) pass through, and everything else --
-/// `{Binding …}`, `{x:Bind …}`, `{x:Null}`, malformed braces -- returns
-/// `None`, dropping the property. The threat model is the block comment
+/// speak XAML markup, so it is not translated at all: every brace-led
+/// value -- `{Binding …}`, `{x:Bind …}`, `{x:Null}`, resource lookups,
+/// malformed braces -- returns `None`, dropping the property. (The
+/// allow-list that once let `{ThemeResource Name}` / `{StaticResource Name}`
+/// through is empty since X-4.) The threat model is the block comment
 /// above [`STYLE_MARKUP_EXTENSIONS`].
 fn translate_xaml_value(key: &str, raw: &str) -> Option<String> {
     let trimmed = raw.trim();
@@ -2957,6 +2957,14 @@ fn xaml_character_spacing(raw: &str) -> Option<String> {
 // ---------------------------------------------------------------------
 // Style values and XAML markup extensions -- the allow-list
 // ---------------------------------------------------------------------
+//
+// SUPERSEDED IN PART (X-4, 2026-10-08). mosstyle is platform-neutral (UI15
+// §8 rule 8), so `STYLE_MARKUP_EXTENSIONS` is now EMPTY: the resource lookups
+// this comment describes as allowed are refused like every other brace-led
+// value, and `mosstyle-compiler` rejects them at compile time
+// (`PlatformValue`). A need such as "follow the system theme" is a system
+// token (UI90 §3.3), not a lookup. The threat model, the matcher and the
+// composite and choke-point checks below all still apply.
 //
 // THE THREAT. XAML reads any attribute value whose first character is `{`
 // as a *markup extension*: a tiny program the XAML loader runs while it
@@ -3274,10 +3282,11 @@ fn normalize_xaml_color_value(s: &str) -> Option<String> {
     ) {
         return None;
     }
-    // `{x:Bind …}` / `{Binding …}` markup extensions or any string with
-    // braces — keep verbatim.  These aren't color literals.
+    // A leading `{` is XAML markup, never a colour, and no style value may
+    // be markup (X-4, UI15 §8 rule 8): refused, as in `translate_xaml_value`
+    // (unreachable through it today; kept so this function is safe alone).
     if trimmed.starts_with('{') {
-        return Some(s.to_string());
+        return None;
     }
     // Already PascalCased (or starts with an uppercase letter)?  Treat
     // as XAML-native and pass through.
@@ -7241,9 +7250,8 @@ fn find_prop_value<'a>(node: &'a LayoutNode, prop_name: &str) -> Option<&'a Layo
 /// Use this for every value that came from an author as text. A value the
 /// emitter *built* as markup (a `{x:Bind …}` state trigger, an `xmlns` URI)
 /// must use [`escape_xml_attr`] instead, or the `{}` would turn it into
-/// text. A style-derived value uses [`escape_style_attr`], which keeps an
-/// allow-listed `{ThemeResource …}` as markup and drops the property for
-/// any other brace-led value (a style value is not text, so escaping it
+/// text. A style-derived value uses [`escape_style_attr`], which drops the
+/// property for any brace-led value (the allow-list is empty since X-4) (a style value is not text, so escaping it
 /// into text would only make the XAML fail to load).
 fn escape_xaml_attr(s: &str) -> String {
     let escaped = escape_xml_attr(s);
