@@ -107,7 +107,14 @@ export default defineConfig({
             },
             {
               name: "script-data",
-              test: /learning[\\/]human-languages[\\/]data[\\/]scripts[\\/]/,
+              // The monolithic inventories are files under data/scripts/; the
+              // shard-native ones (Japanese, Tamil, Persian, Urdu, ...) reach the
+              // app through script-ductus's virtual module, whose id never
+              // contains that path. Without the second alternative that module
+              // fell through to the entry chunk, so twenty Persian and Urdu
+              // digit rows pushed `index` past the 500 kB gate (#17194) while
+              // the script-data batches had room to spare.
+              test: /learning[\\/]human-languages[\\/]data[\\/]scripts[\\/]|virtual:script-ductus-inventories/,
               // Source-verified stroke metadata grows with every HL-C09
               // tranche. Keep the eager canonical corpus in a few cacheable
               // batches instead of allowing one chunk to cross the 500 kB
