@@ -574,7 +574,35 @@ class DebCacheTests(unittest.TestCase):
             self.assertIn(
                 "seeded 0 verified archive(s); 0 not cached; 2 rejected", result.stdout
             )
-            self.assertEqual(list(archives.iterdir()), [])
+            self.assertEqual([p.name for p in archives.iterdir() if p.name != "partial"], [])
+
+    def test_the_whole_pool_path_must_match_not_just_the_file_name(self) -> None:
+        # Two signed sources could publish the same file name and size; the
+        # stanza used is the one whose pool path ends the URI apt will fetch.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            cache, archives = self._layout(root)
+            ours = _Archive("dup", "dup_1_all.deb", "dup_1_all.deb", b"ours")
+            (cache / ours.local).write_bytes(ours.data)
+            elsewhere = ours.stanza().replace("pool/x/", "pool/other/")
+
+            result, _ = self._run(root, ours.uri_line(), elsewhere)
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("seeded 0 verified archive(s); 0 not cached; 1 rejected", result.stdout)
+
+    def test_a_rejected_copy_leaves_nothing_staged(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            cache, archives = self._layout(root)
+            bad = _Archive("bad", "bad_1_all.deb", "bad_1_all.deb", b"expected")
+            (cache / bad.local).write_bytes(b"EXPECTED")
+
+            result, _ = self._run(root, bad.uri_line(), bad.stanza())
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(list((archives / "partial").iterdir()), [])
+            self.assertEqual([p.name for p in archives.iterdir()], ["partial"])
 
     def test_a_name_that_is_not_a_plain_archive_name_is_refused(self) -> None:
         # The name comes from apt's output, but it is joined onto two paths;
@@ -589,7 +617,7 @@ class DebCacheTests(unittest.TestCase):
 
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertIn("1 rejected", result.stdout)
-            self.assertEqual(list(archives.iterdir()), [])
+            self.assertEqual([p.name for p in archives.iterdir() if p.name != "partial"], [])
 
     def test_a_symlinked_cache_entry_is_not_followed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

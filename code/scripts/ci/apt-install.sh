@@ -358,25 +358,28 @@ DEB_NAME='^[A-Za-z0-9][A-Za-z0-9.+~%_-]*\.deb$'
 
 # The strongest hash the signed index records for one archive, as "ALGO hex".
 #
-#   strong_hash_for <package> <pool file name> <size>
+#   strong_hash_for <package> <decoded URI> <size>
 #
 # `--print-uris` names each archive's hash, but it prints the MD5 sum when the
 # index has one -- and Ubuntu's always does -- so its own field cannot be the
 # check. The same index carries SHA256 and SHA512 for every archive, and
 # `apt-cache show` prints them. A package can have several stanzas (versions,
-# pockets), so the one whose pool file name and size both match is chosen.
+# pockets, sources), so the one chosen is the stanza whose whole pool path
+# (`Filename:`, e.g. pool/main/l/latexmk/latexmk_4.83-1_all.deb) ends the URI
+# apt would fetch, right after a slash, and whose size matches too.
 strong_hash_for() {
-  "$APT_CACHE" show -- "$1" 2>/dev/null | awk -v want="$2" -v size="$3" '
+  "$APT_CACHE" show -- "$1" 2>/dev/null | awk -v uri="$2" -v size="$3" '
     BEGIN { RS = ""; FS = "\n" }
     {
       file = ""; bytes = ""; sha256 = ""; sha512 = ""
       for (i = 1; i <= NF; i++) {
-        if ($i ~ /^Filename: /) { file = substr($i, 11); sub(/.*\//, "", file) }
+        if ($i ~ /^Filename: /) { file = substr($i, 11) }
         else if ($i ~ /^Size: /) { bytes = substr($i, 7) }
         else if ($i ~ /^SHA256: /) { sha256 = substr($i, 9) }
         else if ($i ~ /^SHA512: /) { sha512 = substr($i, 9) }
       }
-      if (file == want && bytes == size) {
+      tail = length(uri) - length(file)
+      if (file != "" && tail > 0 && substr(uri, tail) == "/" file && bytes == size) {
         if (sha512 != "") { print "SHA512 " sha512; exit }
         if (sha256 != "") { print "SHA256 " sha256; exit }
       }
@@ -398,7 +401,7 @@ seed_archives_from_cache() {
   fi
 
   local seeded=0 rejected=0 absent=0
-  local uri name size _hash pool cached expected algo want got
+  local uri name size _hash pool cached staged expected algo want got
   while read -r uri name size _hash; do
     [[ -n "${size:-}" ]] || continue
     if [[ ! $name =~ $DEB_NAME || ! $size =~ ^[0-9]+$ ]]; then
@@ -410,26 +413,44 @@ seed_archives_from_cache() {
       absent=$((absent + 1))
       continue
     fi
-    # The index names the pool file (no epoch, `+` as is); the URI names the
-    # same file percent-encoded. Decode it to compare like with like.
+    # Size first: it is free, and a wrong size is already a rejection, so a
+    # huge or truncated file is never read end to end.
+    if [[ "$(stat -c %s "$cached")" != "$size" ]]; then
+      rejected=$((rejected + 1))
+      continue
+    fi
+    # The index names the pool path (no epoch, `+` as is); the URI names the
+    # same path percent-encoded. Decode it to compare like with like. The
+    # result is only ever compared as a string, never used as a path.
     pool="${uri//\'/}"
-    pool="${pool##*/}"
     pool=$(printf '%b' "${pool//%/\\x}")
     expected=$(strong_hash_for "${name%%_*}" "$pool" "$size")
     algo="${expected%% *}"
     want="${expected#* }"
     case "$algo" in
-      SHA256) got=$(sha256sum < "$cached") ;;
-      SHA512) got=$(sha512sum < "$cached") ;;
+      SHA256|SHA512) ;;
       # No strong hash in the index for this file: nothing to trust it on.
       *) rejected=$((rejected + 1)); continue ;;
     esac
+    # Copy first, then hash the COPY: a root-owned file in apt's own partial
+    # directory, which nothing else in the job can rewrite between the check
+    # and apt's use of it. Only a match is moved into place.
+    staged="$APT_ARCHIVES_DIR/partial/$name.from-cache"
+    if ! $SUDO mkdir -p "$APT_ARCHIVES_DIR/partial" ||
+      ! $SUDO cp -- "$cached" "$staged"; then
+      rejected=$((rejected + 1))
+      continue
+    fi
+    case "$algo" in
+      SHA256) got=$(sha256sum < "$staged") ;;
+      SHA512) got=$(sha512sum < "$staged") ;;
+    esac
     got="${got%% *}"
-    if [[ "$got" == "${want,,}" && "$(stat -c %s "$cached")" == "$size" ]]; then
-      if $SUDO cp -- "$cached" "$APT_ARCHIVES_DIR/$name"; then
-        seeded=$((seeded + 1))
-      fi
+    if [[ "$got" == "${want,,}" && "$(stat -c %s "$staged")" == "$size" ]] &&
+      $SUDO mv -f -- "$staged" "$APT_ARCHIVES_DIR/$name"; then
+      seeded=$((seeded + 1))
     else
+      $SUDO rm -f -- "$staged"
       rejected=$((rejected + 1))
     fi
   done <<< "$uris"
@@ -453,6 +474,10 @@ refill_cache_from_archives() {
   echo "deb cache: kept $kept archive(s) in $APT_DEB_CACHE for the next run"
 }
 
+# Both cache steps run in `||` context, which switches `set -e` off inside
+# them; every failure path in them is handled explicitly for that reason, so
+# keep the `||` if this is ever refactored.
+#
 # Neither apt call is allowed to fail quietly: the whole point is that update
 # keeps meaning "the archive we depend on is reachable". Retrying is not
 # swallowing -- the last attempt's failure is still this script's exit status,

@@ -492,8 +492,12 @@ jobs:
         id: tex-debs-key
         run: echo "key=tex-debs-${ImageOS:-unknown}-${ImageVersion:-unknown}-v1" >> "$GITHUB_OUTPUT"
 
+      # Bounded and non-fatal, like everything about this cache: a restore
+      # that hangs or fails costs a download, never the job.
       - name: Restore cached TeX archives
         id: tex-debs
+        timeout-minutes: 5
+        continue-on-error: true
         uses: actions/cache/restore@v6
         with:
           path: ~/.cache/tex-debs
@@ -517,6 +521,9 @@ jobs:
           #   listing 1 x (30 + 15)       =   45s   (normally ~1s; cache only)
           #   install 3 x (270 + 15) + 30 =  885s   (normally ~120s; ~60s cached)
           #   total                        = 1185s  < 1200s
+          # The seeding itself (one index lookup, hash and copy per cached
+          # archive) and the refill copy are uncapped but take seconds; that
+          # is what the remaining 15s covers.
           APT_UPDATE_TIMEOUT: "60"
           APT_LIST_TIMEOUT: "30"
           APT_INSTALL_TIMEOUT: "270"
@@ -541,6 +548,8 @@ jobs:
       # a later book failure does not throw away a download that succeeded.
       # Only on a miss: an exact hit already holds this image's archives.
       - name: Save TeX archives for the next run
+        timeout-minutes: 5
+        continue-on-error: true
         if: >-
           steps.tex-debs.outputs.cache-hit != 'true' &&
           steps.tex-install.outputs.cacheable == 'true'
