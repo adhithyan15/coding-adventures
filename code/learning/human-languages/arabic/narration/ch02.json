@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:340dbb3bb69130d2",
+  "sourceHash": "fnv1a64:ed78dc0261a09c17",
   "lessons": [
     {
       "id": "AR-C02-ism",
@@ -2088,6 +2088,202 @@
             {
               "kind": "speech",
               "text": "Is hamza a vowel mark? (No.) What sound does it write? (A glottal stop.) What is أ? (Hamza riding on an alif seat.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C02-checkpoint",
+      "sequence": 265,
+      "title": "Chapter 2 checkpoint — the introduction, its letters and its marks",
+      "headword": "(practice)",
+      "romanization": "",
+      "gloss": "Chapter 2 checkpoint — the introduction, its letters and its marks, with three words written from sound",
+      "script": "arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:255ed177646c25f3",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the bowl, the dial and the marks",
+          "Writing — from sound alone"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the bowl, the dial and the marks and Writing — from sound alone until you have stopped, and I will say so again when we reach them."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing new here: the introduction, then its letters and marks."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice — the exchange",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the exchange to a man, then to a woman — \"ismī …\" / \"mā ismuka?\" or \"mā ismuki?\" / \"tasharrafnā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the exchange to a man, then to a woman — \"ismī …\" / \"mā ismuka?\" or \"mā ismuki?\" / \"tasharrafnā\"]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — from memory",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "\"A price,\" \"a teacher,\" \"welcome\"? (Thaman; mudarris; ahlan.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Ism's cousin, and tasharrafnā literally? (Hebrew shem, not name; \"we have been honoured,\" sh–r–f.)"
+            },
+            {
+              "kind": "speech",
+              "text": "How are \"my\" and \"your\" built, and what does ismī Arun leave out? (Glued on: -ī; -ka / -ki. \"Is\": the zero copula.)"
+            },
+            {
+              "kind": "speech",
+              "text": "What splits anta from anti, where French splits \"you\" by register? Before a noun, mā or māḏā? (Gender; mā.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "script",
+          "title": "Script — the bowl, the dial and the marks",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What separates ب ن ت ث ي (yāʾ)? (The dots: one below; one, two, three above; two below.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letters build ما, which letter of tasharrafnā is new, and what builds أنت? (م ا; fāʾ; أ, hamza on an alif seat, then ن and ت.)"
+            },
+            {
+              "kind": "speech",
+              "text": "What do َ ِ ُ (fatḥa, kasra, ḍamma; hamza) and ْ ّ ً (sukūn, shadda, fatḥatan) tell you, and which makes أنتِ? (a, i, u; no vowel, double, -an; a kasra under the final ت.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Which marks does mudarris carry, and which two does ahlan add? (fatḥa, kasra, ḍamma, shadda; sukūn, fatḥatan.)"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "aloud, right to left, with meanings — ما, اسمي, أنتَ, أنتِ, ثمن (thaman)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: aloud, right to left, with meanings — **ما**, **اسمي**, **أنتَ**, **أنتِ**, **ثمن**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing — from sound alone",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "COVER",
+              "instruction": "the Script block above",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COVER: the Script block above]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "from sound — b, n, t, th, y; then ismī; then anta and anti, each with its final vowel mark",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: from sound — *b, n, t, th, y*; then *ismī*; then *anta* and *anti*, each with its final vowel mark]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "the hamza alone, then on its alif seat",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: the hamza alone, then on its *alif* seat]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CHECK",
+              "instruction": "against the key — ب ن ت ث ي (yāʾ), اسمي, أنتَ, أنتِ, ء, أ",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CHECK: against the key — **ب ن ت ث ي**, **اسمي**, **أنتَ**, **أنتِ**, **ء**, **أ**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "one repaired dot or mark, then stop",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: one repaired dot or mark, then stop]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name yāʾ's three jobs. Is hamza a vowel mark? (Consonant y, long ī, the suffix -ī \"my\"; no, it writes a glottal stop.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Next chapter: asking how someone is."
             }
           ]
         }
