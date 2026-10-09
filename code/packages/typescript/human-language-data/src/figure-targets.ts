@@ -103,8 +103,9 @@ export const DERIVED_FILMSTRIP_SCRIPTS: Readonly<Record<string, string>> = {
   // first outline (Noto Sans) printed a two-storey a that no source draws.
   // The Latin strips are now drawn on LatinPrint-Subset.ttf, a renamed subset
   // of SIL's literacy typeface Andika, whose a is the one-storey a the school
-  // model teaches. Lessons with an uncited mark (è ê ç ï ë ä ö ē, œ) still
-  // print no strip: the ledger has no ductus for them.
+  // model teaches. è ê ç ï ë ä ö and ē are drawn by analogy with the cited
+  // ü, acute and tilde (their records say so); œ still prints no strip: the
+  // ledger has no ductus for it.
   french: "latin",
   italian: "latin",
   portuguese: "latin",
